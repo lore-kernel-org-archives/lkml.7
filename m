@@ -2,56 +2,57 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA85C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45963C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3D82071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5B72071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421199;
-	bh=RPAAjHkX6Jz9F4rm+4mdrbY+L234J7mVJrQvrjHijEk=;
+	s=default; t=1574421207;
+	bh=3JxE7MxnwJWUazFf1/4aL5Jz2vKF4IYWKmV9aRGK8Zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XpfzaVLw/qHM+K+QpZbcD5OqqHrseK3eWhIU0C9zgXOc5k+BmtPqY7nEkN8OC7x6L
-	 RVwfUsAQypy6QiQsAAa+sgD18hslLGiz49XGfPI2szaoNYQMYbuyb1nVCwvaAb4qhH
-	 wu3BlS/JF4uBo7RYphpz5z9Tej8yB47jOj5mpntg=
+	b=1gRihP8VwBztNhiz/55yD8dFWbLnrF0IBboLkBuxe+tITYl8BOEq2PzhVeP7BTPqs
+	 1xPvbFCS09OLJcw6HDPhnDB7omAefqWFl9dhEoWt4luKhFvtv4NoPDkwpfXVPMfSox
+	 1Lgx5gxZlydgUzFBUFaju+ZNFg18ftxW+CMm79Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfKVKz6 (ORCPT
+        id S1728207AbfKVKzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43254 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbfKVKzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:55 -0500
+        id S1729169AbfKVKze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF7420637;
-        Fri, 22 Nov 2019 10:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 930132071C;
+        Fri, 22 Nov 2019 10:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420153;
-        bh=RPAAjHkX6Jz9F4rm+4mdrbY+L234J7mVJrQvrjHijEk=;
+        s=default; t=1574420133;
+        bh=3JxE7MxnwJWUazFf1/4aL5Jz2vKF4IYWKmV9aRGK8Zw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OYhFkKQ2Y10WKHc/qW0iwC3xAGqjy/cwrwsEHxt18t3scJZpHNucmUn8nRAdtmKTp
-         RmeDXsDhmtKmzk7SDegz2nUn/KBtp7sjBstNmiNo7QrzegvQhD21gzQbDgr757NRja
-         cdstBSA6Ab6aW5rLhvNFpnuP70/7kdyZO82kyh04=
+        b=YK3D/Knw0u282caY0xdo8pGEtUgxSih1bhgaOY6nKqd1nhx6ick99DL1lGswmKo/f
+         lgDEhxqPC0hF1XzqeLb5Vp/LpR2B96XXta1Jfjl6tx5IV4sCdVeN9VMaKVFV7Z8olm
+         ryTg382oPiSFiXt0DeP4a/rGzcWo0j3dUCKPe0P0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Wang YanQing <udknight@gmail.com>
-Subject: [PATCH 4.19 012/220] bpf, x32: Fix bug with ALU64 {LSH, RSH, ARSH} BPF_X shift by 0
-Date:   Fri, 22 Nov 2019 11:26:17 +0100
-Message-Id: <20191122100913.512221429@linuxfoundation.org>
+        stable@vger.kernel.org, Radu Solea <radu.solea@nxp.com>,
+        Franck LENORMAND <franck.lenormand@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 083/122] crypto: mxs-dcp - Fix AES issues
+Date:   Fri, 22 Nov 2019 11:28:56 +0100
+Message-Id: <20191122100823.449933842@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
+In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
+References: <20191122100722.177052205@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,337 +62,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Radu Solea <radu.solea@nxp.com>
 
-commit 68a8357ec15bdce55266e9fba8b8b3b8143fa7d2 upstream.
+[ Upstream commit fadd7a6e616b89c7f4f7bfa7b824f290bab32c3c ]
 
-The current x32 BPF JIT for shift operations is not correct when the
-shift amount in a register is 0. The expected behavior is a no-op, whereas
-the current implementation changes bits in the destination register.
+The DCP driver does not obey cryptlen, when doing android CTS this
+results in passing to hardware input stream lengths which are not
+multiple of block size.
 
-The following example demonstrates the bug. The expected result of this
-program is 1, but the current JITed code returns 2.
+Add a check to prevent future erroneous stream lengths from reaching the
+hardware and adjust the scatterlist walking code to obey cryptlen.
 
-  r0 = 1
-  r1 = 1
-  r2 = 0
-  r1 <<= r2
-  if r1 == 1 goto end
-  r0 = 2
-end:
-  exit
+Also properly copy-out the IV for chaining.
 
-The bug is caused by an incorrect assumption by the JIT that a shift by
-32 clear the register. On x32 however, shifts use the lower 5 bits of
-the source, making a shift by 32 equivalent to a shift by 0.
-
-This patch fixes the bug using double-precision shifts, which also
-simplifies the code.
-
-Fixes: 03f5781be2c7 ("bpf, x86_32: add eBPF JIT compiler for ia32")
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Wang YanQing <udknight@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Radu Solea <radu.solea@nxp.com>
+Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/net/bpf_jit_comp32.c |  221 ++++--------------------------------------
- 1 file changed, 23 insertions(+), 198 deletions(-)
+ drivers/crypto/mxs-dcp.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -722,9 +722,6 @@ static inline void emit_ia32_lsh_r64(con
- {
- 	u8 *prog = *pprog;
- 	int cnt = 0;
--	static int jmp_label1 = -1;
--	static int jmp_label2 = -1;
--	static int jmp_label3 = -1;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
+diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
+index 4615dbee22d0a..e1e1e81107904 100644
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -225,6 +225,12 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
+ 	dma_addr_t dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
+ 					     DCP_BUF_SZ, DMA_FROM_DEVICE);
  
-@@ -743,79 +740,23 @@ static inline void emit_ia32_lsh_r64(con
- 		/* mov ecx,src_lo */
- 		EMIT2(0x8B, add_2reg(0xC0, src_lo, IA32_ECX));
++	if (actx->fill % AES_BLOCK_SIZE) {
++		dev_err(sdcp->dev, "Invalid block size!\n");
++		ret = -EINVAL;
++		goto aes_done_run;
++	}
++
+ 	/* Fill in the DMA descriptor. */
+ 	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
+ 		    MXS_DCP_CONTROL0_INTERRUPT |
+@@ -254,6 +260,7 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
  
--	/* cmp ecx,32 */
--	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 32);
--	/* Jumps when >= 32 */
--	if (is_imm8(jmp_label(jmp_label1, 2)))
--		EMIT2(IA32_JAE, jmp_label(jmp_label1, 2));
--	else
--		EMIT2_off32(0x0F, IA32_JAE + 0x10, jmp_label(jmp_label1, 6));
--
--	/* < 32 */
--	/* shl dreg_hi,cl */
--	EMIT2(0xD3, add_1reg(0xE0, dreg_hi));
--	/* mov ebx,dreg_lo */
--	EMIT2(0x8B, add_2reg(0xC0, dreg_lo, IA32_EBX));
-+	/* shld dreg_hi,dreg_lo,cl */
-+	EMIT3(0x0F, 0xA5, add_2reg(0xC0, dreg_hi, dreg_lo));
- 	/* shl dreg_lo,cl */
- 	EMIT2(0xD3, add_1reg(0xE0, dreg_lo));
+ 	ret = mxs_dcp_start_dma(actx);
  
--	/* IA32_ECX = -IA32_ECX + 32 */
--	/* neg ecx */
--	EMIT2(0xF7, add_1reg(0xD8, IA32_ECX));
--	/* add ecx,32 */
--	EMIT3(0x83, add_1reg(0xC0, IA32_ECX), 32);
--
--	/* shr ebx,cl */
--	EMIT2(0xD3, add_1reg(0xE8, IA32_EBX));
--	/* or dreg_hi,ebx */
--	EMIT2(0x09, add_2reg(0xC0, dreg_hi, IA32_EBX));
--
--	/* goto out; */
--	if (is_imm8(jmp_label(jmp_label3, 2)))
--		EMIT2(0xEB, jmp_label(jmp_label3, 2));
--	else
--		EMIT1_off32(0xE9, jmp_label(jmp_label3, 5));
-+	/* if ecx >= 32, mov dreg_lo into dreg_hi and clear dreg_lo */
++aes_done_run:
+ 	dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
+ 			 DMA_TO_DEVICE);
+ 	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
+@@ -280,13 +287,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
  
--	/* >= 32 */
--	if (jmp_label1 == -1)
--		jmp_label1 = cnt;
--
--	/* cmp ecx,64 */
--	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 64);
--	/* Jumps when >= 64 */
--	if (is_imm8(jmp_label(jmp_label2, 2)))
--		EMIT2(IA32_JAE, jmp_label(jmp_label2, 2));
--	else
--		EMIT2_off32(0x0F, IA32_JAE + 0x10, jmp_label(jmp_label2, 6));
-+	/* cmp ecx,32 */
-+	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 32);
-+	/* skip the next two instructions (4 bytes) when < 32 */
-+	EMIT2(IA32_JB, 4);
+ 	uint8_t *out_tmp, *src_buf, *dst_buf = NULL;
+ 	uint32_t dst_off = 0;
++	uint32_t last_out_len = 0;
  
--	/* >= 32 && < 64 */
--	/* sub ecx,32 */
--	EMIT3(0x83, add_1reg(0xE8, IA32_ECX), 32);
--	/* shl dreg_lo,cl */
--	EMIT2(0xD3, add_1reg(0xE0, dreg_lo));
- 	/* mov dreg_hi,dreg_lo */
- 	EMIT2(0x89, add_2reg(0xC0, dreg_hi, dreg_lo));
--
- 	/* xor dreg_lo,dreg_lo */
- 	EMIT2(0x33, add_2reg(0xC0, dreg_lo, dreg_lo));
+ 	uint8_t *key = sdcp->coh->aes_key;
  
--	/* goto out; */
--	if (is_imm8(jmp_label(jmp_label3, 2)))
--		EMIT2(0xEB, jmp_label(jmp_label3, 2));
--	else
--		EMIT1_off32(0xE9, jmp_label(jmp_label3, 5));
--
--	/* >= 64 */
--	if (jmp_label2 == -1)
--		jmp_label2 = cnt;
--	/* xor dreg_lo,dreg_lo */
--	EMIT2(0x33, add_2reg(0xC0, dreg_lo, dreg_lo));
--	/* xor dreg_hi,dreg_hi */
--	EMIT2(0x33, add_2reg(0xC0, dreg_hi, dreg_hi));
--
--	if (jmp_label3 == -1)
--		jmp_label3 = cnt;
--
- 	if (dstk) {
- 		/* mov dword ptr [ebp+off],dreg_lo */
- 		EMIT3(0x89, add_2reg(0x40, IA32_EBP, dreg_lo),
-@@ -834,9 +775,6 @@ static inline void emit_ia32_arsh_r64(co
- {
- 	u8 *prog = *pprog;
- 	int cnt = 0;
--	static int jmp_label1 = -1;
--	static int jmp_label2 = -1;
--	static int jmp_label3 = -1;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
+ 	int ret = 0;
+ 	int split = 0;
+-	unsigned int i, len, clen, rem = 0;
++	unsigned int i, len, clen, rem = 0, tlen = 0;
+ 	int init = 0;
++	bool limit_hit = false;
  
-@@ -855,79 +793,23 @@ static inline void emit_ia32_arsh_r64(co
- 		/* mov ecx,src_lo */
- 		EMIT2(0x8B, add_2reg(0xC0, src_lo, IA32_ECX));
+ 	actx->fill = 0;
  
--	/* cmp ecx,32 */
--	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 32);
--	/* Jumps when >= 32 */
--	if (is_imm8(jmp_label(jmp_label1, 2)))
--		EMIT2(IA32_JAE, jmp_label(jmp_label1, 2));
--	else
--		EMIT2_off32(0x0F, IA32_JAE + 0x10, jmp_label(jmp_label1, 6));
--
--	/* < 32 */
--	/* lshr dreg_lo,cl */
--	EMIT2(0xD3, add_1reg(0xE8, dreg_lo));
--	/* mov ebx,dreg_hi */
--	EMIT2(0x8B, add_2reg(0xC0, dreg_hi, IA32_EBX));
--	/* ashr dreg_hi,cl */
-+	/* shrd dreg_lo,dreg_hi,cl */
-+	EMIT3(0x0F, 0xAD, add_2reg(0xC0, dreg_lo, dreg_hi));
-+	/* sar dreg_hi,cl */
- 	EMIT2(0xD3, add_1reg(0xF8, dreg_hi));
+@@ -305,6 +314,11 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
+ 	for_each_sg(req->src, src, nents, i) {
+ 		src_buf = sg_virt(src);
+ 		len = sg_dma_len(src);
++		tlen += len;
++		limit_hit = tlen > req->nbytes;
++
++		if (limit_hit)
++			len = req->nbytes - (tlen - len);
  
--	/* IA32_ECX = -IA32_ECX + 32 */
--	/* neg ecx */
--	EMIT2(0xF7, add_1reg(0xD8, IA32_ECX));
--	/* add ecx,32 */
--	EMIT3(0x83, add_1reg(0xC0, IA32_ECX), 32);
--
--	/* shl ebx,cl */
--	EMIT2(0xD3, add_1reg(0xE0, IA32_EBX));
--	/* or dreg_lo,ebx */
--	EMIT2(0x09, add_2reg(0xC0, dreg_lo, IA32_EBX));
--
--	/* goto out; */
--	if (is_imm8(jmp_label(jmp_label3, 2)))
--		EMIT2(0xEB, jmp_label(jmp_label3, 2));
--	else
--		EMIT1_off32(0xE9, jmp_label(jmp_label3, 5));
-+	/* if ecx >= 32, mov dreg_hi to dreg_lo and set/clear dreg_hi depending on sign */
+ 		do {
+ 			if (actx->fill + len > out_off)
+@@ -321,13 +335,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
+ 			 * If we filled the buffer or this is the last SG,
+ 			 * submit the buffer.
+ 			 */
+-			if (actx->fill == out_off || sg_is_last(src)) {
++			if (actx->fill == out_off || sg_is_last(src) ||
++				limit_hit) {
+ 				ret = mxs_dcp_run_aes(actx, req, init);
+ 				if (ret)
+ 					return ret;
+ 				init = 0;
  
--	/* >= 32 */
--	if (jmp_label1 == -1)
--		jmp_label1 = cnt;
--
--	/* cmp ecx,64 */
--	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 64);
--	/* Jumps when >= 64 */
--	if (is_imm8(jmp_label(jmp_label2, 2)))
--		EMIT2(IA32_JAE, jmp_label(jmp_label2, 2));
--	else
--		EMIT2_off32(0x0F, IA32_JAE + 0x10, jmp_label(jmp_label2, 6));
-+	/* cmp ecx,32 */
-+	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 32);
-+	/* skip the next two instructions (5 bytes) when < 32 */
-+	EMIT2(IA32_JB, 5);
+ 				out_tmp = out_buf;
++				last_out_len = actx->fill;
+ 				while (dst && actx->fill) {
+ 					if (!split) {
+ 						dst_buf = sg_virt(dst);
+@@ -350,6 +366,19 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
+ 				}
+ 			}
+ 		} while (len);
++
++		if (limit_hit)
++			break;
++	}
++
++	/* Copy the IV for CBC for chaining */
++	if (!rctx->ecb) {
++		if (rctx->enc)
++			memcpy(req->info, out_buf+(last_out_len-AES_BLOCK_SIZE),
++				AES_BLOCK_SIZE);
++		else
++			memcpy(req->info, in_buf+(last_out_len-AES_BLOCK_SIZE),
++				AES_BLOCK_SIZE);
+ 	}
  
--	/* >= 32 && < 64 */
--	/* sub ecx,32 */
--	EMIT3(0x83, add_1reg(0xE8, IA32_ECX), 32);
--	/* ashr dreg_hi,cl */
--	EMIT2(0xD3, add_1reg(0xF8, dreg_hi));
- 	/* mov dreg_lo,dreg_hi */
- 	EMIT2(0x89, add_2reg(0xC0, dreg_lo, dreg_hi));
--
--	/* ashr dreg_hi,imm8 */
-+	/* sar dreg_hi,31 */
- 	EMIT3(0xC1, add_1reg(0xF8, dreg_hi), 31);
- 
--	/* goto out; */
--	if (is_imm8(jmp_label(jmp_label3, 2)))
--		EMIT2(0xEB, jmp_label(jmp_label3, 2));
--	else
--		EMIT1_off32(0xE9, jmp_label(jmp_label3, 5));
--
--	/* >= 64 */
--	if (jmp_label2 == -1)
--		jmp_label2 = cnt;
--	/* ashr dreg_hi,imm8 */
--	EMIT3(0xC1, add_1reg(0xF8, dreg_hi), 31);
--	/* mov dreg_lo,dreg_hi */
--	EMIT2(0x89, add_2reg(0xC0, dreg_lo, dreg_hi));
--
--	if (jmp_label3 == -1)
--		jmp_label3 = cnt;
--
- 	if (dstk) {
- 		/* mov dword ptr [ebp+off],dreg_lo */
- 		EMIT3(0x89, add_2reg(0x40, IA32_EBP, dreg_lo),
-@@ -946,9 +828,6 @@ static inline void emit_ia32_rsh_r64(con
- {
- 	u8 *prog = *pprog;
- 	int cnt = 0;
--	static int jmp_label1 = -1;
--	static int jmp_label2 = -1;
--	static int jmp_label3 = -1;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -967,77 +846,23 @@ static inline void emit_ia32_rsh_r64(con
- 		/* mov ecx,src_lo */
- 		EMIT2(0x8B, add_2reg(0xC0, src_lo, IA32_ECX));
- 
--	/* cmp ecx,32 */
--	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 32);
--	/* Jumps when >= 32 */
--	if (is_imm8(jmp_label(jmp_label1, 2)))
--		EMIT2(IA32_JAE, jmp_label(jmp_label1, 2));
--	else
--		EMIT2_off32(0x0F, IA32_JAE + 0x10, jmp_label(jmp_label1, 6));
--
--	/* < 32 */
--	/* lshr dreg_lo,cl */
--	EMIT2(0xD3, add_1reg(0xE8, dreg_lo));
--	/* mov ebx,dreg_hi */
--	EMIT2(0x8B, add_2reg(0xC0, dreg_hi, IA32_EBX));
-+	/* shrd dreg_lo,dreg_hi,cl */
-+	EMIT3(0x0F, 0xAD, add_2reg(0xC0, dreg_lo, dreg_hi));
- 	/* shr dreg_hi,cl */
- 	EMIT2(0xD3, add_1reg(0xE8, dreg_hi));
- 
--	/* IA32_ECX = -IA32_ECX + 32 */
--	/* neg ecx */
--	EMIT2(0xF7, add_1reg(0xD8, IA32_ECX));
--	/* add ecx,32 */
--	EMIT3(0x83, add_1reg(0xC0, IA32_ECX), 32);
--
--	/* shl ebx,cl */
--	EMIT2(0xD3, add_1reg(0xE0, IA32_EBX));
--	/* or dreg_lo,ebx */
--	EMIT2(0x09, add_2reg(0xC0, dreg_lo, IA32_EBX));
--
--	/* goto out; */
--	if (is_imm8(jmp_label(jmp_label3, 2)))
--		EMIT2(0xEB, jmp_label(jmp_label3, 2));
--	else
--		EMIT1_off32(0xE9, jmp_label(jmp_label3, 5));
-+	/* if ecx >= 32, mov dreg_hi to dreg_lo and clear dreg_hi */
- 
--	/* >= 32 */
--	if (jmp_label1 == -1)
--		jmp_label1 = cnt;
--	/* cmp ecx,64 */
--	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 64);
--	/* Jumps when >= 64 */
--	if (is_imm8(jmp_label(jmp_label2, 2)))
--		EMIT2(IA32_JAE, jmp_label(jmp_label2, 2));
--	else
--		EMIT2_off32(0x0F, IA32_JAE + 0x10, jmp_label(jmp_label2, 6));
-+	/* cmp ecx,32 */
-+	EMIT3(0x83, add_1reg(0xF8, IA32_ECX), 32);
-+	/* skip the next two instructions (4 bytes) when < 32 */
-+	EMIT2(IA32_JB, 4);
- 
--	/* >= 32 && < 64 */
--	/* sub ecx,32 */
--	EMIT3(0x83, add_1reg(0xE8, IA32_ECX), 32);
--	/* shr dreg_hi,cl */
--	EMIT2(0xD3, add_1reg(0xE8, dreg_hi));
- 	/* mov dreg_lo,dreg_hi */
- 	EMIT2(0x89, add_2reg(0xC0, dreg_lo, dreg_hi));
- 	/* xor dreg_hi,dreg_hi */
- 	EMIT2(0x33, add_2reg(0xC0, dreg_hi, dreg_hi));
- 
--	/* goto out; */
--	if (is_imm8(jmp_label(jmp_label3, 2)))
--		EMIT2(0xEB, jmp_label(jmp_label3, 2));
--	else
--		EMIT1_off32(0xE9, jmp_label(jmp_label3, 5));
--
--	/* >= 64 */
--	if (jmp_label2 == -1)
--		jmp_label2 = cnt;
--	/* xor dreg_lo,dreg_lo */
--	EMIT2(0x33, add_2reg(0xC0, dreg_lo, dreg_lo));
--	/* xor dreg_hi,dreg_hi */
--	EMIT2(0x33, add_2reg(0xC0, dreg_hi, dreg_hi));
--
--	if (jmp_label3 == -1)
--		jmp_label3 = cnt;
--
- 	if (dstk) {
- 		/* mov dword ptr [ebp+off],dreg_lo */
- 		EMIT3(0x89, add_2reg(0x40, IA32_EBP, dreg_lo),
+ 	return ret;
+-- 
+2.20.1
+
 
 
