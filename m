@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FA7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD82C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8167520674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9803A2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404238;
-	bh=lYgW7XNs/bbUDwrVycp3txPbcFxD4o6rSDmCKbDXXEo=;
+	s=default; t=1574404242;
+	bh=PdKlgkUbmjtGXd4lr35779+IJqQhfvMEQr7fvNa42pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWhuSTk5WMqtCAlW2e8PVSpxMsDC7e9lllgLKzvU2favydE98Wm+aQGL3AS1seYvr
-	 7uKliu3VhXw+Zv7TkCegVv02Od0CftcwCdGJ0ujU7Qcsc5pWHL+foX2ILujZQAGtuS
-	 iIwCAX1vQp9iUeggXqdZgrTZihrHj7idJIyRHNV8=
+	b=sSNwoS04bhK8UmpEA/KcfHBpovGOra2fSEbhDlgL8YTk01J3lJCMqKM0xCXF/mZIX
+	 CwuLO5Um2o8aDERLPmZTMzHW6XikrvNeyAJLJdseJX8PLG/TTN0OZhiaynB+8Io9/z
+	 P/PAC7zYnv+Gm9kaToAgO7cut4kteHsvordc4wWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfKVGah (ORCPT
+        id S1727046AbfKVFta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:30:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:49:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbfKVFtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:33 -0500
+        id S1726895AbfKVFtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6FCB2070B;
-        Fri, 22 Nov 2019 05:49:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E2320708;
+        Fri, 22 Nov 2019 05:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401772;
-        bh=lYgW7XNs/bbUDwrVycp3txPbcFxD4o6rSDmCKbDXXEo=;
+        s=default; t=1574401762;
+        bh=PdKlgkUbmjtGXd4lr35779+IJqQhfvMEQr7fvNa42pU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3DkW109RdRE3mnfzsp90aCyCy+NCy1jp7FJGPzS8w8UGPa7WIE1bEK8MlmsaoNjO
-         +T7PG5x3eaOqiTTB350dK8lbLJIO63AnuA7mvyX6bDyJ2/uZpu1h45xYPNBPJf+WMt
-         ENObN3BXm6xFSZ0erpRkUrRYLefuKnpUBuxf+2PE=
+        b=iGwU6KzEBtIfh4UPPgMShh7qa4TgU1xvdBs0iCpBfyqxauU/CEx1lajFlxlolVEW4
+         q6HBN004Quy7nOf+jakLFGczyurchpZo4ieOeG8Iznsl8DDi0xQF9HU1Ygo8hmdZR3
+         ZbPX/z4JgvzqOkhvvPzyWu8ueq6urD/Ye04JY114=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
-        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 022/219] parisc: Fix serio address output
-Date:   Fri, 22 Nov 2019 00:45:54 -0500
-Message-Id: <20191122054911.1750-15-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 014/219] ARM: dts: imx6sx: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:45:46 -0500
+Message-Id: <20191122054911.1750-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -58,38 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
+[ Upstream commit 216f35fedd8688c8b654ebfbad18c6e64713fad7 ]
 
-We want the hpa addresses printed in the serio modules, not some
-virtual ioremap()ed address, e.g.:
+Boards based on imx6sx have duplicate memory nodes:
 
- serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
- serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
+- One coming from the board dts file: memory@
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+- One coming from the imx6sx.dtsi file.
+
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/gscps2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6sx-nitrogen6sx.dts         | 1 +
+ arch/arm/boot/dts/imx6sx-sabreauto.dts           | 1 +
+ arch/arm/boot/dts/imx6sx-sdb.dtsi                | 1 +
+ arch/arm/boot/dts/imx6sx-softing-vining-2000.dts | 1 +
+ arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts      | 1 +
+ arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts   | 1 +
+ arch/arm/boot/dts/imx6sx-udoo-neo-full.dts       | 1 +
+ arch/arm/boot/dts/imx6sx.dtsi                    | 2 --
+ 8 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index 49d8d53e50b7b..96f9b5397367f 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -381,9 +381,9 @@ static int __init gscps2_probe(struct parisc_device *dev)
- 		goto fail;
- #endif
+diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+index adb5cc7d8ce2f..832b5c5d7441a 100644
+--- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
++++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+@@ -12,6 +12,7 @@
+ 	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
  
--	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
-+	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
- 		ps2port->port->name,
--		ps2port->addr,
-+		hpa,
- 		ps2port->padev->irq,
- 		ps2port->port->phys);
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>;
+ 	};
  
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+index 841a27f3198ff..48aede543612b 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -11,6 +11,7 @@
+ 	compatible = "fsl,imx6sx-sabreauto", "fsl,imx6sx";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x80000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index f8f31872fa144..7f5ede5ca4c30 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -21,6 +21,7 @@
+ 	};
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
+index 252175b592475..2bc51623a8060 100644
+--- a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
++++ b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
+@@ -21,6 +21,7 @@
+ 	};
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
+index 40ccdf43dffc5..db0feb9b9f5d7 100644
+--- a/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
++++ b/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
+@@ -49,6 +49,7 @@
+ 	compatible = "udoo,neobasic", "fsl,imx6sx";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
+index 42bfc8f8f7f6b..5c7a2bb9141cb 100644
+--- a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
++++ b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
+@@ -49,6 +49,7 @@
+ 	compatible = "udoo,neoextended", "fsl,imx6sx";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
+index c84c877f09d49..13dfe2afaba56 100644
+--- a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
++++ b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
+@@ -49,6 +49,7 @@
+ 	compatible = "udoo,neofull", "fsl,imx6sx";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 7b62e6fb47ebe..ae0728df542e9 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -15,10 +15,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		can0 = &flexcan1;
 -- 
 2.20.1
 
