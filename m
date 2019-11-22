@@ -2,195 +2,169 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B2DC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE5220706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD512071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AcdvKXHg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDOjm0yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKVVD3 (ORCPT
+        id S1726921AbfKVVFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:03:29 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34264 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKVVD3 (ORCPT
+        Fri, 22 Nov 2019 16:05:05 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32812 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfKVVFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:03:29 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i17so9420920qtq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 13:03:27 -0800 (PST)
+        Fri, 22 Nov 2019 16:05:04 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w9so10298758wrr.0;
+        Fri, 22 Nov 2019 13:05:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JklxB5p9HEc9L1MiCrh3Zy+CQC2KvglM1Tp/GhFHwhc=;
-        b=AcdvKXHg380Tjx2Fu2fN3Y2zrL1iyiYtInzi/r5a6kbUe+zX8D6nD462rgd0lJI4dJ
-         2HizHflABj6D3tvPnFUkoZ2DyCJ0D9R4S9BD87oWJUexET+RwRRuW34QP2wR2BNEfEXh
-         OF/d0Pt4TQQ908y0k02txbFqEszsjNYad7YDc1tURrdF+gorRRdthLg+b43lKtKJIhLZ
-         8VFbYx+XhzcPJeVYQnkye1af9g4w5B5YJDiSzaPaANP+4zi8o1dQuR8VFHZAJ22k/w2M
-         KibCwRU9x97EjhhRr3FVpO98LTF3o+pAEGc2nUC2HuqvkJ4r8as5zd6u3clgBDVs5Wfl
-         vGCQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QlSohMN+E+5oCBXKKFhS8HErVjiZgtw7VYrFplFk394=;
+        b=QDOjm0yBcJrfk1uCdDxmA+VsdjSLZf8wPf6ESO1AitC6WWPVn5+Y4z5+78XqoIQs8S
+         BASwUkLOf6KfmqxYVsw6tX8VdV2OZnqd1rTS9mD6laSi0KGgg8tAe0nxc716x/GUm4LU
+         d8bM4cHcF38c56Th6k87SdaBM67Lp3t2nqGzxb538a2kLZ5VgnVTvhcKPakEu8MQrsRb
+         m0Kf2YTaHV0mLVeZ3PwP8i29N/8K7lHGKIm6s2Vg644hyTpoSrFmSJjmqLhMktxobtZs
+         gTp9TBPrLO/8tgXU+EOF3jn5McUpcYivvjjooY9GpdFwPVNKfmjjFwEnjcwqn1WLE7z4
+         7MAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JklxB5p9HEc9L1MiCrh3Zy+CQC2KvglM1Tp/GhFHwhc=;
-        b=J8r/2kUWALG7Q8ZWCULvFdLnlObSaj1QjvpZhzdnvrZ+RQlPpnbIW9EVVzKnmcKKLw
-         kgGuJ5ttpe4GsNFLqYZG5ugVYHpPlBHuf5ugo8V5ATchkphGcO0fZSG+iUJlEIaGHMG0
-         nEUS/tdaFZG3j0zRoIum2C82G0RCvlSfehqjoOfuwR8FUWHjNP2kg8YfMZYZkQRXasTC
-         xOm+YUEs9FQBWwvn3SRchjYSHIeAjhrz5452yKicFLy9uOlX8885VTBZ7PjsqX/5c1N3
-         w6tsY2R90/UGoszC3+BkvApPadEZiYB16s24v9b6GAgzY5/G9irTD4EATJaYHk9ZrZ1h
-         ANJQ==
-X-Gm-Message-State: APjAAAUvj+fG5yWH8UdryZ6jUwOBjTQpwQf747zSe3itnv7Pc0MwpgRQ
-        NU6B1IA45u9hesNwoAGbHuDE8w==
-X-Google-Smtp-Source: APXvYqzC+V1gBOQ3MLncjF4qDQTnXiTkWeKPquIRggtfIwvLrEKNbxkexfHDiW8c9tvDdAbvPBCNwA==
-X-Received: by 2002:aed:204d:: with SMTP id 71mr7550631qta.116.1574456606488;
-        Fri, 22 Nov 2019 13:03:26 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id c6sm3428151qka.111.2019.11.22.13.03.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 13:03:25 -0800 (PST)
-Message-ID: <1574456603.9585.28.camel@lca.pw>
-Subject: Re: [tip: sched/urgent] sched/core: Avoid spurious lock dependencies
-From:   Qian Cai <cai@lca.pw>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        akpm@linux-foundation.org, cl@linux.com, keescook@chromium.org,
-        penberg@kernel.org, rientjes@google.com, thgarnie@google.com,
-        tytso@mit.edu, will@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Date:   Fri, 22 Nov 2019 16:03:23 -0500
-In-Reply-To: <20191122202059.GA2844@hirez.programming.kicks-ass.net>
-References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-         <157363958888.29376.9190587096871610849.tip-bot2@tip-bot2>
-         <20191122200122.wx7ltij2w7w37cbe@linutronix.de>
-         <20191122202059.GA2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QlSohMN+E+5oCBXKKFhS8HErVjiZgtw7VYrFplFk394=;
+        b=ppmLcpI30q250srpgPrHhvpFXQBYHtGPRpYeT8UTJ1+TyU78dNbNUJlvX8EMOyu8Dp
+         w1h2OlzJvwY3QwhgnP0l7iae5KRGXXhNqgudFby/Bi2YkEqAxZ8Tw2Z39I8dRw0qGxuk
+         Qv17+i14hRXo9g23+LCRqiIcyfeq0ImoOFsQcltPuMQevhIQpQIBGciTswdsOn+HqmID
+         Mlz7X7pVlFgKLqH/FzFaUm+/n21U1IjcbcGJq7GAQkJNRJ0DiWjelKV4sJKEH4XMabIh
+         EZnwGw7AwCn4luXunojl4wL/mdPx9rNszOTtkBgu7bci+v7m4RV6Q5VbBWEk+I6j7+3L
+         g7Cw==
+X-Gm-Message-State: APjAAAXJ4om27R/wcaILQUXTS0BK1Ue3Z3iZ27dBkTPEB2iE6gl2MDsE
+        Y7Ndt0uSFvhqBZKU0oR5vMRw5jwp
+X-Google-Smtp-Source: APXvYqxbU3ujKQU+EkTR/lvE6e8vj2u4KNkjhE6k8YnRDAKaQ98nAovjWaYjNDTig1y8Cok3pkXNzg==
+X-Received: by 2002:a5d:6542:: with SMTP id z2mr20278002wrv.371.1574456700952;
+        Fri, 22 Nov 2019 13:05:00 -0800 (PST)
+Received: from [192.168.1.19] (bfw48.neoplus.adsl.tpnet.pl. [83.28.60.48])
+        by smtp.gmail.com with ESMTPSA id q25sm9318832wra.3.2019.11.22.13.04.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Nov 2019 13:05:00 -0800 (PST)
+Subject: Re: [PATCH v4 0/2] tps6105x add devicetree and leds support
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+References: <20191121142726.22856-1-TheSven73@gmail.com>
+ <4b64bc1d-681d-8916-7247-a9536afc00c6@gmail.com>
+ <CAGngYiXtHC7Ez2c1wXSx13jTcaq+vW69FpNokZYvk7vqt6FmpA@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <957d06d2-90d6-6a19-87ab-9cce7d03543d@gmail.com>
+Date:   Fri, 22 Nov 2019 22:04:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <CAGngYiXtHC7Ez2c1wXSx13jTcaq+vW69FpNokZYvk7vqt6FmpA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-22 at 21:20 +0100, Peter Zijlstra wrote:
-> On Fri, Nov 22, 2019 at 09:01:22PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2019-11-13 10:06:28 [-0000], tip-bot2 for Peter Zijlstra wrote:
-> > > sched/core: Avoid spurious lock dependencies
-> > > 
-> > > While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-> > > when DEBUG_OBJETS, can end up doing allocations.
-> > > 
-> > > This then results in the following lock order:
-> > > 
-> > >   rq->lock
-> > >     zone->lock.rlock
-> > >       batched_entropy_u64.lock
-> > > 
-> > > Which in turn causes deadlocks when we do wakeups while holding that
-> > > batched_entropy lock -- as the random code does.
-> > 
-> > Peter, can it _really_ cause deadlocks? My understanding was that the
-> > batched_entropy_u64.lock is a per-CPU lock and can _not_ cause a
-> > deadlock because it can be always acquired on multiple CPUs
-> > simultaneously (and it is never acquired cross-CPU).
-> > Lockdep is simply not smart enough to see that and complains about it
-> > like it would complain about a regular lock in this case.
+On 11/22/19 2:36 PM, Sven Van Asbroeck wrote:
+> On Thu, Nov 21, 2019 at 1:20 PM Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
+>>
+>> For both patches:
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 > 
-> That part yes. That is, even holding a per-cpu lock you can do a wakeup
-> to the local cpu and recurse back onto rq->lock.
-> 
-> However I don't think it can actually happen bceause this
-> is init_idle, and we only ever do that on hotplug, so actually creating
-> the concurrency required for the deadlock might be tricky.
-> 
-> Still, moving that thing out from under the lock was simple and correct.
+> Thank you Jacek. To get accepted in a maintainer tree, does this
+> patch need more acks/reviews?
 
-Well, the patch alone fixed a real deadlock during boot.
+It should get ack from Pavel Machek since he now maintains LED tree.
 
-https://lore.kernel.org/lkml/1566509603.5576.10.camel@lca.pw/
+I'd say that it should be merged in one batch with the related change
+to the MFD driver, but this is to be agreed upon by Pavel and Lee, via
+which tree it will go.
 
-It needs DEBUG_OBJECTS=y to trigger though.
+> Should I continue to include it in new patch set versions if it doesn't
+> change?
 
-Suppose it does,
+You can include it, and add my ack.
 
-CPU0: zone_lock -> prink() [1]
-CPUs: printk() -> zone_lock [2]
+However, you could remove also below lines, since you switched
+to using color DT property and a new LED registration API:
 
-[1]
-[ 1078.599835][T43784] -> #1 (console_owner){-...}:
-[ 1078.606618][T43784]        __lock_acquire+0x5c8/0xbb0
-[ 1078.611661][T43784]        lock_acquire+0x154/0x428
-[ 1078.616530][T43784]        console_unlock+0x298/0x898
-[ 1078.621573][T43784]        vprintk_emit+0x2d4/0x460
-[ 1078.626442][T43784]        vprintk_default+0x48/0x58
-[ 1078.631398][T43784]        vprintk_func+0x194/0x250
-[ 1078.636267][T43784]        printk+0xbc/0xec
-[ 1078.640443][T43784]        _warn_unseeded_randomness+0xb4/0xd0
-[ 1078.646267][T43784]        get_random_u64+0x4c/0x100
-[ 1078.651224][T43784]        add_to_free_area_random+0x168/0x1a0
-[ 1078.657047][T43784]        free_one_page+0x3dc/0xd08
+-	init_data.devicename = "tps6105x";
+-	init_data.default_label = ":torch";
 
-
-[2]
-[  317.337609] -> #3 (&(&zone->lock)->rlock){-.-.}:
-[  317.337612]        __lock_acquire+0x5b3/0xb40
-[  317.337613]        lock_acquire+0x126/0x280
-[  317.337613]        _raw_spin_lock+0x2f/0x40
-[  317.337614]        rmqueue_bulk.constprop.21+0xb6/0x1160
-[  317.337615]        get_page_from_freelist+0x898/0x22c0
-[  317.337616]        __alloc_pages_nodemask+0x2f3/0x1cd0
-[  317.337617]        alloc_page_interleave+0x18/0x130
-[  317.337618]        alloc_pages_current+0xf6/0x110
-[  317.337619]        allocate_slab+0x4c6/0x19c0
-[  317.337620]        new_slab+0x46/0x70
-[  317.337621]        ___slab_alloc+0x58b/0x960
-[  317.337621]        __slab_alloc+0x43/0x70
-[  317.337622]        kmem_cache_alloc+0x354/0x460
-[  317.337623]        fill_pool+0x272/0x4b0
-[  317.337624]        __debug_object_init+0x86/0x790
-[  317.337624]        debug_object_init+0x16/0x20
-[  317.337625]        hrtimer_init+0x27/0x1e0
-[  317.337626]        init_dl_task_timer+0x20/0x40
-[  317.337627]        __sched_fork+0x10b/0x1f0
-[  317.337627]        init_idle+0xac/0x520
-[  317.337628]        idle_thread_get+0x7c/0xc0
-[  317.337629]        bringup_cpu+0x1a/0x1e0
-[  317.337630]        cpuhp_invoke_callback+0x197/0x1120
-[  317.337630]        _cpu_up+0x171/0x280
-[  317.337631]        do_cpu_up+0xb1/0x120
-[  317.337632]        cpu_up+0x13/0x20
-
-[  317.337635] -> #2 (&rq->lock){-.-.}:
-[  317.337638]        __lock_acquire+0x5b3/0xb40
-[  317.337639]        lock_acquire+0x126/0x280
-[  317.337639]        _raw_spin_lock+0x2f/0x40
-[  317.337640]        task_fork_fair+0x43/0x200
-[  317.337641]        sched_fork+0x29b/0x420
-[  317.337642]        copy_process+0xf3c/0x2fd0
-[  317.337642]        _do_fork+0xef/0x950
-[  317.337643]        kernel_thread+0xa8/0xe0
-
-[  317.337649] -> #1 (&p->pi_lock){-.-.}:
-[  317.337651]        __lock_acquire+0x5b3/0xb40
-[  317.337652]        lock_acquire+0x126/0x280
-[  317.337653]        _raw_spin_lock_irqsave+0x3a/0x50
-[  317.337653]        try_to_wake_up+0xb4/0x1030
-[  317.337654]        wake_up_process+0x15/0x20
-[  317.337655]        __up+0xaa/0xc0
-[  317.337655]        up+0x55/0x60
-[  317.337656]        __up_console_sem+0x37/0x60
-[  317.337657]        console_unlock+0x3a0/0x750
-[  317.337658]        vprintk_emit+0x10d/0x340
-[  317.337658]        vprintk_default+0x1f/0x30
-[  317.337659]        vprintk_func+0x44/0xd4
-[  317.337660]        printk+0x9f/0xc5
+-- 
+Best regards,
+Jacek Anaszewski
