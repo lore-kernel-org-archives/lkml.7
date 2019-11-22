@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA09C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35751C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93BA920706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EAC2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420120;
-	bh=E4c7E0E0gF6jfSVz2Pxox2hy9Q5loNqXt/ABscsuXqo=;
+	s=default; t=1574420124;
+	bh=1/VSmpTTU9BsP9TQjL/wDX5Ico+dlFB6FyvPaSDKljY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDEfw4NGJZijJs1Wk6QtDfv83dqeR0cC58UuDWE/xJqE07DSKAKkgbit8Mn8PnzVq
-	 Rywuv/mRm6qOiifIHbX+QlUxUXIZUrBIHmG8eANbVfwWEXmqc8w+cK65bteEPgMjs0
-	 2csgQcjQNLjBa0k8KlQDxRhCiQ7u0Yyd7wfOleo4=
+	b=ZhgcNOE5sHF5D4ZMDYCHNGYSIKfVuidNfL1znVKrjp03cU+thFaquAtvyrJKYhAbG
+	 NFQwLQxPBXBHWHOiJYujRVFLMeRN6PNckwb/YrAddoF+KmxbafrguPAmGj2Ftsjxcp
+	 4EpYhNYC960yaX3uyahS/kFgD0qH7qrCCsOKKbSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfKVKzT (ORCPT
+        id S1730458AbfKVKzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41824 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730439AbfKVKzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:15 -0500
+        id S1730447AbfKVKzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E114020706;
-        Fri, 22 Nov 2019 10:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B5D22071C;
+        Fri, 22 Nov 2019 10:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420115;
-        bh=E4c7E0E0gF6jfSVz2Pxox2hy9Q5loNqXt/ABscsuXqo=;
+        s=default; t=1574420118;
+        bh=1/VSmpTTU9BsP9TQjL/wDX5Ico+dlFB6FyvPaSDKljY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OWtVenTnxN3Vw6UN2Un07beD1ZckxjXWCwdmc6xPDdfV2BIXbE8121f3bYQZDDuEv
-         SBiORRQPmyauANLqvqgU0C8U3kuR+nm3CZpg9EFnJmD2lRzoIb5NJzXdXhgL/CYyeE
-         Lllwr7BZTXMH/JJHrCAWIpH3S6v9De6FCJDmpNX4=
+        b=05Iga1h9mF3gjozIXVTMge8lcznBTznHbf0RiZZC12BGyLenRTJ2ZJNlwxMFooFNy
+         O/XnLeGWeIT3ZMgEwjDiu8k9fKg3InLSzNSJs6QKj2idAdOcsZksRF6JsJaxXZgnt5
+         N9Nl62J0kMnLZtqLpxdkxMhUCv6AgGvbvBH3FZOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Alan Mikhak <alan.mikhak@sifive.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/122] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
-Date:   Fri, 22 Nov 2019 11:29:32 +0100
-Message-Id: <20191122100837.456100988@linuxfoundation.org>
+Subject: [PATCH 4.14 120/122] tools: PCI: Fix broken pcitest compilation
+Date:   Fri, 22 Nov 2019 11:29:33 +0100
+Message-Id: <20191122100837.625992481@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,37 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
+[ Upstream commit 8a5e0af240e07dd3d4897eb8ff52aab757da7fab ]
 
-OMAP5's Super-Speed USB port has a software mailbox register
-that needs to be fed with VBUS and ID events from an external
-VBUS/ID comparator.
+pcitest is currently broken due to the following compiler error
+and related warning. Fix by changing the run_test() function
+signature to return an integer result.
 
-Without this, Host role will not work correctly.
+pcitest.c: In function run_test:
+pcitest.c:143:9: warning: return with a value, in function
+returning void
+  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
 
-Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+pcitest.c: In function main:
+pcitest.c:232:9: error: void value not ignored as it ought to be
+  return run_test(test);
+
+Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ tools/pci/pcitest.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index f65343f8e1d69..c58f14de01451 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -695,6 +695,7 @@
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 8ca1c62bc06db..7002df55826f4 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -42,15 +42,15 @@ struct pci_test {
+ 	unsigned long	size;
  };
  
- &dwc3 {
-+	extcon = <&extcon_usb3>;
- 	dr_mode = "otg";
- };
+-static void run_test(struct pci_test *test)
++static int run_test(struct pci_test *test)
+ {
+-	long ret;
++	int ret = -EINVAL;
+ 	int fd;
  
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
+-		return;
++		return -ENODEV;
+ 	}
+ 
+ 	if (test->barnum >= 0 && test->barnum <= 5) {
 -- 
 2.20.1
 
