@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38808C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7267AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011312071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEC420726
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452262;
-	bh=1hRyEXSMYVpQ/2jXc23KVPuovQHkAUSs3LuBAgLqh8w=;
+	s=default; t=1574452265;
+	bh=2a4Arq1cQT5fjUZDzAr7jV7YvQfvKlgMRyQqYIyYUY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hEwS26l3mPknbBx6x7mq9w3vEBt147QGEjv8cNmd3mqkSwg7GrfuAQ6Lmza/qhH7z
-	 o2Dh8OB/5pnPQkFayL0rF1Uyrihn6diQyFYoty+dU/zq/oHIDpgTo1EtUahfXKYkF/
-	 m/f3EHtdGHoqr85O3B41X955tmmFLz/PESMglY9g=
+	b=NslCyRgHG+jH/UPPFgHigY+balO8kPftdqxXw7NAm0+3r1C2e7DWruddQGbyxu5PD
+	 AX3fb8/6978dWbcvP3/NyBjli74RTPD+p900ADrSbyyTxXRkB9+FBG3dQMfdYnS9Mr
+	 oPvTWaooqQllX5/1BRbsoBtou0X7EtJo4TLyneO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfKVTvB (ORCPT
+        id S1726747AbfKVTuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:51:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:50:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbfKVTuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:50:20 -0500
+        id S1727768AbfKVTuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:50:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C1F20731;
-        Fri, 22 Nov 2019 19:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7720520731;
+        Fri, 22 Nov 2019 19:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452219;
-        bh=1hRyEXSMYVpQ/2jXc23KVPuovQHkAUSs3LuBAgLqh8w=;
+        s=default; t=1574452211;
+        bh=2a4Arq1cQT5fjUZDzAr7jV7YvQfvKlgMRyQqYIyYUY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hLWju5LT3OBDMMGBZKi+Q3Zck0Rg12LGTqd6RBy4bE+dE4VyULSGDjf14fE9PE0SW
-         t8L5ihlCwEZV8cfjrDXaqqHLDYUUTNQfwinDWaHZp3RCSQWF08EOAUgaXpB2ILcx74
-         zlaaEacUEgqOzIayZh7L9I9I2p7FyA2t/9N6rAhk=
+        b=PgzV3nHDHMTBLrjzWiCrwBjfa2PbAPBO+asMYclAyOE/i4Fp1/phxXQR+ig4pkuV2
+         AEunMBmkAVX+FyB02oKHHJu6oLkOKCTK9Iqj7BQOVe+Owz6LbFWRVMfybYTG26dBrU
+         m+JRfGyRAjNnMorlQuWCVTDM3cQ3EvN0KMuTHt4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     paulhsia <paulhsia@chromium.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 4/9] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
-Date:   Fri, 22 Nov 2019 14:50:09 -0500
-Message-Id: <20191122195014.25065-4-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/13] rsxx: add missed destroy_workqueue calls in remove
+Date:   Fri, 22 Nov 2019 14:49:56 -0500
+Message-Id: <20191122194958.24926-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122195014.25065-1-sashal@kernel.org>
-References: <20191122195014.25065-1-sashal@kernel.org>
+In-Reply-To: <20191122194958.24926-1-sashal@kernel.org>
+References: <20191122194958.24926-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,51 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: paulhsia <paulhsia@chromium.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
+[ Upstream commit dcb77e4b274b8f13ac6482dfb09160cd2fae9a40 ]
 
-If the nullity check for `substream->runtime` is outside of the lock
-region, it is possible to have a null runtime in the critical section
-if snd_pcm_detach_substream is called right before the lock.
+The driver misses calling destroy_workqueue in remove like what is done
+when probe fails.
+Add the missed calls to fix it.
 
-Signed-off-by: paulhsia <paulhsia@chromium.org>
-Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_lib.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/block/rsxx/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index 3ce2b87717623..950730709d28a 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -1877,11 +1877,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime;
- 	unsigned long flags;
+diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
+index 34997df132e24..6beafaa335c71 100644
+--- a/drivers/block/rsxx/core.c
++++ b/drivers/block/rsxx/core.c
+@@ -1025,8 +1025,10 @@ static void rsxx_pci_remove(struct pci_dev *dev)
  
--	if (PCM_RUNTIME_CHECK(substream))
-+	if (snd_BUG_ON(!substream))
- 		return;
--	runtime = substream->runtime;
+ 	cancel_work_sync(&card->event_work);
  
- 	snd_pcm_stream_lock_irqsave(substream, flags);
-+	if (PCM_RUNTIME_CHECK(substream))
-+		goto _unlock;
-+	runtime = substream->runtime;
-+
- 	if (!snd_pcm_running(substream) ||
- 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
- 		goto _end;
-@@ -1892,6 +1895,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- #endif
-  _end:
- 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
-+ _unlock:
- 	snd_pcm_stream_unlock_irqrestore(substream, flags);
- }
++	destroy_workqueue(card->event_wq);
+ 	rsxx_destroy_dev(card);
+ 	rsxx_dma_destroy(card);
++	destroy_workqueue(card->creg_ctrl.creg_wq);
  
+ 	spin_lock_irqsave(&card->irq_lock, flags);
+ 	rsxx_disable_ier_and_isr(card, CR_INTR_ALL);
 -- 
 2.20.1
 
