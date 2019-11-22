@@ -2,175 +2,125 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24033C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC27FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE6320672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4AA20672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="j1h4vOoi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YcLtVyut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfKVQwK (ORCPT
+        id S1727444AbfKVQwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:52:10 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37914 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfKVQwK (ORCPT
+        Fri, 22 Nov 2019 11:52:18 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:46632 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVQwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:52:10 -0500
-Received: by mail-qk1-f194.google.com with SMTP id e2so6862808qkn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:52:09 -0800 (PST)
+        Fri, 22 Nov 2019 11:52:18 -0500
+Received: by mail-pj1-f68.google.com with SMTP id a16so3260665pjs.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=oz+QGCoRKKLNBn1J0LTgNGDFShCE3Rvj+eur+Kujt+U=;
-        b=j1h4vOoi3aE5Ab0Ery0Z98gHQPOt9iBuojfwjn0gKa8Wd9Ugjw0YHSkxwzXfGnrX3m
-         hqVbHeCFsvaQBRRo7Cop0qX/G/adSCJ4m510ZaDa3iWNGUDwV3G41pn6Oy+Ux6KTDF/W
-         cjuAN6ltL6XOOKi9h+OrItXPl8iLIZxAa09fW/goMT0ezFSNzhmMCMRvNtUERSApl7+v
-         MRY/PgA6QCIZMTxHtImyHik+466mhdQ9ArJ7GOQA2ycKjAAf9CLldNhTujKa/Nwt43QV
-         F7oDov2pQ8UAPqxbNCpfdC59O9Q3i+gDg1TqRZYX5aT9uGhgIB6pFD0IKS3qERjoguZY
-         BnNA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bIBZ/pDagkMXdQDKDvezMxRb4iRHYel+ahYnkHe//Mw=;
+        b=YcLtVyutJTxK26Jq0OiYsnmEyoQyQFjeO7obWVSHlkjXGA69msCHJ1tBa8EQQRL9BJ
+         jtOccOm7EWgUTRF7S9XJcsjIq0zkEfG/N3/29fz0xT/jA7K7rz5FtX7XAPEZ1CgnL2no
+         9joKepTABeANY85Wb7q9PUBRCq6t16ZMupPEw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=oz+QGCoRKKLNBn1J0LTgNGDFShCE3Rvj+eur+Kujt+U=;
-        b=UH3XdrUz7+fdhQq9x1Qi0Fcayp9/G1lIlZ1R1IxP4mZeV9/cCOsGSHwHKnmQU2op7M
-         INWahG+tDZ7bJ/Ov/KH27nNdV1Qe/FpPtZxUCvY39RbYgrNutycVKL9BnGs3m9IBPzOH
-         0EmyGHC4II4BoWAdfokuWUL8N31rvbCjoTu1k4vCA2/TDbnodSidAwJAOh0YHqAMqtkT
-         iaSYEHXQzAYEjM+59qGGe453SUTLLPpYDjUb+egvJzHPl0Nzg/PLjGDbcMx6tp1ronjV
-         KFr9X/IjMUtLWvbW2rvuKU9i4keOdoDqUeVVXyvOsUpWjsI/ZJp05I1SjCLnFXzJfoAx
-         PT8Q==
-X-Gm-Message-State: APjAAAVse2fRC71hXJBM6S/wrmZj8vR6bpASmlqVSdCBw+5evwSMGeUy
-        I/MHS+Gkp7tjPkbztomhb4cgmA==
-X-Google-Smtp-Source: APXvYqyzJ4ny5GR6UKdaVlpzoR0g7N+dRHxbOkUrqU6nQADHUPfI7L2wPyZZYxTVsWSVFOL65OmLqA==
-X-Received: by 2002:a37:4bc2:: with SMTP id y185mr14562500qka.474.1574441528764;
-        Fri, 22 Nov 2019 08:52:08 -0800 (PST)
-Received: from tpx230-nicolas ([2610:98:8005::d0])
-        by smtp.gmail.com with ESMTPSA id h44sm3942382qtc.1.2019.11.22.08.52.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bIBZ/pDagkMXdQDKDvezMxRb4iRHYel+ahYnkHe//Mw=;
+        b=H4Rw3xucKTn1t8o4vh3/DE52aQVyQ6LkPjGJUFwSg1Evz1QeFuUMVdEOkjXQwooT4a
+         X86xyGal9XCLHhVqdtudafYu50IeofTwR3cLEJd3TuT043vPAQ18mB9Zyrh5Sr797cIy
+         bsgCwuAQc+myhJCxxiXv+a0NnY3ucM/esmfkOMO9lVzafSQFmQUI/rkVbX4xNd0Tty0a
+         oUdWmoq3YwpYMdleKvj5M7Cz7OFRwTetMX41yAljkzFrg/Z9dtK27unrHLsVbDEGjRkW
+         6TIdku0Qk83lmnqJI0fvy4bGJxR3uekqa/WZ7dqju+DQni3MXR+86Cqbt26UEgngSAZ6
+         pUww==
+X-Gm-Message-State: APjAAAUqDt0rN/251OS1OjY6pU+cgZMsdsvVjulqYxZZMtiSf2VsyCg5
+        N9hujsAPS5yHJNaRamuD9CFUDw==
+X-Google-Smtp-Source: APXvYqzZwZG+BeFAjZyROOnizhpZkQHwGQ/kubJmglsdvzHe+7MOqzo4fPiO5n3oqh16frUICgp+OA==
+X-Received: by 2002:a17:90a:de4:: with SMTP id 91mr20505683pjv.113.1574441537644;
+        Fri, 22 Nov 2019 08:52:17 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u65sm8020297pfb.35.2019.11.22.08.52.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 08:52:07 -0800 (PST)
-Message-ID: <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: hantro: Support H264 profile control
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Hirokazu Honda <hiroh@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 22 Nov 2019 11:52:05 -0500
-In-Reply-To: <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
-References: <20191122051608.128717-1-hiroh@chromium.org>
-         <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
-         <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-EkBdMYKPQvs+VUkT8iK1"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Fri, 22 Nov 2019 08:52:16 -0800 (PST)
+Date:   Fri, 22 Nov 2019 08:52:15 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 0/3] ubsan: Split out bounds checker
+Message-ID: <201911220845.622FDC4@keescook>
+References: <20191121181519.28637-1-keescook@chromium.org>
+ <CACT4Y+b3JZM=TSvUPZRMiJEPNH69otidRCqq9gmKX53UHxYqLg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+b3JZM=TSvUPZRMiJEPNH69otidRCqq9gmKX53UHxYqLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 22, 2019 at 10:07:29AM +0100, Dmitry Vyukov wrote:
+> On Thu, Nov 21, 2019 at 7:15 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > v2:
+> >     - clarify Kconfig help text (aryabinin)
+> >     - add reviewed-by
+> >     - aim series at akpm, which seems to be where ubsan goes through?
+> > v1: https://lore.kernel.org/lkml/20191120010636.27368-1-keescook@chromium.org
+> >
+> > This splits out the bounds checker so it can be individually used. This
+> > is expected to be enabled in Android and hopefully for syzbot. Includes
+> > LKDTM tests for behavioral corner-cases (beyond just the bounds checker).
+> >
+> > -Kees
+> 
+> +syzkaller mailing list
+> 
+> This is great!
+> 
+> I wanted to enable UBSAN on syzbot for a long time. And it's
+> _probably_ not lots of work. But it was stuck on somebody actually
+> dedicating some time specifically for it.
+> Kees, or anybody else interested, could you provide relevant configs
+> that (1) useful for kernel, (2) we want 100% cleanliness, (3) don't
+> fire all the time even without fuzzing? Anything else required to
+> enable UBSAN? I don't see anything. syzbot uses gcc 8.something, which
+> I assume should be enough (but we can upgrade if necessary).
 
---=-EkBdMYKPQvs+VUkT8iK1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Nothing external should be needed; GCC and Clang support the ubsan
+options. Once this series lands, it should be possible to just enable
+this with:
 
-Le samedi 23 novembre 2019 =C3=A0 01:00 +0900, Tomasz Figa a =C3=A9crit :
-> On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca> =
-wrote:
-> > Le vendredi 22 novembre 2019 =C3=A0 14:16 +0900, Hirokazu Honda a =C3=
-=A9crit :
-> > > The Hantro G1 decoder supports H.264 profiles from Baseline to High, =
-with
-> > > the exception of the Extended profile.
-> > >=20
-> > > Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
-> > > applications can query the driver for the list of supported profiles.
-> >=20
-> > Thanks for this patch. Do you think we could also add the LEVEL control
-> > so the profile/level enumeration becomes complete ?
-> >=20
-> > I'm thinking it would be nice if the v4l2 compliance test make sure
-> > that codecs do implement these controls (both stateful and stateless),
-> > it's essential for stack with software fallback, or multiple capable
-> > codec hardware but with different capabilities.
-> >=20
->=20
-> Level is a difficult story, because it also specifies the number of
-> macroblocks per second, but for decoders like this the number of
-> macroblocks per second it can handle depends on things the driver
-> might be not aware of - clock frequencies, DDR throughput, system
-> load, etc.
->=20
-> My take on this is that the decoder driver should advertise the
-> highest resolution the decoder can handle due to hardware constraints.
-> Performance related things depend on the integration details and
-> should be managed elsewhere. For example Android and Chrome OS manage
-> expected decoding performance in per-board configuration files.
+CONFIG_UBSAN=y
+CONFIG_UBSAN_BOUNDS=y
+# CONFIG_UBSAN_MISC is not set
 
-When you read datasheet, the HW is always rated to maximum level (and
-it's a range) with the assumption of a single stream. It seems much
-easier to expose this as-is, statically then to start doing some math
-with data that isn't fully exposed to the user. This is about filtering
-of multiple CODEC instances, it does not need to be rocket science,
-specially that the amount of missing data is important (e.g. usage of
-tiles, compression, IPP all have an impact on the final performance).
-All we want to know in userspace is if this HW is even possibly capable
-of LEVEL X, and if not, we'll look for another one.
+Based on initial testing, the bounds checker isn't very noisy, but I
+haven't spun up a syzbot instance to really confirm this yet (that was
+on the TODO list for today to let it run over the weekend).
 
->=20
-> > > Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
-> > > ---
-> > >  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >=20
-> > > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/stag=
-ing/media/hantro/hantro_drv.c
-> > > index 6d9d41170832..9387619235d8 100644
-> > > --- a/drivers/staging/media/hantro/hantro_drv.c
-> > > +++ b/drivers/staging/media/hantro/hantro_drv.c
-> > > @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] =3D {
-> > >                       .def =3D V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_=
-B,
-> > >                       .max =3D V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_=
-B,
-> > >               },
-> > > +     }, {
-> > > +             .codec =3D HANTRO_H264_DECODER,
-> > > +             .cfg =3D {
-> > > +                     .id =3D V4L2_CID_MPEG_VIDEO_H264_PROFILE,
-> > > +                     .min =3D V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
-> > > +                     .max =3D V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-> > > +                     .menu_skip_mask =3D
-> > > +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-> > > +                     .def =3D V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
-> > > +             }
-> > >       }, {
-> > >       },
-> > >  };
-
---=-EkBdMYKPQvs+VUkT8iK1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXdgSNQAKCRBxUwItrAao
-HGwvAKCHsop1nLCCcwqY6OC/VhAQ+SZlSQCfZOTuCZtzisd//KjRmwOYxdsfx00=
-=pnDn
------END PGP SIGNATURE-----
-
---=-EkBdMYKPQvs+VUkT8iK1--
-
+-- 
+Kees Cook
