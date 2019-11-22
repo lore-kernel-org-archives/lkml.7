@@ -2,132 +2,89 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194D0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA6FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EEE20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0470E2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfKVRek convert rfc822-to-8bit (ORCPT
+        id S1726792AbfKVRgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:34:40 -0500
-Received: from ms.lwn.net ([45.79.88.28]:41496 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfKVRek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:34:40 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D05F337B;
-        Fri, 22 Nov 2019 17:34:38 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 10:34:37 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc: fix reference to core-api/namespaces.rst
-Message-ID: <20191122103437.59fda273@lwn.net>
-In-Reply-To: <20191122115337.1541-1-federico.vaga@vaga.pv.it>
-References: <20191122115337.1541-1-federico.vaga@vaga.pv.it>
-Organization: LWN.net
+        Fri, 22 Nov 2019 12:36:35 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:34203 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVRge (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:36:34 -0500
+X-Originating-IP: 153.3.140.100
+Received: from localhost (unknown [153.3.140.100])
+        (Authenticated sender: fly@kernel.page)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 93CF01BF207;
+        Fri, 22 Nov 2019 17:36:26 +0000 (UTC)
+Date:   Sat, 23 Nov 2019 01:36:13 +0800
+From:   Pengfei Li <fly@kernel.page>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, mhocko@kernel.org, vbabka@suse.cz,
+        iamjoonsoo.kim@lge.com, guro@fb.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, fly@kernel.page
+Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
+Message-ID: <20191123013613.566bb40a.fly@kernel.page>
+In-Reply-To: <alpine.DEB.2.21.1911221551570.10063@www.lameter.com>
+References: <20191121151811.49742-1-fly@kernel.page>
+        <1bb37491-72a7-feaa-722d-a5825813a409@redhat.com>
+        <20191122234907.4da3bc81.fly@kernel.page>
+        <alpine.DEB.2.21.1911221551570.10063@www.lameter.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 12:53:37 +0100
-Federico Vaga <federico.vaga@vaga.pv.it> wrote:
+On Fri, 22 Nov 2019 15:53:57 +0000 (UTC)
+Christopher Lameter <cl@linux.com> wrote:
 
-> This patch:
+> On Fri, 22 Nov 2019, Pengfei Li wrote:
 > 
-> commit fcfacb9f8374 ("doc: move namespaces.rst from kbuild/ to core-api/")
+> > I am sorry that I did not make it clear. I want to express this
+> > series of patches will benefit NUMA systems with multiple nodes.
 > 
-> forgot to update the document kernel-hacking/hacking.rst.
+> Ok but that benefit needs to be quantified somehow.
 > 
-> In addition to the fix the path now is a cross-reference to the document.
+
+Thanks for your comments.
+
+Yes, I will add detailed performance test data in v2.
+
+> > The main benefit is that it will be more efficient when traversing
+> > all nodes (for example when performing page reclamation).
 > 
-> Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
-> ---
->  Documentation/core-api/symbol-namespaces.rst | 2 ++
->  Documentation/kernel-hacking/hacking.rst     | 4 ++--
->  2 files changed, 4 insertions(+), 2 deletions(-)
+> And you loose the prioritization of allocations through these
+> different zones.
+
+Sorry, I forgot to mention that the information about the zones that
+are available to the node is still there.
+
+The old for_each_zone_zonelist has been replaced with
+for_each_zone_nodelist.
+
+I will add some key implementation details in v2. 
+
+> We create zonelists with a certain sequence of the
+> zones in order to prefer allocations from certain zones. This is in
+> particular important for the smaller DMA zones which may be easily
+> exhausted.
 > 
-> diff --git a/Documentation/core-api/symbol-namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
-> index 982ed7b568ac..6791f8a5d726 100644
-> --- a/Documentation/core-api/symbol-namespaces.rst
-> +++ b/Documentation/core-api/symbol-namespaces.rst
-> @@ -1,3 +1,5 @@
-> +.. _core-api-namespace:
-> +
 
-So I've been wondering for a bit why we don't use section headers as
-targets more often rather than adding all these tags.  Perhaps it's because
-we never enabled that extension? What do you think of this as an
-alternative fix? (Probably before committing this I would split into two,
-since enabling the extension merits its own patch).
+I'm not sure if I understand what you mean, but since commit
+c9bff3eebc09 ("mm, page_alloc: rip out ZONELIST_ORDER_ZONE"), the
+zonelist is always in "Node" order, so building the nodelist is fine.
 
-Thanks,
-
-jon
-
-From b5ca7304e1a7f67717acff2a7bf50f56d387afdd Mon Sep 17 00:00:00 2001
-From: Jonathan Corbet <corbet@lwn.net>
-Date: Fri, 22 Nov 2019 10:30:30 -0700
-Subject: [PATCH] docs: fix reference to core-api/namespaces.rst
-
-Fix a couple of dangling links to core-api/namespaces.rst by turning them
-into proper references.  Enable the autosection extension (available since
-Sphinx 1.4) to make this work.
-
-Co-developed-by: Federico Vaga <federico.vaga@vaga.pv.it>
-Fixes: fcfacb9f8374 ("doc: move namespaces.rst from kbuild/ to core-api/")
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
----
- Documentation/conf.py                    | 2 +-
- Documentation/kernel-hacking/hacking.rst | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 3c7bdf4cd31f..fa2bfcd6df1d 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -38,7 +38,7 @@ needs_sphinx = '1.3'
- # ones.
- extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
-               'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
--              'maintainers_include']
-+              'maintainers_include', 'sphinx.ext.autosectionlabel' ]
- 
- # The name of the math extension changed on Sphinx 1.4
- if (major == 1 and minor > 3) or (major > 1):
-diff --git a/Documentation/kernel-hacking/hacking.rst b/Documentation/kernel-hacking/hacking.rst
-index a3ddb213a5e1..d707a0a61cc9 100644
---- a/Documentation/kernel-hacking/hacking.rst
-+++ b/Documentation/kernel-hacking/hacking.rst
-@@ -601,7 +601,7 @@ Defined in ``include/linux/export.h``
- 
- This is the variant of `EXPORT_SYMBOL()` that allows specifying a symbol
- namespace. Symbol Namespaces are documented in
--``Documentation/kbuild/namespaces.rst``.
-+:ref:`Documentation/core-api/symbol-namespaces.rst <Symbol Namespaces>`
- 
- :c:func:`EXPORT_SYMBOL_NS_GPL()`
- --------------------------------
-@@ -610,7 +610,7 @@ Defined in ``include/linux/export.h``
- 
- This is the variant of `EXPORT_SYMBOL_GPL()` that allows specifying a symbol
- namespace. Symbol Namespaces are documented in
--``Documentation/kbuild/namespaces.rst``.
-+:ref:`Documentation/core-api/symbol-namespaces.rst <Symbol Namespaces>`
- 
- Routines and Conventions
- ========================
 -- 
-2.21.0
-
+Pengfei
