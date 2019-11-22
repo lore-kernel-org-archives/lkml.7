@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9085C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECE520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BEAB20730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418825;
-	bh=f2b0CWoNoQ9ioQs7219fTotOnawLUs/soilupI9ggGI=;
+	s=default; t=1574418827;
+	bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=exxaEHJ+CwTRQSZnOH78njHhfopy+DVJBTRviQiI2Tl3mFqQvKoFulK4GasO9/+7z
-	 nFNJXVl+dVPjD7u+LJ95iPHiK48bBS9ysmti8fyB+k4SGeJEVQBa/I3MDUP3oQsg4p
-	 zfUykoDkWzzX2msxCDfRILeyjNvjyPfBXFMLiWW8=
+	b=XEkQbB29N4iXri3Oen+LIhS3p+WNG02uHvO68RCUSDs68iLeFHhoZqc7VzBsKTHJz
+	 ekN9LL/kzN1XUby5NpzDYXSSCcZELmHXxo25LTwb+UnhtxdtyhweWeukokDjvsOTkf
+	 UFQpsgccd89bL81gRODUKrDbx1ppPw4c6vVsvrxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfKVKdo (ORCPT
+        id S1727993AbfKVKdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:33:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfKVKdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:39 -0500
+        id S1727976AbfKVKdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0E6420708;
-        Fri, 22 Nov 2019 10:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C02720708;
+        Fri, 22 Nov 2019 10:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418819;
-        bh=f2b0CWoNoQ9ioQs7219fTotOnawLUs/soilupI9ggGI=;
+        s=default; t=1574418821;
+        bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HuI20uBurxdbNzi689PsH3wm5cpfTWfPpWEkjmDcBM30MLyFuFDBj9P0/5p6J2A8c
-         P6PR4dbsKDfp+U42zEoJsbpucMCnGiWmU5MSndMMmoJbYU6YecyQD5hYAA2dRUBKu/
-         z5tqTQoIaymgO4owDiCTIZ2+1lSNNHze5HliIMRM=
+        b=FwZjmDhqYV+rgw2kcZLQWnPHu+66eFQ35Z27AbL3SsoGImpjiy2EXlxe6h5tlp/JP
+         eIzSqJ+eKbNd6GhpWLOCtL4EBPE1u2Yb/a+fWbz8/J1WrRaEjj4bP81hh10cnBZ9Af
+         4nK1P7o3QSq0uJcG78mjZfk8iSyN/8eEOuRfAdrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Rob Herring <robh@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 061/159] powerpc/pseries: Disable CPU hotplug across migrations
-Date:   Fri, 22 Nov 2019 11:27:32 +0100
-Message-Id: <20191122100752.867186957@linuxfoundation.org>
+Subject: [PATCH 4.4 062/159] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date:   Fri, 22 Nov 2019 11:27:33 +0100
+Message-Id: <20191122100752.929251532@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,51 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 85a88cabad57d26d826dd94ea34d3a785824d802 ]
+[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
 
-When performing partition migrations all present CPUs must be online
-as all present CPUs must make the H_JOIN call as part of the migration
-process. Once all present CPUs make the H_JOIN call, one CPU is returned
-to make the rtas call to perform the migration to the destination system.
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-During testing of migration and changing the SMT state we have found
-instances where CPUs are offlined, as part of the SMT state change,
-before they make the H_JOIN call. This results in a hung system where
-every CPU is either in H_JOIN or offline.
-
-To prevent this this patch disables CPU hotplug during the migration
-process.
-
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 0c42e872d548b..4fcaa7d3d544f 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -967,6 +967,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		goto out;
- 	}
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 17ae0f3efac8e..005bf4ff1b4cb 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
-+	cpu_hotplug_disable();
- 	stop_topology_update();
++#define INT_MAX			((int)(~0U>>1))
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 7e3789ea396b8..0b3db6322c793 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -4,6 +4,8 @@
+ #include <types.h>
+ #include <string.h>
  
- 	/* Call function on all CPUs.  One of us will make the
-@@ -981,6 +982,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		printk(KERN_ERR "Error doing global join\n");
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
  
- 	start_topology_update();
-+	cpu_hotplug_enable();
+ typedef u32 uint32_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 2a663c6bb4285..8850e243c9406 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -1,6 +1,7 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
  
- 	/* Take down CPUs not online prior to suspend */
- 	cpuret = rtas_offline_cpus_mask(offline_mask);
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
 -- 
 2.20.1
 
