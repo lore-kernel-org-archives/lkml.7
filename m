@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D516FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED922071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEF42071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419215;
-	bh=lZXxMuWIybLFtXGs8v1ZWRWHg9eTWJ+Zb4KyQrFSfR0=;
+	s=default; t=1574419218;
+	bh=4HfRl1/n8kiP+P07FQPm8TIcE+1tLtK/NGNIKkyFGsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcgpKEAdgtDoImVDAosJtUE7sRK37COmzZ+T5uuqzRfCEOtXVO+Rr1PqBSswuOP/V
-	 CO77PiabUcIU/9fu17jvusFcXOnTO95UV+7hYk2/kdjODr03HiLmKHbmem3w+NXdic
-	 QE668XNxs8/3ziqUuK5kqlNUXHXEaHx5TEIB2PoA=
+	b=PkCYESMXgBILtvakijXRizdye8AnN8j+jpA11V78/gHjvnSbeFa1dlUzmRzy+vtjx
+	 goNPrCaHLbvETDRdAZIV3uUKLNhYb5/mB8g4BaEv8h5x0mTCFLBuMPLCwwgsWjA8Pb
+	 sY3N2t8QP+4Hhgft/NB88ws4RgLte+13qX8QGVv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfKVKkJ (ORCPT
+        id S1728874AbfKVKkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:40:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbfKVKkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:40:03 -0500
+        id S1728292AbfKVKkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:40:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CE62075B;
-        Fri, 22 Nov 2019 10:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4CA820717;
+        Fri, 22 Nov 2019 10:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419203;
-        bh=lZXxMuWIybLFtXGs8v1ZWRWHg9eTWJ+Zb4KyQrFSfR0=;
+        s=default; t=1574419215;
+        bh=4HfRl1/n8kiP+P07FQPm8TIcE+1tLtK/NGNIKkyFGsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/CiCn+Qz2PTm9nUT9w6VBzQogCAoqgberlFv+8b6ZrMoJzg2TYCMu0InP3oP06cr
-         kNpgsVzhsrkTRnuQi6AAW66rqGzfW+LKZfwSeepJuCjaXu0fpY80JU6UL2cadEHetT
-         U4gre8Jdx1lLap+bQglOdX521G9srkpnXLJA4GIw=
+        b=pfYVMiRVok1Hc5NU+fjJp/rkxwsQUIKqpOxOaSlCSoWk3abfDAI7/QqmEpSHJttuT
+         KPCQwETcRMEZwaJJV8/Vq46UY2YxC/1rmjILj5DW6QJWO2YnQX0FLjIyIQlB+BoJkd
+         WepdEFxyL/TC/oWN77LoN5kUFWSfGnxYPnrArKIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 033/222] iwlwifi: mvm: avoid sending too many BARs
-Date:   Fri, 22 Nov 2019 11:26:13 +0100
-Message-Id: <20191122100843.751274099@linuxfoundation.org>
+Subject: [PATCH 4.9 037/222] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
+Date:   Fri, 22 Nov 2019 11:26:17 +0100
+Message-Id: <20191122100847.869255141@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,48 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 1a19c139be18ed4d6d681049cc48586fae070120 ]
+[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
 
-When we receive TX response, we may release a few packets
-due to a hole that was closed in the transmission window.
+In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
+is set to zero and later vol_quot is computed by dividing by
+lo_vag causing a division by zero error.  Fix this by avoiding
+a zero division and set vol_quot to zero in this specific case
+so that the lowest setting for i is correctly set.
 
-However, if that frame failed, we will mark all the released
-frames as failed and will send multiple BARs.
-
-This affects statistics badly, and cause unnecessary frames
-transmission.
-
-Instead, mark all the following packets as success, with the
-desired result of sending a bar for the failed frame only.
-
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/codecs/sgtl5000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index 1aa74b87599ff..63dcea640d076 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1303,6 +1303,14 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
- 			break;
- 		}
- 
-+		/*
-+		 * If we are freeing multiple frames, mark all the frames
-+		 * but the first one as acked, since they were acknowledged
-+		 * before
-+		 * */
-+		if (skb_freed > 1)
-+			info->flags |= IEEE80211_TX_STAT_ACK;
-+
- 		iwl_mvm_tx_status_check_trigger(mvm, status);
- 
- 		info->status.rates[0].count = tx_resp->failure_frame + 1;
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 7406ea5c9a4f7..39810b713d5f2 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1217,7 +1217,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
+ 	 * Searching for a suitable index solving this formula:
+ 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
+ 	 */
+-	vol_quot = (vag * 100) / lo_vag;
++	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
+ 	lo_vol = 0;
+ 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
+ 		if (vol_quot >= vol_quot_table[i])
 -- 
 2.20.1
 
