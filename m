@@ -2,111 +2,147 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09137C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D90C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C0520708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A092070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400016;
-	bh=hHnjuK8XA/m/8hFJIqEI+WTpjRrY+OpTMEkDT0W9xLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yll3s5F12doEXkzYU4inLLYFfQQu0Fi01kn3sQEPdk2YCT1J4W7TiHnBQvxfMO1TY
-	 wVEXP2dQ8956F7I3TbLZEkcaviBBLMzs3n93HXhu/DpI0lDkveNH/SnZOOmRenfuDg
-	 xbnnYO4ii3BIXUquJV44O1xa084UDwBJV0LoqXpA=
+	s=default; t=1574400026;
+	bh=r3ucmFbcWpJNyhV1/cUTXuEJMILhTtPI5BcKyByQya8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hQ2UjHrb0ofnXwwvEg310wmnFx8rR2CwdWOiJ4kEPPKcpby6ejrrdf7LCVWphAOYu
+	 thXJY4BxO+RT/qulN0rHGk+8r/a5ptazFcyok9eQYiVBbSBli0qMXbYLF7hVw5kKHL
+	 vOHepZlpiYz31zwlhDQW48fLwM6/KFQputAYptW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfKVFUP (ORCPT
+        id S1727046AbfKVFUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:20:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:20:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfKVFUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:20:15 -0500
-Received: from localhost (unknown [171.61.94.63])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726391AbfKVFUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:20:24 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFA032068E;
-        Fri, 22 Nov 2019 05:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B4192068E;
+        Fri, 22 Nov 2019 05:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400014;
-        bh=hHnjuK8XA/m/8hFJIqEI+WTpjRrY+OpTMEkDT0W9xLc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LodpG97AdwfbgKFdBSEwTfhStFASa62n80eMLocrE3UqrIS91btU1TnPmGA9Q7Cd+
-         +6E29Uq4yawJy8JlCedM5cDHFQ7/73YQg7+smVqhBaYmZLnMneN3oPTBIq7vesv3tU
-         2peqJjAJKwk/C2aA2qQoznP6v0C0AEZRryFYFPfI=
-Date:   Fri, 22 Nov 2019 10:50:10 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-Message-ID: <20191122052010.GO82508@vkoul-mobl>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-2-logang@deltatee.com>
- <20191109171853.GF952516@vkoul-mobl>
- <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
- <20191112055540.GY952516@vkoul-mobl>
- <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
- <20191114045555.GJ952516@vkoul-mobl>
- <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
+        s=default; t=1574400023;
+        bh=r3ucmFbcWpJNyhV1/cUTXuEJMILhTtPI5BcKyByQya8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RTIopRm0LTGKD/PynslLNWBirW+votd2oHIfLF6T9rXkJcIlZ2IV0fj6nsil4R+s2
+         Dfhvu/LZXfs194KU3jkzyo/pQUr2CfLqbE9QDp/z1KsgCw88G0Kv/1oSPegtMO0w5x
+         PdOrdZr817A3O3MiFvu7dhrHsnkIN7eE8aXXAJSw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 001/127] scsi: lpfc: Fix kernel Oops due to null pring pointers
+Date:   Fri, 22 Nov 2019 00:18:15 -0500
+Message-Id: <20191122052021.32062-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-11-19, 10:03, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
-> >> But that's the problem. We can't expect our users to be "nice" and not
-> >> unbind when the driver is in use. Killing the kernel if the user
-> >> unexpectedly unbinds is not acceptable.
-> > 
-> > And that is why we review the code and ensure this does not happen and
-> > behaviour is as expected
-> 
-> Yes, but the current code can kill the kernel when the driver is unbound.
-> 
-> >>>> I suspect this is less of an issue for most devices as they wouldn't
-> >>>> normally be unbound while in use (for example there's really no reason
-> >>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
-> >>>> is, the user could unbind these devices at anytime and we don't want to
-> >>>> panic if they do.
-> >>>
-> >>> There are many drivers which do modules so yes I am expecting unbind and
-> >>> even a bind following that to work
-> >>
-> >> Except they will panic if they unbind while in use, so that's a
-> >> questionable definition of "work".
-> > 
-> > dmaengine core has module reference so while they are being used they
-> > won't be removed (unless I complete misread the driver core behaviour)
-> 
-> Yes, as I mentioned in my other email, holding a module reference does
-> not prevent the driver from being unbound. Any driver can be unbound by
-> the user at any time without the module being removed.
+From: James Smart <jsmart2021@gmail.com>
 
-That sounds okay then.
-> 
-> Essentially, at any time, a user can do this:
-> 
-> echo 0000:83:00.4 > /sys/bus/pci/drivers/plx_dma/unbind
-> 
-> Which will call plx_dma_remove() regardless of whether anyone has a
-> reference to the module, and regardless of whether the dma channel is
-> currently in use. I feel it is important that drivers support this
-> without crashing, and my plx_dma driver does the correct thing here.
-> 
-> Logan
+[ Upstream commit 5a9eeff57f340238c39c95d8e7e54c96fc722de7 ]
 
+Driver is hitting null pring pointers in lpfc_do_work().
+
+Pointer assignment occurs based on SLI-revision. If recovering after an
+error, its possible the sli revision for the port was cleared, making the
+lpfc_phba_elsring() not return a ring pointer, thus the null pointer.
+
+Add SLI revision checking to lpfc_phba_elsring() and status checking to all
+callers.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/lpfc/lpfc.h      | 6 ++++++
+ drivers/scsi/lpfc/lpfc_els.c  | 2 ++
+ drivers/scsi/lpfc/lpfc_init.c | 7 ++++++-
+ drivers/scsi/lpfc/lpfc_sli.c  | 2 ++
+ 4 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index bc61cc8bc6f02..03e95a3216c8c 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -1239,6 +1239,12 @@ lpfc_sli_read_hs(struct lpfc_hba *phba)
+ static inline struct lpfc_sli_ring *
+ lpfc_phba_elsring(struct lpfc_hba *phba)
+ {
++	/* Return NULL if sli_rev has become invalid due to bad fw */
++	if (phba->sli_rev != LPFC_SLI_REV4  &&
++	    phba->sli_rev != LPFC_SLI_REV3  &&
++	    phba->sli_rev != LPFC_SLI_REV2)
++		return NULL;
++
+ 	if (phba->sli_rev == LPFC_SLI_REV4) {
+ 		if (phba->sli4_hba.els_wq)
+ 			return phba->sli4_hba.els_wq->pring;
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index ddd29752d96dc..0032465d1b630 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -1335,6 +1335,8 @@ lpfc_els_abort_flogi(struct lpfc_hba *phba)
+ 			Fabric_DID);
+ 
+ 	pring = lpfc_phba_elsring(phba);
++	if (unlikely(!pring))
++		return -EIO;
+ 
+ 	/*
+ 	 * Check the txcmplq for an iocb that matches the nport the driver is
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 25612ccf6ff28..1da125afebddb 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -1773,7 +1773,12 @@ lpfc_sli4_port_sta_fn_reset(struct lpfc_hba *phba, int mbx_action,
+ 	lpfc_offline(phba);
+ 	/* release interrupt for possible resource change */
+ 	lpfc_sli4_disable_intr(phba);
+-	lpfc_sli_brdrestart(phba);
++	rc = lpfc_sli_brdrestart(phba);
++	if (rc) {
++		lpfc_printf_log(phba, KERN_ERR, LOG_INIT,
++				"6309 Failed to restart board\n");
++		return rc;
++	}
+ 	/* request and enable interrupt */
+ 	intr_mode = lpfc_sli4_enable_intr(phba, phba->intr_mode);
+ 	if (intr_mode == LPFC_INTR_ERROR) {
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 6c2b098b76095..0128ea32b208f 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -4421,6 +4421,8 @@ lpfc_sli_brdrestart_s4(struct lpfc_hba *phba)
+ 	hba_aer_enabled = phba->hba_flag & HBA_AER_ENABLED;
+ 
+ 	rc = lpfc_sli4_brdreset(phba);
++	if (rc)
++		return rc;
+ 
+ 	spin_lock_irq(&phba->hbalock);
+ 	phba->pport->stopped = 0;
 -- 
-~Vinod
+2.20.1
+
