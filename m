@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2385C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1554BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72DF2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D818E20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419999;
-	bh=Suk00SgfBhbrNb/3ynvFXyR8ZpUSM4dQi1HdmAwqQ+4=;
+	s=default; t=1574420002;
+	bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYGSvt5OJRMcUuNMF597olSrO1vTbUk9wyYcMx5fnyRXafdW1OfzzkwdrF7KJUBQb
-	 s+rqg70qMNVgZ0VSDqw+kYT56u1+/vq96uXPUGugKE11oHIAcgAMgzkT3z0ekjo8Ht
-	 lAwLDzAK7ags3jCiCGUEKe0xdpl0HkJ9VaOJoGac=
+	b=VdsH60ko4flLw2k8A6pwVNjS41ww8Yl4zdxa9i2KjwCLQic/qhzLLB8q7nVE+jsrf
+	 OBaEjRuuvXrFmUtIxDrsRG5owy3/bfvNxt5PP+DeCZDJWJpLtk+EIRSpTuMW2fSnRt
+	 19nYLs4qYFWDkCcdfG5/mqEQRcNSa5DJX+7jHT/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbfKVKxS (ORCPT
+        id S1730194AbfKVKxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:53:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:53:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729969AbfKVKxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:16 -0500
+        id S1729794AbfKVKxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73ACB2070E;
-        Fri, 22 Nov 2019 10:53:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215AD20656;
+        Fri, 22 Nov 2019 10:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419995;
-        bh=Suk00SgfBhbrNb/3ynvFXyR8ZpUSM4dQi1HdmAwqQ+4=;
+        s=default; t=1574419997;
+        bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPF+Ar3darMYvU9gyE+alNg2KhkFEecai9f9iwU/+bK2JUGTHGnZraHi/T0N2/OTo
-         PSkVltgYeYl72fUaLcCkYo9aqbLugOir6XJvLjKk3UUAPIO1/RYDYZ6SmeFqKeDJPj
-         b6K60sZFrHk9243jH2iae38pKAMSzKj/EhvEQKhY=
+        b=H9T8XcSTEEi3hnzBcMNVOsnx2D0bpokzGbC8quPikNRjXxP/nqKefGv/wg84x9U3d
+         cxLktvQ9vqCVlVz62smJLFP3wCy1rFzxoiY1hC9Z2lIrCUtHLRGSrUfud37vRgYld8
+         w741kqmnq18etXJLZ9Gh91p/3PeV/PNVdr+t2Kr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 035/122] sunrpc: Fix connect metrics
-Date:   Fri, 22 Nov 2019 11:28:08 +0100
-Message-Id: <20191122100750.240757388@linuxfoundation.org>
+Subject: [PATCH 4.14 036/122] mei: samples: fix a signedness bug in amt_host_if_call()
+Date:   Fri, 22 Nov 2019 11:28:09 +0100
+Message-Id: <20191122100751.460721675@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,121 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 3968a8a5310404c2f0b9e4d9f28cab13a12bc4fd ]
+[ Upstream commit 185647813cac080453cb73a2e034a8821049f2a7 ]
 
-For TCP, the logic in xprt_connect_status is currently never invoked
-to record a successful connection. Commit 2a4919919a97 ("SUNRPC:
-Return EAGAIN instead of ENOTCONN when waking up xprt->pending")
-changed the way TCP xprt's are awoken after a connect succeeds.
+"out_buf_sz" needs to be signed for the error handling to work.
 
-Instead, change connection-oriented transports to bump connect_count
-and compute connect_time the moment that XPRT_CONNECTED is set.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprt.c               | 14 ++++----------
- net/sunrpc/xprtrdma/transport.c |  6 +++++-
- net/sunrpc/xprtsock.c           | 10 ++++++----
- 3 files changed, 15 insertions(+), 15 deletions(-)
+ samples/mei/mei-amt-version.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index d0282cc88b145..b852c34bb6373 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -795,17 +795,11 @@ void xprt_connect(struct rpc_task *task)
- 
- static void xprt_connect_status(struct rpc_task *task)
+diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
+index bb9988914a563..32234481ad7db 100644
+--- a/samples/mei/mei-amt-version.c
++++ b/samples/mei/mei-amt-version.c
+@@ -370,7 +370,7 @@ static uint32_t amt_host_if_call(struct amt_host_if *acmd,
+ 			unsigned int expected_sz)
  {
--	struct rpc_xprt	*xprt = task->tk_rqstp->rq_xprt;
--
--	if (task->tk_status == 0) {
--		xprt->stat.connect_count++;
--		xprt->stat.connect_time += (long)jiffies - xprt->stat.connect_start;
-+	switch (task->tk_status) {
-+	case 0:
- 		dprintk("RPC: %5u xprt_connect_status: connection established\n",
- 				task->tk_pid);
--		return;
--	}
--
--	switch (task->tk_status) {
-+		break;
- 	case -ECONNREFUSED:
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
-@@ -822,7 +816,7 @@ static void xprt_connect_status(struct rpc_task *task)
- 	default:
- 		dprintk("RPC: %5u xprt_connect_status: error %d connecting to "
- 				"server %s\n", task->tk_pid, -task->tk_status,
--				xprt->servername);
-+				task->tk_rqstp->rq_xprt->servername);
- 		task->tk_status = -EIO;
- 	}
- }
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 8cf5ccfe180d3..b1b40a1be8c57 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -238,8 +238,12 @@ rpcrdma_connect_worker(struct work_struct *work)
- 	if (++xprt->connect_cookie == 0)	/* maintain a reserved value */
- 		++xprt->connect_cookie;
- 	if (ep->rep_connected > 0) {
--		if (!xprt_test_and_set_connected(xprt))
-+		if (!xprt_test_and_set_connected(xprt)) {
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, 0);
-+		}
- 	} else {
- 		if (xprt_test_and_clear_connected(xprt))
- 			xprt_wake_pending_tasks(xprt, -ENOTCONN);
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 05a58cc1b0cdb..a42871a59f3b9 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1592,6 +1592,9 @@ static void xs_tcp_state_change(struct sock *sk)
- 			clear_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 			xprt_clear_connecting(xprt);
- 
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, -EAGAIN);
- 		}
- 		spin_unlock(&xprt->transport_lock);
-@@ -2008,8 +2011,6 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
- 	}
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	return kernel_connect(sock, xs_addr(xprt), xprt->addrlen, 0);
- }
- 
-@@ -2041,6 +2042,9 @@ static int xs_local_setup_socket(struct sock_xprt *transport)
- 	case 0:
- 		dprintk("RPC:       xprt %p connected to %s\n",
- 				xprt, xprt->address_strings[RPC_DISPLAY_ADDR]);
-+		xprt->stat.connect_count++;
-+		xprt->stat.connect_time += (long)jiffies -
-+					   xprt->stat.connect_start;
- 		xprt_set_connected(xprt);
- 	case -ENOBUFS:
- 		break;
-@@ -2361,8 +2365,6 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
- 	xs_set_memalloc(xprt);
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	set_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 	ret = kernel_connect(sock, xs_addr(xprt), xprt->addrlen, O_NONBLOCK);
- 	switch (ret) {
+ 	uint32_t in_buf_sz;
+-	uint32_t out_buf_sz;
++	ssize_t out_buf_sz;
+ 	ssize_t written;
+ 	uint32_t status;
+ 	struct amt_host_if_resp_header *msg_hdr;
 -- 
 2.20.1
 
