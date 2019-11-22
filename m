@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5446BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E8E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2AF20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419954;
-	bh=MX3Ehabkq3f2CSRb7ik1HoCIDf2ozhTD6e8JcQDK1Ps=;
+	s=default; t=1574419957;
+	bh=kk9s2ECVWRZh6QKxhKPAVyCqzJNCNwA+1D7J7+tmnYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bV076JUbc1GL2V+qr7FzEBNtuSWO1KfsDmhkBLsHWN7mHBiYT7nK2lILNqitxyuRu
-	 tyUYBjtFOuH+JW1nXgOlXByNkyvMLVveF7J4l9Bq4f1PS/ldBcTU3lSwOHxH5EAcMn
-	 Sjn4B3nvagtiAGfTV4PNuPSwmNcQ1GblsW0LTW18=
+	b=oflq9X/3d7npQoJdO+Eipf8xenBWbJ3Pqt2SkJ7BxdoBC+t3roEBzHff1IbI0tgj/
+	 +AjHX8TrUAQpF8k72xWQfl+qRnNYFTYGD7Di1d3buQIQvChXZkqRDPVn90nNSur148
+	 trEfZORvxwDIW0q5ZkTbTOJLJGaGmyiOMK/muCtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfKVKwd (ORCPT
+        id S1728536AbfKVKwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:52:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:52:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbfKVKwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:52:30 -0500
+        id S1727846AbfKVKw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:52:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBD8B20637;
-        Fri, 22 Nov 2019 10:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46ACB20656;
+        Fri, 22 Nov 2019 10:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419950;
-        bh=MX3Ehabkq3f2CSRb7ik1HoCIDf2ozhTD6e8JcQDK1Ps=;
+        s=default; t=1574419947;
+        bh=kk9s2ECVWRZh6QKxhKPAVyCqzJNCNwA+1D7J7+tmnYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKydgzYCyHmV4nZ+meQzAaGb+/7PEhqOBdOGzEq1CDWQltREAS2xKyICuPutTtthl
-         CFDj+L3DtYpQAXScu2LhQAiYLKmxw/hjbE9mOXI4PnljsI7M8xMEABnCT3N/xDjf9S
-         sKaQqkNWubj7e7MozjEA/UGTT5NfIick+55kEHGY=
+        b=H3MLsTwTIBoRnJTpolK5RDqQCyMGyM7TpgNBAyldQhi6k+VrD+MJ+jZI0VA6yQ93e
+         n302IPkJ+PtuU3Q8Uv6b+mKDndh/GJ2uUXT1syKREL6J3zywXZtnsKd6VZH/Hm8kCV
+         7jBbFsFyIf0B3mUvbMMMoXt7ise1fyx9q5xgvj5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Cameron Kaiser <spectre@floodgap.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/122] USB: serial: cypress_m8: fix interrupt-out transfer length
-Date:   Fri, 22 Nov 2019 11:28:36 +0100
-Message-Id: <20191122100806.299996276@linuxfoundation.org>
+Subject: [PATCH 4.14 062/122] KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
+Date:   Fri, 22 Nov 2019 11:28:35 +0100
+Message-Id: <20191122100805.666729402@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -59,36 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Cameron Kaiser <spectre@floodgap.com>
 
-[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
+[ Upstream commit 1006284c5e411872333967b1970c2ca46a9e225f ]
 
-Fix interrupt-out transfer length which was being set to the
-transfer-buffer length rather than the size of the outgoing packet.
+When an OS (currently only classic Mac OS) is running in KVM-PR and makes a
+linked jump from code with split hack addressing enabled into code that does
+not, LR is not correctly updated and reflects the previously munged PC.
 
-Note that no slab data was leaked as the whole transfer buffer is always
-cleared before each transfer.
+To fix this, this patch undoes the address munge when exiting split
+hack mode so that code relying on LR being a proper address will now
+execute. This does not affect OS X or other operating systems running
+on KVM-PR.
 
-Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Cameron Kaiser <spectre@floodgap.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/cypress_m8.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
-index 90110de715e01..d0aa4c853f56a 100644
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -773,7 +773,7 @@ static void cypress_send(struct usb_serial_port *port)
- 
- 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
- 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
--		port->interrupt_out_buffer, port->interrupt_out_size,
-+		port->interrupt_out_buffer, actual_size,
- 		cypress_write_int_callback, port, priv->write_urb_interval);
- 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
- 	if (result) {
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index d38280b01ef08..1eda812499376 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -79,8 +79,11 @@ void kvmppc_unfixup_split_real(struct kvm_vcpu *vcpu)
+ {
+ 	if (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) {
+ 		ulong pc = kvmppc_get_pc(vcpu);
++		ulong lr = kvmppc_get_lr(vcpu);
+ 		if ((pc & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
+ 			kvmppc_set_pc(vcpu, pc & ~SPLIT_HACK_MASK);
++		if ((lr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
++			kvmppc_set_lr(vcpu, lr & ~SPLIT_HACK_MASK);
+ 		vcpu->arch.hflags &= ~BOOK3S_HFLAG_SPLIT_HACK;
+ 	}
+ }
 -- 
 2.20.1
 
