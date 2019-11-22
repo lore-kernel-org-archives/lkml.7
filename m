@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA1FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B61C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4500C20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5018120674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402624;
-	bh=UE13o5NrIZhLN81xQOZBSUABipSuNtXeuxUj/NUsRM8=;
+	s=default; t=1574402633;
+	bh=z1eVLwXiLmA33ZjS/VWvvXhkVIz7u9fA+N+baWptQ2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NC8ExKWyh0UBPrRbslCKyNc0L2heAG2IdN7z4gESZmCCeGf6dcFcgXcTxUaq8cuF2
-	 vewnJNvkolgBWYHCK3HFoigx9WHwFTrPd2RDIHD6N122JriYefW1AJdjH/XonjiEdg
-	 BQAv3zYA4pY2qTludhLQFvonGftb7zIkwX6C8n/o=
+	b=tS/L8Pc+87lisVBhfZwvu4EJY4RZFznOG18NGz4j6zgzoTB7RZ7zhPseAESzqGgJ0
+	 gFToUATTo2Ne96vz2axw09BuCWnPikhcQl4MRBfTIMqOKo96RB41yQoI0Uu62AwCeT
+	 iwPJxh6R43RgkpWcA7qF6m9OmXdcGIG/PJFnJPqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfKVGDm (ORCPT
+        id S1728926AbfKVGDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:03:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:03:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbfKVGDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:03:04 -0500
+        id S1729846AbfKVGDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:03:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B581A20715;
-        Fri, 22 Nov 2019 06:03:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5195D2068E;
+        Fri, 22 Nov 2019 06:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402584;
-        bh=UE13o5NrIZhLN81xQOZBSUABipSuNtXeuxUj/NUsRM8=;
+        s=default; t=1574402582;
+        bh=z1eVLwXiLmA33ZjS/VWvvXhkVIz7u9fA+N+baWptQ2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wqga1epltyBFq9b2jPmpskZDTmhcPZodQkQD7FA3n9pjnpU2dpIlm4ARGKuK/6AZU
-         xML83VhEL5CnV5BcKvth/omEtA1WVO+EPfYCVNyaDtaHpJEr6oYbvj/6CCBOkCoPnE
-         TaBrpnZwhHsncw6q5/QcAUDyWP7x+iHIwqo2Nrmk=
+        b=UPQPqpWr7IrnwskALGo/G/VWtWOsecNNfSvmP6GNv1WNBcrHPXD2qgoBNd2rxjx5i
+         3RbeUeyfZf6o89sVdDoATrIEVelURXb4EsnW3R0sdMidmqhfEJ+X9GSkLWyLRtJBnk
+         JHEsmHB+0cxbDxNwct+/6gAFVfzqs1UqGjAX96Zo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Eric Dumazet <edumazet@google.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 85/91] net: dev: Use unsigned integer as an argument to left-shift
-Date:   Fri, 22 Nov 2019 01:01:23 -0500
-Message-Id: <20191122060129.4239-84-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 83/91] net: fix possible overflow in __sk_mem_raise_allocated()
+Date:   Fri, 22 Nov 2019 01:01:21 -0500
+Message-Id: <20191122060129.4239-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,33 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit f4d7b3e23d259c44f1f1c39645450680fcd935d6 ]
+[ Upstream commit 5bf325a53202b8728cf7013b72688c46071e212e ]
 
-1 << 31 is Undefined Behaviour according to the C standard.
-Use U type modifier to avoid theoretical overflow.
+With many active TCP sockets, fat TCP sockets could fool
+__sk_mem_raise_allocated() thanks to an overflow.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+They would increase their share of the memory, instead
+of decreasing it.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netdevice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/sock.h | 2 +-
+ net/core/sock.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 2ecf0f32444e0..29ed5977ac041 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3565,7 +3565,7 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
- 	if (debug_value == 0)	/* no output */
- 		return 0;
- 	/* set low N bits */
--	return (1 << debug_value) - 1;
-+	return (1U << debug_value) - 1;
+diff --git a/include/net/sock.h b/include/net/sock.h
+index d8d14ae8892a7..aed436567d70b 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1201,7 +1201,7 @@ static inline void sk_sockets_allocated_inc(struct sock *sk)
+ 	percpu_counter_inc(sk->sk_prot->sockets_allocated);
  }
  
- static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
+-static inline int
++static inline u64
+ sk_sockets_allocated_read_positive(struct sock *sk)
+ {
+ 	return percpu_counter_read_positive(sk->sk_prot->sockets_allocated);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index d224933514074..41794a698da66 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2156,7 +2156,7 @@ int __sk_mem_schedule(struct sock *sk, int size, int kind)
+ 	}
+ 
+ 	if (sk_has_memory_pressure(sk)) {
+-		int alloc;
++		u64 alloc;
+ 
+ 		if (!sk_under_memory_pressure(sk))
+ 			return 1;
 -- 
 2.20.1
 
