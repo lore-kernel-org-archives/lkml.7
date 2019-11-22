@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F3DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DD7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8486520718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC8B20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421106;
-	bh=NObG4ppKYgwiPwjuxGjJCTSDOQBfWncIECXrZIt8Aws=;
+	s=default; t=1574421109;
+	bh=urMkjndaCFT8P0B6YUlwM2kbeo3+BVId8Tiq7RtV6pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c449JB+5fDIaHm15DMF95apFcyfAdEBXEjYIm698wdAPtb5PmYaQczhYRTTjfMXwZ
-	 dbpmxPsy719pnZMOnl4CNLAz6Q/DS+D8xqDKPzWZPnSR4EW+wYM0ZdlRpxejgDdhOE
-	 +BVwsvnzHh3MbKu+LMENjalKlSotLlHqK7obWe+U=
+	b=HFVomPfQQNoxgpWRjVvqFppyVCwSEelF8dN9SYydQjgrPa3UjL9PEjD1XBluBUBZn
+	 +hQpoA9trXhUnVWxtbYhFZAMLGOQdfHzxY08dcKFLAMzfI45gowbgqVcjMokOZrK3r
+	 oy8tTHJtwu1M2qkQ9dfoSU+AUVLj3gi3V2JaoysY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbfKVK7I (ORCPT
+        id S1729810AbfKVLLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49676 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:11:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbfKVK7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:02 -0500
+        id S1730868AbfKVK7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B133020721;
-        Fri, 22 Nov 2019 10:59:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A528F20706;
+        Fri, 22 Nov 2019 10:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420342;
-        bh=NObG4ppKYgwiPwjuxGjJCTSDOQBfWncIECXrZIt8Aws=;
+        s=default; t=1574420348;
+        bh=urMkjndaCFT8P0B6YUlwM2kbeo3+BVId8Tiq7RtV6pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MA2SD5MYYioNdTut1HKdZaVlJAsnx6lsaqM9kI9w1EA1RRaFVJVVl1hnYs/oXrV4W
-         bYAAPFjtMUUhHoaG2/in8jP0WX60bs1OtdXWpg/xuPmye3zR/m/dMP1mQSwo+S/5/E
-         Nxv2yoi2IihAcEr9GoakRJuEjNnCUhHMEC0oTvaA=
+        b=df8cISyilpwZ5Trkg1pj1rU4BCijUM1Ds0XlA3dQU3bmxE+WsoXVAPx+M0Zznxymp
+         lqgFO99cy4DLe6Yru5V7qpGBE5zWDo2xKkFPdFfpNi8t6slQqcomfE2DRQ56yBdYor
+         uwXl8icW8JE/BIiJWDCvWDVIXStQJx7cKNSZfhLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 072/220] ARM: dts: at91: sama5d2_ptc_ek: fix bootloader env offsets
-Date:   Fri, 22 Nov 2019 11:27:17 +0100
-Message-Id: <20191122100917.399704323@linuxfoundation.org>
+Subject: [PATCH 4.19 032/220] mt76x2: disable WLAN core before probe
+Date:   Fri, 22 Nov 2019 11:26:37 +0100
+Message-Id: <20191122100914.699320675@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,44 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit f602b4871c5f7ac01d37d8b285ca947ba7613065 ]
+[ Upstream commit 62e04f8a31fcc375c978b7f83b4229a10c3e746d ]
 
-The offsets for the bootloader environment and its redundant partition
-were inverted. Fix the addresses to match our nand flash map available at:
+If the WLAN core is still active during initialization, it might cause
+the MCU or DMA to hang. This can happen during soft reboot, so disable
+the core + clock early to avoid this issue.
 
-http://www.at91.com/linux4sam/pub/Linux4SAM/SambaSubsections//demo_nandflash_map_lnx4sam5x.png
-
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c | 4 ++++
+ drivers/net/wireless/mediatek/mt76/mt76x2_pci.c         | 1 +
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-index 3b1baa8605a77..2214bfe7aa205 100644
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -92,13 +92,13 @@
- 							reg = <0x40000 0xc0000>;
- 						};
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c
+index 324b2a4b8b67c..54a9e1dfaf7a4 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c
+@@ -72,6 +72,9 @@ void mt76x2_reset_wlan(struct mt76x2_dev *dev, bool enable)
+ {
+ 	u32 val;
  
--						bootloaderenv@0x100000 {
--							label = "bootloader env";
-+						bootloaderenvred@0x100000 {
-+							label = "bootloader env redundant";
- 							reg = <0x100000 0x40000>;
- 						};
++	if (!enable)
++		goto out;
++
+ 	val = mt76_rr(dev, MT_WLAN_FUN_CTRL);
  
--						bootloaderenvred@0x140000 {
--							label = "bootloader env redundant";
-+						bootloaderenv@0x140000 {
-+							label = "bootloader env";
- 							reg = <0x140000 0x40000>;
- 						};
+ 	val &= ~MT_WLAN_FUN_CTRL_FRC_WL_ANT_SEL;
+@@ -87,6 +90,7 @@ void mt76x2_reset_wlan(struct mt76x2_dev *dev, bool enable)
+ 	mt76_wr(dev, MT_WLAN_FUN_CTRL, val);
+ 	udelay(20);
  
++out:
+ 	mt76x2_set_wlan_state(dev, enable);
+ }
+ EXPORT_SYMBOL_GPL(mt76x2_reset_wlan);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c b/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c
+index e66f047ea4481..26cfda24ce085 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c
+@@ -53,6 +53,7 @@ mt76pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return -ENOMEM;
+ 
+ 	mt76_mmio_init(&dev->mt76, pcim_iomap_table(pdev)[0]);
++	mt76x2_reset_wlan(dev, false);
+ 
+ 	dev->mt76.rev = mt76_rr(dev, MT_ASIC_VERSION);
+ 	dev_info(dev->mt76.dev, "ASIC revision: %08x\n", dev->mt76.rev);
 -- 
 2.20.1
 
