@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387EAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E189B20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127C8205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419495;
-	bh=sbePzzQan0qJ7i3IEwqAf5vzUm2j7iCFP8XVjEA5+2I=;
+	s=default; t=1574419499;
+	bh=K4yGkZRbv35RcfeluxzhT6L6sAAB+YWzrmzYRIBSGGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bzz+/ANVXJQOf7lhD3q5LI4pnNbi5mfVQy3OMikpbDqj1IkCvMqbATEuLNZ9W+FI/
-	 7/gVVjoJOYw2Dj1Pu3KnbwL+RnIsalbdAgyigkUdkrm9ANgIg6zUequhxQm7v5NMPS
-	 Eo3TL+GuqLSyPiQgZcEQkEaab1uz+IcqSvpG9uVQ=
+	b=zHBVfFpY7l4B99e+EUTePev5QR/hpsfuNJzdf64bm6D203SPnIbV+Dr3b93ZO9zCa
+	 kPFJhZ/Dw01zoI4CR7qlFqLv8Bf7JqosuSA96Ya35fmWHc7dyTpo9C/IHQRLlVsZ/I
+	 u0Gei8MC9YbkLLd+fCdreMt+oAY1mORmpmAr+piM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbfKVKox (ORCPT
+        id S1729395AbfKVKo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:44:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727630AbfKVKov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:51 -0500
+        id S1727413AbfKVKox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA7EE20717;
-        Fri, 22 Nov 2019 10:44:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56928205C9;
+        Fri, 22 Nov 2019 10:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419490;
-        bh=sbePzzQan0qJ7i3IEwqAf5vzUm2j7iCFP8XVjEA5+2I=;
+        s=default; t=1574419492;
+        bh=K4yGkZRbv35RcfeluxzhT6L6sAAB+YWzrmzYRIBSGGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iz0V+qhJKQtnHNb2CCzDwCv6IRlwfrTphb6KCSWoTWUCiYquATziEoe9fx3YrXjBx
-         hEUqTv4rJcneobepJJHIKqBrGzkcvNL5ESE6SrqZngBkZZt4GcOP4NhuRuGYb1eAJg
-         rwnS4AkZ2cjMFKU7zLo3qa9+2rrAqgQkiM6a8IVo=
+        b=GfNczhMHdUhKQDV0ZO4xIsqvVjBQPS223PJ6/kTswcHCO0QaPgDiQJH3mlkv/VDTX
+         a/IfMHL5Fu9QxBQthKTp7gqX9V66ViOJfz8uqKUjZC1zsPd5xDjrmOe2JeI0hRQgvf
+         LChvrk7ClFvJhnW5ZZv0pT/w2JByWprujeHMm/mU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 130/222] ARM: dts: realview: Fix SPI controller node names
-Date:   Fri, 22 Nov 2019 11:27:50 +0100
-Message-Id: <20191122100912.365250983@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 131/222] Bluetooth: L2CAP: Detect if remote is not able to use the whole MPS
+Date:   Fri, 22 Nov 2019 11:27:51 +0100
+Message-Id: <20191122100912.426046447@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,90 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 016add12977bcc30f77d7e48fc9a3a024cb46645 ]
+[ Upstream commit a5c3021bb62b970713550db3f7fd08aa70665d7e ]
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+If the remote is not able to fully utilize the MPS choosen recalculate
+the credits based on the actual amount it is sending that way it can
+still send packets of MTU size without credits dropping to 0.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/arm-realview-eb.dtsi    | 2 +-
- arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
- arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
- arch/arm/boot/dts/arm-realview-pbx.dtsi   | 2 +-
- arch/arm/boot/dts/versatile-ab.dts        | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ net/bluetooth/l2cap_core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/arm-realview-eb.dtsi b/arch/arm/boot/dts/arm-realview-eb.dtsi
-index e2e9599596e25..05379b6c1c13b 100644
---- a/arch/arm/boot/dts/arm-realview-eb.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-eb.dtsi
-@@ -334,7 +334,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 48d23abfe7992..1306962a792af 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -6811,6 +6811,16 @@ static int l2cap_le_data_rcv(struct l2cap_chan *chan, struct sk_buff *skb)
+ 		chan->sdu_len = sdu_len;
+ 		chan->sdu_last_frag = skb;
  
--		ssp: ssp@1000d000 {
-+		ssp: spi@1000d000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1000d000 0x1000>;
- 			clocks = <&sspclk>, <&pclk>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-index c789564f28033..c1fd5615ddfe3 100644
---- a/arch/arm/boot/dts/arm-realview-pb1176.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-@@ -343,7 +343,7 @@
- 			clock-names = "apb_pclk";
- 		};
++		/* Detect if remote is not able to use the selected MPS */
++		if (skb->len + L2CAP_SDULEN_SIZE < chan->mps) {
++			u16 mps_len = skb->len + L2CAP_SDULEN_SIZE;
++
++			/* Adjust the number of credits */
++			BT_DBG("chan->mps %u -> %u", chan->mps, mps_len);
++			chan->mps = mps_len;
++			l2cap_chan_le_send_credits(chan);
++		}
++
+ 		return 0;
+ 	}
  
--		pb1176_ssp: ssp@1010b000 {
-+		pb1176_ssp: spi@1010b000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1010b000 0x1000>;
- 			interrupt-parent = <&intc_dc1176>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-index 3944765ac4b06..e306f1cceb4ec 100644
---- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-@@ -480,7 +480,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
- 
--		ssp@1000d000 {
-+		spi@1000d000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1000d000 0x1000>;
- 			interrupt-parent = <&intc_pb11mp>;
-diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-index aeb49c4bd773f..2bf3958b2e6b9 100644
---- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-@@ -318,7 +318,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
- 
--		ssp: ssp@1000d000 {
-+		ssp: spi@1000d000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1000d000 0x1000>;
- 			clocks = <&sspclk>, <&pclk>;
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 409e069b3a845..00d7d28e86f0b 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -303,7 +303,7 @@
- 			clock-names = "apb_pclk";
- 		};
- 
--		ssp@101f4000 {
-+		spi@101f4000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x101f4000 0x1000>;
- 			interrupts = <11>;
 -- 
 2.20.1
 
