@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2124CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4688C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1C020730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA7C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421689;
-	bh=qHwt6qY58WGCpmbsKOfJ8HhoTBltAdAPuFT+Fs5YduM=;
+	s=default; t=1574421694;
+	bh=ht9seQUWdx8eONxgqfbYtB6UPmAj53mK765ewWByYfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcg4ICp4Lf0TXQ1YNt/8U4OK18if/O4dYIbB/8Mbv+6ftFJhkFFk5xwuQdz1z3enc
-	 fZZ1wqrCcEfNw4m1sR4RM+yUkFmfZzVolVYIjG50EdCj7KFH8D/oguzZRjyUbcdhCw
-	 GeDA46zAl2K/Yq8P8hZLUrur415a41ZuSD0xX6t0=
+	b=VTaH3JzXKWbqECizROOgqwQtQEXcC95fY18vCG48LbjZFXkxPy+hihFb/7Evvcee0
+	 sjcDIWy+2+PQl+63s9KNkaLt6S8CMFQnJSsJb953oCqVLaCKtZ5Iv3FUW8ffEy/WHn
+	 8c9YJhFa4vDtzSjSVOOXHLv4/J+XqGQoqhVkey3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfKVLV1 (ORCPT
+        id S1729419AbfKVKpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:21:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729437AbfKVKpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:16 -0500
+        id S1728325AbfKVKpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A5020718;
-        Fri, 22 Nov 2019 10:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE1720656;
+        Fri, 22 Nov 2019 10:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419516;
-        bh=qHwt6qY58WGCpmbsKOfJ8HhoTBltAdAPuFT+Fs5YduM=;
+        s=default; t=1574419505;
+        bh=ht9seQUWdx8eONxgqfbYtB6UPmAj53mK765ewWByYfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EReMPRcIANoyQMm1Q2ZqvUFbS2FHwdCEn1R66yr/vsds4+RLlj6B6/aFSkMO4ZZk0
-         6ozY+BQZs1yFFAIZbKK4+3BzI1wuWh/F5Wcf5fP4g683Ijn10ZrDO0HsZ1NVjdpc+i
-         plVE1RTNlTCyy2CJef0fx+h1qU+lbSmrmjEJP5uQ=
+        b=u6gkhruoVYXvYNz5YaDm1vJlxedtd2ea8fhmoVRx4foutvl5C6KHbHQAhCZP/0KpI
+         uDQ7lA/4Ggpwd8DmJnevsW4QsddjJUZpezBjBbHtIAmHO+9z6GN0ofDbIcVFbUkODi
+         GPmVfuBYh9+Vtm0B+brw73tfXP9LvzNj02TbkQSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Finn Thain <fthain@telegraphics.com.au>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 138/222] scsi: NCR5380: Dont call dsprintk() following reselection interrupt
-Date:   Fri, 22 Nov 2019 11:27:58 +0100
-Message-Id: <20191122100912.847257642@linuxfoundation.org>
+Subject: [PATCH 4.9 135/222] scsi: NCR5380: Use DRIVER_SENSE to indicate valid sense data
+Date:   Fri, 22 Nov 2019 11:27:55 +0100
+Message-Id: <20191122100912.665562759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -63,55 +63,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 08267216b3f8aa5adc204bdccf8deb72c1cd7665 ]
+[ Upstream commit 070356513963be6196142acff56acc8359069fa1 ]
 
-The X3T9.2 specification (draft) says, under "6.1.4.1 RESELECTION",
-
-    ... The reselected initiator shall then assert the BSY signal
-    within a selection abort time of its most recent detection of being
-    reselected; this is required for correct operation of the time-out
-    procedure.
-
-The selection abort time is only 200 us which may be insufficient time for a
-printk() call. Move the diagnostics to the error paths.
+When sense data is valid, call set_driver_byte(cmd, DRIVER_SENSE).  Otherwise
+some callers of scsi_execute() will ignore sense data.  Don't set DID_ERROR or
+DID_RESET just because sense data is missing.
 
 Tested-by: Michael Schmitz <schmitzmic@gmail.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/NCR5380.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index a4856eeac26f6..03f9ddbc37fbb 100644
+index ba7b3aef3ef0b..35419ba32c467 100644
 --- a/drivers/scsi/NCR5380.c
 +++ b/drivers/scsi/NCR5380.c
-@@ -2109,8 +2109,6 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
- 		return;
+@@ -617,11 +617,12 @@ static void complete_cmd(struct Scsi_Host *instance,
+ 
+ 	if (hostdata->sensing == cmd) {
+ 		/* Autosense processing ends here */
+-		if ((cmd->result & 0xff) != SAM_STAT_GOOD) {
++		if (status_byte(cmd->result) != GOOD) {
+ 			scsi_eh_restore_cmnd(cmd, &hostdata->ses);
+-			set_host_byte(cmd, DID_ERROR);
+-		} else
++		} else {
+ 			scsi_eh_restore_cmnd(cmd, &hostdata->ses);
++			set_driver_byte(cmd, DRIVER_SENSE);
++		}
+ 		hostdata->sensing = NULL;
  	}
  
--	dsprintk(NDEBUG_RESELECTION, instance, "reselect\n");
--
- 	/*
- 	 * At this point, we have detected that our SCSI ID is on the bus,
- 	 * SEL is true and BSY was false for at least one bus settle delay
-@@ -2123,6 +2121,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
- 	NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE | ICR_ASSERT_BSY);
- 	if (NCR5380_poll_politely(instance,
- 	                          STATUS_REG, SR_SEL, 0, 2 * HZ) < 0) {
-+		shost_printk(KERN_ERR, instance, "reselect: !SEL timeout\n");
- 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
- 		return;
+@@ -2356,7 +2357,6 @@ static int NCR5380_abort(struct scsi_cmnd *cmd)
+ 	if (list_del_cmd(&hostdata->autosense, cmd)) {
+ 		dsprintk(NDEBUG_ABORT, instance,
+ 		         "abort: removed %p from sense queue\n", cmd);
+-		set_host_byte(cmd, DID_ERROR);
+ 		complete_cmd(instance, cmd);
  	}
-@@ -2134,6 +2133,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
  
- 	if (NCR5380_poll_politely(instance,
- 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
-+		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
- 		do_abort(instance);
- 		return;
+@@ -2435,7 +2435,6 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
+ 	list_for_each_entry(ncmd, &hostdata->autosense, list) {
+ 		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
+ 
+-		set_host_byte(cmd, DID_RESET);
+ 		cmd->scsi_done(cmd);
  	}
+ 	INIT_LIST_HEAD(&hostdata->autosense);
 -- 
 2.20.1
 
