@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45425C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C77BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136DC2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4917F2073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420379;
-	bh=NYihL1uFTwIweITVkwcy2TUbxQBpKIxwrTjikLGmq8U=;
+	s=default; t=1574420381;
+	bh=iHrSDbtmO6iDPDxEj/3JzV833eWtqf2Bv0P7k8m6R14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/oqKjsZa1O0ABscl1P/BYS2teWMMFWQz/0pTjT3jNgtHWpCx4qAYDkO2MSRthnEN
-	 JI1/CQKZpCJv3n8bmxb99Gk0m73XkZ2GJxdCZsgpM25zvnGkBWLLHSG2f0s4xLSm8k
-	 ItIlM10j+YXxE7UBNCUZo/FQCw3pLPQcsw1jmbzc=
+	b=oj+Yt3e2t2KaOWq/vnkifgsevOngccRxatjxb6qWxOGminzS7oGMiRaL1ziL7lW2G
+	 YE6pfbC0NoRPJ0/LLv1eDZWWnoadVo1gVsSRjy8N9BnW6tVgILV/wtVnSEgiN/eOxC
+	 uCFh4Hihkd5n/6UnG98WCLhL7xb58H2GRXUyqUWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfKVK7h (ORCPT
+        id S1730945AbfKVK7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50776 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbfKVK7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:35 -0500
+        id S1730921AbfKVK7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08D9C2073F;
-        Fri, 22 Nov 2019 10:59:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E11720706;
+        Fri, 22 Nov 2019 10:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420374;
-        bh=NYihL1uFTwIweITVkwcy2TUbxQBpKIxwrTjikLGmq8U=;
+        s=default; t=1574420377;
+        bh=iHrSDbtmO6iDPDxEj/3JzV833eWtqf2Bv0P7k8m6R14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTFTCmXBNLmFRt4dop9AyFI98kPkuNd+aMFyeq85mycTQ2z562HEkw0CVPsToHb3F
-         S6/VCqK8TbrJgm3GyCW2x+OLtBrShNnj1mCZnhYTkNMnAEG1QEnN9LjYSzkRj9Ow50
-         5vtTdmPZoNIXgtSKzBaNYashi5RpDO2sa5buqYGs=
+        b=yXu/dg5aW1uaD2ei0JFD7VHWMD+C/Vyf07mVRgDyGWvqybBFNPu1Ws1Ht5NAA/yty
+         FH8+aSApAvsvxhqHQuDFN9ue0SfT7SDiEil1T0ict80xMtHZ9QT6JSEGV2zcoCv4qA
+         MYhcoAxhWfpc5+FZs7FPpciEa4LajMu0zRNkS0Ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/220] RDMA/hns: Submit bad wr when post send wr exception
-Date:   Fri, 22 Nov 2019 11:27:31 +0100
-Message-Id: <20191122100918.747691647@linuxfoundation.org>
+Subject: [PATCH 4.19 087/220] RDMA/hns: Bugfix for CM test
+Date:   Fri, 22 Nov 2019 11:27:32 +0100
+Message-Id: <20191122100918.844138442@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,10 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit c80e066100b5fed722c8da67c1bd2312e7bcf129 ]
+[ Upstream commit 15fc056fba7b17b9abfbe80a12f188403fc949fb ]
 
-When user issues a RDMA read and enables sq inline, it needs to report a
-bad wr to user.
+It will print the warning when the MSB bit of SLID is not zero running
+cm_req_handler function that test CM. It needs to fixed zero when test
+RoCE device.
 
 Signed-off-by: Lijun Ou <oulijun@huawei.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
@@ -75,17 +76,17 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 4e1465dbad91c..c8a3864f19122 100644
+index c8a3864f19122..7a7232927b126 100644
 --- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
 +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -121,6 +121,7 @@ static int set_rwqe_data_seg(struct ib_qp *ibqp, const struct ib_send_wr *wr,
- 		}
- 
- 		if (wr->opcode == IB_WR_RDMA_READ) {
-+			*bad_wr =  wr;
- 			dev_err(hr_dev->dev, "Not support inline data!\n");
- 			return -EINVAL;
- 		}
+@@ -2268,6 +2268,7 @@ static int hns_roce_v2_poll_one(struct hns_roce_cq *hr_cq,
+ 		wc->src_qp = (u8)roce_get_field(cqe->byte_32,
+ 						V2_CQE_BYTE_32_RMT_QPN_M,
+ 						V2_CQE_BYTE_32_RMT_QPN_S);
++		wc->slid = 0;
+ 		wc->wc_flags |= (roce_get_bit(cqe->byte_32,
+ 					      V2_CQE_BYTE_32_GRH_S) ?
+ 					      IB_WC_GRH : 0);
 -- 
 2.20.1
 
