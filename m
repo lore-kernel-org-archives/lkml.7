@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7518C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8C8C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B10720730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBBC2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421766;
-	bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
+	s=default; t=1574421772;
+	bh=ekjUL9iEKKF0msi9brH469zdJuKPgU6PU/D6LgKa3SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9r1NfXXeQ7Z6cmSLm/ku7+kKSfZANcxRHyUpWNdtOgivO+QCH/vos+/lsqcY5+De
-	 dcbbGOkujGETpa98r7OXNiEf8cuOYHG/vc/Jjbk9/4+ss+mLcdI4QBob/q7T0g7/rz
-	 v7fqSypfxKq1jbJ5+MTGF4lMkm424DwW/Ni+ECqk=
+	b=r9xPZYUq6QNRKxf+FAEZ0/z2K5a9l5LQs8pIIR8aBB1U4tblS82o5YbbgB17sP5GG
+	 eBdToXeJOEVyFHnnzton+mURnhe452jk/fSVe/WVo9K3z2BRAWKOw5pj3ZlrELaAi4
+	 0Uag7rHPNH4UtHn2hvOqFctGxWukRXcn9mrajlFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfKVLWp (ORCPT
+        id S1729126AbfKVKme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:22:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727747AbfKVKmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:42:42 -0500
+        id S1728151AbfKVKmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:42:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D346620715;
-        Fri, 22 Nov 2019 10:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A03F20637;
+        Fri, 22 Nov 2019 10:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419362;
-        bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
+        s=default; t=1574419350;
+        bh=ekjUL9iEKKF0msi9brH469zdJuKPgU6PU/D6LgKa3SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GmVoWriA4/3Or6+UrMP+p5w9iaxkChr+mtIdURb3Lrd/TO96zRtL4ORY1A3uzD3NU
-         fOKbVpUXRMIMzV0dUq+eFoebi9+JRw+B+xbMio/l7DLlVVJ7/Futlu/Tnc4gwdDTrs
-         IW51hTex6mb6WscKaazzZYMwgnYXhajAwuT/DvDU=
+        b=fjQIKV+O7GvJCFdPaccEDyRwvp1Qnpl8kYXpD6nJ+Ubz22lK6D/ixTtMiRKW0fBG5
+         1WTqwdvSzHfTvC7ROdIIZjKt6Q6m+2eBR1GMC15cXSVafrpOR1bMZCdAVVNvDD9/Gd
+         duZt9rRQsN3AShVC52tTENQMSPAuol/hLjmfKi80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Rob Herring <robh@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 087/222] libfdt: Ensure INT_MAX is defined in libfdt_env.h
-Date:   Fri, 22 Nov 2019 11:27:07 +0100
-Message-Id: <20191122100909.853136152@linuxfoundation.org>
+Subject: [PATCH 4.9 083/222] powerpc/iommu: Avoid derefence before pointer check
+Date:   Fri, 22 Nov 2019 11:27:03 +0100
+Message-Id: <20191122100909.462170357@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -64,66 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
+[ Upstream commit 984ecdd68de0fa1f63ce205d6c19ef5a7bc67b40 ]
 
-The next update of libfdt has a new dependency on INT_MAX. Update the
-instances of libfdt_env.h in the kernel to either include the necessary
-header with the definition or define it locally.
+The tbl pointer is being derefenced by IOMMU_PAGE_SIZE prior the check
+if it is not NULL.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Just moving the dereference code to after the check, where there will
+be guarantee that 'tbl' will not be NULL.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 2 ++
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 1 +
- 3 files changed, 5 insertions(+)
+ arch/powerpc/kernel/iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index 17ae0f3efac8e..005bf4ff1b4cb 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -5,6 +5,8 @@
- #include <linux/string.h>
- #include <asm/byteorder.h>
+diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+index 5f202a566ec5f..9bfdd2510fd5e 100644
+--- a/arch/powerpc/kernel/iommu.c
++++ b/arch/powerpc/kernel/iommu.c
+@@ -765,9 +765,9 @@ dma_addr_t iommu_map_page(struct device *dev, struct iommu_table *tbl,
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index 7e3789ea396b8..0b3db6322c793 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -4,6 +4,8 @@
- #include <types.h>
- #include <string.h>
+ 	vaddr = page_address(page) + offset;
+ 	uaddr = (unsigned long)vaddr;
+-	npages = iommu_num_pages(uaddr, size, IOMMU_PAGE_SIZE(tbl));
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- #include "of.h"
- 
- typedef u32 uint32_t;
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index 2a663c6bb4285..8850e243c9406 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -1,6 +1,7 @@
- #ifndef _LIBFDT_ENV_H
- #define _LIBFDT_ENV_H
- 
-+#include <linux/kernel.h>	/* For INT_MAX */
- #include <linux/string.h>
- 
- #include <asm/byteorder.h>
+ 	if (tbl) {
++		npages = iommu_num_pages(uaddr, size, IOMMU_PAGE_SIZE(tbl));
+ 		align = 0;
+ 		if (tbl->it_page_shift < PAGE_SHIFT && size >= PAGE_SIZE &&
+ 		    ((unsigned long)vaddr & ~PAGE_MASK) == 0)
 -- 
 2.20.1
 
