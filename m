@@ -5,51 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E5AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18AE2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF0E2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420560;
-	bh=seh6PmXvSTkNpVGMUR2DlyeDVyJ5I38GlRYzKWTGXiY=;
+	s=default; t=1574420564;
+	bh=ccBzI2Hxcp+UN6EicYvhJ9LXXZoZN5mA1p4W63Ng3vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhoBv19K+Uw5h1OwyPMDaraoI80iugNLNGbBwF2+TuFG6oNGJ669BLbOc78zbzmMc
-	 SDyamTIVWu8b+3swBcKMUqEm6Jgq5mTjDep3/ythSZVd+7gm2pb1o7MvU7XVn7c/7y
-	 ltjO2voOZO+TgbHDI1Efu4bQXd9NviOvJeWURh+c=
+	b=ERxrvuyvBKe0ICN14MebkiXDsqdUvn3YyeyXyMDBaWT1mhT32VBp8eGUBqCvxJhZY
+	 Z568jvti+T8MY7ZYr9iTrEXTshxyr91uAWwcBW/VCWIqW3YSMvqsTxrtu3T529bD1C
+	 tyath2x2Rfa/2QVxiiWIQaogTxcZ4qv8jPy64dBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbfKVLCi (ORCPT
+        id S1731334AbfKVLCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730991AbfKVLCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:35 -0500
+        id S1731324AbfKVLCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A507220840;
-        Fri, 22 Nov 2019 11:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2814E207FC;
+        Fri, 22 Nov 2019 11:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420555;
-        bh=seh6PmXvSTkNpVGMUR2DlyeDVyJ5I38GlRYzKWTGXiY=;
+        s=default; t=1574420557;
+        bh=ccBzI2Hxcp+UN6EicYvhJ9LXXZoZN5mA1p4W63Ng3vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m732d10en112HLLS7Qj1z4RcqAwzOvdl8Z1QSnrEsfJLqD94HxmN2h1+ISZ0RqDRd
-         Xn9cZcTiRFmHEkbU/HsJIl3o1eTw2sr0v8tNqQjH53M/AWZqwCeMHyNScYTQrjkHkH
-         ki3Y1BgkU5G59JtHW/pjWXoeLmXySaKdSAKQXhms=
+        b=AveORbk3PhJsKTEVUvOcuxogMmLBu/pJDfzBchqcoQ34NKL0qQEGPbI3CbBINF2qT
+         h6YxCOpb41GiStyc+wVGGozF7x6F6uUNU+yNDCNGQaiNs8TwosIlE5rfWmBijF1lP2
+         Xa6LTb/t3YCElbzSPa/mTpCzcHps9qzlS+adwC70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/220] xsk: proper AF_XDP socket teardown ordering
-Date:   Fri, 22 Nov 2019 11:28:31 +0100
-Message-Id: <20191122100923.263721887@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Markus T Metzger <markus.t.metzger@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Shankar <ravi.v.shankar@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 147/220] x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately
+Date:   Fri, 22 Nov 2019 11:28:32 +0100
+Message-Id: <20191122100923.327851010@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,102 +72,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-[ Upstream commit 541d7fdd7694560404c502f64298a90ffe017e6b ]
+[ Upstream commit 07e1d88adaaeab247b300926f78cc3f950dbeda3 ]
 
-The AF_XDP socket struct can exist in three different, implicit
-states: setup, bound and released. Setup is prior the socket has been
-bound to a device. Bound is when the socket is active for receive and
-send. Released is when the process/userspace side of the socket is
-released, but the sock object is still lingering, e.g. when there is a
-reference to the socket in an XSKMAP after process termination.
+On 64-bit kernels ptrace can read the FS/GS base using the register access
+APIs (PTRACE_PEEKUSER, etc.) or PTRACE_ARCH_PRCTL.
 
-The Rx fast-path code uses the "dev" member of struct xdp_sock to
-check whether a socket is bound or relased, and the Tx code uses the
-struct xdp_umem "xsk_list" member in conjunction with "dev" to
-determine the state of a socket.
+Make both of these mechanisms return the actual FS/GS base.
 
-However, the transition from bound to released did not tear the socket
-down in correct order.
+This will improve debuggability by providing the correct information
+to ptracer such as GDB.
 
-On the Rx side "dev" was cleared after synchronize_net() making the
-synchronization useless. On the Tx side, the internal queues were
-destroyed prior removing them from the "xsk_list".
+[ chang: Rebased and revised patch description. ]
+[ mingo: Revised the changelog some more. ]
 
-This commit corrects the cleanup order, and by doing so
-xdp_del_sk_umem() can be simplified and one synchronize_net() can be
-removed.
-
-Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-Fixes: ac98d8aab61b ("xsk: wire upp Tx zero-copy functions")
-Reported-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Markus T Metzger <markus.t.metzger@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/1537312139-5580-2-git-send-email-chang.seok.bae@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xdp_umem.c | 11 +++--------
- net/xdp/xsk.c      | 13 ++++++++-----
- 2 files changed, 11 insertions(+), 13 deletions(-)
+ arch/x86/kernel/ptrace.c | 62 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 10 deletions(-)
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 8cab91c482ff5..d9117ab035f7c 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -32,14 +32,9 @@ void xdp_del_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
- {
- 	unsigned long flags;
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 516ec7586a5fb..8d4d506453106 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -40,6 +40,7 @@
+ #include <asm/hw_breakpoint.h>
+ #include <asm/traps.h>
+ #include <asm/syscall.h>
++#include <asm/mmu_context.h>
  
--	if (xs->dev) {
--		spin_lock_irqsave(&umem->xsk_list_lock, flags);
--		list_del_rcu(&xs->list);
--		spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
--
--		if (umem->zc)
--			synchronize_net();
--	}
-+	spin_lock_irqsave(&umem->xsk_list_lock, flags);
-+	list_del_rcu(&xs->list);
-+	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+ #include "tls.h"
+ 
+@@ -343,6 +344,49 @@ static int set_segment_reg(struct task_struct *task,
+ 	return 0;
  }
  
- int xdp_umem_query(struct net_device *dev, u16 queue_id)
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 661504042d304..ff15207036dc5 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -343,12 +343,18 @@ static int xsk_release(struct socket *sock)
- 	local_bh_enable();
- 
- 	if (xs->dev) {
-+		struct net_device *dev = xs->dev;
++static unsigned long task_seg_base(struct task_struct *task,
++				   unsigned short selector)
++{
++	unsigned short idx = selector >> 3;
++	unsigned long base;
 +
- 		/* Wait for driver to stop using the xdp socket. */
--		synchronize_net();
--		dev_put(xs->dev);
-+		xdp_del_sk_umem(xs->umem, xs);
- 		xs->dev = NULL;
-+		synchronize_net();
-+		dev_put(dev);
++	if (likely((selector & SEGMENT_TI_MASK) == 0)) {
++		if (unlikely(idx >= GDT_ENTRIES))
++			return 0;
++
++		/*
++		 * There are no user segments in the GDT with nonzero bases
++		 * other than the TLS segments.
++		 */
++		if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
++			return 0;
++
++		idx -= GDT_ENTRY_TLS_MIN;
++		base = get_desc_base(&task->thread.tls_array[idx]);
++	} else {
++#ifdef CONFIG_MODIFY_LDT_SYSCALL
++		struct ldt_struct *ldt;
++
++		/*
++		 * If performance here mattered, we could protect the LDT
++		 * with RCU.  This is a slow path, though, so we can just
++		 * take the mutex.
++		 */
++		mutex_lock(&task->mm->context.lock);
++		ldt = task->mm->context.ldt;
++		if (unlikely(idx >= ldt->nr_entries))
++			base = 0;
++		else
++			base = get_desc_base(ldt->entries + idx);
++		mutex_unlock(&task->mm->context.lock);
++#else
++		base = 0;
++#endif
++	}
++
++	return base;
++}
++
+ #endif	/* CONFIG_X86_32 */
+ 
+ static unsigned long get_flags(struct task_struct *task)
+@@ -436,18 +480,16 @@ static unsigned long getreg(struct task_struct *task, unsigned long offset)
+ 
+ #ifdef CONFIG_X86_64
+ 	case offsetof(struct user_regs_struct, fs_base): {
+-		/*
+-		 * XXX: This will not behave as expected if called on
+-		 * current or if fsindex != 0.
+-		 */
+-		return task->thread.fsbase;
++		if (task->thread.fsindex == 0)
++			return task->thread.fsbase;
++		else
++			return task_seg_base(task, task->thread.fsindex);
  	}
- 
-+	xskq_destroy(xs->rx);
-+	xskq_destroy(xs->tx);
-+
- 	sock_orphan(sk);
- 	sock->sk = NULL;
- 
-@@ -707,9 +713,6 @@ static void xsk_destruct(struct sock *sk)
- 	if (!sock_flag(sk, SOCK_DEAD))
- 		return;
- 
--	xskq_destroy(xs->rx);
--	xskq_destroy(xs->tx);
--	xdp_del_sk_umem(xs->umem, xs);
- 	xdp_put_umem(xs->umem);
- 
- 	sk_refcnt_debug_dec(sk);
+ 	case offsetof(struct user_regs_struct, gs_base): {
+-		/*
+-		 * XXX: This will not behave as expected if called on
+-		 * current or if fsindex != 0.
+-		 */
+-		return task->thread.gsbase;
++		if (task->thread.gsindex == 0)
++			return task->thread.gsbase;
++		else
++			return task_seg_base(task, task->thread.gsindex);
+ 	}
+ #endif
+ 	}
 -- 
 2.20.1
 
