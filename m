@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74642C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA9A20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041F120679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421872;
-	bh=l51evxqU8zJCOrGtKLHrLz9etFFXDJe12qIraGCuN0U=;
+	s=default; t=1574421875;
+	bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyP4W1gOoLF6QWndTJ6MFhkWJexKRRFPIpiEae0PnMXcFZiRFH6/nJMPmfnRzFWC1
-	 +NWqBljaBPZrpinNdze11Fgl1JQTbLY2qEQWmV3YUoJOq3drwGE44K8W4YWImAj2UK
-	 pg96y5/JgZ1G36rtio0XAsLkb6ENMa4NGdgYVJNU=
+	b=dXt2xZ6ghyfW+MynwobO65NakMlKoj2C1wg0ac2SK2F/kBN5S9rJ6Zq8M/J88l4Xe
+	 hJPexFSdnJb7WONfu3oaea5dAqDXQBXpnzAt+t9QpvJG8ov2++ots73q+ZQUORja5e
+	 PYjqbzVFHzgqkUgDN6BrjZ4nz5SNXqwoTgHwLBAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfKVKiv (ORCPT
+        id S1728703AbfKVKiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbfKVKir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:47 -0500
+        id S1727561AbfKVKip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 471A520717;
-        Fri, 22 Nov 2019 10:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9911320637;
+        Fri, 22 Nov 2019 10:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419126;
-        bh=l51evxqU8zJCOrGtKLHrLz9etFFXDJe12qIraGCuN0U=;
+        s=default; t=1574419124;
+        bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrYNWA7lhgaXLML4fI39XrtORglhoI4gQzeu1tF5gurfIjv08TfxepOpvyz7mz72l
-         Pgd/mgC5hUJiDSQ+O1p1BY0lGRMlt2tcqhfOktVuJn56PlrYUlHuclr+uXeYm1mkdV
-         AloahyhmwX4opANWxRPGOB2ColiZX+KMorklLWts=
+        b=IW72KgJpW8CDJuGzMMlgJ8FX76uVBPZUKG8LAkZbZ1Ixelz5b+0u9HHS0YVU/nutU
+         9yXP527OnebBrDRci2cS0wHaeNTSJP51xUeZBaB/+wt5MzDANCe7BzY2QmK9JWt4av
+         zG2+MIKi7//bjuUHlN+IBiz+YzzuaPjPqWlef5dY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 129/159] ata: ep93xx: Use proper enums for directions
-Date:   Fri, 22 Nov 2019 11:28:40 +0100
-Message-Id: <20191122100833.138524394@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 128/159] IB/mthca: Fix error return code in __mthca_init_one()
+Date:   Fri, 22 Nov 2019 11:28:39 +0100
+Message-Id: <20191122100832.990179210@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,87 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 6adde4a36f1b6a562a1057fbb1065007851050e7 ]
+[ Upstream commit 39f2495618c5e980d2873ea3f2d1877dd253e07a ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+Fix to return a negative error code from the mthca_cmd_init() error
+handling case instead of 0, as done elsewhere in this function.
 
-drivers/ata/pata_ep93xx.c:662:36: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
-                                        ~ ^~~~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:670:36: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
-                                        ~ ^~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:681:19: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        conf.direction = DMA_FROM_DEVICE;
-                       ~ ^~~~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:692:19: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        conf.direction = DMA_TO_DEVICE;
-                       ~ ^~~~~~~~~~~~~
-
-Use the equivalent valued enums from the expected type so that Clang no
-longer warns about a conversion.
-
-DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1
-DMA_FROM_DEVICE = DMA_DEV_TO_MEM = 2
-
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 80fd8238734c ("[PATCH] IB/mthca: Encapsulate command interface init")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/pata_ep93xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/mthca/mthca_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/pata_ep93xx.c b/drivers/ata/pata_ep93xx.c
-index bd6b089c67a3a..634c814cbeda4 100644
---- a/drivers/ata/pata_ep93xx.c
-+++ b/drivers/ata/pata_ep93xx.c
-@@ -659,7 +659,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 	 * start of new transfer.
- 	 */
- 	drv_data->dma_rx_data.port = EP93XX_DMA_IDE;
--	drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
-+	drv_data->dma_rx_data.direction = DMA_DEV_TO_MEM;
- 	drv_data->dma_rx_data.name = "ep93xx-pata-rx";
- 	drv_data->dma_rx_channel = dma_request_channel(mask,
- 		ep93xx_pata_dma_filter, &drv_data->dma_rx_data);
-@@ -667,7 +667,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 		return;
+diff --git a/drivers/infiniband/hw/mthca/mthca_main.c b/drivers/infiniband/hw/mthca/mthca_main.c
+index ded76c101dde3..834b06aacc2bf 100644
+--- a/drivers/infiniband/hw/mthca/mthca_main.c
++++ b/drivers/infiniband/hw/mthca/mthca_main.c
+@@ -989,7 +989,8 @@ static int __mthca_init_one(struct pci_dev *pdev, int hca_type)
+ 		goto err_free_dev;
+ 	}
  
- 	drv_data->dma_tx_data.port = EP93XX_DMA_IDE;
--	drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
-+	drv_data->dma_tx_data.direction = DMA_MEM_TO_DEV;
- 	drv_data->dma_tx_data.name = "ep93xx-pata-tx";
- 	drv_data->dma_tx_channel = dma_request_channel(mask,
- 		ep93xx_pata_dma_filter, &drv_data->dma_tx_data);
-@@ -678,7 +678,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 
- 	/* Configure receive channel direction and source address */
- 	memset(&conf, 0, sizeof(conf));
--	conf.direction = DMA_FROM_DEVICE;
-+	conf.direction = DMA_DEV_TO_MEM;
- 	conf.src_addr = drv_data->udma_in_phys;
- 	conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	if (dmaengine_slave_config(drv_data->dma_rx_channel, &conf)) {
-@@ -689,7 +689,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 
- 	/* Configure transmit channel direction and destination address */
- 	memset(&conf, 0, sizeof(conf));
--	conf.direction = DMA_TO_DEVICE;
-+	conf.direction = DMA_MEM_TO_DEV;
- 	conf.dst_addr = drv_data->udma_out_phys;
- 	conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	if (dmaengine_slave_config(drv_data->dma_tx_channel, &conf)) {
+-	if (mthca_cmd_init(mdev)) {
++	err = mthca_cmd_init(mdev);
++	if (err) {
+ 		mthca_err(mdev, "Failed to init command interface, aborting.\n");
+ 		goto err_free_dev;
+ 	}
 -- 
 2.20.1
 
