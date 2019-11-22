@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B35C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ABEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED1620718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0C320708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421722;
-	bh=rYpbs0dKw7NuXQPuiS1JlwOkFwEBEGYINd5c/qDq/JM=;
+	s=default; t=1574421725;
+	bh=SWnbQ6ESsCx2svhKme4+smyFG/NDFa640/NUKAqdQIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bg9bMez7RYCf8JcfGLzjeg92jRpvGnHCLk16DFPTC/d/dfnMTcjChFTgq6lwHEtGn
-	 +zB0stTBrjEFjJdVt/OqfLEdgHw94X0wcQ9XSBwGxwjtqtKnOB85TpmZTvmyztwjH0
-	 eMB7MunEm0VeaSVVvYtKi1lYJH2azA2i/JcUolnY=
+	b=Vf1g8szOI27SUk9bZf9ACQYdz9Oev9ht4NxLaNzDZkTn1awz04KP4fsoKFx7qRdxn
+	 olPKeqG5mC5M9QeX6jfHFLJaDYAmYjrFLauhvsfsvRIbF2hk65VkQk/1bqtIeRUbfU
+	 PAy3BzOmmeZAjH8TZtO15cRNmtoq01wRVd2Yudg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfKVKoN (ORCPT
+        id S1729061AbfKVLWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49888 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:22:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728832AbfKVKoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:05 -0500
+        id S1729313AbfKVKoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30F1320715;
-        Fri, 22 Nov 2019 10:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6213C20715;
+        Fri, 22 Nov 2019 10:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419444;
-        bh=rYpbs0dKw7NuXQPuiS1JlwOkFwEBEGYINd5c/qDq/JM=;
+        s=default; t=1574419447;
+        bh=SWnbQ6ESsCx2svhKme4+smyFG/NDFa640/NUKAqdQIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Heums4T0EEmlYkzghQkcDScRzdkxh7B/rQAmC07gPGSqWCDRgy19G8FkOD0UPJ4BR
-         dR7A9l+Ms2bKvpu16sts5cCA9nPpKG8uHAnrMdjxjagdZbdY8YAaADQkgpZsToU1zx
-         Q0n3+Npj95a7IKmrhL6tJoeCAN3zUW2qtT3uq9/w=
+        b=Db4ORN48y/HTZuLuvlKrNTlIfqGf9zrT4+7RayxMjAnx+/iQ2qgxRWNwK+IrXKvL4
+         FhhMpRl2fWRAzs+sx0MkgEKqXO3HGSIWP3vFhGOn5vhlkZx5B/ggRP/xF4lCWF4nC8
+         u24Bw8+SQSxoG2gdRpTZW6uUETMpuw9UZ9rP6Ogw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, Joel Pepper <joel.pepper@rwth-aachen.de>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 112/222] usb: gadget: uvc: configfs: Drop leaked references to config items
-Date:   Fri, 22 Nov 2019 11:27:32 +0100
-Message-Id: <20191122100911.324855796@linuxfoundation.org>
+Subject: [PATCH 4.9 113/222] usb: gadget: uvc: configfs: Prevent format changes after linking header
+Date:   Fri, 22 Nov 2019 11:27:33 +0100
+Message-Id: <20191122100911.383044288@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,57 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Joel Pepper <joel.pepper@rwth-aachen.de>
 
-[ Upstream commit 86f3daed59bceb4fa7981d85e89f63ebbae1d561 ]
+[ Upstream commit cb2200f7af8341aaf0c6abd7ba37e4c667c41639 ]
 
-Some of the .allow_link() and .drop_link() operations implementations
-call config_group_find_item() and then leak the reference to the
-returned item. Fix this by dropping those references where needed.
+While checks are in place to avoid attributes and children of a format
+being manipulated after the format is linked into the streaming header,
+the linked flag was never actually set, invalidating the protections.
+Update the flag as appropriate in the header link calls.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Joel Pepper <joel.pepper@rwth-aachen.de>
 Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_configfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/gadget/function/uvc_configfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
-index d7dcd39fe12cb..3803dda54666b 100644
+index 3803dda54666b..3d843e14447bb 100644
 --- a/drivers/usb/gadget/function/uvc_configfs.c
 +++ b/drivers/usb/gadget/function/uvc_configfs.c
-@@ -543,6 +543,7 @@ static int uvcg_control_class_allow_link(struct config_item *src,
- unlock:
- 	mutex_unlock(&opts->lock);
+@@ -772,6 +772,7 @@ static int uvcg_streaming_header_allow_link(struct config_item *src,
+ 	format_ptr->fmt = target_fmt;
+ 	list_add_tail(&format_ptr->entry, &src_hdr->formats);
+ 	++src_hdr->num_fmt;
++	++target_fmt->linked;
+ 
  out:
-+	config_item_put(header);
- 	mutex_unlock(su_mutex);
- 	return ret;
- }
-@@ -584,6 +585,7 @@ static int uvcg_control_class_drop_link(struct config_item *src,
- unlock:
  	mutex_unlock(&opts->lock);
+@@ -810,6 +811,8 @@ static int uvcg_streaming_header_drop_link(struct config_item *src,
+ 			break;
+ 		}
+ 
++	--target_fmt->linked;
++
  out:
-+	config_item_put(header);
- 	mutex_unlock(su_mutex);
- 	return ret;
- }
-@@ -2047,6 +2049,7 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
- unlock:
  	mutex_unlock(&opts->lock);
- out:
-+	config_item_put(header);
  	mutex_unlock(su_mutex);
- 	return ret;
- }
-@@ -2091,6 +2094,7 @@ static int uvcg_streaming_class_drop_link(struct config_item *src,
- unlock:
- 	mutex_unlock(&opts->lock);
- out:
-+	config_item_put(header);
- 	mutex_unlock(su_mutex);
- 	return ret;
- }
 -- 
 2.20.1
 
