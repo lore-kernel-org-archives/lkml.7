@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A4FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF0FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A515B2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5134E2088F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420786;
-	bh=o2JFch+A6p3gmn/4HgcsJDUv94dfZLgFB7wi3AqrSk8=;
+	s=default; t=1574420791;
+	bh=PoHu/DhS+f5VCbwNRPxqlH6ZIVZ4cG59h9sqHS6KGpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qjqFVzZ+xNzmDrmQvBeDX7nwPa1JLg9hJzngVyZuaE3oSTsyvpTLfSLh0dqntjUeB
-	 fGrJpefvmSzNCA5SoPF0dtfFLkPeyRT/sTNDc5H0kqjF9zDkbxpV73dja8Qeo81JFX
-	 k3TSfVxkqfuTqOcYBI/2AvKTnpyJm+Iw9d+7eyFE=
+	b=UgwXFGXsYbpv0opgyrz3slqxUOPiMDxB/rqld0h2nq/bjqyQiCwWRWck7E1cSi5Zj
+	 kkoB134SYZ2JPFE/PlrGOxR+LxS1JwOhG/900OyopbOvjr2zyO7b7GHNgYN9L7ei+0
+	 fb2TvziyNFN82RKsKBJ9cREXSAdl6KUGXOk2upmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbfKVLGZ (ORCPT
+        id S1731876AbfKVLG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34598 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731856AbfKVLGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:22 -0500
+        id S1731865AbfKVLG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE9F220726;
-        Fri, 22 Nov 2019 11:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 917AF2075E;
+        Fri, 22 Nov 2019 11:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420782;
-        bh=o2JFch+A6p3gmn/4HgcsJDUv94dfZLgFB7wi3AqrSk8=;
+        s=default; t=1574420788;
+        bh=PoHu/DhS+f5VCbwNRPxqlH6ZIVZ4cG59h9sqHS6KGpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNOFYtKm6IMqDRmeX5Lhp5eRfjTS7+V5jFyw2GsYioMm8EA7SIjaCeqmJx6I0v9ca
-         5SU8GXTMX4VfCrpKVqCbDS5vR+fX/aA85x4B+LDUEqQSgF66Oo1FBdZyx6EdhxYGo4
-         fZf1Tyv8E98FRx4s6eQDK9Rwwdy9He3NoSTJqYi0=
+        b=ZUB/Nm68KOLfk2JGB1OTrs8eDwssgaiG5BMTaqdXFxsFIWF98x5xyAwVXrKTwVWKe
+         5YRuXXwK43zpKRvZOglcboPIRBMbkMwhBSBSCisFtDClejIQTbP2fEp2oirvU+Wcvj
+         vGjRz9O8iY9MbOjF9kC7lBt48FjVp/+5I4yP/2tw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org,
+        Takeshi Saito <takeshi.saito.xv@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 217/220] tools: PCI: Fix broken pcitest compilation
-Date:   Fri, 22 Nov 2019 11:29:42 +0100
-Message-Id: <20191122100929.234765315@linuxfoundation.org>
+Subject: [PATCH 4.19 219/220] mmc: tmio: fix SCC error handling to avoid false positive CRC error
+Date:   Fri, 22 Nov 2019 11:29:44 +0100
+Message-Id: <20191122100929.359156615@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,55 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
 
-[ Upstream commit 8a5e0af240e07dd3d4897eb8ff52aab757da7fab ]
+[ Upstream commit 51b72656bb39fdcb8f3174f4007bcc83ad1d275f ]
 
-pcitest is currently broken due to the following compiler error
-and related warning. Fix by changing the run_test() function
-signature to return an integer result.
+If an SCC error occurs during a read/write command execution, a false
+positive CRC error message is output.
 
-pcitest.c: In function run_test:
-pcitest.c:143:9: warning: return with a value, in function
-returning void
-  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+mmcblk0: response CRC error sending r/w cmd command, card status 0x900
 
-pcitest.c: In function main:
-pcitest.c:232:9: error: void value not ignored as it ought to be
-  return run_test(test);
+check_scc_error() checks SCC_RVSREQ.RVSERR bit. RVSERR detects a
+correction error in the next (up or down) delay tap position. However,
+since the command is successful, only retuning needs to be executed.
+This has been confirmed by HW engineers.
 
-Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+Thus, on SCC error, set retuning flag instead of setting an error code.
+
+Fixes: b85fb0a1c8ae ("mmc: tmio: Fix SCC error detection")
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+[wsa: updated comment and commit message, removed some braces]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/pci/pcitest.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index ec4d51f3308b8..4c5be77c211f0 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -47,15 +47,15 @@ struct pci_test {
- 	unsigned long	size;
- };
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 94c43c3d3ae58..35630ccbe9e5d 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -926,8 +926,9 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
+ 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
+ 		tmio_mmc_abort_dma(host);
  
--static void run_test(struct pci_test *test)
-+static int run_test(struct pci_test *test)
- {
--	long ret;
-+	int ret = -EINVAL;
- 	int fd;
++	/* SCC error means retune, but executed command was still successful */
+ 	if (host->check_scc_error && host->check_scc_error(host))
+-		mrq->cmd->error = -EILSEQ;
++		mmc_retune_needed(host->mmc);
  
- 	fd = open(test->device, O_RDWR);
- 	if (fd < 0) {
- 		perror("can't open PCI Endpoint Test device");
--		return;
-+		return -ENODEV;
- 	}
- 
- 	if (test->barnum >= 0 && test->barnum <= 5) {
+ 	/* If SET_BLOCK_COUNT, continue with main command */
+ 	if (host->mrq && !mrq->cmd->error) {
 -- 
 2.20.1
 
