@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F1EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37979C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC9E2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE80207FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420278;
-	bh=k5ZRh2ikyUYWBdoD1qh1lHWr6fCnKfqiDBwbD6/ssmo=;
+	s=default; t=1574420286;
+	bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZckuqHIVWMo8spxE6EB019yNa7X3oiV/GBf7osNUU2aL5j04X+pLMlxpvf1TkBolw
-	 dpV+dM/rgW2STVHedu5/dYap++1Z5pcGwk4XSZDKkZg9TndPLuZx4x574ptshrcO5g
-	 T6HAHpzSxAFPZdn5Y3IHv6p7rnYSGE/r0Mlb0a/w=
+	b=U5NXcl930KsHWroAzPk94EAXt0jmoUmRthl8VreQikss2yURrurYNw9ss1PTFN0+m
+	 QBhUJjEYMaAc4QbvY0IK86PVYEm7Zc/XkCBI/grrzkhz7pOEpyRpc7WLLaIX86gfwX
+	 18BUgvhI2OYZrm7Dyt8e3+uT4BPZ4QindK9xXJBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbfKVK55 (ORCPT
+        id S1730760AbfKVK6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:57:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730717AbfKVK5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:49 -0500
+        id S1730502AbfKVK6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D474120718;
-        Fri, 22 Nov 2019 10:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8341F20721;
+        Fri, 22 Nov 2019 10:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420268;
-        bh=k5ZRh2ikyUYWBdoD1qh1lHWr6fCnKfqiDBwbD6/ssmo=;
+        s=default; t=1574420280;
+        bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxQ9l1NRVi0ZZm8SvrlwxOCeIO+JFCr1b4xqyZxquZvs+qXNjfWQCCxXppxGLTXYj
-         WSE32ajBIp4glUoIj+5lKouMqth/YWn92n63ETR1O4/tYm57Wf4c+epEyxrFTttiZR
-         /XLVgHLeLhJwsS4PRJ9EKorQ5d7yVscBSOZj5yDs=
+        b=xAHzKmrLXwAX8HfWj8eYN6ogp/frZfYLAgikXiQIP/9DjXQu2IEhsHiizhkIf9H1V
+         gAv+XQDfnV10eb67z7pPymG5d10BFvU31vgQH7tRY6Zqwr+W2zFDo68zQyCs/BmkBt
+         3ynTdartDY3ngnwlP0LNxaOsupG7pytgGHxCI2eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/220] irqchip/irq-mvebu-icu: Fix wrong private data retrieval
-Date:   Fri, 22 Nov 2019 11:26:54 +0100
-Message-Id: <20191122100915.728633762@linuxfoundation.org>
+Subject: [PATCH 4.19 053/220] watchdog: w83627hf_wdt: Support NCT6796D, NCT6797D, NCT6798D
+Date:   Fri, 22 Nov 2019 11:26:58 +0100
+Message-Id: <20191122100915.975229254@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,44 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 2b4dab69dcca13c5be2ddaf1337ae4accd087de6 ]
+[ Upstream commit 57cbf0e3a0fd48e5ad8f3884562e8dde4827c1c8 ]
 
-The irq_domain structure has an host_data pointer that just stores
-private data. It is meant to not be touched by the IRQ core. However,
-when it comes to MSI, the MSI layer adds its own private data there
-with a structure that also has a host_data pointer.
+The watchdog controller on NCT6796D, NCT6797D, and NCT6798D is compatible
+with the wtachdog controller on other Nuvoton chips.
 
-Because this IRQ domain is an MSI domain, to access private data we
-should do a d->host_data->host_data, also wrapped as
-'platform_msi_get_host_data()'.
-
-This bug was lying there silently because the 'icu' structure retrieved
-this way was just called by dev_err(), only producing a
-'(NULL device *):' output on the console.
-
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mvebu-icu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/w83627hf_wdt.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index 13063339b416d..a2a3acd744911 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -105,7 +105,7 @@ static int
- mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
- 			       unsigned long *hwirq, unsigned int *type)
- {
--	struct mvebu_icu *icu = d->host_data;
-+	struct mvebu_icu *icu = platform_msi_get_host_data(d);
- 	unsigned int icu_group;
+diff --git a/drivers/watchdog/w83627hf_wdt.c b/drivers/watchdog/w83627hf_wdt.c
+index 7817836bff554..4b9365d4de7a9 100644
+--- a/drivers/watchdog/w83627hf_wdt.c
++++ b/drivers/watchdog/w83627hf_wdt.c
+@@ -50,7 +50,7 @@ static int cr_wdt_csr;		/* WDT control & status register */
+ enum chips { w83627hf, w83627s, w83697hf, w83697ug, w83637hf, w83627thf,
+ 	     w83687thf, w83627ehf, w83627dhg, w83627uhg, w83667hg, w83627dhg_p,
+ 	     w83667hg_b, nct6775, nct6776, nct6779, nct6791, nct6792, nct6793,
+-	     nct6795, nct6102 };
++	     nct6795, nct6796, nct6102 };
  
- 	/* Check the count of the parameters in dt */
+ static int timeout;			/* in seconds */
+ module_param(timeout, int, 0);
+@@ -100,6 +100,7 @@ MODULE_PARM_DESC(early_disable, "Disable watchdog at boot time (default=0)");
+ #define NCT6792_ID		0xc9
+ #define NCT6793_ID		0xd1
+ #define NCT6795_ID		0xd3
++#define NCT6796_ID		0xd4	/* also NCT9697D, NCT9698D */
+ 
+ #define W83627HF_WDT_TIMEOUT	0xf6
+ #define W83697HF_WDT_TIMEOUT	0xf4
+@@ -209,6 +210,7 @@ static int w83627hf_init(struct watchdog_device *wdog, enum chips chip)
+ 	case nct6792:
+ 	case nct6793:
+ 	case nct6795:
++	case nct6796:
+ 	case nct6102:
+ 		/*
+ 		 * These chips have a fixed WDTO# output pin (W83627UHG),
+@@ -407,6 +409,9 @@ static int wdt_find(int addr)
+ 	case NCT6795_ID:
+ 		ret = nct6795;
+ 		break;
++	case NCT6796_ID:
++		ret = nct6796;
++		break;
+ 	case NCT6102_ID:
+ 		ret = nct6102;
+ 		cr_wdt_timeout = NCT6102D_WDT_TIMEOUT;
+@@ -450,6 +455,7 @@ static int __init wdt_init(void)
+ 		"NCT6792",
+ 		"NCT6793",
+ 		"NCT6795",
++		"NCT6796",
+ 		"NCT6102",
+ 	};
+ 
 -- 
 2.20.1
 
