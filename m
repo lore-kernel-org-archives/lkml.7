@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35751C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4915DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EAC2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE532072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420124;
-	bh=1/VSmpTTU9BsP9TQjL/wDX5Ico+dlFB6FyvPaSDKljY=;
+	s=default; t=1574420127;
+	bh=YM+20L3XfJDfQla675w1xo0yGmW/B4bzJN2PdZ3ouaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhgcNOE5sHF5D4ZMDYCHNGYSIKfVuidNfL1znVKrjp03cU+thFaquAtvyrJKYhAbG
-	 NFQwLQxPBXBHWHOiJYujRVFLMeRN6PNckwb/YrAddoF+KmxbafrguPAmGj2Ftsjxcp
-	 4EpYhNYC960yaX3uyahS/kFgD0qH7qrCCsOKKbSM=
+	b=H8inK1rV/lDyBzWzy2JY0SBCmLH8y3ZyI0XmUWjmHzk8mCmBUREJG01JD3GDL85V/
+	 1LPr5fNOni7md42xZNrDZIth+qQ0M1BnOb6PIU27H+8SBNmOTwLIkX8r14DP76ji17
+	 MFLFPSuoACvQyU3aIbsiNyPxt08MTS7F7CCZPV0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbfKVKzW (ORCPT
+        id S1730191AbfKVKz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730447AbfKVKzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:19 -0500
+        id S1730453AbfKVKzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B5D22071C;
-        Fri, 22 Nov 2019 10:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A811E2071F;
+        Fri, 22 Nov 2019 10:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420118;
-        bh=1/VSmpTTU9BsP9TQjL/wDX5Ico+dlFB6FyvPaSDKljY=;
+        s=default; t=1574420121;
+        bh=YM+20L3XfJDfQla675w1xo0yGmW/B4bzJN2PdZ3ouaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05Iga1h9mF3gjozIXVTMge8lcznBTznHbf0RiZZC12BGyLenRTJ2ZJNlwxMFooFNy
-         O/XnLeGWeIT3ZMgEwjDiu8k9fKg3InLSzNSJs6QKj2idAdOcsZksRF6JsJaxXZgnt5
-         N9Nl62J0kMnLZtqLpxdkxMhUCv6AgGvbvBH3FZOE=
+        b=E9ix6s8f3NqbyS7S4l6gKFqzAlZ4ZIDuiI/5TKFFJY8aDb5ZD2flc5RO2/yW08Mop
+         e6RMYmaPEIra9C9q8+4W/hRJ8XkxpYtTgU1/1YorMuMOGT5UywgVqQcQo9Lcwyda53
+         g8/dPLwYxv1jtNbkj7S/cAFHsjvX1BdIJ6SAatTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 120/122] tools: PCI: Fix broken pcitest compilation
-Date:   Fri, 22 Nov 2019 11:29:33 +0100
-Message-Id: <20191122100837.625992481@linuxfoundation.org>
+        stable@vger.kernel.org, Lianbo Jiang <lijiang@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, akpm@linux-foundation.org, dan.j.williams@intel.com,
+        bhelgaas@google.com, baiyaowei@cmss.chinamobile.com, tiwai@suse.de,
+        brijesh.singh@amd.com, dyoung@redhat.com, bhe@redhat.com,
+        jroedel@suse.de, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 079/122] kexec: Allocate decrypted control pages for kdump if SME is enabled
+Date:   Fri, 22 Nov 2019 11:28:52 +0100
+Message-Id: <20191122100819.526924385@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,55 +65,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit 8a5e0af240e07dd3d4897eb8ff52aab757da7fab ]
+[ Upstream commit 9cf38d5559e813cccdba8b44c82cc46ba48d0896 ]
 
-pcitest is currently broken due to the following compiler error
-and related warning. Fix by changing the run_test() function
-signature to return an integer result.
+When SME is enabled in the first kernel, it needs to allocate decrypted
+pages for kdump because when the kdump kernel boots, these pages need to
+be accessed decrypted in the initial boot stage, before SME is enabled.
 
-pcitest.c: In function run_test:
-pcitest.c:143:9: warning: return with a value, in function
-returning void
-  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+ [ bp: clean up text. ]
 
-pcitest.c: In function main:
-pcitest.c:232:9: error: void value not ignored as it ought to be
-  return run_test(test);
-
-Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: kexec@lists.infradead.org
+Cc: tglx@linutronix.de
+Cc: mingo@redhat.com
+Cc: hpa@zytor.com
+Cc: akpm@linux-foundation.org
+Cc: dan.j.williams@intel.com
+Cc: bhelgaas@google.com
+Cc: baiyaowei@cmss.chinamobile.com
+Cc: tiwai@suse.de
+Cc: brijesh.singh@amd.com
+Cc: dyoung@redhat.com
+Cc: bhe@redhat.com
+Cc: jroedel@suse.de
+Link: https://lkml.kernel.org/r/20180930031033.22110-3-lijiang@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/pci/pcitest.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/kexec_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 8ca1c62bc06db..7002df55826f4 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -42,15 +42,15 @@ struct pci_test {
- 	unsigned long	size;
- };
- 
--static void run_test(struct pci_test *test)
-+static int run_test(struct pci_test *test)
- {
--	long ret;
-+	int ret = -EINVAL;
- 	int fd;
- 
- 	fd = open(test->device, O_RDWR);
- 	if (fd < 0) {
- 		perror("can't open PCI Endpoint Test device");
--		return;
-+		return -ENODEV;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 8f15665ab6167..27cf24e285e0c 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -473,6 +473,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 		}
  	}
  
- 	if (test->barnum >= 0 && test->barnum <= 5) {
++	/* Ensure that these pages are decrypted if SME is enabled. */
++	if (pages)
++		arch_kexec_post_alloc_pages(page_address(pages), 1 << order, 0);
++
+ 	return pages;
+ }
+ 
+@@ -867,6 +871,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			result  = -ENOMEM;
+ 			goto out;
+ 		}
++		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
+ 		ptr = kmap(page);
+ 		ptr += maddr & ~PAGE_MASK;
+ 		mchunk = min_t(size_t, mbytes,
+@@ -884,6 +889,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			result = copy_from_user(ptr, buf, uchunk);
+ 		kexec_flush_icache_page(page);
+ 		kunmap(page);
++		arch_kexec_pre_free_pages(page_address(page), 1);
+ 		if (result) {
+ 			result = -EFAULT;
+ 			goto out;
 -- 
 2.20.1
 
