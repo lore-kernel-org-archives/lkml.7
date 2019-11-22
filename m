@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDB1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943B8207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4FF2073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420534;
-	bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
+	s=default; t=1574420538;
+	bh=X5sJjt7VX5Mvcc/8ptrKXV0mBAzqXlsQCrJR8uhh/lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPQ+dY+O9jcn8XAxHnqubIitbNVhyFS9WykCdo1lpp9xkqhNl7hotzdImZC6TxePd
-	 ZH+UG1wfB+A5a/tnHM5vtHweVCo9srchxkJlsZTFWkw7q19ylqQ9Teh+WE5K+HyKM8
-	 UKo+plxe9NswDzB6uaQUIDYPhplYYgLbzepAGEEw=
+	b=GODPbgbKgZwbcAGsgTiABv5eZ+wAW+PmQzhQjoLJj0wz0WCNCZ5S7zj6axVVZ0DEK
+	 7hjwjIMzxFV0BgwKO/S0yXvDP3CG2JebAANmMo8W9P88nuVUiOj+uQfKjoKWKGFh0Y
+	 8kXQhLT4FneNZcoCeZ8cwQD9cEewd8k6VuO6dQ20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfKVLCN (ORCPT
+        id S1731287AbfKVLCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731241AbfKVLCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:03 -0500
+        id S1731263AbfKVLCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 245032075B;
-        Fri, 22 Nov 2019 11:02:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68FB120748;
+        Fri, 22 Nov 2019 11:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420522;
-        bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
+        s=default; t=1574420525;
+        bh=X5sJjt7VX5Mvcc/8ptrKXV0mBAzqXlsQCrJR8uhh/lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcsgfTUgtCiBfmAOtsrhR8N5XHfap5gBMTiFgf+kpWLXIwqpDSqrAIeBqPDazeLKU
-         5Wuq1DMWgBHjMZfAdH4d6ZtKE3RnOug/pbbGCGTOpNAqvLqPnG6X75cvkKkBnH0aGL
-         1wxWFCWWBbZhrT00CfoB/Kql+Pv8KGAxJelt86PY=
+        b=w+80LoY/xAH7luGDGuR6c1Ts3nPjPVnBTSEJ5UH+R2ruMEWQYIVGHAab+C17loN3w
+         /y+KOrsaasQnlAjTcmb1B9LDSvGmiNNLYFlbpqW67TWfG+FEXh9JEckECjHZUoInz0
+         qyERY6EBLOyMeAdoZtDhD1S81lfe7TjUNGm6CcDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Suman Anna <s-anna@ti.com>,
+        stable@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 136/220] remoteproc: Check for NULL firmwares in sysfs interface
-Date:   Fri, 22 Nov 2019 11:28:21 +0100
-Message-Id: <20191122100922.594417540@linuxfoundation.org>
+Subject: [PATCH 4.19 137/220] remoteproc: qcom: q6v5: Fix a race condition on fatal crash
+Date:   Fri, 22 Nov 2019 11:28:22 +0100
+Message-Id: <20191122100922.661150215@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,41 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit faeadbb64094757150a8c2a3175ca418dbdd472c ]
+[ Upstream commit d3ae96c0e6b042a883927493351b2af6ee05e92c ]
 
-The remoteproc framework provides a sysfs file 'firmware'
-for modifying the firmware image name from userspace. Add
-an additional check to ensure NULL firmwares are errored
-out right away, rather than getting a delayed error while
-requesting a firmware during the start of a remoteproc
-later on.
+Currently with GLINK_SSR enabled each fatal crash results in servicing
+a crash from wdog as well. This is due to a race that occurs in setting
+the running flag in the shutdown path. Fix this by moving the running
+flag to the end of fatal interrupt handler.
 
-Tested-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
+Crash Logs:
+qcom-q6v5-pil 4080000.remoteproc: fatal error without message
+remoteproc remoteproc0: crash detected in 4080000.remoteproc: type fatal
+	error
+remoteproc remoteproc0: handling crash #1 in 4080000.remoteproc
+remoteproc remoteproc0: recovering 4080000.remoteproc
+qcom-q6v5-pil 4080000.remoteproc: watchdog without message
+remoteproc remoteproc0: crash detected in 4080000.remoteproc: type watchdog
+remoteproc:glink-edge: intent request timed out
+qcom_glink_ssr remoteproc:glink-edge.glink_ssr.-1.-1: failed to send
+	cleanup message
+qcom_glink_ssr remoteproc:glink-edge.glink_ssr.-1.-1: timeout waiting
+	for cleanup done message
+qcom-q6v5-pil 4080000.remoteproc: timed out on wait
+qcom-q6v5-pil 4080000.remoteproc: port failed halt
+remoteproc remoteproc0: stopped remote processor 4080000.remoteproc
+qcom-q6v5-pil 4080000.remoteproc: MBA booted, loading mpss
+remoteproc remoteproc0: remote processor 4080000.remoteproc is now up
+remoteproc remoteproc0: handling crash #2 in 4080000.remoteproc
+remoteproc remoteproc0: recovering 4080000.remoteproc
+qcom-q6v5-pil 4080000.remoteproc: port failed halt
+remoteproc remoteproc0: stopped remote processor 4080000.remoteproc
+qcom-q6v5-pil 4080000.remoteproc: MBA booted, loading mpss
+remoteproc remoteproc0: remote processor 4080000.remoteproc is now up
+
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_sysfs.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/remoteproc/qcom_q6v5.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-index 47be411400e56..3a4c3d7cafca3 100644
---- a/drivers/remoteproc/remoteproc_sysfs.c
-+++ b/drivers/remoteproc/remoteproc_sysfs.c
-@@ -48,6 +48,11 @@ static ssize_t firmware_store(struct device *dev,
- 	}
+diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+index 602af839421de..0d33e3079f0dc 100644
+--- a/drivers/remoteproc/qcom_q6v5.c
++++ b/drivers/remoteproc/qcom_q6v5.c
+@@ -84,6 +84,7 @@ static irqreturn_t q6v5_fatal_interrupt(int irq, void *data)
+ 	else
+ 		dev_err(q6v5->dev, "fatal error without message\n");
  
- 	len = strcspn(buf, "\n");
-+	if (!len) {
-+		dev_err(dev, "can't provide a NULL firmware\n");
-+		err = -EINVAL;
-+		goto out;
-+	}
++	q6v5->running = false;
+ 	rproc_report_crash(q6v5->rproc, RPROC_FATAL_ERROR);
  
- 	p = kstrndup(buf, len, GFP_KERNEL);
- 	if (!p) {
+ 	return IRQ_HANDLED;
+@@ -150,8 +151,6 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+ {
+ 	int ret;
+ 
+-	q6v5->running = false;
+-
+ 	qcom_smem_state_update_bits(q6v5->state,
+ 				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+ 
 -- 
 2.20.1
 
