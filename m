@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61352C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E6DC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393C620674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FB620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402635;
-	bh=Ok3I6A0cc8kL/J20hG8eQcCcmH4Ge5h24qRJu31z9wo=;
+	s=default; t=1574402641;
+	bh=lRz6VDr/pKnSZKAz3I9F7iflM+C4iqPq1uUXP2la3as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tq/jeu2pi6v//QXFD3iH9FmoivvSSTECxpCRT3uQb/BelO52ZqLiC85rgk35IVcQF
-	 CVM2WUE24rqQhxemYgbmzjs/tPg0VAsjsFn5ZAHpMk8QQpL42kdwe3KFH/S2buAaGe
-	 GbQvBRlf1yajQDQ/FRjJY92R6dCMjsS3brOLMMFM=
+	b=cNwJq5rQ7ddW3QXehcGHJ8d0lfArRv734fHoF8VGNlybq7NySvDIkqQOXZ+ENQcJ6
+	 Vliq7/aGljpeQmfoH4kgyfunVrPJfT8PxPFX6LUyAFYUhbU5ffWMoE28VQJRCqv4YA
+	 /s5LwRA5akhIpdpsaa+YcLaSmnRFgFOa0uIsoGJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfKVGDt (ORCPT
+        id S1729841AbfKVGDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:03:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41974 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:03:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfKVGDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:03:03 -0500
+        id S1729826AbfKVGC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C362070B;
-        Fri, 22 Nov 2019 06:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B89C42068F;
+        Fri, 22 Nov 2019 06:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402583;
-        bh=Ok3I6A0cc8kL/J20hG8eQcCcmH4Ge5h24qRJu31z9wo=;
+        s=default; t=1574402576;
+        bh=lRz6VDr/pKnSZKAz3I9F7iflM+C4iqPq1uUXP2la3as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9Q9WGCuX78UG2O0q1NNgrFtxAlNp4omUs0pkXi5CjCp9bRJliHVEGOYGZZPOd//w
-         24QhzBktReTfOhi3rqyRmKfaVAtU7oz6C9PMhza0zX3ePC1ajidIlIzdw0YLEcbP3T
-         T588s1jZtWEgfbU1cs5/JHWsfdkj7HoujGq5Tu78=
+        b=lm2dE7GdzT7rJ/70C88wx1d7wnYJq3ULeLrSJeSjufwCI7cn9onm+kQBc14EBOWVm
+         u1H4kWwuoC6BJKzlA/Y+q2nejL0gQ8crPdYtbe5u9OmE2qKOV80YFTsQgih8EC+5qr
+         rqsBEDinIMpZcBB8MAqmmRS8xOgdfn/ifthc1BHU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maciej Kwiecien <maciej.kwiecien@nokia.com>,
-        Marcin Stojek <marcin.stojek@nokia.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+Cc:     Edward Cree <ecree@solarflare.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 84/91] sctp: don't compare hb_timer expire date before starting it
-Date:   Fri, 22 Nov 2019 01:01:22 -0500
-Message-Id: <20191122060129.4239-83-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 78/91] sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe
+Date:   Fri, 22 Nov 2019 01:01:16 -0500
+Message-Id: <20191122060129.4239-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -63,57 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+From: Edward Cree <ecree@solarflare.com>
 
-[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
+[ Upstream commit 3366463513f544c12c6b88c13da4462ee9e7a1a1 ]
 
-hb_timer might not start at all for a particular transport because its
-start is conditional. In a result a node is not sending heartbeats.
+Use a bitmap to keep track of which partition types we've already seen;
+ for duplicates, return -EEXIST from efx_ef10_mtd_probe_partition() and
+ thus skip adding that partition.
+Duplicate partitions occur because of the A/B backup scheme used by newer
+ sfc NICs.  Prior to this patch they cause sysfs_warn_dup errors because
+ they have the same name, causing us not to expose any MTDs at all.
 
-Function sctp_transport_reset_hb_timer has two roles:
-    - initial start of hb_timer for a given transport,
-    - update expire date of hb_timer for a given transport.
-The function is optimized to update timer's expire only if it is before
-a new calculated one but this comparison is invalid for a timer which
-has not yet started. Such a timer has expire == 0 and if a new expire
-value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
-fail and timer will not start resulting in no heartbeat packets send by
-the node.
-
-This was found when association was initialized within first 5 mins
-after system boot due to jiffies init value which is near to MAX_JIFFIES.
-
-Test kernel version: 4.9.154 (ARCH=arm)
-hb_timer.expire = 0;                //initialized, not started timer
-new_expire = MAX_JIFFIES / 2 + 2;   //or more
-time_before(hb_timer.expire, new_expire) == false
-
-Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
-Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
-Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
-Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/transport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/sfc/ef10.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/net/sctp/transport.c b/net/sctp/transport.c
-index 03d71cd97ec08..5c78942550e97 100644
---- a/net/sctp/transport.c
-+++ b/net/sctp/transport.c
-@@ -205,7 +205,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
+diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+index 3d5d5d54c1033..34e2256c93f46 100644
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -5093,22 +5093,25 @@ static const struct efx_ef10_nvram_type_info efx_ef10_nvram_types[] = {
+ 	{ NVRAM_PARTITION_TYPE_LICENSE,		   0,    0, "sfc_license" },
+ 	{ NVRAM_PARTITION_TYPE_PHY_MIN,		   0xff, 0, "sfc_phy_fw" },
+ };
++#define EF10_NVRAM_PARTITION_COUNT	ARRAY_SIZE(efx_ef10_nvram_types)
  
- 	/* When a data chunk is sent, reset the heartbeat interval.  */
- 	expires = jiffies + sctp_transport_timeout(transport);
--	if (time_before(transport->hb_timer.expires, expires) &&
-+	if ((time_before(transport->hb_timer.expires, expires) ||
-+	     !timer_pending(&transport->hb_timer)) &&
- 	    !mod_timer(&transport->hb_timer,
- 		       expires + prandom_u32_max(transport->rto)))
- 		sctp_transport_hold(transport);
+ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 					struct efx_mcdi_mtd_partition *part,
+-					unsigned int type)
++					unsigned int type,
++					unsigned long *found)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_NVRAM_METADATA_IN_LEN);
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_METADATA_OUT_LENMAX);
+ 	const struct efx_ef10_nvram_type_info *info;
+ 	size_t size, erase_size, outlen;
++	int type_idx = 0;
+ 	bool protected;
+ 	int rc;
+ 
+-	for (info = efx_ef10_nvram_types; ; info++) {
+-		if (info ==
+-		    efx_ef10_nvram_types + ARRAY_SIZE(efx_ef10_nvram_types))
++	for (type_idx = 0; ; type_idx++) {
++		if (type_idx == EF10_NVRAM_PARTITION_COUNT)
+ 			return -ENODEV;
++		info = efx_ef10_nvram_types + type_idx;
+ 		if ((type & ~info->type_mask) == info->type)
+ 			break;
+ 	}
+@@ -5121,6 +5124,13 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ 	if (protected)
+ 		return -ENODEV; /* hide it */
+ 
++	/* If we've already exposed a partition of this type, hide this
++	 * duplicate.  All operations on MTDs are keyed by the type anyway,
++	 * so we can't act on the duplicate.
++	 */
++	if (__test_and_set_bit(type_idx, found))
++		return -EEXIST;
++
+ 	part->nvram_type = type;
+ 
+ 	MCDI_SET_DWORD(inbuf, NVRAM_METADATA_IN_TYPE, type);
+@@ -5149,6 +5159,7 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
+ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ {
+ 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_PARTITIONS_OUT_LENMAX);
++	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT);
+ 	struct efx_mcdi_mtd_partition *parts;
+ 	size_t outlen, n_parts_total, i, n_parts;
+ 	unsigned int type;
+@@ -5177,11 +5188,13 @@ static int efx_ef10_mtd_probe(struct efx_nic *efx)
+ 	for (i = 0; i < n_parts_total; i++) {
+ 		type = MCDI_ARRAY_DWORD(outbuf, NVRAM_PARTITIONS_OUT_TYPE_ID,
+ 					i);
+-		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type);
+-		if (rc == 0)
+-			n_parts++;
+-		else if (rc != -ENODEV)
++		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type,
++						  found);
++		if (rc == -EEXIST || rc == -ENODEV)
++			continue;
++		if (rc)
+ 			goto fail;
++		n_parts++;
+ 	}
+ 
+ 	rc = efx_mtd_add(efx, &parts[0].common, n_parts, sizeof(*parts));
 -- 
 2.20.1
 
