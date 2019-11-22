@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC64CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F50BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB83C2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7DF92070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402318;
-	bh=WbGhciv/qtk73dVy7tm29B/NrK/nbLd9KuYwwCP2gxM=;
+	s=default; t=1574402323;
+	bh=em/d8aYF1bMtjXSLVU4kj2JcBOP0Eed2tRCO1S+7JDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SGSQ5gBQ5Jf6Aj92rCBXke2vCqTo2dPAQEQNwV8lqQj8lZOvBW49hschZ9xGojrqk
-	 y3htsXhcoFRT7zqQj7afTv9z14WPpxlGm4jQaRNaSeLVMRsac2pNsjH51xEORaDkrn
-	 HAo3Yl4A4zx1H1zNucs1mamTHQw2QhYMEsUGepyU=
+	b=dul0pA6/I0ITdekcuUTPwfsXD4nE6L9wF/FNwPJSgcjyCXl33LMUGy6KUmNRWY/tr
+	 LgtWq4cb21nD1WnHxROiin0E7/AtbdVy/Ka6oDZ1nXYNUJfFgbWxNULDIIGcu9tHqX
+	 1eBqLZSdDSjQs+4xCPwAmK3+6JkX092EUFEPRXZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKVF6T (ORCPT
+        id S1729618AbfKVF6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:58:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36718 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:58:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbfKVF6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:58:04 -0500
+        id S1728359AbfKVF5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94C5F207FA;
-        Fri, 22 Nov 2019 05:58:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EAFC2089D;
+        Fri, 22 Nov 2019 05:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402283;
-        bh=WbGhciv/qtk73dVy7tm29B/NrK/nbLd9KuYwwCP2gxM=;
+        s=default; t=1574402274;
+        bh=em/d8aYF1bMtjXSLVU4kj2JcBOP0Eed2tRCO1S+7JDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwoQAQNM7z00DeVzArDXAKIdDraTNFjk7S31c5/4zHDaBQ8mT5wmnYSVoJ4biekai
-         IeHYENbLIoHFByDG8Wf6AdYGTT5m0FfH16nCA+EDK6va0ylxqbmL6FftB2tOP1sp4P
-         kM5Jab33oycRmsLNrulXaPSA+OxjCzGburysgl7c=
+        b=r7msxJzlvyDQk4mtKxo/R51Ts9MnYFG+RHstLhfZA3bTrQdZcPvHyIm+dQIOmEHIC
+         R36dFXJVgCSPEDVcFz+mjhLdYCAh1TqgeOSaN2axnsR8M2p2INT5kmCOWcKiW3GGq1
+         4QULPu64n6UuL/bxMR56eigqEni4AR8kJPRyQsr0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 122/127] ACPI / APEI: Don't wait to serialise with oops messages when panic()ing
-Date:   Fri, 22 Nov 2019 00:55:39 -0500
-Message-Id: <20191122055544.3299-120-sashal@kernel.org>
+Cc:     Maciej Kwiecien <maciej.kwiecien@nokia.com>,
+        Marcin Stojek <marcin.stojek@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 113/127] sctp: don't compare hb_timer expire date before starting it
+Date:   Fri, 22 Nov 2019 00:55:31 -0500
+Message-Id: <20191122055544.3299-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,52 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
 
-[ Upstream commit 78b0b690f6558ed788dccafa45965325dd11ba89 ]
+[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
 
-oops_begin() exists to group printk() messages with the oops message
-printed by die(). To reach this caller we know that platform firmware
-took this error first, then notified the OS via NMI with a 'panic'
-severity.
+hb_timer might not start at all for a particular transport because its
+start is conditional. In a result a node is not sending heartbeats.
 
-Don't wait for another CPU to release the die-lock before panic()ing,
-our only goal is to print this fatal error and panic().
+Function sctp_transport_reset_hb_timer has two roles:
+    - initial start of hb_timer for a given transport,
+    - update expire date of hb_timer for a given transport.
+The function is optimized to update timer's expire only if it is before
+a new calculated one but this comparison is invalid for a timer which
+has not yet started. Such a timer has expire == 0 and if a new expire
+value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
+fail and timer will not start resulting in no heartbeat packets send by
+the node.
 
-This code is always called in_nmi(), and since commit 42a0bb3f7138
-("printk/nmi: generic solution for safe printk in NMI"), it has been
-safe to call printk() from this context. Messages are batched in a
-per-cpu buffer and printed via irq-work, or a call back from panic().
+This was found when association was initialized within first 5 mins
+after system boot due to jiffies init value which is near to MAX_JIFFIES.
 
-Link: https://patchwork.kernel.org/patch/10313555/
-Acked-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Test kernel version: 4.9.154 (ARCH=arm)
+hb_timer.expire = 0;                //initialized, not started timer
+new_expire = MAX_JIFFIES / 2 + 2;   //or more
+time_before(hb_timer.expire, new_expire) == false
+
+Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
+Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
+Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
+Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 2 --
- 1 file changed, 2 deletions(-)
+ net/sctp/transport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 5889f6407fea8..9c31c7cd5cb5e 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -33,7 +33,6 @@
- #include <linux/interrupt.h>
- #include <linux/timer.h>
- #include <linux/cper.h>
--#include <linux/kdebug.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
- #include <linux/ratelimit.h>
-@@ -936,7 +935,6 @@ static int ghes_notify_nmi(unsigned int cmd, struct pt_regs *regs)
+diff --git a/net/sctp/transport.c b/net/sctp/transport.c
+index 43105cf04bc45..274df899e7bfa 100644
+--- a/net/sctp/transport.c
++++ b/net/sctp/transport.c
+@@ -210,7 +210,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
  
- 		sev = ghes_severity(ghes->estatus->error_severity);
- 		if (sev >= GHES_SEV_PANIC) {
--			oops_begin();
- 			ghes_print_queued_estatus();
- 			__ghes_panic(ghes);
- 		}
+ 	/* When a data chunk is sent, reset the heartbeat interval.  */
+ 	expires = jiffies + sctp_transport_timeout(transport);
+-	if (time_before(transport->hb_timer.expires, expires) &&
++	if ((time_before(transport->hb_timer.expires, expires) ||
++	     !timer_pending(&transport->hb_timer)) &&
+ 	    !mod_timer(&transport->hb_timer,
+ 		       expires + prandom_u32_max(transport->rto)))
+ 		sctp_transport_hold(transport);
 -- 
 2.20.1
 
