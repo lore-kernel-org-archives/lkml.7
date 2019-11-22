@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA039C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CCCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9514A20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45782071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420393;
-	bh=/fUyGVnz4vUZV7QqWfrT9JvA8+OesvTPpl/KA51g0nE=;
+	s=default; t=1574420397;
+	bh=GnLDcU3GQlLVz86X48Q6AD2uliaNpA6HTGkKvjNyt+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Ip5GcmDcTYFVwKa2JiRgEhKyBjbQ8aAo4WSZWdE9CizZdsAe0AVjL+n07ggDAYzS
-	 RTzime7aH72HV0ZDI19pBz4sNgaqqPQvVIKqtZmtmSw2xfCqhPE3w8WKP5ODl4jJ6z
-	 nvs9nfWWgyyfiyReh3X9MbadlQo9TnXR80yVxhUQ=
+	b=NuL4AWt4Ae1oxKHM99kYv+EbGiaSbEIBW7VQKhKUtPiLAm3HSFnhqLpnCr9SSc8PA
+	 +ARoa7onoQ4ux42tVe5XRr1Czhf01UILnhUi4ufARSFCoKSpv2vcZ71N2n1F4EeOeK
+	 lYxIbs1CJxnqexFnT4pJvdz7aif4qpiGvnVlX94c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfKVK7v (ORCPT
+        id S1730963AbfKVK7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51200 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730195AbfKVK7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:46 -0500
+        id S1730662AbfKVK7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A62DD20706;
-        Fri, 22 Nov 2019 10:59:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B01420706;
+        Fri, 22 Nov 2019 10:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420386;
-        bh=/fUyGVnz4vUZV7QqWfrT9JvA8+OesvTPpl/KA51g0nE=;
+        s=default; t=1574420389;
+        bh=GnLDcU3GQlLVz86X48Q6AD2uliaNpA6HTGkKvjNyt+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=unI8auj+e1zH/k7WQheQreYXv0L5kBu/9NeivOPMrZorR+yspddVqrhag+IfZAMiE
-         +efrtlVu0gD3ICM0dZ+BFLVPslXUQ1rd7009a5Lgm0bqGjBVqMFEk31kFcnrGW8qOy
-         ixhuJafSbfoffkxN9cCJ73p8Wht3248iRfDGAu5Y=
+        b=zbZSo5fGaLiJJLRCmV+08MyHYIHH8OPVX5fm+rYs7jXd8Jfz6fJBGWnyDph4WdQvI
+         YvmqWdzZmZXEHvZLlXeDWIJujoPZQMrk4e8/neJKxmPNsrg8U3aY4vxR96BjOpo15M
+         xEQYDFh8kauF6I9eRfR66llzVKlG9MUTaR9cEnoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/220] rpmsg: glink: smem: Support rx peak for size less than 4 bytes
-Date:   Fri, 22 Nov 2019 11:27:35 +0100
-Message-Id: <20191122100919.110458321@linuxfoundation.org>
+Subject: [PATCH 4.19 091/220] msm/gpu/a6xx: Force of_dma_configure to setup DMA for GMU
+Date:   Fri, 22 Nov 2019 11:27:36 +0100
+Message-Id: <20191122100919.197631621@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,48 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-[ Upstream commit 928002a5e9dab2ddc1a0fe3e00739e89be30dc6b ]
+[ Upstream commit 32aa27e15c28d3898ed6f9b3c98f95f34a81eab2 ]
 
-The current rx peak function fails to read the data if size is
-less than 4bytes.
+The point of the 'force_dma' parameter for of_dma_configure
+is to force the device to be set up even if DMA capability is
+not described by the firmware which is exactly the use case
+ we have for GMU - we need SMMU to get set up but we have no
+other dma capabilities since memory is managed by the GPU
+driver. Currently we pass false so of_dma_configure() fails
+and subsequently GMU and GPU probe does as well.
 
-Use memcpy_fromio to support data reads of size less than 4 bytes.
-
-Cc: stable@vger.kernel.org
-Fixes: f0beb4ba9b18 ("rpmsg: glink: Remove chunk size word align warning")
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 4b565ca5a2c ("drm/msm: Add A6XX device support")
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rpmsg/qcom_glink_smem.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-index 2b5cf27909540..7b6544348a3e0 100644
---- a/drivers/rpmsg/qcom_glink_smem.c
-+++ b/drivers/rpmsg/qcom_glink_smem.c
-@@ -89,15 +89,11 @@ static void glink_smem_rx_peak(struct qcom_glink_pipe *np,
- 		tail -= pipe->native.length;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 9acb9dfaf57e6..9cde79a7335c8 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -1140,7 +1140,7 @@ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
  
- 	len = min_t(size_t, count, pipe->native.length - tail);
--	if (len) {
--		__ioread32_copy(data, pipe->fifo + tail,
--				len / sizeof(u32));
--	}
-+	if (len)
-+		memcpy_fromio(data, pipe->fifo + tail, len);
+ 	gmu->dev = &pdev->dev;
  
--	if (len != count) {
--		__ioread32_copy(data + len, pipe->fifo,
--				(count - len) / sizeof(u32));
--	}
-+	if (len != count)
-+		memcpy_fromio(data + len, pipe->fifo, (count - len));
- }
+-	of_dma_configure(gmu->dev, node, false);
++	of_dma_configure(gmu->dev, node, true);
  
- static void glink_smem_rx_advance(struct qcom_glink_pipe *np,
+ 	/* Fow now, don't do anything fancy until we get our feet under us */
+ 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
 -- 
 2.20.1
 
