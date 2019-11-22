@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E6AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E9520717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FBB420714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TUM/C1+U";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="W1tRHPCP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nffuJSQG";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ZF+jcD3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfKVKHE (ORCPT
+        id S1727277AbfKVKHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:07:04 -0500
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:59618
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726568AbfKVKHC (ORCPT
+        Fri, 22 Nov 2019 05:07:07 -0500
+Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:45892
+        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726568AbfKVKHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:07:02 -0500
+        Fri, 22 Nov 2019 05:07:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574417221;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574417225;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=ZSU4qhbMLCVW9Iayxgvc4RagwbtPPwu8ndEibWAZEOk=;
-        b=TUM/C1+UBZT3F2o3vw1TKwH/Ur7SD6tVrdjm1JuY0aeKUIh+2K8eki2O3fR787kI
-        BShe47HzhxLSxQtoOFRjK1Km9OaTwMmb5ekzUll3zPOynO/m7OFuYZAOUYCLuRMPevv
-        G2sD/67D+JRj/Do8X/Gv19aqh7Sqwhla8YeWAL5c=
+        bh=7u9hsnpcjlcApIq9QCZIdANWz5eWr5Ssz4EJpyZA6uM=;
+        b=nffuJSQG3QqW0NxwulZv2/IzWSye6/fjLWQnxZc7kYCUIMuMbIE9kQ1JhNo/r29v
+        TsmpBqvKRacZrtLfn8jM1pMcw2PpvLauaRtQ7hLM8SYDZKH/UjD+tiUybYAJz1hQo/v
+        jjhgmOe5AlDLyuPzv8jiCz5m3Tsm/JDMWSbfh/TU=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574417221;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574417225;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=ZSU4qhbMLCVW9Iayxgvc4RagwbtPPwu8ndEibWAZEOk=;
-        b=W1tRHPCPsRAxEf7cDEnn/MCaUHmWGh1Mo5NA5d8DkrCCih2A8VA0AgPfyFsTALF6
-        kFJrrCp04BgRO5dmBtJ6jzVlPjLUFmTf5spJ/QMXjTTCHoA6kwZce7cmadDxQrddMW7
-        EiaWDR8zPBew1UWpQ+aIbqfe8DQ3liRwttH7d8XU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E3A0C3275E
+        bh=7u9hsnpcjlcApIq9QCZIdANWz5eWr5Ssz4EJpyZA6uM=;
+        b=ZF+jcD3aZRrclafVvgo89E+r7ttXCGxgu67BJIl1h0A5t/Fz8y//w23I0o+nVkUJ
+        9q0C3mZJ1aJL0kQwH420M67zyxg7A4xHKKrNS0HxMUfMQ4KVL7KsNjm0f/8Fcuw8gUm
+        Abl2HTgA/RJTkn1aKlzdyhNNNQWrJ+/XuPC22+68=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A47C5C342D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
 From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
@@ -46,110 +46,101 @@ To:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
         sricharan@codeaurora.org
 Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Arun Kumar Neelakantam <aneela@codeaurora.org>
-Subject: [RESEND PATCH V4 3/4] rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
-Date:   Fri, 22 Nov 2019 10:07:01 +0000
-Message-ID: <0101016e929447ec-0bd67225-9152-4bcd-945e-ebd39a0110d5-000000@us-west-2.amazonses.com>
+Subject: [RESEND PATCH V4 4/4] rpmsg: char: Add signal callback and POLLPRI support
+Date:   Fri, 22 Nov 2019 10:07:05 +0000
+Message-ID: <0101016e92945567-e776b6a7-b9c4-4ccb-8737-dd9a56bc8e07-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1574417197-27817-1-git-send-email-aneela@codeaurora.org>
 References: <1574417197-27817-1-git-send-email-aneela@codeaurora.org>
-X-SES-Outgoing: 2019.11.22-54.240.27.188
+X-SES-Outgoing: 2019.11.22-54.240.27.56
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add TICOMGET and TIOCMSET ioctl support for rpmsg char device nodes
-to get/set the low level transport signals.
+Register a callback to get the signal notifications from rpmsg and
+send POLLPRI mask to indicate the signal change in POLL system call.
 
 Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
 ---
- drivers/rpmsg/rpmsg_char.c | 53 +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 50 insertions(+), 3 deletions(-)
+ drivers/rpmsg/rpmsg_char.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-index eea5ebb..07bce51 100644
+index 07bce51..8446c0b 100644
 --- a/drivers/rpmsg/rpmsg_char.c
 +++ b/drivers/rpmsg/rpmsg_char.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-+ * Copyright (c) 2018, The Linux Foundation.
-  * Copyright (c) 2016, Linaro Ltd.
-  * Copyright (c) 2012, Michal Simek <monstr@monstr.eu>
-  * Copyright (c) 2012, PetaLogix
-@@ -19,6 +20,7 @@
- #include <linux/rpmsg.h>
- #include <linux/skbuff.h>
- #include <linux/slab.h>
-+#include <linux/termios.h>
- #include <linux/uaccess.h>
- #include <uapi/linux/rpmsg.h>
+@@ -64,6 +64,7 @@ struct rpmsg_ctrldev {
+  * @queue_lock:	synchronization of @queue operations
+  * @queue:	incoming message queue
+  * @readq:	wait object for incoming queue
++ * @sig_pending:state of signal notification
+  */
+ struct rpmsg_eptdev {
+ 	struct device dev;
+@@ -78,6 +79,8 @@ struct rpmsg_eptdev {
+ 	spinlock_t queue_lock;
+ 	struct sk_buff_head queue;
+ 	wait_queue_head_t readq;
++
++	bool sig_pending;
+ };
  
-@@ -271,15 +273,60 @@ static __poll_t rpmsg_eptdev_poll(struct file *filp, poll_table *wait)
- 	return mask;
+ static int rpmsg_eptdev_destroy(struct device *dev, void *data)
+@@ -122,6 +125,18 @@ static int rpmsg_ept_cb(struct rpmsg_device *rpdev, void *buf, int len,
+ 	return 0;
  }
  
-+static int rpmsg_eptdev_tiocmset(struct file *fp, unsigned int cmd,
-+				 int __user *arg)
++static int rpmsg_sigs_cb(struct rpmsg_device *rpdev, void *priv,
++			 u32 old, u32 new)
 +{
-+	struct rpmsg_eptdev *eptdev = fp->private_data;
-+	u32 set, clear, val;
-+	int ret;
++	struct rpmsg_eptdev *eptdev = priv;
 +
-+	ret = get_user(val, arg);
-+	if (ret)
-+		return ret;
-+	set = clear = 0;
-+	switch (cmd) {
-+	case TIOCMBIS:
-+		set = val;
-+		break;
-+	case TIOCMBIC:
-+		clear = val;
-+		break;
-+	case TIOCMSET:
-+		set = val;
-+		clear = ~val;
-+		break;
-+	}
++	eptdev->sig_pending = true;
 +
-+	set &= TIOCM_DTR | TIOCM_RTS | TIOCM_CD | TIOCM_RI;
-+	clear &= TIOCM_DTR | TIOCM_RTS | TIOCM_CD | TIOCM_RI;
-+
-+	return rpmsg_set_signals(eptdev->ept, set, clear);
++	/* wake up any blocking processes, waiting for signal notification */
++	wake_up_interruptible(&eptdev->readq);
++	return 0;
 +}
 +
- static long rpmsg_eptdev_ioctl(struct file *fp, unsigned int cmd,
- 			       unsigned long arg)
+ static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
  {
- 	struct rpmsg_eptdev *eptdev = fp->private_data;
-+	int ret;
+ 	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
+@@ -138,6 +153,7 @@ static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
+ 		return -EINVAL;
+ 	}
  
--	if (cmd != RPMSG_DESTROY_EPT_IOCTL)
--		return -EINVAL;
-+	switch (cmd) {
-+	case TIOCMGET:
-+		ret = rpmsg_get_signals(eptdev->ept);
-+		if (ret >= 0)
-+			ret = put_user(ret, (int __user *)arg);
-+		break;
-+	case TIOCMSET:
-+	case TIOCMBIS:
-+	case TIOCMBIC:
-+		ret = rpmsg_eptdev_tiocmset(fp, cmd, (int __user *)arg);
-+		break;
-+	case RPMSG_DESTROY_EPT_IOCTL:
-+		ret = rpmsg_eptdev_destroy(&eptdev->dev, NULL);
-+	default:
-+		ret = -EINVAL;
-+	}
++	ept->sig_cb = rpmsg_sigs_cb;
+ 	eptdev->ept = ept;
+ 	filp->private_data = eptdev;
  
--	return rpmsg_eptdev_destroy(&eptdev->dev, NULL);
-+	return ret;
- }
+@@ -157,6 +173,7 @@ static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
+ 		eptdev->ept = NULL;
+ 	}
+ 	mutex_unlock(&eptdev->ept_lock);
++	eptdev->sig_pending = false;
  
- static const struct file_operations rpmsg_eptdev_fops = {
+ 	/* Discard all SKBs */
+ 	while (!skb_queue_empty(&eptdev->queue)) {
+@@ -268,6 +285,9 @@ static __poll_t rpmsg_eptdev_poll(struct file *filp, poll_table *wait)
+ 	if (!skb_queue_empty(&eptdev->queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
++	if (eptdev->sig_pending)
++		mask |= POLLPRI;
++
+ 	mask |= rpmsg_poll(eptdev->ept, filp, wait);
+ 
+ 	return mask;
+@@ -311,6 +331,7 @@ static long rpmsg_eptdev_ioctl(struct file *fp, unsigned int cmd,
+ 
+ 	switch (cmd) {
+ 	case TIOCMGET:
++		eptdev->sig_pending = false;
+ 		ret = rpmsg_get_signals(eptdev->ept);
+ 		if (ret >= 0)
+ 			ret = put_user(ret, (int __user *)arg);
 -- 
 1.9.1
 
