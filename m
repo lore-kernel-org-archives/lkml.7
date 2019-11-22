@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E57C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4834AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A88A20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2058820715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419623;
-	bh=nDvfqjZXN6r7wwXbb9GxQ2ek1DgjPCeAya5u6EOoyBY=;
+	s=default; t=1574419628;
+	bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZ4eFDZPOZ2ff6pO26FYs7cbUEv4ol/hi4zjGmncCP96Ck5mWntiO7PPDCDHbmAiK
-	 hc/fM0oTVYstJSXIt02KMsuoZPNmqznlVehyYClzq2p7inP5MbB6tEOya5BQuzaZ3X
-	 wavbYSlwQtZ1540uvmbRu5LWFT4IwYZjYCrdwKK8=
+	b=j9qgNJZe35en5/n1iuPdrFHI4nvvbhs/IycOWYJMjnB+E6b30wvhbql/utlsV79N1
+	 hDJtZUi7NIDWMrqn4iBxSHYydcg27rMhH8y6dlPwkCZ1KRxaj9bMHmESx3LCrq5JRW
+	 O/XuOId+haK+x/3q9XP3evFNqVFfpPZamOrsQMTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfKVKrB (ORCPT
+        id S1729726AbfKVKrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:47:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:47:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729006AbfKVKq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:46:58 -0500
+        id S1729714AbfKVKrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9F420715;
-        Fri, 22 Nov 2019 10:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E6FB20637;
+        Fri, 22 Nov 2019 10:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419618;
-        bh=nDvfqjZXN6r7wwXbb9GxQ2ek1DgjPCeAya5u6EOoyBY=;
+        s=default; t=1574419620;
+        bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tcd15dr2JTtG7Ot44Neb0QTaVls3Ee8tB0FDgejpmvwudPjNsdhQ8u5TS/bc1C2IH
-         U4UgSQv0pzq+5Ee9fN7ni46x+N1iIF6mzTR5LZeusn9oQ/XlrMYMuYQPmW4tnMRIVk
-         npl1/Z+RmWBJfEzS21kE2hiR1sCcvRlh2re+w3eM=
+        b=2nUF9aDHCtutWgQUASCCRUfMnaDWld6uwVv0Tu9xj+rHXrOq+ZZoTftgxdTqx+dOC
+         FIsSV4JqzGDkPq1O4R24NsMn3BDS0iM6KKU3WXUl9wu6XP48YNzxpt8OXxu6at5CPn
+         TDM8XRvicl/2iwpxpK+ZPaUiCbkqr0SbDU3x+2fU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 175/222] ixgbe: Fix crash with VFs and flow director on interface flap
-Date:   Fri, 22 Nov 2019 11:28:35 +0100
-Message-Id: <20191122100915.087688646@linuxfoundation.org>
+Subject: [PATCH 4.9 176/222] IB/mthca: Fix error return code in __mthca_init_one()
+Date:   Fri, 22 Nov 2019 11:28:36 +0100
+Message-Id: <20191122100915.152256811@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,54 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
+[ Upstream commit 39f2495618c5e980d2873ea3f2d1877dd253e07a ]
 
-This patch fix crash when we have restore flow director filters after reset
-adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
-rx_ring array, as it has a VF identifier in the upper 32 bits.
+Fix to return a negative error code from the mthca_cmd_init() error
+handling case instead of 0, as done elsewhere in this function.
 
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 80fd8238734c ("[PATCH] IB/mthca: Encapsulate command interface init")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mthca/mthca_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index a5428b6abdac2..8ad20b7852ed7 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -4804,6 +4804,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	struct hlist_node *node2;
- 	struct ixgbe_fdir_filter *filter;
-+	u64 action;
- 
- 	spin_lock(&adapter->fdir_perfect_lock);
- 
-@@ -4812,12 +4813,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 
- 	hlist_for_each_entry_safe(filter, node2,
- 				  &adapter->fdir_filter_list, fdir_node) {
-+		action = filter->action;
-+		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
-+			action =
-+			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
-+
- 		ixgbe_fdir_write_perfect_filter_82599(hw,
- 				&filter->filter,
- 				filter->sw_idx,
--				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
-+				(action == IXGBE_FDIR_DROP_QUEUE) ?
- 				IXGBE_FDIR_DROP_QUEUE :
--				adapter->rx_ring[filter->action]->reg_idx);
-+				adapter->rx_ring[action]->reg_idx);
+diff --git a/drivers/infiniband/hw/mthca/mthca_main.c b/drivers/infiniband/hw/mthca/mthca_main.c
+index ded76c101dde3..834b06aacc2bf 100644
+--- a/drivers/infiniband/hw/mthca/mthca_main.c
++++ b/drivers/infiniband/hw/mthca/mthca_main.c
+@@ -989,7 +989,8 @@ static int __mthca_init_one(struct pci_dev *pdev, int hca_type)
+ 		goto err_free_dev;
  	}
  
- 	spin_unlock(&adapter->fdir_perfect_lock);
+-	if (mthca_cmd_init(mdev)) {
++	err = mthca_cmd_init(mdev);
++	if (err) {
+ 		mthca_err(mdev, "Failed to init command interface, aborting.\n");
+ 		goto err_free_dev;
+ 	}
 -- 
 2.20.1
 
