@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05D0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD71C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BB02071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6212077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420343;
-	bh=uoV+vE689AiaK2/D+SicCSmXb2xPyJ1VTO5cJn4q3Pg=;
+	s=default; t=1574420352;
+	bh=WatvhTlnTrUeKgE4vGEfMfvYTXMAw5MLRYU+EHcOmmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQsjG33juS4LHBNY/A623TAiSvyQUi4mVsiLP/DpahwKhCUGrjsx3T7dKjETbLlTz
-	 q45+yHqS/DrCwxbzvhUXFXsKCod6TGNl+Nq/v6154z7i0wc14ZWQK2MHDVdqGlZ65V
-	 4XoiBsFYfx+xERzruNq/Fbj3axi4fth/E577D9rE=
+	b=KHZO62fj+k4loLttlRyGzqo4IWT1jJzhrtYgKjNpaQerBLnYN0hI6PLwC1aLSmU6O
+	 UTbbGZ0wJEYo7F07gkWKxnUl74Im/j9Izyylr4AoOwQjb9NSAaaW/JH5q+Qeiy9bRo
+	 htzfMEIzxS8cKtinGb3SVJ2vxb9/wTDoD58rrcVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbfKVK7C (ORCPT
+        id S1730877AbfKVK7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49504 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730846AbfKVK64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:56 -0500
+        id S1730387AbfKVK7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DC020721;
-        Fri, 22 Nov 2019 10:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 678DB20721;
+        Fri, 22 Nov 2019 10:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420336;
-        bh=uoV+vE689AiaK2/D+SicCSmXb2xPyJ1VTO5cJn4q3Pg=;
+        s=default; t=1574420344;
+        bh=WatvhTlnTrUeKgE4vGEfMfvYTXMAw5MLRYU+EHcOmmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezoUdE9P7iPX7pmNkp6G2rhLp+hHWCw+rjw13mMOgyUfh5210MOAPiN1FbFHqxE8M
-         aZ/dsmbeIsvFCTLTU7zVhFTYC8y7B+jcbL8fASwRBEHWwm9lq0BMLDiAcHAOPgVJ/j
-         c+jv176jctNsua+Sqf2fbSSu8k+/rieqQeY6/mB4=
+        b=0OBl3o81e3Mm8tOZX/W3tHcPHF89vZYyDUUx7l0WdESKXjVSW5FBJlm3I3MmYKQ27
+         gZSwm0+fNGLrHxQXLdOBVe1flOmY6ZB/Ek8pWT/ggdjXK+GkfMK0LV2LF1y2r7FX2L
+         kp1XTvqC7d8m1ur8wRiJunqqsWCeycpBTh5QZJI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/220] ARM: dts: at91: sama5d4_xplained: fix addressable nand flash size
-Date:   Fri, 22 Nov 2019 11:27:15 +0100
-Message-Id: <20191122100917.226696826@linuxfoundation.org>
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 031/220] mt76x2: fix tx power configuration for VHT mcs 9
+Date:   Fri, 22 Nov 2019 11:26:36 +0100
+Message-Id: <20191122100914.627267228@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,33 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-[ Upstream commit df90fc64367ffdb6f1b5c0f0c4940d44832b0174 ]
+[ Upstream commit 60b6645ef1a9239a02c70adeae136298395d145a ]
 
-sama5d4_xplained comes with a 4Gb NAND flash. Increase the rootfs
-size to match this limit.
+Fix tx power configuration for VHT 1SS/STBC mcs 9 since
+in MT_TX_PWR_CFG_{8,9} mcs 8,9 bits are GENMASK(21,16) and
+GENMASK(29,24) while GENMASK(15,6) are marked as reserved
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: 7bc04215a66b ("mt76: add driver code for MT76x2e")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-sama5d4_xplained.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-index 4b7c762d5f223..7d554b9ab27fd 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -252,7 +252,7 @@
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c
+index 9fd6ab4cbb949..ca68dd184489b 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c
+@@ -232,9 +232,9 @@ void mt76x2_phy_set_txpower(struct mt76x2_dev *dev)
+ 	mt76_wr(dev, MT_TX_PWR_CFG_7,
+ 		mt76x2_tx_power_mask(t.ofdm[6], t.vht[8], t.ht[6], t.vht[8]));
+ 	mt76_wr(dev, MT_TX_PWR_CFG_8,
+-		mt76x2_tx_power_mask(t.ht[14], t.vht[8], t.vht[8], 0));
++		mt76x2_tx_power_mask(t.ht[14], 0, t.vht[8], t.vht[8]));
+ 	mt76_wr(dev, MT_TX_PWR_CFG_9,
+-		mt76x2_tx_power_mask(t.ht[6], t.vht[8], t.vht[8], 0));
++		mt76x2_tx_power_mask(t.ht[6], 0, t.vht[8], t.vht[8]));
+ }
+ EXPORT_SYMBOL_GPL(mt76x2_phy_set_txpower);
  
- 						rootfs@800000 {
- 							label = "rootfs";
--							reg = <0x800000 0x0f800000>;
-+							reg = <0x800000 0x1f800000>;
- 						};
- 					};
- 				};
 -- 
 2.20.1
 
