@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDBAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528A020718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0AD20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419320;
-	bh=fCHwIOGu3unDcLR2KdVSgi3LcxKQ2gDJuYvU66MMI3g=;
+	s=default; t=1574419323;
+	bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zc4J9gx1nFVAB/gMbPqBW/JhbBAFr+CJ+JL/dkJyA7QjoHN5O1g/N5jTvMJvdp34T
-	 xvBiE4ooSxOTTrWjriFdf7KTj6NcTmP4aJ3fWhbsdk8Aw7TvT5TYWhc6vtxJUeN3sH
-	 enJEi7RDgAS9IDDQ2jQG6hbgCXpmap+LWVfCcFE4=
+	b=PCQKodxaIhXNdX10glcEil6WdCNzP+3rovXCv96Bvfm1OJpga2H8kYxAcILUp1ynz
+	 MAlF+llCv/SMHK9ztIvmFsOiJvcvS1ITIM2cqT5XBgpeToAdqBS/3bZ45oSEUXuZxl
+	 VbYuwr8mb3nGmyVBB8Xl3eeRJaMgzR1CSaw3S+jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfKVKl7 (ORCPT
+        id S1729072AbfKVKmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:41:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbfKVKl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:56 -0500
+        id S1729061AbfKVKl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B26D620707;
-        Fri, 22 Nov 2019 10:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFCA420715;
+        Fri, 22 Nov 2019 10:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419315;
-        bh=fCHwIOGu3unDcLR2KdVSgi3LcxKQ2gDJuYvU66MMI3g=;
+        s=default; t=1574419318;
+        bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7CfDjVDyw7bICgMwTK1ZZ/FpLrLtsoh4Et8ak5tN8vtTH8L8mOCa6PdHwH7oDX1B
-         SLtoMnNyvdwK8KLjxkYsEDKTWG/PkJR4jj/3x9tC/jc4rkRsvpVuNkJm+yF8rLIhIb
-         z4CzAC0HX2+2lAR6kU5RzhlkzE0J9f9lu78Q6wuQ=
+        b=gcxbs39q3TGys81Y56jzCaZO8p0aMATrUI4/5eoBk3W0FPrgV7VkArAITJP+eF3mp
+         xmybWCE1nt520xJvQtpJF6EtNyCVXEwbk7QjAnbgs+YRjVhRxXS1hHPfk1C1xpV368
+         pEAUcZwkQOeW1cW58WUrAbbO3KA55UOlB2XKCrXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Modra <amodra@gmail.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/222] powerpc/vdso: Correct call frame information
-Date:   Fri, 22 Nov 2019 11:26:48 +0100
-Message-Id: <20191122100905.013915167@linuxfoundation.org>
+        stable@vger.kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Burton <paul.burton@mips.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@linux-mips.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 026/222] MIPS: BCM47XX: Enable USB power on Netgear WNDR3400v3
+Date:   Fri, 22 Nov 2019 11:26:06 +0100
+Message-Id: <20191122100839.788536994@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,98 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Modra <amodra@gmail.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
+[ Upstream commit feef7918667b84f9d5653c501542dd8d84ae32af ]
 
-Call Frame Information is used by gdb for back-traces and inserting
-breakpoints on function return for the "finish" command.  This failed
-when inside __kernel_clock_gettime.  More concerning than difficulty
-debugging is that CFI is also used by stack frame unwinding code to
-implement exceptions.  If you have an app that needs to handle
-asynchronous exceptions for some reason, and you are unlucky enough to
-get one inside the VDSO time functions, your app will crash.
+Setting GPIO 21 high seems to be required to enable power to USB ports
+on the WNDR3400v3. As there is already similar code for WNR3500L,
+make the existing USB power GPIO code generic and use that.
 
-What's wrong:  There is control flow in __kernel_clock_gettime that
-reaches label 99 without saving lr in r12.  CFI info however is
-interpreted by the unwinder without reference to control flow: It's a
-simple matter of "Execute all the CFI opcodes up to the current
-address".  That means the unwinder thinks r12 contains the return
-address at label 99.  Disabuse it of that notion by resetting CFI for
-the return address at label 99.
-
-Note that the ".cfi_restore lr" could have gone anywhere from the
-"mtlr r12" a few instructions earlier to the instruction at label 99.
-I put the CFI as late as possible, because in general that's best
-practice (and if possible grouped with other CFI in order to reduce
-the number of CFI opcodes executed when unwinding).  Using r12 as the
-return address is perfectly fine after the "mtlr r12" since r12 on
-that code path still contains the return address.
-
-__get_datapage also has a CFI error.  That function temporarily saves
-lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
-use of r0 means the CFI at that point isn't correct, as r0 no longer
-contains the return address.  Fix that too.
-
-Signed-off-by: Alan Modra <amodra@gmail.com>
-Tested-by: Reza Arbab <arbab@linux.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20259/
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso32/datapage.S     | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
- arch/powerpc/kernel/vdso64/datapage.S     | 1 +
- arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
- 4 files changed, 4 insertions(+)
+ arch/mips/bcm47xx/workarounds.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 3745113fcc652..2a7eb5452aba7 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 6b2b69616e776..7b341b86216c2 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
-index abf17feffe404..bf96686915116 100644
---- a/arch/powerpc/kernel/vdso64/datapage.S
-+++ b/arch/powerpc/kernel/vdso64/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 3820213248836..09b2a49f6dd53 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -124,6 +124,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
+diff --git a/arch/mips/bcm47xx/workarounds.c b/arch/mips/bcm47xx/workarounds.c
+index e81ce4623070e..06fb94370c7c9 100644
+--- a/arch/mips/bcm47xx/workarounds.c
++++ b/arch/mips/bcm47xx/workarounds.c
+@@ -4,9 +4,8 @@
+ #include <bcm47xx_board.h>
+ #include <bcm47xx.h>
+ 
+-static void __init bcm47xx_workarounds_netgear_wnr3500l(void)
++static void __init bcm47xx_workarounds_enable_usb_power(int usb_power)
+ {
+-	const int usb_power = 12;
+ 	int err;
+ 
+ 	err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
+@@ -22,7 +21,10 @@ void __init bcm47xx_workarounds(void)
+ 
+ 	switch (board) {
+ 	case BCM47XX_BOARD_NETGEAR_WNR3500L:
+-		bcm47xx_workarounds_netgear_wnr3500l();
++		bcm47xx_workarounds_enable_usb_power(12);
++		break;
++	case BCM47XX_BOARD_NETGEAR_WNDR3400_V3:
++		bcm47xx_workarounds_enable_usb_power(21);
+ 		break;
+ 	default:
+ 		/* No workaround(s) needed */
 -- 
 2.20.1
 
