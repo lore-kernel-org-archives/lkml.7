@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ABCC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70825C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACEB2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F15420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420254;
-	bh=dw1Od3tfqTRHm8dZLv6SR3k035VggA/mPAxizj5RnQ8=;
+	s=default; t=1574420259;
+	bh=QSLuD+YpzU6b8rUYnHY1H1u65Kcdamyi0w+ofodb1vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgCfaqqzWnUuYariBMhxwU3+neRuh7E4xu0njheGl37//xs01B0crtTVCp3PK+Fbt
-	 dVVpoFtXfjNj398ZUHD+JhsLnCnr6k+kY1LeeA1aM2+lB60JhGtDh36Tva3wkwj3jS
-	 xs5Ua0kHzk6qti06BkfpKlU4OH3E80VK61tedpBw=
+	b=Dd78UFePPBrKi+DddlHE1pXY26rtDPGQDH7v4FyAcZxX9/f5sSl35ALWktQsD6rvX
+	 0DDhSh0/pom8+C91csoj2FDcZo8AWG0vr8vJbTFDOQWez53XgIo1oM/zbl31U30QMV
+	 ei2+8dRTRKYU+EvYZ/G6Lux2O9XeK9VLBYsbTu4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfKVK5c (ORCPT
+        id S1730696AbfKVK5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbfKVK5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:20 -0500
+        id S1730671AbfKVK5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 387592071C;
-        Fri, 22 Nov 2019 10:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3142072E;
+        Fri, 22 Nov 2019 10:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420239;
-        bh=dw1Od3tfqTRHm8dZLv6SR3k035VggA/mPAxizj5RnQ8=;
+        s=default; t=1574420250;
+        bh=QSLuD+YpzU6b8rUYnHY1H1u65Kcdamyi0w+ofodb1vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+ruqCKa/iHDwby+qjv/l5VkoNVSNs5TP2t8Yea+ToHBCIDpW7h6CVupDKaG2cnsL
-         HIzLqVsew/JKj+bGcNj0q4NfFeF7GfRXawaDDFYsv9szv+0SW8hHrQ5fwPckXycuab
-         nWk4jKUZpIiWOexSR6m/xKZOG0017sLmiew0oU3A=
+        b=bqGPAcoNw3UmydNLnKdZ+FoKtg4nPi5mud5V9abjSyEVMiWcw/aUWOpdyZnengYTr
+         WVaoA46RbglyWrI9+/VN4mpyqZoCFDrJ5Bw7rDckWDS0LmropRN5ZhjAdUemJoUE6v
+         v7LlceUaLrIq1ac6wZ6zIMfreCpm1UNQ+aRHhIz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/220] ata: ahci_brcm: Allow using driver or DSL SoCs
-Date:   Fri, 22 Nov 2019 11:26:45 +0100
-Message-Id: <20191122100915.191592569@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Kossifidis <mickflemm@gmail.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 044/220] ath9k: fix reporting calculated new FFT upper max
+Date:   Fri, 22 Nov 2019 11:26:49 +0100
+Message-Id: <20191122100915.427563948@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -59,34 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Simon Wunderlich <sw@simonwunderlich.de>
 
-[ Upstream commit 7fb44929cb0e5cdcde143e1ca3ca57b5b8247db0 ]
+[ Upstream commit 4fb5837ac2bd46a85620b297002c704e9958f64d ]
 
-The Broadcom STB AHCI controller is the same as the one found on DSL
-SoCs, so we will utilize the same driver on these systems as well.
+Since the debug print code is outside of the loop, it shouldn't use the loop
+iterator anymore but instead print the found maximum index.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Nick Kossifidis <mickflemm@gmail.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/common-spectral.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 39b181d6bd0d8..99698d7fe585a 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -121,7 +121,8 @@ config SATA_AHCI_PLATFORM
+diff --git a/drivers/net/wireless/ath/ath9k/common-spectral.c b/drivers/net/wireless/ath/ath9k/common-spectral.c
+index 440e16e641e4a..f75eb068e6cfc 100644
+--- a/drivers/net/wireless/ath/ath9k/common-spectral.c
++++ b/drivers/net/wireless/ath/ath9k/common-spectral.c
+@@ -411,7 +411,7 @@ ath_cmn_process_ht20_40_fft(struct ath_rx_status *rs,
  
- config AHCI_BRCM
- 	tristate "Broadcom AHCI SATA support"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
-+		   ARCH_BCM_63XX
- 	help
- 	  This option enables support for the AHCI SATA3 controller found on
- 	  Broadcom SoC's.
+ 		ath_dbg(common, SPECTRAL_SCAN,
+ 			"Calculated new upper max 0x%X at %i\n",
+-			tmp_mag, i);
++			tmp_mag, fft_sample_40.upper_max_index);
+ 	} else
+ 	for (i = dc_pos; i < SPECTRAL_HT20_40_NUM_BINS; i++) {
+ 		if (fft_sample_40.data[i] == (upper_mag >> max_exp))
 -- 
 2.20.1
 
