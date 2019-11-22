@@ -2,155 +2,247 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324F1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2254C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B2C2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92BD0206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ck5RoPaz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uS/xP7ZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfKVClP (ORCPT
+        id S1726568AbfKVCnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:41:15 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37834 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKVClP (ORCPT
+        Thu, 21 Nov 2019 21:43:07 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:41888 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfKVCnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:41:15 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p24so2739091pfn.4;
-        Thu, 21 Nov 2019 18:41:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dv1bxAvHpHd/W1kU7AoVueS3lUuNaiq9DlOEZQ0S9UI=;
-        b=Ck5RoPazJp2/Fe93Xp/p3B+Tf1cJhqLlqrJt7AyPUyfWbnJKO44BDgNd7jL+o38yV6
-         MhP8c1OW5EHyjRDQJC4/0b+GzdxXn7+pkqo8yYQFJqc0A87Xd3A4GbqzYC6kuXDZ1o/d
-         Zp57fo+9lFG6HahMFJKt7iL85ZqrD4jrIayWabtyVkRvqRKrxB2xokPhND6x0SGHnrbq
-         NQGZFRrly3NIveJfdOK7BAQ2sHTpv+Vz/lAx0adHAuRcxiBiHsRsLc5v9ywLLdNOpbsQ
-         Rmd6BnkFq8g1uZw5gJn2BnJwDRvN8rd3/39TUgq9PKaPiVJFZ+hiJE3P5mMOYiGmOACN
-         +fEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dv1bxAvHpHd/W1kU7AoVueS3lUuNaiq9DlOEZQ0S9UI=;
-        b=hg77QTwBsVdvCCWokgl8I77oTxl/53ZA2MsA+Qirb00JmOHHTDFIrQ7k1Bza7lU+Ou
-         geBpButrZQkUxzU/z0j5NS1brSIR/5ueBWInfuyb4t1XJ8OF1bGmbqODXBJ6VlW6j7T9
-         Z9JDM0MqgUg/KNsgoNkLqe4ubRu1plLVOG0WCxPfnN2qbS2547BklSDP3XMv0Ul/NPDp
-         l1rMGTsE65fHy6TGVS5R/0tk3D1bkhJwQtlDjBLvoU4Oj2O8awPGBsslCAPzavV5cVai
-         01zbxwYd0RiWwOgwK0MSun62KXdTqrXWIQqcLLYiJ4zPT4nUbX0pXOaQojfigBAGnAoj
-         WquQ==
-X-Gm-Message-State: APjAAAVExqW6bpiVwTQb9MbJTG4dIfigrSKDsvPQOrh1fvmAbPWKWLPw
-        SWveaohvMsWlW3XXIzkEEZv9YWQJ
-X-Google-Smtp-Source: APXvYqwYjk/0lIGQRIcZ8ZEoYk1ifrJ/FSFARppLkcdhtuRCyYMgzQ2zUh7gQdp+kxZtPwFXybTSUA==
-X-Received: by 2002:aa7:9189:: with SMTP id x9mr14884350pfa.41.1574390473807;
-        Thu, 21 Nov 2019 18:41:13 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s6sm5180464pfd.24.2019.11.21.18.41.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 18:41:12 -0800 (PST)
-Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-Cc:     Guenter Roeck <groeck7@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
- <20191121141508.GA13249@roeck-us.net>
- <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8c198e4e-488b-efd0-4caf-b2dddb830ea3@roeck-us.net>
-Date:   Thu, 21 Nov 2019 18:41:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 21 Nov 2019 21:43:07 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191122024302epoutp03cae1388fd69b0eec8d9904428832ae96~ZW_S59XLv0230602306epoutp03T
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 02:43:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191122024302epoutp03cae1388fd69b0eec8d9904428832ae96~ZW_S59XLv0230602306epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574390582;
+        bh=Px4SlZ5apSRJazVEKcmp2ZxkKUBgkoNX88YE/Ke2mS8=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=uS/xP7ZJpaE7dm8BpmRQsfsNp+IZcUg8QFTfJ77zgVFHH52rWHPDbiGYlIP37BRb+
+         H+688o1yjmaaWNVvK3/KrJgnqApsp+/ffDa3RdZMSdKeWSj5vGtiMiqpEshOJ0LxEa
+         cGi/4/TDzTPyV5HKDyyQ+2Cumwklqc7PHY6czK3Y=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20191122024302epcas5p46e8dff0af37d1b4ae884d7573ce74928~ZW_SZSdhY0340703407epcas5p4L;
+        Fri, 22 Nov 2019 02:43:02 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        40.DD.04078.53B47DD5; Fri, 22 Nov 2019 11:43:02 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191122024301epcas5p15162a4693f1d585dcd42d9ff151d1c54~ZW_Rs2dWT2878528785epcas5p1p;
+        Fri, 22 Nov 2019 02:43:01 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191122024301epsmtrp1632ce3d4ffe6c33d6edf0028bac333cf~ZW_Rr_jHR1274412744epsmtrp1k;
+        Fri, 22 Nov 2019 02:43:01 +0000 (GMT)
+X-AuditID: b6c32a49-5edff70000000fee-f4-5dd74b3557fa
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B6.C7.03654.53B47DD5; Fri, 22 Nov 2019 11:43:01 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.111.85.21]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191122024259epsmtip1f209f41be9c8c724411192d7ce2ac4cd~ZW_PzFe0c2388123881epsmtip1Y;
+        Fri, 22 Nov 2019 02:42:59 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Andrew Murray'" <andrew.murray@arm.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+In-Reply-To: <20191121160842.GC43905@e119886-lin.cambridge.arm.com>
+Subject: RE: [PATCH v4 1/2] phy: core: add phy_property_present method
+Date:   Fri, 22 Nov 2019 08:12:57 +0530
+Message-ID: <025701d5a0de$8e8b37d0$aba1a770$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQE1rVtOHv1BqgLHLDW+5IttHzLvfAFs3nFMAYnCwPkCRa1ydaisfipw
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLKsWRmVeSWpSXmKPExsWy7bCmpq6Z9/VYg/MHmSya/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGfdW
+        fGIqWKNaserzG/YGxvuyXYwcHBICJhIT9kt3MXJxCAnsZpTY1X2eCcL5xCgxtamJBcL5xiix
+        +d4nIIcTrOP9/FNsEIm9QC29/ewgCSGB14wSk14LgNhsAvoS537MYwWxRQSiJBbe28oK0sAs
+        8JFR4m/3ArAEp4CzRPu8CewgdwgLuEmsexgIEmYRUJU48OUxWAmvgKVE/4MN7BC2oMTJmU/A
+        jmAWkJfY/nYOM8RBChI/ny6D2uUmcevuTkaIGnGJl0ePsIPslRBYxC5xr/sB1AcuEv8OtrJB
+        2MISr45vYYewpSRe9rdB2fkSPxZPYoZobmGUmHx8LitEwl7iwJU5LCBHMwtoSqzfpQ+xjE+i
+        9/cTJkiY8kp0tAlBVKtJfH9+BupOGYmHzUuZIGwPiSvnfjNPYFScheS1WUhem4XkhVkIyxYw
+        sqxilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAhOZFqeOxhnnfM5xCjAwajEwzuh/Fqs
+        EGtiWXFl7iFGCQ5mJRHePdevxArxpiRWVqUW5ccXleakFh9ilOZgURLnncR6NUZIID2xJDU7
+        NbUgtQgmy8TBKdXAmHrQZYPEF758rZcrLKfeYNKc+lbqr+mJMw7XzzXN9VNXO8C90SBP+cGl
+        MB/rfYcO1/lmS06zaj9rkKtsEWalatdcbB7fwOlyXlKmYecL18epiUsPFqZH54RkyXftsmD6
+        sMEpwO+ta0oYS8TGB0c5l5lfPOZuEcGg3RTzjEV+vZ/QORdrg34lluKMREMt5qLiRADz7g5N
+        YAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsWy7bCSnK6p9/VYg79f+S2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGfdW
+        fGIqWKNaserzG/YGxvuyXYycHBICJhLv559i62Lk4hAS2M0ocfl3NzNEQkZi8uoVrBC2sMTK
+        f8/ZIYpeMkp0TTnHDpJgE9CXOPdjHliRiECUxN/PN1hAipgFfjNKLLv1ngWio4VJYsOFFWBj
+        OQWcJdrnTQDq5uAQFnCTWPcwECTMIqAqceDLY7BBvAKWEv0PNrBD2IISJ2c+YQEpZxbQk2jb
+        yAgSZhaQl9j+dg7UoQoSP58ug7rBTeLW3Z1QNeISL48eYZ/AKDwLyaRZCJNmIZk0C0nHAkaW
+        VYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwfGopbmD8fKS+EOMAhyMSjy8E8qvxQqx
+        JpYVV+YeYpTgYFYS4d1z/UqsEG9KYmVValF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NT
+        C1KLYLJMHJxSDYwNrKymbe7nrvvbNK4tu6kl+u1OM8dsvY3ezc83c+t+1Of3b71z5fjvdo6I
+        dSfseOZdiHuYvOpc74KgOVbrfx5hFLn65W/mg8lq1w9m3/3XuHv1lKiWp8IVDcd87EJifLM6
+        p/c/2npSIukx84MQu6sd+VF1RvyXfAOenwqfpZ4kXdV1c/LyM+pKLMUZiYZazEXFiQACbQoB
+        wwIAAA==
+X-CMS-MailID: 20191122024301epcas5p15162a4693f1d585dcd42d9ff151d1c54
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21
+References: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+        <CGME20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21@epcas5p1.samsung.com>
+        <1574306408-4360-2-git-send-email-anvesh.s@samsung.com>
+        <20191121160842.GC43905@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 5:16 PM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> Roeck, thanks for your time to guide me to finish the review. Do I need to re-send a mail with your sign?
-> 
 
-No, that won't be necessary.
 
-Guenter
-
-> Peng Wang
-> 
 > -----Original Message-----
-> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
-> Sent: Thursday, November 21, 2019 10:15 PM
-> To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
-> Cc: Guenter Roeck <groeck7@gmail.com>; wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set bigger timeout value
+> From: Andrew Murray <andrew.murray@arm.com>
+> Sent: Thursday, November 21, 2019 9:39 PM
+> To: Anvesh Salveru <anvesh.s@samsung.com>
+> Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+> pankaj.dubey@samsung.com; lorenzo.pieralisi@arm.com;
+> bhelgaas@google.com; kishon@ti.com; robh+dt@kernel.org;
+> mark.rutland@arm.com
+> Subject: Re: [PATCH v4 1/2] phy: core: add phy_property_present method
 > 
-> On Thu, Nov 21, 2019 at 10:35:12AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
->>  From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
->> From: Peng Wang <peng.1.wang@nokia-sbell.com>
->> Date: Wed, 20 Nov 2019 15:12:59 +0800
->> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set
->> bigger  timeout value
->>
->> watchdog_dev.c provides means to allow users to set bigger timeout
->> value than HW can support, make DesignWare watchdog align with this.
->>
->> ---
->>
->> v2 -> v1:
->>         - use top_s to compare with wdd->max_hw_heartbeat_ms
->>         - update wdd->timeout in case it's greater than HW supports
->>         - fix comments error
->>
->> v1: initial version
->>
->> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+> On Thu, Nov 21, 2019 at 08:50:07AM +0530, Anvesh Salveru wrote:
+> > In some platforms, we need information of phy properties in the
+> > controller drivers. This patch adds a new phy_property_present()
+> > method which can be used to check if some property exists in PHY or
+> > not.
+> >
+> > In case of DesignWare PCIe controller, we need to write into
+> > controller register to specify about ZRX-DC compliance property of the
+> > PHY, which reduces the power consumption during lower power states.
+> >
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > ---
+> >  drivers/phy/phy-core.c  | 26 ++++++++++++++++++++++++++
+> > include/linux/phy/phy.h |  8 ++++++++
+> >  2 files changed, 34 insertions(+)
+> >
+> > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
+> > b04f4fe..0a62eca 100644
+> > --- a/drivers/phy/phy-core.c
+> > +++ b/drivers/phy/phy-core.c
+> > @@ -420,6 +420,32 @@ int phy_calibrate(struct phy *phy)
+> > EXPORT_SYMBOL_GPL(phy_calibrate);
+> >
+> >  /**
+> > + * phy_property_present() - checks if the property is present in PHY
+> > + * @phy: the phy returned by phy_get()
+> > + * @property: name of the property to check
+> > + *
+> > + * Used to check if the given property is present in PHY. PHY drivers
+> > + * can implement this callback function to expose PHY properties to
+> > + * controller drivers.
+> > + *
+> > + * Returns: true if property exists, false otherwise  */ bool
+> > +phy_property_present(struct phy *phy, const char *property) {
+> > +	bool ret;
+> > +
+> > +	if (!phy || !phy->ops->property_present)
+> > +		return false;
+> > +
+> > +	mutex_lock(&phy->mutex);
+> > +	ret = phy->ops->property_present(phy, property);
 > 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> I don't understand why it is necessary to require every phy driver to
+implement
+> this. Why can't the phy-core driver look up the device node of the given
+phy?
 > 
->> ---
->>   drivers/watchdog/dw_wdt.c | 10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
->> index fef7c61..12c116e 100644
->> --- a/drivers/watchdog/dw_wdt.c
->> +++ b/drivers/watchdog/dw_wdt.c
->> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->>   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->>   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
->>   
->> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
->> +	/*
->> +	 * In case users set bigger timeout value than HW can support,
->> +	 * kernel(watchdog_dev.c) helps to feed watchdog before
->> +	 * wdd->max_hw_heartbeat_ms
->> +	 */
->> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
->> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
->> +	else
->> +		wdd->timeout = top_s;
->>   
->>   	return 0;
->>   }
->> --
->> 1.8.3.1
->>
+
+No specific reason.
+
+We just went ahead and implemented this similar to other API in phy-core.c
+file where it redirects call to platform specific phy driver. As  you
+pointed out in this case, it makes sense to keep it in phy-core driver
+itself, as platform specific phy driver is not going to do anything which is
+really dependent on the PHY. 
+We will wait for further review comments on this patch, and then will take
+up your suggestion in next patchset.
+
+Thanks for review.
+Pankaj Dubey
+> Thanks,
 > 
+> Andrew Murray
+> 
+> > +	mutex_unlock(&phy->mutex);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(phy_property_present);
+> > +
+> > +/**
+> >   * phy_configure() - Changes the phy parameters
+> >   * @phy: the phy returned by phy_get()
+> >   * @opts: New configuration to apply
+> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h index
+> > 15032f14..3dd8f3c 100644
+> > --- a/include/linux/phy/phy.h
+> > +++ b/include/linux/phy/phy.h
+> > @@ -61,6 +61,7 @@ union phy_configure_opts {
+> >   * @reset: resetting the phy
+> >   * @calibrate: calibrate the phy
+> >   * @release: ops to be performed while the consumer relinquishes the
+> > PHY
+> > + * @property_present: check if some property is present in PHY
+> >   * @owner: the module owner containing the ops
+> >   */
+> >  struct phy_ops {
+> > @@ -103,6 +104,7 @@ struct phy_ops {
+> >  	int	(*reset)(struct phy *phy);
+> >  	int	(*calibrate)(struct phy *phy);
+> >  	void	(*release)(struct phy *phy);
+> > +	bool	(*property_present)(struct phy *phy, const char *property);
+> >  	struct module *owner;
+> >  };
+> >
+> > @@ -217,6 +219,7 @@ static inline enum phy_mode phy_get_mode(struct
+> > phy *phy)  }  int phy_reset(struct phy *phy);  int
+> > phy_calibrate(struct phy *phy);
+> > +bool phy_property_present(struct phy *phy, const char *property);
+> >  static inline int phy_get_bus_width(struct phy *phy)  {
+> >  	return phy->attrs.bus_width;
+> > @@ -354,6 +357,11 @@ static inline int phy_calibrate(struct phy *phy)
+> >  	return -ENOSYS;
+> >  }
+> >
+> > +static inline bool phy_property_present(struct phy *phy, const char
+> > +*property) {
+> > +	return false;
+> > +}
+> > +
+> >  static inline int phy_configure(struct phy *phy,
+> >  				union phy_configure_opts *opts)
+> >  {
+> > --
+> > 2.7.4
+> >
 
