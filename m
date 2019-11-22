@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B39AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60252C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94DC20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A552071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418780;
-	bh=IKe3NgO/UtZdXa4rzM4MFaxevILnmTQeYY26tJYkwg0=;
+	s=default; t=1574418782;
+	bh=p2phrhNfUoYu+y1XLEsSbb57i+ADHifGc9qdPbL3SXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAqCW/e8GiOq3XTQiz0jWuFxnh4IyoNWjT54Mw8uX9HG8OGf3QwmkBLK7IgLfa+SB
-	 RpIBvsQKC2TcbPXOme1hCvo1aUB93HLfsYWJd0hndo390m76e5dn6jER+GxC8OPk+m
-	 JTzY+RnRz+vTos3gwo6YjAUkWHEVpvri8EVW6zbo=
+	b=mKy+INl++0YFLvKo7VXjC0yJc8NwDbpTbCplUbHBfNzSwcX18Nwy4596YT/L84rKC
+	 6W6CIMAr5rKsr7VjWxP/G437sRFEJsywo2mitrh3o92+eSsqTHWdFNa11bLBU3ADq7
+	 Ti7fdIjLb9gX88jhN5SoxX5x6flIdtAp9eUvMKxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfKVKc6 (ORCPT
+        id S1727834AbfKVKc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:32:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54722 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:32:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfKVKcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:32:51 -0500
+        id S1727820AbfKVKcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:32:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B331C2071C;
-        Fri, 22 Nov 2019 10:32:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67D5320721;
+        Fri, 22 Nov 2019 10:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418771;
-        bh=IKe3NgO/UtZdXa4rzM4MFaxevILnmTQeYY26tJYkwg0=;
+        s=default; t=1574418773;
+        bh=p2phrhNfUoYu+y1XLEsSbb57i+ADHifGc9qdPbL3SXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TO1vCRGE1B+W/cS0Sm4hoiz5n+5pSKifeq7u0lrBu+rrby32xy4vxNp2PwY0fTqfJ
-         pi5LbO/Dd7zdQWUMdmHaDUJ/X8yWanFiKt7paIElGjPZGOYbk2wBlTQZPlE2BwsL/n
-         4l22k/Q3yUze5N6J8oXFZ5DGAW8l4MXFfLeyX43g=
+        b=j9O8TcyxdCis+QD+D2KhuPnSNBNigxteW9G8tUDxXOe8UTa/FRbMYW6PQOO53zxFT
+         x/UwmTjz+J1rqItfcfRM2LZs3e8MlUCFUXmIktd4xlEFZKImwJwIHYswkW23vOmvUQ
+         YRnBa1uhZ2iqCLqBAJaJgpZVx/KVYmsH5WTjy8kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 046/159] ALSA: intel8x0m: Register irq handler after register initializations
-Date:   Fri, 22 Nov 2019 11:27:17 +0100
-Message-Id: <20191122100739.390511399@linuxfoundation.org>
+Subject: [PATCH 4.4 047/159] pinctrl: at91-pio4: fix has_config check in atmel_pctl_dt_subnode_to_map()
+Date:   Fri, 22 Nov 2019 11:27:18 +0100
+Message-Id: <20191122100739.517616065@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -59,64 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7064f376d4a10686f51c879401a569bb4babf9c6 ]
+[ Upstream commit b97760ae8e3dc8bb91881c13425a0bff55f2bd85 ]
 
-The interrupt handler has to be acquired after the other resource
-initialization when allocated with IRQF_SHARED.  Otherwise it's
-triggered before the resource gets ready, and may lead to unpleasant
-behavior.
+Smatch complains about this condition:
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	if (has_config && num_pins >= 1)
+
+The "has_config" variable is either uninitialized or true.  The
+"num_pins" variable is unsigned and we verified that it is non-zero on
+the lines before so we know "num_pines >= 1" is true.  Really, we could
+just check "num_configs" directly and remove the "has_config" variable.
+
+Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/intel8x0m.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/pinctrl/pinctrl-at91-pio4.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
-index 1bc98c867133d..2286dfd72ff7e 100644
---- a/sound/pci/intel8x0m.c
-+++ b/sound/pci/intel8x0m.c
-@@ -1171,16 +1171,6 @@ static int snd_intel8x0m_create(struct snd_card *card,
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index 9aa82a4e9e254..b4420a0bf7d66 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -477,7 +477,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	unsigned num_pins, num_configs, reserve;
+ 	unsigned long *configs;
+ 	struct property	*pins;
+-	bool has_config;
+ 	u32 pinfunc;
+ 	int ret, i;
+ 
+@@ -493,9 +492,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		return ret;
  	}
  
-  port_inited:
--	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
--			KBUILD_MODNAME, chip)) {
--		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
--		snd_intel8x0m_free(chip);
--		return -EBUSY;
--	}
--	chip->irq = pci->irq;
--	pci_set_master(pci);
--	synchronize_irq(chip->irq);
+-	if (num_configs)
+-		has_config = true;
 -
- 	/* initialize offsets */
- 	chip->bdbars_count = 2;
- 	tbl = intel_regs;
-@@ -1224,11 +1214,21 @@ static int snd_intel8x0m_create(struct snd_card *card,
- 	chip->int_sta_reg = ICH_REG_GLOB_STA;
- 	chip->int_sta_mask = int_sta_masks;
+ 	num_pins = pins->length / sizeof(u32);
+ 	if (!num_pins) {
+ 		dev_err(pctldev->dev, "no pins found in node %s\n",
+@@ -508,7 +504,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	 * map for each pin.
+ 	 */
+ 	reserve = 1;
+-	if (has_config && num_pins >= 1)
++	if (num_configs)
+ 		reserve++;
+ 	reserve *= num_pins;
+ 	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps, num_maps,
+@@ -531,7 +527,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
+ 					  group, func);
  
-+	pci_set_master(pci);
-+
- 	if ((err = snd_intel8x0m_chip_init(chip, 1)) < 0) {
- 		snd_intel8x0m_free(chip);
- 		return err;
- 	}
- 
-+	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
-+			KBUILD_MODNAME, chip)) {
-+		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
-+		snd_intel8x0m_free(chip);
-+		return -EBUSY;
-+	}
-+	chip->irq = pci->irq;
-+
- 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
- 		snd_intel8x0m_free(chip);
- 		return err;
+-		if (has_config) {
++		if (num_configs) {
+ 			ret = pinctrl_utils_add_map_configs(pctldev, map,
+ 					reserved_maps, num_maps, group,
+ 					configs, num_configs,
 -- 
 2.20.1
 
