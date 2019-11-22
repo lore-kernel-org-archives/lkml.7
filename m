@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259E6C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6452207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21BE2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452176;
-	bh=Qcp/95hKgiUmF3weNB1n/j5vx2wAk9FNB3Kh8AoxmL0=;
+	s=default; t=1574452178;
+	bh=QncCh4pQTgUhpPvU4k9NamkWDYyRUhFGs+V6hZtJi64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=im1SE+ROxODW3D0DhkvkjPZ6rTglEuk73xoZxuEfSJwGqGkxMNuLUIBOqi4YWwne2
-	 S4lYOBQupRu37VdHxXGQlM34/oIPzVdKPTM9z6oQ+/WuGzb4I+eAVxBS3HhyIGDsCg
-	 3kqCJR5eZWhyTMg0Cp+9TFh02uUQ7t9gJOasw0gE=
+	b=Xc9aDoEGp1EHjnmlBYcmSVfG6C/Ak1BPXkBf7NCX7GYKkQFyE4XMfcZg2QSN205SQ
+	 oyS0CtwHtRVVE72kJxxcPdVa2pvcivrcLFbv5792lbdH8YvMl2UHAvKO3/Yvn0XK/p
+	 HAMGNhfwb2L1jvTbpe4wISRQpMBUXR0LAfi/vHhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfKVTte (ORCPT
+        id S1727490AbfKVTth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49152 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfKVTt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:28 -0500
+        id S1727416AbfKVTtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E6D20748;
-        Fri, 22 Nov 2019 19:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3FC020865;
+        Fri, 22 Nov 2019 19:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452167;
-        bh=Qcp/95hKgiUmF3weNB1n/j5vx2wAk9FNB3Kh8AoxmL0=;
+        s=default; t=1574452174;
+        bh=QncCh4pQTgUhpPvU4k9NamkWDYyRUhFGs+V6hZtJi64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M8ZDldT0QigIUuH8h32N3/foquOzirJHYLRSMEz0ibjaE76u5s+jJf9bAV7KqqDwm
-         /X/CWG10Dhz4tZ2vxOxD9Gwj2QA89OLmgg8l8dN6swCYeD+jPXG6wd/1FdmWZ/ENAF
-         ReEsV8duCOEr6bzE2Dke7FWX3KtviR4pwH4crU64=
+        b=oQUJpmtz3pFZeHwVXWexildxMLL+8C0wm0AQgNYx8v6uAouoF/7uM9EZmSQBLn1yf
+         lqhcEoE/6gomG+QGZ584Bo420QyRfMjKsaVHcS751eqfuXGZbf9aVwLOuJm/CUmwtJ
+         gdBX5qBHaomH95E8YUI/r5pF2PSFnxIZFTGl+Qd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/25] i2c: core: fix use after free in of_i2c_notify
-Date:   Fri, 22 Nov 2019 14:48:56 -0500
-Message-Id: <20191122194859.24508-23-sashal@kernel.org>
+Cc:     Sirong Wang <wangsirong@huawei.com>,
+        Weihang Li <liweihang@hisilicon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/21] RDMA/hns: Correct the value of HNS_ROCE_HEM_CHUNK_LEN
+Date:   Fri, 22 Nov 2019 14:49:12 -0500
+Message-Id: <20191122194931.24732-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
-References: <20191122194859.24508-1-sashal@kernel.org>
+In-Reply-To: <20191122194931.24732-1-sashal@kernel.org>
+References: <20191122194931.24732-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,41 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Sirong Wang <wangsirong@huawei.com>
 
-[ Upstream commit a4c2fec16f5e6a5fee4865e6e0e91e2bc2d10f37 ]
+[ Upstream commit 531eb45b3da4267fc2a64233ba256c8ffb02edd2 ]
 
-We can't use "adap->dev" after it has been freed.
+Size of pointer to buf field of struct hns_roce_hem_chunk should be
+considered when calculating HNS_ROCE_HEM_CHUNK_LEN, or sg table size will
+be larger than expected when allocating hem.
 
-Fixes: 5bf4fa7daea6 ("i2c: break out OF support into separate file")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+Link: https://lore.kernel.org/r/1572575610-52530-2-git-send-email-liweihang@hisilicon.com
+Signed-off-by: Sirong Wang <wangsirong@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-core-of.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index 0f01cdba9d2c6..14d4884996968 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -253,14 +253,14 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
- 		}
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.h b/drivers/infiniband/hw/hns/hns_roce_hem.h
+index 435748858252d..8e8917ebb013b 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hem.h
++++ b/drivers/infiniband/hw/hns/hns_roce_hem.h
+@@ -52,7 +52,7 @@ enum {
  
- 		client = of_i2c_register_device(adap, rd->dn);
--		put_device(&adap->dev);
--
- 		if (IS_ERR(client)) {
- 			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
- 				 rd->dn);
-+			put_device(&adap->dev);
- 			of_node_clear_flag(rd->dn, OF_POPULATED);
- 			return notifier_from_errno(PTR_ERR(client));
- 		}
-+		put_device(&adap->dev);
- 		break;
- 	case OF_RECONFIG_CHANGE_REMOVE:
- 		/* already depopulated? */
+ #define HNS_ROCE_HEM_CHUNK_LEN	\
+ 	 ((256 - sizeof(struct list_head) - 2 * sizeof(int)) /	 \
+-	 (sizeof(struct scatterlist)))
++	 (sizeof(struct scatterlist) + sizeof(void *)))
+ 
+ enum {
+ 	 HNS_ROCE_HEM_PAGE_SHIFT = 12,
 -- 
 2.20.1
 
