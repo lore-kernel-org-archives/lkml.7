@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF62C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7935C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F0220854
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8166E20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420681;
-	bh=2mZNh7vjMLJ8VzjcNt4mAP3gxaWYiCtdp11s1HXRELc=;
+	s=default; t=1574420685;
+	bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=shapVwCGxo2HantiX5bmrTK+H5sQUAsecs9IBDWix4x9HpZcq4m9/USGk0DP9yGRg
-	 woZWSpv4jIuJoLJVIVwX2HtWj5oIetGLicy5ocbQTK0XFm3N/dVHldZAUogdUwu1zj
-	 +DrJGU5+siAsL1KBvhfw/TB0f3eoBZklmMie0viU=
+	b=KhlQt5hqNbk9QGIWQJPrgvtUxGtvM5nlT6dx1JFY3ZPDU+zjidXYbZ/xa0qb+dTM5
+	 A8pcQqVoCF5gQlqFaUurZxCaNqXqGAAqMedhxxunsn1BbwhT3caHF36jtqqARiHkR9
+	 C9uOuYiyqWr1ZQFh0CgbOwYXRvaVKnH+kYdreiME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbfKVLEk (ORCPT
+        id S1731605AbfKVLEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731579AbfKVLEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:37 -0500
+        id S1731592AbfKVLEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 812BC20840;
-        Fri, 22 Nov 2019 11:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB3120854;
+        Fri, 22 Nov 2019 11:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420677;
-        bh=2mZNh7vjMLJ8VzjcNt4mAP3gxaWYiCtdp11s1HXRELc=;
+        s=default; t=1574420682;
+        bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z4KbDFC6YuuIS9TPRRYYPTcvf7ChlrkfW3D0MG4tm0WzhwnJeTURykEmD8Vf2xIRw
-         DHJ6VS8P3N+YRXGTR7YVhYeFoXTIDCdKrpjRrhtl9hfv3YJSBrtxOPVv5gqQ6vB+xP
-         15dydPuzbxKfZihscMfMsHm8LrGct2CDrBtFHL1w=
+        b=recG/xlFwP7zth13JHoLE2avzrTnGvwwX2b9Bn5MvJfKapT+fk/9kGfqcpn2jPzpH
+         RIU+AP87eP0+VhMrq4/e0NNMxrfaNPhYo9om09fSWqreQw/1tVodaJjZcEfX7NWPAg
+         R40ltE/YJRIy8Axf8hPx/KRWc2ZppCEXz5hTADLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 188/220] bpf: btf: Fix a missing check bug
-Date:   Fri, 22 Nov 2019 11:29:13 +0100
-Message-Id: <20191122100927.690308335@linuxfoundation.org>
+Subject: [PATCH 4.19 190/220] gpio: syscon: Fix possible NULL ptr usage
+Date:   Fri, 22 Nov 2019 11:29:15 +0100
+Message-Id: <20191122100927.791893500@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,46 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 8af03d1ae2e154a8be3631e8694b87007e1bdbc2 ]
+[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
 
-In btf_parse_hdr(), the length of the btf data header is firstly copied
-from the user space to 'hdr_len' and checked to see whether it is larger
-than 'btf_data_size'. If yes, an error code EINVAL is returned. Otherwise,
-the whole header is copied again from the user space to 'btf->hdr'.
-However, after the second copy, there is no check between
-'btf->hdr->hdr_len' and 'hdr_len' to confirm that the two copies get the
-same value. Given that the btf data is in the user space, a malicious user
-can race to change the data between the two copies. By doing so, the user
-can provide malicious data to the kernel and cause undefined behavior.
+The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
+and chip->set is valid pointer. This happens in case the controller uses
+the default GPIO setter. Always use chip->set to access the setter to avoid
+possible NULL pointer dereferencing.
 
-This patch adds a necessary check after the second copy, to make sure
-'btf->hdr->hdr_len' has the same value as 'hdr_len'. Otherwise, an error
-code EINVAL will be returned.
-
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/btf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpio/gpio-syscon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 138f0302692ec..378cef70341c4 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -2114,6 +2114,9 @@ static int btf_parse_hdr(struct btf_verifier_env *env, void __user *btf_data,
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 87c18a5445137..7f3da34c78746 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -122,7 +122,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
+ 				   BIT(offs % SYSCON_REG_BITS));
+ 	}
  
- 	hdr = &btf->hdr;
+-	priv->data->set(chip, offset, val);
++	chip->set(chip, offset, val);
  
-+	if (hdr->hdr_len != hdr_len)
-+		return -EINVAL;
-+
- 	btf_verifier_log_hdr(env, btf_data_size);
- 
- 	if (hdr->magic != BTF_MAGIC) {
+ 	return 0;
+ }
 -- 
 2.20.1
 
