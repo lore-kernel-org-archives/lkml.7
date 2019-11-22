@@ -7,122 +7,83 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B55C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31832C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497122071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BDF2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574435797;
-	bh=ZxQM3k879r7/0GkBs4EcysLfK42eCa9E+tvIZX1nAqw=;
+	s=default; t=1574435971;
+	bh=n4AJKJGVZy+SCQms3UvzF7qaH7ySK/kr/MGC6JHE41g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=baivVZgLbz2DdS0qxKca0QIxRtVBVUQyBL6F1Mw118d87LOOxo5xBfoG8paXKxrEK
-	 qImYcOrDRkh0AQq6PFA7zbiqmZpOrakBXmR3V1Ed/Jn507sks6vlNWs4Fw3AGdeThq
-	 D/9rXJtMqfbw0ri+a8cLA01mZVVLRfiYxHMzGOsA=
+	b=cxofBSk7935IxSKaDIcCMdace4F5qF7te+m5SD+0gouK825DapA/86B2iadb6YXto
+	 cv8Y3Sgz/Bkk9AeETa/742y+A86GnSsnWGdf7XodfEVT1P69ciOZQluv9ufdZ2NQaN
+	 zD8eIRTcPibIxC3vaSnR9KsmmAJA9e6l1QL/aInw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfKVPQg (ORCPT
+        id S1727040AbfKVPTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:16:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 10:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbfKVPQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:16:36 -0500
+        id S1726045AbfKVPT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 10:19:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 890BD2071B;
-        Fri, 22 Nov 2019 15:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9665C2071C;
+        Fri, 22 Nov 2019 15:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574435794;
-        bh=ZxQM3k879r7/0GkBs4EcysLfK42eCa9E+tvIZX1nAqw=;
+        s=default; t=1574435969;
+        bh=n4AJKJGVZy+SCQms3UvzF7qaH7ySK/kr/MGC6JHE41g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1pN1bLDycLvfU0mrNnHJcEJMrU/uYukBOti9fu3snFNR5ACLgx3Wu7zZieU0CTPYQ
-         o3M/aTr9mz3aTqvWuEEucq51s+5yQl79t+MR7wHEWEJ3uvcvOd0rJuCh+39w4lebEq
-         gG9XBXXm0eJjJEjT0RZudmuh/xu5tO3QjNSQDkxQ=
-Date:   Fri, 22 Nov 2019 16:16:31 +0100
+        b=VaLJKmzNlKaCc4l5J4pJaGyM2DFKHCq9Gk2EQV/QKv1DBDLq6sqhxMCaCQSmdHO+j
+         DyRSeSO7clEOczGUvhKUKlBseLKbt3rWLRGHHiXC3yc/JkUocUGi23XHz8ZFqwrBSV
+         Bl/KUKuufuZpHw0hAC0WEs6UnMrRVbO6zOLXLsMU=
+Date:   Fri, 22 Nov 2019 16:19:26 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
-Message-ID: <20191122151631.GA2083451@kroah.com>
-References: <20191122100912.732983531@linuxfoundation.org>
- <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] debugfs: Fix !DEBUG_FS debugfs_create_automount
+Message-ID: <20191122151926.GA2083897@kroah.com>
+References: <20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp>
+ <20191121115232.GC427938@kroah.com>
+ <20191121124413687.NRXY.44544.ppp.dion.ne.jp@dmta0002.auone-net.jp>
+ <20191121132644.GA475684@kroah.com>
+ <20191121185540.1465a308@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
+In-Reply-To: <20191121185540.1465a308@oasis.local.home>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 06:47:05AM -0800, Guenter Roeck wrote:
-> On 11/22/19 2:26 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.86 release.
-> > There are 220 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Thu, Nov 21, 2019 at 06:55:40PM -0500, Steven Rostedt wrote:
+> On Thu, 21 Nov 2019 14:26:44 +0100
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Thu, Nov 21, 2019 at 09:44:13PM +0900, Kusanagi Kouichi wrote:
+> > > On 2019-11-21 12:52:32 +0100, Greg Kroah-Hartman wrote:  
+> > > > 
+> > > > Has this always been a problem, or did it just show up due to some other
+> > > > kernel change?
+> > > >   
+> > > 
+> > > The latter. Please see https://lkml.org/lkml/2019/11/21/11  
 > > 
-> > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> > Anything received after that time might be too late.
-> > 
+> > So it is fine for this to go into 5.5-rc1 then, right?  I'll queue it up
+> > that way.
 > 
-> I see the following warning (at least for arm64, ppc64, and x86_64).
-> This seems to be caused by "idr: Fix idr_get_next race with idr_remove".
-> v4.14.y is also affected. Mainline and v5.3.y are not affected.
+> As the following patch also relies on this fix, can you add this too:
 > 
-> Guenter
+>  https://lore.kernel.org/lkml/20191120104350753.EWCT.12796.ppp.dion.ne.jp@dmta0009.auone-net.jp/
 > 
-> ---
-> [    3.897800] NetLabel: Initializing
-> [    3.897944] NetLabel:  domain hash size = 128
-> [    3.898044] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
-> [    3.898995]
-> [    3.899135] =============================
-> [    3.899235] WARNING: suspicious RCU usage
-> [    3.899479] 4.19.86-rc1+ #1 Not tainted
-> [    3.899595] -----------------------------
-> [    3.899772] include/linux/radix-tree.h:241 suspicious rcu_dereference_check() usage!
-> [    3.899939]
-> [    3.899939] other info that might help us debug this:
-> [    3.899939]
-> [    3.900159]
-> [    3.900159] rcu_scheduler_active = 2, debug_locks = 1
-> [    3.900347] 2 locks held by swapper/0/1:
-> [    3.900479]  #0: (____ptrval____) (cb_lock){+.+.}, at: genl_register_family+0xab/0x717
-> [    3.901498]  #1: (____ptrval____) (genl_mutex){+.+.}, at: genl_register_family+0xb9/0x717
-> [    3.901860]
-> [    3.901860] stack backtrace:
-> [    3.902136] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.19.86-rc1+ #1
-> [    3.902295] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> [    3.902633] Call Trace:
-> [    3.902633]  dump_stack+0x71/0xa0
-> [    3.902633]  idr_get_next+0x133/0x160
-> [    3.902633]  ? genl_register_family+0xab/0x717
-> [    3.902633]  ? do_early_param+0x89/0x89
-> [    3.902633]  genl_family_find_byname+0x4e/0x80
-> [    3.902633]  genl_register_family+0xc1/0x717
-> [    3.902633]  ? do_early_param+0x89/0x89
-> [    3.902633]  ? netlbl_netlink_init+0x21/0x21
-> [    3.902633]  netlbl_netlink_init+0x5/0x21
-> [    3.902633]  netlbl_init+0x4a/0x74
-> [    3.902633]  do_one_initcall+0x58/0x2ae
-> [    3.902633]  ? do_early_param+0x89/0x89
-> [    3.902633]  ? rcu_read_lock_sched_held+0x6f/0x80
-> [    3.902633]  ? do_early_param+0x89/0x89
-> [    3.902633]  kernel_init_freeable+0x1bc/0x24b
-> [    3.902633]  ? rest_init+0x176/0x176
-> [    3.902633]  kernel_init+0x5/0x101
-> [    3.902633]  ret_from_fork+0x3a/0x50
-> 
+> And add my Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Willy, this looks like something from your patch, is it to be expected?
-
-thanks,
+Now queued up, thanks!
 
 greg k-h
