@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F249DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BFDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58462068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8F120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403182;
-	bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zez5a/PyytAtLzSnfM2MNtsxmaQ8dLNplv8oztbmoye/4egKhL1rxV0EpDNklElE7
-	 cWMSoCNedqndiZWbcglfMthaXFghT/i9B6yWQPhNCld+N0wKrRboAdBmMaB6x5IC5B
-	 TX5w3fh9q0Z5rYCOFQ1wGBjjnzaSVM7De7uXFKk8=
+	s=default; t=1574403189;
+	bh=vqEKwBQUFxSHbtDnx/1d4SRZdBCRaEyfWfJl7WNX7OY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UfmrVQ9p4+Mb9kKoHlI46U2dvCRqCek6XiVmlg7dKItvA0Smta0BUi5OsRTn3aH5v
+	 If/9TYpKdmHiaHMfPSe4DBPV9/mnmY9PLITLxZdwVONCGn3RXwfqigPYf33U2sqNZF
+	 ta9tAaZR4QdsccZs2ypyDzf682IjYsJ9OVsBt4iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfKVGNB (ORCPT
+        id S1728227AbfKVGNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33820 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfKVF4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:05 -0500
+        id S1726248AbfKVGNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618ED20731;
-        Fri, 22 Nov 2019 05:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D422068E;
+        Fri, 22 Nov 2019 06:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402165;
-        bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHFleNsUi6Wb3Z9FruRjlqqgntDeNr/TquqK2MmAkkWlJgvCgvX/kjH5yTPYMjxpq
-         PDt/z8A5ZXxBVaeM/Z/QXd6dvByCwtaN9mdXMWwWqQ7N7YzN2+uynoMvE/zKwFOiBD
-         Klo18mxOMllolHdEMAae5PvX0mQHdo0Gh3s3XpGY=
+        s=default; t=1574403183;
+        bh=vqEKwBQUFxSHbtDnx/1d4SRZdBCRaEyfWfJl7WNX7OY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0BjpDP9Yy8KzQn5iTTVuoZy7c2ZQ+eXIdtS+sPFWPVlfpzF9ApW22+EEZ6YQildOI
+         R9+qTLaq7C89jNpPb+EU5grfa9y3tmfD8jOf+me3lZHZ9jTL7F6G+EjTeXvzVMMCeN
+         6X8ptOH6+ZrmsISZDjeLlyY6QzeQwNg2e9lH7yMo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 018/127] mwifiex: debugfs: correct histogram spacing, formatting
-Date:   Fri, 22 Nov 2019 00:53:56 -0500
-Message-Id: <20191122055544.3299-17-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/68] scsi: lpfc: Fix dif and first burst use in write commands
+Date:   Fri, 22 Nov 2019 01:11:55 -0500
+Message-Id: <20191122061301.4947-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,65 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 4cb777c64e030778c569f605398d7604d8aabc0f ]
+[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
 
-Currently, snippets of this file look like:
+When dif and first burst is used in a write command wqe, the driver was not
+properly setting fields in the io command request. This resulted in no dif
+bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
+by the hardware.
 
-rx rates (in Mbps): 0=1M   1=2M2=5.5M  3=11M   4=6M   5=9M  6=12M
-7=18M  8=24M  9=36M  10=48M  11=54M12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)
-44-53=MCS0-9(VHT:BW20)54-63=MCS0-9(VHT:BW40)64-73=MCS0-9(VHT:BW80)
-...
-noise_flr[--96dBm] = 22
-noise_flr[--95dBm] = 149
-noise_flr[--94dBm] = 9
-noise_flr[--93dBm] = 2
+Correct the wqe initializaton when both dif and first burst are used.
 
-We're missing some spaces, and we're adding a minus sign ('-') on values
-that are already negative signed integers.
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/debugfs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-index 6f4239be609d0..49ca84ef1a992 100644
---- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
-+++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-@@ -296,15 +296,13 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
- 		     "total samples = %d\n",
- 		     atomic_read(&phist_data->num_samples));
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index bae36cc3740b6..ab6bff60478f9 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -2707,6 +2707,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
  
--	p += sprintf(p, "rx rates (in Mbps): 0=1M   1=2M");
--	p += sprintf(p, "2=5.5M  3=11M   4=6M   5=9M  6=12M\n");
--	p += sprintf(p, "7=18M  8=24M  9=36M  10=48M  11=54M");
--	p += sprintf(p, "12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
-+	p += sprintf(p,
-+		     "rx rates (in Mbps): 0=1M   1=2M 2=5.5M  3=11M   4=6M   5=9M  6=12M\n"
-+		     "7=18M  8=24M  9=36M  10=48M  11=54M 12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
+ 	/*
+ 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
+@@ -2812,6 +2813,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
  
- 	if (ISSUPP_11ACENABLED(priv->adapter->fw_cap_info)) {
--		p += sprintf(p, "44-53=MCS0-9(VHT:BW20)");
--		p += sprintf(p, "54-63=MCS0-9(VHT:BW40)");
--		p += sprintf(p, "64-73=MCS0-9(VHT:BW80)\n\n");
-+		p += sprintf(p,
-+			     "44-53=MCS0-9(VHT:BW20) 54-63=MCS0-9(VHT:BW40) 64-73=MCS0-9(VHT:BW80)\n\n");
- 	} else {
- 		p += sprintf(p, "\n");
- 	}
-@@ -333,7 +331,7 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
- 	for (i = 0; i < MWIFIEX_MAX_NOISE_FLR; i++) {
- 		value = atomic_read(&phist_data->noise_flr[i]);
- 		if (value)
--			p += sprintf(p, "noise_flr[-%02ddBm] = %d\n",
-+			p += sprintf(p, "noise_flr[%02ddBm] = %d\n",
- 				(int)(i-128), value);
- 	}
- 	for (i = 0; i < MWIFIEX_MAX_SIG_STRENGTH; i++) {
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	return 0;
+ err:
+ 	if (lpfc_cmd->seg_cnt)
+@@ -3361,6 +3370,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
+ 
+ 	/*
+ 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
+@@ -3476,6 +3486,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
+ 
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	/*
+ 	 * If the OAS driver feature is enabled and the lun is enabled for
+ 	 * OAS, set the oas iocb related flags.
 -- 
 2.20.1
 
