@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117D5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BE4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB66120637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC202068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403547;
-	bh=IbldVPHNz9zzb+JEgV4LyfJbvojGwsw+3a21bXkCHwU=;
+	s=default; t=1574403556;
+	bh=OzYtwF3JQAAv1AmFBZhtaXfAlBLGifIQv0NrdVQPlHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6VdZgb1/JIUwH9JNUqhN16cqL2fZEH8C3CwpT20CkWm0rjynknMVUzNvRFII9bBQ
-	 hdziAGkbNREI4eKKhQNbQn+4KNXztbWel49tNptyigzdtAtGkJwQVzE6kHpk5kbi8U
-	 Vch8R1iBFJF+NA7/JBFI4ClwqyT7tUaa8vHtqMnw=
+	b=njkbOiZoeDc8DvGHwA7tssq4t6yGDD0zOAvCOK57jNOKyCYpILG+DZFFeyWTFhGXX
+	 IG9a02HHtjZR34MH2pLDe8fmMVMPynFnAiwWPVul0hkuevVz6CG6jkoBBE88Kj8/8y
+	 Ia1+WgNgoWRvhyAohkFGKRPmD8AMLjvTphRDKEpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfKVGS6 (ORCPT
+        id S1728589AbfKVGTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:18:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33772 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:19:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfKVF4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:03 -0500
+        id S1728560AbfKVFz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:55:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2642072D;
-        Fri, 22 Nov 2019 05:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75BF4207FC;
+        Fri, 22 Nov 2019 05:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402162;
-        bh=IbldVPHNz9zzb+JEgV4LyfJbvojGwsw+3a21bXkCHwU=;
+        s=default; t=1574402159;
+        bh=OzYtwF3JQAAv1AmFBZhtaXfAlBLGifIQv0NrdVQPlHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/1l4U7C5M9Qd+5bcCImvV+5LQGFNFVgtr1uL9WpbIpBe8Hra0Sf8doCPU082laU3
-         KNcj2NVwxvRp7kxaDCyOnhWFsGTukR1Hx6vSCHHoay/BitomlssDb4k4Wk9J4IBrRY
-         U06DTYB16tDBskKuo/XxjoKfFp+XOXHRXLq1Wyno=
+        b=1kJYVlZAyGwxaE9F45UTXLv1XnHCAxYjXlwP7nbNg5Mfu06RoGx6MiLwG5flyQmwv
+         wWn+solXbg9e3+IqDV21hOh3IaJv9VtQO9yiV3AH6btNcQaidqW34QJHW/pd/2sOzC
+         hUgREYMM7MO+JelboOU8FdGxhp9gmRbhbsQvZ2Xc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 016/127] crypto: user - support incremental algorithm dumps
-Date:   Fri, 22 Nov 2019 00:53:54 -0500
-Message-Id: <20191122055544.3299-15-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 013/127] ARM: ks8695: fix section mismatch warning
+Date:   Fri, 22 Nov 2019 00:53:51 -0500
+Message-Id: <20191122055544.3299-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,114 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0ac6b8fb23c724b015d9ca70a89126e8d1563166 ]
+[ Upstream commit 4aa64677330beeeed721b4b122884dabad845d66 ]
 
-CRYPTO_MSG_GETALG in NLM_F_DUMP mode sometimes doesn't return all
-registered crypto algorithms, because it doesn't support incremental
-dumps.  crypto_dump_report() only permits itself to be called once, yet
-the netlink subsystem allocates at most ~64 KiB for the skb being dumped
-to.  Thus only the first recvmsg() returns data, and it may only include
-a subset of the crypto algorithms even if the user buffer passed to
-recvmsg() is large enough to hold all of them.
+WARNING: vmlinux.o(.text+0x13250): Section mismatch in reference from the function acs5k_i2c_init() to the (unknown reference) .init.data:(unknown)
+The function acs5k_i2c_init() references
+the (unknown reference) __initdata (unknown).
+This is often because acs5k_i2c_init lacks a __initdata
+annotation or the annotation of (unknown) is wrong.
 
-Fix this by using one of the arguments in the netlink_callback structure
-to keep track of the current position in the algorithm list.  Then
-userspace can do multiple recvmsg() on the socket after sending the dump
-request.  This is the way netlink dumps work elsewhere in the kernel;
-it's unclear why this was different (probably just an oversight).
-
-Also fix an integer overflow when calculating the dump buffer size hint.
-
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/crypto_user.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
+ arch/arm/mach-ks8695/board-acs5k.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/crypto_user.c b/crypto/crypto_user.c
-index 2b8fb8f1391e0..5e457a7dd1c92 100644
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -296,30 +296,33 @@ static int crypto_report(struct sk_buff *in_skb, struct nlmsghdr *in_nlh,
+diff --git a/arch/arm/mach-ks8695/board-acs5k.c b/arch/arm/mach-ks8695/board-acs5k.c
+index e4d709c8ed32f..76d3083f1f634 100644
+--- a/arch/arm/mach-ks8695/board-acs5k.c
++++ b/arch/arm/mach-ks8695/board-acs5k.c
+@@ -92,7 +92,7 @@ static struct i2c_board_info acs5k_i2c_devs[] __initdata = {
+ 	},
+ };
  
- static int crypto_dump_report(struct sk_buff *skb, struct netlink_callback *cb)
+-static void acs5k_i2c_init(void)
++static void __init acs5k_i2c_init(void)
  {
--	struct crypto_alg *alg;
-+	const size_t start_pos = cb->args[0];
-+	size_t pos = 0;
- 	struct crypto_dump_info info;
--	int err;
--
--	if (cb->args[0])
--		goto out;
--
--	cb->args[0] = 1;
-+	struct crypto_alg *alg;
-+	int res;
- 
- 	info.in_skb = cb->skb;
- 	info.out_skb = skb;
- 	info.nlmsg_seq = cb->nlh->nlmsg_seq;
- 	info.nlmsg_flags = NLM_F_MULTI;
- 
-+	down_read(&crypto_alg_sem);
- 	list_for_each_entry(alg, &crypto_alg_list, cra_list) {
--		err = crypto_report_alg(alg, &info);
--		if (err)
--			goto out_err;
-+		if (pos >= start_pos) {
-+			res = crypto_report_alg(alg, &info);
-+			if (res == -EMSGSIZE)
-+				break;
-+			if (res)
-+				goto out;
-+		}
-+		pos++;
- 	}
--
-+	cb->args[0] = pos;
-+	res = skb->len;
- out:
--	return skb->len;
--out_err:
--	return err;
-+	up_read(&crypto_alg_sem);
-+	return res;
- }
- 
- static int crypto_dump_report_done(struct netlink_callback *cb)
-@@ -503,7 +506,7 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	if ((type == (CRYPTO_MSG_GETALG - CRYPTO_MSG_BASE) &&
- 	    (nlh->nlmsg_flags & NLM_F_DUMP))) {
- 		struct crypto_alg *alg;
--		u16 dump_alloc = 0;
-+		unsigned long dump_alloc = 0;
- 
- 		if (link->dump == NULL)
- 			return -EINVAL;
-@@ -511,16 +514,16 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		down_read(&crypto_alg_sem);
- 		list_for_each_entry(alg, &crypto_alg_list, cra_list)
- 			dump_alloc += CRYPTO_REPORT_MAXSIZE;
-+		up_read(&crypto_alg_sem);
- 
- 		{
- 			struct netlink_dump_control c = {
- 				.dump = link->dump,
- 				.done = link->done,
--				.min_dump_alloc = dump_alloc,
-+				.min_dump_alloc = min(dump_alloc, 65535UL),
- 			};
- 			err = netlink_dump_start(crypto_nlsk, skb, nlh, &c);
- 		}
--		up_read(&crypto_alg_sem);
- 
- 		return err;
- 	}
+ 	/* The gpio interface */
+ 	platform_device_register(&acs5k_i2c_device);
 -- 
 2.20.1
 
