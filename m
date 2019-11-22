@@ -2,201 +2,217 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859DAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A18C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DEB206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520172068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:46:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H3hPC+ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKVBkI convert rfc822-to-8bit (ORCPT
+        id S1726546AbfKVBqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:40:08 -0500
-Received: from mail.windriver.com ([147.11.1.11]:64416 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfKVBkI (ORCPT
+        Thu, 21 Nov 2019 20:46:36 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:39068 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfKVBqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:40:08 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xAM1dqh2013247
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 21 Nov 2019 17:39:53 -0800 (PST)
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.75]) by
- ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0468.000; Thu,
- 21 Nov 2019 17:39:52 -0800
-From:   "Liu, Yongxin" <Yongxin.Liu@windriver.com>
-To:     "Liu, Yongxin" <Yongxin.Liu@windriver.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-CC:     "mario.limonciello@dell.com" <mario.limonciello@dell.com>
-Subject: RE: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather
- than unregister"
-Thread-Topic: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather
- than unregister"
-Thread-Index: AQHVm3ZtvRF1oVEA1UCC8bXYi76Qu6eWcVmg
-Date:   Fri, 22 Nov 2019 01:39:50 +0000
-Message-ID: <597B109EC20B76429F71A8A97770610D19F0D0B8@ALA-MBD.corp.ad.wrs.com>
-References: <20191115052710.46880-1-yongxin.liu@windriver.com>
-In-Reply-To: <20191115052710.46880-1-yongxin.liu@windriver.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [128.224.158.159]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 21 Nov 2019 20:46:36 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAM1iRN3115334;
+        Fri, 22 Nov 2019 01:46:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=hnvuc3jTrXOhRIAjl5N+6c/vPzfwGWHedFpRIDxERKw=;
+ b=H3hPC+otfrlRNB6MwS7rlfQ4IZrzApo37kTlkanXe3cFJ1O7DSNfRhxKb7jbaYWy7NjG
+ pV8Gf1tBsqicmFXXkDCxSFyfxTWDXUoEsapTLZxHKDVreHdrnFplwh8U0vOpEJpeIdRm
+ LMbtRQaTGuPYXq8lFmyIQZZj3/P5SI7cupnF+zu3fctz3hxAnuP8IREiUGHd+dc5VXbl
+ f8rrMMmPVsS12SwUIVBJsAsWciyqJre3QgVmnJ73JFzHmbO30b81Xzi85Bd0mIySNMDA
+ Wd0m/uH53dPtUFX6WNRLBXXiPlB5R4FQROR/kzD1q+ER+ObI6W1aL6zP4mPSDenzwOk3 eQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wa92q7ta4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Nov 2019 01:46:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAM1i1Re062553;
+        Fri, 22 Nov 2019 01:46:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2wdfrw9aee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Nov 2019 01:46:06 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAM1jxDB017623;
+        Fri, 22 Nov 2019 01:46:03 GMT
+Received: from prakashs-mbp-2.lan (/98.248.138.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Nov 2019 17:45:59 -0800
+Subject: Re: [RESEND RFC PATCH 1/1] Selectively allow CAP_SYS_NICE capability
+ inside user namespaces
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        tglx@linutronix.de, peterz@infradead.org, serge@hallyn.com
+References: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
+ <1574096478-11520-2-git-send-email-prakash.sangappa@oracle.com>
+ <87wobszzqi.fsf@x220.int.ebiederm.org>
+From:   Prakash Sangappa <prakash.sangappa@oracle.com>
+Message-ID: <0d7fb84d-e7e8-c442-37a3-23b036fdf12c@oracle.com>
+Date:   Thu, 21 Nov 2019 17:45:57 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <87wobszzqi.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911220013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911220013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add more logs for this issue.
-
-When loading wmi driver module,
-
-    device class 'wmi_bus': registering
-    bus: 'wmi': registered
-    bus: 'platform': add driver acpi-wmi
-    bus: 'platform': driver_probe_device: matched device PNP0C14:00 with driver acpi-wmi
-    bus: 'platform': really_probe: probing driver acpi-wmi with device PNP0C14:00
-    acpi-wmi PNP0C14:00: no default pinctrl state
-    device: 'wakeup28': device_add
-    device: 'wmi_bus-PNP0C14:00': device_add
-    PM: Adding info for No Bus:wmi_bus-PNP0C14:00
-    device: '86CCFD48-205E-4A77-9C48-2021CBEDE341': device_add
-    bus: 'wmi': add device 86CCFD48-205E-4A77-9C48-2021CBEDE341
-    PM: Adding info for wmi:86CCFD48-205E-4A77-9C48-2021CBEDE341
-    driver: 'acpi-wmi': driver_bound: bound to device 'PNP0C14:00'
-    bus: 'platform': really_probe: bound device PNP0C14:00 to driver acpi-wmi
-    bus: 'platform': driver_probe_device: matched device PNP0C14:01 with driver acpi-wmi
-    bus: 'platform': really_probe: probing driver acpi-wmi with device PNP0C14:01
-    acpi-wmi PNP0C14:01: no default pinctrl state
-    device: 'wakeup29': device_add
-    device: 'wmi_bus-PNP0C14:01': device_add
-    PM: Adding info for No Bus:wmi_bus-PNP0C14:01
-    device: '2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B': device_add
-    bus: 'wmi': add device 2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
-    PM: Adding info for wmi:2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
-    device: 'A6FEA33E-DABF-46F5-BFC8-460D961BEC9F': device_add
-    bus: 'wmi': add device A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
-    PM: Adding info for wmi:A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
-    device: '05901221-D566-11D1-B2F0-00A0C9062910': device_add
-    bus: 'wmi': add device 05901221-D566-11D1-B2F0-00A0C9062910
-    PM: Adding info for wmi:05901221-D566-11D1-B2F0-00A0C9062910
-    driver: 'acpi-wmi': driver_bound: bound to device 'PNP0C14:01'
-    bus: 'platform': really_probe: bound device PNP0C14:01 to driver acpi-wmi
-    bus: 'platform': driver_probe_device: matched device PNP0C14:02 with driver acpi-wmi
-    bus: 'platform': really_probe: probing driver acpi-wmi with device PNP0C14:02
-    acpi-wmi PNP0C14:02: no default pinctrl state
-    device: 'wakeup30': device_add
-    device: 'wmi_bus-PNP0C14:02': device_add
-    PM: Adding info for No Bus:wmi_bus-PNP0C14:02
-    acpi PNP0C14:02: duplicate WMI GUID 05901221-D566-11D1-B2F0-00A0C9062910 (first instance was on PNP0C14:01)
-    device: '1F13AB7F-6220-4210-8F8E-8BB5E71EE969': device_add
-    bus: 'wmi': add device 1F13AB7F-6220-4210-8F8E-8BB5E71EE969
-    PM: Adding info for wmi:1F13AB7F-6220-4210-8F8E-8BB5E71EE969
-    driver: 'acpi-wmi': driver_bound: bound to device 'PNP0C14:02'
-    bus: 'platform': really_probe: bound device PNP0C14:02 to driver acpi-wmi
 
 
-When unloading wmi driver module, without this patch, there is calltrace.
+On 11/21/19 1:27 PM, ebiederm@xmission.com wrote:
+> Prakash Sangappa <prakash.sangappa@oracle.com> writes:
+>
+>> Allow CAP_SYS_NICE to take effect for processes having effective uid of a
+>> root user from init namespace.
+>>
+>> Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
+>> ---
+>>   kernel/sched/core.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index 7880f4f..628bd46 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -4548,6 +4548,8 @@ int can_nice(const struct task_struct *p, const int nice)
+>>   	int nice_rlim = nice_to_rlimit(nice);
+>>   
+>>   	return (nice_rlim <= task_rlimit(p, RLIMIT_NICE) ||
+>> +		(ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE) &&
+>> +		uid_eq(current_euid(), GLOBAL_ROOT_UID)) ||
+>>   		capable(CAP_SYS_NICE));
+>>   }
+>>   
+>> @@ -4784,7 +4786,9 @@ static int __sched_setscheduler(struct task_struct *p,
+>>   	/*
+>>   	 * Allow unprivileged RT tasks to decrease priority:
+>>   	 */
+>> -	if (user && !capable(CAP_SYS_NICE)) {
+>> +	if (user && !(ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE) &&
+>> +		uid_eq(current_euid(), GLOBAL_ROOT_UID)) &&
+>> +		!capable(CAP_SYS_NICE)) {
+>>   		if (fair_policy(policy)) {
+>>   			if (attr->sched_nice < task_nice(p) &&
+>>   			    !can_nice(p, attr->sched_nice))
+>
+> I remember looking at this before.  I don't remember if I commented.
 
-    bus: 'platform': remove driver acpi-wmi
-    device: '1F13AB7F-6220-4210-8F8E-8BB5E71EE969': device_unregister
-    bus: 'wmi': remove device 1F13AB7F-6220-4210-8F8E-8BB5E71EE969
-    PM: Removing info for wmi:1F13AB7F-6220-4210-8F8E-8BB5E71EE969
-    device: 'wmi_bus-PNP0C14:00': device_unregister
-    PM: Removing info for No Bus:wmi_bus-PNP0C14:00
-    device: 'wakeup29': device_unregister
-    device: '2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B': device_unregister
-    bus: 'wmi': remove device 2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
-    PM: Removing info for wmi:2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
-    device: 'A6FEA33E-DABF-46F5-BFC8-460D961BEC9F': device_unregister
-    bus: 'wmi': remove device A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
-    PM: Removing info for wmi:A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
-    device: '05901221-D566-11D1-B2F0-00A0C9062910': device_unregister
-    bus: 'wmi': remove device 05901221-D566-11D1-B2F0-00A0C9062910
-    PM: Removing info for wmi:05901221-D566-11D1-B2F0-00A0C9062910
-    device: 'wmi_bus-PNP0C14:01': device_unregister
-    PM: Removing info for No Bus:wmi_bus-PNP0C14:01
-    device: 'wmi_bus-PNP0C14:01': device_create_release
-    device: 'wakeup28': device_unregister
-    device: '86CCFD48-205E-4A77-9C48-2021CBEDE341': device_unregister
-    ------------[ cut here ]------------
-    sysfs group 'power' not found for kobject '86CCFD48-205E-4A77-9C48-2021CBEDE341'
-    WARNING: CPU: 8 PID: 636 at fs/sysfs/group.c:280 sysfs_remove_group+0x80/0x90
-    Modules linked in: wmi(-) snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic i915 snd_hda_intel snd_intel_nhlt intel_rapl_msr snd_hda_codec intel_rapl_common   x86_pkg_temp_thermal intel_powerclamp coretemp crct10dif_pclmul crct10dif_common snd_hda_core snd_pcm iTCO_wdt iTCO_vendor_support sch_fq_codel watchdog aesni_intel video thermal idma64 glue_helper efi_pstore snd_timer i2c_i801 crypto_simd backlight acpi_pad efivars openvswitch cryptd fan nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4     [last unloaded: wmi_bmof]
-    CPU: 8 PID: 636 Comm: rmmod Tainted: G        W         5.4.0-rc7 #1
-    Hardware name: Intel Corporation CoffeeLake Client Platform/CoffeeLake S 82 UDIMM RVP, BIOS CNLSFWX1.R00.X151.B01.1807201217 07/20/2018
-    RIP: 0010:sysfs_remove_group+0x80/0x90
-    Code: e8 a5 b3 ff ff 5b 41 5c 41 5d 5d c3 48 89 df e8 46 ae ff ff eb c6 49 8b 55 00 48 c7 c7 c8 9b bc 9b 49 8b 34 24 e8 30 7b cd ff <0f> 0b 5b 41 5c 41 5d 5d c3 0f 1f 80 00 00 00 00 0f 1f 44 00 00 48
-    RSP: 0018:ffffbaacc063bd38 EFLAGS: 00010282
-    RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-    RDX: 0000000000000001 RSI: ffffffff9a586023 RDI: ffffffff9a586023
-    RBP: ffffbaacc063bd50 R08: 0000000000000001 R09: 0000000000000000
-    R10: 00000000ffba64cc R11: 0000000000000000 R12: ffffffff9b8d9d20
-    R13: ffff9c3843c85000 R14: dead000000000100 R15: ffff9c384facc000
-    FS:  00007f5a591fa740(0000) GS:ffff9c385ac00000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 000055b3f2513d28 CR3: 0000000441ed6005 CR4: 00000000003606e0
-    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    Call Trace:
-     dpm_sysfs_remove+0x58/0x60
-     device_del+0x77/0x380
-     ? acpi_ut_release_mutex+0x71/0x76
-     device_unregister+0x41/0x60
-     acpi_wmi_remove+0xdd/0x120 [wmi]
-     platform_drv_remove+0x25/0x50
-     device_release_driver_internal+0xec/0x1b0
-     driver_detach+0x4d/0xa0
-     bus_remove_driver+0x80/0xe0
-     driver_unregister+0x2f/0x50
-     platform_driver_unregister+0x12/0x20
-     acpi_wmi_exit+0x10/0x169 [wmi]
-     __x64_sys_delete_module+0x15b/0x240
-     ? lockdep_hardirqs_on+0xe8/0x1c0
-     ? do_syscall_64+0x17/0x1c0
-     ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    do_syscall_64+0x55/0x1c0
-    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    RIP: 0033:0x7f5a592f6767
-    Code: 73 01 c3 48 8b 0d 19 c7 0b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e9 c6 0b 00 f7 d8 64 89 01 48
-    RSP: 002b:00007ffd85909808 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-    RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f5a592f6767
-    RDX: 000000000000000a RSI: 0000000000000800 RDI: 000055b3f25097c8
-    RBP: 00007ffd85909858 R08: 0000000000000000 R09: 0000000000000000
-    R10: 00007f5a59366ac0 R11: 0000000000000206 R12: 00007ffd85909a20
-    R13: 00007ffd85909e36 R14: 000055b3f25092a0 R15: 000055b3f2509760
-    irq event stamp: 7152
-    hardirqs last  enabled at (7151): [<ffffffff9b2b26ec>] _raw_spin_unlock_irq+0x2c/0x50
-    hardirqs last disabled at (7152): [<ffffffff9a401eba>] trace_hardirqs_off_thunk+0x1a/0x20
-    softirqs last  enabled at (7146): [<ffffffff9b6002d9>] __do_softirq+0x2d9/0x4ef
-    softirqs last disabled at (7133): [<ffffffff9a504ba4>] irq_exit+0xc4/0xd0
-    ---[ end trace 61882efbb33d050e ]---
-    bus: 'wmi': remove device 86CCFD48-205E-4A77-9C48-2021CBEDE341
-    PM: Removing info for wmi:86CCFD48-205E-4A77-9C48-2021CBEDE341
-    device: 'wmi_bus-PNP0C14:00': device_create_release
-    device: 'wmi_bus-PNP0C14:02': device_unregister
-    PM: Removing info for No Bus:wmi_bus-PNP0C14:02
-    device: 'wmi_bus-PNP0C14:02': device_create_release
-    device: 'wakeup27': device_unregister
-    driver: 'acpi-wmi': driver_release
-    bus: 'wmi': unregistering
-    device class 'wmi_bus': unregistering
-    class 'wmi_bus': release.
-    class 'wmi_bus' does not have a release() function, be careful
+Thanks for looking at this.
+
+>
+> 1) Having GLOBAL_ROOT_UID in a user namespace is A Bad Idea™.
+>     Definitely not something we should make special case for.
+>     That configuration is almost certainly a privilege escalation waiting
+>     to happen.
+
+Mapping root uid 0(GLOBAL_ROOT_UID) from init namespace into a user 
+namespace is allowed right now. so the proposal was to extend this to 
+allow capabilities like CAP_SYS_NICE to take effect which is lacking.
+
+Understand encouraging use of GLOBAL_ROOT_UID for this purpose may not 
+be a good idea.
+
+We could look at other means to grant such capabilities to user 
+namespace thru a per process /proc file like 'cap_map' or something as 
+suggested in the other thread. What do you think about this approach?
+
+Only privileged user in init namespace gets to add an entry to this 
+file. We need to define if this gets inherited by any nested user 
+namespaces that get created.
 
 
-Thanks,
-Yongxin
 
+> 2) If I read the other thread correctly there was talk about setting the
+>     nice levels of processes in other containers.  Ouch!
+
+No not in other containers. Only on processes with in the container 
+which as this capability. The use case is to use it in a container with 
+user namespace and pid namespace. So no processes from other containers 
+should be visible. Necessary checks should be added?.
+
+
+>
+>     The only thing I can think that makes any sense at all is to allow
+>     setting the nice levels of the processes in your own container.
+
+Yes that is the intended use.
+
+>
+>     I can totally see having a test to see if a processes credentials are
+>     in the caller's user namespace or a child of caller's user namespace
+>     and allowing admin level access if the caller has the appropriate
+>     caps in their user namespace.
+
+Ok
+
+>     But in this case I don't see anything preventing the admin in a
+>     container from using the ordinary nice levels on a task.  You are
+>     unlocking the nice levels reserved for the system administrator
+>     for special occassions.   I don't see how that makes any sense
+>     to do from inside a container.
+
+But this is what seems to be lacking. A container could have some 
+critical processes running which need to run at a higher priority.
+
+>
+> The design goal of user namespaces (assuming a non-buggy kernel) is to
+> ensure user namespaces give a user no more privileges than the user had
+> before creating a user namespace.  In this case you are granting a user
+> who creates a user namespace the ability to change nice levels on all
+> process in the system (limited to users whose uid happens to be
+> GLOBAL_ROOT_UID).  But still this is effectively a way to get
+> CAP_SYS_NICE back if it was dropped.
+
+Giving privileges to only to those user with root uid from init 
+namespace inside the user namespace(GLOBAL_ROOT_UID), or if not using 
+GLOBAL_ROOT_UID, then privilege granted thru the /proc mechanism as 
+mentioned above.
+
+>
+> As a violation of security policy this change simply can not be allowed.
+> The entire idiom:  "ns_capable(__task_cred(p)->user_ns, ...)" is a check
+> that provides no security.
+
+If the effect of allowing such privileges inside user namespace could be 
+controlled with use of Cgroups, even then would it be a concern?
+
+-Prakash
+> Eric
+>
+>
+>
+>
+>
+>     
+>     
+>
 
