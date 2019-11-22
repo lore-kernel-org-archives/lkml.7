@@ -2,122 +2,102 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163B1C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A166AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E312C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421541;
-	bh=znLn9LJ2/eO4Ye50gjLxQYVnp33OeM+DWzZHWQSYY7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mNaCgbDuMwATY16HZcRxzUc8vW4VGIjNkYG7Bw1P8uzjd8CFKej04hRcUKUYkO89j
-	 /dPGI2Pj/Xi9DJACD6pfG0+G2gjHRJOcZS8BWNopHlXl8EmmOR2ubht51KOTYy3orV
-	 9Nhyezf2c0egyCF+0joQgU8eaDh5Ez7s0Y9RjAEY=
+	by mail.kernel.org (Postfix) with ESMTP id 74D1E2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbfKVKsM (ORCPT
+        id S1729948AbfKVLTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:48:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbfKVKsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 601ED205C9;
-        Fri, 22 Nov 2019 10:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419688;
-        bh=znLn9LJ2/eO4Ye50gjLxQYVnp33OeM+DWzZHWQSYY7Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfbpXHbW0n1PaG+L9/0TBGmjb80640V6aMiR+Nuv8n9Dpi+Q9Myh6NdNmC5+y5skZ
-         4rfWo/hMj+Pr+R08cxo6cfdXjvuLO5fEOZgj4+MHZDpohVreD1OakqhyKBbaF6FxHj
-         Dhjf6iuNXos8RDrqNUyywIU1nVAiG5kNBnmNaCrY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 197/222] ACPI / SBS: Fix rare oops when removing modules
-Date:   Fri, 22 Nov 2019 11:28:57 +0100
-Message-Id: <20191122100916.452503754@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 06:19:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34668 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729850AbfKVKsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:48:11 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iY6Tv-00034Y-EV; Fri, 22 Nov 2019 11:48:07 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 004EF1C1A30;
+        Fri, 22 Nov 2019 11:48:07 +0100 (CET)
+Date:   Fri, 22 Nov 2019 10:48:06 -0000
+From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/kcsan] objtool, kcsan: Add KCSAN runtime functions to whitelist
+Cc:     Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <157441968693.21853.970992591741702327.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronald Tschalär <ronald@innovation.ch>
+The following commit has been merged into the locking/kcsan branch of tip:
 
-[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
+Commit-ID:     5f5c971292b43fed68273d5cba7202f6bd953df9
+Gitweb:        https://git.kernel.org/tip/5f5c971292b43fed68273d5cba7202f6bd953df9
+Author:        Marco Elver <elver@google.com>
+AuthorDate:    Thu, 14 Nov 2019 19:02:57 +01:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Sat, 16 Nov 2019 07:23:14 -08:00
 
-There was a small race when removing the sbshc module where
-smbus_alarm() had queued acpi_smbus_callback() for deferred execution
-but it hadn't been run yet, so that when it did run hc had been freed
-and the module unloaded, resulting in an invalid paging request.
+objtool, kcsan: Add KCSAN runtime functions to whitelist
 
-A similar race existed when removing the sbs module with regards to
-acpi_sbs_callback() (which is called from acpi_smbus_callback()).
+This patch adds KCSAN runtime functions to the objtool whitelist.
 
-We therefore need to ensure no callbacks are pending or executing before
-the cleanups are done and the modules are removed.
-
-Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Marco Elver <elver@google.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- drivers/acpi/osl.c   | 1 +
- drivers/acpi/sbshc.c | 2 ++
- 2 files changed, 3 insertions(+)
+ tools/objtool/check.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 416953a425109..b9fade7a3bcf4 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -1126,6 +1126,7 @@ void acpi_os_wait_events_complete(void)
- 	flush_workqueue(kacpid_wq);
- 	flush_workqueue(kacpi_notify_wq);
- }
-+EXPORT_SYMBOL(acpi_os_wait_events_complete);
- 
- struct acpi_hp_work {
- 	struct work_struct work;
-diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
-index 7a3431018e0ab..5008ead4609a4 100644
---- a/drivers/acpi/sbshc.c
-+++ b/drivers/acpi/sbshc.c
-@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
- 	hc->callback = NULL;
- 	hc->context = NULL;
- 	mutex_unlock(&hc->lock);
-+	acpi_os_wait_events_complete();
- 	return 0;
- }
- 
-@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
- 
- 	hc = acpi_driver_data(device);
- 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
-+	acpi_os_wait_events_complete();
- 	kfree(hc);
- 	device->driver_data = NULL;
- 	return 0;
--- 
-2.20.1
-
-
-
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 044c9a3..e022a9a 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -466,6 +466,24 @@ static const char *uaccess_safe_builtin[] = {
+ 	"__asan_report_store4_noabort",
+ 	"__asan_report_store8_noabort",
+ 	"__asan_report_store16_noabort",
++	/* KCSAN */
++	"kcsan_found_watchpoint",
++	"kcsan_setup_watchpoint",
++	/* KCSAN/TSAN */
++	"__tsan_func_entry",
++	"__tsan_func_exit",
++	"__tsan_read_range",
++	"__tsan_write_range",
++	"__tsan_read1",
++	"__tsan_read2",
++	"__tsan_read4",
++	"__tsan_read8",
++	"__tsan_read16",
++	"__tsan_write1",
++	"__tsan_write2",
++	"__tsan_write4",
++	"__tsan_write8",
++	"__tsan_write16",
+ 	/* KCOV */
+ 	"write_comp_data",
+ 	"__sanitizer_cov_trace_pc",
