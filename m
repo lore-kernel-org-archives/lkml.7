@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4BAC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0E0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D62B20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AC520708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421849;
-	bh=9lO1imc9AkSk65FSLE3NlJ+ZwySJsQ3+6ogMVEiY88I=;
+	s=default; t=1574421855;
+	bh=ImmlDRzMG4QM7y293HzEHL2Nt8F3ObbdD/6TybDalBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NwZ+pFLzOnrctHOnUKDIP0LMZE8FymiIh++05DILgXel7QOwyNHGwNjNK5L8bZtZ4
-	 J7r2aDrQXO+dr7v271EdwG4cu2KAJSSQWV/7SAHUhzf2h5uicJwnnGWua1clam/K3j
-	 cG3T1ATgilSjgGEIPDLPmP7ej/fEULlpTyZ08F4U=
+	b=E7TQV2elCCrD1hNWsbyHSL9ZaNt4vg+gqRIN++i19hyZFRniNiLLTREvlsHic8KyR
+	 S8s6iWZD73jx0kp+tnOkPnMKB5ELj3SExDhnGzvhOLK2BVvdotTyXRZZGbtXq/wS39
+	 DNVBiNM0eeBnu+5D3p6aodVKQ0xQvUPpg/qDCXAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfKVKjq (ORCPT
+        id S1729257AbfKVLYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:39:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43084 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:24:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfKVKjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:39:43 -0500
+        id S1728789AbfKVKje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:39:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 482E420721;
-        Fri, 22 Nov 2019 10:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 556E820715;
+        Fri, 22 Nov 2019 10:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419182;
-        bh=9lO1imc9AkSk65FSLE3NlJ+ZwySJsQ3+6ogMVEiY88I=;
+        s=default; t=1574419173;
+        bh=ImmlDRzMG4QM7y293HzEHL2Nt8F3ObbdD/6TybDalBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+vxMf/u5axVCSGcTt1hpc72YBSAIeQ7wpcdBfdtZIt0NwiWUmtqXlGIy31MAal2v
-         DUksqWexKiKPkBdy4cuQGAJuhRzpxztXxxgiLMW/nN/DhyARurKbO0Qqjgfm0zzONR
-         H6I39/qefBW8exixriDdfJP66kTKswIe16UkX/rQ=
+        b=cakd225a+qmawMHJxqQkWaIBU2uxmVj4Bb75MfAnaKOpJfRzR/vE1Jl4cKV+4kZd1
+         ryyD3EcY56mdQET5TFZCe6M4214lLBFdmkcVZSryPH2t4HwgyX7qRDMZkOmzDSYXYa
+         7tMji0ePcMJjrObiLbo6bn8lHU+hGC/CeEgz7DO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.9 007/222] Input: synaptics-rmi4 - clear IRQ enables for F54
-Date:   Fri, 22 Nov 2019 11:25:47 +0100
-Message-Id: <20191122100831.673137806@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 004/222] ALSA: usb-audio: not submit urb for stopped endpoint
+Date:   Fri, 22 Nov 2019 11:25:44 +0100
+Message-Id: <20191122100831.363618518@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,34 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Henry Lin <henryl@nvidia.com>
 
-commit 549766ac2ac1f6c8bb85906bbcea759541bb19a2 upstream.
+commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
 
-The driver for F54 just polls the status and doesn't even have a IRQ
-handler registered. Make sure to disable all F54 IRQs, so we don't crash
-the kernel on a nonexistent handler.
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Link: https://lore.kernel.org/r/20191105114402.6009-1-l.stach@pengutronix.de
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
+
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_f54.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/endpoint.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/input/rmi4/rmi_f54.c
-+++ b/drivers/input/rmi4/rmi_f54.c
-@@ -617,7 +617,7 @@ static int rmi_f54_config(struct rmi_fun
- {
- 	struct rmi_driver *drv = fn->rmi_dev->driver;
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -403,6 +403,9 @@ static void snd_complete_urb(struct urb
+ 		}
  
--	drv->set_irq_bits(fn->rmi_dev, fn->irq_mask);
-+	drv->clear_irq_bits(fn->rmi_dev, fn->irq_mask);
- 
- 	return 0;
- }
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 
 
