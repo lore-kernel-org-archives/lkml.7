@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC372C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D122070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC2B20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420671;
-	bh=84uaRIPv5X8QlnjzO78ZiN4sPge0T8QMfyyMtrZ2xiM=;
+	s=default; t=1574420674;
+	bh=WNzOcSDtG5/ZzPIRNc452Bw+G3KZ9d2AoXandGQy9MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ScAMR7DaZJhUSRaNNPSd/6yANknaGTMG4GTeW9lXNB1Tk7wup3Tp+l+Q8cIkADrae
-	 thSq5qHiCeVr6oTumiQNqWw3izz9b6/Kf3LaP+tIKFvuxfX8Nf9iqRyR3ADUQd7DP4
-	 xmdVi4jrBrNte5wg7TxITcY7Qhom5CSnAtcUIkSc=
+	b=zH1nLt8TRruoWEpkJKNiFFqlzUbNQpby7bFK8Mnd9At6qBVxBSELdJwOfVWL5LrY7
+	 nVa1L56LovY+WBtdPJ1BJPeYVN9GnGg7lHlT2wqVVfIChZXCR7JW9yw6avYSpB0wOK
+	 Q3kaC9Z/v+S1dDaP8ns3Hqd8ufwtHhpkz5tlqTVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbfKVLEa (ORCPT
+        id S1731570AbfKVLEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:04:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730972AbfKVLE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:28 -0500
+        id S1731563AbfKVLEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E3B207FC;
-        Fri, 22 Nov 2019 11:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1588207FC;
+        Fri, 22 Nov 2019 11:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420667;
-        bh=84uaRIPv5X8QlnjzO78ZiN4sPge0T8QMfyyMtrZ2xiM=;
+        s=default; t=1574420670;
+        bh=WNzOcSDtG5/ZzPIRNc452Bw+G3KZ9d2AoXandGQy9MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kM/0Nrl3kvMLjT02ip46+llrMtWO3cdOsMYy3zMi3/XDTDAd68Hw5KxVBv9gDZWi2
-         mCopFu7hg3LaIAogXDm1ePmSuH1BEl7hT6gIPZg4bIDrkJSoZi6h2vQdBkTfK6Hk6n
-         b+z94wLgghqE0M238HtSM2X3KiPqO8wuPqv141ig=
+        b=1T/31Wj2VRkukB8wemW1hd8GbXwOlWC5XCrztXKgPlSJ3pVCRMfWaLg3UkA1Q5U/K
+         Dp2c6htyutCYf4eyKgenljcjylw18VEbPBsKZ5H3OVzvHBz1ZZyRIM13tsKizGE2hi
+         WOHYvVWkRipTFxzArK23jJwWo9WMJBJTiSjS9w4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhoujie Wu <zjwu@marvell.com>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/220] lightnvm: pblk: consider max hw sectors supported for max_write_pgs
-Date:   Fri, 22 Nov 2019 11:29:11 +0100
-Message-Id: <20191122100927.586039674@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 169/220] s390/kasan: avoid user access code instrumentation
+Date:   Fri, 22 Nov 2019 11:28:54 +0100
+Message-Id: <20191122100924.963763508@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhoujie Wu <zjwu@marvell.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 8a57fc3823d08edb1661a06d9e0a8c2365ac561e ]
+[ Upstream commit b6cbe3e8bdff6f21f1b58b08a55f479cdcf98282 ]
 
-When do GC, the number of read/write sectors are determined
-by max_write_pgs(see gc_rq preparation in pblk_gc_line_prepare_ws).
+Kasan instrumentation adds "store" check for variables marked as
+modified by inline assembly. With user pointers containing addresses
+from another address space this produces false positives.
 
-Due to max_write_pgs doesn't consider max hw sectors
-supported by nvme controller(128K), which leads to GC
-tries to read 64 * 4K in one command, and see below error
-caused by pblk_bio_map_addr in function pblk_submit_read_gc.
+static inline unsigned long clear_user_xc(void __user *to, ...)
+{
+	asm volatile(
+	...
+	: "+a" (to) ...
 
-[ 2923.005376] pblk: could not add page to bio
-[ 2923.005377] pblk: could not allocate GC bio (18446744073709551604)
+User space access functions are wrapped by manually instrumented
+functions in kasan common code, which should be sufficient to catch
+errors. So, we just disable uaccess.o instrumentation altogether.
 
-Signed-off-by: Zhoujie Wu <zjwu@marvell.com>
-Reviewed-by: Javier González <javier@cnexlabs.com>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-init.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/lib/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
-index 91fd2b291db91..88b632787abd6 100644
---- a/drivers/lightnvm/pblk-init.c
-+++ b/drivers/lightnvm/pblk-init.c
-@@ -375,6 +375,8 @@ static int pblk_core_init(struct pblk *pblk)
- 	pblk->min_write_pgs = geo->ws_opt;
- 	max_write_ppas = pblk->min_write_pgs * geo->all_luns;
- 	pblk->max_write_pgs = min_t(int, max_write_ppas, NVM_MAX_VLBA);
-+	pblk->max_write_pgs = min_t(int, pblk->max_write_pgs,
-+		queue_max_hw_sectors(dev->q) / (geo->csecs >> SECTOR_SHIFT));
- 	pblk_set_sec_per_write(pblk, pblk->min_write_pgs);
+diff --git a/arch/s390/lib/Makefile b/arch/s390/lib/Makefile
+index 57ab40188d4bd..5418d10dc2a81 100644
+--- a/arch/s390/lib/Makefile
++++ b/arch/s390/lib/Makefile
+@@ -9,5 +9,9 @@ lib-$(CONFIG_SMP) += spinlock.o
+ lib-$(CONFIG_KPROBES) += probes.o
+ lib-$(CONFIG_UPROBES) += probes.o
  
- 	if (pblk->max_write_pgs > PBLK_MAX_REQ_ADDRS) {
++# Instrumenting memory accesses to __user data (in different address space)
++# produce false positives
++KASAN_SANITIZE_uaccess.o := n
++
+ chkbss := mem.o
+ include $(srctree)/arch/s390/scripts/Makefile.chkbss
 -- 
 2.20.1
 
