@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B995CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA88C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA6D2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200CD2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452373;
-	bh=lmNlI0Iy1U04FTtoVNG4GxPlCEQXl93btRPK0tuyk5w=;
+	s=default; t=1574452379;
+	bh=o+FcnjAr4l6b6GsIcdrroLJ1V8AgtiMh6PuIpSHnYUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuohBqm1Av4VDXieK3GSM5k+8hvbMB7fZlaqZfHBrTRmE+teI700yUJyXbIN4IWx/
-	 wCp11EhZyQnqvWrZll2mOqXHs5KNHRWlt1b53HiaSdP2Dr6GGI6ZDv9NltMfP4K7WS
-	 GicTLFa88N0hgFhbveAtmlpFDvQSI+en3mx8aGY4=
+	b=IJS8npYZVCt/1EThaDJvCqxpDbgIcnHRgCf2oXKDqwL77HTUvAutCxrcq0+HZkSOG
+	 FMKl/NCQTCwV0SUOFaGmxhMjeUehUUoZAymNW8mCVbygAMVoOIZzMXA099mr+URJK3
+	 abKl01RR/nOcuHQTNf5bkvNCRWzBqmvzRdPzH3gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfKVTww (ORCPT
+        id S1727541AbfKVTtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:52:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49840 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbfKVTto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:44 -0500
+        id S1727484AbfKVTti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA792073F;
-        Fri, 22 Nov 2019 19:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34BCB2072D;
+        Fri, 22 Nov 2019 19:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452184;
-        bh=lmNlI0Iy1U04FTtoVNG4GxPlCEQXl93btRPK0tuyk5w=;
+        s=default; t=1574452177;
+        bh=o+FcnjAr4l6b6GsIcdrroLJ1V8AgtiMh6PuIpSHnYUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QuwZW4Q44Rv1zMZYKBPFaXoImuvwO1VSPR3WDf8C2VyVSCARmsNibYPqzBeJW6Kwt
-         NncoC2pxE1WLIK2mxDJj3GiKuorIX/Q2i1YRXRGDqsSGMt/mrmaP397iLbUVUsbps+
-         t8Tx1utKai+BHXhr6KzR+6PB6pd7s3upKqdM0hjw=
+        b=L8H8gX9PsKYFim98w7pgmrD1Ieoq6kGvSVZoC7mmCkullhqDbrrrgp1k4F8v5qBCu
+         HWsOZF2aV9GRf6kYW7eWr8+G8YIVYQn3b4mwKL8ocL5pJICkkTT/Ootsus9jL54ctB
+         p9njCZMDadiKRqH8+Exs6yp8qUEXUdfsbkwx/4SU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        akpm@linux-foundation.org, bigeasy@linutronix.de, cl@linux.com,
-        keescook@chromium.org, penberg@kernel.org, rientjes@google.com,
-        thgarnie@google.com, tytso@mit.edu, will@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 10/21] sched/core: Avoid spurious lock dependencies
-Date:   Fri, 22 Nov 2019 14:49:20 -0500
-Message-Id: <20191122194931.24732-10-sashal@kernel.org>
+Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/21] iwlwifi: pcie: don't consider IV len in A-MSDU
+Date:   Fri, 22 Nov 2019 14:49:14 -0500
+Message-Id: <20191122194931.24732-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194931.24732-1-sashal@kernel.org>
 References: <20191122194931.24732-1-sashal@kernel.org>
@@ -63,65 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-[ Upstream commit ff51ff84d82aea5a889b85f2b9fb3aa2b8691668 ]
+[ Upstream commit cb1a4badf59275eb7221dcec621e8154917eabd1 ]
 
-While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-when DEBUG_OBJETS, can end up doing allocations.
+From gen2 PN is totally offloaded to hardware (also the space for the
+IV isn't part of the skb).  As you can see in mvm/mac80211.c:3545, the
+MAC for cipher types CCMP/GCMP doesn't set
+IEEE80211_KEY_FLAG_PUT_IV_SPACE for gen2 NICs.
 
-This then results in the following lock order:
+This causes all the AMSDU data to be corrupted with cipher enabled.
 
-  rq->lock
-    zone->lock.rlock
-      batched_entropy_u64.lock
-
-Which in turn causes deadlocks when we do wakeups while holding that
-batched_entropy lock -- as the random code does.
-
-Solve this by moving __sched_fork() out from under rq->lock. This is
-safe because nothing there relies on rq->lock, as also evident from the
-other __sched_fork() callsite.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: bigeasy@linutronix.de
-Cc: cl@linux.com
-Cc: keescook@chromium.org
-Cc: penberg@kernel.org
-Cc: rientjes@google.com
-Cc: thgarnie@google.com
-Cc: tytso@mit.edu
-Cc: will@kernel.org
-Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
-Link: https://lkml.kernel.org/r/20191001091837.GK4536@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 20 +++++++------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index bbf8b32fc69ec..97a27726ea217 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5242,10 +5242,11 @@ void init_idle(struct task_struct *idle, int cpu)
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long flags;
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+index 6f45c8148b279..bbb39d6ec2ee3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -232,27 +232,23 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+ 	struct ieee80211_hdr *hdr = (void *)skb->data;
+ 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+ 	unsigned int mss = skb_shinfo(skb)->gso_size;
+-	u16 length, iv_len, amsdu_pad;
++	u16 length, amsdu_pad;
+ 	u8 *start_hdr;
+ 	struct iwl_tso_hdr_page *hdr_page;
+ 	struct page **page_ptr;
+ 	struct tso_t tso;
  
-+	__sched_fork(0, idle);
-+
- 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
- 	raw_spin_lock(&rq->lock);
+-	/* if the packet is protected, then it must be CCMP or GCMP */
+-	iv_len = ieee80211_has_protected(hdr->frame_control) ?
+-		IEEE80211_CCMP_HDR_LEN : 0;
+-
+ 	trace_iwlwifi_dev_tx(trans->dev, skb, tfd, sizeof(*tfd),
+ 			     &dev_cmd->hdr, start_len, 0);
  
--	__sched_fork(0, idle);
- 	idle->state = TASK_RUNNING;
- 	idle->se.exec_start = sched_clock();
- 	idle->flags |= PF_IDLE;
+ 	ip_hdrlen = skb_transport_header(skb) - skb_network_header(skb);
+ 	snap_ip_tcp_hdrlen = 8 + ip_hdrlen + tcp_hdrlen(skb);
+-	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len - iv_len;
++	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len;
+ 	amsdu_pad = 0;
+ 
+ 	/* total amount of header we may need for this A-MSDU */
+ 	hdr_room = DIV_ROUND_UP(total_len, mss) *
+-		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr)) + iv_len;
++		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr));
+ 
+ 	/* Our device supports 9 segments at most, it will fit in 1 page */
+ 	hdr_page = get_page_hdr(trans, hdr_room);
+@@ -263,14 +259,12 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+ 	start_hdr = hdr_page->pos;
+ 	page_ptr = (void *)((u8 *)skb->cb + trans_pcie->page_offs);
+ 	*page_ptr = hdr_page->page;
+-	memcpy(hdr_page->pos, skb->data + hdr_len, iv_len);
+-	hdr_page->pos += iv_len;
+ 
+ 	/*
+-	 * Pull the ieee80211 header + IV to be able to use TSO core,
++	 * Pull the ieee80211 header to be able to use TSO core,
+ 	 * we will restore it for the tx_status flow.
+ 	 */
+-	skb_pull(skb, hdr_len + iv_len);
++	skb_pull(skb, hdr_len);
+ 
+ 	/*
+ 	 * Remove the length of all the headers that we don't actually
+@@ -348,8 +342,8 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+ 		}
+ 	}
+ 
+-	/* re -add the WiFi header and IV */
+-	skb_push(skb, hdr_len + iv_len);
++	/* re -add the WiFi header */
++	skb_push(skb, hdr_len);
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
