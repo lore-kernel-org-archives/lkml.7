@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBD52070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE6220714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403996;
-	bh=UxEp8ox6OzQg67AWkKUhgIDhv14VbLfTIqTETNkCDyU=;
+	s=default; t=1574404000;
+	bh=5NqZWv/lrf+4gV1AJubypYGwHZ9tJ+dRz9dCQ+jRxVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebxuZ6S7xu3dWlfCP4ntxN4Lzk/HiibzOpE+mzXC4G7YKkzaqvmjAq5aWfxKyPPRW
-	 ZnZrBATwbAeirzEDPjQ86kIcBoMH7+wC60goBWyBD/bqi9fxDPp/N7j4s5ZeSz55p0
-	 2kCMGuK5BavUYl9u2gwmg7WLzS+TKQGcuWI8iXlg=
+	b=O5efGWFwsElvCDG4LeWzvuUxllQ8PIUQkBd+8T6c7moN01x2h4E0EvhP21enQIhxJ
+	 AbxyBtrWSfblydkofmzjWFRw2FOXlSiYg+hKwQ1ybVLRYOUXEpBaYxmOxR3iRWhHmt
+	 bHTDR0CyjiGgk6e+rMSE2EULiDnByn2TOUJGG6As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfKVFur (ORCPT
+        id S1728552AbfKVG0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbfKVFul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:41 -0500
+        id S1727867AbfKVFur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29A482075B;
-        Fri, 22 Nov 2019 05:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FDAB20726;
+        Fri, 22 Nov 2019 05:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401840;
-        bh=UxEp8ox6OzQg67AWkKUhgIDhv14VbLfTIqTETNkCDyU=;
+        s=default; t=1574401847;
+        bh=5NqZWv/lrf+4gV1AJubypYGwHZ9tJ+dRz9dCQ+jRxVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TgP1EBMTGu1yatgo8/yMCDnGPhgEQlfIXhyJySIPMuu8OcFxdYoh+83V7LX324D02
-         WfwGSU65Wm2CluQHx0SUhW+7xDR2OX45WT7SmQsJpGV+ClmFM/ILboEFvtZs3h23pZ
-         SQUVGufdpjiZ29gwjrwpzo3O7D3cNwmk/JRJ0tds=
+        b=dXNXADBtlCp6WTkeO2bkbAJBQtoFyqxszwk3oLpjv17K/Yq1xBkfvN0YTVOarcvS5
+         UTXO0UreHZzj924LAsk3Qj+bnCxahhIzPUG0I3q114X27veM7WijYPW+hdVuPLbDUA
+         wua7edgmB88ooWSBJwceer4F48IFLlSk0vzCi6b0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.19 081/219] xen/pciback: Check dev_data before using it
-Date:   Fri, 22 Nov 2019 00:46:53 -0500
-Message-Id: <20191122054911.1750-74-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 085/219] memory: omap-gpmc: Get the header of the enum
+Date:   Fri, 22 Nov 2019 00:46:57 -0500
+Message-Id: <20191122054911.1750-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,36 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
+[ Upstream commit a0752e9c3097b2c4fccd618802938e0951038dfa ]
 
-If pcistub_init_device fails, the release function will be called with
-dev_data set to NULL.  Check it before using it to avoid a NULL pointer
-dereference.
+Commit 21abf103818a
+("gpio: Pass a flag to gpiochip_request_own_desc()")
+started to pass an enum gpiod_flags but this file is
+not including the header file that defines that enum
+and the compiler spits:
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+drivers/memory/omap-gpmc.c: In function
+			    'gpmc_probe_generic_child':
+drivers/memory/omap-gpmc.c:2174:9: error: type of formal
+				   parameter 4 is incomplete
+         0);
+         ^
+
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 21abf103818a ("gpio: Pass a flag to gpiochip_request_own_desc()")
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/pci_stub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/memory/omap-gpmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 59661db144e51..097410a7cdb74 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -106,7 +106,8 @@ static void pcistub_device_release(struct kref *kref)
- 	 * is called from "unbind" which takes a device_lock mutex.
- 	 */
- 	__pci_reset_function_locked(dev);
--	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
-+	if (dev_data &&
-+	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
- 		dev_info(&dev->dev, "Could not reload PCI state\n");
- 	else
- 		pci_restore_state(dev);
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index c215287e80cf3..1c6a7c16e0c17 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -21,6 +21,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/io.h>
+ #include <linux/gpio/driver.h>
++#include <linux/gpio/consumer.h> /* GPIO descriptor enum */
+ #include <linux/interrupt.h>
+ #include <linux/irqdomain.h>
+ #include <linux/platform_device.h>
 -- 
 2.20.1
 
