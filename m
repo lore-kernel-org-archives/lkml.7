@@ -2,126 +2,175 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3850AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24033C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A29B20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE6320672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="j1h4vOoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfKVQvz (ORCPT
+        id S1727370AbfKVQwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:51:55 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:59720 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726046AbfKVQvy (ORCPT
+        Fri, 22 Nov 2019 11:52:10 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37914 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVQwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:51:54 -0500
-Received: (qmail 6639 invoked by uid 2102); 22 Nov 2019 11:51:53 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 22 Nov 2019 11:51:53 -0500
-Date:   Fri, 22 Nov 2019 11:51:53 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
-        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in hub_event
-In-Reply-To: <000000000000109c040597dc5843@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911221150350.1511-100000@iolanthe.rowland.org>
+        Fri, 22 Nov 2019 11:52:10 -0500
+Received: by mail-qk1-f194.google.com with SMTP id e2so6862808qkn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:52:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=oz+QGCoRKKLNBn1J0LTgNGDFShCE3Rvj+eur+Kujt+U=;
+        b=j1h4vOoi3aE5Ab0Ery0Z98gHQPOt9iBuojfwjn0gKa8Wd9Ugjw0YHSkxwzXfGnrX3m
+         hqVbHeCFsvaQBRRo7Cop0qX/G/adSCJ4m510ZaDa3iWNGUDwV3G41pn6Oy+Ux6KTDF/W
+         cjuAN6ltL6XOOKi9h+OrItXPl8iLIZxAa09fW/goMT0ezFSNzhmMCMRvNtUERSApl7+v
+         MRY/PgA6QCIZMTxHtImyHik+466mhdQ9ArJ7GOQA2ycKjAAf9CLldNhTujKa/Nwt43QV
+         F7oDov2pQ8UAPqxbNCpfdC59O9Q3i+gDg1TqRZYX5aT9uGhgIB6pFD0IKS3qERjoguZY
+         BnNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=oz+QGCoRKKLNBn1J0LTgNGDFShCE3Rvj+eur+Kujt+U=;
+        b=UH3XdrUz7+fdhQq9x1Qi0Fcayp9/G1lIlZ1R1IxP4mZeV9/cCOsGSHwHKnmQU2op7M
+         INWahG+tDZ7bJ/Ov/KH27nNdV1Qe/FpPtZxUCvY39RbYgrNutycVKL9BnGs3m9IBPzOH
+         0EmyGHC4II4BoWAdfokuWUL8N31rvbCjoTu1k4vCA2/TDbnodSidAwJAOh0YHqAMqtkT
+         iaSYEHXQzAYEjM+59qGGe453SUTLLPpYDjUb+egvJzHPl0Nzg/PLjGDbcMx6tp1ronjV
+         KFr9X/IjMUtLWvbW2rvuKU9i4keOdoDqUeVVXyvOsUpWjsI/ZJp05I1SjCLnFXzJfoAx
+         PT8Q==
+X-Gm-Message-State: APjAAAVse2fRC71hXJBM6S/wrmZj8vR6bpASmlqVSdCBw+5evwSMGeUy
+        I/MHS+Gkp7tjPkbztomhb4cgmA==
+X-Google-Smtp-Source: APXvYqyzJ4ny5GR6UKdaVlpzoR0g7N+dRHxbOkUrqU6nQADHUPfI7L2wPyZZYxTVsWSVFOL65OmLqA==
+X-Received: by 2002:a37:4bc2:: with SMTP id y185mr14562500qka.474.1574441528764;
+        Fri, 22 Nov 2019 08:52:08 -0800 (PST)
+Received: from tpx230-nicolas ([2610:98:8005::d0])
+        by smtp.gmail.com with ESMTPSA id h44sm3942382qtc.1.2019.11.22.08.52.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 08:52:07 -0800 (PST)
+Message-ID: <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
+Subject: Re: [PATCH] media: hantro: Support H264 profile control
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Hirokazu Honda <hiroh@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 Nov 2019 11:52:05 -0500
+In-Reply-To: <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
+References: <20191122051608.128717-1-hiroh@chromium.org>
+         <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
+         <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-EkBdMYKPQvs+VUkT8iK1"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019, syzbot wrote:
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    46178223 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15a05836e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1061395ae00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13653d1ce00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com
-> 
-> rcu: INFO: rcu_sched self-detected stall on CPU
+--=-EkBdMYKPQvs+VUkT8iK1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> RIP: 0010:hid_apply_multiplier drivers/hid/hid-core.c:1058 [inline]
-> RIP: 0010:hid_setup_resolution_multiplier+0x33b/0x990  
-> drivers/hid/hid-core.c:1114
+Le samedi 23 novembre 2019 =C3=A0 01:00 +0900, Tomasz Figa a =C3=A9crit :
+> On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca> =
+wrote:
+> > Le vendredi 22 novembre 2019 =C3=A0 14:16 +0900, Hirokazu Honda a =C3=
+=A9crit :
+> > > The Hantro G1 decoder supports H.264 profiles from Baseline to High, =
+with
+> > > the exception of the Extended profile.
+> > >=20
+> > > Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
+> > > applications can query the driver for the list of supported profiles.
+> >=20
+> > Thanks for this patch. Do you think we could also add the LEVEL control
+> > so the profile/level enumeration becomes complete ?
+> >=20
+> > I'm thinking it would be nice if the v4l2 compliance test make sure
+> > that codecs do implement these controls (both stateful and stateless),
+> > it's essential for stack with software fallback, or multiple capable
+> > codec hardware but with different capabilities.
+> >=20
+>=20
+> Level is a difficult story, because it also specifies the number of
+> macroblocks per second, but for decoders like this the number of
+> macroblocks per second it can handle depends on things the driver
+> might be not aware of - clock frequencies, DDR throughput, system
+> load, etc.
+>=20
+> My take on this is that the decoder driver should advertise the
+> highest resolution the decoder can handle due to hardware constraints.
+> Performance related things depend on the integration details and
+> should be managed elsewhere. For example Android and Chrome OS manage
+> expected decoding performance in per-board configuration files.
 
-Diagnostic patch.
+When you read datasheet, the HW is always rated to maximum level (and
+it's a range) with the assumption of a single stream. It seems much
+easier to expose this as-is, statically then to start doing some math
+with data that isn't fully exposed to the user. This is about filtering
+of multiple CODEC instances, it does not need to be rocket science,
+specially that the amount of missing data is important (e.g. usage of
+tiles, compression, IPP all have an impact on the final performance).
+All we want to know in userspace is if this HW is even possibly capable
+of LEVEL X, and if not, we'll look for another one.
 
-#syz test: https://github.com/google/kasan.git 46178223
+>=20
+> > > Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+> > > ---
+> > >  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >=20
+> > > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/stag=
+ing/media/hantro/hantro_drv.c
+> > > index 6d9d41170832..9387619235d8 100644
+> > > --- a/drivers/staging/media/hantro/hantro_drv.c
+> > > +++ b/drivers/staging/media/hantro/hantro_drv.c
+> > > @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] =3D {
+> > >                       .def =3D V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_=
+B,
+> > >                       .max =3D V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_=
+B,
+> > >               },
+> > > +     }, {
+> > > +             .codec =3D HANTRO_H264_DECODER,
+> > > +             .cfg =3D {
+> > > +                     .id =3D V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+> > > +                     .min =3D V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+> > > +                     .max =3D V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+> > > +                     .menu_skip_mask =3D
+> > > +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+> > > +                     .def =3D V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+> > > +             }
+> > >       }, {
+> > >       },
+> > >  };
 
- drivers/hid/hid-core.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+--=-EkBdMYKPQvs+VUkT8iK1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Index: usb-devel/drivers/hid/hid-core.c
-===================================================================
---- usb-devel.orig/drivers/hid/hid-core.c
-+++ usb-devel/drivers/hid/hid-core.c
-@@ -1055,8 +1055,13 @@ static void hid_apply_multiplier(struct
- 	 */
- 	multiplier_collection = &hid->collection[multiplier->usage->collection_index];
- 	while (multiplier_collection->parent_idx != -1 &&
--	       multiplier_collection->type != HID_COLLECTION_LOGICAL)
-+	       multiplier_collection->type != HID_COLLECTION_LOGICAL) {
-+		hid_info(hid, "collection %d %px parent %d\n",
-+	multiplier_collection - hid->collection, multiplier_collection,
-+	multiplier_collection->parent_idx);
- 		multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
-+	}
-+	hid_info(hid, "Got collection\n");
- 
- 	effective_multiplier = hid_calculate_multiplier(hid, multiplier);
- 
-@@ -1069,6 +1074,7 @@ static void hid_apply_multiplier(struct
- 						      effective_multiplier);
- 		}
- 	}
-+	hid_info(hid, "Applied multiplier\n");
- }
- 
- /*
-@@ -1103,16 +1109,23 @@ void hid_setup_resolution_multiplier(str
- 
- 	rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
- 	list_for_each_entry(rep, &rep_enum->report_list, list) {
-+		hid_info(hid, "Start report %px maxfield %d\n",
-+	rep, rep->maxfield);
- 		for (i = 0; i < rep->maxfield; i++) {
- 			/* Ignore if report count is out of bounds. */
- 			if (rep->field[i]->report_count < 1)
- 				continue;
- 
-+			hid_info(hid, "Field %d %px maxusage %d\n",
-+	i, rep->field[i], rep->field[i]->maxusage);
- 			for (j = 0; j < rep->field[i]->maxusage; j++) {
- 				usage = &rep->field[i]->usage[j];
--				if (usage->hid == HID_GD_RESOLUTION_MULTIPLIER)
-+				if (usage->hid == HID_GD_RESOLUTION_MULTIPLIER) {
-+					hid_info(hid, "Usage %d %px\n",
-+	j, usage);
- 					hid_apply_multiplier(hid,
- 							     rep->field[i]);
-+				}
- 			}
- 		}
- 	}
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXdgSNQAKCRBxUwItrAao
+HGwvAKCHsop1nLCCcwqY6OC/VhAQ+SZlSQCfZOTuCZtzisd//KjRmwOYxdsfx00=
+=pnDn
+-----END PGP SIGNATURE-----
+
+--=-EkBdMYKPQvs+VUkT8iK1--
 
