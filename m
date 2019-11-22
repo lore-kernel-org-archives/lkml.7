@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE912C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1B720721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3DB20730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421444;
-	bh=yPJ2/XulO2bDi2HBr4ZZGwNMrmIfrdf5A0gQw9f4l5g=;
+	s=default; t=1574421448;
+	bh=DaQLybh/xJL6ICV5KQelju/IXatkVj3q7xwN1oiX+YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IOq6tLJlcaWc898BjDWr3j5kfTR/JPpqDw5c+JtKpmMkOXcTu/v14qQVxhzzAmQzn
-	 SFxKXGQGG0ZhmPkhLEDCwa4AkAoauJWod9UgnostCI0uSkfrxaH/x6q2SWtg4skenB
-	 RLSDEKZV7SDRWFF3rc6sV3o5f4S4JRRqAGmlkUrI=
+	b=vbrO6nX0EFNzIqRh56Y60+7OxHAMVCyzZuXC3xjcHWPrCJ/cMQRiZKjwsyzdLD2w0
+	 JHGQNQ9vKQ2x8iyBlOM7/rPwwBqY2G8oUWFVsuQ8Bl+esVey5DTvQPXUnTHTjo3ad+
+	 pc+dWRWd9R4i2wQQJYymDn/7KIZNj90/TUIVpKcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfKVKsj (ORCPT
+        id S1730448AbfKVLR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:48:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57460 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:17:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbfKVKsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:33 -0500
+        id S1728851AbfKVKsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:48:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030D3205C9;
-        Fri, 22 Nov 2019 10:48:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBFD520637;
+        Fri, 22 Nov 2019 10:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419712;
-        bh=yPJ2/XulO2bDi2HBr4ZZGwNMrmIfrdf5A0gQw9f4l5g=;
+        s=default; t=1574419718;
+        bh=DaQLybh/xJL6ICV5KQelju/IXatkVj3q7xwN1oiX+YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAEhbk4zvAXA1sX8dvypVtMHL3dkirvRU47dV8B/tRCPw0FOmUmr/NstGoUMEizIi
-         pjkP19dpaqbPnVzVxu43uM4jmglpPuyBiaAH9zqRWj7jnkzjLQK0aBZ4UkgWnvBTDw
-         GyX5yXLzRDNCrGNy4rfrwnJ37kOXhbHixFId507E=
+        b=B4BrNISl85is1zvBMwJeqJhZJtO2ORC5GV7T70tEFvjbnFZEzq4PEiN3k520FOzxP
+         cKwCg5wUj7QD5za2trrUATPHE4OZSyPWYZSeEl2iMcQZAcOkRwT4lEKpEGrRpYZ8FB
+         EARXm4EorLDTMPug5TJUMgCe2ciHi5/scdaSTIOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lianbo Jiang <lijiang@redhat.com>,
-        Borislav Petkov <bp@suse.de>, x86@kernel.org,
+        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 204/222] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
-Date:   Fri, 22 Nov 2019 11:29:04 +0100
-Message-Id: <20191122100917.020149839@linuxfoundation.org>
+Subject: [PATCH 4.9 206/222] mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
+Date:   Fri, 22 Nov 2019 11:29:06 +0100
+Message-Id: <20191122100917.186392777@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,47 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
+[ Upstream commit c974ac771479327b5424f60d58845e31daddadea ]
 
-Lianbo reported a build error with a particular 32-bit config, see Link
-below for details.
+If a child device like touchscreen is wakeup capable, then keep ADC
+interface on, so that a touching resistive screen will generate wakeup
+event to the system.
 
-Provide a weak copy_oldmem_page_encrypted() function which architectures
-can override, in the same manner other functionality in that file is
-supplied.
-
-Reported-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: x86@kernel.org
-Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/vmcore.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mfd/ti_am335x_tscadc.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 8ab782d8b33dd..93d13f4010c14 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -164,6 +164,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 	return remap_pfn_range(vma, from, pfn, size, prot);
+diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+index 60286adbd6a1c..e56f0844b98de 100644
+--- a/drivers/mfd/ti_am335x_tscadc.c
++++ b/drivers/mfd/ti_am335x_tscadc.c
+@@ -295,11 +295,24 @@ static int ti_tscadc_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
-+/*
-+ * Architectures which support memory encryption override this.
-+ */
-+ssize_t __weak
-+copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+			   unsigned long offset, int userbuf)
++static int __maybe_unused ti_tscadc_can_wakeup(struct device *dev, void *data)
 +{
-+	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
++	return device_may_wakeup(dev);
 +}
 +
- /*
-  * Copy to either kernel or user space
-  */
+ static int __maybe_unused tscadc_suspend(struct device *dev)
+ {
+ 	struct ti_tscadc_dev	*tscadc = dev_get_drvdata(dev);
+ 
+ 	regmap_write(tscadc->regmap, REG_SE, 0x00);
++	if (device_for_each_child(dev, NULL, ti_tscadc_can_wakeup)) {
++		u32 ctrl;
++
++		regmap_read(tscadc->regmap, REG_CTRL, &ctrl);
++		ctrl &= ~(CNTRLREG_POWERDOWN);
++		ctrl |= CNTRLREG_TSCSSENB;
++		regmap_write(tscadc->regmap, REG_CTRL, ctrl);
++	}
+ 	pm_runtime_put_sync(dev);
+ 
+ 	return 0;
 -- 
 2.20.1
 
