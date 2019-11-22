@@ -2,125 +2,133 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBB6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAFEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5D12071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F9320706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EExNY+FM"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X1aI59PJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfKVNWg (ORCPT
+        id S1727851AbfKVNXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:22:36 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46883 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726548AbfKVNWf (ORCPT
+        Fri, 22 Nov 2019 08:23:21 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:38326 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726548AbfKVNXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:22:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574428954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+4wnR7dCvlIXj37ch8LQ+LBMc9e941hqLYJ5YiYY/54=;
-        b=EExNY+FM7cHvRoF2+plNATcZW42dKZSC1HiyRK77MVjAd4nZxtXvN0gWIldlnL/V8iYRVi
-        /r3CGIhFNWib1iB5g37pFiqH/D/DtH90kmKLXm1b//ILIRGR/YjAr9yaqDqBaVz2zQMreu
-        Oftn3GtG87M1+KEEnNbsps/Y+gqaCr4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-t0HIDd_wN9ys9txeJAhyvw-1; Fri, 22 Nov 2019 08:22:31 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06DD010054E3;
-        Fri, 22 Nov 2019 13:22:30 +0000 (UTC)
-Received: from krava (unknown [10.40.205.117])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 047141A8D9;
-        Fri, 22 Nov 2019 13:22:26 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 14:22:26 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 3/3] perf record: adapt affinity to machines with
- #CPUs > 1K
-Message-ID: <20191122132226.GF17308@krava>
-References: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
- <2561f736-bdb5-a10a-1a5d-590ad499ce49@linux.intel.com>
+        Fri, 22 Nov 2019 08:23:21 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMDH5K5020334;
+        Fri, 22 Nov 2019 14:22:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=yQtLtgP4SshXnHOsAHP1arx+i7HyYqVIpwa3Jnqm8ds=;
+ b=X1aI59PJrQVIw5W4jTHEYGmyufOTJ7KCbqVgkGEe0P2YPDG8EUF5xGo3EkmynhXISSBK
+ 1SOwXAIb0gpuvQ5V+AuJQ3XO1Ep3a1vTpG2MHjiUvxe59qDUrtAssceNU90ECTB2tpdO
+ htPIq9Y/tyH+Pu5yWqMXUDvxkPFGX51SUFH/cHsKegF0+W3gL7b18OIaxzQKJfbmcM+u
+ gqEtM92PDH5tkDHTOkSTn4iXiqBOjTEevrS8ZhuRMuyGma/E8f+C9hzS4ubq7zNy1YRP
+ Dn5ph4x2k+M5YmL6kzu0ZZbWageJzR6KsuhqyjDazDSw60YJ2NizcpOW4T9DLhzIQ1wb +A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wa9ujgy24-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 Nov 2019 14:22:54 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1830F100034;
+        Fri, 22 Nov 2019 14:22:49 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9E3652BE25A;
+        Fri, 22 Nov 2019 14:22:48 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov 2019 14:22:48
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <linux-watchdog@vger.kernel.org>, <christophe.roullier@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3 1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
+Date:   Fri, 22 Nov 2019 14:22:46 +0100
+Message-ID: <20191122132246.8473-1-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <2561f736-bdb5-a10a-1a5d-590ad499ce49@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: t0HIDd_wN9ys9txeJAhyvw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:38:57PM +0300, Alexey Budankov wrote:
+If the watchdog hardware is already enabled during the boot process,
+when the Linux watchdog driver loads, it should start/reset the watchdog
+and tell the watchdog framework. As a result, ping can be generated from
+the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
+until the userspace watchdog daemon takes over control
 
-SNIP
+Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
 
-> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> index 063d1b93c53d..070b1873cd45 100644
-> --- a/tools/perf/util/mmap.c
-> +++ b/tools/perf/util/mmap.c
-> @@ -23,6 +23,7 @@
->  #include "mmap.h"
->  #include "../perf.h"
->  #include <internal/lib.h> /* page_size */
-> +#include <linux/bitmap.h>
-> =20
->  size_t mmap__mmap_len(struct mmap *map)
->  {
-> @@ -215,7 +216,7 @@ void mmap__munmap(struct mmap *map)
->  =09auxtrace_mmap__munmap(&map->auxtrace_mmap);
->  }
-> =20
-> -static void build_node_mask(int node, cpu_set_t *mask)
-> +static void build_node_mask(int node, struct mmap_cpu_mask *mask)
->  {
->  =09int c, cpu, nr_cpus;
->  =09const struct perf_cpu_map *cpu_map =3D NULL;
-> @@ -228,28 +229,43 @@ static void build_node_mask(int node, cpu_set_t *ma=
-sk)
->  =09for (c =3D 0; c < nr_cpus; c++) {
->  =09=09cpu =3D cpu_map->map[c]; /* map c index to online cpu index */
->  =09=09if (cpu__get_node(cpu) =3D=3D node)
-> -=09=09=09CPU_SET(cpu, mask);
-> +=09=09=09set_bit(cpu, mask->bits);
->  =09}
->  }
-> =20
-> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap=
-_params *mp)
-> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_=
-params *mp)
->  {
-> -=09CPU_ZERO(&map->affinity_mask);
-> +=09map->affinity_mask.nbits =3D cpu__max_cpu();
-> +=09map->affinity_mask.bits =3D bitmap_alloc(map->affinity_mask.nbits);
-> +=09if (!map->affinity_mask.bits)
-> +=09=09return 1;
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+Changes since v2:
+According to Guenter
+removed intermediate variable
 
-I guess this works, but please return < 0 on error
+I've tested some config and it is working as expected:
+Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set + daemon watchdog in userland ON ==> No reset IWDG2
+Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set ==> Reset IWDG2
+Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
+Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
+Watchdog disable in Uboot + HANDLE_BOOT_ENABLE is not set ==> No reset IWDG2
+Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
+Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON ==> No reset IWDG2
+Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
 
-thanks,
-jirka
+Thanks,
+Christophe
+
+ drivers/watchdog/stm32_iwdg.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+index a3a329011a06..25188d6bbe15 100644
+--- a/drivers/watchdog/stm32_iwdg.c
++++ b/drivers/watchdog/stm32_iwdg.c
+@@ -262,6 +262,24 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+ 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+ 	watchdog_init_timeout(wdd, 0, dev);
+ 
++	/*
++	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
++	 * (Means U-Boot/bootloaders leaves the watchdog running)
++	 * When we get here we should make a decision to prevent
++	 * any side effects before user space daemon will take care of it.
++	 * The best option, taking into consideration that there is no
++	 * way to read values back from hardware, is to enforce watchdog
++	 * being run with deterministic values.
++	 */
++	if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED)) {
++		ret = stm32_iwdg_start(wdd);
++		if (ret)
++			return ret;
++
++		/* Make sure the watchdog is serviced */
++		set_bit(WDOG_HW_RUNNING, &wdd->status);
++	}
++
+ 	ret = devm_watchdog_register_device(dev, wdd);
+ 	if (ret)
+ 		return ret;
+-- 
+2.17.1
 
