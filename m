@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D05C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E233C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7212A2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D7C2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403358;
-	bh=7I440dgsAAXMb1dwZ7WtUl9IFmfO2mQSOAE4QTI4dN4=;
+	s=default; t=1574403360;
+	bh=KZb8ob2IGRQ5it7YQX1abQxF3UyJRObWUe+TBwZzo14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNaepw87P/RwMTrby45dbjAJkrd6XSeQvYb/UuHaYwXLvVGo+/GoIhYB9vKHjXQJK
-	 r4B1cJMlsO0q/TYx8HLQCgY7+0YUwek8A8U6D66/YhCYWFrMiB7GLpcQTi0qKZOMYU
-	 AXLCPkaDQ9u6FQXg8KGa6Y4agagBiU1AoZ6My/vE=
+	b=w/kAaCX2Ok/7fO5ovRQY/6w8hynPstqULJVyb5TGxrA1L8nTMa+lWnOpErlZfRq8v
+	 nmqcg8Dngb1v6Lbvm8dulKdGinZfxLfkRqwb/5lWewSsLbtLioa+K6Qi/pohmR0HKN
+	 zfXFABW1wmCAoxKWjEeY2KN52444pbLa0x0XpXHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfKVGP5 (ORCPT
+        id S1729284AbfKVGPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:15:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:15:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbfKVGOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:14:03 -0500
+        id S1728704AbfKVGOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:14:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6788E2068E;
-        Fri, 22 Nov 2019 06:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0E52070E;
+        Fri, 22 Nov 2019 06:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403242;
-        bh=7I440dgsAAXMb1dwZ7WtUl9IFmfO2mQSOAE4QTI4dN4=;
+        s=default; t=1574403243;
+        bh=KZb8ob2IGRQ5it7YQX1abQxF3UyJRObWUe+TBwZzo14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMJuvdE89iogC90Vpz+hfYgK5vHuEXfgEsGms4Iqv71Wsa/LO4JVaRMfS4Gb1oza7
-         OPbo8+bLh7FKl7h3Me5IepHw0aUgcZC0WcJISbt0a+vt9MsKDatdOqgKbSj5EJjCNZ
-         g1fyDehufF9Cd5OyNahY2mvvBZW8Qz4fY2VQNu5A=
+        b=TpSeSd0N1i12u6oN6OU5j45agEhMCtukzzVWL6ERqIWn3+GgGA98G8YToHji5UnwL
+         sTOCI32Wp79KwXkqg2d/doomVKVYDhxjKyrrMwhII3Ubf1QxY+588/CZdav1TJ8IK2
+         e9E8v5jwVE7lbti23XgD90kwtyFTuinlLURukhUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olof Johansson <olof@lixom.net>,
-        Huang Shijie <sjhuang@iluvatar.ai>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Skidanov <alexey.skidanov@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 53/68] lib/genalloc.c: include vmalloc.h
-Date:   Fri, 22 Nov 2019 01:12:46 -0500
-Message-Id: <20191122061301.4947-52-sashal@kernel.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 54/68] mtd: Check add_mtd_device() ret code
+Date:   Fri, 22 Nov 2019 01:12:47 -0500
+Message-Id: <20191122061301.4947-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -62,41 +58,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Boris Brezillon <bbrezillon@kernel.org>
 
-[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
+[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
 
-Fixes build break on most ARM/ARM64 defconfigs:
+add_mtd_device() can fail. We should always check its return value
+and gracefully handle the failure case. Fix the call sites where this
+not done (in mtdpart.c) and add a __must_check attribute to the
+prototype to avoid this kind of mistakes.
 
-  lib/genalloc.c: In function 'gen_pool_add_virt':
-  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
-  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-  lib/genalloc.c: In function 'gen_pool_destroy':
-  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
-
-Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
-Cc: Huang Shijie <sjhuang@iluvatar.ai>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Skidanov <alexey.skidanov@intel.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/genalloc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/mtdcore.h |  2 +-
+ drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index 38764572ddde8..e3a475b14e260 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -35,6 +35,7 @@
- #include <linux/interrupt.h>
- #include <linux/genalloc.h>
- #include <linux/of_device.h>
-+#include <linux/vmalloc.h>
+diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
+index 7b0353399a106..b837f44716820 100644
+--- a/drivers/mtd/mtdcore.h
++++ b/drivers/mtd/mtdcore.h
+@@ -6,7 +6,7 @@
+ extern struct mutex mtd_table_mutex;
  
- static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+ struct mtd_info *__mtd_next_device(int i);
+-int add_mtd_device(struct mtd_info *mtd);
++int __must_check add_mtd_device(struct mtd_info *mtd);
+ int del_mtd_device(struct mtd_info *mtd);
+ int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
+ int del_mtd_partitions(struct mtd_info *);
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index f8ba153f63bfe..9b48be05cd1af 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -610,10 +610,22 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
+ 	list_add(&new->list, &mtd_partitions);
+ 	mutex_unlock(&mtd_partitions_mutex);
+ 
+-	add_mtd_device(&new->mtd);
++	ret = add_mtd_device(&new->mtd);
++	if (ret)
++		goto err_remove_part;
+ 
+ 	mtd_add_partition_attrs(new);
+ 
++	return 0;
++
++err_remove_part:
++	mutex_lock(&mtd_partitions_mutex);
++	list_del(&new->list);
++	mutex_unlock(&mtd_partitions_mutex);
++
++	free_partition(new);
++	pr_info("%s:%i\n", __func__, __LINE__);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mtd_add_partition);
+@@ -658,28 +670,42 @@ int add_mtd_partitions(struct mtd_info *master,
  {
+ 	struct mtd_part *slave;
+ 	uint64_t cur_offset = 0;
+-	int i;
++	int i, ret;
+ 
+ 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
+ 
+ 	for (i = 0; i < nbparts; i++) {
+ 		slave = allocate_partition(master, parts + i, i, cur_offset);
+ 		if (IS_ERR(slave)) {
+-			del_mtd_partitions(master);
+-			return PTR_ERR(slave);
++			ret = PTR_ERR(slave);
++			goto err_del_partitions;
+ 		}
+ 
+ 		mutex_lock(&mtd_partitions_mutex);
+ 		list_add(&slave->list, &mtd_partitions);
+ 		mutex_unlock(&mtd_partitions_mutex);
+ 
+-		add_mtd_device(&slave->mtd);
++		ret = add_mtd_device(&slave->mtd);
++		if (ret) {
++			mutex_lock(&mtd_partitions_mutex);
++			list_del(&slave->list);
++			mutex_unlock(&mtd_partitions_mutex);
++
++			free_partition(slave);
++			goto err_del_partitions;
++		}
++
+ 		mtd_add_partition_attrs(slave);
+ 
+ 		cur_offset = slave->offset + slave->mtd.size;
+ 	}
+ 
+ 	return 0;
++
++err_del_partitions:
++	del_mtd_partitions(master);
++
++	return ret;
+ }
+ 
+ static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
