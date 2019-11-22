@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84876C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCB9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4A32075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4022075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452162;
-	bh=5eoak+mG+mcguMksu8j3IrzoHYAFKuEkrFK2NPhaFjQ=;
+	s=default; t=1574452165;
+	bh=oDf5fs0G/3ZrgGTY0bfsuAPLd7SQPhTaCdfoB0W93zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j2CFkcJ+VX5Vg6cpmL5WudjnkX2sCIgiLbuPxOq44C8KhgWMmCoW3wK9g9S3E18LD
-	 ldonTzjhajaBzhEuJL+9a91+W1nwcbBW31i59DqaSxESWmLkxx933pxlKlNNpfZDE5
-	 H3O9PfcqTM6iSblhvWrc9NFXFSXSzxjVRVividl0=
+	b=jJ/tkIbX0r4HdsLxr7m20qih3xNWXQcYaskqq5YIwZTyBjrvEjqqyWRA0AWfTRiOL
+	 a20Hj00CxEnZ4r7ZQGV5VznfSMwUgaSVwcVRzrTUgW46fyusGEPYL8HJAhjwbVm3Q/
+	 vGcq+x8x6+yF5LmdoWxL5pTwsQN+Y7n0XjaSdBw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfKVTtV (ORCPT
+        id S1727374AbfKVTtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48698 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfKVTtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:18 -0500
+        id S1727330AbfKVTtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2EA207FA;
-        Fri, 22 Nov 2019 19:49:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF9BD20658;
+        Fri, 22 Nov 2019 19:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452158;
-        bh=5eoak+mG+mcguMksu8j3IrzoHYAFKuEkrFK2NPhaFjQ=;
+        s=default; t=1574452160;
+        bh=oDf5fs0G/3ZrgGTY0bfsuAPLd7SQPhTaCdfoB0W93zQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+0K1hu8wDDxqQwGp9/SGlLK/T1U94zGCWMrJ5AXuowjNUFLqeZEfbjHCqA6aPDzx
-         19rGP91JfBpWwbaPSJeAtWPIMXMaCLB6lU09bIid9pvOdD2HC/3ml3dyR9wlgd/VO4
-         rJpdAYfGv+8hz1dE9EqNfCzTBm76YUWvkVICTuec=
+        b=nNiSrr98najvQ9ogp2Yakpxnpy686jswYIVFwYNpoDIo/RRPxM494NjW5Fq73fqWu
+         FaWGU/4Z37CKnAs9rNmTueuXBMh+Zs3OlbVxi7nrmfD0xFCtIzpwZe2KzkZTP9sveR
+         jm+E++PFzD16ZXe4nCLpg6l7UEOniUCBAkpvA/Kk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/25] net: usb: qmi_wwan: add support for Foxconn T77W968 LTE modules
-Date:   Fri, 22 Nov 2019 14:48:48 -0500
-Message-Id: <20191122194859.24508-15-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/25] net: cdc_ncm: Signedness bug in cdc_ncm_set_dgram_size()
+Date:   Fri, 22 Nov 2019 14:48:50 -0500
+Message-Id: <20191122194859.24508-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,48 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 802753cb0b141cf5170ab97fe7e79f5ca10d06b0 ]
+[ Upstream commit a56dcc6b455830776899ce3686735f1172e12243 ]
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those.
+This code is supposed to test for negative error codes and partial
+reads, but because sizeof() is size_t (unsigned) type then negative
+error codes are type promoted to high positive values and the condition
+doesn't work as expected.
 
-The QMI interface is exposed in USB configuration #1:
-
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Fixes: 332f989a3b00 ("CDC-NCM: handle incomplete transfer of MTU")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/cdc_ncm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9f037c50054df..b55fd76348f9f 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1306,6 +1306,8 @@ static const struct usb_device_id products[] = {
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
- 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b5, 0)},	/* Foxconn T77W968 LTE with eSIM support*/
- 
- 	/* 4. Gobi 1000 devices */
- 	{QMI_GOBI1K_DEVICE(0x05c6, 0x9212)},	/* Acer Gobi Modem Device */
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index a57d82ef0f810..1f57a6a2b8a25 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -579,7 +579,7 @@ static void cdc_ncm_set_dgram_size(struct usbnet *dev, int new_size)
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+ 			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+-	if (err < sizeof(max_datagram_size)) {
++	if (err != sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
 -- 
 2.20.1
 
