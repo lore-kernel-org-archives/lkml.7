@@ -2,141 +2,110 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA16C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929A3C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BA72068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574423681;
-	bh=hqGDz6Um33qq5kJMsX0SHWUt1NZ7H9oyHrdfAVpLU+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N1Yvzt1jiabEV4HiqiR2EZyt5+4pIsAmTwdq/YuujPOQwZ5ygpebOHlVW9M28mxJ3
-	 TxEeSri1FDGL1Wm7GJdfXbBfaiNOYeKXVI8AocZ/DTaxcivymj0bg0D1Vzbrv7/l+P
-	 UudPPiNx7GeRllVpq3qm9R71fdgQ/TxrBEnZduU8=
+	by mail.kernel.org (Postfix) with ESMTP id 6AE6720718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQ7yrdfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfKVLyk (ORCPT
+        id S1727576AbfKVL4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:54:40 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46735 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfKVLyj (ORCPT
+        Fri, 22 Nov 2019 06:56:35 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36271 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfKVL4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:54:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id n23so5875697otr.13;
-        Fri, 22 Nov 2019 03:54:39 -0800 (PST)
+        Fri, 22 Nov 2019 06:56:35 -0500
+Received: by mail-ed1-f66.google.com with SMTP id f7so5778421edq.3;
+        Fri, 22 Nov 2019 03:56:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=myV3lKf8LP8zgt7/x2kHqtOs6MwOjmNsOxknrMDY0ng=;
+        b=VQ7yrdfJ+b8iOC+zpO0ugY7dMTPSCsYa7A2gTPvEWMTPUFp+kltiZXnVeTpQrMRTTV
+         sUFNKD9SJFA0zurJvqWjUvgty76PVzvoHHH5aEsWJD4Kl5eMgu9wjScwCd2ITaa8b/vK
+         MzLM5yaDrDz6IdGpOdQ29yArA0YM9wWefREL2XGTbTSIqeRj0K4vQlM+2T1ARxlkSenl
+         THt5NeDxfNxxPyEsKY3GIDN5k/sfsiHvcpNhI9N3f14JPs6WmCpVef8aOtPzNHnAoD2J
+         9Fm+YRhj05y4FJvytds4mlL7D9IK9Ig0wwPBbCiZg8LAIOtaB+03OdBXXtwDohdS6VWC
+         ontw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C4mw3VH3FIHQmO15qFz9D30nizXldnLunLKZhMRaWvs=;
-        b=EJ3ns0xGAaZCh5YFTjBxCbxwIp9yoNh29f6lbhzbd1FZNq45GE+gGY8m/sFbTjB9YD
-         Wb8j82TOTCErTcTgGndbRbpJmxEOwhYsfPDwAOky9Nd6xde6cfoXqiAWXbdKN+IKKBIW
-         +BikCobn0rUJabdg2lFnByMjr06Ja7Mo+gK07RNFjlH921vvgAa5hq6AqpHVsK1LTTXi
-         bo3dpMuvUL/g6wm5wNtTnykeKF5y5S2MyZJy4hyrhnEK3eUu1joP1nAWsktW3aW7wp6B
-         EX1NXLIUKq86vEo5bWt/NW9mEqxewi8xXttNB2ZJ5AH4WfXU9MmBj2u2NHcrJRrH77Bg
-         YObQ==
-X-Gm-Message-State: APjAAAWrAVvuf5vZv796GKl1SkFBuX2eiBTOgGqMihrkDAQYVONdg6ca
-        71gQelgc4hmpiNSstKlF7FwWoV9c8ZBL7U4Y0Uw=
-X-Google-Smtp-Source: APXvYqwXetKL36FIRsxPYnOnyYAS3YKHZ/sbHgfrxxTdSkSPdYmAXFC+StyAtNbf4Peqs9hEtloUH7Ir06gvcptDfkE=
-X-Received: by 2002:a9d:7d01:: with SMTP id v1mr9895024otn.167.1574423678614;
- Fri, 22 Nov 2019 03:54:38 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=myV3lKf8LP8zgt7/x2kHqtOs6MwOjmNsOxknrMDY0ng=;
+        b=YuzlOyZfTIukVarXCneJOBWDqhPz2URxy3wDM1sP6ipQqTdegusqWe+WwvQBNE2l3H
+         Nt9WvLhILXEePNPXBvfYo2hCxQuPhVhHbZxTUbMpMic5ccvE6Vika1ZINxJi4X7FUhhv
+         0o0bkZ7H/o09yF+zb0AXSahBM1g5oi7R4UP1U4UzsayBXceYsbXvXjKT8DstKs3F8hGI
+         PhmvfDb75Mhp2rLN9sjZSvE5fzXEY8WJMtpqO/oBbRD8WzTOgUlWgd9kMIEVJYVMfK9x
+         8HlT7ilNnztSPho8P5T+BpWpbq5qIxQOHgRfgo/0U1VpHbR5IcvyIFaWQjrv1GLF46ba
+         ArAg==
+X-Gm-Message-State: APjAAAVypWpEFgHafCh0Mvzv9TWGbAKHO39njZODUdxqanngvKWUXYKW
+        njSUAVCtk9mrAYP2l9NGmKZjEeD4hOwgV54ksIU=
+X-Google-Smtp-Source: APXvYqxYvHXQjj3nxnwa8FYn66nKlRY69aGEXxyFBuEfXNzyt7zIFpEnsN09uAqv+7c0vjuzjmibcFvkSNUtCulAfYs=
+X-Received: by 2002:a17:906:4dd5:: with SMTP id f21mr21480540ejw.203.1574423793266;
+ Fri, 22 Nov 2019 03:56:33 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
- <20191121194942.GY11621@lahna.fi.intel.com> <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
- <20191122103637.GA11621@lahna.fi.intel.com> <CAJZ5v0gifnGZcKr6mgc6C2EfqX13OyJnOac0uDxYNKN=A0cgMg@mail.gmail.com>
- <CACO55tsN_B4Apk1sgMipU5FHRJ1vSPm8HdonrKxqm8Uuo9=6rQ@mail.gmail.com>
-In-Reply-To: <CACO55tsN_B4Apk1sgMipU5FHRJ1vSPm8HdonrKxqm8Uuo9=6rQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 22 Nov 2019 12:54:26 +0100
-Message-ID: <CAJZ5v0igbrDecX=KEfNGKMhAdM=DtDK9D=+VbeHJqWRtUE672w@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
+References: <20191121162520.10120-1-marco.franchi@nxp.com> <20191121162520.10120-2-marco.franchi@nxp.com>
+ <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
+In-Reply-To: <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
+From:   Marco Franchi <marcofrk@gmail.com>
+Date:   Fri, 22 Nov 2019 08:56:22 -0300
+Message-ID: <CAM4PwSWJYrN=xSWNiwxHYS9XMWJFmnpAByVhsOV75kBBF4M3Xg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: freescale: add initial support for
+ Google i.MX 8MQ Phanbell
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Marco Antonio Franchi <marco.franchi@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "atv@google.com" <atv@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 12:34 PM Karol Herbst <kherbst@redhat.com> wrote:
+Hi Fabio,
+
+Em qui., 21 de nov. de 2019 =C3=A0s 15:22, Fabio Estevam
+<festevam@gmail.com> escreveu:
 >
-> On Fri, Nov 22, 2019 at 12:30 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-
-[cut]
-
-> >
+> Hi Marco,
 >
-> the issue is not AML related at all as I am able to reproduce this
-> issue without having to invoke any of that at all, I just need to poke
-> into the PCI register directly to cut the power.
+> On Thu, Nov 21, 2019 at 1:25 PM Marco Antonio Franchi
+> <marco.franchi@nxp.com> wrote:
+> >
+> > This patch adds the device tree to support Google Coral Edge TPU,
+> > historicaly named as fsl-imx8mq-phanbell, a computer on module
+> > which can be used for AI/ML propose.
+> >
+> > It introduces a minimal enablement support for this module and
+> > was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
+>
+> Please remove the "totally based on the NXP i.MX 8MQ EVK board" as
+> they are different boards.
+>
+> > +       memory@40000000 {
+> > +               device_type =3D "memory";
+> > +               reg =3D <0x00000000 0x40000000 0 0xc0000000>;
+>
+> The memory size here does not match with the one used in the Google repo.
+Thanks.
+>
+> With these changes you can add:
+>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Ok, I will add it at the v3.
 
-Since the register is not documented, you don't actually know what
-exactly happens when it is written to.
-
-You basically are saying something like "if I write a specific value
-to an undocumented register, that makes things fail".  And yes,
-writing things to undocumented registers is likely to cause failure to
-happen, in general.
-
-The point is that the kernel will never write into this register by itself.
-
-> The register is not documented, but effectively what the AML code is writing to as well.
-
-So that AML code is problematic.  It expects the write to do something
-useful, but that's not the case.  Without the AML, the register would
-not have been written to at all.
-
-> Of course it might also be that the code I was testing it was doing
-> things in a non conformant way and I just hit a different issue as
-> well, but in the end I don't think that the AML code is the root cause
-> of all of that.
-
-If AML is not involved at all, things work.  You've just said so in
-another message in this thread, quoting verbatim:
-
-"yes. In my previous testing I was poking into the PCI registers of the
-bridge controller and the GPU directly and that never caused any
-issues as long as I limited it to putting the devices into D3hot."
-
-You cannot claim a hardware bug just because a write to an
-undocumented register from AML causes things to break.
-
-First, that may be a bug in the AML (which is not unheard of).
-Second, and that is more likely, the expectations of the AML code may
-not be met at the time it is run.
-
-Assuming the latter, the root cause is really that the kernel executes
-the AML in a hardware configuration in which the expectations of that
-AML are not met.
-
-We are now trying to understand what those expectations may be and so
-how to cause them to be met.
-
-Your observation that the issue can be avoided if the GPU is not put
-into D3hot by a PMCSR write is a step in that direction and it is a
-good finding.  The information from Mika based on the ASL analysis is
-helpful too.  Let's not jump to premature conclusions too quickly,
-though.
+Best regards,
+Marco
