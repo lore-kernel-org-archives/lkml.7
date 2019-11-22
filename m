@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0412AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D59BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FEF2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D7A20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402608;
-	bh=jBC81i7U8izKqPJ1jAPMmeyW0nekulh1PNMe8Er95Kk=;
+	s=default; t=1574402612;
+	bh=XKvP91xaYDgsGCqTwJbf8sn1B9eY8HzqLn3yToE3lcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Npv22aPHYlttgpntT2YvdqXVtwmYGiE2wIhcuDbrCJDygEVdiaEFfLLL02wagmhT0
-	 ApI50WzwlwSzPLmcT7xeZ0X+yffR5vKMJ0F1J1E/YOYI2aw3/itD9T9V9t5fl47MMz
-	 NANCDTBmtBuPIQ4lOq/JJbl3mXnBUB12+A9Z4qdM=
+	b=038sClz78srL9dWoW2VmpLykgjy8gKxlz7tt91DMhtdIE6E6rHHFUs/nxRUkWK2XW
+	 hvHEsSM77Pz6qMhAAyoIFPmGHEvXNGLtWa2uo1VT4aiI1ZiD333gEVlMz18doZZEbq
+	 dBmo5p7wrL2cxHOfsj96tlD6MjITJbngRpDPzutQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbfKVGDI (ORCPT
+        id S1727022AbfKVGDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:03:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:03:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbfKVGDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:03:00 -0500
+        id S1729859AbfKVGDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:03:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA3920731;
-        Fri, 22 Nov 2019 06:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2E702068E;
+        Fri, 22 Nov 2019 06:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402579;
-        bh=jBC81i7U8izKqPJ1jAPMmeyW0nekulh1PNMe8Er95Kk=;
+        s=default; t=1574402587;
+        bh=XKvP91xaYDgsGCqTwJbf8sn1B9eY8HzqLn3yToE3lcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FouLo2hokIeVUz11Ln6JUIc8QHOyzqlp9/lHaQJOYPintWJ7o4pdu5EjGmMFaeK1u
-         o8xQL70yX1F6H4HzCqLaUhQMbVOzqjo1jmQY4Iq/7symDGNoMULGbet+Bv1C5tKqW/
-         9uPXyFDE3fNM1OpMFMjfwxTfJbuRAfYl/91yUy0I=
+        b=CuYeOcwUaXo2T4LOwB+DAVCcxDdxZDWy8nXs/wEaDHpQ7F0VeJMi711tL3NiHw9+d
+         9doEwepQg/Rwcfy8vNW1pjqZURC5y+mdcxQRngMBnTB63munexv1q3AqRU5+ZC6qOH
+         plrVR4IQFobe6OAUqDlfN+eevQ8DuyqCEf7rRsMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
-        Ying Xue <ying.xue@windriver.com>,
-        Jon Maloy <maloy@donjonn.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 81/91] tipc: fix skb may be leaky in tipc_link_input
-Date:   Fri, 22 Nov 2019 01:01:19 -0500
-Message-Id: <20191122060129.4239-80-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 88/91] ACPI / APEI: Switch estatus pool to use vmalloc memory
+Date:   Fri, 22 Nov 2019 01:01:26 -0500
+Message-Id: <20191122060129.4239-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -62,46 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoang Le <hoang.h.le@dektech.com.au>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 7384b538d3aed2ed49d3575483d17aeee790fb06 ]
+[ Upstream commit 0ac234be1a9497498e57d958f4251f5257b116b4 ]
 
-When we free skb at tipc_data_input, we return a 'false' boolean.
-Then, skb passed to subcalling tipc_link_input in tipc_link_rcv,
+The ghes code is careful to parse and round firmware's advertised
+memory requirements for CPER records, up to a maximum of 64K.
+However when ghes_estatus_pool_expand() does its work, it splits
+the requested size into PAGE_SIZE granules.
 
-<snip>
-1303 int tipc_link_rcv:
-...
-1354    if (!tipc_data_input(l, skb, l->inputq))
-1355        rc |= tipc_link_input(l, skb, l->inputq);
-</snip>
+This means if firmware generates 5K of CPER records, and correctly
+describes this in the table, __process_error() will silently fail as it
+is unable to allocate more than PAGE_SIZE.
 
-Fix it by simple changing to a 'true' boolean when skb is being free-ed.
-Then, tipc_link_rcv will bypassed to subcalling tipc_link_input as above
-condition.
+Switch the estatus pool to vmalloc() memory. On x86 vmalloc() memory
+may fault and be fixed up by vmalloc_fault(). To prevent this call
+vmalloc_sync_all() before an NMI handler could discover the memory.
 
-Acked-by: Ying Xue <ying.xue@windriver.com>
-Acked-by: Jon Maloy <maloy@donjonn.com>
-Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/link.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/apei/ghes.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index 4e8647aef01c1..c7406c1fdc14b 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -1063,7 +1063,7 @@ static bool tipc_data_input(struct tipc_link *l, struct sk_buff *skb,
- 	default:
- 		pr_warn("Dropping received illegal msg type\n");
- 		kfree_skb(skb);
--		return false;
-+		return true;
- 	};
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 0375c60240621..a6e3c8dc2be4e 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -203,40 +203,40 @@ static int ghes_estatus_pool_init(void)
+ 	return 0;
  }
  
+-static void ghes_estatus_pool_free_chunk_page(struct gen_pool *pool,
++static void ghes_estatus_pool_free_chunk(struct gen_pool *pool,
+ 					      struct gen_pool_chunk *chunk,
+ 					      void *data)
+ {
+-	free_page(chunk->start_addr);
++	vfree((void *)chunk->start_addr);
+ }
+ 
+ static void ghes_estatus_pool_exit(void)
+ {
+ 	gen_pool_for_each_chunk(ghes_estatus_pool,
+-				ghes_estatus_pool_free_chunk_page, NULL);
++				ghes_estatus_pool_free_chunk, NULL);
+ 	gen_pool_destroy(ghes_estatus_pool);
+ }
+ 
+ static int ghes_estatus_pool_expand(unsigned long len)
+ {
+-	unsigned long i, pages, size, addr;
+-	int ret;
++	unsigned long size, addr;
+ 
+ 	ghes_estatus_pool_size_request += PAGE_ALIGN(len);
+ 	size = gen_pool_size(ghes_estatus_pool);
+ 	if (size >= ghes_estatus_pool_size_request)
+ 		return 0;
+-	pages = (ghes_estatus_pool_size_request - size) / PAGE_SIZE;
+-	for (i = 0; i < pages; i++) {
+-		addr = __get_free_page(GFP_KERNEL);
+-		if (!addr)
+-			return -ENOMEM;
+-		ret = gen_pool_add(ghes_estatus_pool, addr, PAGE_SIZE, -1);
+-		if (ret)
+-			return ret;
+-	}
+ 
+-	return 0;
++	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
++	if (!addr)
++		return -ENOMEM;
++
++	/*
++	 * New allocation must be visible in all pgd before it can be found by
++	 * an NMI allocating from the pool.
++	 */
++	vmalloc_sync_all();
++
++	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ }
+ 
+ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
 -- 
 2.20.1
 
