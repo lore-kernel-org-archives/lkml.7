@@ -2,96 +2,124 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A37C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0B920674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574413639;
-	bh=40cp6sbp1LXK6FgVw9DtfWmsQFXcIol/9unXXqPvBWE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HMH6y70O8ePXtp5q/FMArJzAO6NgwhJLtnLYzcUsIbDszowg0nj3QNx/pM2IzB6Vt
-	 ahPHniU68h841Jk5kNxcaLQYJa6KUZU2tbPFKpVQnJKzNS4c9D+0A9EAG93hsAdjd5
-	 LCPBUlNBWRzJMU0iYsNc/fzgEoVimveiGTlSAgDs=
+	by mail.kernel.org (Postfix) with ESMTP id 988E020714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t13lqmTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfKVJHR (ORCPT
+        id S1726869AbfKVJHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 04:07:17 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44512 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfKVJHR (ORCPT
+        Fri, 22 Nov 2019 04:07:43 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:38460 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfKVJHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 04:07:17 -0500
-Received: by mail-ot1-f68.google.com with SMTP id c19so5533675otr.11;
-        Fri, 22 Nov 2019 01:07:16 -0800 (PST)
+        Fri, 22 Nov 2019 04:07:43 -0500
+Received: by mail-qv1-f68.google.com with SMTP id q19so2581962qvs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 01:07:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ljr/rHZhX2cKSZOMtdFMLeDFfDK4qscTIQX92Z+51jk=;
+        b=t13lqmTwW8+/JGno5Gk07nvJjaKYrR5f5FQtDf/FQuBJNqezdlfd+R1Lqo6u2sCE9o
+         4CJ6U0irpU617kY74B7xZ6MfT4NFdXzJ5Aw0EUiuSfdsL3YYJiaqDkPZQkqFln3hAr+6
+         lCgiZ22CmSJ/IT4/cyPr5v1VE9JpkXewlPyu9Z4PtyeC27Bg7NP5nCRuFrXFM+4vDjN+
+         lYMhfaePSyn/RK2K5o9jQh5HNsh/GLlmWGIHSm+zRNzhE/Tp5DvutMQPpakvtVzRP8/y
+         tiF5wJv8sZCez+gaEocICDbNCXycofg3bfXYVDBPpEZ2vY+nhsQQCvPB3ztg0MX3tLjk
+         808A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=40cp6sbp1LXK6FgVw9DtfWmsQFXcIol/9unXXqPvBWE=;
-        b=P8pegOdZpnZNV2y/Wo/3oFCP9BS211Sn13jJFDja3JjXIaa+dlwg0ThbbjQD85K1Za
-         Qo48Kpsby1SCmcrCKNsiFECZc8JdgZyfMqmhY+Qj3HD8tKdGWz23in2SQFwIUyng3uP5
-         Y4HHYETMG7kMppt4l5lNhce/PCMMG05bsp0+pXU1bHvHAOW0g7jgR3v8lfk9F0ww5Okz
-         7kxT8hZ2rWoru0dVigvCO4RFHEruUGY81QrbXSuRpBa5bklGFLBe8Qk4dfGz0RYPtU9W
-         Agj3QtzWAyn/M9Z3bckWolQlh2kim6Eha3Bcz8+1zNLLTt1l0Zbi7m1WPtK/xxKCdS1C
-         td7Q==
-X-Gm-Message-State: APjAAAXXDyF1ANYAC0Ru/NWogBFaYzImmA5B+uJLTQ8cZiiPrDXZ8pNt
-        5aiHJPnfYxCiZV62BbgLBdUlXlgz7PQmd8RCwkV0gZcc
-X-Google-Smtp-Source: APXvYqzd0eIxmN800CobU7Ca6/eY+fxOdyQYM0rOLFzFsNXb7tETIPDcTZ5muyZROiFWKVaDqLPhAwIk5Kw3TbBmlQw=
-X-Received: by 2002:a9d:7d01:: with SMTP id v1mr9451324otn.167.1574413636386;
- Fri, 22 Nov 2019 01:07:16 -0800 (PST)
+        bh=Ljr/rHZhX2cKSZOMtdFMLeDFfDK4qscTIQX92Z+51jk=;
+        b=fls7ibdZECvQfpGdhDafzJKdQz/aXc1ctNZ5W/jfZbgRVCCDwRTDTvtOpdhaZJlTOS
+         BrKr2cYWMObioLYXDMb15wCOC+bvlbuVrb4JGQz3Sf2tvm3MNDoChAMByVTZ7Qq2XVV1
+         B7jDH3ERDnG9BOCsgP9hVLmhY6j2kDG1PRzSTfCLeiTKhdt810X6YrXZYbA+GBUpOwQa
+         /6AO/LKm2pLYgaXvUJ2lfNYNrHkfcaC/5XDq5h+jDXROCvI3EczdnjMQqH4INcZNEukE
+         Mgq0W6bhE/nk+WjObZHK6mM4Ujf9ctFn2m+nvWzhnwr945NwoCwP+g/mBDlgnis+GVET
+         Fojw==
+X-Gm-Message-State: APjAAAX2eh97Sk3bSfL+uiy/6/2pGVeohNCyE1GU8Vh0nDI2UP5c5JU7
+        KOdH9hNgZtRqpNgzV/Wfi3gkleYFfA3L+id2/1Ijtg==
+X-Google-Smtp-Source: APXvYqyuNa94PLnoPGiyrEBNkcWkeo4IQevYwXNAy+9m/OTWblAYAJgbB28j4btr7t9cSrDA+LBcxyqV3jdSyfW0U6o=
+X-Received: by 2002:a0c:b446:: with SMTP id e6mr12863287qvf.159.1574413661601;
+ Fri, 22 Nov 2019 01:07:41 -0800 (PST)
 MIME-Version: 1.0
-References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
- <20191121194942.GY11621@lahna.fi.intel.com> <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
- <CACO55tvFeTFo3gGdL02gnWMMk+AHPPb=hntkre0ZcA6WvKcV1A@mail.gmail.com> <CACO55tvkQyYYnCs71_nJuNFm4f8kkvBqje8WeZGph7X+2zO3aA@mail.gmail.com>
-In-Reply-To: <CACO55tvkQyYYnCs71_nJuNFm4f8kkvBqje8WeZGph7X+2zO3aA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 22 Nov 2019 10:07:04 +0100
-Message-ID: <CAJZ5v0jNq77xPXxeYeq_JJBCfekVPVPOye1mZwpQi=+=MKSS7w@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+References: <20191121181519.28637-1-keescook@chromium.org>
+In-Reply-To: <20191121181519.28637-1-keescook@chromium.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 22 Nov 2019 10:07:29 +0100
+Message-ID: <CACT4Y+b3JZM=TSvUPZRMiJEPNH69otidRCqq9gmKX53UHxYqLg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] ubsan: Split out bounds checker
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
+        kernel-hardening@lists.openwall.com,
+        syzkaller <syzkaller@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 1:13 AM Karol Herbst <kherbst@redhat.com> wrote:
+On Thu, Nov 21, 2019 at 7:15 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> so while trying to test with d3cold disabled, I noticed that I run
-> into the exact same error.
+> v2:
+>     - clarify Kconfig help text (aryabinin)
+>     - add reviewed-by
+>     - aim series at akpm, which seems to be where ubsan goes through?
+> v1: https://lore.kernel.org/lkml/20191120010636.27368-1-keescook@chromium.org
+>
+> This splits out the bounds checker so it can be individually used. This
+> is expected to be enabled in Android and hopefully for syzbot. Includes
+> LKDTM tests for behavioral corner-cases (beyond just the bounds checker).
+>
+> -Kees
 
-Does this mean that you disabled d3cold on the GPU via sysfs (the
-"d3cold_allowed" attribute was 0) and the original problem still
-occurred in that configuration?
++syzkaller mailing list
 
-> And I verified that the
-> \_SB.PCI0.PEG0.PG00._STA returns 1, which indicates it should still be
-> turned on.
+This is great!
 
-I don't really understand this comment, so can you explain it a bit to
-me, please?
+I wanted to enable UBSAN on syzbot for a long time. And it's
+_probably_ not lots of work. But it was stuck on somebody actually
+dedicating some time specifically for it.
+Kees, or anybody else interested, could you provide relevant configs
+that (1) useful for kernel, (2) we want 100% cleanliness, (3) don't
+fire all the time even without fuzzing? Anything else required to
+enable UBSAN? I don't see anything. syzbot uses gcc 8.something, which
+I assume should be enough (but we can upgrade if necessary).
+
+
+
+> Kees Cook (3):
+>   ubsan: Add trap instrumentation option
+>   ubsan: Split "bounds" checker from other options
+>   lkdtm/bugs: Add arithmetic overflow and array bounds checks
+>
+>  drivers/misc/lkdtm/bugs.c  | 75 ++++++++++++++++++++++++++++++++++++++
+>  drivers/misc/lkdtm/core.c  |  3 ++
+>  drivers/misc/lkdtm/lkdtm.h |  3 ++
+>  lib/Kconfig.ubsan          | 42 +++++++++++++++++++--
+>  lib/Makefile               |  2 +
+>  scripts/Makefile.ubsan     | 16 ++++++--
+>  6 files changed, 134 insertions(+), 7 deletions(-)
+>
+> --
+> 2.17.1
