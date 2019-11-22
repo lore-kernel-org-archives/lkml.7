@@ -2,290 +2,133 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32831C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7FAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81F620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283572071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574453365;
+	bh=sUU5ZHY5o7dMVF1G7nOuopKx1TMsfFOufwaWDvxep14=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=njSp0R7AXecck3MeZngiFKkZI4hZK7l4eEyPg76xSZLnll0v4DrRFMHStUAsiKx9+
+	 /u2BUOyz/5dDc2qMgNYPuZGKA8M0xS6KJFpHBZUyF2hHplpDt0hJ6zk0t38GBve/pq
+	 bgmRZU3Kmb7fO5Uwg4pnBZYCOULVpK0q/a2p02WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfKVUF2 convert rfc822-to-8bit (ORCPT
+        id S1727235AbfKVUJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:05:28 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50507 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKVUF1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:05:27 -0500
-X-Originating-IP: 93.23.248.230
-Received: from xps13 (230.248.23.93.rev.sfr.net [93.23.248.230])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id EE5C61C0006;
-        Fri, 22 Nov 2019 20:05:21 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 21:05:20 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] mtd: Changes for 5.5
-Message-ID: <20191122210520.3f714435@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 22 Nov 2019 15:09:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726568AbfKVUJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 15:09:24 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B9AF2068F;
+        Fri, 22 Nov 2019 20:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574453362;
+        bh=sUU5ZHY5o7dMVF1G7nOuopKx1TMsfFOufwaWDvxep14=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p3AersLtERcCiWgiHG0s79dPmiHB2nPQF2Ibr+jLXXalGxmxpLAOkIqWFUzaMh813
+         HI7a/gu38NO7AIXzEzt0eQETT1sfw7VdV6Mix+D1IQLAbfE2ZruFEtUKCk5PIgqQYD
+         AZ9VfK5k9//yIe3EcYAI2HUXUC0IBnTKvYAVPgp0=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Ramon Pantin <pantin@google.com>
+Subject: [PATCH 1/2] f2fs: expose main_blkaddr in sysfs
+Date:   Fri, 22 Nov 2019 12:09:19 -0800
+Message-Id: <20191122200920.83941-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+Expose in /sys/fs/f2fs/<blockdev>/main_blkaddr the block address where the
+main area starts. This allows user mode programs to determine:
 
-This is the MTD PR for 5.5.
+- That pinned files that are made exclusively of fully allocated 2MB
+  segments will never be unpinned by the file system.
 
-Thanks,
-Miquèl
+- Where the main area starts. This is required by programs that want to
+  verify if a file is made exclusively of 2MB f2fs segments, the alignment
+  boundary for segments starts at this address. Testing for 2MB alignment
+  relative to the start of the device is incorrect, because for some
+  filesystems main_blkaddr is not at a 2MB boundary relative to the start
+  of the device.
 
+The entry will be used when validating reliable pinning file feature proposed
+by "f2fs: support aligned pinned file".
 
-The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
+Signed-off-by: Ramon Pantin <pantin@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ Documentation/ABI/testing/sysfs-fs-f2fs | 6 ++++++
+ Documentation/filesystems/f2fs.txt      | 3 +++
+ fs/f2fs/sysfs.c                         | 2 ++
+ 3 files changed, 11 insertions(+)
 
-  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
+diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+index 7ab2b1b5e255..aedeae1e8ec1 100644
+--- a/Documentation/ABI/testing/sysfs-fs-f2fs
++++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+@@ -31,6 +31,12 @@ Contact:	"Jaegeuk Kim" <jaegeuk.kim@samsung.com>
+ Description:
+ 		 Controls the issue rate of segment discard commands.
+ 
++What:		/sys/fs/f2fs/<disk>/max_blkaddr
++Date:		November 2019
++Contact:	"Ramon Pantin" <pantin@google.com>
++Description:
++		 Shows first block address of MAIN area.
++
+ What:		/sys/fs/f2fs/<disk>/ipu_policy
+ Date:		November 2013
+ Contact:	"Jaegeuk Kim" <jaegeuk.kim@samsung.com>
+diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+index 29020af0cff9..3135b80df6da 100644
+--- a/Documentation/filesystems/f2fs.txt
++++ b/Documentation/filesystems/f2fs.txt
+@@ -297,6 +297,9 @@ Files in /sys/fs/f2fs/<devname>
+ 			      reclaim the prefree segments to free segments.
+ 			      By default, 5% over total # of segments.
+ 
++ main_blkaddr                 This value gives the first block address of
++			      MAIN area in the partition.
++
+  max_small_discards	      This parameter controls the number of discard
+ 			      commands that consist small blocks less than 2MB.
+ 			      The candidates to be discarded are cached until
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index f164959e4224..70945ceb9c0c 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -445,6 +445,7 @@ F2FS_RW_ATTR(GC_THREAD, f2fs_gc_kthread, gc_no_gc_sleep_time, no_gc_sleep_time);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_idle, gc_mode);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_urgent, gc_mode);
+ F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, reclaim_segments, rec_prefree_segments);
++F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, main_blkaddr, main_blkaddr);
+ F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, max_small_discards, max_discards);
+ F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_granularity, discard_granularity);
+ F2FS_RW_ATTR(RESERVED_BLOCKS, f2fs_sb_info, reserved_blocks, reserved_blocks);
+@@ -512,6 +513,7 @@ static struct attribute *f2fs_attrs[] = {
+ 	ATTR_LIST(gc_idle),
+ 	ATTR_LIST(gc_urgent),
+ 	ATTR_LIST(reclaim_segments),
++	ATTR_LIST(main_blkaddr),
+ 	ATTR_LIST(max_small_discards),
+ 	ATTR_LIST(discard_granularity),
+ 	ATTR_LIST(batched_trim_sections),
+-- 
+2.19.0.605.g01d371f741-goog
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.5
-
-for you to fetch changes up to 589e1b6c47ce72fcae103c2e45d899610c92c11e:
-
-  Merge tag 'nand/for-5.5' into mtd/next (2019-11-17 18:34:25 +0100)
-
-----------------------------------------------------------------
-MTD core:
-* Dropped inactive maintainers, updated the repositories and added the IRC
-  channel.
-* Debugfs functions improvements.
-* Initialized of more structure parameters.
-* Misc fixes reported by robots.
-
-MTD devices:
-* spear_smi: Fixed Write Burst mode
-* New Intel IXP4xx flash probing hook.
-
-Raw NAND core:
-* Useless extra checks dropped.
-* Updated the detection of the bad block markers position
-
-Raw NAND controller drivers:
-* Cadence : New driver
-* Brcmnand: Support for flash-dma v0 + fixes
-* Denali : Support for the legacy controller/chip DT representation
-           dropped
-* Superfluous dev_err() calls removed
-
-SPI NOR core changes:
-* introduce 'struct spi_nor_controller_ops',
-* clean the Register Operations methods,
-* use dev_dbg insted of dev_err for low level info,
-* fix retlen handling in sst_write(),
-* fix silent truncations in spi_nor_read and spi_nor_read_raw(),
-* fix the clearing of QE bit on lock()/unlock(),
-* rework the disabling of the block write protection,
-* rework the Quad Enable methods,
-* make sure nor->spimem and nor->controller_ops are mutually exclusive,
-* set default Quad Enable method for ISSI flashes,
-* add support for few flashes.
-
-SPI NOR controller drivers changes:
-* intel-spi:
-  - support chips without software sequencer,
-  - add support for Intel Cannon Lake and Intel Comet Lake-H flashes.
-
-CFI core changes:
-* Code cleanups related useless initializers and coding style issues
-* Fix for a possible double free problem in cfi_cmdset_0002
-* Improved error reporting and handling in cfi_cmdset_0002 core for HyperFlash
-
-----------------------------------------------------------------
-Angelo Dureghello (1):
-      mtd: devices: fix mchp23k256 read and write
-
-Bartosz Golaszewski (1):
-      mtd: st_spi_fsm: remove unused field from struct stfsm
-
-Boris Brezillon (1):
-      MAINTAINERS: Add the IRC channel to the MTD entry
-
-DENG Qingfang (1):
-      mtd: spi-nor: add support for en25qh16
-
-Florian Fainelli (1):
-      mtd: rawnand: brcmnand: Fix NULL pointer assignment
-
-Fuqian Huang (1):
-      mtd: maps: l440gx: Avoid printing address to dmesg
-
-Greg Kroah-Hartman (1):
-      mtd: no need to check return value of debugfs_create functions
-
-Hou Tao (1):
-      mtd: cfi_cmdset_0002: don't free cfi->cfiq in error path of cfi_amdstd_setup()
-
-Jethro Beekman (2):
-      mtd: spi-nor: intel-spi: support chips without software sequencer
-      mtd: spi-nor: intel-spi: add support for Intel Cannon Lake SPI flash
-
-Kamal Dasu (1):
-      mtd: nand: brcmnand: Add support for flash-dma v0
-
-Linus Walleij (2):
-      mtd: add DT bindings for the Intel IXP4xx Flash
-      mtd: physmap_of: add a hook for Intel IXP4xx flash probing
-
-Manivannan Sadhasivam (1):
-      mtd: spi-nor: Add support for w25q256jw
-
-Marek Vasut (1):
-      mtd: Remove myself from MAINTAINERS
-
-Masahiro Yamada (1):
-      mtd: rawnand: denali: remove the old unified controller/chip DT support
-
-Mika Westerberg (1):
-      mtd: spi-nor: intel-spi: Add support for Intel Comet Lake-H SPI serial flash
-
-Miquel Raynal (7):
-      mtd: Initialize all parameters of mtd_oob_ops
-      MAINTAINERS: mtd/ubi/ubifs: Remove inactive maintainers
-      mtd: spear_smi: Fix Write Burst mode
-      MAINTAINERS: ubi/ubifs: Update the Git repository
-      Merge CFI/Hyperbus tag 'for-v5.5-rc1' into mtd/next
-      Merge tag 'spi-nor/for-5.5' into mtd/next
-      Merge tag 'nand/for-5.5' into mtd/next
-
-Piotr Sroka (4):
-      mtd: rawnand: Change calculating of position page containing BBM
-      mtd: rawnand: Add new Cadence NAND driver to MTD subsystem
-      dt-bindings: mtd: Add Cadence NAND controller driver
-      mtd: rawnand: remove unecessary checking if dmac is NULL
-
-Sagar Shrikant Kadam (2):
-      mtd: spi-nor: Add support for is25wp256
-      mtd: spi-nor: Set default Quad Enable method for ISSI flashes
-
-Sergei Shtylyov (6):
-      mtd: spi-nor: fix silent truncation in spi_nor_read()
-      mtd: spi-nor: fix silent truncation in spi_nor_read_raw()
-      mtd: cfi_util: use DIV_ROUND_UP() in cfi_udelay()
-      mtd: cfi_cmdset_*: kill useless 'ret' variable initializers
-      mtd: cfi_cmdset_0002: only check errors when ready in cfi_check_err_status()
-      mtd: cfi_cmdset_0002: fix delayed error detection on HyperFlash
-
-Stephen Boyd (1):
-      mtd: Remove dev_err() usage after platform_get_irq()
-
-Tudor Ambarus (36):
-      mtd: spi-nor: hisi-sfc: Drop nor->erase NULL assignment
-      mtd: spi-nor: Introduce 'struct spi_nor_controller_ops'
-      mtd: spi-nor: cadence-quadspi: Fix cqspi_command_read() definition
-      mtd: spi-nor: Prepend spi_nor_ to all Reg Ops methods
-      mtd: spi-nor: Drop duplicated new line
-      mtd: spi-nor: Group all Reg Ops to avoid forward declarations
-      mtd: spi-nor: Stop compare with negative in Reg Ops methods
-      mtd: spi-nor: Drop explicit cast to int to already int value
-      mtd: spi-nor: Don't overwrite errno from Reg Ops
-      mtd: spi-nor: Pointer parameter for SR in spi_nor_read_sr()
-      mtd: spi-nor: Pointer parameter for FSR in spi_nor_read_fsr()
-      mtd: spi-nor: Pointer parameter for CR in spi_nor_read_cr()
-      mtd: spi-nor: Drop redundant error reports in Reg Ops callers
-      mtd: spi-nor: Fix retlen handling in sst_write()
-      mtd: spi-nor: Constify data to write to the Status Register
-      mtd: spi-nor: Print device info in case of error
-      mtd: spi-nor: Use dev_dbg insted of dev_err for low level info
-      mtd: spi-nor: Print debug info inside Reg Ops methods
-      mtd: spi-nor: Check for errors after each Register Operation
-      mtd: spi-nor: Rename label as it is no longer generic
-      mtd: spi-nor: Void return type for spi_nor_clear_sr/fsr()
-      mtd: spi-nor: Move the WE and wait calls inside Write SR methods
-      mtd: spi-nor: Merge spi_nor_write_sr() and spi_nor_write_sr_cr()
-      mtd: spi-nor: Describe all the Reg Ops
-      mtd: spi-nor: Drop spansion_quad_enable()
-      mtd: spi-nor: Fix errno on Quad Enable methods
-      mtd: spi-nor: Check all the bits written, not just the BP ones
-      mtd: spi-nor: Print debug message when the read back test fails
-      mtd: spi-nor: Fix clearing of QE bit on lock()/unlock()
-      mtd: spi-nor: Rework the disabling of block write protection
-      mtd: spi-nor: Extend the SR Read Back test
-      mtd: spi-nor: Rename CR_QUAD_EN_SPAN to SR2_QUAD_EN_BIT1
-      mtd: spi-nor: Merge spansion Quad Enable methods
-      mtd: spi-nor: Rename Quad Enable methods
-      mtd: spi-nor: Make sure nor->spimem and nor->controller_ops are mutually exclusive
-      mtd: spi-nor: Move condition to avoid a NULL check
-
-YueHaibing (2):
-      mtd: rawnand: mxic: Remove dev_err() on platform_get_irq() failure
-      mtd: rawnand: cadence: Remove dev_err() on platform_get_irq() failure
-
-zhengbin (1):
-      mtd: spear_smi: remove set but not used variable 'flash_info'
-
- Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt |   53 ++
- Documentation/devicetree/bindings/mtd/intel,ixp4xx-flash.txt      |   22 +
- MAINTAINERS                                                       |   21 +-
- drivers/mtd/chips/cfi_cmdset_0001.c                               |   10 +-
- drivers/mtd/chips/cfi_cmdset_0002.c                               |   79 +-
- drivers/mtd/chips/cfi_cmdset_0020.c                               |    8 +-
- drivers/mtd/chips/cfi_util.c                                      |    2 +-
- drivers/mtd/devices/mchp23k256.c                                  |   20 +-
- drivers/mtd/devices/spear_smi.c                                   |   42 +-
- drivers/mtd/devices/st_spi_fsm.c                                  |    1 -
- drivers/mtd/maps/Kconfig                                          |   11 +
- drivers/mtd/maps/Makefile                                         |    1 +
- drivers/mtd/maps/l440gx.c                                         |    2 +-
- drivers/mtd/maps/physmap-core.c                                   |    5 +
- drivers/mtd/maps/physmap-ixp4xx.c                                 |  132 +++
- drivers/mtd/maps/physmap-ixp4xx.h                                 |   17 +
- drivers/mtd/mtdchar.c                                             |   10 +-
- drivers/mtd/mtdcore.c                                             |   26 +-
- drivers/mtd/mtdswap.c                                             |    8 +-
- drivers/mtd/nand/raw/Kconfig                                      |    7 +
- drivers/mtd/nand/raw/Makefile                                     |    1 +
- drivers/mtd/nand/raw/brcmnand/brcmnand.c                          |   23 +-
- drivers/mtd/nand/raw/cadence-nand-controller.c                    | 3030 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/mtd/nand/raw/denali_dt.c                                  |   59 +-
- drivers/mtd/nand/raw/hisi504_nand.c                               |    4 +-
- drivers/mtd/nand/raw/lpc32xx_mlc.c                                |    1 -
- drivers/mtd/nand/raw/marvell_nand.c                               |    4 +-
- drivers/mtd/nand/raw/meson_nand.c                                 |    4 +-
- drivers/mtd/nand/raw/mtk_ecc.c                                    |    4 +-
- drivers/mtd/nand/raw/mtk_nand.c                                   |    1 -
- drivers/mtd/nand/raw/mxic_nand.c                                  |    4 +-
- drivers/mtd/nand/raw/nand_base.c                                  |    8 +-
- drivers/mtd/nand/raw/nand_micron.c                                |    4 +-
- drivers/mtd/nand/raw/omap2.c                                      |    8 +-
- drivers/mtd/nand/raw/sh_flctl.c                                   |    4 +-
- drivers/mtd/nand/raw/stm32_fmc2_nand.c                            |    5 +-
- drivers/mtd/nand/raw/sunxi_nand.c                                 |    4 +-
- drivers/mtd/spi-nor/aspeed-smc.c                                  |   23 +-
- drivers/mtd/spi-nor/cadence-quadspi.c                             |   58 +-
- drivers/mtd/spi-nor/hisi-sfc.c                                    |   23 +-
- drivers/mtd/spi-nor/intel-spi-pci.c                               |    6 +
- drivers/mtd/spi-nor/intel-spi.c                                   |   58 +-
- drivers/mtd/spi-nor/mtk-quadspi.c                                 |   25 +-
- drivers/mtd/spi-nor/nxp-spifi.c                                   |   23 +-
- drivers/mtd/spi-nor/spi-nor.c                                     | 1537 ++++++++++++++++++++---------------
- drivers/mtd/ubi/debug.c                                           |  111 +--
- include/linux/mtd/spi-nor.h                                       |   64 +-
- include/linux/platform_data/intel-spi.h                           |    1 +
- 48 files changed, 4538 insertions(+), 1036 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/intel,ixp4xx-flash.txt
- create mode 100644 drivers/mtd/maps/physmap-ixp4xx.c
- create mode 100644 drivers/mtd/maps/physmap-ixp4xx.h
- create mode 100644 drivers/mtd/nand/raw/cadence-nand-controller.c
