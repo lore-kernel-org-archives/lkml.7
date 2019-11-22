@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE20A20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FB420637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419297;
-	bh=v1prjkhELBhwKJpCCsadHkv68GhTa67gCjrparn07S0=;
+	s=default; t=1574419301;
+	bh=7t+zd6ApZDLHyDBXxaHnsvqdU5V0/DfKsl898ThufDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKuXP4Dm5muDCMBsjGTn5EQxZBU27YiP4a7s1WphcuZ5+5cALIuuyFzXmAU2Wdfzc
-	 +vDOCjNb3k9r0rZAwNx+Xv1A0IAHzKeBPtcaWC49s9k/WlpYwO2lgjmgVAfEALt6Rn
-	 r6s+g+9In9dk91IFDg3ACTgBEwyNkKBJ+qAMOR9M=
+	b=qs6lUtmiTrQ4Lyy1yeqnFGddNfyk7jAHpA5lgklmqzg4pWhdcCCPqPCc99nfferwX
+	 E5ssACmc5/LU4kBL8sxH8veom8ra5KFFGVaXW6LRB7CiYD8TGgjdLSRedVmxSmW55Z
+	 QFVNU7N5e936TglWnuL40yDrgQHd52L5CknArJgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfKVKlg (ORCPT
+        id S1727835AbfKVKlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:41:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46178 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:41:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfKVKlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:35 -0500
+        id S1727107AbfKVKlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C09220637;
-        Fri, 22 Nov 2019 10:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A417C20637;
+        Fri, 22 Nov 2019 10:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419294;
-        bh=v1prjkhELBhwKJpCCsadHkv68GhTa67gCjrparn07S0=;
+        s=default; t=1574419297;
+        bh=7t+zd6ApZDLHyDBXxaHnsvqdU5V0/DfKsl898ThufDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9mT53RiOiKR4tQRBGHu6brsOHF2UrgUEcSo5/qBljnsGt38kzJt5SmsETgRlyHe3
-         hoM+d4HZM/TPVr8/BZmltGAHxA6kzDOxmsTD8/QTGPQkvZ5WepSNbmWRj1Ek8HxFmq
-         E3K8veGjysQxDrN9buQ/1a3wyZ/PnIGheMoSl0bc=
+        b=YsE9+aAuhH25peo2UuI0fxv4yM95aFL3GV1cXYQHsUbLRiX5yhYFgeJvJzSXnGxAi
+         sW2matM3XsHdnFVhx5pT3M+pwc75YW3VV3aCHXDtjtcjNFc8cmUpIH08v9qu3sRvPk
+         4jYtqgLrGRu+D3nsSW3uqbu9ms1iKr+u5jqI/FGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        stable@vger.kernel.org, Lao Wei <zrlw@qq.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/222] nvmem: core: return error code instead of NULL from nvmem_device_get
-Date:   Fri, 22 Nov 2019 11:26:41 +0100
-Message-Id: <20191122100859.001421740@linuxfoundation.org>
+Subject: [PATCH 4.9 062/222] media: fix: media: pci: meye: validate offset to avoid arbitrary access
+Date:   Fri, 22 Nov 2019 11:26:42 +0100
+Message-Id: <20191122100859.905517569@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Lao Wei <zrlw@qq.com>
 
-[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
+[ Upstream commit eac7230fdb4672c2cb56f6a01a1744f562c01f80 ]
 
-nvmem_device_get() should return ERR_PTR() on error or valid pointer
-on success, but one of the code path seems to return NULL, so fix it.
+Motion eye video4linux driver for Sony Vaio PictureBook desn't validate user-controlled parameter
+'vma->vm_pgoff', a malicious process might access all of kernel memory from user space by trying
+pass different arbitrary address.
+Discussion: http://www.openwall.com/lists/oss-security/2018/07/06/1
 
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Lao Wei <zrlw@qq.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/core.c | 2 +-
+ drivers/media/pci/meye/meye.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 9ca24e4d5d49c..2a0c5f3b0e509 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -609,7 +609,7 @@ static struct nvmem_device *nvmem_find(const char *name)
- 	d = bus_find_device(&nvmem_bus_type, NULL, (void *)name, nvmem_match);
+diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
+index ba887e8e1b171..a85c5199ccd30 100644
+--- a/drivers/media/pci/meye/meye.c
++++ b/drivers/media/pci/meye/meye.c
+@@ -1469,7 +1469,7 @@ static int meye_mmap(struct file *file, struct vm_area_struct *vma)
+ 	unsigned long page, pos;
  
- 	if (!d)
--		return NULL;
-+		return ERR_PTR(-ENOENT);
- 
- 	return to_nvmem_device(d);
- }
+ 	mutex_lock(&meye.lock);
+-	if (size > gbuffers * gbufsize) {
++	if (size > gbuffers * gbufsize || offset > gbuffers * gbufsize - size) {
+ 		mutex_unlock(&meye.lock);
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
