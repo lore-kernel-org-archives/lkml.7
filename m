@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2304FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCC82070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF16C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452309;
-	bh=D55g7ML9j5z4+gKRarcfhgQpGRZmkgK6l6KHN+PXncs=;
+	s=default; t=1574452318;
+	bh=tawO3EiEOzoXBA5escWcgSKwcPu0Xc1V1YBXwfOTuws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBXacrEwxieLe05YvubnKAzSpFjRt85Iwb23PBkkrKNtZKsbbKoIQQNdFbzXmZ6Sj
-	 Vf5ZGKAgKB9/S/2hMXPfWkkej9P8BHdSg7rREZym3XL0GSAuuS75YdpICjSxiy0Gdo
-	 KrBa7J7b2FsYLFgWf0VKtrcNCd5acYdXzBlqZzLo=
+	b=Kmc243rwNcB2ZJ7Lx94PRUhYdFLRVjKoLTSlzvilVVN2i+6HTIhIa6oiDL64CijZ1
+	 fV6vUNlToI53q315Ow0fuq2I7uakDZLuHp3FyO7C/PEfBXgxklSf3+QRbJuYwd2Hml
+	 xap/8QTl1S/2crau7qUeEc370dTwSR50sDtPJlwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKVTvs (ORCPT
+        id S1728010AbfKVTv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50670 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727734AbfKVTuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:50:08 -0500
+        id S1727705AbfKVTuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:50:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF41A207DD;
-        Fri, 22 Nov 2019 19:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B2D92075E;
+        Fri, 22 Nov 2019 19:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452207;
-        bh=D55g7ML9j5z4+gKRarcfhgQpGRZmkgK6l6KHN+PXncs=;
+        s=default; t=1574452203;
+        bh=tawO3EiEOzoXBA5escWcgSKwcPu0Xc1V1YBXwfOTuws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vcT0gIOi8YqNaKRm8b/FzTVifH4GSi4oVXygng9Uf8O2BVNTHfVEuKZ66EEcocOGN
-         gHtZXK6y9PhpUVH/p+A6FGJAcTGuVv80IvjiRbSilXP1st9yZb9zApeKarXAYEuloo
-         0iQYnms790m+zqwKOexSLpjffJTqGvUnb2YmWZG0=
+        b=uqKnAZZwkJvUW1XRJFgnC4FewJZjN4Bs/kPvfiZ2Kpu2kIn3A1zWlFjyJ1dSEeYmx
+         zRW7/SiRr2hil8NZ/yt2bjRt+/b1ITJcTmp0ufk5eHJ1hcUDEpLnUd85DnREKMP21Z
+         0lE4ou29pl3J7+TYH25fX+VD5DARU4hExSdVxhjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/13] slip: Fix memory leak in slip_open error path
-Date:   Fri, 22 Nov 2019 14:49:53 -0500
-Message-Id: <20191122194958.24926-8-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
+        linux-audit@redhat.com
+Subject: [PATCH AUTOSEL 4.9 04/13] audit_get_nd(): don't unlock parent too early
+Date:   Fri, 22 Nov 2019 14:49:49 -0500
+Message-Id: <20191122194958.24926-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194958.24926-1-sashal@kernel.org>
 References: <20191122194958.24926-1-sashal@kernel.org>
@@ -61,58 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+[ Upstream commit 69924b89687a2923e88cc42144aea27868913d0e ]
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+if the child has been negative and just went positive
+under us, we want coherent d_is_positive() and ->d_inode.
+Don't unlock the parent until we'd done that work...
 
-Here is the slcan memory leak trace reported by Syzkaller:
-
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/audit_watch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index 9ed6d1c1ee45f..b2317b3a542a0 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -860,6 +860,7 @@ static int slip_open(struct tty_struct *tty)
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
- 
- err_exit:
- 	rtnl_unlock();
+diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+index f036b6ada6efc..712469a3103ac 100644
+--- a/kernel/audit_watch.c
++++ b/kernel/audit_watch.c
+@@ -365,12 +365,12 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
+ 	struct dentry *d = kern_path_locked(watch->path, parent);
+ 	if (IS_ERR(d))
+ 		return PTR_ERR(d);
+-	inode_unlock(d_backing_inode(parent->dentry));
+ 	if (d_is_positive(d)) {
+ 		/* update watch filter fields */
+ 		watch->dev = d->d_sb->s_dev;
+ 		watch->ino = d_backing_inode(d)->i_ino;
+ 	}
++	inode_unlock(d_backing_inode(parent->dentry));
+ 	dput(d);
+ 	return 0;
+ }
 -- 
 2.20.1
 
