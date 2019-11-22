@@ -4,63 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88180C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0FC20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6671620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403729;
-	bh=7h6dwNVHY+1AQQph4vopgpi5NMKwVpbXI1hUGCpEHyY=;
+	s=default; t=1574403732;
+	bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYAYwFlQiR2dD3EWu0lMCwQEFB1Z70Ye/u0MfN1Kl5BQy46JXA3Q/F14S9l4/oS+x
-	 jFi1Q6feeiddUziTnNpoEroIkVWs7JlHkm80LD+duOJENkFObC3Id+IP9niKFyqNP5
-	 a/vEX3I+TfdevHYnaqTBekWP07XZKER5j8VB9VVU=
+	b=g7dodk4gyLa2voPpcpsnSPu8EKHlxfMfD16+qn2UpJpTxaaDG5OveieDOKSWkymIe
+	 H/rxm/vKBHQuQirSr4W0vClVjgdqLVVLQISpcJnRG2N52Grq2jWfJBdx0aCPc8ss0R
+	 55o7n61JLTcPRWWAiUKOowJfH+0tGwLSYgyKGBaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfKVGWI (ORCPT
+        id S1728401AbfKVFwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:22:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:52:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbfKVFwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:07 -0500
+        id S1728332AbfKVFv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C3B22075E;
-        Fri, 22 Nov 2019 05:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC3A2071B;
+        Fri, 22 Nov 2019 05:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401926;
-        bh=7h6dwNVHY+1AQQph4vopgpi5NMKwVpbXI1hUGCpEHyY=;
+        s=default; t=1574401916;
+        bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLobdi53F2bwPNJXQhWW+/PkqPuqwHCld5KxoMw+prl5t0Umfh8jXyi1xjIXZ5ydc
-         9T8oktvS9iVHdj+HfJF5xadu5lO/M5gN+dNhGm3A44ofaLm/FM/fo8/FqTCkJNm8xe
-         VuxrRnQ9tmtfnCOySA0MFCIBKFHI77l4fDBj18+g=
+        b=u4zEyz+VsgNl4odT3/l7+RPaQjyZSxTNS/FvtDwBzHgUJZHYIRFC9dcSA6MQoeu1O
+         19kilF6wqRGxShRvaMaALq6ZjvB2sKkCfPD3PGE6PcACl05EdU3glDRfGha1EejBb2
+         sUz2x0Fwr5fcwbQljdU1BHYDSq5ZV8PqNz7SzEgE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Lu <aaron.lu@intel.com>,
-        Pawel Staszewski <pstaszewski@itcare.pl>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Pankaj gupta <pagupta@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 154/219] mm/page_alloc.c: free order-0 pages through PCP in page_frag_free()
-Date:   Fri, 22 Nov 2019 00:48:06 -0500
-Message-Id: <20191122054911.1750-147-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH AUTOSEL 4.19 146/219] net: stmicro: fix a missing check of clk_prepare
+Date:   Fri, 22 Nov 2019 00:47:58 -0500
+Message-Id: <20191122054911.1750-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,107 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Lu <aaron.lu@intel.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 65895b67ad27df0f62bfaf82dd5622f95ea29196 ]
+[ Upstream commit f86a3b83833e7cfe558ca4d70b64ebc48903efec ]
 
-page_frag_free() calls __free_pages_ok() to free the page back to Buddy.
-This is OK for high order page, but for order-0 pages, it misses the
-optimization opportunity of using Per-Cpu-Pages and can cause zone lock
-contention when called frequently.
+clk_prepare() could fail, so let's check its status, and if it fails,
+return its error code upstream.
 
-Pawel Staszewski recently shared his result of 'how Linux kernel handles
-normal traffic'[1] and from perf data, Jesper Dangaard Brouer found the
-lock contention comes from page allocator:
-
-  mlx5e_poll_tx_cq
-  |
-   --16.34%--napi_consume_skb
-             |
-             |--12.65%--__free_pages_ok
-             |          |
-             |           --11.86%--free_one_page
-             |                     |
-             |                     |--10.10%--queued_spin_lock_slowpath
-             |                     |
-             |                      --0.65%--_raw_spin_lock
-             |
-             |--1.55%--page_frag_free
-             |
-              --1.44%--skb_release_data
-
-Jesper explained how it happened: mlx5 driver RX-page recycle mechanism is
-not effective in this workload and pages have to go through the page
-allocator.  The lock contention happens during mlx5 DMA TX completion
-cycle.  And the page allocator cannot keep up at these speeds.[2]
-
-I thought that __free_pages_ok() are mostly freeing high order pages and
-thought this is an lock contention for high order pages but Jesper
-explained in detail that __free_pages_ok() here are actually freeing
-order-0 pages because mlx5 is using order-0 pages to satisfy its page pool
-allocation request.[3]
-
-The free path as pointed out by Jesper is:
-skb_free_head()
-  -> skb_free_frag()
-    -> page_frag_free()
-And the pages being freed on this path are order-0 pages.
-
-Fix this by doing similar things as in __page_frag_cache_drain() - send
-the being freed page to PCP if it's an order-0 page, or directly to Buddy
-if it is a high order page.
-
-With this change, Paweł hasn't noticed lock contention yet in his
-workload and Jesper has noticed a 7% performance improvement using a micro
-benchmark and lock contention is gone.  Ilias' test on a 'low' speed 1Gbit
-interface on an cortex-a53 shows ~11% performance boost testing with
-64byte packets and __free_pages_ok() disappeared from perf top.
-
-[1]: https://www.spinics.net/lists/netdev/msg531362.html
-[2]: https://www.spinics.net/lists/netdev/msg531421.html
-[3]: https://www.spinics.net/lists/netdev/msg531556.html
-
-[akpm@linux-foundation.org: add comment]
-Link: http://lkml.kernel.org/r/20181120014544.GB10657@intel.com
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-Reported-by: Pawel Staszewski <pstaszewski@itcare.pl>
-Analysed-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Acked-by: Tariq Toukan <tariqt@mellanox.com>
-Acked-by: Pankaj gupta <pagupta@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index b34348a41bfed..dcc46d955df2e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4581,8 +4581,14 @@ void page_frag_free(void *addr)
- {
- 	struct page *page = virt_to_head_page(addr);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+index d07520fb969e6..62ccbd47c1db2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+@@ -59,7 +59,9 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
+ 		gmac->clk_enabled = 1;
+ 	} else {
+ 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_MII_RATE);
+-		clk_prepare(gmac->tx_clk);
++		ret = clk_prepare(gmac->tx_clk);
++		if (ret)
++			return ret;
+ 	}
  
--	if (unlikely(put_page_testzero(page)))
--		__free_pages_ok(page, compound_order(page));
-+	if (unlikely(put_page_testzero(page))) {
-+		unsigned int order = compound_order(page);
-+
-+		if (order == 0)		/* Via pcp? */
-+			free_unref_page(page);
-+		else
-+			__free_pages_ok(page, order);
-+	}
- }
- EXPORT_SYMBOL(page_frag_free);
- 
+ 	return 0;
 -- 
 2.20.1
 
