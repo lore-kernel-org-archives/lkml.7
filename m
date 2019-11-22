@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FFEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85610C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AA820659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D742068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402599;
-	bh=QHKteMkunbJlctgILnKR+J0vR47GMm2EXyhGDIVjrLM=;
+	s=default; t=1574402606;
+	bh=yA/ALcMI77WBmSZhAk6X8hHB8Qj7j6gisXQdnHK9arI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swy0UOK/OJsQ/wB3eoHD5u/nm65lg8qzQNiVT+ooj2/byiqjtm/YqfanR2/YJuh7m
-	 +//K3nB7UQGQbMmJea/RpCWa6Ms4Q1d/SX6PjiG54MLFQk/m+plWfKBiZ5OrrqPglv
-	 /P5/Iah6FWb+nhO/JWVjttuLJuGyScsPj5sgnPvM=
+	b=tMz4FaNcUGA6zpavBz10AYV9n/V+ENlVxCxYXojUiyDhfR7Bc1glPjDr25UHkwl3O
+	 sDsDks/XLOYLaaPiEkH7jbvlMvq7kQCpDhsYxFUtGCJKNR2zl9QgsgB0NxrQ1/IXEg
+	 MxdKnQ6/uVxTYEmay07xjwWmFWhzDBMhz7IOhbAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfKVGDR (ORCPT
+        id S1727394AbfKVGDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:03:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:03:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbfKVGDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:03:11 -0500
+        id S1729860AbfKVGDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:03:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 406252068E;
-        Fri, 22 Nov 2019 06:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11D7C2070A;
+        Fri, 22 Nov 2019 06:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402590;
-        bh=QHKteMkunbJlctgILnKR+J0vR47GMm2EXyhGDIVjrLM=;
+        s=default; t=1574402588;
+        bh=yA/ALcMI77WBmSZhAk6X8hHB8Qj7j6gisXQdnHK9arI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00BaIfqH4TFaauFIrfiEaX6OYkDxoffn1znXU/FlVmQrPntjRgKYu2OskeoNjnFLm
-         9BhJWkVUxfXwt4cyYBKnRAutnSO5tuZx654gNfQswv45e4ZtOiYGx4Ip2XVwIK5tpd
-         PAfgLECJ2hBGMZ+ba5A8HKMTlcx0ykeH4NyFFD3s=
+        b=BToK4S4pFgQRtSbj7InDolPFaaOnOI2HtcPyBtxuo7ULI6aD19FV5dWWCqp1AiHTI
+         3zWO3uup7X6Z7zNpd8WBX8Z3IgnZ39CPcQpUOPzUsqVqgd6rZaf4w9dpwFXjcve7xG
+         Bs2USGeT1JX+kTjds/Zjn15TuIJ9+GDMkz9Ixbg0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 91/91] mtd: Remove a debug trace in mtdpart.c
-Date:   Fri, 22 Nov 2019 01:01:29 -0500
-Message-Id: <20191122060129.4239-90-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, Jian Luo <luojian5@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 89/91] scsi: libsas: Check SMP PHY control function result
+Date:   Fri, 22 Nov 2019 01:01:27 -0500
+Message-Id: <20191122060129.4239-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -58,33 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit bda2ab56356b9acdfab150f31c4bac9846253092 ]
+[ Upstream commit 01929a65dfa13e18d89264ab1378854a91857e59 ]
 
-Commit 2b6f0090a333 ("mtd: Check add_mtd_device() ret code") contained
-a leftover of the debug session that led to this bug fix. Remove this
-pr_info().
+Currently the SMP PHY control execution result is checked, however the
+function result for the command is not.
 
-Fixes: 2b6f0090a333 ("mtd: Check add_mtd_device() ret code")
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+As such, we may be missing all potential errors, like SMP FUNCTION FAILED,
+INVALID REQUEST FRAME LENGTH, etc., meaning the PHY control request has
+failed.
+
+In some scenarios we need to ensure the function result is accepted, so add
+a check for this.
+
+Tested-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdpart.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/libsas/sas_expander.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 70e476c1c474d..5e2d1aa5e81e1 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -662,7 +662,6 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
- 	mutex_unlock(&mtd_partitions_mutex);
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index ba16231665a5e..091af5c1cf50f 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -603,7 +603,14 @@ int sas_smp_phy_control(struct domain_device *dev, int phy_id,
+ 	}
  
- 	free_partition(new);
--	pr_info("%s:%i\n", __func__, __LINE__);
- 
- 	return ret;
- }
+ 	res = smp_execute_task(dev, pc_req, PC_REQ_SIZE, pc_resp,PC_RESP_SIZE);
+-
++	if (res) {
++		pr_err("ex %016llx phy%02d PHY control failed: %d\n",
++		       SAS_ADDR(dev->sas_addr), phy_id, res);
++	} else if (pc_resp[2] != SMP_RESP_FUNC_ACC) {
++		pr_err("ex %016llx phy%02d PHY control failed: function result 0x%x\n",
++		       SAS_ADDR(dev->sas_addr), phy_id, pc_resp[2]);
++		res = pc_resp[2];
++	}
+ 	kfree(pc_resp);
+ 	kfree(pc_req);
+ 	return res;
 -- 
 2.20.1
 
