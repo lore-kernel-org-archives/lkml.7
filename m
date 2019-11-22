@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0F1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB29C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B9A2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C832070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403678;
-	bh=SuHJO9KBBvsWwPusjwAJI4z2nSO4KEDYibgE4E+Y0e4=;
+	s=default; t=1574403682;
+	bh=8YvM9+J34BD6t+/ML1qLi5wu14hLYMK6CX1h3JsZ7+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZMifGM57bAK245DZDCimXuhEqGJuwpAIUIvRUH/tyM4lqh+/FSfJrOx0JaOQ3cJlV
-	 2vFlTvyCYcH57qOKTso29/VeC4romWrKjF83dt3+VhJYtTfFsJ3d+gTclIxvnMIFsD
-	 mM0+tBMqzhAC8qZvMvk1rMGjMl/kmB/I+GpWwOys=
+	b=uzPY3UBLtgBwbaqRM8NYZqm1MX6y5EpFfvAygFKLnv/cVnKHs13pj6WXWTdFgkLq2
+	 FAGkC6EIxHKAc/PEo7PsGu1QtGtK1qmD3BfTODKQeSc4gYFLgRtBGHnbJ1Kk8sCpct
+	 svClPozqOunGxPfv+mFcfM/Jtw/+p1Do9KMpsTT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfKVFwX (ORCPT
+        id S1729328AbfKVGVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57964 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:21:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbfKVFwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:18 -0500
+        id S1728507AbfKVFwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 636A520717;
-        Fri, 22 Nov 2019 05:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A0B2070A;
+        Fri, 22 Nov 2019 05:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401938;
-        bh=SuHJO9KBBvsWwPusjwAJI4z2nSO4KEDYibgE4E+Y0e4=;
+        s=default; t=1574401942;
+        bh=8YvM9+J34BD6t+/ML1qLi5wu14hLYMK6CX1h3JsZ7+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDtzdJbY4BrMkC5TLNllgu+iAe1XBMCFDLfrlcwQmaoL+xEf3KcAtU/FhW2PrQDds
-         T4l7CEvxy7ytSDiWMwqVp8OYbp45tg8lorVW16l5lm4oyhyAbL8U7Ayqzan9IclFd7
-         NuqSJJ/HdrSVnrhUhFwv45xepaaFV5NU3shgwDAM=
+        b=mO6GRh/0du4vSEAHIhLwh7IRG28H9kNH6oOFHTfM6762JC2nKIuE+zpByv2hxX7Yz
+         TtqkYc1O2JHJi4GrtWszc7Yv6+9Q+r8sELONUB2UaTwQtICX8FKgRrGnU0RRFHm/Th
+         ORFxkwct0gIfixPM1WWoAr/KoafzklAQ+bEMLeZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Morse <james.morse@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 163/219] firmware: arm_sdei: Fix DT platform device creation
-Date:   Fri, 22 Nov 2019 00:48:15 -0500
-Message-Id: <20191122054911.1750-156-sashal@kernel.org>
+Cc:     Yi Wang <wang.yi59@zte.com.cn>, Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 166/219] fork: fix some -Wmissing-prototypes warnings
+Date:   Fri, 22 Nov 2019 00:48:18 -0500
+Message-Id: <20191122054911.1750-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,51 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Yi Wang <wang.yi59@zte.com.cn>
 
-[ Upstream commit acafce48b07bf5f9994a38e7fe237193d43d092e ]
+[ Upstream commit fb5bf31722d0805a3f394f7d59f2e8cd07acccb7 ]
 
-It turns out the dt-probing part of this wasn't tested properly after it
-was merged. commit 3aa0582fdb82 ("of: platform: populate /firmware/ node
-from of_platform_default_populate_init()") changed the core-code to
-generate the platform devices, meaning the driver's attempt fails, and it
-bails out.
+We get a warning when building kernel with W=1:
 
-Fix this by removing the manual platform-device creation for DT systems,
-core code has always done this for us.
+  kernel/fork.c:167:13: warning: no previous prototype for `arch_release_thread_stack' [-Wmissing-prototypes]
+  kernel/fork.c:779:13: warning: no previous prototype for `fork_init' [-Wmissing-prototypes]
 
-CC: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Add the missing declaration in head file to fix this.
+
+Also, remove arch_release_thread_stack() completely because no arch
+seems to implement it since bb9d81264 (arch: remove tile port).
+
+Link: http://lkml.kernel.org/r/1542170087-23645-1-git-send-email-wang.yi59@zte.com.cn
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_sdei.c | 5 -----
- 1 file changed, 5 deletions(-)
+ include/linux/sched/task.h | 2 ++
+ init/main.c                | 1 -
+ kernel/fork.c              | 5 -----
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index dffb47c6b4801..c64c7da738297 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -1009,7 +1009,6 @@ static struct platform_driver sdei_driver = {
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 108ede99e5335..44c6f15800ff5 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -39,6 +39,8 @@ void __noreturn do_task_dead(void);
  
- static bool __init sdei_present_dt(void)
- {
--	struct platform_device *pdev;
- 	struct device_node *np, *fw_np;
+ extern void proc_caches_init(void);
  
- 	fw_np = of_find_node_by_name(NULL, "firmware");
-@@ -1019,11 +1018,7 @@ static bool __init sdei_present_dt(void)
- 	np = of_find_matching_node(fw_np, sdei_of_match);
- 	if (!np)
- 		return false;
--
--	pdev = of_platform_device_create(np, sdei_driver.driver.name, NULL);
- 	of_node_put(np);
--	if (!pdev)
--		return false;
++extern void fork_init(void);
++
+ extern void release_task(struct task_struct * p);
  
- 	return true;
+ #ifdef CONFIG_HAVE_COPY_THREAD_TLS
+diff --git a/init/main.c b/init/main.c
+index 020972fed1171..38a603f62b7bb 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -105,7 +105,6 @@
+ static int kernel_init(void *);
+ 
+ extern void init_IRQ(void);
+-extern void fork_init(void);
+ extern void radix_tree_init(void);
+ 
+ /*
+diff --git a/kernel/fork.c b/kernel/fork.c
+index aef1430bdce0b..8cb5cd7c97e19 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -163,10 +163,6 @@ static inline void free_task_struct(struct task_struct *tsk)
  }
+ #endif
+ 
+-void __weak arch_release_thread_stack(unsigned long *stack)
+-{
+-}
+-
+ #ifndef CONFIG_ARCH_THREAD_STACK_ALLOCATOR
+ 
+ /*
+@@ -376,7 +372,6 @@ static void release_task_stack(struct task_struct *tsk)
+ 		return;  /* Better to leak the stack than to free prematurely */
+ 
+ 	account_kernel_stack(tsk, -1);
+-	arch_release_thread_stack(tsk->stack);
+ 	free_thread_stack(tsk);
+ 	tsk->stack = NULL;
+ #ifdef CONFIG_VMAP_STACK
 -- 
 2.20.1
 
