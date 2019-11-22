@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE46C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED9D2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C266520706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420051;
-	bh=oeUILCoYnzNn+H2vA7zbnS+k6R6CH4wMXcGBPruayWo=;
+	s=default; t=1574420055;
+	bh=D9FF+PKLhEVyXZcKFFSveysZnUiYAUBTZCk1o2cEWVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCBnofjoBVaqOpNC+WZ5KmF4uEn7FItBZRhaH8OJooiaMxuqzbCDUOQ056nGAfZao
-	 5gpBRxaTM1SZhHeGuOCvbKZZw23NnqV7m4mCEkanNWWXmbqIVhR/pgxgTOrfY+jh5g
-	 V9H5RvOsZ6jnCHBNxXZ3pWiHM7ZOPpKkNu2pjUlk=
+	b=xu+J9VrNsaTpEUklOFdxFA+sRYnhcYyTvE7eZZJmEmOa3AHUFUeqJxkBgLmrf+oys
+	 TxQU+hXD1btUohA+vZ3bEL6iT51Ah4GrAlAc9UolT/adeletu5p8/5r+RHarYPb5D3
+	 QLYH2Ttqza9EosnzioVtCSGeoONgtNpI67i0O9SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfKVKyK (ORCPT
+        id S1730311AbfKVKyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39354 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730285AbfKVKyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:05 -0500
+        id S1730299AbfKVKyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8946320637;
-        Fri, 22 Nov 2019 10:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 516782071C;
+        Fri, 22 Nov 2019 10:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420045;
-        bh=oeUILCoYnzNn+H2vA7zbnS+k6R6CH4wMXcGBPruayWo=;
+        s=default; t=1574420050;
+        bh=D9FF+PKLhEVyXZcKFFSveysZnUiYAUBTZCk1o2cEWVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QdSji4yro4uv62+fIyCID/EAmWe6dQwFQJvAh0FUFMPqmarbrMQ9a3DMZ9rIGCcR0
-         6KQttGmJumH0YcuIMGXCVx0gpEDXzH9yGeP0FspDGArijwHhU3P0dhML0R9uw1Qmsw
-         5EWZo4Vli3qWKTerNxLI5VR65Aw+nmwi25gJfZgI=
+        b=cjRRstAfkFGIzwhaHpfiUg/XGyIe7JL0YoqkB/t8gPt/BX0ymVCHLyqfpV3n8xqUR
+         Rwo77pe8iRT9xtmFpZHxGPXP/2wtP2+leWqHk/+ooJSnECJ67k3NaP5P5+AN8TlCel
+         kH9OAS386Oc0lervrv9HzMJDo2gB8apQ3oQWa0Do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 097/122] mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
-Date:   Fri, 22 Nov 2019 11:29:10 +0100
-Message-Id: <20191122100830.798920395@linuxfoundation.org>
+Subject: [PATCH 4.14 099/122] media: isif: fix a NULL pointer dereference bug
+Date:   Fri, 22 Nov 2019 11:29:12 +0100
+Message-Id: <20191122100831.205692675@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,50 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-[ Upstream commit c974ac771479327b5424f60d58845e31daddadea ]
+[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
 
-If a child device like touchscreen is wakeup capable, then keep ADC
-interface on, so that a touching resistive screen will generate wakeup
-event to the system.
+In isif_probe(), there is a while loop to get the ISIF base address and
+linearization table0 and table1 address. In the loop body, the function
+platform_get_resource() is called to get the resource. If
+platform_get_resource() returns NULL, the loop is terminated and the
+execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
+first iteration because platform_get_resource() returns NULL and the
+execution goes to 'fail_nobase_res'. Given that there is another while loop
+at 'fail_nobase_res' and i equals to 0, one iteration of the second while
+loop will be executed. However, the second while loop does not check the
+return value of platform_get_resource(). This can cause a NULL pointer
+dereference bug if the return value is a NULL pointer.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This patch avoids the above issue by adding a check in the second while
+loop after the call to platform_get_resource().
+
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/ti_am335x_tscadc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/media/platform/davinci/isif.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
-index 5894d6c16fab8..ca9f0c8d1ed0f 100644
---- a/drivers/mfd/ti_am335x_tscadc.c
-+++ b/drivers/mfd/ti_am335x_tscadc.c
-@@ -296,11 +296,24 @@ static int ti_tscadc_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 5813b49391edb..90d0f13283ae9 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -1102,7 +1102,8 @@ static int isif_probe(struct platform_device *pdev)
  
-+static int __maybe_unused ti_tscadc_can_wakeup(struct device *dev, void *data)
-+{
-+	return device_may_wakeup(dev);
-+}
-+
- static int __maybe_unused tscadc_suspend(struct device *dev)
- {
- 	struct ti_tscadc_dev	*tscadc = dev_get_drvdata(dev);
- 
- 	regmap_write(tscadc->regmap, REG_SE, 0x00);
-+	if (device_for_each_child(dev, NULL, ti_tscadc_can_wakeup)) {
-+		u32 ctrl;
-+
-+		regmap_read(tscadc->regmap, REG_CTRL, &ctrl);
-+		ctrl &= ~(CNTRLREG_POWERDOWN);
-+		ctrl |= CNTRLREG_TSCSSENB;
-+		regmap_write(tscadc->regmap, REG_CTRL, ctrl);
-+	}
- 	pm_runtime_put_sync(dev);
- 
- 	return 0;
+ 	while (i >= 0) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+-		release_mem_region(res->start, resource_size(res));
++		if (res)
++			release_mem_region(res->start, resource_size(res));
+ 		i--;
+ 	}
+ 	vpfe_unregister_ccdc_device(&isif_hw_dev);
 -- 
 2.20.1
 
