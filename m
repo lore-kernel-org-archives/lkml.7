@@ -2,102 +2,68 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA7DC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9733820704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:26:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tI9ZcU4X"
+	by mail.kernel.org (Postfix) with ESMTP id 414FD20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574397253;
+	bh=RbVhcnfxDZXYbq5FrYM2h68FLrNpgIh467ix1PTKw1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NbrTEgt5RVgL2KosW5ykA8KpCIETrclN6baMuxmadjXyJRBwgYmp5Rxot+w8By/aU
+	 q7d4HzzFtxJOIbNIdTHgEpO8DGRmoqf0c7bSn4iUN+PYBhMNvMsGB4WP9QkZ5DswIy
+	 IPbbD8QC+N+X9EXJ5LoVKyuwxR8NFqorw2V22ETY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKVE0L (ORCPT
+        id S1726620AbfKVEeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 23:26:11 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:46344 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfKVE0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 23:26:11 -0500
-Received: by mail-qk1-f180.google.com with SMTP id h15so5125528qka.13;
-        Thu, 21 Nov 2019 20:26:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mHG8+AxgBFSWa8fV+NFUGm+PfxGngjUbTez74iu0nRg=;
-        b=tI9ZcU4Xe1MKGicL93WBj6TscKcqAOuxBlMzSP/FS2W2Pv4T2F1rHrN+Aepi6pF2NL
-         Ym2EkT5lcpeqUFQfNfIitYYxY69axKaYRavmuTDa0YsvoFpuzMVmMl+uKNsD4Z9OptCS
-         +RW20STVgsxUffNkF56iNWvWeuMaaZUXbChfa9gVcu4vhDVNvQNkc/45ou7xLo/XbMO7
-         NeTCb8AlptxmP8eMKnkfEFRW0owhazbJZlYdEj0ZpkJlG0VpTwhqcSk8NW27Gzlliqz4
-         xDQDroUim2xPx7F8BNkXJBGEjrMX+m4EOKXWTZul9cV1ONthw+PqfHg4nQF02M7XtRGt
-         QWkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mHG8+AxgBFSWa8fV+NFUGm+PfxGngjUbTez74iu0nRg=;
-        b=GxzMmdfojenwTOvaE9xiAFAGX68gDgB/Lzl561B4vvAwhlrdAjFwLrGGIP5WDKa1K/
-         RzzOpE1B4szno97Px1qQObho0r8c4wVwTLee6pIykeQn1AS5FM869O6/lEvln/zcwjcO
-         hK9ZP5/mOUON/G8L9pBLGG3AaEa0PA9ePrnUkVwSr2qxSesDtUH/0ralxFo2CiEEreDi
-         3uwQnia0UXkqUcOhQl6UTTSmZ1+Ose7le+KKs9Fp1YyYBQjHgZHIDNE032zZ2HxFUWyG
-         sjUccy2EG3JsUkZWyePvrayVGgSNthskWMeH+pNrmU1ICSmI7Qhx3/rSKueuzlIKdYwv
-         qkwQ==
-X-Gm-Message-State: APjAAAWW0v3oHwOwtc2Fuzp0D+qT4KRJkDPS+Zs5n4GqEjk0sZE3rqve
-        5q3P4CnFd1YG2/yFOQxoggKB/Hx7z3hcVQ==
-X-Google-Smtp-Source: APXvYqyW5aL2g8rbYlgvhpyY3kUxtcidGpbW8mDaqNBNfOBUXyy8NsIxoXl2GcFRM2QkICe6U0DT8Q==
-X-Received: by 2002:a37:508b:: with SMTP id e133mr11084096qkb.21.1574396770124;
-        Thu, 21 Nov 2019 20:26:10 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id b6sm2748821qtp.5.2019.11.21.20.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 20:26:09 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        corbet@lwn.net
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        keyrings@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] Documentation: security: core.rst: fix warnings
-Date:   Fri, 22 Nov 2019 01:18:06 -0300
-Message-Id: <20191122041806.68650-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 21 Nov 2019 23:34:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726500AbfKVEeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 23:34:06 -0500
+Received: from localhost (unknown [171.61.94.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CB4320704;
+        Fri, 22 Nov 2019 04:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574397246;
+        bh=RbVhcnfxDZXYbq5FrYM2h68FLrNpgIh467ix1PTKw1M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=avS4p66UA4nU92G88TOUa4dZerKvnZcw9sfXPjNIWCxyz78jSEoHODin8INeG3195
+         7Wv0lY8ZkKRXZ80CdyM566gwHXKrjw9p4BySG+iNQFprnRi9xCF9b+Tdg/3u9l1rh3
+         xOIB4eswglMDrpRZ9C4lg8A7sTCOIyNYWQvQmIpc=
+Date:   Fri, 22 Nov 2019 10:04:02 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     broonie@kernel.org, geert@linux-m68k.org,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] spi: pic32: Retire dma_request_slave_channel_compat()
+Message-ID: <20191122043402.GJ82508@vkoul-mobl>
+References: <20191121092703.30465-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121092703.30465-1-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On 21-11-19, 11:27, Peter Ujfalusi wrote:
+> There is no reason to use the dma_request_slave_channel_compat() as no
+> filter function and parameter is provided.
+> 
+> Switch the driver to use dma_request_chan() instead and add support for
+> deferred probing against DMA channel.
 
-Fix warnings due to missing markup, no change in content otherwise.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
----
- Documentation/security/keys/core.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/security/keys/core.rst b/Documentation/security/keys/core.rst
-index d6d8b0b756b6..d9b0b859018b 100644
---- a/Documentation/security/keys/core.rst
-+++ b/Documentation/security/keys/core.rst
-@@ -1102,7 +1102,7 @@ payload contents" for more information.
-     See also Documentation/security/keys/request-key.rst.
- 
- 
-- *  To search for a key in a specific domain, call:
-+ *  To search for a key in a specific domain, call::
- 
- 	struct key *request_key_tag(const struct key_type *type,
- 				    const char *description,
 -- 
-2.24.0
-
+~Vinod
