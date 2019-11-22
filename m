@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB7FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A572068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DBC2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402827;
-	bh=rbDfZ37pyFkTziq+H9O55VekzIqVmSm6qVNT7/Ygp88=;
+	s=default; t=1574402835;
+	bh=v/ELUbqxZyXrZuAAY7IR8tKjXYRyU+EDsOX/Vedj/xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZUZjxnRcKy5/dNYZJdeUtFtHK20kOY4wk3tGaCxgm8h7JGiDzbdxDt6Iy1NFDshBu
-	 +jL+SXiew2K3UImz3HZUgcK8jEHwAatGwgi5Tiy224PiY5fV0maXMK5GUNjN/DoAAQ
-	 nZCp1UyK1sEhhcepMpi+zDseZnh8vioKhlw4tD4c=
+	b=gZnPI7/UzFYYmPUNSvJ5WgwAgzf1nftQyL7VBvERDq6SEtmoiUoEJnYXQFOfGCXeG
+	 0lmf2WITlTWoIjyb5Bw1sCTW0a1Jl+5xVyBiyns3CfXLZRCM68mw+GNUaxgz45MD6y
+	 FU5DNkEx7PuMlZfsA4BBV4EaMALMdVeVLJQVZfWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbfKVGCK (ORCPT
+        id S1727670AbfKVGHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:07:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbfKVGCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:05 -0500
+        id S1728629AbfKVGCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98782070B;
-        Fri, 22 Nov 2019 06:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AFF0207FC;
+        Fri, 22 Nov 2019 06:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402525;
-        bh=rbDfZ37pyFkTziq+H9O55VekzIqVmSm6qVNT7/Ygp88=;
+        s=default; t=1574402522;
+        bh=v/ELUbqxZyXrZuAAY7IR8tKjXYRyU+EDsOX/Vedj/xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dta8erRlPhaceZ2xiW/nDD/xWpOsC1qsFLbxMClcQMD3l6AioQETl6TdL/TXiqMPo
-         XvpJk9Vt3dYLFr2dd5L8d8NWpvKpjqqL3Ekd/CNqB77P6TFZzXZKdh9Scm/YkxFIym
-         WsVLGQKtNIJzxEfpC4SmZGNnU/ZqS+DcolhI2b9w=
+        b=XFMhMPlf7tcqFPIyKZBHt50auTaxuTueIBK+ciTHK8QA1aDO5cVLD8jC4A+qQkfUT
+         A+OVMm7yLgEMV1U9uOsuwm6RaP/WrEixry4ZDJeDr0DXpTcbKakPyG291Jz2A4a2Va
+         O9AjMqpcPP5oAOf+sijQ8jXuTrSxP2BCYs+faD10=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.9 33/91] gfs2: take jdata unstuff into account in do_grow
-Date:   Fri, 22 Nov 2019 01:00:31 -0500
-Message-Id: <20191122060129.4239-32-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 30/91] pinctrl: sh-pfc: sh7734: Fix shifted values in IPSR10
+Date:   Fri, 22 Nov 2019 01:00:28 -0500
+Message-Id: <20191122060129.4239-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,35 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit bc0205612bbd4dd4026d4ba6287f5643c37366ec ]
+[ Upstream commit 054f2400f706327f96770219c3065b5131f8f154 ]
 
-Before this patch, function do_grow would not reserve enough journal
-blocks in the transaction to unstuff jdata files while growing them.
-This patch adds the logic to add one more block if the file to grow
-is jdata.
+Some values in the Peripheral Function Select Register 10 descriptor are
+shifted by one position, which may cause a peripheral function to be
+programmed incorrectly.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixing this makes all HSCIF0 pins use Function 4 (value 3), like was
+already the case for the HSCK0 pin in field IP10[5:3].
+
+Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index 39af17b407f00..d83e99fa98b3a 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -1236,6 +1236,8 @@ static int do_grow(struct inode *inode, u64 size)
- 	}
- 
- 	error = gfs2_trans_begin(sdp, RES_DINODE + RES_STATFS + RES_RG_BIT +
-+				 (unstuff &&
-+				  gfs2_is_jdata(ip) ? RES_JDATA : 0) +
- 				 (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF ?
- 				  0 : RES_QUOTA), 0);
- 	if (error)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index 6502e676d3686..33232041ee86d 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -2213,22 +2213,22 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP10_22 [1] */
+ 		FN_CAN_CLK_A, FN_RX4_D,
+ 	    /* IP10_21_19 [3] */
+-		FN_AUDIO_CLKOUT, FN_TX1_E, FN_HRTS0_C, FN_FSE_B,
+-		FN_LCD_M_DISP_B, 0, 0, 0,
++		FN_AUDIO_CLKOUT, FN_TX1_E, 0, FN_HRTS0_C, FN_FSE_B,
++		FN_LCD_M_DISP_B, 0, 0,
+ 	    /* IP10_18_16 [3] */
+-		FN_AUDIO_CLKC, FN_SCK1_E, FN_HCTS0_C, FN_FRB_B,
+-		FN_LCD_VEPWC_B, 0, 0, 0,
++		FN_AUDIO_CLKC, FN_SCK1_E, 0, FN_HCTS0_C, FN_FRB_B,
++		FN_LCD_VEPWC_B, 0, 0,
+ 	    /* IP10_15 [1] */
+ 		FN_AUDIO_CLKB_A, FN_LCD_CLK_B,
+ 	    /* IP10_14_12 [3] */
+ 		FN_AUDIO_CLKA_A, FN_VI1_CLK_B, FN_SCK1_D, FN_IECLK_B,
+ 		FN_LCD_FLM_B, 0, 0, 0,
+ 	    /* IP10_11_9 [3] */
+-		FN_SSI_SDATA3, FN_VI1_7_B, FN_HTX0_C, FN_FWE_B,
+-		FN_LCD_CL2_B, 0, 0, 0,
++		FN_SSI_SDATA3, FN_VI1_7_B, 0, FN_HTX0_C, FN_FWE_B,
++		FN_LCD_CL2_B, 0, 0,
+ 	    /* IP10_8_6 [3] */
+-		FN_SSI_SDATA2, FN_VI1_6_B, FN_HRX0_C, FN_FRE_B,
+-		FN_LCD_CL1_B, 0, 0, 0,
++		FN_SSI_SDATA2, FN_VI1_6_B, 0, FN_HRX0_C, FN_FRE_B,
++		FN_LCD_CL1_B, 0, 0,
+ 	    /* IP10_5_3 [3] */
+ 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
+ 		FN_LCD_DON_B, 0, 0, 0,
 -- 
 2.20.1
 
