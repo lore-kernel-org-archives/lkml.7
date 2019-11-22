@@ -2,78 +2,80 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C35C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F33C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E553206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB17C206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="RL09Jusx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKVBZt (ORCPT
+        id S1726698AbfKVB06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:25:49 -0500
-Received: from mga05.intel.com ([192.55.52.43]:47273 "EHLO mga05.intel.com"
+        Thu, 21 Nov 2019 20:26:58 -0500
+Received: from onstation.org ([52.200.56.107]:33714 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfKVBZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:25:49 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 17:25:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,228,1571727600"; 
-   d="scan'208";a="210108101"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 17:25:46 -0800
-Date:   Fri, 22 Nov 2019 09:32:45 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     kernel test robot <lkp@intel.com>, LKP <lkp@lists.01.org>,
-        linaro-mm-sig@lists.linaro.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: 2989f64510 ("dma-buf: Add selftests for dma-fence"): WARNING:
- CPU: 0 PID: 1 at lib/debugobjects.c:524 __debug_object_init
-Message-ID: <20191122013244.GC313@intel.com>
-References: <5dd63a8f.BFdOlqs/XZAJHDfR%lkp@intel.com>
- <157432116576.24852.2065478066028556019@skylake-alporthouse-com>
+        id S1726329AbfKVB05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 20:26:57 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 482153EE6F;
+        Fri, 22 Nov 2019 01:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1574386016;
+        bh=Kq+RNFpqhutChH3/+5/pT8eAUKeDkBlnAGwXIrYo9xI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RL09JusxKP7Q2NBDbvwmFjeJDGHFW1vkN8cZqS9rqhpxdQEmg8v8HesxPW00j66BV
+         sS3yuBiW71E5aQ2H7bC/JjONlWFZD/JANow9HKUK8ETpVKrC3PqkDvI7cMXd4n2fA8
+         FNB9N6NYZYQJkBT8RFVJ7+82hbn702AWaMIEo8fY=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
+        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 0/4] drm/msm/gpu: add support for ocmem interconnect
+Date:   Thu, 21 Nov 2019 20:26:41 -0500
+Message-Id: <20191122012645.7430-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157432116576.24852.2065478066028556019@skylake-alporthouse-com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:26:05AM +0000, Chris Wilson wrote:
-> Quoting kernel test robot (2019-11-21 07:19:43)
-> > Greetings,
-> > 
-> > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > 
-> > commit 2989f6451084aed3f8cc9992477f7a9bf57a3716
-> > Author:     Chris Wilson <chris@chris-wilson.co.uk>
-> > AuthorDate: Mon Aug 19 10:59:27 2019 +0100
-> > Commit:     Chris Wilson <chris@chris-wilson.co.uk>
-> > CommitDate: Mon Aug 19 18:09:46 2019 +0100
-> 
-> That's a belated report, fixed by
-Hi Chris, thanks for the feedback, we will double check this report and
-provide update later.
+Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
+and must use the On Chip MEMory (OCMEM) in order to be functional.
+There's a separate interconnect path that needs to be setup to OCMEM.
+This patch series adds support for that path, and sets the votes for the
+two interconnect paths to the highest speed for a3xx and a4xx-based
+platforms.
 
-> 
-> commit 6ac3a0ebfcc2f0c75ca0ca6974389ce421aa5cbd
-> Author: Chris Wilson <chris@chris-wilson.co.uk>
-> Date:   Tue Aug 20 13:21:18 2019 +0100
-> 
-> 	dmabuf: Mark up onstack timer for selftests
-> 
-> No?
-> -Chris
+Changes since v1:
+- Don't rename icc_path to gfx_mem_icc_path. Leave existing variable
+  named as is and add comment to declaration in struct msm_gpu.
+
+Brian Masney (4):
+  dt-bindings: drm/msm/gpu: document second interconnect
+  drm/msm/gpu: add support for ocmem interconnect path
+  drm/msm/a3xx: set interconnect bandwidth vote
+  drm/msm/a4xx: set interconnect bandwidth vote
+
+ .../devicetree/bindings/display/msm/gpu.txt        |  6 +++++-
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c              |  8 ++++++++
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c              |  8 ++++++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c            | 14 +++++++++++++-
+ drivers/gpu/drm/msm/msm_gpu.h                      |  7 +++++++
+ 5 files changed, 41 insertions(+), 2 deletions(-)
+
+-- 
+2.21.0
+
