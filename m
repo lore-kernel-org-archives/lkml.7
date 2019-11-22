@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7EBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8AAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D3020715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C4820717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418880;
-	bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
+	s=default; t=1574418882;
+	bh=OQxAjtgjoRmh71w/KKY3w4GztgCDEsVjgMRHOe26tms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=risu0+ejgWgWpiLfTsahNEj4TPcUSdh8XTh11lfPuAwvG/mDp955xtF89XDWCPjVj
-	 HJlPxTH+u4PlGzboeEW8G0pxJ6kAkOj9JKoLTLHIUN4Cz5EpdqNa7Pky2I/3xIXWU1
-	 Wq0Ft+r0JK7djZdd1VeIM//46FWfyGlujhczubHA=
+	b=kIfwzESZFYOJth51o92fG8TF/GFCdx1XmaYjlI0Z9KMeSKh2niXLX57LfdMoqN2Xm
+	 j+yq/twwU3CvjSfaP2W7gHoOTsNZhhlciKrhbC84gLRnfgO+stg1AKuACf9K7JlIAz
+	 /Oi4ElZO7UleDNzA86J+itYcDlLDSDOEEs7Reix8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfKVKej (ORCPT
+        id S1728128AbfKVKel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:34:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727367AbfKVKei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:34:38 -0500
+        id S1727443AbfKVKej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:34:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2904320715;
-        Fri, 22 Nov 2019 10:34:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D20F620656;
+        Fri, 22 Nov 2019 10:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418876;
-        bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
+        s=default; t=1574418879;
+        bh=OQxAjtgjoRmh71w/KKY3w4GztgCDEsVjgMRHOe26tms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPmCWz8oOle2Ez7lXBlTFuVLGJWfQDQQ1Si20UDivtZCz4u2HtlWhUtYUAAooo0PV
-         uYb/WyF+Xcg9gvI9spnyh+GU4Jz/Qb8zSvzLTE5reE0LdRF0sokXa4RNExwizj/Kyb
-         mqReHCOFtCiy9HgS2TaaDxcma8XTcKSup17xX7Xs=
+        b=TcCkX9auO3ynNaFL2CSkGsaya1rA0UJNJ/jqooNZAuSdP2FUn+nl+nF0f4RcTSgvg
+         yL9sQiqHTOkHzmLapVMzLCORa3+TGUTP4I2BCRRN9XpoVA8DLynXCvlDPTUbrPCHH8
+         uEl83pgteNNFtB+g1nefTTxYF7TVhbhsXO3H2Sp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Paul Elder <paul.elder@ideasonboard.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 083/159] usb: gadget: uvc: Factor out video USB request queueing
-Date:   Fri, 22 Nov 2019 11:27:54 +0100
-Message-Id: <20191122100805.666703358@linuxfoundation.org>
+Subject: [PATCH 4.4 084/159] usb: gadget: uvc: Only halt video streaming endpoint in bulk mode
+Date:   Fri, 22 Nov 2019 11:27:55 +0100
+Message-Id: <20191122100806.327002706@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -64,11 +64,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 9d1ff5dcb3cd3390b1e56f1c24ae42c72257c4a3 ]
+[ Upstream commit 8dbf9c7abefd5c1434a956d5c6b25e11183061a3 ]
 
-USB requests for video data are queued from two different locations in
-the driver, with the same code block occurring twice. Factor it out to a
-function.
+When USB requests for video data fail to be submitted, the driver
+signals a problem to the host by halting the video streaming endpoint.
+This is only valid in bulk mode, as isochronous transfers have no
+handshake phase and can't thus report a stall. The usb_ep_set_halt()
+call returns an error when using isochronous endpoints, which we happily
+ignore, but some UDCs complain in the kernel log. Fix this by only
+trying to halt the endpoint in bulk mode.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
@@ -76,71 +80,24 @@ Tested-by: Paul Elder <paul.elder@ideasonboard.com>
 Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_video.c | 30 ++++++++++++++++---------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/usb/gadget/function/uvc_video.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index 0f01c04d7cbd8..540917f54506a 100644
+index 540917f54506a..d6bab12b0b47d 100644
 --- a/drivers/usb/gadget/function/uvc_video.c
 +++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -129,6 +129,19 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
-  * Request handling
-  */
- 
-+static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
-+{
-+	int ret;
-+
-+	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+	if (ret < 0) {
-+		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
-+		usb_ep_set_halt(video->ep);
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * I somehow feel that synchronisation won't be easy to achieve here. We have
-  * three events that control USB requests submission:
-@@ -193,14 +206,13 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
- 
- 	video->encode(req, video, buf);
- 
--	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
--		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
--		usb_ep_set_halt(ep);
--		spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+	ret = uvcg_video_ep_queue(video, req);
-+	spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+
-+	if (ret < 0) {
- 		uvcg_queue_cancel(queue, 0);
- 		goto requeue;
- 	}
--	spin_unlock_irqrestore(&video->queue.irqlock, flags);
- 
- 	return;
- 
-@@ -320,15 +332,13 @@ int uvcg_video_pump(struct uvc_video *video)
- 		video->encode(req, video, buf);
- 
- 		/* Queue the USB request */
--		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+		ret = uvcg_video_ep_queue(video, req);
-+		spin_unlock_irqrestore(&queue->irqlock, flags);
-+
- 		if (ret < 0) {
--			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
--			usb_ep_set_halt(video->ep);
--			spin_unlock_irqrestore(&queue->irqlock, flags);
- 			uvcg_queue_cancel(queue, 0);
- 			break;
- 		}
--		spin_unlock_irqrestore(&queue->irqlock, flags);
+@@ -136,7 +136,9 @@ static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
+ 	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
+ 	if (ret < 0) {
+ 		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
+-		usb_ep_set_halt(video->ep);
++		/* Isochronous endpoints can't be halted. */
++		if (usb_endpoint_xfer_bulk(video->ep->desc))
++			usb_ep_set_halt(video->ep);
  	}
  
- 	spin_lock_irqsave(&video->req_lock, flags);
+ 	return ret;
 -- 
 2.20.1
 
