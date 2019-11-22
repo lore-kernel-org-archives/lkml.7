@@ -2,54 +2,53 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE1EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8EFF20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F6D2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420497;
-	bh=/6FWNdpKNl84TV5f38o5NkUpHCI7HDqYIwInkd6yMEE=;
+	s=default; t=1574420501;
+	bh=l6pIeRuMJhfnBHzeFNNTbpdwiyNr5qVCW2IiF8wlkhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EdhvFyWazUqJ+qlkW84Bqv7+pTYLvp1cOBZgazDBZSh119FljwDhSUjcNROl6YgTw
-	 67Kk2S/doEyY0EG2MC9eJrgehCI7yB3cMubzYY6XzodRuofkAo4bJlUV1sSEHM43kR
-	 EVMJ4amypcM2kPtfCxn73n+GN1pCtAg2FxD3GL5o=
+	b=LVZhFN5DOJeq8VWk9xgHwjs8tUFZn3oOD3eJNCCbe9qmP98G9sXpoOeCbEHiDQfWE
+	 sWReIV7XoV2zv0o5NftP8MjBA25EctYCJmWbsv9CmzD/4raVj2/xnQ9asGwgk3/cRL
+	 c0CwhIm5me7Q2GKiwOIE++yhtTda0BsKErByIpuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfKVLBg (ORCPT
+        id S1731219AbfKVLBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:01:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730900AbfKVLBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:01:33 -0500
+        id S1731212AbfKVLBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:01:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6066620721;
-        Fri, 22 Nov 2019 11:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B13320721;
+        Fri, 22 Nov 2019 11:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420492;
-        bh=/6FWNdpKNl84TV5f38o5NkUpHCI7HDqYIwInkd6yMEE=;
+        s=default; t=1574420496;
+        bh=l6pIeRuMJhfnBHzeFNNTbpdwiyNr5qVCW2IiF8wlkhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ky7JeJ/2pTXcOGtRy6sBUQw//U0ohVKUzBaujrNs8F4jEjx8L6z4fwhPp3TWVlqpn
-         JP2ZWUgQzlok1rZha4kACKi4KhE34V6q/S78d3Et9oHmG+wgWTbo3eSklQ5BC6ZcaT
-         FDbQVOX2LtWm1/jGDwb1GhHJ8witi2uyAoVGbgxs=
+        b=iUQ1/TsLKhDVFOvjSkgJTJugXuT99UDSoDBxxMiDH0sxS8PqNM6mgcM83A98+4Fee
+         cFYpkxxHVj+N0u3lFUJb0XJ70PNpVkkRw/2QBB1psNw1tMC9RDrx5eg0I6bDLXee/n
+         VrrISZ4d+Y/yvjSdDfjXfRR8Ls9OuboJHDorcWak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
         Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 081/220] i40e: Use proper enum in i40e_ndo_set_vf_link_state
-Date:   Fri, 22 Nov 2019 11:27:26 +0100
-Message-Id: <20191122100918.259777514@linuxfoundation.org>
+Subject: [PATCH 4.19 082/220] ixgbe: Fix crash with VFs and flow director on interface flap
+Date:   Fri, 22 Nov 2019 11:27:27 +0100
+Message-Id: <20191122100918.358805947@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,47 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit 43ade6ad18416b8fd5bb3c9e9789faa666527eec ]
+[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
 
-Clang warns when one enumerated type is converted implicitly to another.
+This patch fix crash when we have restore flow director filters after reset
+adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
+rx_ring array, as it has a VF identifier in the upper 32 bits.
 
-drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4214:42: warning:
-implicit conversion from enumeration type 'enum i40e_aq_link_speed' to
-different enumeration type 'enum virtchnl_link_speed'
-      [-Wenum-conversion]
-                pfe.event_data.link_event.link_speed = I40E_LINK_SPEED_40GB;
-                                                     ~ ^~~~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Use the proper enum from virtchnl_link_speed, which has the same value
-as I40E_LINK_SPEED_40GB, VIRTCHNL_LINK_SPEED_40GB. This appears to be
-missed by commit ff3f4cc267f6 ("virtchnl: finish conversion to virtchnl
-interface").
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/81
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
 Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 46a71d289bca2..6a677fd540d64 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -4211,7 +4211,7 @@ int i40e_ndo_set_vf_link_state(struct net_device *netdev, int vf_id, int link)
- 		vf->link_forced = true;
- 		vf->link_up = true;
- 		pfe.event_data.link_event.link_status = true;
--		pfe.event_data.link_event.link_speed = I40E_LINK_SPEED_40GB;
-+		pfe.event_data.link_event.link_speed = VIRTCHNL_LINK_SPEED_40GB;
- 		break;
- 	case IFLA_VF_LINK_STATE_DISABLE:
- 		vf->link_forced = true;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index f3e21de3b1f0b..b45a6e2ed8d15 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -5187,6 +5187,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
++	u64 action;
+ 
+ 	spin_lock(&adapter->fdir_perfect_lock);
+ 
+@@ -5195,12 +5196,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
++		action = filter->action;
++		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
++			action =
++			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+ 				&filter->filter,
+ 				filter->sw_idx,
+-				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
++				(action == IXGBE_FDIR_DROP_QUEUE) ?
+ 				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[filter->action]->reg_idx);
++				adapter->rx_ring[action]->reg_idx);
+ 	}
+ 
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
