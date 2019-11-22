@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF591C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA660C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A122068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7722068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403346;
-	bh=ZqhmHdJec/fQf7pPzyr/UMoumkzN9Rp2eK3BlGc4qY0=;
+	s=default; t=1574403350;
+	bh=4n5Hz48TXnqrIXsGHju1Wnpfhr59qkX+mio24jYPjxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2z8hv9BiuTntzYt6mMLSATtSHysE+yHpeA6fChJ5GxGUCe84ywrp/ylKxA+SWmBd
-	 CRUQlBeNKkCydqItose4Er/YGi4RfcBijsuWvF0Cs9gJKwAzZ0kTd+otWPBq6hAybp
-	 6cyTW3R6iRviTMCUEpzWDeL7EdwEOVmTfANTLg/I=
+	b=giqNmhKO8q9Gw1kdbYed51mBbhV7/6Nt1WW7tw70cCRJ+/xgBAT97eM6NfQaHQcmt
+	 pAE9MhUdSjgMea29YhtPTL4OuCzUY9+xX2++Oxd2JwfwXh/aAN33kelYQnt/XXk70+
+	 Tu2c5G8uwNoCSoshUL9VQQpF6HyLUJ1iWXKWei60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfKVGPp (ORCPT
+        id S1729619AbfKVGOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:15:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51614 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:14:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbfKVGOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:14:06 -0500
+        id S1729144AbfKVGNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96A720718;
-        Fri, 22 Nov 2019 06:14:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57E8120718;
+        Fri, 22 Nov 2019 06:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403245;
-        bh=ZqhmHdJec/fQf7pPzyr/UMoumkzN9Rp2eK3BlGc4qY0=;
+        s=default; t=1574403230;
+        bh=4n5Hz48TXnqrIXsGHju1Wnpfhr59qkX+mio24jYPjxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CFx5vNjbOod+fYicdCfzzHR+pIOGwUFHgnBAqgszwq7O93Ap+eKhfkNrZRtAe1Bus
-         zJuQiR1UFa8XOlp6JjXPG32srNl62MspUWL4tT1nPkgb84AEE9mQhzynBgBy96tGAT
-         0fu5kIBcZd8QsfJ2sAYyqPOyqyjVi45obTBPz97E=
+        b=2gVIPtvgBYKqG4anOc+pwKEpaD+XrQhwhfeD3d2zWDklzaMXxL5Sq5pabDJZ6z/O+
+         GyrEOK0T2dkWvxwqpKswX6t4lpAeEIbxuiYQpkhg4IWf/ktMKTvuZJ+rT0AhhFz3AU
+         y322Npr/DSmditF+HUm2JqZTVYX25iBjVDHEskjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 56/68] net/core/neighbour: tell kmemleak about hash tables
-Date:   Fri, 22 Nov 2019 01:12:49 -0500
-Message-Id: <20191122061301.4947-55-sashal@kernel.org>
+Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 43/68] drbd: reject attach of unsuitable uuids even if connected
+Date:   Fri, 22 Nov 2019 01:12:36 -0500
+Message-Id: <20191122061301.4947-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,81 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
 
-[ Upstream commit 85704cb8dcfd88d351bfc87faaeba1c8214f3177 ]
+[ Upstream commit fe43ed97bba3b11521abd934b83ed93143470e4f ]
 
-This fixes false-positive kmemleak reports about leaked neighbour entries:
+Multiple failure scenario:
+a) all good
+   Connected Primary/Secondary UpToDate/UpToDate
+b) lose disk on Primary,
+   Connected Primary/Secondary Diskless/UpToDate
+c) continue to write to the device,
+   changes only make it to the Secondary storage.
+d) lose disk on Secondary,
+   Connected Primary/Secondary Diskless/Diskless
+e) now try to re-attach on Primary
 
-unreferenced object 0xffff8885c6e4d0a8 (size 1024):
-  comm "softirq", pid 0, jiffies 4294922664 (age 167640.804s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 20 2c f3 83 ff ff ff ff  ........ ,......
-    08 c0 ef 5f 84 88 ff ff 01 8c 7d 02 01 00 00 00  ..._......}.....
-  backtrace:
-    [<00000000748509fe>] ip6_finish_output2+0x887/0x1e40
-    [<0000000036d7a0d8>] ip6_output+0x1ba/0x600
-    [<0000000027ea7dba>] ip6_send_skb+0x92/0x2f0
-    [<00000000d6e2111d>] udp_v6_send_skb.isra.24+0x680/0x15e0
-    [<000000000668a8be>] udpv6_sendmsg+0x18c9/0x27a0
-    [<000000004bd5fa90>] sock_sendmsg+0xb3/0xf0
-    [<000000008227b29f>] ___sys_sendmsg+0x745/0x8f0
-    [<000000008698009d>] __sys_sendmsg+0xde/0x170
-    [<00000000889dacf1>] do_syscall_64+0x9b/0x400
-    [<0000000081cdb353>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000005767ed39>] 0xffffffffffffffff
+This would have succeeded before, even though that is clearly the
+wrong data set to attach to (missing the modifications from c).
+Because we only compared our "effective" and the "to-be-attached"
+data generation uuid tags if (device->state.conn < C_CONNECTED).
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix: change that constraint to (device->state.pdsk != D_UP_TO_DATE)
+compare the uuids, and reject the attach.
+
+This patch also tries to improve the reverse scenario:
+first lose Secondary, then Primary disk,
+then try to attach the disk on Secondary.
+
+Before this patch, the attach on the Secondary succeeds, but since commit
+drbd: disconnect, if the wrong UUIDs are attached on a connected peer
+the Primary will notice unsuitable data, and drop the connection hard.
+
+Though unfortunately at a point in time during the handshake where
+we cannot easily abort the attach on the peer without more
+refactoring of the handshake.
+
+We now reject any attach to "unsuitable" uuids,
+as long as we can see a Primary role,
+unless we already have access to "good" data.
+
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/block/drbd/drbd_nl.c       |  6 +++---
+ drivers/block/drbd/drbd_receiver.c | 19 +++++++++++++++++++
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index b3b242f7ecfd2..bba672482a0ef 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -18,6 +18,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index 27e1abcf57100..4adbf4c8d532c 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -1685,9 +1685,9 @@ int drbd_adm_attach(struct sk_buff *skb, struct genl_info *info)
+ 		}
+ 	}
  
- #include <linux/slab.h>
-+#include <linux/kmemleak.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -325,12 +326,14 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 	ret = kmalloc(sizeof(*ret), GFP_ATOMIC);
- 	if (!ret)
- 		return NULL;
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		buckets = kzalloc(size, GFP_ATOMIC);
--	else
-+	} else {
- 		buckets = (struct neighbour __rcu **)
- 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
- 					   get_order(size));
-+		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
-+	}
- 	if (!buckets) {
- 		kfree(ret);
- 		return NULL;
-@@ -350,10 +353,12 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
- 	size_t size = (1 << nht->hash_shift) * sizeof(struct neighbour *);
- 	struct neighbour __rcu **buckets = nht->hash_buckets;
+-	if (device->state.conn < C_CONNECTED &&
+-	    device->state.role == R_PRIMARY && device->ed_uuid &&
+-	    (device->ed_uuid & ~((u64)1)) != (nbc->md.uuid[UI_CURRENT] & ~((u64)1))) {
++	if (device->state.pdsk != D_UP_TO_DATE && device->ed_uuid &&
++	    (device->state.role == R_PRIMARY || device->state.peer == R_PRIMARY) &&
++            (device->ed_uuid & ~((u64)1)) != (nbc->md.uuid[UI_CURRENT] & ~((u64)1))) {
+ 		drbd_err(device, "Can only attach to data with current UUID=%016llX\n",
+ 		    (unsigned long long)device->ed_uuid);
+ 		retcode = ERR_DATA_NOT_CURRENT;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index b1ee358edd3b4..afd8f315d29b1 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -4116,6 +4116,25 @@ static int receive_state(struct drbd_connection *connection, struct packet_info
+ 	if (peer_state.conn == C_AHEAD)
+ 		ns.conn = C_BEHIND;
  
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		kfree(buckets);
--	else
-+	} else {
-+		kmemleak_free(buckets);
- 		free_pages((unsigned long)buckets, get_order(size));
-+	}
- 	kfree(nht);
- }
- 
++	/* TODO:
++	 * if (primary and diskless and peer uuid != effective uuid)
++	 *     abort attach on peer;
++	 *
++	 * If this node does not have good data, was already connected, but
++	 * the peer did a late attach only now, trying to "negotiate" with me,
++	 * AND I am currently Primary, possibly frozen, with some specific
++	 * "effective" uuid, this should never be reached, really, because
++	 * we first send the uuids, then the current state.
++	 *
++	 * In this scenario, we already dropped the connection hard
++	 * when we received the unsuitable uuids (receive_uuids().
++	 *
++	 * Should we want to change this, that is: not drop the connection in
++	 * receive_uuids() already, then we would need to add a branch here
++	 * that aborts the attach of "unsuitable uuids" on the peer in case
++	 * this node is currently Diskless Primary.
++	 */
++
+ 	if (device->p_uuid && peer_state.disk >= D_NEGOTIATING &&
+ 	    get_ldev_if_state(device, D_NEGOTIATING)) {
+ 		int cr; /* consider resync */
 -- 
 2.20.1
 
