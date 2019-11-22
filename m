@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC327C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3392CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A351F2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022B220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403782;
-	bh=+MPkf+/1ZgSXTTcyRZTaHbIWLFnK7BZRQH9Tcq5LrlY=;
+	s=default; t=1574403785;
+	bh=j7KbmtmkT44bfLvNzW6tYCDaM4Eo1gsgtSpVmt6J7mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vl+6CBeTEs0iUgoeRQSFVCqwhBT/V3Hfcb3uBExYxyT886VAX4DqykOfwKp4SpKON
-	 hg4rpGu7Wx1q7r3BM2G8p/9g/byaIteX2BeAGiPk44aVqEOYJId8BWVntAmNeAhNvA
-	 x+wxuirceqnKPnPHB4CQRsIS4dbOsLHJAGQKEuv0=
+	b=IOC+BGpsgj6X4L7zfDTkq5mIVIVvv6wkZjAc316hsXL0zlDzzDaNjsawPA4Rbxi7Q
+	 XP2ZO1s9uanlbTq1WVtADza+YTEJrCmmg+p4ivXM9siTnOEDB6q56cuHpzE6vETefq
+	 RpXtyT+SRmWgaJSM559iCx7L9sHAManA7AGP6Ofc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfKVGXB (ORCPT
+        id S1728300AbfKVFvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:23:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57226 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfKVFvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:54 -0500
+        id S1728242AbfKVFvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D5DA2070A;
-        Fri, 22 Nov 2019 05:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9542207FC;
+        Fri, 22 Nov 2019 05:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401913;
-        bh=+MPkf+/1ZgSXTTcyRZTaHbIWLFnK7BZRQH9Tcq5LrlY=;
+        s=default; t=1574401902;
+        bh=j7KbmtmkT44bfLvNzW6tYCDaM4Eo1gsgtSpVmt6J7mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ur/qXM0UZOHhrmqSRKTl8ZLjoNzUpMOB500Me/fMwxbCH4ydP/o0fBv+VwmDz1dvq
-         UJIRaMpsetUpCiCX66/JR21ermiDEe8N+3ahPkwLG5fMzi+jQISxawS5fKrEbz8kYF
-         TdpX2BjkZ5kZZfgK6h4Ih5yP0HyRy478sYhDrzuY=
+        b=IT+PJ+JM9EkzwJWJNeLnvbLzZCwSgM1WpUBM9U7m6R0XC9qKpwo1y3Y6jF5JRRQtG
+         /c+QHlVonyyCO59B86XA3nITVjl8bDGmhwfB46Ud1YB/6IePSCQlzVEr2LXfw+bkkt
+         Z60JZJkQ9rPMPMV//BWtva9EHiQVAOTxVkNEn4I8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 144/219] um: Make GCOV depend on !KCOV
-Date:   Fri, 22 Nov 2019 00:47:56 -0500
-Message-Id: <20191122054911.1750-137-sashal@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 134/219] powerpc: Fix HMIs on big-endian with CONFIG_RELOCATABLE=y
+Date:   Fri, 22 Nov 2019 00:47:46 -0500
+Message-Id: <20191122054911.1750-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -58,32 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit 550ed0e2036663b35cec12374b835444f9c60454 ]
+[ Upstream commit 505a314fb28ce122091691c51426fa85c084e115 ]
 
-Both do more or less the same thing and are mutually exclusive.
-If both are enabled the build will fail.
-Sooner or later we can kill UML's GCOV.
+HMIs will crash the kernel due to
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
+	BRANCH_LINK_TO_FAR(hmi_exception_realmode)
+
+Calling into the OPD instead of the actual code.
+
+Fixes: 2337d207288f ("powerpc/64: CONFIG_RELOCATABLE support for hmi interrupts")
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+[mpe: Use DOTSYM() rather than #ifdef]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/Kconfig.debug | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/exceptions-64s.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/um/Kconfig.debug b/arch/um/Kconfig.debug
-index 2014597605ea9..85726eeec3451 100644
---- a/arch/um/Kconfig.debug
-+++ b/arch/um/Kconfig.debug
-@@ -16,6 +16,7 @@ config GPROF
- config GCOV
- 	bool "Enable gcov support"
- 	depends on DEBUG_INFO
-+	depends on !KCOV
- 	help
- 	  This option allows developers to retrieve coverage data from a UML
- 	  session.
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index 90af86f143a91..e1dab9b1e4478 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -1123,7 +1123,7 @@ TRAMP_REAL_BEGIN(hmi_exception_early)
+ 	EXCEPTION_PROLOG_COMMON_2(PACA_EXGEN)
+ 	EXCEPTION_PROLOG_COMMON_3(0xe60)
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+-	BRANCH_LINK_TO_FAR(hmi_exception_realmode) /* Function call ABI */
++	BRANCH_LINK_TO_FAR(DOTSYM(hmi_exception_realmode)) /* Function call ABI */
+ 	cmpdi	cr0,r3,0
+ 
+ 	/* Windup the stack. */
 -- 
 2.20.1
 
