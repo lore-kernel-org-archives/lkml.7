@@ -2,70 +2,66 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72136C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28420C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C2920721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574444708;
-	bh=9x1hxC3qi2eaamCM/dHXu4NQ/2NJTHkhMoy7sos1LU4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=S4ztmqqK5AhKMK5ODLMOT7mvdlrsZ5FdEL3HWpw1pCjapPP1S7Nsa3o2hXi6fW9Fg
-	 2kIoASV9wZiP0pxIPEgqeORFqLwPALymUJNzC68JXm+IGihPdB/FUYugMmzt5OrXnY
-	 ydr2K/9jqvzyDpobEyCvfUEczmX4gvfMIqCcueJg=
+	by mail.kernel.org (Postfix) with ESMTP id F0ABA20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKVRpH (ORCPT
+        id S1727071AbfKVRqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:45:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbfKVRpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:45:05 -0500
-Subject: Re: [GIT PULL] Power management regression fix for final v5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574444704;
-        bh=9x1hxC3qi2eaamCM/dHXu4NQ/2NJTHkhMoy7sos1LU4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xXCqc8aTzWlubuKtIXno+XuTfuYOUnSDjtbAI1fzL35Gll9+Smc2G7gRtqs+WLsD+
-         Cw8GDPgeXl/SQhqO1O5HCDMLAskSyq9PAX1QnAR/aPunrUcmxsV+cLxGzrlD6kDpsU
-         lNdulm9MVEOnZNPFHKdyTpZmPVDH3cvwL+3r+bLo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0ioXnbzy86fV7=JfZwjawfN45xXs8-b2xMtnTEy8ACsuw@mail.gmail.com>
-References: <CAJZ5v0ioXnbzy86fV7=JfZwjawfN45xXs8-b2xMtnTEy8ACsuw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0ioXnbzy86fV7=JfZwjawfN45xXs8-b2xMtnTEy8ACsuw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- pm-5.4-final
-X-PR-Tracked-Commit-Id: 05ff1ba412fd6bd48d56dd4c0baff626533728cc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a6b0373ffcd8950b9121195e09c5d7c73e6e9f5d
-Message-Id: <157444470467.7762.11731245732169668008.pr-tracker-bot@kernel.org>
-Date:   Fri, 22 Nov 2019 17:45:04 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 22 Nov 2019 12:46:09 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:38210 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKVRqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:46:08 -0500
+Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E46A21527DCCB;
+        Fri, 22 Nov 2019 09:46:07 -0800 (PST)
+Date:   Fri, 22 Nov 2019 09:46:07 -0800 (PST)
+Message-Id: <20191122.094607.2168889001623078802.davem@davemloft.net>
+To:     andrea.mayer@uniroma2.it
+Cc:     sergei.shtylyov@cogentembedded.com, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, dav.lebrun@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next, v3 1/1] seg6: allow local packet processing for
+ SRv6 End.DT6 behavior
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191122162242.2574-2-andrea.mayer@uniroma2.it>
+References: <20191122162242.2574-1-andrea.mayer@uniroma2.it>
+        <20191122162242.2574-2-andrea.mayer@uniroma2.it>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 22 Nov 2019 09:46:08 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 22 Nov 2019 13:40:35 +0100:
+From: Andrea Mayer <andrea.mayer@uniroma2.it>
+Date: Fri, 22 Nov 2019 17:22:42 +0100
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.4-final
+> End.DT6 behavior makes use of seg6_lookup_nexthop() function which drops
+> all packets that are destined to be locally processed. However, DT* should
+> be able to deliver decapsulated packets that are destined to local
+> addresses. Function seg6_lookup_nexthop() is also used by DX6, so in order
+> to maintain compatibility I created another routing helper function which
+> is called seg6_lookup_any_nexthop(). This function is able to take into
+> account both packets that have to be processed locally and the ones that
+> are destined to be forwarded directly to another machine. Hence,
+> seg6_lookup_any_nexthop() is used in DT6 rather than seg6_lookup_nexthop()
+> to allow local delivery.
+> 
+> Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a6b0373ffcd8950b9121195e09c5d7c73e6e9f5d
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Applied to net-next
