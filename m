@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1006EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDB1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55FD2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943B8207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420528;
-	bh=j1xtx9yjAgRktUtejvRwP+MnUo+B8NrgqFSuVJrAbdw=;
+	s=default; t=1574420534;
+	bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPTvHDRIDxQGGfDkfO5grRbKOxP8r/6eOxoJVpHjwXzETZLSFgyAMK71PbBsa5olL
-	 kUEq/IVDlDeRw03cPET8NW5GGA2j/uy9y4pBq0Y5q3/V9Cxl32tuEk9fWQhINu+bML
-	 IC+feCVs1IKOR/rilIIb3n5ZNXmr/D1Rw6zALevI=
+	b=DPQ+dY+O9jcn8XAxHnqubIitbNVhyFS9WykCdo1lpp9xkqhNl7hotzdImZC6TxePd
+	 ZH+UG1wfB+A5a/tnHM5vtHweVCo9srchxkJlsZTFWkw7q19ylqQ9Teh+WE5K+HyKM8
+	 UKo+plxe9NswDzB6uaQUIDYPhplYYgLbzepAGEEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfKVLCH (ORCPT
+        id S1731277AbfKVLCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731233AbfKVLB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:01:57 -0500
+        id S1731241AbfKVLCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 369DE2077B;
-        Fri, 22 Nov 2019 11:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 245032075B;
+        Fri, 22 Nov 2019 11:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420516;
-        bh=j1xtx9yjAgRktUtejvRwP+MnUo+B8NrgqFSuVJrAbdw=;
+        s=default; t=1574420522;
+        bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6ppTCtVK/PRsOGaBKCJnUYzworPB7Lck3LGBjgOGTFdS3MNl+FvKsuAWIeyCeLxI
-         cvPakyYOmqnHHeMz9qWyX3KdF+94lDbn1JEAFHDonwaXFVfO46PUVqRfueMewitxaX
-         K+IHZYzkYyRc98GIRhu293Tf2fe2n33tYjDhH/lc=
+        b=GcsgfTUgtCiBfmAOtsrhR8N5XHfap5gBMTiFgf+kpWLXIwqpDSqrAIeBqPDazeLKU
+         5Wuq1DMWgBHjMZfAdH4d6ZtKE3RnOug/pbbGCGTOpNAqvLqPnG6X75cvkKkBnH0aGL
+         1wxWFCWWBbZhrT00CfoB/Kql+Pv8KGAxJelt86PY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 134/220] net: hns3: Fix for rx vlan id handle to support Rev 0x21 hardware
-Date:   Fri, 22 Nov 2019 11:28:19 +0100
-Message-Id: <20191122100922.456733870@linuxfoundation.org>
+Subject: [PATCH 4.19 136/220] remoteproc: Check for NULL firmwares in sysfs interface
+Date:   Fri, 22 Nov 2019 11:28:21 +0100
+Message-Id: <20191122100922.594417540@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,92 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Suman Anna <s-anna@ti.com>
 
-[ Upstream commit 701a6d6ac78c76083ddb7c6581fdbedd95093e11 ]
+[ Upstream commit faeadbb64094757150a8c2a3175ca418dbdd472c ]
 
-In revision 0x20, we use vlan id != 0 to check whether a vlan tag
-has been offloaded, so vlan id 0 is not supported.
+The remoteproc framework provides a sysfs file 'firmware'
+for modifying the firmware image name from userspace. Add
+an additional check to ensure NULL firmwares are errored
+out right away, rather than getting a delayed error while
+requesting a firmware during the start of a remoteproc
+later on.
 
-In revision 0x21, rx buffer descriptor adds two bits to indicate
-whether one or more vlan tags have been offloaded, so vlan id 0
-is valid now.
-
-This patch seperates the handle for vlan id 0, add vlan id 0 support
-for revision 0x21.
-
-Fixes: 5b5455a9ed5a ("net: hns3: Add STRP_TAGP field support for hardware revision 0x21")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 30 ++++++++-----------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ drivers/remoteproc/remoteproc_sysfs.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 15030df574a8b..e11a7de20b8f4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2124,18 +2124,18 @@ static void hns3_rx_skb(struct hns3_enet_ring *ring, struct sk_buff *skb)
- 	napi_gro_receive(&ring->tqp_vector->napi, skb);
- }
- 
--static u16 hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
--			       struct hns3_desc *desc, u32 l234info)
-+static bool hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
-+				struct hns3_desc *desc, u32 l234info,
-+				u16 *vlan_tag)
- {
- 	struct pci_dev *pdev = ring->tqp->handle->pdev;
--	u16 vlan_tag;
- 
- 	if (pdev->revision == 0x20) {
--		vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
--		if (!(vlan_tag & VLAN_VID_MASK))
--			vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
-+		*vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
-+		if (!(*vlan_tag & VLAN_VID_MASK))
-+			*vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
- 
--		return vlan_tag;
-+		return (*vlan_tag != 0);
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index 47be411400e56..3a4c3d7cafca3 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -48,6 +48,11 @@ static ssize_t firmware_store(struct device *dev,
  	}
  
- #define HNS3_STRP_OUTER_VLAN	0x1
-@@ -2144,17 +2144,14 @@ static u16 hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
- 	switch (hnae3_get_field(l234info, HNS3_RXD_STRP_TAGP_M,
- 				HNS3_RXD_STRP_TAGP_S)) {
- 	case HNS3_STRP_OUTER_VLAN:
--		vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
--		break;
-+		*vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
-+		return true;
- 	case HNS3_STRP_INNER_VLAN:
--		vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
--		break;
-+		*vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
-+		return true;
- 	default:
--		vlan_tag = 0;
--		break;
-+		return false;
- 	}
--
--	return vlan_tag;
- }
+ 	len = strcspn(buf, "\n");
++	if (!len) {
++		dev_err(dev, "can't provide a NULL firmware\n");
++		err = -EINVAL;
++		goto out;
++	}
  
- static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
-@@ -2256,8 +2253,7 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
- 	if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX) {
- 		u16 vlan_tag;
- 
--		vlan_tag = hns3_parse_vlan_tag(ring, desc, l234info);
--		if (vlan_tag & VLAN_VID_MASK)
-+		if (hns3_parse_vlan_tag(ring, desc, l234info, &vlan_tag))
- 			__vlan_hwaccel_put_tag(skb,
- 					       htons(ETH_P_8021Q),
- 					       vlan_tag);
+ 	p = kstrndup(buf, len, GFP_KERNEL);
+ 	if (!p) {
 -- 
 2.20.1
 
