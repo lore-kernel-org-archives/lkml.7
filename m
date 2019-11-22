@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADEEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E94420717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16BC20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419504;
-	bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
+	s=default; t=1574419508;
+	bh=pdvAvsejs+m9ghYz4ndlfv1HwItb8YLYK5+SNO/7GAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAAJEDIwgmxxHNaNCHxnQwEGZzsLUdXM8itikayuFqtXguaJnV3Kezu5pKptHQMdF
-	 mxWDziNsHv4t7vb/o+Zhw0X35L8uIIH30QARlok8WiB9cg6nyKTw8sN69R2ul7QTN7
-	 qn6PB9rSBs2k4WhfK0rMTz3V18jdJJ9PK5uFgKoY=
+	b=qua0Lue7JX5E0bwK8EwlNjF4sq0CGKftC144EzbMdOVfUw28cK6KVZUGDn15t0QAq
+	 zrt/tI6N1PrjGElKvCjhL7zw4zaTDDTxOURjM+JLXBI5fFaS6GLqINnRejOVrmD+H5
+	 Jw0clrBTBJy2DecA+M9p/LTM1UHN69w6+rAJmeFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfKVKpC (ORCPT
+        id S1729415AbfKVKpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbfKVKpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:00 -0500
+        id S1728502AbfKVKpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 976EE20717;
-        Fri, 22 Nov 2019 10:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D40205C9;
+        Fri, 22 Nov 2019 10:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419500;
-        bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
+        s=default; t=1574419502;
+        bh=pdvAvsejs+m9ghYz4ndlfv1HwItb8YLYK5+SNO/7GAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WKjJSAd48nX/bgfbgk+cWIq0unBGnlOy6djpGYpMEE9m7ozRo/fiFz407F93hixoz
-         GZQWLm6SlagSdbHD9b9j7Z3Ll4OzeNd3aaz5pN7gr4wkwcfMoED1Ssve8dJ0Tzyit5
-         056QQAAhkuQNQ3cVhhta0iOjBA05KtaGuBhz7JHY=
+        b=zIyCncF7ajdCwHzKGMCwQonsVpIQUaa5HV9AdNP47YAmEueAvzX4MQY+VaF+GNX37
+         zKfEERBUapG90lrIWhQCVaufHKEfd+Nh3cYCD3l/xHcL/fCREK1zOaIbBtM3E4zAwu
+         XPCIizj9rRSb9nhtqzgFjZeF89n+z5YFLPD5MaAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Dan Aloni <dan@kernelim.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 133/222] crypto: fix a memory leak in rsa-kcs1pads encryption mode
-Date:   Fri, 22 Nov 2019 11:27:53 +0100
-Message-Id: <20191122100912.541742992@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ondrey Zary <linux@rainbow-software.org>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 134/222] scsi: NCR5380: Clear all unissued commands on host reset
+Date:   Fri, 22 Nov 2019 11:27:54 +0100
+Message-Id: <20191122100912.598230520@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,44 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Aloni <dan@kernelim.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit 3944f139d5592790b70bc64f197162e643a8512b ]
+[ Upstream commit 1aeeeed7f03c576f096eede7b0384f99a98f588c ]
 
-The encryption mode of pkcs1pad never uses out_sg and out_buf, so
-there's no need to allocate the buffer, which presently is not even
-being freed.
+When doing a host reset we should be clearing all outstanding commands, not
+just the command triggering the reset.
 
-CC: Herbert Xu <herbert@gondor.apana.org.au>
-CC: linux-crypto@vger.kernel.org
-CC: "David S. Miller" <davem@davemloft.net>
-Signed-off-by: Dan Aloni <dan@kernelim.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[mkp: adjusted Hannes' SoB address]
+
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Ondrey Zary <linux@rainbow-software.org>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/rsa-pkcs1pad.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/scsi/NCR5380.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
-index 7830d304dff6f..d58224d808675 100644
---- a/crypto/rsa-pkcs1pad.c
-+++ b/crypto/rsa-pkcs1pad.c
-@@ -267,15 +267,6 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
- 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
- 			ctx->key_size - 1 - req->src_len, req->src);
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 3cfab8868c989..ba7b3aef3ef0b 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2392,7 +2392,7 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
+ 	spin_lock_irqsave(&hostdata->lock, flags);
  
--	req_ctx->out_buf = kmalloc(ctx->key_size, GFP_KERNEL);
--	if (!req_ctx->out_buf) {
--		kfree(req_ctx->in_buf);
--		return -ENOMEM;
--	}
--
--	pkcs1pad_sg_set_buf(req_ctx->out_sg, req_ctx->out_buf,
--			ctx->key_size, NULL);
--
- 	akcipher_request_set_tfm(&req_ctx->child_req, ctx->child);
- 	akcipher_request_set_callback(&req_ctx->child_req, req->base.flags,
- 			pkcs1pad_encrypt_sign_complete_cb, req);
+ #if (NDEBUG & NDEBUG_ANY)
+-	scmd_printk(KERN_INFO, cmd, __func__);
++	shost_printk(KERN_INFO, instance, __func__);
+ #endif
+ 	NCR5380_dprint(NDEBUG_ANY, instance);
+ 	NCR5380_dprint_phase(NDEBUG_ANY, instance);
+@@ -2410,10 +2410,13 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
+ 	 * commands!
+ 	 */
+ 
+-	if (list_del_cmd(&hostdata->unissued, cmd)) {
++	list_for_each_entry(ncmd, &hostdata->unissued, list) {
++		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
++
+ 		cmd->result = DID_RESET << 16;
+ 		cmd->scsi_done(cmd);
+ 	}
++	INIT_LIST_HEAD(&hostdata->unissued);
+ 
+ 	if (hostdata->selecting) {
+ 		hostdata->selecting->result = DID_RESET << 16;
 -- 
 2.20.1
 
