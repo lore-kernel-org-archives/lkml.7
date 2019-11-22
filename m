@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1520CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE36DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF2B20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B257520715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419993;
-	bh=S42pxMw6/wYTxvLBzsja1ndTqzGbyWY3pPEbYY4F1S4=;
+	s=default; t=1574419997;
+	bh=aFpAA8wU35EfuFHr6Frbd4f3Et0ExszuYiPWOtiTJRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJr+BIn6iGY5MA95uB9i+d0Yqq0WXlsUqpUfmiDqMHnLOMmGDacMuspDhSoutTdtr
-	 SWpqcAioTakUGKM85HJRZLEwsEKf7BKCbgmeiYi+RN0+mIPMGi2Ed/l5TkhoshuBJR
-	 iHFIS0qffbLGMJ6DnCKaMfWRGRClS+2EkzGmypp4=
+	b=RsFEcSaBzHVrHX3618riODp9T6Y7yEuVOzbZlGDMvfvqcQNCOZjYPYndNdt+J/1ge
+	 AWF2pSiAyFKRIWgOZlQmxZcK6smrGkS6ZK9UvQ1hz+PhhxR5ZzdJlooD08GyddvGRY
+	 tHPTv9EhRFvob1vkun4lTlxL/ynJHb4rUbop4zgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfKVKxL (ORCPT
+        id S1730183AbfKVKxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:53:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:53:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727762AbfKVKxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:06 -0500
+        id S1730166AbfKVKxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 838942072E;
-        Fri, 22 Nov 2019 10:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B6120715;
+        Fri, 22 Nov 2019 10:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419986;
-        bh=S42pxMw6/wYTxvLBzsja1ndTqzGbyWY3pPEbYY4F1S4=;
+        s=default; t=1574419991;
+        bh=aFpAA8wU35EfuFHr6Frbd4f3Et0ExszuYiPWOtiTJRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCU2oQTWwjboIOxtXmmmGjeViXSk2eu/91Kk2S2CS04D+RkKSsHbwkAm37gcgAZVD
-         hFIfNYtmhjo9U331B/ZdXESEgT95Yg1icFABCE8toYfNx/QPV516qRaYnC0mmMLKpO
-         bQOB0GUcSyX52XF+4lQ1mXB4GXCf6viWj040dPoE=
+        b=c0+0C23wR6/D7Qw7Zv5udR+wNdhM0d2e+5B1pqURuDrslPrYlxnIRJvsH21t9gtK7
+         77oe7V430CEW39SRubFJL5hNjSQ7Z3McODfXklAHtokGVnTVNwCKTHSsAhn8h7e5fj
+         f/tsAZjgo4KoByc/zlZurNbmnTbS4Ckijj3xQBxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 032/122] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
-Date:   Fri, 22 Nov 2019 11:28:05 +0100
-Message-Id: <20191122100747.720313352@linuxfoundation.org>
+        stable@vger.kernel.org, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 034/122] clk: keystone: Enable TISCI clocks if K3_ARCH
+Date:   Fri, 22 Nov 2019 11:28:07 +0100
+Message-Id: <20191122100749.509920394@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,43 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Nishanth Menon <nm@ti.com>
 
-[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
+[ Upstream commit 2f149e6e14bcb5e581e49307b54aafcd6f74a74f ]
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+K3_ARCH uses TISCI for clocks as well. Enable the same
+for the driver support.
 
-drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
-enumeration type 'enum dma_transfer_direction' to different enumeration
-type 'enum dma_data_direction' [-Wenum-conversion]
-                td_desc->desc_list_len, DMA_MEM_TO_DEV);
-                                        ^~~~~~~~~~~~~~
-1 warning generated.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/timb_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/Makefile         | 1 +
+ drivers/clk/keystone/Kconfig | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index 896bafb7a5324..cf6588cc3efdc 100644
---- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -545,7 +545,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
- 	}
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index f7f761b02beda..8ca03d9d693b0 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -65,6 +65,7 @@ obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
+ obj-y					+= imgtec/
+ obj-$(CONFIG_ARCH_MXC)			+= imx/
+ obj-$(CONFIG_MACH_INGENIC)		+= ingenic/
++obj-$(CONFIG_ARCH_K3)			+= keystone/
+ obj-$(CONFIG_ARCH_KEYSTONE)		+= keystone/
+ obj-$(CONFIG_MACH_LOONGSON32)		+= loongson1/
+ obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
+diff --git a/drivers/clk/keystone/Kconfig b/drivers/clk/keystone/Kconfig
+index 7e9f0176578a6..b04927d06cd10 100644
+--- a/drivers/clk/keystone/Kconfig
++++ b/drivers/clk/keystone/Kconfig
+@@ -7,7 +7,7 @@ config COMMON_CLK_KEYSTONE
  
- 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
--		td_desc->desc_list_len, DMA_MEM_TO_DEV);
-+		td_desc->desc_list_len, DMA_TO_DEVICE);
- 
- 	return &td_desc->txd;
- }
+ config TI_SCI_CLK
+ 	tristate "TI System Control Interface clock drivers"
+-	depends on (ARCH_KEYSTONE || COMPILE_TEST) && OF
++	depends on (ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST) && OF
+ 	depends on TI_SCI_PROTOCOL
+ 	default ARCH_KEYSTONE
+ 	---help---
 -- 
 2.20.1
 
