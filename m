@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1BFC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693282068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDC720659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402540;
-	bh=scB8O+eVXyBPc4/vjx0Hl/m2poIpD1+Ps8hKHZnlgZ0=;
+	s=default; t=1574402543;
+	bh=oyecKgL4JJJNfN/xarrb88sIaFNFCW/ML4rY/gU8oKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfUvk2MmgM/mLjbybiirfOIdCFlqA7tjf1PNs5bTMZ2SLzdAlyEIX78Y3bn9sA4He
-	 as1Ox0BtzvWufY+uvnA6KY3Op+yW5MOkmwz1/6sj3SOnESJh3yA5ie6mePn3FUcW43
-	 JxQ24bd/0DwhmWFTSKhQdoTlsEH/FDFF8qFvS3U8=
+	b=QhJ7vdjNF2G6wShRn8TZzd/mVU7Xt4J3kwq27ObA5FE++MrxUezW1uJxoEl9cj0el
+	 hJ0vGMbfou+tWCAAYTYJtfVF1wGWeZnM0ODZdYcVzfuj0ZntuKDMaLLXdFpuDt9LZL
+	 AxDXm/+ixHSier+RDTfLB0z3WE/LgYSiTGb2UbJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbfKVGCT (ORCPT
+        id S1729702AbfKVGCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbfKVGCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:15 -0500
+        id S1726685AbfKVGCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED062068F;
-        Fri, 22 Nov 2019 06:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B60F12068E;
+        Fri, 22 Nov 2019 06:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402535;
-        bh=scB8O+eVXyBPc4/vjx0Hl/m2poIpD1+Ps8hKHZnlgZ0=;
+        s=default; t=1574402539;
+        bh=oyecKgL4JJJNfN/xarrb88sIaFNFCW/ML4rY/gU8oKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BP6fwWhwvnIer2N2dK3TUVZO1XAPxDjcwLJuLN3BcebS0dyFU/6fwQB+7006n0+WN
-         uN40P3SmTkaylgp7U1EzAr3Mm5bCK3WmcIm0fCNihXCMUT6R91903G9niyjxmYF9VJ
-         b/S2PcOXYxEFU2Mxu/OJFkDmaHBU5dqhYU6EsK/A=
+        b=zt2We2FyrrIfq9YYlqxVSElLFktd/udawJCrflpXkp8jPQvSqrLC2MuFgkoZRZQZT
+         P0JcWd43iycFkZ0cIxKctQMYYpi8nUX7DJTQN6KM1lVyczgU3cEEuyGopgQxu1kmmL
+         fYIJLPcEnXBuhTX9IYDbbO1R34sg0Cud/1/rhbYQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Sergey Gorenko <sergeygo@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 42/91] RDMA/srp: Propagate ib_post_send() failures to the SCSI mid-layer
-Date:   Fri, 22 Nov 2019 01:00:40 -0500
-Message-Id: <20191122060129.4239-41-sashal@kernel.org>
+Cc:     Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 46/91] ath6kl: Fix off by one error in scan completion
+Date:   Fri, 22 Nov 2019 01:00:44 -0500
+Message-Id: <20191122060129.4239-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -62,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit 2ee00f6a98c36f7e4ba07cc33f24cc5a69060cc9 ]
+[ Upstream commit 5803c12816c43bd09e5f4247dd9313c2d9a2c41b ]
 
-This patch avoids that the SCSI mid-layer keeps retrying forever if
-ib_post_send() fails. This was discovered while testing immediate
-data support and passing a too large num_sge value to ib_post_send().
+When ath6kl was reworked to share code between regular and scheduled scans
+in commit 3b8ffc6a22ba ("ath6kl: Configure probed SSID list consistently"),
+probed SSID entry changed from 1-index to 0-indexed. However,
+ath6kl_cfg80211_scan_complete_event() was missed in that change. Fix its
+indexing so that we correctly clear out the probed SSID list.
 
-Cc: Sergey Gorenko <sergeygo@mellanox.com>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Cc: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 74de1ae48d4f7..af68be201c299 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -2180,6 +2180,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
- 
- 	if (srp_post_send(ch, iu, len)) {
- 		shost_printk(KERN_ERR, target->scsi_host, PFX "Send failed\n");
-+		scmnd->result = DID_ERROR << 16;
- 		goto err_unmap;
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 0cce5a2bca161..650d2f6446a6c 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -1088,7 +1088,7 @@ void ath6kl_cfg80211_scan_complete_event(struct ath6kl_vif *vif, bool aborted)
+ 	if (vif->scan_req->n_ssids && vif->scan_req->ssids[0].ssid_len) {
+ 		for (i = 0; i < vif->scan_req->n_ssids; i++) {
+ 			ath6kl_wmi_probedssid_cmd(ar->wmi, vif->fw_vif_idx,
+-						  i + 1, DISABLE_SSID_FLAG,
++						  i, DISABLE_SSID_FLAG,
+ 						  0, NULL);
+ 		}
  	}
- 
 -- 
 2.20.1
 
