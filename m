@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B51AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82489C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA0D20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556DC2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400662;
-	bh=PdKlgkUbmjtGXd4lr35779+IJqQhfvMEQr7fvNa42pU=;
+	s=default; t=1574400669;
+	bh=uMgmPvrDLDsbL0dY3dsmfSahB5TPRLdrqSc2NbbB570=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PaVeBjbCElumHJhl3Xgtszko1tp02/egFLhB5KWrgik7Lzp8z0hc7vp90SBahYVMx
-	 7bPHqLJVfBetEoBHn+6CzItVfEdIc+XqZQCNzq7VGnl5T3FgORHwaTERPf/JX2xuCn
-	 tWqJTEpu+8AfMBKuOo/gxH2xFjRROoy1KGg5+pUM=
+	b=ngHFDSaI91AVqDIweSyV++9W+66dBUGdoifLs1SxOUGkzwIEb123OxCRUrnkUFQtz
+	 z8V5DKWY4Yyco3UzjYWTjXQvqQbZrn/BfCSUOmwlYowJSMRJml9fUuGauJwdmGzt3O
+	 J+1NGSIjV6jtqX1OqGPFg/639VwzpE0zh58AfWIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKVFbC (ORCPT
+        id S1727175AbfKVFaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:31:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47778 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:30:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbfKVFaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:13 -0500
+        id S1726248AbfKVFaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 035B620707;
-        Fri, 22 Nov 2019 05:30:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83DD20708;
+        Fri, 22 Nov 2019 05:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400612;
-        bh=PdKlgkUbmjtGXd4lr35779+IJqQhfvMEQr7fvNa42pU=;
+        s=default; t=1574400605;
+        bh=uMgmPvrDLDsbL0dY3dsmfSahB5TPRLdrqSc2NbbB570=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vt7EGcXAT3R4Ctr1C6ojPA0BHWA55tOSgZr6DJxjQzt9Apb7j7aQEAqY7ieXWIA3+
-         y0d63NXPdrYoi/oDWQk03RfXkBoD4aAxOLwmpBC3WOfJmRCBF7xLo1sDjsknf0gpGe
-         rWQ37IBib4+17+b2cUBBctwMSpD0lGUewkPsPjLI=
+        b=FqVx/Lnwfn7aO7CrtL0vWdk28Blgbud8nKn8cw5YoqdJ6ATYBT5Io03v8HJFXPg+t
+         Mr7FBCoBthAgFd2+lBUKKGCm06PXoBHytau2XB8yD+BOjYN5Rk/wHJjyubs/zgt0+7
+         Af63dCqt89XSL4H11nQMHCKHVd6tMsQrD4mqrf48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 014/219] ARM: dts: imx6sx: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:26:36 -0500
-Message-Id: <20191122053001.752-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 009/219] ARM: dts: imx53: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:26:31 -0500
+Message-Id: <20191122053001.752-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
 References: <20191122053001.752-1-sashal@kernel.org>
@@ -62,13 +62,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 216f35fedd8688c8b654ebfbad18c6e64713fad7 ]
+[ Upstream commit e8fd17b900a4a1e3a8bef7b44727cbad35db05a7 ]
 
-Boards based on imx6sx have duplicate memory nodes:
+Boards based on imx53 have duplicate memory nodes:
 
 - One coming from the board dts file: memory@
 
-- One coming from the imx6sx.dtsi file.
+- One coming from the imx53.dtsi file.
 
 Fix the duplication by removing the memory node from the dtsi file
 and by adding 'device_type = "memory";' in the board dts.
@@ -78,105 +78,118 @@ Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx-nitrogen6sx.dts         | 1 +
- arch/arm/boot/dts/imx6sx-sabreauto.dts           | 1 +
- arch/arm/boot/dts/imx6sx-sdb.dtsi                | 1 +
- arch/arm/boot/dts/imx6sx-softing-vining-2000.dts | 1 +
- arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts      | 1 +
- arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts   | 1 +
- arch/arm/boot/dts/imx6sx-udoo-neo-full.dts       | 1 +
- arch/arm/boot/dts/imx6sx.dtsi                    | 2 --
- 8 files changed, 7 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx53-ard.dts         | 1 +
+ arch/arm/boot/dts/imx53-cx9020.dts      | 1 +
+ arch/arm/boot/dts/imx53-m53.dtsi        | 1 +
+ arch/arm/boot/dts/imx53-qsb-common.dtsi | 1 +
+ arch/arm/boot/dts/imx53-smd.dts         | 1 +
+ arch/arm/boot/dts/imx53-tqma53.dtsi     | 1 +
+ arch/arm/boot/dts/imx53-tx53.dtsi       | 1 +
+ arch/arm/boot/dts/imx53-usbarmory.dts   | 1 +
+ arch/arm/boot/dts/imx53.dtsi            | 2 --
+ 9 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-index adb5cc7d8ce2f..832b5c5d7441a 100644
---- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-+++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-@@ -12,6 +12,7 @@
- 	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
+diff --git a/arch/arm/boot/dts/imx53-ard.dts b/arch/arm/boot/dts/imx53-ard.dts
+index 117bd002dd1d1..7d5a48250f867 100644
+--- a/arch/arm/boot/dts/imx53-ard.dts
++++ b/arch/arm/boot/dts/imx53-ard.dts
+@@ -19,6 +19,7 @@
+ 	compatible = "fsl,imx53-ard", "fsl,imx53";
  
- 	memory@80000000 {
+ 	memory@70000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
+ 		reg = <0x70000000 0x40000000>;
  	};
  
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 841a27f3198ff..48aede543612b 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+diff --git a/arch/arm/boot/dts/imx53-cx9020.dts b/arch/arm/boot/dts/imx53-cx9020.dts
+index cf70ebc4399a2..c875e23ee45fb 100644
+--- a/arch/arm/boot/dts/imx53-cx9020.dts
++++ b/arch/arm/boot/dts/imx53-cx9020.dts
+@@ -22,6 +22,7 @@
+ 	};
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x20000000>,
+ 		      <0xb0000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx53-m53.dtsi b/arch/arm/boot/dts/imx53-m53.dtsi
+index ce45f08e30514..db2e5bce9b6a1 100644
+--- a/arch/arm/boot/dts/imx53-m53.dtsi
++++ b/arch/arm/boot/dts/imx53-m53.dtsi
+@@ -16,6 +16,7 @@
+ 	compatible = "aries,imx53-m53", "denx,imx53-m53", "fsl,imx53";
+ 
+ 	memory@70000000 {
++		device_type = "memory";
+ 		reg = <0x70000000 0x20000000>,
+ 		      <0xb0000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+index 50dde84b72ed7..f00dda334976a 100644
+--- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
++++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
 @@ -11,6 +11,7 @@
- 	compatible = "fsl,imx6sx-sabreauto", "fsl,imx6sx";
+ 	};
  
- 	memory@80000000 {
+ 	memory@70000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
+ 		reg = <0x70000000 0x20000000>,
+ 		      <0xb0000000 0x20000000>;
  	};
+diff --git a/arch/arm/boot/dts/imx53-smd.dts b/arch/arm/boot/dts/imx53-smd.dts
+index 462071c9ddd73..09071ca11c6cf 100644
+--- a/arch/arm/boot/dts/imx53-smd.dts
++++ b/arch/arm/boot/dts/imx53-smd.dts
+@@ -12,6 +12,7 @@
+ 	compatible = "fsl,imx53-smd", "fsl,imx53";
  
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index f8f31872fa144..7f5ede5ca4c30 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory@80000000 {
+ 	memory@70000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
+ 		reg = <0x70000000 0x40000000>;
  	};
  
-diff --git a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-index 252175b592475..2bc51623a8060 100644
---- a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-+++ b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-@@ -21,6 +21,7 @@
- 	};
+diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
+index a72b8981fc3bd..c77d58f06c949 100644
+--- a/arch/arm/boot/dts/imx53-tqma53.dtsi
++++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "tq,tqma53", "fsl,imx53";
  
- 	memory@80000000 {
+ 	memory@70000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
+ 		reg = <0x70000000 0x40000000>; /* Up to 1GiB */
  	};
  
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
-index 40ccdf43dffc5..db0feb9b9f5d7 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
-@@ -49,6 +49,7 @@
- 	compatible = "udoo,neobasic", "fsl,imx6sx";
+diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
+index 54cf3e67069a9..4ab135906949f 100644
+--- a/arch/arm/boot/dts/imx53-tx53.dtsi
++++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+@@ -51,6 +51,7 @@
  
- 	memory@80000000 {
+ 	/* Will be filled by the bootloader */
+ 	memory@70000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
+ 		reg = <0x70000000 0>;
  	};
- };
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-index 42bfc8f8f7f6b..5c7a2bb9141cb 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-@@ -49,6 +49,7 @@
- 	compatible = "udoo,neoextended", "fsl,imx6sx";
  
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
+diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
+index f6268d0ded296..ee6263d1c2d3d 100644
+--- a/arch/arm/boot/dts/imx53-usbarmory.dts
++++ b/arch/arm/boot/dts/imx53-usbarmory.dts
+@@ -58,6 +58,7 @@
  	};
- };
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-index c84c877f09d49..13dfe2afaba56 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-@@ -49,6 +49,7 @@
- 	compatible = "udoo,neofull", "fsl,imx6sx";
  
- 	memory@80000000 {
+ 	memory@70000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
+ 		reg = <0x70000000 0x20000000>;
  	};
- };
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 7b62e6fb47ebe..ae0728df542e9 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -15,10 +15,8 @@
+ 
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index b6b0818343c4e..8accbe16b7584 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -23,10 +23,8 @@
  	 * The decompressor and also some bootloaders rely on a
  	 * pre-existing /chosen node to be available to insert the
  	 * command line and merge other ATAGS info.
@@ -186,7 +199,7 @@ index 7b62e6fb47ebe..ae0728df542e9 100644
 -	memory { device_type = "memory"; };
  
  	aliases {
- 		can0 = &flexcan1;
+ 		ethernet0 = &fec;
 -- 
 2.20.1
 
