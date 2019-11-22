@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C7EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD42C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B628C2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081662071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420301;
-	bh=kL0HXZps80TZHqhI8/x93MmrZiMXxsREYGLIJetJgV0=;
+	s=default; t=1574420304;
+	bh=dlyw4oCcyKNR2SNh/XhvBtQMONKlvoPuARJ9KYHE57U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HI4oWe+5JzcCoEObr2oDtLan7Iwh6QAcgwqQKhYnO7aftPI/UdMqxmg9tQWqj4Znf
-	 NmiJhxpEE18by16j9iz7YERrMXn/3vHdYjOShViVRZNekMVnP/dbKWarSNbR2YcykU
-	 tPIzOMIo71dh66jIt5vP3Y0OnWwRM9q5foLgGhNQ=
+	b=kUrcXjGwL41FrV0if/Id1Wpo5yExpoNr5EKUhFS0jDepy7R9P4t8GAf1x+esc+GLQ
+	 glyWDhTO/CqM+K/igddIF3wJwbI/zjh/a3lYgvFoP/jECbviIStNWW5HhivkjTZKfo
+	 fFKKtnlgDom5nEGdPTss5To2G/Yt8BeGzsek74wM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfKVK6U (ORCPT
+        id S1730785AbfKVK6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48104 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730781AbfKVK6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:18 -0500
+        id S1730780AbfKVK6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410DB20706;
-        Fri, 22 Nov 2019 10:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FED32071C;
+        Fri, 22 Nov 2019 10:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420297;
-        bh=kL0HXZps80TZHqhI8/x93MmrZiMXxsREYGLIJetJgV0=;
+        s=default; t=1574420295;
+        bh=dlyw4oCcyKNR2SNh/XhvBtQMONKlvoPuARJ9KYHE57U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZ/xXgR9U5QRayUjLD35T4Ofv4zKbOgK+GrvDvCnYyxH1zalAypIucd7oi8/z58tj
-         X56/mTScI+p4+k3o2DjwRWj/V8C1l5tVOip/agIA5KCNoYHPm7r7x0v4EzbpawrSRU
-         O3+r3uauBazs+SUDLcjRdFgkqsMoGSMma4YWuHzo=
+        b=Grwrf0bQfHQJD7eHJqvr31jjKxqe5B8A4UXFN9WlotuY299dOwdY7PW2bZorslzEb
+         pKdDdBdO3gUUTP872SJ3p9hkO8OuXHCyKruhW6FBUCNIW2bPYeMONasAInt14qJcu1
+         Mo9z8jn0tl89pHp1wV2JrS5HJz+NojRcRPZWUxt8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/220] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
-Date:   Fri, 22 Nov 2019 11:27:03 +0100
-Message-Id: <20191122100916.293549628@linuxfoundation.org>
+Subject: [PATCH 4.19 057/220] dmaengine: ep93xx: Return proper enum in ep93xx_dma_chan_direction
+Date:   Fri, 22 Nov 2019 11:27:02 +0100
+Message-Id: <20191122100916.229301096@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,17 +62,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
+[ Upstream commit 9524d6b265f9b2b9a61fceb2ee2ce1c2a83e39ca ]
 
 Clang warns when implicitly converting from one enumerated type to
 another. Avoid this by using the equivalent value from the expected
 type.
 
-drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
-enumeration type 'enum dma_transfer_direction' to different enumeration
-type 'enum dma_data_direction' [-Wenum-conversion]
-                td_desc->desc_list_len, DMA_MEM_TO_DEV);
-                                        ^~~~~~~~~~~~~~
+In file included from drivers/dma/ep93xx_dma.c:30:
+./include/linux/platform_data/dma-ep93xx.h:88:10: warning: implicit
+conversion from enumeration type 'enum dma_data_direction' to different
+enumeration type 'enum dma_transfer_direction' [-Wenum-conversion]
+                return DMA_NONE;
+                ~~~~~~ ^~~~~~~~
 1 warning generated.
 
 Reported-by: Nick Desaulniers <ndesaulniers@google.com>
@@ -81,22 +82,22 @@ Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/timb_dma.c | 2 +-
+ include/linux/platform_data/dma-ep93xx.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index 395c698edb4d7..fc0f9c8766a87 100644
---- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -545,7 +545,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
- 	}
+diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
+index f8f1f6b952a62..eb9805bb3fe8a 100644
+--- a/include/linux/platform_data/dma-ep93xx.h
++++ b/include/linux/platform_data/dma-ep93xx.h
+@@ -85,7 +85,7 @@ static inline enum dma_transfer_direction
+ ep93xx_dma_chan_direction(struct dma_chan *chan)
+ {
+ 	if (!ep93xx_dma_chan_is_m2p(chan))
+-		return DMA_NONE;
++		return DMA_TRANS_NONE;
  
- 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
--		td_desc->desc_list_len, DMA_MEM_TO_DEV);
-+		td_desc->desc_list_len, DMA_TO_DEVICE);
- 
- 	return &td_desc->txd;
- }
+ 	/* even channels are for TX, odd for RX */
+ 	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
 -- 
 2.20.1
 
