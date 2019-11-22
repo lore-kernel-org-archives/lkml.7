@@ -2,54 +2,51 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B01C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A14020715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF55220714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418716;
-	bh=uIXzy5NaSb2l3HTFOk/ZUs1O/o+lkruU8kvNmDUkF+4=;
+	s=default; t=1574418721;
+	bh=ImmlDRzMG4QM7y293HzEHL2Nt8F3ObbdD/6TybDalBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+6PZzv0sJmIVia92cg8kcBALEex85Ok6hIwD+Tb82k9/aJvlEphxkKFKWNC/RqUM
-	 IB9FxQXzgbBvBIN2D61rsJ+HocfAfZirFoA/7lsFXJsTAfvNj4wXWBEQnCYwxp+Bi3
-	 HzwdisOzwV95+CWxwdlN7kCE8NL261qLk2wA9fzg=
+	b=KzF+iLidwd/opMlP03QG8GyBe8CVOUkG1Lj759R27EPBplEeAPUIeOqPeO7LUxx5K
+	 /FTJxREjJz7Sib9+6zoOsKDgnEYo3Kb9YS0KAuXU/qMNVRVyrwehF7Kn27bOl0nyJk
+	 Ejgu7XnU82xxTE0vCotBZwgZRtDwduWOo6+qW2+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfKVKbz (ORCPT
+        id S1727532AbfKVKb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727467AbfKVKbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:51 -0500
+        id S1726563AbfKVKb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381D420714;
-        Fri, 22 Nov 2019 10:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4635920714;
+        Fri, 22 Nov 2019 10:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418710;
-        bh=uIXzy5NaSb2l3HTFOk/ZUs1O/o+lkruU8kvNmDUkF+4=;
+        s=default; t=1574418716;
+        bh=ImmlDRzMG4QM7y293HzEHL2Nt8F3ObbdD/6TybDalBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xgUlo1RrG3UzSFh1PjZFT2wjnS2UUZhMlmks72i/cpTUnk39TJSZ9oOgmvOSyp+Ld
-         CvuZhsqMcHgxheFbInrfJPSyYOMqkeNJq3y88vfAksMFmp0jxq3/bUyZHT19YFBXE3
-         x806hvWmWDgTlScGNDF0gRRpGm5nh3fwtA3XXzUk=
+        b=X4/XEmRJ9jmfGIB14OIn4frqvyNVkXzQLbwRIXZlKb+DMheaHvObK9pGpERb7jc14
+         EKgfbGG027WYTtfUEsHQH17AFINm0iox3cIPUxsXJc10OZdmKe6ljcFI/zPIcfG47V
+         ++2xEAEwtTZot7+u4bKXudXFRse9tmCPVZkOQ1O0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Raghuram Chary Jallipalli 
-        <raghuramchary.jallipalli@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 025/159] net: lan78xx: Bail out if lan78xx_get_endpoints fails
-Date:   Fri, 22 Nov 2019 11:26:56 +0100
-Message-Id: <20191122100723.738425098@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 004/159] ALSA: usb-audio: not submit urb for stopped endpoint
+Date:   Fri, 22 Nov 2019 11:26:35 +0100
+Message-Id: <20191122100708.764223290@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,40 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Henry Lin <henryl@nvidia.com>
 
-[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
+commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
 
-We need to bail out if lan78xx_get_endpoints() fails, otherwise the
-result is overwritten.
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
+
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/usb/endpoint.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 45a6a7cae4bfc..fc922f8122801 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2246,6 +2246,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- 	int i;
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -403,6 +403,9 @@ static void snd_complete_urb(struct urb
+ 		}
  
- 	ret = lan78xx_get_endpoints(dev, intf);
-+	if (ret) {
-+		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
-+			    ret);
-+		return ret;
-+	}
- 
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
--- 
-2.20.1
-
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 
 
