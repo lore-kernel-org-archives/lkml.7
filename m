@@ -2,95 +2,66 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF163C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49D120715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:13:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCxdEI/y"
+	by mail.kernel.org (Postfix) with ESMTP id 3AFAB2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKVSNl (ORCPT
+        id S1726977AbfKVSN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:13:41 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43157 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfKVSNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:13:40 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l20so7281980oie.10;
-        Fri, 22 Nov 2019 10:13:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HWSTYNzlkfy1NirQ9eTd5paYFBQwR5NNRGN8Mv4zqh0=;
-        b=fCxdEI/y1U5H993S8qPP8GKEjbQv99Z0GnwdVd6TnAguaqBZ6kfHp13n7Pa46fPZbA
-         kaKPqt0Sxhm9nWX09zgGSTGZp2P0ynr2EWGussUZA9lkg01YLAjcBDkmU44KRb7ll1pZ
-         2nwFbKRwjzSt2lFY1OLdVeNg4/KeLtf+u2zVVhLN8N0VGHSIrFw4cJ/8RTPt6N8oKG9G
-         IG2uP6IZK5kQBN5DcGyCEakAelmGmudhnYJYnIjuQhM3vy1aAARSnEExlsp5CiCq9i2m
-         pxqHAd79qY96EAF7BV+RRgiXNFn6NdE0jto7iYxHAOeO75TzSayGp1MDpMrExwlW970y
-         qwwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HWSTYNzlkfy1NirQ9eTd5paYFBQwR5NNRGN8Mv4zqh0=;
-        b=kdbebt9CZs62DcFp2jB+bP5UFzKHwGpnVtO4lqtrkgEhLwydq6rEa2Sf+pgxxweAyB
-         ft5b9FjCdSZCBxBU0DsHaGq6qSEYnhqkc1z9L2JuvaAeqwDmA9gphEs+aypOf88hYOff
-         5Wx3i7xHBN7wd8ksTJkunV4yJLmsU7+2LXquT3cvteTOY3+8pKraPxgsPFGNvLwxIuVp
-         MrDm+KlgfMS+EZdR0KeiO80efwS6ygMpkb6d2+XhMQfr5CnoYgnUhIvWrSB2HodprrMq
-         5XnFLpXjTyBhViXAFU2TYy7mdZbkatWuu1aKa5wYe18aWPIs/F2ayQRe7sjhBtFbEC9t
-         Q5Rg==
-X-Gm-Message-State: APjAAAXvnq1CZqVZuCl6k6HU09yxCBTJG0GzCLjpQmz2ut5cyANd80CK
-        o76t1wNDSnO02N+D/CgrFbs=
-X-Google-Smtp-Source: APXvYqyfJQQqBax+9bnfj+470MXeZoqlxTrix7Mu5n+3Is0+VYL0rUW6+An2aBQ2/fuFHCmi8yukRA==
-X-Received: by 2002:a05:6808:81:: with SMTP id s1mr13715833oic.65.1574446419747;
-        Fri, 22 Nov 2019 10:13:39 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k66sm2257160oia.40.2019.11.22.10.13.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Nov 2019 10:13:39 -0800 (PST)
-Date:   Fri, 22 Nov 2019 10:13:37 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
-Message-ID: <20191122181337.GD13514@roeck-us.net>
-References: <20191122100912.732983531@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 22 Nov 2019 13:13:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55454 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726046AbfKVSN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 13:13:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 332B6ADCF;
+        Fri, 22 Nov 2019 18:13:55 +0000 (UTC)
+Date:   Fri, 22 Nov 2019 19:13:54 +0100
+Message-ID: <s5hk17r22zh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        "Jaroslav Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: Re: [PATCH 1/2] ALSA: aloop: Remove redundant locking in timer open function
+In-Reply-To: <20191122175218.17187-1-andrew_gabbasov@mentor.com>
+References: <20191122175218.17187-1-andrew_gabbasov@mentor.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:26:05AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.86 release.
-> There are 220 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, 22 Nov 2019 18:52:17 +0100,
+Andrew Gabbasov wrote:
 > 
-> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> Anything received after that time might be too late.
+> loopback_parse_timer_id() uses snd_card_ref(), that can lock on mutex,
+> also snd_timer_instance_new() uses non-atomic allocation, that can sleep.
+> So, both functions can not be called from loopback_snd_timer_open()
+> with cable->lock spinlock locked.
 > 
+> Moreover, most part of loopback_snd_timer_open() function body works
+> when the opposite stream of the same cable does not yet exist, and
+> the current stream is not yet completely open and can't be running,
+> so existing locking of loopback->cable_lock mutex is enough to protect
+> from conflicts with simultaneous opening or closing.
+> Locking of cable->lock spinlock is not needed in this case.
+> 
+> Fixes: 26c53379f98d ("ALSA: aloop: Support selection of snd_timer instead of jiffies")
+> Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 390 pass: 390 fail: 0
+Applied, thanks.
 
-As already reported, there is a new suspicious RCU usage warning
-in idr_get_next().
 
-Guenter
+Takashi
