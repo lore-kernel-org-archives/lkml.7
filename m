@@ -2,101 +2,105 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B41EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF5AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621C220715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D9B20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GY3TSJ3c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N2614tNY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUmmmSwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfKVMxU (ORCPT
+        id S1727705AbfKVMxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:53:20 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:43929 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbfKVMxU (ORCPT
+        Fri, 22 Nov 2019 07:53:21 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42091 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfKVMxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 07:53:20 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 778A150EA;
-        Fri, 22 Nov 2019 07:53:16 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 22 Nov 2019 07:53:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=6sTaGdNaAmXwRq4Z1SN9IJKH5kM
-        GbGtleKNhLuS6KCc=; b=GY3TSJ3cyNB/ELYaZuV8A4JzI1BnSHgTsWtwatzFMQ1
-        +qyz/x4YpfIKfKwrxY14//8TUBs/sNm4IX89awRfB91iRdT3Qs8IBFEiiAGVp94D
-        yVy1wB4cCHPAIkdS1nLHsgt9AzSlP+KhU04bxg46IMRT+9isBpe1QEJX+pdrKU5g
-        QF8mHkIKr2rTNDjOwzoWKCK5wXsJfWuzcBJjc+gI7NTe3+x3r4CuIGQeu+DyGRzo
-        C0JXS7dhk0R/Rqujk3ZlYG1NdlLADsSmxry7weB69Af84sgI2RYiCOpoDMIaLCws
-        1Ec0vbvhbrKSLjjeqtX5A2TU6Gmecc5nEKzbHx0Micw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=6sTaGd
-        NaAmXwRq4Z1SN9IJKH5kMGbGtleKNhLuS6KCc=; b=N2614tNYPyX/Ppe8PZ7zoG
-        OKJIyoH0vBdx58kOTNIEA4g4i5JAJiEX8fOdTX03t3E0hwHAy87hTvsZu8GL4vCv
-        nMGos43iq3x3eUvMiPuWxVtfNGQPD0J3hAHQmNDucZsoQOT6upX4P9dn1x+IBAJR
-        GVweTZka4jKc6D1T797Qt5/CqQIrOmg6PdodkG345U+XimATQoCYFrwDVc3Vm0n7
-        wY9Bt4elDZ3XLU1KlBPplcPukeVY+guEhcHnIySzQKolG4dOPmkLPlUrbBOfUFY+
-        DonKbF8GZvVl4bszSxshEaJzkAo6BQg97WQEB39j8BoKIeed2UgpwB422gz6sprw
-        ==
-X-ME-Sender: <xms:ONrXXfspYttb_FGwg4feQCUKW3Cuze2CKmn7gG8ultW6G6OyTKNPFg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehgedggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujggfsehttd
-    ertddtredvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegt
-    vghrnhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuvehluhhsthgvrhfu
-    ihiivgeptd
-X-ME-Proxy: <xmx:ONrXXR0A77t3Rrze9Stj3tjITlYJ9AbhRQbTDiroGSsfKYolhTB-ww>
-    <xmx:ONrXXfxwTluPtoy8Vk-wAC-heffLw0dWicrlsRGrVmjqzNo16feFnw>
-    <xmx:ONrXXVVqCv5JZ1My3N64FvfyexWvqlrx_t4BLF6v6biF18p6bBlSQA>
-    <xmx:PNrXXTeRfTFSjCBjey-yFNLl_uofxUM5PdxlXGUT5Z_Aa1XYjxXA3g>
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DD2DC8005B;
-        Fri, 22 Nov 2019 07:53:11 -0500 (EST)
-Date:   Fri, 22 Nov 2019 13:53:09 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 3/3] crypto: sun4i-ss: add the A33 variant of SS
-Message-ID: <20191122125309.GL4345@gilmour.lan>
-References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
- <20191120152833.20443-4-clabbe.montjoie@gmail.com>
+Received: by mail-lf1-f68.google.com with SMTP id y19so5419046lfl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:53:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C8R7NEDueibHtXFqup1VmL6iM+bPcC4QfocIAUJQOdI=;
+        b=aUmmmSwS2BYNFlhTaRJt05gbgpUdl9bPc4u0dViAnMhe+39FKwYcZ5ZbeMtu0YMR1h
+         IMtow+JySIg9ZfoOQcJsSD/0nbQjROkqD6bY4pZTUS3tDkGvX6a01RAXLscAvxSzD0nA
+         QSwbypkiAWDMoz1jmGm5iQLWssZx0ubVG0s79UqJYD4tV/dLycPSBlAe2pOFK1fOICeb
+         9M95KnzCyYm10ONh5r8//OSi9ZBVIVnqYEKeCycfswYit/q0p8sEk1NafChgug73axNQ
+         iJJITbdBMZAhgOUSLghwYkJFa37E99WBLRwet4NYoBaWRLBNqWoXFbu2MaVgLIcX2UbL
+         RVhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C8R7NEDueibHtXFqup1VmL6iM+bPcC4QfocIAUJQOdI=;
+        b=aFgV056njGCkGmtnCheKlD1wh+Tr766znD0sQcwA9UtYKMr2HuK8s4jSSaZazbIfq/
+         as0rDcfq4lQv/v589s6nr7RoQ0NNywS673xZgbJLYuqQkA9AoLppEDNw6cSAagSnfEyB
+         HgWbTBmk22NaCMOJDFX2qlDBMz4LqPRb+ovyQ3dnHNbyuUUuNLJC9/ADvcxw/Ev+NbE8
+         78WrwxT8y7ArV3CJuj3vZLXsRn5WXYA+1bUITEeUFHHy12JMbTFSKxTK5daWCpuDmCEC
+         2Jpq3odyNnHq/zPneEbEg2gfqtkPjMSY/nFia01dzB5mFORyn7dZ4rCcLi94ygY1dBq1
+         DUTw==
+X-Gm-Message-State: APjAAAWTazNWr2YLwzUMXj5TFllh7TwbcRBBZB0GzNzCADbMM8kS8gU/
+        0v6W9FPQv/DBF0jAJwD6sgQYnf2D2h/B3F8b165jsw==
+X-Google-Smtp-Source: APXvYqzhVgwHKTyzMPjQyHHyWrIQkpIHO0Ex+y6b1ZbPxxQDU2ZwtOXL6oUU6aMJgcHt3uty1B7pTB2/1uRI8XbC7yM=
+X-Received: by 2002:a19:f701:: with SMTP id z1mr6862942lfe.133.1574427198426;
+ Fri, 22 Nov 2019 04:53:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120152833.20443-4-clabbe.montjoie@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com> <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
+In-Reply-To: <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 13:53:07 +0100
+Message-ID: <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 04:28:33PM +0100, Corentin Labbe wrote:
-> The A33 SS has a difference with all other SS, it give SHA1 digest
-> directly in BE.
-> So this patch adds variant support in sun4i-ss.
->
-> Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+On Fri, Nov 22, 2019 at 1:47 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+> what about the existing bindings for at24 that don't mandate the
+> active-low flag? I'm afraid this would break the support for this
+> specific chip or lead to code duplication if we had this in both nvmem
+> and at24 with different logic.
 
-I'll apply the DT patches once Herbert will have merged this patch.
+Hm yeah I realized this when I read patches 3 & 4.
 
-Thanks!
-Maxime
+I would to like this:
+
+1. Add a new generic property
+   writeprotect-gpios that mandates to use GPIO_ACTIVE_LOW
+   and use this in the new example
+
+2. Deprecate wp-gpios in the binding, keep it around but deprecated.
+
+3. Add a quirk to gpiolib-of in the manner of the other quirks there
+   (like for SPI) so that if we are dealing with some EEPROM node
+   like at24 and the flag is zero, tag on GPIO_ACTIVE_LOW on
+   the descriptor.
+
+The driver will now handle the semantic of both cases
+with gpiolib-of providing a quirk for the old binding.
+
+This is how we solved this type of problem before.
+
+Yours,
+Linus Walleij
