@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF70C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E59C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7182071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D24B20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452414;
-	bh=HpP0fwt7DW+xzRn4gSMIq4k6WXh/kAPKCD3S6/TGhvU=;
+	s=default; t=1574452425;
+	bh=p9dduV/SfO6VK/Wj1E1+PzJhUj70IKevY3pdThcKypY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rN/682j0KBvXE49ZXwayqrAuPwHX661Aj4z5WYdllx7UwJ+zazV4Abf7v54TWuZx0
-	 +6xBdwhwoYNtHMzq71s6jz3Nfyh8YcqGmnPhXJbDeKBgSzVvJci4KIqIOmDaCLQH9B
-	 5/HAxaF8/r2rQFn0dy6Do9VD9wd/f6fGz6Q6/RzY=
+	b=s+OZBnD67cHZVlWllOpfagOi1dHB1DcysRPof0YydOzh5GFi+HnruYOJ4hETheTSQ
+	 yqvOZw58E07+spSZcatlY+Lj803kor26lsBPGO3Xjahr9sR3zps5nTKWdCJZmEUDmi
+	 6swxe+kexocKnEotkb/MVY7MI/BWot02WAt0540Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfKVTxd (ORCPT
+        id S1727887AbfKVTxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:53:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49244 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:53:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727428AbfKVTta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:30 -0500
+        id S1727417AbfKVTt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BED2075E;
-        Fri, 22 Nov 2019 19:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA462075B;
+        Fri, 22 Nov 2019 19:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452169;
-        bh=HpP0fwt7DW+xzRn4gSMIq4k6WXh/kAPKCD3S6/TGhvU=;
+        s=default; t=1574452168;
+        bh=p9dduV/SfO6VK/Wj1E1+PzJhUj70IKevY3pdThcKypY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ku7pegmJHEtVmmky4D9Vf8ib4kabp7c67HiFJwoeQK9s7E6EQguq2chnDoPQjaUWe
-         29Lot1B239Jgk7Oe7qLgysDzcQMC6xts/NrF2CUpP+hblgi9H0oVaJtD/dkAuUm4al
-         aJWHdlmI83Y7eQ5TQsJI6CNDo/+D20l6+z6u+rPE=
+        b=Mm+RifkNfby/xkg9lSkr/GFiqAz+WNcbo0Y5hjHP8HueFB9y6dRPdR+HJVi9zu7Ch
+         6Y6lMr+9k+E+g/CB+0wwYMGe9fK8dz+2z6VjTorTdiYYg8eHzy+rfkhwcwdMbFEMVz
+         Ep/D1vh6yW4B1BOVQXwOc/pK5eu1FHMPtoZ8TUbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/25] net: gemini: add missed free_netdev
-Date:   Fri, 22 Nov 2019 14:48:58 -0500
-Message-Id: <20191122194859.24508-25-sashal@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/25] Input: synaptics - enable RMI mode for X1 Extreme 2nd Generation
+Date:   Fri, 22 Nov 2019 14:48:57 -0500
+Message-Id: <20191122194859.24508-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
@@ -61,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 18d647ae74116bfee38953978501cea2960a0c25 ]
+[ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
 
-This driver forgets to free allocated netdev in remove like
-what is done in probe failure.
-Add the free to fix it.
+Just got one of these for debugging some unrelated issues, and noticed
+that Lenovo seems to have gone back to using RMI4 over smbus with
+Synaptics touchpads on some of their new systems, particularly this one.
+So, let's enable RMI mode for the X1 Extreme 2nd Generation.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cortina/gemini.c | 1 +
+ drivers/input/mouse/synaptics.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
-index dfd1ad0b1cb94..4af78de0e077a 100644
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -2530,6 +2530,7 @@ static int gemini_ethernet_port_remove(struct platform_device *pdev)
- 	struct gemini_ethernet_port *port = platform_get_drvdata(pdev);
- 
- 	gemini_port_remove(port);
-+	free_netdev(port->netdev);
- 	return 0;
- }
- 
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 06cebde2422ea..afdb9947d8af9 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -180,6 +180,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN009b", /* T580 */
++	"LEN0402", /* X1 Extreme 2nd Generation */
+ 	"LEN200f", /* T450s */
+ 	"LEN2054", /* E480 */
+ 	"LEN2055", /* E580 */
 -- 
 2.20.1
 
