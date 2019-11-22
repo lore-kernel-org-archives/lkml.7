@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0B1C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6122068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28AF2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402699;
-	bh=rkaZ7GFBTezRs+c1psX1fLT4Sv2NwyXuvcK7sz8Rltk=;
+	s=default; t=1574402705;
+	bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwituUegBKBMzedLARloRKX0pgx1xZr+iJYzY4j1n9H75rKEG6hK0F5NFyfPnG90K
-	 FbibdO4ElbjAluV8Cem9xOw3ytMyBttF1o64gf5nWUXkLgMipEEcryvq0btzOI7Dsh
-	 N+s9Eqpju79C4bI5pmI8QH2B5e035fx6WHBVi8IQ=
+	b=IWdiu/iZfyrBriHLdQequA4kir4JpEwEavW4o1FpgSBy95ZFJX/+rVIt5YLnLYRIJ
+	 ot/LmiK1zPAAkXq24lE6R874hDFR6R+R8ZBfYeEh8oOsRXzCiWRkR4k5WBhye3syuz
+	 h7Ac23G488Jiwdd62ukWKbOpbuqqsPvV7k/8VAx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfKVGE6 (ORCPT
+        id S1728650AbfKVGCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:04:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41634 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbfKVGCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:48 -0500
+        id S1729445AbfKVGCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53B352072E;
-        Fri, 22 Nov 2019 06:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5439020718;
+        Fri, 22 Nov 2019 06:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402567;
-        bh=rkaZ7GFBTezRs+c1psX1fLT4Sv2NwyXuvcK7sz8Rltk=;
+        s=default; t=1574402555;
+        bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XnuIRWVWo3N1wH+3/DXNnlXy5miGGhx8lZKmW334yFPdn7XW07WRyGD5lcJsAUzIt
-         MfIxo1W7ZBekJugqms3MeG/pQtRWl2idpfM9CzxA/8rxoQHcKORx4/caB5BYrxJYuZ
-         Kp/+JKRgii/wRqPV+J1UAGSnWiV8H1q7Nj8QDqoU=
+        b=tfhlrSAyA+UXH6Uk0DN1dLHFLfAyrOgWBlrUMdxFptFJVPVXWRCKLfqVXZQWsNkmG
+         0TESOZw2TE+PL7LSl7hJ3V72jPPd5JStTr/jgNeg9nXuRolTlDFlUyz+JJ3Z3syGva
+         p+8Qo/obOB6Hurq2/uKicYuvnv/ehijmSjWkWbeU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Skidanov <alexey.skidanov@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Daniel Mentz <danielmentz@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 70/91] lib/genalloc.c: fix allocation of aligned buffer from non-aligned chunk
-Date:   Fri, 22 Nov 2019 01:01:08 -0500
-Message-Id: <20191122060129.4239-69-sashal@kernel.org>
+Cc:     Alexander Shiyan <shc_work@mail.ru>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 60/91] pwm: clps711x: Fix period calculation
+Date:   Fri, 22 Nov 2019 01:00:58 -0500
+Message-Id: <20191122060129.4239-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -64,164 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Skidanov <alexey.skidanov@intel.com>
+From: Alexander Shiyan <shc_work@mail.ru>
 
-[ Upstream commit 52fbf1134d479234d7e64ba9dcbaea23405f229e ]
+[ Upstream commit b0f17570b8203c22f139459c86cfbaa0311313ed ]
 
-gen_pool_alloc_algo() uses different allocation functions implementing
-different allocation algorithms.  With gen_pool_first_fit_align()
-allocation function, the returned address should be aligned on the
-requested boundary.
+Commit e39c0df1be5a ("pwm: Introduce the pwm_args concept") has
+changed the variable for the period for clps711x-pwm driver, so now
+pwm_get/set_period() works with pwm->state.period variable instead
+of pwm->args.period.
+This patch changes the period variable in other places where it is used.
 
-If chunk start address isn't aligned on the requested boundary, the
-returned address isn't aligned too.  The only way to get properly
-aligned address is to initialize the pool with chunks aligned on the
-requested boundary.  If want to have an ability to allocate buffers
-aligned on different boundaries (for example, 4K, 1MB, ...), the chunk
-start address should be aligned on the max possible alignment.
-
-This happens because gen_pool_first_fit_align() looks for properly
-aligned memory block without taking into account the chunk start address
-alignment.
-
-To fix this, we provide chunk start address to
-gen_pool_first_fit_align() and change its implementation such that it
-starts looking for properly aligned block with appropriate offset
-(exactly as is done in CMA).
-
-Link: https://lkml.kernel.org/lkml/a170cf65-6884-3592-1de9-4c235888cc8a@intel.com
-Link: http://lkml.kernel.org/r/1541690953-4623-1-git-send-email-alexey.skidanov@intel.com
-Signed-off-by: Alexey Skidanov <alexey.skidanov@intel.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Daniel Mentz <danielmentz@google.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/genalloc.h | 13 +++++++------
- lib/genalloc.c           | 20 ++++++++++++--------
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ drivers/pwm/pwm-clps711x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
-index 206fe3bcccccd..575f2dee8cf71 100644
---- a/include/linux/genalloc.h
-+++ b/include/linux/genalloc.h
-@@ -50,7 +50,8 @@ typedef unsigned long (*genpool_algo_t)(unsigned long *map,
- 			unsigned long size,
- 			unsigned long start,
- 			unsigned int nr,
--			void *data, struct gen_pool *pool);
-+			void *data, struct gen_pool *pool,
-+			unsigned long start_addr);
- 
- /*
-  *  General purpose special memory pool descriptor.
-@@ -130,24 +131,24 @@ extern void gen_pool_set_algo(struct gen_pool *pool, genpool_algo_t algo,
- 
- extern unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool);
-+		struct gen_pool *pool, unsigned long start_addr);
- 
- extern unsigned long gen_pool_fixed_alloc(unsigned long *map,
- 		unsigned long size, unsigned long start, unsigned int nr,
--		void *data, struct gen_pool *pool);
-+		void *data, struct gen_pool *pool, unsigned long start_addr);
- 
- extern unsigned long gen_pool_first_fit_align(unsigned long *map,
- 		unsigned long size, unsigned long start, unsigned int nr,
--		void *data, struct gen_pool *pool);
-+		void *data, struct gen_pool *pool, unsigned long start_addr);
- 
- 
- extern unsigned long gen_pool_first_fit_order_align(unsigned long *map,
- 		unsigned long size, unsigned long start, unsigned int nr,
--		void *data, struct gen_pool *pool);
-+		void *data, struct gen_pool *pool, unsigned long start_addr);
- 
- extern unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool);
-+		struct gen_pool *pool, unsigned long start_addr);
- 
- 
- extern struct gen_pool *devm_gen_pool_create(struct device *dev,
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index ca06adc4f4451..5deb25c40a5a1 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -311,7 +311,7 @@ unsigned long gen_pool_alloc_algo(struct gen_pool *pool, size_t size,
- 		end_bit = chunk_size(chunk) >> order;
- retry:
- 		start_bit = algo(chunk->bits, end_bit, start_bit,
--				 nbits, data, pool);
-+				 nbits, data, pool, chunk->start_addr);
- 		if (start_bit >= end_bit)
- 			continue;
- 		remain = bitmap_set_ll(chunk->bits, start_bit, nbits);
-@@ -525,7 +525,7 @@ EXPORT_SYMBOL(gen_pool_set_algo);
-  */
- unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
+diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+index 26ec24e457b12..7e16b7def0dcb 100644
+--- a/drivers/pwm/pwm-clps711x.c
++++ b/drivers/pwm/pwm-clps711x.c
+@@ -48,7 +48,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+ static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
  {
- 	return bitmap_find_next_zero_area(map, size, start, nr, 0);
+ 	/* Duty cycle 0..15 max */
+-	return DIV_ROUND_CLOSEST(v * 0xf, pwm_get_period(pwm));
++	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
  }
-@@ -543,16 +543,19 @@ EXPORT_SYMBOL(gen_pool_first_fit);
-  */
- unsigned long gen_pool_first_fit_align(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	struct genpool_data_align *alignment;
--	unsigned long align_mask;
-+	unsigned long align_mask, align_off;
- 	int order;
  
- 	alignment = data;
- 	order = pool->min_alloc_order;
- 	align_mask = ((alignment->align + (1UL << order) - 1) >> order) - 1;
--	return bitmap_find_next_zero_area(map, size, start, nr, align_mask);
-+	align_off = (start_addr & (alignment->align - 1)) >> order;
-+
-+	return bitmap_find_next_zero_area_off(map, size, start, nr,
-+					      align_mask, align_off);
- }
- EXPORT_SYMBOL(gen_pool_first_fit_align);
+ static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+@@ -71,7 +71,7 @@ static int clps711x_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct clps711x_chip *priv = to_clps711x_chip(chip);
+ 	unsigned int duty;
  
-@@ -567,7 +570,7 @@ EXPORT_SYMBOL(gen_pool_first_fit_align);
-  */
- unsigned long gen_pool_fixed_alloc(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	struct genpool_data_fixed *fixed_data;
- 	int order;
-@@ -601,7 +604,8 @@ EXPORT_SYMBOL(gen_pool_fixed_alloc);
-  */
- unsigned long gen_pool_first_fit_order_align(unsigned long *map,
- 		unsigned long size, unsigned long start,
--		unsigned int nr, void *data, struct gen_pool *pool)
-+		unsigned int nr, void *data, struct gen_pool *pool,
-+		unsigned long start_addr)
- {
- 	unsigned long align_mask = roundup_pow_of_two(nr) - 1;
+-	if (period_ns != pwm_get_period(pwm))
++	if (period_ns != pwm->args.period)
+ 		return -EINVAL;
  
-@@ -624,7 +628,7 @@ EXPORT_SYMBOL(gen_pool_first_fit_order_align);
-  */
- unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	unsigned long start_bit = size;
- 	unsigned long len = size + 1;
+ 	duty = clps711x_get_duty(pwm, duty_ns);
 -- 
 2.20.1
 
