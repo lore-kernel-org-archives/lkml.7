@@ -2,145 +2,133 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BACC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D0EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CD220715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEr2jjn9"
+	by mail.kernel.org (Postfix) with ESMTP id D254E20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfKVM20 (ORCPT
+        id S1727874AbfKVMaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:28:26 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38925 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbfKVM20 (ORCPT
+        Fri, 22 Nov 2019 07:30:16 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:34239 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKVMaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:28:26 -0500
-Received: by mail-lj1-f195.google.com with SMTP id p18so7159794ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:28:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
-        b=dEr2jjn9fgOjdiaDJE2cZkZfXprKxiCesiH6JGQ81KlVLsOAGLk2zI3vm3VTxAW/Dt
-         ZAWD9BggBEV7m9WWyDmoJLJQLBLAb655y6NgNk/WDLD6uEI/O8S08ynaATwcY9j91g/X
-         oz6jR2QHAF05zYR4+HVWmCa5e4flLcECiB+55HYKL/QYKAUVUIgkRwnch+WdQq8HQQeX
-         wKKBM4IOSVLQf4ztqRZ0MjhDejiodCApagsb6m9creQc3gJ83j5p+55dvpS01vvlXDsE
-         /HJ54qBLHQD9VnBEpRVhFG/r3OLcZpVj7BTpKPDCMJV9fuFmPgFiiNrbj/+bvDGzfw1v
-         ZjwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
-        b=P+zcTIsWaSI2PktdZC6PdtamTXlCbAzRYIAoBMXN576EnsTCiUd08LIG9HQIpBRMBr
-         oq3q1FgPpxM8z78vgZeElQFQDaa3/aJvBJ9Bd19KZhXH3FOzqE/60Si/MPkGkgJNkJY5
-         IsvbNF+4aime7aDX/6Fcc6CI4VzzAiLAIzjkAZbS4aYGkWjF5WHDl6Oh8jvlkR/9znOx
-         fqwrLdtr8YxJnfoZZjJYB3ZhAVld8f6/yAtsiuQfDZ6UM5v/Byxxae73YdH4AYEimmor
-         fABo7+epTwYQeOdd5u4pSpnkkyvTVVq/ePIO2g7fq7DfqkgZFs3geUML1AWdBZVK8qqE
-         DZ9A==
-X-Gm-Message-State: APjAAAWMKreEKoAk00OK8SweE73TehIxTWqLpgc7NKx60aOdhKUm/s3T
-        oZSneSrUaKBhcWQIvq+C4MPIMkd4mWLzT5FawZh4ng==
-X-Google-Smtp-Source: APXvYqyEr875KK6+Z3AoTFLNHg9GG1Nc70IgJCEP8t2ZeLuj4RGoP4v/mkCP2LZsVpBsQMxyu52/73Y3stYR9or4KTU=
-X-Received: by 2002:a2e:9699:: with SMTP id q25mr12078801lji.251.1574425704107;
- Fri, 22 Nov 2019 04:28:24 -0800 (PST)
+        Fri, 22 Nov 2019 07:30:15 -0500
+Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MIMT4-1ibRSr3iZY-00EQmw; Fri, 22 Nov 2019 13:30:14 +0100
+Received: by mail-qv1-f51.google.com with SMTP id x14so2798494qvu.0;
+        Fri, 22 Nov 2019 04:30:13 -0800 (PST)
+X-Gm-Message-State: APjAAAWBQ6Pt7ELUVeg7oYmwXNyKj3nZkIgFcCcVX3O89vcQUr92Obyk
+        eo+RSIXn7M2Q0EmeHKUxApF6FTma+3fMIvvbsc8=
+X-Google-Smtp-Source: APXvYqwo4cq5vi2UMJ+B8EOtGb2wJBoNA355QcEFDck33B0EH/15Sn93Gc6HoQeA3bY6XQ3M3oRovNXI54EVvUWqnm0=
+X-Received: by 2002:a05:6214:2c2:: with SMTP id g2mr12983338qvu.210.1574425812653;
+ Fri, 22 Nov 2019 04:30:12 -0800 (PST)
 MIME-Version: 1.0
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
- <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
- <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
- <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com> <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:28:12 +0100
-Message-ID: <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+References: <20191111203835.2260382-4-arnd@arndb.de> <20191122070015.D5A702068E@mail.kernel.org>
+In-Reply-To: <20191122070015.D5A702068E@mail.kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 22 Nov 2019 13:29:56 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3kAGE1AvKtifkVuBbrqRXn2f078Q_2kxznv_gFzmrSWg@mail.gmail.com>
+Message-ID: <CAK8P3a3kAGE1AvKtifkVuBbrqRXn2f078Q_2kxznv_gFzmrSWg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] media: v4l2-core: compat: ignore native command codes
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
+        "# 3.4.x" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nrgb/6yGw4RXoOcQfuvbxGNdUm6TKYxWJqe8POQt4YiVIXuc+bI
+ fhDG5WQ2tntq//8TPfxFoOpHSwd9DrK/kCRDA2juQN3Xh8xmSEcFMaD0zIQEq6/O4c+ctGd
+ BkwyJO04mBWrLKHPd+8Jz5CdhYmUH9+Cq4BivCWpMl2DYkchkt1/Ix7LT00I5WY8jjSYNIl
+ aDMutOkzvBtynI/OLb31g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lj4cpsbr/HA=:/mJNazM+K1aP8eczjLsXTX
+ g0utTWatesEH2EcIFWvosnwuDsPOR3xk5KyoEoKtshgMxQ34IdCnewB6EZWpetsBuWL5FYsTr
+ B1SJMkxGAxc7mXt7/nJhVZyOmba1ltBmndg8WZ7KXV7Sq9WtiUPlsK0oMOIBd+Byhotq+TUEP
+ uObQ9pXnIopLMOj7f3PrMTzYFjq07pMR/JiHOR4mKKiGhFKKnv7l9K/zCGbbggadFW5D1zuJS
+ Bdg14R0J/b/eDqDgBj6Mx4DnyGIMSRnNWFa5wJ0pnTYy8zLtOLYBy/jJkdJuKNx32jFG/FTxf
+ wyKSaabS4zsMXiGM/p60eQYZcYrYLTiLXQGh+osdwpeTikMeh9q2zEjYFJTXgksaMJ0NTa193
+ dUV4m5sD6k0OJbz5IKZmXa6mTq1ZZmsRpBS0MY4rOrMl+dvV9BrHhFR2cNAOI7V7+6+yDoF4G
+ 7N2dCKvtPMSY5KnsVe3TePCmddZC0V5b+jQotZvkeQAyVM01w4QUhyGDOpPUuQVCPzHggbx3e
+ wogRVwM2fH9jIXF8m5VTe7XwKOXWLsgCO8KJId+hFhPBOl3vDvij0lzuG5Q/nk78VfAZhFa2H
+ ZmxmZ4NIxlojxWqLex00OUYv1vmQ+xRajPfb9BR4nkXd5sU2f/e+QRiQd3HHxrSYN8NB7iopX
+ mQmB/GISrt4pTJQ6WguG4ak5dPhs+TaycLhVLepbfvKajE0PBmgup3Ti+H2R7+3vcOkxwMzFW
+ lKTcLnBgwVWQQIwkab59cvlAlqfTQqjRYsi+GQ40M2Am1Kpzwoa5zcxR3T3+eE/hNGWAxcjX+
+ x/hhpFkT9b88rtTm05aJHiW52WPsE+d/FzDFKOvq46k3+thSbrR/0cB/orPrTVJwzQgzveMX8
+ KdrgecevEIA6sAxn1EHQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 5:42 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> > On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-
-> > > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=
-=82(a):
-> > Is it really so? The bgpio_lock does protect the registers used
-> > by regmap-mmio but unless the interrupt code is also using the
-> > same registers it is fine to have a different lock for those.
-> >
-> > Is the interrupt code really poking into the very same registers
-> > as passed to bgpio_init()?
-> >
-> > Of course it could be seen as a bit dirty to poke around in the
-> > same memory space with regmap and the bgpio_* accessors
-> > but in practice it's no problem if they never touch the same
-> > things.
-> >
-> > Yours,
-> > Linus Walleij
+On Fri, Nov 22, 2019 at 8:00 AM Sasha Levin <sashal@kernel.org> wrote:
 >
-> I'm wondering if it won't cause any inconsistencies when for example
-> interrupts are being triggered on input lines while we're also reading
-> their values? Seems to me it's just more clear to use a single lock
-> for a register range. Most drivers using gpio-mmio do just that in
-> their irq-related routines.
+> Hi,
+>
+> [This is an automated email]
+>
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+>
+> The bot has tested the following trees: v5.3.11, v4.19.84, v4.14.154, v4.9.201, v4.4.201.
+>
+> v5.3.11: Build OK!
+> v4.19.84: Build OK!
 
-OK good point. Just one lock for the whole thing is likely
-more maintainable even if it works with two different locks.
+Ok, good.
 
-> Anyway: even without using bgpio_lock this code is inconsistent: if
-> we're using regmap for interrupt registers, we should either decide to
-> rely on locking provided by regmap or disable it and use a locally
-> defined lock.
+> v4.14.154: Failed to apply! Possible dependencies:
+>     6dd0394f5fcd ("media: v4l2-compat-ioctl32: better name userspace pointers")
+>     fef6cc6b3618 ("media: v4l2-compat-ioctl32: fix several __user annotations")
 
-OK makes sense, let's say we use the bgpio_lock everywhere
-for this.
+The fef6cc6b3618 is probably a candidate for backporting (it fixes smatch
+and sparse warnings and should have no other effect), the 6dd0394f5fcd
+may be a little too big (but also harmless).
 
-Yash: are you OK with this? (Haven't read the new patch set
-yet, maybe it is already fixed...)
+The downside of not backporting the patch is that user space code built
+with 64-bit time_t would get incorrect data rather than failing with an
+error code on older kernels.
 
-> Also: if we're using regmap, then let's use it
-> everywhere, not only when it's convenient for updating registers.
+I do not expect to see backports of 64-bit time_t support to kernels older
+than 4.19, so this probably won't matter much, but in theory it's still
+possible that users can run into it.
 
-I think what you are saying is that we should extend gpio-mmio.c
-with some optional regmap API (or create a separate MMIO library
-for regmap consumers) which makes sense, but it feels a bit
-heavy task to toss at contributors.
+> v4.9.201: Failed to apply! Possible dependencies:
+>     6dd0394f5fcd ("media: v4l2-compat-ioctl32: better name userspace pointers")
+>     a56bc171598c ("[media] v4l: compat: Prevent allocating excessive amounts of memory")
+>     ba7ed691dcce ("[media] v4l2-compat-ioctl32: VIDIOC_S_EDID should return all fields on error")
+>     fb9ffa6a7f7e ("[media] v4l: Add metadata buffer type and format")
+>     fef6cc6b3618 ("media: v4l2-compat-ioctl32: fix several __user annotations")
+>
+> v4.4.201: Failed to apply! Possible dependencies:
+>     0579e6e3a326 ("doc-rst: linux_tv: remove whitespaces")
+>     17defc282fe6 ("Documentation: add meta-documentation for Sphinx and kernel-doc")
+>     22cba31bae9d ("Documentation/sphinx: add basic working Sphinx configuration and build")
+>     234d549662a7 ("doc-rst: video: use reference for VIDIOC_ENUMINPUT")
+>     5377d91f3e88 ("doc-rst: linux_tv DocBook to reST migration (docs-next)")
+>     6dd0394f5fcd ("media: v4l2-compat-ioctl32: better name userspace pointers")
+>     7347081e8a52 ("doc-rst: linux_tv: simplify references")
+>     789818845202 ("doc-rst: audio: Fix some cross references")
+>     94fff0dc5333 ("doc-rst: dmx_fcalls: improve man-like format")
+>     9e00ffca8cc7 ("doc-rst: querycap: fix troubles on some references")
+>     af4a4d0db8ab ("doc-rst: linux_tv: Replace reference names to match ioctls")
+>     c2b66cafdf02 ("[media] v4l: doc: Remove row numbers from tables")
+>     e6702ee18e24 ("doc-rst: app-pri: Fix a bad reference")
+>     fb9ffa6a7f7e ("[media] v4l: Add metadata buffer type and format")
+>
+>
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+>
+> How should we proceed with this patch?
 
-We could add it to the TODO file, where I already have some
-item like this for port-mapped I/O.
+I'm happy to provide a hand-backported version of the patch for the older
+kernels if Mauro and Hans think we should do that, otherwise I think it's
+we're fine with having it on 4.19+.
 
-Yours,
-Linus Walleij
+      Arnd
