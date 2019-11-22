@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17829C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161292070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D911220672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfKVIZl (ORCPT
+        id S1727553AbfKVIZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:25:41 -0500
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:52499 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfKVIZi (ORCPT
+        Fri, 22 Nov 2019 03:25:48 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:60568 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727529AbfKVIZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:25:38 -0500
-IronPort-SDR: MaJtDyEI/JuCOdKTvuRr0V/beitdFb6f/soCebS99Y8qx93iDsuHWkpDOXkGBZm1sIKAtxU1/W
- UOLq0ItzKJU1F+DavhEDTMV08w4uRdSvYjWssKRtU1xdAmv8K9Ndp35VOmiixwW2hdFkMlxVIh
- 5LA88TILa9Q/gZgt/CN8YPODGpRoY4kJZjQ/zvaLgPgyQP1hKx5Wb66sjNU5THzLhRf9hP8O1p
- iUtJxKTZWOz3fHKnwQPsvac2Z8DyghEYMoTVfy+Tc9cEvTxvqMzZzxCWf0QvGyhJiPicWzesQ3
- lgs=
+        Fri, 22 Nov 2019 03:25:44 -0500
+IronPort-SDR: 6FKMhYuUEd7O25zaWCBe/YqzppFflF61uGsobbOuJqC7Cjup2dY8PwDG6B/ypUrDuOI5P72hSk
+ 0plPCMxTOlCZRC14HStuVRAc8lFABa6FbaPXJyluxV6lTreZHwEPfwB75oKfhfnNTBMdvmCTKp
+ nwlQ57OekxQeXik/QsrKSwAxC8+9nGGgfACGzLXedWicFSyycLB296e29hEZGtdwf8nnaZvLLH
+ Z8HDGyl5HHdHgw7Jb0Dzb3IcSonGbfOn7vwdz2kh8zJUc1KwZabgT20sNLyCMQS8a6WMYH7Yz9
+ yuY=
 X-IronPort-AV: E=Sophos;i="5.69,229,1571731200"; 
-   d="scan'208";a="43358937"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:25:37 -0800
-IronPort-SDR: qrIeMB0I+Mxk+TZMP0OwHvgsWC9BFe8NmwyvH9Of5GKRrWzdl+Qa0puWnfsQ3Jy2DUCckr35LA
- V975d81pgd9tFx+sQkNDsjw6HmJEkDlK0XQ+ozM6WTzR/JxHyeWPsXzr4D/ZPnl3ZzUa5A4IwI
- 6Kwkc9NFwsBB2fuDGU7YpzWTfYnE45sliBPanZSEBBsMnhIuLtHe9UY4pQBGS5ukYnNSNRHGng
- LZdo0XYVNqsgDHU0/zlcUuzRkX6+hZOT36VcuDt9FYNnAFQyrQTId42t5RKd8NzWDiRscgsDOJ
- MYU=
+   d="scan'208";a="45291148"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:25:44 -0800
+IronPort-SDR: 8vcvcRxrs7iO1JAqq+x+sUhEE4gMRC1dNJN16YfYxcDEQJ8ULcjqZhNcpoOOEVDzBKgi2+JlII
+ 8n/Dzzf/VL8/VpP9Rhrlr/N5U6IUTc1kvPbeycGNp+2zNg9jwS1uABUzmKuK3bdMhOPJfkGThh
+ GPpyQjYjbsVb0yNhmCYP4JH1zt0P+vc8Vr+8kX44V5VUFBc0lP0PSoECgsTfRd4MgoLbVUeqJQ
+ kixQ/AcCJut5EZpoa1yM4HVgw8OwrVS5+28rQPzFDqN/O6AjSgQVJpsiEY19lAY5H5P0ty4ztH
+ UFo=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
@@ -42,9 +41,9 @@ To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v6 25/48] Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
-Date:   Fri, 22 Nov 2019 17:23:39 +0900
-Message-ID: <20191122082402.18173-26-jiada_wang@mentor.com>
+Subject: [PATCH v6 27/48] Input: atmel_mxt_ts - orientation is not present in hover
+Date:   Fri, 22 Nov 2019 17:23:41 +0900
+Message-ID: <20191122082402.18173-28-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191122082402.18173-1-jiada_wang@mentor.com>
 References: <20191122082402.18173-1-jiada_wang@mentor.com>
@@ -57,108 +56,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-The path of enabling the IRQ in the probe function is not safe in level
-triggered operation, if it was already powered up and there is a message
-waiting on the device (eg finger down) because the object table has not yet
-been read. This forces the ISR into a hard loop.
-
-Delay enabling the interrupt until it is first needed.
+When in hover, the orientation information is not sent
 
 Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 64c9dadc4a3250a185baf06ab0f628be45d5d9a0)
-[gdavis: Resolve forward port conflicts due to v4.14-rc1 commit
-	 8cc8446b9b62 ("Input: atmel_mxt_ts - use more managed
-	 resources") and applying upstream commit 96a938aa214e ("Input:
-	 atmel_mxt_ts - remove platform data support").]
+(cherry picked from ndyer/linux/for-upstream commit 0c885d5bd276bd9240c43aa046fc407cbe2ae864)
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 40 +++++++++++++++---------
- 1 file changed, 26 insertions(+), 14 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 842d407efc86..f5d67e43a786 100644
+index fc2f804e5293..de77079e3324 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -1451,9 +1451,24 @@ static int mxt_acquire_irq(struct mxt_data *data)
- {
- 	int error;
- 
--	enable_irq(data->irq);
-+	if (!data->irq) {
-+		error = devm_request_threaded_irq(&data->client->dev,
-+						  data->client->irq,
-+						  NULL, mxt_interrupt,
-+						  IRQF_ONESHOT,
-+						  data->client->name, data);
-+		if (error) {
-+			dev_err(&data->client->dev, "Error requesting irq\n");
-+			return error;
-+		}
-+
-+		/* Presence of data->irq means IRQ initialised */
-+		data->irq = data->client->irq;
-+	} else {
-+		enable_irq(data->irq);
-+	}
- 
--	if (data->use_retrigen_workaround) {
-+	if (data->object_table && data->use_retrigen_workaround) {
- 		error = mxt_process_messages_until_invalid(data);
- 		if (error)
- 			return error;
-@@ -3373,7 +3388,9 @@ static int mxt_load_fw(struct device *dev)
- 			goto release_firmware;
- 	}
- 
--	enable_irq(data->irq);
-+	ret = mxt_acquire_irq(data);
-+	if (ret)
-+		goto release_firmware;
- 
- 	/* Poll after 0.1s if no interrupt received */
- 	schedule_delayed_work(&data->flash->work, msecs_to_jiffies(100));
-@@ -3800,7 +3817,6 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		 client->adapter->nr, client->addr);
- 
- 	data->client = client;
--	data->irq = client->irq;
- 	i2c_set_clientdata(client, data);
- 
- 	init_completion(&data->chg_completion);
-@@ -3828,26 +3844,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		return error;
- 	}
- 
--	error = devm_request_threaded_irq(&client->dev, client->irq,
--					  NULL, mxt_interrupt, IRQF_ONESHOT,
--					  client->name, data);
--	if (error) {
--		dev_err(&client->dev, "Failed to register interrupt\n");
--		return error;
--	}
+@@ -1029,10 +1029,6 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+ 			distance = MXT_DISTANCE_HOVERING;
+ 			hover = true;
+ 			active = true;
 -
- 	if (data->suspend_mode == MXT_SUSPEND_REGULATOR) {
-+		error = mxt_acquire_irq(data);
-+		if (error)
-+			return error;
-+
- 		error = mxt_probe_regulators(data);
- 		if (error)
- 			return error;
-+
-+		disable_irq(data->irq);
- 	} else if (data->reset_gpio) {
- 		msleep(MXT_RESET_GPIO_TIME);
- 		gpiod_set_value(data->reset_gpio, 1);
- 		msleep(MXT_RESET_INVALID_CHG);
- 	}
- 
--	disable_irq(data->irq);
+-			if (data->t100_aux_vect)
+-				orientation = message[data->t100_aux_vect];
 -
- 	error = mxt_initialize(data);
- 	if (error)
- 		return error;
+ 			break;
+ 
+ 		case MXT_T100_TYPE_FINGER:
 -- 
 2.17.1
 
