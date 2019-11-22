@@ -2,209 +2,429 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6985CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DACFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD3E2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B02720707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKVSo7 (ORCPT
+        id S1726792AbfKVSsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:44:59 -0500
-Received: from mga07.intel.com ([134.134.136.100]:58745 "EHLO mga07.intel.com"
+        Fri, 22 Nov 2019 13:48:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:51132 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfKVSo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:44:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 10:44:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="259793861"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Nov 2019 10:44:57 -0800
-Date:   Fri, 22 Nov 2019 10:44:57 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191122184457.GA31235@linux.intel.com>
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
- <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121171214.GD12042@gmail.com>
- <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
- <20191122105141.GY4114@hirez.programming.kicks-ass.net>
- <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+        id S1726062AbfKVSsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 13:48:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD2E3328;
+        Fri, 22 Nov 2019 10:48:11 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBF453F6C4;
+        Fri, 22 Nov 2019 10:48:10 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:48:08 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: [GIT PULL] arm64 updates for 5.5
+Message-ID: <20191122184806.GA3422@arrakis.emea.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122152715.GA1909@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 04:27:15PM +0100, Peter Zijlstra wrote:
-> On Fri, Nov 22, 2019 at 11:51:41AM +0100, Peter Zijlstra wrote:
-> 
-> > A non-lethal default enabled variant would be even better for them :-)
-> 
-> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-> index d779366ce3f8..d23638a0525e 100644
-> --- a/arch/x86/include/asm/thread_info.h
-> +++ b/arch/x86/include/asm/thread_info.h
-> @@ -92,6 +92,7 @@ struct thread_info {
->  #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
->  #define TIF_NOTSC		16	/* TSC is not accessible in userland */
->  #define TIF_IA32		17	/* IA32 compatibility process */
-> +#define TIF_SLD			18	/* split_lock_detect */
+Hi Linus,
 
-Maybe use SLAC (Split-Lock AC) as the acronym?  I can't help but read
-SLD as "split-lock disabled".  And name this TIF_NOSLAC (or TIF_NOSLD if
-you don't like SLAC) since it's set when the task is running without #AC?
+Here's an early pull request for 5.5. Apart from the arm64-specific bits
+(core arch and perf, new arm64 selftests), it touches the generic
+cow_user_page() (reviewed by Kirill) together with a macro for x86 to
+preserve the existing behaviour on this architecture. There is a
+conflict with mainline in asm/asm-uaccess.h because of the arm64 fixes
+that went in after -rc8. The resolution is as per current mainline
+(remove the code; see my resolution after the diffstat below).
 
->  #define TIF_NOHZ		19	/* in adaptive nohz mode */
->  #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
->  #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
-> @@ -122,6 +123,7 @@ struct thread_info {
->  #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
->  #define _TIF_NOTSC		(1 << TIF_NOTSC)
->  #define _TIF_IA32		(1 << TIF_IA32)
-> +#define _TIF_SLD		(1 << TIF_SLD)
->  #define _TIF_NOHZ		(1 << TIF_NOHZ)
->  #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
->  #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
+Happy Thanksgiving!
 
-...
+The following changes since commit 777d062e5bee0e3c0751cdcbce116a76ee2310ec:
 
-> +void handle_split_lock(void)
-> +{
-> +	return sld_state != sld_off;
-> +}
-> +
-> +void handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +{
-> +	if (sld_state == sld_fatal)
-> +		return false;
-> +
-> +	pr_alert("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> +		 current->comm, current->pid, regs->ip);
-> +
-> +	__sld_set_msr(false);
-> +	set_tsk_thread_flag(current, TIF_CLD);
-> +	return true;
-> +}
-> +
-> +void switch_sld(struct task_struct *prev)
-> +{
-> +	__sld_set_msr(true);
-> +	clear_tsk_thread_flag(current, TIF_CLD);
-> +}
+  Merge branch 'errata/tx2-219' into for-next/fixes (2019-10-17 13:42:42 -0700)
 
-...
+are available in the Git repository at:
 
-> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> index bd2a11ca5dd6..c04476a1f970 100644
-> --- a/arch/x86/kernel/process.c
-> +++ b/arch/x86/kernel/process.c
-> @@ -654,6 +654,9 @@ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
->  		/* Enforce MSR update to ensure consistent state */
->  		__speculation_ctrl_update(~tifn, tifn);
->  	}
-> +
-> +	if (tifp & _TIF_SLD)
-> +		switch_sld(prev_p);
->  }
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-upstream
 
-Re-enabling #AC when scheduling out the misbehaving task would also work
-well for KVM, e.g. call a variant of handle_user_split_lock() on an
-unhandled #AC in the guest.  We can also reuse KVM's existing code to
-restore the MSR on return to userspace so that an #AC in the guest doesn't
-disable detection in the userspace VMM.
+for you to fetch changes up to d8e85e144bbe12e8d82c6b05d690a34da62cc991:
 
-Alternatively, KVM could manually do it's own thing and context switch
-the MSR on VM-Enter/VM-Exit (after an unhandled #AC), but I'd rather keep
-this out of the VM-Enter path and also avoid thrashing the MSR on an SMT
-CPU.  The only downside is that KVM itself would occasionally run with #AC
-disabled, but that doesn't seem like a big deal since split locks should
-not be magically appearing in KVM.
+  arm64: Kconfig: add a choice for endianness (2019-11-14 14:39:03 +0000)
 
-Last thought, KVM should only expose split lock #AC to the guest if SMT=n
-or the host is in "force" mode so that split lock #AC is always enabled
-in hardware (for the guest) when then guest wants it enabled.  KVM would
-obviously not actually disable #AC in hardware when running in force mode,
-regardless of the guest's wishes.
+----------------------------------------------------------------
+arm64 updates for 5.5:
 
->  /*
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 3451a004e162..3cba28c9c4d9 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -242,7 +242,6 @@ do_trap(int trapnr, int signr, char *str, struct pt_regs *regs,
->  {
->  	struct task_struct *tsk = current;
->  
-> -
->  	if (!do_trap_no_signal(tsk, trapnr, str, regs, error_code))
->  		return;
->  
-> @@ -288,9 +287,34 @@ DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overru
->  DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
->  DO_ERROR(X86_TRAP_NP,     SIGBUS,           0, NULL, "segment not present", segment_not_present)
->  DO_ERROR(X86_TRAP_SS,     SIGBUS,           0, NULL, "stack segment",       stack_segment)
-> -DO_ERROR(X86_TRAP_AC,     SIGBUS,  BUS_ADRALN, NULL, "alignment check",     alignment_check)
->  #undef IP
->  
-> +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
-> +{
-> +	unsigned int trapnr = X86_TRAP_AC;
-> +	char str[] = "alignment check";
-> +	int signr = SIGBUS;
-> +
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-> +
-> +	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) == NOTIFY_STOP)
-> +		return;
-> +
-> +	if (!handle_split_lock())
+- On ARMv8 CPUs without hardware updates of the access flag, avoid
+  failing cow_user_page() on PFN mappings if the pte is old. The patches
+  introduce an arch_faults_on_old_pte() macro, defined as false on x86.
+  When true, cow_user_page() makes the pte young before attempting
+  __copy_from_user_inatomic().
 
-Pretty sure this should be omitted entirely.  For an #AC in the kernel,
-simply restarting the instruction will fault indefinitely, e.g. dieing is
-probably the best course of action if a (completely unexpteced) #AC occurs
-in "off" mode.  Dropping this check also lets handle_user_split_lock() do
-the right thing for #AC due to EFLAGS.AC=1 (pointed out by Tony).
+- Covert the synchronous exception handling paths in
+  arch/arm64/kernel/entry.S to C.
 
-> +		return;
-> +
-> +	if (!user_mode(regs))
-> +		die("Split lock detected\n", regs, error_code);
-> +
-> +	cond_local_irq_enable(regs);
-> +
-> +	if (handle_user_split_lock(regs, error_code))
-> +		return;
-> +
-> +	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
-> +		error_code, BUS_ADRALN, NULL);
-> +}
-> +
->  #ifdef CONFIG_VMAP_STACK
->  __visible void __noreturn handle_stack_overflow(const char *message,
->  						struct pt_regs *regs,
+- FTRACE_WITH_REGS support for arm64.
+
+- ZONE_DMA re-introduced on arm64 to support Raspberry Pi 4
+
+- Several kselftest cases specific to arm64, together with a MAINTAINERS
+  update for these files (moved to the ARM64 PORT entry).
+
+- Workaround for a Neoverse-N1 erratum where the CPU may fetch stale
+  instructions under certain conditions.
+
+- Workaround for Cortex-A57 and A72 errata where the CPU may
+  speculatively execute an AT instruction and associate a VMID with the
+  wrong guest page tables (corrupting the TLB).
+
+- Perf updates for arm64: additional PMU topologies on HiSilicon
+  platforms, support for CCN-512 interconnect, AXI ID filtering in the
+  IMX8 DDR PMU, support for the CCPI2 uncore PMU in ThunderX2.
+
+- GICv3 optimisation to avoid a heavy barrier when accessing the
+  ICC_PMR_EL1 register.
+
+- ELF HWCAP documentation updates and clean-up.
+
+- SMC calling convention conduit code clean-up.
+
+- KASLR diagnostics printed during boot
+
+- NVIDIA Carmel CPU added to the KPTI whitelist
+
+- Some arm64 mm clean-ups: use generic free_initrd_mem(), remove stale
+  macro, simplify calculation in __create_pgd_mapping(), typos.
+
+- Kconfig clean-ups: CMDLINE_FORCE to depend on CMDLINE, choice for
+  endinanness to help with allmodconfig.
+
+----------------------------------------------------------------
+Anders Roxell (2):
+      arm64: Kconfig: make CMDLINE_FORCE depend on CMDLINE
+      arm64: Kconfig: add a choice for endianness
+
+Anshuman Khandual (1):
+      arm64/mm: Poison initmem while freeing with free_reserved_area()
+
+Bhupesh Sharma (1):
+      arm64: mm: Remove MAX_USER_VA_BITS definition
+
+Catalin Marinas (10):
+      arm64: Silence clang warning on mismatched value/register sizes
+      Merge remote-tracking branch 'arm64/for-next/fixes' into for-next/core
+      Merge branch 'for-next/neoverse-n1-stale-instr' into for-next/core
+      Merge branch 'kvm-arm64/erratum-1319367' of git://git.kernel.org/.../maz/arm-platforms into for-next/core
+      arm64: Make arm64_dma32_phys_limit static
+      Merge branch 'for-next/entry-s-to-c' into for-next/core
+      Merge branch 'arm64/ftrace-with-regs' of git://git.kernel.org/.../mark/linux into for-next/core
+      Merge branch 'for-next/perf' into for-next/core
+      Merge branches 'for-next/elf-hwcap-docs', 'for-next/smccc-conduit-cleanup', 'for-next/zone-dma', 'for-next/relax-icc_pmr_el1-sync', 'for-next/double-page-fault', 'for-next/misc', 'for-next/kselftest-arm64-signal' and 'for-next/kaslr-diagnostics' into for-next/core
+      MAINTAINERS: Add arm64 selftests to the ARM64 PORT entry
+
+Colin Ian King (1):
+      kselftest: arm64: fix spelling mistake "contiguos" -> "contiguous"
+
+Cristian Marussi (12):
+      kselftest: arm64: extend toplevel skeleton Makefile
+      kselftest: arm64: mangle_pstate_invalid_compat_toggle and common utils
+      kselftest: arm64: mangle_pstate_invalid_daif_bits
+      kselftest: arm64: mangle_pstate_invalid_mode_el[123][ht]
+      kselftest: arm64: extend test_init functionalities
+      kselftest: arm64: add helper get_current_context
+      kselftest: arm64: fake_sigreturn_bad_magic
+      kselftest: arm64: fake_sigreturn_bad_size_for_magic0
+      kselftest: arm64: fake_sigreturn_missing_fpsimd
+      kselftest: arm64: fake_sigreturn_duplicated_fpsimd
+      kselftest: arm64: fake_sigreturn_bad_size
+      kselftest: arm64: fake_sigreturn_misaligned_sp
+
+Dave Martin (1):
+      arm64: docs: cpu-feature-registers: Document ID_AA64PFR1_EL1
+
+Ganapatrao Prabhakerrao Kulkarni (2):
+      Documentation: perf: Update documentation for ThunderX2 PMU uncore driver
+      drivers/perf: Add CCPI2 PMU support in ThunderX2 UNCORE driver.
+
+James Morse (7):
+      arm64: errata: Hide CTR_EL0.DIC on systems affected by Neoverse-N1 #1542419
+      arm64: Fake the IminLine size on systems affected by Neoverse-N1 #1542419
+      arm64: compat: Workaround Neoverse-N1 #1542419 for compat user-space
+      arm64: remove __exception annotations
+      arm64: Add prototypes for functions called by entry.S
+      arm64: Remove asmlinkage from updated functions
+      arm64: entry-common: don't touch daif before bp-hardening
+
+Jia He (4):
+      arm64: cpufeature: introduce helper cpu_has_hw_af()
+      arm64: mm: implement arch_faults_on_old_pte() on arm64
+      x86/mm: implement arch_faults_on_old_pte() stub on x86
+      mm: fix double page fault on arm64 if PTE_AF is cleared
+
+Joakim Zhang (6):
+      docs/perf: Add explanation for DDR_CAP_AXI_ID_FILTER_ENHANCED quirk
+      bindings: perf: imx-ddr: Add new compatible string
+      perf/imx_ddr: Add enhanced AXI ID filter support
+      perf/imx_ddr: Add driver for DDR PMU in i.MX8MPlus
+      docs/perf: Add AXI ID filter capabilities information
+      perf/imx_ddr: Dump AXI ID filter info to userspace
+
+Julien Grall (4):
+      docs/arm64: elf_hwcaps: sort the HWCAP{, 2} documentation by ascending value
+      docs/arm64: elf_hwcaps: Document HWCAP_SB
+      docs/arm64: cpu-feature-registers: Documents missing visible fields
+      docs/arm64: cpu-feature-registers: Rewrite bitfields that don't follow [e, s]
+
+Marc Zyngier (7):
+      arm64: Relax ICC_PMR_EL1 accesses when ICC_CTLR_EL1.PMHE is clear
+      arm64: Document ICC_CTLR_EL3.PMHE setting requirements
+      arm64: Add ARM64_WORKAROUND_1319367 for all A57 and A72 versions
+      arm64: KVM: Reorder system register restoration and stage-2 activation
+      arm64: KVM: Disable EL1 PTW when invalidating S2 TLBs
+      arm64: KVM: Prevent speculative S1 PTW when restoring vcpu context
+      arm64: Enable and document ARM errata 1319367 and 1319537
+
+Marek Bykowski (2):
+      perf: arm-ccn: Enable stats for CCN-512 interconnect
+      Documentation: Add documentation for CCN-512 DTS binding
+
+Mark Brown (3):
+      arm64: pgtable: Correct typo in comment
+      arm64: kaslr: Announce KASLR status on boot
+      arm64: kaslr: Check command line before looking for a seed
+
+Mark Rutland (16):
+      arm64: simplify syscall wrapper ifdeffery
+      arm/arm64: smccc/psci: add arm_smccc_1_1_get_conduit()
+      arm64: errata: use arm_smccc_1_1_get_conduit()
+      arm: spectre-v2: use arm_smccc_1_1_get_conduit()
+      firmware/psci: use common SMCCC_CONDUIT_*
+      firmware: arm_sdei: use common SMCCC_CONDUIT_*
+      arm64: add local_daif_inherit()
+      arm64: entry: convert el1_sync to C
+      arm64: entry: convert el0_sync to C
+      ftrace: add ftrace_init_nop()
+      module/ftrace: handle patchable-function-entry
+      arm64: module: rework special section handling
+      arm64: module/ftrace: intialize PLT at load time
+      arm64: insn: add encoder for MOV (register)
+      arm64: asm-offsets: add S_FP
+      arm64: ftrace: minimize ifdeffery
+
+Masahiro Yamada (1):
+      arm64: mm: simplify the page end calculation in __create_pgd_mapping()
+
+Mike Rapoport (1):
+      arm64: use generic free_initrd_mem()
+
+Nathan Chancellor (1):
+      arm64: mm: Fix unused variable warning in zone_sizes_init
+
+Nicolas Saenz Julienne (6):
+      arm64: mm: use arm64_dma_phys_limit instead of calling max_zone_dma_phys()
+      arm64: rename variables used to calculate ZONE_DMA32's size
+      arm64: use both ZONE_DMA and ZONE_DMA32
+      mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
+      dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
+      arm64: mm: reserve CMA and crashkernel in ZONE_DMA32
+
+Rich Wiley (1):
+      arm64: kpti: Add NVIDIA's Carmel core to the KPTI whitelist
+
+Shaokun Zhang (3):
+      arm64: cpufeature: Fix typos in comment
+      arm64: perf: Simplify the ARMv8 PMUv3 event attributes
+      drivers/perf: hisi: update the sccl_id/ccl_id for certain HiSilicon platform
+
+Torsten Duwe (1):
+      arm64: implement ftrace with regs
+
+Xiang Zheng (1):
+      arm64: print additional fault message when executing non-exec memory
+
+YueHaibing (5):
+      perf: hisi: use devm_platform_ioremap_resource() to simplify code
+      perf: xgene: use devm_platform_ioremap_resource() to simplify code
+      perf/arm-ccn: use devm_platform_ioremap_resource() to simplify code
+      perf/arm-cci: use devm_platform_ioremap_resource() to simplify code
+      perf/smmuv3: use devm_platform_ioremap_resource() to simplify code
+
+Yunfeng Ye (1):
+      arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+
+ Documentation/admin-guide/perf/imx-ddr.rst         |  15 +-
+ Documentation/admin-guide/perf/thunderx2-pmu.rst   |  20 +-
+ Documentation/arm64/booting.rst                    |   3 +
+ Documentation/arm64/cpu-feature-registers.rst      |  19 +-
+ Documentation/arm64/elf_hwcaps.rst                 |  67 +++--
+ Documentation/arm64/silicon-errata.rst             |   6 +
+ Documentation/devicetree/bindings/perf/arm-ccn.txt |   1 +
+ .../devicetree/bindings/perf/fsl-imx-ddr.txt       |   1 +
+ MAINTAINERS                                        |   1 +
+ arch/arm/mm/proc-v7-bugs.c                         |  10 +-
+ arch/arm64/Kconfig                                 |  51 +++-
+ arch/arm64/Makefile                                |   5 +
+ arch/arm64/include/asm/asm-uaccess.h               |   9 -
+ arch/arm64/include/asm/barrier.h                   |  12 +
+ arch/arm64/include/asm/cache.h                     |   3 +-
+ arch/arm64/include/asm/cpucaps.h                   |   4 +-
+ arch/arm64/include/asm/cpufeature.h                |  14 +
+ arch/arm64/include/asm/daifflags.h                 |  19 +-
+ arch/arm64/include/asm/exception.h                 |  22 +-
+ arch/arm64/include/asm/ftrace.h                    |  23 ++
+ arch/arm64/include/asm/insn.h                      |   3 +
+ arch/arm64/include/asm/irqflags.h                  |  19 +-
+ arch/arm64/include/asm/kvm_host.h                  |   3 +-
+ arch/arm64/include/asm/memory.h                    |   6 -
+ arch/arm64/include/asm/module.h                    |   2 +-
+ arch/arm64/include/asm/pgtable-hwdef.h             |   2 +-
+ arch/arm64/include/asm/pgtable.h                   |  16 +-
+ arch/arm64/include/asm/processor.h                 |  16 +-
+ arch/arm64/include/asm/syscall_wrapper.h           |   6 -
+ arch/arm64/include/asm/traps.h                     |  10 -
+ arch/arm64/kernel/Makefile                         |   6 +-
+ arch/arm64/kernel/asm-offsets.c                    |   1 +
+ arch/arm64/kernel/cpu_errata.c                     |  82 +++--
+ arch/arm64/kernel/cpufeature.c                     |   1 +
+ arch/arm64/kernel/cpuinfo.c                        |   2 +-
+ arch/arm64/kernel/entry-common.c                   | 332 +++++++++++++++++++++
+ arch/arm64/kernel/entry-ftrace.S                   | 140 ++++++++-
+ arch/arm64/kernel/entry.S                          | 281 +----------------
+ arch/arm64/kernel/fpsimd.c                         |   6 +-
+ arch/arm64/kernel/ftrace.c                         | 123 +++++---
+ arch/arm64/kernel/insn.c                           |  13 +
+ arch/arm64/kernel/kaslr.c                          |  44 ++-
+ arch/arm64/kernel/module-plts.c                    |   3 +-
+ arch/arm64/kernel/module.c                         |  57 +++-
+ arch/arm64/kernel/perf_event.c                     | 191 ++++--------
+ arch/arm64/kernel/probes/kprobes.c                 |   4 -
+ arch/arm64/kernel/psci.c                           |  15 +-
+ arch/arm64/kernel/sdei.c                           |   3 +-
+ arch/arm64/kernel/sys_compat.c                     |  11 +
+ arch/arm64/kernel/syscall.c                        |   4 +-
+ arch/arm64/kernel/traps.c                          |  21 +-
+ arch/arm64/kernel/vmlinux.lds.S                    |   3 -
+ arch/arm64/kvm/hyp/switch.c                        |  52 +++-
+ arch/arm64/kvm/hyp/sysreg-sr.c                     |  35 ++-
+ arch/arm64/kvm/hyp/tlb.c                           |  23 ++
+ arch/arm64/mm/fault.c                              |  64 +---
+ arch/arm64/mm/init.c                               |  91 +++---
+ arch/arm64/mm/mmu.c                                |   5 +-
+ arch/parisc/Makefile                               |   1 -
+ arch/parisc/kernel/module.c                        |  10 +-
+ arch/parisc/kernel/module.lds                      |   7 -
+ arch/powerpc/include/asm/page.h                    |   9 -
+ arch/powerpc/mm/mem.c                              |  20 +-
+ arch/s390/include/asm/page.h                       |   2 -
+ arch/s390/mm/init.c                                |   1 +
+ arch/x86/include/asm/pgtable.h                     |   6 +
+ drivers/firmware/arm_sdei.c                        |  12 +-
+ drivers/firmware/psci/psci.c                       |  24 +-
+ drivers/irqchip/irq-gic-v3.c                       |  20 ++
+ drivers/perf/arm-cci.c                             |   4 +-
+ drivers/perf/arm-ccn.c                             |   4 +-
+ drivers/perf/arm_smmuv3_pmu.c                      |   5 +-
+ drivers/perf/fsl_imx8_ddr_perf.c                   | 124 ++++++--
+ drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c      |   5 +-
+ drivers/perf/hisilicon/hisi_uncore_hha_pmu.c       |   4 +-
+ drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c       |   4 +-
+ drivers/perf/hisilicon/hisi_uncore_pmu.c           |  26 +-
+ drivers/perf/thunderx2_pmu.c                       | 267 +++++++++++++++--
+ drivers/perf/xgene_pmu.c                           |  14 +-
+ include/asm-generic/vmlinux.lds.h                  |  14 +-
+ include/linux/arm-smccc.h                          |  16 +
+ include/linux/arm_sdei.h                           |   6 -
+ include/linux/dma-direct.h                         |   2 +
+ include/linux/ftrace.h                             |  40 ++-
+ include/linux/irqchip/arm-gic-v3.h                 |   2 +
+ include/linux/mmzone.h                             |  45 +--
+ include/linux/psci.h                               |   9 +-
+ init/initramfs.c                                   |   8 +
+ kernel/dma/direct.c                                |  13 +-
+ kernel/module.c                                    |   2 +-
+ kernel/trace/ftrace.c                              |   6 +-
+ mm/memory.c                                        | 104 ++++++-
+ tools/testing/selftests/Makefile                   |   1 +
+ tools/testing/selftests/arm64/Makefile             |  64 +++-
+ tools/testing/selftests/arm64/README               |  25 ++
+ tools/testing/selftests/arm64/signal/.gitignore    |   3 +
+ tools/testing/selftests/arm64/signal/Makefile      |  32 ++
+ tools/testing/selftests/arm64/signal/README        |  59 ++++
+ tools/testing/selftests/arm64/signal/signals.S     |  64 ++++
+ .../testing/selftests/arm64/signal/test_signals.c  |  29 ++
+ .../testing/selftests/arm64/signal/test_signals.h  | 100 +++++++
+ .../selftests/arm64/signal/test_signals_utils.c    | 328 ++++++++++++++++++++
+ .../selftests/arm64/signal/test_signals_utils.h    | 120 ++++++++
+ .../signal/testcases/fake_sigreturn_bad_magic.c    |  52 ++++
+ .../signal/testcases/fake_sigreturn_bad_size.c     |  77 +++++
+ .../testcases/fake_sigreturn_bad_size_for_magic0.c |  46 +++
+ .../testcases/fake_sigreturn_duplicated_fpsimd.c   |  50 ++++
+ .../testcases/fake_sigreturn_misaligned_sp.c       |  37 +++
+ .../testcases/fake_sigreturn_missing_fpsimd.c      |  50 ++++
+ .../mangle_pstate_invalid_compat_toggle.c          |  31 ++
+ .../testcases/mangle_pstate_invalid_daif_bits.c    |  35 +++
+ .../testcases/mangle_pstate_invalid_mode_el1h.c    |  15 +
+ .../testcases/mangle_pstate_invalid_mode_el1t.c    |  15 +
+ .../testcases/mangle_pstate_invalid_mode_el2h.c    |  15 +
+ .../testcases/mangle_pstate_invalid_mode_el2t.c    |  15 +
+ .../testcases/mangle_pstate_invalid_mode_el3h.c    |  15 +
+ .../testcases/mangle_pstate_invalid_mode_el3t.c    |  15 +
+ .../mangle_pstate_invalid_mode_template.h          |  28 ++
+ .../selftests/arm64/signal/testcases/testcases.c   | 196 ++++++++++++
+ .../selftests/arm64/signal/testcases/testcases.h   | 104 +++++++
+ .../testing/selftests/arm64/{ => tags}/.gitignore  |   0
+ tools/testing/selftests/arm64/tags/Makefile        |   7 +
+ .../selftests/arm64/{ => tags}/run_tags_test.sh    |   0
+ .../testing/selftests/arm64/{ => tags}/tags_test.c |   0
+ 124 files changed, 3535 insertions(+), 930 deletions(-)
+
+----------------------------------------------------------------
+diff --cc arch/arm64/include/asm/asm-uaccess.h
+index c764cc8fb3b6,a70575edae8e..35e6145e1402
+--- a/arch/arm64/include/asm/asm-uaccess.h
++++ b/arch/arm64/include/asm/asm-uaccess.h
+@@@ -57,13 -57,21 +57,4 @@@ alternative_else_nop_endi
+  	.macro	uaccess_ttbr0_enable, tmp1, tmp2, tmp3
+  	.endm
+  #endif
+--
+--/*
+-  * Remove the address tag from a virtual address, if present.
+ - * These macros are no-ops when UAO is present.
+-- */
+- 	.macro	untagged_addr, dst, addr
+- 	sbfx	\dst, \addr, #0, #56
+- 	and	\dst, \dst, \addr
+ -	.macro	uaccess_disable_not_uao, tmp1, tmp2
+ -	uaccess_ttbr0_disable \tmp1, \tmp2
+ -alternative_if ARM64_ALT_PAN_NOT_UAO
+ -	SET_PSTATE_PAN(1)
+ -alternative_else_nop_endif
+--	.endm
+--
+ -	.macro	uaccess_enable_not_uao, tmp1, tmp2, tmp3
+ -	uaccess_ttbr0_enable \tmp1, \tmp2, \tmp3
+ -alternative_if ARM64_ALT_PAN_NOT_UAO
+ -	SET_PSTATE_PAN(0)
+ -alternative_else_nop_endif
+ -	.endm
+  #endif
+
+-- 
+Catalin
