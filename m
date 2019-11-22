@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A954AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4655BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD662070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0692070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401919;
-	bh=M40l9of/5w28DtT7o9OfgX+vth97LDYxOA329hDtE/0=;
+	s=default; t=1574401923;
+	bh=H4fzkwRnyDHbgjcBi7TGcVgeTqMYGyUEBJ2d/LTsAVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dzeas2Up0NWC3wZjRL+aBArGGC8ZCabw/R0/zXcHKKnc7AciJooM/ybvG9nF6RPZE
-	 vjKSL3hsM1BAQQeJMBkI87jobd1qum+juDjXN0ogkQ8wc56Dp7RFsG+fAmuzJhkFWZ
-	 q47My/RquFiexgiKFOil91FRBlYteP9kvFi+t6X4=
+	b=eL7I1AmInCJG4i+AdG7ngT1sPyync7Ddr74yv+f/CacvdA4m/TyU8iyNXdWNQv+GU
+	 Fz/upRwfn5KOl//PkIF1CFwoc/MAlBuzIfRq2G2BYU09kdzLqWdhZ7D99NE8zURYEH
+	 9jzRFUaYNmrzmaR9xyQQH2NSSG9UhRLuK8+aui6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfKVFv6 (ORCPT
+        id S1728367AbfKVFwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:52:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfKVFvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:50 -0500
+        id S1728312AbfKVFvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F05192070A;
-        Fri, 22 Nov 2019 05:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DCF020721;
+        Fri, 22 Nov 2019 05:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401909;
-        bh=M40l9of/5w28DtT7o9OfgX+vth97LDYxOA329hDtE/0=;
+        s=default; t=1574401911;
+        bh=H4fzkwRnyDHbgjcBi7TGcVgeTqMYGyUEBJ2d/LTsAVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rkQ++TFMXvT8iUUBigEzLP+NTt1gQIVvGGl1U15YtzKqduMeScHNXFEITn+ytFGh
-         lltUWGH6RAFsBRpXvlIQLokcf+folzcBPXqQb5xpATQJrXAdKWqbgx0m/p8NJPhezi
-         3qNsmEU5LJXvKm2mGs+69l/ocnId3woOx37uylRs=
+        b=U+cptFQoWeCPi+LAjwDaFPYQ4lP7/xYrcQgpLzfGNnbg5SyxEypmP387Nn54dis03
+         BIMGm53IogbE7yEFLhChmGLefE9Qq5JJce+qF6zrdwtT4A08DaTC7xKHcmOl7Z/Hki
+         CfU4k0WEugklx/QHrVF+z9EYzIPdMgc4R59U9NXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Dryomov <idryomov@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        ceph-devel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 140/219] libceph: drop last_piece logic from write_partial_message_data()
-Date:   Fri, 22 Nov 2019 00:47:52 -0500
-Message-Id: <20191122054911.1750-133-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 142/219] f2fs: fix to dirty inode synchronously
+Date:   Fri, 22 Nov 2019 00:47:54 -0500
+Message-Id: <20191122054911.1750-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -58,60 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 1f6b821aef78e3d79e8d598ae59fc7e23fb6c563 ]
+[ Upstream commit b32e019049e959ee10ec359893c9dd5d057dad55 ]
 
-last_piece is for the last piece in the current data item, not in the
-entire data payload of the message.  This is harmful for messages with
-multiple data items.  On top of that, we don't need to signal the end
-of a data payload either because it is always followed by a footer.
+If user change inode's i_flags via ioctl, let's add it into global
+dirty list, so that checkpoint can guarantee its persistence before
+fsync, it can make checkpoint keeping strong consistency.
 
-We used to signal "more" unconditionally, until commit fe38a2b67bc6
-("libceph: start defining message data cursor").  Part of a large
-series, it introduced cursor->last_piece and also mistakenly inverted
-the hint by passing last_piece for "more".  This was corrected with
-commit c2cfa1940097 ("libceph: Fix ceph_tcp_sendpage()'s more boolean
-usage").
-
-As it is, last_piece is not helping at all: because Nagle algorithm is
-disabled, for a simple message with two 512-byte data items we end up
-emitting three packets: front + first data item, second data item and
-footer.  Go back to the original pre-fe38a2b67bc6 behavior -- a single
-packet in most cases.
-
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ceph/messenger.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ fs/f2fs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
-index f7d7f32ac673c..6514816947fbe 100644
---- a/net/ceph/messenger.c
-+++ b/net/ceph/messenger.c
-@@ -1612,7 +1612,6 @@ static int write_partial_message_data(struct ceph_connection *con)
- 		struct page *page;
- 		size_t page_offset;
- 		size_t length;
--		bool last_piece;
- 		int ret;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 8d1eb8dec6058..7a5e84cfccf5e 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1668,7 +1668,7 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
  
- 		if (!cursor->resid) {
-@@ -1620,10 +1619,9 @@ static int write_partial_message_data(struct ceph_connection *con)
- 			continue;
- 		}
+ 	inode->i_ctime = current_time(inode);
+ 	f2fs_set_inode_flags(inode);
+-	f2fs_mark_inode_dirty_sync(inode, false);
++	f2fs_mark_inode_dirty_sync(inode, true);
+ 	return 0;
+ }
  
--		page = ceph_msg_data_next(cursor, &page_offset, &length,
--					  &last_piece);
--		ret = ceph_tcp_sendpage(con->sock, page, page_offset,
--					length, !last_piece);
-+		page = ceph_msg_data_next(cursor, &page_offset, &length, NULL);
-+		ret = ceph_tcp_sendpage(con->sock, page, page_offset, length,
-+					true);
- 		if (ret <= 0) {
- 			if (do_datacrc)
- 				msg->footer.data_crc = cpu_to_le32(crc);
 -- 
 2.20.1
 
