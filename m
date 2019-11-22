@@ -7,51 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DE3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B64C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CA62071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E1E2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574434710;
-	bh=ek8BA65IDtI5nq1rFXATIe7Ij5GaPGbZPFSb8Sut9Vo=;
+	s=default; t=1574434712;
+	bh=U+tcY+SJWfndTrheNTw31STbw/4M9GsmZcxi5VJMtxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LsBmTE6eaT1fzA7o0p40OdTBIIxXeZHnpoP3+YxMVAelgX9fTFNBZi8HSk3aisDaJ
-	 r629ieHupjw188u8vgHfmII4OLhwURcOU39LWVg1huRg4Gr7SSieWaCde22Sg9XjWm
-	 4csiwxNYUQuNqHGyd4BEzfvn8LPH8ofJeNUqZatk=
+	b=b/aD+LxyIb8lBtcywdAFp+A4+4XyyGgbF5bCFMg47WeiQzfYqvASBuEDrIWGoCsfX
+	 1N39E4kS+QxrfNO3ijSqs0/uilhPZhCXbZrNtkYwn1HbtAbDVY2RL+eBJVE4WMdl0F
+	 +XKHZ31ISexQQnnQITgfhRD8NnG+sUQdzrA43kXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfKVO62 (ORCPT
+        id S1727766AbfKVO6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:58:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59422 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 09:58:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727698AbfKVO6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:58:25 -0500
+        id S1727740AbfKVO63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:58:29 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 928172073F;
-        Fri, 22 Nov 2019 14:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FA9B2073B;
+        Fri, 22 Nov 2019 14:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574434704;
-        bh=ek8BA65IDtI5nq1rFXATIe7Ij5GaPGbZPFSb8Sut9Vo=;
+        s=default; t=1574434708;
+        bh=U+tcY+SJWfndTrheNTw31STbw/4M9GsmZcxi5VJMtxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EH+qAJTHwtcXfaHVTD+GE2hIrsLDPaBul4WvIxa1LmHexuavU/NZtVKQABr//nhbg
-         1Ymy+gSddR009jWaH2uk92D/2QMDiuQSDNWjvNHpKsUUDVR83rrP882lEOXoFji2mW
-         HyiBuyfZmMXl5sXd438JLco0Mxx32CtwcK2WBke4=
+        b=D+hEzz5/ySmx80Zx0QHu2y/VB8a7lBstrAwY0I/Lw1xI0w9XVMH9S2Z6q7+yxFUfc
+         a+yquaZ+N7wgYAWjeDJssnJcMJDHjCmDg+XyE0Ov5D2dWcOPD/ksdsNRuCsLVPiQwC
+         /SWk/dme6tTg8FUmui82ao3bZnyHnq17wfOz5OEI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Hewenliang <hewenliang4@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel-janitors@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 24/26] libtraceevent: Fix memory leakage in copy_filter_type
-Date:   Fri, 22 Nov 2019 11:57:09 -0300
-Message-Id: <20191122145711.3171-25-acme@kernel.org>
+Subject: [PATCH 25/26] perf probe: Fix spelling mistake "addrees" -> "address"
+Date:   Fri, 22 Nov 2019 11:57:10 -0300
+Message-Id: <20191122145711.3171-26-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191122145711.3171-1-acme@kernel.org>
 References: <20191122145711.3171-1-acme@kernel.org>
@@ -62,50 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hewenliang <hewenliang4@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-It is necessary to free the memory that we have allocated when error occurs.
+There is a spelling mistake in a pr_warning message. Fix it.
 
-Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Colin King <colin.king@canonical.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel-janitors@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191121092623.374896-1-colin.king@canonical.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/parse-filter.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 552592d153fb..f3cbf86e51ac 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1473,8 +1473,10 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
- 		/* Add trivial event */
- 		arg = allocate_arg();
--		if (arg == NULL)
-+		if (arg == NULL) {
-+			free(str);
- 			return -1;
-+		}
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 38d6cd22779f..c470c49a804f 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -812,7 +812,7 @@ static int verify_representive_line(struct probe_finder *pf, const char *fname,
+ 	if (strcmp(fname, __fname) || lineno == __lineno)
+ 		return 0;
  
- 		arg->type = TEP_FILTER_ARG_BOOLEAN;
- 		if (strcmp(str, "TRUE") == 0)
-@@ -1483,8 +1485,11 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 			arg->boolean.value = 0;
+-	pr_warning("This line is sharing the addrees with other lines.\n");
++	pr_warning("This line is sharing the address with other lines.\n");
  
- 		filter_type = add_filter_type(filter, event->id);
--		if (filter_type == NULL)
-+		if (filter_type == NULL) {
-+			free(str);
-+			free_arg(arg);
- 			return -1;
-+		}
- 
- 		filter_type->filter = arg;
- 
+ 	if (pf->pev->point.function) {
+ 		/* Find best match function name and lines */
 -- 
 2.21.0
 
