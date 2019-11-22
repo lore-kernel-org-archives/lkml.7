@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD89C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B70C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675CC20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269DC2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403228;
-	bh=0VH8yrhi9GC0ENQNA7KNwTLpwZFqByhMisUPcy4OreE=;
+	s=default; t=1574403237;
+	bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MY5Wl3rLlIpjHl3Dex7gb+Ooyl5lfPL80gXDqcKFmpFHDR1k+MnluZ11OmlvFMJz0
-	 6K/CpCvGFwVyAowLtoXZuWdlakNTdXMNKqid91Uz+augXWRHFiEmMVjPE7zKohizte
-	 W25MWjfYolMlg98BBUjtbiYngGrleMiAHgeNa8xQ=
+	b=gX0wtiIcxgqJ2y9gS1CkXFHI6lMElYpC/2u0F6wmmBwEcfBpXGK1MbpNwx+zcmie6
+	 Mc5xG1uF1ejX0ftUGhjS3Ze7RFFpt+JGxvYHtmWrF3FZ0StR6dacP4833+hFYusKeI
+	 NGk9QU6JQrkmt3kwkVCVDZrwtxDbzb7QG3lyNPtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfKVGNp (ORCPT
+        id S1727796AbfKVGN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728333AbfKVGNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:34 -0500
+        id S1729439AbfKVGNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86E12071B;
-        Fri, 22 Nov 2019 06:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13B9D20718;
+        Fri, 22 Nov 2019 06:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403213;
-        bh=0VH8yrhi9GC0ENQNA7KNwTLpwZFqByhMisUPcy4OreE=;
+        s=default; t=1574403219;
+        bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mn1QsmcN5+GgCKJ1TEQ4wrdCNpkYTNkONZQOIVXgjzLvgv/V7RlXQrBUNzZtOk+jI
-         B2847hi/Jmw+yL60/N0t0uhObV1HwqT6r8P9b1itWBo7foA87od1KwSXTP0S1cNgFD
-         Q5CKJyXFU96+kLvjKWJMw9bxvzknYbEcO/LLQ2YI=
+        b=qeH+R4ohdNFfMPpWRN+LluCdlARyNunXbdmd+DBfxaw1I6Q4WGogQF/Cg1i0kwWwR
+         qR0W3IvxVcOerrj8HLFdYB0K+NUFXCuZ6BOQtjIWL4j6EA6jIdsJX5x1K5KLLlcH/4
+         EgIdlHNtAwNSPnIGjFqbCDCvDOvNGd0SdeOSANV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Bowler <nbowler@draconx.ca>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 28/68] xfs: Align compat attrlist_by_handle with native implementation.
-Date:   Fri, 22 Nov 2019 01:12:21 -0500
-Message-Id: <20191122061301.4947-27-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, openrisc@lists.librecores.org
+Subject: [PATCH AUTOSEL 4.4 34/68] openrisc: Fix broken paths to arch/or32
+Date:   Fri, 22 Nov 2019 01:12:27 -0500
+Message-Id: <20191122061301.4947-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,54 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Bowler <nbowler@draconx.ca>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit c456d64449efe37da50832b63d91652a85ea1d20 ]
+[ Upstream commit 57ce8ba0fd3a95bf29ed741df1c52bd591bf43ff ]
 
-While inspecting the ioctl implementations, I noticed that the compat
-implementation of XFS_IOC_ATTRLIST_BY_HANDLE does not do exactly the
-same thing as the native implementation.  Specifically, the "cursor"
-does not appear to be written out to userspace on the compat path,
-like it is on the native path.
+OpenRISC was mainlined as "openrisc", not "or32".
+vmlinux.lds is generated from vmlinux.lds.S.
 
-This adjusts the compat implementation to copy out the cursor just
-like the native implementation does.  The attrlist cursor does not
-require any special compat handling.  This fixes xfstests xfs/269
-on both IA-32 and x32 userspace, when running on an amd64 kernel.
-
-Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-Fixes: 0facef7fb053b ("xfs: in _attrlist_by_handle, copy the cursor back to userspace")
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_ioctl32.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/openrisc/kernel/entry.S | 2 +-
+ arch/openrisc/kernel/head.S  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index 1a05d8ae327db..e7372cef5ac33 100644
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -346,6 +346,7 @@ xfs_compat_attrlist_by_handle(
- {
- 	int			error;
- 	attrlist_cursor_kern_t	*cursor;
-+	compat_xfs_fsop_attrlist_handlereq_t __user *p = arg;
- 	compat_xfs_fsop_attrlist_handlereq_t al_hreq;
- 	struct dentry		*dentry;
- 	char			*kbuf;
-@@ -380,6 +381,11 @@ xfs_compat_attrlist_by_handle(
- 	if (error)
- 		goto out_kfree;
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index fec8bf97d8064..c17e8451d9978 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -179,7 +179,7 @@ handler:							;\
+  *	 occured. in fact they never do. if you need them use
+  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
+  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
+- *       in 'arch/or32/kernel/head.S'
++ *       in 'arch/openrisc/kernel/head.S'
+  */
  
-+	if (copy_to_user(&p->pos, cursor, sizeof(attrlist_cursor_kern_t))) {
-+		error = -EFAULT;
-+		goto out_kfree;
-+	}
-+
- 	if (copy_to_user(compat_ptr(al_hreq.buffer), kbuf, al_hreq.buflen))
- 		error = -EFAULT;
+ /* =====================================================[ exceptions] === */
+diff --git a/arch/openrisc/kernel/head.S b/arch/openrisc/kernel/head.S
+index f14793306b03f..98dd6860bc0b9 100644
+--- a/arch/openrisc/kernel/head.S
++++ b/arch/openrisc/kernel/head.S
+@@ -1596,7 +1596,7 @@ _string_esr_irq_bug:
  
+ /*
+  * .data section should be page aligned
+- *	(look into arch/or32/kernel/vmlinux.lds)
++ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
+  */
+ 	.section .data,"aw"
+ 	.align	8192
 -- 
 2.20.1
 
