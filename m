@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2DFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F54C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD632084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A625F20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402282;
-	bh=8m/MqRha1T/Gf1VwXx+GBM1pGru1K/qiMgwuwyeqJvE=;
+	s=default; t=1574402290;
+	bh=n+Wons8GrY+1VzeMZgkyPKXji48Eh6cjTU8tvUR/bUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2NZf1cRsXTSyv0JQUaUhp9CN3wO/EVoYuxRjd8uNXguvqFE0P0DKgB2HryzpLpnc/
-	 ju4iw18008I9raPj0BmHRBF7PwwmC6UyEi+MlvnJg6HZ+b1IkwqA4uR0zgYucxlXki
-	 05oAURsUGdEd1G4z1M5M4vU0ikGHCPzmpHhluyiQ=
+	b=hXpnLu0VzlOmfPCFUjyrwIKyP1aO3MT9wEzBP+4yyFUD4Ncu2/ffDGWJBZez8ZHuk
+	 dzKPmMliIawzxI7Ix3uQDKveAnBH4/mEC6j+r+Ukb4uw7U9yceMiezo7Axu5GGizs1
+	 dvYiwg7xQgQkq9/vvYMSwpaChDTeJbhD8vhAuRaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfKVF6A (ORCPT
+        id S1729630AbfKVF6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:58:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:58:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbfKVF5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:48 -0500
+        id S1728632AbfKVF54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DC092072D;
-        Fri, 22 Nov 2019 05:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6BE420659;
+        Fri, 22 Nov 2019 05:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402268;
-        bh=8m/MqRha1T/Gf1VwXx+GBM1pGru1K/qiMgwuwyeqJvE=;
+        s=default; t=1574402276;
+        bh=n+Wons8GrY+1VzeMZgkyPKXji48Eh6cjTU8tvUR/bUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/UEe1KkZU/D+g38UusUEK8YofxLaXLHEWJzmcK6oyRmkUi/Y0B1rezNKm5fWidzk
-         sj7JrRnoSizYrIuzJthIpRvc9B1TlF5aNmel0z2YwSsYWmiEuOEG3DkwKTuid2RfDw
-         vd/3U/6WGLU+WVvDWJKxZFYZE0hKLwPyPLVIVLbo=
+        b=EPUX5Eqr1ZD2ysyWWEJt/w6Q5Skofx7CNCG7vxQ1gDONjeysV+UaO8UXRymSHbxwD
+         cER1XcQJ78bTYt+ioVPyrSrFJ7iFfxZuqlPed+XCJg+mFPHaEtUIYrxjYjfG36Cdy8
+         zeBN0II9Kuh3wboXNSM2uxkyAzJ1a1oSeTlbZFFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 108/127] net/smc: prevent races between smc_lgr_terminate() and smc_conn_free()
-Date:   Fri, 22 Nov 2019 00:55:26 -0500
-Message-Id: <20191122055544.3299-107-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 115/127] net: dev: Use unsigned integer as an argument to left-shift
+Date:   Fri, 22 Nov 2019 00:55:33 -0500
+Message-Id: <20191122055544.3299-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -61,46 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 77f838ace755d2f466536c44dac6c856f62cd901 ]
+[ Upstream commit f4d7b3e23d259c44f1f1c39645450680fcd935d6 ]
 
-To prevent races between smc_lgr_terminate() and smc_conn_free() add an
-extra check of the lgr field before accessing it, and cancel a delayed
-free_work when a new smc connection is created.
-This fixes the problem that free_work cleared the lgr variable but
-smc_lgr_terminate() or smc_conn_free() still access it in parallel.
+1 << 31 is Undefined Behaviour according to the C standard.
+Use U type modifier to avoid theoretical overflow.
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/netdevice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index f04a037dc9677..0de788fa43e95 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -103,6 +103,8 @@ static void smc_lgr_unregister_conn(struct smc_connection *conn)
- 	struct smc_link_group *lgr = conn->lgr;
- 	int reduced = 0;
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 40b830d55fe50..4725a9d9597fc 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3522,7 +3522,7 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
+ 	if (debug_value == 0)	/* no output */
+ 		return 0;
+ 	/* set low N bits */
+-	return (1 << debug_value) - 1;
++	return (1U << debug_value) - 1;
+ }
  
-+	if (!lgr)
-+		return;
- 	write_lock_bh(&lgr->conns_lock);
- 	if (conn->alert_token_local) {
- 		reduced = 1;
-@@ -431,6 +433,8 @@ int smc_conn_create(struct smc_sock *smc, __be32 peer_in_addr,
- 			local_contact = SMC_REUSE_CONTACT;
- 			conn->lgr = lgr;
- 			smc_lgr_register_conn(conn); /* add smc conn to lgr */
-+			if (delayed_work_pending(&lgr->free_work))
-+				cancel_delayed_work(&lgr->free_work);
- 			write_unlock_bh(&lgr->conns_lock);
- 			break;
- 		}
+ static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
 -- 
 2.20.1
 
