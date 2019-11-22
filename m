@@ -2,112 +2,135 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F19C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE5C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADF020656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419567;
-	bh=DLqtyD3FkQpL4d6hSuqWxbmsfSbHPKfvIDSHACFVQUw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kkXMzpsFCREtU1TkYl5YQBKRj1KIIexsv1ME5ccGBNchhZ4g3HCVcHp12++kld7t2
-	 h+tCHJP5G+Qo+7QWwwk8e2/2PVxzLjg6CWGq62rR6kod0r8X7NiWwUfPQkmarwH9Qd
-	 ItOMolPKke1x6DnmBvgkfpy7J57KeyHkFPObGD4c=
+	by mail.kernel.org (Postfix) with ESMTP id 7EAF92073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ktb+gOuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbfKVKqG (ORCPT
+        id S1729604AbfKVKqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbfKVKqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:46:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3060020748;
-        Fri, 22 Nov 2019 10:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419561;
-        bh=DLqtyD3FkQpL4d6hSuqWxbmsfSbHPKfvIDSHACFVQUw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMikqmNJ69Z2h5ffuKYtmu61LgraIdDEvszalaFTG8fAUww1L9nK4R48IZa9lUXB6
-         Ow+hJoO6TGHrer6EAx5Nfn6XU/9t9fokvC+MOLw6fAmQ0yQacWCoDOlYqwZrrO2EqG
-         UoRDjWBtFdMS0lpl5xh4krjjHTJsAwMctCJSWjNQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@fb.com>
-Subject: [PATCH 4.9 153/222] block: introduce blk_rq_is_passthrough
-Date:   Fri, 22 Nov 2019 11:28:13 +0100
-Message-Id: <20191122100913.777795515@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 05:46:05 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12091 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729590AbfKVKqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:46:00 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7bc630000>; Fri, 22 Nov 2019 02:45:55 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 02:45:59 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 02:45:59 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:59 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:59 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 Nov 2019 10:45:58 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd7bc610002>; Fri, 22 Nov 2019 02:45:57 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH 6/6] arm64: tegra: Add support for PCIe endpoint mode in P2972-0000 platform
+Date:   Fri, 22 Nov 2019 16:15:05 +0530
+Message-ID: <20191122104505.8986-7-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122104505.8986-1-vidyas@nvidia.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574419555; bh=PzuZi1jgVofZ8q1sxB8QaUCLTmbzr9ZfQuYuJ3/x5K8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=Ktb+gOuEAFazZJ++Zih63UDEUoq0Knd69pW4jpEgWQQY/wL9Cskb2VbxFNT8TEADn
+         Y9EPP73h3nNDlsroK4+P25izEt3p7Er44xIuQ//JykAE5kEHrf9RIgf3WoHL950+V+
+         k6qX3ylaMlyw9ZZmBlxJpfcqsnsVlZvsYoQL17CDGQRQyEEgtcnT/64eIY/Ab/eVG/
+         PBANvUKXqBUL85kYaOFdKm/3OR9sxoWowDpqpZJKs0epAQBKC4RTu6YtukDCn72YZP
+         572sSGOMxonhi0hP2UKLucl5vYIfssW7ToleKPUz/Hv9Xi/c0GCmjpgmbH+GY5kCqI
+         CQRH1Qu0L470g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Add endpoint mode support for PCIe C5 controller in P2972-0000 platform
+with information about supplies, PHY, PERST GPIO and GPIO that controls
+PCIe reference clock coming from the host system.
 
-commit 57292b58ddb58689e8c3b4c6eadbef10d9ca44dd upstream.
-
-This can be used to check for fs vs non-fs requests and basically
-removes all knowledge of BLOCK_PC specific from the block layer,
-as well as preparing for removing the cmd_type field in struct request.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@fb.com>
-[only take the blkdev.h changes as we only want the function for backported
-patches - gregkh]
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- include/linux/blkdev.h |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -212,6 +212,11 @@ struct request {
- 	(req)->cmd_flags |= flags;		\
- } while (0)
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+index 7eb64b816e08..58c3a9677bc8 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+@@ -43,6 +43,19 @@
  
-+static inline bool blk_rq_is_passthrough(struct request *rq)
-+{
-+	return rq->cmd_type != REQ_TYPE_FS;
-+}
+ 		gpio@c2f0000 {
+ 			status = "okay";
++			/*
++			 * Change the below node's status to 'okay' when
++			 * PCIe C5 controller is enabled to operate in endpoint
++			 * to allow REFCLK from the host system to flow into
++			 * the controller.
++			 */
++			pex-refclk-sel-high {
++				gpio-hog;
++				output-high;
++				gpios = <TEGRA194_AON_GPIO(AA, 5) 0>;
++				label = "pex_refclk_sel_high";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		pwm@c340000 {
+@@ -144,6 +157,22 @@
+ 			    "p2u-5", "p2u-6", "p2u-7";
+ 	};
+ 
++	pcie_ep@141a0000 {
++		status = "disabled";
 +
- static inline unsigned short req_get_ioprio(struct request *req)
- {
- 	return req->ioprio;
-@@ -663,7 +668,7 @@ static inline void blk_clear_rl_full(str
- 
- static inline bool rq_mergeable(struct request *rq)
- {
--	if (rq->cmd_type != REQ_TYPE_FS)
-+	if (blk_rq_is_passthrough(rq))
- 		return false;
- 
- 	if (req_op(rq) == REQ_OP_FLUSH)
-@@ -910,7 +915,7 @@ static inline unsigned int blk_rq_get_ma
- {
- 	struct request_queue *q = rq->q;
- 
--	if (unlikely(rq->cmd_type != REQ_TYPE_FS))
-+	if (blk_rq_is_passthrough(rq))
- 		return q->limits.max_hw_sectors;
- 
- 	if (!q->limits.chunk_sectors ||
-
++		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++
++		nvidia,pex-rst-gpio = <&gpio TEGRA194_MAIN_GPIO(GG, 1)
++					GPIO_ACTIVE_LOW>;
++
++		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
++		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
++		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++	};
++
+ 	fan: fan {
+ 		compatible = "pwm-fan";
+ 		pwms = <&pwm4 0 45334>;
+-- 
+2.17.1
 
