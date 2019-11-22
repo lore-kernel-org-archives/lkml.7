@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AA9C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957FEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0595920717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642B52072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402154;
-	bh=TH3g2xK0o/g45rMbWe6XW4bUEmbjAzv2YZ7x/00C14s=;
+	s=default; t=1574402156;
+	bh=l9yHDJcal3aq3sI6P1LeEpTZuLYipVHXnMG2ZNDim2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQjZfq4oh0PwDMWQNkiP4N1tokkjNWgzlAQpkbzP5iahXA05pcupLjYSfu0zCM/+r
-	 6cPJbmwRgtNKviIeG3gR1cLo+rTBEqpLPZq7Fdu3JUIlLP/QAdmtu928WZb4yQ3eiF
-	 jxTizS8uyIH1e7b7t7LZOz7M42hpnp4aN9NN30cA=
+	b=2V5o3mvyNhgGMHPoNqDLtFAiSNX87tv73RQhL7MZg6kgRPnNnjsJl3ct5F5vbqiNi
+	 9ZCm06g87EHtcoMUesZhCqWxc5+5HJ7zZh5Fxwy8Cyw+O0Vmj/UgArdBxPw7qmp5VO
+	 QYyIVhq37QTjvcqR6YAP2rubbTFh+23zpTLew2DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfKVFzx (ORCPT
+        id S1728965AbfKVFzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:55:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:55:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbfKVFzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:55:50 -0500
+        id S1728946AbfKVFzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:55:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90282068F;
-        Fri, 22 Nov 2019 05:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 308B42070A;
+        Fri, 22 Nov 2019 05:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402149;
-        bh=TH3g2xK0o/g45rMbWe6XW4bUEmbjAzv2YZ7x/00C14s=;
+        s=default; t=1574402151;
+        bh=l9yHDJcal3aq3sI6P1LeEpTZuLYipVHXnMG2ZNDim2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SI8zToOpgJYZwX6j4sKIhDpaXmvjWBLNRvgljt97jFU+fTmGzzbkrIhBsjMBwJuEL
-         MDeYbEaBT2USJJE4nCYOgIDljffz+UufNQFArzsUxY7A7WgMYiqqKyrfSespV5Ag+7
-         TDoTVpHn15LSJBLFdGtgvPbPBaYSfdTzFDbU4MiQ=
+        b=2e0iSYqUQOsx+YleG0ZBzkjjEiJhiqQ4jAwYpOhS+OPNSLFGCEp0eZTKQyothsWb0
+         //JGGpoZLkGW+GdWJ4Ou5DBU68Yp3/g1xftQFMll/KjR6XVa92I2uLFlw4rXM/GXNn
+         tTPLxSpz6uf7zmCPEbSlURDEXM1cU7R5wfMVqOOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Marco Franchi <marco.franchi@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 005/127] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:53:43 -0500
-Message-Id: <20191122055544.3299-4-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 007/127] parisc: Fix HP SDC hpa address output
+Date:   Fri, 22 Nov 2019 00:53:45 -0500
+Message-Id: <20191122055544.3299-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -61,42 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
+[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
 
-imx53-voipac-dmm-668 has two memory nodes, but the correct representation
-would be to use a single one with two reg entries - one for each RAM chip
-select, so fix it accordingly.
+Show the hpa address of the HP SDC instead of a hashed value, e.g.:
+HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
 
-Reported-by: Marco Franchi <marco.franchi@nxp.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/input/serio/hp_sdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-index df8dafe2564dd..2297ed90ee895 100644
---- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-+++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-@@ -17,12 +17,8 @@
+diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
+index 8eef6849d0660..5585823ced19d 100644
+--- a/drivers/input/serio/hp_sdc.c
++++ b/drivers/input/serio/hp_sdc.c
+@@ -887,8 +887,8 @@ static int __init hp_sdc_init(void)
+ 			"HP SDC NMI", &hp_sdc))
+ 		goto err2;
  
- 	memory@70000000 {
- 		device_type = "memory";
--		reg = <0x70000000 0x20000000>;
--	};
--
--	memory@b0000000 {
--		device_type = "memory";
--		reg = <0xb0000000 0x20000000>;
-+		reg = <0x70000000 0x20000000>,
-+		      <0xb0000000 0x20000000>;
- 	};
+-	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
+-	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
++	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
++	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
  
- 	regulators {
+ 	hp_sdc_status_in8();
+ 	hp_sdc_data_in8();
 -- 
 2.20.1
 
