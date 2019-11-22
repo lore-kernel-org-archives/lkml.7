@@ -2,68 +2,107 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C910C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9A0C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3DF2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726F520692
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKVCK6 (ORCPT
+        id S1726704AbfKVCLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:10:58 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfKVCK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:10:57 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A1361C4F7D82AC032453;
-        Fri, 22 Nov 2019 10:10:54 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 22 Nov 2019 10:10:47 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] scsi: pm80xx: Remove unused including <linux/version.h>
-Date:   Fri, 22 Nov 2019 02:09:11 +0000
-Message-ID: <20191122020911.33269-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Nov 2019 21:11:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfKVCLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 21:11:38 -0500
+Received: from oasis.local.home (unknown [66.170.99.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 160052068F;
+        Fri, 22 Nov 2019 02:11:36 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 21:11:34 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 03/12] x86/ftrace: Explicitly include vmalloc.h for
+ set_vm_flush_reset_perms()
+Message-ID: <20191121211134.5938b2d9@oasis.local.home>
+In-Reply-To: <20191119002121.4107-4-sean.j.christopherson@intel.com>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+        <20191119002121.4107-4-sean.j.christopherson@intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
+On Mon, 18 Nov 2019 16:21:12 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/pm8001/pm80xx_hwi.c | 1 -
- 1 file changed, 1 deletion(-)
+> The inclusion of linux/vmalloc.h, which is required for its definition
+> of set_vm_flush_reset_perms(), is somehow dependent on asm/realmode.h
+> being included by asm/acpi.h.  Explicitly include linux/vmalloc.h so
+> that a future patch can drop the realmode.h include from asm/acpi.h
+> without breaking the build.
+> 
+> Fixes: 7fdfe1e40b225 ("x86/ftrace: Use vmalloc special flag")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 19601138e889..6402629bcd40 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -37,7 +37,6 @@
-  * POSSIBILITY OF SUCH DAMAGES.
-  *
-  */
-- #include <linux/version.h>
-  #include <linux/slab.h>
-  #include "pm8001_sas.h"
-  #include "pm80xx_hwi.h"
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
+-- Steve
 
+> ---
+>  arch/x86/kernel/ftrace.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 2a179fb35cd1..681eae0fb64d 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/memory.h>
+> +#include <linux/vmalloc.h>
+>  
+>  #include <trace/syscall.h>
+>  
 
