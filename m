@@ -2,101 +2,90 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F54CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE87C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0742068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EhbyVJD2"
+	by mail.kernel.org (Postfix) with ESMTP id 501D02067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKVBsl (ORCPT
+        id S1726532AbfKVBw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:48:41 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:48770 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfKVBsk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:48:40 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAM1iFCO128056;
-        Fri, 22 Nov 2019 01:48:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=SNgm4BbWhnsLzBcjJXaM8if4RgmU/BKYbkviXRJN6FA=;
- b=EhbyVJD29S1QcUxkvgTBPwhpFNNvDM6uhZUcBWGjxVBg39B3WlJ2SqjWTSV9YozawQ+u
- wvsGDhprVEd1gXWORWkk5XPRgO/NkvGWMrRxSzoRASoSePzEO6MuPKmBSPvNpN+Ewqme
- ma/oF8jioOHb+BzfDSvxOZ1O81C3cAcAKgCw8cVJzBv1pUoVD9GhhxcS0xieLWQx5p0E
- UUgNqDSXqWVOpAfKxt6cCkTooDN9FKVXT/4yv/kBujUcSwQMH+lRYVBunmLEC6GDUoPU
- mLz1EGunv28I8Wqn7IOxXUjsrjCywXFWv+DODr0F/ZrN2CAaYl13zxhmRT3CqWfKIC3c hg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2wa8hu7vsf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 01:48:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAM1m2xr075618;
-        Fri, 22 Nov 2019 01:48:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2wd47y0eas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 01:48:34 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAM1mWvL018791;
-        Fri, 22 Nov 2019 01:48:32 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 Nov 2019 17:48:31 -0800
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     Tyrel Datwyler <turtle.in.the.kernel@gmail.com>,
-        mikecyr@linux.ibm.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] scsi: ibmvscsi_tgt: Remove unneeded variable rc
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191101120407.GA9369@saurav>
-        <25de88a9-b013-f5cc-06c2-3efb1f3f0001@gmail.com>
-Date:   Thu, 21 Nov 2019 20:48:29 -0500
-In-Reply-To: <25de88a9-b013-f5cc-06c2-3efb1f3f0001@gmail.com> (Tyrel
-        Datwyler's message of "Wed, 20 Nov 2019 17:11:12 -0800")
-Message-ID: <yq1blt4d6ky.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 21 Nov 2019 20:52:27 -0500
+Received: from mga07.intel.com ([134.134.136.100]:61190 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfKVBw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 20:52:27 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 17:52:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,228,1571727600"; 
+   d="scan'208";a="205263047"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Nov 2019 17:52:25 -0800
+Date:   Thu, 21 Nov 2019 17:52:25 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191122015225.GG16617@linux.intel.com>
+References: <3908561D78D1C84285E8C5FCA982C28F7F4DC167@ORSMSX115.amr.corp.intel.com>
+ <B2612A75-BEC8-4FF7-9FDA-A7B55C2E0B4A@amacapital.net>
+ <20191121235329.GE199273@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=957
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911220014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911220013
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121235329.GE199273@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 03:53:29PM -0800, Fenghua Yu wrote:
+> On Thu, Nov 21, 2019 at 03:18:46PM -0800, Andy Lutomirski wrote:
+> > 
+> > > On Nov 21, 2019, at 2:29 PM, Luck, Tony <tony.luck@intel.com> wrote:
+> > > 
+> > >> It would be really, really nice if we could pass this feature through to a VM. Can we?
+> > > 
+> > > It's hard because the MSR is core scoped rather than thread scoped.  So on an HT
+> > > enabled system a pair of logical processors gets enabled/disabled together.
+> > > 
+> > 
+> > Well that sucks.
+> > 
+> > Could we pass it through if the host has no HT?  Debugging is *so* much
+> > easier in a VM.  And HT is a bit dubious these days anyway.
+> 
+> I think it's doable to pass it through to KVM. The difficulty is to disable
+> split lock detection in KVM because that will disable split lock on the whole
+> core including threads for the host. Without disabling split lock in KVM,
+> it's doable to debug split lock in KVM.
+> 
+> Sean and Xiaoyao are working on split lock for KVM (in separate patch set).
+> They may have insight on how to do this.
 
->> Variable rc is not modified in ibmvscsis_srp_i_logout function.  So
->> remove unneeded variable rc.
->> 
->> Issue found using coccicheck tool.
->> 
->> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
->
-> Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-
-Applied to 5.5/scsi-queue, thanks.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Yes, with SMT off KVM could allow the guest to enable split lock #AC, but
+for the initial implementation we'd want to allow it if and only if split
+lock #AC is disabled in the host kernel.  Otherwise we have to pull in the
+logic to control whether or not a guest can disable split lock #AC, what
+to do if a split lock #AC happens when it's enabled by the host but
+disabled by the guest, etc...
