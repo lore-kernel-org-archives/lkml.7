@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EACBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A34CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CBF20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1599620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574422019;
-	bh=tyo6kBRBm1QkQkkx+3ckrmLBrKm+CEEt7pqVzB1udDs=;
+	s=default; t=1574422023;
+	bh=iuc+CW/MwNh7Z3Nj4jlGrhbfNy6HZQZso3XrQC80OqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Skq+d8KaMtEOM+Xsm++lgVcWyCx/PYOM/OzAoccymFlSi8yBOE2/+JoUkzYV5Sv14
-	 wd5IYofSxMpIt+f0nL7oUqX5lb4FX6sbRD5GnxSzR5gKZjZc2rvcaMyWYeD9y64GsW
-	 oH1Iw015V+6o2Efi3ag6haF4ySfcFJc21Lv/t6UQ=
+	b=C+V+RRf0bWfIMd9cdhxa3KS6jarQb7CStPHXWUrwuXSkxbpXBr4fsAlEHjszc6I10
+	 numedfvMfm6J/6+gFS80V8HHuzs8N+36+QYDXc2+kPo6itMkvrKO9vT9cOcYyF/FDv
+	 s7NyM/Atuzs2QnfJTXuJZY8BpWf3P1Je6krPbIRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfKVKd2 (ORCPT
+        id S1728811AbfKVL1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:27:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfKVKdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:24 -0500
+        id S1727936AbfKVKd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D2B20708;
-        Fri, 22 Nov 2019 10:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7DDD20708;
+        Fri, 22 Nov 2019 10:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418804;
-        bh=tyo6kBRBm1QkQkkx+3ckrmLBrKm+CEEt7pqVzB1udDs=;
+        s=default; t=1574418807;
+        bh=iuc+CW/MwNh7Z3Nj4jlGrhbfNy6HZQZso3XrQC80OqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EE0cMs5LsFcqOXiiptnlMsjNW25cf/arlDfMBVgSnCp7FBCrLnZn1CV6hECyVMmOh
-         cV+e+Y9d8uEBhGwfrgZmESX0ChKvva2CnXtm8MMf+AZ6WHVdpnliNjP7cGRZoQ+2aT
-         CCFOXNoA5pnvl3vwbLNzGdYn6e9dAzkLwYnfa46Q=
+        b=HPW46oR1Zbqv0eiSMc85mzF4ch7f5aFlz97oZ5NRQZ7SBC187xMU+A7WGBWvt7IO2
+         vM50OTUKcNaTgdMQwZBE1QEY9sVsQRh0TV5N+NuwK4yVOF2Aua7r1uVUzoGFIqC0u6
+         YPut7fXd2O9pZb9MgzPRwtvrt/TRLzd5ZXtXU9A8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 056/159] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Fri, 22 Nov 2019 11:27:27 +0100
-Message-Id: <20191122100747.920640313@linuxfoundation.org>
+Subject: [PATCH 4.4 057/159] PCI/ACPI: Correct error message for ASPM disabling
+Date:   Fri, 22 Nov 2019 11:27:28 +0100
+Message-Id: <20191122100749.437814451@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,60 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Sinan Kaya <okaya@kernel.org>
 
-[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
+[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
 
-Calling napi_schedule() from process context does not ensure that the
-NET_RX softirq is run in a timely fashion. So trigger it manually.
+If _OSC execution fails today for platforms without an _OSC entry, code is
+printing a misleading message saying disabling ASPM as follows:
 
-This is no big issue with current code. A call to ndo_open() is usually
-followed by a ndo_set_rx_mode() call, and for qeth this contains a
-spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
-early.
-Nevertheless it's best to not depend on this behaviour, and just fix
-the issue at its source like all other drivers do. For instance see
-commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
 
-Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We need to ensure that platform supports ASPM to begin with.
+
+Reported-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 3 +++
- drivers/s390/net/qeth_l3_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/acpi/pci_root.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 22045e7d78ac3..97211f7f0cf02 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -996,7 +996,10 @@ static int __qeth_l2_open(struct net_device *dev)
- 
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 2cc9bc1ef1e38..0d71d2e6419af 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -3031,7 +3031,10 @@ static int __qeth_l3_open(struct net_device *dev)
- 
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 3b0b4bd67b71b..4031ec8024cee 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -454,8 +454,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
+ 	decode_osc_support(root, "OS supports", support);
+ 	status = acpi_pci_osc_support(root, support);
+ 	if (ACPI_FAILURE(status)) {
+-		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+-			 acpi_format_exception(status));
++		dev_info(&device->dev, "_OSC failed (%s)%s\n",
++			 acpi_format_exception(status),
++			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
+ 		*no_aspm = 1;
+ 		return;
+ 	}
 -- 
 2.20.1
 
