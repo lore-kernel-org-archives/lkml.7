@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0456C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70263C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669642073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385F320721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419271;
-	bh=OwuU0lQNIA9UaoMd+h3PZWnX2WrogOipN6n7Het3bJc=;
+	s=default; t=1574419276;
+	bh=8AN2pFZyrm0yIe8Lxq0JW9552ptGWoMKWXo+U6zPmiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Stg4BpYAoUEyJFIBZaHXIHDeodaodYoRfoZjgcJaxzdy9jqTnZLItqcyGnXUq0X1/
-	 sbx9v4h10FV+TX12w1chlqOq64kkYzpFWoAnfLVhM044cPoq+HwK3h2YvVUZyS2qm+
-	 yvsMPdY0fbk9XglUD697ecxBaGcugs+5t/9qmu4Q=
+	b=cmCb/0qPt3zFW9U8QV6MoJaI7ytg8qCSJf3+P5W8O9aj0fHIkn2/f03v6JGUcCJPF
+	 7PEAzNS7mDSqmMYSWG6tgTatphmcsGlq+Hff3AUvtqbZntQt4F80z3nsyfH7g69nUj
+	 m09j526P91oLlA4ypqKSs/xztld44J8xAXKA3gWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfKVKlK (ORCPT
+        id S1728986AbfKVKlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:41:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:41:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbfKVKlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:08 -0500
+        id S1727733AbfKVKlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D22C20718;
-        Fri, 22 Nov 2019 10:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB78220717;
+        Fri, 22 Nov 2019 10:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419267;
-        bh=OwuU0lQNIA9UaoMd+h3PZWnX2WrogOipN6n7Het3bJc=;
+        s=default; t=1574419271;
+        bh=8AN2pFZyrm0yIe8Lxq0JW9552ptGWoMKWXo+U6zPmiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0CL0XqKDy3786FPoyJuKRLgilthiFZ5Wi2PphB6qaJsVcNO5mD0XwxsBMfZciGvi
-         olJ3uggnmD7wCYWzZa6ZTheBV/IKgHvQwpVlfWdvYO8ErBF7hMIdZ9euZ4nGFKP2r1
-         hnJYqQXVq2kQc/Rbgp1r5wOLivo3LJa4GWj7UIvo=
+        b=wznjFRwZVAPirzAIoWQSArb5KEs9dsQ3nQ0pb9MabssGPpEXtoYY2eCrYvD1Z+P/1
+         rs8RiLS6ZQwNjN7R/JgHQZ60wGrVg6MFXqh7WOZxXGC+0moDygy2A2YgM4BdHq00PE
+         9e4fkgsg3QfQvj70Ft5iOntvRtGpYLHtRYptVk3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 053/222] signal: Properly deliver SIGILL from uprobes
-Date:   Fri, 22 Nov 2019 11:26:33 +0100
-Message-Id: <20191122100855.735759441@linuxfoundation.org>
+Subject: [PATCH 4.9 054/222] signal: Properly deliver SIGSEGV from x86 uprobes
+Date:   Fri, 22 Nov 2019 11:26:34 +0100
+Message-Id: <20191122100856.164465952@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,51 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 55a3235fc71bf34303e34a95eeee235b2d2a35dd ]
+[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
 
-For userspace to tell the difference between a random signal and an
-exception, the exception must include siginfo information.
+For userspace to tell the difference between an random signal
+and an exception, the exception must include siginfo information.
 
-Using SEND_SIG_FORCED for SIGILL is thus wrong, and it will result
-in userspace seeing si_code == SI_USER (like a random signal) instead
-of si_code == SI_KERNEL or a more specific si_code as all exceptions
+Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
+userspace seeing si_code == SI_USER (like a random signal) instead of
+si_code == SI_KERNEL or a more specific si_code as all exceptions
 deliver.
 
-Therefore replace force_sig_info(SIGILL, SEND_SIG_FORCE, current)
-with force_sig(SIG_ILL, current) which gets this right and is
-shorter and easier to type.
+Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
+with force_sig(SIG_SEGV, current) which gets this right and is shorter
+and easier to type.
 
-Fixes: 014940bad8e4 ("uprobes/x86: Send SIGILL if arch_uprobe_post_xol() fails")
-Fixes: 0b5256c7f173 ("uprobes: Send SIGILL if handle_trampoline() fails")
+Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/uprobes.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index fbfab5722254a..8ddd29476c0dc 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1846,7 +1846,7 @@ static void handle_trampoline(struct pt_regs *regs)
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index e35466afe989d..eac679ab543f6 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -983,7 +983,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
+ 		pr_err("uprobe: return address clobbered: pid=%d, %%sp=%#lx, "
+ 			"%%ip=%#lx\n", current->pid, regs->sp, regs->ip);
  
-  sigill:
- 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
--	force_sig_info(SIGILL, SEND_SIG_FORCED, current);
-+	force_sig(SIGILL, current);
- 
- }
- 
-@@ -1962,7 +1962,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 
- 	if (unlikely(err)) {
- 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
--		force_sig_info(SIGILL, SEND_SIG_FORCED, current);
-+		force_sig(SIGILL, current);
+-		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
++		force_sig(SIGSEGV, current);
  	}
- }
  
+ 	return -1;
 -- 
 2.20.1
 
