@@ -2,69 +2,119 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48036C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8660DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216802068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A02420707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:04:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Cznat/dV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfKVNCu (ORCPT
+        id S1727509AbfKVNEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:02:50 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:45170 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKVNCt (ORCPT
+        Fri, 22 Nov 2019 08:04:15 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39435 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfKVNEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:02:49 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.3)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iY8a8-0003rO-7Y; Fri, 22 Nov 2019 14:02:40 +0100
-Message-ID: <7d43bbc0dfeb040d3e0468155858c4cbe50c0de2.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211_hwsim: set the maximum EIRP output power for
- 5GHz
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Ramon Fontes <ramonreisfontes@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        kvalo@codeaurora.org, davem@davemloft.net
-Date:   Fri, 22 Nov 2019 14:02:37 +0100
-In-Reply-To: <CAK8U23amVqf-6YoiPoyk5_za3dhVb4FJmBDvmA2xv2sD43DhQA@mail.gmail.com> (sfid-20191122_135302_082448_33FD13BE)
-References: <20191108152013.13418-1-ramonreisfontes@gmail.com>
-         <fe198371577479c1e00a80e9cae6f577ab39ce8e.camel@sipsolutions.net>
-         <CAK8U23amVqf-6YoiPoyk5_za3dhVb4FJmBDvmA2xv2sD43DhQA@mail.gmail.com>
-         (sfid-20191122_135302_082448_33FD13BE)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 22 Nov 2019 08:04:15 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v138so6399911oif.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 05:04:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fzPqklm51f4d+04Hk2lQiF3YOc8XKDMT60XYkopdcUs=;
+        b=Cznat/dVZPw9vqZe2bd3oZfkQzZl0vWz5bWzsmdOpvJGNKn6qNI+C+eCevnHvOdQEw
+         DiPcgzw6YvU/vJNRB2xRSWiu8zLiN0QZ1ZWNZ0Mva9iIRMOUFAbrgyq8Kgoglke8mih3
+         Q8o62l9vxugKLHAeIcsfUPPWNJlQgTAhy5Jbs6Rwpi+e71pn0yUePkWQYidiviCtLMFz
+         pgSHbflxkymTl5MGW24kHzVVL6qtYC8t5j5/Q3MKfneH0geutsfd6SqpEtskcb7Rts0o
+         JcoVwKa+z5jQEUk5ln3MY7xKHUbQAtRi+hQsU3DnsvplJtPOTC/6edITOayA5o7fWlba
+         VqHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fzPqklm51f4d+04Hk2lQiF3YOc8XKDMT60XYkopdcUs=;
+        b=DB7zOuCqIW3QEy4CltOClppfUvh241UqU8EnktnpJDcn1QGYnOqENSdq5JepycySNC
+         alfFyj9i0T29iIWooSTGDt7/GiyRybokvu8Ubd/rTQuFCMmuo1MSkrDt6FqmjVxudUn2
+         SZYwHPVRvzmH71ONHWBrVS5qJvHS0ISB1Jx9VYwsJUXVPZ90xyA7DgM4w6IjsDlVz3Sq
+         EI58pJ61Rdi+5WogNtfdfq8s73gcv8llAYapYbN5lcJLrct0MlXC6jbFshHlrYdcAb86
+         QWU6oRKSok6ofJHKlnHv3UEjFC/rxPdSjHurFXnpdWJjNBb6vvo7lx1yM8gZBjxuVgtI
+         EOow==
+X-Gm-Message-State: APjAAAX1imdfFGpCp2Er2HiGBtfXAGpfpuKnmjmisxRmcTcQ8QNzT/0g
+        GC+DwC7P7TiB3+iyLvb4gNce8SgjnMppZeFzClNHmA==
+X-Google-Smtp-Source: APXvYqy2JE5Ni1hucVa+uC4X3b7zH+41DjbxZJ2O7HjBDpIvPEzKv2S1eu0QvaHdn8sa03AeYVlSy23xr8VmtmUiRPM=
+X-Received: by 2002:a05:6808:498:: with SMTP id z24mr12274927oid.114.1574427854113;
+ Fri, 22 Nov 2019 05:04:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+ <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com> <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+In-Reply-To: <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 22 Nov 2019 14:04:03 +0100
+Message-ID: <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-22 at 09:52 -0300, Ramon Fontes wrote:
-> > How is hwsim related to ETSI? What does it matter?
-> 
-> It's well known that the frequency bands 2,4 GHz and 5 GHz are mainly
-> used by Radio LANs and in many cases, the deployed technology is based
-> on the IEEE 802.11 standards family. However, other technologies such
-> as LTE-LAA are deployed in those frequency bands as well. That said,
-> considering that hwsim is an excellent module that can be used in
-> different network simulation scenarios; that it is not only used in
-> North America; and also considering that some regulatory power limits
-> are taken from the ETSI standards, why not set a maximum value
-> supported by a renowned Institute? Without this new value, regdomain
-> will not work as expected for some countries.
+pt., 22 lis 2019 o 13:53 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Fri, Nov 22, 2019 at 1:47 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+>
+> > what about the existing bindings for at24 that don't mandate the
+> > active-low flag? I'm afraid this would break the support for this
+> > specific chip or lead to code duplication if we had this in both nvmem
+> > and at24 with different logic.
+>
+> Hm yeah I realized this when I read patches 3 & 4.
+>
+> I would to like this:
+>
+> 1. Add a new generic property
+>    writeprotect-gpios that mandates to use GPIO_ACTIVE_LOW
+>    and use this in the new example
+>
+> 2. Deprecate wp-gpios in the binding, keep it around but deprecated.
 
-Right, so the commit log should say that it should be incremented to
-allow regdb to work, rather than worry about ETSI specifics?
+This is a pretty standard property though - for instance it is
+documented in the main mmc binding and doesn't mandate GPIO_ACTIVE_LOW
+either. I think this is because nobody says that the write-protect
+line must always be driver low to be asserted - this is highly
+implementation-specific.
 
-Or maybe this limit should just be removed entirely?
+Bartosz
 
-johannes
-
+>
+> 3. Add a quirk to gpiolib-of in the manner of the other quirks there
+>    (like for SPI) so that if we are dealing with some EEPROM node
+>    like at24 and the flag is zero, tag on GPIO_ACTIVE_LOW on
+>    the descriptor.
+>
+> The driver will now handle the semantic of both cases
+> with gpiolib-of providing a quirk for the old binding.
+>
+> This is how we solved this type of problem before.
+>
+> Yours,
+> Linus Walleij
