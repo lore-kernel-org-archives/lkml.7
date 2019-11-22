@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACAFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D413C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F4020674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC7F2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402661;
-	bh=tI+Me4l/Tp44n2yNMTP+jfpnQPT4d2ccg/rfEF2XdTs=;
+	s=default; t=1574402665;
+	bh=m6/UddO3uVeswlhu7e7/QS+bGiHCMuf33iWbMXmEGOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQnjYsmjmK8I+SvRCEt1DjfVZlggIUBygKczzTXLzyLRHtIZCslJp1FHFF/tfRaW9
-	 WFyDLawV1a7tyiCKMZVKerhl4zjQ2EFSsQKNZb5IxJKA0OPXlhHgnoIIhB9fAFXmlO
-	 XubArqX7RgGOgN6isbyLL1Q5F+KYSDqwrrxAsi78=
+	b=LkTyV2NsEZ/H8ACzpFtklkdCSaCH2jjE9wfn+APaec/Fo6LBhmtBw0JCO20J3wWLt
+	 fBFqFGRxPaMLSkDwLWVdo7IlLfnmff0A7MglqkgZlsaGr3cPC7Emskhv4c6la0kjzs
+	 Ha7f4IfzYS6NXCs/WnpruMcdIc6d8ITf1q1tw5dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfKVGCz (ORCPT
+        id S1728748AbfKVGEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41792 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729351AbfKVGCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:53 -0500
+        id S1728752AbfKVGCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A4B20730;
-        Fri, 22 Nov 2019 06:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9937F20714;
+        Fri, 22 Nov 2019 06:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402572;
-        bh=tI+Me4l/Tp44n2yNMTP+jfpnQPT4d2ccg/rfEF2XdTs=;
+        s=default; t=1574402575;
+        bh=m6/UddO3uVeswlhu7e7/QS+bGiHCMuf33iWbMXmEGOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xE1hQAt7ZZL8l9h3nrAftA5n+zjgESX1CMKenxq6Soz9pk0+fWUcQgjBiv2sJzo3p
-         kYSq7ERNzCoTGla11BmNvt8gxzZV0US9mWZsIfuwjg9Pj0BG4FtuSfUvQRofWZ3+gV
-         EgmIYdbIyvf3I5mZWpzNYUpoR1newkZAl0icAHHs=
+        b=iNRwO/SaFtMG/5QzyiSV0O2161sVdC1NH6gAk4s4h/e1XmxC7ksILrCLjbJH9AF/x
+         mj2gNrjKC99BPU52cbyAizDOCaD5muXztVEU+sqavzZ3UVHkhZRQadHBWCX0+Eai+y
+         P5b7DBeiHFASjq1f3V9NXbTf/UDyTqkk7mWb9L9M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 74/91] mtd: Check add_mtd_device() ret code
-Date:   Fri, 22 Nov 2019 01:01:12 -0500
-Message-Id: <20191122060129.4239-73-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 77/91] net/core/neighbour: fix kmemleak minimal reference count for hash tables
+Date:   Fri, 22 Nov 2019 01:01:15 -0500
+Message-Id: <20191122060129.4239-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -58,110 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
+[ Upstream commit 01b833ab44c9e484060aad72267fc7e71beb559b ]
 
-add_mtd_device() can fail. We should always check its return value
-and gracefully handle the failure case. Fix the call sites where this
-not done (in mtdpart.c) and add a __must_check attribute to the
-prototype to avoid this kind of mistakes.
+This should be 1 for normal allocations, 0 disables leak reporting.
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 85704cb8dcfd ("net/core/neighbour: tell kmemleak about hash tables")
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.h |  2 +-
- drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 6 deletions(-)
+ net/core/neighbour.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
-index 55fdb8e1fd2a8..488b652ba9e63 100644
---- a/drivers/mtd/mtdcore.h
-+++ b/drivers/mtd/mtdcore.h
-@@ -6,7 +6,7 @@
- extern struct mutex mtd_table_mutex;
- 
- struct mtd_info *__mtd_next_device(int i);
--int add_mtd_device(struct mtd_info *mtd);
-+int __must_check add_mtd_device(struct mtd_info *mtd);
- int del_mtd_device(struct mtd_info *mtd);
- int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
- int del_mtd_partitions(struct mtd_info *);
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index fccdd49bb9640..70e476c1c474d 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -648,10 +648,22 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
- 	list_add(&new->list, &mtd_partitions);
- 	mutex_unlock(&mtd_partitions_mutex);
- 
--	add_mtd_device(&new->mtd);
-+	ret = add_mtd_device(&new->mtd);
-+	if (ret)
-+		goto err_remove_part;
- 
- 	mtd_add_partition_attrs(new);
- 
-+	return 0;
-+
-+err_remove_part:
-+	mutex_lock(&mtd_partitions_mutex);
-+	list_del(&new->list);
-+	mutex_unlock(&mtd_partitions_mutex);
-+
-+	free_partition(new);
-+	pr_info("%s:%i\n", __func__, __LINE__);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mtd_add_partition);
-@@ -696,28 +708,42 @@ int add_mtd_partitions(struct mtd_info *master,
- {
- 	struct mtd_part *slave;
- 	uint64_t cur_offset = 0;
--	int i;
-+	int i, ret;
- 
- 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
- 
- 	for (i = 0; i < nbparts; i++) {
- 		slave = allocate_partition(master, parts + i, i, cur_offset);
- 		if (IS_ERR(slave)) {
--			del_mtd_partitions(master);
--			return PTR_ERR(slave);
-+			ret = PTR_ERR(slave);
-+			goto err_del_partitions;
- 		}
- 
- 		mutex_lock(&mtd_partitions_mutex);
- 		list_add(&slave->list, &mtd_partitions);
- 		mutex_unlock(&mtd_partitions_mutex);
- 
--		add_mtd_device(&slave->mtd);
-+		ret = add_mtd_device(&slave->mtd);
-+		if (ret) {
-+			mutex_lock(&mtd_partitions_mutex);
-+			list_del(&slave->list);
-+			mutex_unlock(&mtd_partitions_mutex);
-+
-+			free_partition(slave);
-+			goto err_del_partitions;
-+		}
-+
- 		mtd_add_partition_attrs(slave);
- 
- 		cur_offset = slave->offset + slave->mtd.size;
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 1e2b0c258aa88..44a29be7bfff3 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -332,7 +332,7 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
+ 		buckets = (struct neighbour __rcu **)
+ 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
+ 					   get_order(size));
+-		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
++		kmemleak_alloc(buckets, size, 1, GFP_ATOMIC);
  	}
- 
- 	return 0;
-+
-+err_del_partitions:
-+	del_mtd_partitions(master);
-+
-+	return ret;
- }
- 
- static DEFINE_SPINLOCK(part_parser_lock);
+ 	if (!buckets) {
+ 		kfree(ret);
 -- 
 2.20.1
 
