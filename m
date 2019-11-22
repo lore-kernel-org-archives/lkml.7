@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9029EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2620DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F46F20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE7520715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419447;
-	bh=ZPx3Vy/86jl0wKdRxpnPl9z9J+BNHaRp+RGaA7wUUqk=;
+	s=default; t=1574419451;
+	bh=eEownlkPfVu13wGtnwr3XoSC/zxbkHiIhTahBXw1/Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fycp5fex3eQiylU+SoihKbQcgxz8iBhql4I7yt890IqAINEL/7aMblQYlXf8XX5j8
-	 c/79jYbQIquYgco3rzJwjm1DOwDSjNBfGce6Trfi5aFNms+0594KHS8OJXQ+W7dmxF
-	 a1AxmU7efRdEujJNKrigLYZJkK1SWue+D/5lA4qg=
+	b=iSH97RSq9javE0DoAFJavDJsOF18W/A2pGWfJ3QJYzkzcIT9fnbDKJp6PFHoTu39I
+	 IZ7jAlGi1E8s9rog1FAf9cUbPusbOBIKbvwjTfck1ALKUCFpq5Yx4iiCQqE4zUYvFN
+	 VeMddbJJAKgirs5FS5dYiQXrB3LHgrLFzI+Fz7cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbfKVKoG (ORCPT
+        id S1728298AbfKVKoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:44:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729293AbfKVKn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:59 -0500
+        id S1728886AbfKVKoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23FBF20717;
-        Fri, 22 Nov 2019 10:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F7A20656;
+        Fri, 22 Nov 2019 10:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419438;
-        bh=ZPx3Vy/86jl0wKdRxpnPl9z9J+BNHaRp+RGaA7wUUqk=;
+        s=default; t=1574419442;
+        bh=eEownlkPfVu13wGtnwr3XoSC/zxbkHiIhTahBXw1/Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ttWceY6BIbJ8G5J/508ct2FaV3Itr+t0uurMf1hQYOt+Fg2CZGQSM+8UITPBokFNg
-         ARhMQiev6zU/YhYDbtAiwlCzwhXQXnlDLxnAmGdG645xkEF9YEHR7vw0fLaqOgypDY
-         BwGQaFj2NVPL0S8Ibwg+IuCZnDmXEUHyzbdHySiw=
+        b=bv3vDBXZVl42cM1FCsT/3ereif5iXxVMCQkVLB/LwZCHwGwZqc1If7iReqotgd/oB
+         uuaHQeQMrEi1Jfm5fuk3dDjGFHeYS0SIMZtx6d5aQx0U+LY2/GNzIAZFMhH7NtBgpD
+         ppf5BIx6q2/TeZuSNZiVmciyDO82L/LwVNsXqc9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Hans Verkuil <hans.verkuil@cisco.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 110/222] media: au0828: Fix incorrect error messages
-Date:   Fri, 22 Nov 2019 11:27:30 +0100
-Message-Id: <20191122100911.209989428@linuxfoundation.org>
+Subject: [PATCH 4.9 111/222] media: davinci: Fix implicit enum conversion warning
+Date:   Fri, 22 Nov 2019 11:27:31 +0100
+Message-Id: <20191122100911.268008102@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,46 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Love <brad@nextdimension.cc>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit f347596f2bf114a3af3d80201c6e6bef538d884f ]
+[ Upstream commit 4158757395b300b6eb308fc20b96d1d231484413 ]
 
-Correcting red herring error messages.
+Clang warns when one enumerated type is implicitly converted to another.
 
-Where appropriate, replaces au0282_dev_register with:
-- au0828_analog_register
-- au0828_dvb_register
+drivers/media/platform/davinci/vpbe_display.c:524:24: warning: implicit
+conversion from enumeration type 'enum osd_v_exp_ratio' to different
+enumeration type 'enum osd_h_exp_ratio' [-Wenum-conversion]
+                        layer_info->h_exp = V_EXP_6_OVER_5;
+                                          ~ ^~~~~~~~~~~~~~
+1 warning generated.
 
-Signed-off-by: Brad Love <brad@nextdimension.cc>
+This appears to be a copy and paste error judging from the couple of
+lines directly above this statement and the way that height is handled
+in the if block above this one.
+
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/au0828/au0828-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/davinci/vpbe_display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
-index 38e73ee5c8fb1..78f0bf8ee084c 100644
---- a/drivers/media/usb/au0828/au0828-core.c
-+++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -639,7 +639,7 @@ static int au0828_usb_probe(struct usb_interface *interface,
- 	/* Analog TV */
- 	retval = au0828_analog_register(dev, interface);
- 	if (retval) {
--		pr_err("%s() au0282_dev_register failed to register on V4L2\n",
-+		pr_err("%s() au0828_analog_register failed to register on V4L2\n",
- 			__func__);
- 		goto done;
- 	}
-@@ -647,7 +647,7 @@ static int au0828_usb_probe(struct usb_interface *interface,
- 	/* Digital TV */
- 	retval = au0828_dvb_register(dev);
- 	if (retval)
--		pr_err("%s() au0282_dev_register failed\n",
-+		pr_err("%s() au0828_dvb_register failed\n",
- 		       __func__);
- 
- 	/* Remote controller */
+diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
+index a9bc0175e4d3d..c839003953a74 100644
+--- a/drivers/media/platform/davinci/vpbe_display.c
++++ b/drivers/media/platform/davinci/vpbe_display.c
+@@ -518,7 +518,7 @@ vpbe_disp_calculate_scale_factor(struct vpbe_display *disp_dev,
+ 		else if (v_scale == 4)
+ 			layer_info->v_zoom = ZOOM_X4;
+ 		if (v_exp)
+-			layer_info->h_exp = V_EXP_6_OVER_5;
++			layer_info->v_exp = V_EXP_6_OVER_5;
+ 	} else {
+ 		/* no scaling, only cropping. Set display area to crop area */
+ 		cfg->ysize = expected_ysize;
 -- 
 2.20.1
 
