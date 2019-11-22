@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD71C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6212077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D98A2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420352;
-	bh=WatvhTlnTrUeKgE4vGEfMfvYTXMAw5MLRYU+EHcOmmA=;
+	s=default; t=1574420355;
+	bh=IWdzDFSf/TRr9ci4D2Ci/WM12+j7L/sItckgGxtTqy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KHZO62fj+k4loLttlRyGzqo4IWT1jJzhrtYgKjNpaQerBLnYN0hI6PLwC1aLSmU6O
-	 UTbbGZ0wJEYo7F07gkWKxnUl74Im/j9Izyylr4AoOwQjb9NSAaaW/JH5q+Qeiy9bRo
-	 htzfMEIzxS8cKtinGb3SVJ2vxb9/wTDoD58rrcVY=
+	b=nU29FFdcc1Mo3P9QDKQZsQ5pkKWQxB6u1cIcM6Au+k/l9xTkrR9Lja2CTLpekz5jb
+	 w74ONI26XLT7kayyTFc5b7z0Ar9NEQS3roDUIsa9JVhwUXUKWZyg9EFGG1V5yHdr/m
+	 VkPLsgNLyEoZG1nC0iJ4RXTENJ8ioxvkIj05Rpdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfKVK7K (ORCPT
+        id S1730880AbfKVK7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730387AbfKVK7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:05 -0500
+        id S1730387AbfKVK7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678DB20721;
-        Fri, 22 Nov 2019 10:59:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EE1720706;
+        Fri, 22 Nov 2019 10:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420344;
-        bh=WatvhTlnTrUeKgE4vGEfMfvYTXMAw5MLRYU+EHcOmmA=;
+        s=default; t=1574420350;
+        bh=IWdzDFSf/TRr9ci4D2Ci/WM12+j7L/sItckgGxtTqy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OBl3o81e3Mm8tOZX/W3tHcPHF89vZYyDUUx7l0WdESKXjVSW5FBJlm3I3MmYKQ27
-         gZSwm0+fNGLrHxQXLdOBVe1flOmY6ZB/Ek8pWT/ggdjXK+GkfMK0LV2LF1y2r7FX2L
-         kp1XTvqC7d8m1ur8wRiJunqqsWCeycpBTh5QZJI8=
+        b=UBuO29+NCMUhIootlDXcvwYv6X9HK5HjYGvP0XJUMrHQ/J3totu1I7cxyybKj4fYh
+         i5H1/3+8m4VyVy3t/d3KT5ciMtnaCkDPC3C5ElDWVs6I4vLPDtJ1hjKnzSi793ap2n
+         JwCmqs8EPZorYG6JT/OszOHIIz8v+21SvyuMhHMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/220] mt76x2: fix tx power configuration for VHT mcs 9
-Date:   Fri, 22 Nov 2019 11:26:36 +0100
-Message-Id: <20191122100914.627267228@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 033/220] mt76: fix handling ps-poll frames
+Date:   Fri, 22 Nov 2019 11:26:38 +0100
+Message-Id: <20191122100914.763259022@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 60b6645ef1a9239a02c70adeae136298395d145a ]
+[ Upstream commit 36d910960fae3f9e74bedf3e0ef39ee26bdaa51f ]
 
-Fix tx power configuration for VHT 1SS/STBC mcs 9 since
-in MT_TX_PWR_CFG_{8,9} mcs 8,9 bits are GENMASK(21,16) and
-GENMASK(29,24) while GENMASK(15,6) are marked as reserved
+Hardware station lookup for pspoll frames can fail, which makes the driver
+ignore ps-poll frames. Fix the resulting powersave issues by looking up
+the station for pspoll frames in software
 
-Fixes: 7bc04215a66b ("mt76: add driver code for MT76x2e")
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mac80211.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c
-index 9fd6ab4cbb949..ca68dd184489b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2_phy_common.c
-@@ -232,9 +232,9 @@ void mt76x2_phy_set_txpower(struct mt76x2_dev *dev)
- 	mt76_wr(dev, MT_TX_PWR_CFG_7,
- 		mt76x2_tx_power_mask(t.ofdm[6], t.vht[8], t.ht[6], t.vht[8]));
- 	mt76_wr(dev, MT_TX_PWR_CFG_8,
--		mt76x2_tx_power_mask(t.ht[14], t.vht[8], t.vht[8], 0));
-+		mt76x2_tx_power_mask(t.ht[14], 0, t.vht[8], t.vht[8]));
- 	mt76_wr(dev, MT_TX_PWR_CFG_9,
--		mt76x2_tx_power_mask(t.ht[6], t.vht[8], t.vht[8], 0));
-+		mt76x2_tx_power_mask(t.ht[6], 0, t.vht[8], t.vht[8]));
- }
- EXPORT_SYMBOL_GPL(mt76x2_phy_set_txpower);
+diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
+index ade4a2029a24a..1b5abd4816ed7 100644
+--- a/drivers/net/wireless/mediatek/mt76/mac80211.c
++++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
+@@ -548,6 +548,12 @@ mt76_check_ps(struct mt76_dev *dev, struct sk_buff *skb)
+ 	struct mt76_wcid *wcid = status->wcid;
+ 	bool ps;
+ 
++	if (ieee80211_is_pspoll(hdr->frame_control) && !wcid) {
++		sta = ieee80211_find_sta_by_ifaddr(dev->hw, hdr->addr2, NULL);
++		if (sta)
++			wcid = status->wcid = (struct mt76_wcid *) sta->drv_priv;
++	}
++
+ 	if (!wcid || !wcid->sta)
+ 		return;
  
 -- 
 2.20.1
