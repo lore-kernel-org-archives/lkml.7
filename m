@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E0AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAC0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2455F207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FBC207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420585;
-	bh=6tKVNmbw+qYOY0gZtKFGEPhIaxF5nM+KLL6j78blHzQ=;
+	s=default; t=1574420591;
+	bh=Pa5fKk6CHyK6RI2MGsaLXHeaFP6X1ftK/j9elCp552A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PfseBxc0GIbURbzYdZQ71TpXpk6vnOobQGcR59k6xaNp8H9QVwr5jLl4/0+3yO/XU
-	 FgVgWOE0wwOQ2Jx9ivz/PnoCS9MpNZPbvv+QdqzaMncPPYteSjALK+vzldX83VHvko
-	 yWe61/sTa6WLs7D223fe9vTuKbZX4Gz8VSRIOCDQ=
+	b=Wn+n2KtLbB3qFeuvClBNGlvG6U3e2S8rs+EDr4CkBM7jx2pQ+Q9AsNJTDkkh7Z/GD
+	 hIjHext3ra1Vc2o4eYXAUlqpvXwbntHL9OzHpe6vmOKDVvrEeHdxDiy2sHO3tYU+/C
+	 8kPZvEJHKnTcSZdHHPUEYV1i5lCwIu5jjRFT0k3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731397AbfKVLDE (ORCPT
+        id S1731392AbfKVLDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731023AbfKVLC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:58 -0500
+        id S1731381AbfKVLDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EBF20679;
-        Fri, 22 Nov 2019 11:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5A422075E;
+        Fri, 22 Nov 2019 11:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420577;
-        bh=6tKVNmbw+qYOY0gZtKFGEPhIaxF5nM+KLL6j78blHzQ=;
+        s=default; t=1574420580;
+        bh=Pa5fKk6CHyK6RI2MGsaLXHeaFP6X1ftK/j9elCp552A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0qm6lzZohESOwGoqHKTTaJOHJGlUG53JDN/w5rFzzR2iOAbKQSCBDmHRTLrakojdT
-         tW9vTnYluE/lsfc/CYqLw4ft6JblfvnDHJLoBH7tpdbRdenasf802z35pH2jUkqBrH
-         MyqTGKY/FbqIoEZtFEpIyCwzLfHjR3qvevG1pjL8=
+        b=LNolhz4rc2pqtk6yppIM4xiB0WC+NzNApGJAT3Cp+bJ0Z7heFISm48lfzQ+Em7K7I
+         QVe1lvcKWS/dTjvtJxAPxw+IvDuF/3wWFh0yEwD4gjIdUcDTiyyTT5/Rpi83fxwkRT
+         bBHSN19linIPAWaDVW+5KPLE8ktXNVU8ZLMh9PbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Peter Malone <peter.malone@gmail.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Mathieu Malaterre <malat@debian.org>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Alexander Shiyan <shc_work@mail.ru>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 153/220] fbdev: sbuslib: integer overflow in sbusfb_ioctl_helper()
-Date:   Fri, 22 Nov 2019 11:28:38 +0100
-Message-Id: <20191122100923.730711838@linuxfoundation.org>
+Subject: [PATCH 4.19 154/220] fbdev: fix broken menu dependencies
+Date:   Fri, 22 Nov 2019 11:28:39 +0100
+Message-Id: <20191122100923.797486909@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -63,36 +63,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit e5017716adb8aa5c01c52386c1b7470101ffe9c5 ]
+[ Upstream commit aae3394ef0ef90cf00a21133357448385f13a5d4 ]
 
-The "index + count" addition can overflow.  Both come directly from the
-user.  This bug leads to an information leak.
+The framebuffer options and devices menu is unintentionally split
+or broken because some items in it do not depend on FB (including
+several under omap and mmp).
+Fix this by moving FB_CMDLINE, FB_NOTIFY, and FB_CLPS711X_OLD to
+just before the FB Kconfig symbol definition and by moving the
+omap, omap2, and mmp menus to last, following FB_SM712.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Peter Malone <peter.malone@gmail.com>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Mathieu Malaterre <malat@debian.org>
+Also, the FB_VIA dependencies are duplicated by both being inside
+an "if FB_VIA/endif" block and "depends on FB_VIA", so drop the
+"depends on FB_VIA" lines since they are redundant.
+
+Fixes: ea6763c104c9 ("video/fbdev: Always built-in video= cmdline parsing")
+Fixes: 5ec9653806ba ("fbdev: Make fb-notify a no-op if CONFIG_FB=n")
+Fixes: ef74d46a4ef3 ("video: clps711x: Add new Cirrus Logic CLPS711X framebuffer driver")
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Alexander Shiyan <shc_work@mail.ru>
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sbuslib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/fbdev/Kconfig | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/video/fbdev/sbuslib.c b/drivers/video/fbdev/sbuslib.c
-index 90c51330969c2..01a7110e61a76 100644
---- a/drivers/video/fbdev/sbuslib.c
-+++ b/drivers/video/fbdev/sbuslib.c
-@@ -171,7 +171,7 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
- 		    get_user(ublue, &c->blue))
- 			return -EFAULT;
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index 591a13a597874..f99558d006bf4 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -2,6 +2,18 @@
+ # fbdev configuration
+ #
  
--		if (index + count > cmap->len)
-+		if (index > cmap->len || count > cmap->len - index)
- 			return -EINVAL;
++config FB_CMDLINE
++	bool
++
++config FB_NOTIFY
++	bool
++
++config FB_CLPS711X_OLD
++	tristate
++	select FB_CFB_FILLRECT
++	select FB_CFB_COPYAREA
++	select FB_CFB_IMAGEBLIT
++
+ menuconfig FB
+ 	tristate "Support for frame buffer devices"
+ 	select FB_CMDLINE
+@@ -54,12 +66,6 @@ config FIRMWARE_EDID
+ 	 combination with certain motherboards and monitors are known to
+ 	 suffer from this problem.
  
- 		for (i = 0; i < count; i++) {
+-config FB_CMDLINE
+-	bool
+-
+-config FB_NOTIFY
+-	bool
+-
+ config FB_DDC
+        tristate
+        depends on FB
+@@ -329,12 +335,6 @@ config FB_ACORN
+ 	  hardware found in Acorn RISC PCs and other ARM-based machines.  If
+ 	  unsure, say N.
+ 
+-config FB_CLPS711X_OLD
+-	tristate
+-	select FB_CFB_FILLRECT
+-	select FB_CFB_COPYAREA
+-	select FB_CFB_IMAGEBLIT
+-
+ config FB_CLPS711X
+ 	tristate "CLPS711X LCD support"
+ 	depends on FB && (ARCH_CLPS711X || COMPILE_TEST)
+@@ -1456,7 +1456,6 @@ if FB_VIA
+ 
+ config FB_VIA_DIRECT_PROCFS
+ 	bool "direct hardware access via procfs (DEPRECATED)(DANGEROUS)"
+-	depends on FB_VIA
+ 	default n
+ 	help
+ 	  Allow direct hardware access to some output registers via procfs.
+@@ -1466,7 +1465,6 @@ config FB_VIA_DIRECT_PROCFS
+ 
+ config FB_VIA_X_COMPATIBILITY
+ 	bool "X server compatibility"
+-	depends on FB_VIA
+ 	default n
+ 	help
+ 	  This option reduces the functionality (power saving, ...) of the
+@@ -2308,10 +2306,6 @@ config FB_SIMPLE
+ 	  Configuration re: surface address, size, and format must be provided
+ 	  through device tree, or plain old platform data.
+ 
+-source "drivers/video/fbdev/omap/Kconfig"
+-source "drivers/video/fbdev/omap2/Kconfig"
+-source "drivers/video/fbdev/mmp/Kconfig"
+-
+ config FB_SSD1307
+ 	tristate "Solomon SSD1307 framebuffer support"
+ 	depends on FB && I2C
+@@ -2341,3 +2335,7 @@ config FB_SM712
+ 	  This driver is also available as a module. The module will be
+ 	  called sm712fb. If you want to compile it as a module, say M
+ 	  here and read <file:Documentation/kbuild/modules.txt>.
++
++source "drivers/video/fbdev/omap/Kconfig"
++source "drivers/video/fbdev/omap2/Kconfig"
++source "drivers/video/fbdev/mmp/Kconfig"
 -- 
 2.20.1
 
