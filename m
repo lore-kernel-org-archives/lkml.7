@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74836C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D282FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB3F20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975AA20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419641;
-	bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
+	s=default; t=1574419645;
+	bh=Ezy/2toqxH4vDYuGNzQ7l2KT4KeAUcuyJ9W611bMqB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T1wlw1kjhom/Mih71ymvVXhKlGTuhNopQrsluwmMtJIjHSVzTt6wDGTBfTkpHEg7w
-	 de6fo7Ou7miPhZeIwAPvhWH+czudalslCyAGsM6CeBFq0SWEzRXfoghMGu4bUUgq4f
-	 uX6WByWSCXaJdFaf94gy5wTNrnnAhiqxmgoAnc/E=
+	b=rVljeGJS7ngMeYNJ16oxy58HZF+06M+Ydj8gSvr8m5ny7+8MTTQ7SfgaAvpLKE7XF
+	 jRJu2NZrD9SdNHd5FoLh5e0Qhq6mcNgmT6m/gpOht3uvfOUqmzDvQbtbBeapZZfcOC
+	 uZB8l7pIJFu6sKgs9DhQSXhgyGpTaTdnjug0+yMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbfKVKrU (ORCPT
+        id S1729764AbfKVKrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:47:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729756AbfKVKrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:17 -0500
+        id S1727755AbfKVKrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47F0420637;
-        Fri, 22 Nov 2019 10:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D74120718;
+        Fri, 22 Nov 2019 10:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419635;
-        bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
+        s=default; t=1574419641;
+        bh=Ezy/2toqxH4vDYuGNzQ7l2KT4KeAUcuyJ9W611bMqB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9hVG/jNncM98gqctLESBzmt2UVWaunuGkeCBtt6Z5H7O9lR5bLe9+4Mp3uwKIVFQ
-         4TLopnGeJvw3tmhA5DBzTnoWwpw/FRwXlaYayAxG1W6nWFgPXHqYJEeEzL+4EfWlh5
-         AYDo6SXtJVqtTgAXUmcMZrax+TU2MqwkGljHdyb0=
+        b=H4jDpmLl5B5hpKbnHBXQ5VwI3IFUTKAxvw5xyirCzpmSlwqCTNh2w8B1fUKng6W4i
+         41UMSXGL7hslaluxgN0qO7e0XTV4oXuzFbT/xDAzX6e00/e/Ka0QGtA1g0QYUEbTeI
+         icY7zE4XkgbB7/6nE1w3J/hPmq7q+r9OEuOoOOQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Pobega <mpobega@neverware.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 181/222] ALSA: hda/sigmatel - Disable automute for Elo VuPoint
-Date:   Fri, 22 Nov 2019 11:28:41 +0100
-Message-Id: <20191122100915.446256424@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 165/222] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
+Date:   Fri, 22 Nov 2019 11:28:25 +0100
+Message-Id: <20191122100914.505807337@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,83 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Pobega <mpobega@neverware.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit d153135e93a50cdb6f1b52e238909e9965b56056 ]
+[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
 
-The Elo VuPoint 15MX has two headphone jacks of which neither work by
-default. Disabling automute allows ALSA to work normally with the
-speakers & left headphone jack.
+The driver may sleep in an interrupt handler.
+The function call path (from bottom to top) in Linux-4.17 is:
 
-Future pin configuration changes may be required in the future to get
-the right headphone jack working in tandem.
+[FUNC] fotg210_ep_queue(GFP_KERNEL)
+drivers/usb/gadget/udc/fotg210-udc.c, 744:
+	fotg210_ep_queue in fotg210_get_status
+drivers/usb/gadget/udc/fotg210-udc.c, 768:
+	fotg210_get_status in fotg210_setup_packet
+drivers/usb/gadget/udc/fotg210-udc.c, 949:
+	fotg210_setup_packet in fotg210_irq (interrupt handler)
 
-Signed-off-by: Michael Pobega <mpobega@neverware.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
+If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
+can be also removed.
+
+This bug is found by my static analysis tool DSAC.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_sigmatel.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index 0abab7926dca3..d1a6d20ace0da 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -77,6 +77,7 @@ enum {
- 	STAC_DELL_M6_BOTH,
- 	STAC_DELL_EQ,
- 	STAC_ALIENWARE_M17X,
-+	STAC_ELO_VUPOINT_15MX,
- 	STAC_92HD89XX_HP_FRONT_JACK,
- 	STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK,
- 	STAC_92HD73XX_ASUS_MOBO,
-@@ -1875,6 +1876,18 @@ static void stac92hd73xx_fixup_no_jd(struct hda_codec *codec,
- 		codec->no_jack_detect = 1;
+diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
+index 95df2b3bb6a1a..76e991557116a 100644
+--- a/drivers/usb/gadget/udc/fotg210-udc.c
++++ b/drivers/usb/gadget/udc/fotg210-udc.c
+@@ -744,7 +744,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
+ 	fotg210->ep0_req->length = 2;
+ 
+ 	spin_unlock(&fotg210->lock);
+-	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
++	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
+ 	spin_lock(&fotg210->lock);
  }
  
-+
-+static void stac92hd73xx_disable_automute(struct hda_codec *codec,
-+				     const struct hda_fixup *fix, int action)
-+{
-+	struct sigmatel_spec *spec = codec->spec;
-+
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
-+
-+	spec->gen.suppress_auto_mute = 1;
-+}
-+
- static const struct hda_fixup stac92hd73xx_fixups[] = {
- 	[STAC_92HD73XX_REF] = {
- 		.type = HDA_FIXUP_FUNC,
-@@ -1900,6 +1913,10 @@ static const struct hda_fixup stac92hd73xx_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = stac92hd73xx_fixup_alienware_m17x,
- 	},
-+	[STAC_ELO_VUPOINT_15MX] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = stac92hd73xx_disable_automute,
-+	},
- 	[STAC_92HD73XX_INTEL] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = intel_dg45id_pin_configs,
-@@ -1938,6 +1955,7 @@ static const struct hda_model_fixup stac92hd73xx_models[] = {
- 	{ .id = STAC_DELL_M6_BOTH, .name = "dell-m6" },
- 	{ .id = STAC_DELL_EQ, .name = "dell-eq" },
- 	{ .id = STAC_ALIENWARE_M17X, .name = "alienware" },
-+	{ .id = STAC_ELO_VUPOINT_15MX, .name = "elo-vupoint-15mx" },
- 	{ .id = STAC_92HD73XX_ASUS_MOBO, .name = "asus-mobo" },
- 	{}
- };
-@@ -1987,6 +2005,8 @@ static const struct snd_pci_quirk stac92hd73xx_fixup_tbl[] = {
- 		      "Alienware M17x", STAC_ALIENWARE_M17X),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_DELL, 0x0490,
- 		      "Alienware M17x R3", STAC_DELL_EQ),
-+	SND_PCI_QUIRK(0x1059, 0x1011,
-+		      "ELO VuPoint 15MX", STAC_ELO_VUPOINT_15MX),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x1927,
- 				"HP Z1 G2", STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x2b17,
 -- 
 2.20.1
 
