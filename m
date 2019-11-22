@@ -2,340 +2,280 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E318C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E38C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE120679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DCC2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WIgf9LcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfKVOeJ (ORCPT
+        id S1726802AbfKVOhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:34:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:48214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfKVOeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:34:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D428731B;
-        Fri, 22 Nov 2019 06:34:07 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6135F3F703;
-        Fri, 22 Nov 2019 06:34:06 -0800 (PST)
-Subject: Re: [PATCH v4 11/11] sched/fair: rework find_idlest_group
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com,
-        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
-        riel@surriel.com
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <5b4d204f-ce18-948a-416b-1920bcea7cf7@arm.com>
-Date:   Fri, 22 Nov 2019 14:34:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 09:37:09 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:56954 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVOhJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:37:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574433422; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YpCE21+fHqnut680I3BLvFteO+uKZOg8KIh9pmfWWCs=;
+        b=WIgf9LcGZAwH1nAv5NPuNb/rjgRpVt+3Pv6gg/hScEEBrn1FPFWQNi0DGcwNwQzaottkh3
+        BTRPRMZsU+owErj1h33Wz8DRFgJBSDroi+PesXxC444jKapSkuRtfQR3fae3S0qnUgEsEx
+        ZnlRdAZiysVO49Ygyh3DQqHgqFxdSPg=
+Date:   Fri, 22 Nov 2019 15:36:49 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/4] MIPS: Ingenic: initial X1000 support.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com
+Message-Id: <1574433409.3.0@crapouillou.net>
+In-Reply-To: <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
+References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
+        <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-In-Reply-To: <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
+Hi Zhou,
 
-Apologies for the delayed review on that one. I have a few comments inline,
-otherwise for the misfit part, if at all still relevant:
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-
-On 18/10/2019 14:26, Vincent Guittot wrote:
->  static struct sched_group *
->  find_idlest_group(struct sched_domain *sd, struct task_struct *p,
-> +		  int this_cpu, int sd_flag);
-                                    ^^^^^^^
-That parameter is now unused. AFAICT it was only used to special-case fork
-events (sd flag & SD_BALANCE_FORK). I didn't see any explicit handling of
-this case in the rework, I assume the new group type classification makes
-it possible to forgo?
-
-> @@ -8241,6 +8123,252 @@ static inline enum fbq_type fbq_classify_rq(struct rq *rq)
->  }
->  #endif /* CONFIG_NUMA_BALANCING */
->  
+Le ven., nov. 22, 2019 at 21:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+> This is left unselectable in Kconfig until a X1000 based board is
+> added in a later commit.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>  arch/mips/boot/dts/ingenic/x1000.dtsi | 161=20
+> ++++++++++++++++++++++++++++++++++
+>  arch/mips/jz4740/Kconfig              |   6 ++
+>  arch/mips/jz4740/time.c               |   4 +-
+>  3 files changed, 170 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> new file mode 100644
+> index 0000000..b8658a6
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> @@ -0,0 +1,161 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <dt-bindings/clock/x1000-cgu.h>
 > +
-> +struct sg_lb_stats;
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	compatible =3D "ingenic,x1000", "ingenic,x1000e";
 > +
-> +/*
-> + * update_sg_wakeup_stats - Update sched_group's statistics for wakeup.
-> + * @denv: The ched_domain level to look for idlest group.
-> + * @group: sched_group whose statistics are to be updated.
-> + * @sgs: variable to hold the statistics for this group.
-> + */
-> +static inline void update_sg_wakeup_stats(struct sched_domain *sd,
-> +					  struct sched_group *group,
-> +					  struct sg_lb_stats *sgs,
-> +					  struct task_struct *p)
-> +{
-> +	int i, nr_running;
-> +
-> +	memset(sgs, 0, sizeof(*sgs));
-> +
-> +	for_each_cpu(i, sched_group_span(group)) {
-> +		struct rq *rq = cpu_rq(i);
-> +
-> +		sgs->group_load += cpu_load(rq);
-> +		sgs->group_util += cpu_util_without(i, p);
-> +		sgs->sum_h_nr_running += rq->cfs.h_nr_running;
-> +
-> +		nr_running = rq->nr_running;
-> +		sgs->sum_nr_running += nr_running;
-> +
-> +		/*
-> +		 * No need to call idle_cpu() if nr_running is not 0
-> +		 */
-> +		if (!nr_running && idle_cpu(i))
-> +			sgs->idle_cpus++;
-> +
-> +
-> +	}
-> +
-> +	/* Check if task fits in the group */
-> +	if (sd->flags & SD_ASYM_CPUCAPACITY &&
-> +	    !task_fits_capacity(p, group->sgc->max_capacity)) {
-> +		sgs->group_misfit_task_load = 1;
-> +	}
-> +
-> +	sgs->group_capacity = group->sgc->capacity;
-> +
-> +	sgs->group_type = group_classify(sd->imbalance_pct, group, sgs);
-> +
-> +	/*
-> +	 * Computing avg_load makes sense only when group is fully busy or
-> +	 * overloaded
-> +	 */
-> +	if (sgs->group_type < group_fully_busy)
-> +		sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
-> +				sgs->group_capacity;
-> +}
-> +
-> +static bool update_pick_idlest(struct sched_group *idlest,
-
-Nit: could we name this update_sd_pick_idlest() to follow
-update_sd_pick_busiest()? It's the kind of thing where if I typed
-"update_sd" in gtags I'd like to see both listed, seeing as they are
-*very* similar. And we already have update_sg_{wakeup, lb}_stats().
-
-> +			       struct sg_lb_stats *idlest_sgs,
-> +			       struct sched_group *group,
-> +			       struct sg_lb_stats *sgs)
-> +{
-> +	if (sgs->group_type < idlest_sgs->group_type)
-> +		return true;
-> +
-> +	if (sgs->group_type > idlest_sgs->group_type)
-> +		return false;
-> +
-> +	/*
-> +	 * The candidate and the current idles group are the same type of
-> +	 * group. Let check which one is the idlest according to the type.
-> +	 */
-> +
-> +	switch (sgs->group_type) {
-> +	case group_overloaded:
-> +	case group_fully_busy:
-> +		/* Select the group with lowest avg_load. */
-> +		if (idlest_sgs->avg_load <= sgs->avg_load)
-> +			return false;
-> +		break;
-> +
-> +	case group_imbalanced:
-> +	case group_asym_packing:
-> +		/* Those types are not used in the slow wakeup path */
-> +		return false;
-> +
-> +	case group_misfit_task:
-> +		/* Select group with the highest max capacity */
-> +		if (idlest->sgc->max_capacity >= group->sgc->max_capacity)
-> +			return false;
-> +		break;
-> +
-> +	case group_has_spare:
-> +		/* Select group with most idle CPUs */
-> +		if (idlest_sgs->idle_cpus >= sgs->idle_cpus)
-> +			return false;
-> +		break;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +/*
-> + * find_idlest_group finds and returns the least busy CPU group within the
-> + * domain.
-> + *
-> + * Assumes p is allowed on at least one CPU in sd.
-> + */
-> +static struct sched_group *
-> +find_idlest_group(struct sched_domain *sd, struct task_struct *p,
-> +		  int this_cpu, int sd_flag)
-> +{
-> +	struct sched_group *idlest = NULL, *local = NULL, *group = sd->groups;
-> +	struct sg_lb_stats local_sgs, tmp_sgs;
-> +	struct sg_lb_stats *sgs;
-> +	unsigned long imbalance;
-> +	struct sg_lb_stats idlest_sgs = {
-> +			.avg_load = UINT_MAX,
-> +			.group_type = group_overloaded,
+> +	cpuintc: interrupt-controller {
+> +		#address-cells =3D <0>;
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-controller;
+> +		compatible =3D "mti,cpu-interrupt-controller";
 > +	};
 > +
-> +	imbalance = scale_load_down(NICE_0_LOAD) *
-> +				(sd->imbalance_pct-100) / 100;
+> +	intc: interrupt-controller@10001000 {
+> +		compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
+> +		reg =3D <0x10001000 0x50>;
 > +
-> +	do {
-> +		int local_group;
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <1>;
 > +
-> +		/* Skip over this group if it has no CPUs allowed */
-> +		if (!cpumask_intersects(sched_group_span(group),
-> +					p->cpus_ptr))
-> +			continue;
+> +		interrupt-parent =3D <&cpuintc>;
+> +		interrupts =3D <2>;
+> +	};
 > +
-> +		local_group = cpumask_test_cpu(this_cpu,
-> +					       sched_group_span(group));
+> +	exclk: ext {
+> +		compatible =3D "fixed-clock";
+> +		#clock-cells =3D <0>;
+> +	};
 > +
-> +		if (local_group) {
-> +			sgs = &local_sgs;
-> +			local = group;
-> +		} else {
-> +			sgs = &tmp_sgs;
-> +		}
+> +	rtclk: rtc {
+> +		compatible =3D "fixed-clock";
+> +		#clock-cells =3D <0>;
+> +		clock-frequency =3D <32768>;
+> +	};
 > +
-> +		update_sg_wakeup_stats(sd, group, sgs, p);
+> +	cgu: x1000-cgu@10000000 {
+> +		compatible =3D "ingenic,x1000-cgu";
+> +		reg =3D <0x10000000 0x100>;
 > +
-> +		if (!local_group && update_pick_idlest(idlest, &idlest_sgs, group, sgs)) {
-> +			idlest = group;
-> +			idlest_sgs = *sgs;
-> +		}
+> +		clocks =3D <&exclk>, <&rtclk>;
+> +		clock-names =3D "ext", "rtc";
 > +
-> +	} while (group = group->next, group != sd->groups);
+> +		#clock-cells =3D <1>;
+> +	};
 > +
+> +	apb {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		ranges =3D <>;
 > +
-> +	/* There is no idlest group to push tasks to */
-> +	if (!idlest)
-> +		return NULL;
+> +		uart0: serial@10030000 {
+> +			compatible =3D "ingenic,x1000-uart";
+> +			reg =3D <0x10030000 0x100>;
 > +
-> +	/*
-> +	 * If the local group is idler than the selected idlest group
-> +	 * don't try and push the task.
-> +	 */
-> +	if (local_sgs.group_type < idlest_sgs.group_type)
-> +		return NULL;
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <51>;
 > +
-> +	/*
-> +	 * If the local group is busier than the selected idlest group
-> +	 * try and push the task.
-> +	 */
-> +	if (local_sgs.group_type > idlest_sgs.group_type)
-> +		return idlest;
+> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
+> +			clock-names =3D "baud", "module";
 > +
-> +	switch (local_sgs.group_type) {
-> +	case group_overloaded:
-> +	case group_fully_busy:
-> +		/*
-> +		 * When comparing groups across NUMA domains, it's possible for
-> +		 * the local domain to be very lightly loaded relative to the
-> +		 * remote domains but "imbalance" skews the comparison making
-> +		 * remote CPUs look much more favourable. When considering
-> +		 * cross-domain, add imbalance to the load on the remote node
-> +		 * and consider staying local.
-> +		 */
+> +			status =3D "disabled";
+> +		};
 > +
-> +		if ((sd->flags & SD_NUMA) &&
-> +		    ((idlest_sgs.avg_load + imbalance) >= local_sgs.avg_load))
-> +			return NULL;
+> +		uart1: serial@10031000 {
+> +			compatible =3D "ingenic,x1000-uart";
+> +			reg =3D <0x10031000 0x100>;
 > +
-> +		/*
-> +		 * If the local group is less loaded than the selected
-> +		 * idlest group don't try and push any tasks.
-> +		 */
-> +		if (idlest_sgs.avg_load >= (local_sgs.avg_load + imbalance))
-> +			return NULL;
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <50>;
 > +
-> +		if (100 * local_sgs.avg_load <= sd->imbalance_pct * idlest_sgs.avg_load)
-> +			return NULL;
-> +		break;
+> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
+> +			clock-names =3D "baud", "module";
 > +
-> +	case group_imbalanced:
-> +	case group_asym_packing:
-> +		/* Those type are not used in the slow wakeup path */
-> +		return NULL;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart2: serial@10032000 {
+> +			compatible =3D "ingenic,x1000-uart";
+> +			reg =3D <0x10032000 0x100>;
+> +
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <49>;
+> +
+> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
+> +			clock-names =3D "baud", "module";
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		pinctrl: pin-controller@10010000 {
+> +			compatible =3D "ingenic,x1000-pinctrl";
+> +			reg =3D <0x10010000 0x800>;
+> +
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			gpa: gpio@0 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <0>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 0 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <17>;
+> +			};
+> +
+> +			gpb: gpio@1 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <1>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 32 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <16>;
+> +			};
+> +
+> +			gpc: gpio@2 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <2>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 64 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <15>;
+> +			};
+> +
+> +			gpd: gpio@3 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <3>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 96 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <14>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+> index 4dd0c44..6b96844 100644
+> --- a/arch/mips/jz4740/Kconfig
+> +++ b/arch/mips/jz4740/Kconfig
+> @@ -33,3 +33,9 @@ config MACH_JZ4780
+>  	select MIPS_CPU_SCACHE
+>  	select SYS_HAS_CPU_MIPS32_R2
+>  	select SYS_SUPPORTS_HIGHMEM
+> +
+> +config MACH_X1000
+> +	bool
+> +	select MIPS_CPU_SCACHE
+> +	select SYS_HAS_CPU_MIPS32_R2
+> +	select SYS_SUPPORTS_HIGHMEM
+> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
+> index cb768e5..3af6538 100644
+> --- a/arch/mips/jz4740/time.c
+> +++ b/arch/mips/jz4740/time.c
+> @@ -101,7 +101,9 @@ static struct clock_event_device=20
+> jz4740_clockevent =3D {
+>  #ifdef CONFIG_MACH_JZ4740
+>  	.irq =3D JZ4740_IRQ_TCU0,
+>  #endif
+> -#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
+> +#if defined(CONFIG_MACH_JZ4770) || \
+> +    defined(CONFIG_MACH_JZ4780) || \
+> +    defined(CONFIG_MACH_X1000)
 
-I suppose group_asym_packing could be handled similarly to misfit, right?
-i.e. make the group type group_asym_packing if
+That code was removed in the TCU patchset that was merged in time for=20
+5.4-rc1.
+Please rebase your patchset on top mips-next.
 
-  !sched_asym_prefer(sg.asym_prefer_cpu, local.asym_prefer_cpu)
+Cheers,
+-Paul
 
-> +
-> +	case group_misfit_task:
-> +		/* Select group with the highest max capacity */
-> +		if (local->sgc->max_capacity >= idlest->sgc->max_capacity)
-> +			return NULL;
+=
 
-Got confused a bit here due to the naming; in this case 'group_misfit_task'
-only means 'if placed on this group, the task will be misfit'. If the
-idlest group will cause us to remain misfit, but can give us some extra
-capacity, I think it makes sense to move.
-
-> +		break;
-> +
-> +	case group_has_spare:
-> +		if (sd->flags & SD_NUMA) {
-> +#ifdef CONFIG_NUMA_BALANCING
-> +			int idlest_cpu;
-> +			/*
-> +			 * If there is spare capacity at NUMA, try to select
-> +			 * the preferred node
-> +			 */
-> +			if (cpu_to_node(this_cpu) == p->numa_preferred_nid)
-> +				return NULL;
-> +
-> +			idlest_cpu = cpumask_first(sched_group_span(idlest));
-> +			if (cpu_to_node(idlest_cpu) == p->numa_preferred_nid)
-> +				return idlest;
-> +#endif
-> +			/*
-> +			 * Otherwise, keep the task on this node to stay close
-> +			 * its wakeup source and improve locality. If there is
-> +			 * a real need of migration, periodic load balance will
-> +			 * take care of it.
-> +			 */
-> +			if (local_sgs.idle_cpus)
-> +				return NULL;
-> +		}
-> +
-> +		/*
-> +		 * Select group with highest number of idle cpus. We could also
-> +		 * compare the utilization which is more stable but it can end
-> +		 * up that the group has less spare capacity but finally more
-> +		 * idle cpus which means more opportunity to run task.
-> +		 */
-> +		if (local_sgs.idle_cpus >= idlest_sgs.idle_cpus)
-> +			return NULL;
-> +		break;
-> +	}
-> +
-> +	return idlest;
-> +}
-> +
->  /**
->   * update_sd_lb_stats - Update sched_domain's statistics for load balancing.
->   * @env: The load balancing environment.
-> 
