@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF0BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55706C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3EA20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AA920708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419035;
-	bh=NpbV87MbFdzgksay7uQciuMhgTrAH0Ty1w4P1B34b8g=;
+	s=default; t=1574419038;
+	bh=LM8ruIL8X/Y2yzIg+sD0At4KY49iLx9uJ24+giuOoa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XbEW1D92artDoYEB0djPL2ICRVw6zRNX8oSMINPVg08Cg2WdG0FQe6ZmtsRPUzI3V
-	 UWvwbXsRs+TTs/hcSbw17WXHhrZqag8awNuxTL8f82VcO56Q8DYD/S3C1eJtS0MlSs
-	 9/QGvmR3fRo36XspPbM3LDLyZr3r4ccr8lHAv/Xc=
+	b=kV3aZOvwNGxRE+rNGhRuHwmiLByC1afT8gdf0UXc7psZZipNll2KRmzBmzfU+AX9z
+	 guh79y3sAknxKv8ao97jSxaSKuIq1ruMnh2wRH+/+I/4PJm/ooavmpFeVq3iPmS1N1
+	 7W3x16/HFD6lAQq9+Sz9gxBatIPoGf7VsfAI4aaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfKVKhO (ORCPT
+        id S1728515AbfKVKhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:37:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38242 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:37:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbfKVKhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:37:10 -0500
+        id S1728006AbfKVKhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:37:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 707AD20708;
-        Fri, 22 Nov 2019 10:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D6F20656;
+        Fri, 22 Nov 2019 10:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419029;
-        bh=NpbV87MbFdzgksay7uQciuMhgTrAH0Ty1w4P1B34b8g=;
+        s=default; t=1574419032;
+        bh=LM8ruIL8X/Y2yzIg+sD0At4KY49iLx9uJ24+giuOoa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TeqmeejVWsmQULXUkCK4LUyAX6ujlRJ9eHc1yjdLPhNHPEUI/Zc23bf2oG06YwNC9
-         nzBb1xYTpS9qtmqy0+7Qw1GIXbIVqaQMHb/eFwYMLPGc6vqzKhhfI6iNi9wLmQZ6k9
-         0ooJ+znDq8w121bvExqb6vBvL48p3+Hsxjx1BZhI=
+        b=LM+hKKVgDm8U8exCvRME0BfsTOBmKMwikNq93pQU+UqVt2UeO83Vx3pmaQDPyr35+
+         +IlfCblz0Tuqtyn/I9w9OAq/owuQ8TNrNswAlbM2IyxWreC8bZmnSIUG//6+z6LV+c
+         miIZbfwo4sNp41KkhzENnGnN/f4a1e1fgnEqbQFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 134/159] brcmfmac: fix full timeout waiting for action frame on-channel tx
-Date:   Fri, 22 Nov 2019 11:28:45 +0100
-Message-Id: <20191122100835.106522058@linuxfoundation.org>
+Subject: [PATCH 4.4 135/159] NFSv4.x: fix lock recovery during delegation recall
+Date:   Fri, 22 Nov 2019 11:28:46 +0100
+Message-Id: <20191122100835.368468901@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,88 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit fbf07000960d9c8a13fdc17c6de0230d681c7543 ]
+[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
 
-The driver sends an action frame down and waits for a completion signal
-triggered by the received BRCMF_E_ACTION_FRAME_OFF_CHAN_COMPLETE event
-to continue the process. However, the action frame could be transmitted
-either on the current channel or on an off channel. For the on-channel
-case, only BRCMF_E_ACTION_FRAME_COMPLETE event will be received when
-the frame is transmitted, which make the driver always wait a full
-timeout duration. This patch has the completion signal be triggered by
-receiving the BRCMF_E_ACTION_FRAME_COMPLETE event for the on-channel
-case.
+Running "./nfstest_delegation --runtest recall26" uncovers that
+client doesn't recover the lock when we have an appending open,
+where the initial open got a write delegation.
 
-This change fixes WFA p2p certification 5.1.19 failure.
+Instead of checking for the passed in open context against
+the file lock's open context. Check that the state is the same.
 
-Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/p2p.c | 17 +++++++++++++++--
- drivers/net/wireless/brcm80211/brcmfmac/p2p.h |  2 ++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ fs/nfs/delegation.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/brcm80211/brcmfmac/p2p.c
-index e6c8b0d5afe06..7dae935701a72 100644
---- a/drivers/net/wireless/brcm80211/brcmfmac/p2p.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/p2p.c
-@@ -1469,10 +1469,12 @@ int brcmf_p2p_notify_action_tx_complete(struct brcmf_if *ifp,
- 		return 0;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 5dac3382405ce..b50315ad0391a 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -101,7 +101,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
+ 	return nfs4_do_check_delegation(inode, flags, false);
+ }
  
- 	if (e->event_code == BRCMF_E_ACTION_FRAME_COMPLETE) {
--		if (e->status == BRCMF_E_STATUS_SUCCESS)
-+		if (e->status == BRCMF_E_STATUS_SUCCESS) {
- 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_COMPLETED,
- 				&p2p->status);
--		else {
-+			if (!p2p->wait_for_offchan_complete)
-+				complete(&p2p->send_af_done);
-+		} else {
- 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_NOACK, &p2p->status);
- 			/* If there is no ack, we don't need to wait for
- 			 * WLC_E_ACTION_FRAME_OFFCHAN_COMPLETE event
-@@ -1523,6 +1525,17 @@ static s32 brcmf_p2p_tx_action_frame(struct brcmf_p2p_info *p2p,
- 	p2p->af_sent_channel = le32_to_cpu(af_params->channel);
- 	p2p->af_tx_sent_jiffies = jiffies;
- 
-+	if (test_bit(BRCMF_P2P_STATUS_DISCOVER_LISTEN, &p2p->status) &&
-+	    p2p->af_sent_channel ==
-+	    ieee80211_frequency_to_channel(p2p->remain_on_channel.center_freq))
-+		p2p->wait_for_offchan_complete = false;
-+	else
-+		p2p->wait_for_offchan_complete = true;
-+
-+	brcmf_dbg(TRACE, "Waiting for %s tx completion event\n",
-+		  (p2p->wait_for_offchan_complete) ?
-+		   "off-channel" : "on-channel");
-+
- 	timeout = wait_for_completion_timeout(&p2p->send_af_done,
- 					msecs_to_jiffies(P2P_AF_MAX_WAIT_TIME));
- 
-diff --git a/drivers/net/wireless/brcm80211/brcmfmac/p2p.h b/drivers/net/wireless/brcm80211/brcmfmac/p2p.h
-index 5d49059021a9f..59e902adfc087 100644
---- a/drivers/net/wireless/brcm80211/brcmfmac/p2p.h
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/p2p.h
-@@ -125,6 +125,7 @@ struct afx_hdl {
-  * @gon_req_action: about to send go negotiation requets frame.
-  * @block_gon_req_tx: drop tx go negotiation requets frame.
-  * @p2pdev_dynamically: is p2p device if created by module param or supplicant.
-+ * @wait_for_offchan_complete: wait for off-channel tx completion event.
-  */
- struct brcmf_p2p_info {
- 	struct brcmf_cfg80211_info *cfg;
-@@ -146,6 +147,7 @@ struct brcmf_p2p_info {
- 	bool gon_req_action;
- 	bool block_gon_req_tx;
- 	bool p2pdev_dynamically;
-+	bool wait_for_offchan_complete;
- };
- 
- s32 brcmf_p2p_attach(struct brcmf_cfg80211_info *cfg, bool p2pdev_forced);
+-static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
++static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
+ {
+ 	struct inode *inode = state->inode;
+ 	struct file_lock *fl;
+@@ -116,7 +116,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
+ 	spin_lock(&flctx->flc_lock);
+ restart:
+ 	list_for_each_entry(fl, list, fl_list) {
+-		if (nfs_file_open_context(fl->fl_file) != ctx)
++		if (nfs_file_open_context(fl->fl_file)->state != state)
+ 			continue;
+ 		spin_unlock(&flctx->flc_lock);
+ 		status = nfs4_lock_delegation_recall(fl, state, stateid);
+@@ -163,7 +163,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
+ 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
+ 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
+ 		if (!err)
+-			err = nfs_delegation_claim_locks(ctx, state, stateid);
++			err = nfs_delegation_claim_locks(state, stateid);
+ 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
+ 			err = -EAGAIN;
+ 		mutex_unlock(&sp->so_delegreturn_mutex);
 -- 
 2.20.1
 
