@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DEEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591A02068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C72F2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403474;
-	bh=dC4Kdk5BlL5mVfoX77m9Qqd+m+VvEAHhCbrDMAN3XLc=;
+	s=default; t=1574403478;
+	bh=ZCOYm7uvTGNlci+Nc06dmUObDmY7JSDWXNomo+BzJS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUN0DjJnEcwZdMdvCoIMelxFmHd5CkJqh5VBOMz67q/Qde7f06INK86nvU+pre/Fo
-	 nIFVU8siWkfzc44u9hA4eIg94PhCA2/JiFRLcO106Lw4Wjc7TJZu9buV76HhJx5aW0
-	 8a/t7G9m9RqaT73ArgoJOO8KKTLZv5k6KhzDZ8XU=
+	b=hnw6+HZe1YipwJ80OnbNNcvL8FHcW5pON8NF5uItTu8QUbHAWDy9wPWWPX/WVl1bl
+	 mRbbDoVY+7pWbMS8w76Rc4BExcdS3K8auLgFeyMJ9jvaHC0dCweUHVHZeMqZNKOQZC
+	 +qKsa/xsj8/f+nvQbMDeg0vyZjFqsKljr6lUE2zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfKVGNV (ORCPT
+        id S1729219AbfKVGR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:17:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbfKVGNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:18 -0500
+        id S1728721AbfKVGNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCED620707;
-        Fri, 22 Nov 2019 06:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54CBC20717;
+        Fri, 22 Nov 2019 06:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403197;
-        bh=dC4Kdk5BlL5mVfoX77m9Qqd+m+VvEAHhCbrDMAN3XLc=;
+        s=default; t=1574403200;
+        bh=ZCOYm7uvTGNlci+Nc06dmUObDmY7JSDWXNomo+BzJS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxxZVPy+2FRRN8qP4YzERUPPgJtEkmD1/ZtDPcdnoX8E+M6N4X39K70zLcDYDFGaI
-         IGlYQryj3H30K2xIxCyZmqmBVu97RLQZGWticP9EQaSdHhhDg77CnJWb8Q7Gn4EAUQ
-         JSWlM85uUeeO5+eDCuI26aYU5BeCEN2l8HeH9Zpc=
+        b=05Z6PbRNYV/0KtTCIuNORZa3qk4NlSCoMHwGHAJQHVUiar7MVIzcCTZxvlZ5kS4yG
+         S/hDpaLZTcZxgZHNWzaSQycu4l0uVdnOBEM0IkC5xqELikhu9FCmSRepMvuDk80epu
+         Vn8sfQaOLV2clbXey569MY+Z6LnL5OCwNMVzrtec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill O'Donnell <billodo@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/68] xfs: require both realtime inodes to mount
-Date:   Fri, 22 Nov 2019 01:12:07 -0500
-Message-Id: <20191122061301.4947-13-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 17/68] microblaze: adjust the help to the real behavior
+Date:   Fri, 22 Nov 2019 01:12:10 -0500
+Message-Id: <20191122061301.4947-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,43 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
+[ Upstream commit bafcc61d998c1ca18f556d92a0e95335ac68c7da ]
 
-Since mkfs always formats the filesystem with the realtime bitmap and
-summary inodes immediately after the root directory, we should expect
-that both of them are present and loadable, even if there isn't a
-realtime volume attached.  There's no reason to skip this if rbmino ==
-NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
-realtime volume and someone writes to it.
+"make ARCH=microblaze help" mentions simpleImage.<dt>.unstrip,
+but it is not a real Make target. It does not work because Makefile
+assumes "system.unstrip" is the name of DT.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
+$ make ARCH=microblaze CROSS_COMPILE=microblaze-linux- simpleImage.system.unstrip
+  [ snip ]
+make[1]: *** No rule to make target 'arch/microblaze/boot/dts/system.unstrip.dtb', needed by 'arch/microblaze/boot/dts/system.dtb'.  Stop.
+make: *** [Makefile;1060: arch/microblaze/boot/dts] Error 2
+make: *** Waiting for unfinished jobs....
+
+simpleImage.<dt> works like a phony target that generates multiple
+images. Reflect the real behavior. I removed the DT directory path
+information because it is already explained a few lines below.
+
+While I am here, I deleted the redundant *_defconfig explanation.
+
+The top-level Makefile caters to list available defconfig files:
+
+  mmu_defconfig            - Build for mmu
+  nommu_defconfig          - Build for nommu
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/microblaze/Makefile | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index ab1bac6a3a1c0..919b6544b61a3 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1225,13 +1225,11 @@ xfs_rtmount_inodes(
- 	xfs_sb_t	*sbp;
- 
- 	sbp = &mp->m_sb;
--	if (sbp->sb_rbmino == NULLFSINO)
--		return 0;
- 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
- 	if (error)
- 		return error;
- 	ASSERT(mp->m_rbmip != NULL);
--	ASSERT(sbp->sb_rsumino != NULLFSINO);
-+
- 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
- 	if (error) {
- 		IRELE(mp->m_rbmip);
+diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
+index 740f2b82a182a..5e1e18540a571 100644
+--- a/arch/microblaze/Makefile
++++ b/arch/microblaze/Makefile
+@@ -83,11 +83,11 @@ define archhelp
+   echo '* linux.bin    - Create raw binary'
+   echo '  linux.bin.gz - Create compressed raw binary'
+   echo '  linux.bin.ub - Create U-Boot wrapped raw binary'
+-  echo '  simpleImage.<dt> - ELF image with $(arch)/boot/dts/<dt>.dts linked in'
+-  echo '                   - stripped elf with fdt blob'
+-  echo '  simpleImage.<dt>.unstrip - full ELF image with fdt blob'
+-  echo '  *_defconfig      - Select default config from arch/microblaze/configs'
+-  echo ''
++  echo '  simpleImage.<dt> - Create the following images with <dt>.dtb linked in'
++  echo '                    simpleImage.<dt>        : raw image'
++  echo '                    simpleImage.<dt>.ub     : raw image with U-Boot header'
++  echo '                    simpleImage.<dt>.unstrip: ELF (identical to vmlinux)'
++  echo '                    simpleImage.<dt>.strip  : stripped ELF'
+   echo '  Targets with <dt> embed a device tree blob inside the image'
+   echo '  These targets support board with firmware that does not'
+   echo '  support passing a device tree directly. Replace <dt> with the'
 -- 
 2.20.1
 
