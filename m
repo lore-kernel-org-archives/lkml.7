@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EC5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B993E2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECE520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418821;
-	bh=Dy0nQHLC0EG49p21cGnkSnEVhDvhAHZJBiKFNBod/08=;
+	s=default; t=1574418825;
+	bh=f2b0CWoNoQ9ioQs7219fTotOnawLUs/soilupI9ggGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+b4x4DuERZ2ovx1kYJib1w0atILxh9ue/jpAF0WAOTfaPGYbor6PrEdxOCggyCLt
-	 TYev4TBxKScpMAvIr1cazVzfz5In9Yns7g2dXGMaesoLe6UGGJFehjfaA6KqmD7nYO
-	 03lSoHgvhdAFHS0vbnuYmIh7ef4qAn08U6YChzL4=
+	b=exxaEHJ+CwTRQSZnOH78njHhfopy+DVJBTRviQiI2Tl3mFqQvKoFulK4GasO9/+7z
+	 nFNJXVl+dVPjD7u+LJ95iPHiK48bBS9ysmti8fyB+k4SGeJEVQBa/I3MDUP3oQsg4p
+	 zfUykoDkWzzX2msxCDfRILeyjNvjyPfBXFMLiWW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfKVKdk (ORCPT
+        id S1727983AbfKVKdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:33:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbfKVKdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:37 -0500
+        id S1727970AbfKVKdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D6720714;
-        Fri, 22 Nov 2019 10:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E6420708;
+        Fri, 22 Nov 2019 10:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418816;
-        bh=Dy0nQHLC0EG49p21cGnkSnEVhDvhAHZJBiKFNBod/08=;
+        s=default; t=1574418819;
+        bh=f2b0CWoNoQ9ioQs7219fTotOnawLUs/soilupI9ggGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6jfH/QaTWZ74XsPvbzZ5we3gSRnEgaA/+LILUUCmPwS/heDmpYwphPPBJB4nt3rt
-         ZjHiZantWWxrOi92UGBd/SbmSmu4mExZcRH1Pry3uJBNHQBpWFEWKOz7PH8bBJFEgz
-         VUb4uiz9vNZhCXCrVNpHyqw5HrwoAPa/+oHBpIEQ=
+        b=HuI20uBurxdbNzi689PsH3wm5cpfTWfPpWEkjmDcBM30MLyFuFDBj9P0/5p6J2A8c
+         P6PR4dbsKDfp+U42zEoJsbpucMCnGiWmU5MSndMMmoJbYU6YecyQD5hYAA2dRUBKu/
+         z5tqTQoIaymgO4owDiCTIZ2+1lSNNHze5HliIMRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 060/159] powerpc/64s/hash: Fix stab_rr off by one initialization
-Date:   Fri, 22 Nov 2019 11:27:31 +0100
-Message-Id: <20191122100751.286058517@linuxfoundation.org>
+Subject: [PATCH 4.4 061/159] powerpc/pseries: Disable CPU hotplug across migrations
+Date:   Fri, 22 Nov 2019 11:27:32 +0100
+Message-Id: <20191122100752.867186957@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,34 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
 
-[ Upstream commit 09b4438db13fa83b6219aee5993711a2aa2a0c64 ]
+[ Upstream commit 85a88cabad57d26d826dd94ea34d3a785824d802 ]
 
-This causes SLB alloation to start 1 beyond the start of the SLB.
-There is no real problem because after it wraps it stats behaving
-properly, it's just surprisig to see when looking at SLB traces.
+When performing partition migrations all present CPUs must be online
+as all present CPUs must make the H_JOIN call as part of the migration
+process. Once all present CPUs make the H_JOIN call, one CPU is returned
+to make the rtas call to perform the migration to the destination system.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+During testing of migration and changing the SMT state we have found
+instances where CPUs are offlined, as part of the SMT state change,
+before they make the H_JOIN call. This results in a hung system where
+every CPU is either in H_JOIN or offline.
+
+To prevent this this patch disables CPU hotplug during the migration
+process.
+
+Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Reviewed-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/slb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/rtas.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/mm/slb.c b/arch/powerpc/mm/slb.c
-index 309027208f7c0..27f00a7c1085f 100644
---- a/arch/powerpc/mm/slb.c
-+++ b/arch/powerpc/mm/slb.c
-@@ -322,7 +322,7 @@ void slb_initialize(void)
- #endif
+diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
+index 0c42e872d548b..4fcaa7d3d544f 100644
+--- a/arch/powerpc/kernel/rtas.c
++++ b/arch/powerpc/kernel/rtas.c
+@@ -967,6 +967,7 @@ int rtas_ibm_suspend_me(u64 handle)
+ 		goto out;
  	}
  
--	get_paca()->stab_rr = SLB_NUM_BOLTED;
-+	get_paca()->stab_rr = SLB_NUM_BOLTED - 1;
++	cpu_hotplug_disable();
+ 	stop_topology_update();
  
- 	lflags = SLB_VSID_KERNEL | linear_llp;
- 	vflags = SLB_VSID_KERNEL | vmalloc_llp;
+ 	/* Call function on all CPUs.  One of us will make the
+@@ -981,6 +982,7 @@ int rtas_ibm_suspend_me(u64 handle)
+ 		printk(KERN_ERR "Error doing global join\n");
+ 
+ 	start_topology_update();
++	cpu_hotplug_enable();
+ 
+ 	/* Take down CPUs not online prior to suspend */
+ 	cpuret = rtas_offline_cpus_mask(offline_mask);
 -- 
 2.20.1
 
