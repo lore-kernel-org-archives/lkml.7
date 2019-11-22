@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F11AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769E1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3A520674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F69520674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420627;
-	bh=dVNRZUOppbIJs5ql/gl9Dfu+yySfO+0rBHt2dBpyjbo=;
+	s=default; t=1574420630;
+	bh=j7hhSDZ7CtrD2nv5ImgbrakypO9BBw85VDk4h55n7J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=moYmXoKbO1OqPkpCAmx+u6jNeJVc2ESzlU4cO/6b20r4yFzgp0ZMEdtEqYZnMg271
-	 tnXj7qOunXbPABzblM5KE88DzxouKSoqMU8DUrcc9b90GBEnNTSFNBpkPpJo45UrJ3
-	 h6h2LdOdhKbzFp5bB7l+2YXfn/S3FvOq69fx/fT4=
+	b=Cg/1qGgmacwWoGTrZlsUYZYglBppYEBieiljunmEOK8cOsSo5dmmDvf+EZqkCBdme
+	 pjgv6eaKcQ5a2wnT1QCwQ7iVgt8i8jGEQwlybV7/lDSSKuOwWseSaXGmKqHul8OFpl
+	 a1UmG2DcqYdNndsM3+2Li5vRJz2+e/x8g//kTDZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731456AbfKVLDp (ORCPT
+        id S1731437AbfKVLDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731437AbfKVLDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:40 -0500
+        id S1731029AbfKVLDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92203207FC;
-        Fri, 22 Nov 2019 11:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41BF1207DD;
+        Fri, 22 Nov 2019 11:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420620;
-        bh=dVNRZUOppbIJs5ql/gl9Dfu+yySfO+0rBHt2dBpyjbo=;
+        s=default; t=1574420622;
+        bh=j7hhSDZ7CtrD2nv5ImgbrakypO9BBw85VDk4h55n7J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s072tu2MA58vMHKgF9QKhexH4N8abuDn5wkA3OceOr7qHzUe8/9rjOwbQO7kzE2V7
-         o40N+llf/5lgEsIkrNF0ezOzh1QWXNfs4HxXO/7DDEccV5C2hb8DlzI3pkovHIxOTs
-         o41mb+7PMqZZM1PxsByCA8MkNT/FaUR8ayCreLQU=
+        b=wmjNdGjx+Rfig4gyUyR8cYbRQNe7Qg86LAyVs3y7CUVs20gsqA0oldegddl0ydW55
+         zL87zozX3J8vxl7YjK+bYsExqVM5xQN3/pX9Oceaoz404X9rqDvqPe0UAn7h3/Gqne
+         O1q/zYHMTt3i4qJFfrGG26CL949O6ezstKwUAxJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/220] media: cec-gpio: select correct Signal Free Time
-Date:   Fri, 22 Nov 2019 11:28:10 +0100
-Message-Id: <20191122100921.767282759@linuxfoundation.org>
+Subject: [PATCH 4.19 126/220] gfs2: slow the deluge of io error messages
+Date:   Fri, 22 Nov 2019 11:28:11 +0100
+Message-Id: <20191122100921.851990005@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,61 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit c439d5c1e13dbf66cff53455432f21d4d0536c51 ]
+[ Upstream commit b524abcc01483b2ac093cc6a8a2a7375558d2b64 ]
 
-If a receive is in progress or starts before the transmit has
-a chance, then lower the Signal Free Time of the upcoming transmit
-to no more than CEC_SIGNAL_FREE_TIME_NEW_INITIATOR.
+When an io error is hit, it calls gfs2_io_error_bh_i for every
+journal buffer it can't write. Since we changed gfs2_io_error_bh_i
+recently to withdraw later in the cycle, it sends a flood of
+errors to the console. This patch checks for the file system already
+being withdrawn, and if so, doesn't send more messages. It doesn't
+stop the flood of messages, but it slows it down and keeps it more
+reasonable.
 
-This is per the specification requirements.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-pin.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ fs/gfs2/incore.h |  1 +
+ fs/gfs2/log.c    |  7 +++++--
+ fs/gfs2/util.c   | 13 +++++++------
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/cec/cec-pin.c b/drivers/media/cec/cec-pin.c
-index 0496d93b2b8fa..8f987bc0dd883 100644
---- a/drivers/media/cec/cec-pin.c
-+++ b/drivers/media/cec/cec-pin.c
-@@ -936,6 +936,17 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
- 			/* Start bit, switch to receive state */
- 			pin->ts = ts;
- 			pin->state = CEC_ST_RX_START_BIT_LOW;
-+			/*
-+			 * If a transmit is pending, then that transmit should
-+			 * use a signal free time of no more than
-+			 * CEC_SIGNAL_FREE_TIME_NEW_INITIATOR since it will
-+			 * have a new initiator due to the receive that is now
-+			 * starting.
-+			 */
-+			if (pin->tx_msg.len && pin->tx_signal_free_time >
-+			    CEC_SIGNAL_FREE_TIME_NEW_INITIATOR)
-+				pin->tx_signal_free_time =
-+					CEC_SIGNAL_FREE_TIME_NEW_INITIATOR;
- 			break;
- 		}
- 		if (ktime_to_ns(pin->ts) == 0)
-@@ -1158,6 +1169,15 @@ static int cec_pin_adap_transmit(struct cec_adapter *adap, u8 attempts,
- {
- 	struct cec_pin *pin = adap->pin;
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index b96d39c28e17c..5d72e8b66a269 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -623,6 +623,7 @@ enum {
+ 	SDF_RORECOVERY		= 7, /* read only recovery */
+ 	SDF_SKIP_DLM_UNLOCK	= 8,
+ 	SDF_FORCE_AIL_FLUSH     = 9,
++	SDF_AIL1_IO_ERROR	= 10,
+ };
  
-+	/*
-+	 * If a receive is in progress, then this transmit should use
-+	 * a signal free time of max CEC_SIGNAL_FREE_TIME_NEW_INITIATOR
-+	 * since when it starts transmitting it will have a new initiator.
-+	 */
-+	if (pin->state != CEC_ST_IDLE &&
-+	    signal_free_time > CEC_SIGNAL_FREE_TIME_NEW_INITIATOR)
-+		signal_free_time = CEC_SIGNAL_FREE_TIME_NEW_INITIATOR;
-+
- 	pin->tx_signal_free_time = signal_free_time;
- 	pin->tx_extra_bytes = 0;
- 	pin->tx_msg = *msg;
+ enum gfs2_freeze_state {
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index cd85092723dea..90b5c8d0c56ac 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -108,7 +108,9 @@ __acquires(&sdp->sd_ail_lock)
+ 		gfs2_assert(sdp, bd->bd_tr == tr);
+ 
+ 		if (!buffer_busy(bh)) {
+-			if (!buffer_uptodate(bh)) {
++			if (!buffer_uptodate(bh) &&
++			    !test_and_set_bit(SDF_AIL1_IO_ERROR,
++					      &sdp->sd_flags)) {
+ 				gfs2_io_error_bh(sdp, bh);
+ 				*withdraw = true;
+ 			}
+@@ -206,7 +208,8 @@ static void gfs2_ail1_empty_one(struct gfs2_sbd *sdp, struct gfs2_trans *tr,
+ 		gfs2_assert(sdp, bd->bd_tr == tr);
+ 		if (buffer_busy(bh))
+ 			continue;
+-		if (!buffer_uptodate(bh)) {
++		if (!buffer_uptodate(bh) &&
++		    !test_and_set_bit(SDF_AIL1_IO_ERROR, &sdp->sd_flags)) {
+ 			gfs2_io_error_bh(sdp, bh);
+ 			*withdraw = true;
+ 		}
+diff --git a/fs/gfs2/util.c b/fs/gfs2/util.c
+index 59c811de0dc7a..6a02cc890daf9 100644
+--- a/fs/gfs2/util.c
++++ b/fs/gfs2/util.c
+@@ -256,12 +256,13 @@ void gfs2_io_error_bh_i(struct gfs2_sbd *sdp, struct buffer_head *bh,
+ 			const char *function, char *file, unsigned int line,
+ 			bool withdraw)
+ {
+-	fs_err(sdp,
+-	       "fatal: I/O error\n"
+-	       "  block = %llu\n"
+-	       "  function = %s, file = %s, line = %u\n",
+-	       (unsigned long long)bh->b_blocknr,
+-	       function, file, line);
++	if (!test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
++		fs_err(sdp,
++		       "fatal: I/O error\n"
++		       "  block = %llu\n"
++		       "  function = %s, file = %s, line = %u\n",
++		       (unsigned long long)bh->b_blocknr,
++		       function, file, line);
+ 	if (withdraw)
+ 		gfs2_lm_withdraw(sdp, NULL);
+ }
 -- 
 2.20.1
 
