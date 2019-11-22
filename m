@@ -2,133 +2,106 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E842C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E59C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BCC2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B0B2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QyTag3rY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EzoKUoES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKVTdz (ORCPT
+        id S1727096AbfKVTeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:33:55 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23128 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726695AbfKVTdy (ORCPT
+        Fri, 22 Nov 2019 14:34:16 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45233 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKVTeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:33:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574451233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JKcl9yS0cJKCotCijHKAQf+0jmhdSMlOqNVO8Y8+/lY=;
-        b=QyTag3rYreG71+gqwwq+GUHzqgoA2rHxpsw2xjlr0bTmuEPKI1nG10hxED3FSdE0Axdtv5
-        FnUP5l2jhwjHfT6aFkS14h5qQYF1czn2fvm0ViSHwUC5RkgCsCFzpRKCJ9tSkB2qjEAXTC
-        Xx6/56ya+ZHIgCttwA7jgIK98OnyK10=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-mTi7oQhHPG2hcSE2I_a2Ug-1; Fri, 22 Nov 2019 14:33:48 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 251AB8018A2;
-        Fri, 22 Nov 2019 19:33:47 +0000 (UTC)
-Received: from krava (ovpn-204-245.brq.redhat.com [10.40.204.245])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E5B215F773;
-        Fri, 22 Nov 2019 19:33:44 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 20:33:43 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, davidca@fb.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v7] perf: Sharing PMU counters across compatible events
-Message-ID: <20191122193343.GB2157@krava>
-References: <20191115235504.4034879-1-songliubraving@fb.com>
+        Fri, 22 Nov 2019 14:34:16 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k1so3762188pgg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 11:34:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oqYSA8zPdRhtM6rEbGD4qCmkL4I7wr9gbLC8ZneJKVc=;
+        b=EzoKUoESpP7irV8mjBMQGFbkhw9eSthUJ77TIPPGKtB23+8EqQ0cWzVuPUeosoGWqE
+         BAQk5RERzYiIArk0/gBzoYWGUcA/9jZxOZJSsVP8MjqTzDR6lzz3lO5HXM/cpFkqUBxx
+         rvqxmTYM0BPsOvg4nLtdGolSZddlBz+VEkbSs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oqYSA8zPdRhtM6rEbGD4qCmkL4I7wr9gbLC8ZneJKVc=;
+        b=lI1KkmTmJwz9Xi4876grHRFi8ucRk2k99tLWVnvprgYUOLZT1ryJ5tuK9IPSxsBEZP
+         D+hA9p6RYftIbpLNhoVOc3v7wWDxcVfg+oitUlojvb/A7hnMKDl3dq0ykA0E2CImorzQ
+         +KimW+vi6lGTBfziWsXu/Bs2OZLgJWe5Hrh9sZzc6qentGgYCZvbATtJlq1h6k2acT5n
+         yTlG5WPBqD5RmdHwfZvoDf/twtx8Du0Dmmc1zMPuQ3rDmpVLoAE2YxQo8NLk29kgSiv8
+         KOBL/1wMA6QO4b66e7WmVX1m90xdtdD40qx9/n4ivjoFlpgb+hS+Ala6+dFgjcXRnAjA
+         Ss7Q==
+X-Gm-Message-State: APjAAAU7QMlFNGCZV6HDFkJdQT/a4zZvcCRHGWSvJ6BbDwbCbeGSJSYB
+        JPmieKTXpZZPN2riV9ncp+ZTZA==
+X-Google-Smtp-Source: APXvYqyCwXryEcLfjsz9Ez7xd3217ZlZjgNnnO5Wwz4cArL7b6i2ioPLdFCp6e+EEo30hlTjCqNnLQ==
+X-Received: by 2002:a63:4415:: with SMTP id r21mr18033144pga.184.1574451254140;
+        Fri, 22 Nov 2019 11:34:14 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i26sm8292006pfr.151.2019.11.22.11.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 11:34:13 -0800 (PST)
+Date:   Fri, 22 Nov 2019 11:34:11 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: Replace bio_check_ro()'s WARN_ON()
+Message-ID: <201911221131.A34DFAA49@keescook>
+References: <20180824211535.GA22251@beast>
+ <201911221052.0FDE1A1@keescook>
+ <20191122190707.GA2136@infradead.org>
+ <94976fb5-12d3-557d-7f31-347d6116b18c@kernel.dk>
+ <20191122191434.GA10150@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20191115235504.4034879-1-songliubraving@fb.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: mTi7oQhHPG2hcSE2I_a2Ug-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <20191122191434.GA10150@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 03:55:04PM -0800, Song Liu wrote:
-> This patch tries to enable PMU sharing. When multiple perf_events are
-> counting the same metric, they can share the hardware PMU counter. We
-> call these events as "compatible events".
->=20
-> The PMU sharing are limited to events within the same perf_event_context
-> (ctx). When a event is installed or enabled, search the ctx for compatibl=
-e
-> events. This is implemented in perf_event_setup_dup(). One of these
-> compatible events are picked as the master (stored in event->dup_master).
-> Similarly, when the event is removed or disabled, perf_event_remove_dup()
-> is used to clean up sharing.
->=20
-> A new state PERF_EVENT_STATE_ENABLED is introduced for the master event.
-> This state is used when the slave event is ACTIVE, but the master event
-> is not.
->=20
-> On the critical paths (add, del read), sharing PMU counters doesn't
-> increase the complexity. Helper functions event_pmu_[add|del|read]() are
-> introduced to cover these cases. All these functions have O(1) time
-> complexity.
->=20
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
->=20
-> ---
-> Changes in v7:
-> Major rewrite to avoid allocating extra master event.
+On Fri, Nov 22, 2019 at 11:14:34AM -0800, Christoph Hellwig wrote:
+> On Fri, Nov 22, 2019 at 12:09:14PM -0700, Jens Axboe wrote:
+> > On 11/22/19 12:07 PM, Christoph Hellwig wrote:
+> > > On Fri, Nov 22, 2019 at 10:53:22AM -0800, Kees Cook wrote:
+> > >> Friendly ping! I keep tripping over this. Can this please get applied so
+> > >> we can silence syzbot and avoid needless WARNs? :)
+> > > 
+> > > What call stack reaches this?  Upper layers should never submit a write
+> > > bio on a read-only queue, and we need to fix that in the upper layer.
+> > 
+> > It's an fsync, the trace is here:
+> > 
+> > https://syzkaller.appspot.com/x/log.txt?x=159503d2e00000
+> 
+> Oh.  I think this is a bug in the block layer, we should not treat
+> a sync as write for the purposes of is read-only checks, as it never
+> writes data to the device.  At the request layer we alread use
+> the proper REQ_OP_FLUSH, but at the bio layer we are still abusing
+> empty writes apparently.  I'll try to cook up something over the
+> weekend.
 
-hi,
-what is this based on? I can't apply it on tip/master:
+Cool; thanks! Note that syzbot has a reproducer for it:
+https://syzkaller.appspot.com/text?tag=ReproC&x=117ccc8c400000
 
-=09Applying: perf: Sharing PMU counters across compatible events
-=09error: patch failed: include/linux/perf_event.h:722
-=09error: include/linux/perf_event.h: patch does not apply
-=09Patch failed at 0001 perf: Sharing PMU counters across compatible events
-=09hint: Use 'git am --show-current-patch' to see the failed patch
-=09When you have resolved this problem, run "git am --continue".
-=09If you prefer to skip this patch, run "git am --skip" instead.
-=09To restore the original branch and stop patching, run "git am --abort".
+If that doesn't work for your own testing, you can ask syzbot to test
+patches itself:
+https://goo.gl/tpsmEJ#testing-patches
 
-also I'm getting this when trying to see/apply plain text patch:
-
-=09[jolsa@dell-r440-01 linux-perf]$ git am --show-current-patch | tail
-=09 =3D09=3D09for_each_sibling_event(sibling, group_leader) {
-=09 =3D09=3D09=3D09perf_remove_from_context(sibling, 0);
-=09 =3D09=3D09=3D09put_ctx(gctx);
-=09+=3D09=3D09=3D09WARN_ON_ONCE(sibling->dup_master);
-=09 =3D09=3D09}
-=09=3D20
-=09 =3D09=3D09/*
-=09--=3D20
-=092.17.1
-
-
-jirka
-
+-- 
+Kees Cook
