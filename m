@@ -2,96 +2,206 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B810C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F19C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3F920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421501;
-	bh=rIE4VPIrEIPSgI9Tss7jaX/soOHcNIuRa+Zq6z6B5Dc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhXQzVjxVFTS84AdklEVTfcH4qHvvw5G08Gzuu6/R4z/zuSyPQrcHxBL+V3rapXlR
-	 ByjaB0sOLjbLE8zV2We9a7opu4dP3eJJxayP+m9iJ14xBaVv2mPApWkpixBR6LDZ77
-	 +zd7IpXTZK/OrYLAHMvfBR2Qsl3k2EIHx7Arp108=
+	by mail.kernel.org (Postfix) with ESMTP id 6D6D720718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Iym2zVnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfKVLSP (ORCPT
+        id S1730671AbfKVLS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:18:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729917AbfKVKsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9714205C9;
-        Fri, 22 Nov 2019 10:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419703;
-        bh=rIE4VPIrEIPSgI9Tss7jaX/soOHcNIuRa+Zq6z6B5Dc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFHEH3MUj4Mn1rchZ0z3DrdrqW9tekLMnX+3ChYs2S6svGYZ6CqgA9genQcsEn99k
-         QrlJIdTWMi923eX73o9cVJl7/lKSjoMk2hfs2NorZcvgHyA9ePFIwNKii0WDKsvw+w
-         H1rVQ2gdjOtZhnI9M49rBTHujxrb+TZIQM7v4Q+4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 202/222] bcache: recal cached_dev_sectors on detach
-Date:   Fri, 22 Nov 2019 11:29:02 +0100
-Message-Id: <20191122100916.847108132@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 06:18:28 -0500
+Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:54809
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729904AbfKVKsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:48:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ogMJF0ItoKS7deLeO+MWiNxwnziPsBCm5yZZRWmAdQXZhjs1F0Wj9TzKwsr1uNTd5H6PXDTA2fUVHwhxFRS8qVukBKCAgf9nKT4/nmg9FLEeZA1yrtBcgpZr4gaPBkNkxbDotloiRSEYusb7kQ/mLm1SbzEmL/pH9SyNaXbxbf8APMXsXW9mrwCjpjIB//yforulMllv3KxjvdsLLoNj8UCYQb2iqw9YRWYMW9L2s2sJuUED5R1fnOcmMHTy9s/Vm4QWmtHeVXfaPl3ypSS2+pDm5ddSkmF4Zvz2GEHECnI8LfvfVDJ5JfRH9zHNeXSqC7+Bj1MJvRgrMLyI6Uhvnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3qqqySnUx5hbngPXJSn7qDcJcQbjLOyL9Ze+Zk60ShI=;
+ b=LYEu6u7ncJal+wUzaCQEUr+Rg0II3FhrnLLSA9iYdCckDTFe2NV7TVUPt7Ba9KGW0uHLalNxMAu2/VMVP1BEmWyHkdb1aS9YlMTP2MxtU9d3bDyGVUNi81cvuLDFdGBKbasrEeG9tIgH5xoYv1iuUFOnKAsBcguENzN4cVCULmeuBSc0RHk4s2UGpua8OeIj9sRdp2Gk8zV6YOz/HSuUzqRC8h6CVneKhKtB/+UaAOxptws67q2W9ddo7v5QtXGFXrOlsJ0Sj7Xlsr/+nd/bDb3P80cyOkZjUGcATnzq8fNOzDplo/D+bycGEB5jSo07Y/Dt9q4616zEOLAigBZFsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3qqqySnUx5hbngPXJSn7qDcJcQbjLOyL9Ze+Zk60ShI=;
+ b=Iym2zVnGD71PvhClTe/ASh+YSIJ7CIR16quepGhQAyyCZsQR7j5+f2iCs4UBM3dXd9K2NzmmjFKpLW6o2RY9U74b3n3sYr2kunrU88sS2Q3+ZiT1LBRA68D5/lH+QzGewnhpuVPsKsn8+wvupt6HJoQPUkthR3ItbmFLxoH0q3A=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB6961.eurprd04.prod.outlook.com (52.132.212.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Fri, 22 Nov 2019 10:48:17 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2474.019; Fri, 22 Nov 2019
+ 10:48:17 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>
+CC:     Peng Fan <peng.fan@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v2 07/11] clk: imx: Rename sccg and frac pll register to
+ suggest clk_hw
+Thread-Topic: [PATCH v2 07/11] clk: imx: Rename sccg and frac pll register to
+ suggest clk_hw
+Thread-Index: AQHVoSJYdI0dfcrcUkSeoWKrP5yyHg==
+Date:   Fri, 22 Nov 2019 10:48:16 +0000
+Message-ID: <1574419679-3813-8-git-send-email-abel.vesa@nxp.com>
+References: <1574419679-3813-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1574419679-3813-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR0402CA0020.eurprd04.prod.outlook.com
+ (2603:10a6:208:15::33) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+x-mailer: git-send-email 2.7.4
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 92471ecd-12be-44f1-f26a-08d76f397b1e
+x-ms-traffictypediagnostic: AM0PR04MB6961:|AM0PR04MB6961:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB696121794DA502BE5D9B6E6BF6490@AM0PR04MB6961.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:989;
+x-forefront-prvs: 02296943FF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(186003)(44832011)(446003)(11346002)(2616005)(52116002)(76176011)(66446008)(64756008)(66556008)(66476007)(7736002)(478600001)(6636002)(36756003)(5660300002)(6506007)(26005)(2906002)(86362001)(14454004)(102836004)(386003)(305945005)(25786009)(66946007)(256004)(110136005)(8936002)(50226002)(6116002)(316002)(99286004)(54906003)(81166006)(81156014)(8676002)(6436002)(6512007)(4326008)(71190400001)(3846002)(71200400001)(66066001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6961;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qTh15l9nxloArqUScywHo/zhF1J1vavZpfEPwEkhDp/wTXHpeiNiPfksRUJEs7YW/hVvLpUWstoigBKQ/h2uJC3V3oVe8BuHRpdOUBXJVzJD1cN5Gj/6ie2ED5NI67ENxObRh5/GrCbnuq+YOCIQyVPRgADSDnUDR99gMKnk+kKMG/lOdQXh7R66Qim1nQI95PllMU9ZhJ2vELRiB2j6NhmIct26oYWZFBucBb3zK67OPYQErl6aueUUF63S3SouD2d8mu9SmNx++6wL8KN433jvbmkaXwEQR/pT+uJOsPCrLdqejZGV9t2nWrj2cH9lJHpNg7rxn20feKwHiZuy0Ea8CfR2L4U/a1KuLyltoRhU3J7WgxYFprnkNob2JRfkPTbrMkXA3jhngPYPbPnG8mcGXzO+oY0ulAHHjmSoSRBz+ICk+wgOaazNu0Wm5IvB
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92471ecd-12be-44f1-f26a-08d76f397b1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 10:48:16.7138
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ydbsT2hH2pz6WD+gB9JjK/b5vUERUrHHamZXyZTaBSKjM0grGxJg2VZ/n6+KgBw/Qo435fyRZUX9a3LTtF3wIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6961
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shenghui Wang <shhuiw@foxmail.com>
+Renaming the imx_clk_frac_pll and imx_clk_sccg_pll register functions to
+imx_clk_hw_frac_pll, respectively imx_clk_hw_sccg_pll to be more obvious
+that they are clk_hw based.
 
-[ Upstream commit 46010141da6677b81cc77f9b47f8ac62bd1cbfd3 ]
-
-Recal cached_dev_sectors on cached_dev detached, as recal done on
-cached_dev attached.
-
-Update the cached_dev_sectors before bcache_device_detach called
-as bcache_device_detach will set bcache_device->c to NULL.
-
-Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/md/bcache/super.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/imx/clk-frac-pll.c |  7 ++++---
+ drivers/clk/imx/clk-sscg-pll.c |  4 ++--
+ drivers/clk/imx/clk.h          | 12 ++++++++++--
+ 3 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index c5bc3e5e921e4..080f9afcde8da 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -904,6 +904,7 @@ static void cached_dev_detach_finish(struct work_struct *w)
- 	bch_write_bdev_super(dc, &cl);
- 	closure_sync(&cl);
- 
-+	calc_cached_dev_sectors(dc->disk.c);
- 	bcache_device_detach(&dc->disk);
- 	list_move(&dc->list, &uncached_devices);
- 
--- 
-2.20.1
-
-
+diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-pll.=
+c
+index fece503..101e0a3 100644
+--- a/drivers/clk/imx/clk-frac-pll.c
++++ b/drivers/clk/imx/clk-frac-pll.c
+@@ -201,8 +201,9 @@ static const struct clk_ops clk_frac_pll_ops =3D {
+ 	.set_rate	=3D clk_pll_set_rate,
+ };
+=20
+-struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
+-			     void __iomem *base)
++struct clk_hw *imx_clk_hw_frac_pll(const char *name,
++				   const char *parent_name,
++				   void __iomem *base)
+ {
+ 	struct clk_init_data init;
+ 	struct clk_frac_pll *pll;
+@@ -230,5 +231,5 @@ struct clk *imx_clk_frac_pll(const char *name, const ch=
+ar *parent_name,
+ 		return ERR_PTR(ret);
+ 	}
+=20
+-	return hw->clk;
++	return hw;
+ }
+diff --git a/drivers/clk/imx/clk-sscg-pll.c b/drivers/clk/imx/clk-sscg-pll.=
+c
+index 0669e17..acd1b90 100644
+--- a/drivers/clk/imx/clk-sscg-pll.c
++++ b/drivers/clk/imx/clk-sscg-pll.c
+@@ -506,7 +506,7 @@ static const struct clk_ops clk_sscg_pll_ops =3D {
+ 	.determine_rate	=3D clk_sscg_pll_determine_rate,
+ };
+=20
+-struct clk *imx_clk_sscg_pll(const char *name,
++struct clk_hw *imx_clk_hw_sscg_pll(const char *name,
+ 				const char * const *parent_names,
+ 				u8 num_parents,
+ 				u8 parent, u8 bypass1, u8 bypass2,
+@@ -545,5 +545,5 @@ struct clk *imx_clk_sscg_pll(const char *name,
+ 		return ERR_PTR(ret);
+ 	}
+=20
+-	return hw->clk;
++	return hw;
+ }
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index d6c65f0..a7d86df 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -115,6 +115,14 @@ extern struct imx_pll14xx_clk imx_1443x_pll;
+ #define imx_clk_pllv2(name, parent, base) \
+ 	to_clk(imx_clk_hw_pllv2(name, parent, base))
+=20
++#define imx_clk_frac_pll(name, parent_name, base) \
++	to_clk(imx_clk_hw_frac_pll(name, parent_name, base))
++
++#define imx_clk_sscg_pll(name, parent_names, num_parents, parent,\
++				bypass1, bypass2, base, flags) \
++	to_clk(imx_clk_hw_sscg_pll(name, parent_names, num_parents, parent,\
++				bypass1, bypass2, base, flags))
++
+ struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
+ 		 void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
+=20
+@@ -124,10 +132,10 @@ struct clk_hw *imx_clk_hw_pllv1(enum imx_pllv1_type t=
+ype, const char *name,
+ struct clk_hw *imx_clk_hw_pllv2(const char *name, const char *parent,
+ 		void __iomem *base);
+=20
+-struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
++struct clk_hw *imx_clk_hw_frac_pll(const char *name, const char *parent_na=
+me,
+ 			     void __iomem *base);
+=20
+-struct clk *imx_clk_sscg_pll(const char *name,
++struct clk_hw *imx_clk_hw_sscg_pll(const char *name,
+ 				const char * const *parent_names,
+ 				u8 num_parents,
+ 				u8 parent, u8 bypass1, u8 bypass2,
+--=20
+2.7.4
 
