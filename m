@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F11EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744182073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1918C2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420099;
-	bh=+ugDS3NL4mHHN24G7VTK1jmCHcSW7yZCBs8zU+QAsHI=;
+	s=default; t=1574420101;
+	bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jYPD8WpjYFrG3AZLDwy8Sov7RsW8qtZPX9RYxAdgiL1sNDORuGVsHHv1hqmMa1X8x
-	 FRSPDA4/zsa8YfV0TLMxWxSGxSd1V7jKN5pUMUvDX+1+hXYdXIDhX/px05MD964esV
-	 3vGtmnitTdutGa3VcUSXcyuDCIWKxP3+4nUEpWdQ=
+	b=YnEkgN30xuHGLMCLyWSY3rHnXH9XpeX5dnFlAk/VriO5G/7zOusJP5lSPCwqlEwuo
+	 KjWahVSrn4hFqjpAel9VzOQSWh4XmSujoxG0yjHvDcaNgcxbzN4GRPz0zJQovNFsVa
+	 NKhYvH173R8vddRS2OtBdSopBDXoeSizjXcZ3OV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfKVKy6 (ORCPT
+        id S1728973AbfKVKzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbfKVKyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:55 -0500
+        id S1730394AbfKVKy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7129C20721;
-        Fri, 22 Nov 2019 10:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CE42071C;
+        Fri, 22 Nov 2019 10:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420094;
-        bh=+ugDS3NL4mHHN24G7VTK1jmCHcSW7yZCBs8zU+QAsHI=;
+        s=default; t=1574420097;
+        bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+ldxuwjR5HQHsu6GRs3bmiEWMCJsa20oH/Ef3OuN4oiS7Y3OMzG1UQtOQC98Qeea
-         CcDg7ZOY1diMJbmKNLP9EA3F6UQ2zhomluVpQFCH6J6AOOsWyXz2WMR0blAZhAoFWq
-         9TgvJ9SkWZPtbUIuALi1TVyVI5xN7LOFWex8z2YY=
+        b=rANbdL93v19VceodQY3smlEwk7Yak1rfD4iJTo7+WYAgWTIc/uMv6r5kDnEThrZbO
+         Ch9tKxgxbL3UOHJ6wjqDniwLQvxc40KOzIyrCuX5daq7UdLNEStWtog6t6ElBYyIkS
+         F5pfKSmtiIegLCI5faTQTfhiFbI6s+afrqezmOz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
+        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 113/122] misc: cxl: Fix possible null pointer dereference
-Date:   Fri, 22 Nov 2019 11:29:26 +0100
-Message-Id: <20191122100835.272176088@linuxfoundation.org>
+Subject: [PATCH 4.14 078/122] remoteproc: Check for NULL firmwares in sysfs interface
+Date:   Fri, 22 Nov 2019 11:28:51 +0100
+Message-Id: <20191122100818.237329904@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,35 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Suman Anna <s-anna@ti.com>
 
-[ Upstream commit 3dac3583bf1a61db6aaf31dfd752c677a4400afd ]
+[ Upstream commit faeadbb64094757150a8c2a3175ca418dbdd472c ]
 
-It is not safe to dereference an object before a null test. It is
-not needed and just remove them. Ftrace can be used instead.
+The remoteproc framework provides a sysfs file 'firmware'
+for modifying the firmware image name from userspace. Add
+an additional check to ensure NULL firmwares are errored
+out right away, rather than getting a delayed error while
+requesting a firmware during the start of a remoteproc
+later on.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/cxl/guest.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/remoteproc/remoteproc_sysfs.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
-index 1a64eb185cfd5..de2ce55395454 100644
---- a/drivers/misc/cxl/guest.c
-+++ b/drivers/misc/cxl/guest.c
-@@ -1028,8 +1028,6 @@ int cxl_guest_init_afu(struct cxl *adapter, int slice, struct device_node *afu_n
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index 47be411400e56..3a4c3d7cafca3 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -48,6 +48,11 @@ static ssize_t firmware_store(struct device *dev,
+ 	}
  
- void cxl_guest_remove_afu(struct cxl_afu *afu)
- {
--	pr_devel("in %s - AFU(%d)\n", __func__, afu->slice);
--
- 	if (!afu)
- 		return;
+ 	len = strcspn(buf, "\n");
++	if (!len) {
++		dev_err(dev, "can't provide a NULL firmware\n");
++		err = -EINVAL;
++		goto out;
++	}
  
+ 	p = kstrndup(buf, len, GFP_KERNEL);
+ 	if (!p) {
 -- 
 2.20.1
 
