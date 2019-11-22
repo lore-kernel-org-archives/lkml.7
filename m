@@ -2,83 +2,121 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95952C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC217C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D232071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C3B2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g/Agl4II"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVGcKgS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKVS5y (ORCPT
+        id S1727031AbfKVTCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:57:54 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:44963 "EHLO
+        Fri, 22 Nov 2019 14:02:13 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38077 "EHLO
         mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfKVS5y (ORCPT
+        with ESMTP id S1726062AbfKVTCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:57:54 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w8so3388521pjh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 10:57:53 -0800 (PST)
+        Fri, 22 Nov 2019 14:02:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id f7so3416108pjw.5;
+        Fri, 22 Nov 2019 11:02:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vD+kTqNKNFaJHHlnS5aCOrni7KxxMunXRiver5To2T0=;
-        b=g/Agl4II1MX+BTTCUS+ZZ4/rAMJxc9T3/gbAxCPvdkQ9nefWpWsM6/QnJE0rpovvat
-         7hON3Yt/r0+/LsKce0ErN0oI6JTIDYsNLwRC0D2lIWV51VozpVdXuNXNpOz8hhdp/I2g
-         YuXzTGI+pXJpxUPwt77bXdlEESJwTNClpLIY8=
+         :content-disposition:in-reply-to:user-agent;
+        bh=rXO9cqEQmTofVcUIhUtd2eNJuGiff/iEv3zoqiv6qHo=;
+        b=JVGcKgS9V2ip/SRxOAk03Fht0RCY6Asf7kXy1KRaOcWczzcWUR9yBEdsrXVf1lOz6y
+         04H5Bq9Y20bNKdrti7DmVLKFnqaSwl9oNSyZgzRP/BRIH8fJrdidtavACPXt46uQjo/k
+         plm33ARALqvWtCTxKcktBDH+w4Tj4eHjlXnCpjcvpB7TW/hN1nybRlSy+2X2IThkczQl
+         0+xdWthH+823/yFLAnzV26AG0BiBQIiKhddpUZ6Pk0CpzCXGnkRx+eRPb9TD42c4pPzE
+         mFO9GWvyz9dCkAfdJ2oNp5u2HVvg1XtAgxXQ7MQbEZNAu6g9nYLy0vNyyOebfD0r8txr
+         olQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vD+kTqNKNFaJHHlnS5aCOrni7KxxMunXRiver5To2T0=;
-        b=Zzn8eK26ln2ndPtQrqBMqcVqoZqDuJ8S5oVVzn6Aq7NVXnsUKOzZeZtGUUZP58Mtn8
-         0hzmtvVmXzn6WEk+VBcY9SG94M4aDdJWqWxdVm05wMhW+aq/t6I0taGu7WBstfS9j6z4
-         Fs67QrYLcGWLIQNaKHZHA/ioOAR90M+YuS6A3pm+cXWEYMl5i58iRq+q05Vok54sB2iI
-         h1UEie9SW/LBhinbZ0tcxvP0SL3oEII7rVYLJmRjAAzJZ3chrT0dKEVOiXqZVvvPrTzp
-         8fvCOavSEfu1MyJdA2K2cvQ2Q8geqJKr3xRrqhs4Vq7/4j9Np0dWMZuC3+wl4WMSdNzK
-         3/ow==
-X-Gm-Message-State: APjAAAUOok4sydd45By8fa894ROaLO11WJWw9KnoK6DlJq1T4PiAuqtZ
-        0SeQ01cIUQG9P7PfJHQ+QhWTHQ==
-X-Google-Smtp-Source: APXvYqy4i51ZomUDiUmgqotvybJkRWcwGT2mjCe9qNMep2IAr0W6vYTafi4bgH/WkbxpKRz1qvkfOg==
-X-Received: by 2002:a17:90a:b385:: with SMTP id e5mr21272476pjr.115.1574449073600;
-        Fri, 22 Nov 2019 10:57:53 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a3sm7986059pfo.71.2019.11.22.10.57.52
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rXO9cqEQmTofVcUIhUtd2eNJuGiff/iEv3zoqiv6qHo=;
+        b=mmUEmaTvCuiIGMoHPL1onbj/rPdTHVZ3ggurD3A0mGF5vbM20pXnnH+WFp3SqxlEUi
+         eyqV2PvWWqobdPOXvqMwvjn7t+SEz5KnkBIts0RcQonB9GkRxDfC2xAVwri9QhAWMyzY
+         gXVbeSAmK15j4ZRdKRj8zYkrq2zSc3MI7qc3ouEeVoaZMgEdPE11XH0+IzzK6f4vHuvG
+         6WR0pCGkPZtwFA7RzTSU2rqPPLjgDYTv0xWrpoxHIma/vpOxtbY3JfMZqHjMTfryZmGm
+         sgnjZOfvNiFJy+X2ZL8+D9Tosv2pizZUkBTMjvlQMs56UNoebFW16AlXILstpeuUUCk1
+         bfXg==
+X-Gm-Message-State: APjAAAU8RIMVPWWezy+OZe5xgrqruWC+1R5fVo5Ci5YL5J+olFS8EIjP
+        Cz2Aiwj5rubGqU68SlxeADY=
+X-Google-Smtp-Source: APXvYqxmIeXmYqTAGH5G6KIOCDjlzWl389mvrK8MD9R9K8eUmje6qYAJBh9w3bdvna6APckPqBIq8w==
+X-Received: by 2002:a17:90a:db43:: with SMTP id u3mr21080194pjx.56.1574449332145;
+        Fri, 22 Nov 2019 11:02:12 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id l21sm3554290pjt.28.2019.11.22.11.02.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 10:57:52 -0800 (PST)
-Date:   Fri, 22 Nov 2019 10:57:51 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: Replace bio_check_ro()'s WARN_ON()
-Message-ID: <201911221057.2B0E5696C@keescook>
-References: <20180824211535.GA22251@beast>
- <201911221052.0FDE1A1@keescook>
- <181810c8-657d-d603-a833-215f753be5be@kernel.dk>
+        Fri, 22 Nov 2019 11:02:11 -0800 (PST)
+Date:   Fri, 22 Nov 2019 11:02:08 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        emamd001@umn.edu
+Subject: Re: [PATCH] Input: Fix memory leak in psxpad_spi_probe
+Message-ID: <20191122190208.GA248138@dtor-ws>
+References: <20191121200115.24846-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <181810c8-657d-d603-a833-215f753be5be@kernel.dk>
+In-Reply-To: <20191121200115.24846-1-navid.emamdoost@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:55:11AM -0700, Jens Axboe wrote:
-> On 11/22/19 11:53 AM, Kees Cook wrote:
-> > Friendly ping! I keep tripping over this. Can this please get applied so
-> > we can silence syzbot and avoid needless WARNs? :)
-> 
-> I'll get it applied, I did see syzbot complain about this again.
+Hi Navid,
 
-Awesome; thanks! :)
+On Thu, Nov 21, 2019 at 02:01:11PM -0600, Navid Emamdoost wrote:
+> In the implementation of psxpad_spi_probe() the allocated memory for
+> pdev is leaked if psxpad_spi_init_ff() or input_register_polled_device()
+> fail. The solution is using device managed allocation, like the one used
+> for pad. Perform the allocation using
+> devm_input_allocate_polled_device().
+> 
+> Fixes: 8be193c7b1f4 ("Input: add support for PlayStation 1/2 joypads connected via SPI")
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+
+This is fixed in the current version of the driver, but you can send it
+to stable@gerkernel.orf with my
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+> ---
+>  drivers/input/joystick/psxpad-spi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/joystick/psxpad-spi.c b/drivers/input/joystick/psxpad-spi.c
+> index 7eee1b0e360f..99a6052500ca 100644
+> --- a/drivers/input/joystick/psxpad-spi.c
+> +++ b/drivers/input/joystick/psxpad-spi.c
+> @@ -292,7 +292,7 @@ static int psxpad_spi_probe(struct spi_device *spi)
+>  	if (!pad)
+>  		return -ENOMEM;
+>  
+> -	pdev = input_allocate_polled_device();
+> +	pdev = devm_input_allocate_polled_device(&spi->dev);
+>  	if (!pdev) {
+>  		dev_err(&spi->dev, "failed to allocate input device\n");
+>  		return -ENOMEM;
+> -- 
+> 2.17.1
+> 
 
 -- 
-Kees Cook
+Dmitry
