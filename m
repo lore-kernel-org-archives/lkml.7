@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975D6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4658DC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634292068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C152068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402936;
-	bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1Eoy6weGqlzkSVG0CHGvVOHTvv9bLy/bNm366e47OQafmYAtaNMXpN3UNs0v6EFd
-	 bf2XtU0vuQ7m0P2AWjmj6LZGwDNqssw8dwrxlrtEaXUogKaBJBh4NmyrY9UjqGA7pu
-	 zJn9DNAv8/kl5PByVFTN7SCyd7PjFyRmD0vetZTo=
+	s=default; t=1574402941;
+	bh=lhL1UpcXPjZuPgvTxh6qj4Kz7MUW0YwV4aqksO/IBvo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wt63ZF45rduwXPtwJcgL9CNkdQn9btT+Es7tI/KP9BUuvF0CtKCZq2jiCrG6nwOhX
+	 fnHDJiY5wCSXaUaiJ1Ystw8OTA+Ce7N8IA1uNdGQoQggQWg31mwSTa9iPQpDS7VqtA
+	 o8JF05GOFtvrTYFDtAWljLpaJZzaEuix23T9X+1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfKVGBg (ORCPT
+        id S1728907AbfKVGBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbfKVGBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 01:01:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727602AbfKVGBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B44612070A;
-        Fri, 22 Nov 2019 06:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6205D2068F;
+        Fri, 22 Nov 2019 06:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402493;
-        bh=pBD8D54Jh+aAZ584Gec2gIdMiQfp2n7SefwZdXpySxQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gs9+VEyi7nfmonYyAFtJgDkzTAJb/i0+KJtvU6MfiTE5NwqoOQEspmt5nfGvXxEho
-         /uzQg2OSo+MKjdFgoBa47xZHmXKTqLY6+URmHGi2JNm17WViPAZ51adaaqCjVst7kW
-         URVULmlwDbBNo/85mcImZHrJbe+8dxEdengYzvv0=
+        s=default; t=1574402491;
+        bh=lhL1UpcXPjZuPgvTxh6qj4Kz7MUW0YwV4aqksO/IBvo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RZDOP9niXzhzt7xDbDJxFtqXqJX8l55cO/5xyu6MtbWCnEQXTB1d3PPns0ScMoH7J
+         d5zADghjafHSKz9UDueWgsmB9J49bevk/9BVnyvNN46JbF8mDw9OB/rbyv+jvwSkgE
+         7hTDje3d/4idj0k8Mhp4xXI2zqDL1D+x2taclOW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
-        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/91] parisc: Fix serio address output
-Date:   Fri, 22 Nov 2019 01:00:02 -0500
-Message-Id: <20191122060129.4239-3-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/91] scsi: lpfc: Fix dif and first burst use in write commands
+Date:   Fri, 22 Nov 2019 01:00:00 -0500
+Message-Id: <20191122060129.4239-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
-References: <20191122060129.4239-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,38 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
+[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
 
-We want the hpa addresses printed in the serio modules, not some
-virtual ioremap()ed address, e.g.:
+When dif and first burst is used in a write command wqe, the driver was not
+properly setting fields in the io command request. This resulted in no dif
+bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
+by the hardware.
 
- serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
- serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
+Correct the wqe initializaton when both dif and first burst are used.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/gscps2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index ecba666afadb7..cca26e6f38b36 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -382,9 +382,9 @@ static int gscps2_probe(struct parisc_device *dev)
- 		goto fail;
- #endif
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index d197aa176dee3..d489cc1018b5c 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -2707,6 +2707,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
  
--	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
-+	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
- 		ps2port->port->name,
--		ps2port->addr,
-+		hpa,
- 		ps2port->padev->irq,
- 		ps2port->port->phys);
+ 	/*
+ 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
+@@ -2812,6 +2813,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
  
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	return 0;
+ err:
+ 	if (lpfc_cmd->seg_cnt)
+@@ -3364,6 +3373,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
+ 
+ 	/*
+ 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
+@@ -3479,6 +3489,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
+ 
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	/*
+ 	 * If the OAS driver feature is enabled and the lun is enabled for
+ 	 * OAS, set the oas iocb related flags.
 -- 
 2.20.1
 
