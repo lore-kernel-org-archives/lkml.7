@@ -2,464 +2,174 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40AAC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CE9C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD972070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AF220708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HY/tE+Xh"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="t2/RfkKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfKVIY6 (ORCPT
+        id S1726907AbfKVIai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:24:58 -0500
-Received: from mail-eopbgr720116.outbound.protection.outlook.com ([40.107.72.116]:15392
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727262AbfKVIYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:24:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BwXrUIYaoSpOVKUKkPMe4MUJLJxxMuG8jvWAT9fFoeL17SmLsoesmxR7PAKD5Qb7xflJ3BCkSuD8VMtV09eR1G+qOVnOC8cOHjwqywL+kSD6ZygkCs8bE1nSxd844d91q3riAwljkIjj3GR65yM81IyATr3b9p7AGHHCYdTKin4dJwDr62FEcX34Y/VoWGLWooB5+fh79BfqNnkYfmUvG1ZnXtI9r+uh0CAuS9UY/aqQE0euW+5VPiyr6gHCRRD8Nvg9hDg8Bnwt1v5zSWod3WyQQJHe4NBaoOayHUJypb1Uvt1wj9eGAc9RX/faxZPyO54IZo/H7PT3cM6kbvaX8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/XkyxbUNFMVr8OLWw+QBvJe5T0Xpw1K97dNA+kLAmHs=;
- b=kDmUl3hAK1iKX7bvNIxaF250LW/rQBOpK+DWAd6qmX9833oDRlQnlZCytt9tdnyntfKdIQ/3Lz66oTM4A0yB4e/VV0+qv0vUzsj0yQKCZF7e82zTRTBPYJ5zcxXediTtJ/HJ9YJDTZua6gk4bQMl7wLIxbwxCvlkpgKZ1NLVr8SqZ44hYppv7Sqm985FB2TNA4QjYjcYGM0wryuXSQ5c7D4PabHNtwYT3/vl/Etmw50tGlm5Ah9cL5hsYCokieiWqkn7AWS0ZSFt8XAbuo4DIU23MDh9EfuBX4RyeBo4jBAzVwcFh4lbt46d6KQmoaB5qh83PUQ7xkHQ2HWkviXuwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/XkyxbUNFMVr8OLWw+QBvJe5T0Xpw1K97dNA+kLAmHs=;
- b=HY/tE+XhbCawWgh6ZsrYF/AicfNAHzdELR+PFRAFUwCOwhYND+IbLAWGj7SDIHAR98jIqGL7SyhX7LXWcYCtjUjUhA4LUyyvOeWCfeGfe0z+W433qmHc3aVNaAusCymGDJshbUnTBRejVDuADxwWAURpcuP/c5MvrcHsgGwHKAw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-Received: from CH2PR21MB1447.namprd21.prod.outlook.com (20.180.11.151) by
- CH2PR21MB1461.namprd21.prod.outlook.com (20.180.9.71) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.3; Fri, 22 Nov 2019 08:24:50 +0000
-Received: from CH2PR21MB1447.namprd21.prod.outlook.com
- ([fe80::6c54:3203:ae0c:6f4]) by CH2PR21MB1447.namprd21.prod.outlook.com
- ([fe80::6c54:3203:ae0c:6f4%5]) with mapi id 15.20.2495.010; Fri, 22 Nov 2019
- 08:24:49 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     b.zolnierkie@samsung.com, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
-        hch@lst.de, m.szyprowski@samsung.com, mchehab+samsung@kernel.org,
-        sam@ravnborg.org, gregkh@linuxfoundation.org,
-        alexandre.belloni@bootlin.com, info@metux.net, arnd@arndb.de,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com
-Cc:     Wei Hu <weh@microsoft.com>
-Subject: [PATCH v2] video: hyperv: hyperv_fb: Use physical memory for fb on HyperV Gen 1 VMs.
-Date:   Fri, 22 Nov 2019 16:24:08 +0800
-Message-Id: <20191122082408.3210-1-weh@microsoft.com>
-X-Mailer: git-send-email 2.20.1
-Reply-To: weh@microsoft.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0002.apcprd02.prod.outlook.com
- (2603:1096:3:17::14) To CH2PR21MB1447.namprd21.prod.outlook.com
- (2603:10b6:610:8c::23)
+        Fri, 22 Nov 2019 03:30:38 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27135 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726018AbfKVIai (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 03:30:38 -0500
+X-UUID: f6eec23ec8f74fedaaa4374a57dbb3fc-20191122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=zKQOxirmySYcxcZXIgTVjcOzLInsWmu/tj21UeF5XGk=;
+        b=t2/RfkKI/ox3+OPPbvtlWkJsEST3bSklC1Y7G9DihP67Nlery+fKYhCTTZLXirZEMZje1Mhji1e+tnHUKCqCaEK3hEPvVWsrVw95mnpIs521VUNVqZddIwHzofjur2v65POm9ru7heNr5wCaVyPU5ITPVZYMsFJ5G/qNYu7wyrU=;
+X-UUID: f6eec23ec8f74fedaaa4374a57dbb3fc-20191122
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 356741794; Fri, 22 Nov 2019 16:30:31 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 22 Nov 2019 16:30:23 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 22 Nov 2019 16:30:03 +0800
+Message-ID: <1574411430.19450.5.camel@mtksdaap41>
+Subject: Re: [PATCH v17 3/6] soc: mediatek: cmdq: define the instruction
+ struct
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+Date:   Fri, 22 Nov 2019 16:30:30 +0800
+In-Reply-To: <20191121015410.18852-4-bibby.hsieh@mediatek.com>
+References: <20191121015410.18852-1-bibby.hsieh@mediatek.com>
+         <20191121015410.18852-4-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.113) by SG2PR02CA0002.apcprd02.prod.outlook.com (2603:1096:3:17::14) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Fri, 22 Nov 2019 08:24:43 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [167.220.255.113]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 497ac35a-c01e-416e-c8a2-08d76f2570e8
-X-MS-TrafficTypeDiagnostic: CH2PR21MB1461:|CH2PR21MB1461:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR21MB14613DCE140FCCDE213E2712BB490@CH2PR21MB1461.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
-X-Forefront-PRVS: 02296943FF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(346002)(376002)(199004)(189003)(14444005)(6636002)(2906002)(2870700001)(305945005)(7736002)(6116002)(6666004)(3450700001)(7416002)(22452003)(316002)(1511001)(43066004)(386003)(3846002)(51416003)(7696005)(52116002)(30864003)(48376002)(47776003)(1076003)(6486002)(5660300002)(66066001)(81166006)(50466002)(36756003)(6436002)(25786009)(478600001)(10290500003)(66946007)(8676002)(8936002)(2616005)(50226002)(186003)(86362001)(956004)(81156014)(26005)(66476007)(16526019)(107886003)(4326008)(1250700005)(10090500001)(66556008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR21MB1461;H:CH2PR21MB1447.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: T5rzk2ChX9QKkvup8ntMttAAoEVJtRH25cC0wfdO0aNhQsZlPiA7iX+ImOJa1W/IHSSwi8SYmwly4+M9LCGPsQbBPOt/vEHJYgBbm8fjA/8s8J44Wmn7n6njOiXkrmtEUxZGJDr5H8P4brtljNTcXXuTSlmEziecLQobJ9D/0QKDigHFHildRmwFh+AVvlRhiNNTXxy+ocDkiYPE+40jimpLX5+4qkL0tbBxruF7RN1jKdrWaAQgimdhVn5kW+r/jJGV/sVJzlG/3yN04SLKKa9O0YW2lBqVsXm641n/XpCbOIYEtcfdMZm+ZnDAIRZHWKWo2WaIZI2RJ5VCvnJGzcx0mxZW0XyydqsRQwVrKt1aSTG1OnrnPceu+6gz6pZZ/WYMYOjSXza94rjkBSzIpXp3dUUr6wj28idimB+wtJ9yWZ7NnpImOX8GXbzpBwF4
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 497ac35a-c01e-416e-c8a2-08d76f2570e8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2019 08:24:49.8804
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 98CgGTW24u4eEuFrmF5mrnyetsc9+whRDYTl2zRA04/Fg36v3LvRP7g6sGRFCuY/TznKVeVOqs8F0jalsVaWHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1461
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Hyper-V, Generation 1 VMs can directly use VM's physical memory for
-their framebuffers. This can improve the efficiency of framebuffer and
-overall performence for VM. The physical memory assigned to framebuffer
-must be contiguous. We use CMA allocator to get contiguouse physicial
-memory when the framebuffer size is greater than 4MB. For size under
-4MB, we use alloc_pages to achieve this.
-
-To enable framebuffer memory allocation from CMA, supply a kernel
-parameter to give enough space to CMA allocator at boot time. For
-example:
-    cma=130m
-This gives 130MB memory to CAM allocator that can be allocated to
-framebuffer. If this fails, we fall back to the old way of using
-mmio for framebuffer.
-
-Signed-off-by: Wei Hu <weh@microsoft.com>
----
-    v2: Incorporated review comments form hch@lst.de, Michael Kelley and
-    Dexuan Cui
-    - Use dma_alloc_coherent to allocate large contiguous memory
-    - Use phys_addr_t for physical addresses
-    - Corrected a few spelling errors and minor cleanups
-    - Also tested on 32 bit Ubuntu guest 
-
- drivers/video/fbdev/Kconfig     |   1 +
- drivers/video/fbdev/hyperv_fb.c | 196 +++++++++++++++++++++++++-------
- 2 files changed, 158 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index aa9541bf964b..87b82de4598d 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -2215,6 +2215,7 @@ config FB_HYPERV
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
- 	select FB_DEFERRED_IO
-+	select DMA_CMA if HAVE_DMA_CONTIGUOUS
- 	help
- 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
- 
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index 3f60b7bc8589..8ba96764c749 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -31,6 +31,16 @@
-  * "set-vmvideo" command. For example
-  *     set-vmvideo -vmname name -horizontalresolution:1920 \
-  * -verticalresolution:1200 -resolutiontype single
-+ *
-+ * Gen 1 VMs also support direct using VM's physical memory for framebuffer.
-+ * It could improve the efficiency and performance for framebuffer and VM.
-+ * This requires to allocate contiguous physical memory from Linux kernel's
-+ * CMA memory allocator. To enable this, supply a kernel parameter to give
-+ * enough memory space to CMA allocator for framebuffer. For example:
-+ *    cma=130m
-+ * This gives 130MB memory to CMA allocator that can be allocated to
-+ * framebuffer. For reference, 8K resolution (7680x4320) takes about
-+ * 127MB memory.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -227,7 +237,6 @@ struct synthvid_msg {
- } __packed;
- 
- 
--
- /* FB driver definitions and structures */
- #define HVFB_WIDTH 1152 /* default screen width */
- #define HVFB_HEIGHT 864 /* default screen height */
-@@ -256,12 +265,15 @@ struct hvfb_par {
- 	/* If true, the VSC notifies the VSP on every framebuffer change */
- 	bool synchronous_fb;
- 
-+	/* If true, need to copy from deferred IO mem to framebuffer mem */
-+	bool need_docopy;
-+
- 	struct notifier_block hvfb_panic_nb;
- 
- 	/* Memory for deferred IO and frame buffer itself */
- 	unsigned char *dio_vp;
- 	unsigned char *mmio_vp;
--	unsigned long mmio_pp;
-+	phys_addr_t mmio_pp;
- 
- 	/* Dirty rectangle, protected by delayed_refresh_lock */
- 	int x1, y1, x2, y2;
-@@ -432,7 +444,7 @@ static void synthvid_deferred_io(struct fb_info *p,
- 		maxy = max_t(int, maxy, y2);
- 
- 		/* Copy from dio space to mmio address */
--		if (par->fb_ready)
-+		if (par->fb_ready && par->need_docopy)
- 			hvfb_docopy(par, start, PAGE_SIZE);
- 	}
- 
-@@ -749,12 +761,12 @@ static void hvfb_update_work(struct work_struct *w)
- 		return;
- 
- 	/* Copy the dirty rectangle to frame buffer memory */
--	for (j = y1; j < y2; j++) {
--		hvfb_docopy(par,
--			    j * info->fix.line_length +
--			    (x1 * screen_depth / 8),
--			    (x2 - x1) * screen_depth / 8);
--	}
-+	if (par->need_docopy)
-+		for (j = y1; j < y2; j++)
-+			hvfb_docopy(par,
-+				    j * info->fix.line_length +
-+				    (x1 * screen_depth / 8),
-+				    (x2 - x1) * screen_depth / 8);
- 
- 	/* Refresh */
- 	if (par->fb_ready && par->update)
-@@ -799,7 +811,8 @@ static int hvfb_on_panic(struct notifier_block *nb,
- 	par = container_of(nb, struct hvfb_par, hvfb_panic_nb);
- 	par->synchronous_fb = true;
- 	info = par->info;
--	hvfb_docopy(par, 0, dio_fb_size);
-+	if (par->need_docopy)
-+		hvfb_docopy(par, 0, dio_fb_size);
- 	synthvid_update(info, 0, 0, INT_MAX, INT_MAX);
- 
- 	return NOTIFY_DONE;
-@@ -938,6 +951,74 @@ static void hvfb_get_option(struct fb_info *info)
- 	return;
- }
- 
-+/*
-+ * Allocate enough contiguous physical memory.
-+ * Return physical address if succeeded or -1 if failed.
-+ */
-+static phys_addr_t hvfb_get_phymem(struct hv_device *hdev,
-+				   unsigned int request_size)
-+{
-+	struct page *page = NULL;
-+	dma_addr_t dma_handle;
-+	void *vmem;
-+	unsigned int request_pages;
-+	phys_addr_t paddr = 0;
-+	unsigned int order = get_order(request_size);
-+
-+	if (request_size == 0)
-+		return -1;
-+
-+	/* Try to call alloc_pages if the size is less than 2^MAX_ORDER */
-+	if (order < MAX_ORDER) {
-+		page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
-+		if (!page)
-+			return -1;
-+
-+		paddr = (page_to_pfn(page) << PAGE_SHIFT);
-+		request_pages = (1 << order);
-+		goto get_phymem1;
-+	}
-+
-+	/* Allocate from CMA */
-+	if (hdev == NULL)
-+		return -1;
-+
-+	hdev->device.coherent_dma_mask = DMA_BIT_MASK(64);
-+
-+	request_pages = (round_up(request_size, PAGE_SIZE) >> PAGE_SHIFT);
-+
-+	vmem = dma_alloc_coherent(&hdev->device,
-+				 request_pages * PAGE_SIZE,
-+				 &dma_handle,
-+				 GFP_KERNEL | __GFP_NOWARN);
-+
-+	if (!vmem)
-+		return -1;
-+
-+	paddr = virt_to_phys(vmem);
-+
-+get_phymem1:
-+	pr_info("Allocated %d pages starts at physical addr 0x%llx\n",
-+		request_pages, paddr);
-+
-+	return paddr;
-+}
-+
-+/* Release contiguous physical memory */
-+static void hvfb_release_phymem(struct hv_device *hdev,
-+				phys_addr_t paddr, unsigned int size)
-+{
-+	unsigned int order = get_order(size);
-+
-+	if (order < MAX_ORDER)
-+		__free_pages(pfn_to_page(paddr >> PAGE_SHIFT), order);
-+	else
-+		dma_free_coherent(&hdev->device,
-+				  round_up(size, PAGE_SIZE),
-+				  phys_to_virt(paddr),
-+				  paddr);
-+}
-+
- 
- /* Get framebuffer memory from Hyper-V video pci space */
- static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
-@@ -947,8 +1028,57 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- 	void __iomem *fb_virt;
- 	int gen2vm = efi_enabled(EFI_BOOT);
- 	resource_size_t pot_start, pot_end;
-+	phys_addr_t paddr;
- 	int ret;
- 
-+	if (!gen2vm) {
-+		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
-+			PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
-+		if (!pdev) {
-+			pr_err("Unable to find PCI Hyper-V video\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	info->apertures = alloc_apertures(1);
-+	if (!info->apertures)
-+		goto err1;
-+
-+	if (gen2vm) {
-+		info->apertures->ranges[0].base = screen_info.lfb_base;
-+		info->apertures->ranges[0].size = screen_info.lfb_size;
-+	} else {
-+		info->apertures->ranges[0].base = pci_resource_start(pdev, 0);
-+		info->apertures->ranges[0].size = pci_resource_len(pdev, 0);
-+	}
-+
-+	/*
-+	 * For Gen 1 VM, we can directly use the contiguous memory
-+	 * from VM. If we succeed, deferred IO happens directly
-+	 * on this allocated framebuffer memory, avoiding extra
-+	 * memory copy.
-+	 */
-+	if (!gen2vm) {
-+		paddr = hvfb_get_phymem(hdev, screen_fb_size);
-+		if (paddr != (phys_addr_t) -1) {
-+			par->mmio_pp = paddr;
-+			par->mmio_vp = par->dio_vp = __va(paddr);
-+
-+			info->fix.smem_start = paddr;
-+			info->fix.smem_len = screen_fb_size;
-+			info->screen_base = par->mmio_vp;
-+			info->screen_size = screen_fb_size;
-+
-+			par->need_docopy = false;
-+			goto getmem1;
-+		}
-+		pr_info("Unable to allocate enough contiguous physical memory on Gen 1 VM. Use MMIO instead.\n");
-+	}
-+
-+	/*
-+	 * Cannot use the contiguous physical memory.
-+	 * Allocate mmio space for framebuffer.
-+	 */
- 	dio_fb_size =
- 		screen_width * screen_height * screen_depth / 8;
- 
-@@ -956,13 +1086,6 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- 		pot_start = 0;
- 		pot_end = -1;
- 	} else {
--		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
--			      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
--		if (!pdev) {
--			pr_err("Unable to find PCI Hyper-V video\n");
--			return -ENODEV;
--		}
--
- 		if (!(pci_resource_flags(pdev, 0) & IORESOURCE_MEM) ||
- 		    pci_resource_len(pdev, 0) < screen_fb_size) {
- 			pr_err("Resource not available or (0x%lx < 0x%lx)\n",
-@@ -991,20 +1114,6 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- 	if (par->dio_vp == NULL)
- 		goto err3;
- 
--	info->apertures = alloc_apertures(1);
--	if (!info->apertures)
--		goto err4;
--
--	if (gen2vm) {
--		info->apertures->ranges[0].base = screen_info.lfb_base;
--		info->apertures->ranges[0].size = screen_info.lfb_size;
--		remove_conflicting_framebuffers(info->apertures,
--						KBUILD_MODNAME, false);
--	} else {
--		info->apertures->ranges[0].base = pci_resource_start(pdev, 0);
--		info->apertures->ranges[0].size = pci_resource_len(pdev, 0);
--	}
--
- 	/* Physical address of FB device */
- 	par->mmio_pp = par->mem->start;
- 	/* Virtual address of FB device */
-@@ -1015,13 +1124,15 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- 	info->screen_base = par->dio_vp;
- 	info->screen_size = dio_fb_size;
- 
-+getmem1:
-+	remove_conflicting_framebuffers(info->apertures,
-+					KBUILD_MODNAME, false);
-+
- 	if (!gen2vm)
- 		pci_dev_put(pdev);
- 
- 	return 0;
- 
--err4:
--	vfree(par->dio_vp);
- err3:
- 	iounmap(fb_virt);
- err2:
-@@ -1035,13 +1146,19 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- }
- 
- /* Release the framebuffer */
--static void hvfb_putmem(struct fb_info *info)
-+static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
- {
- 	struct hvfb_par *par = info->par;
- 
--	vfree(par->dio_vp);
--	iounmap(info->screen_base);
--	vmbus_free_mmio(par->mem->start, screen_fb_size);
-+	if (par->need_docopy) {
-+		vfree(par->dio_vp);
-+		iounmap(info->screen_base);
-+		vmbus_free_mmio(par->mem->start, screen_fb_size);
-+	} else {
-+		hvfb_release_phymem(hdev, info->fix.smem_start,
-+				    screen_fb_size);
-+	}
-+
- 	par->mem = NULL;
- }
- 
-@@ -1060,6 +1177,7 @@ static int hvfb_probe(struct hv_device *hdev,
- 	par = info->par;
- 	par->info = info;
- 	par->fb_ready = false;
-+	par->need_docopy = true;
- 	init_completion(&par->wait);
- 	INIT_DELAYED_WORK(&par->dwork, hvfb_update_work);
- 
-@@ -1145,7 +1263,7 @@ static int hvfb_probe(struct hv_device *hdev,
- 
- error:
- 	fb_deferred_io_cleanup(info);
--	hvfb_putmem(info);
-+	hvfb_putmem(hdev, info);
- error2:
- 	vmbus_close(hdev->channel);
- error1:
-@@ -1175,7 +1293,7 @@ static int hvfb_remove(struct hv_device *hdev)
- 	vmbus_close(hdev->channel);
- 	hv_set_drvdata(hdev, NULL);
- 
--	hvfb_putmem(info);
-+	hvfb_putmem(hdev, info);
- 	framebuffer_release(info);
- 
- 	return 0;
--- 
-2.20.1
+SGksIEJpYmJ5Og0KDQpPbiBUaHUsIDIwMTktMTEtMjEgYXQgMDk6NTQgKzA4MDAsIEJpYmJ5IEhz
+aWVoIHdyb3RlOg0KPiBEZWZpbmUgYW4gaW5zdHJ1Y3Rpb24gc3RydWN0dXJlIGZvciBnY2UgZHJp
+dmVyIHRvIGFwcGVuZCBjb21tYW5kLg0KPiBUaGlzIHN0cnVjdHVyZSBjYW4gbWFrZSB0aGUgY2xp
+ZW50J3MgY29kZSBtb3JlIHJlYWRhYmlsaXR5Lg0KDQpFdmVuIHRob3VnaCBJIGRvIG5vdCBsaWtl
+IHBhc3Mgc3RydWN0IHBhcmFtZXRlciBieSB2YWx1ZSwgYnV0IHN0cnVjdA0KY21kcV9pbnN0cnVj
+dGlvbiBpcyBqdXN0IGEgNjQgYml0cyBpbnRlZ2VyIGFuZCB3b3VsZCBub3QgYmUgbW9kaWZpZWQg
+aW4NCmNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKCksIHNvDQoNClJldmlld2VkLWJ5OiBDSyBIdSA8
+Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8
+YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jICAgfCA3MyArKysrKysrKysrKysrKysrLS0tLS0tLS0NCj4gIGlu
+Y2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggfCAxMCArKysrDQo+ICAyIGZp
+bGVzIGNoYW5nZWQsIDU5IGluc2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVy
+cy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggYzhmYjY5Nzg3NjQ5Li4x
+MWJmY2MxNTBlYmQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRx
+LWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5j
+DQo+IEBAIC05LDEyICs5LDI0IEBADQo+ICAjaW5jbHVkZSA8bGludXgvbWFpbGJveF9jb250cm9s
+bGVyLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmg+DQo+ICAN
+Cj4gLSNkZWZpbmUgQ01EUV9BUkdfQV9XUklURV9NQVNLCTB4ZmZmZg0KPiAgI2RlZmluZSBDTURR
+X1dSSVRFX0VOQUJMRV9NQVNLCUJJVCgwKQ0KPiAgI2RlZmluZSBDTURRX0VPQ19JUlFfRU4JCUJJ
+VCgwKQ0KPiAgI2RlZmluZSBDTURRX0VPQ19DTUQJCSgodTY0KSgoQ01EUV9DT0RFX0VPQyA8PCBD
+TURRX09QX0NPREVfU0hJRlQpKSBcDQo+ICAJCQkJPDwgMzIgfCBDTURRX0VPQ19JUlFfRU4pDQo+
+ICANCj4gK3N0cnVjdCBjbWRxX2luc3RydWN0aW9uIHsNCj4gKwl1bmlvbiB7DQo+ICsJCXUzMiB2
+YWx1ZTsNCj4gKwkJdTMyIG1hc2s7DQo+ICsJfTsNCj4gKwl1bmlvbiB7DQo+ICsJCXUxNiBvZmZz
+ZXQ7DQo+ICsJCXUxNiBldmVudDsNCj4gKwl9Ow0KPiArCXU4IHN1YnN5czsNCj4gKwl1OCBvcDsN
+Cj4gK307DQo+ICsNCj4gIHN0YXRpYyB2b2lkIGNtZHFfY2xpZW50X3RpbWVvdXQoc3RydWN0IHRp
+bWVyX2xpc3QgKnQpDQo+ICB7DQo+ICAJc3RydWN0IGNtZHFfY2xpZW50ICpjbGllbnQgPSBmcm9t
+X3RpbWVyKGNsaWVudCwgdCwgdGltZXIpOw0KPiBAQCAtMTEwLDEwICsxMjIsMTAgQEAgdm9pZCBj
+bWRxX3BrdF9kZXN0cm95KHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiAgfQ0KPiAgRVhQT1JUX1NZ
+TUJPTChjbWRxX3BrdF9kZXN0cm95KTsNCj4gIA0KPiAtc3RhdGljIGludCBjbWRxX3BrdF9hcHBl
+bmRfY29tbWFuZChzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgZW51bSBjbWRxX2NvZGUgY29kZSwNCj4g
+LQkJCQkgICB1MzIgYXJnX2EsIHUzMiBhcmdfYikNCj4gK3N0YXRpYyBpbnQgY21kcV9wa3RfYXBw
+ZW5kX2NvbW1hbmQoc3RydWN0IGNtZHFfcGt0ICpwa3QsDQo+ICsJCQkJICAgc3RydWN0IGNtZHFf
+aW5zdHJ1Y3Rpb24gaW5zdCkNCj4gIHsNCj4gLQl1NjQgKmNtZF9wdHI7DQo+ICsJc3RydWN0IGNt
+ZHFfaW5zdHJ1Y3Rpb24gKmNtZF9wdHI7DQo+ICANCj4gIAlpZiAodW5saWtlbHkocGt0LT5jbWRf
+YnVmX3NpemUgKyBDTURRX0lOU1RfU0laRSA+IHBrdC0+YnVmX3NpemUpKSB7DQo+ICAJCS8qDQo+
+IEBAIC0xMjksOCArMTQxLDkgQEAgc3RhdGljIGludCBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChz
+dHJ1Y3QgY21kcV9wa3QgKnBrdCwgZW51bSBjbWRxX2NvZGUgY29kZSwNCj4gIAkJCV9fZnVuY19f
+LCAodTMyKXBrdC0+YnVmX3NpemUpOw0KPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gIAl9DQo+ICsN
+Cj4gIAljbWRfcHRyID0gcGt0LT52YV9iYXNlICsgcGt0LT5jbWRfYnVmX3NpemU7DQo+IC0JKCpj
+bWRfcHRyKSA9ICh1NjQpKChjb2RlIDw8IENNRFFfT1BfQ09ERV9TSElGVCkgfCBhcmdfYSkgPDwg
+MzIgfCBhcmdfYjsNCj4gKwkqY21kX3B0ciA9IGluc3Q7DQo+ICAJcGt0LT5jbWRfYnVmX3NpemUg
+Kz0gQ01EUV9JTlNUX1NJWkU7DQo+ICANCj4gIAlyZXR1cm4gMDsNCj4gQEAgLTEzOCwyMSArMTUx
+LDI4IEBAIHN0YXRpYyBpbnQgY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQoc3RydWN0IGNtZHFfcGt0
+ICpwa3QsIGVudW0gY21kcV9jb2RlIGNvZGUsDQo+ICANCj4gIGludCBjbWRxX3BrdF93cml0ZShz
+dHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLCB1MTYgb2Zmc2V0LCB1MzIgdmFsdWUpDQo+
+ICB7DQo+IC0JdTMyIGFyZ19hID0gKG9mZnNldCAmIENNRFFfQVJHX0FfV1JJVEVfTUFTSykgfA0K
+PiAtCQkgICAgKHN1YnN5cyA8PCBDTURRX1NVQlNZU19TSElGVCk7DQo+ICsJc3RydWN0IGNtZHFf
+aW5zdHJ1Y3Rpb24gaW5zdDsNCj4gIA0KPiAtCXJldHVybiBjbWRxX3BrdF9hcHBlbmRfY29tbWFu
+ZChwa3QsIENNRFFfQ09ERV9XUklURSwgYXJnX2EsIHZhbHVlKTsNCj4gKwlpbnN0Lm9wID0gQ01E
+UV9DT0RFX1dSSVRFOw0KPiArCWluc3QudmFsdWUgPSB2YWx1ZTsNCj4gKwlpbnN0Lm9mZnNldCA9
+IG9mZnNldDsNCj4gKwlpbnN0LnN1YnN5cyA9IHN1YnN5czsNCj4gKw0KPiArCXJldHVybiBjbWRx
+X3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChj
+bWRxX3BrdF93cml0ZSk7DQo+ICANCj4gIGludCBjbWRxX3BrdF93cml0ZV9tYXNrKHN0cnVjdCBj
+bWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICAJCQl1MTYgb2Zmc2V0LCB1MzIgdmFsdWUsIHUz
+MiBtYXNrKQ0KPiAgew0KPiAtCXUzMiBvZmZzZXRfbWFzayA9IG9mZnNldDsNCj4gKwlzdHJ1Y3Qg
+Y21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gKwl1MTYgb2Zmc2V0X21hc2sgPSBv
+ZmZzZXQ7DQo+ICAJaW50IGVycjsNCj4gIA0KPiAgCWlmIChtYXNrICE9IDB4ZmZmZmZmZmYpIHsN
+Cj4gLQkJZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBDTURRX0NPREVfTUFTSywg
+MCwgfm1hc2spOw0KPiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX01BU0s7DQo+ICsJCWluc3QubWFz
+ayA9IH5tYXNrOw0KPiArCQllcnIgPSBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3Qp
+Ow0KPiAgCQlpZiAoZXJyIDwgMCkNCj4gIAkJCXJldHVybiBlcnI7DQo+ICANCj4gQEAgLTE2Niw0
+NSArMTg2LDUwIEBAIEVYUE9SVF9TWU1CT0woY21kcV9wa3Rfd3JpdGVfbWFzayk7DQo+ICANCj4g
+IGludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBldmVudCkNCj4gIHsN
+Cj4gLQl1MzIgYXJnX2I7DQo+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9
+IH07DQo+ICANCj4gIAlpZiAoZXZlbnQgPj0gQ01EUV9NQVhfRVZFTlQpDQo+ICAJCXJldHVybiAt
+RUlOVkFMOw0KPiAgDQo+IC0JLyoNCj4gLQkgKiBXRkUgYXJnX2INCj4gLQkgKiBiaXQgMC0xMTog
+d2FpdCB2YWx1ZQ0KPiAtCSAqIGJpdCAxNTogMSAtIHdhaXQsIDAgLSBubyB3YWl0DQo+IC0JICog
+Yml0IDE2LTI3OiB1cGRhdGUgdmFsdWUNCj4gLQkgKiBiaXQgMzE6IDEgLSB1cGRhdGUsIDAgLSBu
+byB1cGRhdGUNCj4gLQkgKi8NCj4gLQlhcmdfYiA9IENNRFFfV0ZFX1VQREFURSB8IENNRFFfV0ZF
+X1dBSVQgfCBDTURRX1dGRV9XQUlUX1ZBTFVFOw0KPiArCWluc3Qub3AgPSBDTURRX0NPREVfV0ZF
+Ow0KPiArCWluc3QudmFsdWUgPSBDTURRX1dGRV9PUFRJT047DQo+ICsJaW5zdC5ldmVudCA9IGV2
+ZW50Ow0KPiAgDQo+IC0JcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgQ01EUV9D
+T0RFX1dGRSwgZXZlbnQsIGFyZ19iKTsNCj4gKwlyZXR1cm4gY21kcV9wa3RfYXBwZW5kX2NvbW1h
+bmQocGt0LCBpbnN0KTsNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3Rfd2ZlKTsNCj4g
+IA0KPiAgaW50IGNtZHFfcGt0X2NsZWFyX2V2ZW50KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYg
+ZXZlbnQpDQo+ICB7DQo+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07
+DQo+ICsNCj4gIAlpZiAoZXZlbnQgPj0gQ01EUV9NQVhfRVZFTlQpDQo+ICAJCXJldHVybiAtRUlO
+VkFMOw0KPiAgDQo+IC0JcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgQ01EUV9D
+T0RFX1dGRSwgZXZlbnQsDQo+IC0JCQkJICAgICAgIENNRFFfV0ZFX1VQREFURSk7DQo+ICsJaW5z
+dC5vcCA9IENNRFFfQ09ERV9XRkU7DQo+ICsJaW5zdC52YWx1ZSA9IENNRFFfV0ZFX1VQREFURTsN
+Cj4gKwlpbnN0LmV2ZW50ID0gZXZlbnQ7DQo+ICsNCj4gKwlyZXR1cm4gY21kcV9wa3RfYXBwZW5k
+X2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfY2xl
+YXJfZXZlbnQpOw0KPiAgDQo+ICBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBj
+bWRxX3BrdCAqcGt0KQ0KPiAgew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7
+IHswfSB9Ow0KPiAgCWludCBlcnI7DQo+ICANCj4gIAkvKiBpbnNlcnQgRU9DIGFuZCBnZW5lcmF0
+ZSBJUlEgZm9yIGVhY2ggY29tbWFuZCBpdGVyYXRpb24gKi8NCj4gLQllcnIgPSBjbWRxX3BrdF9h
+cHBlbmRfY29tbWFuZChwa3QsIENNRFFfQ09ERV9FT0MsIDAsIENNRFFfRU9DX0lSUV9FTik7DQo+
+ICsJaW5zdC5vcCA9IENNRFFfQ09ERV9FT0M7DQo+ICsJaW5zdC52YWx1ZSA9IENNRFFfRU9DX0lS
+UV9FTjsNCj4gKwllcnIgPSBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiAg
+CWlmIChlcnIgPCAwKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgDQo+ICAJLyogSlVNUCB0byBlbmQg
+Ki8NCj4gLQllcnIgPSBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIENNRFFfQ09ERV9KVU1Q
+LCAwLCBDTURRX0pVTVBfUEFTUyk7DQo+ICsJaW5zdC5vcCA9IENNRFFfQ09ERV9KVU1QOw0KPiAr
+CWluc3QudmFsdWUgPSBDTURRX0pVTVBfUEFTUzsNCj4gKwllcnIgPSBjbWRxX3BrdF9hcHBlbmRf
+Y29tbWFuZChwa3QsIGluc3QpOw0KPiAgDQo+ICAJcmV0dXJuIGVycjsNCj4gIH0NCj4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggYi9pbmNsdWRl
+L2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+IGluZGV4IGU2ZjU0ZWY2Njk4Yi4u
+Njc4NzYwNTQ4NzkxIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNt
+ZHEtbWFpbGJveC5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWls
+Ym94LmgNCj4gQEAgLTIwLDYgKzIwLDE2IEBADQo+ICAjZGVmaW5lIENNRFFfV0ZFX1dBSVQJCQlC
+SVQoMTUpDQo+ICAjZGVmaW5lIENNRFFfV0ZFX1dBSVRfVkFMVUUJCTB4MQ0KPiAgDQo+ICsvKg0K
+PiArICogV0ZFIGFyZ19iDQo+ICsgKiBiaXQgMC0xMTogd2FpdCB2YWx1ZQ0KPiArICogYml0IDE1
+OiAxIC0gd2FpdCwgMCAtIG5vIHdhaXQNCj4gKyAqIGJpdCAxNi0yNzogdXBkYXRlIHZhbHVlDQo+
+ICsgKiBiaXQgMzE6IDEgLSB1cGRhdGUsIDAgLSBubyB1cGRhdGUNCj4gKyAqLw0KPiArI2RlZmlu
+ZSBDTURRX1dGRV9PUFRJT04JCQkoQ01EUV9XRkVfVVBEQVRFIHwgQ01EUV9XRkVfV0FJVCB8IFwN
+Cj4gKwkJCQkJQ01EUV9XRkVfV0FJVF9WQUxVRSkNCj4gKw0KPiAgLyoqIGNtZHEgZXZlbnQgbWF4
+aW11bSAqLw0KPiAgI2RlZmluZSBDTURRX01BWF9FVkVOVAkJCTB4M2ZmDQo+ICANCg0K
 
