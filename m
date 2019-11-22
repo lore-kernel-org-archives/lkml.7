@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9057EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D110DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C66220718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F3E2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419189;
-	bh=xRQ0dd3wlZXcMmBrtEuNQlSzpqubTbFKog6GR1OKagk=;
+	s=default; t=1574419192;
+	bh=LHbSsgvlfIFYwVphoUzBCoXI0djOAiYN5mAvEXNqBfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dSyszT6b1tzhU46K1h2ncR4My3/Zzwr6HeT5Km7SW4v0XnnENurthcBh+/Gn+Hwb6
-	 +KzsS/wz8Vlru5BtXZjKCI0eeUoC2Xek3nl4/N9z535XQcTi5Jdh4LGGFJgVWHBzen
-	 cP/zs/i1jgPXY7sLpv2uQra4y8sJ8bgsQO9FW7BM=
+	b=l3uYvz7E48CtNsdeJBZTFSnw0fFLccWemJjyr9Fa8JAz2Ftqz0nyi/8ftQDBCL9J5
+	 IvRM2Wr4R5cdAbYbWzyoQOf4FDnJEj47ZHk6ZAJqNZ47PWdj4Rt/CfsjaFEOxde2kL
+	 fCUdg/I5IugenBg0U8aDrMDigeqNto9v9ONDUUTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfKVKjs (ORCPT
+        id S1728822AbfKVKjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:39:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:39:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbfKVKjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:39:45 -0500
+        id S1727351AbfKVKjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:39:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B1720721;
-        Fri, 22 Nov 2019 10:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349762071F;
+        Fri, 22 Nov 2019 10:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419185;
-        bh=xRQ0dd3wlZXcMmBrtEuNQlSzpqubTbFKog6GR1OKagk=;
+        s=default; t=1574419188;
+        bh=LHbSsgvlfIFYwVphoUzBCoXI0djOAiYN5mAvEXNqBfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZfpBEH6CFy/uAgeP24FnA2y4HVKxchXowjBau2ZESajK1MOPz4pM9k+FG3BRw4YpG
-         3CLkVRByfQtUjraMSjERXTBmCiKzAoz+rPU5lzo2c12fFyeGvz3OazP/b4UePEwn2z
-         Mnz1TebRipbPIk0lJh2tVaBmo0mlYpFD9vGIGYTM=
+        b=2eGVe0qQk0Sbc+nvaqlVq2C8QCsuO4E7cOMnfSzPSSAr+ChmCx73+JgtzgwqLPYp6
+         lgV3H6vEXDPB+ssxuM+fpCOVT/M1Hf46oRcUrjyBmwOm5nyX5HKu/WrvcsFeT30nVz
+         /D+HykrVBjc3eDps3YfzP5DWvKuXLl0zgkZs/x4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.9 008/222] Input: synaptics-rmi4 - destroy F54 poller workqueue when removing
-Date:   Fri, 22 Nov 2019 11:25:48 +0100
-Message-Id: <20191122100831.811622597@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        James Erwin <james.erwin@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 009/222] IB/hfi1: Ensure full Gen3 speed in a Gen4 system
+Date:   Fri, 22 Nov 2019 11:25:49 +0100
+Message-Id: <20191122100831.947611592@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,35 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: James Erwin <james.erwin@intel.com>
 
-commit ba60cf9f78f0d7c8e73c7390608f7f818ee68aa0 upstream.
+commit a9c3c4c597704b3a1a2b9bef990e7d8a881f6533 upstream.
 
-The driver forgets to destroy workqueue in remove() similarly to what is
-done when probe() fails. Add a call to destroy_workqueue() to fix it.
+If an hfi1 card is inserted in a Gen4 systems, the driver will avoid the
+gen3 speed bump and the card will operate at half speed.
 
-Since unregistration will wait for the work to finish, we do not need to
-cancel/flush the work instance in remove().
+This is because the driver avoids the gen3 speed bump when the parent bus
+speed isn't identical to gen3, 8.0GT/s.  This is not compatible with gen4
+and newer speeds.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191114023405.31477-1-hslester96@gmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fix by relaxing the test to explicitly look for the lower capability
+speeds which inherently allows for gen4 and all future speeds.
+
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Link: https://lore.kernel.org/r/20191101192059.106248.1699.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: James Erwin <james.erwin@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_f54.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hfi1/pcie.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/input/rmi4/rmi_f54.c
-+++ b/drivers/input/rmi4/rmi_f54.c
-@@ -744,6 +744,7 @@ static void rmi_f54_remove(struct rmi_fu
- 
- 	video_unregister_device(&f54->vdev);
- 	v4l2_device_unregister(&f54->v4l2);
-+	destroy_workqueue(f54->workqueue);
- }
- 
- struct rmi_function_handler rmi_f54_handler = {
+--- a/drivers/infiniband/hw/hfi1/pcie.c
++++ b/drivers/infiniband/hw/hfi1/pcie.c
+@@ -377,7 +377,9 @@ int pcie_speeds(struct hfi1_devdata *dd)
+ 	/*
+ 	 * bus->max_bus_speed is set from the bridge's linkcap Max Link Speed
+ 	 */
+-	if (parent && dd->pcidev->bus->max_bus_speed != PCIE_SPEED_8_0GT) {
++	if (parent &&
++	    (dd->pcidev->bus->max_bus_speed == PCIE_SPEED_2_5GT ||
++	     dd->pcidev->bus->max_bus_speed == PCIE_SPEED_5_0GT)) {
+ 		dd_dev_info(dd, "Parent PCIe bridge does not support Gen3\n");
+ 		dd->link_gen3_capable = 0;
+ 	}
 
 
