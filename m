@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98BF2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD632084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402275;
-	bh=M3ojh6xd7Sh422K7jc7cJuoAtbq2AUgs1fVwY82uxaM=;
+	s=default; t=1574402282;
+	bh=8m/MqRha1T/Gf1VwXx+GBM1pGru1K/qiMgwuwyeqJvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Od06ik5Pf451Ttl+Vw/xUy3xgotbfIp3Q5MrzNSDS+neiK3g9XnYIB9qm6QbGUzvv
-	 Cf/Zd/pqE0eNS2yJFo+eVk3jlDJ8NVC1qS5gyLQTwMcM+1TbVWeN6R/wXfKxLbs72a
-	 FskNEp0yxk+LuBIQ20jFpVCpfuYH2blwtqoKJX6k=
+	b=2NZf1cRsXTSyv0JQUaUhp9CN3wO/EVoYuxRjd8uNXguvqFE0P0DKgB2HryzpLpnc/
+	 ju4iw18008I9raPj0BmHRBF7PwwmC6UyEi+MlvnJg6HZ+b1IkwqA4uR0zgYucxlXki
+	 05oAURsUGdEd1G4z1M5M4vU0ikGHCPzmpHhluyiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfKVF5x (ORCPT
+        id S1729593AbfKVF6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36226 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:58:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbfKVF5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:43 -0500
+        id S1727175AbfKVF5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC6742072E;
-        Fri, 22 Nov 2019 05:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC092072D;
+        Fri, 22 Nov 2019 05:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402262;
-        bh=M3ojh6xd7Sh422K7jc7cJuoAtbq2AUgs1fVwY82uxaM=;
+        s=default; t=1574402268;
+        bh=8m/MqRha1T/Gf1VwXx+GBM1pGru1K/qiMgwuwyeqJvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C2QE73mXs52s2cO8AP91bh1tt970N23g5r2+nJUbG6swyB7qOeWQp17CEHC7hAqIP
-         QHPfdtwHV/GuMt2Mnxjov2Gq1zyCK5VJqu9wY1ocuS2lNDv5rAP4MyZDgIfELHRl26
-         UVqRrLMFvwYCYjCYDeF6iqLpMq+oyCn1OmdzeA6w=
+        b=V/UEe1KkZU/D+g38UusUEK8YofxLaXLHEWJzmcK6oyRmkUi/Y0B1rezNKm5fWidzk
+         sj7JrRnoSizYrIuzJthIpRvc9B1TlF5aNmel0z2YwSsYWmiEuOEG3DkwKTuid2RfDw
+         vd/3U/6WGLU+WVvDWJKxZFYZE0hKLwPyPLVIVLbo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     He Zhe <zhe.he@windriver.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 103/127] serial: 8250: Fix serial8250 initialization crash
-Date:   Fri, 22 Nov 2019 00:55:21 -0500
-Message-Id: <20191122055544.3299-102-sashal@kernel.org>
+Cc:     Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 108/127] net/smc: prevent races between smc_lgr_terminate() and smc_conn_free()
+Date:   Fri, 22 Nov 2019 00:55:26 -0500
+Message-Id: <20191122055544.3299-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -60,70 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Karsten Graul <kgraul@linux.ibm.com>
 
-[ Upstream commit 352c4cf40c4a7d439fa5d30aa2160f54b394da82 ]
+[ Upstream commit 77f838ace755d2f466536c44dac6c856f62cd901 ]
 
-The initialization code of interrupt backoff work might reference NULL
-pointer and cause the following crash, if no port was found.
+To prevent races between smc_lgr_terminate() and smc_conn_free() add an
+extra check of the lgr field before accessing it, and cancel a delayed
+free_work when a new smc connection is created.
+This fixes the problem that free_work cleared the lgr variable but
+smc_lgr_terminate() or smc_conn_free() still access it in parallel.
 
-[   10.017727] CPU 0 Unable to handle kernel paging request at virtual address 000001b0, epc == 807088e0, ra == 8070863c
----- snip ----
-[   11.704470] [<807088e0>] serial8250_register_8250_port+0x318/0x4ac
-[   11.747251] [<80708d74>] serial8250_probe+0x148/0x1c0
-[   11.789301] [<80728450>] platform_drv_probe+0x40/0x94
-[   11.830515] [<807264f8>] really_probe+0xf8/0x318
-[   11.870876] [<80726b7c>] __driver_attach+0x110/0x12c
-[   11.910960] [<80724374>] bus_for_each_dev+0x78/0xcc
-[   11.951134] [<80725958>] bus_add_driver+0x200/0x234
-[   11.989756] [<807273d8>] driver_register+0x84/0x148
-[   12.029832] [<80d72f84>] serial8250_init+0x138/0x198
-[   12.070447] [<80100e6c>] do_one_initcall+0x5c/0x2a0
-[   12.110104] [<80d3a208>] kernel_init_freeable+0x370/0x484
-[   12.150722] [<80a49420>] kernel_init+0x10/0xf8
-[   12.191517] [<8010756c>] ret_from_kernel_thread+0x14/0x1c
-
-This patch makes sure the initialization code can be reached only if a port
-is found.
-
-Fixes: 6d7f677a2afa ("serial: 8250: Rate limit serial port rx interrupts during input overruns")
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Reviewed-by: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_core.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ net/smc/smc_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index ceeea4b159c4b..c698ebab6d3bd 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -1077,15 +1077,16 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index f04a037dc9677..0de788fa43e95 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -103,6 +103,8 @@ static void smc_lgr_unregister_conn(struct smc_connection *conn)
+ 	struct smc_link_group *lgr = conn->lgr;
+ 	int reduced = 0;
  
- 			ret = 0;
++	if (!lgr)
++		return;
+ 	write_lock_bh(&lgr->conns_lock);
+ 	if (conn->alert_token_local) {
+ 		reduced = 1;
+@@ -431,6 +433,8 @@ int smc_conn_create(struct smc_sock *smc, __be32 peer_in_addr,
+ 			local_contact = SMC_REUSE_CONTACT;
+ 			conn->lgr = lgr;
+ 			smc_lgr_register_conn(conn); /* add smc conn to lgr */
++			if (delayed_work_pending(&lgr->free_work))
++				cancel_delayed_work(&lgr->free_work);
+ 			write_unlock_bh(&lgr->conns_lock);
+ 			break;
  		}
--	}
- 
--	/* Initialise interrupt backoff work if required */
--	if (up->overrun_backoff_time_ms > 0) {
--		uart->overrun_backoff_time_ms = up->overrun_backoff_time_ms;
--		INIT_DELAYED_WORK(&uart->overrun_backoff,
--				  serial_8250_overrun_backoff_work);
--	} else {
--		uart->overrun_backoff_time_ms = 0;
-+		/* Initialise interrupt backoff work if required */
-+		if (up->overrun_backoff_time_ms > 0) {
-+			uart->overrun_backoff_time_ms =
-+				up->overrun_backoff_time_ms;
-+			INIT_DELAYED_WORK(&uart->overrun_backoff,
-+					serial_8250_overrun_backoff_work);
-+		} else {
-+			uart->overrun_backoff_time_ms = 0;
-+		}
- 	}
- 
- 	mutex_unlock(&serial_mutex);
 -- 
 2.20.1
 
