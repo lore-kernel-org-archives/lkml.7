@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC993C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CE4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812FC20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965AF2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404222;
-	bh=mlWxuW4QaOp/nmQEFoM+4MUVtpTnW56Eknmzh6voCTg=;
+	s=default; t=1574404227;
+	bh=o2FPNobaFbaYlgZPd/1WGtshSJiIG2vt/ILAAxZwP+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RZGss66uGC8a8JfMCXizLiKB8OKcnNnZ6LuPnqNUsZ4atr0DcrBwEzg4iXiGHANRZ
-	 qF70dkfCqaZORC+ExMea6bB0UJzIt6hPnQFUVmx58vU+RDJXzqCiZfO/xTVhvnzdpE
-	 rL2jJDp5qmWFZiJYlNexgwyLEBK660o/IL7Y+XHE=
+	b=dVG5COUEjR7RfBiGRdWO9V8fzSJN6uVwe6SAJau28GiYxzONQqWqdTa+C4ybwxEkF
+	 CnVFXS8SLJTSlP4Mb+9AC6l3TuzyaIqHEcVFjwQzScS75E1J4JJlCDBIbPTayb086F
+	 jTLVKPDJ8YkzBSDSkGPJ0ROgmqfPG5IJCgtSFryc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfKVGaV (ORCPT
+        id S1728072AbfKVGa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:30:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53764 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:30:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfKVFth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:37 -0500
+        id S1727121AbfKVFtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26ED820708;
-        Fri, 22 Nov 2019 05:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E5212070A;
+        Fri, 22 Nov 2019 05:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401777;
-        bh=mlWxuW4QaOp/nmQEFoM+4MUVtpTnW56Eknmzh6voCTg=;
+        s=default; t=1574401775;
+        bh=o2FPNobaFbaYlgZPd/1WGtshSJiIG2vt/ILAAxZwP+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSCQ3B79JsvINc2vN9+H2j9/AS5/RPq0eF/O7NkSc+dDORSzAkmnjY8fH0wAYhdjW
-         hZ1GpbmBMFFhEGLMNex6pG1RPpOAU3+ItnHZ2DNvdQr6lrX1768xMOhv8SIUKVuuMT
-         djrsNucR0mI5NAx1CyEKtyqZuUG+OrrituQMU/8k=
+        b=UUcaC+r1H+zFzzzjIeP3ZuEoPb/3P9KkWx58Rs71okZXJdv0b+i7q81dqzSZMIEXG
+         dolwR9xrJoa2stTkm9drCpf1VaNYKharO7ojSIDBl3Ko4dzWTk3Kx35jobtT8aSG1Q
+         oINXlqk+2yZ3xyYkb3AKEwPP8U4seRed9jxFCcPs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
+Cc:     Steve Capper <steve.capper@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 026/219] arm64: smp: Handle errors reported by the firmware
-Date:   Fri, 22 Nov 2019 00:45:58 -0500
-Message-Id: <20191122054911.1750-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 025/219] arm64: mm: Prevent mismatched 52-bit VA support
+Date:   Fri, 22 Nov 2019 00:45:57 -0500
+Message-Id: <20191122054911.1750-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -62,37 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+From: Steve Capper <steve.capper@arm.com>
 
-[ Upstream commit f357b3a7e17af7736d67d8267edc1ed3d1dd9391 ]
+[ Upstream commit a96a33b1ca57dbea4285893dedf290aeb8eb090b ]
 
-The __cpu_up() routine ignores the errors reported by the firmware
-for a CPU bringup operation and looks for the error status set by the
-booting CPU. If the CPU never entered the kernel, we could end up
-in assuming stale error status, which otherwise would have been
-set/cleared appropriately by the booting CPU.
+For cases where there is a mismatch in ARMv8.2-LVA support between CPUs
+we have to be careful in allowing secondary CPUs to boot if 52-bit
+virtual addresses have already been enabled on the boot CPU.
 
-Reported-by: Steve Capper <steve.capper@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+This patch adds code to the secondary startup path. If the boot CPU has
+enabled 52-bit VAs then ID_AA64MMFR2_EL1 is checked to see if the
+secondary can also enable 52-bit support. If not, the secondary is
+prevented from booting and an error message is displayed indicating why.
+
+Technically this patch could be implemented using the cpufeature code
+when considering 52-bit userspace support. However, we employ low level
+checks here as the cpufeature code won't be able to run if we have
+mismatched 52-bit kernel va support.
+
+Signed-off-by: Steve Capper <steve.capper@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/head.S | 26 ++++++++++++++++++++++++++
+ arch/arm64/kernel/smp.c  |  5 +++++
+ 2 files changed, 31 insertions(+)
 
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 77ca59598c8b1..06058fba5f86c 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -703,6 +703,7 @@ secondary_startup:
+ 	/*
+ 	 * Common entry point for secondary CPUs.
+ 	 */
++	bl	__cpu_secondary_check52bitva
+ 	bl	__cpu_setup			// initialise processor
+ 	bl	__enable_mmu
+ 	ldr	x8, =__secondary_switched
+@@ -779,6 +780,31 @@ ENTRY(__enable_mmu)
+ 	ret
+ ENDPROC(__enable_mmu)
+ 
++ENTRY(__cpu_secondary_check52bitva)
++#ifdef CONFIG_ARM64_52BIT_VA
++	ldr_l	x0, vabits_user
++	cmp	x0, #52
++	b.ne	2f
++
++	mrs_s	x0, SYS_ID_AA64MMFR2_EL1
++	and	x0, x0, #(0xf << ID_AA64MMFR2_LVA_SHIFT)
++	cbnz	x0, 2f
++
++	adr_l	x0, va52mismatch
++	mov	w1, #1
++	strb	w1, [x0]
++	dmb	sy
++	dc	ivac, x0	// Invalidate potentially stale cache line
++
++	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x0, x1
++1:	wfe
++	wfi
++	b	1b
++
++#endif
++2:	ret
++ENDPROC(__cpu_secondary_check52bitva)
++
+ __no_granule_support:
+ 	/* Indicate that this CPU can't boot and is stuck in the kernel */
+ 	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x1, x2
 diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 2c31d65bc541b..52aa51f6310b0 100644
+index 25fcd22a4bb24..2c31d65bc541b 100644
 --- a/arch/arm64/kernel/smp.c
 +++ b/arch/arm64/kernel/smp.c
-@@ -146,6 +146,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+@@ -108,6 +108,7 @@ static int boot_secondary(unsigned int cpu, struct task_struct *idle)
+ }
+ 
+ static DECLARE_COMPLETION(cpu_running);
++bool va52mismatch __ro_after_init;
+ 
+ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ {
+@@ -137,6 +138,10 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 
+ 		if (!cpu_online(cpu)) {
+ 			pr_crit("CPU%u: failed to come online\n", cpu);
++
++			if (IS_ENABLED(CONFIG_ARM64_52BIT_VA) && va52mismatch)
++				pr_crit("CPU%u: does not support 52-bit VAs\n", cpu);
++
+ 			ret = -EIO;
  		}
  	} else {
- 		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
-+		return ret;
- 	}
- 
- 	secondary_data.task = NULL;
 -- 
 2.20.1
 
