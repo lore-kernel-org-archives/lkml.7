@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37417C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F53C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037E32068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7E52068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402925;
-	bh=sz0y5j2fxJx1Pkcj5/eMAgrHZ2wvg0pw0CiCrYSmcjI=;
+	s=default; t=1574402933;
+	bh=bn7fpoGbsr5yYxne9+e9O//N48LFYLbM1CQiyWwEfes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VseUoaqvHU+cxYrC277vn+ftylD3M1oa9xZqsN+ele+K1pH/z9yDjaJTD3y2jwhcX
-	 YHX1zqo95dLj8/mOpUxT0OsXObgT1XYektTbXtvCfZU0rpticvlOsJ967BO40E34W+
-	 +c2GzrtaWs0f+Usa7U2usvuaXy6BQg9UTs5bl8tY=
+	b=fAxGMu88tg9NowDKuD6lha+th1FQGTQevMU0aT9UWe/kpnDR3tpj1GKANQmM7oWiT
+	 eGv1uuVTlGO//yf1UzWarpDUHFZKDmyV+BbL6jvTI3Qbj8qs3SxBuFkdazO4IlrPgo
+	 lsYclWOCuFr31EnxSJGJtJSV8x2RBGyHnfqj/z4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbfKVGIn (ORCPT
+        id S1727208AbfKVGIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:08:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39842 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:08:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbfKVGBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:01:38 -0500
+        id S1728945AbfKVGBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1785A2068F;
-        Fri, 22 Nov 2019 06:01:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE8DD2070B;
+        Fri, 22 Nov 2019 06:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402497;
-        bh=sz0y5j2fxJx1Pkcj5/eMAgrHZ2wvg0pw0CiCrYSmcjI=;
+        s=default; t=1574402495;
+        bh=bn7fpoGbsr5yYxne9+e9O//N48LFYLbM1CQiyWwEfes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rtgjyX48zAqjzGO6+NxSm6bhh0oeXnl1py2OUEtY0nU2jGEOITReXjNKjfFx8LQLb
-         Ns2RJ1xiAUpOacO8/VMiYaqvN/CjZwVvQnFQCO446j2G1w1s/yPaYFFqZnPbAdH191
-         jidc31WqowC/kL65X4xfjbvrJmeicR6ylDlkQ2/s=
+        b=SmIfM/4BYSV6ivc/n8G7zKhe+pz3B/8YyABlnChdG/3LGtOtAx1LIsBd8MVMIUZ/S
+         aahLMdYCu+f9oKNcuTM6uJw0r0Rc0ZhmIg/ATdRq4ODB/OwqxmlFVHL+xedHmotmaS
+         lZqN9VJFsQQocIJEOUozY6+zowLWUXfaWqEMOc9U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Meyer <thomas@m3y3r.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/91] PM / AVS: SmartReflex: NULL check before some freeing functions is not needed
-Date:   Fri, 22 Nov 2019 01:00:06 -0500
-Message-Id: <20191122060129.4239-7-sashal@kernel.org>
+Cc:     Steve Capper <steve.capper@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 06/91] arm64: mm: Prevent mismatched 52-bit VA support
+Date:   Fri, 22 Nov 2019 01:00:04 -0500
+Message-Id: <20191122060129.4239-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -60,34 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Steve Capper <steve.capper@arm.com>
 
-[ Upstream commit 14d338a857f05f894ba3badd9e6d3039c68b8180 ]
+[ Upstream commit a96a33b1ca57dbea4285893dedf290aeb8eb090b ]
 
-NULL check before some freeing functions is not needed.
+For cases where there is a mismatch in ARMv8.2-LVA support between CPUs
+we have to be careful in allowing secondary CPUs to boot if 52-bit
+virtual addresses have already been enabled on the boot CPU.
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This patch adds code to the secondary startup path. If the boot CPU has
+enabled 52-bit VAs then ID_AA64MMFR2_EL1 is checked to see if the
+secondary can also enable 52-bit support. If not, the secondary is
+prevented from booting and an error message is displayed indicating why.
+
+Technically this patch could be implemented using the cpufeature code
+when considering 52-bit userspace support. However, we employ low level
+checks here as the cpufeature code won't be able to run if we have
+mismatched 52-bit kernel va support.
+
+Signed-off-by: Steve Capper <steve.capper@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/avs/smartreflex.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/kernel/head.S | 26 ++++++++++++++++++++++++++
+ arch/arm64/kernel/smp.c  |  5 +++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/drivers/power/avs/smartreflex.c b/drivers/power/avs/smartreflex.c
-index fa0f19b975a6a..bb7b817cca599 100644
---- a/drivers/power/avs/smartreflex.c
-+++ b/drivers/power/avs/smartreflex.c
-@@ -994,8 +994,7 @@ static int omap_sr_remove(struct platform_device *pdev)
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index db6ff1944c412..3b10b93959607 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -686,6 +686,7 @@ secondary_startup:
+ 	/*
+ 	 * Common entry point for secondary CPUs.
+ 	 */
++	bl	__cpu_secondary_check52bitva
+ 	bl	__cpu_setup			// initialise processor
+ 	bl	__enable_mmu
+ 	ldr	x8, =__secondary_switched
+@@ -759,6 +760,31 @@ ENTRY(__enable_mmu)
+ 	ret
+ ENDPROC(__enable_mmu)
  
- 	if (sr_info->autocomp_active)
- 		sr_stop_vddautocomp(sr_info);
--	if (sr_info->dbg_dir)
--		debugfs_remove_recursive(sr_info->dbg_dir);
-+	debugfs_remove_recursive(sr_info->dbg_dir);
++ENTRY(__cpu_secondary_check52bitva)
++#ifdef CONFIG_ARM64_52BIT_VA
++	ldr_l	x0, vabits_user
++	cmp	x0, #52
++	b.ne	2f
++
++	mrs_s	x0, SYS_ID_AA64MMFR2_EL1
++	and	x0, x0, #(0xf << ID_AA64MMFR2_LVA_SHIFT)
++	cbnz	x0, 2f
++
++	adr_l	x0, va52mismatch
++	mov	w1, #1
++	strb	w1, [x0]
++	dmb	sy
++	dc	ivac, x0	// Invalidate potentially stale cache line
++
++	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x0, x1
++1:	wfe
++	wfi
++	b	1b
++
++#endif
++2:	ret
++ENDPROC(__cpu_secondary_check52bitva)
++
+ __no_granule_support:
+ 	/* Indicate that this CPU can't boot and is stuck in the kernel */
+ 	update_early_cpu_boot_status CPU_STUCK_IN_KERNEL, x1, x2
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index cfd33f18f4378..f0c41524b052f 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -136,6 +136,7 @@ static int boot_secondary(unsigned int cpu, struct task_struct *idle)
+ }
  
- 	pm_runtime_disable(&pdev->dev);
- 	list_del(&sr_info->node);
+ static DECLARE_COMPLETION(cpu_running);
++bool va52mismatch __ro_after_init;
+ 
+ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ {
+@@ -164,6 +165,10 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 
+ 		if (!cpu_online(cpu)) {
+ 			pr_crit("CPU%u: failed to come online\n", cpu);
++
++			if (IS_ENABLED(CONFIG_ARM64_52BIT_VA) && va52mismatch)
++				pr_crit("CPU%u: does not support 52-bit VAs\n", cpu);
++
+ 			ret = -EIO;
+ 		}
+ 	} else {
 -- 
 2.20.1
 
