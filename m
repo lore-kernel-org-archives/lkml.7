@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D04AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941DDC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E623A2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D07420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421648;
-	bh=1cb9MWqtHS9XKZYwGFko2caVYbppdnjIrOxi/cdSZbo=;
+	s=default; t=1574421656;
+	bh=p3wOtXFwCxxL6GayYEYYWLwTqQWP8j50iQYNkNIRsMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FzKjOr5eYkJmeFK47u1dn2aOpq36Z2BD6uOmB8vM108tIJKNEZvMnGIR0UcsHYyuT
-	 4sjFxegfMmAzEhp0kd0OvPrrjjTkDLP9aNvOBRKpVt58dS3moviHDtU5r+MK1zKxYr
-	 Wg5avVp3VaxF3rWfT4bPeZ4D7I21JwRA53zAjBwk=
+	b=t8UNwJS1lUei4FoJmcfJa2wISTQIwaSbn72dFbEo7QJ3hJ15OKPjFd4yCVVz+dAYx
+	 gyXK6tTt9Lobh76wsilXpbrLJW53ng+CN4yHjlcEEQVcHsVSd55enrVUfuef1b/jBZ
+	 7h21LA7HU0b5tw/RBnlZBwxqicIfwKJINsIX/so0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfKVKpp (ORCPT
+        id S1728967AbfKVLUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:20:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbfKVKpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:42 -0500
+        id S1728762AbfKVKpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D6C20718;
-        Fri, 22 Nov 2019 10:45:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037672071C;
+        Fri, 22 Nov 2019 10:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419541;
-        bh=1cb9MWqtHS9XKZYwGFko2caVYbppdnjIrOxi/cdSZbo=;
+        s=default; t=1574419544;
+        bh=p3wOtXFwCxxL6GayYEYYWLwTqQWP8j50iQYNkNIRsMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AlT73KSCUU0uQ+DVZKeUGHMHdAL1++rZ17VLt5agtA+RrvkWedBmosFBu/x4n+nK3
-         tCAAPpiZX3nm5/erbY7zPUWtDHfeBhj7RjfibUrGS62HuFr98o7C3/arv9teQ2MNtd
-         qadOrjxmzkqnF/L6gS0uDwbp/Sa6vKAcfxvqdseo=
+        b=MyTkSkUt3WeJUd/uBcqZzAqoNDN+YgQVGqkdzqIodZzIEJz7S7UDYxvdHUquOTmdh
+         EX02bH0IP7cpv254jACVAE2LMRQvY+ffAd0jd6nW8mc1ifFSymn1TKChF0LeiX8/rh
+         ajKk6x0C+GLv7iOynYJkgCcI3hfnOPnpZA9RnV0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 4.9 146/222] memfd: Use radix_tree_deref_slot_protected to avoid the warning.
-Date:   Fri, 22 Nov 2019 11:28:06 +0100
-Message-Id: <20191122100913.339562558@linuxfoundation.org>
+        stable@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Subject: [PATCH 4.9 147/222] slcan: Fix memory leak in error path
+Date:   Fri, 22 Nov 2019 11:28:07 +0100
+Message-Id: <20191122100913.404506796@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,35 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-The commit 3ce6b467b9b2 ("memfd: Fix locking when tagging pins")
-introduces the following warning messages.
+commit ed50e1600b4483c049ce76e6bd3b665a6a9300ed upstream.
 
-*WARNING: suspicious RCU usage in memfd_wait_for_pins*
+This patch is fixing memory leak reported by Syzkaller:
 
-It is because we still use radix_tree_deref_slot without read_rcu_lock.
-We should use radix_tree_deref_slot_protected instead in the case.
+BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
+  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
+  hex dump (first 32 bytes):
+    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
+    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
+    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
+    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
+    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
+    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
+    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
+    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
+    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
+    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
+    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<000000008ea75434>] 0xffffffffffffffff
 
-Cc: stable@vger.kernel.org
-Fixes: 3ce6b467b9b2 ("memfd: Fix locking when tagging pins")
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- mm/shmem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2464,7 +2464,7 @@ static void shmem_tag_pins(struct addres
+---
+ drivers/net/can/slcan.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -613,6 +613,7 @@ err_free_chan:
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	free_netdev(sl->dev);
  
- 	spin_lock_irq(&mapping->tree_lock);
- 	radix_tree_for_each_slot(slot, &mapping->page_tree, &iter, start) {
--		page = radix_tree_deref_slot(slot);
-+		page = radix_tree_deref_slot_protected(slot, &mapping->tree_lock);
- 		if (!page || radix_tree_exception(page)) {
- 			if (radix_tree_deref_retry(page)) {
- 				slot = radix_tree_iter_retry(&iter);
+ err_exit:
+ 	rtnl_unlock();
 
 
