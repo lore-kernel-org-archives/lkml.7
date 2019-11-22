@@ -2,126 +2,149 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B18C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F63C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF422070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400673;
-	bh=J41T5dDACX6mMdDwcHJ66tJM39TIQDMBCyI3Q1j6VLM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eurxMtp7/0IvBt8MOufoc1ZfasxSjYrL0/CTDJRjQCqaa2rm9PPO6s6Va7j1J9DEp
-	 SYduSBoe/j/HxUxaqLUN+eEoWCdCBQUxUqzkYMU0if6D8NNImaOi4rhxmd8xhI+MVO
-	 wgXHFsaBS8L7P/cnqZdzlFCdgnDpI0srh2rOmPyI=
+	by mail.kernel.org (Postfix) with ESMTP id A05B72068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pwj48DzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfKVFbM (ORCPT
+        id S1726573AbfKVFhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:31:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbfKVFaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 22 Nov 2019 00:37:07 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36169 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726364AbfKVFhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:37:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574401026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eKkONTtWVn2eOzE/ZmOcrElOUkXfPmqcjl279Q5P6lw=;
+        b=Pwj48DzQ9qQ/UmCuOYaEw8tRNYu4WoZELV/8Z5S17SuXYsftabY+jxq/jey/a383PIFG0x
+        ttTpxnOkQmySKNgtC/grCBzeMU970ib1aGy2VXXbIcf4lCLmIKbQT0Uzk9I6iEcZuwAbKL
+        YPDsmvmlzmpWaEk5FJmjTW6muWKhwoQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171-T_UOHI-YNQGQjE4f7guipw-1; Fri, 22 Nov 2019 00:37:02 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B3720707;
-        Fri, 22 Nov 2019 05:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400608;
-        bh=J41T5dDACX6mMdDwcHJ66tJM39TIQDMBCyI3Q1j6VLM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5akh81urYHiucIH11o9+9BARL4xn3RQtZl3XnbyMAATcjlEGPBFCCiLhEG/JZnFH
-         yeqvwWVOOCx2VjEWFBcFBds4vxkWI4teo4KcLVAH4Cc9X+B7wMYYCVmjkoH6qMmcV0
-         ghrwiYEuFhQkx236KMq9QLu9CxTikqruWMxH4O/A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 011/219] ARM: dts: imx35: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:26:33 -0500
-Message-Id: <20191122053001.752-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
-References: <20191122053001.752-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D69E11800D41;
+        Fri, 22 Nov 2019 05:37:00 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B6730100EA05;
+        Fri, 22 Nov 2019 05:37:00 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 895A218095FF;
+        Fri, 22 Nov 2019 05:37:00 +0000 (UTC)
+Date:   Fri, 22 Nov 2019 00:37:00 -0500 (EST)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
+        Keith Busch <keith.busch@intel.com>
+Message-ID: <838611538.35971353.1574401020319.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAPcyv4gsQXY5C5URF2vrTaD-0Q_CJ+ib3GVb1VFZAO+1Gdau2w@mail.gmail.com>
+References: <20191120092831.6198-1-pagupta@redhat.com> <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com> <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com> <CAPcyv4hJ6gHX=NYz-CoXFSrN93HUT+Xh+DP+QAjzqgGmmghmGA@mail.gmail.com> <1617854972.35808055.1574323227395.JavaMail.zimbra@redhat.com> <CAPcyv4haUOM92uzCBfVyrANxnNHKucivq053MFBmGOL3vqMgwQ@mail.gmail.com> <560894997.35969622.1574397521533.JavaMail.zimbra@redhat.com> <CAPcyv4gsQXY5C5URF2vrTaD-0Q_CJ+ib3GVb1VFZAO+1Gdau2w@mail.gmail.com>
+Subject: Re: [PATCH] virtio pmem: fix async flush ordering
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.116.214, 10.4.195.30]
+Thread-Topic: virtio pmem: fix async flush ordering
+Thread-Index: yct1AVHQcm+1LDSyVVEj51GYlhrF5A==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: T_UOHI-YNQGQjE4f7guipw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 8721610a6c2b8c42fc57819d8c3bfbb9166f95a3 ]
+> > > > > >
+> > > > > > I added that and was about to push this out, but what about the
+> > > > > > fact
+> > > > > > that now the guest will synchronously wait for flushing to occu=
+r.
+> > > > > > The
+> > > > > > goal of the child bio was to allow that to be an I/O wait with
+> > > > > > overlapping I/O, or at least not blocking the submission thread=
+.
+> > > > > > Does
+> > > > > > the block layer synchronously wait for PREFLUSH requests? If no=
+t I
+> > > > > > think a synchronous wait is going to be a significant performan=
+ce
+> > > > > > regression. Are there any numbers to accompany this change?
+> > > > >
+> > > > > Why not just swap the parent child relationship in the PREFLUSH c=
+ase?
+> > > >
+> > > > I we are already inside parent bio "make_request" function and we
+> > > > create
+> > > > child
+> > > > bio. How we exactly will swap the parent/child relationship for
+> > > > PREFLUSH
+> > > > case?
+> > > >
+> > > > Child bio is queued after parent bio completes.
+> > >
+> > > Sorry, I didn't quite mean with bio_split, but issuing another reques=
+t
+> > > in front of the real bio. See md_flush_request() for inspiration.
+> >
+> > o.k. Thank you. Will try to post patch today to be considered for 5.4.
+> >
+>=20
+> I think it is too late for v5.4-final, but we can get it in the
+> -stable queue. Let's take the time to do it right and get some testing
+> on it.
 
-Boards based on imx35 have duplicate memory nodes:
+Sure.
 
-- One coming from the board dts file: memory@
+Just sharing probable patch for early feedback, if I am doing it correctly?
+I will test it thoroughly.
 
-- One coming from the imx35.dtsi file.
+Thanks,
+Pankaj
 
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
+=3D=3D=3D=3D=3D=3D=3D=3D
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi | 1 +
- arch/arm/boot/dts/imx35-pdk.dts              | 1 +
- arch/arm/boot/dts/imx35.dtsi                 | 2 --
- 3 files changed, 2 insertions(+), 2 deletions(-)
+diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+index 10351d5b49fa..c683e0e2515c 100644
+--- a/drivers/nvdimm/nd_virtio.c
++++ b/drivers/nvdimm/nd_virtio.c
+@@ -112,6 +112,12 @@ int async_pmem_flush(struct nd_region *nd_region, stru=
+ct bio *bio)
+                bio_copy_dev(child, bio);
+                child->bi_opf =3D REQ_PREFLUSH;
+                child->bi_iter.bi_sector =3D -1;
++
++               if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
++                       struct request_queue *q =3D bio->bi_disk->queue;
++                       q->make_request_fn(q, child);
++                       return 0;
++               }
+                bio_chain(child, bio);
+                submit_bio(child);
+                return 0;
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-index ba39d938f2891..5f8a47a9fcd40 100644
---- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-+++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-@@ -18,6 +18,7 @@
- 	compatible = "eukrea,cpuimx35", "fsl,imx35";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x8000000>; /* 128M */
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx35-pdk.dts b/arch/arm/boot/dts/imx35-pdk.dts
-index df613e88fd2c1..ddce0a844758b 100644
---- a/arch/arm/boot/dts/imx35-pdk.dts
-+++ b/arch/arm/boot/dts/imx35-pdk.dts
-@@ -11,6 +11,7 @@
- 	compatible = "fsl,imx35-pdk", "fsl,imx35";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x8000000>,
- 		      <0x90000000 0x8000000>;
- 	};
-diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-index 1c50b785cad47..b36b97b655dda 100644
---- a/arch/arm/boot/dts/imx35.dtsi
-+++ b/arch/arm/boot/dts/imx35.dtsi
-@@ -13,10 +13,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &fec;
--- 
-2.20.1
+=20
 
