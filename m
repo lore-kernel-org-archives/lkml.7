@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22428C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAB9C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4E220658
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4772070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452347;
-	bh=F4g/7JM361b4jueC7R7Pu21X1iG8ZDQQgUl8g+L65+k=;
+	s=default; t=1574452350;
+	bh=zS1CtbHCBF4bK+RK/MZJvOJkzdCeTQNOmmZaInhmvGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjMh/5aV7eV/5+SzrdPyWLqqvDDVdXuwQbjMGD25u1shBzSXI3G+BlmE8iZfI3qIo
-	 VWSxngshF0NGZxxp7B254VeYReQq8aEHVVnleSVLDL7ssd7E0z5LEpL5UQFgXMgMUo
-	 yWJq5qPbb/mJlhxO4esT6EsJhxtJ+8lLX9f3+zIk=
+	b=i73aiXqoGFsoz3TQr91uzyj6ub1JCdrtrk4zK1o90kw4Dr7Q+7ywBk3jeLaekqRH1
+	 3iM6ItA9nb3JPXjleJy4rlIwOeyq0OTMm426pypi9TX5WRVxew3vxf2ZXOAFc47Xzt
+	 hytjTW+DPZLnx6HvMEHWC7A9+nFLLmoBMDctTI50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfKVTtu (ORCPT
+        id S1728044AbfKVTw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49924 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727575AbfKVTtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:47 -0500
+        id S1727606AbfKVTtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A986720726;
-        Fri, 22 Nov 2019 19:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC4C2075B;
+        Fri, 22 Nov 2019 19:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452186;
-        bh=F4g/7JM361b4jueC7R7Pu21X1iG8ZDQQgUl8g+L65+k=;
+        s=default; t=1574452190;
+        bh=zS1CtbHCBF4bK+RK/MZJvOJkzdCeTQNOmmZaInhmvGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YSy63xyEVU6GYywQSu4Scv93gAgLrRmFSfRvcMmzWA6QN/YU/d7sl6Hfb23z0wC+s
-         e2h1hvL4eEgozgJwmZ5MGSOgXpZmqYs5XyoDbPkBQg0Az3I3bjtk46xAFEYHto+HJv
-         n/MYs5eY/cVS3KJ1+NuANFgO+eWpjOFzPanLSbMQ=
+        b=lDs+YMTf1y/gF4vcovX9Gx1KUcpHgX0mNrSxf1Ir8GeWcbCZXM0RNPdoyqTuszUke
+         TjkIdTXx72NBwLIYwmVMDm+kSDOOtLUxW/N1uu4tRsLgP4bHBbZkU8NqHOFXOwfjKm
+         uuHqPG6eHZx9S/YB9g1PyVnp3lzdME+plOLc3IP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/21] net: usb: qmi_wwan: add support for Foxconn T77W968 LTE modules
-Date:   Fri, 22 Nov 2019 14:49:22 -0500
-Message-Id: <20191122194931.24732-12-sashal@kernel.org>
+Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 15/21] slcan: Fix memory leak in error path
+Date:   Fri, 22 Nov 2019 14:49:25 -0500
+Message-Id: <20191122194931.24732-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194931.24732-1-sashal@kernel.org>
 References: <20191122194931.24732-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,48 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit 802753cb0b141cf5170ab97fe7e79f5ca10d06b0 ]
+[ Upstream commit ed50e1600b4483c049ce76e6bd3b665a6a9300ed ]
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those.
+This patch is fixing memory leak reported by Syzkaller:
 
-The QMI interface is exposed in USB configuration #1:
+BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
+  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
+  hex dump (first 32 bytes):
+    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
+    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
+    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
+    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
+    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
+    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
+    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
+    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
+    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
+    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
+    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<000000008ea75434>] 0xffffffffffffffff
 
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/can/slcan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 8ed538295d090..4a984b76a60ec 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1295,6 +1295,8 @@ static const struct usb_device_id products[] = {
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
- 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b5, 0)},	/* Foxconn T77W968 LTE with eSIM support*/
+diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+index 5d067c1b987f8..49427f44dc5ba 100644
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -613,6 +613,7 @@ static int slcan_open(struct tty_struct *tty)
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	free_netdev(sl->dev);
  
- 	/* 4. Gobi 1000 devices */
- 	{QMI_GOBI1K_DEVICE(0x05c6, 0x9212)},	/* Acer Gobi Modem Device */
+ err_exit:
+ 	rtnl_unlock();
 -- 
 2.20.1
 
