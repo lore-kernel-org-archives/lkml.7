@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6C4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8471720715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D14220715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419891;
-	bh=ENLaFmlq2o6BrANfDwjWLVdeKtxLU22mhH9zgrr8jqQ=;
+	s=default; t=1574419896;
+	bh=lFxxBxjXHU5mvLq0/vlgvYPguApXQkNTD64lNsNZdvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uK6jUEIWuKV5XQDP6uE8UCAiGP1MiwTStGxjv13oGTochnhAc8yQt3C9kcK+k3zfm
-	 iEnvorXpgXIe6R6tdJ/e9tQUXY92xsVtz/1Rz4rhpZI//e50o/dIJsPiq0qyD8UlGG
-	 0ph75ZPt/6AQKKybHHW3RayifJJMTvR1EB+pVe88=
+	b=YcT1rmGWM6c9Jk84PWxrqcho6EIEFKsbxINHQX1R65EQEDvylqVb/nMNLT4y5PpeQ
+	 IEocu3Pv0NB+tKir/NaB0lECU0cwMtlkie3bWQXM/j0LWG2zfo1eYFg4UFm1L+E0Wk
+	 skeTUGcMFoX1vhtk3EGFKHv5SdjKqh4n6pym4kgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfKVKv3 (ORCPT
+        id S1729676AbfKVKvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbfKVKv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:26 -0500
+        id S1729978AbfKVKvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521A120715;
-        Fri, 22 Nov 2019 10:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 237D52070E;
+        Fri, 22 Nov 2019 10:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419885;
-        bh=ENLaFmlq2o6BrANfDwjWLVdeKtxLU22mhH9zgrr8jqQ=;
+        s=default; t=1574419891;
+        bh=lFxxBxjXHU5mvLq0/vlgvYPguApXQkNTD64lNsNZdvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FaHRu4+hPohoMsemSKRgD30XuKZ19k1XUKz1fQLmzsvOh7Ntpw1N2+dxrz3bGNvFe
-         gPWX/YZeXhwUkzxoFIuBnRDrK2ZiDlnf2gRGs6JiWitnpUbbc5NcWw+lxgeXazSqHA
-         tlzlPRwsv691kzeP1YHMAKhSOyarGHjONVuwVp9Q=
+        b=wnuizhxxlxzS8fQfSk8ciiZefuBtWVG1Zqou18DB2riGy9yiIBq5kSlr2Ast3GKyx
+         G5WjWwLPFt/YRYnpJTQgrtWLeebJyMGh51bbiaw4/ZmWJPXN0/SuTjcWg/4EI5IqSq
+         o6urh0V3JVqAi0JR/JsDPC3ytGvFX3LqgqiLxgBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 043/122] ARM: dts: at91: at91sam9x5cm: fix addressable nand flash size
-Date:   Fri, 22 Nov 2019 11:28:16 +0100
-Message-Id: <20191122100755.167362534@linuxfoundation.org>
+Subject: [PATCH 4.14 045/122] PM / hibernate: Check the success of generating md5 digest before hibernation
+Date:   Fri, 22 Nov 2019 11:28:18 +0100
+Message-Id: <20191122100755.423093841@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,33 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Chen Yu <yu.c.chen@intel.com>
 
-[ Upstream commit 6f270d88a0c4a11725afd8fd2001ae408733afbf ]
+[ Upstream commit 749fa17093ff67b31dea864531a3698b6a95c26c ]
 
-at91sam9x5cm comes with a 2Gb NAND flash. Fix the rootfs size to
-match this limit.
+Currently if get_e820_md5() fails, then it will hibernate nevertheless.
+Actually the error code should be propagated to upper caller so that
+the hibernation could be aware of the result and terminates the process
+if md5 digest fails.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9x5cm.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/power/hibernate_64.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index bdeaa0b64a5bf..0a673a7082be1 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -88,7 +88,7 @@
+diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
+index 9c80966c80bae..692a179b1ba32 100644
+--- a/arch/x86/power/hibernate_64.c
++++ b/arch/x86/power/hibernate_64.c
+@@ -250,9 +250,9 @@ static int get_e820_md5(struct e820_table *table, void *buf)
+ 	return ret;
+ }
  
- 						rootfs@800000 {
- 							label = "rootfs";
--							reg = <0x800000 0x1f800000>;
-+							reg = <0x800000 0x0f800000>;
- 						};
- 					};
- 				};
+-static void hibernation_e820_save(void *buf)
++static int hibernation_e820_save(void *buf)
+ {
+-	get_e820_md5(e820_table_firmware, buf);
++	return get_e820_md5(e820_table_firmware, buf);
+ }
+ 
+ static bool hibernation_e820_mismatch(void *buf)
+@@ -272,8 +272,9 @@ static bool hibernation_e820_mismatch(void *buf)
+ 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
+ }
+ #else
+-static void hibernation_e820_save(void *buf)
++static int hibernation_e820_save(void *buf)
+ {
++	return 0;
+ }
+ 
+ static bool hibernation_e820_mismatch(void *buf)
+@@ -318,9 +319,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
+ 
+ 	rdr->magic = RESTORE_MAGIC;
+ 
+-	hibernation_e820_save(rdr->e820_digest);
+-
+-	return 0;
++	return hibernation_e820_save(rdr->e820_digest);
+ }
+ 
+ /**
 -- 
 2.20.1
 
