@@ -2,108 +2,92 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6EEC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5384F20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="JwHoJJc9"
+	by mail.kernel.org (Postfix) with ESMTP id BCFBF20726
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKVIxz (ORCPT
+        id S1727072AbfKVIzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:53:55 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39147 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfKVIxz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:53:55 -0500
-Received: by mail-io1-f67.google.com with SMTP id k1so7071472ioj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 00:53:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=if8y5NFlyeeHTVh2ye2YOtmqiEB2pxeks7g0W56+3es=;
-        b=JwHoJJc9ZdDEo2RfCLoHKhgPn33o0v94BCrI2ZMbALFuFVtOHM1a+qalcjViTJfFQT
-         wGcdzwIMTaDsA1t3vMYt//MtNtE3uURk5xRuo2xlStXwYIn3bJMXAwFvyYkjueSS4CD1
-         zgF9/i0saIRA64YKR74eTiK0B+nP1OrKdDmxAi1y+jpz1jorKEHmjys8nLyksACQpDai
-         8LBpdj5FaasX8V3ouc2ihovhAIJJN4RANMDxnmpnA+3eu9lF9Y3J6q9rpdt0xwzYKDBI
-         LFz+oY+uQ9v12b95F5t2v5ukYMy77BpLoqRIcmZkF3V7HZ7hw+WQN1KiyW/+7EMtM9MJ
-         U0YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=if8y5NFlyeeHTVh2ye2YOtmqiEB2pxeks7g0W56+3es=;
-        b=ibR9cO6IRMXPNXVbXAzOJMxxS80RIuGxsHe6sMnlXH4F4ccW14lzSliuYv2rVOEas2
-         hA8orPme0Acwd67uboFx2y0p04xzK6FVhJlOGGptQfHQuNtFgNeCX/LjhOJAZA2TOFt+
-         NTwdPZaDGN+hMArOQ2bHjZ2F3wTejQtojp0ff7b/hOufTIlGJviGQCXfJTnbCTxixaom
-         8iGfp9A1Aq5wT+DAgVjBEh96MO4AgZmW5mrpOXukdz3yk4Nh2reBHiTz0eJ5Bszx4fUZ
-         4moPtmOyql/1vhSuaQXmOTAYi55yeAyyGsfdi9bi4Be+XXdtPBnKvefPGMUXneMlz4j0
-         o47Q==
-X-Gm-Message-State: APjAAAVvtZtIIme+3JU1+Gk9JtWqNlkurMd8MJXnarQcqYMJWvq3wXfs
-        qKXqT4jSLp7GUd9cXnRVDVkp3AjbZDeuHf4gKHRO+A==
-X-Google-Smtp-Source: APXvYqxDK3EHEOhKT9JqqXJcN1RlH2l246qXTmKF4IrMpMVi2D/sVuuclWbE+i1Pf3xycShYZT9chaj6eIn92yKanrg=
-X-Received: by 2002:a5d:9c15:: with SMTP id 21mr5135825ioe.298.1574412834417;
- Fri, 22 Nov 2019 00:53:54 -0800 (PST)
+        Fri, 22 Nov 2019 03:55:35 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:45594 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfKVIzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 03:55:35 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iY4ij-00006J-Er; Fri, 22 Nov 2019 16:55:17 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iY4ie-00050h-Ik; Fri, 22 Nov 2019 16:55:12 +0800
+Date:   Fri, 22 Nov 2019 16:55:12 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jamie Iles <jamie@jamieiles.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: picoxcell: add missed tasklet_kill
+Message-ID: <20191122085512.m75tjfa3valqfgyv@gondor.apana.org.au>
+References: <20191115023116.7070-1-hslester96@gmail.com>
 MIME-Version: 1.0
-References: <20191120135031.270708-1-colin.king@canonical.com>
-In-Reply-To: <20191120135031.270708-1-colin.king@canonical.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Fri, 22 Nov 2019 09:53:43 +0100
-Message-ID: <CAMGffE=dHSO8jW4+iVe7xe5n6esdEb0D9V61XvFr3=a-MAMJJw@mail.gmail.com>
-Subject: Re: [PATCH][next] scsi: pm80xx: fix logic to break out of loop when
- register value is 2 or 3
-To:     Colin King <colin.king@canonical.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Deepak Ukey <Deepak.Ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115023116.7070-1-hslester96@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 2:50 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The condition (reg_val != 2) || (reg_val != 3) will always be true because
-> reg_val cannot be equal to two different values at the same time. Fix this
-> by replacing the || operator with && so that the loop will loop if reg_val
-> is not a 2 and not a 3 as was originally intended.
->
-> Addresses-Coverity: ("Constant expression result")
-> Fixes: 50dc2f221455 ("scsi: pm80xx: Modified the logic to collect fatal dump")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-looks fine. thanks Colin.
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> ---
->  drivers/scsi/pm8001/pm80xx_hwi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-> index 19601138e889..d41908b23760 100644
-> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
-> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-> @@ -348,7 +348,7 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
->                         do {
->                                 reg_val = pm8001_mr32(fatal_table_address,
->                                         MPI_FATAL_EDUMP_TABLE_STATUS);
-> -                       } while (((reg_val != 2) || (reg_val != 3)) &&
-> +                       } while (((reg_val != 2) && (reg_val != 3)) &&
->                                         time_before(jiffies, start));
->
->                         if (reg_val < 2) {
-> --
-> 2.24.0
->
+On Fri, Nov 15, 2019 at 10:31:16AM +0800, Chuhong Yuan wrote:
+> This driver forgets to kill tasklet when probe fails and remove.
+> Add the calls to fix it.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+
+Yes this driver does look buggy but I think your patch isn't
+enough.
+
+> diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
+> index 3cbefb41b099..8d7c6bb2876e 100644
+> --- a/drivers/crypto/picoxcell_crypto.c
+> +++ b/drivers/crypto/picoxcell_crypto.c
+> @@ -1755,6 +1755,7 @@ static int spacc_probe(struct platform_device *pdev)
+>  	if (!ret)
+>  		return 0;
+>  
+> +	tasklet_kill(&engine->complete);
+
+The tasklet is schedule by the IRQ handler so you should not kill
+it until the IRQ handler has been unregistered.
+
+This driver is also buggy because it registers the IRQ handler
+before initialising the tasklet.  You must always be prepared for
+spurious IRQs.  IOW, as soon as you register the IRQ handler you
+must be prepared for it to be called.
+
+> @@ -1771,6 +1772,7 @@ static int spacc_remove(struct platform_device *pdev)
+>  	struct spacc_alg *alg, *next;
+>  	struct spacc_engine *engine = platform_get_drvdata(pdev);
+>  
+> +	tasklet_kill(&engine->complete);
+
+Ditto.
+
+However, the IRQ handler is registered through devm which makes it
+hard to kill the tasklet after unregistering it.  We should probably
+convert it to a normal request_irq so we can control how it's
+unregistered.
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
