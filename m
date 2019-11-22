@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0141C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6474FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8801920706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC9E20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420453;
-	bh=XRvnylUpGzfPdPpjbHa5Bu+gFEj6YjRPwqZH4SaSa+Y=;
+	s=default; t=1574420459;
+	bh=VZ69EaVF1a9oQj7zBLNDMh1JGIjNLhQeYaadd78Ayrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCPVUNJKJPjruy3HEZdpauLJVpIHbLBaWW/0yfFuUFMgjwjXZTEwrUwksabKs3z2h
-	 zGzBO+RH8adb8KYLG3wULTi7sWFdZqaU7m2KYpbYtFrn1Hbv+QR1+K6W9K75wEABiG
-	 lOtFZj6HZb37Mn4NiI5gfaDjLcYoQeqegPD+cgTM=
+	b=Q2WpRgLxx3H38Fz1NZavReVTaltpltP1GaqQMjkg6KGLyigiWcqOe8c8j09QhgCqK
+	 C/OY93/SoynZXsMazdoxEdm6qRasEkf8sbr9pOutLFDL93UuXQVi4HDwlkU8dLeBtu
+	 gdSCSxatVPCsGGoF8gYCUkvPPShdD4/5zo+qzgHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbfKVLAw (ORCPT
+        id S1731105AbfKVLA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:00:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53388 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:00:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730440AbfKVLAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:00:51 -0500
+        id S1728932AbfKVLAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:00:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C75EB20679;
-        Fri, 22 Nov 2019 11:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167FB20706;
+        Fri, 22 Nov 2019 11:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420451;
-        bh=XRvnylUpGzfPdPpjbHa5Bu+gFEj6YjRPwqZH4SaSa+Y=;
+        s=default; t=1574420448;
+        bh=VZ69EaVF1a9oQj7zBLNDMh1JGIjNLhQeYaadd78Ayrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=quF1jZ8gPGmnLr3ofgliwNiaqIhQ1tjZcs7u+12hD8BxlQqbLGm2Sm4UM9WSx/fC3
-         6uXw4bdhhq682RxaZcADLPh+cQrMgj84/lFfXqM+IT97jINWZkFbbWDE1myzRwV0dD
-         /LBO/K4FMU6GufN+/ICLKfdwYd/nQ6VPodNLibHo=
+        b=VY+kL1bJ1xMrX1BxAFg1bgftH1UfQO6+j5jQeDgUcus52es/lSEQPPTFWgbUpSGTc
+         gGqHGgAdDvh7Xr5aITT/Ca5VNlygFgJkgMpd5fEcEgrlSnQ9aC56UhPGcqzP4tSrLF
+         wWu1KWSK+Kg+5PLWcJ8FomtiWjqylY8e+tys3QN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 110/220] cpu/SMT: State SMT is disabled even with nosmt and without "=force"
-Date:   Fri, 22 Nov 2019 11:27:55 +0100
-Message-Id: <20191122100920.676724471@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 109/220] mtd: physmap_of: Release resources on error
+Date:   Fri, 22 Nov 2019 11:27:54 +0100
+Message-Id: <20191122100920.607987616@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,39 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
-[ Upstream commit d0e7d14455d41163126afecd0fcce935463cc512 ]
+[ Upstream commit ef0de747f7ad179c7698a5b0e28db05f18ecbf57 ]
 
-When booting with "nosmt=force" a message is issued into dmesg to
-confirm that SMT has been force-disabled but such a message is not
-issued when only "nosmt" is on the kernel command line.
+During probe, if there was an error the memory region and the memory
+map were not properly released.This can lead a system unusable if
+deferred probe is in use.
 
-Fix that.
+Replace mem_request and map with devm_ioremap_resource
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20181004172227.10094-1-bp@alien8.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/maps/physmap_of_core.c | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 9bb57ce57d98d..8d6b8b5493f9f 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -375,6 +375,7 @@ void __init cpu_smt_disable(bool force)
- 		pr_info("SMT: Force disabled\n");
- 		cpu_smt_control = CPU_SMT_FORCE_DISABLED;
- 	} else {
-+		pr_info("SMT: disabled\n");
- 		cpu_smt_control = CPU_SMT_DISABLED;
+diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
+index 4129535b8e46f..ece605d78c215 100644
+--- a/drivers/mtd/maps/physmap_of_core.c
++++ b/drivers/mtd/maps/physmap_of_core.c
+@@ -31,7 +31,6 @@
+ struct of_flash_list {
+ 	struct mtd_info *mtd;
+ 	struct map_info map;
+-	struct resource *res;
+ };
+ 
+ struct of_flash {
+@@ -56,18 +55,10 @@ static int of_flash_remove(struct platform_device *dev)
+ 			mtd_concat_destroy(info->cmtd);
  	}
+ 
+-	for (i = 0; i < info->list_size; i++) {
++	for (i = 0; i < info->list_size; i++)
+ 		if (info->list[i].mtd)
+ 			map_destroy(info->list[i].mtd);
+ 
+-		if (info->list[i].map.virt)
+-			iounmap(info->list[i].map.virt);
+-
+-		if (info->list[i].res) {
+-			release_resource(info->list[i].res);
+-			kfree(info->list[i].res);
+-		}
+-	}
+ 	return 0;
  }
+ 
+@@ -215,10 +206,11 @@ static int of_flash_probe(struct platform_device *dev)
+ 
+ 		err = -EBUSY;
+ 		res_size = resource_size(&res);
+-		info->list[i].res = request_mem_region(res.start, res_size,
+-						       dev_name(&dev->dev));
+-		if (!info->list[i].res)
++		info->list[i].map.virt = devm_ioremap_resource(&dev->dev, &res);
++		if (IS_ERR(info->list[i].map.virt)) {
++			err = PTR_ERR(info->list[i].map.virt);
+ 			goto err_out;
++		}
+ 
+ 		err = -ENXIO;
+ 		width = of_get_property(dp, "bank-width", NULL);
+@@ -246,15 +238,6 @@ static int of_flash_probe(struct platform_device *dev)
+ 		if (err)
+ 			goto err_out;
+ 
+-		err = -ENOMEM;
+-		info->list[i].map.virt = ioremap(info->list[i].map.phys,
+-						 info->list[i].map.size);
+-		if (!info->list[i].map.virt) {
+-			dev_err(&dev->dev, "Failed to ioremap() flash"
+-				" region\n");
+-			goto err_out;
+-		}
+-
+ 		simple_map_init(&info->list[i].map);
+ 
+ 		/*
 -- 
 2.20.1
 
