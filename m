@@ -2,312 +2,249 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2E2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB75C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD702071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF402071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="aR9QcJAt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nxoz37wT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfKVPLI (ORCPT
+        id S1726948AbfKVPOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:11:08 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25885 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfKVPLH (ORCPT
+        Fri, 22 Nov 2019 10:14:32 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55134 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfKVPOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:11:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574435431; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=F/UeNzZZIxxbeqSsXkX8t5pKeG3cpx0L+XjbMfJnBgZbQ0X6r/JUHpHaRRXIooYiVjvKEpzxt+HfO36TufGdPAykdaKQmlLE1kYYnID0XnHeDB75u3mdSgsK+tAbbyD45j1BHFDvJnjlInF3AXQm6cJM0UUsCCZZXHAqivi8k+k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574435431; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=nESsLvhzaQb1NGJ+1u9ZSjHrT1AthJvXPz55nH0Q2OQ=; 
-        b=aJE+kn42jl78ZHNnp5Mh5bQFKArdLGpbNuJ/+fmazUCvg7wDXLaAKOyXJ0whg/2X3dWaG3YDbrVjGKTKDVzF1NeV6f+LyS5kvpiIvpMf3s8puXFnScucrhwj/3fhF/HnsaHPS0NmB+rsNmIddYnzQgCDuMuH0DYlVDfM1aaQnZU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=tOpBGigrJUdJPA+iI6mAC3HsCgDZ4QsCnHz8akkwg7bmEyvKymB+ODIPaZVzYvnoBjVXYF3ZYv9P
-    wdEbe1MiWy2aVuSJQRl04ncv/kKmD2vS4lY/NeJwGsja9hGBmrtG  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574435431;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=nESsLvhzaQb1NGJ+1u9ZSjHrT1AthJvXPz55nH0Q2OQ=;
-        b=aR9QcJAtBZsmDoGuOOWS7WczN7aUJhhmQNvboAGIoKAc7X7ZFzGAcSKNJofMpglP
-        vUxZHDjro57ylyXE37QS7ov3KfuIxNk2CFLyT1PQWa9giTmbO1EoXf19IB62fDdoevS
-        kJez+dmFYQAjzY/jn/+7wCmCIhnOI+iPbGfES91w=
-Received: from [192.168.88.130] (171.221.113.177 [171.221.113.177]) by mx.zohomail.com
-        with SMTPS id 1574435431336248.96638470349205; Fri, 22 Nov 2019 07:10:31 -0800 (PST)
-Subject: Re: [PATCH 1/4] MIPS: Ingenic: initial X1000 support.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
- <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
- <1574433409.3.0@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DD7FA57.7070209@zoho.com>
-Date:   Fri, 22 Nov 2019 23:10:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Fri, 22 Nov 2019 10:14:31 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAMFEMoe002803;
+        Fri, 22 Nov 2019 09:14:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574435662;
+        bh=LEoKzP+gjwdd+jJNdlnzot4AMyZh5+QDRZw7mWkYVlw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Nxoz37wTLG2Kc65jwGRBK6zLymqsD3Xq+Ex/iBMd6FRlaArNNbRMscdA1+fUNZC5S
+         HQ3GHtB4d7kg9VL0Jjvpir9/GFTbvsATEv93WtK8ehC2tD6pZ7zOuPaJcm1CdWRld5
+         sV7LJM2IPIfsMyZDFM9N+gzuXdAk84NvX1/afb58=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAMFEMr8099775
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Nov 2019 09:14:22 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 22
+ Nov 2019 09:14:21 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 22 Nov 2019 09:14:21 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAMFEJJD069844;
+        Fri, 22 Nov 2019 09:14:19 -0600
+Subject: Re: [RFC 2/2] gpiolib: Support for (output only) shared GPIO line
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
+ <20191120133409.9217-3-peter.ujfalusi@ti.com>
+ <CACRpkdYt5P=GNc3EgHb-ry9fxMbXfpZd4FC=tuLqonNJKUM2wg@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <18d7bc91-2fd8-fe33-bda6-b3a200d280d0@ti.com>
+Date:   Fri, 22 Nov 2019 17:14:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1574433409.3.0@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+In-Reply-To: <CACRpkdYt5P=GNc3EgHb-ry9fxMbXfpZd4FC=tuLqonNJKUM2wg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
 
-On 2019=E5=B9=B411=E6=9C=8822=E6=97=A5 22:36, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le ven., nov. 22, 2019 at 21:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
->> This is left unselectable in Kconfig until a X1000 based board is
->> added in a later commit.
+
+On 22/11/2019 14.22, Linus Walleij wrote:
+> On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> 
+>> This patch adds basic support for handling shared GPIO lines in the core.
+>> The line must be configured with a child node in DT.
+>> Based on the configuration the core will use different strategy to manage
+>> the shared line:
+>> refcounted low: Keep the line low as long as there is at least one low
+>>                 request is registered
+>> refcounted high: Keep the line high as long as there is at least one high
+>>                 request is registered
+>> pass through: all requests are allowed to go through without refcounting.
 >>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>  arch/mips/boot/dts/ingenic/x1000.dtsi | 161=20
->> ++++++++++++++++++++++++++++++++++
->>  arch/mips/jz4740/Kconfig              |   6 ++
->>  arch/mips/jz4740/time.c               |   4 +-
->>  3 files changed, 170 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+>> The pass through mode is equivalent to how currently the
+>> GPIOD_FLAGS_BIT_NONEXCLUSIVE is handled.
 >>
->> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
->> b/arch/mips/boot/dts/ingenic/x1000.dtsi
->> new file mode 100644
->> index 0000000..b8658a6
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
->> @@ -0,0 +1,161 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +#include <dt-bindings/clock/x1000-cgu.h>
->> +
->> +/ {
->> +    #address-cells =3D <1>;
->> +    #size-cells =3D <1>;
->> +    compatible =3D "ingenic,x1000", "ingenic,x1000e";
->> +
->> +    cpuintc: interrupt-controller {
->> +        #address-cells =3D <0>;
->> +        #interrupt-cells =3D <1>;
->> +        interrupt-controller;
->> +        compatible =3D "mti,cpu-interrupt-controller";
->> +    };
->> +
->> +    intc: interrupt-controller@10001000 {
->> +        compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
->> +        reg =3D <0x10001000 0x50>;
->> +
->> +        interrupt-controller;
->> +        #interrupt-cells =3D <1>;
->> +
->> +        interrupt-parent =3D <&cpuintc>;
->> +        interrupts =3D <2>;
->> +    };
->> +
->> +    exclk: ext {
->> +        compatible =3D "fixed-clock";
->> +        #clock-cells =3D <0>;
->> +    };
->> +
->> +    rtclk: rtc {
->> +        compatible =3D "fixed-clock";
->> +        #clock-cells =3D <0>;
->> +        clock-frequency =3D <32768>;
->> +    };
->> +
->> +    cgu: x1000-cgu@10000000 {
->> +        compatible =3D "ingenic,x1000-cgu";
->> +        reg =3D <0x10000000 0x100>;
->> +
->> +        clocks =3D <&exclk>, <&rtclk>;
->> +        clock-names =3D "ext", "rtc";
->> +
->> +        #clock-cells =3D <1>;
->> +    };
->> +
->> +    apb {
->> +        compatible =3D "simple-bus";
->> +        #address-cells =3D <1>;
->> +        #size-cells =3D <1>;
->> +        ranges =3D <>;
->> +
->> +        uart0: serial@10030000 {
->> +            compatible =3D "ingenic,x1000-uart";
->> +            reg =3D <0x10030000 0x100>;
->> +
->> +            interrupt-parent =3D <&intc>;
->> +            interrupts =3D <51>;
->> +
->> +            clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
->> +            clock-names =3D "baud", "module";
->> +
->> +            status =3D "disabled";
->> +        };
->> +
->> +        uart1: serial@10031000 {
->> +            compatible =3D "ingenic,x1000-uart";
->> +            reg =3D <0x10031000 0x100>;
->> +
->> +            interrupt-parent =3D <&intc>;
->> +            interrupts =3D <50>;
->> +
->> +            clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
->> +            clock-names =3D "baud", "module";
->> +
->> +            status =3D "disabled";
->> +        };
->> +
->> +        uart2: serial@10032000 {
->> +            compatible =3D "ingenic,x1000-uart";
->> +            reg =3D <0x10032000 0x100>;
->> +
->> +            interrupt-parent =3D <&intc>;
->> +            interrupts =3D <49>;
->> +
->> +            clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
->> +            clock-names =3D "baud", "module";
->> +
->> +            status =3D "disabled";
->> +        };
->> +
->> +        pinctrl: pin-controller@10010000 {
->> +            compatible =3D "ingenic,x1000-pinctrl";
->> +            reg =3D <0x10010000 0x800>;
->> +
->> +            #address-cells =3D <1>;
->> +            #size-cells =3D <0>;
->> +
->> +            gpa: gpio@0 {
->> +                compatible =3D "ingenic,x1000-gpio";
->> +                reg =3D <0>;
->> +
->> +                gpio-controller;
->> +                gpio-ranges =3D <&pinctrl 0 0 32>;
->> +                #gpio-cells =3D <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells =3D <2>;
->> +
->> +                interrupt-parent =3D <&intc>;
->> +                interrupts =3D <17>;
->> +            };
->> +
->> +            gpb: gpio@1 {
->> +                compatible =3D "ingenic,x1000-gpio";
->> +                reg =3D <1>;
->> +
->> +                gpio-controller;
->> +                gpio-ranges =3D <&pinctrl 0 32 32>;
->> +                #gpio-cells =3D <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells =3D <2>;
->> +
->> +                interrupt-parent =3D <&intc>;
->> +                interrupts =3D <16>;
->> +            };
->> +
->> +            gpc: gpio@2 {
->> +                compatible =3D "ingenic,x1000-gpio";
->> +                reg =3D <2>;
->> +
->> +                gpio-controller;
->> +                gpio-ranges =3D <&pinctrl 0 64 32>;
->> +                #gpio-cells =3D <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells =3D <2>;
->> +
->> +                interrupt-parent =3D <&intc>;
->> +                interrupts =3D <15>;
->> +            };
->> +
->> +            gpd: gpio@3 {
->> +                compatible =3D "ingenic,x1000-gpio";
->> +                reg =3D <3>;
->> +
->> +                gpio-controller;
->> +                gpio-ranges =3D <&pinctrl 0 96 32>;
->> +                #gpio-cells =3D <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells =3D <2>;
->> +
->> +                interrupt-parent =3D <&intc>;
->> +                interrupts =3D <14>;
->> +            };
->> +        };
->> +    };
->> +};
->> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
->> index 4dd0c44..6b96844 100644
->> --- a/arch/mips/jz4740/Kconfig
->> +++ b/arch/mips/jz4740/Kconfig
->> @@ -33,3 +33,9 @@ config MACH_JZ4780
->>      select MIPS_CPU_SCACHE
->>      select SYS_HAS_CPU_MIPS32_R2
->>      select SYS_SUPPORTS_HIGHMEM
->> +
->> +config MACH_X1000
->> +    bool
->> +    select MIPS_CPU_SCACHE
->> +    select SYS_HAS_CPU_MIPS32_R2
->> +    select SYS_SUPPORTS_HIGHMEM
->> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
->> index cb768e5..3af6538 100644
->> --- a/arch/mips/jz4740/time.c
->> +++ b/arch/mips/jz4740/time.c
->> @@ -101,7 +101,9 @@ static struct clock_event_device=20
->> jz4740_clockevent =3D {
->>  #ifdef CONFIG_MACH_JZ4740
->>      .irq =3D JZ4740_IRQ_TCU0,
->>  #endif
->> -#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
->> +#if defined(CONFIG_MACH_JZ4770) || \
->> +    defined(CONFIG_MACH_JZ4780) || \
->> +    defined(CONFIG_MACH_X1000)
->
-> That code was removed in the TCU patchset that was merged in time for=20
-> 5.4-rc1.
-> Please rebase your patchset on top mips-next.
->
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> This is a good start! Some ideas on how I'd like this to develop.
 
-Thank you for your reminder, I will do it in v2.
+Thanks!
 
-Thanks and best regards=EF=BC=81
+> 
+>>  drivers/gpio/gpiolib-of.c |  28 ++++++--
+>>  drivers/gpio/gpiolib.c    | 132 +++++++++++++++++++++++++++++++++++---
+> 
+> Please put this API under its own Kconfig option
+> and in its own file in
+> drivers/gpio/gpiolib-refcounted.c
+> local header in
+> drivers/gpio/gpiolib-refcounted.h
+> only built in if the appropriate Kconfig is selected.
 
-> Cheers,
-> -Paul
->
->
+This patch is not really an API, but extension to the current one so
+that clients does not need to be aware of the shared use.
 
+> Consumer header in
+> include/linux/gpio/reference-counted.h
+> And add external driver API to this last file.
 
+would it be better to have
+include/linux/gpio/consumer-refcounted.h
 
+> 
+>> --- a/drivers/gpio/gpiolib-of.c
+> 
+> No commenting on this because as pointed out in the binding
+> patch I want this done by simply detecting the same GPIO
+> being referenced by several <&gpio N> phandles.
+
+Would you scan all pins for each gpio-chip during boot time or scan only
+when a gpio is requested and it is not already requested (so it is shared)?
+
+>> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+>> index ca9bc1e4803c..0eec0857e3a8 100644
+>> --- a/drivers/gpio/gpiolib.h
+>> +++ b/drivers/gpio/gpiolib.h
+>> @@ -111,11 +111,18 @@ struct gpio_desc {
+>>  #define FLAG_PULL_UP    13     /* GPIO has pull up enabled */
+>>  #define FLAG_PULL_DOWN  14     /* GPIO has pull down enabled */
+>>  #define FLAG_BIAS_DISABLE    15        /* GPIO has pull disabled */
+>> +#define FLAG_IS_SHARED 16      /* GPIO is shared */
+> 
+> This is a good way of flagging that this is a refcounted GPIO
+> I would call it FLAG_IS_REFERENCE_COUNTED as it is
+> more precise to what it means.
+
+As I said before, I think this refcounting is not going to work nicely
+when we have actually shared gpio.
+
+>> +#define FLAG_REFCOUNT_LOW 17   /* Shared GPIO is refcounted for raw low */
+>> +#define FLAG_REFCOUNT_HIGH 18  /* Shared GPIO is refcounted for raw high */
+> 
+> Do not put this here, keep it in the local refcounted GPIO
+> struct gpio_refcount_desc.
+
+OK.
+
+>>         /* Connection label */
+>>         const char              *label;
+>>         /* Name of the GPIO */
+>>         const char              *name;
+>> +       /* Number of users of a shared GPIO */
+>> +       int                     shared_users;
+>> +       /* Reference counter for shared GPIO (low or high level) */
+>> +       int                     level_refcount;
+> 
+> We can't expand this struct for everyone on the planet like this.
+> 
+> In the local header
+> 
+> drivers/gpio/gpiolib-refcount.h create something like:
+> 
+> struct gpio_refcount_desc {
+>     struct gpio_desc *gd;
+>     int shared_users;
+>     int level_refcount;
+> };
+
+So. If we give this to multiple users then how different GPIO_ACTIVE_*
+would be handled? What flag would be used for gd?
+How do we know which level that needs to be preserved?
+
+struct gpio_refcount_desc *gpiod_refcounted_get(struct device *dev,
+					const char *con_id,
+					enum gpiod_flags flags,
+					bool i_care_for_asserted_state);
+
+Would take care of that, but we will still have the issue coming from
+the global refcounting.
+
+Hrm, actually we might not. If we use the level_refcount to count for
+high for example, then we would never decrement below 0 (as I do in this
+patch) then things might be balanced.
+No, they are not:
+
+We want high refcount for the gpio.
+Driver1 probes, asks for gpio and it asks it to be low.
+Driver1 sets the gpio to high as it is enabled.
+Driver2 probes, asks for the gpio and it asks it to be low.
+Device1 also got reset.
+Driver2 is not enabling the gpio as it is not needing it
+Driver1 bugs out on access to chip.
+
+> This should be the opaque cookie returned to consumers of this new
+> refcounted API.
+> 
+> It defines the reference counted API as separate and optional from
+> the non-reference counted API, also using its own API.
+> 
+> The only effect on the core
+> gpiolib will be the single flag in struct gpio_desc; and some
+> calls into the shared code with stubs if the support for systems
+> that do not enable the reference counting API.
+
+One thing which might work, but it might be a longer shot:
+If there is a chance that the driver is used in shared gpio case, the
+driver needs to use the new API. I would not call it refcounted, but
+perhaps 'managed'?
+
+When the first driver requests the gpio, then we would allocate a
+'master' managed descriptor, similar to "struct gpio_refcount_desc" but
+with list_head and probably something else as well (lock/mutex, whatever
+we need). Get the gpio for it, mark it as shared.
+Allocate a 'client' managed struct which we add to the list and give it
+back to the driver requesting the gpio line.
+
+Likely the 'master' struct needs to be in a global list as well to be
+able to find the correct one when someone else is requesting the same
+gpio, which is already managed.
+SO we might need to list_heads in there, one for the global 'masters'
+list and one for it's 'clients' list.
+
+From here it is kind of simple as when a client driver asks for a level,
+we will change the 'client' node's state the the level and then ask the
+'master' to check all of it's 'clients' current state and decide if the
+real GPIO needs to be changed and to what level.
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
