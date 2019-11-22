@@ -2,221 +2,163 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ED2C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E862C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E9A2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96CC2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCmcaWEO"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TjtQBA2i";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OtGxYLHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfKVAWI (ORCPT
+        id S1726676AbfKVAW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 19:22:08 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60968 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726265AbfKVAWI (ORCPT
+        Thu, 21 Nov 2019 19:22:29 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:20866 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726541AbfKVAW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 19:22:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574382125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=rUekpHztE4Y/AJCnx5fkeLUBunhkT4upfB7DGt7EVwQ=;
-        b=fCmcaWEOdY9WjtjbdbD5tNTvwKPuFT///7QPItfehuaGA4DxihS58J4FsrmcmOdjDR4Bea
-        tjRcn1b8A6m7g++/LdmGjrEvvsTHVKw9Sl3pehINWZA3CBlc+UWZAxmTUDRuEa2dFvVrLG
-        HWaVxuNwkVe7bM1QKHdvtgLycnS+upY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-a-_4YcC6P-e6hdOTQK3F-g-1; Thu, 21 Nov 2019 19:22:04 -0500
-Received: by mail-wr1-f69.google.com with SMTP id a3so2966829wrn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 16:22:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W1fJRPx8jNVd2/thMPiixkjKvF9zObui3jPum3g5eVQ=;
-        b=FQbnwMLcBEeu7rrEzev62h7UadJPRXETF0anY/2ZdLRUamhTpz7OkZPclW42Uk6a1w
-         cFDVdhV2LDZ7QIsMdavFY/XcK/qrTzgkGplGe1065Tmi0Q+1GE6UapbU7iUngQ4uTNUQ
-         bAWIOdt6wzzoySzoj88ZGvEkDh0u0XEjRF2V4fq22DfGDvF35O9wkHxQR+0VwVRbw42v
-         rrHxy6Mj+/eZjWuRLsygkQQEpVVDL6gwGpk4DbcO82Rm0jyf5SRwo2ARaqP9aM/o61IL
-         DGuhMASDMNQ1lBiikEdnlOeF9Z5u3vAh8D6awr1VIJJ8Joi0z/hkuqhR/F05QJMZ4ERg
-         LlaQ==
-X-Gm-Message-State: APjAAAUe/gOTXsdF/VgUe2xS+R5fco9o4RGqOKCaVupkbxcLSSjhYiUM
-        s3omY32cqbBUDbuiTk9xJ4v73kH6oFgvvcAmeraqenf4y2C6sKTnQIOKMH5lnbSyIPic3OIvfi0
-        fCjNZkiUqEREMsQl8LKSWutS5
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr14748010wra.246.1574382123125;
-        Thu, 21 Nov 2019 16:22:03 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwoJAmffZuZMuES1MgzeSD7DVWMT78Ozvsm2ZLIe1GjyavVRSTTjvnluR6Q46fXQRM4NmNd1A==
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr14747987wra.246.1574382122838;
-        Thu, 21 Nov 2019 16:22:02 -0800 (PST)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:f836:f331:d633:a9f0])
-        by smtp.gmail.com with ESMTPSA id d16sm3510565wrg.27.2019.11.21.16.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 16:22:01 -0800 (PST)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH v5] pci: prevent putting nvidia GPUs into lower device states on certain intel bridges
-Date:   Fri, 22 Nov 2019 01:21:59 +0100
-Message-Id: <20191122002159.4159-1-kherbst@redhat.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 21 Nov 2019 19:22:28 -0500
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAM0ARm5024796;
+        Thu, 21 Nov 2019 16:22:08 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=J7bvfFj7ufWCZjsPUoChvgY0dfDEYl0vY+MSXzezycQ=;
+ b=TjtQBA2ia/4HidGY8xalja5uqYUcNBwWUiXbCUD0t5Oy25rmwj7vhIxScXcrW51f+UVC
+ WvXTqqYqheIHuTvyntEpiySAd91ow1QTb0PjmVoha4UvH5yHZWxUncaPvpUtu6DpGSyz
+ tLVfOk27E8KpmsH1JuBjkMSmTBw8XHpw5HI= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2wdxtm24py-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 16:22:07 -0800
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 21 Nov 2019 16:21:58 -0800
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 21 Nov 2019 16:22:07 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E5SNCWYxILcg5ZWbVHzT6/+U4zISl5DBGhK+XIph+w/vUeVoDJMSyLUMwCYq3ci9AYpoOvrCmqGXWF8i7O5DPVya+TocAjF6rulyfcQnduynhjNNSvrsmNqwaMuYHrH0m7KJDFKa+Y9f+OoH3Zy/Psk8Q3+0+xa4EmisIG7vkP9T5c8fTiv14rUIO3hV8PXAPvMCyNRYk7xy7RRhxt1fXnBpg14zx6b2U9obzUV1qe/rXzb37AZerv5KMPHmS+snzmZ/6gftBgMxQ/EHGNtQTJfeXBBawcaefnBrazUqzxlzu300TSd3TuJFJOvDBd9x8p7Qv/xcVuDWBYvZRV+nRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J7bvfFj7ufWCZjsPUoChvgY0dfDEYl0vY+MSXzezycQ=;
+ b=TeiFrRPKoK0I625Aj/ovCAFEM9O0V0zk5MycffTXglWbCEyovLuObevBI8JS63RGheUkBzBAaTYRRuduQKZM6PQbnVNngEMpSyHI8FlT/egbTldsLSMH478igp5YBvwGfJKyrweOpnpLh9Rkc5oyiemwMyi5haI977VjBgaJSei+rHMLjhrjd5VCO0POp14179zubbAh3RgiOvH6k3N3MIovoXuHHhHgQ4GzxqAWieV3rDYmG1xIO62kwAtjNPCuykPaj+lXBZQmI0PSyqqXrIPa6Kps72NYxf5JGhyfB4xu24+8qKdw6htSuIcX0iPi/uqCqaQfC2nVn16TNjM9WQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J7bvfFj7ufWCZjsPUoChvgY0dfDEYl0vY+MSXzezycQ=;
+ b=OtGxYLHU7Iqi2e7D4u2mMcivMXbihT54jiX9qk5d+T6gJ3W2tbvrLfP16hhes6SW7bXij6J/NRKw2TxhONaAiOSLSu5vtOIxnl+C1sCGnmIE/L7CCX776ge1bBB7rSOaWNdQREEqAW58lIzic7uKTs9wT/HU5+WCCVX0/zSH55c=
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.60.27) by
+ BYAPR15MB3255.namprd15.prod.outlook.com (20.179.57.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.30; Fri, 22 Nov 2019 00:22:05 +0000
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::a9f8:a9c0:854c:d680]) by BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::a9f8:a9c0:854c:d680%4]) with mapi id 15.20.2474.019; Fri, 22 Nov 2019
+ 00:22:05 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Brian Vazquez <brianvv@google.com>
+CC:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: [PATCH v2 bpf-next 9/9] selftests/bpf: add batch ops testing to
+ array bpf map
+Thread-Topic: [PATCH v2 bpf-next 9/9] selftests/bpf: add batch ops testing to
+ array bpf map
+Thread-Index: AQHVnw/0rnKpbCfcfky9UVTXU5Cf8qeVctYAgACwXoCAADRlAA==
+Date:   Fri, 22 Nov 2019 00:22:05 +0000
+Message-ID: <5ff4bbe7-49ee-b6ad-cdf2-ff9ebd32fb09@fb.com>
+References: <20191119193036.92831-1-brianvv@google.com>
+ <20191119193036.92831-10-brianvv@google.com>
+ <4688ba20-0730-7689-9332-aa0dcef5258e@fb.com>
+ <CAMzD94SCUQTi=O694HN3Muh=F-NT81_C4kBnzyBu0pfoNi87DQ@mail.gmail.com>
+In-Reply-To: <CAMzD94SCUQTi=O694HN3Muh=F-NT81_C4kBnzyBu0pfoNi87DQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR05CA0009.namprd05.prod.outlook.com
+ (2603:10b6:102:2::19) To BYAPR15MB3384.namprd15.prod.outlook.com
+ (2603:10b6:a03:112::27)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:ffef]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 75c0cc94-6d19-4132-c110-08d76ee200dd
+x-ms-traffictypediagnostic: BYAPR15MB3255:
+x-microsoft-antispam-prvs: <BYAPR15MB32550CD499AC0AC9F7247BF2D3490@BYAPR15MB3255.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02296943FF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(39860400002)(376002)(136003)(189003)(199004)(7416002)(71190400001)(4326008)(46003)(14454004)(186003)(54906003)(86362001)(6512007)(71200400001)(2906002)(6116002)(31696002)(99286004)(25786009)(386003)(6506007)(31686004)(6246003)(53546011)(76176011)(52116002)(478600001)(102836004)(66556008)(64756008)(66476007)(66946007)(66446008)(6916009)(316002)(229853002)(14444005)(6486002)(6436002)(8676002)(305945005)(81166006)(81156014)(256004)(7736002)(5660300002)(2616005)(8936002)(11346002)(36756003)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3255;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dCXZMuvk7P5RhzEfG96i9Z8RqCpAR7QZDU1tNXmTjGWf99pZA7XBVeEqHjBVImB31Ku4Nlc21Gmcsy9GpqSfYe8mVjdYQ0Ht/CxP7BmJRP+Rr+c2J5BygRjnrfz3ZA+1HeBZAHVaVI6jFl4LXgyk1V5Vi94l/FHlCzyMm2U2uM8CemONzkMW/MsOvYvvFYR6hQ+aoc6uOEmunXgmSXQB18E8wfk1KNu28LGByrmcLGzQDz1Micl6hALMVa59eghMxLYa6NHDxj5r1V5qKc9JxBg92JPm3vyl3PJEK8dTzYwUpt3yEx5At4y0YdqnBEzW863m3dUI9VIdIx+YJrBmgkQ2ctRNSIwy2DDi9tEAcL+z5z73EQpNxGS5QUVFL3bpcSGh8fPtX91tIP6UqPZilCm0BPpMJSqZapJw0X/9N89pQCrB9iWFETldhCxGCDRY
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BA2A6CD134239A4193AB26305B1C5638@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MC-Unique: a-_4YcC6P-e6hdOTQK3F-g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75c0cc94-6d19-4132-c110-08d76ee200dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 00:22:05.5429
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wF9vbHrlQYbnQwj2C7VtYtXMAifZ4fBnrnk41+bvP32OElO5tqy0njpVenLAEtm5
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3255
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_07:2019-11-21,2019-11-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=972
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911220000
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher devic=
-e
-states.
-
-v2: convert to pci_dev quirk
-    put a proper technical explanation of the issue as a in-code comment
-v3: disable it only for certain combinations of intel and nvidia hardware
-v4: simplify quirk by setting flag on the GPU itself
-v5: restructure quirk to make it easier to add new IDs
-    fix whitespace issues
-    fix potential NULL pointer access
-    update the quirk documentation
-
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D205623
----
- drivers/pci/pci.c    |  7 ++++++
- drivers/pci/quirks.c | 51 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h  |  1 +
- 3 files changed, 59 insertions(+)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 57f15a7e6f0b..e08db2daa924 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -850,6 +850,13 @@ static int pci_raw_set_power_state(struct pci_dev *dev=
-, pci_power_t state)
- =09   || (state =3D=3D PCI_D2 && !dev->d2_support))
- =09=09return -EIO;
-=20
-+=09/*
-+=09 * Check if we have a bad combination of bridge controller and nvidia
-+=09 * GPU, see quirk_broken_nv_runpm for more info
-+=09 */
-+=09if (state !=3D PCI_D0 && dev->broken_nv_runpm)
-+=09=09return 0;
-+
- =09pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-=20
- =09/*
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 44c4ae1abd00..24e3f247d291 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5268,3 +5268,54 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(st=
-ruct pci_dev *pdev)
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
- =09=09=09      PCI_CLASS_DISPLAY_VGA, 8,
- =09=09=09      quirk_reset_lenovo_thinkpad_p50_nvgpu);
-+
-+/*
-+ * Some Intel PCIe bridge controllers cause devices to not reappear doing =
-a
-+ * D0 -> D3hot -> D3cold -> D0 sequence. Skipping the intermediate D3hot s=
-tep
-+ * seems to make it work again.
-+ *
-+ * This leads to various manifestations of this issue:
-+ *  - AIML code execution hits an infinite loop (as the coe waits on devic=
-e
-+ *    memory to change).
-+ *  - kernel crashes, as all PCI reads return -1, which most code isn't ab=
-le
-+ *    to handle well enough.
-+ *  - sudden shutdowns, as the kernel identified an unrecoverable error af=
-ter
-+ *    userspace tries to access the GPU.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of t=
-he
-+ * Intel PCIe bridge controller (0x1901) in order to power down the GPU.
-+ * Nonetheless, there are other code paths inside the ACPI firmware which =
-use
-+ * other registers, which seem to work fine:
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memo=
-ry
-+ * and not any device accessible memory at all, so there is no portable wa=
-y of
-+ * changing the conditions.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics la=
-ptops
-+ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It cannot be rul=
-ed
-+ * out that this issue only occurs in combination with listed Intel PCIe
-+ * bridge controllers and the mentioned GPUs or if it's only a hw bug in t=
-he
-+ * bridge controller.
-+ */
-+
-+static void quirk_broken_nv_runpm(struct pci_dev *dev)
-+{
-+=09struct pci_dev *bridge =3D pci_upstream_bridge(dev);
-+
-+=09if (!bridge || bridge->vendor !=3D PCI_VENDOR_ID_INTEL)
-+=09=09return;
-+
-+=09switch (bridge->device) {
-+=09case 0x1901:
-+=09=09dev->broken_nv_runpm =3D 1;
-+=09}
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+=09=09=09      PCI_BASE_CLASS_DISPLAY, 16,
-+=09=09=09      quirk_broken_nv_runpm);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index ac8a6c4e1792..903a0b3a39ec 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -416,6 +416,7 @@ struct pci_dev {
- =09unsigned int=09__aer_firmware_first_valid:1;
- =09unsigned int=09__aer_firmware_first:1;
- =09unsigned int=09broken_intx_masking:1;=09/* INTx masking can't be used *=
-/
-+=09unsigned int=09broken_nv_runpm:1;=09/* some combinations of intel bridg=
-e controller and nvidia GPUs break rtd3 */
- =09unsigned int=09io_window_1k:1;=09=09/* Intel bridge 1K I/O windows */
- =09unsigned int=09irq_managed:1;
- =09unsigned int=09has_secondary_link:1;
---=20
-2.23.0
-
+DQoNCk9uIDExLzIxLzE5IDE6MTQgUE0sIEJyaWFuIFZhenF1ZXogd3JvdGU6DQo+IFRoYW5rcyBm
+b3IgcmV2aWV3aW5nIGl0IQ0KPiANCj4gT24gVGh1LCBOb3YgMjEsIDIwMTkgYXQgMTA6NDMgQU0g
+WW9uZ2hvbmcgU29uZyA8eWhzQGZiLmNvbT4gd3JvdGU6DQo+Pg0KPj4NCj4+DQo+PiBPbiAxMS8x
+OS8xOSAxMTozMCBBTSwgQnJpYW4gVmF6cXVleiB3cm90ZToNCj4+PiBUZXN0ZWQgYnBmX21hcF9s
+b29rdXBfYmF0Y2goKSBhbmQgYnBmX21hcF91cGRhdGVfYmF0Y2goKQ0KPj4+IGZ1bmN0aW9uYWxp
+dHkuDQo+Pj4NCj4+PiAgICAgJCAuL3Rlc3RfbWFwcw0KPj4+ICAgICAgICAgLi4uDQo+Pj4gICAg
+ICAgICAgIHRlc3RfbWFwX2xvb2t1cF9hbmRfZGVsZXRlX2JhdGNoX2FycmF5OlBBU1MNCj4+PiAg
+ICAgICAgIC4uLg0KPj4NCj4+IFRoZSB0ZXN0IGlzIGZvciBsb29rdXBfYmF0Y2goKSBhbmQgdXBk
+YXRlX2JhdGNoKCkNCj4+IGFuZCB0aGUgdGVzdCBuYW1lIGFuZCBmdW5jIG5hbWUgaXMgbG9va3Vw
+X2FuZF9kZWxldGVfYmF0Y2goKSwNCj4+IHByb2JhYmx5IHJlbmFtZSBpcyB0byBsb29rdXBfYW5k
+X3VwZGF0ZV9iYXRjaF9hcnJheSgpPw0KPj4NCj4gWWVzLCB5b3UgYXJlIHJpZ2h0LCBJIHdpbGwg
+Y2hhbmdlIHRoZSBuYW1lIGZvciBuZXh0IHZlcnNpb24uDQo+IA0KPj4gSXQgd291bGQgYmUgZ29v
+ZCBpZiBnZW5lcmljIGxvb2t1cF9hbmRfZGVsZXRlX2JhdGNoKCkNCj4+IGFuZCBkZWxldGVfcGF0
+Y2goKSBjYW4gYmUgdGVzdGVkIGFzIHdlbGwuDQo+PiBNYXliZSB0cmllZCB0byB1c2UgcHJvZ19h
+cnJheT8NCj4gDQo+ICAgSSBkaWQgdGVzdCBnZW5lcmljX2xvb2t1cF9hbmRfZGVsZXRlX2JhdGNo
+IHdpdGggaG1hcCBhbmQgaXQgd29ya2VkDQo+IGZpbmUgYmVjYXVzZSBJIGRpZG4ndCBoYXZlIGNv
+bmN1cnJlbnQgZGVsZXRpb25zLg0KPiBCdXQgeWVzIEkgd2lsbCBhZGQgdGVzdHMgZm9yIGdlbmVy
+aWMgZGVsZXRlIGFuZCBsb29rdXBfYW5kX2RlbGV0ZSwNCj4gbWF5YmUgZm9yIHRoZSB0cmllIG1h
+cCAocHJvZ19hcnJheSBkb2Vzbid0IHN1cHBvcnQgbG9va3VwIGFuZyBoZW5jZQ0KPiBsb29rdXBf
+YW5kX2RlbGV0ZSB3b24ndCBhcHBseSB0aGVyZSk/DQoNCnRyaWVfbWFwIGlzIGEgZ29vZCBjaG9p
+Y2UuIEJhc2ljYWxseSBhbnkgbWFwIHdoaWNoIGNhbiBiZSB1c2VkIHRvIHRlc3QNCnRoaXMgQVBJ
+Lg0K
