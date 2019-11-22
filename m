@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF0FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E85C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5134E2088F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEEF20885
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420791;
-	bh=PoHu/DhS+f5VCbwNRPxqlH6ZIVZ4cG59h9sqHS6KGpY=;
+	s=default; t=1574420793;
+	bh=ETy3/oLlODMF6IqyyikE3r7NS0VCBoZzrTvaSa//SfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UgwXFGXsYbpv0opgyrz3slqxUOPiMDxB/rqld0h2nq/bjqyQiCwWRWck7E1cSi5Zj
-	 kkoB134SYZ2JPFE/PlrGOxR+LxS1JwOhG/900OyopbOvjr2zyO7b7GHNgYN9L7ei+0
-	 fb2TvziyNFN82RKsKBJ9cREXSAdl6KUGXOk2upmM=
+	b=1P+oKK8adhUabCqdCr4KjWIS658qd9Gj0EG/3sf6ipcwPe9ou3QE/3muJeDyDpza7
+	 pI0OR221CR80xFH+VBLsWk9VcD4fQFuqHj2wC2u26VSM4/4qtyJ0PkXazlYtV92+Wz
+	 K7C8SV5gcZABVbVocZ00yr2sk+EJKZF3COczC4oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731876AbfKVLG3 (ORCPT
+        id S1731868AbfKVLG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731865AbfKVLG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 06:06:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727842AbfKVLGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 917AF2075E;
-        Fri, 22 Nov 2019 11:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF06520726;
+        Fri, 22 Nov 2019 11:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420788;
-        bh=PoHu/DhS+f5VCbwNRPxqlH6ZIVZ4cG59h9sqHS6KGpY=;
+        s=default; t=1574420785;
+        bh=ETy3/oLlODMF6IqyyikE3r7NS0VCBoZzrTvaSa//SfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUB/Nm68KOLfk2JGB1OTrs8eDwssgaiG5BMTaqdXFxsFIWF98x5xyAwVXrKTwVWKe
-         5YRuXXwK43zpKRvZOglcboPIRBMbkMwhBSBSCisFtDClejIQTbP2fEp2oirvU+Wcvj
-         vGjRz9O8iY9MbOjF9kC7lBt48FjVp/+5I4yP/2tw=
+        b=Egb5sNNcgrNDeCyH8A5/piT2JXZ26um48yzOyjGmvHThTU0Nal5HXIAwt6QXunKtF
+         OuOWjfoju1lqpWjhkRDSYigGr8/JdfGY/YEFtrwZcO5/YJ/nWIgIBB9u4VutgMWhNB
+         VNpu6jQ0se9Bt+A0QRwyiK2WRSqyZAV9XoeMD1JQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Saito <takeshi.saito.xv@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 219/220] mmc: tmio: fix SCC error handling to avoid false positive CRC error
-Date:   Fri, 22 Nov 2019 11:29:44 +0100
-Message-Id: <20191122100929.359156615@linuxfoundation.org>
+Subject: [PATCH 4.19 218/220] powerpc/time: Fix clockevent_decrementer initalisation for PR KVM
+Date:   Fri, 22 Nov 2019 11:29:43 +0100
+Message-Id: <20191122100929.297295181@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -64,50 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Saito <takeshi.saito.xv@renesas.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 51b72656bb39fdcb8f3174f4007bcc83ad1d275f ]
+[ Upstream commit b4d16ab58c41ff0125822464bdff074cebd0fe47 ]
 
-If an SCC error occurs during a read/write command execution, a false
-positive CRC error message is output.
+In the recent commit 8b78fdb045de ("powerpc/time: Use
+clockevents_register_device(), fixing an issue with large
+decrementer") we changed the way we initialise the decrementer
+clockevent(s).
 
-mmcblk0: response CRC error sending r/w cmd command, card status 0x900
+We no longer initialise the mult & shift values of
+decrementer_clockevent itself.
 
-check_scc_error() checks SCC_RVSREQ.RVSERR bit. RVSERR detects a
-correction error in the next (up or down) delay tap position. However,
-since the command is successful, only retuning needs to be executed.
-This has been confirmed by HW engineers.
+This has the effect of breaking PR KVM, because it uses those values
+in kvmppc_emulate_dec(). The symptom is guest kernels spin forever
+mid-way through boot.
 
-Thus, on SCC error, set retuning flag instead of setting an error code.
+For now fix it by assigning back to decrementer_clockevent the mult
+and shift values.
 
-Fixes: b85fb0a1c8ae ("mmc: tmio: Fix SCC error detection")
-Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
-[wsa: updated comment and commit message, removed some braces]
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 8b78fdb045de ("powerpc/time: Use clockevents_register_device(), fixing an issue with large decrementer")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/tmio_mmc_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/time.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-index 94c43c3d3ae58..35630ccbe9e5d 100644
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -926,8 +926,9 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
- 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
- 		tmio_mmc_abort_dma(host);
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 6a1f0a084ca35..7707990c4c169 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -988,6 +988,10 @@ static void register_decrementer_clockevent(int cpu)
  
-+	/* SCC error means retune, but executed command was still successful */
- 	if (host->check_scc_error && host->check_scc_error(host))
--		mrq->cmd->error = -EILSEQ;
-+		mmc_retune_needed(host->mmc);
+ 	printk_once(KERN_DEBUG "clockevent: %s mult[%x] shift[%d] cpu[%d]\n",
+ 		    dec->name, dec->mult, dec->shift, cpu);
++
++	/* Set values for KVM, see kvm_emulate_dec() */
++	decrementer_clockevent.mult = dec->mult;
++	decrementer_clockevent.shift = dec->shift;
+ }
  
- 	/* If SET_BLOCK_COUNT, continue with main command */
- 	if (host->mrq && !mrq->cmd->error) {
+ static void enable_large_decrementer(void)
 -- 
 2.20.1
 
