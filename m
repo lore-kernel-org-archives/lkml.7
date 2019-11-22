@@ -2,243 +2,146 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6420DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44CBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB5F2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746DC20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lxvz5Wru"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e2dfL6iL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKVHvC (ORCPT
+        id S1726676AbfKVH5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:51:02 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53710 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfKVHvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 02:51:02 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAM7oqIF090014;
-        Fri, 22 Nov 2019 01:50:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574409052;
-        bh=nk1aJbB0a61/1Y1yPPwV+6t0qLWNrPuDsFJe8epqbXk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Lxvz5WrumkO9Y0+xYGbcNQITZuVwBsh5WkKCnzF9iqEyr/w4Mf3wKm0IklS/a1El8
-         Z3aBWniIxJ6e789rxLCYhjStqkdkkXcaV1uZy4uOKWe4WTLjbiFLsAzN9G7myzzZbi
-         wV76fDBnNXIF2tMQENeLVu3wfa714o1yHSXnAyVk=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAM7oq4J066898
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 Nov 2019 01:50:52 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 22
- Nov 2019 01:50:50 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 22 Nov 2019 01:50:50 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAM7onVe123373;
-        Fri, 22 Nov 2019 01:50:49 -0600
-Subject: Re: [PATCH 1/2] dmaengine: ti: edma: add missed pm_runtime_disable
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191118073728.28366-1-hslester96@gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <9ce1c3bb-3af8-6f6e-6f8f-cf2ab091de84@ti.com>
-Date:   Fri, 22 Nov 2019 09:50:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191118073728.28366-1-hslester96@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 22 Nov 2019 02:57:00 -0500
+Received: from mail-eopbgr10044.outbound.protection.outlook.com ([40.107.1.44]:61262
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726018AbfKVH5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 02:57:00 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JFtNn3CdKNluBlyS3DdJFrDC0+ZgA2oGLrQt9ti+K/Xb/FHYFAzNVqgrGvn4oI/Ci+6g5vVF0I+F77RplwlF3Xvc4rT7N/Z+z7FquaEGv1t1gNVIg6rb9eavdqqPHoODrF6GHqbSFAAc55YM0kgzazdss/ppEa9H5okgyC8oQ1iLPcXGoc2H9eBg2gVtb8g4rtF8+1WJlC0YsrZhaRCwn9kYgRcSWSoGOOEQsLHt/u3dVJk37DI+N2pDGhj4SJW5NkuXxu2WHqF1RfpkXGM/rJidutwQHCm5WB4A1vb6fPsGMECIuyMsBcQ9rFKVJcUPfqTnddLv19177NOmzE34Eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nzi+V84V86ZKbhw7QU9ksxpenLpTZvyv6Ll5XQlrEuA=;
+ b=D+kDOZJnciUr23iDwNMwQXmWx402ZEQMrfznS3NF2KOYam7eLGUCo+440Y1L6c0Q3po+dKaGXizjEAGoys22KXzry1Ltty3BKk43fV/LQUuuqnecRMQ3i2Xy0txiPqp4bl+H5HbiwILVik6IStfDtvjXaG3SdornyynkGirI95rJzL/yosUSeRCFyCp8AuaW1E2M6oChpgz09+o2gXwgJ+DEoJkWXzbqjgIuoOzBCN49TXEt389msGGqzZosJ2mYdWmfJhBe20jQHsQ8j2orlyySKMyzSb09K8fz66sjZLZ6cUtzkoNCsDrIa8Mbcypryb5zFANUsW+6C8/eAFN3vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nzi+V84V86ZKbhw7QU9ksxpenLpTZvyv6Ll5XQlrEuA=;
+ b=e2dfL6iLaub887SrYZRS/s9IoAWrbcuxkdQZs4uGWzrd7V9KInWC3zPtuxWF9RMkgmb058DVFCqNHN+Oneem3zcUnynNkL8yThaWvqNHmmh17GcT4MpxaU12l4BmnO/eKt5zyzyoFoCkfCW6tW9H+XtO2NninWR0N18474TPfz8=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5937.eurprd04.prod.outlook.com (20.178.114.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.16; Fri, 22 Nov 2019 07:56:53 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2474.021; Fri, 22 Nov 2019
+ 07:56:53 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Abel Vesa <abel.vesa@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
+Thread-Topic: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
+Thread-Index: AQHVnuLWT6CchFdcV0y5WK5bSM6NyqeW1t9Q
+Date:   Fri, 22 Nov 2019 07:56:52 +0000
+Message-ID: <AM0PR04MB4481B956515863CC096852B888490@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1574172496-12987-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1574172496-12987-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5ca59c18-3495-40a1-1061-08d76f2189be
+x-ms-traffictypediagnostic: AM0PR04MB5937:|AM0PR04MB5937:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB593722CB849613A319CC475888490@AM0PR04MB5937.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1091;
+x-forefront-prvs: 02296943FF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(199004)(189003)(3846002)(71200400001)(316002)(54906003)(110136005)(99286004)(256004)(305945005)(86362001)(74316002)(7736002)(55016002)(8936002)(9686003)(6436002)(6636002)(229853002)(71190400001)(6506007)(33656002)(7696005)(186003)(5660300002)(76116006)(44832011)(66476007)(64756008)(25786009)(66446008)(102836004)(66556008)(14454004)(66946007)(52536014)(478600001)(6246003)(446003)(11346002)(2906002)(6116002)(4326008)(81156014)(8676002)(76176011)(26005)(66066001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5937;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kXmfkc6z+G+BzjYbA11X5HKYI8c2iwSi3BRfhlDMZ59T8C0aHXm41Isk2L6vmatYwVbrjDmAl9R7nDSKTkrjENMhvdybA+Sq+op5cRpuj6kEmuB3Ow1YkoHutGAy+F9Ezzi9nLID5KCt34MSWJn93/KqcXwWVDW9hbqaeF6BQHQohudkpIMB5kpHx4u9qhra451vf92OASiTHtdQGiWIFpDkbtil7eQW1g80gejf68oKU3GrQuv4JsR43bCbuQMyoDe9+A2lWZbL+CVpJMDTDzdO49Hs7ZPw2VSZiByyrUIwGY9c72uZ+cuos7iTA5SBCvj9iZ9FPo1Rr7wZjPPSNFBGq5OcS4de18T9SWhyJRDQc3uzcz+xsnTu1ssYNfLxOCIyzUY699krFRIUu2C3vyMr3X8xU3hwTE/TqthoiqNbBLd9pHDtUKP6vv6Ls3FV
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ca59c18-3495-40a1-1061-08d76f2189be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 07:56:53.0163
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: caqGq/Gj7FoH1cKKfowZRu/eITf3d2bVfLPFvtg4cgMo5keXc6ZtvBHOlYbEALcA4O8KTOXHoBwC2YnOc2eMFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5937
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> Subject: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
+>=20
+> These changes are cleanups for the clk_hw based API i.MX clock drivers
+> switch longterm effort. As mentioned in the commit messages, the end goal
+> here is to have all the i.MX drivers use clk_hw based API only.
+>=20
+> I've put these all in a single patchset since they do not impact in any w=
+ay the
+> expected behavior of the drivers and they are quite obvious trivial ones.
+> More patches to follow for the older i.MX platforms but those might not b=
+e as
+> harmless (and trivial) as these ones.
 
-On 18/11/2019 9.37, Chuhong Yuan wrote:
-> The driver forgets to call pm_runtime_disable in probe failure and
-> remove.
-> Add the calls and modify probe failure handling to fix it.
-> 
-> Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/dma/ti/edma.c | 43 ++++++++++++++++++++++++++++---------------
->  1 file changed, 28 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index ba7c4f07fcd6..8be32fd9f762 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -2282,16 +2282,18 @@ static int edma_probe(struct platform_device *pdev)
+For the patchset,
 
-Please move the pm_runtime_enable/get section just before
-edma_setup_from_hw()
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
->  	ret = pm_runtime_get_sync(dev);
->  	if (ret < 0) {
->  		dev_err(dev, "pm_runtime_get_sync() failed\n");
-> -		return ret;
-> +		goto err_disable_pm;
+>=20
+> Abel Vesa (9):
+>   clk: imx: Replace all the clk based helpers with macros
+>   clk: imx: pllv1: Switch to clk_hw based API
+>   clk: imx: pllv2: Switch to clk_hw based API
+>   clk: imx: imx7ulp composite: Rename to show is clk_hw based
+>   clk: imx: Rename sccg and frac pll register to suggest clk_hw
+>   clk: imx: Rename the imx_clk_pllv4 to imply it's clk_hw based
+>   clk: imx: Rename the imx_clk_pfdv2 to imply it's clk_hw based
+>   clk: imx: Rename the imx_clk_divider_gate to imply it's clk_hw based
+>   clk: imx7up: Rename the clks to hws
+>=20
+>  drivers/clk/imx/clk-composite-7ulp.c |   2 +-
+>  drivers/clk/imx/clk-divider-gate.c   |   2 +-
+>  drivers/clk/imx/clk-frac-pll.c       |   7 +-
+>  drivers/clk/imx/clk-imx7ulp.c        | 182
+> +++++++++++++++++------------------
+>  drivers/clk/imx/clk-pfdv2.c          |   2 +-
+>  drivers/clk/imx/clk-pllv1.c          |  14 ++-
+>  drivers/clk/imx/clk-pllv2.c          |  14 ++-
+>  drivers/clk/imx/clk-pllv4.c          |   2 +-
+>  drivers/clk/imx/clk-sccg-pll.c       |   4 +-
+>  drivers/clk/imx/clk.h                |  69 +++++++------
+>  10 files changed, 153 insertions(+), 145 deletions(-)
+>=20
+> --
+> 2.7.4
 
-Here you need:
-	pm_runtime_disable(dev);
-	return ret;
-
->  	}
->  
->  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->  	if (ret)
-> -		return ret;
-> +		goto err_disable_pm;
->  
->  	ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
-> -	if (!ecc)
-> -		return -ENOMEM;
-> +	if (!ecc) {
-> +		ret = -ENOMEM;
-> +		goto err_disable_pm;
-> +	}
->  
->  	ecc->dev = dev;
->  	ecc->id = pdev->id;
-> @@ -2306,30 +2308,37 @@ static int edma_probe(struct platform_device *pdev)
->  		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  		if (!mem) {
->  			dev_err(dev, "no mem resource?\n");
-> -			return -ENODEV;
-> +			ret = -ENODEV;
-> +			goto err_disable_pm;
->  		}
->  	}
->  	ecc->base = devm_ioremap_resource(dev, mem);
-> -	if (IS_ERR(ecc->base))
-> -		return PTR_ERR(ecc->base);
-> +	if (IS_ERR(ecc->base)) {
-> +		ret = PTR_ERR(ecc->base);
-> +		goto err_disable_pm;
-> +	}
-
-None of the above changes needed since the pm_runtime initialization is
-moved
-
->  	platform_set_drvdata(pdev, ecc);
-
-here.
-
->  	/* Get eDMA3 configuration from IP */
->  	ret = edma_setup_from_hw(dev, info, ecc);
->  	if (ret)
-> -		return ret;
-> +		goto err_disable_pm;
->  
->  	/* Allocate memory based on the information we got from the IP */
->  	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
->  					sizeof(*ecc->slave_chans), GFP_KERNEL);
-> -	if (!ecc->slave_chans)
-> -		return -ENOMEM;
-> +	if (!ecc->slave_chans) {
-> +		ret = -ENOMEM;
-> +		goto err_disable_pm;
-> +	}
->  
->  	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
->  				       sizeof(unsigned long), GFP_KERNEL);
-> -	if (!ecc->slot_inuse)
-> -		return -ENOMEM;
-> +	if (!ecc->slot_inuse) {
-> +		ret = -ENOMEM;
-> +		goto err_disable_pm;
-> +	}
-
-and this does not apply since we have the
-	ecc->channels_mask = devm_kcalloc()
-in here.
-
-If you rebase, then I would suggest to combine the memory allocation
-checks into one:
-if (!ecc->slave_chans || !ecc->slot_inuse | !ecc->channels_mask) {
-	ret = -ENOMEM;
-	goto err_disable_pm;
-}
-
->  
->  	ecc->default_queue = info->default_queue;
->  
-> @@ -2368,7 +2377,7 @@ static int edma_probe(struct platform_device *pdev)
->  				       ecc);
->  		if (ret) {
->  			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
-> -			return ret;
-> +			goto err_disable_pm;
->  		}
->  		ecc->ccint = irq;
->  	}
-> @@ -2384,7 +2393,7 @@ static int edma_probe(struct platform_device *pdev)
->  				       ecc);
->  		if (ret) {
->  			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
-> -			return ret;
-> +			goto err_disable_pm;
->  		}
->  		ecc->ccerrint = irq;
->  	}
-> @@ -2392,7 +2401,8 @@ static int edma_probe(struct platform_device *pdev)
->  	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
->  	if (ecc->dummy_slot < 0) {
->  		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
-> -		return ecc->dummy_slot;
-> +		ret = ecc->dummy_slot;
-> +		goto err_disable_pm;
->  	}
->  
->  	queue_priority_mapping = info->queue_priority_mapping;
-> @@ -2473,6 +2483,8 @@ static int edma_probe(struct platform_device *pdev)
->  
->  err_reg1:
->  	edma_free_slot(ecc, ecc->dummy_slot);
-> +err_disable_pm:
-
-Please add:
-	pm_runtime_put_sync(dev);
-
-> +	pm_runtime_disable(dev);
->  	return ret;
->  }
->  
-> @@ -2503,6 +2515,7 @@ static int edma_remove(struct platform_device *pdev)
->  	if (ecc->dma_memcpy)
->  		dma_async_device_unregister(ecc->dma_memcpy);
->  	edma_free_slot(ecc, ecc->dummy_slot);
-
-Here also:
-	pm_runtime_put_sync(dev);
-
-
-> +	pm_runtime_disable(dev);
->  
->  	return 0;
->  }
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
