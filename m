@@ -2,87 +2,88 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA9FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AEEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1C820726
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:55:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KFOzCgDu"
+	by mail.kernel.org (Postfix) with ESMTP id 9333020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKVVzP (ORCPT
+        id S1726729AbfKVWCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:55:15 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:43388 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfKVVzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:55:15 -0500
-Received: from zn.tnic (p200300EC2F0E970088E58EB60414A2FA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:9700:88e5:8eb6:414:a2fa])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3DC1D1EC0D02;
-        Fri, 22 Nov 2019 22:55:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574459714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NJD7hK0V08Fiv81ewyxttDMTtuYk35R4KS06J38w9Fg=;
-        b=KFOzCgDube0CAI4WGo9Bh9klX7+ly+K8y5OzDCb0jAqcpwR0kq5lhw+qf4QWcEdfZSizOa
-        ElJJQAPFv+JjnFTsHAbAFCgbv7pVWM6yyONROSESsMzS1wNbkViBIhmUbwZu9ryX+VNTZc
-        qZtWBNwyKGhisTTBZ2QoEzA2ZyQJyQ8=
-Date:   Fri, 22 Nov 2019 22:54:59 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 1/6] x86/fpu/xstate: Fix small issues before adding
- supervisor xstates
-Message-ID: <20191122215459.GM6289@zn.tnic>
-References: <20190925151022.21688-1-yu-cheng.yu@intel.com>
- <20190925151022.21688-2-yu-cheng.yu@intel.com>
- <20191009155847.GE10395@zn.tnic>
- <b33151bdfb5611de7db8493cb8fcca4b8f372267.camel@intel.com>
+        Fri, 22 Nov 2019 17:02:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35763 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKVWCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 17:02:18 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iYH0J-0005vj-Tc; Fri, 22 Nov 2019 23:02:16 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2CED51C1A91;
+        Fri, 22 Nov 2019 23:02:15 +0100 (CET)
+Date:   Fri, 22 Nov 2019 22:02:15 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/entry/32: Increase the size of CPU_ENTRY_AREA_PAGES
+Cc:     Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b33151bdfb5611de7db8493cb8fcca4b8f372267.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157446013502.21853.8227778923037920355.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 01:22:37PM -0800, Yu-cheng Yu wrote:
-> This implicitly converts a u32 to a bool. By looking at it, I think it
-> should be OK, but wonder if anything overlooked? I would be happy to
-> make this a separate patch.
+The following commit has been merged into the x86/urgent branch of tip:
 
-I don't understand your question: are you asking whether you should
-convert the functions to "static bool" or what is your question?
+Commit-ID:     d9976e424909d44585206e90154f74723b5f9fe5
+Gitweb:        https://git.kernel.org/tip/d9976e424909d44585206e90154f74723b5f9fe5
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Fri, 22 Nov 2019 22:54:37 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 22 Nov 2019 22:55:10 +01:00
 
-If it is that, then yes pls. Also, change xfeature_is_user() to return
-bool too, while at it.
+x86/entry/32: Increase the size of CPU_ENTRY_AREA_PAGES
 
-Thx.
+The following commit:
 
--- 
-Regards/Gruss,
-    Boris.
+  880a98c33996: ("x86/cpu_entry_area: Add guard page for entry stack on 32bit")
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Increased the size of 'struct cpu_entry_area' by 4K, so increase
+CPU_ENTRY_AREA_PAGES from 40 to 41.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/include/asm/pgtable_32_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/pgtable_32_types.h b/arch/x86/include/asm/pgtable_32_types.h
+index b0bc0ff..0fab4bf 100644
+--- a/arch/x86/include/asm/pgtable_32_types.h
++++ b/arch/x86/include/asm/pgtable_32_types.h
+@@ -44,7 +44,7 @@ extern bool __vmalloc_start_set; /* set once high_memory is set */
+  * Define this here and validate with BUILD_BUG_ON() in pgtable_32.c
+  * to avoid include recursion hell
+  */
+-#define CPU_ENTRY_AREA_PAGES	(NR_CPUS * 40)
++#define CPU_ENTRY_AREA_PAGES	(NR_CPUS * 41)
+ 
+ #define CPU_ENTRY_AREA_BASE						\
+ 	((FIXADDR_TOT_START - PAGE_SIZE * (CPU_ENTRY_AREA_PAGES + 1))   \
