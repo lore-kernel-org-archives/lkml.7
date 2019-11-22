@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB29C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBFC2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB552072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419904;
-	bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
+	s=default; t=1574419909;
+	bh=iUAeOmTC6KKyCJsPjqadlOssi2y1HjidqPkef2RGGfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gi/URdmmf6jQzKkLUEQg6/3EldTDHjYsmultRXWtGfvlSw8Jf8OBNFAsjMkUr5dWC
-	 Z/agN7+qFaKnV2LiP6iARp+pjcKO69EWvFaxst9COpYYLE8oLI6NjaUqG0o8vZ5XJB
-	 IWeQdobw6TWI4c6y9ijhz4po8recG7XHuCvLXpAA=
+	b=dz79m6by2LKSGcT5H+6zAY2fu/lN79hKgggNy6/Ypemi9Cs2FW2ChdBeTKZ6k3qD6
+	 Ug6k3NFJ0w9JzESfdbIbBFk6e0UKPFwdmDVR5R5gejoRg76TKo8xRVUsPTY5fg0naY
+	 JakIMKsRd+1HvxGaZU7bSNS4Jm3bL2Gdt9C0Il7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbfKVKvn (ORCPT
+        id S1730038AbfKVKvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34566 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbfKVKvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:38 -0500
+        id S1730100AbfKVKvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D552071F;
-        Fri, 22 Nov 2019 10:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CAE20718;
+        Fri, 22 Nov 2019 10:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419897;
-        bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
+        s=default; t=1574419903;
+        bh=iUAeOmTC6KKyCJsPjqadlOssi2y1HjidqPkef2RGGfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AhWvcoDnPj10GnJV4RJL3zZm5SbeR9mb1vuheVIK2v9F9KZsKhTr/2pDxPsX2+Grv
-         xBRWzcivyzsMSjiU/jTmM+57N49M1iKJengEP6zwWtrL2jxz7TYk6fo/r4BkKEQfnQ
-         EnCW4cVpA5FWK12ZS01zE8UhXMzpiTcY6pkZmWC4=
+        b=qSv1MehF/7IWNPKX/bDqre7knEjp38HGeiAPDTeYIvqvnEdsiXw4piB7yCNfwZlzz
+         spjYMvntOItknMLcd3RDW3Mjw4h5reKUQGoYm569dFoP/dR1NvS1Z5g1okvsQZmKqp
+         T4GiQ5SExMP+FJ6KDi+Qp2ko54Umnr9OieAtIG6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 029/122] watchdog: w83627hf_wdt: Support NCT6796D, NCT6797D, NCT6798D
-Date:   Fri, 22 Nov 2019 11:28:02 +0100
-Message-Id: <20191122100745.165239238@linuxfoundation.org>
+Subject: [PATCH 4.14 048/122] clocksource/drivers/sh_cmt: Fix clocksource width for 32-bit machines
+Date:   Fri, 22 Nov 2019 11:28:21 +0100
+Message-Id: <20191122100756.726284211@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,68 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 57cbf0e3a0fd48e5ad8f3884562e8dde4827c1c8 ]
+[ Upstream commit 37e7742c55ba856eaec7e35673ee370f36eb17f3 ]
 
-The watchdog controller on NCT6796D, NCT6797D, and NCT6798D is compatible
-with the wtachdog controller on other Nuvoton chips.
+The driver seems to abuse *unsigned long* not only for the (32-bit)
+register values but also for the 'sh_cmt_channel::total_cycles' which
+needs to always be 64-bit -- as a result, the clocksource's mask is
+needlessly clamped down to 32-bits on the 32-bit machines...
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: 19bdc9d061bc ("clocksource: sh_cmt clocksource support")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/w83627hf_wdt.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/clocksource/sh_cmt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/w83627hf_wdt.c b/drivers/watchdog/w83627hf_wdt.c
-index 7817836bff554..4b9365d4de7a9 100644
---- a/drivers/watchdog/w83627hf_wdt.c
-+++ b/drivers/watchdog/w83627hf_wdt.c
-@@ -50,7 +50,7 @@ static int cr_wdt_csr;		/* WDT control & status register */
- enum chips { w83627hf, w83627s, w83697hf, w83697ug, w83637hf, w83627thf,
- 	     w83687thf, w83627ehf, w83627dhg, w83627uhg, w83667hg, w83627dhg_p,
- 	     w83667hg_b, nct6775, nct6776, nct6779, nct6791, nct6792, nct6793,
--	     nct6795, nct6102 };
-+	     nct6795, nct6796, nct6102 };
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index 560541f53c8d9..3cd62f7c33e30 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -105,7 +105,7 @@ struct sh_cmt_channel {
+ 	raw_spinlock_t lock;
+ 	struct clock_event_device ced;
+ 	struct clocksource cs;
+-	unsigned long total_cycles;
++	u64 total_cycles;
+ 	bool cs_enabled;
+ };
  
- static int timeout;			/* in seconds */
- module_param(timeout, int, 0);
-@@ -100,6 +100,7 @@ MODULE_PARM_DESC(early_disable, "Disable watchdog at boot time (default=0)");
- #define NCT6792_ID		0xc9
- #define NCT6793_ID		0xd1
- #define NCT6795_ID		0xd3
-+#define NCT6796_ID		0xd4	/* also NCT9697D, NCT9698D */
+@@ -607,8 +607,8 @@ static u64 sh_cmt_clocksource_read(struct clocksource *cs)
+ {
+ 	struct sh_cmt_channel *ch = cs_to_sh_cmt(cs);
+ 	unsigned long flags;
+-	unsigned long value;
+ 	u32 has_wrapped;
++	u64 value;
+ 	u32 raw;
  
- #define W83627HF_WDT_TIMEOUT	0xf6
- #define W83697HF_WDT_TIMEOUT	0xf4
-@@ -209,6 +210,7 @@ static int w83627hf_init(struct watchdog_device *wdog, enum chips chip)
- 	case nct6792:
- 	case nct6793:
- 	case nct6795:
-+	case nct6796:
- 	case nct6102:
- 		/*
- 		 * These chips have a fixed WDTO# output pin (W83627UHG),
-@@ -407,6 +409,9 @@ static int wdt_find(int addr)
- 	case NCT6795_ID:
- 		ret = nct6795;
- 		break;
-+	case NCT6796_ID:
-+		ret = nct6796;
-+		break;
- 	case NCT6102_ID:
- 		ret = nct6102;
- 		cr_wdt_timeout = NCT6102D_WDT_TIMEOUT;
-@@ -450,6 +455,7 @@ static int __init wdt_init(void)
- 		"NCT6792",
- 		"NCT6793",
- 		"NCT6795",
-+		"NCT6796",
- 		"NCT6102",
- 	};
+ 	raw_spin_lock_irqsave(&ch->lock, flags);
+@@ -682,7 +682,7 @@ static int sh_cmt_register_clocksource(struct sh_cmt_channel *ch,
+ 	cs->disable = sh_cmt_clocksource_disable;
+ 	cs->suspend = sh_cmt_clocksource_suspend;
+ 	cs->resume = sh_cmt_clocksource_resume;
+-	cs->mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
++	cs->mask = CLOCKSOURCE_MASK(sizeof(u64) * 8);
+ 	cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
  
+ 	dev_info(&ch->cmt->pdev->dev, "ch%u: used as clock source\n",
 -- 
 2.20.1
 
