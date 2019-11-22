@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E18C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0AE20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F60205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419433;
-	bh=pVwVyxF2N9wnorQ5Bgsg+Gc9P53KWGzWUXl79vsexVo=;
+	s=default; t=1574419438;
+	bh=HShIySpLPUNeFNOt26VHwgmGLAKWF2+VsW+uRVUMwGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3KLy4x7wuemZzapp3fxWGfwrs+9n0CS6A7IHtT+SnwthrXwl261kDo+tRPVsY2Ve
-	 NdmEXYyIZ3DpDh1SOx0Iid5SZIdhx+WKV60Glj9wPe0cSBwUYYqb0zVsQkgl1YbbiZ
-	 dc0pbry2z0XBGEeoFV3Pi6iRAQIzDLVRMYyw1PUE=
+	b=cxiSE0xEiR9rR1H56XgrR0MQVoqUQF7ZyMcxjs8KyjRJEAK/dJtI9OdMMfY3kXKN2
+	 eIOyn4CRXdzePmhbvBvFVlxOrbsG25kLGFLmq0yHSbqeFCATyTB2ltEnbMLTDntB3W
+	 C2PKNZHNVhL0q6UEZTAqOnN36sJ6rVk5N3JQSQxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfKVKnw (ORCPT
+        id S1727653AbfKVKn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49424 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:43:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfKVKnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:47 -0500
+        id S1727646AbfKVKnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B95205C9;
-        Fri, 22 Nov 2019 10:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FE6320715;
+        Fri, 22 Nov 2019 10:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419427;
-        bh=pVwVyxF2N9wnorQ5Bgsg+Gc9P53KWGzWUXl79vsexVo=;
+        s=default; t=1574419432;
+        bh=HShIySpLPUNeFNOt26VHwgmGLAKWF2+VsW+uRVUMwGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQJhvRlMu/JUst4VDlLjb6/Hp37gfDowrse8vMGaNY14OmYnbMKQCa43fp6XQMlaQ
-         L4k0infZz8v+POadT0QtzszRVpMl5j0a3RhGafx2Q8BJQeyL57NuNoZt+2u9kfuDfk
-         H5p3fLUjgbhhDWGJjx6KGWZflTDOcIjs7iwg5Ntc=
+        b=zLhCZQutHFwWZWeF0dS9XhHMW7tg5lLPWLW8DxOsw6v5TrTWfne8xg5PYCch6AVnZ
+         nWk/r65sdOms7WfI3fR5MZI2vpg3a5FaP1YcMwjDzI5izD97BRV4iQXhvttDEyikFN
+         DLE+dYeqxe06i3GbNsLJXfrIgnsd72vdthJ2h5Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Whitehead <tedheadster@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        Jia Zhang <qianyue.zj@alibaba-inc.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 107/222] x86/CPU: Use correct macros for Cyrix calls
-Date:   Fri, 22 Nov 2019 11:27:27 +0100
-Message-Id: <20191122100911.032076915@linuxfoundation.org>
+Subject: [PATCH 4.9 073/222] power: reset: at91-poweroff: do not procede if at91_shdwc is allocated
+Date:   Fri, 22 Nov 2019 11:26:53 +0100
+Message-Id: <20191122100907.543194787@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -66,65 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Whitehead <tedheadster@gmail.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 03b099bdcdf7125d4a63dc9ddeefdd454e05123d ]
+[ Upstream commit 9f1e44774be578fb92776add95f1fcaf8284d692 ]
 
-There are comments in processor-cyrix.h advising you to _not_ make calls
-using the deprecated macros in this style:
+There should be only one instance of struct shdwc in the system. This is
+referenced through at91_shdwc. Return in probe if at91_shdwc is already
+allocated.
 
-  setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
-
-This is because it expands the macro into a non-functioning calling
-sequence. The calling order must be:
-
-  outb(CX86_CCR2, 0x22);
-  inb(0x23);
-
->From the comments:
-
- * When using the old macros a line like
- *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
- * gets expanded to:
- *  do {
- *    outb((CX86_CCR2), 0x22);
- *    outb((({
- *        outb((CX86_CCR2), 0x22);
- *        inb(0x23);
- *    }) | 0x88), 0x23);
- *  } while (0);
-
-The new macros fix this problem, so use them instead.
-
-Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Andy Lutomirski <luto@amacapital.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Jia Zhang <qianyue.zj@alibaba-inc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20180921212041.13096-2-tedheadster@gmail.com
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/cyrix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/reset/at91-sama5d2_shdwc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
-index 311d0fad17e6b..a4f6e0ec4ba0f 100644
---- a/arch/x86/kernel/cpu/cyrix.c
-+++ b/arch/x86/kernel/cpu/cyrix.c
-@@ -434,7 +434,7 @@ static void cyrix_identify(struct cpuinfo_x86 *c)
- 			/* enable MAPEN  */
- 			setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);
- 			/* enable cpuid  */
--			setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
-+			setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x80);
- 			/* disable MAPEN */
- 			setCx86(CX86_CCR3, ccr3);
- 			local_irq_restore(flags);
+diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/reset/at91-sama5d2_shdwc.c
+index 90b0b5a70ce52..04ca990e8f6cb 100644
+--- a/drivers/power/reset/at91-sama5d2_shdwc.c
++++ b/drivers/power/reset/at91-sama5d2_shdwc.c
+@@ -246,6 +246,9 @@ static int __init at91_shdwc_probe(struct platform_device *pdev)
+ 	if (!pdev->dev.of_node)
+ 		return -ENODEV;
+ 
++	if (at91_shdwc)
++		return -EBUSY;
++
+ 	at91_shdwc = devm_kzalloc(&pdev->dev, sizeof(*at91_shdwc), GFP_KERNEL);
+ 	if (!at91_shdwc)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
