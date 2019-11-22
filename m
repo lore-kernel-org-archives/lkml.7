@@ -2,115 +2,154 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDD2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907BBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE6120637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C15420637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EA+/5w6i"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="UfqJ+8+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfKVIMR (ORCPT
+        id S1726942AbfKVIMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:12:17 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:33491 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfKVILH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:11:07 -0500
-Received: by mail-qv1-f65.google.com with SMTP id x14so2544803qvu.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 00:11:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bunR22uohvLumSntRQCcWdw1R7jgySamsOIo5iz6NMg=;
-        b=EA+/5w6i1pKnrL2pn3ktDXOh6H+54aNLV2LSClr5L+8ngdUgBsF1wcv5p1Cj4u95cb
-         WIxIp+e45TL/K1UuwGkhJ7ul8TDo9pfGmyYdMe6XbSTo6zT5/DS/KZpHZecgr8pYUvtW
-         oemOTf+WY+3qi8tqN05M/LFN0TT9HkwMpyCtBxAK3gMqrcP/SbwT6QYrUimNd8fyCSE/
-         +74qcLZpLr8DWUIQo6qATXRLOZzzRIIsvFZMrs4e+gdJMVLvGo2zm1pwulbWZnkmKkOn
-         NAz4K1k3iD9e03paQCALC8tYpWLoicbIByko5b1CZ2SRhF4+9YnXjnrJzgIiWHVUOr7D
-         CXaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bunR22uohvLumSntRQCcWdw1R7jgySamsOIo5iz6NMg=;
-        b=Ly4DyHkQsqRiPyN+zGy88WRU//RYs5bH+8ryBL6SYBmM9vngcCpygj9CzchooeaYt8
-         nHHOC+fgq/4idlbgumGzU0uxuEox2ot0Yqt861/n+kMigyqgxl2aIlhNuWNiWNZIpAOF
-         zbVdSh/9wB7L2gLF8mN90UWVMmosf538FV7JyBSU+o45PvUiloDWxde3m8QKfTbWmp7L
-         SnUYJAQNMcHPTWu64xhFKqitR+vM3/0nwJCE7EnJmGAWOW9hpF8CpxEnFINKSIL14oLc
-         0I0Ve5ZTU5u0+eB8FoECFtObsSpwq9dugFLN14a2BlbiPFR8AGVx0vHobwppuPvSaLnS
-         mCBw==
-X-Gm-Message-State: APjAAAXzcwmWj9i3B0RG296RNH4FInwifVgX1hbi1dVd6uLC9KCpH3jC
-        mIsmh7eu3O0s8Z9eihrWAdPIEP1papzlj7TuS7/fHA==
-X-Google-Smtp-Source: APXvYqygFQrkNm6Bt588zmo6tr7srw9mz4qHapNvIHUVmygRLfGyxXTse6VYxx2Cq5vwWS04IxnKEwPg4nNLc1pthaI=
-X-Received: by 2002:a0c:b064:: with SMTP id l33mr12729742qvc.34.1574410265787;
- Fri, 22 Nov 2019 00:11:05 -0800 (PST)
-MIME-Version: 1.0
-References: <000000000000bf6bd30575fec528@google.com> <000000000000e2ac670597ad2663@google.com>
- <CAHk-=wjg0JXgwb6rkFK0q_JvW7YdGpiPtMVWe=YhFK1y_2-F7Q@mail.gmail.com>
- <14e1a22937ce5a54d94dab04a103e159215fb654.camel@kernel.crashing.org> <CAHk-=wgR=8QX6A6iPAzsD-E38t6Uesa45yWLmeTWZTnK0GbRow@mail.gmail.com>
-In-Reply-To: <CAHk-=wgR=8QX6A6iPAzsD-E38t6Uesa45yWLmeTWZTnK0GbRow@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 22 Nov 2019 09:10:54 +0100
-Message-ID: <CACT4Y+ZQ6uB2qNjjbyvqgvywZvDay8Zo9mqUw=FhGUysAf9yiA@mail.gmail.com>
-Subject: Re: general protection fault in kernfs_add_one
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        syzbot <syzbot+db1637662f412ac0d556@syzkaller.appspotmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Fri, 22 Nov 2019 03:12:25 -0500
+Received: from mout.web.de ([212.227.15.3]:50327 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfKVIMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 03:12:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1574410263;
+        bh=M0NbBfDQUkr/VgDzsbL81QG5vRwRapzFbAO9bUSc3kM=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=UfqJ+8+l1y+qSLRjScSjXU/0S0lwMXKblwz3OaIxj6wcDamh3RfBUcKXL3SexHcOd
+         7zZv5Kl+78Ghfe8zvgNzHgD1e0ZZdprJCZb2GZUYhr69US1whCElSgQdoLQ7FFh9g7
+         zRJD+NEPnghL7AyrY+Fdn2vAZzbnsjmiHv7R9los=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.244.174.75]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LhvYQ-1i2bAL0IE6-00n8VA; Fri, 22
+ Nov 2019 09:11:03 +0100
+Subject: Re: [PATCH v4 04/13] exfat: add directory operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Tejun Heo <tj@kernel.org>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nikolay Borisov <nborisov@suse.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191121052618.31117-1-namjae.jeon@samsung.com>
+ <CGME20191121052917epcas1p259b8cb61ab86975cabc0cf4815a8dc38@epcas1p2.samsung.com>
+ <20191121052618.31117-5-namjae.jeon@samsung.com>
+ <498a958f-9066-09c6-7240-114234965c1a@web.de>
+ <004901d5a0e0$f7bf1030$e73d3090$@samsung.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <0e17c0a7-9b40-12a4-3f3f-500b9abb66de@web.de>
+Date:   Fri, 22 Nov 2019 09:11:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <004901d5a0e0$f7bf1030$e73d3090$@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:sprXqfhDPylyC+PS/I3B9RUW8MbH2DypxSRx8eC5UoR4qUZatvc
+ 524I2jtKfD2Rz1pOhGm2+4iyX6vZ7uiWMKaEHLnl818fckYxp1lteGKSUcg7O637QiGZ27g
+ Ky5oQi+TFKUGoG+zL6i3x6k2CQiwCLZAmq0hIApG69q9ylyIhIYFMFAO1l2f3we2q8fURPM
+ 3NihE1Ssu3qeaW+FQNazQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+Vw750mv/qc=:WOxz6T/NdpyQa6H9Dvjl1c
+ yS8P/eoAhRnNkMMUzAOlVF2ZoeYHLcXLvlkt8YclCK/ATmV0EDuJzZMZNEh5/TWg4kKsW/1bD
+ m1qO5m1/rCTEcZcM74yYKxcsE6LeQqlVyTq5MvMVQjYHRZNl76pjUSZ4XfznhmdTLK0s5bKAf
+ ED5p2Pk+BEzhVwPi0PEBriWw/yTD85FrgVRIE+Gt/sKqpUlqHqXrZEk/TtfKQ6y38GGbn3nQs
+ pALbVnPht1KCssyTllx0kOZGLXcEC4Gmcuvo18RLElma3H3qb9ZDpNuRfH9PDSGIDLrLlRkwj
+ XQoOHJWauKiDQ1NqIUbLqPgFB59BslKLku/xWs+fpqBODnKBYwW6dxSEj0eQSqTnro7hDqHvq
+ uGuOnwwudnlqqxvnO5DrCq4aHVUU7g6YeGpkCamJIXs3DcGtqjWDFtmO3oGkWkfLeyvC96kQF
+ nM/WVfV+4Q37tWd7LzPCHRTvmArZf/Adtd1KpiIr/U+QgAo/uPORY3X78HqcUlgehRMZQkyQ+
+ A0J8kpOAjajZPH20EMHGVgUFsf29adk5Zaw5koMJD21yN3gwQwFSqfl2NmPAhyte0BZPRl5tg
+ BlZGEHlJQ/u2W0s0QgXCk6GoYKC3At9Q5mzDGxSE3SDuXQaMOGDS0uyox5tPnwJyuLM5Xx5Ep
+ Vt5cIVgX4BFPa+bJT0xA3qTjocl+qkRTpEPPJSPu3DROECY+Hiuyqg/CVsGj0auyhEnEyKnrm
+ dAatC67uzO/UUM1T6tskNMCEvARk99VXQQs2X/qSb9xHaDB4hUt+G7WnGG7EW9Ywmtq7ER0S7
+ ynlSwx0OdSJ8UUBrUNOWBfePT+F99/T49+OFJbVxJNpXWc+uuzkpGs6ULkFWpWNY7U87zL4yv
+ +mHzq0SdmQnSHd9g7qGYbg+I74u+krjntQRtI41M+pGA2FFli0OLutnICv53hK7c+ZZlwQEYR
+ Ml2TvJ1VcbEK7dqPjXcGOKnZLCWdwusgZJ4iixz1rWb8+J7OHwJUfnErBhuZ455cC6KDKRiH9
+ 9mKwy9lAmd/+y7ttiMN5hO45yUxBsXwXCwJhMhi/fiZToW1EDVXeT16s8t253FJleSoBoWrbw
+ 4LEs1FNHHD1kefJkyOW/giFjgLSpNpoAq7618RJqN5ewdonLn8hjEmyrh1s8IrIhL5JMY9spB
+ ihEp8l4mSklwFdzdFdCAsBlxnXCC+tTbXYQ/3thEqUuDu6ITAN7ut7s8v5WsF60i/WgvHs9wj
+ Ybz+I9ZGNPkApLetadAoYog1doT7YF8yD57koUtpji11sjyleJ5v1vhyU68k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 5:54 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Nov 19, 2019 at 8:04 PM Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> >
-> > Could this be what was fixed by:
-> >
-> > ac43432cb1f5c2950408534987e57c2071e24d8f
-> > ("driver core: Fix use-after-free and double free on glue directory")
-> >
-> > Which went into 5.3 afaik ?
->
-> Hmm. Sounds very possible. It matches the commit syzbot bisected to,
-> and looking at the reports, the I can't find anything that is 5.3 or
-> later.
->
-> I did find a 5.3.0-rc2+ report, but that's still consistent with that
-> commit: it got merged just before 5.3-rc4.
->
-> So I think you're right.
->
-> I forget what the magic email rule was to report that something is
-> fixed to syzbot..
+>> =E2=80=A6
+>>> +++ b/fs/exfat/dir.c
+>> =E2=80=A6
+>>> +static int exfat_readdir(struct inode *inode, struct exfat_dir_entry
+>> *dir_entry)
+>>> +{
+>> =E2=80=A6
+>>> +			if (!ep) {
+>>> +				ret =3D -EIO;
+>>> +				goto free_clu;
+>>> +			}
+>>
+>> How do you think about to move a bit of common exception handling code
+>> (at similar places)?
+> Not sure it is good.
 
-Hi Linus,
+The software development opinions can vary also for this change pattern
+according to different design goals.
+Is such a transformation just another possibility to reduce duplicate
+source code a bit?
 
-This would be:
-
-#syz fix: driver core: Fix use-after-free and double free on glue directory
-
-FTR, the cheat sheet is referenced in every bug report:
-
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with syzbot.
+Regards,
+Markus
