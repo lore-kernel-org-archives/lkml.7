@@ -2,72 +2,95 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632F7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D75C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385FD2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDF620715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDH9tjOV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfKVSLt (ORCPT
+        id S1726909AbfKVSMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:11:49 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38552 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfKVSLt (ORCPT
+        Fri, 22 Nov 2019 13:12:53 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39440 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfKVSMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:11:49 -0500
-Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1DF0E15282F8B;
-        Fri, 22 Nov 2019 10:11:48 -0800 (PST)
-Date:   Fri, 22 Nov 2019 10:11:47 -0800 (PST)
-Message-Id: <20191122.101147.1112820693050959325.davem@davemloft.net>
-To:     guillaume.tucker@collabora.com
-Cc:     hulkci@huawei.com, tomeu.vizoso@collabora.com, broonie@kernel.org,
-        khilman@baylibre.com, mgalka@collabora.com,
-        enric.balletbo@collabora.com, yuehaibing@huawei.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
-Subject: Re: net-next/master bisection: boot on beaglebone-black
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <bfe5e987-e0b5-6c89-f193-6666be203532@collabora.com>
-References: <5dd7d181.1c69fb81.64fbc.cd8a@mx.google.com>
-        <20191122.093657.95680289541075120.davem@davemloft.net>
-        <bfe5e987-e0b5-6c89-f193-6666be203532@collabora.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 22 Nov 2019 10:11:48 -0800 (PST)
+        Fri, 22 Nov 2019 13:12:53 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w24so6972251otk.6;
+        Fri, 22 Nov 2019 10:12:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LbBeEobsz4S0LFGMIMH+H3mQPLYBzbcsiCNXRc3XsUE=;
+        b=UDH9tjOVODOSByFsaieInwQyk4OzVHBe0OZWjg0ugAAC7lEd+c3Y/l8Zl5gwC0jGRl
+         SZLbHfAC9mKpT8Ap/ihDuKBuZPwilu6wAChta7moMcm5w08ALS5BAauys8/gdm1E2ZQu
+         9+dqZDwtJNL9lPPBuF6Xd5+K7E1c+bP/wOrZtm6lKtl85286hX5v2iCaG7QMSDVcu28e
+         835g/vYqwz6jthgDGXpXw9pnp6i0k9sIJYZphfBLIcHsLhDko8g3PxXMdAaa8Lf+onpO
+         ulKWdfIVv8N0akxCmTlVqXo6w3zyVAbbqBm+fuI6K1Iae5pOp5B1yDHDZH4bvxp1AL4q
+         +GmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LbBeEobsz4S0LFGMIMH+H3mQPLYBzbcsiCNXRc3XsUE=;
+        b=G6xIDkfAOi7cXLgN/q3OV49AUySvSeHX/zgtmLVOeh0NnYLW/tPevNO6Po3MCGKpcO
+         6Gb1lMrbPOsb1g53FFWEshBgULUb05VuZhJDC7y7tzdNes5wvfKFWCtIZk6WWGOIXFJn
+         QEAqCXqmrzOoCwnuWEmE+l61nP9yj/efETNbvKTRmCkTPx1o0D0FRWEqOEjefQOWEyaR
+         uhkLVoOuTmIjcumbGfSM7Zonkt5qwupCUSGvfNfXKR8j2zto991ey95jxPtXOl8bUSGh
+         R2o+uQWonpWauchqSo5BETQBS8/XVlbvvlLv2NeYlZlQzTGOB8q0ebzdKXL96ABZ0fwV
+         wXgQ==
+X-Gm-Message-State: APjAAAVJ1Oj4KU0Vt1OcrRh/uCieY0ymlKjbMOGElT1CnEP5YmazF5xV
+        PNmrJnihnsgIQDEw462lnj4=
+X-Google-Smtp-Source: APXvYqz8z75oREf6uxIOKcQLk2lwxIgbfK1hNWeQqS2O9SVT8tV73+K05b7lW0j50IPaPGJJmZ7H5A==
+X-Received: by 2002:a9d:648f:: with SMTP id g15mr11857332otl.195.1574446372290;
+        Fri, 22 Nov 2019 10:12:52 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d205sm2258606oig.28.2019.11.22.10.12.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Nov 2019 10:12:51 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:12:50 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/122] 4.14.156-stable review
+Message-ID: <20191122181250.GC13514@roeck-us.net>
+References: <20191122100722.177052205@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Date: Fri, 22 Nov 2019 18:02:06 +0000
+On Fri, Nov 22, 2019 at 11:27:33AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.156 release.
+> There are 122 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> Anything received after that time might be too late.
+> 
 
-> As far as I can tell, it's the first time someone replies to say
-> this issue is already fixed.  Sorry if I've missed an email.
+Results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 372 pass: 372 fail: 0
 
-I saw the first one and just ignored it hoping that since I had
-the fix in 'net' these emails would simply stop.
+As already reported, there is a new suspicious RCU usage warning
+in idr_get_next().
 
-> Also, it's apparently not fixed in the net-next tree which
-> explains why it was reported again.  I guess we need to disable
-> bisections in net-next until it gets rebased and includes the
-> fix, and add a way to mark issues fixed somewhere else in
-> KernelCI to avoid this situation in the future.
-
-If you're not combining the net and the net-next tree, as Stephen
-Rothwell's tree is doing, then you're going to run into this problem
-every single day and spam us with these messages.
-
-What is being done right now doesn't work.  You can't just wait for
-net integration into net-next, that doesn't cut it.
+Guenter
