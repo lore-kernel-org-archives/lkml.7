@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CA2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00839C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A48320659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA91A20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402108;
-	bh=AkmH7/23k2qjTXz17Saidwk9VDL7TkNqlVi282KJW4M=;
+	s=default; t=1574402115;
+	bh=MbC18X3Sfxye5skgXLrpnqugMo/Tin2MGO7PyG9qQWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JgZ35gBbw3MfYLHpV51gWlNI+lE2IP5GSZ5wPUjaAYdXaJ+e2jFI9fDEO2GZa6kKS
-	 USxkYFs7HXmVM174ejLvlBZ1NZRt5K4Y0FsdEWjbM3p/t752i86zsqTg0AMeRWKRKc
-	 emj8lyCBtFpN08fg595bIUqMKeoxaOsOcNpA1sBI=
+	b=nWnG9ZB7OGgTp020Dp0DKtaNZDBB7Z8yvqGkiBk12AuaO4poo75PNby0sJ/CKMtkZ
+	 JDM3CXeMfJjH6wgGilcRxou+fZioFh0bOtYP/XHrsXK0G9C2QTIYB8zbafjjwyW705
+	 QJFJDAB+2jEENE4EoYq4qHnko3/T3/4Xfr6HnjHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfKVFzH (ORCPT
+        id S1728330AbfKVFzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:55:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728706AbfKVFw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:59 -0500
+        id S1728719AbfKVFwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C5232068F;
-        Fri, 22 Nov 2019 05:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B474F2084B;
+        Fri, 22 Nov 2019 05:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401977;
-        bh=AkmH7/23k2qjTXz17Saidwk9VDL7TkNqlVi282KJW4M=;
+        s=default; t=1574401974;
+        bh=MbC18X3Sfxye5skgXLrpnqugMo/Tin2MGO7PyG9qQWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HnfRxW3Vw+L/z52IcCrpp/p5WO51yH3clAtrOLvbjOZ8j8TnLOAE2IRa1LuMeX9f0
-         MfsFLTVa2W6nVKvhUsbsfdqcEJUj7SzhqYbOn0OwHDSCd14wocl8lL8RE/ouzMLj9E
-         gUUjxJlj6ssTKVvQwNfZHjDCVIETmYE5vRoej29s=
+        b=gDDuPMGZBFoU/I11kGhClA6V0XDWQ8G/EL9stjJyrsVe3M39uG3yKUFdN0i9nTBFB
+         7pl+wtHwx6A8JO2m0EHyIDmR/yR3beKMB8NnQcHLgxzcwNSDvDXSglzv5ahbEuWCqR
+         Ah2isa8xRb4NAxa0Hv1IN8K2vHajuRc4qrkLPcO8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Christoph Hellwig <hch@lst.de>, Faiz Abbas <faiz_abbas@ti.com>,
-        linux-block@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 196/219] mmc: core: align max segment size with logical block size
-Date:   Fri, 22 Nov 2019 00:48:48 -0500
-Message-Id: <20191122054911.1750-189-sashal@kernel.org>
+Cc:     Maciej Kwiecien <maciej.kwiecien@nokia.com>,
+        Marcin Stojek <marcin.stojek@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 194/219] sctp: don't compare hb_timer expire date before starting it
+Date:   Fri, 22 Nov 2019 00:48:46 -0500
+Message-Id: <20191122054911.1750-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,75 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Maciej Kwiecien <maciej.kwiecien@nokia.com>
 
-[ Upstream commit c53336c8f5f29043fded57912cc06c24e12613d7 ]
+[ Upstream commit d1f20c03f48102e52eb98b8651d129b83134cae4 ]
 
-Logical block size is the lowest possible block size that the storage
-device can address. Max segment size is often related with controller's
-DMA capability. And it is reasonable to align max segment size with
-logical block size.
+hb_timer might not start at all for a particular transport because its
+start is conditional. In a result a node is not sending heartbeats.
 
-SDHCI sets un-aligned max segment size, and causes ADMA error, so
-fix it by aligning max segment size with logical block size.
+Function sctp_transport_reset_hb_timer has two roles:
+    - initial start of hb_timer for a given transport,
+    - update expire date of hb_timer for a given transport.
+The function is optimized to update timer's expire only if it is before
+a new calculated one but this comparison is invalid for a timer which
+has not yet started. Such a timer has expire == 0 and if a new expire
+value is bigger than (MAX_JIFFIES / 2 + 2) then "time_before" macro will
+fail and timer will not start resulting in no heartbeat packets send by
+the node.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-block@vger.kernel.org
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+This was found when association was initialized within first 5 mins
+after system boot due to jiffies init value which is near to MAX_JIFFIES.
+
+Test kernel version: 4.9.154 (ARCH=arm)
+hb_timer.expire = 0;                //initialized, not started timer
+new_expire = MAX_JIFFIES / 2 + 2;   //or more
+time_before(hb_timer.expire, new_expire) == false
+
+Fixes: ba6f5e33bdbb ("sctp: avoid refreshing heartbeat timer too often")
+Reported-by: Marcin Stojek <marcin.stojek@nokia.com>
+Tested-by: Marcin Stojek <marcin.stojek@nokia.com>
+Signed-off-by: Maciej Kwiecien <maciej.kwiecien@nokia.com>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/block.c | 6 ------
- drivers/mmc/core/queue.c | 9 ++++++++-
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ net/sctp/transport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index eee004fb3c3e3..527ab15c421f9 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -2384,12 +2384,6 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
- 	snprintf(md->disk->disk_name, sizeof(md->disk->disk_name),
- 		 "mmcblk%u%s", card->host->index, subname ? subname : "");
+diff --git a/net/sctp/transport.c b/net/sctp/transport.c
+index 033696e6f74fb..ad158d311ffae 100644
+--- a/net/sctp/transport.c
++++ b/net/sctp/transport.c
+@@ -207,7 +207,8 @@ void sctp_transport_reset_hb_timer(struct sctp_transport *transport)
  
--	if (mmc_card_mmc(card))
--		blk_queue_logical_block_size(md->queue.queue,
--					     card->ext_csd.data_sector_size);
--	else
--		blk_queue_logical_block_size(md->queue.queue, 512);
--
- 	set_capacity(md->disk, size);
- 
- 	if (mmc_host_cmd23(card->host)) {
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 18aae28845ec9..becc6594a8a47 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -355,6 +355,7 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
- {
- 	struct mmc_host *host = card->host;
- 	u64 limit = BLK_BOUNCE_HIGH;
-+	unsigned block_size = 512;
- 
- 	if (mmc_dev(host)->dma_mask && *mmc_dev(host)->dma_mask)
- 		limit = (u64)dma_max_pfn(mmc_dev(host)) << PAGE_SHIFT;
-@@ -368,7 +369,13 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
- 	blk_queue_max_hw_sectors(mq->queue,
- 		min(host->max_blk_count, host->max_req_size / 512));
- 	blk_queue_max_segments(mq->queue, host->max_segs);
--	blk_queue_max_segment_size(mq->queue, host->max_seg_size);
-+
-+	if (mmc_card_mmc(card))
-+		block_size = card->ext_csd.data_sector_size;
-+
-+	blk_queue_logical_block_size(mq->queue, block_size);
-+	blk_queue_max_segment_size(mq->queue,
-+			round_down(host->max_seg_size, block_size));
- 
- 	INIT_WORK(&mq->recovery_work, mmc_mq_recovery_handler);
- 	INIT_WORK(&mq->complete_work, mmc_blk_mq_complete_work);
+ 	/* When a data chunk is sent, reset the heartbeat interval.  */
+ 	expires = jiffies + sctp_transport_timeout(transport);
+-	if (time_before(transport->hb_timer.expires, expires) &&
++	if ((time_before(transport->hb_timer.expires, expires) ||
++	     !timer_pending(&transport->hb_timer)) &&
+ 	    !mod_timer(&transport->hb_timer,
+ 		       expires + prandom_u32_max(transport->rto)))
+ 		sctp_transport_hold(transport);
 -- 
 2.20.1
 
