@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D25C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA4B20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526F720715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418932;
-	bh=p3wOtXFwCxxL6GayYEYYWLwTqQWP8j50iQYNkNIRsMo=;
+	s=default; t=1574418936;
+	bh=PZ4mNX3BZ5ujetohvjV/4ez0wEdlzaYIfrhi0antStA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OY2M2NpthPm7vnFjylu8XhmhPgB1qUpOjwf7CbTEzqiLUkwlsBr0OBSV1H4NPVnMK
-	 gHS9vLZzyHa0gU8ORihdMmjG4RwzZWF9JH8baRl3BToJ+KQpiQDGB144+gapgP2QTQ
-	 atQQQOZzGwzqQbCYfHOISmgLRJDDfmNrbT9aCKfo=
+	b=xOLz0lFV80AgSxg5lUrZveKshPeQpVexvZi8ENtGC757lR9lrL/HTj4bAhAhqFckc
+	 hRzWio3wU/0TPY6PY9t5o+taM08hSwD9PvsD5sFVeKsRLOTQ1v0wweQYRVps9504xC
+	 WLQIBsM3RA5thwfcAYklTl03+6i/Krx0dfscCJVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfKVKfb (ORCPT
+        id S1728260AbfKVKfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:35:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:35:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727653AbfKVKf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:35:27 -0500
+        id S1727096AbfKVKfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:35:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C5720715;
-        Fri, 22 Nov 2019 10:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BDE120637;
+        Fri, 22 Nov 2019 10:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418926;
-        bh=p3wOtXFwCxxL6GayYEYYWLwTqQWP8j50iQYNkNIRsMo=;
+        s=default; t=1574418930;
+        bh=PZ4mNX3BZ5ujetohvjV/4ez0wEdlzaYIfrhi0antStA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xlHz10DTD25qq0IMmmiG8iSb9EMlP5sSthgoooSlUgFJOr9ieSYoSenu2DhjzkhjW
-         Nh4El3yJfRgH5sbWC8okzC8zdyp0yBqSupk9JAIHleFanbR+YFdhDyLN9fuBcZ86Ox
-         3D2/BMcT+dqb8aclv6WlTk6SMU0fEYaCSN+BaGHo=
+        b=nyuXxMcYs9HQosPk+cuRs1/iHk9SUeCQcXWtdR2H3eiQtUhhlUAVzHCbQ3PEiHptC
+         8g/EMem0hQe+h5iTYgHFmPgXLCOEkjv1uAL5p3O8YsZaNohF+Q0uoViBHipV1uATPx
+         rXQStn2JpyKS94r+1D98ezm0KEwEngaZjGftM0Dc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: [PATCH 4.4 099/159] slcan: Fix memory leak in error path
-Date:   Fri, 22 Nov 2019 11:28:10 +0100
-Message-Id: <20191122100819.529582595@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.4 100/159] net: cdc_ncm: Signedness bug in cdc_ncm_set_dgram_size()
+Date:   Fri, 22 Nov 2019 11:28:11 +0100
+Message-Id: <20191122100820.277001861@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit ed50e1600b4483c049ce76e6bd3b665a6a9300ed upstream.
+commit a56dcc6b455830776899ce3686735f1172e12243 upstream.
 
-This patch is fixing memory leak reported by Syzkaller:
+This code is supposed to test for negative error codes and partial
+reads, but because sizeof() is size_t (unsigned) type then negative
+error codes are type promoted to high positive values and the condition
+doesn't work as expected.
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xffffffffffffffff
-
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+Fixes: 332f989a3b00 ("CDC-NCM: handle incomplete transfer of MTU")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/slcan.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/usb/cdc_ncm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -613,6 +613,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
- 
- err_exit:
- 	rtnl_unlock();
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -534,7 +534,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+ 			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+-	if (err < sizeof(max_datagram_size)) {
++	if (err != sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
 
 
