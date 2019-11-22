@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8050C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AEBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F86204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7489204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404256;
-	bh=HwrdliP4e2KnHoiiMFsQZ6eO7u3d7tT5XWKqlt9m2F4=;
+	s=default; t=1574404263;
+	bh=rBaaCepDaC+PYJzZ8NE3MPbHgZYe5c/CjDWf7Ogf0ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bG9JoOaIzZBVCUh75e2ijL+Wel5AccuM/rFVJk/8cj6Z1zCCr5n42ARlE97c9CvhZ
-	 vANtUei97YwyuQIy0AM4CvZAgG80SczfC2s0BZbGfrOYEBGWfIZFKEqM8I9E/eNX+k
-	 4WfN/1S3G2nY09idX7x23xzjCDJs5P47z3dNLhpY=
+	b=cXtevogra6qr4XeVaF3IbpZCxbzZ0mGJR9qZQyNv3oK0xvo1eSbjorl4aqMCZVcYo
+	 nUpGt5j+IjZb7da3xJq/9bFsjhd6JCzptAHfn/Lwrm1qQMIZVb88FPTua72gHEnng7
+	 K/L/AL7lMWW1EzFR2nfWsoq620tte9deD5XjRN3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbfKVGaz (ORCPT
+        id S1726846AbfKVFtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:30:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:49:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfKVFt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:27 -0500
+        id S1726655AbfKVFtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43DC82070A;
-        Fri, 22 Nov 2019 05:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 479D72070B;
+        Fri, 22 Nov 2019 05:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401766;
-        bh=HwrdliP4e2KnHoiiMFsQZ6eO7u3d7tT5XWKqlt9m2F4=;
+        s=default; t=1574401756;
+        bh=rBaaCepDaC+PYJzZ8NE3MPbHgZYe5c/CjDWf7Ogf0ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9NgTKehk3TpbcX32KKf/Ip69oGyp6Jvz9Cy8BfHM0+Ok8qDnRMCRg2ZS+M54agVz
-         GjBO+fXY0jcJ2aWkEXGaEAnW5+0isCbj8fg8I+F+d4U5l69NQNiuzMpkr3yMoimTk0
-         7tva1vutYeYKX2vdP6sFNpxH19BjkqtwWSXpjkuE=
+        b=d0aicebpDbgpv6oZaWNZfGa4x2gT7Z4+Jc3Cdkcx3aAWGjUHa7+fkYl/haSIQQPvk
+         gYMTZWKXZs8ft6zee4p8C7nNJH2VtDi+mVVxhKnG4n9n5nF4F3SMgSyjwrStzZttCd
+         IbSAxX2HOlEjA/E7tCVV6R/aibokil8IuNKTN65E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH AUTOSEL 4.19 017/219] ARM: dts: imx23: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:45:49 -0500
-Message-Id: <20191122054911.1750-10-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 010/219] ARM: dts: imx31: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:45:42 -0500
+Message-Id: <20191122054911.1750-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -63,95 +63,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit b629e83520fafe6f4c2f3e8c88c78a496fc4987c ]
+[ Upstream commit 013d37e4707e24c7b9bc3fc55aeda55ce9c2b262 ]
 
-Boards based on imx23 have duplicate memory nodes:
+Boards based on imx31 have duplicate memory nodes:
 
 - One coming from the board dts file: memory@
 
-- One coming from the imx23.dtsi file.
+- One coming from the imx31.dtsi file.
 
 Fix the duplication by removing the memory node from the dtsi file
 and by adding 'device_type = "memory";' in the board dts.
 
 Reported-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Tested-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx23-evk.dts           | 1 +
- arch/arm/boot/dts/imx23-olinuxino.dts     | 1 +
- arch/arm/boot/dts/imx23-sansa.dts         | 1 +
- arch/arm/boot/dts/imx23-stmp378x_devb.dts | 1 +
- arch/arm/boot/dts/imx23-xfi3.dts          | 1 +
- arch/arm/boot/dts/imx23.dtsi              | 2 --
- 6 files changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx31-bug.dts  | 1 +
+ arch/arm/boot/dts/imx31-lite.dts | 1 +
+ arch/arm/boot/dts/imx31.dtsi     | 2 --
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx23-evk.dts b/arch/arm/boot/dts/imx23-evk.dts
-index ad2ae25b7b4db..aca27aa2d44bd 100644
---- a/arch/arm/boot/dts/imx23-evk.dts
-+++ b/arch/arm/boot/dts/imx23-evk.dts
-@@ -10,6 +10,7 @@
- 	compatible = "fsl,imx23-evk", "fsl,imx23";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx23-olinuxino.dts b/arch/arm/boot/dts/imx23-olinuxino.dts
-index e9351774c6199..109f51603d45e 100644
---- a/arch/arm/boot/dts/imx23-olinuxino.dts
-+++ b/arch/arm/boot/dts/imx23-olinuxino.dts
-@@ -20,6 +20,7 @@
- 	compatible = "olimex,imx23-olinuxino", "fsl,imx23";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x04000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx23-sansa.dts b/arch/arm/boot/dts/imx23-sansa.dts
-index 67de7863ad795..fa22fd9b24129 100644
---- a/arch/arm/boot/dts/imx23-sansa.dts
-+++ b/arch/arm/boot/dts/imx23-sansa.dts
-@@ -50,6 +50,7 @@
- 	compatible = "sandisk,sansa_fuze_plus", "fsl,imx23";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x04000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx23-stmp378x_devb.dts b/arch/arm/boot/dts/imx23-stmp378x_devb.dts
-index 95c7b918f6d60..aab029349420d 100644
---- a/arch/arm/boot/dts/imx23-stmp378x_devb.dts
-+++ b/arch/arm/boot/dts/imx23-stmp378x_devb.dts
+diff --git a/arch/arm/boot/dts/imx31-bug.dts b/arch/arm/boot/dts/imx31-bug.dts
+index 6ee4ff8e4e8f0..9eb960cc02cc5 100644
+--- a/arch/arm/boot/dts/imx31-bug.dts
++++ b/arch/arm/boot/dts/imx31-bug.dts
 @@ -17,6 +17,7 @@
- 	compatible = "fsl,stmp378x-devb", "fsl,imx23";
+ 	compatible = "buglabs,imx31-bug", "fsl,imx31";
  
- 	memory@40000000 {
+ 	memory@80000000 {
 +		device_type = "memory";
- 		reg = <0x40000000 0x04000000>;
+ 		reg = <0x80000000 0x8000000>; /* 128M */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx31-lite.dts b/arch/arm/boot/dts/imx31-lite.dts
+index db52ddccabc33..d17abdfb6330c 100644
+--- a/arch/arm/boot/dts/imx31-lite.dts
++++ b/arch/arm/boot/dts/imx31-lite.dts
+@@ -18,6 +18,7 @@
  	};
  
-diff --git a/arch/arm/boot/dts/imx23-xfi3.dts b/arch/arm/boot/dts/imx23-xfi3.dts
-index 9616e500b9961..2b5df8dfd3ff3 100644
---- a/arch/arm/boot/dts/imx23-xfi3.dts
-+++ b/arch/arm/boot/dts/imx23-xfi3.dts
-@@ -49,6 +49,7 @@
- 	compatible = "creative,x-fi3", "fsl,imx23";
- 
- 	memory@40000000 {
+ 	memory@80000000 {
 +		device_type = "memory";
- 		reg = <0x40000000 0x04000000>;
+ 		reg = <0x80000000 0x8000000>;
  	};
  
-diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-index 71bfd2b15609a..aaaa987d8eff9 100644
---- a/arch/arm/boot/dts/imx23.dtsi
-+++ b/arch/arm/boot/dts/imx23.dtsi
-@@ -13,10 +13,8 @@
+diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
+index ca1419ca303c3..2fc64d2c7c88e 100644
+--- a/arch/arm/boot/dts/imx31.dtsi
++++ b/arch/arm/boot/dts/imx31.dtsi
+@@ -10,10 +10,8 @@
  	 * The decompressor and also some bootloaders rely on a
  	 * pre-existing /chosen node to be available to insert the
  	 * command line and merge other ATAGS info.
@@ -161,7 +124,7 @@ index 71bfd2b15609a..aaaa987d8eff9 100644
 -	memory { device_type = "memory"; };
  
  	aliases {
- 		gpio0 = &gpio0;
+ 		gpio0 = &gpio1;
 -- 
 2.20.1
 
