@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D3AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52919C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BBE2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267D820708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400524;
-	bh=Snhzch8azwuOYXbCQtEWlQY+Q47JjDAygTaC4J/qZj8=;
+	s=default; t=1574400527;
+	bh=qxxjYPnh4PQsTATEX/9F4QwWxNBeIk0vs4XPtZpHA2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VjXALUzaYPW3I8Dwk6kdSMEDUCzgClpGbw8HF4JD5O8lKpa8tz1pzdLaf2hf0ysQ/
-	 gPa9fCZMUwOflXO9tgxtQq0k0FAEOHIonQWKsi1OjfuqmRtCApVOn9aSo3/a/ZTh07
-	 6oGeTGd/Z/UXk/T6Mfkizuf+igMn45wP3yElR638=
+	b=0haDnTphczatfyukqTsIeZ+YNmBRCLpTtGC5ofBbuHpiOLMXSfbrb5lQz8489IZwZ
+	 /OuDwX9ocKLKREGZTm541XcqcpHLfzFk9LXnD1yA6RCiexZK5dnioDW3VjY+Rj0wad
+	 e8FeZ5/Rc+K/ApUmn7ijKkp5lWVI4rj/VpD9J2Fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKVF2n (ORCPT
+        id S1727106AbfKVF2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:28:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46650 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:28:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfKVF2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:28:42 -0500
+        id S1727047AbfKVF2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:28:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395902070A;
-        Fri, 22 Nov 2019 05:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3C4F20708;
+        Fri, 22 Nov 2019 05:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400521;
-        bh=Snhzch8azwuOYXbCQtEWlQY+Q47JjDAygTaC4J/qZj8=;
+        s=default; t=1574400524;
+        bh=qxxjYPnh4PQsTATEX/9F4QwWxNBeIk0vs4XPtZpHA2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIlo8SkwBuy4UqJ+yuxqkqIdbHNnt/vU9Kdgm647PoHFrlPrbJaGagvmDI45SiUkv
-         DCflrwcFrp0WZwNrQqnZqGp1GBF10jygnY/vw1imH6NtmMXFrMVbvLqAmC6tRKhKdj
-         IHvWhzbNuMd/6/zsl5gK4UdBYCK7s2TBpfsAlX24=
+        b=t8aP2o5bJsdUeIXEVzVdc4B5r4Ohm29UKuCZwaxSLZuLPHLx6Dn3/u+L8NYOHifRH
+         A3boHOQmUO2G7CI3Jmvmdjb2YoN1g5fUm1OhXElxwf3q0qsWuAN3AnNidU9mShOGPQ
+         4cfktGVbDNG0SsL9H7qRJQi8NrEVNfQxHinrqH/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/219] scsi: lpfc: Fix kernel Oops due to null pring pointers
-Date:   Fri, 22 Nov 2019 00:25:00 -0500
-Message-Id: <20191122052837.357-2-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 005/219] ARM: dts: Fix up SQ201 flash access
+Date:   Fri, 22 Nov 2019 00:25:03 -0500
+Message-Id: <20191122052837.357-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122052837.357-1-sashal@kernel.org>
 References: <20191122052837.357-1-sashal@kernel.org>
@@ -60,91 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 5a9eeff57f340238c39c95d8e7e54c96fc722de7 ]
+[ Upstream commit d88b11ef91b15d0af9c0676cbf4f441a0dff0c56 ]
 
-Driver is hitting null pring pointers in lpfc_do_work().
+This sets the partition information on the SQ201 to be read
+out from the RedBoot partition table, removes the static
+partition table and sets our boot options to mount root from
+/dev/mtdblock2 where the squashfs+JFFS2 resides.
 
-Pointer assignment occurs based on SLI-revision. If recovering after an
-error, its possible the sli revision for the port was cleared, making the
-lpfc_phba_elsring() not return a ring pointer, thus the null pointer.
-
-Add SLI revision checking to lpfc_phba_elsring() and status checking to all
-callers.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h      | 6 ++++++
- drivers/scsi/lpfc/lpfc_els.c  | 2 ++
- drivers/scsi/lpfc/lpfc_init.c | 7 ++++++-
- drivers/scsi/lpfc/lpfc_sli.c  | 2 ++
- 4 files changed, 16 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/gemini-sq201.dts | 37 ++++--------------------------
+ 1 file changed, 5 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 43732e8d13473..79c3b2f53828e 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -1235,6 +1235,12 @@ lpfc_sli_read_hs(struct lpfc_hba *phba)
- static inline struct lpfc_sli_ring *
- lpfc_phba_elsring(struct lpfc_hba *phba)
- {
-+	/* Return NULL if sli_rev has become invalid due to bad fw */
-+	if (phba->sli_rev != LPFC_SLI_REV4  &&
-+	    phba->sli_rev != LPFC_SLI_REV3  &&
-+	    phba->sli_rev != LPFC_SLI_REV2)
-+		return NULL;
-+
- 	if (phba->sli_rev == LPFC_SLI_REV4) {
- 		if (phba->sli4_hba.els_wq)
- 			return phba->sli4_hba.els_wq->pring;
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index f3c6801c0b312..3651c0fc88197 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -1340,6 +1340,8 @@ lpfc_els_abort_flogi(struct lpfc_hba *phba)
- 			Fabric_DID);
+diff --git a/arch/arm/boot/dts/gemini-sq201.dts b/arch/arm/boot/dts/gemini-sq201.dts
+index 3787cf3763c41..e9e4a8a02600b 100644
+--- a/arch/arm/boot/dts/gemini-sq201.dts
++++ b/arch/arm/boot/dts/gemini-sq201.dts
+@@ -20,7 +20,7 @@
+ 	};
  
- 	pring = lpfc_phba_elsring(phba);
-+	if (unlikely(!pring))
-+		return -EIO;
+ 	chosen {
+-		bootargs = "console=ttyS0,115200n8";
++		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
+ 		stdout-path = &uart0;
+ 	};
  
- 	/*
- 	 * Check the txcmplq for an iocb that matches the nport the driver is
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 9acb5b44ce4c1..dae0dd8066f04 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -1801,7 +1801,12 @@ lpfc_sli4_port_sta_fn_reset(struct lpfc_hba *phba, int mbx_action,
- 	lpfc_offline(phba);
- 	/* release interrupt for possible resource change */
- 	lpfc_sli4_disable_intr(phba);
--	lpfc_sli_brdrestart(phba);
-+	rc = lpfc_sli_brdrestart(phba);
-+	if (rc) {
-+		lpfc_printf_log(phba, KERN_ERR, LOG_INIT,
-+				"6309 Failed to restart board\n");
-+		return rc;
-+	}
- 	/* request and enable interrupt */
- 	intr_mode = lpfc_sli4_enable_intr(phba, phba->intr_mode);
- 	if (intr_mode == LPFC_INTR_ERROR) {
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index a490e63c94b67..266e7101902ef 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -4644,6 +4644,8 @@ lpfc_sli_brdrestart_s4(struct lpfc_hba *phba)
- 	hba_aer_enabled = phba->hba_flag & HBA_AER_ENABLED;
+@@ -138,37 +138,10 @@
+ 			/* 16MB of flash */
+ 			reg = <0x30000000 0x01000000>;
  
- 	rc = lpfc_sli4_brdreset(phba);
-+	if (rc)
-+		return rc;
+-			partition@0 {
+-				label = "RedBoot";
+-				reg = <0x00000000 0x00120000>;
+-				read-only;
+-			};
+-			partition@120000 {
+-				label = "Kernel";
+-				reg = <0x00120000 0x00200000>;
+-			};
+-			partition@320000 {
+-				label = "Ramdisk";
+-				reg = <0x00320000 0x00600000>;
+-			};
+-			partition@920000 {
+-				label = "Application";
+-				reg = <0x00920000 0x00600000>;
+-			};
+-			partition@f20000 {
+-				label = "VCTL";
+-				reg = <0x00f20000 0x00020000>;
+-				read-only;
+-			};
+-			partition@f40000 {
+-				label = "CurConf";
+-				reg = <0x00f40000 0x000a0000>;
+-				read-only;
+-			};
+-			partition@fe0000 {
+-				label = "FIS directory";
+-				reg = <0x00fe0000 0x00020000>;
+-				read-only;
++			partitions {
++				compatible = "redboot-fis";
++				/* Eraseblock at 0xfe0000 */
++				fis-index-block = <0x1fc>;
+ 			};
+ 		};
  
- 	spin_lock_irq(&phba->hbalock);
- 	phba->pport->stopped = 0;
 -- 
 2.20.1
 
