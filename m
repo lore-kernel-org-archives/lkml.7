@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F19C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F7BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6D720718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE48F20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Iym2zVnG"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kH5aH8Ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbfKVLS2 (ORCPT
+        id S1730040AbfKVLS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:18:28 -0500
-Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:54809
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Fri, 22 Nov 2019 06:18:26 -0500
+Received: from mail-eopbgr20045.outbound.protection.outlook.com ([40.107.2.45]:34373
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729904AbfKVKsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729908AbfKVKsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 05:48:21 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ogMJF0ItoKS7deLeO+MWiNxwnziPsBCm5yZZRWmAdQXZhjs1F0Wj9TzKwsr1uNTd5H6PXDTA2fUVHwhxFRS8qVukBKCAgf9nKT4/nmg9FLEeZA1yrtBcgpZr4gaPBkNkxbDotloiRSEYusb7kQ/mLm1SbzEmL/pH9SyNaXbxbf8APMXsXW9mrwCjpjIB//yforulMllv3KxjvdsLLoNj8UCYQb2iqw9YRWYMW9L2s2sJuUED5R1fnOcmMHTy9s/Vm4QWmtHeVXfaPl3ypSS2+pDm5ddSkmF4Zvz2GEHECnI8LfvfVDJ5JfRH9zHNeXSqC7+Bj1MJvRgrMLyI6Uhvnw==
+ b=GOU5BJk8yPY+dTOu90Sipiq2VJ1oh0YIRk31QDkIbpzLEK7j+ol8+E7MRxezhcby3NO+2fSl5Z71D9ZZp6igz09qzqhJCvYVKs1ZJVCL4gpseHp8J53HZLp1neJqg/iCKqzOAiZQRsZ+T+HkrEboQeeP0YVOCWZ7asq1Xr6wl3r/VUvLblJPFM4bT4bHIUlLR6PJVsE2mRBwbqk6rdkHY1+9LSzXhsY9H58gs0lyAXFtbxHU8jHKaRmqPzF1PjlOU9b2di+KjSxsPn0xRwF2KeUHssrWQ0RGoSTntaicXaRvVjqB4Y4nQN4sydKxYZA7QA1PaUagDpO5uxQHCN1qqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3qqqySnUx5hbngPXJSn7qDcJcQbjLOyL9Ze+Zk60ShI=;
- b=LYEu6u7ncJal+wUzaCQEUr+Rg0II3FhrnLLSA9iYdCckDTFe2NV7TVUPt7Ba9KGW0uHLalNxMAu2/VMVP1BEmWyHkdb1aS9YlMTP2MxtU9d3bDyGVUNi81cvuLDFdGBKbasrEeG9tIgH5xoYv1iuUFOnKAsBcguENzN4cVCULmeuBSc0RHk4s2UGpua8OeIj9sRdp2Gk8zV6YOz/HSuUzqRC8h6CVneKhKtB/+UaAOxptws67q2W9ddo7v5QtXGFXrOlsJ0Sj7Xlsr/+nd/bDb3P80cyOkZjUGcATnzq8fNOzDplo/D+bycGEB5jSo07Y/Dt9q4616zEOLAigBZFsg==
+ bh=hpB7/h8s8+NB1zXHlwW1O5r1FDB+BYRcST9UVjrcAD4=;
+ b=WqcLkN0hF+CsGfHlEq4I8Ueag4mkPFkg8rLLTzWAxsXqEv7z6iMEy271IpllqevCXkRuKkuRDggB1Ecv7E69aiYphFI4GHRoW7aXMAb5CXm8jqtfRQQzPjb+xIPjXzpzfp1f/TlTctsPIzcqCuGstbJcyyMBr9vE/WsAYukT+zrQQ5cfjT2FSz5YNnNP1uiJW6us33ZbeOS2ZmeJUEBsxzna4RE8jGYN+GQ8PztzQuPTdRR3eDc6EGoVXjGF/4dsV/NhXVV+mfxJaieXXu5eRD0ZVcPy/tXy4iJ6zco/lIzj4qsHqUZ9ueTnNGwVvsCDjrajXMmcnocFVTSn9SMwSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3qqqySnUx5hbngPXJSn7qDcJcQbjLOyL9Ze+Zk60ShI=;
- b=Iym2zVnGD71PvhClTe/ASh+YSIJ7CIR16quepGhQAyyCZsQR7j5+f2iCs4UBM3dXd9K2NzmmjFKpLW6o2RY9U74b3n3sYr2kunrU88sS2Q3+ZiT1LBRA68D5/lH+QzGewnhpuVPsKsn8+wvupt6HJoQPUkthR3ItbmFLxoH0q3A=
+ bh=hpB7/h8s8+NB1zXHlwW1O5r1FDB+BYRcST9UVjrcAD4=;
+ b=kH5aH8Ugn17NzwpBA9iGkiCbNpOars+hkY8MEW2zbxchEXIYskkOrabaKncIMleROk4JGGX5gg3hFobIU0znH/Z0iVl5VgQ+7G4I/BIXXk6f/IamrZmw9VkV/GRAe6BTiH8j8AupyrQ9BDSe5zoqUVAFeYbsy0PRGliiTtwv7XU=
 Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB6961.eurprd04.prod.outlook.com (52.132.212.203) with Microsoft SMTP
+ AM0PR04MB5074.eurprd04.prod.outlook.com (20.177.42.26) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Fri, 22 Nov 2019 10:48:17 +0000
+ 15.20.2474.19; Fri, 22 Nov 2019 10:48:11 +0000
 Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
  ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
  ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2474.019; Fri, 22 Nov 2019
- 10:48:17 +0000
+ 10:48:11 +0000
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Aisheng Dong <aisheng.dong@nxp.com>,
         Shawn Guo <shawnguo@kernel.org>,
@@ -58,13 +58,13 @@ CC:     Peng Fan <peng.fan@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 07/11] clk: imx: Rename sccg and frac pll register to
- suggest clk_hw
-Thread-Topic: [PATCH v2 07/11] clk: imx: Rename sccg and frac pll register to
- suggest clk_hw
-Thread-Index: AQHVoSJYdI0dfcrcUkSeoWKrP5yyHg==
-Date:   Fri, 22 Nov 2019 10:48:16 +0000
-Message-ID: <1574419679-3813-8-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 01/11] clk: imx: Add correct failure handling for clk based
+ helpers
+Thread-Topic: [PATCH v2 01/11] clk: imx: Add correct failure handling for clk
+ based helpers
+Thread-Index: AQHVoSJV3+BGHUQPMkG8d0LKK8nz2A==
+Date:   Fri, 22 Nov 2019 10:48:10 +0000
+Message-ID: <1574419679-3813-2-git-send-email-abel.vesa@nxp.com>
 References: <1574419679-3813-1-git-send-email-abel.vesa@nxp.com>
 In-Reply-To: <1574419679-3813-1-git-send-email-abel.vesa@nxp.com>
 Accept-Language: en-US
@@ -81,127 +81,133 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 92471ecd-12be-44f1-f26a-08d76f397b1e
-x-ms-traffictypediagnostic: AM0PR04MB6961:|AM0PR04MB6961:
+x-ms-office365-filtering-correlation-id: 630c59f2-36db-42ac-3649-08d76f3977ab
+x-ms-traffictypediagnostic: AM0PR04MB5074:|AM0PR04MB5074:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB696121794DA502BE5D9B6E6BF6490@AM0PR04MB6961.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:989;
+x-microsoft-antispam-prvs: <AM0PR04MB5074BA9DEB47A28DC1868096F6490@AM0PR04MB5074.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
 x-forefront-prvs: 02296943FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(186003)(44832011)(446003)(11346002)(2616005)(52116002)(76176011)(66446008)(64756008)(66556008)(66476007)(7736002)(478600001)(6636002)(36756003)(5660300002)(6506007)(26005)(2906002)(86362001)(14454004)(102836004)(386003)(305945005)(25786009)(66946007)(256004)(110136005)(8936002)(50226002)(6116002)(316002)(99286004)(54906003)(81166006)(81156014)(8676002)(6436002)(6512007)(4326008)(71190400001)(3846002)(71200400001)(66066001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6961;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(478600001)(14444005)(256004)(6506007)(54906003)(7736002)(305945005)(316002)(71200400001)(5660300002)(110136005)(102836004)(186003)(86362001)(66066001)(71190400001)(2906002)(4326008)(76176011)(99286004)(36756003)(26005)(52116002)(386003)(8936002)(3846002)(2616005)(446003)(44832011)(11346002)(66556008)(66476007)(66446008)(64756008)(6486002)(66946007)(6436002)(81166006)(8676002)(81156014)(6636002)(6512007)(25786009)(14454004)(50226002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5074;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qTh15l9nxloArqUScywHo/zhF1J1vavZpfEPwEkhDp/wTXHpeiNiPfksRUJEs7YW/hVvLpUWstoigBKQ/h2uJC3V3oVe8BuHRpdOUBXJVzJD1cN5Gj/6ie2ED5NI67ENxObRh5/GrCbnuq+YOCIQyVPRgADSDnUDR99gMKnk+kKMG/lOdQXh7R66Qim1nQI95PllMU9ZhJ2vELRiB2j6NhmIct26oYWZFBucBb3zK67OPYQErl6aueUUF63S3SouD2d8mu9SmNx++6wL8KN433jvbmkaXwEQR/pT+uJOsPCrLdqejZGV9t2nWrj2cH9lJHpNg7rxn20feKwHiZuy0Ea8CfR2L4U/a1KuLyltoRhU3J7WgxYFprnkNob2JRfkPTbrMkXA3jhngPYPbPnG8mcGXzO+oY0ulAHHjmSoSRBz+ICk+wgOaazNu0Wm5IvB
+x-microsoft-antispam-message-info: iV4gbwLuQW9Vq7UdzckzTsAHAhPxbNSSDRCDIb+AVKDhhn9aSN+xVB+PNUv2QFY6c0GYuwCXxEMNf3RwrOclK6IhfgYU1UMYn4MUBp8n6o61mfA3wDffaZkCalF5Q6LjvTOWb2Xc3uBX7X9eTNkEUoETOCiPVjuJ3CrVmRcsnMviWNW0VzyGtg9kyeifemuf3w7DFM5mDbGijTFpB3pRE/Ru093+RSbtfLecSgfv/G1Rw5+/0++/RTgvPxLJu6GMLkDm0wxenAqoMdfgCfaEWXdr8klUNhlkigjuCfuCKWuje0DKBtayXwZqR8b92+yg8zC2OU9ma/mbzKXvJ3pCZiQImuJjR8STUsur1s02aMhHnFs9dJRh3hwwJ8ZfvMkdVbg1bGIxsikaoPmEYc6jnqyAlaOZAARNvBPikElLHLGWr1vxAuM++H5sxpD7o9HY
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92471ecd-12be-44f1-f26a-08d76f397b1e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 10:48:16.7138
+X-MS-Exchange-CrossTenant-Network-Message-Id: 630c59f2-36db-42ac-3649-08d76f3977ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 10:48:10.9281
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ydbsT2hH2pz6WD+gB9JjK/b5vUERUrHHamZXyZTaBSKjM0grGxJg2VZ/n6+KgBw/Qo435fyRZUX9a3LTtF3wIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6961
+X-MS-Exchange-CrossTenant-userprincipalname: PajE31Amud/CMtt87ufpFQrVMVnXnaOObcOXi/W37kOoKIau5sxHR23VNtOqpua9paDEr0a0kLqaqOL3iYHSew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Renaming the imx_clk_frac_pll and imx_clk_sccg_pll register functions to
-imx_clk_hw_frac_pll, respectively imx_clk_hw_sccg_pll to be more obvious
-that they are clk_hw based.
+If the clk_hw based API returns an error, trying to return the clk from
+hw will end up in a NULL pointer dereference. So adding the to_clk
+checker and using it inside every clk based macro helper we handle that
+case correctly.
+
+This to_clk is also temporary and will go away along with the clk based
+macro helpers once there is no user that need them anymore.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/clk/imx/clk-frac-pll.c |  7 ++++---
- drivers/clk/imx/clk-sscg-pll.c |  4 ++--
- drivers/clk/imx/clk.h          | 12 ++++++++++--
- 3 files changed, 16 insertions(+), 7 deletions(-)
+ drivers/clk/imx/clk.h | 37 ++++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-pll.=
-c
-index fece503..101e0a3 100644
---- a/drivers/clk/imx/clk-frac-pll.c
-+++ b/drivers/clk/imx/clk-frac-pll.c
-@@ -201,8 +201,9 @@ static const struct clk_ops clk_frac_pll_ops =3D {
- 	.set_rate	=3D clk_pll_set_rate,
- };
-=20
--struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
--			     void __iomem *base)
-+struct clk_hw *imx_clk_hw_frac_pll(const char *name,
-+				   const char *parent_name,
-+				   void __iomem *base)
- {
- 	struct clk_init_data init;
- 	struct clk_frac_pll *pll;
-@@ -230,5 +231,5 @@ struct clk *imx_clk_frac_pll(const char *name, const ch=
-ar *parent_name,
- 		return ERR_PTR(ret);
- 	}
-=20
--	return hw->clk;
-+	return hw;
- }
-diff --git a/drivers/clk/imx/clk-sscg-pll.c b/drivers/clk/imx/clk-sscg-pll.=
-c
-index 0669e17..acd1b90 100644
---- a/drivers/clk/imx/clk-sscg-pll.c
-+++ b/drivers/clk/imx/clk-sscg-pll.c
-@@ -506,7 +506,7 @@ static const struct clk_ops clk_sscg_pll_ops =3D {
- 	.determine_rate	=3D clk_sscg_pll_determine_rate,
- };
-=20
--struct clk *imx_clk_sscg_pll(const char *name,
-+struct clk_hw *imx_clk_hw_sscg_pll(const char *name,
- 				const char * const *parent_names,
- 				u8 num_parents,
- 				u8 parent, u8 bypass1, u8 bypass2,
-@@ -545,5 +545,5 @@ struct clk *imx_clk_sscg_pll(const char *name,
- 		return ERR_PTR(ret);
- 	}
-=20
--	return hw->clk;
-+	return hw;
- }
 diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index d6c65f0..a7d86df 100644
+index bc5bb6a..30ddbc1 100644
 --- a/drivers/clk/imx/clk.h
 +++ b/drivers/clk/imx/clk.h
-@@ -115,6 +115,14 @@ extern struct imx_pll14xx_clk imx_1443x_pll;
- #define imx_clk_pllv2(name, parent, base) \
- 	to_clk(imx_clk_hw_pllv2(name, parent, base))
+@@ -54,48 +54,48 @@ extern struct imx_pll14xx_clk imx_1416x_pll;
+ extern struct imx_pll14xx_clk imx_1443x_pll;
 =20
-+#define imx_clk_frac_pll(name, parent_name, base) \
-+	to_clk(imx_clk_hw_frac_pll(name, parent_name, base))
-+
-+#define imx_clk_sscg_pll(name, parent_names, num_parents, parent,\
-+				bypass1, bypass2, base, flags) \
-+	to_clk(imx_clk_hw_sscg_pll(name, parent_names, num_parents, parent,\
-+				bypass1, bypass2, base, flags))
-+
+ #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
+-	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
++	to_clk(imx_clk_hw_cpu(name, parent_name, div, mux, pll, step))
+=20
+ #define clk_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
+ 				cgr_val, clk_gate_flags, lock, share_count) \
+-	clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
+-				cgr_val, clk_gate_flags, lock, share_count)->clk
++	to_clk(clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx,=
+ \
++				cgr_val, clk_gate_flags, lock, share_count))
+=20
+ #define imx_clk_pllv3(type, name, parent_name, base, div_mask) \
+-	imx_clk_hw_pllv3(type, name, parent_name, base, div_mask)->clk
++	to_clk(imx_clk_hw_pllv3(type, name, parent_name, base, div_mask))
+=20
+ #define imx_clk_pfd(name, parent_name, reg, idx) \
+-	imx_clk_hw_pfd(name, parent_name, reg, idx)->clk
++	to_clk(imx_clk_hw_pfd(name, parent_name, reg, idx))
+=20
+ #define imx_clk_gate_exclusive(name, parent, reg, shift, exclusive_mask) \
+-	imx_clk_hw_gate_exclusive(name, parent, reg, shift, exclusive_mask)->clk
++	to_clk(imx_clk_hw_gate_exclusive(name, parent, reg, shift, exclusive_mask=
+))
+=20
+ #define imx_clk_fixed_factor(name, parent, mult, div) \
+-	imx_clk_hw_fixed_factor(name, parent, mult, div)->clk
++	to_clk(imx_clk_hw_fixed_factor(name, parent, mult, div))
+=20
+ #define imx_clk_divider2(name, parent, reg, shift, width) \
+-	imx_clk_hw_divider2(name, parent, reg, shift, width)->clk
++	to_clk(imx_clk_hw_divider2(name, parent, reg, shift, width))
+=20
+ #define imx_clk_gate_dis(name, parent, reg, shift) \
+-	imx_clk_hw_gate_dis(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate_dis(name, parent, reg, shift))
+=20
+ #define imx_clk_gate2(name, parent, reg, shift) \
+-	imx_clk_hw_gate2(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate2(name, parent, reg, shift))
+=20
+ #define imx_clk_gate2_flags(name, parent, reg, shift, flags) \
+-	imx_clk_hw_gate2_flags(name, parent, reg, shift, flags)->clk
++	to_clk(imx_clk_hw_gate2_flags(name, parent, reg, shift, flags))
+=20
+ #define imx_clk_gate2_shared2(name, parent, reg, shift, share_count) \
+-	imx_clk_hw_gate2_shared2(name, parent, reg, shift, share_count)->clk
++	to_clk(imx_clk_hw_gate2_shared2(name, parent, reg, shift, share_count))
+=20
+ #define imx_clk_gate3(name, parent, reg, shift) \
+-	imx_clk_hw_gate3(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate3(name, parent, reg, shift))
+=20
+ #define imx_clk_gate4(name, parent, reg, shift) \
+-	imx_clk_hw_gate4(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate4(name, parent, reg, shift))
+=20
+ #define imx_clk_mux(name, reg, shift, width, parents, num_parents) \
+-	imx_clk_hw_mux(name, reg, shift, width, parents, num_parents)->clk
++	to_clk(imx_clk_hw_mux(name, reg, shift, width, parents, num_parents))
+=20
  struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
  		 void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
+@@ -198,6 +198,13 @@ struct clk_hw *imx_clk_hw_fixup_mux(const char *name, =
+void __iomem *reg,
+ 			      u8 shift, u8 width, const char * const *parents,
+ 			      int num_parents, void (*fixup)(u32 *val));
 =20
-@@ -124,10 +132,10 @@ struct clk_hw *imx_clk_hw_pllv1(enum imx_pllv1_type t=
-ype, const char *name,
- struct clk_hw *imx_clk_hw_pllv2(const char *name, const char *parent,
- 		void __iomem *base);
-=20
--struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
-+struct clk_hw *imx_clk_hw_frac_pll(const char *name, const char *parent_na=
-me,
- 			     void __iomem *base);
-=20
--struct clk *imx_clk_sscg_pll(const char *name,
-+struct clk_hw *imx_clk_hw_sscg_pll(const char *name,
- 				const char * const *parent_names,
- 				u8 num_parents,
- 				u8 parent, u8 bypass1, u8 bypass2,
++static inline struct clk *to_clk(struct clk_hw *hw)
++{
++	if (IS_ERR_OR_NULL(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++
+ static inline struct clk *imx_clk_fixed(const char *name, int rate)
+ {
+ 	return clk_register_fixed_rate(NULL, name, NULL, 0, rate);
 --=20
 2.7.4
 
