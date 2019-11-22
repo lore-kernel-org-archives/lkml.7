@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4658DC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E18C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C152068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1867C2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402941;
-	bh=lhL1UpcXPjZuPgvTxh6qj4Kz7MUW0YwV4aqksO/IBvo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wt63ZF45rduwXPtwJcgL9CNkdQn9btT+Es7tI/KP9BUuvF0CtKCZq2jiCrG6nwOhX
-	 fnHDJiY5wCSXaUaiJ1Ystw8OTA+Ce7N8IA1uNdGQoQggQWg31mwSTa9iPQpDS7VqtA
-	 o8JF05GOFtvrTYFDtAWljLpaJZzaEuix23T9X+1s=
+	s=default; t=1574402946;
+	bh=TOV0UK0piw0Hanyoyx8YpCbQcv2tT6LiX7Adeaopczg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v/SCXj4TlTruVbP8YBB4veGxeijmzZAz8LEsBWZUJjGjUyLg1ILcPXFN6h5g/cF3n
+	 p9n+GfhWwFYRsLlYLgW8m+fFwhhP4jTmmIKxyb+Qh1AM+tyM+u6bj+NsUPSFaB448N
+	 I0jX1mwco2vGveLIrc+7d/yWwQKOUbSpWgjL9UB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfKVGBe (ORCPT
+        id S1728024AbfKVGJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:01:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39764 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:09:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbfKVGBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:01:31 -0500
+        id S1727484AbfKVGBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6205D2068F;
-        Fri, 22 Nov 2019 06:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 809B620715;
+        Fri, 22 Nov 2019 06:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402491;
-        bh=lhL1UpcXPjZuPgvTxh6qj4Kz7MUW0YwV4aqksO/IBvo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RZDOP9niXzhzt7xDbDJxFtqXqJX8l55cO/5xyu6MtbWCnEQXTB1d3PPns0ScMoH7J
-         d5zADghjafHSKz9UDueWgsmB9J49bevk/9BVnyvNN46JbF8mDw9OB/rbyv+jvwSkgE
-         7hTDje3d/4idj0k8Mhp4xXI2zqDL1D+x2taclOW0=
+        s=default; t=1574402492;
+        bh=TOV0UK0piw0Hanyoyx8YpCbQcv2tT6LiX7Adeaopczg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VxNPQO5vzGBBTfNrEbOsQF9rp7I+8+w9MYkI/dXCN63P8/J787K3dI2yo96/0P/WC
+         +ksu/OESVU+Nqnean7ADkZVhxH7xi9VItYgkiLS70N/1ATQk7dQOHzzBrRAyh9LMFX
+         dEBZp6O+1SlpnpN0MZjqJjqPkS2jc1vvzdQVmQ08=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/91] scsi: lpfc: Fix dif and first burst use in write commands
-Date:   Fri, 22 Nov 2019 01:00:00 -0500
-Message-Id: <20191122060129.4239-1-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 03/91] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 01:00:01 -0500
+Message-Id: <20191122060129.4239-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
+References: <20191122060129.4239-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,75 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
+[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
 
-When dif and first burst is used in a write command wqe, the driver was not
-properly setting fields in the io command request. This resulted in no dif
-bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
-by the hardware.
+imx53-voipac-dmm-668 has two memory nodes, but the correct representation
+would be to use a single one with two reg entries - one for each RAM chip
+select, so fix it accordingly.
 
-Correct the wqe initializaton when both dif and first burst are used.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index d197aa176dee3..d489cc1018b5c 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -2707,6 +2707,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index ba689fbd0e413..301cf8d45947f 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -17,12 +17,8 @@
  
- 	/*
- 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
-@@ -2812,6 +2813,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
+ 	memory@70000000 {
+ 		device_type = "memory";
+-		reg = <0x70000000 0x20000000>;
+-	};
+-
+-	memory@b0000000 {
+-		device_type = "memory";
+-		reg = <0xb0000000 0x20000000>;
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
+ 	};
  
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	return 0;
- err:
- 	if (lpfc_cmd->seg_cnt)
-@@ -3364,6 +3373,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
- 
- 	/*
- 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
-@@ -3479,6 +3489,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
- 
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	/*
- 	 * If the OAS driver feature is enabled and the lun is enabled for
- 	 * OAS, set the oas iocb related flags.
+ 	regulators {
 -- 
 2.20.1
 
