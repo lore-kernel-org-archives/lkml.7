@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2EBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F46C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04BA20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B52820717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404066;
-	bh=oRalRQLcvw3mDLy4hoii35OLsY/POsYuwsyEtYJ06wQ=;
+	s=default; t=1574404069;
+	bh=YxOwail4Tn4iKsO6SwLLJfbsBO8zDbkTETDTiTByHgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HyZ8iaw0pHb7HABLeGrzUPZOIdChtPapG1ct8OxA/87hiBWQcdvXV9JAf81As2KQ6
-	 8pwR6uxxmemgUYgVzsjVn0UAIjmY8zB4p/0wlNc/wCME4tXIoRM/d6uenEPelurLjx
-	 N3qw4Y8ghui2obnKMUh6Xapa5XRSrIbUvGPgtZYk=
+	b=qu+X7Pi6DV2hXUC8yY21BKMn5KvfwCR0XUfsUxxiDCoQF1iCLI+GMR3CSg5RkphIY
+	 aTClM2nCA3lgi+OGivXJ3Wq3RT5YudZGAdsLG051y4hFpFXXY/f2ZCYxMMXZqmytcM
+	 /GyQL0nlNOuCCccsvGI1F6T5PUdTgSCudzi9uNzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfKVFuX (ORCPT
+        id S1727636AbfKVFuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727629AbfKVFuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 00:50:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727602AbfKVFuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C2D22070E;
-        Fri, 22 Nov 2019 05:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C926320748;
+        Fri, 22 Nov 2019 05:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401820;
-        bh=oRalRQLcvw3mDLy4hoii35OLsY/POsYuwsyEtYJ06wQ=;
+        s=default; t=1574401818;
+        bh=YxOwail4Tn4iKsO6SwLLJfbsBO8zDbkTETDTiTByHgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/RXbXFyudwcVDMaHlK8f3+Y8RFaNLrIdjEv1N5oQGE9WoaQQV3W0doXzHMkkner6
-         e4MhI+2CINsd6+TuUOozK3gZuR4Hw+yagQslWRLz7FwUcQTFv3ukeFj8plOHyAYlBc
-         H34vC1unDNz2GPHJTFJ6VqeiSuURM/VM16DK4uuo=
+        b=RFeu8rFHfcXcHUekn54E6G3YOKi1nFC18WjaeikesjR9pZetuI7Z2VaI7vBQJlynQ
+         QFHuJLJzUWeNjqRRBXQqjC094X+t2RqTOahCYmwAb9vW9V/uKDF2I/gDBHzaFaGB/J
+         KxyuHExEOTY2vY+rZ22NxE5F6pvmE06HgZfMPiLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 064/219] gpiolib: Fix return value of gpio_to_desc() stub if !GPIOLIB
-Date:   Fri, 22 Nov 2019 00:46:36 -0500
-Message-Id: <20191122054911.1750-57-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 062/219] iwlwifi: pcie: set cmd_len in the correct place
+Date:   Fri, 22 Nov 2019 00:46:34 -0500
+Message-Id: <20191122054911.1750-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,37 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit c5510b8dafce5f3f5a039c9b262ebcae0092c462 ]
+[ Upstream commit 956343a61226e1af3d146386f70a059feb567d0c ]
 
-If CONFIG_GPOILIB is not set, the stub of gpio_to_desc() should return
-the same type of error as regular version: NULL.  All the callers
-compare the return value of gpio_to_desc() against NULL, so returned
-ERR_PTR would be treated as non-error case leading to dereferencing of
-error value.
+command len is set too early in the code, since when building
+AMSDU, the size changes. This causes the byte count table to
+have the wrong size.
 
-Fixes: 79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a0ec0169b7a9 ("iwlwifi: support new tx api")
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio/consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 412098b24f58b..8dfd8300d9c31 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -475,7 +475,7 @@ static inline int gpiod_set_consumer_name(struct gpio_desc *desc,
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+index b99f33ff91230..a9e42f0437ccb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -555,18 +555,6 @@ int iwl_trans_pcie_gen2_tx(struct iwl_trans *trans, struct sk_buff *skb,
  
- static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
- {
--	return ERR_PTR(-EINVAL);
-+	return NULL;
- }
+ 	spin_lock(&txq->lock);
  
- static inline int desc_to_gpio(const struct gpio_desc *desc)
+-	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_22560) {
+-		struct iwl_tx_cmd_gen3 *tx_cmd_gen3 =
+-			(void *)dev_cmd->payload;
+-
+-		cmd_len = le16_to_cpu(tx_cmd_gen3->len);
+-	} else {
+-		struct iwl_tx_cmd_gen2 *tx_cmd_gen2 =
+-			(void *)dev_cmd->payload;
+-
+-		cmd_len = le16_to_cpu(tx_cmd_gen2->len);
+-	}
+-
+ 	if (iwl_queue_space(trans, txq) < txq->high_mark) {
+ 		iwl_stop_queue(trans, txq);
+ 
+@@ -604,6 +592,18 @@ int iwl_trans_pcie_gen2_tx(struct iwl_trans *trans, struct sk_buff *skb,
+ 		return -1;
+ 	}
+ 
++	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_22560) {
++		struct iwl_tx_cmd_gen3 *tx_cmd_gen3 =
++			(void *)dev_cmd->payload;
++
++		cmd_len = le16_to_cpu(tx_cmd_gen3->len);
++	} else {
++		struct iwl_tx_cmd_gen2 *tx_cmd_gen2 =
++			(void *)dev_cmd->payload;
++
++		cmd_len = le16_to_cpu(tx_cmd_gen2->len);
++	}
++
+ 	/* Set up entry for this TFD in Tx byte-count array */
+ 	iwl_pcie_gen2_update_byte_tbl(trans_pcie, txq, cmd_len,
+ 				      iwl_pcie_gen2_get_num_tbs(trans, tfd));
 -- 
 2.20.1
 
