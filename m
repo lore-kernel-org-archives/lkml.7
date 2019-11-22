@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37979C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699E4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE80207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438212071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420286;
-	bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
+	s=default; t=1574420287;
+	bh=pPjVqW+TzBuF+V00o4hpuDk0lt7UMlrEz4zrYZiDHD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U5NXcl930KsHWroAzPk94EAXt0jmoUmRthl8VreQikss2yURrurYNw9ss1PTFN0+m
-	 QBhUJjEYMaAc4QbvY0IK86PVYEm7Zc/XkCBI/grrzkhz7pOEpyRpc7WLLaIX86gfwX
-	 18BUgvhI2OYZrm7Dyt8e3+uT4BPZ4QindK9xXJBc=
+	b=spaHqST9GwrqdFT0p1g5mnKxKBVgAC8wPb5xAjUMCjrOxB9xWHh6MMDna+CXp/wmT
+	 p45S1wtncYDbzbtJhviOlpNvMXDjAG886kRDG+QLzio6MQZaQIO/noB0pyREuAzG+g
+	 9T0S2vYMcbALwLHPWwjiDXgrD+4bvg5+EwUlng1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfKVK6F (ORCPT
+        id S1730754AbfKVK6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:58:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730502AbfKVK6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:00 -0500
+        id S1730742AbfKVK56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8341F20721;
-        Fri, 22 Nov 2019 10:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFC322073B;
+        Fri, 22 Nov 2019 10:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420280;
-        bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
+        s=default; t=1574420277;
+        bh=pPjVqW+TzBuF+V00o4hpuDk0lt7UMlrEz4zrYZiDHD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAHzKmrLXwAX8HfWj8eYN6ogp/frZfYLAgikXiQIP/9DjXQu2IEhsHiizhkIf9H1V
-         gAv+XQDfnV10eb67z7pPymG5d10BFvU31vgQH7tRY6Zqwr+W2zFDo68zQyCs/BmkBt
-         3ynTdartDY3ngnwlP0LNxaOsupG7pytgGHxCI2eg=
+        b=QCzWHFHQvb+bHKex08ljJvRi3j9SWq/SFku//HKTHu9K2zC7zDUa6CpRZ9VHwnxD/
+         KbYnsY0FUKToDBE7lQNwKtqVCZRQ+XMy6F739222cnPokFXukPyZABGIQTYfFsLY+C
+         Hb9yRLQ5iTUxQ/ZDgCu2JSi2WZIJKQWgZYK+Hhf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Romain Izard <romain.izard.pro@gmail.com>,
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/220] watchdog: w83627hf_wdt: Support NCT6796D, NCT6797D, NCT6798D
-Date:   Fri, 22 Nov 2019 11:26:58 +0100
-Message-Id: <20191122100915.975229254@linuxfoundation.org>
+Subject: [PATCH 4.19 052/220] watchdog: sama5d4: fix timeout-sec usage
+Date:   Fri, 22 Nov 2019 11:26:57 +0100
+Message-Id: <20191122100915.919777684@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,67 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Romain Izard <romain.izard.pro@gmail.com>
 
-[ Upstream commit 57cbf0e3a0fd48e5ad8f3884562e8dde4827c1c8 ]
+[ Upstream commit 2e0432f8f8ad11b4bd208445360220efa5b37d82 ]
 
-The watchdog controller on NCT6796D, NCT6797D, and NCT6798D is compatible
-with the wtachdog controller on other Nuvoton chips.
+When using watchdog_init_timeout to update the default timeout value,
+an error means that there is no "timeout-sec" in the relevant device
+tree node.
 
+This should not prevent binding of the driver to the device.
+
+Fixes: 976932e40036 ("watchdog: sama5d4: make use of timeout-secs provided in devicetree")
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Reviewed-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/w83627hf_wdt.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/watchdog/sama5d4_wdt.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/watchdog/w83627hf_wdt.c b/drivers/watchdog/w83627hf_wdt.c
-index 7817836bff554..4b9365d4de7a9 100644
---- a/drivers/watchdog/w83627hf_wdt.c
-+++ b/drivers/watchdog/w83627hf_wdt.c
-@@ -50,7 +50,7 @@ static int cr_wdt_csr;		/* WDT control & status register */
- enum chips { w83627hf, w83627s, w83697hf, w83697ug, w83637hf, w83627thf,
- 	     w83687thf, w83627ehf, w83627dhg, w83627uhg, w83667hg, w83627dhg_p,
- 	     w83667hg_b, nct6775, nct6776, nct6779, nct6791, nct6792, nct6793,
--	     nct6795, nct6102 };
-+	     nct6795, nct6796, nct6102 };
+diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
+index 255169916dbb6..1e93c1b0e3cfc 100644
+--- a/drivers/watchdog/sama5d4_wdt.c
++++ b/drivers/watchdog/sama5d4_wdt.c
+@@ -247,11 +247,7 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
- static int timeout;			/* in seconds */
- module_param(timeout, int, 0);
-@@ -100,6 +100,7 @@ MODULE_PARM_DESC(early_disable, "Disable watchdog at boot time (default=0)");
- #define NCT6792_ID		0xc9
- #define NCT6793_ID		0xd1
- #define NCT6795_ID		0xd3
-+#define NCT6796_ID		0xd4	/* also NCT9697D, NCT9698D */
+-	ret = watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
+-	if (ret) {
+-		dev_err(&pdev->dev, "unable to set timeout value\n");
+-		return ret;
+-	}
++	watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
  
- #define W83627HF_WDT_TIMEOUT	0xf6
- #define W83697HF_WDT_TIMEOUT	0xf4
-@@ -209,6 +210,7 @@ static int w83627hf_init(struct watchdog_device *wdog, enum chips chip)
- 	case nct6792:
- 	case nct6793:
- 	case nct6795:
-+	case nct6796:
- 	case nct6102:
- 		/*
- 		 * These chips have a fixed WDTO# output pin (W83627UHG),
-@@ -407,6 +409,9 @@ static int wdt_find(int addr)
- 	case NCT6795_ID:
- 		ret = nct6795;
- 		break;
-+	case NCT6796_ID:
-+		ret = nct6796;
-+		break;
- 	case NCT6102_ID:
- 		ret = nct6102;
- 		cr_wdt_timeout = NCT6102D_WDT_TIMEOUT;
-@@ -450,6 +455,7 @@ static int __init wdt_init(void)
- 		"NCT6792",
- 		"NCT6793",
- 		"NCT6795",
-+		"NCT6796",
- 		"NCT6102",
- 	};
+ 	timeout = WDT_SEC2TICKS(wdd->timeout);
  
 -- 
 2.20.1
