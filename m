@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C0520708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6838120708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421625;
-	bh=DuCIBAqhdSOob/5HkZMdAhgQxPJHm9GEVLYGMGLpj1I=;
+	s=default; t=1574421632;
+	bh=cr3IUombf9EhZ71/I7ho4fT1dibD1bo/zsPTJKKMmA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ao1OWLn9uco0LfoWbv79+IAUYPyjk3xuOBuHJ8KioG3u3Tkwpuw0ciiSdJ3GLEL1Y
-	 CZ6nImYCjCDVlveCrKOkwnG6kJqBIMjjzaU0gDTlxelUFJmgDy6KlBMlW5C95gRFCH
-	 gRLiCZ/0Q+6Vk8Id1BoBniZwNB7uT/51c8JTG7k4=
+	b=tnTep0rS50qTixnVRz/MpPws25V8WGFSG1SD6UxfOEKqm6E0YiJ275OmBkb7Mi8wG
+	 omebaGV/RaXzMzZ2f/LQ0vjfDFAzSTRajHFEMP6BKI8XF/mTU3GwIecW/dupLVswPl
+	 3URJEvv5fQxTMTgUN9ucYg3W0hXYJakzTOOZJzTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfKVLUZ (ORCPT
+        id S1729716AbfKVLUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:20:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52672 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:20:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729567AbfKVKp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:56 -0500
+        id S1727944AbfKVKpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6795D20721;
-        Fri, 22 Nov 2019 10:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4EA320715;
+        Fri, 22 Nov 2019 10:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419555;
-        bh=DuCIBAqhdSOob/5HkZMdAhgQxPJHm9GEVLYGMGLpj1I=;
+        s=default; t=1574419553;
+        bh=cr3IUombf9EhZ71/I7ho4fT1dibD1bo/zsPTJKKMmA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w86FkkepnUtIBAUAgCBRxNY02ieV6Ea3Ps404fGEqBe/QyjZIGvlKSrQ6Z83l4OW6
-         /osV3H1M6069vz8af7jlBkuRh3LhJGAdvq7DMHyRZmdlFIZOIHjU9eH9ldAYVuoGdL
-         pTHmJADWKKXgLDVve7CodShmswvULIqsont5JStw=
+        b=yeyHu9jYJwigy7B3F99Wz2oytgOFIUcON5aQJDObFdyvScsqWe0usVWk/jfaZQrSG
+         efuTaRqMKxLU/bd0qAkPa/h4H+b338Jtz0m5Hd2TMOsZCBTtLtVNcYIlPMalFMYAQi
+         xKIefxytrPafGOEvxCMdaZLEXH4y3JPAUwbp0l7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Francis Deslauriers <francis.deslauriers@efficios.com>,
+        Oleg Nesterov <oleg@redhat.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Andy Lutomirski <luto@kernel.org>,
@@ -54,9 +54,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Borislav Petkov <bp@suse.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 151/222] uprobes/x86: Prohibit probing on MOV SS instruction
-Date:   Fri, 22 Nov 2019 11:28:11 +0100
-Message-Id: <20191122100913.646743449@linuxfoundation.org>
+Subject: [PATCH 4.9 150/222] kprobes/x86: Prohibit probing on exception masking instructions
+Date:   Fri, 22 Nov 2019 11:28:10 +0100
+Message-Id: <20191122100913.582883301@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -71,21 +71,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 13ebe18c94f5b0665c01ae7fad2717ae959f4212 upstream.
+commit ee6a7354a3629f9b65bc18dbe393503e9440d6f5 upstream.
 
 Since MOV SS and POP SS instructions will delay the exceptions until the
-next instruction is executed, single-stepping on it by uprobes must be
+next instruction is executed, single-stepping on it by kprobes must be
 prohibited.
 
-uprobe already rejects probing on POP SS (0x1f), but allows probing on MOV
-SS (0x8e and reg == 2).  This checks the target instruction and if it is
-MOV SS or POP SS, returns -ENOTSUPP to reject probing.
+However, kprobes usually executes those instructions directly on trampoline
+buffer (a.k.a. kprobe-booster), except for the kprobes which has
+post_handler. Thus if kprobe user probes MOV SS with post_handler, it will
+do single-stepping on the MOV SS.
+
+This means it is safe that if it is used via ftrace or perf/bpf since those
+don't use the post_handler.
+
+Anyway, since the stack switching is a rare case, it is safer just
+rejecting kprobes on such instructions.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
 Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 Cc: Francis Deslauriers <francis.deslauriers@efficios.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -94,25 +101,51 @@ Cc: Yonghong Song <yhs@fb.com>
 Cc: Borislav Petkov <bp@suse.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: "David S . Miller" <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/152587072544.17316.5950935243917346341.stgit@devbox
+Link: https://lkml.kernel.org/r/152587069574.17316.3311695234863248641.stgit@devbox
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/uprobes.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/asm/insn.h    |   18 ++++++++++++++++++
+ arch/x86/kernel/kprobes/core.c |    4 ++++
+ 2 files changed, 22 insertions(+)
 
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -296,6 +296,10 @@ static int uprobe_init_insn(struct arch_
- 	if (is_prefix_bad(insn))
- 		return -ENOTSUPP;
+--- a/arch/x86/include/asm/insn.h
++++ b/arch/x86/include/asm/insn.h
+@@ -208,4 +208,22 @@ static inline int insn_offset_immediate(
+ 	return insn_offset_displacement(insn) + insn->displacement.nbytes;
+ }
+ 
++#define POP_SS_OPCODE 0x1f
++#define MOV_SREG_OPCODE 0x8e
++
++/*
++ * Intel SDM Vol.3A 6.8.3 states;
++ * "Any single-step trap that would be delivered following the MOV to SS
++ * instruction or POP to SS instruction (because EFLAGS.TF is 1) is
++ * suppressed."
++ * This function returns true if @insn is MOV SS or POP SS. On these
++ * instructions, single stepping is suppressed.
++ */
++static inline int insn_masking_exception(struct insn *insn)
++{
++	return insn->opcode.bytes[0] == POP_SS_OPCODE ||
++		(insn->opcode.bytes[0] == MOV_SREG_OPCODE &&
++		 X86_MODRM_REG(insn->modrm.bytes[0]) == 2);
++}
++
+ #endif /* _ASM_X86_INSN_H */
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -376,6 +376,10 @@ int __copy_instruction(u8 *dest, u8 *src
+ 		return 0;
+ 	memcpy(dest, insn.kaddr, length);
  
 +	/* We should not singlestep on the exception masking instructions */
-+	if (insn_masking_exception(insn))
-+		return -ENOTSUPP;
++	if (insn_masking_exception(&insn))
++		return 0;
 +
- 	if (x86_64)
- 		good_insns = good_insns_64;
- 	else
+ #ifdef CONFIG_X86_64
+ 	if (insn_rip_relative(&insn)) {
+ 		s64 newdisp;
 
 
