@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC383C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70F72070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8905A2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421135;
-	bh=fAL4fjcaPMxzF3yBKiRd6D+DTiReBP5DKKTY84t6nDs=;
+	s=default; t=1574421139;
+	bh=aR+7IWwqhRZDLaMIVikkwQEGC9EKDQlI50+mJ7hE0ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SU5NYiI2NosE5bansK7NC/Guh4PUtNovop64z6Xmcy1DjPjOp33RZ1mCRkm6VgfyL
-	 JOkTK9FghCLIJBCyZItrxgGRen+haGS0n4kb74uQhpg3Kg7IkgjVpwKUeenNu2ZgHg
-	 sUpE+rPX2pd9dtOSXQEORdWQOZrYBowIMLRgH0fE=
+	b=eK1KG58y/iTG/tQO2cQBCyqFh8VkEFkosPgb9upnF/ULDp07mbbo+TDyaX+8U+DWA
+	 xhNs5CO8S1s2UyGiYpr7yta2Uz5rst31lyTVynrsqGTEiGzZP+5aJzP8OhjtTpxvXL
+	 SpyTG+dsTTwac+Rvb4QIm0FB//YoD0Dgpy47beX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfKVLMO (ORCPT
+        id S1730748AbfKVK6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:12:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47892 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbfKVK6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:12 -0500
+        id S1729312AbfKVK5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63FA420718;
-        Fri, 22 Nov 2019 10:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB4B20718;
+        Fri, 22 Nov 2019 10:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420291;
-        bh=fAL4fjcaPMxzF3yBKiRd6D+DTiReBP5DKKTY84t6nDs=;
+        s=default; t=1574420271;
+        bh=aR+7IWwqhRZDLaMIVikkwQEGC9EKDQlI50+mJ7hE0ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSj1kSSunqG4xFnh4xVwedFQVQuAfcy1v/DO/FmWmu/qC6fMShUnHsCq02/DuQPIr
-         eZqgkm5HkR088byPm46jEf2b5I4G1wg76Ht/9fwwmjgMp7Sn7ebOEfqvKyUBxZkmSq
-         oHZHGSUXwG5gGhQt3H+56bJkPUU3UUdEMBmepMfE=
+        b=W7nWQ7raXohxYnWuHz6o28vbGo1MQitT4Q5u7dY/y9LHY5ZPAu4z3335SuYdpASl8
+         DCDIsZ0Bxjumyb3bKf1Mo2isXT+ShIlBzXZnhLu0/GucCk+QKBaTIdpe3penu6xsTe
+         OObPTpNzAILGT+e9yT7OxyEBCbeUc1BHXzwAvICo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/220] printk: CON_PRINTBUFFER console registration is a bit racy
-Date:   Fri, 22 Nov 2019 11:27:01 +0100
-Message-Id: <20191122100916.176222949@linuxfoundation.org>
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/220] watchdog: core: fix null pointer dereference when releasing cdev
+Date:   Fri, 22 Nov 2019 11:26:55 +0100
+Message-Id: <20191122100915.802441612@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,73 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 884e370ea88c109a3b982f4eb9ecd82510a3a1fe ]
+[ Upstream commit 953b9dd7725bad55a922a35e75bff7bebf7b9978 ]
 
-CON_PRINTBUFFER console registration requires us to do several
-preparation steps:
-- Rollback console_seq to replay logbuf messages which were already
-  seen on other consoles;
-- Set exclusive_console flag so console_unlock() will ->write() logbuf
-  messages only to the exclusive_console driver.
+watchdog_stop() calls watchdog_update_worker() which needs a valid
+wdd->wd_data pointer. So, when unregistering the cdev, clear the
+pointers after we call watchdog_stop(), not before.
 
-The way we do it, however, is a bit racy
-
-	logbuf_lock_irqsave(flags);
-	console_seq = syslog_seq;
-	console_idx = syslog_idx;
-	logbuf_unlock_irqrestore(flags);
-						<< preemption enabled
-						<< irqs enabled
-	exclusive_console = newcon;
-	console_unlock();
-
-We rollback console_seq under logbuf_lock with IRQs disabled, but
-we set exclusive_console with local IRQs enabled and logbuf unlocked.
-If the system oops-es or panic-s before we set exclusive_console - and
-given that we have IRQs and preemption enabled there is such a
-possibility - we will re-play all logbuf messages to every registered
-console, which may be a bit annoying and time consuming.
-
-Move exclusive_console assignment to the same IRQs-disabled and
-logbuf_lock-protected section where we rollback console_seq.
-
-Link: http://lkml.kernel.org/r/20180928095304.9972-1-sergey.senozhatsky@gmail.com
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Fixes: bb292ac1c602 ("watchdog: Introduce watchdog_stop_on_unregister helper")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/watchdog/watchdog_dev.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b627954061bb6..11d70fd15e706 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2708,14 +2708,18 @@ void register_console(struct console *newcon)
- 		logbuf_lock_irqsave(flags);
- 		console_seq = syslog_seq;
- 		console_idx = syslog_idx;
--		logbuf_unlock_irqrestore(flags);
- 		/*
- 		 * We're about to replay the log buffer.  Only do this to the
- 		 * just-registered console to avoid excessive message spam to
- 		 * the already-registered consoles.
-+		 *
-+		 * Set exclusive_console with disabled interrupts to reduce
-+		 * race window with eventual console_flush_on_panic() that
-+		 * ignores console_lock.
- 		 */
- 		exclusive_console = newcon;
- 		exclusive_console_stop_seq = console_seq;
-+		logbuf_unlock_irqrestore(flags);
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index ffbdc4642ea55..f6c24b22b37c0 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -1019,16 +1019,16 @@ static void watchdog_cdev_unregister(struct watchdog_device *wdd)
+ 		old_wd_data = NULL;
  	}
- 	console_unlock();
- 	console_sysfs_notify();
+ 
+-	mutex_lock(&wd_data->lock);
+-	wd_data->wdd = NULL;
+-	wdd->wd_data = NULL;
+-	mutex_unlock(&wd_data->lock);
+-
+ 	if (watchdog_active(wdd) &&
+ 	    test_bit(WDOG_STOP_ON_UNREGISTER, &wdd->status)) {
+ 		watchdog_stop(wdd);
+ 	}
+ 
++	mutex_lock(&wd_data->lock);
++	wd_data->wdd = NULL;
++	wdd->wd_data = NULL;
++	mutex_unlock(&wd_data->lock);
++
+ 	hrtimer_cancel(&wd_data->timer);
+ 	kthread_cancel_work_sync(&wd_data->work);
+ 
 -- 
 2.20.1
 
