@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC20CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C9020674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49CB20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403941;
-	bh=VuJLFF+98QvkWxdbK4hp/Y/tQqKfJY/Eub1jtxof0Jc=;
+	s=default; t=1574403946;
+	bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DvZ2YWHS8+W/tsKqefHKl+QUrm0aRI5o2fZ2OVWdbJaV5rrpP9anVkMlMbiFgR42x
-	 5ukRm+OcbZPv2/lxMpFU8W4/niKSdSIf7iUNHAUEQruK7v8Rmg8Q2mQFf1a3tp1h1v
-	 07ZgvXqcgK5TpFPyaoX8EFBjtXRTaBnc3V0xXDeM=
+	b=tsZfxKcMbFy71HllG6YxfKW50KmJRgnxj27fxdr8jzraC224x5nW5Pricy6CYPNl+
+	 sDnL8cI6VK3OFIW6JWRbuDjTiWOei7UyeLQP/7tarMnBQNtkDGvq6UKAng+QBArCpG
+	 nxjep3sajZqIpCAVRCDmhe7daonY7cr48s/tTPwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbfKVGZk (ORCPT
+        id S1729084AbfKVGZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:25:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56006 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:25:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfKVFvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:03 -0500
+        id S1727948AbfKVFu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89FD720731;
-        Fri, 22 Nov 2019 05:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 189C52075E;
+        Fri, 22 Nov 2019 05:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401863;
-        bh=VuJLFF+98QvkWxdbK4hp/Y/tQqKfJY/Eub1jtxof0Jc=;
+        s=default; t=1574401858;
+        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kuAK+qnhno6MXzCrVN4iNGwiPTlqygF3DykfFGWz6QPnI7BSyCa6pihoIQ1UZ87qc
-         rSmjeZSWAC7hAib2hbfm7d1trcPCZdShnjxREpevcF9LpgFJhDOxBvzFI3XBIWOAX0
-         pvbV+SLeztJfm7+LjbYt4IBhq7oUSNdDo7qD6Nhs=
+        b=BtkJCDlTHsSJqiYegMlgZoz0PzjcTSMNmyfR4uLezbeQzgXj6TCK09+I8zVWh/ax4
+         /Lvmx1FJhkF/Ut8zLyLj++By9NqeUlRPCe89Tw75jtbOBv10qOuupifp0QZo8aAqoI
+         FDYGzIsF1/Z9iN/Vh/Nqore2FeI2CnHJNjLz/VUQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.19 099/219] gfs2: take jdata unstuff into account in do_grow
-Date:   Fri, 22 Nov 2019 00:47:11 -0500
-Message-Id: <20191122054911.1750-92-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 095/219] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
+Date:   Fri, 22 Nov 2019 00:47:07 -0500
+Message-Id: <20191122054911.1750-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,35 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit bc0205612bbd4dd4026d4ba6287f5643c37366ec ]
+[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
 
-Before this patch, function do_grow would not reserve enough journal
-blocks in the transaction to unstuff jdata files while growing them.
-This patch adds the logic to add one more block if the file to grow
-is jdata.
+The Port F Control Register 3 (PFCR3) contains only a single field.
+However, counting from left to right, it is the fourth field, not the
+first field.
+Insert the missing dummy configuration values (3 fields of 16 values) to
+fix this.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+The descriptor for the Port F Control Register 0 (PFCR0) lacks the
+description for the 4th field (PF0 Mode, PF0MD[2:0]).
+Add the missing configuration values to fix this.
+
+Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index 52feccedd7a44..096b479721395 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -2122,6 +2122,8 @@ static int do_grow(struct inode *inode, u64 size)
- 	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index 8070765311dbf..e1c34e19222ee 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	},
  
- 	error = gfs2_trans_begin(sdp, RES_DINODE + RES_STATFS + RES_RG_BIT +
-+				 (unstuff &&
-+				  gfs2_is_jdata(ip) ? RES_JDATA : 0) +
- 				 (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF ?
- 				  0 : RES_QUOTA), 0);
- 	if (error)
+ 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
+ 		PF12MD_100, PF12MD_101, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0 }
+@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+ 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
+ 		PF1MD_100, PF1MD_101, 0, 0,
+-		0, 0, 0, 0, 0, 0, 0, 0
+-	 }
++		0, 0, 0, 0, 0, 0, 0, 0,
++		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
++		PF0MD_100, PF0MD_101, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0 }
+ 	},
+ 
+ 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
 -- 
 2.20.1
 
