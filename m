@@ -2,146 +2,168 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34B0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8121EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7940020708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5524420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="Y0ozO5lX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQQWRgqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfKVLjY (ORCPT
+        id S1727518AbfKVLju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:39:24 -0500
-Received: from canardo.mork.no ([148.122.252.1]:55969 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbfKVLjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:39:24 -0500
-Received: from miraculix.mork.no ([IPv6:2a02:2121:282:b3eb:68e2:39ff:fe1c:1a78])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xAMBcrd3005262
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Nov 2019 12:38:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1574422737; bh=wfYrn3KtkSHcvrkxgI6n4PBGeVoGDfOTKtruuPGGVD4=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=Y0ozO5lXpA+nwFd29Y53ZFWliMxTIZUoU2vGigHCp06zXYVgT4HjsfX260dOCgda8
-         s9VL66MrecBltNUHScS93Oa9ec83fuFi67P8jYkNbkQhhAftmKQrAdqzRPOJBOakaZ
-         2Puo0GUCo5i0m99zkforlECblwQ5qPt5hpJedpgg=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1iY7Gx-0006wV-VL; Fri, 22 Nov 2019 12:38:47 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Yongxin Liu <yongxin.liu@windriver.com>
-Cc:     <andy@infradead.org>, <dvhart@infradead.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mario.limonciello@dell.com>
-Subject: Re: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather than unregister"
-Organization: m
-References: <20191115052710.46880-1-yongxin.liu@windriver.com>
-Date:   Fri, 22 Nov 2019 12:38:47 +0100
-In-Reply-To: <20191115052710.46880-1-yongxin.liu@windriver.com> (Yongxin Liu's
-        message of "Fri, 15 Nov 2019 13:27:10 +0800")
-Message-ID: <87blt45eew.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 22 Nov 2019 06:39:50 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41055 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfKVLjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:39:49 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p26so3364409pfq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 03:39:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YUGJKVrycnJTlGVKAo+rQ9RRZBSMb8QTIRmNqH2bNwI=;
+        b=BQQWRgqowYXJKMkQvn45vZTga2rmiDy03er8pX6KXj/45IWh8+gQ32A0SiRVut4Tpn
+         smRhcNpZ1rCFmUOYZWRS4LUnkPBcPYS8yYvH0HwE2M9P2f+D0sKZE8KdhdK9fBcu0+Sv
+         9g0BykkVPsFI/txDTfxnbXAKJpNmT+ggjMOuSTgt9eHHGLBg+Xj1cpFmxIaYgr1bsXIs
+         qDsDCYEir3HM5CtJC60bhivL1wSvnpFbtfXlEznlS41TDbpjDCa9jloT3Tf/6k3RPlvF
+         lQ42SBVbuq+un3Oy116l+5fIwLRwpeBBauWqk+8i5mXSdKSQ7n0SaLa6I8EP5HVKo2eU
+         6pgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YUGJKVrycnJTlGVKAo+rQ9RRZBSMb8QTIRmNqH2bNwI=;
+        b=kcOv6X84J9/BN8TgOP1kx8EjpbZcGa0XDXgXHJKny3/pyL8rKekH/VhLy/fm5j1BBI
+         /A2+zu7ww1FTSuvjA2SzQICIr9lt4KuyE+rqWcRldz3bosB9A/PClIBG6YNHng99TCjs
+         VTw7VnigHrAMi/1Emm78ukQUbb3VGCr8LiFON1k4VUZ9WxuAz/xHU4Lm/Z3UquAOqxl4
+         m2MOmRAnYgZp9QpWIFwQz24TTKes3iU75H4CNAyji4IPzHH2fI//RL5I3QN6vz8C84e4
+         J3wA8KKbOTd+xuWyJIoDOwZ5m6NMlKH13YwJfOp9uoJ5BPYYIjj2RD4nqsgZqsvpFAPI
+         ITBA==
+X-Gm-Message-State: APjAAAXVjfF6IxXOpDEpioo8zbYgQGwS0Hg4VHCL7Q9u8/KbHHEj06JH
+        GzJQHYi9VbNbOzk9S4UrE8s=
+X-Google-Smtp-Source: APXvYqwdNHIlJNS7n1P1nOUqGYy2fQ+PEoU+AxoFvydk8nziOOuPaW79miW0+sSOm6bmSQpCqZAkSQ==
+X-Received: by 2002:a63:190a:: with SMTP id z10mr11025834pgl.153.1574422788779;
+        Fri, 22 Nov 2019 03:39:48 -0800 (PST)
+Received: from localhost (g143.222-224-150.ppp.wakwak.ne.jp. [222.224.150.143])
+        by smtp.gmail.com with ESMTPSA id z10sm7432600pfr.139.2019.11.22.03.39.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 03:39:48 -0800 (PST)
+Date:   Fri, 22 Nov 2019 20:39:45 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH] openrisc: Fix Kconfig indentation
+Message-ID: <20191122113945.GL24874@lianli.shorne-pla.net>
+References: <20191120133712.12066-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at canardo
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120133712.12066-1-krzk@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yongxin Liu <yongxin.liu@windriver.com> writes:
+On Wed, Nov 20, 2019 at 09:37:12PM +0800, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> This reverts commit 7b11e8989618581bc0226ad313264cdc05d48d86.
->
-> Consider the following hardware setting.
->
-> |-PNP0C14:00
-> |  |-- device #1
-> |-PNP0C14:01
-> |  |-- device #2
->
-> When unloading wmi driver module, device #2 will be first unregistered.
-> But device_destroy() using MKDEV(0, 0) will locate PNP0C14:00 first
-> and unregister it. This is incorrect. Should use device_unregister() to
-> unregister the real parent device.
->
-> Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+Acked-by: Stafford Horne <shorne@gmail.com>
+
+Thanks, I must have forgot to hit the TAB button on a few of these.  I will
+queue these up for the next release unless you have a queue you want to merge
+them on.
+
+-Stafford
+
 > ---
->  drivers/platform/x86/wmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 59e9aa0f9643..e16f660aa117 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -1347,7 +1347,7 @@ static int acpi_wmi_remove(struct platform_device *=
-device)
->  	acpi_remove_address_space_handler(acpi_device->handle,
->  				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
->  	wmi_free_devices(acpi_device);
-> -	device_destroy(&wmi_bus_class, MKDEV(0, 0));
-> +	device_unregister((struct device *)dev_get_drvdata(&device->dev));
->=20=20
->  	return 0;
->  }
-> @@ -1401,7 +1401,7 @@ static int acpi_wmi_probe(struct platform_device *d=
-evice)
->  	return 0;
->=20=20
->  err_remove_busdev:
-> -	device_destroy(&wmi_bus_class, MKDEV(0, 0));
-> +	device_unregister(wmi_bus_dev);
->=20=20
->  err_remove_notify_handler:
->  	acpi_remove_notify_handler(acpi_device->handle, ACPI_DEVICE_NOTIFY,
-
-
-Definitely!  Good catch!
-
-device_create() will allow registering multiple devices with a zero
-major.  Using device_destroy() with MKDEV(0, 0) will unregister an
-arbitrary one of them.
-
-I believe all of these should be reviewed and fixed up:
-
-drivers/nvme/host/fabrics.c:    device_destroy(nvmf_class, MKDEV(0, 0));
-drivers/nvme/host/fabrics.c:    device_destroy(nvmf_class, MKDEV(0, 0));
-drivers/nvme/host/fc.c: device_destroy(&fc_class, MKDEV(0, 0));
-drivers/nvme/host/fc.c: device_destroy(&fc_class, MKDEV(0, 0));
-drivers/nvme/target/fcloop.c:   device_destroy(fcloop_class, MKDEV(0, 0));
-drivers/platform/x86/wmi.c:     device_destroy(&wmi_bus_class, MKDEV(0, 0));
-drivers/platform/x86/wmi.c:     device_destroy(&wmi_bus_class, MKDEV(0, 0));
-drivers/staging/comedi/drivers/comedi_test.c:   device_destroy(ctcls, MKDEV=
-(0, 0));
-drivers/staging/comedi/drivers/comedi_test.c:           device_destroy(ctcl=
-s, MKDEV(0, 0));
-drivers/video/fbdev/core/fbcon.c:       device_destroy(fb_class, MKDEV(0, 0=
-));
-net/netfilter/xt_IDLETIMER.c:   device_destroy(idletimer_tg_class, MKDEV(0,=
- 0));
-net/netfilter/xt_IDLETIMER.c:   device_destroy(idletimer_tg_class, MKDEV(0,=
- 0));
-
-
-Note that most of these probably are not bugs.  yet...
-
-But there is no reason to look up the device by dev_t for drivers
-allowing only one device anyway. Using device_unregister() directly
-makes the code easier to follow and prevents future bugs in case
-someone decides to support more devices.
-
-Maybe we should add a WARN_ON(!MAJOR(devt)) or similar to
-device_destroy() to prevent similar future problems?
-
-
-Bj=C3=B8rn
+>  arch/openrisc/Kconfig | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+> index bf326f0edd2f..1928e061ff96 100644
+> --- a/arch/openrisc/Kconfig
+> +++ b/arch/openrisc/Kconfig
+> @@ -13,7 +13,7 @@ config OPENRISC
+>  	select IRQ_DOMAIN
+>  	select HANDLE_DOMAIN_IRQ
+>  	select GPIOLIB
+> -        select HAVE_ARCH_TRACEHOOK
+> +	select HAVE_ARCH_TRACEHOOK
+>  	select SPARSE_IRQ
+>  	select GENERIC_IRQ_CHIP
+>  	select GENERIC_IRQ_PROBE
+> @@ -51,12 +51,12 @@ config NO_IOPORT_MAP
+>  	def_bool y
+>  
+>  config TRACE_IRQFLAGS_SUPPORT
+> -        def_bool y
+> +	def_bool y
+>  
+>  # For now, use generic checksum functions
+>  #These can be reimplemented in assembly later if so inclined
+>  config GENERIC_CSUM
+> -        def_bool y
+> +	def_bool y
+>  
+>  config STACKTRACE_SUPPORT
+>  	def_bool y
+> @@ -89,8 +89,8 @@ config DCACHE_WRITETHROUGH
+>  	  If unsure say N here
+>  
+>  config OPENRISC_BUILTIN_DTB
+> -        string "Builtin DTB"
+> -        default ""
+> +	string "Builtin DTB"
+> +	default ""
+>  
+>  menu "Class II Instructions"
+>  
+> @@ -161,13 +161,13 @@ config OPENRISC_HAVE_SHADOW_GPRS
+>  	  On a unicore system it's safe to say N here if you are unsure.
+>  
+>  config CMDLINE
+> -        string "Default kernel command string"
+> -        default ""
+> -        help
+> -          On some architectures there is currently no way for the boot loader
+> -          to pass arguments to the kernel. For these architectures, you should
+> -          supply some command-line options at build time by entering them
+> -          here.
+> +	string "Default kernel command string"
+> +	default ""
+> +	help
+> +	  On some architectures there is currently no way for the boot loader
+> +	  to pass arguments to the kernel. For these architectures, you should
+> +	  supply some command-line options at build time by entering them
+> +	  here.
+>  
+>  menu "Debugging options"
+>  
+> @@ -185,7 +185,7 @@ config OPENRISC_ESR_EXCEPTION_BUG_CHECK
+>  	default n
+>  	help
+>  	  This option enables some checks that might expose some problems
+> -          in kernel.
+> +	  in kernel.
+>  
+>  	  Say N if you are unsure.
+>  
+> -- 
+> 2.17.1
+> 
