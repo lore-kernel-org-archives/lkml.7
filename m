@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6042EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EDCC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A49B20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AC620706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420079;
-	bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
+	s=default; t=1574420081;
+	bh=FQxdcPlHeuxk12YE2UCy2y47gJFvSt793ga4V9vyrog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqE+8u6jBGIkpDXvSX1+aveSaUEdxQeGbnbnDzRl072RcvvVWLI1HHaK0zhwKIy9l
-	 rdRo2jxbNOftdjIqZoGnumlUP2Houx2jm3zM1Y7QM2q0vPQeB0dzqAvjR+5sLqxubP
-	 Eq0eVXDeq4q6TUjo17y1kt+mI8tfqEGGpMIHTyZQ=
+	b=MRKlPiHakP/3uA8L4ZhWlv7RFDKIw0fYjFcnvAG6wHSzLSL9GVswl4NK4iGazJBnC
+	 2PlPNGPqz7ieyugrM9QTYU/DUB0nG78pwvX8VCivC81Gz85rQYl5RFL6X3iKYD60yW
+	 WE+QPcurwhmkD/CC+AQTXf17Z737zMf81S9FzhI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbfKVKyi (ORCPT
+        id S1730360AbfKVKyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbfKVKyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:35 -0500
+        id S1730351AbfKVKyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDC7120706;
-        Fri, 22 Nov 2019 10:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF87C2072E;
+        Fri, 22 Nov 2019 10:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420074;
-        bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
+        s=default; t=1574420077;
+        bh=FQxdcPlHeuxk12YE2UCy2y47gJFvSt793ga4V9vyrog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uExblJk3KQLfoo0PmsSXpBr0yXvEQLReRNusckYFJbGdHV3sNPXXOJQTyqEBHDV/J
-         AVa6kCIEbijr0HQXqkoXHIDNcnWBlumMkNf0FrN8hXqQvfi3+BE3TW+JZbh/lR7c/E
-         I0E/XRs2hBD5yPyBL1ynki+HimirRlm3LLvy4Op8=
+        b=x3+BwOdxuGyUysXRzVx33hVmo7SS3uTx6WnbZT+saHih6IJWkoVOvKLWZDmSFWTwu
+         xDWDp2pakjy4ymzd58Bnke7byunbt5l+Q8Ysw3SHoKMmdjuTUJgwv230QKq2KPovzF
+         +3fzUY+q2tZTINCm1sNCggdlp8m8hW8j2RdEHKM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trent Piepho <tpiepho@impinj.com>,
-        =?UTF-8?q?Jan=20Kundr=C3=83=C2=A1t?= <jan.kundrat@cesnet.cz>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 106/122] spi: spidev: Fix OF tree warning logic
-Date:   Fri, 22 Nov 2019 11:29:19 +0100
-Message-Id: <20191122100832.932331523@linuxfoundation.org>
+Subject: [PATCH 4.14 107/122] ARM: 8802/1: Call syscall_trace_exit even when system call skipped
+Date:   Fri, 22 Nov 2019 11:29:20 +0100
+Message-Id: <20191122100833.086512348@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -62,50 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trent Piepho <tpiepho@impinj.com>
+From: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
 
-[ Upstream commit 605b3bec73cbd74b4ac937b580cd0b47d1300484 ]
+[ Upstream commit f18aef742c8fbd68e280dff0a63ba0ca6ee8ad85 ]
 
-spidev will make a big fuss if a device tree node binds a device by
-using "spidev" as the node's compatible property.
+On at least x86 and ARM64, and as documented in the ptrace man page
+a skipped system call will still cause a syscall exit ptrace stop.
 
-However, the logic for this isn't looking for "spidev" in the
-compatible, but rather checking that the device is NOT compatible with
-spidev's list of devices.
+Previous to this commit 32-bit ARM did not, resulting in strace
+being confused when seccomp skips system calls.
 
-This causes a false positive if a device not named "rohm,dh2228fv", etc.
-binds to spidev, even if a means other than putting "spidev" in the
-device tree was used.  E.g., the sysfs driver_override attribute.
+This change also impacts programs that use ptrace to skip system calls.
 
-Signed-off-by: Trent Piepho <tpiepho@impinj.com>
-Reviewed-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
-Tested-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ad75b51459ae ("ARM: 7579/1: arch/allow a scno of -1 to not cause a SIGILL")
+Signed-off-by: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
+Signed-off-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
+Tested-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/arm/kernel/entry-common.S | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index cda10719d1d1b..c5fe08bc34a0a 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -724,11 +724,9 @@ static int spidev_probe(struct spi_device *spi)
- 	 * compatible string, it is a Linux implementation thing
- 	 * rather than a description of the hardware.
- 	 */
--	if (spi->dev.of_node && !of_match_device(spidev_dt_ids, &spi->dev)) {
--		dev_err(&spi->dev, "buggy DT: spidev listed directly in DT\n");
--		WARN_ON(spi->dev.of_node &&
--			!of_match_device(spidev_dt_ids, &spi->dev));
--	}
-+	WARN(spi->dev.of_node &&
-+	     of_device_is_compatible(spi->dev.of_node, "spidev"),
-+	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index d7dc808a3d154..08a7132f56006 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -282,16 +282,15 @@ __sys_trace:
+ 	cmp	scno, #-1			@ skip the syscall?
+ 	bne	2b
+ 	add	sp, sp, #S_OFF			@ restore stack
+-	b	ret_slow_syscall
  
- 	spidev_probe_acpi(spi);
+-__sys_trace_return:
+-	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
++__sys_trace_return_nosave:
++	enable_irq_notrace
+ 	mov	r0, sp
+ 	bl	syscall_trace_exit
+ 	b	ret_slow_syscall
  
+-__sys_trace_return_nosave:
+-	enable_irq_notrace
++__sys_trace_return:
++	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
+ 	mov	r0, sp
+ 	bl	syscall_trace_exit
+ 	b	ret_slow_syscall
 -- 
 2.20.1
 
