@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC8EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD2FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618E820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E132070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421363;
-	bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
+	s=default; t=1574421381;
+	bh=SFa9Hrg+Z/KkxLOuH+wdWC71jllfBEWNrvKlWM6RZBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bTrK+fCgGqK1suyJHbOI+NKVBV+VXobPnt8OjB8vemscMn0wi2nodeW1xhL4Y9qLL
-	 NSPtSUpamEHoLp0P7eA+rBBEoa4kc0txGx0w1y1jAgYEGe4O9D6BGonJL6NobbMvFy
-	 v1GMcSWQml49PdAMustOF5DCR12e/5imFTQ6sFI0=
+	b=FRUZ+nwIBGTZ+ymuyEKmasExJoPg3qv34aQ76TObqZi0HrPstexe+2KU/ZS1E4UTR
+	 i+4aPWnNJiQYtTrzDoxv5XzOkNfJ1NUeRmL7s/wVdEX2qxPqqIWC4IXi3Ug4vIjTIu
+	 DgOAhLctxenMqHJ8GxzmB4MyRpXuM5SEw56HDqAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfKVKvQ (ORCPT
+        id S1727902AbfKVKuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33784 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:50:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729252AbfKVKvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:12 -0500
+        id S1726620AbfKVKuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:50:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E56D02072E;
-        Fri, 22 Nov 2019 10:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48999205C9;
+        Fri, 22 Nov 2019 10:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419871;
-        bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
+        s=default; t=1574419838;
+        bh=SFa9Hrg+Z/KkxLOuH+wdWC71jllfBEWNrvKlWM6RZBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5IuxPDVBPlYapbtOLa/598cA279/Jk5onfmlabAhpsg51RFNYAsoQlfZ1iXZhPtQ
-         t8aEl/6cpGh8tr4xlUIbI3qJLz6DtVGcHQuX45b1jGNlrKFODxXbZ//bYtURLUVvq0
-         sQ9xfTW23RGk6+Zw0bTkmP8Tkl3YIJEj1ppCGP8Q=
+        b=V8sagXy8ZPKZz+tO8I1uKecPw3cgk1QPYMzHw0JNJ3BMKIvO/spSLWcf0EXRmm0/z
+         NsKe0yrAobbp/n9OJQZDipSfosPOZfKUYSV255nMNq1CpRIw2LdG2KNVHSxFKmPfTF
+         b0bdV5htoK8cbj7J+DnWiroQu9LFR9+W5i5KP70A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 038/122] cxgb4: Use proper enum in IEEE_FAUX_SYNC
-Date:   Fri, 22 Nov 2019 11:28:11 +0100
-Message-Id: <20191122100752.871426333@linuxfoundation.org>
+Subject: [PATCH 4.14 026/122] usb: dwc3: gadget: Check ENBLSLPM before sending ep command
+Date:   Fri, 22 Nov 2019 11:27:59 +0100
+Message-Id: <20191122100741.290644583@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -62,48 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 258b6d141878530ba1f8fc44db683822389de914 ]
+[ Upstream commit 87dd96111b0bb8e616fcbd74dbf4bb4182f2c596 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
+GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an endpoint
+command.
 
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:390:4: warning: implicit
-conversion from enumeration type 'enum cxgb4_dcb_state' to different
-enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
-                        IEEE_FAUX_SYNC(dev, dcb);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h:70:10: note: expanded
-from macro 'IEEE_FAUX_SYNC'
-                                            CXGB4_DCB_STATE_FW_ALLSYNCED);
-                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Current implementation only save and restore GUSB2PHYCFG.SUSPHY
+configuration. We must save and clear both GUSB2PHYCFG.ENBLSLPM and
+GUSB2PHYCFG.SUSPHY settings. Restore them after the command is
+completed.
 
-Use the equivalent value of the expected type to silence Clang while
-resulting in no functional change.
+DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
 
-CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
-index ccf24d3dc9824..2c418c405c508 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
-@@ -67,7 +67,7 @@
- 	do { \
- 		if ((__dcb)->dcb_version == FW_PORT_DCB_VER_IEEE) \
- 			cxgb4_dcb_state_fsm((__dev), \
--					    CXGB4_DCB_STATE_FW_ALLSYNCED); \
-+					    CXGB4_DCB_INPUT_FW_ALLSYNCED); \
- 	} while (0)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 5916340c41621..e96b22d6fa52e 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -277,27 +277,36 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+ 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+ 	struct dwc3		*dwc = dep->dwc;
+ 	u32			timeout = 1000;
++	u32			saved_config = 0;
+ 	u32			reg;
  
- /* States we can be in for a port's Data Center Bridging.
+ 	int			cmd_status = 0;
+-	int			susphy = false;
+ 	int			ret = -EINVAL;
+ 
+ 	/*
+-	 * Synopsys Databook 2.60a states, on section 6.3.2.5.[1-8], that if
+-	 * we're issuing an endpoint command, we must check if
+-	 * GUSB2PHYCFG.SUSPHY bit is set. If it is, then we need to clear it.
++	 * When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
++	 * GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an
++	 * endpoint command.
+ 	 *
+-	 * We will also set SUSPHY bit to what it was before returning as stated
+-	 * by the same section on Synopsys databook.
++	 * Save and clear both GUSB2PHYCFG.ENBLSLPM and GUSB2PHYCFG.SUSPHY
++	 * settings. Restore them after the command is completed.
++	 *
++	 * DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
+ 	 */
+ 	if (dwc->gadget.speed <= USB_SPEED_HIGH) {
+ 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+ 		if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
+-			susphy = true;
++			saved_config |= DWC3_GUSB2PHYCFG_SUSPHY;
+ 			reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
+-			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 		}
++
++		if (reg & DWC3_GUSB2PHYCFG_ENBLSLPM) {
++			saved_config |= DWC3_GUSB2PHYCFG_ENBLSLPM;
++			reg &= ~DWC3_GUSB2PHYCFG_ENBLSLPM;
++		}
++
++		if (saved_config)
++			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 	}
+ 
+ 	if (DWC3_DEPCMD_CMD(cmd) == DWC3_DEPCMD_STARTTRANSFER) {
+@@ -395,9 +404,9 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+ 		}
+ 	}
+ 
+-	if (unlikely(susphy)) {
++	if (saved_config) {
+ 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+-		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
++		reg |= saved_config;
+ 		dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 	}
+ 
 -- 
 2.20.1
 
