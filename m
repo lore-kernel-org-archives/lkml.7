@@ -2,87 +2,104 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D56AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D1CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E962067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641402067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:09:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aocSHzwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKVSI5 (ORCPT
+        id S1727072AbfKVSJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:08:57 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:49088 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbfKVSI4 (ORCPT
+        Fri, 22 Nov 2019 13:09:41 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41408 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfKVSJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:08:56 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.3)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iYD6N-0002B1-Et; Fri, 22 Nov 2019 18:52:15 +0100
-Message-ID: <175edd72f0cd3bc4d2c0dbd42a4570c7fb47b8fd.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211_hwsim: set the maximum EIRP output power for
- 5GHz
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Ramon Fontes <ramonreisfontes@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        kvalo@codeaurora.org, davem@davemloft.net
-Date:   Fri, 22 Nov 2019 18:52:12 +0100
-In-Reply-To: <CAK8U23aL7UDgko4Z2EkQ9r4muBTjNOCq-Erb9h2TFRnxdOmtWg@mail.gmail.com> (sfid-20191122_151928_905345_8C817F08)
-References: <20191108152013.13418-1-ramonreisfontes@gmail.com>
-         <fe198371577479c1e00a80e9cae6f577ab39ce8e.camel@sipsolutions.net>
-         <CAK8U23amVqf-6YoiPoyk5_za3dhVb4FJmBDvmA2xv2sD43DhQA@mail.gmail.com>
-         <7d43bbc0dfeb040d3e0468155858c4cbe50c0de2.camel@sipsolutions.net>
-         <CAK8U23aL7UDgko4Z2EkQ9r4muBTjNOCq-Erb9h2TFRnxdOmtWg@mail.gmail.com>
-         (sfid-20191122_151928_905345_8C817F08)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 22 Nov 2019 13:09:41 -0500
+Received: by mail-oi1-f196.google.com with SMTP id e9so7278066oif.8;
+        Fri, 22 Nov 2019 10:09:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LzPGe9jNoFe06HsvZcJh28F5+rCWRe7dlKz7ip1T8jM=;
+        b=aocSHzwQyqD0J1tEblob40O5AI2fghfC/QQIzWQUKEW1DCUeY0H1su3oHYU8XF+LBa
+         m851LWRqjMKDlQF0lX7GVJnXty5WbLhxj9CPxbEigzW8Y/2zYFGIRNigJ4bq1BIwl5aa
+         uIoTApjUraYIgaEtuyXBrqjoT94+gqHAj8cKIRCfOWOJNv1nqHv+X0daAFdCOXouHsyT
+         teu+063Byr52i97MnLImFGLhmZTK/Bt2LprB/Pjgq9dvLRldrS13PX+BY6vtIjodBiOF
+         kNcJ/YQ1w3q2aa3BIkOaqmXRiYHVH19TH5nWrEyXqkmwYarxiIRO6NRadc8QJBG4g/s/
+         +kIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LzPGe9jNoFe06HsvZcJh28F5+rCWRe7dlKz7ip1T8jM=;
+        b=FrJkda23T6pM/jF8C8wNMlyEmUrllv74iQqGEbQ3cr+Jit0zM+XnpIQfPWfxM4RH1+
+         yPJl15MpgXSNaQ03ZxbIICDFZdB3Ejpx0O5XPflLgGqgaG1nNGtW/mEff9UM8d0VRPgs
+         C4sQ8UHAL/JyXdfmLEhrkb17GvgqqiPnw0Ko9+ssfjC34Gq1fcpqvxxzGCVCGy0EWoI2
+         8h1IjM4CcjfpcM4o9tdBxDrJe+h2ORrCYlsKYbEV3WaeMRXkGbX3tWTyzG0DS0uvbWo1
+         lg1xZl1W/jAsT5LGa+sFyNDkcjraO32oUYgV+Cif10Y21xNRcT2OJEhodPMkQpREf8sL
+         D6/Q==
+X-Gm-Message-State: APjAAAUcxkVeqQV1YD9WDcsWsoWc3vFT9PFlhY9iiggSU8io6mvba18T
+        lf/+3MpIi1slVGK8z25yHaFL3w0n
+X-Google-Smtp-Source: APXvYqyCyqE8PONQTIi7O0k94MtnqcIAM2ZCphgst7ZRhRg9xTaEGo4DblFfCysVbt8OySM/oCkiyg==
+X-Received: by 2002:a05:6808:995:: with SMTP id a21mr12631144oic.108.1574446179966;
+        Fri, 22 Nov 2019 10:09:39 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e19sm2387811otj.51.2019.11.22.10.09.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Nov 2019 10:09:39 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:09:37 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+Message-ID: <20191122180937.GA13514@roeck-us.net>
+References: <20191122100704.194776704@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-22 at 11:19 -0300, Ramon Fontes wrote:
-> > Right, so the commit log should say that it should be incremented to
-> > allow regdb to work, rather than worry about ETSI specifics?
-> > 
-> > Or maybe this limit should just be removed entirely?
+On Fri, Nov 22, 2019 at 11:26:31AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.203 release.
+> There are 159 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Hmm.. not sure. Perhaps we should add only one more information:
+> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> Anything received after that time might be too late.
 > 
-> ETSI has been set the maximum EIRP output power to 36 dBm (4000 mW)
-> Source: https://www.etsi.org/deliver/etsi_en/302500_302599/302502/01.02.01_60/en_302502v010201p.pdf
-> 
-> + The new maximum EIRP output power also allows regdb to work
-> correctly when txpower is greater than 20 dBm.
-> 
-> Since there is no standard defining greater txpower, in my opinion we
-> should keep the maximum value. What do you think?
 
-It just feels to me like if the only restriction in the driver is
-regulatory, we shouldn't have it in the driver. That's what we have the
-regulatory database for.
+For v4.4.202-159-gdbaac4c54573:
 
-If there's some other (physical?) restriction in the driver, sure, maybe
-it should have one there, but for pure regulatory I'm not sure I see it.
+Build results:
+	total: 170 pass: 168 fail: 2
+Failed builds:
+	arm:allmodconfig
+	arm:omap2plus_defconfig
+Qemu test results:
+	total: 325 pass: 307 fail: 18
+Failed tests:
+	<many arm tests>
 
-That's why the pointer here to ETSI feels so strange to me.
+------------
+Error log:
+Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or path dwc3 not found
+FATAL ERROR: Syntax error parsing input tree
 
-> Do I need to submit a new patch?
-
-I'll need to see if we can remove it, but if we can I'll do that, and
-otherwise I can just commit your patch but with a changed commit
-message.
-
-Note that I just sent my final pull request for the current kernel, so
-this'll probably have to wait some time.
-
-johannes
-
+Guenter
