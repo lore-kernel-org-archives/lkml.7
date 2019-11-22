@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9616EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6042EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEA720718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A49B20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420072;
-	bh=FxbYPhvLR8fg0DHgSH8WQhAhiiLiSwo6/aH4Zs4YwwI=;
+	s=default; t=1574420079;
+	bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cNEpEd+bv/SDgRRMxyTHcbpE26WQeGz2/IEG+AR7f7eAzQCEbze9Veq/MnYf6WUTq
-	 cAPJzIKdqAOYjtEcwijjgUvVcUOIP8V6c/cA/je0Xp1IpLmjzI4WXJkyqOX09yCFbU
-	 uUf8EPy1+O510tBTCofvh+kl6NJpOR2Fi6z6drQ0=
+	b=kqE+8u6jBGIkpDXvSX1+aveSaUEdxQeGbnbnDzRl072RcvvVWLI1HHaK0zhwKIy9l
+	 rdRo2jxbNOftdjIqZoGnumlUP2Houx2jm3zM1Y7QM2q0vPQeB0dzqAvjR+5sLqxubP
+	 Eq0eVXDeq4q6TUjo17y1kt+mI8tfqEGGpMIHTyZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbfKVKyb (ORCPT
+        id S1730085AbfKVKyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40068 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfKVKy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:29 -0500
+        id S1730143AbfKVKyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D529D20715;
-        Fri, 22 Nov 2019 10:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC7120706;
+        Fri, 22 Nov 2019 10:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420068;
-        bh=FxbYPhvLR8fg0DHgSH8WQhAhiiLiSwo6/aH4Zs4YwwI=;
+        s=default; t=1574420074;
+        bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pgcl0zGBKtscdasSB9l483qCkrKW9K2rOEkn/Zku8Ix2WElDBhCde0opJmZlI8WkS
-         NahKfqsfUhEHyh7pVFOZ0RXOc+BX7NC+M1twtEV/dmOz7yrFzGCe8Bk4TjWAK4aDNl
-         RdwOFJfCtoOOCbv7Sf8JbW5U+P8dZknaZJu9N3qA=
+        b=uExblJk3KQLfoo0PmsSXpBr0yXvEQLReRNusckYFJbGdHV3sNPXXOJQTyqEBHDV/J
+         AVa6kCIEbijr0HQXqkoXHIDNcnWBlumMkNf0FrN8hXqQvfi3+BE3TW+JZbh/lR7c/E
+         I0E/XRs2hBD5yPyBL1ynki+HimirRlm3LLvy4Op8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hieu Tran Dang <dangtranhieu2012@gmail.com>,
+        stable@vger.kernel.org, Trent Piepho <tpiepho@impinj.com>,
+        =?UTF-8?q?Jan=20Kundr=C3=83=C2=A1t?= <jan.kundrat@cesnet.cz>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/122] spi: fsl-lpspi: Prevent FIFO under/overrun by default
-Date:   Fri, 22 Nov 2019 11:29:17 +0100
-Message-Id: <20191122100832.065445789@linuxfoundation.org>
+Subject: [PATCH 4.14 106/122] spi: spidev: Fix OF tree warning logic
+Date:   Fri, 22 Nov 2019 11:29:19 +0100
+Message-Id: <20191122100832.932331523@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,37 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hieu Tran Dang <dangtranhieu2012@gmail.com>
+From: Trent Piepho <tpiepho@impinj.com>
 
-[ Upstream commit de8978c388c66b8fca192213ec9f0727e964c652 ]
+[ Upstream commit 605b3bec73cbd74b4ac937b580cd0b47d1300484 ]
 
-Certain devices don't work well when a transmit FIFO underrun or
-receive FIFO overrun occurs. Example is the SAF400x radio chip when
-running at high speed which leads to garbage being sent to/received from
-the chip. In which case, it should stall waiting for further data to be
-available before proceeding. This patch unset the NOSTALL bit in CFGR1
-by default to prevent this issue.
+spidev will make a big fuss if a device tree node binds a device by
+using "spidev" as the node's compatible property.
 
-Signed-off-by: Hieu Tran Dang <dangtranhieu2012@gmail.com>
+However, the logic for this isn't looking for "spidev" in the
+compatible, but rather checking that the device is NOT compatible with
+spidev's list of devices.
+
+This causes a false positive if a device not named "rohm,dh2228fv", etc.
+binds to spidev, even if a means other than putting "spidev" in the
+device tree was used.  E.g., the sysfs driver_override attribute.
+
+Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+Reviewed-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
+Tested-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-lpspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spidev.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index cb3c73007ca15..8fe51f7541bb3 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -287,7 +287,7 @@ static int fsl_lpspi_config(struct fsl_lpspi_data *fsl_lpspi)
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index cda10719d1d1b..c5fe08bc34a0a 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -724,11 +724,9 @@ static int spidev_probe(struct spi_device *spi)
+ 	 * compatible string, it is a Linux implementation thing
+ 	 * rather than a description of the hardware.
+ 	 */
+-	if (spi->dev.of_node && !of_match_device(spidev_dt_ids, &spi->dev)) {
+-		dev_err(&spi->dev, "buggy DT: spidev listed directly in DT\n");
+-		WARN_ON(spi->dev.of_node &&
+-			!of_match_device(spidev_dt_ids, &spi->dev));
+-	}
++	WARN(spi->dev.of_node &&
++	     of_device_is_compatible(spi->dev.of_node, "spidev"),
++	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
  
- 	fsl_lpspi_set_watermark(fsl_lpspi);
+ 	spidev_probe_acpi(spi);
  
--	temp = CFGR1_PCSCFG | CFGR1_MASTER | CFGR1_NOSTALL;
-+	temp = CFGR1_PCSCFG | CFGR1_MASTER;
- 	if (fsl_lpspi->config.mode & SPI_CS_HIGH)
- 		temp |= CFGR1_PCSPOL;
- 	writel(temp, fsl_lpspi->base + IMX7ULP_CFGR1);
 -- 
 2.20.1
 
