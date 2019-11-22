@@ -2,199 +2,116 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97A3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB97C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A642071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C282070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574421400;
+	bh=gZnYs58YiVe5TChW7bml8wRKh6KmwgwD+XgFFTEa1qk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wYDiJUfygiNcAkkExEXxj97KL/zLm5GAET8u5Z9KrGnjcLiKlA5SQun/Xe3M3uTsG
+	 xrG8KYrCCbTrpnTo0/9unGpTslPgIXKjbyyEj94l+c+Z30baoDycUmPNV+DuBBjylK
+	 yICPkbEjNAiq9cP1KVvM+jlnRgXIUXaKQGsiDPXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbfKVKuV (ORCPT
+        id S1727071AbfKVLQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:50:21 -0500
-Received: from mga01.intel.com ([192.55.52.88]:12230 "EHLO mga01.intel.com"
+        Fri, 22 Nov 2019 06:16:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729775AbfKVKuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729417AbfKVKuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 05:50:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 02:50:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
-   d="scan'208";a="216342128"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 02:50:12 -0800
-Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 12:50:12 +0200
-Date:   Fri, 22 Nov 2019 12:50:12 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: USB devices on Dell TB16 dock stop working after resuming
-Message-ID: <20191122105012.GD11621@lahna.fi.intel.com>
-References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
- <20191104142459.GC2552@lahna.fi.intel.com>
- <20191104144436.GD2552@lahna.fi.intel.com>
- <20191104154446.GH2552@lahna.fi.intel.com>
- <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
- <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
- <20191104162103.GI2552@lahna.fi.intel.com>
- <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
- <20191120105048.GY11621@lahna.fi.intel.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDA0205C9;
+        Fri, 22 Nov 2019 10:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574419815;
+        bh=gZnYs58YiVe5TChW7bml8wRKh6KmwgwD+XgFFTEa1qk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cERXZQQhBRWRcpJzPHw2ZTOGvYxQsWGR9MuAWDZCAaUYkWqID0OgfS2r2r4dHeM1E
+         K8NpLubHUNudyFc1BpGOAobQTWm5DiK3pDKKKL5iafEdRXXfSGqfN/s3fjNuzcsr5n
+         xZVBdLYcxeo8IjV3LzhWGtR4OrkhAw6IiEkDlorM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 019/122] iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
+Date:   Fri, 22 Nov 2019 11:27:52 +0100
+Message-Id: <20191122100735.999354490@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
+References: <20191122100722.177052205@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191120105048.GY11621@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:50:53PM +0200, Mika Westerberg wrote:
-> On Tue, Nov 19, 2019 at 05:55:43PM +0100, Paul Menzel wrote:
-> > Dear Mika,
-> > 
-> > 
-> > On 2019-11-04 17:21, Mika Westerberg wrote:
-> > > On Mon, Nov 04, 2019 at 05:11:10PM +0100, Paul Menzel wrote:
-> > 
-> > >> On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
-> > >>
-> > >>>> From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > >>>> Sent: Monday, November 4, 2019 9:45 AM
-> > >>
-> > >>>> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
-> > >>>>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
-> > >>
-> > >>>>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
-> > >>
-> > >>>>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
-> > >>>>>>> suspending the system, and resuming with Dell’s Thunderbolt TB16
-> > >>>>>>> dock connected, the USB input devices, keyboard and mouse,
-> > >>>>>>> connected to the TB16 stop working. They work for a few seconds
-> > >>>>>>> (mouse cursor can be moved), but then stop working. The laptop
-> > >>>>>>> keyboard and touchpad still works fine. All firmware is up-to-date
-> > >>>>>>> according to `fwupdmgr`.
-> > >>>>>>
-> > >>>>>> What are the exact steps to reproduce? Just "echo mem >
-> > >>>>>> /sys/power/state" and then resume by pressing power button?
-> > >>
-> > >> GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
-> > >> display. So more than `echo mem > /sys/power/state` is done. What
-> > >> distribution do you use?
-> > > 
-> > > I have buildroot based "distro" so there is no UI running.
-> > 
-> > Hmm, this is quite different from the “normal” use-case of the these devices.
-> > That way you won’t hit the bugs of the normal users. ;-)
-> 
-> Well, I can install some distro to that thing also :) I suppose Debian
-> 10.2 does have this issue, no?
-> 
-> > >>>>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
-> > >>>>> suspend/resume cycles (to s2idle) but I don't see any issues.
-> > >>>>>
-> > >>>>> I may have older/different firmware than you, though.
-> > >>>>
-> > >>>> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
-> > >>>> on my system :/
-> > >>
-> > >> The user reported the issue with the previous firmwares 1.x and TBT NVM v40.
-> > >> Updating to the recent version (I got the logs with) did not fix the issue.
-> > > 
-> > > I also tried v40 (that was originally on that system) but I was not able
-> > > to reproduce it.
-> > > 
-> > > Do you know if the user changed any BIOS settings?
-> > 
-> > We had to disable the Thunderbolt security settings as otherwise the USB
-> > devices wouldn’t work at cold boot either.
-> 
-> That does not sound right at all. There is the preboot ACL that allows
-> you to use TBT dock aready on boot. Bolt takes care of this.
-> 
-> Are you talking about USB devices connected to the TB16 dock?
-> 
-> Also are you connecting the TB16 dock to the Thunderbolt ports (left
-> side of the system marked with small lightning logo) or to the normal
-> Type-C ports (right side)?
-> 
-> > So, I built Linux 5.4-rc8 (`make bindeb-pkg -j8`), but unfortunately the
-> > error is still there. Sometimes, re-plugging the dock helped, and sometimes
-> > it did not.
-> > 
-> > Please find the logs attached. The strange thing is, the Linux kernel detects
-> > the devices and I do not see any disconnect events. But, `lsusb` does not list
-> > the keyboard and the mouse. Is that expected.
-> 
-> I'm bit confused. Can you describe the exact steps what you do (so I can
-> replicate them).
+From: Robin Murphy <robin.murphy@arm.com>
 
-I managed to reproduce following scenario.
+[ Upstream commit 85c7a0f1ef624ef58173ef52ea77780257bdfe04 ]
 
-1. Boot the system up to UI
-2. Connect TB16 dock (and see that it gets authorized by bolt)
-3. Connect keyboard and mouse to the TB16 dock
-4. Both mouse and keyboard are functional
-5. Enter s2idle by closing laptop lid
-6. Exit s2idle by opening the laptop lid
-7. After ~10 seconds or so the mouse or keyboard or both do not work
-   anymore. They do not respond but they are still "present".
+In removing the pagetable-wide lock, we gained the possibility of the
+vanishingly unlikely case where we have a race between two concurrent
+unmappers splitting the same block entry. The logic to handle this is
+fairly straightforward - whoever loses the race frees their partial
+next-level table and instead dereferences the winner's newly-installed
+entry in order to fall back to a regular unmap, which intentionally
+echoes the pre-existing case of recursively splitting a 1GB block down
+to 4KB pages by installing a full table of 2MB blocks first.
 
-The above does not happen always but from time to time.
+Unfortunately, the chump who implemented that logic failed to update the
+condition check for that fallback, meaning that if said race occurs at
+the last level (where the loser's unmap_idx is valid) then the unmap
+won't actually happen. Fix that to properly account for both the race
+and recursive cases.
 
-Is this the scenario you see as well?
+Fixes: 2c3d273eabe8 ("iommu/io-pgtable-arm: Support lockless operation")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+[will: re-jig control flow to avoid duplicate cmpxchg test]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/io-pgtable-arm.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-This is on Ubuntu 19.10 with the 5.3 stock kernel.
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index e8018a308868e..17a9225283dd1 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -551,13 +551,12 @@ static int arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
+ 			return 0;
+ 
+ 		tablep = iopte_deref(pte, data);
++	} else if (unmap_idx >= 0) {
++		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
++		return size;
+ 	}
+ 
+-	if (unmap_idx < 0)
+-		return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+-
+-	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
+-	return size;
++	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+ }
+ 
+ static int __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
+-- 
+2.20.1
 
-I can get them work again by unplugging them and plugging back (leaving
-the TBT16 dock connected). Also if you run lspci when the problem
-occurs it still shows the dock so PCIe link stays up.
 
-I suspect this has something to do with the ASMEDIA xHCI controller but
-I'm not an expert so Mathias CC'd.
 
-> > Additionally, despite `CONFIG_PCI_DEBUG` I do not see more elaborate messages.
-> 
-> I see one strange thing in that log. The Thunderbolt driver does not
-> show the device at boot. You should see something like this when you
-> boot with the dock connected:
-> 
->   thunderbolt 0-3: new device found, vendor=0xd4 device=0xb051
->   thunderbolt 0-3: Dell Dell Thunderbolt Cable
->   thunderbolt 0-303: new device found, vendor=0xd4 device=0xb054
->   thunderbolt 0-303: Dell Dell Thunderbolt Dock
-> 
-> I only see those after you did suspend/resume cycle.
-> 
-> > Lastly, could the daemon boltd have anything to do with this?
-> 
-> It is the one that authorizes the PCIe tunneling so definitely has
-> something to do but below:
-> 
-> > 
-> > ```
-> > $ boltctl --version
-> > bolt 0.8
-> > $ boltctl list
-> >  ● Dell Thunderbolt Cable
-> >    ├─ type:          peripheral
-> >    ├─ name:          Dell Thunderbolt Cable
-> >    ├─ vendor:        Dell
-> >    ├─ uuid:          0082b09d-2f5f-d400-ffff-ffffffffffff
-> >    ├─ status:        authorized
-> 
-> looks what is expected.
