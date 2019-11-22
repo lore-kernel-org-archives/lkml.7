@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B0CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2524C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420482071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815AC2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419841;
-	bh=PdQVLVDvmxyVyKUrtgndumSRZV085gVoUxALfMKFSKE=;
+	s=default; t=1574419845;
+	bh=QNKsw1ScWAI/B1oICO7w9vn1HmKyrpOW0OpdHrOzMbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqy5EFb3hukBjhswLjE7b7Uusm8Ka2Xz5rIDgYz1VMrk6ZIksdZ31knGtlmVjRrYE
-	 aGekXeJ3LeEw7dLRurqr8yWJwhrhEXsg2QChfZFmge3YvCP/Si9ZAkhtQBnBsBtcfS
-	 7sWHp9rnimh7rodMpVyE6y25bHGC/AmA5JK0TPok=
+	b=qzJjPE/VDLgQ3sWM2wexJ/pHofS2ex1LkNHHiLKiZ2Px+X9m6+a9eickONg6UkCy9
+	 qCVI0D0CwvH2udQvEE64PyPfZPDF1rUubkveWWf7SdKXMAezD0+H1TLXyDtSqPehum
+	 p4hqp3JIulZ3D9KlhByk+xIPwI6gb71QdA3ZXD9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfKVKui (ORCPT
+        id S1727698AbfKVKuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:50:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:50:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbfKVKud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:50:33 -0500
+        id S1727173AbfKVKug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:50:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5632A205C9;
-        Fri, 22 Nov 2019 10:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB13205C9;
+        Fri, 22 Nov 2019 10:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419832;
-        bh=PdQVLVDvmxyVyKUrtgndumSRZV085gVoUxALfMKFSKE=;
+        s=default; t=1574419836;
+        bh=QNKsw1ScWAI/B1oICO7w9vn1HmKyrpOW0OpdHrOzMbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikMxKO+SLQWQZmJSP9GJQaD+1l1WVEY80/qqvPiMT4rSXgAxKyo+BdU81bRdiU4PC
-         RRCy4b2Y6sYG/qaQWvarGtN+8tNZaoAnFpkig1KA2PGbOtao7kj7Gf4YKZ6ksVNbGu
-         TdmRErQLhyV3E04sI8Tn44ULBS8E4VmwZedzlqL8=
+        b=NJMEOfIP7s6pRDDG/FFxjdYO3JJxWlt/GtOratC1cNtGgwT7z+inBKh8KdbP4tLDG
+         MG7VF4hiSesw13icbUPhTWWKeFRjuMgNB+vt9J3CcrNaLlSyBwgOojEz9Rw9yi38Qd
+         zGXhnAoQk+fYO1TBvEw+nzSgkAGMDdz/zkDocfDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Kossifidis <mickflemm@gmail.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 024/122] ath9k: fix reporting calculated new FFT upper max
-Date:   Fri, 22 Nov 2019 11:27:57 +0100
-Message-Id: <20191122100739.517562947@linuxfoundation.org>
+Subject: [PATCH 4.14 025/122] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
+Date:   Fri, 22 Nov 2019 11:27:58 +0100
+Message-Id: <20191122100740.548126868@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Wunderlich <sw@simonwunderlich.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 4fb5837ac2bd46a85620b297002c704e9958f64d ]
+[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
 
-Since the debug print code is outside of the loop, it shouldn't use the loop
-iterator anymore but instead print the found maximum index.
+The driver may sleep in an interrupt handler.
+The function call path (from bottom to top) in Linux-4.17 is:
 
-Cc: Nick Kossifidis <mickflemm@gmail.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[FUNC] fotg210_ep_queue(GFP_KERNEL)
+drivers/usb/gadget/udc/fotg210-udc.c, 744:
+	fotg210_ep_queue in fotg210_get_status
+drivers/usb/gadget/udc/fotg210-udc.c, 768:
+	fotg210_get_status in fotg210_setup_packet
+drivers/usb/gadget/udc/fotg210-udc.c, 949:
+	fotg210_setup_packet in fotg210_irq (interrupt handler)
+
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
+If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
+can be also removed.
+
+This bug is found by my static analysis tool DSAC.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/common-spectral.c | 2 +-
+ drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/common-spectral.c b/drivers/net/wireless/ath/ath9k/common-spectral.c
-index a41bcbda1d9e8..37d5994eb1ccd 100644
---- a/drivers/net/wireless/ath/ath9k/common-spectral.c
-+++ b/drivers/net/wireless/ath/ath9k/common-spectral.c
-@@ -411,7 +411,7 @@ ath_cmn_process_ht20_40_fft(struct ath_rx_status *rs,
+diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
+index d17d7052605ba..6866a0be249e4 100644
+--- a/drivers/usb/gadget/udc/fotg210-udc.c
++++ b/drivers/usb/gadget/udc/fotg210-udc.c
+@@ -744,7 +744,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
+ 	fotg210->ep0_req->length = 2;
  
- 		ath_dbg(common, SPECTRAL_SCAN,
- 			"Calculated new upper max 0x%X at %i\n",
--			tmp_mag, i);
-+			tmp_mag, fft_sample_40.upper_max_index);
- 	} else
- 	for (i = dc_pos; i < SPECTRAL_HT20_40_NUM_BINS; i++) {
- 		if (fft_sample_40.data[i] == (upper_mag >> max_exp))
+ 	spin_unlock(&fotg210->lock);
+-	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
++	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
+ 	spin_lock(&fotg210->lock);
+ }
+ 
 -- 
 2.20.1
 
