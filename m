@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE2EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB95C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EFA20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A4020717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419264;
-	bh=cz9yANBsZW2qAh4Evu4ZWcIfTP6aODRHbacB8e9E0Ik=;
+	s=default; t=1574419268;
+	bh=mGPjGEXeFtYqntBkrRgeMklZjdB5TWfymVfeBoAC8P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+RmUsL3v2I6iGpP2InCSEDlwfUJiDF1fFdyLcKmMfHcbIxofOvVi6EctGWFXI1te
-	 tkn1UAMyT2qvQrrgSbrF3pyngJM6wgBV11+Lp2a1r5i+HmD8DkuoViUTcRXafcE6oD
-	 SxGSvm112dXGg/eBWVoZUWtS4hK3gCX/7OnC2aeE=
+	b=Vk5FJAkEyieZtW6iAxrLvPYAhIRiEuOomq8uVeSr0+ZQ7zx8CAGI9a7+kBqR/avQo
+	 FwOqHdAKwPP3Fa4tXw6X861Qa/SAEyC/+sb/OMZ5DjC0CaJr2z7iu8MLSr7egfi1XL
+	 aryzSDAlHo2Tj/qLY7m7DJfEwZznFNiRaGxIpLDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbfKVKlD (ORCPT
+        id S1728975AbfKVKlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:41:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45302 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:41:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfKVKlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:00 -0500
+        id S1727102AbfKVKlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 045F22071F;
-        Fri, 22 Nov 2019 10:40:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C33CC2071F;
+        Fri, 22 Nov 2019 10:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419259;
-        bh=cz9yANBsZW2qAh4Evu4ZWcIfTP6aODRHbacB8e9E0Ik=;
+        s=default; t=1574419265;
+        bh=mGPjGEXeFtYqntBkrRgeMklZjdB5TWfymVfeBoAC8P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A55ASMvHa35gPowENgN3BMwY+QAuebAv//FPP6bvjQJfTGLFd/rfGPiINdHTNMRSd
-         jpGwoVZC1FoOpe46lohdbE1y5C32SesmIHex2WxUmSDErt81c5J0vG4bxLoiBDEpTj
-         eXnrej2jpyPeNc0b5H8pjxaDS9DRTsXnZK4r4vh0=
+        b=SD1fsyDkDthRKmAV8spIYIlz8JbJyOKvGIp4QhoJNXnOgBPGOKtU5z7Etf4krDIYV
+         iA7T7w8YFnCbqYo2/tYvehiVKoYX121bXsRuRxdunOG1kU3JBwPI2/S403djgRMqrE
+         g1kDbSJHRWNRuKlGwUOQ0/7dZpfmb4SZhRLYCkRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 024/222] gfs2: Dont set GFS2_RDF_UPTODATE when the lvb is updated
-Date:   Fri, 22 Nov 2019 11:26:04 +0100
-Message-Id: <20191122100838.381317027@linuxfoundation.org>
+Subject: [PATCH 4.9 052/222] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
+Date:   Fri, 22 Nov 2019 11:26:32 +0100
+Message-Id: <20191122100855.334236731@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,60 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
+[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
 
-The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
-a rgrp buffer is valid. It's cleared when the glock is invalidated,
-signifying that the buffer data is now invalid. But before this
-patch, function update_rgrp_lvb was setting the flag when it
-determined it had a valid lvb. But that's an invalid assumption:
-just because you have a valid lvb doesn't mean you have valid
-buffers. After all, another node may have made the lvb valid,
-and this node just fetched it from the glock via dlm.
+If the first process started (aka /sbin/init) receives a SIGKILL it
+will panic the system if it is delivered.  Making the system unusable
+and undebugable.  It isn't much better if the first process started
+receives SIGSTOP.
 
-Consider this scenario:
-1. The file system is mounted with RGRPLVB option.
-2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
-   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
-3. Since loops == 0 and the allocation target (ap->target) is
-   bigger than the largest known chunk of blocks in the rgrp
-   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
-   the call to gfs2_rgrp_bh_get there as well.
-4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
-   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
-   to this invalid assumption.
-5. The next time update_rgrp_lvb is called, it sees the bit is set
-   and just returns 0, assuming both the lvb and rgrp are both
-   uptodate. But since this is a smaller allocation, or space has
-   been freed by another node, thus adjusting the lvb values,
-   it decides to use the rgrp for allocations, with invalid rd_free
-   due to the fact it was never updated.
+So always ignore SIGSTOP and SIGKILL sent to init.
 
-This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
-flag anymore. That way, it has no choice but to fetch the latest
-values.
+This is done in a separate clause in sig_task_ignored as force_sig_info
+can clear SIG_UNKILLABLE and this protection should work even then.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/rgrp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/signal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index 0731267072706..f77a38755aea6 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -1211,7 +1211,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
- 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
- 	rl_flags &= ~GFS2_RDF_MASK;
- 	rgd->rd_flags &= GFS2_RDF_MASK;
--	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
-+	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
- 	if (rgd->rd_rgl->rl_unlinked == 0)
- 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
- 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 2bb1f9dc86c7d..30914b3c76b21 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -71,6 +71,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
+ 
+ 	handler = sig_handler(t, sig);
+ 
++	/* SIGKILL and SIGSTOP may not be sent to the global init */
++	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
++		return true;
++
+ 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
+ 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
+ 		return 1;
 -- 
 2.20.1
 
