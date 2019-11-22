@@ -2,53 +2,53 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EB0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B8CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3191220672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AB220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421858;
-	bh=LFSN8ShC4Q5FMVFLBCNYvsqI/QYLN2eTHUz5rIJax6w=;
+	s=default; t=1574421862;
+	bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPUH3sxMphdLnNUpIDfOttkIKAk4wGm5kFNudRQtnSv7Y22cIMWeRySCcAewESw2e
-	 SHm3zx/MB+ErZ/fQiKz1NiT6mVuBxKaf0Qealrxnjg2AkiSBfmB1NpuSIeT9Tx+uO7
-	 x/HMoibLyj5EUUFTc4g+Pce2IEGd7Wlz4x6LxyHI=
+	b=Vv19A4ZMowci2Psxvh3waRRYXw+0dYgzwTL+2XCTHdNkxGiV1kMjsGDa+1VKK7trf
+	 hME34YHN+iZpiYce8J/xMkeCmLOQM5Ds+00oU2n56ctIOQpn/RYSvdHJnzvUdy9HRv
+	 jC53+xjlMCpfFSNEbWdMyYcP2HATbbwtz4fX0ijI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfKVKja (ORCPT
+        id S1728767AbfKVKjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:39:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:39:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbfKVKjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:39:25 -0500
+        id S1728754AbfKVKjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:39:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6AEA20707;
-        Fri, 22 Nov 2019 10:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1DB020707;
+        Fri, 22 Nov 2019 10:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419165;
-        bh=LFSN8ShC4Q5FMVFLBCNYvsqI/QYLN2eTHUz5rIJax6w=;
+        s=default; t=1574419156;
+        bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J5CR3YhAltr74zLZ1MVbuDWL/JdWq/rcz8VrUFvGnnzw50g7mTuBQJY9PfkwURLJD
-         Jeosypw1HMwXvfzkVtH4jS0WOIfq+gr9AYgHxYRE8AHmwfY11YVnpB31Ly2tE1KCPK
-         KpHskoYpcG3dzKbWu+yHlo2guoplyzeZLrhgxJSA=
+        b=t4msuKa1iUMJGUv+CxHUEuGcKHA0xpLqCUZee7x88PN0wtOUixGHSXtpe6K56OcGW
+         8kAA3iYzhMxam6RfaMHIWho74iDD8x4JKWhjuPG8BTY9X36tHhi1gjUEk8L2X83AWa
+         FsbUR7B8ocgRCmos1S2hgfsekr1ffGFLWRdFdjkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.9 002/222] slip: Fix memory leak in slip_open error path
-Date:   Fri, 22 Nov 2019 11:25:42 +0100
-Message-Id: <20191122100831.187446575@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 017/222] iio: dac: mcp4922: fix error handling in mcp4922_write_raw
+Date:   Fri, 22 Nov 2019 11:25:57 +0100
+Message-Id: <20191122100835.654672541@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,55 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+[ Upstream commit 0833627fc3f757a0dca11e2a9c46c96335a900ee ]
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+Do not try to write negative values and make sure that the write goes well.
 
-Here is the slcan memory leak trace reported by Syzkaller:
-
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/dac/mcp4922.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -860,6 +860,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
+diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
+index 3854d201a5d6c..68dd0be1ac076 100644
+--- a/drivers/iio/dac/mcp4922.c
++++ b/drivers/iio/dac/mcp4922.c
+@@ -94,17 +94,22 @@ static int mcp4922_write_raw(struct iio_dev *indio_dev,
+ 		long mask)
+ {
+ 	struct mcp4922_state *state = iio_priv(indio_dev);
++	int ret;
  
- err_exit:
- 	rtnl_unlock();
+ 	if (val2 != 0)
+ 		return -EINVAL;
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+-		if (val > GENMASK(chan->scan_type.realbits-1, 0))
++		if (val < 0 || val > GENMASK(chan->scan_type.realbits - 1, 0))
+ 			return -EINVAL;
+ 		val <<= chan->scan_type.shift;
+-		state->value[chan->channel] = val;
+-		return mcp4922_spi_write(state, chan->channel, val);
++
++		ret = mcp4922_spi_write(state, chan->channel, val);
++		if (!ret)
++			state->value[chan->channel] = val;
++		return ret;
++
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.20.1
+
 
 
