@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ACBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9029EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365202072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F46F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419444;
-	bh=8DD4osZh3pqSw/v3Z8lBeKCbS7/Ml7qR65jLNRSZyrc=;
+	s=default; t=1574419447;
+	bh=ZPx3Vy/86jl0wKdRxpnPl9z9J+BNHaRp+RGaA7wUUqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rYBjoHL6RYXVOcko9zfuA02Vvk6aIysRpprVKKFAXYB64SQEdw7bSXghqvBxerZmI
-	 kiRhyCl6a8LVsRMlfkfMFr8q7NjyrA182GCJEPQAuZh8eXoFk/Synt/w7hD5WjLk5Q
-	 9L2yQxV5jHzFgM3/1JtY5X8/jMPfB3NPqLvcZMv8=
+	b=Fycp5fex3eQiylU+SoihKbQcgxz8iBhql4I7yt890IqAINEL/7aMblQYlXf8XX5j8
+	 c/79jYbQIquYgco3rzJwjm1DOwDSjNBfGce6Trfi5aFNms+0594KHS8OJXQ+W7dmxF
+	 a1AxmU7efRdEujJNKrigLYZJkK1SWue+D/5lA4qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfKVKn7 (ORCPT
+        id S1729310AbfKVKoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:44:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfKVKnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:50 -0500
+        id S1729293AbfKVKn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF9A20656;
-        Fri, 22 Nov 2019 10:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23FBF20717;
+        Fri, 22 Nov 2019 10:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419430;
-        bh=8DD4osZh3pqSw/v3Z8lBeKCbS7/Ml7qR65jLNRSZyrc=;
+        s=default; t=1574419438;
+        bh=ZPx3Vy/86jl0wKdRxpnPl9z9J+BNHaRp+RGaA7wUUqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ES5ZNT4Z6zwqxT1uNQfiWD0Kp9LnhUldJj2B8ZFcsW0c+b8RPAddcXTUWbsWvrnVp
-         SPA+4txjuz84NaITyiKurWDQA7xz1spVprtSnx5a+VzSapiNT6umH8oWKni0+mfhX0
-         T1cgGYL7gXhZmXByjyIq3SC9JAn9Fab2B66sDlus=
+        b=ttWceY6BIbJ8G5J/508ct2FaV3Itr+t0uurMf1hQYOt+Fg2CZGQSM+8UITPBokFNg
+         ARhMQiev6zU/YhYDbtAiwlCzwhXQXnlDLxnAmGdG645xkEF9YEHR7vw0fLaqOgypDY
+         BwGQaFj2NVPL0S8Ibwg+IuCZnDmXEUHyzbdHySiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rachel Mozes <rachel.mozes@intel.com>,
-        Dengcheng Zhu <dzhu@wavecomp.com>,
-        Paul Burton <paul.burton@mips.com>, pburton@wavecomp.com,
-        ralf@linux-mips.org, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 108/222] MIPS: kexec: Relax memory restriction
-Date:   Fri, 22 Nov 2019 11:27:28 +0100
-Message-Id: <20191122100911.088070869@linuxfoundation.org>
+Subject: [PATCH 4.9 110/222] media: au0828: Fix incorrect error messages
+Date:   Fri, 22 Nov 2019 11:27:30 +0100
+Message-Id: <20191122100911.209989428@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,48 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dengcheng Zhu <dzhu@wavecomp.com>
+From: Brad Love <brad@nextdimension.cc>
 
-[ Upstream commit a6da4d6fdf8bd512c98d3ac7f1d16bc4bb282919 ]
+[ Upstream commit f347596f2bf114a3af3d80201c6e6bef538d884f ]
 
-We can rely on the system kernel and the dump capture kernel themselves in
-memory usage.
+Correcting red herring error messages.
 
-Being restrictive with 512MB limit may cause kexec tool failure on some
-platforms.
+Where appropriate, replaces au0282_dev_register with:
+- au0828_analog_register
+- au0828_dvb_register
 
-Tested-by: Rachel Mozes <rachel.mozes@intel.com>
-Reported-by: Rachel Mozes <rachel.mozes@intel.com>
-Signed-off-by: Dengcheng Zhu <dzhu@wavecomp.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20568/
-Cc: pburton@wavecomp.com
-Cc: ralf@linux-mips.org
-Cc: linux-mips@linux-mips.org
+Signed-off-by: Brad Love <brad@nextdimension.cc>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/kexec.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/usb/au0828/au0828-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
-index 493a3cc7c39ad..cfdbe66575f4d 100644
---- a/arch/mips/include/asm/kexec.h
-+++ b/arch/mips/include/asm/kexec.h
-@@ -12,11 +12,11 @@
- #include <asm/stacktrace.h>
+diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
+index 38e73ee5c8fb1..78f0bf8ee084c 100644
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -639,7 +639,7 @@ static int au0828_usb_probe(struct usb_interface *interface,
+ 	/* Analog TV */
+ 	retval = au0828_analog_register(dev, interface);
+ 	if (retval) {
+-		pr_err("%s() au0282_dev_register failed to register on V4L2\n",
++		pr_err("%s() au0828_analog_register failed to register on V4L2\n",
+ 			__func__);
+ 		goto done;
+ 	}
+@@ -647,7 +647,7 @@ static int au0828_usb_probe(struct usb_interface *interface,
+ 	/* Digital TV */
+ 	retval = au0828_dvb_register(dev);
+ 	if (retval)
+-		pr_err("%s() au0282_dev_register failed\n",
++		pr_err("%s() au0828_dvb_register failed\n",
+ 		       __func__);
  
- /* Maximum physical address we can use pages from */
--#define KEXEC_SOURCE_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
- /* Maximum address we can reach in physical address mode */
--#define KEXEC_DESTINATION_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-  /* Maximum address we can use for the control code buffer */
--#define KEXEC_CONTROL_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
- /* Reserve 3*4096 bytes for board-specific info */
- #define KEXEC_CONTROL_PAGE_SIZE (4096 + 3*4096)
- 
+ 	/* Remote controller */
 -- 
 2.20.1
 
