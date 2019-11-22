@@ -2,53 +2,51 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB394C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C54C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B7120715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01BD20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419158;
-	bh=704GgVtjPbYQSRgT22k+tk3j6Fu7SlUM8LHDVu+aC9Y=;
+	s=default; t=1574419165;
+	bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxBdpnuB8Z1Om+Gn/ehhm42HgNCotG9FzKUTBnLWppmyg0zeSvvDkhYUkuJn8kE5s
-	 mcdk34gFT8mz/VkwZpJVyV3BgXXYgp4mZjihkTKF5J/2/TBmLtOpkDsAMqraOvWs/B
-	 xRwpszXqctTN2rNS1fKjYkNWcqoU4aSSy+WTWDJ0=
+	b=FIDRtsyw7hp/mb+skvndfgmER5lx7annJ5wjlK+VXYBeSDR990aAEwxnWpCF9dSj6
+	 su+6kjutXX+AQqfpOrhquqlaGPX+5qO9lzm2ZWbrlu7OM+0Gph3kDdzrdLInMWQV01
+	 yX5Qa9fmUiDnv1uw03Bpt8GS1uZETOkso9en5rU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfKVKjR (ORCPT
+        id S1728775AbfKVKjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:39:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42130 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:39:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbfKVKjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:39:10 -0500
+        id S1728764AbfKVKjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:39:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D01932071C;
-        Fri, 22 Nov 2019 10:39:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEAEB2071F;
+        Fri, 22 Nov 2019 10:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419150;
-        bh=704GgVtjPbYQSRgT22k+tk3j6Fu7SlUM8LHDVu+aC9Y=;
+        s=default; t=1574419159;
+        bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xnsr8BCncteZERF7OBYW6jzrQQmelRIGxxPqv7hjFK5ta4QXUJssPiBDCjXCBap/j
-         2rCQQVaK9CUV46lOCkRHQPng9phOeo9VwqRVwbmz4kv9aQB/TMBLglGOTR6aMHgU4o
-         uQdUOk84Kc3rnEX9wnJTvdONjRohs0ETI2Rsdl1I=
+        b=WWyXeEfQXSB7H5bTK5L1JK0BwPt91je7gnLMaC/z/NReXPCQxOVnNP35M8yfnnh+4
+         qi+dZwVCv0iFLRlq36OrBfn6CbySOQv4fZKXbTP9cqpJcP6bV9H3hq+GRWYnoG6lAr
+         mutPhOf0GIskGO0IEy4UNhzp+5M9rmdM6FmmLgdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 015/222] mmc: sdhci-of-at91: fix quirk2 overwrite
-Date:   Fri, 22 Nov 2019 11:25:55 +0100
-Message-Id: <20191122100834.762535278@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 018/222] ALSA: pcm: signedness bug in snd_pcm_plug_alloc()
+Date:   Fri, 22 Nov 2019 11:25:58 +0100
+Message-Id: <20191122100835.950992431@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,35 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit fed23c5829ecab4ddc712d7b0046e59610ca3ba4 upstream.
+[ Upstream commit 6f128fa41f310e1f39ebcea9621d2905549ecf52 ]
 
-The quirks2 are parsed and set (e.g. from DT) before the quirk for broken
-HS200 is set in the driver.
-The driver needs to enable just this flag, not rewrite the whole quirk set.
+The "frames" variable is unsigned so the error handling doesn't work
+properly.
 
-Fixes: 7871aa60ae00 ("mmc: sdhci-of-at91: add quirk for broken HS200")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-at91.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -318,7 +318,7 @@ static int sdhci_at91_probe(struct platf
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 
- 	/* HS200 is broken at this moment */
--	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
-+	host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
- 
- 	ret = sdhci_add_host(host);
- 	if (ret)
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index a84a1d3d23e56..c6888d76ca5e9 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+-- 
+2.20.1
+
 
 
