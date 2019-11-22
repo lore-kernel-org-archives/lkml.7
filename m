@@ -2,271 +2,81 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18667C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE02BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CFA20692
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="agj/iPgt"
+	by mail.kernel.org (Postfix) with ESMTP id AD427206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574388298;
+	bh=gr/XBHOIomBO9YTccBT5tV/04vjrg4bPLRQHZ/upRIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OkmgGWhJelnyJrUGY6pLyMZDXH71sQST2ivHcBYw2DloaGzvLfmtT6PIqtTocu0nm
+	 fJXBEYXsQFThqB0V62qnIaW1huiUHeDUXY+Qv0USpGnOGuzwrnKi8Ly8kAbtCSKPly
+	 fg85crYuGZ/1uloCMmf/43L7sNfhoSpiaVpiw9IY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKVB6f (ORCPT
+        id S1726539AbfKVCE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:58:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36657 "EHLO ozlabs.org"
+        Thu, 21 Nov 2019 21:04:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfKVB6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:58:35 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726265AbfKVCE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 21:04:57 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47K02b4jTMz9sPT;
-        Fri, 22 Nov 2019 12:58:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574387911;
-        bh=XXXaZCyJ9aCPQ7u4H+s2s92nxTaQyyYfSZ2G27ef8v0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=agj/iPgtHxO7oSJbxx/yD2TDnyC8uKeT4bh5cJ9RCdB7h+/qMdZmmqezEVSf2PCbt
-         2ptOAE4VaHwYTKOYYXDQDcthaIXtVgCkOOlXSaSPxpn0UrUqXV6uIj3AwyemO8Ei2f
-         9kcqAmsWQ8LvVDdQKwKAGLjJzPCOO0s1Tj60rQwIZaFrAlTQGDNe6z5ARPw6VTpw+e
-         Cp3INkNNl/ssJy+XUrHMJUvGAzPWPZjsOrbZ2t0CuP1d7EeTz8q1fhqTRVdNBjrgEh
-         jsGq3EzILYLWfz/LWM5NtW8ZNFmIFFGGP3nqVLJiHzIH/jq53BRziHr64vDU186ClW
-         0jTWy8QhR7pqQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 4/8] powerpc/vdso32: inline __get_datapage()
-In-Reply-To: <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr>
-References: <cover.1572342582.git.christophe.leroy@c-s.fr> <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr>
-Date:   Fri, 22 Nov 2019 12:58:28 +1100
-Message-ID: <874kywbrjv.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id E66AD2067D;
+        Fri, 22 Nov 2019 02:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574388297;
+        bh=gr/XBHOIomBO9YTccBT5tV/04vjrg4bPLRQHZ/upRIw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e4DCSNwQE+swxLteljdLwbIyHasX1yBVOhKXf1bGGYRpLbZNvN1cSP1sN9vgeuM//
+         bhCcCzrsH39igs2o1xic/+pPJSVI6+NrUX4D+VV6D1DFVBQK1uqNnu8tJJ/apgowpH
+         mE7eSmvoI7J/J558GFU7D9EWVv4tH0P4gH9sRMUk=
+Date:   Thu, 21 Nov 2019 18:04:55 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v6 1/8] crypto: x86/glue_helper: Regularize function
+ prototypes
+Message-ID: <20191122020455.GA32523@sol.localdomain>
+References: <20191122010334.12081-1-keescook@chromium.org>
+ <20191122010334.12081-2-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191122010334.12081-2-keescook@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> __get_datapage() is only a few instructions to retrieve the
-> address of the page where the kernel stores data to the VDSO.
->
-> By inlining this function into its users, a bl/blr pair and
-> a mflr/mtlr pair is avoided, plus a few reg moves.
->
-> The improvement is noticeable (about 55 nsec/call on an 8xx)
->
-> vdsotest before the patch:
-> gettimeofday:    vdso: 731 nsec/call
-> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
-> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->
-> vdsotest after the patch:
-> gettimeofday:    vdso: 677 nsec/call
-> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
-> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On Thu, Nov 21, 2019 at 05:03:27PM -0800, Kees Cook wrote:
+> The crypto glue performed function prototype casting to make indirect
+> calls to assembly routines. Instead of performing casts at the call
+> sites (which trips Control Flow Integrity prototype checking), switch
+> each prototype to a common standard set of arguments which allows the
+> incremental removal of the existing macros. In order to keep pointer
+> math unchanged, internal casting between u128 pointers and u8 pointers
+> is added.
+> 
+> Co-developed-by: João Moreira <joao.moreira@intel.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This doesn't build with gcc 4.6.3:
+Co-developers need their own Signed-off-by.  checkpatch.pl warns about this.
 
-  /linux/arch/powerpc/kernel/vdso32/gettimeofday.S: Assembler messages:
-  /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:41: Error: unsupported relocation against __kernel_datapage_offset
-  /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:86: Error: unsupported relocation against __kernel_datapage_offset
-  /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:213: Error: unsupported relocation against __kernel_datapage_offset
-  /linux/arch/powerpc/kernel/vdso32/gettimeofday.S:247: Error: unsupported relocation against __kernel_datapage_offset
-  make[4]: *** [arch/powerpc/kernel/vdso32/gettimeofday.o] Error 1
-
-https://travis-ci.org/linuxppc/linux/jobs/614904530
-
-
-cheers
-
-> ---
-> v3: define get_datapage macro in asm/vdso_datapage.h
-> ---
->  arch/powerpc/include/asm/vdso_datapage.h  | 10 ++++++++++
->  arch/powerpc/kernel/vdso32/cacheflush.S   |  9 ++++-----
->  arch/powerpc/kernel/vdso32/datapage.S     | 28 +++-------------------------
->  arch/powerpc/kernel/vdso32/gettimeofday.S | 12 +++++-------
->  4 files changed, 22 insertions(+), 37 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
-> index 2ccb938d8544..da3d2de817f6 100644
-> --- a/arch/powerpc/include/asm/vdso_datapage.h
-> +++ b/arch/powerpc/include/asm/vdso_datapage.h
-> @@ -116,6 +116,16 @@ struct vdso_data {
->  
->  extern struct vdso_data *vdso_data;
->  
-> +#else /* __ASSEMBLY__ */
-> +
-> +.macro get_datapage ptr, tmp
-> +	bcl	20, 31, .+4
-> +	mflr	\ptr
-> +	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
-> +	lwz	\tmp, 0(\ptr)
-> +	add	\ptr, \tmp, \ptr
-> +.endm
-> +
->  #endif /* __ASSEMBLY__ */
->  
->  #endif /* __KERNEL__ */
-> diff --git a/arch/powerpc/kernel/vdso32/cacheflush.S b/arch/powerpc/kernel/vdso32/cacheflush.S
-> index 7f882e7b9f43..d178ec8c279d 100644
-> --- a/arch/powerpc/kernel/vdso32/cacheflush.S
-> +++ b/arch/powerpc/kernel/vdso32/cacheflush.S
-> @@ -8,6 +8,7 @@
->  #include <asm/processor.h>
->  #include <asm/ppc_asm.h>
->  #include <asm/vdso.h>
-> +#include <asm/vdso_datapage.h>
->  #include <asm/asm-offsets.h>
->  
->  	.text
-> @@ -24,14 +25,12 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
->    .cfi_startproc
->  	mflr	r12
->    .cfi_register lr,r12
-> -	mr	r11,r3
-> -	bl	__get_datapage@local
-> +	get_datapage	r10, r0
->  	mtlr	r12
-> -	mr	r10,r3
->  
->  	lwz	r7,CFG_DCACHE_BLOCKSZ(r10)
->  	addi	r5,r7,-1
-> -	andc	r6,r11,r5		/* round low to line bdy */
-> +	andc	r6,r3,r5		/* round low to line bdy */
->  	subf	r8,r6,r4		/* compute length */
->  	add	r8,r8,r5		/* ensure we get enough */
->  	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
-> @@ -48,7 +47,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
->  
->  	lwz	r7,CFG_ICACHE_BLOCKSZ(r10)
->  	addi	r5,r7,-1
-> -	andc	r6,r11,r5		/* round low to line bdy */
-> +	andc	r6,r3,r5		/* round low to line bdy */
->  	subf	r8,r6,r4		/* compute length */
->  	add	r8,r8,r5
->  	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
-> diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-> index 6c7401bd284e..1095d818f94a 100644
-> --- a/arch/powerpc/kernel/vdso32/datapage.S
-> +++ b/arch/powerpc/kernel/vdso32/datapage.S
-> @@ -10,35 +10,13 @@
->  #include <asm/asm-offsets.h>
->  #include <asm/unistd.h>
->  #include <asm/vdso.h>
-> +#include <asm/vdso_datapage.h>
->  
->  	.text
->  	.global	__kernel_datapage_offset;
->  __kernel_datapage_offset:
->  	.long	0
->  
-> -V_FUNCTION_BEGIN(__get_datapage)
-> -  .cfi_startproc
-> -	/* We don't want that exposed or overridable as we want other objects
-> -	 * to be able to bl directly to here
-> -	 */
-> -	.protected __get_datapage
-> -	.hidden __get_datapage
-> -
-> -	mflr	r0
-> -  .cfi_register lr,r0
-> -
-> -	bcl	20,31,data_page_branch
-> -data_page_branch:
-> -	mflr	r3
-> -	mtlr	r0
-> -	addi	r3, r3, __kernel_datapage_offset-data_page_branch
-> -	lwz	r0,0(r3)
-> -  .cfi_restore lr
-> -	add	r3,r0,r3
-> -	blr
-> -  .cfi_endproc
-> -V_FUNCTION_END(__get_datapage)
-> -
->  /*
->   * void *__kernel_get_syscall_map(unsigned int *syscall_count) ;
->   *
-> @@ -53,7 +31,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
->  	mflr	r12
->    .cfi_register lr,r12
->  	mr	r4,r3
-> -	bl	__get_datapage@local
-> +	get_datapage	r3, r0
->  	mtlr	r12
->  	addi	r3,r3,CFG_SYSCALL_MAP32
->  	cmpli	cr0,r4,0
-> @@ -75,7 +53,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
->    .cfi_startproc
->  	mflr	r12
->    .cfi_register lr,r12
-> -	bl	__get_datapage@local
-> +	get_datapage	r3, r0
->  	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
->  	lwz	r3,CFG_TB_TICKS_PER_SEC(r3)
->  	mtlr	r12
-> diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-> index 355b537d327a..9867c7b9a25a 100644
-> --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-> +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-> @@ -9,6 +9,7 @@
->  #include <asm/processor.h>
->  #include <asm/ppc_asm.h>
->  #include <asm/vdso.h>
-> +#include <asm/vdso_datapage.h>
->  #include <asm/asm-offsets.h>
->  #include <asm/unistd.h>
->  
-> @@ -35,8 +36,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
->  
->  	mr	r10,r3			/* r10 saves tv */
->  	mr	r11,r4			/* r11 saves tz */
-> -	bl	__get_datapage@local	/* get data page */
-> -	mr	r9, r3			/* datapage ptr in r9 */
-> +	get_datapage	r9, r0
->  	cmplwi	r10,0			/* check if tv is NULL */
->  	beq	3f
->  	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
-> @@ -82,8 +82,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
->  	mflr	r12			/* r12 saves lr */
->    .cfi_register lr,r12
->  	mr	r11,r4			/* r11 saves tp */
-> -	bl	__get_datapage@local	/* get data page */
-> -	mr	r9,r3			/* datapage ptr in r9 */
-> +	get_datapage	r9, r0
->  	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
->  	ori	r7,r7,NSEC_PER_SEC@l
->  	beq	cr5, .Lcoarse_clocks
-> @@ -208,7 +207,7 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
->  
->  	mflr	r12
->    .cfi_register lr,r12
-> -	bl	__get_datapage@local	/* get data page */
-> +	get_datapage	r3, r0
->  	lwz	r5, CLOCK_HRTIMER_RES(r3)
->  	mtlr	r12
->  	li	r3,0
-> @@ -242,8 +241,7 @@ V_FUNCTION_BEGIN(__kernel_time)
->    .cfi_register lr,r12
->  
->  	mr	r11,r3			/* r11 holds t */
-> -	bl	__get_datapage@local
-> -	mr	r9, r3			/* datapage ptr in r9 */
-> +	get_datapage	r9, r0
->  
->  	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
->  
-> -- 
-> 2.13.3
+- Eric
