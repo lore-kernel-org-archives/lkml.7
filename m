@@ -2,113 +2,94 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B639CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97D7C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB11206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924C9206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="OjE96Svw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R2IINA7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfKVCNV (ORCPT
+        id S1726813AbfKVCNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:13:21 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46345 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfKVCNV (ORCPT
+        Thu, 21 Nov 2019 21:13:36 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46752 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfKVCNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:13:21 -0500
-Received: by mail-pg1-f195.google.com with SMTP id r18so2563178pgu.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 18:13:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=1nM290Esy7Uqp7BbINVlXuraHnSu6AJkW/DhkP1Ld/0=;
-        b=OjE96SvwrAsA4U87NunnoAOxE+pGxo/rM2M47bdljHcsEazCjyKOjhYVIPDH3sUVrp
-         ceyXjVuGibiCrUbr4wDEKnf5WYEkkWocpRXZje2oQMWpFRlUKcMdxx3NgANz/3C90EjB
-         y98zEFwajYRWKQtWwXZsjZhYu5R5qeFtQBQzd97bENO1KrSraZvywGwh9hP681CX3akz
-         +oZ0eqjaRbFZpM0tAyx2DA84K685rqaari0+YwgFw0TmBZFJdutogxVIP23RCegesbXN
-         NkO3/gRpNOqirnbi58nwQSi+5NtH/i2GW0fAK9XHWCju+IHuaqgWNHflsz60wsjioklo
-         0h8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=1nM290Esy7Uqp7BbINVlXuraHnSu6AJkW/DhkP1Ld/0=;
-        b=h1/Uh6t2SqC4ZaQaxk0ktCj+h6W20008VEN5OzJAJESZK4iWthN01bIHmxKrx73Lqp
-         pxvCcs92tGjb7tqmRGAUFxwBeOzIghNjj/ubS6+MRYHubUHoAZ69+DeYHDJfWooaWUeB
-         g/JP8BtqC4Pn1b/aQ5Ubmb51kA1hbeIe2DkBvDQElFUsVDpuPgCQaf5d+LT0+8wy4wlo
-         DY4DeT+3rrTGU2Kq+Rh31QHM5QryZejCU6VBE3iBWiguZrNcMEsTfV6LbmkcEAbOHeSW
-         MQTqORrZbT4O3HdR47bAcEhI1k1vYNWinNSt2d2Bg4OYdZuiP4ilC3hQ+gdwWhc++1rT
-         H8dA==
-X-Gm-Message-State: APjAAAWSMr10gumcIRv8Q1Qpjbfsn4SMAcxcv5l6sG/SKFy86yC+dkww
-        2KZ9Y8jjdzGXvOUgJcZB8byFCg==
-X-Google-Smtp-Source: APXvYqxjKbUvPdABXRjxDnr2V9kmHUFrp4dRPfgurcbJzVTLfuGhzprq0awCLS0FiILsKpBDqZ4bww==
-X-Received: by 2002:a63:ec03:: with SMTP id j3mr13364348pgh.212.1574388800381;
-        Thu, 21 Nov 2019 18:13:20 -0800 (PST)
-Received: from ?IPv6:2600:1010:b062:827f:f4a7:a1e:b790:5671? ([2600:1010:b062:827f:f4a7:a1e:b790:5671])
-        by smtp.gmail.com with ESMTPSA id r33sm806663pjb.5.2019.11.21.18.13.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 18:13:19 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v10 4/6] x86/split_lock: Enumerate split lock detection if the IA32_CORE_CAPABILITIES MSR is not supported
-Date:   Thu, 21 Nov 2019 18:13:18 -0800
-Message-Id: <5A85615E-EFFF-4DF3-A1A5-DB8532451A42@amacapital.net>
-References: <20191122003754.GF199273@romley-ivt3.sc.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-In-Reply-To: <20191122003754.GF199273@romley-ivt3.sc.intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-X-Mailer: iPhone Mail (17A878)
+        Thu, 21 Nov 2019 21:13:36 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAM29MIY144986;
+        Fri, 22 Nov 2019 02:13:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=rbaVrfvNpeSog8dcDylxXVV3ptewurNNj/oaRb7B83Y=;
+ b=R2IINA7yBSLivO2IMdgp/49coWk21Epjfp4oasnXp4JR8Xl36Wq1bKjmfDLFRe/hZWS1
+ RDLkt318zMmlHs5PpIjfbG5UckhjCAdkr6Ud4Vffj7Gt0h6BPvi1Fet6dfE62+65DWod
+ ZlAnicLodJTK82OFh9D2dodBEcQXU6ZYsA0rord8BGLYg167LzVabB93Rw9BmjkOIxy4
+ B1ujsT/aE2Kpz3U85HiWIz9KY6oPP0mqBWRuFyFTf8zH2OpUuiGLZO0At4hMwV9I/KJH
+ SfjEd6xa+/tDmNj0mn7II5+O8lxm96dItBfEQetr8wKE+yexou7v0hPydQMqbzc1VKlP Pg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2wa8hu7xs4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Nov 2019 02:13:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAM28gGV112601;
+        Fri, 22 Nov 2019 02:13:16 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2wdfrwd8jw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Nov 2019 02:13:16 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAM2DFHx013213;
+        Fri, 22 Nov 2019 02:13:15 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Nov 2019 18:13:14 -0800
+To:     John Garry <john.garry@huawei.com>
+Cc:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
+        <hch@lst.de>, <linux-scsi@vger.kernel.org>,
+        <chenxiang66@hisilicon.com>, <linux-kernel@vger.kernel.org>,
+        <yanaijie@huawei.com>
+Subject: Re: [PATCH] scsi: scsi_transport_sas: Fix memory leak when removing devices
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1574242755-94156-1-git-send-email-john.garry@huawei.com>
+Date:   Thu, 21 Nov 2019 21:13:12 -0500
+In-Reply-To: <1574242755-94156-1-git-send-email-john.garry@huawei.com> (John
+        Garry's message of "Wed, 20 Nov 2019 17:39:15 +0800")
+Message-ID: <yq136egd5fr.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=822
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911220017
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=908 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911220017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On Nov 21, 2019, at 4:25 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
->=20
-> =EF=BB=BFOn Thu, Nov 21, 2019 at 02:07:38PM -0800, Andy Lutomirski wrote:
->>=20
->>=20
->>>> On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
->>>=20
->>> =EF=BB=BFArchitecturally the split lock detection feature is enumerated b=
-y
->>> IA32_CORE_CAPABILITIES MSR and future CPU models will indicate presence
->>> of the feature by setting bit 5. But the feature is present in a few
->>> older models where split lock detection is enumerated by the CPU models.=
+John,
 
->>>=20
->>> Use a "x86_cpu_id" table to list the older CPU models with the feature.
->>>=20
->>=20
->> This may need to be disabled if the HYPERVISOR bit is set.
->=20
-> How about just keeping this patch set as basic enabling code and
-> keep HYPERVISOR out of scope as of now? KVM folks will have better
-> handling of split lock in KVM once this patch set is available in
-> the kernel.
->=20
->=20
+> Removing a non-host rphy causes a memory leak:
 
-You seem to be assuming that certain model CPUs have this feature even if no=
-t enumerated. You need to make sure you don=E2=80=99t try to use it in a VM w=
-ithout the hypervisor giving you an indication that it=E2=80=99s available a=
-nd permitted. My suggestion is to disable model-based enumeration if HYPERVI=
-SOR is set.  You should also consider probing the MSR to double check even i=
-f you don=E2=80=99t think you have a hypervisor.=
+Applied to 5.5/scsi-queue, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
