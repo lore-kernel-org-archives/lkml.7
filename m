@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591DEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558542068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311FC20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402259;
-	bh=CcGoJg+UihYBaV8Tf12lR+9gsdgjxSjD2C2kvFXqYcg=;
+	s=default; t=1574402262;
+	bh=/cepJ60ECB47VYqqRBNMGpJeFX5CEY5bxz87y5OpgDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kKjHCgSDJaMzi+Zrr9pfHl3ltBbdzyU0hs04CbFSkXABU3Kel2oiOVWPn9Bjigj1z
-	 rnQDhz04FZ/5Ao1Ue3MnBGIIAWTedtMtnNbzYAnuy7RwvRDg+ZKYsjSzSIMeS3soEQ
-	 GKZhKIzNdxXS7p12nyPK/iTCb5lCmfM8cwngImU8=
+	b=OA8sU46xjB8EU5Vx+/GLYNVmVllQP76NdPvMQggtoTwk0S0VT+BPfAfIGCRiRYFXB
+	 YZTp50+Y4rmytqVbs2OFeCazvWOf6WIQEE9tC8wIX51r4v0SpOt/slOv87OnZa/pWd
+	 cqQvaawLJe85tyHJpL+17jeTJqMFdvtIIt5vnnwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfKVF5i (ORCPT
+        id S1728786AbfKVF5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbfKVF50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:26 -0500
+        id S1729448AbfKVF5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E542070A;
-        Fri, 22 Nov 2019 05:57:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 794EF2071F;
+        Fri, 22 Nov 2019 05:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402246;
-        bh=CcGoJg+UihYBaV8Tf12lR+9gsdgjxSjD2C2kvFXqYcg=;
+        s=default; t=1574402249;
+        bh=/cepJ60ECB47VYqqRBNMGpJeFX5CEY5bxz87y5OpgDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYPjoCmrfY0mpOMwmS8Btj+SlQtVk2zbDR7MgOvSOxHyczhGkGSIKlfYGIjK5agIV
-         26xyicKy3VLpLYOZCeCBpPDtlcb66I9ZyPLiWV4LXLm6ebWq1b50n0wJpIOvPsXVpD
-         pKjSal1gDr8jNkfwYNsUu9ubpHZrOTgkBLHfjnTQ=
+        b=MEm7cMQlzoPboMQAx3tFq6Gu0A3oZ7ba+Ca0eQyhUcwCVbpHFwTgzW645aFngCAeA
+         RD2Hh814FJAifAOy2vo0UhZH98UHT5/co7SYIPij/ABHI0cQ1q0oYU/m21ZIzPESLs
+         FmzYWHFGK73W7oCjJu1yxrtV9vzhMjlLRozU7Kdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, Peng Hao <peng.hao2@zte.com.cn>,
-        Zhao Qiang <qiang.zhao@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 090/127] net/wan/fsl_ucc_hdlc: Avoid double free in ucc_hdlc_probe()
-Date:   Fri, 22 Nov 2019 00:55:08 -0500
-Message-Id: <20191122055544.3299-89-sashal@kernel.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 092/127] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
+Date:   Fri, 22 Nov 2019 00:55:10 -0500
+Message-Id: <20191122055544.3299-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -60,37 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Wei Yang <richard.weiyang@gmail.com>
 
-[ Upstream commit 40752b3eae29f8ca2378e978a02bd6dbeeb06d16 ]
+[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
 
-This patch fixes potential double frees if register_hdlc_device() fails.
+Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
+fail zone_reclaim() as full") changed the return value of
+node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
+after this commit.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
-CC: Zhao Qiang <qiang.zhao@nxp.com>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-CC: linuxppc-dev@lists.ozlabs.org
-CC: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While the return value of node_reclaim() when CONFIG_NUMA is n is not
+changed.  This will leads to call zone_watermark_ok() again.
+
+This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
+Since node_reclaim() is only called in page_alloc.c, move it to
+mm/internal.h.
+
+Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Matthew Wilcox <willy@infradead.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/swap.h |  6 ------
+ mm/internal.h        | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index 18b648648adb2..289dff262948d 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -1114,7 +1114,6 @@ static int ucc_hdlc_probe(struct platform_device *pdev)
- 	if (register_hdlc_device(dev)) {
- 		ret = -ENOBUFS;
- 		pr_err("ucc_hdlc: unable to register hdlc device\n");
--		free_netdev(dev);
- 		goto free_dev;
- 	}
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index e643866912b70..411953964c345 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -363,14 +363,8 @@ extern unsigned long vm_total_pages;
+ extern int node_reclaim_mode;
+ extern int sysctl_min_unmapped_ratio;
+ extern int sysctl_min_slab_ratio;
+-extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
+ #else
+ #define node_reclaim_mode 0
+-static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
+-				unsigned int order)
+-{
+-	return 0;
+-}
+ #endif
  
+ extern int page_evictable(struct page *page);
+diff --git a/mm/internal.h b/mm/internal.h
+index 1df011f624801..a182506242c43 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -455,6 +455,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
+ #define NODE_RECLAIM_SOME	0
+ #define NODE_RECLAIM_SUCCESS	1
+ 
++#ifdef CONFIG_NUMA
++extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
++#else
++static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
++				unsigned int order)
++{
++	return NODE_RECLAIM_NOSCAN;
++}
++#endif
++
+ extern int hwpoison_filter(struct page *p);
+ 
+ extern u32 hwpoison_filter_dev_major;
 -- 
 2.20.1
 
