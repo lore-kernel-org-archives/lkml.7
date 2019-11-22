@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AD4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FBDC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9988820730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D6E20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419018;
-	bh=NCLa/CmFT/n4HyVaQnIGfgA6wAxspxSXxhBEMczoqUQ=;
+	s=default; t=1574419021;
+	bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRbMBLF4XOa7MWngLYKIIx73antz1iLlsxgSJ/WJeizlZ4L6LTvRz/f1tPBxe72Fl
-	 j6f+NMA9d+9dpifN/dnRxlwDhUzY5pgCRYDO+ss0ZHnzRh5JcVrV07t6QhCpfQzXgS
-	 Wkh3aSIPqPey3WCNezEbuhXdgv06hJvvgF6KxRVY=
+	b=1FpuzErqmzxuDJe8NH7JaEDTEVIX9eHsR61au/j6MZTATmhQPgx9vWWFUNDBo8G12
+	 5TElYJeC2FKzbe4wwtuUOm9cqhZssYU97yDOiqRWKbd3MFiv5I0mMlRIqWUChvMoVl
+	 LmjRyJKE5Wr7MUfyc+4U2YRib8Ab1kyzVqTsk2NQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbfKVKg5 (ORCPT
+        id S1728480AbfKVKhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:36:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:37:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbfKVKgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:36:55 -0500
+        id S1727208AbfKVKg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:36:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BB9120707;
-        Fri, 22 Nov 2019 10:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8FC820656;
+        Fri, 22 Nov 2019 10:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419015;
-        bh=NCLa/CmFT/n4HyVaQnIGfgA6wAxspxSXxhBEMczoqUQ=;
+        s=default; t=1574419018;
+        bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kmWv9rxpUzInv+QI/pWoJ+jmKrQzC9waOF/2tOoy3CMdcbJPyz/9Np4E6HI0hiwM4
-         CDSKimznodRSINuMS0b72bs15cNIlq6VWDPHyBq6eEJ1/E6HRuDs3m9H0kCVDDfqEf
-         v6FNCX9VW/WMgRHusYtEbhmRURgJBhVOE4G29fJM=
+        b=2Q8p4Xb2D9aaLeDLm4XKYVwZtgFyacZZAhL3Yway8G0MRkCqt4xIXcl5Quh2Dk6Nu
+         9j3noTI29X64DVoIvVwp3Pr+wjuS8FO5NBhwoNnuM0e4n9Lq+Wea/AQhg7RYqnFE0U
+         tULJyA95JHYTWzNiaHqE8K3Si+oBjG6Vl9KIlkLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 121/159] mei: samples: fix a signedness bug in amt_host_if_call()
-Date:   Fri, 22 Nov 2019 11:28:32 +0100
-Message-Id: <20191122100831.264094414@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Pobega <mpobega@neverware.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 130/159] ALSA: hda/sigmatel - Disable automute for Elo VuPoint
+Date:   Fri, 22 Nov 2019 11:28:41 +0100
+Message-Id: <20191122100833.459550266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -59,32 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Michael Pobega <mpobega@neverware.com>
 
-[ Upstream commit 185647813cac080453cb73a2e034a8821049f2a7 ]
+[ Upstream commit d153135e93a50cdb6f1b52e238909e9965b56056 ]
 
-"out_buf_sz" needs to be signed for the error handling to work.
+The Elo VuPoint 15MX has two headphone jacks of which neither work by
+default. Disabling automute allows ALSA to work normally with the
+speakers & left headphone jack.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Future pin configuration changes may be required in the future to get
+the right headphone jack working in tandem.
+
+Signed-off-by: Michael Pobega <mpobega@neverware.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/misc-devices/mei/mei-amt-version.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_sigmatel.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/misc-devices/mei/mei-amt-version.c b/Documentation/misc-devices/mei/mei-amt-version.c
-index 57d0d871dcf71..33e67bd1dc343 100644
---- a/Documentation/misc-devices/mei/mei-amt-version.c
-+++ b/Documentation/misc-devices/mei/mei-amt-version.c
-@@ -370,7 +370,7 @@ static uint32_t amt_host_if_call(struct amt_host_if *acmd,
- 			unsigned int expected_sz)
- {
- 	uint32_t in_buf_sz;
--	uint32_t out_buf_sz;
-+	ssize_t out_buf_sz;
- 	ssize_t written;
- 	uint32_t status;
- 	struct amt_host_if_resp_header *msg_hdr;
+diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
+index 0abab7926dca3..d1a6d20ace0da 100644
+--- a/sound/pci/hda/patch_sigmatel.c
++++ b/sound/pci/hda/patch_sigmatel.c
+@@ -77,6 +77,7 @@ enum {
+ 	STAC_DELL_M6_BOTH,
+ 	STAC_DELL_EQ,
+ 	STAC_ALIENWARE_M17X,
++	STAC_ELO_VUPOINT_15MX,
+ 	STAC_92HD89XX_HP_FRONT_JACK,
+ 	STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK,
+ 	STAC_92HD73XX_ASUS_MOBO,
+@@ -1875,6 +1876,18 @@ static void stac92hd73xx_fixup_no_jd(struct hda_codec *codec,
+ 		codec->no_jack_detect = 1;
+ }
+ 
++
++static void stac92hd73xx_disable_automute(struct hda_codec *codec,
++				     const struct hda_fixup *fix, int action)
++{
++	struct sigmatel_spec *spec = codec->spec;
++
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	spec->gen.suppress_auto_mute = 1;
++}
++
+ static const struct hda_fixup stac92hd73xx_fixups[] = {
+ 	[STAC_92HD73XX_REF] = {
+ 		.type = HDA_FIXUP_FUNC,
+@@ -1900,6 +1913,10 @@ static const struct hda_fixup stac92hd73xx_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = stac92hd73xx_fixup_alienware_m17x,
+ 	},
++	[STAC_ELO_VUPOINT_15MX] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = stac92hd73xx_disable_automute,
++	},
+ 	[STAC_92HD73XX_INTEL] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = intel_dg45id_pin_configs,
+@@ -1938,6 +1955,7 @@ static const struct hda_model_fixup stac92hd73xx_models[] = {
+ 	{ .id = STAC_DELL_M6_BOTH, .name = "dell-m6" },
+ 	{ .id = STAC_DELL_EQ, .name = "dell-eq" },
+ 	{ .id = STAC_ALIENWARE_M17X, .name = "alienware" },
++	{ .id = STAC_ELO_VUPOINT_15MX, .name = "elo-vupoint-15mx" },
+ 	{ .id = STAC_92HD73XX_ASUS_MOBO, .name = "asus-mobo" },
+ 	{}
+ };
+@@ -1987,6 +2005,8 @@ static const struct snd_pci_quirk stac92hd73xx_fixup_tbl[] = {
+ 		      "Alienware M17x", STAC_ALIENWARE_M17X),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_DELL, 0x0490,
+ 		      "Alienware M17x R3", STAC_DELL_EQ),
++	SND_PCI_QUIRK(0x1059, 0x1011,
++		      "ELO VuPoint 15MX", STAC_ELO_VUPOINT_15MX),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x1927,
+ 				"HP Z1 G2", STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x2b17,
 -- 
 2.20.1
 
