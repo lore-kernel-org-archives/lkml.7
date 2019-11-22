@@ -7,46 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABAC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18665C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDED20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E650620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421235;
-	bh=5ZZg/xigrTA2+oyrMBGTOMx97kcHllNc7EFKeSaV/nQ=;
+	s=default; t=1574421241;
+	bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVSAfTlYJ1tD5Jv8cYKXmTKITvKGtR1/2jpORkNox4Gwohn5PZoW+oGhXsHbnHEpZ
-	 7jFYFuhxgrK/8gbhH1gdQ7dcfDZxpfiyiS+VpatHunE6v6Rst3gs7w/x9bT/kZlVry
-	 nIGLjIjhiql42nFDI2DhrihvAsBmOhqu5fl/IsSo=
+	b=Uftn4darG5d/P660Tf7CuW2jgd91KgijHiDFk8hcMnQFRjYgfhfeffqDuk/od1v3K
+	 NV0YTrBO38dFwC689iNsnqMLbyDpdBj5WpVWOyjdQC8JIREDeeXb/BFw8dhGJPYD0d
+	 vf3an4UognFSjTs6wP5zEuKjEc9plQz6DGkww7/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbfKVKyg (ORCPT
+        id S1730323AbfKVKy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40196 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbfKVKyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:33 -0500
+        id S1730180AbfKVKyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10EF620706;
-        Fri, 22 Nov 2019 10:54:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 601EF2070E;
+        Fri, 22 Nov 2019 10:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420071;
-        bh=5ZZg/xigrTA2+oyrMBGTOMx97kcHllNc7EFKeSaV/nQ=;
+        s=default; t=1574420059;
+        bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPj6wGbVT9wKmO/kQ45Ay0l1k4eSSw+5RrXporQnB4c2QNg6jtXsK6X8n16aZjno3
-         eW8HwPrIllHm2EAWRVIecz48I0OBdO1rYbSE0ZuMF1E6zL2XM8ZQpMW3X6+8aOx4yX
-         taOGaCR8aGFFba23jyyC2M3c/5ax/C41Zw5MJwUg=
+        b=HlUfFUAGE9n9Gbb94WhByzaXup4OMD0deYMdsJGCI/nlNvBoaowL8g4237bpwXFtw
+         8AgHUGcCDbtkKPPZjfgOJ9i6suJRZ9RSE0zfcscqC4PbsFOyAar2epX2V6R7bx3uOf
+         4j1NcrVHnIAZRGT/kB6KsgSP6o4K+zfImrVOmD7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/122] pinctrl: gemini: Mask and set properly
-Date:   Fri, 22 Nov 2019 11:29:18 +0100
-Message-Id: <20191122100832.406597374@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
+        dan.j.williams@intel.com, dyoung@redhat.com,
+        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 102/122] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+Date:   Fri, 22 Nov 2019 11:29:15 +0100
+Message-Id: <20191122100831.655547656@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -59,39 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit d17f477c5bc6b4a5dd9f51ae263870da132a8e89 ]
+[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
 
-The code was written under the assumption that the
-regmap_update_bits() would mask the bits in the mask and
-set the bits in the value.
+The only use of KEXEC_BACKUP_SRC_END is as an argument to
+walk_system_ram_res():
 
-It missed the points that it will not set bits in the value
-unless these are also masked in the mask. Set value bits
-that are not in the mask will simply be ignored.
+  int crash_load_segments(struct kimage *image)
+  {
+    ...
+    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+                        image, determine_backup_region);
 
-Fixes: 06351d133dea ("pinctrl: add a Gemini SoC pin controller")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+walk_system_ram_res() expects "start, end" arguments that are inclusive,
+i.e., the range to be walked includes both the start and end addresses.
+
+KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+first address *past* the desired 0-640KB range.
+
+Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+region is [0-0x9ffff], not [0-0xa0000].
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Brijesh Singh <brijesh.singh@amd.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Lianbo Jiang <lijiang@redhat.com>
+CC: Takashi Iwai <tiwai@suse.de>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: baiyaowei@cmss.chinamobile.com
+CC: bhe@redhat.com
+CC: dan.j.williams@intel.com
+CC: dyoung@redhat.com
+CC: kexec@lists.infradead.org
+Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-gemini.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-gemini.c b/drivers/pinctrl/pinctrl-gemini.c
-index 39e6221e71000..05441dc2519d2 100644
---- a/drivers/pinctrl/pinctrl-gemini.c
-+++ b/drivers/pinctrl/pinctrl-gemini.c
-@@ -2164,7 +2164,8 @@ static int gemini_pmx_set_mux(struct pinctrl_dev *pctldev,
- 		 func->name, grp->name);
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index f327236f0fa71..5125fca472bb0 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -67,7 +67,7 @@ struct kimage;
  
- 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &before);
--	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL, grp->mask,
-+	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL,
-+			   grp->mask | grp->value,
- 			   grp->value);
- 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &after);
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+-#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
  
+ /*
+  * CPU does not save ss and sp on stack if execution is already
 -- 
 2.20.1
 
