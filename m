@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FD9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A09C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7409F20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502F82070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403417;
-	bh=krRnmuaqC7qVirxcwWinxCXHxJDjFmPmqqWCcCAM/RA=;
+	s=default; t=1574403420;
+	bh=IP5ew8cinng8wN83PXrqL1p/+8xz9WNlKNL1skXB5BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BadgghkYxuju5z4IRzwKorBX1xIw3/eNflftGxT2W9mEqfmzH/u1FSkduwPZ65qN0
-	 ovzgLpE23X48l8+3ujAEMFbrhQWGgrSyHSoY65W3SyjbjLTdUWTsAGpW58S3Vj4Qbp
-	 xqKyY0rIXaLsl73PjnHy5kgUtIaFt6drCFSwYvlM=
+	b=no87LjG2i/nhTCf/HK9b69t5b4lcSBCcmZsHmFCBsGl3k55AwBsHdkwqhC+1yL6wo
+	 QGVgiXMrguA0Z7+we2P4A2Ji3vq3eID/ex5iJfouB1asWilSYIAPEGVug6vXspc+f2
+	 XMUlImXNGEtHZuwk9MwSf9SJC+ynU21Tv4i1iVUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfKVGQu (ORCPT
+        id S1729584AbfKVGQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:16:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51108 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:16:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbfKVGNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:43 -0500
+        id S1728428AbfKVGNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8B52068E;
-        Fri, 22 Nov 2019 06:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B803520718;
+        Fri, 22 Nov 2019 06:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403223;
-        bh=krRnmuaqC7qVirxcwWinxCXHxJDjFmPmqqWCcCAM/RA=;
+        s=default; t=1574403224;
+        bh=IP5ew8cinng8wN83PXrqL1p/+8xz9WNlKNL1skXB5BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eeCMiuaQUvh99xGE8hoRYnQuxEBuIKXtOLjFST0QIjQwBkUsuOCVivo8iTgjSI28S
-         Hge6wrYUlay4sx1xBFlBqY9TXLxWLPFfOmLJDDccWoXHVTglZsoohjZzI4u5jNe7X1
-         5EhwZ3fp7RXUOSzAUG1YL1gDVR8NY2/xUKSucOtM=
+        b=zwJPVXH8QDbwEtv/oCUZY3FpTRlPZZHHSpbVxg6IpZjDKYaf44kHP1ClL5Kc8a1VB
+         LWCf3zvRNjQ5l3lEhjDCreJ9bSlPno7SGMC/lYu3J5mM1zOlaRkCcSrSwNA3uJCnM8
+         hdfKVdU22bzTob4WlGVoDOeejCW6+oulGRMdenp0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Varun Prakash <varun@chelsio.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 37/68] scsi: csiostor: fix incorrect dma device in case of vport
-Date:   Fri, 22 Nov 2019 01:12:30 -0500
-Message-Id: <20191122061301.4947-36-sashal@kernel.org>
+Cc:     Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 38/68] ath6kl: Only use match sets when firmware supports it
+Date:   Fri, 22 Nov 2019 01:12:31 -0500
+Message-Id: <20191122061301.4947-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,33 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Varun Prakash <varun@chelsio.com>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit 9934613edcb40b92a216122876cd3b7e76d08390 ]
+[ Upstream commit fb376a495fbdb886f38cfaf5a3805401b9e46f13 ]
 
-In case of ->vport_create() call scsi_add_host_with_dma() instead of
-scsi_add_host() to pass correct dma device.
+Commit dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+merged the probed and matched SSID lists before sending them to the
+firmware. In the process, it assumed match set support is always available
+in ath6kl_set_probed_ssids, which breaks scans for hidden SSIDs. Now, check
+that the firmware supports matching SSIDs in scheduled scans before setting
+MATCH_SSID_FLAG.
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_init.c | 2 +-
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-index dbe416ff46c27..776b992786881 100644
---- a/drivers/scsi/csiostor/csio_init.c
-+++ b/drivers/scsi/csiostor/csio_init.c
-@@ -648,7 +648,7 @@ csio_shost_init(struct csio_hw *hw, struct device *dev,
- 	if (csio_lnode_init(ln, hw, pln))
- 		goto err_shost_put;
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 81ac8c59f0ecd..2b79815f59093 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -932,7 +932,7 @@ static int ath6kl_set_probed_ssids(struct ath6kl *ar,
+ 		else
+ 			ssid_list[i].flag = ANY_SSID_FLAG;
  
--	if (scsi_add_host(shost, dev))
-+	if (scsi_add_host_with_dma(shost, dev, &hw->pdev->dev))
- 		goto err_lnode_exit;
+-		if (n_match_ssid == 0)
++		if (ar->wiphy->max_match_sets != 0 && n_match_ssid == 0)
+ 			ssid_list[i].flag |= MATCH_SSID_FLAG;
+ 	}
  
- 	return ln;
 -- 
 2.20.1
 
