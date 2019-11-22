@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB61C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E05C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5542068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD482068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402407;
-	bh=JB48OivgvDkEPWzY0v698UMzPguwajsoOOPQ3FdxZNA=;
+	s=default; t=1574402409;
+	bh=gsezTrwdiq3nD9JRIcpdArOxVKjnR8lRYMoWPJV6N7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0bBUJwyq6fcEUdWIQ9rJJ/R+bzoqUQKDxQxUXhiaeBl7SQW97ORLEHL2MkXYRIau
-	 PKmAYN+vnU+/3Pdunk6Mg+A4Q4sf+NACF+05fIS+DXI2cpfx6UVTAQ7cqALoLOzgfP
-	 Jmh9AniuX0t5AI+ARdG05QpwQ0MGZTem7R0eTMO8=
+	b=iZCT2p6CljtT81HjSt5K0pOBf3AWDZIuOKpPObj2oaAbKeGr2JZBvK13DRLy6FB+f
+	 v1ZgDtoqkaMg0AE4GQaHzHxyGofv3/xevoCA4H3PMqWC8ggYB3Ht/3hMGNPOr5TC8H
+	 nfF/kzKHei3NRJscsEVJfUAJM8tAeU4zWCKecmL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfKVF5m (ORCPT
+        id S1727883AbfKVGAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35874 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:00:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbfKVF5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:32 -0500
+        id S1729501AbfKVF5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E49D620717;
-        Fri, 22 Nov 2019 05:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0AE820659;
+        Fri, 22 Nov 2019 05:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402250;
-        bh=JB48OivgvDkEPWzY0v698UMzPguwajsoOOPQ3FdxZNA=;
+        s=default; t=1574402261;
+        bh=gsezTrwdiq3nD9JRIcpdArOxVKjnR8lRYMoWPJV6N7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXQEe669wf4WjKrKRsl5RydpGoCNQV9nPDdpkVS5SnEmoZGCVot1NZGg2iNIKGka5
-         gxJ82RGRRaABzmbkVfS9NoWbQp+ki3U5V4VgxXMEJXFC634nDrePnQ5UlYvqjr0AEE
-         H+ESg9nj1nIhjjg/bblG5ghhD/LJLlfyHtF/Jp/g=
+        b=KjI/M3ZnrMaVThiggMMJ1DzY06krp9IY3UAPu+3mguRnfJYmEjEwqiXQDPSbmCd7q
+         LaJHHnFQ8dMcq3l6LX4JCBTyqk+dEY8+7Nf4q1OXHX50p4v0o4CLGYpmnVIaI/aVv/
+         8CfOXXEN8ADpRZDGvMVtzdTmJav3ak4wsxor3t34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Skidanov <alexey.skidanov@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Daniel Mentz <danielmentz@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 093/127] lib/genalloc.c: fix allocation of aligned buffer from non-aligned chunk
-Date:   Fri, 22 Nov 2019 00:55:11 -0500
-Message-Id: <20191122055544.3299-92-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 102/127] net/core/neighbour: fix kmemleak minimal reference count for hash tables
+Date:   Fri, 22 Nov 2019 00:55:20 -0500
+Message-Id: <20191122055544.3299-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -64,164 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Skidanov <alexey.skidanov@intel.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 52fbf1134d479234d7e64ba9dcbaea23405f229e ]
+[ Upstream commit 01b833ab44c9e484060aad72267fc7e71beb559b ]
 
-gen_pool_alloc_algo() uses different allocation functions implementing
-different allocation algorithms.  With gen_pool_first_fit_align()
-allocation function, the returned address should be aligned on the
-requested boundary.
+This should be 1 for normal allocations, 0 disables leak reporting.
 
-If chunk start address isn't aligned on the requested boundary, the
-returned address isn't aligned too.  The only way to get properly
-aligned address is to initialize the pool with chunks aligned on the
-requested boundary.  If want to have an ability to allocate buffers
-aligned on different boundaries (for example, 4K, 1MB, ...), the chunk
-start address should be aligned on the max possible alignment.
-
-This happens because gen_pool_first_fit_align() looks for properly
-aligned memory block without taking into account the chunk start address
-alignment.
-
-To fix this, we provide chunk start address to
-gen_pool_first_fit_align() and change its implementation such that it
-starts looking for properly aligned block with appropriate offset
-(exactly as is done in CMA).
-
-Link: https://lkml.kernel.org/lkml/a170cf65-6884-3592-1de9-4c235888cc8a@intel.com
-Link: http://lkml.kernel.org/r/1541690953-4623-1-git-send-email-alexey.skidanov@intel.com
-Signed-off-by: Alexey Skidanov <alexey.skidanov@intel.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Daniel Mentz <danielmentz@google.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 85704cb8dcfd ("net/core/neighbour: tell kmemleak about hash tables")
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/genalloc.h | 13 +++++++------
- lib/genalloc.c           | 20 ++++++++++++--------
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ net/core/neighbour.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
-index 872f930f1b06d..dd0a452373e71 100644
---- a/include/linux/genalloc.h
-+++ b/include/linux/genalloc.h
-@@ -51,7 +51,8 @@ typedef unsigned long (*genpool_algo_t)(unsigned long *map,
- 			unsigned long size,
- 			unsigned long start,
- 			unsigned int nr,
--			void *data, struct gen_pool *pool);
-+			void *data, struct gen_pool *pool,
-+			unsigned long start_addr);
- 
- /*
-  *  General purpose special memory pool descriptor.
-@@ -131,24 +132,24 @@ extern void gen_pool_set_algo(struct gen_pool *pool, genpool_algo_t algo,
- 
- extern unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool);
-+		struct gen_pool *pool, unsigned long start_addr);
- 
- extern unsigned long gen_pool_fixed_alloc(unsigned long *map,
- 		unsigned long size, unsigned long start, unsigned int nr,
--		void *data, struct gen_pool *pool);
-+		void *data, struct gen_pool *pool, unsigned long start_addr);
- 
- extern unsigned long gen_pool_first_fit_align(unsigned long *map,
- 		unsigned long size, unsigned long start, unsigned int nr,
--		void *data, struct gen_pool *pool);
-+		void *data, struct gen_pool *pool, unsigned long start_addr);
- 
- 
- extern unsigned long gen_pool_first_fit_order_align(unsigned long *map,
- 		unsigned long size, unsigned long start, unsigned int nr,
--		void *data, struct gen_pool *pool);
-+		void *data, struct gen_pool *pool, unsigned long start_addr);
- 
- extern unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool);
-+		struct gen_pool *pool, unsigned long start_addr);
- 
- 
- extern struct gen_pool *devm_gen_pool_create(struct device *dev,
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index ca06adc4f4451..5deb25c40a5a1 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -311,7 +311,7 @@ unsigned long gen_pool_alloc_algo(struct gen_pool *pool, size_t size,
- 		end_bit = chunk_size(chunk) >> order;
- retry:
- 		start_bit = algo(chunk->bits, end_bit, start_bit,
--				 nbits, data, pool);
-+				 nbits, data, pool, chunk->start_addr);
- 		if (start_bit >= end_bit)
- 			continue;
- 		remain = bitmap_set_ll(chunk->bits, start_bit, nbits);
-@@ -525,7 +525,7 @@ EXPORT_SYMBOL(gen_pool_set_algo);
-  */
- unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	return bitmap_find_next_zero_area(map, size, start, nr, 0);
- }
-@@ -543,16 +543,19 @@ EXPORT_SYMBOL(gen_pool_first_fit);
-  */
- unsigned long gen_pool_first_fit_align(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	struct genpool_data_align *alignment;
--	unsigned long align_mask;
-+	unsigned long align_mask, align_off;
- 	int order;
- 
- 	alignment = data;
- 	order = pool->min_alloc_order;
- 	align_mask = ((alignment->align + (1UL << order) - 1) >> order) - 1;
--	return bitmap_find_next_zero_area(map, size, start, nr, align_mask);
-+	align_off = (start_addr & (alignment->align - 1)) >> order;
-+
-+	return bitmap_find_next_zero_area_off(map, size, start, nr,
-+					      align_mask, align_off);
- }
- EXPORT_SYMBOL(gen_pool_first_fit_align);
- 
-@@ -567,7 +570,7 @@ EXPORT_SYMBOL(gen_pool_first_fit_align);
-  */
- unsigned long gen_pool_fixed_alloc(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	struct genpool_data_fixed *fixed_data;
- 	int order;
-@@ -601,7 +604,8 @@ EXPORT_SYMBOL(gen_pool_fixed_alloc);
-  */
- unsigned long gen_pool_first_fit_order_align(unsigned long *map,
- 		unsigned long size, unsigned long start,
--		unsigned int nr, void *data, struct gen_pool *pool)
-+		unsigned int nr, void *data, struct gen_pool *pool,
-+		unsigned long start_addr)
- {
- 	unsigned long align_mask = roundup_pow_of_two(nr) - 1;
- 
-@@ -624,7 +628,7 @@ EXPORT_SYMBOL(gen_pool_first_fit_order_align);
-  */
- unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data,
--		struct gen_pool *pool)
-+		struct gen_pool *pool, unsigned long start_addr)
- {
- 	unsigned long start_bit = size;
- 	unsigned long len = size + 1;
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 9a28a21a51f05..2664ad58e5c01 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -368,7 +368,7 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
+ 		buckets = (struct neighbour __rcu **)
+ 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
+ 					   get_order(size));
+-		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
++		kmemleak_alloc(buckets, size, 1, GFP_ATOMIC);
+ 	}
+ 	if (!buckets) {
+ 		kfree(ret);
 -- 
 2.20.1
 
