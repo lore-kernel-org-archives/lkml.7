@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB32EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F95EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42472071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFCA20731
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402561;
-	bh=ItxSqDFiFPe32iS6WA6fvIXptjkKIjmv+gsp8JwxaaY=;
+	s=default; t=1574402567;
+	bh=AOTMLwBoPqJAtntlxmJ/XB13F96MU3zmgiI5dJWDJPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vt4mo1lO46cx6zsdglShRS5g2caQVl9rgj8H8pnCgfd17u0ENlgtQmLKhWZHXYNSc
-	 D44C73kFiAeD1lrbBFZAMm3BJHkXVb+m3+Et1IMC8U3Fb9Q/2xzfhSm3OHU9Gp8seY
-	 LD51nHZhb5qMrnq9a7dtLzkmWPBHUf5F1rhXCICU=
+	b=V6fnktUcWBv9eQ4aEB/acfbf6eD7xzbEUBcLr2qDOMgUUcdqmYamL4WjbuIYXZG/Z
+	 A9kAT5A5sa1GylE99gGjbPZ0RR3Clk7H2kCvQ2KufprHswVBfjs2WiyKpgUvJxAtH0
+	 o8Xzry5l3otH/99guDpxoTDh2gYGAYj/uOHWFRAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfKVGCk (ORCPT
+        id S1729794AbfKVGCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbfKVGCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:35 -0500
+        id S1728656AbfKVGCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C39820714;
-        Fri, 22 Nov 2019 06:02:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733C020659;
+        Fri, 22 Nov 2019 06:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402554;
-        bh=ItxSqDFiFPe32iS6WA6fvIXptjkKIjmv+gsp8JwxaaY=;
+        s=default; t=1574402556;
+        bh=AOTMLwBoPqJAtntlxmJ/XB13F96MU3zmgiI5dJWDJPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7GSjh5dWdjHX15kn3aGQJZXHK50WPZKo1/wXoSPUNYC6z8OJ5vrf9OJLGwf5jbgh
-         jImrjZQQ6yEC+lSn0w1iMTPzQR1ryToepCuFRKopWbNuqRDWid30RBVH5R8QNzVd0S
-         B72y5vJqji1+OIk+nYT0e0Qe8JC9aPULgGDZomWc=
+        b=zQOHIR0mrSh8Tp5MAnI++EVT4nC/0jWwoD/EiW3LLatW9TacXYVVF/EAApU5aE0mo
+         PJm3F9OBSMebLe/gIH+pvSZaScu3YaO+zedUu3P7GA6blObsHAAYY/YgeXlWG7MfjJ
+         dVmy+yWIFH9SvweDc7qLReg91821AP6lHLvpN3lo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 59/91] crypto: mxc-scc - fix build warnings on ARM64
-Date:   Fri, 22 Nov 2019 01:00:57 -0500
-Message-Id: <20191122060129.4239-58-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 61/91] net/net_namespace: Check the return value of register_pernet_subsys()
+Date:   Fri, 22 Nov 2019 01:00:59 -0500
+Message-Id: <20191122060129.4239-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,69 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 2326828ee40357b3d2b1359b8ca7526af201495b ]
+[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
 
-The following build warnings are seen when building for ARM64 allmodconfig:
+In net_ns_init(), register_pernet_subsys() could fail while registering
+network namespace subsystems. The fix checks the return value and
+sends a panic() on failure.
 
-drivers/crypto/mxc-scc.c:181:20: warning: format '%d' expects argument of type 'int', but argument 5 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-drivers/crypto/mxc-scc.c:186:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-drivers/crypto/mxc-scc.c:277:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-drivers/crypto/mxc-scc.c:339:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-drivers/crypto/mxc-scc.c:340:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-
-Fix them by using the %zu specifier to print a size_t variable and using
-a plain %x to print the result of a readl().
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxc-scc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/core/net_namespace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/mxc-scc.c b/drivers/crypto/mxc-scc.c
-index ee4be1b0d30ba..0a57b3db2d67e 100644
---- a/drivers/crypto/mxc-scc.c
-+++ b/drivers/crypto/mxc-scc.c
-@@ -178,12 +178,12 @@ static int mxc_scc_get_data(struct mxc_scc_ctx *ctx,
- 	else
- 		from = scc->black_memory;
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 4509dec7bd1cd..7630fa80db92a 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -802,7 +802,8 @@ static int __init net_ns_init(void)
  
--	dev_dbg(scc->dev, "pcopy: from 0x%p %d bytes\n", from,
-+	dev_dbg(scc->dev, "pcopy: from 0x%p %zu bytes\n", from,
- 		ctx->dst_nents * 8);
- 	len = sg_pcopy_from_buffer(ablkreq->dst, ctx->dst_nents,
- 				   from, ctx->size, ctx->offset);
- 	if (!len) {
--		dev_err(scc->dev, "pcopy err from 0x%p (len=%d)\n", from, len);
-+		dev_err(scc->dev, "pcopy err from 0x%p (len=%zu)\n", from, len);
- 		return -EINVAL;
- 	}
+ 	mutex_unlock(&net_mutex);
  
-@@ -274,7 +274,7 @@ static int mxc_scc_put_data(struct mxc_scc_ctx *ctx,
- 	len = sg_pcopy_to_buffer(req->src, ctx->src_nents,
- 				 to, len, ctx->offset);
- 	if (!len) {
--		dev_err(scc->dev, "pcopy err to 0x%p (len=%d)\n", to, len);
-+		dev_err(scc->dev, "pcopy err to 0x%p (len=%zu)\n", to, len);
- 		return -EINVAL;
- 	}
+-	register_pernet_subsys(&net_ns_ops);
++	if (register_pernet_subsys(&net_ns_ops))
++		panic("Could not register network namespace subsystems");
  
-@@ -335,9 +335,9 @@ static void mxc_scc_ablkcipher_next(struct mxc_scc_ctx *ctx,
- 		return;
- 	}
- 
--	dev_dbg(scc->dev, "Start encryption (0x%p/0x%p)\n",
--		(void *)readl(scc->base + SCC_SCM_RED_START),
--		(void *)readl(scc->base + SCC_SCM_BLACK_START));
-+	dev_dbg(scc->dev, "Start encryption (0x%x/0x%x)\n",
-+		readl(scc->base + SCC_SCM_RED_START),
-+		readl(scc->base + SCC_SCM_BLACK_START));
- 
- 	/* clear interrupt control registers */
- 	writel(SCC_SCM_INTR_CTRL_CLR_INTR,
+ 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL, NULL);
+ 	rtnl_register(PF_UNSPEC, RTM_GETNSID, rtnl_net_getid, rtnl_net_dumpid,
 -- 
 2.20.1
 
