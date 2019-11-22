@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF5EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCDCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F592068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8874B2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402997;
-	bh=FN9DNkhjWE4bOqv/LD+u4tQ3YYJgjKGVp+RlCgJQZJ0=;
+	s=default; t=1574403002;
+	bh=3QMdufV80+4d+hL2KT7BVZFNM0dt7I/JcvPcovucgcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OOfk5+19kQUzMqNLBgxDK3JvIq/88hTV+ndSLBwjp0Zd/8FdsW5UBdsZy8yHh5ix0
-	 RxPgXiWt/v5dSqhYIc98zVQszN743f/5ixYM9/FjEvRagHZp5JdLMty5Do2tjqbPLu
-	 s8UUtZFO+tiYSZaS73PlpzDg7+CgUpyCDHVYp03g=
+	b=lRH2/U9f5/PEg0xUAVwnwu/4GYecFAbPM8cMno1MXYJMjwynCyULvlg89CrrFZb/o
+	 vIaYEtLuBEdn6QOlUvFYao5TRlStjsXzp9wWbuZTwxpqRxWlGALhgUub/nNZRJF1u4
+	 b4Cp7bTgO6QIDBsYpbzxlI6/JL2sJkvDASUuGr2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfKVGJ4 (ORCPT
+        id S1729441AbfKVGKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:09:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:10:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbfKVF45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:57 -0500
+        id S1729257AbfKVF4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 237252070A;
-        Fri, 22 Nov 2019 05:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDF0920717;
+        Fri, 22 Nov 2019 05:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402216;
-        bh=FN9DNkhjWE4bOqv/LD+u4tQ3YYJgjKGVp+RlCgJQZJ0=;
+        s=default; t=1574402214;
+        bh=3QMdufV80+4d+hL2KT7BVZFNM0dt7I/JcvPcovucgcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkPwLsFuTUDraMoD6A+zJf1C0KeugFZbZ9yOtaMwPTGzfNiwLQww9pxReT4EBBkF3
-         xVih6CNznM4KgLnAT3rQv/TXolTU7AvY38cC2ZbC63ETP2fqZtQMwUE62twF2y/ZrL
-         jXm/djnaRbVZYy8Kj7zWsrXq33fP4gFtb+nIVUl4=
+        b=ubZjjBjgKP3dlFzSrD2NOL9u3kJPiZpJLDhJ6+fV5tEBlGOSj3WNBJzL61XzUXq0h
+         w+Uqujd8TzOwqDIqrXy/FoAjoJF8h4e+g2mBMI0DxXqwIYbms8qzKlVtZA3SiyMHAY
+         BQBIVotGiDhbS/wpZOIYHEwy7ehbly1vf1ijPVjQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 064/127] powerpc/perf: Fix unit_sel/cache_sel checks
-Date:   Fri, 22 Nov 2019 00:54:42 -0500
-Message-Id: <20191122055544.3299-63-sashal@kernel.org>
+Cc:     Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 062/127] ath6kl: Only use match sets when firmware supports it
+Date:   Fri, 22 Nov 2019 00:54:40 -0500
+Message-Id: <20191122055544.3299-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,96 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit 2d46d4877b1afd14059393a48bdb8ce27955174c ]
+[ Upstream commit fb376a495fbdb886f38cfaf5a3805401b9e46f13 ]
 
-Raw event code has couple of fields "unit" and "cache" in it, to capture
-the "unit" to monitor for a given pmcxsel and cache reload qualifier to
-program in MMCR1.
+Commit dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+merged the probed and matched SSID lists before sending them to the
+firmware. In the process, it assumed match set support is always available
+in ath6kl_set_probed_ssids, which breaks scans for hidden SSIDs. Now, check
+that the firmware supports matching SSIDs in scheduled scans before setting
+MATCH_SSID_FLAG.
 
-isa207_get_constraint() refers "unit" field to update the MMCRC (L2/L3)
-Event bus control fields with "cache" bits of the raw event code.
-These are power8 specific and not supported by PowerISA v3.0 pmu. So wrap
-the checks to be power8 specific. Also, "cache" bit field is referred to
-update MMCR1[16:17] and this check can be power8 specific.
-
-Fixes: 7ffd948fae4cd ('powerpc/perf: factor out power8 pmu functions')
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: dd45b7598f1c ("ath6kl: Include match ssid list in scheduled scan")
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/isa207-common.c | 25 ++++++++++++++++++-------
- arch/powerpc/perf/isa207-common.h |  4 ++--
- 2 files changed, 20 insertions(+), 9 deletions(-)
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-index cf9c35aa0cf45..7ecea7143e587 100644
---- a/arch/powerpc/perf/isa207-common.c
-+++ b/arch/powerpc/perf/isa207-common.c
-@@ -150,6 +150,14 @@ static bool is_thresh_cmp_valid(u64 event)
- 	return true;
- }
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 414b5b596efcd..f790d8021fa17 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -939,7 +939,7 @@ static int ath6kl_set_probed_ssids(struct ath6kl *ar,
+ 		else
+ 			ssid_list[i].flag = ANY_SSID_FLAG;
  
-+static unsigned int dc_ic_rld_quad_l1_sel(u64 event)
-+{
-+	unsigned int cache;
-+
-+	cache = (event >> EVENT_CACHE_SEL_SHIFT) & MMCR1_DC_IC_QUAL_MASK;
-+	return cache;
-+}
-+
- static inline u64 isa207_find_source(u64 idx, u32 sub_idx)
- {
- 	u64 ret = PERF_MEM_NA;
-@@ -290,10 +298,10 @@ int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp)
- 		 * have a cache selector of zero. The bank selector (bit 3) is
- 		 * irrelevant, as long as the rest of the value is 0.
- 		 */
--		if (cache & 0x7)
-+		if (!cpu_has_feature(CPU_FTR_ARCH_300) && (cache & 0x7))
- 			return -1;
- 
--	} else if (event & EVENT_IS_L1) {
-+	} else if (cpu_has_feature(CPU_FTR_ARCH_300) || (event & EVENT_IS_L1)) {
- 		mask  |= CNST_L1_QUAL_MASK;
- 		value |= CNST_L1_QUAL_VAL(cache);
+-		if (n_match_ssid == 0)
++		if (ar->wiphy->max_match_sets != 0 && n_match_ssid == 0)
+ 			ssid_list[i].flag |= MATCH_SSID_FLAG;
  	}
-@@ -396,11 +404,14 @@ int isa207_compute_mmcr(u64 event[], int n_ev,
- 		/* In continuous sampling mode, update SDAR on TLB miss */
- 		mmcra_sdar_mode(event[i], &mmcra);
  
--		if (event[i] & EVENT_IS_L1) {
--			cache = event[i] >> EVENT_CACHE_SEL_SHIFT;
--			mmcr1 |= (cache & 1) << MMCR1_IC_QUAL_SHIFT;
--			cache >>= 1;
--			mmcr1 |= (cache & 1) << MMCR1_DC_QUAL_SHIFT;
-+		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
-+			cache = dc_ic_rld_quad_l1_sel(event[i]);
-+			mmcr1 |= (cache) << MMCR1_DC_IC_QUAL_SHIFT;
-+		} else {
-+			if (event[i] & EVENT_IS_L1) {
-+				cache = dc_ic_rld_quad_l1_sel(event[i]);
-+				mmcr1 |= (cache) << MMCR1_DC_IC_QUAL_SHIFT;
-+			}
- 		}
- 
- 		if (is_event_marked(event[i])) {
-diff --git a/arch/powerpc/perf/isa207-common.h b/arch/powerpc/perf/isa207-common.h
-index 6c737d675792e..493e5cc5fa8a6 100644
---- a/arch/powerpc/perf/isa207-common.h
-+++ b/arch/powerpc/perf/isa207-common.h
-@@ -232,8 +232,8 @@
- #define MMCR1_COMBINE_SHIFT(pmc)	(35 - ((pmc) - 1))
- #define MMCR1_PMCSEL_SHIFT(pmc)		(24 - (((pmc) - 1)) * 8)
- #define MMCR1_FAB_SHIFT			36
--#define MMCR1_DC_QUAL_SHIFT		47
--#define MMCR1_IC_QUAL_SHIFT		46
-+#define MMCR1_DC_IC_QUAL_MASK		0x3
-+#define MMCR1_DC_IC_QUAL_SHIFT		46
- 
- /* MMCR1 Combine bits macro for power9 */
- #define p9_MMCR1_COMBINE_SHIFT(pmc)	(38 - ((pmc - 1) * 2))
 -- 
 2.20.1
 
