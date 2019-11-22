@@ -2,106 +2,131 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAC3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFABB20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421748;
-	bh=/NIyCPyZeLdBwZL2f6/XlX7dwDQA8o09yF4PJxAG3WA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gl1JzGo5XvMMGp0C2+bj9417S3kFskTitVG/+ZfQxI/cIbFx5Atd9SvRW1AiBVdBS
-	 JW9EvLiV1Aa6oMhYGw76cJkLz2wpSaACXhAi7hdPA1ku8KOzijp4D+FCGB7nqAS7Cw
-	 A5ZIMRYZT4bOpXreVi+SAMTJRwaXUZU0luQaWSo0=
+	by mail.kernel.org (Postfix) with ESMTP id 6340D20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dXniKX0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfKVKnT (ORCPT
+        id S1729177AbfKVLWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728031AbfKVKnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A6D20637;
-        Fri, 22 Nov 2019 10:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419389;
-        bh=/NIyCPyZeLdBwZL2f6/XlX7dwDQA8o09yF4PJxAG3WA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2pydndonjjVUX4nzh3zAsRHTma9XSxTXgCwCkjkSUas9/q0jj3w0nrwOBMSofU/rM
-         pub70Fs5KaZDFOAfQmuZ66hPrTGQNWhHeS5OVSULa0kcN2TVAd8fru2o+3sBm/qjVU
-         VhW2Hh3TZ8PIWLrKqwAO4WrQmYyCTSF9trcvupbQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Peter Chen <peter.chen@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 095/222] usb: chipidea: Fix otg event handler
-Date:   Fri, 22 Nov 2019 11:27:15 +0100
-Message-Id: <20191122100910.315599583@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 06:22:32 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:35104 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728796AbfKVKnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:06 -0500
+Received: by mail-yb1-f194.google.com with SMTP id h23so2554155ybg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 02:43:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xeRsX7uk9JInuVpTCDPgVQn8I9ef6lPqe1vjPRu+FZ4=;
+        b=dXniKX0oSrn32S3I6viPYhCnrkW5RC8QBhQ+HnveJ64PajVPXNOf6lWs8ikK324gHX
+         W5zx9Tu2PGSqkOTKyD9lBTdsqXTEYDL2EDfYXLSdCRtQj0BA+edOiLDI+Oz5ahHfHH+P
+         Ct5z1ckAZpNAdyMglpBVfcW80kIpyOYzncubHxLg2MUPO6B5Qqfn8rsLwaDOd4TJo+1K
+         t67LvMmDtCEo7luM9hVrPY9V7lwnxxOO2n4xP+to4SlvZB8PcqMP8lm1ADf08yPC/eAp
+         GuV3wIpXTu/csvMN6i2NgalTtPhebuqATZGQF5uTW3ujHIkstYVxKWS5Mw4Han+9ONCu
+         QGDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xeRsX7uk9JInuVpTCDPgVQn8I9ef6lPqe1vjPRu+FZ4=;
+        b=aO9Z0Tsuzg+NLUrAL4HtnliluCv7h+lAU8CoNEbIMvWV3hxh0AFeGDPtEqNYkppl1Y
+         LMZ8GPW33CPzIViR/YDeESO5Mvz6Gzp/vBv8VtlhndyXjsnuSY8+kpdfe9I01g3MCsvg
+         Y/+xEHWHJJKEeO/Hh7gqkG0wQQ1TYbOOgbIKPhyshrf+Tury9bIiBEkQk1pHK5DQiNM6
+         DtuNOWm+VZq/LPJ7F9DrKn1YuzKb3zBWX/z6gr4Xz8dx42Y7H3oRYskcuTndBOLWixty
+         QKIqNurYh4d7iz0nCjelUif6DKNJSi8R09jERyY8/FyAg1yFHsF+ZI9eBtx65Rnkxzlh
+         aYYQ==
+X-Gm-Message-State: APjAAAXrtT6XxJLJpV93jR+NXX7m00xeVd8Qb8xPKi7caz3kCVfdkZpw
+        YyhY9QBw4+G39XZZ9wbxP/F/+17Mt0R/Sh5jc5yMuzVJ
+X-Google-Smtp-Source: APXvYqzrSydT9kPhL0fBk9JVUeZL09XbeO2dliY/MqyRSLQJtWLGL/kGjDfz5exxikigzDAwFPNI8DVjsPStCJhu+go=
+X-Received: by 2002:a25:50c9:: with SMTP id e192mr9535860ybb.208.1574419384804;
+ Fri, 22 Nov 2019 02:43:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191121211053.48861-1-rrangel@chromium.org> <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
+ <CABXOdTeotUnO_7k9UycJ0vJEKV8pdZOjRrepDv5WVo5RmOLnEA@mail.gmail.com> <20191122080319.GC3296@dell>
+In-Reply-To: <20191122080319.GC3296@dell>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Fri, 22 Nov 2019 02:42:53 -0800
+Message-ID: <CABXOdTf7Oo-qPSnC040Tgxhn3mCogKo=WCsxo_Kj+C+f9DOCyw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] platform/chrome: i2c: i2c-cros-ec-tunnel: Convert i2c
+ tunnel to MFD Cell
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Wolfram Sang <wsa@the-dreams.de>, Akshu.Agrawal@amd.com,
+        Guenter Roeck <groeck@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, Benson Leung <bleung@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+On Fri, Nov 22, 2019 at 12:03 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Thu, 21 Nov 2019, Guenter Roeck wrote:
+>
+> > On Thu, Nov 21, 2019 at 1:11 PM Raul E Rangel <rrangel@chromium.org> wr=
+ote:
+> > >
+> > > If the i2c-cros-ec-tunnel driver is compiled into the kernel, it is
+> > > possible that i2c-cros-ec-tunnel could be probed before cros_ec_XXX
+> > > has finished initializing and setting the drvdata. This would cause a
+> > > NULL pointer panic.
+> > >
+> > > Converting this driver over to an MFD solves the problem and aligns w=
+ith
+> > > where the cros_ec is going.
+> > >
+> >
+> > I thought the mfd maintainer objects to the use of the mfd API outside
+> > drivers/mfd. Did that change recently ?
+>
+> It hasn't changed, although I don't see that here?
+>
+Sorry, I was confused.
 
-[ Upstream commit 59739131e0ca06db7560f9073fff2fb83f6bc2a5 ]
+Guenter
 
-At OTG work running time, it's possible that several events need to be
-addressed (e.g. ID and VBUS events). The current implementation handles
-only one event at a time which leads to ignoring the other one. Fix it.
-
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/chipidea/otg.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
-index f36a1ac3bfbdf..b8650210be0f7 100644
---- a/drivers/usb/chipidea/otg.c
-+++ b/drivers/usb/chipidea/otg.c
-@@ -206,14 +206,17 @@ static void ci_otg_work(struct work_struct *work)
- 	}
- 
- 	pm_runtime_get_sync(ci->dev);
-+
- 	if (ci->id_event) {
- 		ci->id_event = false;
- 		ci_handle_id_switch(ci);
--	} else if (ci->b_sess_valid_event) {
-+	}
-+
-+	if (ci->b_sess_valid_event) {
- 		ci->b_sess_valid_event = false;
- 		ci_handle_vbus_change(ci);
--	} else
--		dev_err(ci->dev, "unexpected event occurs at %s\n", __func__);
-+	}
-+
- 	pm_runtime_put_sync(ci->dev);
- 
- 	enable_irq(ci->irq);
--- 
-2.20.1
-
-
-
+> > > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> > > ---
+> > > You can now see the device node lives under the mfd device.
+> > >
+> > > $ find /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunne=
+l.12.auto/ -iname firmware_node -exec ls -l '{}' \;
+> > > /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.au=
+to/firmware_node -> ../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/de=
+vice:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00
+> > > /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.au=
+to/i2c-9/firmware_node -> ../../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0=
+A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00
+> > > /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.au=
+to/i2c-9/i2c-10EC5682:00/firmware_node -> ../../../../../../../../LNXSYSTM:=
+00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00/10EC=
+5682:00
+> > >
+> > >  drivers/i2c/busses/i2c-cros-ec-tunnel.c | 36 +++++++++--------------=
+--
+> > >  drivers/mfd/cros_ec_dev.c               | 19 +++++++++++++
+> > >  2 files changed, 32 insertions(+), 23 deletions(-)
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
