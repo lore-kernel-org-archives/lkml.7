@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3C0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2739C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D3C20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2E220718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420364;
-	bh=GLgwkBO1KEs44BKp6ccObxLRmL9YCEqi1g0TfMe05Lw=;
+	s=default; t=1574420366;
+	bh=GwUErkfOcTNNe8fJakwxrN+hDieJPLPdT00X3OCbnKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N9wfyfuG8thk84F2lEW6WqiQPI+DLq7IHfpnNkro2+stMyRmXiNLYYoQm1H2fikEL
-	 /pMX3dsgf6DFbkuJVWJHk1dyjqHfs97iUlj0tutclaNUDNMhLnI671GUKXMZ6hQgzn
-	 yY1nlzvhYx/6+03r1Z0MWX+9b/lDwbUjMrBNWHDI=
+	b=LanV8d3pabhKoJlVvYio4hMtnYnuBo4mf+S+1G/QBfP7J7sJ+ompDrAATnG6bxIk1
+	 4dgzWVKg6YSXPGWx7KgsRoBk+z6OmiqEL4E90ESIt3PTGcnNde5SQA5yT5vTz1dERR
+	 JCEFsUkqqOHMHuM6XaoOFwP7jpexeg7KmEK12SfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbfKVK7W (ORCPT
+        id S1730914AbfKVK7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730894AbfKVK7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:20 -0500
+        id S1730906AbfKVK7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E95420730;
-        Fri, 22 Nov 2019 10:59:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A2A20706;
+        Fri, 22 Nov 2019 10:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420360;
-        bh=GLgwkBO1KEs44BKp6ccObxLRmL9YCEqi1g0TfMe05Lw=;
+        s=default; t=1574420362;
+        bh=GwUErkfOcTNNe8fJakwxrN+hDieJPLPdT00X3OCbnKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYEJf0TS8tITcz09UojQ/mwTpKEeymMloiGdyPQtMRDqoNWV5rJ2w4Y0E8DWFQLlN
-         /ny7u8P0gQn2RtfoYsJ8Z56y1o9Ii2bCw2wRvy3siIKH17UmcTG2c2pS1fn1KpenB+
-         SFyAmmcsiKfTNbHXDwZDFsfwkIryJMkX2PnItF58=
+        b=I1ZgLjG1xq5Rx2d6r7x8UvbP7fq8OgjUfhpfcE2qPtYGMRIi0MYAsZ69as7goAu4l
+         qrBwYl8AAzjw31dl0l0+w26LNis+gyr+3xLnSWCqL4aloYYO6xC8t+4xZ0Q4Wippte
+         EXxAVbBcs9bXgLBiETAwZY5KS4UofE3qeX0gkvxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/220] ACPI / LPSS: Make acpi_lpss_find_device() also find PCI devices
-Date:   Fri, 22 Nov 2019 11:26:31 +0100
-Message-Id: <20191122100914.347957765@linuxfoundation.org>
+Subject: [PATCH 4.19 074/220] PM / hibernate: Check the success of generating md5 digest before hibernation
+Date:   Fri, 22 Nov 2019 11:27:19 +0100
+Message-Id: <20191122100917.596370205@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -63,58 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chen Yu <yu.c.chen@intel.com>
 
-[ Upstream commit 1e30124ac60abc41d74793900f8b4034f29bcb3d ]
+[ Upstream commit 749fa17093ff67b31dea864531a3698b6a95c26c ]
 
-On some Cherry Trail systems the GPU ACPI fwnode has power-resources which
-point to the PMIC, which is connected over one of the LPSS I2C controllers.
+Currently if get_e820_md5() fails, then it will hibernate nevertheless.
+Actually the error code should be propagated to upper caller so that
+the hibernation could be aware of the result and terminates the process
+if md5 digest fails.
 
-To get the suspend/resume ordering correct for this we need to be able to
-add device-links between the GPU and the I2c controller. The GPU is a PCI
-device, so this requires acpi_lpss_find_device() to also work on PCI devs.
-
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/power/hibernate_64.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 7eda27d43b482..3ef22d50df302 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -16,6 +16,7 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/mutex.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/clk-lpss.h>
- #include <linux/platform_data/x86/pmc_atom.h>
-@@ -512,12 +513,18 @@ static int match_hid_uid(struct device *dev, void *data)
- 
- static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
- {
-+	struct device *dev;
-+
- 	struct hid_uid data = {
- 		.hid = hid,
- 		.uid = uid,
- 	};
- 
--	return bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
-+	dev = bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
-+	if (dev)
-+		return dev;
-+
-+	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
+diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
+index c9986041a5e12..6c3ec193a2465 100644
+--- a/arch/x86/power/hibernate_64.c
++++ b/arch/x86/power/hibernate_64.c
+@@ -266,9 +266,9 @@ static int get_e820_md5(struct e820_table *table, void *buf)
+ 	return ret;
  }
  
- static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+-static void hibernation_e820_save(void *buf)
++static int hibernation_e820_save(void *buf)
+ {
+-	get_e820_md5(e820_table_firmware, buf);
++	return get_e820_md5(e820_table_firmware, buf);
+ }
+ 
+ static bool hibernation_e820_mismatch(void *buf)
+@@ -288,8 +288,9 @@ static bool hibernation_e820_mismatch(void *buf)
+ 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
+ }
+ #else
+-static void hibernation_e820_save(void *buf)
++static int hibernation_e820_save(void *buf)
+ {
++	return 0;
+ }
+ 
+ static bool hibernation_e820_mismatch(void *buf)
+@@ -334,9 +335,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
+ 
+ 	rdr->magic = RESTORE_MAGIC;
+ 
+-	hibernation_e820_save(rdr->e820_digest);
+-
+-	return 0;
++	return hibernation_e820_save(rdr->e820_digest);
+ }
+ 
+ /**
 -- 
 2.20.1
 
