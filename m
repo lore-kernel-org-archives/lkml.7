@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B335C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB56C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E411E20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BFB20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421575;
-	bh=n3daIQABMSMyTN19xpigzsj0xSzVqhEfm8h/Km4hcpM=;
+	s=default; t=1574421581;
+	bh=P+UQtROkCA51/TMMU3JLQRCuGXr6mCdR6xtD5hFuvU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y9Y17Xo8N2Ikgv+rfncI0v4i+qgkRlN/gta5O/3/CzS2nkNwFFfyVtFLyX8b+bPgD
-	 K+D5ofLZO2tIVT9LpXN5tYdwyt7ebrCWPJORunTHiMeN6csmU5N/Pc1LRYAtedRX+e
-	 k/M4quQ0PbQNckdf7wOpy8T5Cm1GCNwZQ+E4BlQo=
+	b=VaUqaJsz424E+wekZiZTHG6PL6cI6Jw5/VKbRZfQp9xzc4wjj+rzRL2o3CcxiVza9
+	 IhMv7ITjmX9tL+Eqk8b4JjWyjuz8Y4xVHETLi3wrJ2VYY9q70pZFqrNi8lYQi8QR04
+	 0oFalLCe79PLzCPR+eCdw9NulCFMUnDoZ2KBj7sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfKVLTc (ORCPT
+        id S1729686AbfKVLTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:19:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55638 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:19:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbfKVKrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:37 -0500
+        id S1726942AbfKVKrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D5C20637;
-        Fri, 22 Nov 2019 10:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A21D20656;
+        Fri, 22 Nov 2019 10:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419656;
-        bh=n3daIQABMSMyTN19xpigzsj0xSzVqhEfm8h/Km4hcpM=;
+        s=default; t=1574419638;
+        bh=P+UQtROkCA51/TMMU3JLQRCuGXr6mCdR6xtD5hFuvU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5FOLwcvDiPrxkIjf50ZCogYWgZaxh2oYr+C/3U7zlntNP7csWOto7hGRy3/GWahb
-         ZvwseJrgxjYvF8+4OwXcysYDszvjoyvmUTeCOaLHWmGrGDMqP7ll9dHRVlxl0cawao
-         lhikEHYIuYDPjJ8Ysp6Uz4T0cdcK1A4H+SdWTABU=
+        b=DfwyjoByUpsXEKmB5q6agsRtfUFQ4+CTnU6rwf9nxVAix5QuKo8iLJ++dEgnTCLRk
+         HqSqbnCoHaJxoq7KDBfDV+zRoOT9se22di2qBmOSlzqtaVMhYdTvp4gnIRsW420Tzu
+         IMHxlWBWSoQxFSagSu5Hitiv+KONFePEMXNxvhis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Cameron Kaiser <spectre@floodgap.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 187/222] brcmfmac: fix full timeout waiting for action frame on-channel tx
-Date:   Fri, 22 Nov 2019 11:28:47 +0100
-Message-Id: <20191122100915.828498979@linuxfoundation.org>
+Subject: [PATCH 4.9 182/222] KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
+Date:   Fri, 22 Nov 2019 11:28:42 +0100
+Message-Id: <20191122100915.509282448@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,88 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+From: Cameron Kaiser <spectre@floodgap.com>
 
-[ Upstream commit fbf07000960d9c8a13fdc17c6de0230d681c7543 ]
+[ Upstream commit 1006284c5e411872333967b1970c2ca46a9e225f ]
 
-The driver sends an action frame down and waits for a completion signal
-triggered by the received BRCMF_E_ACTION_FRAME_OFF_CHAN_COMPLETE event
-to continue the process. However, the action frame could be transmitted
-either on the current channel or on an off channel. For the on-channel
-case, only BRCMF_E_ACTION_FRAME_COMPLETE event will be received when
-the frame is transmitted, which make the driver always wait a full
-timeout duration. This patch has the completion signal be triggered by
-receiving the BRCMF_E_ACTION_FRAME_COMPLETE event for the on-channel
-case.
+When an OS (currently only classic Mac OS) is running in KVM-PR and makes a
+linked jump from code with split hack addressing enabled into code that does
+not, LR is not correctly updated and reflects the previously munged PC.
 
-This change fixes WFA p2p certification 5.1.19 failure.
+To fix this, this patch undoes the address munge when exiting split
+hack mode so that code relying on LR being a proper address will now
+execute. This does not affect OS X or other operating systems running
+on KVM-PR.
 
-Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Cameron Kaiser <spectre@floodgap.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/broadcom/brcm80211/brcmfmac/p2p.c  | 17 +++++++++++++++--
- .../wireless/broadcom/brcm80211/brcmfmac/p2p.h  |  2 ++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-index c91f5ef0be7c3..aac9c97d22557 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-@@ -1462,10 +1462,12 @@ int brcmf_p2p_notify_action_tx_complete(struct brcmf_if *ifp,
- 		return 0;
- 
- 	if (e->event_code == BRCMF_E_ACTION_FRAME_COMPLETE) {
--		if (e->status == BRCMF_E_STATUS_SUCCESS)
-+		if (e->status == BRCMF_E_STATUS_SUCCESS) {
- 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_COMPLETED,
- 				&p2p->status);
--		else {
-+			if (!p2p->wait_for_offchan_complete)
-+				complete(&p2p->send_af_done);
-+		} else {
- 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_NOACK, &p2p->status);
- 			/* If there is no ack, we don't need to wait for
- 			 * WLC_E_ACTION_FRAME_OFFCHAN_COMPLETE event
-@@ -1516,6 +1518,17 @@ static s32 brcmf_p2p_tx_action_frame(struct brcmf_p2p_info *p2p,
- 	p2p->af_sent_channel = le32_to_cpu(af_params->channel);
- 	p2p->af_tx_sent_jiffies = jiffies;
- 
-+	if (test_bit(BRCMF_P2P_STATUS_DISCOVER_LISTEN, &p2p->status) &&
-+	    p2p->af_sent_channel ==
-+	    ieee80211_frequency_to_channel(p2p->remain_on_channel.center_freq))
-+		p2p->wait_for_offchan_complete = false;
-+	else
-+		p2p->wait_for_offchan_complete = true;
-+
-+	brcmf_dbg(TRACE, "Waiting for %s tx completion event\n",
-+		  (p2p->wait_for_offchan_complete) ?
-+		   "off-channel" : "on-channel");
-+
- 	timeout = wait_for_completion_timeout(&p2p->send_af_done,
- 					      P2P_AF_MAX_WAIT_TIME);
- 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
-index 8ce9447533ef8..fbee511489046 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
-@@ -124,6 +124,7 @@ struct afx_hdl {
-  * @gon_req_action: about to send go negotiation requets frame.
-  * @block_gon_req_tx: drop tx go negotiation requets frame.
-  * @p2pdev_dynamically: is p2p device if created by module param or supplicant.
-+ * @wait_for_offchan_complete: wait for off-channel tx completion event.
-  */
- struct brcmf_p2p_info {
- 	struct brcmf_cfg80211_info *cfg;
-@@ -144,6 +145,7 @@ struct brcmf_p2p_info {
- 	bool gon_req_action;
- 	bool block_gon_req_tx;
- 	bool p2pdev_dynamically;
-+	bool wait_for_offchan_complete;
- };
- 
- s32 brcmf_p2p_attach(struct brcmf_cfg80211_info *cfg, bool p2pdev_forced);
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index 73c3c127d8584..209cad89a11a5 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -78,8 +78,11 @@ void kvmppc_unfixup_split_real(struct kvm_vcpu *vcpu)
+ {
+ 	if (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) {
+ 		ulong pc = kvmppc_get_pc(vcpu);
++		ulong lr = kvmppc_get_lr(vcpu);
+ 		if ((pc & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
+ 			kvmppc_set_pc(vcpu, pc & ~SPLIT_HACK_MASK);
++		if ((lr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
++			kvmppc_set_lr(vcpu, lr & ~SPLIT_HACK_MASK);
+ 		vcpu->arch.hflags &= ~BOOK3S_HFLAG_SPLIT_HACK;
+ 	}
+ }
 -- 
 2.20.1
 
