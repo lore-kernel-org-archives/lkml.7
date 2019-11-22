@@ -2,80 +2,86 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE59C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB3AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA9F206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5425B20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574382407;
+	bh=fTil7yxc8yCj0UuKEAWDgfJRsvr35/d/VBefn//EAJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RYQsjeFVJEeYibSadkBcZRr3a5CKhPS9/D5q5GqiAdMtPjhDlbrRfOmb8eo+6h4z/
+	 DYtxnqF5TTlJoI5Me27rTdQlaXKQ6lFNfHv9XzrrzoZuvG37iTgvJzON2Zja5znn7A
+	 b7ha1tfq+PGM2W98REcCNmBdDFD69uN7mytNJADQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKVAZx (ORCPT
+        id S1726703AbfKVA0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 19:25:53 -0500
-Received: from mga11.intel.com ([192.55.52.93]:13408 "EHLO mga11.intel.com"
+        Thu, 21 Nov 2019 19:26:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfKVAZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 19:25:53 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 16:25:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
-   d="scan'208";a="219280751"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga002.jf.intel.com with ESMTP; 21 Nov 2019 16:25:44 -0800
-Date:   Thu, 21 Nov 2019 16:37:54 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 4/6] x86/split_lock: Enumerate split lock detection
- if the IA32_CORE_CAPABILITIES MSR is not supported
-Message-ID: <20191122003754.GF199273@romley-ivt3.sc.intel.com>
-References: <1574297603-198156-5-git-send-email-fenghua.yu@intel.com>
- <D4D6F51D-D791-4B78-8FCA-5D419B1D079C@amacapital.net>
+        id S1726038AbfKVA0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 19:26:46 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FA07206DA;
+        Fri, 22 Nov 2019 00:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574382405;
+        bh=fTil7yxc8yCj0UuKEAWDgfJRsvr35/d/VBefn//EAJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XfccTj2tvOzw9LmskeWAfF1jy9UHkazmIhJipHh6i6waeEZJC2mhufXtU1AG027D4
+         iEXajkzs1JFe/4zy6ZwBycnhyjdMvAPSn+Fo4msHeYjVwdl2bpqBJ7skB8lDpL2nlI
+         IrhfzA5JQ0G5Tfi33HdVSojK0Y/rmcwYnooKOS9c=
+Date:   Thu, 21 Nov 2019 19:26:44 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        benjamin.tissoires@redhat.com, linux-hyperv@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, Alexander.Levin@microsoft.com
+Subject: Re: [PATCH v2] HID: hyperv: Add the support of hibernation
+Message-ID: <20191122002644.GH16867@sasha-vm>
+References: <1574234096-48767-1-git-send-email-decui@microsoft.com>
+ <nycvar.YFH.7.76.1911211533430.1799@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D4D6F51D-D791-4B78-8FCA-5D419B1D079C@amacapital.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <nycvar.YFH.7.76.1911211533430.1799@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 02:07:38PM -0800, Andy Lutomirski wrote:
-> 
-> 
-> > On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > 
-> > ﻿Architecturally the split lock detection feature is enumerated by
-> > IA32_CORE_CAPABILITIES MSR and future CPU models will indicate presence
-> > of the feature by setting bit 5. But the feature is present in a few
-> > older models where split lock detection is enumerated by the CPU models.
-> > 
-> > Use a "x86_cpu_id" table to list the older CPU models with the feature.
-> > 
-> 
-> This may need to be disabled if the HYPERVISOR bit is set.
+On Thu, Nov 21, 2019 at 03:34:10PM +0100, Jiri Kosina wrote:
+>On Tue, 19 Nov 2019, Dexuan Cui wrote:
+>
+>> During the suspend process and resume process, if there is any mouse
+>> event, there is a small chance the suspend and the resume process can be
+>> aborted because of mousevsc_on_receive() -> pm_wakeup_hard_event().
+>>
+>> This behavior can be avoided by disabling the Hyper-V mouse device as
+>> a wakeup source:
+>>
+>> echo disabled > /sys/bus/vmbus/drivers/hid_hyperv/XXX/power/wakeup
+>> (XXX is the device's GUID).
+>>
+>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>> Acked-by: Jiri Kosina <jkosina@suse.cz>
+>
+>My Ack still holds for v2. Sasha, this is going to be merged through your
+>tree, right?
 
-How about just keeping this patch set as basic enabling code and
-keep HYPERVISOR out of scope as of now? KVM folks will have better
-handling of split lock in KVM once this patch set is available in
-the kernel.
+Yup, queued up for hyperv-next, thanks!
 
-Thanks.
-
--Fenghua
+-- 
+Thanks,
+Sasha
