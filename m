@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFF7C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E54C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5C6205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2B020715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419582;
-	bh=uddy0IJBcHg7Jm9rKBTSDP8OwXg59gNsk0H1n3osQWI=;
+	s=default; t=1574419584;
+	bh=EaahZ43xIAI67Xn9sdPbZMgQlctzU9ySGIqHmmeZmDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqMvHOEyWnf1D0/noAlirhruOK0e8G337sim99gNKsU/99dKB7a/VLSXd7HJEUm29
-	 iAxVHCygNh3teJgyBNOO7quNTbvxocj77Z9NdWYJ3jAaCUU7LLfwaSFmeesrOdJ9BD
-	 ABtdgndWJC+kA0OF25ZgW5TAhNOf9gzVCr32cvH4=
+	b=CHt2OI0kPH3+ud2t3/NrgjBWoVezYK4sJ3VHvHTX8kDLZSdv4wk5ej5BohM8R8bdQ
+	 vJPN83K5xWgUKw/mlsAqcV38TbvuUHKVi/i4CGJfGCsdnSJ0HpBR6wXenqLGC6184y
+	 n13ZOMf2ZffxjQjH6wIo6KO8rbfDrZSrF5V4/nw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfKVKqV (ORCPT
+        id S1729651AbfKVKqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:46:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53384 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:46:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729041AbfKVKqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:46:18 -0500
+        id S1729156AbfKVKqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:46:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED602072D;
-        Fri, 22 Nov 2019 10:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37533205C9;
+        Fri, 22 Nov 2019 10:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419578;
-        bh=uddy0IJBcHg7Jm9rKBTSDP8OwXg59gNsk0H1n3osQWI=;
+        s=default; t=1574419580;
+        bh=EaahZ43xIAI67Xn9sdPbZMgQlctzU9ySGIqHmmeZmDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTl59JLcb0ij8Lwy3jCzZIftXFoeWgUP0bpv439wK1A4pNE/0ermp1YEfKw3wRCnD
-         WtY65g+lhPqyCIF9K8ErGo8hdS9D8xy4/RFBB3XUYbbfrMfKzrTnQ1XoeY6Zq0T+qu
-         VDpeUitu+IBq8ILgdWcpb343JZQjEFYOC4BLnV+w=
+        b=OMNzSwwcLwwr8VGGugzKLOQRMIEeRC0quFuFLiHM6ciyeen5nGPi+69uSpXHzVnAT
+         w9q2VtYpG97gFsKwWwR5hfg2WYz0G4TQ1OPTO8lvA6HI0gm5RDxoyiW7zK222CSolT
+         vcs1+/ymgRgHIp7+deRu1HmuQTcxQ7gqUkofYNck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 158/222] f2fs: return correct errno in f2fs_gc
-Date:   Fri, 22 Nov 2019 11:28:18 +0100
-Message-Id: <20191122100914.086543232@linuxfoundation.org>
+Subject: [PATCH 4.9 159/222] SUNRPC: Fix priority queue fairness
+Date:   Fri, 22 Nov 2019 11:28:19 +0100
+Message-Id: <20191122100914.151156766@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,31 +60,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 61f7725aa148ee870436a29d3a24d5c00ab7e9af ]
+[ Upstream commit f42f7c283078ce3c1e8368b140e270755b1ae313 ]
 
-This fixes overriding error number in f2fs_gc.
+Fix up the priority queue to not batch by owner, but by queue, so that
+we allow '1 << priority' elements to be dequeued before switching to
+the next priority queue.
+The owner field is still used to wake up requests in round robin order
+by owner to avoid single processes hogging the RPC layer by loading the
+queues.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sunrpc/sched.h |   2 -
+ net/sunrpc/sched.c           | 109 +++++++++++++++++------------------
+ 2 files changed, 54 insertions(+), 57 deletions(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 759056e776e50..b1d62003cda62 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -985,7 +985,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync)
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index 7ba040c797ec4..da2791b5fe879 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -185,7 +185,6 @@ struct rpc_timer {
+ struct rpc_wait_queue {
+ 	spinlock_t		lock;
+ 	struct list_head	tasks[RPC_NR_PRIORITY];	/* task queue for each priority level */
+-	pid_t			owner;			/* process id of last task serviced */
+ 	unsigned char		maxpriority;		/* maximum priority (0 if queue is not a priority queue) */
+ 	unsigned char		priority;		/* current priority */
+ 	unsigned char		nr;			/* # tasks remaining for cookie */
+@@ -201,7 +200,6 @@ struct rpc_wait_queue {
+  * from a single cookie.  The aim is to improve
+  * performance of NFS operations such as read/write.
+  */
+-#define RPC_BATCH_COUNT			16
+ #define RPC_IS_PRIORITY(q)		((q)->maxpriority > 0)
  
- 	put_gc_inode(&gc_list);
+ /*
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 600eacce653ae..0ef65822fdd34 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -99,64 +99,78 @@ __rpc_add_timer(struct rpc_wait_queue *queue, struct rpc_task *task)
+ 	list_add(&task->u.tk_wait.timer_list, &queue->timer_list.list);
+ }
  
--	if (sync)
-+	if (sync && !ret)
- 		ret = sec_freed ? 0 : -EAGAIN;
- 	return ret;
+-static void rpc_rotate_queue_owner(struct rpc_wait_queue *queue)
+-{
+-	struct list_head *q = &queue->tasks[queue->priority];
+-	struct rpc_task *task;
+-
+-	if (!list_empty(q)) {
+-		task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
+-		if (task->tk_owner == queue->owner)
+-			list_move_tail(&task->u.tk_wait.list, q);
+-	}
+-}
+-
+ static void rpc_set_waitqueue_priority(struct rpc_wait_queue *queue, int priority)
+ {
+ 	if (queue->priority != priority) {
+-		/* Fairness: rotate the list when changing priority */
+-		rpc_rotate_queue_owner(queue);
+ 		queue->priority = priority;
++		queue->nr = 1U << priority;
+ 	}
+ }
+ 
+-static void rpc_set_waitqueue_owner(struct rpc_wait_queue *queue, pid_t pid)
+-{
+-	queue->owner = pid;
+-	queue->nr = RPC_BATCH_COUNT;
+-}
+-
+ static void rpc_reset_waitqueue_priority(struct rpc_wait_queue *queue)
+ {
+ 	rpc_set_waitqueue_priority(queue, queue->maxpriority);
+-	rpc_set_waitqueue_owner(queue, 0);
+ }
+ 
+ /*
+- * Add new request to a priority queue.
++ * Add a request to a queue list
+  */
+-static void __rpc_add_wait_queue_priority(struct rpc_wait_queue *queue,
+-		struct rpc_task *task,
+-		unsigned char queue_priority)
++static void
++__rpc_list_enqueue_task(struct list_head *q, struct rpc_task *task)
+ {
+-	struct list_head *q;
+ 	struct rpc_task *t;
+ 
+-	INIT_LIST_HEAD(&task->u.tk_wait.links);
+-	if (unlikely(queue_priority > queue->maxpriority))
+-		queue_priority = queue->maxpriority;
+-	if (queue_priority > queue->priority)
+-		rpc_set_waitqueue_priority(queue, queue_priority);
+-	q = &queue->tasks[queue_priority];
+ 	list_for_each_entry(t, q, u.tk_wait.list) {
+ 		if (t->tk_owner == task->tk_owner) {
+-			list_add_tail(&task->u.tk_wait.list, &t->u.tk_wait.links);
++			list_add_tail(&task->u.tk_wait.links,
++					&t->u.tk_wait.links);
++			/* Cache the queue head in task->u.tk_wait.list */
++			task->u.tk_wait.list.next = q;
++			task->u.tk_wait.list.prev = NULL;
+ 			return;
+ 		}
+ 	}
++	INIT_LIST_HEAD(&task->u.tk_wait.links);
+ 	list_add_tail(&task->u.tk_wait.list, q);
+ }
+ 
++/*
++ * Remove request from a queue list
++ */
++static void
++__rpc_list_dequeue_task(struct rpc_task *task)
++{
++	struct list_head *q;
++	struct rpc_task *t;
++
++	if (task->u.tk_wait.list.prev == NULL) {
++		list_del(&task->u.tk_wait.links);
++		return;
++	}
++	if (!list_empty(&task->u.tk_wait.links)) {
++		t = list_first_entry(&task->u.tk_wait.links,
++				struct rpc_task,
++				u.tk_wait.links);
++		/* Assume __rpc_list_enqueue_task() cached the queue head */
++		q = t->u.tk_wait.list.next;
++		list_add_tail(&t->u.tk_wait.list, q);
++		list_del(&task->u.tk_wait.links);
++	}
++	list_del(&task->u.tk_wait.list);
++}
++
++/*
++ * Add new request to a priority queue.
++ */
++static void __rpc_add_wait_queue_priority(struct rpc_wait_queue *queue,
++		struct rpc_task *task,
++		unsigned char queue_priority)
++{
++	if (unlikely(queue_priority > queue->maxpriority))
++		queue_priority = queue->maxpriority;
++	__rpc_list_enqueue_task(&queue->tasks[queue_priority], task);
++}
++
+ /*
+  * Add new request to wait queue.
+  *
+@@ -194,13 +208,7 @@ static void __rpc_add_wait_queue(struct rpc_wait_queue *queue,
+  */
+ static void __rpc_remove_wait_queue_priority(struct rpc_task *task)
+ {
+-	struct rpc_task *t;
+-
+-	if (!list_empty(&task->u.tk_wait.links)) {
+-		t = list_entry(task->u.tk_wait.links.next, struct rpc_task, u.tk_wait.list);
+-		list_move(&t->u.tk_wait.list, &task->u.tk_wait.list);
+-		list_splice_init(&task->u.tk_wait.links, &t->u.tk_wait.links);
+-	}
++	__rpc_list_dequeue_task(task);
+ }
+ 
+ /*
+@@ -212,7 +220,8 @@ static void __rpc_remove_wait_queue(struct rpc_wait_queue *queue, struct rpc_tas
+ 	__rpc_disable_timer(queue, task);
+ 	if (RPC_IS_PRIORITY(queue))
+ 		__rpc_remove_wait_queue_priority(task);
+-	list_del(&task->u.tk_wait.list);
++	else
++		list_del(&task->u.tk_wait.list);
+ 	queue->qlen--;
+ 	dprintk("RPC: %5u removed from queue %p \"%s\"\n",
+ 			task->tk_pid, queue, rpc_qname(queue));
+@@ -481,17 +490,9 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
+ 	 * Service a batch of tasks from a single owner.
+ 	 */
+ 	q = &queue->tasks[queue->priority];
+-	if (!list_empty(q)) {
+-		task = list_entry(q->next, struct rpc_task, u.tk_wait.list);
+-		if (queue->owner == task->tk_owner) {
+-			if (--queue->nr)
+-				goto out;
+-			list_move_tail(&task->u.tk_wait.list, q);
+-		}
+-		/*
+-		 * Check if we need to switch queues.
+-		 */
+-		goto new_owner;
++	if (!list_empty(q) && --queue->nr) {
++		task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
++		goto out;
+ 	}
+ 
+ 	/*
+@@ -503,7 +504,7 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
+ 		else
+ 			q = q - 1;
+ 		if (!list_empty(q)) {
+-			task = list_entry(q->next, struct rpc_task, u.tk_wait.list);
++			task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
+ 			goto new_queue;
+ 		}
+ 	} while (q != &queue->tasks[queue->priority]);
+@@ -513,8 +514,6 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
+ 
+ new_queue:
+ 	rpc_set_waitqueue_priority(queue, (unsigned int)(q - &queue->tasks[0]));
+-new_owner:
+-	rpc_set_waitqueue_owner(queue, task->tk_owner);
+ out:
+ 	return task;
  }
 -- 
 2.20.1
