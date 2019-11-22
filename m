@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F68C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C7EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81032071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B628C2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420296;
-	bh=MMgzRe5yVk3nwNXkDvps5UuvfqiDrf2kC1LxpPtNu0Q=;
+	s=default; t=1574420301;
+	bh=kL0HXZps80TZHqhI8/x93MmrZiMXxsREYGLIJetJgV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fEEfMKMKMS9jccRslG9ZyyKQvRPV9oohhvPjyotL4Jw3shaROU8fRQg8+grKMG1dS
-	 GYW1CcKRRnfK7IANc0NCvBAnA3B1loTQMKTN+UtFDzcdtHyRetRKsC8T46Zua5Sdr6
-	 5yquAFduCzt4OVz0KmSNtWPTZa7TOqc28XVM76RA=
+	b=HI4oWe+5JzcCoEObr2oDtLan7Iwh6QAcgwqQKhYnO7aftPI/UdMqxmg9tQWqj4Znf
+	 NmiJhxpEE18by16j9iz7YERrMXn/3vHdYjOShViVRZNekMVnP/dbKWarSNbR2YcykU
+	 tPIzOMIo71dh66jIt5vP3Y0OnWwRM9q5foLgGhNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfKVK6P (ORCPT
+        id S1730294AbfKVK6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:58:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730773AbfKVK6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:09 -0500
+        id S1730781AbfKVK6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8F882071C;
-        Fri, 22 Nov 2019 10:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 410DB20706;
+        Fri, 22 Nov 2019 10:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420289;
-        bh=MMgzRe5yVk3nwNXkDvps5UuvfqiDrf2kC1LxpPtNu0Q=;
+        s=default; t=1574420297;
+        bh=kL0HXZps80TZHqhI8/x93MmrZiMXxsREYGLIJetJgV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lU/8QRCLiWXUC7g7juz6SCd64BVh6m9EfQSWHp8e2TOIRY43QadEtNzh5lq7D6uBJ
-         x1+MkE9mymEVIuXyL1Xak1Q22j3g9h/ACldkfEp6tr+FosXDm+Zgwoe2kDWBEgioDm
-         QtO6UyMbvcYUQRWifxTzGXA7Pjnrdm682rCCg2tE=
+        b=kZ/xXgR9U5QRayUjLD35T4Ofv4zKbOgK+GrvDvCnYyxH1zalAypIucd7oi8/z58tj
+         X56/mTScI+p4+k3o2DjwRWj/V8C1l5tVOip/agIA5KCNoYHPm7r7x0v4EzbpawrSRU
+         O3+r3uauBazs+SUDLcjRdFgkqsMoGSMma4YWuHzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/220] IB/hfi1: Error path MAD response size is incorrect
-Date:   Fri, 22 Nov 2019 11:26:34 +0100
-Message-Id: <20191122100914.513996783@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 058/220] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
+Date:   Fri, 22 Nov 2019 11:27:03 +0100
+Message-Id: <20191122100916.293549628@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -63,47 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael J. Ruhl <michael.j.ruhl@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 935c84ac649a147e1aad2c48ee5c5a1a9176b2d0 ]
+[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
 
-If a MAD packet has incorrect header information, the logic uses the reply
-path to report the error.  The reply path expects *resp_len to be set
-prior to return.  Unfortunately, *resp_len is set to 0 for this path.
-This causes an incorrect response packet.
+Clang warns when implicitly converting from one enumerated type to
+another. Avoid this by using the equivalent value from the expected
+type.
 
-Fix by ensuring that the *resp_len is defaulted to the incoming packet
-size (wc->bytes_len - sizeof(GRH)).
+drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
+enumeration type 'enum dma_transfer_direction' to different enumeration
+type 'enum dma_data_direction' [-Wenum-conversion]
+                td_desc->desc_list_len, DMA_MEM_TO_DEV);
+                                        ^~~~~~~~~~~~~~
+1 warning generated.
 
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/mad.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/timb_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
-index f208a25d0e4f5..1669548e91dcf 100644
---- a/drivers/infiniband/hw/hfi1/mad.c
-+++ b/drivers/infiniband/hw/hfi1/mad.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright(c) 2015-2017 Intel Corporation.
-+ * Copyright(c) 2015-2018 Intel Corporation.
-  *
-  * This file is provided under a dual BSD/GPLv2 license.  When using or
-  * redistributing this file, you may do so under either license.
-@@ -4829,7 +4829,7 @@ static int hfi1_process_opa_mad(struct ib_device *ibdev, int mad_flags,
- 	int ret;
- 	int pkey_idx;
- 	int local_mad = 0;
--	u32 resp_len = 0;
-+	u32 resp_len = in_wc->byte_len - sizeof(*in_grh);
- 	struct hfi1_ibport *ibp = to_iport(ibdev, port);
+diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
+index 395c698edb4d7..fc0f9c8766a87 100644
+--- a/drivers/dma/timb_dma.c
++++ b/drivers/dma/timb_dma.c
+@@ -545,7 +545,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
+ 	}
  
- 	pkey_idx = hfi1_lookup_pkey_idx(ibp, LIM_MGMT_P_KEY);
+ 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
+-		td_desc->desc_list_len, DMA_MEM_TO_DEV);
++		td_desc->desc_list_len, DMA_TO_DEVICE);
+ 
+ 	return &td_desc->txd;
+ }
 -- 
 2.20.1
 
