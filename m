@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7F3C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3074C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267462071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E99207FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420157;
-	bh=+MDVunTPEMMpFv/BUNtzZS6Dddws/K6pUWQKAluF6Go=;
+	s=default; t=1574420161;
+	bh=hoi0A6doKosz05TOcHyTBS65f5NrBZQ6y2IQFRS7R6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQmJzJNtTvwVKC5ZX7f1uI4j0JkPCfOITxW5J1LxTom4nADk9zgMjrdIcdt3kv5tU
-	 HcKhSocDO/Op8fZd8jdPjjQSBMzNAoTFHr8GYl5NF/gwl6O1QIsjr+7fmUBY2p+BBh
-	 2tjztKLBBw4jHx8m2xJNa3TF4SuTlAfAhjgz2MrI=
+	b=fS8qTmmV1f9rmh+SF5pV+PmulKlZVV1UIMpqSaS48gUVI06WiHw5lif4/J0SJlKj0
+	 BpsT94flrN+7IaqSNhvEC3bwt4oJUiiJE4VZWRp/HTGibjXllLhpmEv1xxaumt5yBa
+	 Dl4iTv+cVBLhdEA56+I2/g/p6F43v9YaDNONIJs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbfKVKz4 (ORCPT
+        id S1729819AbfKVK4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43108 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:56:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbfKVKzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:51 -0500
+        id S1730529AbfKVKz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 478AF20718;
-        Fri, 22 Nov 2019 10:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B8ED20706;
+        Fri, 22 Nov 2019 10:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420150;
-        bh=+MDVunTPEMMpFv/BUNtzZS6Dddws/K6pUWQKAluF6Go=;
+        s=default; t=1574420156;
+        bh=hoi0A6doKosz05TOcHyTBS65f5NrBZQ6y2IQFRS7R6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OdhyE+vkLyEvTJ+f2KVMIiTpstK3De+PavoLNpuTZvGza05VnIQx0O4GHLG0yc+dI
-         1OO5kaLOHT621CGLPtTBVIZNaDMtJRyfMsGZrWzjT8BF2oQNqeloMCyX3hP0qiRzQ7
-         Ev3BaVMuoalJSvNPY3yJnQHS4qzJWAAl2vCmb3Lw=
+        b=jZUDVT8FIIlIw5QiU2ie0psjVe3Kxtb2swUEJ7wyOwSAA8vAYvS5aItcynGxF2HNu
+         GkFW7tCZbTdRxWh2CPQDfkCTxzhgIkiXxm1zJrmE/8SncunCtWcQPCIkw8K7eO9qEL
+         mWITSMasHXvnUeBmml+4YJTNpSfFh4V/1bafksME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang YanQing <udknight@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.19 011/220] bpf, x32: Fix bug for BPF_ALU64 | BPF_NEG
-Date:   Fri, 22 Nov 2019 11:26:16 +0100
-Message-Id: <20191122100913.448861318@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Wang YanQing <udknight@gmail.com>
+Subject: [PATCH 4.19 013/220] bpf, x32: Fix bug with ALU64 {LSH, RSH, ARSH} BPF_K shift by 0
+Date:   Fri, 22 Nov 2019 11:26:18 +0100
+Message-Id: <20191122100913.566226388@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -59,82 +61,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang YanQing <udknight@gmail.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit b9aa0b35d878dff9ed19f94101fe353a4de00cc4 upstream.
+commit 6fa632e719eec4d1b1ebf3ddc0b2d667997b057b upstream.
 
-The current implementation has two errors:
+The current x32 BPF JIT does not correctly compile shift operations when
+the immediate shift amount is 0. The expected behavior is for this to
+be a no-op.
 
-1: The second xor instruction will clear carry flag which
-   is necessary for following sbb instruction.
-2: The select coding for sbb instruction is wrong, the coding
-   is "sbb dreg_hi,ecx", but what we need is "sbb ecx,dreg_hi".
+The following program demonstrates the bug. The expexceted result is 1,
+but the current JITed code returns 2.
 
-This patch rewrites the implementation and fixes the errors.
+  r0 = 1
+  r1 = 1
+  r1 <<= 0
+  if r1 == 1 goto end
+  r0 = 2
+end:
+  exit
 
-This patch fixes below errors reported by bpf/test_verifier in x32
-platform when the jit is enabled:
+This patch simplifies the code and fixes the bug.
 
-"
-0: (b4) w1 = 4
-1: (b4) w2 = 4
-2: (1f) r2 -= r1
-3: (4f) r2 |= r1
-4: (87) r2 = -r2
-5: (c7) r2 s>>= 63
-6: (5f) r1 &= r2
-7: (bf) r0 = r1
-8: (95) exit
-processed 9 insns (limit 131072), stack depth 0
-0: (b4) w1 = 4
-1: (b4) w2 = 4
-2: (1f) r2 -= r1
-3: (4f) r2 |= r1
-4: (87) r2 = -r2
-5: (c7) r2 s>>= 63
-6: (5f) r1 &= r2
-7: (bf) r0 = r1
-8: (95) exit
-processed 9 insns (limit 131072), stack depth 0
-......
-Summary: 1189 PASSED, 125 SKIPPED, 15 FAILED
-"
-
-Signed-off-by: Wang YanQing <udknight@gmail.com>
+Fixes: 03f5781be2c7 ("bpf, x86_32: add eBPF JIT compiler for ia32")
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Wang YanQing <udknight@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/net/bpf_jit_comp32.c |   19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ arch/x86/net/bpf_jit_comp32.c |   63 ++++--------------------------------------
+ 1 file changed, 6 insertions(+), 57 deletions(-)
 
 --- a/arch/x86/net/bpf_jit_comp32.c
 +++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -698,19 +698,12 @@ static inline void emit_ia32_neg64(const
- 		      STACK_VAR(dst_hi));
+@@ -892,27 +892,10 @@ static inline void emit_ia32_lsh_i64(con
  	}
- 
--	/* xor ecx,ecx */
--	EMIT2(0x31, add_2reg(0xC0, IA32_ECX, IA32_ECX));
--	/* sub dreg_lo,ecx */
--	EMIT2(0x2B, add_2reg(0xC0, dreg_lo, IA32_ECX));
--	/* mov dreg_lo,ecx */
--	EMIT2(0x89, add_2reg(0xC0, dreg_lo, IA32_ECX));
+ 	/* Do LSH operation */
+ 	if (val < 32) {
+-		/* shl dreg_hi,imm8 */
+-		EMIT3(0xC1, add_1reg(0xE0, dreg_hi), val);
+-		/* mov ebx,dreg_lo */
+-		EMIT2(0x8B, add_2reg(0xC0, dreg_lo, IA32_EBX));
++		/* shld dreg_hi,dreg_lo,imm8 */
++		EMIT4(0x0F, 0xA4, add_2reg(0xC0, dreg_hi, dreg_lo), val);
+ 		/* shl dreg_lo,imm8 */
+ 		EMIT3(0xC1, add_1reg(0xE0, dreg_lo), val);
 -
--	/* xor ecx,ecx */
--	EMIT2(0x31, add_2reg(0xC0, IA32_ECX, IA32_ECX));
--	/* sbb dreg_hi,ecx */
--	EMIT2(0x19, add_2reg(0xC0, dreg_hi, IA32_ECX));
--	/* mov dreg_hi,ecx */
--	EMIT2(0x89, add_2reg(0xC0, dreg_hi, IA32_ECX));
-+	/* neg dreg_lo */
-+	EMIT2(0xF7, add_1reg(0xD8, dreg_lo));
-+	/* adc dreg_hi,0x0 */
-+	EMIT3(0x83, add_1reg(0xD0, dreg_hi), 0x00);
-+	/* neg dreg_hi */
-+	EMIT2(0xF7, add_1reg(0xD8, dreg_hi));
+-		/* IA32_ECX = 32 - val */
+-		/* mov ecx,val */
+-		EMIT2(0xB1, val);
+-		/* movzx ecx,ecx */
+-		EMIT3(0x0F, 0xB6, add_2reg(0xC0, IA32_ECX, IA32_ECX));
+-		/* neg ecx */
+-		EMIT2(0xF7, add_1reg(0xD8, IA32_ECX));
+-		/* add ecx,32 */
+-		EMIT3(0x83, add_1reg(0xC0, IA32_ECX), 32);
+-
+-		/* shr ebx,cl */
+-		EMIT2(0xD3, add_1reg(0xE8, IA32_EBX));
+-		/* or dreg_hi,ebx */
+-		EMIT2(0x09, add_2reg(0xC0, dreg_hi, IA32_EBX));
+ 	} else if (val >= 32 && val < 64) {
+ 		u32 value = val - 32;
  
- 	if (dstk) {
- 		/* mov dword ptr [ebp+off],dreg_lo */
+@@ -958,27 +941,10 @@ static inline void emit_ia32_rsh_i64(con
+ 
+ 	/* Do RSH operation */
+ 	if (val < 32) {
+-		/* shr dreg_lo,imm8 */
+-		EMIT3(0xC1, add_1reg(0xE8, dreg_lo), val);
+-		/* mov ebx,dreg_hi */
+-		EMIT2(0x8B, add_2reg(0xC0, dreg_hi, IA32_EBX));
++		/* shrd dreg_lo,dreg_hi,imm8 */
++		EMIT4(0x0F, 0xAC, add_2reg(0xC0, dreg_lo, dreg_hi), val);
+ 		/* shr dreg_hi,imm8 */
+ 		EMIT3(0xC1, add_1reg(0xE8, dreg_hi), val);
+-
+-		/* IA32_ECX = 32 - val */
+-		/* mov ecx,val */
+-		EMIT2(0xB1, val);
+-		/* movzx ecx,ecx */
+-		EMIT3(0x0F, 0xB6, add_2reg(0xC0, IA32_ECX, IA32_ECX));
+-		/* neg ecx */
+-		EMIT2(0xF7, add_1reg(0xD8, IA32_ECX));
+-		/* add ecx,32 */
+-		EMIT3(0x83, add_1reg(0xC0, IA32_ECX), 32);
+-
+-		/* shl ebx,cl */
+-		EMIT2(0xD3, add_1reg(0xE0, IA32_EBX));
+-		/* or dreg_lo,ebx */
+-		EMIT2(0x09, add_2reg(0xC0, dreg_lo, IA32_EBX));
+ 	} else if (val >= 32 && val < 64) {
+ 		u32 value = val - 32;
+ 
+@@ -1023,27 +989,10 @@ static inline void emit_ia32_arsh_i64(co
+ 	}
+ 	/* Do RSH operation */
+ 	if (val < 32) {
+-		/* shr dreg_lo,imm8 */
+-		EMIT3(0xC1, add_1reg(0xE8, dreg_lo), val);
+-		/* mov ebx,dreg_hi */
+-		EMIT2(0x8B, add_2reg(0xC0, dreg_hi, IA32_EBX));
++		/* shrd dreg_lo,dreg_hi,imm8 */
++		EMIT4(0x0F, 0xAC, add_2reg(0xC0, dreg_lo, dreg_hi), val);
+ 		/* ashr dreg_hi,imm8 */
+ 		EMIT3(0xC1, add_1reg(0xF8, dreg_hi), val);
+-
+-		/* IA32_ECX = 32 - val */
+-		/* mov ecx,val */
+-		EMIT2(0xB1, val);
+-		/* movzx ecx,ecx */
+-		EMIT3(0x0F, 0xB6, add_2reg(0xC0, IA32_ECX, IA32_ECX));
+-		/* neg ecx */
+-		EMIT2(0xF7, add_1reg(0xD8, IA32_ECX));
+-		/* add ecx,32 */
+-		EMIT3(0x83, add_1reg(0xC0, IA32_ECX), 32);
+-
+-		/* shl ebx,cl */
+-		EMIT2(0xD3, add_1reg(0xE0, IA32_EBX));
+-		/* or dreg_lo,ebx */
+-		EMIT2(0x09, add_2reg(0xC0, dreg_lo, IA32_EBX));
+ 	} else if (val >= 32 && val < 64) {
+ 		u32 value = val - 32;
+ 
 
 
