@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5754DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F6BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3355420721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E8D20840
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKVWkV (ORCPT
+        id S1727133AbfKVWk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:40:21 -0500
+        Fri, 22 Nov 2019 17:40:26 -0500
 Received: from mga01.intel.com ([192.55.52.88]:61229 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfKVWkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726942AbfKVWkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 17:40:05 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:40:05 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:40:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
-   d="scan'208";a="409029702"
+   d="scan'208";a="409029696"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Nov 2019 14:40:05 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 22 Nov 2019 14:40:04 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/13] KVM: x86: Add helper to "handle" internal emulation error
-Date:   Fri, 22 Nov 2019 14:39:57 -0800
-Message-Id: <20191122223959.13545-12-sean.j.christopherson@intel.com>
+Subject: [PATCH 10/13] KVM: x86: Shrink the usercopy region of the emulation context
+Date:   Fri, 22 Nov 2019 14:39:56 -0800
+Message-Id: <20191122223959.13545-11-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122223959.13545-1-sean.j.christopherson@intel.com>
 References: <20191122223959.13545-1-sean.j.christopherson@intel.com>
@@ -50,74 +50,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to set the appropriate error codes in vcpu->run when
-emulation fails (future patches will add additional failure scenarios).
+Shuffle a few operand structs to the end of struct x86_emulate_ctxt and
+update the cache creation to whitelist only the region of the emulation
+context that is expected to be copied to/from user memory, e.g. the
+instruction operands, registers, and fetch/io/mem caches.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ arch/x86/kvm/kvm_emulate.h |  8 +++++---
+ arch/x86/kvm/x86.c         | 12 ++++++------
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
+diff --git a/arch/x86/kvm/kvm_emulate.h b/arch/x86/kvm/kvm_emulate.h
+index 844e833609db..c25133080666 100644
+--- a/arch/x86/kvm/kvm_emulate.h
++++ b/arch/x86/kvm/kvm_emulate.h
+@@ -318,9 +318,6 @@ struct x86_emulate_ctxt {
+ 	u8 intercept;
+ 	u8 op_bytes;
+ 	u8 ad_bytes;
+-	struct operand src;
+-	struct operand src2;
+-	struct operand dst;
+ 	int (*execute)(struct x86_emulate_ctxt *ctxt);
+ 	int (*check_perm)(struct x86_emulate_ctxt *ctxt);
+ 	/*
+@@ -345,6 +342,11 @@ struct x86_emulate_ctxt {
+ 	u8 seg_override;
+ 	u64 d;
+ 	unsigned long _eip;
++
++	/* Here begins the usercopy section. */
++	struct operand src;
++	struct operand src2;
++	struct operand dst;
+ 	struct operand memop;
+ 	/* Fields above regs are cleared together. */
+ 	unsigned long _regs[NR_VCPU_REGS];
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 418717876ad0..4667a51b4f25 100644
+index 548cf3b659f5..418717876ad0 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -6401,6 +6401,14 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
- }
- EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
+@@ -231,13 +231,13 @@ static struct kmem_cache *x86_emulator_cache;
  
-+static int internal_emulation_error(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+	vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
-+	vcpu->run->internal.ndata = 0;
-+	return 0;
-+}
-+
- static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
- 				    int emulation_type)
+ static struct kmem_cache *kvm_alloc_emulator_cache(void)
  {
-@@ -6414,21 +6422,13 @@ static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
- 		return 1;
- 	}
- 
--	if (emulation_type & EMULTYPE_SKIP) {
--		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
--		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
--		vcpu->run->internal.ndata = 0;
--		return 0;
--	}
-+	if (emulation_type & EMULTYPE_SKIP)
-+		return internal_emulation_error(vcpu);
- 
- 	kvm_queue_exception(vcpu, UD_VECTOR);
- 
--	if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) {
--		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
--		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
--		vcpu->run->internal.ndata = 0;
--		return 0;
--	}
-+	if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0)
-+		return internal_emulation_error(vcpu);
- 
- 	return 1;
+-	return kmem_cache_create_usercopy("x86_emulator",
+-					  sizeof(struct x86_emulate_ctxt),
++	unsigned int useroffset = offsetof(struct x86_emulate_ctxt, src);
++	unsigned int size = sizeof(struct x86_emulate_ctxt);
++
++	return kmem_cache_create_usercopy("x86_emulator", size,
+ 					  __alignof__(struct x86_emulate_ctxt),
+-					  SLAB_ACCOUNT,
+-					  0,
+-					  sizeof(struct x86_emulate_ctxt),
+-					  NULL);
++					  SLAB_ACCOUNT, useroffset,
++					  size - useroffset, NULL);
  }
-@@ -8830,12 +8830,8 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
  
- 	ret = emulator_task_switch(ctxt, tss_selector, idt_index, reason,
- 				   has_error_code, error_code);
--	if (ret) {
--		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
--		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
--		vcpu->run->internal.ndata = 0;
--		return 0;
--	}
-+	if (ret)
-+		return internal_emulation_error(vcpu);
- 
- 	kvm_rip_write(vcpu, ctxt->eip);
- 	kvm_set_rflags(vcpu, ctxt->eflags);
+ static int emulator_fix_hypercall(struct x86_emulate_ctxt *ctxt);
 -- 
 2.24.0
 
