@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0707AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B35C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB8720708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED1620718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421720;
-	bh=W0mfyXlOQJc8EOdIZJoXJvWy43HYarysZdwefjnP4tY=;
+	s=default; t=1574421722;
+	bh=rYpbs0dKw7NuXQPuiS1JlwOkFwEBEGYINd5c/qDq/JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jMe2z8iV/sfbKGOBkDtDVbeDM4obEShavaQMatgdpU0mpqpVlXyWDxBpMNqEIlN1m
-	 6bwBPlSr+OP+kTDQTA6Ls4MHZdoeOsksjnmt9lnV/c0jIihdAKdUqS84w7cu1alDNg
-	 cYQTl2b7cZtYh93UHAu74xS1bgwZoopdFWmBUMQQ=
+	b=Bg9bMez7RYCf8JcfGLzjeg92jRpvGnHCLk16DFPTC/d/dfnMTcjChFTgq6lwHEtGn
+	 +zB0stTBrjEFjJdVt/OqfLEdgHw94X0wcQ9XSBwGxwjtqtKnOB85TpmZTvmyztwjH0
+	 eMB7MunEm0VeaSVVvYtKi1lYJH2azA2i/JcUolnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfKVKoQ (ORCPT
+        id S1728349AbfKVKoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50026 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:44:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfKVKoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:11 -0500
+        id S1728832AbfKVKoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1811A20656;
-        Fri, 22 Nov 2019 10:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30F1320715;
+        Fri, 22 Nov 2019 10:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419450;
-        bh=W0mfyXlOQJc8EOdIZJoXJvWy43HYarysZdwefjnP4tY=;
+        s=default; t=1574419444;
+        bh=rYpbs0dKw7NuXQPuiS1JlwOkFwEBEGYINd5c/qDq/JM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6tb1XhdzW3pkQJlV3lvR6EqS+RaHk7OZI4Qk0qNR0dKkO4wZLAdbV5q1TSJTFiBa
-         dLmtcVJGrx3Hv/eoECZ+PXXM8am34F99XqusHpx2BFWZZeYLfdTkLTcwSFtCNi8+zN
-         nwZNtYrHn9gMNgQlV9Ypz7zvARhJ7Kyde9YyOAWs=
+        b=Heums4T0EEmlYkzghQkcDScRzdkxh7B/rQAmC07gPGSqWCDRgy19G8FkOD0UPJ4BR
+         dR7A9l+Ms2bKvpu16sts5cCA9nPpKG8uHAnrMdjxjagdZbdY8YAaADQkgpZsToU1zx
+         Q0n3+Npj95a7IKmrhL6tJoeCAN3zUW2qtT3uq9/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 114/222] phy: phy-twl4030-usb: fix denied runtime access
-Date:   Fri, 22 Nov 2019 11:27:34 +0100
-Message-Id: <20191122100911.439094902@linuxfoundation.org>
+Subject: [PATCH 4.9 112/222] usb: gadget: uvc: configfs: Drop leaked references to config items
+Date:   Fri, 22 Nov 2019 11:27:32 +0100
+Message-Id: <20191122100911.324855796@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,79 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 6c7103aa026094a4ee2c2708ec6977a6dfc5331d ]
+[ Upstream commit 86f3daed59bceb4fa7981d85e89f63ebbae1d561 ]
 
-When runtime is not enabled, pm_runtime_get_sync() returns -EACCESS,
-the counter will be incremented but the resume callback not called,
-so enumeration and charging will not start properly.
-To avoid that happen, disable irq on suspend and recheck on resume.
+Some of the .allow_link() and .drop_link() operations implementations
+call config_group_find_item() and then leak the reference to the
+returned item. Fix this by dropping those references where needed.
 
-Practically this happens when the device is woken up from suspend by
-plugging in usb.
-
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/phy-twl4030-usb.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/usb/gadget/function/uvc_configfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/phy-twl4030-usb.c b/drivers/phy/phy-twl4030-usb.c
-index 547ca7b3f0985..ddb530ee2255c 100644
---- a/drivers/phy/phy-twl4030-usb.c
-+++ b/drivers/phy/phy-twl4030-usb.c
-@@ -144,6 +144,7 @@
- #define PMBR1				0x0D
- #define GPIO_USB_4PIN_ULPI_2430C	(3 << 0)
- 
-+static irqreturn_t twl4030_usb_irq(int irq, void *_twl);
- /*
-  * If VBUS is valid or ID is ground, then we know a
-  * cable is present and we need to be runtime-enabled
-@@ -392,6 +393,33 @@ static void __twl4030_phy_power(struct twl4030_usb *twl, int on)
- 	WARN_ON(twl4030_usb_write_verify(twl, PHY_PWR_CTRL, pwr) < 0);
+diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+index d7dcd39fe12cb..3803dda54666b 100644
+--- a/drivers/usb/gadget/function/uvc_configfs.c
++++ b/drivers/usb/gadget/function/uvc_configfs.c
+@@ -543,6 +543,7 @@ static int uvcg_control_class_allow_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
  }
- 
-+static int __maybe_unused twl4030_usb_suspend(struct device *dev)
-+{
-+	struct twl4030_usb *twl = dev_get_drvdata(dev);
-+
-+	/*
-+	 * we need enabled runtime on resume,
-+	 * so turn irq off here, so we do not get it early
-+	 * note: wakeup on usb plug works independently of this
-+	 */
-+	dev_dbg(twl->dev, "%s\n", __func__);
-+	disable_irq(twl->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused twl4030_usb_resume(struct device *dev)
-+{
-+	struct twl4030_usb *twl = dev_get_drvdata(dev);
-+
-+	dev_dbg(twl->dev, "%s\n", __func__);
-+	enable_irq(twl->irq);
-+	/* check whether cable status changed */
-+	twl4030_usb_irq(0, twl);
-+
-+	return 0;
-+}
-+
- static int __maybe_unused twl4030_usb_runtime_suspend(struct device *dev)
- {
- 	struct twl4030_usb *twl = dev_get_drvdata(dev);
-@@ -652,6 +680,7 @@ static const struct phy_ops ops = {
- static const struct dev_pm_ops twl4030_usb_pm_ops = {
- 	SET_RUNTIME_PM_OPS(twl4030_usb_runtime_suspend,
- 			   twl4030_usb_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(twl4030_usb_suspend, twl4030_usb_resume)
- };
- 
- static int twl4030_usb_probe(struct platform_device *pdev)
+@@ -584,6 +585,7 @@ static int uvcg_control_class_drop_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -2047,6 +2049,7 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -2091,6 +2094,7 @@ static int uvcg_streaming_class_drop_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
 -- 
 2.20.1
 
