@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCB7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD60C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140602068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290BA2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403320;
-	bh=5UKKWctJDQZ8xRe1z8NZtBEcyGxr87Z4366ykrJckvA=;
+	s=default; t=1574403324;
+	bh=4ViH26CfKQ55nuwcbzbxlFI+t7zG1NSHwlFV6FltphI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9AiCwgM5TLCQGcUrfi8fbrYW82NbmhfUzoxUmCY1CL7N60bNpzI8XJtC5Ypwhwtz
-	 yG9HULJ98IBn1njHk8UtXNOYZbdswVykjHnnJamrT14WDmfnulSGiUqHru/dcy9pKa
-	 eH7EKpGPzVNrzHrCl3VImpExD3tuLxxyiB7JPycc=
+	b=yOF7VZK8vAfzfMgTNKyaHClkOf+WCVvZgziUcjZ4g69SbHgkfdaqGOlMDZxbqmwGE
+	 tU61DGiNZssKAgVNUp/8y8lx0E20PBk6wDX3qLKP+jqXAUXzmwPpZ4bCmslMJQ8cWP
+	 xXXFz475b2bNyPWtR81FEQiS48RVUxIGv+dqNv5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbfKVGOO (ORCPT
+        id S1729183AbfKVGPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:15:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729518AbfKVGNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:55 -0500
+        id S1729516AbfKVGOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:14:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE392068F;
-        Fri, 22 Nov 2019 06:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5BC2068F;
+        Fri, 22 Nov 2019 06:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403234;
-        bh=5UKKWctJDQZ8xRe1z8NZtBEcyGxr87Z4366ykrJckvA=;
+        s=default; t=1574403250;
+        bh=4ViH26CfKQ55nuwcbzbxlFI+t7zG1NSHwlFV6FltphI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPkffZivTxxUTZsM+Txy3F67yLPkJaK9hsb4j/WOdxtDgWF3xgnUkAFx7eO7FHFMR
-         Cyxt9DUnwqxa4l/UikX3/ZiZBmqxhYdxNqHUmSZimurj3EhckEBtFBOCWeNIUwpfGZ
-         3IHdT3JjdPbn0kaVhi5pVTI6J5uM7Jo0mQiJTdvQ=
+        b=LFxfePbFEL3XA11K4zQnk8eo7oi0At68HOV+ZvAfpNp9ijOlTfzVVk3j9JSAaaagM
+         vywaBfQ5A6rjBuL8BRJNmPj0I8CxCRiiuRfR5LNMnW9yAttKeyRQYS3K/HLuqvjbLO
+         HYh/ZDJJL/Tphy70DB+XR6cX5oio1QVqQNCNhFbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 47/68] um: Make GCOV depend on !KCOV
-Date:   Fri, 22 Nov 2019 01:12:40 -0500
-Message-Id: <20191122061301.4947-46-sashal@kernel.org>
+Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
+        Ying Xue <ying.xue@windriver.com>,
+        Jon Maloy <maloy@donjonn.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 60/68] tipc: fix skb may be leaky in tipc_link_input
+Date:   Fri, 22 Nov 2019 01:12:53 -0500
+Message-Id: <20191122061301.4947-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -58,32 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-[ Upstream commit 550ed0e2036663b35cec12374b835444f9c60454 ]
+[ Upstream commit 7384b538d3aed2ed49d3575483d17aeee790fb06 ]
 
-Both do more or less the same thing and are mutually exclusive.
-If both are enabled the build will fail.
-Sooner or later we can kill UML's GCOV.
+When we free skb at tipc_data_input, we return a 'false' boolean.
+Then, skb passed to subcalling tipc_link_input in tipc_link_rcv,
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
+<snip>
+1303 int tipc_link_rcv:
+...
+1354    if (!tipc_data_input(l, skb, l->inputq))
+1355        rc |= tipc_link_input(l, skb, l->inputq);
+</snip>
+
+Fix it by simple changing to a 'true' boolean when skb is being free-ed.
+Then, tipc_link_rcv will bypassed to subcalling tipc_link_input as above
+condition.
+
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Acked-by: Jon Maloy <maloy@donjonn.com>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/Kconfig.debug | 1 +
- 1 file changed, 1 insertion(+)
+ net/tipc/link.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/um/Kconfig.debug b/arch/um/Kconfig.debug
-index 68205fd3b08c8..6ae7f0f434a9c 100644
---- a/arch/um/Kconfig.debug
-+++ b/arch/um/Kconfig.debug
-@@ -18,6 +18,7 @@ config GPROF
- config GCOV
- 	bool "Enable gcov support"
- 	depends on DEBUG_INFO
-+	depends on !KCOV
- 	help
- 	  This option allows developers to retrieve coverage data from a UML
- 	  session.
+diff --git a/net/tipc/link.c b/net/tipc/link.c
+index 736fffb28ab6f..0080699b7cd1b 100644
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -883,7 +883,7 @@ static bool tipc_data_input(struct tipc_link *l, struct sk_buff *skb,
+ 	default:
+ 		pr_warn("Dropping received illegal msg type\n");
+ 		kfree_skb(skb);
+-		return false;
++		return true;
+ 	};
+ }
+ 
 -- 
 2.20.1
 
