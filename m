@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70982070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210B02070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400613;
-	bh=g/LS6jI+ABLx2gf5i8mdPXUrd5s/zvOXFa8u8m4VnH8=;
+	s=default; t=1574400616;
+	bh=x4QYvNgnGAT1UIUmEnssqiLP8KCWRUy/qX7wjuA54Zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HGrMukjNMZ3TE/lOGdHxeUj7QWLmoBksOmJAJteJd5lCgvb3k/Zo+H/KGbd6OUASU
-	 RzNL4rQdu29JQG2mB1hgn6EGqxGvqoSY3mj9ukU15w4rm6tD9/8yWXy3XKJKyLO1W1
-	 ExLsI/m2cGBKXyzedAJWdbm/BLHmwbNQ4b8to1Qo=
+	b=cX/t/VAE6RxuU0Xavy6rqvmbz92iCvr9Kpheb6zaEy7kCXUj91+q55H1uu0vNtreU
+	 mQyu30LPZCcctTVPR7wtY8mwT56QsCaJNX+ZIZVIoCIwVH7UUAvZPPaSwRaBHA6jFU
+	 Fbz5Ht0PnQytSKL8GQ/oCYc03sQ1xXOeFjrFu36c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfKVFaM (ORCPT
+        id S1727205AbfKVFaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:30:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:30:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727186AbfKVFaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:10 -0500
+        id S1726970AbfKVFaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F141A20708;
-        Fri, 22 Nov 2019 05:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CBB20714;
+        Fri, 22 Nov 2019 05:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400609;
-        bh=g/LS6jI+ABLx2gf5i8mdPXUrd5s/zvOXFa8u8m4VnH8=;
+        s=default; t=1574400611;
+        bh=x4QYvNgnGAT1UIUmEnssqiLP8KCWRUy/qX7wjuA54Zw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkH8Gpo8lTMj1loFgCKx+hJ7TYC2YFFVrmmGhPfDb8Yiy6qf9itKr9J1sk9NJfV2f
-         vUlQIPNWOZt9Yw6lLhC6bZuT7kHreGbrD81D1oD/e84Fy4ZOVPRWdH9hDo6wswYxYo
-         FPtBsiwu4uajSqhQzn7z02LjHtUTy0qThSSHBPuo=
+        b=NFMNKTuQDzwFVvzp+GBUiSOAF0Ee4Pptdw+XFB7pf+lWYahEobF8sV6EU6pilHy0T
+         lVYEFTjUwgI3cc1Myq5QaXECGhtUN+YFUv2x69z0wXyL6D9OMxXEF5DCMn6hGX2wsv
+         1bjNxVPViIkeTbsltA/8wpqwz2MPrWvTyFeHmN7Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 012/219] ARM: dts: imx7: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:26:34 -0500
-Message-Id: <20191122053001.752-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 013/219] ARM: dts: imx6ul: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:26:35 -0500
+Message-Id: <20191122053001.752-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
 References: <20191122053001.752-1-sashal@kernel.org>
@@ -62,13 +62,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 29988e867cb17de7119e971f9acfad2c3fccdb47 ]
+[ Upstream commit 750d8df6e7b269b828f66631a1d39ea027afc92a ]
 
-Boards based on imx7 have duplicate memory nodes:
+Boards based on imx6ul have duplicate memory nodes:
 
 - One coming from the board dts file: memory@
 
-- One coming from the imx7s.dtsi file.
+- One coming from the imx6ul.dtsi file.
 
 Fix the duplication by removing the memory node from the dtsi file
 and by adding 'device_type = "memory";' in the board dts.
@@ -78,125 +78,107 @@ Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts   | 3 ++-
- arch/arm/boot/dts/imx7d-colibri-emmc.dtsi | 1 +
- arch/arm/boot/dts/imx7d-colibri.dtsi      | 1 +
- arch/arm/boot/dts/imx7d-nitrogen7.dts     | 1 +
- arch/arm/boot/dts/imx7d-pico.dtsi         | 1 +
- arch/arm/boot/dts/imx7d-sdb.dts           | 1 +
- arch/arm/boot/dts/imx7s-colibri.dtsi      | 1 +
- arch/arm/boot/dts/imx7s-warp.dts          | 1 +
- arch/arm/boot/dts/imx7s.dtsi              | 2 --
- 9 files changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi        | 1 +
+ arch/arm/boot/dts/imx6ul-geam.dts              | 1 +
+ arch/arm/boot/dts/imx6ul-isiot.dtsi            | 1 +
+ arch/arm/boot/dts/imx6ul-litesom.dtsi          | 1 +
+ arch/arm/boot/dts/imx6ul-opos6ul.dtsi          | 1 +
+ arch/arm/boot/dts/imx6ul-pico-hobbit.dts       | 1 +
+ arch/arm/boot/dts/imx6ul-tx6ul.dtsi            | 1 +
+ arch/arm/boot/dts/imx6ul.dtsi                  | 2 --
+ arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi | 1 +
+ arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi    | 1 +
+ 10 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 584418f517a88..62d5e9a4a7818 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -19,6 +19,7 @@
- 	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
- 	};
- 
-@@ -284,4 +285,4 @@
- 			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
- 		>;
- 	};
--};
-\ No newline at end of file
-+};
-diff --git a/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi b/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
-index 04d24ee17b142..898f4b8d7421f 100644
---- a/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
-+++ b/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
-@@ -8,6 +8,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7d-colibri.dtsi b/arch/arm/boot/dts/imx7d-colibri.dtsi
-index d9f8fb69511b6..e2e327f437e35 100644
---- a/arch/arm/boot/dts/imx7d-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7d-colibri.dtsi
-@@ -45,6 +45,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index 177d21fdeb288..6b4acea1ef795 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 32a07232c0345..8180211265592 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
 @@ -12,6 +12,7 @@
- 	compatible = "boundary,imx7d-nitrogen7", "fsl,imx7d";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
  	};
- 
-diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index f27b3849d3ff3..934a019f341e4 100644
---- a/arch/arm/boot/dts/imx7d-pico.dtsi
-+++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -49,6 +49,7 @@
- 	compatible = "technexion,imx7d-pico", "fsl,imx7d";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index c9b3c60b0eb22..317f1bcc56e2a 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -15,6 +15,7 @@
- 	};
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7s-colibri.dtsi b/arch/arm/boot/dts/imx7s-colibri.dtsi
-index fe8344cee8641..1fb1ec5d3d707 100644
---- a/arch/arm/boot/dts/imx7s-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
-@@ -45,6 +45,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index fa390da636de7..97d5c711eb0ca 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -51,6 +51,7 @@
- 	compatible = "warp,imx7s-warp", "fsl,imx7s";
  
  	memory@80000000 {
 +		device_type = "memory";
  		reg = <0x80000000 0x20000000>;
  	};
  
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 90f5bdfa9b3ce..7eaf96b425bed 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -17,10 +17,8 @@
+diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
+index d81d20f8fc8dd..85cfad080f15c 100644
+--- a/arch/arm/boot/dts/imx6ul-geam.dts
++++ b/arch/arm/boot/dts/imx6ul-geam.dts
+@@ -51,6 +51,7 @@
+ 	compatible = "engicam,imx6ul-geam", "fsl,imx6ul";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index cd99285511544..1cb52744f58ad 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -46,6 +46,7 @@
+ 
+ / {
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6ul-litesom.dtsi b/arch/arm/boot/dts/imx6ul-litesom.dtsi
+index 8f775f6974d1c..8d6893210842b 100644
+--- a/arch/arm/boot/dts/imx6ul-litesom.dtsi
++++ b/arch/arm/boot/dts/imx6ul-litesom.dtsi
+@@ -48,6 +48,7 @@
+ 	compatible = "grinn,imx6ul-litesom", "fsl,imx6ul";
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6ul-opos6ul.dtsi b/arch/arm/boot/dts/imx6ul-opos6ul.dtsi
+index a031bee311df4..cf7faf4b9c47e 100644
+--- a/arch/arm/boot/dts/imx6ul-opos6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul-opos6ul.dtsi
+@@ -49,6 +49,7 @@
+ 
+ / {
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0>; /* will be filled by U-Boot */
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+index 0c09420f99512..797262d2f27fd 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+@@ -53,6 +53,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
+index 02b5ba42cd591..bb6dbfd5546b4 100644
+--- a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
+@@ -71,6 +71,7 @@
+ 	};
+ 
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0>; /* will be filled by U-Boot */
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 336cdead3da54..50834a43e5fb2 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -15,10 +15,8 @@
  	 * The decompressor and also some bootloaders rely on a
  	 * pre-existing /chosen node to be available to insert the
  	 * command line and merge other ATAGS info.
@@ -206,7 +188,31 @@ index 90f5bdfa9b3ce..7eaf96b425bed 100644
 -	memory { device_type = "memory"; };
  
  	aliases {
- 		gpio0 = &gpio1;
+ 		ethernet0 = &fec1;
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
+index 10ab4697950f5..fb213bec46543 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
+@@ -7,6 +7,7 @@
+ 
+ / {
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x10000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+index 183193e8580dd..038d8c90f6dfe 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+@@ -7,6 +7,7 @@
+ 
+ / {
+ 	memory@80000000 {
++		device_type = "memory";
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
 -- 
 2.20.1
 
