@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5AAC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C7A2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9452068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402971;
-	bh=VvRfFCC/KgixHFcsaFYlG0r52DlU90PC4AO4Z5QVs/Y=;
+	s=default; t=1574402974;
+	bh=3STd+I0ZH/0LNTU+Yvg39crAO7P5nDqtGIPmBwkDu20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KYRBb7/Biz6IiM1WMSSXs5iuy6Ju86caHVFsjstY09mFkKtdmvYBWKs6tsneJtCEi
-	 dQdaN3kfttwnMmmNFWZwelfxyJNQ3fw6l6yQvTPkVWpxV3FtQ7btSX/nG7hVGN/9uC
-	 PxB6vXEQx3yIGRVGydPeqWQ8lXxSlqUpAvfdmx3s=
+	b=cbRqV2nHRUU8g362zf7DSqu/Y/sV4kBfmCyCR6pRTFjLbhAQrUpGbGQooQRF44pSr
+	 3AhK+B8h1b3ftAFCnWPzhgxptV3xofWlGHMGK11bo9k5lKfkTmOeGwkGSqx4SqjWaj
+	 t+vOCVYQWaOEPeEF89ZCRcIJ4dqqGnleCPxWyjtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfKVGJa (ORCPT
+        id S1729434AbfKVGJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:09:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbfKVF5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:08 -0500
+        id S1729359AbfKVF5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46C120659;
-        Fri, 22 Nov 2019 05:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59FDD2072D;
+        Fri, 22 Nov 2019 05:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402228;
-        bh=VvRfFCC/KgixHFcsaFYlG0r52DlU90PC4AO4Z5QVs/Y=;
+        s=default; t=1574402227;
+        bh=3STd+I0ZH/0LNTU+Yvg39crAO7P5nDqtGIPmBwkDu20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0iACGkfDu4PzmKpKb6vasJHlraKGiFqbsCPUT42z/Q8tA8j8b42C0GNKWHntFgDu
-         i+uE1YDyPW9unWObavtQoVg6b/s3vr04BrKj6CUiDvQ6z+UHeMlnChzFgskkWivk+R
-         S3rbDlHEy1Jgx+R73Q7lqOY/jvBUaTwgvohIEc/8=
+        b=PfVi56ak9vLpcDECrPrLxmqSbc9Kmgc4xXi5fvdrArZKZghqlCxIeKQFtmPRMx7RX
+         NR8uh1YKL2vIQGVskvwEuuH0i5ylhTdClM9TYpeJHxdow/al4o7JadfD9EqCoHofEg
+         7YafT88a5v7Llc+w/OiCTe9//11Q2xNp9Cy4RDzQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 074/127] IB/rxe: Make counters thread safe
-Date:   Fri, 22 Nov 2019 00:54:52 -0500
-Message-Id: <20191122055544.3299-73-sashal@kernel.org>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 073/127] drbd: fix print_st_err()'s prototype to match the definition
+Date:   Fri, 22 Nov 2019 00:54:51 -0500
+Message-Id: <20191122055544.3299-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,60 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit d5108e69fe013ff47ab815b849caba9cc33ca1e5 ]
+[ Upstream commit 2c38f035117331eb78d0504843c79ea7c7fabf37 ]
 
-Current rxe device counters are not thread safe.
-When multiple QPs are used, they can be racy.
-Make them thread safe by making it atomic64.
+print_st_err() is defined with its 4th argument taking an
+'enum drbd_state_rv' but its prototype use an int for it.
 
-Fixes: 0b1e5b99a48b ("IB/rxe: Add port protocol stats")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fix this by using 'enum drbd_state_rv' in the prototype too.
+
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_hw_counters.c | 2 +-
- drivers/infiniband/sw/rxe/rxe_verbs.h       | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/block/drbd/drbd_state.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_hw_counters.c b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
-index 6aeb7a165e469..ea4542a9d69e6 100644
---- a/drivers/infiniband/sw/rxe/rxe_hw_counters.c
-+++ b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
-@@ -59,7 +59,7 @@ int rxe_ib_get_hw_stats(struct ib_device *ibdev,
- 		return -EINVAL;
+diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
+index ea58301d0895c..b2a390ba73a05 100644
+--- a/drivers/block/drbd/drbd_state.h
++++ b/drivers/block/drbd/drbd_state.h
+@@ -131,7 +131,7 @@ extern enum drbd_state_rv _drbd_set_state(struct drbd_device *, union drbd_state
+ 					  enum chg_state_flags,
+ 					  struct completion *done);
+ extern void print_st_err(struct drbd_device *, union drbd_state,
+-			union drbd_state, int);
++			union drbd_state, enum drbd_state_rv);
  
- 	for (cnt = 0; cnt  < ARRAY_SIZE(rxe_counter_name); cnt++)
--		stats->value[cnt] = dev->stats_counters[cnt];
-+		stats->value[cnt] = atomic64_read(&dev->stats_counters[cnt]);
- 
- 	return ARRAY_SIZE(rxe_counter_name);
- }
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index b2b76a316ebae..d1cc89f6f2e33 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -410,16 +410,16 @@ struct rxe_dev {
- 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
- 	int			mmap_offset;
- 
--	u64			stats_counters[RXE_NUM_OF_COUNTERS];
-+	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
- 
- 	struct rxe_port		port;
- 	struct list_head	list;
- 	struct crypto_shash	*tfm;
- };
- 
--static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters cnt)
-+static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters index)
- {
--	rxe->stats_counters[cnt]++;
-+	atomic64_inc(&rxe->stats_counters[index]);
- }
- 
- static inline struct rxe_dev *to_rdev(struct ib_device *dev)
+ enum drbd_state_rv
+ _conn_request_state(struct drbd_connection *connection, union drbd_state mask, union drbd_state val,
 -- 
 2.20.1
 
