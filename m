@@ -2,91 +2,141 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7AAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE9AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6253120714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC782071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574437847;
+	bh=YyVgvQ275e3tv6kQYPq05Cdmt5/g44Jwrrc70QXxg0Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S+YhXrBzREtxm/HCXzmZU0IxtDMl4wQuaXZIU5fxrB3Hp6sfWpaif8fhkyzJVy+14
+	 Wf7NokPHkz+ecrBfLoII2YbsVJBaXg9JkPOl1qy+2xu4qU8WDYNamwwMXe/7Rg0/yv
+	 lXv+D2zZ56tfZaWoq9+Lb9+o7P4vXNiTBJwbWep4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKVPuP (ORCPT
+        id S1727289AbfKVPuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:50:15 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:36257 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKVPuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:50:15 -0500
-Received: from localhost (unknown [153.3.140.100])
-        (Authenticated sender: fly@kernel.page)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id CA1E1100010;
-        Fri, 22 Nov 2019 15:49:31 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 23:49:07 +0800
-From:   Pengfei Li <fly@kernel.page>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        mhocko@kernel.org, vbabka@suse.cz, cl@linux.com,
-        iamjoonsoo.kim@lge.com, guro@fb.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, fly@kernel.page
-Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
-Message-ID: <20191122234907.4da3bc81.fly@kernel.page>
-In-Reply-To: <1bb37491-72a7-feaa-722d-a5825813a409@redhat.com>
-References: <20191121151811.49742-1-fly@kernel.page>
-        <1bb37491-72a7-feaa-722d-a5825813a409@redhat.com>
+        Fri, 22 Nov 2019 10:50:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbfKVPuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 10:50:46 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B087D20721;
+        Fri, 22 Nov 2019 15:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574437844;
+        bh=YyVgvQ275e3tv6kQYPq05Cdmt5/g44Jwrrc70QXxg0Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lCh/GGuFABRGLpa77QaxVyOzcPZwPwcBWn8bzNYXZuu7I9azFITQRJLxRNAn8NT7C
+         qpns74d3vbTGjo+5q1X6cQ4qmI/n18DAZzXx5IqtC7z1lwfMBN75k0eMBkkwY2PVK5
+         0o5GnnfzVGg58itoNZNcH6zgJykSMZnC+DTa7IuA=
+Received: by mail-qv1-f45.google.com with SMTP id x14so3075721qvu.0;
+        Fri, 22 Nov 2019 07:50:44 -0800 (PST)
+X-Gm-Message-State: APjAAAU+NFInupP4/DZfXasBerLu27ZLeuRQybMEvNOR/eSOr9UB9ioA
+        yVbsvxbubvZAJtwbKDM13/ofxSmSdV0d5Yxe/g==
+X-Google-Smtp-Source: APXvYqwGGJblDyLrod013TGs3RdLWg22H1HuGkGQ1TL0T/oqtvU6mgVVePtuiNDWsbDa/2MkKnaLB0nx29hNdiuDJeE=
+X-Received: by 2002:a0c:aee1:: with SMTP id n33mr5260909qvd.135.1574437843805;
+ Fri, 22 Nov 2019 07:50:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+ <20191121212923.GA24437@bogus> <06AE1B9D-F048-4AF1-9826-E8CAFA44DD58@holtmann.org>
+In-Reply-To: <06AE1B9D-F048-4AF1-9826-E8CAFA44DD58@holtmann.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 Nov 2019 09:50:32 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKso2Us5VW-Qp8mENAkMmoEh7YDT+HfhRMD1BKi7q=qAw@mail.gmail.com>
+Message-ID: <CAL_JsqKso2Us5VW-Qp8mENAkMmoEh7YDT+HfhRMD1BKi7q=qAw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 11:03:30 +0100
-David Hildenbrand <david@redhat.com> wrote:
+On Fri, Nov 22, 2019 at 6:34 AM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Rob,
+>
+> >> Add documentation for pcm parameters.
+> >>
+> >> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> >> ---
+> >>
+> >> Changes in v6: None
+> >> Changes in v5: None
+> >> Changes in v4: None
+> >> Changes in v3: None
+> >> Changes in v2: None
+> >
+> > Really? I'm staring at v2 that looks a bit different.
+> >
+> >> .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
+> >> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> >> 2 files changed, 48 insertions(+)
+> >> create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> index c749dc297624..8561e4684378 100644
+> >> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> @@ -29,10 +29,20 @@ Optional properties:
+> >>    - "lpo": external low power 32.768 kHz clock
+> >>  - vbat-supply: phandle to regulator supply for VBAT
+> >>  - vddio-supply: phandle to regulator supply for VDDIO
+> >> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> >> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> >> + - brcm,bt-pcm-frame-type: short, long
+> >> + - brcm,bt-pcm-sync-mode: slave, master
+> >> + - brcm,bt-pcm-clock-mode: slave, master
+> >
+> > Little of this seems unique to Broadcom. We already have some standard
+> > audio related properties for audio interfaces such as 'format',
+> > 'frame-master' and 'bitclock-master'. Ultimately, this would be tied
+> > into the audio complex of SoCs and need to work with the audio
+> > bindings. We also have HDMI audio bindings.
+> >
+> > Maybe sco-routing is unique to BT and still needed in some form though
+> > if you describe the connection to the SoC audio complex, then maybe
+> > not? I'd assume every BT chip has some audio routing configuration.
+>
+> so we tried to generalize this some time before and failed to get a proper consensus.
+>
+> In general I am with you that we should just expose generic properties from the attached audio codec, but nobody has come up with anything like that. And I think aligning all chip manufacturers will take some time.
+>
 
-> On 21.11.19 16:17, Pengfei Li wrote:
-> > Motivation
-> > ----------
-> > Currently if we want to iterate through all the nodes we have to
-> > traverse all the zones from the zonelist.
-> > 
-> > So in order to reduce the number of loops required to traverse node,
-> > this series of patches modified the zonelist to nodelist.
-> > 
-> > Two new macros have been introduced:
-> > 1) for_each_node_nlist
-> > 2) for_each_node_nlist_nodemask
-> > 
-> > 
-> > Benefit
-> > -------
-> > 1. For a NUMA system with N nodes, each node has M zones, the number
-> >     of loops is reduced from N*M times to N times when traversing
-> > node.
-> > 
-> > 2. The size of pg_data_t is much reduced.
-> > 
-> > 
-> > Test Result
-> > -----------
-> > Currently I have only performed a simple page allocation benchmark
-> > test on my laptop, and the results show that the performance of a
-> > system with only one node is almost unaffected.
-> > 
-> 
-> So you are seeing no performance changes. I am wondering why do we
-> need this, then - because your motivation sounds like a performance 
-> improvement? (not completely against this, just trying to understand
-> the value of this :) )
+That shouldn't be hard. It's a solved problem for codecs and HDMI. I
+don't think BT is any more complicated (ignoring phones). I suspect
+it's not solved simply because no one wants to do the work beyond
+their 1 BT device they care about ATM.
 
-Thanks for your comments.
+> Maybe in the interim we just use brcm,bt-pcm-int-params = [00 00 ..] as initially proposed.
 
-I am sorry that I did not make it clear. I want to express this series
-of patches will benefit NUMA systems with multiple nodes.
+What's the device using this? Some chromebook I suppose. I think it
+would be better to first see how this fits in with the rest of the
+audio subsystem. Until then, the driver should probably just default
+to "transport" mode which I assume is audio routed over the UART
+interface. That should work on any platform at least, but may not be
+optimal.
 
-The main benefit is that it will be more efficient when traversing all
-nodes (for example when performing page reclamation).
-
+Rob
