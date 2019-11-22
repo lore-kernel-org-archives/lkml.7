@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72451C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D008FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36AA820707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92AF02068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402907;
-	bh=bDG4xtoh/SrBstjX3anlU4xsiDOvEQgQgmYJo+6L2m8=;
+	s=default; t=1574402913;
+	bh=Blf/Jr/CgoOus8tGQdPdkyE7gdy3r35yHYj1VNTpXjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hrNZaBJNGeR7ALaVihrkUMHubqgrwsb27W+k3uVfIWXbPAWwwFaOlYCaSSsTzj66v
-	 /BlujC4bXU5FHqKFwE/S0NvbOkH00fg7pTAx4kcOqQMThGad0ntqA7GN29zowyB99j
-	 K2/S77bGLnggDblPuaoXYO7qT2Q2314jdp1JJ3Nc=
+	b=Hc8vgkPBJC9qfQBF5UoGzX60gJcG3zRbkuAfDtG6npBLfFb5xFd0xspwQiILm3YmV
+	 c7REx4tLiaudJzw7XuzpnXvGMfbm3ModH7369ucMFG0JrnIrkpTWMcRVBPdPN0arUd
+	 jiy5Nd9LN+8NgDsYt8ht8WuSyQP6F/TjU4ZAsIIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfKVGIZ (ORCPT
+        id S1728815AbfKVGIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:08:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40048 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:08:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbfKVGBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:01:46 -0500
+        id S1727287AbfKVGBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0D020714;
-        Fri, 22 Nov 2019 06:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F1F22070B;
+        Fri, 22 Nov 2019 06:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402505;
-        bh=bDG4xtoh/SrBstjX3anlU4xsiDOvEQgQgmYJo+6L2m8=;
+        s=default; t=1574402502;
+        bh=Blf/Jr/CgoOus8tGQdPdkyE7gdy3r35yHYj1VNTpXjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=irI5Tp8hdXAqCK1P3Nypah+lNyayM5cWnAHJ6klvm1nkoCr8P4o8YMoOremLkkHjf
-         Hs1wC++2Hvbdm6jlvZCn8OZp9DFYM9RRE/QdF1Tu6aNCC4IYOPiydkyQ+HuTV5Ftm5
-         emLFH496OFECF01nDnzhAP2xY9NDDhHRSbnX+G7s=
+        b=HmphHVUMTTDWvr4OzDineQYKHhmDe3j3hRfHG13pCb6LYkJfPrXB5Aat85axLsS/Q
+         Dh9sLqAcixkybNfnPwK6gkE+xJPLN3O8MJ7YRQmrdC29VnDw0L79nQJp9jQXKu/mq9
+         Ch1dntUdxoib/CBM+QBGyjdzs88b+uMxNMXhHCGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Bill O'Donnell <billodo@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/91] xfs: require both realtime inodes to mount
-Date:   Fri, 22 Nov 2019 01:00:13 -0500
-Message-Id: <20191122060129.4239-14-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/91] mwifiex: fix potential NULL dereference and use after free
+Date:   Fri, 22 Nov 2019 01:00:10 -0500
+Message-Id: <20191122060129.4239-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,43 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
+[ Upstream commit 1dcd9429212b98bea87fc6ec92fb50bf5953eb47 ]
 
-Since mkfs always formats the filesystem with the realtime bitmap and
-summary inodes immediately after the root directory, we should expect
-that both of them are present and loadable, even if there isn't a
-realtime volume attached.  There's no reason to skip this if rbmino ==
-NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
-realtime volume and someone writes to it.
+There are two defects: (1) passing a NULL bss to
+mwifiex_save_hidden_ssid_channels will result in NULL dereference,
+(2) using bss after dropping the reference to it via cfg80211_put_bss.
+To fix them, the patch moves the buggy code to the branch that bss is
+not NULL and puts it before cfg80211_put_bss.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 802bcc326d9fb..0d93d3c10fcc4 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1222,13 +1222,11 @@ xfs_rtmount_inodes(
- 	xfs_sb_t	*sbp;
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 7e96b6a37946a..828c6f5eb83c8 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1890,15 +1890,17 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
+ 					    ETH_ALEN))
+ 					mwifiex_update_curr_bss_params(priv,
+ 								       bss);
+-				cfg80211_put_bss(priv->wdev.wiphy, bss);
+-			}
  
- 	sbp = &mp->m_sb;
--	if (sbp->sb_rbmino == NULLFSINO)
--		return 0;
- 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
- 	if (error)
- 		return error;
- 	ASSERT(mp->m_rbmip != NULL);
--	ASSERT(sbp->sb_rsumino != NULLFSINO);
+-			if ((chan->flags & IEEE80211_CHAN_RADAR) ||
+-			    (chan->flags & IEEE80211_CHAN_NO_IR)) {
+-				mwifiex_dbg(adapter, INFO,
+-					    "radar or passive channel %d\n",
+-					    channel);
+-				mwifiex_save_hidden_ssid_channels(priv, bss);
++				if ((chan->flags & IEEE80211_CHAN_RADAR) ||
++				    (chan->flags & IEEE80211_CHAN_NO_IR)) {
++					mwifiex_dbg(adapter, INFO,
++						    "radar or passive channel %d\n",
++						    channel);
++					mwifiex_save_hidden_ssid_channels(priv,
++									  bss);
++				}
 +
- 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
- 	if (error) {
- 		IRELE(mp->m_rbmip);
++				cfg80211_put_bss(priv->wdev.wiphy, bss);
+ 			}
+ 		}
+ 	} else {
 -- 
 2.20.1
 
