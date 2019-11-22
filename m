@@ -2,88 +2,155 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0554EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0792067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B2C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ck5RoPaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfKVClP (ORCPT
+        id S1726735AbfKVClP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 21 Nov 2019 21:41:15 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7163 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbfKVClP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37834 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKVClP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Nov 2019 21:41:15 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 20B8BA3444DCEAE0AB35;
-        Fri, 22 Nov 2019 10:41:10 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 22 Nov 2019 10:41:02 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <nitesh@redhat.com>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next v2] KVM: x86: remove set but not used variable 'called'
-Date:   Fri, 22 Nov 2019 10:39:23 +0800
-Message-ID: <20191122023923.155013-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <61f534ca-7575-6716-10ec-ac5c92258452@redhat.com>
-References: <61f534ca-7575-6716-10ec-ac5c92258452@redhat.com>
+Received: by mail-pf1-f195.google.com with SMTP id p24so2739091pfn.4;
+        Thu, 21 Nov 2019 18:41:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Dv1bxAvHpHd/W1kU7AoVueS3lUuNaiq9DlOEZQ0S9UI=;
+        b=Ck5RoPazJp2/Fe93Xp/p3B+Tf1cJhqLlqrJt7AyPUyfWbnJKO44BDgNd7jL+o38yV6
+         MhP8c1OW5EHyjRDQJC4/0b+GzdxXn7+pkqo8yYQFJqc0A87Xd3A4GbqzYC6kuXDZ1o/d
+         Zp57fo+9lFG6HahMFJKt7iL85ZqrD4jrIayWabtyVkRvqRKrxB2xokPhND6x0SGHnrbq
+         NQGZFRrly3NIveJfdOK7BAQ2sHTpv+Vz/lAx0adHAuRcxiBiHsRsLc5v9ywLLdNOpbsQ
+         Rmd6BnkFq8g1uZw5gJn2BnJwDRvN8rd3/39TUgq9PKaPiVJFZ+hiJE3P5mMOYiGmOACN
+         +fEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Dv1bxAvHpHd/W1kU7AoVueS3lUuNaiq9DlOEZQ0S9UI=;
+        b=hg77QTwBsVdvCCWokgl8I77oTxl/53ZA2MsA+Qirb00JmOHHTDFIrQ7k1Bza7lU+Ou
+         geBpButrZQkUxzU/z0j5NS1brSIR/5ueBWInfuyb4t1XJ8OF1bGmbqODXBJ6VlW6j7T9
+         Z9JDM0MqgUg/KNsgoNkLqe4ubRu1plLVOG0WCxPfnN2qbS2547BklSDP3XMv0Ul/NPDp
+         l1rMGTsE65fHy6TGVS5R/0tk3D1bkhJwQtlDjBLvoU4Oj2O8awPGBsslCAPzavV5cVai
+         01zbxwYd0RiWwOgwK0MSun62KXdTqrXWIQqcLLYiJ4zPT4nUbX0pXOaQojfigBAGnAoj
+         WquQ==
+X-Gm-Message-State: APjAAAVExqW6bpiVwTQb9MbJTG4dIfigrSKDsvPQOrh1fvmAbPWKWLPw
+        SWveaohvMsWlW3XXIzkEEZv9YWQJ
+X-Google-Smtp-Source: APXvYqwYjk/0lIGQRIcZ8ZEoYk1ifrJ/FSFARppLkcdhtuRCyYMgzQ2zUh7gQdp+kxZtPwFXybTSUA==
+X-Received: by 2002:aa7:9189:: with SMTP id x9mr14884350pfa.41.1574390473807;
+        Thu, 21 Nov 2019 18:41:13 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s6sm5180464pfd.24.2019.11.21.18.41.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 18:41:12 -0800 (PST)
+Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+Cc:     Guenter Roeck <groeck7@gmail.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
+ <20191121141508.GA13249@roeck-us.net>
+ <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8c198e4e-488b-efd0-4caf-b2dddb830ea3@roeck-us.net>
+Date:   Thu, 21 Nov 2019 18:41:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On 11/21/19 5:16 PM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> Roeck, thanks for your time to guide me to finish the review. Do I need to re-send a mail with your sign?
+> 
 
-arch/x86/kvm/x86.c: In function kvm_make_scan_ioapic_request_mask:
-arch/x86/kvm/x86.c:7911:7: warning: variable called set but not
-used [-Wunused-but-set-variable]
+No, that won't be necessary.
 
-It is not used since commit 7ee30bc132c6 ("KVM: x86: deliver KVM
-IOAPIC scan request to target vCPUs")
+Guenter
 
-Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v2: add fixes tag since Paolo and Vitaly proposal.
- arch/x86/kvm/x86.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 0d0a682..870f0bc 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7908,12 +7908,11 @@ void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
- 				       unsigned long *vcpu_bitmap)
- {
- 	cpumask_var_t cpus;
--	bool called;
- 
- 	zalloc_cpumask_var(&cpus, GFP_ATOMIC);
- 
--	called = kvm_make_vcpus_request_mask(kvm, KVM_REQ_SCAN_IOAPIC,
--					     vcpu_bitmap, cpus);
-+	kvm_make_vcpus_request_mask(kvm, KVM_REQ_SCAN_IOAPIC,
-+				    vcpu_bitmap, cpus);
- 
- 	free_cpumask_var(cpus);
- }
--- 
-2.7.4
+> Peng Wang
+> 
+> -----Original Message-----
+> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
+> Sent: Thursday, November 21, 2019 10:15 PM
+> To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
+> Cc: Guenter Roeck <groeck7@gmail.com>; wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set bigger timeout value
+> 
+> On Thu, Nov 21, 2019 at 10:35:12AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+>>  From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
+>> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+>> Date: Wed, 20 Nov 2019 15:12:59 +0800
+>> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set
+>> bigger  timeout value
+>>
+>> watchdog_dev.c provides means to allow users to set bigger timeout
+>> value than HW can support, make DesignWare watchdog align with this.
+>>
+>> ---
+>>
+>> v2 -> v1:
+>>         - use top_s to compare with wdd->max_hw_heartbeat_ms
+>>         - update wdd->timeout in case it's greater than HW supports
+>>         - fix comments error
+>>
+>> v1: initial version
+>>
+>> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+>> ---
+>>   drivers/watchdog/dw_wdt.c | 10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+>> index fef7c61..12c116e 100644
+>> --- a/drivers/watchdog/dw_wdt.c
+>> +++ b/drivers/watchdog/dw_wdt.c
+>> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>>   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>>   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+>>   
+>> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+>> +	/*
+>> +	 * In case users set bigger timeout value than HW can support,
+>> +	 * kernel(watchdog_dev.c) helps to feed watchdog before
+>> +	 * wdd->max_hw_heartbeat_ms
+>> +	 */
+>> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
+>> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+>> +	else
+>> +		wdd->timeout = top_s;
+>>   
+>>   	return 0;
+>>   }
+>> --
+>> 1.8.3.1
+>>
+> 
 
