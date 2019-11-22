@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F30C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE9F20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A77420717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419094;
-	bh=mwos+MVeoqtMRotueUyVTiTBMiid/z7oNgxPt77TpPs=;
+	s=default; t=1574419096;
+	bh=W+ZYmJ3tALheWbUv4P01KUCmLl9oUrjKMEXFXL+OArg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HfYXOmyiy963bg9puKM2HQQsnkZjQPRauv1CxQ7958SpsGzaR8jL0h8R1Tioep+c/
-	 qxpO0xeUR9MLhYEGTJDEjnFL2JCmTCqD5PWb2EJyWJj1yKUK0BxPJm3PD5ZcsAD9BM
-	 eaaL3X+3C5J2f+VfkB0tEPpuGzlJu8PMj4zp6S6g=
+	b=oink/Vo1zY4Vx1ygDUorKr5JVBy9bzsLufytUrb2qfrBbLeirkB3wjh+F4lXsNCmf
+	 rO1AbJRS7jTVopuXqjjMsHsy7VyCL5Oifdz/MvGVgYcHuVX0gLJ9IkJdPhF8oP4o/O
+	 Y9Fu7s1HpIzA1tuajUOVvD5b9AhqBfl0yXzMvgak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfKVKiN (ORCPT
+        id S1728631AbfKVKiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbfKVKiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:09 -0500
+        id S1727587AbfKVKiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F3D20717;
-        Fri, 22 Nov 2019 10:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF1922072D;
+        Fri, 22 Nov 2019 10:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419088;
-        bh=mwos+MVeoqtMRotueUyVTiTBMiid/z7oNgxPt77TpPs=;
+        s=default; t=1574419091;
+        bh=W+ZYmJ3tALheWbUv4P01KUCmLl9oUrjKMEXFXL+OArg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+SzjdkiyAWF/VaTCjYs1MFOMA4mCyibQoEupu/g49+Qwz0Sj5620SZxHSSuz2aiI
-         0G1upF5qPBUcvuWVrTr7cUSzVpQ1+P+4mLb1mR8DBWTEfjhikgWYOEYwinWG8FvTop
-         XiaP5U/hZt0g0txiHH629E29k3L/91vU9bXlhQ4o=
+        b=CHQRpoCRyF6PUxKoFfemk3TO1QD6GQmstxhpyXtVdtJsydeKmgPrW5gZw8pF66eJe
+         0mor3rg1yTekbRg4ds7ldZyDDMrWfqvyeVrnrYkaO6wgg9PEDgQTwTSgdEiSgQAxMa
+         5Ma7drQhAq5w4hSUODl0xNWpQPzVTawJvW0atKXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Trent Piepho <tpiepho@impinj.com>,
+        =?UTF-8?q?Jan=20Kundr=C3=83=C2=A1t?= <jan.kundrat@cesnet.cz>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 152/159] gpio: syscon: Fix possible NULL ptr usage
-Date:   Fri, 22 Nov 2019 11:29:03 +0100
-Message-Id: <20191122100844.892559679@linuxfoundation.org>
+Subject: [PATCH 4.4 153/159] spi: spidev: Fix OF tree warning logic
+Date:   Fri, 22 Nov 2019 11:29:04 +0100
+Message-Id: <20191122100846.710231917@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,35 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Trent Piepho <tpiepho@impinj.com>
 
-[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
+[ Upstream commit 605b3bec73cbd74b4ac937b580cd0b47d1300484 ]
 
-The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
-and chip->set is valid pointer. This happens in case the controller uses
-the default GPIO setter. Always use chip->set to access the setter to avoid
-possible NULL pointer dereferencing.
+spidev will make a big fuss if a device tree node binds a device by
+using "spidev" as the node's compatible property.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+However, the logic for this isn't looking for "spidev" in the
+compatible, but rather checking that the device is NOT compatible with
+spidev's list of devices.
+
+This causes a false positive if a device not named "rohm,dh2228fv", etc.
+binds to spidev, even if a means other than putting "spidev" in the
+device tree was used.  E.g., the sysfs driver_override attribute.
+
+Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+Reviewed-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
+Tested-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-syscon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spidev.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 7b25fdf648023..f579938552cc5 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -127,7 +127,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
- 				   BIT(offs % SYSCON_REG_BITS));
- 	}
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index d0e7dfc647cf2..c5f1045561acc 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -713,11 +713,9 @@ static int spidev_probe(struct spi_device *spi)
+ 	 * compatible string, it is a Linux implementation thing
+ 	 * rather than a description of the hardware.
+ 	 */
+-	if (spi->dev.of_node && !of_match_device(spidev_dt_ids, &spi->dev)) {
+-		dev_err(&spi->dev, "buggy DT: spidev listed directly in DT\n");
+-		WARN_ON(spi->dev.of_node &&
+-			!of_match_device(spidev_dt_ids, &spi->dev));
+-	}
++	WARN(spi->dev.of_node &&
++	     of_device_is_compatible(spi->dev.of_node, "spidev"),
++	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
  
--	priv->data->set(chip, offset, val);
-+	chip->set(chip, offset, val);
- 
- 	return 0;
- }
+ 	/* Allocate driver data */
+ 	spidev = kzalloc(sizeof(*spidev), GFP_KERNEL);
 -- 
 2.20.1
 
