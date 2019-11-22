@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D39FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAA9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BBD2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A614E2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403067;
-	bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
+	s=default; t=1574403071;
+	bh=dem0dnbBYskFHC39U2QDOwYhTUAtk8tPl+8xAKosFFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ayt8w9cR6pLyWu6u6P2+bCTzyKqHTqIfueGBBcI2R7AswAPd8r6vVkbJI2oIgYQOF
-	 thkcYOTHU5S6DBNxbWGRVe8EcMhO/qTjAhf3qrIOf816Zt8Sbfch5vsIMCqm/Px70A
-	 MsbVvjM14M02zBJ5sst8y8s5UkIQovy/PEns+6T8=
+	b=bop0ilLP2mukYISZPtDNi2mSWkaukUxjXCQ5w1iX0M3jAD/2pjT2xC4S+cEl41OIf
+	 25iWwB6bPAm2AI6Xs6PuKfAAEOIxDlKICUv4osXVOXu9bq5+Om/DfdjdlQ70VgxaMB
+	 TTWPkGZ5ZV/cxXZgWA+mzRi5kxNTh8S9yLNbaleQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfKVF4i (ORCPT
+        id S1728747AbfKVGLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:11:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbfKVF41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:27 -0500
+        id S1729193AbfKVF4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149862071F;
-        Fri, 22 Nov 2019 05:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C572071F;
+        Fri, 22 Nov 2019 05:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402186;
-        bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
+        s=default; t=1574402197;
+        bh=dem0dnbBYskFHC39U2QDOwYhTUAtk8tPl+8xAKosFFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0+y3+AGfuGZ/i70OG2tq9mZXQ+d1vkKCV1qOuVmY0hE43dHtJfQPD1MbvlL9IQeU
-         0xi06HaEC3WAHU/U92f5AXqZQB2GXCtW4h52a9cPhSlTR1FSiSr/mzXvfYUkAqDMQ5
-         Bki2SUFu8VHmyVCiRcGJKaH0sJiBiNBwR7mwZn/I=
+        b=viFKi+GEQR2mOBNR7SAp6yqh+i2pT1wtOYIAM/vYwocX4pGz8R3kZokIS0009Nqmd
+         DLpT7+UhWIIcu5byvQWYcG+6oMau9TSd4a489u2Fzyu3f1KJF3oxcMg7q0lEDGvMvr
+         vbrUC8nMpQFTYZmT//Ox8XGwtO7k0qSrJKBVTZak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Schiller <ms@dev.tdt.de>, John Crispin <john@phrozen.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 037/127] pinctrl: xway: fix gpio-hog related boot issues
-Date:   Fri, 22 Nov 2019 00:54:15 -0500
-Message-Id: <20191122055544.3299-36-sashal@kernel.org>
+Cc:     Sweet Tea <sweettea@redhat.com>,
+        John Dorminy <jdorminy@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 046/127] dm flakey: Properly corrupt multi-page bios.
+Date:   Fri, 22 Nov 2019 00:54:24 -0500
+Message-Id: <20191122055544.3299-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,87 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Sweet Tea <sweettea@redhat.com>
 
-[ Upstream commit 9b4924da4711674e62d97d4f5360446cc78337af ]
+[ Upstream commit a00f5276e26636cbf72f24f79831026d2e2868e7 ]
 
-This patch is based on commit a86caa9ba5d7 ("pinctrl: msm: fix gpio-hog
-related boot issues").
+The flakey target is documented to be able to corrupt the Nth byte in
+a bio, but does not corrupt byte indices after the first biovec in the
+bio. Change the corrupting function to actually corrupt the Nth byte
+no matter in which biovec that index falls.
 
-It fixes the issue that the gpio ranges needs to be defined before
-gpiochip_add().
+A test device generating two-page bios, atop a flakey device configured
+to corrupt a byte index on the second page, verified both the failure
+to corrupt before this patch and the expected corruption after this
+change.
 
-Therefore, we also have to swap the order of registering the pinctrl
-driver and registering the gpio chip.
-
-You also have to add the "gpio-ranges" property to the pinctrl device
-node to get it finally working.
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Acked-by: John Crispin <john@phrozen.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: John Dorminy <jdorminy@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-xway.c | 39 +++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+ drivers/md/dm-flakey.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
-index f9e98a7d4f0ce..1b0c5958c56a7 100644
---- a/drivers/pinctrl/pinctrl-xway.c
-+++ b/drivers/pinctrl/pinctrl-xway.c
-@@ -1748,14 +1748,6 @@ static int pinmux_xway_probe(struct platform_device *pdev)
- 	}
- 	xway_pctrl_desc.pins = xway_info.pads;
+diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
+index 0c1ef63c3461b..b1b68e01b889c 100644
+--- a/drivers/md/dm-flakey.c
++++ b/drivers/md/dm-flakey.c
+@@ -282,20 +282,31 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
  
--	/* register the gpio chip */
--	xway_chip.parent = &pdev->dev;
--	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to register gpio chip\n");
--		return ret;
--	}
+ static void corrupt_bio_data(struct bio *bio, struct flakey_c *fc)
+ {
+-	unsigned bio_bytes = bio_cur_bytes(bio);
+-	char *data = bio_data(bio);
++	unsigned int corrupt_bio_byte = fc->corrupt_bio_byte - 1;
++
++	struct bvec_iter iter;
++	struct bio_vec bvec;
++
++	if (!bio_has_data(bio))
++		return;
+ 
+ 	/*
+-	 * Overwrite the Nth byte of the data returned.
++	 * Overwrite the Nth byte of the bio's data, on whichever page
++	 * it falls.
+ 	 */
+-	if (data && bio_bytes >= fc->corrupt_bio_byte) {
+-		data[fc->corrupt_bio_byte - 1] = fc->corrupt_bio_value;
 -
- 	/* setup the data needed by pinctrl */
- 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
- 	xway_pctrl_desc.npins	= xway_chip.ngpio;
-@@ -1777,10 +1769,33 @@ static int pinmux_xway_probe(struct platform_device *pdev)
- 		return ret;
+-		DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
+-			"(rw=%c bi_opf=%u bi_sector=%llu cur_bytes=%u)\n",
+-			bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
+-			(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
+-			(unsigned long long)bio->bi_iter.bi_sector, bio_bytes);
++	bio_for_each_segment(bvec, bio, iter) {
++		if (bio_iter_len(bio, iter) > corrupt_bio_byte) {
++			char *segment = (page_address(bio_iter_page(bio, iter))
++					 + bio_iter_offset(bio, iter));
++			segment[corrupt_bio_byte] = fc->corrupt_bio_value;
++			DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
++				"(rw=%c bi_opf=%u bi_sector=%llu size=%u)\n",
++				bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
++				(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
++				(unsigned long long)bio->bi_iter.bi_sector, bio->bi_iter.bi_size);
++			break;
++		}
++		corrupt_bio_byte -= bio_iter_len(bio, iter);
  	}
- 
--	/* finish with registering the gpio range in pinctrl */
--	xway_gpio_range.npins = xway_chip.ngpio;
--	xway_gpio_range.base = xway_chip.base;
--	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
-+	/* register the gpio chip */
-+	xway_chip.parent = &pdev->dev;
-+	xway_chip.owner = THIS_MODULE;
-+	xway_chip.of_node = pdev->dev.of_node;
-+	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register gpio chip\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * For DeviceTree-supported systems, the gpio core checks the
-+	 * pinctrl's device node for the "gpio-ranges" property.
-+	 * If it is present, it takes care of adding the pin ranges
-+	 * for the driver. In this case the driver can skip ahead.
-+	 *
-+	 * In order to remain compatible with older, existing DeviceTree
-+	 * files which don't set the "gpio-ranges" property or systems that
-+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-+	 */
-+	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
-+		/* finish with registering the gpio range in pinctrl */
-+		xway_gpio_range.npins = xway_chip.ngpio;
-+		xway_gpio_range.base = xway_chip.base;
-+		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
-+	}
-+
- 	dev_info(&pdev->dev, "Init done\n");
- 	return 0;
  }
+ 
 -- 
 2.20.1
 
