@@ -2,71 +2,91 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DCBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3442C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EB720674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A199020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574422083;
+	bh=kWDkKmlSBskNXl3EeNSbF3ef+vbB83Y/aOnQrvMZQnk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UTnpvHiQDTBbOwbyRKN100xt12M7HwZ8o4DnlIJcdI2BqsjtwpkTxR6N7Y4NbtuXG
+	 IykgQGtG5xUvzKlVU1smFcYOv81X7xq4yxqH9zdpdO5ViGswwXNzaUNszPFn5eAQA5
+	 vBTRZuWG53JMsuVE/2pizD2DiSUdjla3Rn3/VWPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfKVL1u (ORCPT
+        id S1727360AbfKVKbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:27:50 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:47188 "EHLO inva020.nxp.com"
+        Fri, 22 Nov 2019 05:31:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfKVKb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:59 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E259B1A00B2;
-        Fri, 22 Nov 2019 11:31:57 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3903D1A01FD;
-        Fri, 22 Nov 2019 11:31:52 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0071B4027F;
-        Fri, 22 Nov 2019 18:31:44 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, shengjiu.wang@nxp.com,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        allison@lohutok.net, tglx@linutronix.de,
-        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] ASoC: wm8524: Add support S32_LE
-Date:   Fri, 22 Nov 2019 18:30:13 +0800
-Message-Id: <cff745cc041c5208910821f0740f988926af8a66.1574418380.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727297AbfKVKbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5126420708;
+        Fri, 22 Nov 2019 10:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574418691;
+        bh=kWDkKmlSBskNXl3EeNSbF3ef+vbB83Y/aOnQrvMZQnk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M5t5z9C7rkPIIOVP4T+2lbJlY/b8OFVB7yqifTXQktvqrdezMtXKw8DuE4ThBCutR
+         khMoaFUWdQTUtuRpFOVydphk5fmPdbomBjxpOcjhHtxF5jAKGwgJRlSrEr4iSdKM4O
+         fmVobtIGvfqrdzBe6gUGYPUBAFigQh1U0uBv2jfM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 002/159] ax88172a: fix information leak on short answers
+Date:   Fri, 22 Nov 2019 11:26:33 +0100
+Message-Id: <20191122100706.861611940@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
+References: <20191122100704.194776704@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow 32bit sample with this codec.
+From: Oliver Neukum <oneukum@suse.com>
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+[ Upstream commit a9a51bd727d141a67b589f375fe69d0e54c4fe22 ]
+
+If a malicious device gives a short MAC it can elicit up to
+5 bytes of leaked memory out of the driver. We need to check for
+ETH_ALEN instead.
+
+Reported-by: syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/codecs/wm8524.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/ax88172a.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8524.c b/sound/soc/codecs/wm8524.c
-index 91e3d1570c45..4e9ab542f648 100644
---- a/sound/soc/codecs/wm8524.c
-+++ b/sound/soc/codecs/wm8524.c
-@@ -159,7 +159,9 @@ static int wm8524_mute_stream(struct snd_soc_dai *dai, int mute, int stream)
+--- a/drivers/net/usb/ax88172a.c
++++ b/drivers/net/usb/ax88172a.c
+@@ -243,7 +243,7 @@ static int ax88172a_bind(struct usbnet *
  
- #define WM8524_RATES SNDRV_PCM_RATE_8000_192000
- 
--#define WM8524_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
-+#define WM8524_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
-+			SNDRV_PCM_FMTBIT_S24_LE |\
-+			SNDRV_PCM_FMTBIT_S32_LE)
- 
- static const struct snd_soc_dai_ops wm8524_dai_ops = {
- 	.startup	= wm8524_startup,
--- 
-2.21.0
+ 	/* Get the MAC address */
+ 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf);
+-	if (ret < 0) {
++	if (ret < ETH_ALEN) {
+ 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
+ 		goto free;
+ 	}
+
 
