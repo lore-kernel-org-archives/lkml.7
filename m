@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74456C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084D02070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A95D2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574399959;
-	bh=EfdXdmgPbL7KrEcnb9ASYZq3zIOjABUQfQHZzLN0W94=;
+	s=default; t=1574399964;
+	bh=qcEG6w2/GDNSrFO6+mPfxkBVtMr5NJCSsxklqfbSFtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1tLOL0xUpUR4kUG9RMg32u9CuJD5uYYKBYLDYioymPXQ2TfKjBrTOzXibymdBfMk
-	 0fCxH+mOcC4nf+PWgBHjcCGv6DD3JJIpkGK7JgQjSgkwFJhxjxP65W+BgrtbOugisC
-	 VN8kmyo58nBopb0MY0EkisKboXosWYWt4enTi/rg=
+	b=ncPS4+G6eJGzJ1pTce0nLlyZFrfJORqNMsn/xu0EPGXICu2hLKTHzI6A+Bw+AK2JV
+	 c60yLhj9jkwYMhwkfFT44npBDkiN+8tUSuQ19WsmQEUIdARS3OyIp+6bwd/SChMb8I
+	 JvtYSmdk6O1NXA8t/D9tDmElu23SNaE4KH0btqyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKVFTR (ORCPT
+        id S1726887AbfKVFTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:19:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41152 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:19:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfKVFTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:19:14 -0500
+        id S1726500AbfKVFTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:19:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9876B2070A;
-        Fri, 22 Nov 2019 05:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E052070B;
+        Fri, 22 Nov 2019 05:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574399953;
-        bh=EfdXdmgPbL7KrEcnb9ASYZq3zIOjABUQfQHZzLN0W94=;
+        s=default; t=1574399949;
+        bh=qcEG6w2/GDNSrFO6+mPfxkBVtMr5NJCSsxklqfbSFtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAep61sHwlxnZuuRq0HSG2QWVa50Wz+WUFsjJyOfccasLpd4ZPkiCTWeibSG93i6L
-         lucuXLoZhjUs2ayOp36qfuy/LKMWwob7iLUBq+9zUgADwSyfxeBAcG8ZjyPfTvu6++
-         iHaPBKKS2RosJlLHIIb/c6dHnsc5oxLRftmJVyIk=
+        b=myWLSKwTxghiYMrzTMNkPOhwFSdK+1P2U5xcPysugLyBhyWkMr4DVN6SXh5ikHb5O
+         38ushgiTZDp+aVPtM3DKWi9r86h5MIBeADLrcOZKrOsojp7bCYInmzRvid1VHUQIBc
+         gLoRKRnzjukt+G016Wn9NalV7WpIlPs1Vf7vub+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 006/219] tracing: Lock event_mutex before synth_event_mutex
-Date:   Fri, 22 Nov 2019 00:15:30 -0500
-Message-Id: <20191122051903.31749-6-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 003/219] scsi: lpfc: Fix dif and first burst use in write commands
+Date:   Fri, 22 Nov 2019 00:15:27 -0500
+Message-Id: <20191122051903.31749-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122051903.31749-1-sashal@kernel.org>
 References: <20191122051903.31749-1-sashal@kernel.org>
@@ -60,232 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit fc800a10be26017f8f338bc8e500d48e3e6429d9 ]
+[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
 
-synthetic event is using synth_event_mutex for protecting
-synth_event_list, and event_trigger_write() path acquires
-locks as below order.
+When dif and first burst is used in a write command wqe, the driver was not
+properly setting fields in the io command request. This resulted in no dif
+bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
+by the hardware.
 
-event_trigger_write(event_mutex)
-  ->trigger_process_regex(trigger_cmd_mutex)
-    ->event_hist_trigger_func(synth_event_mutex)
+Correct the wqe initializaton when both dif and first burst are used.
 
-On the other hand, synthetic event creation and deletion paths
-call trace_add_event_call() and trace_remove_event_call()
-which acquires event_mutex. In that case, if we keep the
-synth_event_mutex locked while registering/unregistering synthetic
-events, its dependency will be inversed.
-
-To avoid this issue, current synthetic event is using a 2 phase
-process to create/delete events. For example, it searches existing
-events under synth_event_mutex to check for event-name conflicts, and
-unlocks synth_event_mutex, then registers a new event under event_mutex
-locked. Finally, it locks synth_event_mutex and tries to add the
-new event to the list. But it can introduce complexity and a chance
-for name conflicts.
-
-To solve this simpler, this introduces trace_add_event_call_nolock()
-and trace_remove_event_call_nolock() which don't acquire
-event_mutex inside. synthetic event can lock event_mutex before
-synth_event_mutex to solve the lock dependency issue simpler.
-
-Link: http://lkml.kernel.org/r/154140844377.17322.13781091165954002713.stgit@devbox
-
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Tested-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/trace_events.h     |  2 ++
- kernel/trace/trace_events.c      | 34 ++++++++++++++++++++++++++------
- kernel/trace/trace_events_hist.c | 24 ++++++++++------------
- 3 files changed, 40 insertions(+), 20 deletions(-)
+ drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 78a010e19ed41..0643c083ed862 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -529,6 +529,8 @@ extern int trace_event_raw_init(struct trace_event_call *call);
- extern int trace_define_field(struct trace_event_call *call, const char *type,
- 			      const char *name, int offset, int size,
- 			      int is_signed, int filter_type);
-+extern int trace_add_event_call_nolock(struct trace_event_call *call);
-+extern int trace_remove_event_call_nolock(struct trace_event_call *call);
- extern int trace_add_event_call(struct trace_event_call *call);
- extern int trace_remove_event_call(struct trace_event_call *call);
- extern int trace_event_get_offsets(struct trace_event_call *call);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7345f5f8f3fe6..017f737237e60 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2302,11 +2302,11 @@ __trace_early_add_new_event(struct trace_event_call *call,
- struct ftrace_module_file_ops;
- static void __add_event_to_tracers(struct trace_event_call *call);
- 
--/* Add an additional event_call dynamically */
--int trace_add_event_call(struct trace_event_call *call)
-+int trace_add_event_call_nolock(struct trace_event_call *call)
- {
- 	int ret;
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	mutex_lock(&trace_types_lock);
- 
- 	ret = __register_event(call, NULL);
-@@ -2314,6 +2314,16 @@ int trace_add_event_call(struct trace_event_call *call)
- 		__add_event_to_tracers(call);
- 
- 	mutex_unlock(&trace_types_lock);
-+	return ret;
-+}
-+
-+/* Add an additional event_call dynamically */
-+int trace_add_event_call(struct trace_event_call *call)
-+{
-+	int ret;
-+
-+	mutex_lock(&event_mutex);
-+	ret = trace_add_event_call_nolock(call);
- 	mutex_unlock(&event_mutex);
- 	return ret;
- }
-@@ -2363,17 +2373,29 @@ static int probe_remove_event_call(struct trace_event_call *call)
- 	return 0;
- }
- 
--/* Remove an event_call */
--int trace_remove_event_call(struct trace_event_call *call)
-+/* no event_mutex version */
-+int trace_remove_event_call_nolock(struct trace_event_call *call)
- {
- 	int ret;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	mutex_lock(&trace_types_lock);
- 	down_write(&trace_event_sem);
- 	ret = probe_remove_event_call(call);
- 	up_write(&trace_event_sem);
- 	mutex_unlock(&trace_types_lock);
-+
-+	return ret;
-+}
-+
-+/* Remove an event_call */
-+int trace_remove_event_call(struct trace_event_call *call)
-+{
-+	int ret;
-+
-+	mutex_lock(&event_mutex);
-+	ret = trace_remove_event_call_nolock(call);
- 	mutex_unlock(&event_mutex);
- 
- 	return ret;
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index dac518977e7d0..11d952650fa72 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -914,7 +914,7 @@ static int register_synth_event(struct synth_event *event)
- 	call->data = event;
- 	call->tp = event->tp;
- 
--	ret = trace_add_event_call(call);
-+	ret = trace_add_event_call_nolock(call);
- 	if (ret) {
- 		pr_warn("Failed to register synthetic event: %s\n",
- 			trace_event_name(call));
-@@ -938,7 +938,7 @@ static int unregister_synth_event(struct synth_event *event)
- 	struct trace_event_call *call = &event->call;
- 	int ret;
- 
--	ret = trace_remove_event_call(call);
-+	ret = trace_remove_event_call_nolock(call);
- 
- 	return ret;
- }
-@@ -1015,12 +1015,10 @@ static void add_or_delete_synth_event(struct synth_event *event, int delete)
- 	if (delete)
- 		free_synth_event(event);
- 	else {
--		mutex_lock(&synth_event_mutex);
- 		if (!find_synth_event(event->name))
- 			list_add(&event->list, &synth_event_list);
- 		else
- 			free_synth_event(event);
--		mutex_unlock(&synth_event_mutex);
- 	}
- }
- 
-@@ -1032,6 +1030,7 @@ static int create_synth_event(int argc, char **argv)
- 	int i, consumed = 0, n_fields = 0, ret = 0;
- 	char *name;
- 
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&synth_event_mutex);
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index 666495f21c246..425b83618a2e5 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -2732,6 +2732,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
  
  	/*
-@@ -1104,8 +1103,6 @@ static int create_synth_event(int argc, char **argv)
- 		goto err;
- 	}
-  out:
--	mutex_unlock(&synth_event_mutex);
--
- 	if (event) {
- 		if (delete_event) {
- 			ret = unregister_synth_event(event);
-@@ -1115,10 +1112,13 @@ static int create_synth_event(int argc, char **argv)
- 			add_or_delete_synth_event(event, ret);
- 		}
- 	}
-+	mutex_unlock(&synth_event_mutex);
-+	mutex_unlock(&event_mutex);
+ 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
+@@ -2837,6 +2838,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
  
- 	return ret;
-  err:
- 	mutex_unlock(&synth_event_mutex);
-+	mutex_unlock(&event_mutex);
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	return 0;
+ err:
+ 	if (lpfc_cmd->seg_cnt)
+@@ -3401,6 +3410,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
  
- 	for (i = 0; i < n_fields; i++)
- 		free_synth_field(fields[i]);
-@@ -1129,12 +1129,10 @@ static int create_synth_event(int argc, char **argv)
+ 	/*
+ 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
+@@ -3516,6 +3526,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
  
- static int release_all_synth_events(void)
- {
--	struct list_head release_events;
- 	struct synth_event *event, *e;
- 	int ret = 0;
- 
--	INIT_LIST_HEAD(&release_events);
--
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&synth_event_mutex);
- 
- 	list_for_each_entry(event, &synth_event_list, list) {
-@@ -1144,16 +1142,14 @@ static int release_all_synth_events(void)
- 		}
- 	}
- 
--	list_splice_init(&event->list, &release_events);
--
--	mutex_unlock(&synth_event_mutex);
--
--	list_for_each_entry_safe(event, e, &release_events, list) {
-+	list_for_each_entry_safe(event, e, &synth_event_list, list) {
- 		list_del(&event->list);
- 
- 		ret = unregister_synth_event(event);
- 		add_or_delete_synth_event(event, !ret);
- 	}
-+	mutex_unlock(&synth_event_mutex);
-+	mutex_unlock(&event_mutex);
- 
- 	return ret;
- }
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	/*
+ 	 * If the OAS driver feature is enabled and the lun is enabled for
+ 	 * OAS, set the oas iocb related flags.
 -- 
 2.20.1
 
