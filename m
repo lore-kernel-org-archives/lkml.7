@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB70AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E16C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44972071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58FB120706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420058;
-	bh=JQAqd3/36HKh/pU2BDrNqBNz2bCic8kK4z5cvAQx8z0=;
+	s=default; t=1574420061;
+	bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYcBpl5OCtqRM9dR2DbclXf+m6JrzTmU/G8CPWRTecKk7qW7k1UErzHFdcnKD8Y25
-	 ep5OMCgKDEP6WjtSWa4dsrcnZq6KIdovz5B8VBCdIPsfdJ8Euci0Rp8aRdXoherK4c
-	 6JexIhWkkcQbW4p07dvdfEl2u5IUvBUpmBM/gFok=
+	b=ZyCh9ktxx51mOYtdgcC7AEmTkfNmZjNYLfma3AfFCUR4aO/4tmB2o3aRiQ4AfLZEj
+	 CKCb/I2jE3Ec+fPKpn6wI201MFTaHMqMPGUvYIpz7UwiaxvAo5fxrCQDpMXd8GfsIF
+	 Pv2SRF/Sa7Q0JRgE7lTZNKsRX1+SLjf8yZDviy/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfKVKyR (ORCPT
+        id S1730145AbfKVKyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39560 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfKVKyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:14 -0500
+        id S1729306AbfKVKyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B5D20721;
-        Fri, 22 Nov 2019 10:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCCA02071F;
+        Fri, 22 Nov 2019 10:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420054;
-        bh=JQAqd3/36HKh/pU2BDrNqBNz2bCic8kK4z5cvAQx8z0=;
+        s=default; t=1574420057;
+        bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CcTMJdJ+vn+UE0EQlUhqcAHp6vUF7zNb9uqF9aaVJkUmtWwYF9d2Be/8aKCYEMNct
-         q1JU7rfXErICsPNgJZvrBxu859YBUSHTBbzrvduDIkf7PCsKlp7SluAy/Jh56O7Dif
-         mjbbfAp4Ys79ToO+WZJLPAwq2gJTSu4Ni4Qxzy10=
+        b=xI6F6MosOtQ54ddglgtfJLjLEp4bCA5UF2gCYPlb3i90EnW4De0x2IVULFSFAUpQe
+         0bvL+ymvZZ+5YGu9kSrmZIftsufns+NMbAJBI2cRsUjJLyjxqneCEibu/Yd2gNsh8l
+         qcWgcAq99pzUp+gFNMkyPESzNm3M+XKa0kw5p2lg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Smith <tim.smith@citrix.com>,
-        Mark Syms <mark.syms@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 100/122] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
-Date:   Fri, 22 Nov 2019 11:29:13 +0100
-Message-Id: <20191122100831.357429043@linuxfoundation.org>
+Subject: [PATCH 4.14 101/122] media: cx231xx: fix potential sign-extension overflow on large shift
+Date:   Fri, 22 Nov 2019 11:29:14 +0100
+Message-Id: <20191122100831.513095593@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,62 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Smith <tim.smith@citrix.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
+[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
 
-Flushing the workqueue can cause operations to happen which might
-call gfs2_log_reserve(), or get stuck waiting for locks taken by such
-operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
-will never wake because the only thing which can wake it is gfs2_logd()
-which was already stopped.
+Shifting the u8 value[3] by an int can lead to sign-extension
+overflow. For example, if value[3] is 0xff and the shift is 24 then it
+is promoted to int and then the top bit is sign-extended so that all
+upper 32 bits are set.  Fix this by casting value[3] to a u32 before
+the shift.
 
-This causes umount of a gfs2 filesystem to wedge permanently if, for
-example, the umount immediately follows a large delete operation.
+Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
 
-When this occured, the following stack trace was obtained from the
-umount command
+Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
 
-[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
-[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
-[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
-[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
-[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
-[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
-[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
-[<ffffffff811b79b9>] deactivate_super+0x59/0x60
-[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
-[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
-[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
-[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
-[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
-[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
-[<ffffffffffffffff>] 0xffffffffffffffff
-
-Signed-off-by: Tim Smith <tim.smith@citrix.com>
-Signed-off-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/super.c | 2 +-
+ drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index 8e54f2e3a3040..c3f3f1ae4e1b7 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -845,10 +845,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
- 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
- 		return error;
- 
-+	flush_workqueue(gfs2_delete_workqueue);
- 	kthread_stop(sdp->sd_quotad_process);
- 	kthread_stop(sdp->sd_logd_process);
- 
--	flush_workqueue(gfs2_delete_workqueue);
- 	gfs2_quota_sync(sdp->sd_vfs, 0);
- 	gfs2_statfs_sync(sdp->sd_vfs, 0);
- 
+diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
+index 179b8481a870d..fd33c2e9327da 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-video.c
++++ b/drivers/media/usb/cx231xx/cx231xx-video.c
+@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
+ 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
+ 				(u16)reg->reg, value, 4);
+ 		reg->val = value[0] | value[1] << 8 |
+-			value[2] << 16 | value[3] << 24;
++			value[2] << 16 | (u32)value[3] << 24;
+ 		reg->size = 4;
+ 		break;
+ 	case 1:	/* AFE - read byte */
 -- 
 2.20.1
 
