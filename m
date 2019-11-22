@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9112C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9212EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8177820409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6347620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403835;
-	bh=NxGRVXtjD/aXIsPUuHL37B5BbTj3nmk8XEn0YOKo7Kc=;
+	s=default; t=1574403842;
+	bh=/lcAWHBkLChrSM0oXx4xjHts2xF9XpAEnOD+MzhiIF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eGFpQ7vCafuKruPpz2TmS9uC5GPm43J4BMpFjMbz5t0XFmWaINK55kc7c2Z/oQrtF
-	 F/YQX8P2jAmsyKBBUbj6STMLNvSyf3m24LkEuZuRV4sWwvTIaB6Xjh0Zopamwssmi1
-	 IAGz7fGXRxKB2fpM/Cc+H+zFVQY1cYWTlwdPZOJM=
+	b=yqLIS5q6//xwj59NZF/cS99V+6n7lXd2qRvt3eUtJ+nSpQN1emlb2bM2xxadTHkgw
+	 I9xbuptKxuO9nsGktK+qP66GU5b8x6PLrLtVS5I6Tn0Epp8nuVYCE4jt7cy1ys7DX2
+	 6mScf1KGR8KQoXwC3aFUHiumoNqMo4AngfV3zQ4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfKVFvi (ORCPT
+        id S1728783AbfKVGYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56680 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:24:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbfKVFvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:32 -0500
+        id S1728188AbfKVFvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D35E20726;
-        Fri, 22 Nov 2019 05:51:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098112071C;
+        Fri, 22 Nov 2019 05:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401891;
-        bh=NxGRVXtjD/aXIsPUuHL37B5BbTj3nmk8XEn0YOKo7Kc=;
+        s=default; t=1574401894;
+        bh=/lcAWHBkLChrSM0oXx4xjHts2xF9XpAEnOD+MzhiIF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDzEDFNFrxQAGO7Dcjn04273De5jXJx5+uGNpGumGTMczJuTfuwjq4l9dV1U//Guj
-         w/ZHbL4GmjL1K9sFhGszdcDss32niFyYN0PuLsJmce1UshgwBbA92eo3iJhz/l2Oke
-         YJOSF9SM1xbfa6VwJSNIdgBHJeEL3tuNyHUHGDVE=
+        b=VRJGC0KenVClaPwYJX6lxBwzkXYrlorIWGUeqTeI+wLJBqAeUBBYZdMz0nZtT1lA3
+         FeU/jXx+NlHs051SDJAOnZ4NpicQpGQg+n4cz0ypoI8dpph4HRU9Jgz+g7aiNejGDo
+         akLr8kf0VV9Vjwuoc5DvTj+ekqOms1HjsAPCL7NU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 124/219] powerpc/powernv/eeh/npu: Fix uninitialized variables in opal_pci_eeh_freeze_status
-Date:   Fri, 22 Nov 2019 00:47:36 -0500
-Message-Id: <20191122054911.1750-117-sashal@kernel.org>
+Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 127/219] drbd: do not block when adjusting "disk-options" while IO is frozen
+Date:   Fri, 22 Nov 2019 00:47:39 -0500
+Message-Id: <20191122054911.1750-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,82 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
 
-[ Upstream commit c20577014f85f36d4e137d3d52a1f61225b4a3d2 ]
+[ Upstream commit f708bd08ecbdc23d03aaedf5b3311ebe44cfdb50 ]
 
-The current implementation of the OPAL_PCI_EEH_FREEZE_STATUS call in
-skiboot's NPU driver does not touch the pci_error_type parameter so
-it might have garbage but the powernv code analyzes it nevertheless.
+"suspending" IO is overloaded.
+It can mean "do not allow new requests" (obviously),
+but it also may mean "must not complete pending IO",
+for example while the fencing handlers do their arbitration.
 
-This initializes pcierr and fstate to zero in all call sites.
+When adjusting disk options, we suspend io (disallow new requests), then
+wait for the activity-log to become unused (drain all IO completions),
+and possibly replace it with a new activity log of different size.
 
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+If the other "suspend IO" aspect is active, pending IO completions won't
+happen, and we would block forever (unkillable drbdsetup process).
+
+Fix this by skipping the activity log adjustment if the "al-extents"
+setting did not change. Also, in case it did change, fail early without
+blocking if it looks like we would block forever.
+
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/eeh-powernv.c | 8 ++++----
- arch/powerpc/platforms/powernv/pci-ioda.c    | 4 ++--
- arch/powerpc/platforms/powernv/pci.c         | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/block/drbd/drbd_nl.c | 37 ++++++++++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-index 3c1beae29f2d8..9dd5b8909178b 100644
---- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-@@ -578,8 +578,8 @@ static void pnv_eeh_get_phb_diag(struct eeh_pe *pe)
- static int pnv_eeh_get_phb_state(struct eeh_pe *pe)
- {
- 	struct pnv_phb *phb = pe->phb->private_data;
--	u8 fstate;
--	__be16 pcierr;
-+	u8 fstate = 0;
-+	__be16 pcierr = 0;
- 	s64 rc;
- 	int result = 0;
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index 3366c1a91ee00..5b15ffd0c7f57 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -1515,6 +1515,30 @@ static void sanitize_disk_conf(struct drbd_device *device, struct disk_conf *dis
+ 	}
+ }
  
-@@ -617,8 +617,8 @@ static int pnv_eeh_get_phb_state(struct eeh_pe *pe)
- static int pnv_eeh_get_pe_state(struct eeh_pe *pe)
++static int disk_opts_check_al_size(struct drbd_device *device, struct disk_conf *dc)
++{
++	int err = -EBUSY;
++
++	if (device->act_log &&
++	    device->act_log->nr_elements == dc->al_extents)
++		return 0;
++
++	drbd_suspend_io(device);
++	/* If IO completion is currently blocked, we would likely wait
++	 * "forever" for the activity log to become unused. So we don't. */
++	if (atomic_read(&device->ap_bio_cnt))
++		goto out;
++
++	wait_event(device->al_wait, lc_try_lock(device->act_log));
++	drbd_al_shrink(device);
++	err = drbd_check_al_size(device, dc);
++	lc_unlock(device->act_log);
++	wake_up(&device->al_wait);
++out:
++	drbd_resume_io(device);
++	return err;
++}
++
+ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
  {
- 	struct pnv_phb *phb = pe->phb->private_data;
--	u8 fstate;
--	__be16 pcierr;
-+	u8 fstate = 0;
-+	__be16 pcierr = 0;
- 	s64 rc;
- 	int result;
+ 	struct drbd_config_context adm_ctx;
+@@ -1577,15 +1601,12 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
+ 		}
+ 	}
  
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 326ca6288bb12..ee63749a2d47e 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -605,8 +605,8 @@ static int pnv_ioda_unfreeze_pe(struct pnv_phb *phb, int pe_no, int opt)
- static int pnv_ioda_get_pe_state(struct pnv_phb *phb, int pe_no)
- {
- 	struct pnv_ioda_pe *slave, *pe;
--	u8 fstate, state;
--	__be16 pcierr;
-+	u8 fstate = 0, state;
-+	__be16 pcierr = 0;
- 	s64 rc;
- 
- 	/* Sanity check on PE number */
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index 13aef2323bbca..db230a35609bf 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -602,8 +602,8 @@ static void pnv_pci_handle_eeh_config(struct pnv_phb *phb, u32 pe_no)
- static void pnv_pci_config_check_eeh(struct pci_dn *pdn)
- {
- 	struct pnv_phb *phb = pdn->phb->private_data;
--	u8	fstate;
--	__be16	pcierr;
-+	u8	fstate = 0;
-+	__be16	pcierr = 0;
- 	unsigned int pe_no;
- 	s64	rc;
- 
+-	drbd_suspend_io(device);
+-	wait_event(device->al_wait, lc_try_lock(device->act_log));
+-	drbd_al_shrink(device);
+-	err = drbd_check_al_size(device, new_disk_conf);
+-	lc_unlock(device->act_log);
+-	wake_up(&device->al_wait);
+-	drbd_resume_io(device);
+-
++	err = disk_opts_check_al_size(device, new_disk_conf);
+ 	if (err) {
++		/* Could be just "busy". Ignore?
++		 * Introduce dedicated error code? */
++		drbd_msg_put_info(adm_ctx.reply_skb,
++			"Try again without changing current al-extents setting");
+ 		retcode = ERR_NOMEM;
+ 		goto fail_unlock;
+ 	}
 -- 
 2.20.1
 
