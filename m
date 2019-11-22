@@ -2,132 +2,97 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C9CC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CC7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCEA620708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBA420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vUGgAy80"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ZPNwk6af"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKVU0E (ORCPT
+        id S1727112AbfKVU1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:26:04 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44332 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVU0D (ORCPT
+        Fri, 22 Nov 2019 15:27:01 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33333 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfKVU1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:26:03 -0500
-Received: by mail-pg1-f194.google.com with SMTP id e6so3831911pgi.11;
-        Fri, 22 Nov 2019 12:26:03 -0800 (PST)
+        Fri, 22 Nov 2019 15:27:00 -0500
+Received: by mail-qt1-f196.google.com with SMTP id y39so9307737qty.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 12:27:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=JDYXarROpC1eNzKna2zZoOdAaSL8sfvjdyuyZruxS+E=;
-        b=vUGgAy80y2xWW/M+12ob23BwpxER1hYdVUIRe98rzR6go6PGmxcTYQgl+XkxFj5gS+
-         v7cXpPLwMZANDABm7dcVcsGhZmMVjuWtSxla+KMTWGi9zmvyVlx4NeyjeKhodPgkz3Ab
-         k3tbQfoI1ferSJq38LO40+0HHiQ6xLNdI7Xxu095SE+Qo9bbMBaE9i1cfNRys7SIkNER
-         ZInz8ZoxaPua3ZTIrcELtAyeGQc4UFKEySdPTIPoQOH6nKdjxdRxAjE+Yfp4T8YAjDvl
-         wYUWUjzbJaK28/XLfJq5NOSwm8+cqWYQPxKQzSv/mxuxIF2JJE1gPC0C9A3f8puO9djZ
-         FeOw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TuEJSat07gB1IHltKZEvc+y9sVWtpqAObc38RVhlHg0=;
+        b=ZPNwk6afKIW5LdcIqrEVpFENUsOBQjX7BOurhZoa9oUBIsHu1KKcmUKaWCot2Q+48Z
+         SGX4FOcognZAAp7qk1OyjjPiiR3ZS9bJzC6+k4M09o9xN5OPVPdFnHs4uD0+aCHzdvUl
+         n2ZkL3ip5FLLzoLFnrg3S+wkYJtn5JMasBIkeM6Tfob2uKznZ0Y86d77OqQaTrrLwvt1
+         EZX2qVp5UVqdXnJSPUN403GQBGujUnFUfKr7+GkQvDXRgp6HLpyY+1xunABdnLI/Snyy
+         xDy5l78e0J7pDTy8SMlNua2a0swLp4IC6UpLZjUIHtQL35Vb0VFRQ59cCnNECJCTAEoA
+         Mp2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=JDYXarROpC1eNzKna2zZoOdAaSL8sfvjdyuyZruxS+E=;
-        b=la2GWZHaDL093Xqi/rGaq50lD+ZocdI+udbE9oCm0xk8mYNz2ImOzM9RamhkgiLV2S
-         5jk2iDLe79ee6hyQbgRA964v2IQo8MwuFs3nQ5lem2IvZDAB4GY96A/IN+syvvr9aVAm
-         b3frKf43fThso5W7VaPuwFUNQiaPFSSCh79gcDEAKWkJGkT3ZEY3wVpRyxDEmYRTl1Mm
-         G7/3LM+HYbvdoXyhZlncE/3cDXuoCk5pQ+Y/YytkQT5gJ6mmXpwgDSzHI69wwakHLbLC
-         yqF+xQ+apUi0jl1I/zanOu3U20geaVlzqDI+qqObNsFDdE7CfDBETahaw3quGdT8UNXP
-         ARAw==
-X-Gm-Message-State: APjAAAVAs2fFQSpJ8bsOjukGiYa0RS082Ydg8gaiH0r5T5GgoLPn9WEG
-        LfncAlgzbnxYm1iCu4TNM+Y=
-X-Google-Smtp-Source: APXvYqyIZv1Tw3m3Gm4B0c++BYkqj7DCwbAQuYD5xuFf8mX9fCzF00qF0RjN/qNg5S3VSzfpUPVHwA==
-X-Received: by 2002:a65:5a4d:: with SMTP id z13mr10661479pgs.21.1574454362505;
-        Fri, 22 Nov 2019 12:26:02 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id fz12sm3656086pjb.15.2019.11.22.12.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 12:26:01 -0800 (PST)
-Date:   Fri, 22 Nov 2019 12:25:59 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: hid-input: clear unmapped usages
-Message-ID: <20191122202559.GA71021@dtor-ws>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TuEJSat07gB1IHltKZEvc+y9sVWtpqAObc38RVhlHg0=;
+        b=dKAsFjAh8ksUj3JqJt7JPT/1PPSjwTBaC6A4/dndzuyBTmc767Y1IWbXk+4eYkF1wR
+         7bDKS5u5sAYoZAT9tXJjuXHMxIlRBUhXpI+moR+ZaPE2C4bLizlOEqcYOKJ3oAwiXToi
+         jW9mFo5nNg7meTL1ObImeeDSNU7zi/IfoWJgP4HZuQbYJJHfPYR4XFWsfagfrpd4VFkd
+         KuFB4vizM8gJ7TXzgqaZlth/7ykAdbzSlCtf4PMMBUOOQc90FdkUm8VQnGNNIf44r4R+
+         4UFOFWY3e0uRXqt0g7t80aA13q6VZDYfUlWO10BhPlFiMu8yxGPqP9aYe1+k42gxNwwW
+         dq8g==
+X-Gm-Message-State: APjAAAVTAjTN3Z4rXeRRDuDoIZN5ilOeqfUbgUpPlVd0ww42TarhZvAV
+        aAecEEZl6UHIjsKfkW3O1ByHRw==
+X-Google-Smtp-Source: APXvYqzkWEbBdtWdJtN3F5QnaVFyACvDHG6QXr8Rgqs/FHE1QO0QMaRfW07+SVgpG840pdDY+8eSjg==
+X-Received: by 2002:ac8:2432:: with SMTP id c47mr16453020qtc.74.1574454419946;
+        Fri, 22 Nov 2019 12:26:59 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id r48sm4048719qte.49.2019.11.22.12.26.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Nov 2019 12:26:59 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iYFW6-0002OB-U5; Fri, 22 Nov 2019 16:26:58 -0400
+Date:   Fri, 22 Nov 2019 16:26:58 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] IB/hfi1: remove redundant assignment to variable ret
+Message-ID: <20191122202658.GA9162@ziepe.ca>
+References: <20191122154814.87257-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191122154814.87257-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should not be leaving half-mapped usages with potentially invalid
-keycodes, as that may confuse hidinput_find_key() when the key is
-located by index, which may end up feeding way too large keycode into
-the VT keyboard handler and cause OOB write there:
+On Fri, Nov 22, 2019 at 03:48:14PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being initialized with a value that is never
+> read and it is being updated later with a new value. The
+> initialization is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+> ---
+>  drivers/infiniband/hw/hfi1/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
-Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
-...
- kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
- kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
- input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
- input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
- input_pass_values drivers/input/input.c:949 [inline]
- input_set_keycode+0x290/0x320 drivers/input/input.c:954
- evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
- evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+Applied to for-next, thanks
 
-In this case we were dealing with a fuzzed HID device that declared over
-12K buttons:
-
-https://syzkaller.appspot.com/bug?extid=19340dff067c2d3835c0
-
-Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
-
-I'll be putting a guard into drivers/tty/vt/keyboard.c as well.
-Please consider for stable.
-
- drivers/hid/hid-input.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 63855f275a38..3957d1c4d967 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1215,9 +1215,11 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		set_bit(MSC_SCAN, input->mscbit);
- 	}
- 
--ignore:
- 	return;
- 
-+ignore:
-+	usage->type = 0;
-+	usage->code = 0;
- }
- 
- static void hidinput_handle_scroll(struct hid_usage *usage,
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
-
--- 
-Dmitry
+Jason
