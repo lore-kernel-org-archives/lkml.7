@@ -3,98 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DC2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA35C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB4F20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419523;
-	bh=wg46qknz9Hf2607OK9IVon7QRzTj/a1p1YRAecuuMHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZ0xkHmasmm1xEw48sFqBnOAD9WFsa/fdil0P65JSNsJCPLV4nwnKPrIxXjfC041D
-	 BdSsN+nEBtRHjcBPx3MZNsA3mU3z0+9yGFIIEFF9/ikUukxBds4XC/gfG8eKFM3cx7
-	 I519Q+83bEAJOmdhLq4/r1jhHvGVOZxL6mPgE3nw=
+	by mail.kernel.org (Postfix) with ESMTP id 754E420715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cAZe+uR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfKVKpW (ORCPT
+        id S1727261AbfKVKpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbfKVKpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5812620718;
-        Fri, 22 Nov 2019 10:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419518;
-        bh=wg46qknz9Hf2607OK9IVon7QRzTj/a1p1YRAecuuMHk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lHvr2G/Y1GRHuRdnWWfQVOFizn8FPgMsPkpnTi0h9dqTl+/0DtLGN7LQgfIbw5iHc
-         xk3fi0YhFcvdSvJQB2KDu5ossWFeHppYTIFQ9dCu3I1CEPIctO91Z/j5CFGKIJ1QiY
-         F2tlp/drvrj5IHHMwLZ2icD9Cpi7/2/Iiqf/MyTY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 139/222] scsi: NCR5380: Handle BUS FREE during reselection
-Date:   Fri, 22 Nov 2019 11:27:59 +0100
-Message-Id: <20191122100912.901414049@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 05:45:25 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10368 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbfKVKpV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:21 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7bc410000>; Fri, 22 Nov 2019 02:45:21 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 02:45:19 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 02:45:19 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:19 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 Nov 2019 10:45:19 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd7bc3a0001>; Fri, 22 Nov 2019 02:45:18 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH 1/6] soc/tegra: bpmp: Update ABI header
+Date:   Fri, 22 Nov 2019 16:15:00 +0530
+Message-ID: <20191122104505.8986-2-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122104505.8986-1-vidyas@nvidia.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574419521; bh=WbZi9iAoLwfEFJsQN2GWHRgTWfU+vRs78ozDlVh5aUs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=cAZe+uR2E+SHtXkhvp/sV5HwiJ4pGBtPb5LtbEXtXzUSABNKfDleGwwKclVEvW1Yi
+         aiBHAW+X7P2LtOvMpG9BRGE1qNKomBwbWs6CZ5tOYBdwwtnuj89633Tz14q5Tk965G
+         XsiIq81F1CIeyFaS91CEQAEzKc9OxqCPG2rBiEAkbwD1huJwwEh6m/RaXeqAjx2YoZ
+         XXKodtjnwK2F0yDWqFM5NeyVWR1++/jefp9gHLfWC0gV2hqoTpWtgBhU01QXNhGmmO
+         Ldje0Io+ed332aRRl2y+ZjEB4Pxa+mLNftcgIoN8FfeGpVdOGu7f0zHnLIGQZDd0hi
+         9YfX/3VwtBwLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+Update the firmware header to support uninitialization of UPHY PLL
+when the PCIe controller is operating in endpoint mode and host cuts
+the PCIe reference clock.
 
-[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
-
-The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
-procedure", that a target may assert RST or go to BUS FREE phase if the
-initiator does not respond within 200 us. Something like this has been
-observed with AztecMonster II target. When it happens, all we can do is wait
-for the target to try again.
-
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- drivers/scsi/NCR5380.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/soc/tegra/bpmp-abi.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 03f9ddbc37fbb..27270631c70c2 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2133,6 +2133,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+diff --git a/include/soc/tegra/bpmp-abi.h b/include/soc/tegra/bpmp-abi.h
+index cac6f610b3fe..322d06e21918 100644
+--- a/include/soc/tegra/bpmp-abi.h
++++ b/include/soc/tegra/bpmp-abi.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (c) 2014-2018, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2014-2019, NVIDIA CORPORATION.  All rights reserved.
+  */
  
- 	if (NCR5380_poll_politely(instance,
- 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
-+		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
-+			/* BUS FREE phase */
-+			return;
- 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
- 		do_abort(instance);
- 		return;
+ #ifndef _ABI_BPMP_ABI_H_
+@@ -2119,6 +2119,7 @@ enum {
+ 	CMD_UPHY_PCIE_LANE_MARGIN_STATUS = 2,
+ 	CMD_UPHY_PCIE_EP_CONTROLLER_PLL_INIT = 3,
+ 	CMD_UPHY_PCIE_CONTROLLER_STATE = 4,
++	CMD_UPHY_PCIE_EP_CONTROLLER_PLL_OFF = 5,
+ 	CMD_UPHY_MAX,
+ };
+ 
+@@ -2151,6 +2152,11 @@ struct cmd_uphy_pcie_controller_state_request {
+ 	uint8_t enable;
+ } __ABI_PACKED;
+ 
++struct cmd_uphy_ep_controller_pll_off_request {
++	/** @brief EP controller number, valid: 0, 4, 5 */
++	uint8_t ep_controller;
++} __ABI_PACKED;
++
+ /**
+  * @ingroup UPHY
+  * @brief Request with #MRQ_UPHY
+@@ -2165,6 +2171,7 @@ struct cmd_uphy_pcie_controller_state_request {
+  * |CMD_UPHY_PCIE_LANE_MARGIN_STATUS     |                                        |
+  * |CMD_UPHY_PCIE_EP_CONTROLLER_PLL_INIT |cmd_uphy_ep_controller_pll_init_request |
+  * |CMD_UPHY_PCIE_CONTROLLER_STATE       |cmd_uphy_pcie_controller_state_request  |
++ * |CMD_UPHY_PCIE_EP_CONTROLLER_PLL_OFF  |cmd_uphy_ep_controller_pll_off_request  |
+  *
+  */
+ 
+@@ -2178,6 +2185,7 @@ struct mrq_uphy_request {
+ 		struct cmd_uphy_margin_control_request uphy_set_margin_control;
+ 		struct cmd_uphy_ep_controller_pll_init_request ep_ctrlr_pll_init;
+ 		struct cmd_uphy_pcie_controller_state_request controller_state;
++		struct cmd_uphy_ep_controller_pll_off_request ep_ctrlr_pll_off;
+ 	} __UNION_ANON;
+ } __ABI_PACKED;
+ 
 -- 
-2.20.1
-
-
+2.17.1
 
