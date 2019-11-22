@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08634C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EF8C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4CC52071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF0620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403719;
-	bh=JD+nfwlfA6FTDIx8CSLBblnhU8b9zxdQYj7UMBcMqL0=;
+	s=default; t=1574403724;
+	bh=X6ZU5Ku5AFuY7y/gtONIX9Zv1xUuXsUKp1Q94UlImcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4XRUoZfBgKhaTOsea7bzHIL5OCUSlPyHeMnWkBuwY2XhzTmEGlA6IgQCYH7UwXl3
-	 VI3n9Qpydt5H5eHHUg8w6S+Qz8cVq0rzBf9Q4OgujnyedsUvL8y7kGrehyU2vmH7kK
-	 1aFTvKMMff65f12q2dH9SBOdyEH08s0M8BoekWQo=
+	b=0bFF0VFOAjZG8EqzkjAtOQO6htvL96/IRlZDg4NUqgUO3/NNmL1HRcpQsBMbw7ptB
+	 qNRKPvqnbzp8B47lvjVynacqSt4WoKWmh59qWIDd6g6bGs1PCSeWZjAIQ5sxbl1U5D
+	 HSTcO2DMYw2jvjHRhW/XBWPMyqKpEl0ieYKe9Ato=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKVFwL (ORCPT
+        id S1728410AbfKVFwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57486 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:52:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728383AbfKVFwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:03 -0500
+        id S1728341AbfKVFv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2BE2070A;
-        Fri, 22 Nov 2019 05:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6764C20726;
+        Fri, 22 Nov 2019 05:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401923;
-        bh=JD+nfwlfA6FTDIx8CSLBblnhU8b9zxdQYj7UMBcMqL0=;
+        s=default; t=1574401917;
+        bh=X6ZU5Ku5AFuY7y/gtONIX9Zv1xUuXsUKp1Q94UlImcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrRptPQADb2LBdWt24/YRC4VdycjVBV3FlpmotxvAxgrtd1+K+EG9nFD459UHAD02
-         LqdEBdD/PYgdCglMgFIZ9/gYkmJkRPQTF/di0azAE6iZ2kUo2JOOmW/8gmm81JHgkd
-         s6aJ7gm4gADUnSOVRiYkWq+k3UDbJMGW8xKD0uO8=
+        b=aXzV/VsdfXLdr7pFNF2v5/lvNapU5OKetXJHEg0MH9sAVVRzorJEBYfez4ugbHu/f
+         XrNUcehJXVmIyy0WunBLH8ws/Ig+7QsCvCL7izSSE6JEwegxACM3ydoi9cTqayj6oW
+         hTNs42pCQpdK+MXjEKXY9fJa+TQLb/Q3Sf1F4+jA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Yiwen Jiang <jiangyiwen@huawei.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Mark Fasheh <mfasheh@versity.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.19 152/219] ocfs2: clear journal dirty flag after shutdown journal
-Date:   Fri, 22 Nov 2019 00:48:04 -0500
-Message-Id: <20191122054911.1750-145-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 147/219] net: dsa: bcm_sf2: Propagate error value from mdio_write
+Date:   Fri, 22 Nov 2019 00:47:59 -0500
+Message-Id: <20191122054911.1750-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -66,55 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit d85400af790dba2aa294f0a77e712f166681f977 ]
+[ Upstream commit e49505f7255be8ced695919c08a29bf2c3d79616 ]
 
-Dirty flag of the journal should be cleared at the last stage of umount,
-if do it before jbd2_journal_destroy(), then some metadata in uncommitted
-transaction could be lost due to io error, but as dirty flag of journal
-was already cleared, we can't find that until run a full fsck.  This may
-cause system panic or other corruption.
+Both bcm_sf2_sw_indir_rw and mdiobus_write_nested could fail, so let's
+return their error codes upstream.
 
-Link: http://lkml.kernel.org/r/20181121020023.3034-3-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Mark Fasheh <mfasheh@versity.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/journal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/dsa/bcm_sf2.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-index c492cbb2410f6..4c7e9b8dca316 100644
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -1018,7 +1018,8 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
- 			mlog_errno(status);
- 	}
- 
--	if (status == 0) {
-+	/* Shutdown the kernel journal system */
-+	if (!jbd2_journal_destroy(journal->j_journal) && !status) {
- 		/*
- 		 * Do not toggle if flush was unsuccessful otherwise
- 		 * will leave dirty metadata in a "clean" journal
-@@ -1027,9 +1028,6 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
- 		if (status < 0)
- 			mlog_errno(status);
- 	}
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index ca3655d28e00f..1ffdad278899f 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -309,11 +309,10 @@ static int bcm_sf2_sw_mdio_write(struct mii_bus *bus, int addr, int regnum,
+ 	 * send them to our master MDIO bus controller
+ 	 */
+ 	if (addr == BRCM_PSEUDO_PHY_ADDR && priv->indir_phy_mask & BIT(addr))
+-		bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
++		return bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
+ 	else
+-		mdiobus_write_nested(priv->master_mii_bus, addr, regnum, val);
 -
--	/* Shutdown the kernel journal system */
--	jbd2_journal_destroy(journal->j_journal);
- 	journal->j_journal = NULL;
+-	return 0;
++		return mdiobus_write_nested(priv->master_mii_bus, addr,
++				regnum, val);
+ }
  
- 	OCFS2_I(inode)->ip_open_count--;
+ static irqreturn_t bcm_sf2_switch_0_isr(int irq, void *dev_id)
 -- 
 2.20.1
 
