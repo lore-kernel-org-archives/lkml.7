@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2620DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ECCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE7520715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB03620715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419451;
-	bh=eEownlkPfVu13wGtnwr3XoSC/zxbkHiIhTahBXw1/Cg=;
+	s=default; t=1574419459;
+	bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iSH97RSq9javE0DoAFJavDJsOF18W/A2pGWfJ3QJYzkzcIT9fnbDKJp6PFHoTu39I
-	 IZ7jAlGi1E8s9rog1FAf9cUbPusbOBIKbvwjTfck1ALKUCFpq5Yx4iiCQqE4zUYvFN
-	 VeMddbJJAKgirs5FS5dYiQXrB3LHgrLFzI+Fz7cA=
+	b=pI+fc8WuluKHPJMnMIztrjZJGIRfyX8NUHEwHt/Nm1liNEiRuyZRC5aNkkqpNWvj9
+	 qrvXfIWoK3Mu9I9/DsPOS87Gt+8EQzXRFR3LEbQMsblRwGOeQsAIJLmL2//0hTT2X9
+	 jJm9h3dnRtLlA+VNgGCq9bn9NeD53SYjFVhT5eks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfKVKoJ (ORCPT
+        id S1729330AbfKVKoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49820 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:44:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbfKVKoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:02 -0500
+        id S1728516AbfKVKoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F7A20656;
-        Fri, 22 Nov 2019 10:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 600E220715;
+        Fri, 22 Nov 2019 10:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419442;
-        bh=eEownlkPfVu13wGtnwr3XoSC/zxbkHiIhTahBXw1/Cg=;
+        s=default; t=1574419453;
+        bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bv3vDBXZVl42cM1FCsT/3ereif5iXxVMCQkVLB/LwZCHwGwZqc1If7iReqotgd/oB
-         uuaHQeQMrEi1Jfm5fuk3dDjGFHeYS0SIMZtx6d5aQx0U+LY2/GNzIAZFMhH7NtBgpD
-         ppf5BIx6q2/TeZuSNZiVmciyDO82L/LwVNsXqc9E=
+        b=VkDpaUykg1hqdzcIOPWfL3bcKPahOzHcx1Zy9F9yOgs1yPBxSRhy0pI8CAZ2LATZi
+         D22wsxX1xGYeqpoW6tRU8DbWJ1WxsyVHxOvtQ1iIsZnCWtqJumXiyzVktr3WYuie5L
+         +y+sgisqBT7fdrhqAGRgBaOjAz2ywBdm6QW9h9fU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Paul Elder <paul.elder@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 111/222] media: davinci: Fix implicit enum conversion warning
-Date:   Fri, 22 Nov 2019 11:27:31 +0100
-Message-Id: <20191122100911.268008102@linuxfoundation.org>
+Subject: [PATCH 4.9 115/222] usb: gadget: uvc: Factor out video USB request queueing
+Date:   Fri, 22 Nov 2019 11:27:35 +0100
+Message-Id: <20191122100911.493792795@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,45 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 4158757395b300b6eb308fc20b96d1d231484413 ]
+[ Upstream commit 9d1ff5dcb3cd3390b1e56f1c24ae42c72257c4a3 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+USB requests for video data are queued from two different locations in
+the driver, with the same code block occurring twice. Factor it out to a
+function.
 
-drivers/media/platform/davinci/vpbe_display.c:524:24: warning: implicit
-conversion from enumeration type 'enum osd_v_exp_ratio' to different
-enumeration type 'enum osd_h_exp_ratio' [-Wenum-conversion]
-                        layer_info->h_exp = V_EXP_6_OVER_5;
-                                          ~ ^~~~~~~~~~~~~~
-1 warning generated.
-
-This appears to be a copy and paste error judging from the couple of
-lines directly above this statement and the way that height is handled
-in the if block above this one.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
+Tested-by: Paul Elder <paul.elder@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpbe_display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/function/uvc_video.c | 30 ++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
-index a9bc0175e4d3d..c839003953a74 100644
---- a/drivers/media/platform/davinci/vpbe_display.c
-+++ b/drivers/media/platform/davinci/vpbe_display.c
-@@ -518,7 +518,7 @@ vpbe_disp_calculate_scale_factor(struct vpbe_display *disp_dev,
- 		else if (v_scale == 4)
- 			layer_info->v_zoom = ZOOM_X4;
- 		if (v_exp)
--			layer_info->h_exp = V_EXP_6_OVER_5;
-+			layer_info->v_exp = V_EXP_6_OVER_5;
- 	} else {
- 		/* no scaling, only cropping. Set display area to crop area */
- 		cfg->ysize = expected_ysize;
+diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
+index 0f01c04d7cbd8..540917f54506a 100644
+--- a/drivers/usb/gadget/function/uvc_video.c
++++ b/drivers/usb/gadget/function/uvc_video.c
+@@ -129,6 +129,19 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
+  * Request handling
+  */
+ 
++static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
++{
++	int ret;
++
++	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
++	if (ret < 0) {
++		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
++		usb_ep_set_halt(video->ep);
++	}
++
++	return ret;
++}
++
+ /*
+  * I somehow feel that synchronisation won't be easy to achieve here. We have
+  * three events that control USB requests submission:
+@@ -193,14 +206,13 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 
+ 	video->encode(req, video, buf);
+ 
+-	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
+-		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
+-		usb_ep_set_halt(ep);
+-		spin_unlock_irqrestore(&video->queue.irqlock, flags);
++	ret = uvcg_video_ep_queue(video, req);
++	spin_unlock_irqrestore(&video->queue.irqlock, flags);
++
++	if (ret < 0) {
+ 		uvcg_queue_cancel(queue, 0);
+ 		goto requeue;
+ 	}
+-	spin_unlock_irqrestore(&video->queue.irqlock, flags);
+ 
+ 	return;
+ 
+@@ -320,15 +332,13 @@ int uvcg_video_pump(struct uvc_video *video)
+ 		video->encode(req, video, buf);
+ 
+ 		/* Queue the USB request */
+-		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
++		ret = uvcg_video_ep_queue(video, req);
++		spin_unlock_irqrestore(&queue->irqlock, flags);
++
+ 		if (ret < 0) {
+-			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
+-			usb_ep_set_halt(video->ep);
+-			spin_unlock_irqrestore(&queue->irqlock, flags);
+ 			uvcg_queue_cancel(queue, 0);
+ 			break;
+ 		}
+-		spin_unlock_irqrestore(&queue->irqlock, flags);
+ 	}
+ 
+ 	spin_lock_irqsave(&video->req_lock, flags);
 -- 
 2.20.1
 
