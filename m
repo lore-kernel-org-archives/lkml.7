@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FB3C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165BE20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BC320718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419389;
-	bh=V4x9S+RffWZW9SkrU3gO6jgfU04aB9QwG/YsZYVbTL4=;
+	s=default; t=1574419392;
+	bh=hdjgwnbCXaX75t0UDxSR3kAVZIU9Y421d0mh+DbJK0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DVePQoe4xQisMaKH8gPEtlPjN8YjhmA5IW0+oikijlmDUW9xCbkuPPs2y4GfMrFXs
-	 8Xx4FXNR/BWDDKBm89tDnCKFE77u4tOAAUjyxv9aGwv3B6Z8LXcdJipyoRS1Ah7ASt
-	 +18dFpgaaKj8qYGrELSTmis0oKK01oHnuBYHevbo=
+	b=dp22wSiYW8kHr66e8I41NwuMDPURJmWC2+PPyDDAPjVZ8i/T9szeTcC15i8nfILqQ
+	 yYuxqn/h3fWtRi/tfsSbguAPung1kqohh97rTc69shi/a1NiotS9lFy3bqK5G7bLcq
+	 GwLgolAltwaPcGfFJeA+LTdtx3Gg79nt2ZklQD+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfKVKnI (ORCPT
+        id S1729189AbfKVKnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48500 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbfKVKnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:01 -0500
+        id S1729172AbfKVKnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58BF72071F;
-        Fri, 22 Nov 2019 10:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43FE420717;
+        Fri, 22 Nov 2019 10:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419379;
-        bh=V4x9S+RffWZW9SkrU3gO6jgfU04aB9QwG/YsZYVbTL4=;
+        s=default; t=1574419385;
+        bh=hdjgwnbCXaX75t0UDxSR3kAVZIU9Y421d0mh+DbJK0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bwoj+03HDVlDPvYRLkQ6mqEUiJrMxT4pPeOOR6fSj0ytu5PrRWwGVLsFIin/DT5K+
-         /zI8i9S4QLxZbel0LNTe7ySpw+aVHb0k+0mJAgyvZh+VRi4yOE3GVat6lbw4sm2DoM
-         p7bwTsaR+598yMPnyqleeRrxwyUJyBqFl+XRK0Fw=
+        b=b1Vq1QBBNVULXvKom7IV/REVe4GhNnH5FlsVktT0hPnrY4vV85U7CrONr+/SzhybK
+         UDAD4ckQSwbnzAQrnhSoYCbUbglBN3rZdXM64LwPT//pyTk/NLB/EvTtUFdT0AFWnu
+         QWD0SzqkZ9iTCBaQpfwcyqoxnxPh/0WVR6YDyGYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Nicolas Adell <nicolas.adell@actia.fr>,
+        Peter Chen <peter.chen@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 092/222] net: broadcom: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:27:12 +0100
-Message-Id: <20191122100910.145920123@linuxfoundation.org>
+Subject: [PATCH 4.9 094/222] usb: chipidea: imx: enable OTG overcurrent in case USB subsystem is already started
+Date:   Fri, 22 Nov 2019 11:27:14 +0100
+Message-Id: <20191122100910.260315838@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,67 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Nicolas Adell <nicolas.adell@actia.fr>
 
-[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
+[ Upstream commit 1dedbdf2bbb1ede8d96f35f9845ecae179dc1988 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+When initializing the USB subsystem before starting the kernel,
+OTG overcurrent detection is disabled. In case the OTG polarity of
+overcurrent is low active, the overcurrent detection is never enabled
+again and events cannot be reported as expected. Because imx usb
+overcurrent polarity is low active by default, only detection needs
+to be enable in usbmisc init function.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicolas Adell <nicolas.adell@actia.fr>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
- drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/chipidea/usbmisc_imx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index c4078401b7ded..900f2f706cbc7 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -571,12 +571,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
- /*
-  * tx request callback
-  */
--static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct bcm_enet_priv *priv;
- 	struct bcm_enet_desc *desc;
- 	u32 len_stat;
--	int ret;
-+	netdev_tx_t ret;
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index 20d02a5e418d9..c6577f489d0f6 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -273,6 +273,8 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
+ 	} else if (data->oc_polarity == 1) {
+ 		/* High active */
+ 		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
++	} else {
++		reg &= ~(MX6_BM_OVER_CUR_DIS);
+ 	}
+ 	writel(reg, usbmisc->base + data->index * 4);
  
- 	priv = netdev_priv(dev);
- 
-diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
-index f1b81187a2010..dc7953894c351 100644
---- a/drivers/net/ethernet/broadcom/sb1250-mac.c
-+++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
-@@ -299,7 +299,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
- static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
- static uint64_t sbmac_addr2reg(unsigned char *ptr);
- static irqreturn_t sbmac_intr(int irq, void *dev_instance);
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
- static void sbmac_setmulti(struct sbmac_softc *sc);
- static int sbmac_init(struct platform_device *pldev, long long base);
- static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
-@@ -2032,7 +2032,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
-  *  Return value:
-  *  	   nothing
-  ********************************************************************* */
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct sbmac_softc *sc = netdev_priv(dev);
- 	unsigned long flags;
 -- 
 2.20.1
 
