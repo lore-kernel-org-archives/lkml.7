@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A1C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16871C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9113920715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B6720721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420104;
-	bh=Sy7hbScv19rV8NDL9qHrMbFUObG15Smc8I2tCM0i/MU=;
+	s=default; t=1574420107;
+	bh=T12/7retfQyoc+36Vzb58+LWVgO4QkqdGYK53unX8Tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdgWFu7z9jbMvVYJ2ItdVZHetEBHsLnKfm7Pu0AGYzCmKLFHLMK590rtqZUJNy+yF
-	 x5lt0GpdZVIbgmCqvVT2JmjpN1g4vRnJ2DtMmrJJelEc3bmCv3yZ2aH/3x8XiPyqmZ
-	 YYzsjgGboJI+6al+YjcuNCbzlxKU91w16t0lSqaM=
+	b=fpLwunYP3O3xRFpN30e7OWwAau9y8/MX49b8W0AcOLaHlFaSzGuBIOI35jH7ilrmP
+	 kudSDclE2CXQvsaGz18asMj3BMUjWW3F3yBUZ/RZgYdvg8TJe9JP/zr/jXRRzAKQul
+	 OO8O5TU90kJ2cfUUNBopGPHzR+9sqs01hRAP0GwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfKVKzD (ORCPT
+        id S1730419AbfKVKzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbfKVKzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:01 -0500
+        id S1730394AbfKVKzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7290E207FA;
-        Fri, 22 Nov 2019 10:55:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2E020721;
+        Fri, 22 Nov 2019 10:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420101;
-        bh=Sy7hbScv19rV8NDL9qHrMbFUObG15Smc8I2tCM0i/MU=;
+        s=default; t=1574420103;
+        bh=T12/7retfQyoc+36Vzb58+LWVgO4QkqdGYK53unX8Tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGMSVDZ+6lnqspqAX4YpR6XG62lQRZ9nV1EPpTBNHiOjlWXDCrSHeKY+WuCXoOTWA
-         243o0FRbJ/pdbwPAVhT+X+z/hOjYw0YvOFvjQ9i2COTyPL8nrKagf3aNh7Je81HXI+
-         aYCOmw7rdRtwfE8hs5l55f5kw2Nbz2w0lb7EALq8=
+        b=DM0RHBXCa+a906UQ6mDEMdGUaoMBBaXsat1EbmQ5pmz8yRhDNEMqRK1S8EuEXx1f2
+         QSTV8QKfYMh8kaDgPcr0SNEmOzKG41ObKyJErxfNSXQ/GCiYWmXYvqAfeC8VuQ5t+F
+         zX1nC1/P3+6Ob5sDT92JyMsmLdXwvFsOm13swNSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 114/122] mac80211: minstrel: fix using short preamble CCK rates on HT clients
-Date:   Fri, 22 Nov 2019 11:29:27 +0100
-Message-Id: <20191122100835.630191478@linuxfoundation.org>
+Subject: [PATCH 4.14 115/122] mac80211: minstrel: fix CCK rate group streams value
+Date:   Fri, 22 Nov 2019 11:29:28 +0100
+Message-Id: <20191122100835.956227031@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -62,43 +62,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 37439f2d6e43ae79e22be9be159f0af157468f82 ]
+[ Upstream commit 80df9be67c44cb636bbc92caeddad8caf334c53c ]
 
-mi->supported[MINSTREL_CCK_GROUP] needs to be updated
-short preamble rates need to be marked as supported regardless of
-whether it's currently enabled. Its state can change at any time without
-a rate_update call.
+Fixes a harmless underflow issue when CCK rates are actively being used
 
-Fixes: 782dda00ab8e ("mac80211: minstrel_ht: move short preamble check out of get_rate")
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/mac80211/rc80211_minstrel_ht.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index 4a5bdad9f3030..25cb3e5f8b482 100644
+index 25cb3e5f8b482..bc97d31907f60 100644
 --- a/net/mac80211/rc80211_minstrel_ht.c
 +++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -1132,7 +1132,6 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
- 	struct ieee80211_mcs_info *mcs = &sta->ht_cap.mcs;
- 	u16 sta_cap = sta->ht_cap.cap;
- 	struct ieee80211_sta_vht_cap *vht_cap = &sta->vht_cap;
--	struct sta_info *sinfo = container_of(sta, struct sta_info, sta);
- 	int use_vht;
- 	int n_supported = 0;
- 	int ack_dur;
-@@ -1258,8 +1257,7 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
- 	if (!n_supported)
- 		goto use_legacy;
+@@ -129,7 +129,7 @@
  
--	if (test_sta_flag(sinfo, WLAN_STA_SHORT_PREAMBLE))
--		mi->cck_supported_short |= mi->cck_supported_short << 4;
-+	mi->supported[MINSTREL_CCK_GROUP] |= mi->cck_supported_short << 4;
- 
- 	/* create an initial rate table with the lowest supported rates */
- 	minstrel_ht_update_stats(mp, mi);
+ #define CCK_GROUP					\
+ 	[MINSTREL_CCK_GROUP] = {			\
+-		.streams = 0,				\
++		.streams = 1,				\
+ 		.flags = 0,				\
+ 		.duration = {				\
+ 			CCK_DURATION_LIST(false),	\
 -- 
 2.20.1
 
