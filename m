@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C78C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1113C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29112084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEB020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420769;
-	bh=aiz3eV8mf86aSfRxkTBxpeVCFF/Kh1Qwikco9jtuQ0Y=;
+	s=default; t=1574420770;
+	bh=+G/Hb5yXy8J1/R9Fa07bK3eEpG/8DlxjsJp1lvjGrEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xg3ayHBMpBQLDv7EGrxSVfgqYxs3XlBRAj2RA91v2dVOLylRjVQv7QqTu7xutqMbn
-	 G7W15It91s1Y/B79nRX8iWK4PWnQh9zYvCJi7GIJI1z3FNp0GK7SVxND9DhlMalaRe
-	 ++8Zn4FG3XALTeH64ntAV5ECzKWXv2fF5JmcNKkg=
+	b=xUWAs82Imdqhu8VGHRjpd4nIqkbKZby97tEc7V9z7SwTMhj9KHELutvbq/6vpCV2n
+	 nQauh5kaKtA+YqdLAvnwKsOuVbkifC9Dh6u5pHrH7NEmNlWx/Y5sRFvm5OEQvy28le
+	 kF/4suB3cG6BcvijeNcfiU8+AkG8A/F6gzKFLVxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbfKVLGH (ORCPT
+        id S1731810AbfKVLGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33972 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730087AbfKVLGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:02 -0500
+        id S1727881AbfKVLGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 808F52070E;
-        Fri, 22 Nov 2019 11:06:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47DB52088F;
+        Fri, 22 Nov 2019 11:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420762;
-        bh=aiz3eV8mf86aSfRxkTBxpeVCFF/Kh1Qwikco9jtuQ0Y=;
+        s=default; t=1574420764;
+        bh=+G/Hb5yXy8J1/R9Fa07bK3eEpG/8DlxjsJp1lvjGrEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVS7hrScp+rjv16JuxrSeylBwmX0UjsdUtG7jiRdHSsvR26+B045EoGOeWekpNQu0
-         u3WO+B5d+7s5ivpykadVhUtvwNyzHwnE6BDHZAD12+/o+PyGsV1IfiRtaIWlLKCT8l
-         +FuzbxRcSIkWv36biTKNPhuUxPzwxaeRUs1aMqBo=
+        b=ra9TBkugYUTA2u867sVtjjk76fKvuRiDYYqZb/SA7E/Pb19s548K4L4oHGeShcI5g
+         Af6DDaBYBNI12Oqly+tyuMxG5lTcXUDekVVmmqDHjoZu/lvQK3M3S5ZrOupHpz7QAG
+         sWbytJXJgB8E4VrBQ+6ZS6YMYUUVhhESGSexnboA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, rostedt@goodmis.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        He Zhe <zhe.he@windriver.com>, Petr Mladek <pmladek@suse.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 173/220] printk: Give error on attempt to set log buffer length to over 2G
-Date:   Fri, 22 Nov 2019 11:28:58 +0100
-Message-Id: <20191122100925.293272966@linuxfoundation.org>
+Subject: [PATCH 4.19 174/220] media: isif: fix a NULL pointer dereference bug
+Date:   Fri, 22 Nov 2019 11:28:59 +0100
+Message-Id: <20191122100925.367404978@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,87 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-[ Upstream commit e6fe3e5b7d16e8f146a4ae7fe481bc6e97acde1e ]
+[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
 
-The current printk() is ready to handle log buffer size up to 2G.
-Give an explicit error for users who want to use larger log buffer.
+In isif_probe(), there is a while loop to get the ISIF base address and
+linearization table0 and table1 address. In the loop body, the function
+platform_get_resource() is called to get the resource. If
+platform_get_resource() returns NULL, the loop is terminated and the
+execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
+first iteration because platform_get_resource() returns NULL and the
+execution goes to 'fail_nobase_res'. Given that there is another while loop
+at 'fail_nobase_res' and i equals to 0, one iteration of the second while
+loop will be executed. However, the second while loop does not check the
+return value of platform_get_resource(). This can cause a NULL pointer
+dereference bug if the return value is a NULL pointer.
 
-Also fix printk formatting to show the 2G as a positive number.
+This patch avoids the above issue by adding a check in the second while
+loop after the call to platform_get_resource().
 
-Link: http://lkml.kernel.org/r/20181008135916.gg4kkmoki5bgtco5@pathway.suse.cz
-Cc: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org
-Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-[pmladek: Fixed to the really safe limit 2GB.]
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/media/platform/davinci/isif.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 52390f5a1db11..c7b3d5489937d 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -438,6 +438,7 @@ static u32 clear_idx;
- /* record buffer */
- #define LOG_ALIGN __alignof__(struct printk_log)
- #define __LOG_BUF_LEN (1 << CONFIG_LOG_BUF_SHIFT)
-+#define LOG_BUF_LEN_MAX (u32)(1 << 31)
- static char __log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
- static char *log_buf = __log_buf;
- static u32 log_buf_len = __LOG_BUF_LEN;
-@@ -1038,18 +1039,23 @@ void log_buf_vmcoreinfo_setup(void)
- static unsigned long __initdata new_log_buf_len;
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index f924e76e2fbf8..340f8218f54d3 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -1100,7 +1100,8 @@ static int isif_probe(struct platform_device *pdev)
  
- /* we practice scaling the ring buffer by powers of 2 */
--static void __init log_buf_len_update(unsigned size)
-+static void __init log_buf_len_update(u64 size)
- {
-+	if (size > (u64)LOG_BUF_LEN_MAX) {
-+		size = (u64)LOG_BUF_LEN_MAX;
-+		pr_err("log_buf over 2G is not supported.\n");
-+	}
-+
- 	if (size)
- 		size = roundup_pow_of_two(size);
- 	if (size > log_buf_len)
--		new_log_buf_len = size;
-+		new_log_buf_len = (unsigned long)size;
- }
- 
- /* save requested log_buf_len since it's too early to process it */
- static int __init log_buf_len_setup(char *str)
- {
--	unsigned int size;
-+	u64 size;
- 
- 	if (!str)
- 		return -EINVAL;
-@@ -1119,7 +1125,7 @@ void __init setup_log_buf(int early)
+ 	while (i >= 0) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+-		release_mem_region(res->start, resource_size(res));
++		if (res)
++			release_mem_region(res->start, resource_size(res));
+ 		i--;
  	}
- 
- 	if (unlikely(!new_log_buf)) {
--		pr_err("log_buf_len: %ld bytes not available\n",
-+		pr_err("log_buf_len: %lu bytes not available\n",
- 			new_log_buf_len);
- 		return;
- 	}
-@@ -1132,8 +1138,8 @@ void __init setup_log_buf(int early)
- 	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
- 	logbuf_unlock_irqrestore(flags);
- 
--	pr_info("log_buf_len: %d bytes\n", log_buf_len);
--	pr_info("early log buf free: %d(%d%%)\n",
-+	pr_info("log_buf_len: %u bytes\n", log_buf_len);
-+	pr_info("early log buf free: %u(%u%%)\n",
- 		free, (free * 100) / __LOG_BUF_LEN);
- }
- 
+ 	vpfe_unregister_ccdc_device(&isif_hw_dev);
 -- 
 2.20.1
 
