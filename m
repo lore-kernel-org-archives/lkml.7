@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D53AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87018C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA4C20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EFF20672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421833;
-	bh=SLrivsqtWUW1YaeUJjXQacHkwJO/47lWejE0nFG1YqU=;
+	s=default; t=1574421840;
+	bh=Jeo/39pPQmoT6D0knHh+tThuVePJ8AIQxDESlg922GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2k+p7+yoEodEo/uPFSDw/qTm16RXIFMEmP96trOv2XkyyTRdF4XIB6lHBTFtJJx1C
-	 uvRqZ+IzcMILZxbg5DMlzocuZXg72zjA57U9q+BS8jJmgbi+LM3Rz+xGeOrPhWiydS
-	 6ee6GHYmqfXXHO7y3j1DqBBcRCrjnmUh8hdQtnuw=
+	b=j630LJ7TVEXhHXjlLg5S8nN8T/BbdWwCOVHPIyiE1nwy4XHrCEBKwy0HzWwYuF1SK
+	 x+GG3ceUjRih8jByBodJuXZY5GYGXqAZA2riRyqLcKSRlU7Si60XKPAz6mkLlNtcuV
+	 vC7fO+p301mZ3bSyywJzpwYvUaUHLNorGblQi+bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbfKVKkR (ORCPT
+        id S1728970AbfKVLX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:40:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43912 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:23:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727653AbfKVKkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:40:13 -0500
+        id S1728854AbfKVKkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:40:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D85D020717;
-        Fri, 22 Nov 2019 10:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01DA20717;
+        Fri, 22 Nov 2019 10:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419212;
-        bh=SLrivsqtWUW1YaeUJjXQacHkwJO/47lWejE0nFG1YqU=;
+        s=default; t=1574419206;
+        bh=Jeo/39pPQmoT6D0knHh+tThuVePJ8AIQxDESlg922GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cNQ6KyMy7hv+sz/8UXFkrB+Ic8cjWR8zcgYXp4uqYZY+gqpxmIbXJB/QQP6QrwTQw
-         Txrc4xEpth5rJV37HmqH9hg0bx10k1Jll0OXbH9gvx/sqv+/1AsygINUtauERkd4xP
-         EzR95oEP3w+F2+VYgsrA14shrgLABJ8/ypROaAb8=
+        b=ReNFgNTb5MfMv0CYY8yCho0bDZmWcEFvZPEDLbN2rF9AcW52ZqY898GKAe2rMt6mJ
+         9N6TRLElG4u0xwA/4pPAh0oOav6/DG89zMptnVojnAIVTLPtPHqZY1zLjhapjRZ7KX
+         k6yo6gKwt660vmnv02hFZH0CPgWnAh2q9xDTBol4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Raghuram Chary Jallipalli 
-        <raghuramchary.jallipalli@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Marcel Ziswiler <marcel@ziswiler.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 036/222] net: lan78xx: Bail out if lan78xx_get_endpoints fails
-Date:   Fri, 22 Nov 2019 11:26:16 +0100
-Message-Id: <20191122100846.707774879@linuxfoundation.org>
+Subject: [PATCH 4.9 034/222] ARM: dts: pxa: fix power i2c base address
+Date:   Fri, 22 Nov 2019 11:26:14 +0100
+Message-Id: <20191122100844.710539343@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,38 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
 
-[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
+[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
 
-We need to bail out if lan78xx_get_endpoints() fails, otherwise the
-result is overwritten.
+There is one too many zeroes in the Power I2C base address. Fix this.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/pxa27x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index e143a7fe93201..a3f9d8f05db4a 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2621,6 +2621,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- 	int i;
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 9e73dc6b3ed3e..0e1320afa1562 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -70,7 +70,7 @@
+ 			clocks = <&clks CLK_PWM1>;
+ 		};
  
- 	ret = lan78xx_get_endpoints(dev, intf);
-+	if (ret) {
-+		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
-+			    ret);
-+		return ret;
-+	}
- 
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
+-		pwri2c: i2c@40f000180 {
++		pwri2c: i2c@40f00180 {
+ 			compatible = "mrvl,pxa-i2c";
+ 			reg = <0x40f00180 0x24>;
+ 			interrupts = <6>;
 -- 
 2.20.1
 
