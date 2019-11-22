@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFE1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50672C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE68D20840
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AC1207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420571;
-	bh=4AqIKX5t8RvYRZ+5XLEmOm7MDx4bs/HyQdJ9zb2hRN8=;
+	s=default; t=1574420578;
+	bh=eHQG1+45UnU0f2+tIK6SyHL4QPGWNo5WyA4FhoQxtTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PM4Zc3b8viqzqlOGPDrOYQma4ShTQjQ7XfLzTV2pI99MDUYwRNmUR0B1/2Aa0TvDq
-	 sekxYpctYJegIOdGB+TerBSXMPcKW6txhyytGoQnY4d7u3fwNfUmd53mKivCemMxju
-	 1k2N1ft3Cs+Dmm9wETK36WsgXjkiuomQz+Gj0A4k=
+	b=zDmIGdPa0pXp9c11NPzEWss7SvvnonQubHIEDX2SgLMnHluCrOl21RXZo56aUfQ02
+	 Ne7+9deROdrDIKkiIeHQjG65xlF6pO2FflgIz9cDUSLReYAnk07KZO1guo4hZ61Eq0
+	 jKZGejQYXRqJugK4Y+bSmjSW3PQ889x/iyVzluik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfKVLCu (ORCPT
+        id S1730942AbfKVLC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56374 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730991AbfKVLCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:41 -0500
+        id S1731023AbfKVLCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 676AE207DD;
-        Fri, 22 Nov 2019 11:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD458207FA;
+        Fri, 22 Nov 2019 11:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420560;
-        bh=4AqIKX5t8RvYRZ+5XLEmOm7MDx4bs/HyQdJ9zb2hRN8=;
+        s=default; t=1574420572;
+        bh=eHQG1+45UnU0f2+tIK6SyHL4QPGWNo5WyA4FhoQxtTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1cpHFdS5uY9kPQLWa/Ya8M3lxcLz3SOYbQMtT9+dTiu4FTo88JXkAPSdrwGTG0d0
-         ZjwiLX10341ZyGnS+o4Bed/aVaRB8MXdDZGAjUkE4GY4Jmfw0Q2B3fOQdOZT4y9hbF
-         fiRPWwNcvu3p2jG7HbDLvdMU1BcZq+dqFn51sd+A=
+        b=X3nKADSxQVzPkG2n+ptOA1HEdul8Rm0arjl2MJ5KJ3cDynQjB7n2gQJYmPbJ/a4Uo
+         bekQybriS15IlWUKhjal1j86v0Y6ViElMte6W+6j2ot48fiI3Vq0ZQSdIAk80A/opc
+         GHEyxEfQGkNNisgPEHdvepL2Od1lSzDEAaYm3q34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 148/220] mmc: renesas_sdhi_internal_dmac: Whitelist r8a774a1
-Date:   Fri, 22 Nov 2019 11:28:33 +0100
-Message-Id: <20191122100923.394392320@linuxfoundation.org>
+Subject: [PATCH 4.19 151/220] atmel_lcdfb: support native-mode display-timings
+Date:   Fri, 22 Nov 2019 11:28:36 +0100
+Message-Id: <20191122100923.595617511@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -64,36 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit 2e1501a8bdd49eaa0e967c0ad00e9dcd68d0b30f ]
+[ Upstream commit 60e5e48dba72c6b59a7a9c7686ba320766913368 ]
 
-We need r8a774a1 to be whitelisted for SDHI to work on the RZ/G2M,
-but we don't care about the revision of the SoC, so just whitelist
-the generic part number.
+When a device tree set a display-timing using native-mode
+then according to the bindings doc this should:
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+    native-mode:
+    The native mode for the display, in case multiple
+    modes are provided.
+    When omitted, assume the first node is the native.
+
+The atmel_lcdfb used the last timing subnode and did not
+respect the timing mode specified with native-mode.
+
+Introduce use of of_get_videomode() which allowed
+a nice simplification of the code while also
+added support for native-mode.
+
+As a nice side-effect this fixes a memory leak where the
+data used for timings and the display_np was not freed.
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/atmel_lcdfb.c | 43 +++++++------------------------
+ 1 file changed, 9 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index ca0b43973769c..f4aefa8954bfc 100644
---- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -298,6 +298,7 @@ static const struct soc_device_attribute gen3_soc_whitelist[] = {
- 	{ .soc_id = "r8a7796", .revision = "ES1.0",
- 	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
- 	/* generic ones */
-+	{ .soc_id = "r8a774a1" },
- 	{ .soc_id = "r8a7795" },
- 	{ .soc_id = "r8a7796" },
- 	{ .soc_id = "r8a77965" },
+diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
+index 076d24afbd728..4ed55e6bbb840 100644
+--- a/drivers/video/fbdev/atmel_lcdfb.c
++++ b/drivers/video/fbdev/atmel_lcdfb.c
+@@ -22,6 +22,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <video/of_videomode.h>
+ #include <video/of_display_timing.h>
+ #include <linux/regulator/consumer.h>
+ #include <video/videomode.h>
+@@ -1028,11 +1029,11 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
+ 	struct device *dev = &sinfo->pdev->dev;
+ 	struct device_node *np =dev->of_node;
+ 	struct device_node *display_np;
+-	struct device_node *timings_np;
+-	struct display_timings *timings;
+ 	struct atmel_lcdfb_power_ctrl_gpio *og;
+ 	bool is_gpio_power = false;
++	struct fb_videomode fb_vm;
+ 	struct gpio_desc *gpiod;
++	struct videomode vm;
+ 	int ret = -ENOENT;
+ 	int i;
+ 
+@@ -1105,44 +1106,18 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
+ 	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
+ 	pdata->lcdcon_pol_negative = of_property_read_bool(display_np, "atmel,lcdcon-backlight-inverted");
+ 
+-	timings = of_get_display_timings(display_np);
+-	if (!timings) {
+-		dev_err(dev, "failed to get display timings\n");
+-		ret = -EINVAL;
++	ret = of_get_videomode(display_np, &vm, OF_USE_NATIVE_MODE);
++	if (ret) {
++		dev_err(dev, "failed to get videomode from DT\n");
+ 		goto put_display_node;
+ 	}
+ 
+-	timings_np = of_get_child_by_name(display_np, "display-timings");
+-	if (!timings_np) {
+-		dev_err(dev, "failed to find display-timings node\n");
+-		ret = -ENODEV;
++	ret = fb_videomode_from_videomode(&vm, &fb_vm);
++	if (ret < 0)
+ 		goto put_display_node;
+-	}
+ 
+-	for (i = 0; i < of_get_child_count(timings_np); i++) {
+-		struct videomode vm;
+-		struct fb_videomode fb_vm;
+-
+-		ret = videomode_from_timings(timings, &vm, i);
+-		if (ret < 0)
+-			goto put_timings_node;
+-		ret = fb_videomode_from_videomode(&vm, &fb_vm);
+-		if (ret < 0)
+-			goto put_timings_node;
+-
+-		fb_add_videomode(&fb_vm, &info->modelist);
+-	}
+-
+-	/*
+-	 * FIXME: Make sure we are not referencing any fields in display_np
+-	 * and timings_np and drop our references to them before returning to
+-	 * avoid leaking the nodes on probe deferral and driver unbind.
+-	 */
+-
+-	return 0;
++	fb_add_videomode(&fb_vm, &info->modelist);
+ 
+-put_timings_node:
+-	of_node_put(timings_np);
+ put_display_node:
+ 	of_node_put(display_np);
+ 	return ret;
 -- 
 2.20.1
 
