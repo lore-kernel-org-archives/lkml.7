@@ -2,92 +2,145 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACFBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25652067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F742067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LlBo6dnE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vz3gQ6O1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKVSOM (ORCPT
+        id S1727090AbfKVSPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:14:12 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39555 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfKVSOL (ORCPT
+        Fri, 22 Nov 2019 13:15:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:47016 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfKVSPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:14:11 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w24so6975473otk.6;
-        Fri, 22 Nov 2019 10:14:09 -0800 (PST)
+        Fri, 22 Nov 2019 13:15:16 -0500
+Received: by mail-ot1-f68.google.com with SMTP id n23so6922810otr.13;
+        Fri, 22 Nov 2019 10:15:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=++X7xvmmEbbGpJA2CoHFS/wR4H0lmv9UHljrPukoLCs=;
-        b=LlBo6dnE/SBL3UjtBXI1U0LRnf2iqF2u+GwbIu02rlOZ264GmQRucdnvKstLp+OXaQ
-         lvvqkcrZ7rHaOcVfq6vDu6kQZyDZvYtOFstccNuWdlmpIbJHE466KhgVI4jczfopaRfD
-         7xeEqenQjKrsuT0X9C0QMcjlTRY4mMfm4bC03Mi37Ow8VpxK887gc3PnR/VaZr8FPuQA
-         2X5iyGu2kPXkq9/kgxtNmLy9MYcLrKY189DKHQZmvv8VymkqbfQNZhILjnJShjH0uCqo
-         Zz49UCFmrwmg3FhM0723V4F6avaTdX6Tp98G84OOvrLPQkXEoWEAsDyH+pKgJVyL6I3s
-         gIWg==
+        bh=ETqvKsN8Ki2d6xHH8hTbXwpsKjbO3HfYiexCJg5rHps=;
+        b=Vz3gQ6O1BkWhfRXtLHeOZ1T4j0hc4HluEkr2GeygkgSlXNXYYls21eZu5tBmUxU+b0
+         vujx+tMFlVWeq6L7c40pdigm6tdfzY+MBy430YjI91yH9k0WvHBwSELP2kByBZVikZIG
+         40FJeXLCZrR2RuSbOsQxawVgBZ8YTfm36yX6kbjcsZyB0rtBH5OcPXNQrQ2mVaIxg0jI
+         LLGoxqrDBzEvEVJ9Dn0joSrhUGIxdqivs5KIbC2/hIf5aeNpxRmeLJbE1uojbgcMDVn4
+         eIDnamhHvrUYwjVCQmhijVLTXA7429vX9v4ZKh7JuBc6nORGyuKZZmZLF8UXPIurGpzX
+         vHcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=++X7xvmmEbbGpJA2CoHFS/wR4H0lmv9UHljrPukoLCs=;
-        b=FUkdHvWj68FMZs3ZtDP4M2W798EviADMLYgHfIs05fOk92kC3Z1UfKs0A3BTyVsxH2
-         pNhc3VqtnViImaZCwQ8choQ+ju5QqwcVljSxYiG1tiXDF69IP9p1TtTAHPvaxbbGR3Bc
-         y11Fo/89PJFDzLS/efq8pPqaIvvQhZd1yaBnzqoyL2iUkOH54rryEHGe+DDSd1PwfG4s
-         q5RK1PsKALlmnW5r4G0JXY5/cevMRHc5tP1B+EmOwcPyi8QuIEO3cKiB2ejdHIuzczrk
-         ZEyRXQ0Ir1jv6+555hjpbZMGpaYqnE4C4KL16BbVPOsMrgUmhiwO5OsADjKFobNudb+e
-         U2Yw==
-X-Gm-Message-State: APjAAAV+AmOoCXa/l9AScOQQbvsMfwIGozS5fsycQkRYacYqUFUSffJs
-        AzFGd1cHvXNnlR131mwan2A=
-X-Google-Smtp-Source: APXvYqyFZ8+Mx5tmiub/FoI97kwONWv6XJKNoA1R3cCR6avi/awBqTpTmb57QPfJ2h3aE0sOfG1mQA==
-X-Received: by 2002:a05:6830:1152:: with SMTP id x18mr1316947otq.87.1574446449056;
-        Fri, 22 Nov 2019 10:14:09 -0800 (PST)
+        bh=ETqvKsN8Ki2d6xHH8hTbXwpsKjbO3HfYiexCJg5rHps=;
+        b=UMgc70suQVASnyggBLJPpliMnVrM0mh9MUyISqgcHPt+wbtN/pR9lWy6LFvobjdUHZ
+         lMzyGxnBtNuH5BLOTrHVy3f6KB4L6EevVDsMcxoJO6il1x2Nl7x/3K+mGENOBu7PiTkT
+         o4u9O5cDba47jrR4pL39ThmKdgAd0LfqXHl7lw3kMxzhnhAYtTc/ACDgg/H3031bLuCD
+         zhO5/tAtn1slKPqGMBwjLl2V6KO1U+S7lNy3byuNKwAeTR1+ZlVgG6LLdHkQ0RRaLhpI
+         IeorIDec0vN30DshDVJGMSIGgAtW3LLuK9stijX12YpCnyTWVG40etziLpscayEfGNvR
+         GILQ==
+X-Gm-Message-State: APjAAAXbfHLp9nwwq6Po9wCZDXmOlu4sihI8IxHsfoTH27XeY6uZlK2R
+        NEoNUXz+BrmnzOPb+PdFmLI=
+X-Google-Smtp-Source: APXvYqwBL0X8maNi1+glH+XvII4//7Sep1yviT3f2IJKTzhTVDnXRxb6iMDaSdRlzAFvgdA3hxqlRg==
+X-Received: by 2002:a9d:3b0:: with SMTP id f45mr4071239otf.92.1574446515684;
+        Fri, 22 Nov 2019 10:15:15 -0800 (PST)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j80sm2266842oih.49.2019.11.22.10.14.08
+        by smtp.gmail.com with ESMTPSA id e23sm2391977otk.73.2019.11.22.10.15.14
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Nov 2019 10:14:08 -0800 (PST)
-Date:   Fri, 22 Nov 2019 10:14:07 -0800
+        Fri, 22 Nov 2019 10:15:15 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:15:13 -0800
 From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 0/6] 5.3.13-stable review
-Message-ID: <20191122181407.GE13514@roeck-us.net>
-References: <20191122100320.878809004@linuxfoundation.org>
+To:     Christophe Roullier <christophe.roullier@st.com>
+Cc:     wim@linux-watchdog.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/1] drivers: watchdog: stm32_iwdg: set
+ WDOG_HW_RUNNING at probe
+Message-ID: <20191122181513.GF13514@roeck-us.net>
+References: <20191122132246.8473-1-christophe.roullier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122100320.878809004@linuxfoundation.org>
+In-Reply-To: <20191122132246.8473-1-christophe.roullier@st.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:30:02AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.13 release.
-> There are 6 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Nov 22, 2019 at 02:22:46PM +0100, Christophe Roullier wrote:
+> If the watchdog hardware is already enabled during the boot process,
+> when the Linux watchdog driver loads, it should start/reset the watchdog
+> and tell the watchdog framework. As a result, ping can be generated from
+> the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
+> until the userspace watchdog daemon takes over control
 > 
-> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> Anything received after that time might be too late.
+> Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
 > 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 390 pass: 390 fail: 0
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Guenter
+> ---
+> Changes since v2:
+> According to Guenter
+> removed intermediate variable
+> 
+> I've tested some config and it is working as expected:
+> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set + daemon watchdog in userland ON ==> No reset IWDG2
+> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set ==> Reset IWDG2
+> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
+> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
+> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE is not set ==> No reset IWDG2
+> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
+> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON ==> No reset IWDG2
+> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
+> 
+> Thanks,
+> Christophe
+> 
+>  drivers/watchdog/stm32_iwdg.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+> index a3a329011a06..25188d6bbe15 100644
+> --- a/drivers/watchdog/stm32_iwdg.c
+> +++ b/drivers/watchdog/stm32_iwdg.c
+> @@ -262,6 +262,24 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>  	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+>  	watchdog_init_timeout(wdd, 0, dev);
+>  
+> +	/*
+> +	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
+> +	 * (Means U-Boot/bootloaders leaves the watchdog running)
+> +	 * When we get here we should make a decision to prevent
+> +	 * any side effects before user space daemon will take care of it.
+> +	 * The best option, taking into consideration that there is no
+> +	 * way to read values back from hardware, is to enforce watchdog
+> +	 * being run with deterministic values.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED)) {
+> +		ret = stm32_iwdg_start(wdd);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Make sure the watchdog is serviced */
+> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +	}
+> +
+>  	ret = devm_watchdog_register_device(dev, wdd);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.17.1
+> 
