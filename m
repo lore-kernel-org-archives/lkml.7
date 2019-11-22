@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D25C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BDBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526F720715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E5C20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418936;
-	bh=PZ4mNX3BZ5ujetohvjV/4ez0wEdlzaYIfrhi0antStA=;
+	s=default; t=1574418938;
+	bh=0FGA/lGC82rofF93YqFcq8aB0jY9hs9zk6WqHjuxlvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xOLz0lFV80AgSxg5lUrZveKshPeQpVexvZi8ENtGC757lR9lrL/HTj4bAhAhqFckc
-	 hRzWio3wU/0TPY6PY9t5o+taM08hSwD9PvsD5sFVeKsRLOTQ1v0wweQYRVps9504xC
-	 WLQIBsM3RA5thwfcAYklTl03+6i/Krx0dfscCJVs=
+	b=UnYBjYQBM9OHhsx52U/YWuyQ6fIP6BJE8i1iJ36BiDa0nSIAnUz/i0rJ6C7l77D4J
+	 j/G/uf1mxxb6qgfdJYue50feG73lt+qyy/hAvrRX95aysBGu1eTUZE1aKozZHbDhcW
+	 ZiFharIL+5h/ONvTcF+Uj03LfFRaBF78xEgaDz4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfKVKfe (ORCPT
+        id S1728270AbfKVKfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33768 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:35:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbfKVKfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:35:30 -0500
+        id S1727717AbfKVKfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:35:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BDE120637;
-        Fri, 22 Nov 2019 10:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DDF220656;
+        Fri, 22 Nov 2019 10:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418930;
-        bh=PZ4mNX3BZ5ujetohvjV/4ez0wEdlzaYIfrhi0antStA=;
+        s=default; t=1574418932;
+        bh=0FGA/lGC82rofF93YqFcq8aB0jY9hs9zk6WqHjuxlvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyuXxMcYs9HQosPk+cuRs1/iHk9SUeCQcXWtdR2H3eiQtUhhlUAVzHCbQ3PEiHptC
-         8g/EMem0hQe+h5iTYgHFmPgXLCOEkjv1uAL5p3O8YsZaNohF+Q0uoViBHipV1uATPx
-         rXQStn2JpyKS94r+1D98ezm0KEwEngaZjGftM0Dc=
+        b=zrTrU1IVjhH0ZRb3QkEs+1ss1/FDMmhKcvIGW/I/M1w5CrIJNgpEL+oYXS6k4PfdH
+         V1BpjQBTVErmX0R8Mct2UlxIwG901AIMY2c+bez1VEIivaZh5Pq2P0vk/YPUWRJ/8D
+         Sb33SInPkDys2pPNKle5ssTkbVcUBAcbZhFCpWwY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 100/159] net: cdc_ncm: Signedness bug in cdc_ncm_set_dgram_size()
-Date:   Fri, 22 Nov 2019 11:28:11 +0100
-Message-Id: <20191122100820.277001861@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jari Ruusu <jari.ruusu@gmail.com>
+Subject: [PATCH 4.4 101/159] x86/atomic: Fix smp_mb__{before,after}_atomic()
+Date:   Fri, 22 Nov 2019 11:28:12 +0100
+Message-Id: <20191122100821.012496305@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,35 +63,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit a56dcc6b455830776899ce3686735f1172e12243 upstream.
+commit 69d927bba39517d0980462efc051875b7f4db185 upstream.
 
-This code is supposed to test for negative error codes and partial
-reads, but because sizeof() is size_t (unsigned) type then negative
-error codes are type promoted to high positive values and the condition
-doesn't work as expected.
+Recent probing at the Linux Kernel Memory Model uncovered a
+'surprise'. Strongly ordered architectures where the atomic RmW
+primitive implies full memory ordering and
+smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
+fail for:
 
-Fixes: 332f989a3b00 ("CDC-NCM: handle incomplete transfer of MTU")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+	*x = 1;
+	atomic_inc(u);
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Because, while the atomic_inc() implies memory order, it
+(surprisingly) does not provide a compiler barrier. This then allows
+the compiler to re-order like so:
+
+	atomic_inc(u);
+	*x = 1;
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Which the CPU is then allowed to re-order (under TSO rules) like:
+
+	atomic_inc(u);
+	r0 = *y;
+	*x = 1;
+
+And this very much was not intended. Therefore strengthen the atomic
+RmW ops to include a compiler barrier.
+
+NOTE: atomic_{or,and,xor} and the bitops already had the compiler
+barrier.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/usb/cdc_ncm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/atomic.h      |    8 ++++----
+ arch/x86/include/asm/atomic64_64.h |    8 ++++----
+ arch/x86/include/asm/barrier.h     |    4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/net/usb/cdc_ncm.c
-+++ b/drivers/net/usb/cdc_ncm.c
-@@ -534,7 +534,7 @@ static void cdc_ncm_set_dgram_size(struc
- 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
- 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
- 			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
--	if (err < sizeof(max_datagram_size)) {
-+	if (err != sizeof(max_datagram_size)) {
- 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
- 		goto out;
- 	}
+--- a/arch/x86/include/asm/atomic.h
++++ b/arch/x86/include/asm/atomic.h
+@@ -49,7 +49,7 @@ static __always_inline void atomic_add(i
+ {
+ 	asm volatile(LOCK_PREFIX "addl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
+ 
+ /**
+@@ -63,7 +63,7 @@ static __always_inline void atomic_sub(i
+ {
+ 	asm volatile(LOCK_PREFIX "subl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
+ 
+ /**
+@@ -89,7 +89,7 @@ static __always_inline int atomic_sub_an
+ static __always_inline void atomic_inc(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "incl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ 
+ /**
+@@ -101,7 +101,7 @@ static __always_inline void atomic_inc(a
+ static __always_inline void atomic_dec(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "decl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ 
+ /**
+--- a/arch/x86/include/asm/atomic64_64.h
++++ b/arch/x86/include/asm/atomic64_64.h
+@@ -44,7 +44,7 @@ static __always_inline void atomic64_add
+ {
+ 	asm volatile(LOCK_PREFIX "addq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -58,7 +58,7 @@ static inline void atomic64_sub(long i,
+ {
+ 	asm volatile(LOCK_PREFIX "subq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -85,7 +85,7 @@ static __always_inline void atomic64_inc
+ {
+ 	asm volatile(LOCK_PREFIX "incq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -98,7 +98,7 @@ static __always_inline void atomic64_dec
+ {
+ 	asm volatile(LOCK_PREFIX "decq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ 
+ /**
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -116,7 +116,7 @@ do {									\
+ #endif
+ 
+ /* Atomic operations are already serializing on x86 */
+-#define smp_mb__before_atomic()	barrier()
+-#define smp_mb__after_atomic()	barrier()
++#define smp_mb__before_atomic()	do { } while (0)
++#define smp_mb__after_atomic()	do { } while (0)
+ 
+ #endif /* _ASM_X86_BARRIER_H */
 
 
