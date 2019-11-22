@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8FEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F237EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1E220715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4BF2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419628;
-	bh=vTpcVYcvxzR34taHLSLfCiRR7n/iUpgwaOY9lPqklpo=;
+	s=default; t=1574419632;
+	bh=0lcDox0pzW+j0DkcAwN8jvU/lx22Ypx2/yL4h5meA2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TixzEOR0x1KwhXqi3VO9X2BgvS1jjkx/wmyX7O9Uf08dH2XzqaIxJsGxtDPmaJ23X
-	 Xt5qtsO/J4XL8ACJJnH0cA28DyCs/fAVPzd3OoVWHGZ3k0VoFWPwGtggA3DdGjOmEt
-	 l0AuqyvvmbUZsTMCzV3SIHKbwYZkXuXWgZeSPj1w=
+	b=puARdTUTzeQJPJA+SOP748yfgT5SKklVK9txBzkwsGA+VPv42JJ3n45iyw6TFXDZq
+	 tKToTeQX9+5Wi8E2aGIRqlM/4pYZMa2LE+x9IkrVJVAUutKdbFDntsbdS1lA4RQ3Yy
+	 SBe+4PXtvb3wnv4+dJTzPb5uJE2N7fudU1lkYR2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbfKVKrH (ORCPT
+        id S1729301AbfKVKrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:47:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54756 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:47:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbfKVKrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:04 -0500
+        id S1729738AbfKVKrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B02120715;
-        Fri, 22 Nov 2019 10:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27CC720637;
+        Fri, 22 Nov 2019 10:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419624;
-        bh=vTpcVYcvxzR34taHLSLfCiRR7n/iUpgwaOY9lPqklpo=;
+        s=default; t=1574419626;
+        bh=0lcDox0pzW+j0DkcAwN8jvU/lx22Ypx2/yL4h5meA2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CCVgegrbOUSZ+5GzInwXTETyr67GYutns8yL0MeDRyUF0atGX59q/0OqhAXHhqNJk
-         jrnvd3jU6ybXqGNCMZPE+VhCeXqWA0ykV2sUmnnFGzCeNLjxPvAWnay7UumXwCd2Hm
-         Jj8VUQjdRi1EAlAlOJmzBdfcxJslVae79hMer10c=
+        b=OrxK6QouQMVtccrSz7NT6yrgzpafdVX3dx69OaxrTRtCtym2dXFrNazImINIzNInL
+         9e/vGocx6ri1H5Gr3a8nU0JlXHrrCp+MpAjIo33rjh6AJiocj724Loqx/IG9tYzRyI
+         PjhQXuYMmw7XFaBs0NR8PXpLuc83Ei1Y85mCHlNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 177/222] IB/mlx4: Avoid implicit enumerated type conversion
-Date:   Fri, 22 Nov 2019 11:28:37 +0100
-Message-Id: <20191122100915.205859072@linuxfoundation.org>
+Subject: [PATCH 4.9 178/222] ACPICA: Never run _REG on system_memory and system_IO
+Date:   Fri, 22 Nov 2019 11:28:38 +0100
+Message-Id: <20191122100915.272238040@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,49 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Bob Moore <robert.moore@intel.com>
 
-[ Upstream commit b56511c15713ba6c7572e77a41f7ddba9c1053ec ]
+[ Upstream commit 8b1cafdcb4b75c5027c52f1e82b47ebe727ad7ed ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+These address spaces are defined by the ACPI spec to be
+"always available", and thus _REG should never be run on them.
+Provides compatibility with other ACPI implementations.
 
-drivers/infiniband/hw/mlx4/mad.c:1811:41: warning: implicit conversion
-from enumeration type 'enum mlx4_ib_qp_flags' to different enumeration
-type 'enum ib_qp_create_flags' [-Wenum-conversion]
-                qp_init_attr.init_attr.create_flags = MLX4_IB_SRIOV_TUNNEL_QP;
-                                                    ~ ^~~~~~~~~~~~~~~~~~~~~~~
-
-drivers/infiniband/hw/mlx4/mad.c:1819:41: warning: implicit conversion
-from enumeration type 'enum mlx4_ib_qp_flags' to different enumeration
-type 'enum ib_qp_create_flags' [-Wenum-conversion]
-                qp_init_attr.init_attr.create_flags = MLX4_IB_SRIOV_SQP;
-                                                    ~ ^~~~~~~~~~~~~~~~~
-
-The type mlx4_ib_qp_flags explicitly provides supplemental values to the
-type ib_qp_create_flags. Make that clear to Clang by changing the
-create_flags type to u32.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpica/acevents.h |  2 ++
+ drivers/acpi/acpica/aclocal.h  |  2 +-
+ drivers/acpi/acpica/evregion.c | 17 +++++++++++++++--
+ drivers/acpi/acpica/evrgnini.c |  6 +-----
+ drivers/acpi/acpica/evxfregn.c |  1 -
+ 5 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 0638b8aeba34d..1d9c701b1c7b3 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1026,7 +1026,7 @@ struct ib_qp_init_attr {
- 	struct ib_qp_cap	cap;
- 	enum ib_sig_type	sq_sig_type;
- 	enum ib_qp_type		qp_type;
--	enum ib_qp_create_flags	create_flags;
-+	u32			create_flags;
+diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
+index 92fa47c6498cd..20fd17aaa9189 100644
+--- a/drivers/acpi/acpica/acevents.h
++++ b/drivers/acpi/acpica/acevents.h
+@@ -247,6 +247,8 @@ acpi_status
+ acpi_ev_initialize_region(union acpi_operand_object *region_obj,
+ 			  u8 acpi_ns_locked);
+ 
++u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
++
+ /*
+  * evsci - SCI (System Control Interrupt) handling/dispatch
+  */
+diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
+index dff1207a60788..219bc576d1270 100644
+--- a/drivers/acpi/acpica/aclocal.h
++++ b/drivers/acpi/acpica/aclocal.h
+@@ -428,9 +428,9 @@ struct acpi_simple_repair_info {
+ /* Info for running the _REG methods */
+ 
+ struct acpi_reg_walk_info {
+-	acpi_adr_space_type space_id;
+ 	u32 function;
+ 	u32 reg_run_count;
++	acpi_adr_space_type space_id;
+ };
+ 
+ /*****************************************************************************
+diff --git a/drivers/acpi/acpica/evregion.c b/drivers/acpi/acpica/evregion.c
+index 4c6f795140402..9cb60fdc77e50 100644
+--- a/drivers/acpi/acpica/evregion.c
++++ b/drivers/acpi/acpica/evregion.c
+@@ -677,6 +677,19 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
+ 
+ 	ACPI_FUNCTION_TRACE(ev_execute_reg_methods);
+ 
++	/*
++	 * These address spaces do not need a call to _REG, since the ACPI
++	 * specification defines them as: "must always be accessible". Since
++	 * they never change state (never become unavailable), no need to ever
++	 * call _REG on them. Also, a data_table is not a "real" address space,
++	 * so do not call _REG. September 2018.
++	 */
++	if ((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) ||
++	    (space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
++	    (space_id == ACPI_ADR_SPACE_DATA_TABLE)) {
++		return_VOID;
++	}
++
+ 	info.space_id = space_id;
+ 	info.function = function;
+ 	info.reg_run_count = 0;
+@@ -738,8 +751,8 @@ acpi_ev_reg_run(acpi_handle obj_handle,
+ 	}
  
  	/*
- 	 * Only needed for special QP types, or when using the RW API.
+-	 * We only care about regions.and objects that are allowed to have address
+-	 * space handlers
++	 * We only care about regions and objects that are allowed to have
++	 * address space handlers
+ 	 */
+ 	if ((node->type != ACPI_TYPE_REGION) && (node != acpi_gbl_root_node)) {
+ 		return (AE_OK);
+diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
+index 75ddd160a716f..c8646c3977865 100644
+--- a/drivers/acpi/acpica/evrgnini.c
++++ b/drivers/acpi/acpica/evrgnini.c
+@@ -50,9 +50,6 @@
+ #define _COMPONENT          ACPI_EVENTS
+ ACPI_MODULE_NAME("evrgnini")
+ 
+-/* Local prototypes */
+-static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
+-
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_ev_system_memory_region_setup
+@@ -67,7 +64,6 @@ static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
+  * DESCRIPTION: Setup a system_memory operation region
+  *
+  ******************************************************************************/
+-
+ acpi_status
+ acpi_ev_system_memory_region_setup(acpi_handle handle,
+ 				   u32 function,
+@@ -347,7 +343,7 @@ acpi_ev_pci_config_region_setup(acpi_handle handle,
+  *
+  ******************************************************************************/
+ 
+-static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
++u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
+ {
+ 	acpi_status status;
+ 	struct acpi_pnp_device_id *hid;
+diff --git a/drivers/acpi/acpica/evxfregn.c b/drivers/acpi/acpica/evxfregn.c
+index d2743067126af..f87d59a05c681 100644
+--- a/drivers/acpi/acpica/evxfregn.c
++++ b/drivers/acpi/acpica/evxfregn.c
+@@ -227,7 +227,6 @@ acpi_remove_address_space_handler(acpi_handle device,
+ 				 */
+ 				region_obj =
+ 				    handler_obj->address_space.region_list;
+-
+ 			}
+ 
+ 			/* Remove this Handler object from the list */
 -- 
 2.20.1
 
