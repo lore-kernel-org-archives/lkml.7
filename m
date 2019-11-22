@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311FC20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138C520840
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402262;
-	bh=/cepJ60ECB47VYqqRBNMGpJeFX5CEY5bxz87y5OpgDY=;
+	s=default; t=1574402267;
+	bh=q/nXUueN+PhY2qiBQi4R8Z9iq0FW4Qo7pZkcszenzB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OA8sU46xjB8EU5Vx+/GLYNVmVllQP76NdPvMQggtoTwk0S0VT+BPfAfIGCRiRYFXB
-	 YZTp50+Y4rmytqVbs2OFeCazvWOf6WIQEE9tC8wIX51r4v0SpOt/slOv87OnZa/pWd
-	 cqQvaawLJe85tyHJpL+17jeTJqMFdvtIIt5vnnwo=
+	b=PPgUccc63odO9DPVprU08QleFu1B1tzTalJEUlQqi+lHNEbaqcwMIas0eXPSGj9kN
+	 E8QHeqFFF8hdEGS+Qu58L2vESUuioKOsDC9lQpyJhpGnATQvh6YSZFohzLGW/ZjzYY
+	 5qxTkVIix2jtVueQQRQ3pgPR8i66kb/ENvInwT3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfKVF5k (ORCPT
+        id S1729519AbfKVF5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729448AbfKVF5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:30 -0500
+        id S1729458AbfKVF5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794EF2071F;
-        Fri, 22 Nov 2019 05:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAEF20731;
+        Fri, 22 Nov 2019 05:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402249;
-        bh=/cepJ60ECB47VYqqRBNMGpJeFX5CEY5bxz87y5OpgDY=;
+        s=default; t=1574402253;
+        bh=q/nXUueN+PhY2qiBQi4R8Z9iq0FW4Qo7pZkcszenzB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEm7cMQlzoPboMQAx3tFq6Gu0A3oZ7ba+Ca0eQyhUcwCVbpHFwTgzW645aFngCAeA
-         RD2Hh814FJAifAOy2vo0UhZH98UHT5/co7SYIPij/ABHI0cQ1q0oYU/m21ZIzPESLs
-         FmzYWHFGK73W7oCjJu1yxrtV9vzhMjlLRozU7Kdg=
+        b=QjdHVcS1Np72Bd+fVIUQafMA6yIIjHzigrNBZSr8yFqNKuxT8rlBQtg6kd68XSWLc
+         cO0CkBMp0eOiljq0qUoCTR8p/HjI98Rj2mh+PoiFK9KHICvBxh+u4r7jmgLYA2iVoC
+         TSONfV9thI3WqDcUdS0bycB9LWMGtxc8vUAnIdnk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
+Cc:     Yi Wang <wang.yi59@zte.com.cn>, Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 092/127] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
-Date:   Fri, 22 Nov 2019 00:55:10 -0500
-Message-Id: <20191122055544.3299-91-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 095/127] fork: fix some -Wmissing-prototypes warnings
+Date:   Fri, 22 Nov 2019 00:55:13 -0500
+Message-Id: <20191122055544.3299-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -63,75 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richard.weiyang@gmail.com>
+From: Yi Wang <wang.yi59@zte.com.cn>
 
-[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
+[ Upstream commit fb5bf31722d0805a3f394f7d59f2e8cd07acccb7 ]
 
-Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
-fail zone_reclaim() as full") changed the return value of
-node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
-after this commit.
+We get a warning when building kernel with W=1:
 
-While the return value of node_reclaim() when CONFIG_NUMA is n is not
-changed.  This will leads to call zone_watermark_ok() again.
+  kernel/fork.c:167:13: warning: no previous prototype for `arch_release_thread_stack' [-Wmissing-prototypes]
+  kernel/fork.c:779:13: warning: no previous prototype for `fork_init' [-Wmissing-prototypes]
 
-This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
-Since node_reclaim() is only called in page_alloc.c, move it to
-mm/internal.h.
+Add the missing declaration in head file to fix this.
 
-Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Also, remove arch_release_thread_stack() completely because no arch
+seems to implement it since bb9d81264 (arch: remove tile port).
+
+Link: http://lkml.kernel.org/r/1542170087-23645-1-git-send-email-wang.yi59@zte.com.cn
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h |  6 ------
- mm/internal.h        | 10 ++++++++++
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ include/linux/sched/task.h | 2 ++
+ init/main.c                | 1 -
+ kernel/fork.c              | 5 -----
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index e643866912b70..411953964c345 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -363,14 +363,8 @@ extern unsigned long vm_total_pages;
- extern int node_reclaim_mode;
- extern int sysctl_min_unmapped_ratio;
- extern int sysctl_min_slab_ratio;
--extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
- #else
- #define node_reclaim_mode 0
--static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
--				unsigned int order)
--{
--	return 0;
--}
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index a74ec619ac510..11b4fba82950f 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -39,6 +39,8 @@ void __noreturn do_task_dead(void);
+ 
+ extern void proc_caches_init(void);
+ 
++extern void fork_init(void);
++
+ extern void release_task(struct task_struct * p);
+ 
+ #ifdef CONFIG_HAVE_COPY_THREAD_TLS
+diff --git a/init/main.c b/init/main.c
+index 51067e2db509d..b1ab36fe1a55c 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -98,7 +98,6 @@
+ static int kernel_init(void *);
+ 
+ extern void init_IRQ(void);
+-extern void fork_init(void);
+ extern void radix_tree_init(void);
+ 
+ /*
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 3352fdbd5e20d..3d9d6a28e21d9 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -162,10 +162,6 @@ static inline void free_task_struct(struct task_struct *tsk)
+ }
  #endif
  
- extern int page_evictable(struct page *page);
-diff --git a/mm/internal.h b/mm/internal.h
-index 1df011f624801..a182506242c43 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -455,6 +455,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
- #define NODE_RECLAIM_SOME	0
- #define NODE_RECLAIM_SUCCESS	1
+-void __weak arch_release_thread_stack(unsigned long *stack)
+-{
+-}
+-
+ #ifndef CONFIG_ARCH_THREAD_STACK_ALLOCATOR
  
-+#ifdef CONFIG_NUMA
-+extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
-+#else
-+static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
-+				unsigned int order)
-+{
-+	return NODE_RECLAIM_NOSCAN;
-+}
-+#endif
-+
- extern int hwpoison_filter(struct page *p);
+ /*
+@@ -348,7 +344,6 @@ static void release_task_stack(struct task_struct *tsk)
+ 		return;  /* Better to leak the stack than to free prematurely */
  
- extern u32 hwpoison_filter_dev_major;
+ 	account_kernel_stack(tsk, -1);
+-	arch_release_thread_stack(tsk->stack);
+ 	free_thread_stack(tsk);
+ 	tsk->stack = NULL;
+ #ifdef CONFIG_VMAP_STACK
 -- 
 2.20.1
 
