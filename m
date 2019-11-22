@@ -2,150 +2,120 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39798C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3D0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B07720718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCA520718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwMro+DW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ARM5VetO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfKVNUN (ORCPT
+        id S1727919AbfKVNUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:20:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33989 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKVNUM (ORCPT
+        Fri, 22 Nov 2019 08:20:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36587 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726548AbfKVNUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:20:12 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so8640071wrr.1;
-        Fri, 22 Nov 2019 05:20:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6sg6rDS5zsmnONV3JVTno5+5UKGIXJNaE0e1hOOttVA=;
-        b=LwMro+DWviHvcawXAIPhdJi5PSeHe95tuxMmk4eMaDwhHeli14vHK63rrBLaytZBX4
-         gaSOx7PJ3CGfHdepQUlIq3YTfnqBQOzl+iT4n0q/aBWAeOUJpLc0clmfZ7HK/j6OK/N+
-         pe/SrMQuc5TA4FWwm/mEBbHxIXRc+0H6ENtlw3uqXJw9RA8i0By7ESmIVWmxQKJixodi
-         pDSUWqfK3QeRlK45U4Zzm18W1zZ1bN6spDNvo5Dihj5gbZrw9cktKqKRaUaMw7iETrJL
-         nJ/K8N5R4ZvmyvqZ6GvAC9dqrOZg8uVAPAYpPEFV3HYzGjeIrzXp3uvwj8VLaDhtDiLp
-         sIUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6sg6rDS5zsmnONV3JVTno5+5UKGIXJNaE0e1hOOttVA=;
-        b=d1i9chdBrQ6JVKmCQxVYT8XdkEDMZO61kBL9Ju3hOkzYuwmW/mPTj6tpkgpVj/jDli
-         fsH/wwfn/c7SggyGOLRZy2cJ6Rmr9xsbwnkd1QIrE2GQJQ11VeN1+IwjRcZWkoa714+M
-         3yjVtfiU9qm/9vS5Jj9H/SAi/9Y2PtTMygJp5w6fjniueOQvTGk0caG3rZKW96cAC5ws
-         7z3n/K55c38hzsOCuW5vMuzw0huz4hcdh8h6FY6GR/z+Fx/7v5hddMu9g5K4Gf+eGj9F
-         llszNb6DpLd5rHjN3uv5mT8q6XfDF3sdMKUTzb7XewTOd/OfcuFP94/h15pem2qMudfx
-         wHrA==
-X-Gm-Message-State: APjAAAV+gKpApOAQWoHO5rrUlb+W5ajHKv/iN2fVnJc2CFBfzFCeU7Gp
-        wDe9r2xz+xsdehqPkKFoSCU=
-X-Google-Smtp-Source: APXvYqzrCqSjrtUVRHlaOa9Gk4HuJFCQ1LF9bmXEW4d7Zmwj4NkDmsR4lDd8rOe+2g7t/R+8gHhFoQ==
-X-Received: by 2002:adf:dd10:: with SMTP id a16mr18371366wrm.213.1574428810111;
-        Fri, 22 Nov 2019 05:20:10 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id 16sm3808746wmf.0.2019.11.22.05.20.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 05:20:08 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:20:07 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 5/6] arm64: tegra: Enable GPIO controllers nodes for
- P2972-0000 platform
-Message-ID: <20191122132007.GC1315704@ulmo>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-6-vidyas@nvidia.com>
+        Fri, 22 Nov 2019 08:20:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574428842;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TcpMO7N5Av7TXp8MXIEndacd5hJ7I/V4hiUn3Vf4UDs=;
+        b=ARM5VetOd1nxc6Pf/whHhMs5KQ0vJM8pVXX7kv9LBbbZBHbCIMxz1CJ3YLK1TdWVe8dsIX
+        Qces3D76rE3A2kPxmbUZJj653Dq/pz/3nKpyAooBU7Im5JHhLqhf/HCg7oxR2YtsEYRFkR
+        l3xE0vjeZlwlPwz2DxcF8lJ21XM/ZZc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-9I8s34nrO3iYDcaehz-16A-1; Fri, 22 Nov 2019 08:20:41 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD97D800054;
+        Fri, 22 Nov 2019 13:20:39 +0000 (UTC)
+Received: from krava (unknown [10.40.205.117])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8491028DFD;
+        Fri, 22 Nov 2019 13:20:37 +0000 (UTC)
+Date:   Fri, 22 Nov 2019 14:20:35 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/3] perf mmap: declare type for cpu mask of arbitrary
+ length
+Message-ID: <20191122131513.GE17308@krava>
+References: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
+ <0c716b33-a91e-2972-637f-e7c3a187fa77@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
+In-Reply-To: <0c716b33-a91e-2972-637f-e7c3a187fa77@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 9I8s34nrO3iYDcaehz-16A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191122104505.8986-6-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---nmemrqcdn5VTmUEE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Nov 22, 2019 at 04:15:04PM +0530, Vidya Sagar wrote:
-> Enable GPIO controllers nodes for P2972-0000 platform which are required
-> by other controllers in the SoC for example when PCIe C5 controller
-> operates in endpoint mode.
+On Wed, Nov 20, 2019 at 12:37:48PM +0300, Alexey Budankov wrote:
 >=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Declare a dedicated struct map_cpu_mask type for cpu masks of=20
+> arbitrary length. Mask is available thru bits pointer and the=20
+> mask length is kept in nbits field. mmap_cpu_mask_bytes() macro=20
+> returns mask storage size in bytes.
+>=20
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
-
-The GPIO controllers are enabled by default, so there's no need to
-explicitly enable them.
-
-Thierry
-
+>  tools/perf/util/mmap.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
-m64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index 353a6a22196d..7eb64b816e08 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -37,6 +37,14 @@
->  			status =3D "okay";
->  		};
+> diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+> index bee4e83f7109..a218a0eb1466 100644
+> --- a/tools/perf/util/mmap.h
+> +++ b/tools/perf/util/mmap.h
+> @@ -15,6 +15,15 @@
+>  #include "event.h"
 > =20
-> +		gpio@2200000 {
-> +			status =3D "okay";
-> +		};
+>  struct aiocb;
 > +
-> +		gpio@c2f0000 {
-> +			status =3D "okay";
-> +		};
+> +struct mmap_cpu_mask {
+> +=09unsigned long *bits;
+> +=09size_t nbits;
+> +};
 > +
->  		pwm@c340000 {
->  			status =3D "okay";
->  		};
+> +#define mmap_cpu_mask_bytes(m) \
+
+we try to have all macros upper case
+
+> +=09(BITS_TO_LONGS(((struct mmap_cpu_mask *)m)->nbits) * sizeof(unsigned =
+long))
+
+we have BITS_TO_BYTES
+
+thanks,
+jirka
+
+> +
+>  /**
+>   * struct mmap - perf's ring buffer mmap details
+>   *
 > --=20
-> 2.17.1
+> 2.20.1
 >=20
 
---nmemrqcdn5VTmUEE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3X4IcACgkQ3SOs138+
-s6FpAQ/+JotZz8/2JN3IdtE0k+8HWLGaEx1OOv0qlI9Im7TRT6KIdSgkmlOjyWc8
-3JJ8fSte/65M3AqAJl+321hN4dhmnh4VDxHXfKsmx3q5PaZr02AByCD8sCNqkpt2
-/mDeVZ8rwWhtGOA3L20pPbRLeEKNlhzWPX02saLkTSH2eL34fHu/eg1YZAeW9Cu8
-oNg3i/2aqHKoyMoUvXE9MlrbibcGQAB3ZL9samNeotzBYF0r/jUTPVe/8Hb/M8+l
-9VFAHuw8Rv5VQCiHkiwtBZccd40PXeNISeGsrIuDPYY2MY8qmJncvYYqJLtsILyg
-R2bztDz4+5F77NLP92ktl6AXfO6pR0bG+PYMMauh95yxtJ9it5I51LKXTOXSxXCy
-fBmzIyR4rWYMtZE8TH8bahyR0nScsIFUlYT74w4CRchW5j4OEd/AhV/CECdPVOU0
-j9ANfV1g+OCPx/J3NOSxmIJDrDIjOwKqNCofb1ijc11kVketJ1ubmObS8bgu3oLV
-uE32RVxblix0IT0geVDMDP4r4z7nDNE6PmCptvhtyiVmtdSWKoMLod1nxZ7qGbT2
-BrEEozE/f/kNpQvLDp1uhCdtkgOi+hxqPze6p5FJhrJJ1ftzB+mdinqgOU9Jm8yQ
-En+CE7rFd5SFf2RRD/5r+bb93b8DBwNYbh1B0AGjT5EpTqi2Qbg=
-=kby4
------END PGP SIGNATURE-----
-
---nmemrqcdn5VTmUEE--
