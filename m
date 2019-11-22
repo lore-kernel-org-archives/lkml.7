@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABFBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F204FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921E72070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09B42075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420707;
-	bh=CISu5P/jMUfzxYshfYe9HfhmQSco0Rm52SQyQxCrb00=;
+	s=default; t=1574420713;
+	bh=0KIFf+yZ8C/VuVjVmiu3e3orCWGVm8Ohdi7wNMRPvMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKoQCTW13CxvfG5o8uOdpVpEFdCdPhwcmp+msee9xOSi6ySBOFFkaV6XXdClkB6A5
-	 36me9M15L/n4Blf/ek25KHVp4ukxYmp1TjuBcOeqCPUAcY+U+/1bsuiS8CKOCE9yiE
-	 bM6B5nR53ypHLyhVDE+67vQ40u2beoRxbqnfRjVk=
+	b=VUbdk0vxirntLIEUnZPpD6ypGrFe0f9JR9WpmEcki4HJoiFI8RbauuV2L5YlIDx/K
+	 MCIKla/WOtWhwie5yENX9HubjdQB9rV7j+nmmj2QVy44EGg6LvXA7CPizE2/vVPsX3
+	 VvstmqH5UyRpixXrxYRGB26oTFlN8zWt5IoISfCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731655AbfKVLFG (ORCPT
+        id S1731674AbfKVLFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:05:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60508 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:05:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731281AbfKVLFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:05:03 -0500
+        id S1731656AbfKVLFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 947D02075E;
-        Fri, 22 Nov 2019 11:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E8B2075E;
+        Fri, 22 Nov 2019 11:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420703;
-        bh=CISu5P/jMUfzxYshfYe9HfhmQSco0Rm52SQyQxCrb00=;
+        s=default; t=1574420708;
+        bh=0KIFf+yZ8C/VuVjVmiu3e3orCWGVm8Ohdi7wNMRPvMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXrttcLWCi8aFEbfmM786mInEo9iwyacALsTm0BSI8QYPpXvgjst0hKgcS3nXThqC
-         WAgEXAX+mZXBKlsvON6OLQGqNHaBTdKP2yqI1kPaAgvU8zRf51D0y/OUEHXMeLfY78
-         xudwUkLt4N11XcnaZmrqd6FVnjAp49m9kNT+kEeY=
+        b=j+lDfLKjZNu8oZgeUlo6gCn8LUc55+YiI8YimvaWktBXr44C6os4AI/viZ7K9BDPg
+         zPMvBqFS66EcZDk+8/w4m5hmhO0GRqDEgxaV8gDPPhxovo+b3+/gX0p/jniIhaIfo0
+         hORxcf2fXQAIAeoy4cm+5ecEP2yDZ6ML7U5XcCfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lianbo Jiang <lijiang@redhat.com>,
-        Borislav Petkov <bp@suse.de>, x86@kernel.org,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Ching Huang <ching2048@areca.com.tw>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 170/220] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
-Date:   Fri, 22 Nov 2019 11:28:55 +0100
-Message-Id: <20191122100925.051133866@linuxfoundation.org>
+Subject: [PATCH 4.19 198/220] scsi: arcmsr: clean up clang warning on extraneous parentheses
+Date:   Fri, 22 Nov 2019 11:29:23 +0100
+Message-Id: <20191122100928.204102618@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,47 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
+[ Upstream commit ca2ade24157693b4e533ccec69df00ef719d4aad ]
 
-Lianbo reported a build error with a particular 32-bit config, see Link
-below for details.
+There are extraneous parantheses that are causing clang to produce a
+warning so remove these.
 
-Provide a weak copy_oldmem_page_encrypted() function which architectures
-can override, in the same manner other functionality in that file is
-supplied.
+Clean up 3 clang warnings:
+equality comparison with extraneous parentheses [-Wparentheses-equality]
 
-Reported-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: x86@kernel.org
-Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Ching Huang <ching2048@areca.com.tw>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/vmcore.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/scsi/arcmsr/arcmsr_hba.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index cbde728f8ac60..5c5f161763c8c 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -176,6 +176,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 	return remap_pfn_range(vma, from, pfn, size, prot);
- }
- 
-+/*
-+ * Architectures which support memory encryption override this.
-+ */
-+ssize_t __weak
-+copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+			   unsigned long offset, int userbuf)
-+{
-+	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
-+}
-+
- /*
-  * Copy to either kernel or user space
-  */
+diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
+index 12316ef4c8931..c75d4695f9828 100644
+--- a/drivers/scsi/arcmsr/arcmsr_hba.c
++++ b/drivers/scsi/arcmsr/arcmsr_hba.c
+@@ -4135,9 +4135,9 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
+ 		pci_read_config_byte(acb->pdev, i, &value[i]);
+ 	}
+ 	/* hardware reset signal */
+-	if ((acb->dev_id == 0x1680)) {
++	if (acb->dev_id == 0x1680) {
+ 		writel(ARCMSR_ARC1680_BUS_RESET, &pmuA->reserved1[0]);
+-	} else if ((acb->dev_id == 0x1880)) {
++	} else if (acb->dev_id == 0x1880) {
+ 		do {
+ 			count++;
+ 			writel(0xF, &pmuC->write_sequence);
+@@ -4161,7 +4161,7 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
+ 		} while (((readl(&pmuE->host_diagnostic_3xxx) &
+ 			ARCMSR_ARC1884_DiagWrite_ENABLE) == 0) && (count < 5));
+ 		writel(ARCMSR_ARC188X_RESET_ADAPTER, &pmuE->host_diagnostic_3xxx);
+-	} else if ((acb->dev_id == 0x1214)) {
++	} else if (acb->dev_id == 0x1214) {
+ 		writel(0x20, pmuD->reset_request);
+ 	} else {
+ 		pci_write_config_byte(acb->pdev, 0x84, 0x20);
 -- 
 2.20.1
 
