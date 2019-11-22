@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9823AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C654DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7286920674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99EB620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404152;
-	bh=WxhQkwHJIFJqmiQcam91kuSyvW8HP7Zb7M0NPoHGyNg=;
+	s=default; t=1574404157;
+	bh=VnSpNutR+HYM6dXHXuOieaAsfuez/ZwHMECRQRp7HeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JU3FS0t/fRmjIiggZtksl03LIM4q+i5849IrqRWuW1L9RJUa+LnaRZMpi9ncGGf0A
-	 iGyuKR6+WABZrBqMhkDH9yTs3r2bLWbyr4vgkmO4uOFl2A18rjtpsByQPALLyjalFB
-	 225HK6HcvcWoeB1KcM4GjSV6nQS72qGKY3TkcV10=
+	b=HaiOgOfvR6tc14Hl2LUKf1IwSwfDdLrGwSUv4eA3OdXbdmYYXjAA2j3vqJab57GPb
+	 Z16leS4XeR9fjTwKd3js25XdwShx8X5qtEwsBJG/1euaA1QRPHIMQGZmO1fDMOn2Vk
+	 K14oBGDBWg1b7Iyhz0v1EOI8nYHnSCwdOuOM6abU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfKVFuD (ORCPT
+        id S1729033AbfKVG3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54250 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:29:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727356AbfKVFty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:54 -0500
+        id S1727322AbfKVFuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A5842068F;
-        Fri, 22 Nov 2019 05:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B37E20718;
+        Fri, 22 Nov 2019 05:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401794;
-        bh=WxhQkwHJIFJqmiQcam91kuSyvW8HP7Zb7M0NPoHGyNg=;
+        s=default; t=1574401800;
+        bh=VnSpNutR+HYM6dXHXuOieaAsfuez/ZwHMECRQRp7HeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dckV56jpcE//8u+3l5nSQZtyoeT5CHOdkrM06c/ScAGQcQobNu4ZETxPsPY4suDSI
-         coLm8AVhpwiObYwWg9pr0H0MVAG/Gkqa2VMik05YtNlsjMqYxcqedGBBPuC5qLJKB2
-         NpTX7405+8vZ1W4kx7jH0wmuNtVsmyNvEcnOF34Q=
+        b=S6hdi8XJtw6a8vHR7hsb22TPejm6r3YqxucCGlcbxFgoWKHVmuPAkpoEDAxOZdgEH
+         XRA6BMULnJSwY5LXZiPb2v6uWyN3uzVOP2B0tx+3Gx9DXzYs9bWfImvmaDHt6bEaGn
+         J1aDOTbaRCjpgjc/xp72uah3ODPf/e5+gWR+iJak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 041/219] s390/zcrypt: make sysfs reset attribute trigger queue reset
-Date:   Fri, 22 Nov 2019 00:46:13 -0500
-Message-Id: <20191122054911.1750-34-sashal@kernel.org>
+Cc:     Wright Feng <wright.feng@cypress.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 046/219] brcmfmac: set F2 watermark to 256 for 4373
+Date:   Fri, 22 Nov 2019 00:46:18 -0500
+Message-Id: <20191122054911.1750-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,73 +64,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Wright Feng <wright.feng@cypress.com>
 
-[ Upstream commit 42a87d4103ae365e18c3be1333592ab583b8ad9d ]
+[ Upstream commit e1a08730eeb0bad4d82c3bc40e74854872de618d ]
 
-Until now there is no way to reset a AP queue or card. Driving a card
-or queue offline and online again does only toggle the 'software'
-online state. The only way to trigger a (hardware) reset is by running
-hot-unplug/hot-plug for example on the HMC.
+We got SDIO_CRC_ERROR with 4373 on SDR104 when doing bi-directional
+throughput test. Enable watermark to 256 to guarantee the operation
+stability.
 
-This patch makes the queue reset attribute in sysfs writable.
-Writing into this attribute triggers a reset on the AP queue's state
-machine. So the AP queue is flushed and state machine runs through the
-initial states which cause a reset (PQAP(RAPQ)) and a re-registration
-to interrupts (PQAP(AQIC)) if available.
-
-The reset sysfs attribute is writable by root only. So only an
-administrator is allowed to initiate a reset of AP queues. Please note
-that the queue's counter values are left untouched by the reset.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/ap_queue.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ .../broadcom/brcm80211/brcmfmac/sdio.c        | 26 +++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
-index 0aa4b3ccc948c..576ac08777c50 100644
---- a/drivers/s390/crypto/ap_queue.c
-+++ b/drivers/s390/crypto/ap_queue.c
-@@ -14,6 +14,9 @@
- #include <asm/facility.h>
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 53e4962ceb8ae..e487dd78cc024 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -49,6 +49,10 @@
+ #define DCMD_RESP_TIMEOUT	msecs_to_jiffies(2500)
+ #define CTL_DONE_TIMEOUT	msecs_to_jiffies(2500)
  
- #include "ap_bus.h"
-+#include "ap_debug.h"
++/* watermark expressed in number of words */
++#define DEFAULT_F2_WATERMARK    0x8
++#define CY_4373_F2_WATERMARK    0x40
 +
-+static void __ap_flush_queue(struct ap_queue *aq);
+ #ifdef DEBUG
  
- /**
-  * ap_queue_enable_interruption(): Enable interruption on an AP queue.
-@@ -541,7 +544,25 @@ static ssize_t reset_show(struct device *dev,
- 	return rc;
- }
+ #define BRCMF_TRAP_INFO_SIZE	80
+@@ -138,6 +142,8 @@ struct rte_console {
+ /* 1: isolate internal sdio signals, put external pads in tri-state; requires
+  * sdio bus power cycle to clear (rev 9) */
+ #define SBSDIO_DEVCTL_PADS_ISO		0x08
++/* 1: enable F2 Watermark */
++#define SBSDIO_DEVCTL_F2WM_ENAB		0x10
+ /* Force SD->SB reset mapping (rev 11) */
+ #define SBSDIO_DEVCTL_SB_RST_CTL	0x30
+ /*   Determined by CoreControl bit */
+@@ -4060,6 +4066,7 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 	void *nvram;
+ 	u32 nvram_len;
+ 	u8 saveclk;
++	u8 devctl;
  
--static DEVICE_ATTR_RO(reset);
-+static ssize_t reset_store(struct device *dev,
-+			   struct device_attribute *attr,
-+			   const char *buf, size_t count)
-+{
-+	struct ap_queue *aq = to_ap_queue(dev);
-+
-+	spin_lock_bh(&aq->lock);
-+	__ap_flush_queue(aq);
-+	aq->state = AP_STATE_RESET_START;
-+	ap_wait(ap_sm_event(aq, AP_EVENT_POLL));
-+	spin_unlock_bh(&aq->lock);
-+
-+	AP_DBF(DBF_INFO, "reset queue=%02x.%04x triggered by user\n",
-+	       AP_QID_CARD(aq->qid), AP_QID_QUEUE(aq->qid));
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(reset);
+ 	brcmf_dbg(TRACE, "Enter: dev=%s, err=%d\n", dev_name(dev), err);
  
- static ssize_t interrupt_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
+@@ -4115,8 +4122,23 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 		brcmf_sdiod_writel(sdiod, core->base + SD_REG(hostintmask),
+ 				   bus->hostintmask, NULL);
+ 
+-
+-		brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK, 8, &err);
++		switch (sdiod->func1->device) {
++		case SDIO_DEVICE_ID_CYPRESS_4373:
++			brcmf_dbg(INFO, "set F2 watermark to 0x%x*4 bytes\n",
++				  CY_4373_F2_WATERMARK);
++			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
++					   CY_4373_F2_WATERMARK, &err);
++			devctl = brcmf_sdiod_readb(sdiod, SBSDIO_DEVICE_CTL,
++						   &err);
++			devctl |= SBSDIO_DEVCTL_F2WM_ENAB;
++			brcmf_sdiod_writeb(sdiod, SBSDIO_DEVICE_CTL, devctl,
++					   &err);
++			break;
++		default:
++			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
++					   DEFAULT_F2_WATERMARK, &err);
++			break;
++		}
+ 	} else {
+ 		/* Disable F2 again */
+ 		sdio_disable_func(sdiod->func2);
 -- 
 2.20.1
 
