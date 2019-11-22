@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C493DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E78AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC8820708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78F020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421798;
-	bh=t1Z6oANTD0sjrIAyHNoQs/W7em2+BiiEHXb/QECHPfs=;
+	s=default; t=1574421800;
+	bh=vh7PF8Txw85I7bDLRWcJf5RC2LEdYpmkGZ235XlfREs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rw59Gwd8bXPg6uF2oRPhYsvvSGRGh8S85m1S8S4f3Wqhq3IgStEOXEUYHiHWfDBQI
-	 HdIHG3Hoh6pzdFdl7DmEIEE9VXNeC2UDgyfyfi+eHpmIaVNjPzcm+z5XWHpmTHWLN1
-	 ozOdpzt2EF1Pogm3PtHKYDt+pNrwHGAFGS1ZbdmU=
+	b=WceMdA4F6oAMNiCfrQ301vhdsdQVZpO2ZeZxA0m0RLTbDX2x6oSYXYdf8i2PsGHPe
+	 P/ZyEn6x7i5qzzxECu5lYwUkyepRmJP6r6Pf0wUTDO0rYQLZvUr4XpagafY/gxoCSu
+	 /KmfbD+njGesKulo6FDd91isZynyLaiV9fUCb2ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfKVKlY (ORCPT
+        id S1729178AbfKVLXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:41:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:23:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbfKVKlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:20 -0500
+        id S1727578AbfKVKl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F5172071C;
-        Fri, 22 Nov 2019 10:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 330B120717;
+        Fri, 22 Nov 2019 10:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419279;
-        bh=t1Z6oANTD0sjrIAyHNoQs/W7em2+BiiEHXb/QECHPfs=;
+        s=default; t=1574419288;
+        bh=vh7PF8Txw85I7bDLRWcJf5RC2LEdYpmkGZ235XlfREs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEXSrVsEprEguygoJlF49mfxvwk99y9l6dhbDAygNhhzZXATLHX6X4xAxwYdQVDmD
-         FB0wOrqBTSzlXZzNdmmLwIWSt8eugh8XhpgQSXmtUTPSVSqAS8M10gX6o/YOiWYbAl
-         U3fO0Divdi5lGG8dwDRG9ka5ZVhfZPW6BjYNdjoA=
+        b=CewPZ0gPKhXgwReVeN20gznpKO36lO2cIBmQVOvD68KoTT/3IUEHWpJAXYqvaCGN3
+         OE5DUzOtE0i+dwGgYGwzD6V6glimb6wQ89HwsBdhG3hjKoSWhE6tISSchAYnpYP5UC
+         q/Mi0ojNAgEgW5hcE+R7NoVFlr5XL5Pt8lXyWdVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 057/222] ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff" is set
-Date:   Fri, 22 Nov 2019 11:26:37 +0100
-Message-Id: <20191122100857.218333102@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 060/222] kprobes: Dont call BUG_ON() if there is a kprobe in use on free list
+Date:   Fri, 22 Nov 2019 11:26:40 +0100
+Message-Id: <20191122100858.632581833@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,72 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 8148d2136002da2e2887caf6a07bbd9c033f14f3 ]
+[ Upstream commit cbdd96f5586151e48317d90a403941ec23f12660 ]
 
-One of the Freescale recommended sequences for power off with external
-PMIC is the following:
-...
-3.  SoC is programming PMIC for power off when standby is asserted.
-4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+Instead of calling BUG_ON(), if we find a kprobe in use on free kprobe
+list, just remove it from the list and keep it on kprobe hash list
+as same as other in-use kprobes.
 
-See:
-http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-page 5083
-
-This patch implements step 4. of this sequence.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/153666126882.21306.10738207224288507996.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ kernel/kprobes.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index 1515e498d348c..dd9eb3f14f45c 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
- 				   IMX6Q_GPR1_GINT);
- }
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 11863e2b01c25..1b75fb8c7735e 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -514,8 +514,14 @@ static void do_free_cleaned_kprobes(void)
+ 	struct optimized_kprobe *op, *tmp;
  
-+static void imx6_pm_stby_poweroff(void)
-+{
-+	imx6_set_lpm(STOP_POWER_OFF);
-+	imx6q_suspend_finish(0);
-+
-+	mdelay(1000);
-+
-+	pr_emerg("Unable to poweroff system\n");
-+}
-+
-+static int imx6_pm_stby_poweroff_probe(void)
-+{
-+	if (pm_power_off) {
-+		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
-+			__func__, pm_power_off, pm_power_off);
-+		return -EBUSY;
-+	}
-+
-+	pm_power_off = imx6_pm_stby_poweroff;
-+	return 0;
-+}
-+
- void __init imx6_pm_ccm_init(const char *ccm_compat)
- {
- 	struct device_node *np;
-@@ -618,6 +640,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
- 	val = readl_relaxed(ccm_base + CLPCR);
- 	val &= ~BM_CLPCR_LPM;
- 	writel_relaxed(val, ccm_base + CLPCR);
-+
-+	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
-+		imx6_pm_stby_poweroff_probe();
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+-		BUG_ON(!kprobe_unused(&op->kp));
+ 		list_del_init(&op->list);
++		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
++			/*
++			 * This must not happen, but if there is a kprobe
++			 * still in use, keep it on kprobes hash list.
++			 */
++			continue;
++		}
+ 		free_aggr_kprobe(&op->kp);
+ 	}
  }
- 
- void __init imx6q_pm_init(void)
 -- 
 2.20.1
 
