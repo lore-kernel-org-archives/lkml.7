@@ -5,48 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E90C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FDEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30372072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395E320637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419753;
-	bh=JZdrSf66McTwmVPyGVXRXf/zpqf72r7V9/3MkaYOAbA=;
+	s=default; t=1574419757;
+	bh=uXJnpNa2DlT2etLUcYrrcS9giJvdo6ordh6k9tSg9PM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EszxF2gJpWkQ1RATYZLKte+RWjGG3jnkDcgEfLR5EIy5iM7r+22xhXhaeS36svROJ
-	 E4/W1IfaAJHq0EuhA5V6mGPrrFn/EgKtWVn0TVNqoz9DFENd36HnwEUtW46ryMXPvC
-	 KPf9zkUN/RJlnkg9F15OdaeuKFHY6zzdqrZjqmcg=
+	b=iWHYW+X4fZRVBG205uFNYswGbUk1yHP5OQQHNEerB1znTgiX/AXdwXzO4PyFQeQQq
+	 In2zUDwcRTc9FPFYnms354gvT66GftKmrGXJjL87jMfbpYx474QJ62ywI8ORe0vxqb
+	 m+b5YzTcqgFAPSMuLxwYccbiCX8b1wd+VcrsI4pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfKVKtM (ORCPT
+        id S1729648AbfKVKtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:49:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:49:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbfKVKtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:49:06 -0500
+        id S1729630AbfKVKtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:49:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A51520715;
-        Fri, 22 Nov 2019 10:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4343120637;
+        Fri, 22 Nov 2019 10:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419744;
-        bh=JZdrSf66McTwmVPyGVXRXf/zpqf72r7V9/3MkaYOAbA=;
+        s=default; t=1574419747;
+        bh=uXJnpNa2DlT2etLUcYrrcS9giJvdo6ordh6k9tSg9PM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hszOb+BKfTOLAcdM9CKoSpzqOVQmVCC2XgZOfnT0w/ktvV4YZEJaY59SXQN11OZ2M
-         wazEiElggdPRhkhi8i648RUBeG6kW0pDxNdBvPlNbx+6FCeBXgn2m09IzbfaZngaru
-         7kUVDHF50cY1VwgFhk8n3Ys0woJ+Apl+Iqfw4Usk=
+        b=PT2MyWSn5AOzlXPK6HLALFtGWwIMxD+yVSXMgn1QzT5EiE2SyyeDW9m3KEZHm184E
+         513Kk+buuIa20bYn420DnJwiWXYkRHrnj6bpqpIW5xvPuB9jbBVM5lWGs+GZJKk4q2
+         6FCdWxGAq9alydDaynEhcdJsdrHZP2iN5TbClIM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 163/222] ata: ahci_brcm: Allow using driver or DSL SoCs
-Date:   Fri, 22 Nov 2019 11:28:23 +0100
-Message-Id: <20191122100914.392555480@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
+        dan.j.williams@intel.com, dyoung@redhat.com,
+        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 211/222] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+Date:   Fri, 22 Nov 2019 11:29:11 +0100
+Message-Id: <20191122100917.646811418@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,34 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 7fb44929cb0e5cdcde143e1ca3ca57b5b8247db0 ]
+[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
 
-The Broadcom STB AHCI controller is the same as the one found on DSL
-SoCs, so we will utilize the same driver on these systems as well.
+The only use of KEXEC_BACKUP_SRC_END is as an argument to
+walk_system_ram_res():
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  int crash_load_segments(struct kimage *image)
+  {
+    ...
+    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+                        image, determine_backup_region);
+
+walk_system_ram_res() expects "start, end" arguments that are inclusive,
+i.e., the range to be walked includes both the start and end addresses.
+
+KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+first address *past* the desired 0-640KB range.
+
+Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+region is [0-0x9ffff], not [0-0xa0000].
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Brijesh Singh <brijesh.singh@amd.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Lianbo Jiang <lijiang@redhat.com>
+CC: Takashi Iwai <tiwai@suse.de>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: baiyaowei@cmss.chinamobile.com
+CC: bhe@redhat.com
+CC: dan.j.williams@intel.com
+CC: dyoung@redhat.com
+CC: kexec@lists.infradead.org
+Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 5d16fc4fa46c7..a8d4f4b5a77eb 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -100,7 +100,8 @@ config SATA_AHCI_PLATFORM
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 282630e4c6ea4..1624a7ffa95d8 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -66,7 +66,7 @@ struct kimage;
  
- config AHCI_BRCM
- 	tristate "Broadcom AHCI SATA support"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
-+		   ARCH_BCM_63XX
- 	help
- 	  This option enables support for the AHCI SATA3 controller found on
- 	  Broadcom SoC's.
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+-#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
 -- 
 2.20.1
 
