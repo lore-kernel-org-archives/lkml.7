@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF5EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF812068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F592068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402985;
-	bh=6nw8p55LQxTrXbv68h7YR+Jq/74C7CEpUk0H1DdNjX0=;
+	s=default; t=1574402997;
+	bh=FN9DNkhjWE4bOqv/LD+u4tQ3YYJgjKGVp+RlCgJQZJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajoOkz6ofrVFq3WgrGf3SSAH5d9KEipYON6F7v4Ij3tKf315HxCDa9ON/bRVdV2fP
-	 wrhOEgjrP4hnGSXJNCd41UDIgK1erUp8u7iMFKjUrpW1A6a5z3fqWz5+/9iPDu2l4A
-	 R4KTIDstg5nHsCpshj6vmIryrFTEWmb2wvsv8eFU=
+	b=OOfk5+19kQUzMqNLBgxDK3JvIq/88hTV+ndSLBwjp0Zd/8FdsW5UBdsZy8yHh5ix0
+	 RxPgXiWt/v5dSqhYIc98zVQszN743f/5ixYM9/FjEvRagHZp5JdLMty5Do2tjqbPLu
+	 s8UUtZFO+tiYSZaS73PlpzDg7+CgUpyCDHVYp03g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfKVGJn (ORCPT
+        id S1728255AbfKVGJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:09:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbfKVF5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:04 -0500
+        id S1728874AbfKVF45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCBC20721;
-        Fri, 22 Nov 2019 05:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 237252070A;
+        Fri, 22 Nov 2019 05:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402223;
-        bh=6nw8p55LQxTrXbv68h7YR+Jq/74C7CEpUk0H1DdNjX0=;
+        s=default; t=1574402216;
+        bh=FN9DNkhjWE4bOqv/LD+u4tQ3YYJgjKGVp+RlCgJQZJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R5Vyy3CMlPOxYE4J4A3fsI9q1z0CC+9KjCKQNw8Qq2i0h6x1r90gInzTK7hIcDVjU
-         /KMRZ975H62y38LLu8Rc4n/3JPA6HV5oyjUOlg/xG8oQa6Dbj8FKxXIHRGXgptR30K
-         +1k6j/CBixLOcqyRz6rTjIcZkUYsIXA6X09cvZMs=
+        b=HkPwLsFuTUDraMoD6A+zJf1C0KeugFZbZ9yOtaMwPTGzfNiwLQww9pxReT4EBBkF3
+         xVih6CNznM4KgLnAT3rQv/TXolTU7AvY38cC2ZbC63ETP2fqZtQMwUE62twF2y/ZrL
+         jXm/djnaRbVZYy8Kj7zWsrXq33fP4gFtb+nIVUl4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 070/127] drbd: ignore "all zero" peer volume sizes in handshake
-Date:   Fri, 22 Nov 2019 00:54:48 -0500
-Message-Id: <20191122055544.3299-69-sashal@kernel.org>
+Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 064/127] powerpc/perf: Fix unit_sel/cache_sel checks
+Date:   Fri, 22 Nov 2019 00:54:42 -0500
+Message-Id: <20191122055544.3299-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,114 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
+From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 
-[ Upstream commit 94c43a13b8d6e3e0dd77b3536b5e04a84936b762 ]
+[ Upstream commit 2d46d4877b1afd14059393a48bdb8ce27955174c ]
 
-During handshake, if we are diskless ourselves, we used to accept any size
-presented by the peer.
+Raw event code has couple of fields "unit" and "cache" in it, to capture
+the "unit" to monitor for a given pmcxsel and cache reload qualifier to
+program in MMCR1.
 
-Which could be zero if that peer was just brought up and connected
-to us without having a disk attached first, in which case both
-peers would just "flip" their volume sizes.
+isa207_get_constraint() refers "unit" field to update the MMCRC (L2/L3)
+Event bus control fields with "cache" bits of the raw event code.
+These are power8 specific and not supported by PowerISA v3.0 pmu. So wrap
+the checks to be power8 specific. Also, "cache" bit field is referred to
+update MMCR1[16:17] and this check can be power8 specific.
 
-Now, even a diskless node will ignore "zero" sizes
-presented by a diskless peer.
-
-Also a currently Diskless Primary will refuse to shrink during handshake:
-it may be frozen, and waiting for a "suitable" local disk or peer to
-re-appear (on-no-data-accessible suspend-io). If the peer is smaller
-than what we used to be, it is not suitable.
-
-The logic for a diskless node during handshake is now supposed to be:
-believe the peer, if
- - I don't have a current size myself
- - we agree on the size anyways
- - I do have a current size, am Secondary, and he has the only disk
- - I do have a current size, am Primary, and he has the only disk,
-   which is larger than my current size
-
-Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 7ffd948fae4cd ('powerpc/perf: factor out power8 pmu functions')
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_receiver.c | 33 +++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ arch/powerpc/perf/isa207-common.c | 25 ++++++++++++++++++-------
+ arch/powerpc/perf/isa207-common.h |  4 ++--
+ 2 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 8fbdfaacc2226..08586bc5219bf 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -3977,6 +3977,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 	struct o_qlim *o = (connection->agreed_features & DRBD_FF_WSAME) ? p->qlim : NULL;
- 	enum determine_dev_size dd = DS_UNCHANGED;
- 	sector_t p_size, p_usize, p_csize, my_usize;
-+	sector_t new_size, cur_size;
- 	int ldsc = 0; /* local disk size changed */
- 	enum dds_flags ddsf;
+diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
+index cf9c35aa0cf45..7ecea7143e587 100644
+--- a/arch/powerpc/perf/isa207-common.c
++++ b/arch/powerpc/perf/isa207-common.c
+@@ -150,6 +150,14 @@ static bool is_thresh_cmp_valid(u64 event)
+ 	return true;
+ }
  
-@@ -3984,6 +3985,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 	if (!peer_device)
- 		return config_unknown_volume(connection, pi);
- 	device = peer_device->device;
-+	cur_size = drbd_get_capacity(device->this_bdev);
- 
- 	p_size = be64_to_cpu(p->d_size);
- 	p_usize = be64_to_cpu(p->u_size);
-@@ -3994,7 +3996,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 	device->p_size = p_size;
- 
- 	if (get_ldev(device)) {
--		sector_t new_size, cur_size;
- 		rcu_read_lock();
- 		my_usize = rcu_dereference(device->ldev->disk_conf)->disk_size;
- 		rcu_read_unlock();
-@@ -4012,7 +4013,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 		/* Never shrink a device with usable data during connect.
- 		   But allow online shrinking if we are connected. */
- 		new_size = drbd_new_dev_size(device, device->ldev, p_usize, 0);
--		cur_size = drbd_get_capacity(device->this_bdev);
- 		if (new_size < cur_size &&
- 		    device->state.disk >= D_OUTDATED &&
- 		    device->state.conn < C_CONNECTED) {
-@@ -4077,9 +4077,36 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
- 		 *
- 		 * However, if he sends a zero current size,
- 		 * take his (user-capped or) backing disk size anyways.
-+		 *
-+		 * Unless of course he does not have a disk himself.
-+		 * In which case we ignore this completely.
++static unsigned int dc_ic_rld_quad_l1_sel(u64 event)
++{
++	unsigned int cache;
++
++	cache = (event >> EVENT_CACHE_SEL_SHIFT) & MMCR1_DC_IC_QUAL_MASK;
++	return cache;
++}
++
+ static inline u64 isa207_find_source(u64 idx, u32 sub_idx)
+ {
+ 	u64 ret = PERF_MEM_NA;
+@@ -290,10 +298,10 @@ int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp)
+ 		 * have a cache selector of zero. The bank selector (bit 3) is
+ 		 * irrelevant, as long as the rest of the value is 0.
  		 */
-+		sector_t new_size = p_csize ?: p_usize ?: p_size;
- 		drbd_reconsider_queue_parameters(device, NULL, o);
--		drbd_set_my_capacity(device, p_csize ?: p_usize ?: p_size);
-+		if (new_size == 0) {
-+			/* Ignore, peer does not know nothing. */
-+		} else if (new_size == cur_size) {
-+			/* nothing to do */
-+		} else if (cur_size != 0 && p_size == 0) {
-+			drbd_warn(device, "Ignored diskless peer device size (peer:%llu != me:%llu sectors)!\n",
-+					(unsigned long long)new_size, (unsigned long long)cur_size);
-+		} else if (new_size < cur_size && device->state.role == R_PRIMARY) {
-+			drbd_err(device, "The peer's device size is too small! (%llu < %llu sectors); demote me first!\n",
-+					(unsigned long long)new_size, (unsigned long long)cur_size);
-+			conn_request_state(peer_device->connection, NS(conn, C_DISCONNECTING), CS_HARD);
-+			return -EIO;
-+		} else {
-+			/* I believe the peer, if
-+			 *  - I don't have a current size myself
-+			 *  - we agree on the size anyways
-+			 *  - I do have a current size, am Secondary,
-+			 *    and he has the only disk
-+			 *  - I do have a current size, am Primary,
-+			 *    and he has the only disk,
-+			 *    which is larger than my current size
-+			 */
-+			drbd_set_my_capacity(device, new_size);
-+		}
- 	}
+-		if (cache & 0x7)
++		if (!cpu_has_feature(CPU_FTR_ARCH_300) && (cache & 0x7))
+ 			return -1;
  
- 	if (get_ldev(device)) {
+-	} else if (event & EVENT_IS_L1) {
++	} else if (cpu_has_feature(CPU_FTR_ARCH_300) || (event & EVENT_IS_L1)) {
+ 		mask  |= CNST_L1_QUAL_MASK;
+ 		value |= CNST_L1_QUAL_VAL(cache);
+ 	}
+@@ -396,11 +404,14 @@ int isa207_compute_mmcr(u64 event[], int n_ev,
+ 		/* In continuous sampling mode, update SDAR on TLB miss */
+ 		mmcra_sdar_mode(event[i], &mmcra);
+ 
+-		if (event[i] & EVENT_IS_L1) {
+-			cache = event[i] >> EVENT_CACHE_SEL_SHIFT;
+-			mmcr1 |= (cache & 1) << MMCR1_IC_QUAL_SHIFT;
+-			cache >>= 1;
+-			mmcr1 |= (cache & 1) << MMCR1_DC_QUAL_SHIFT;
++		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
++			cache = dc_ic_rld_quad_l1_sel(event[i]);
++			mmcr1 |= (cache) << MMCR1_DC_IC_QUAL_SHIFT;
++		} else {
++			if (event[i] & EVENT_IS_L1) {
++				cache = dc_ic_rld_quad_l1_sel(event[i]);
++				mmcr1 |= (cache) << MMCR1_DC_IC_QUAL_SHIFT;
++			}
+ 		}
+ 
+ 		if (is_event_marked(event[i])) {
+diff --git a/arch/powerpc/perf/isa207-common.h b/arch/powerpc/perf/isa207-common.h
+index 6c737d675792e..493e5cc5fa8a6 100644
+--- a/arch/powerpc/perf/isa207-common.h
++++ b/arch/powerpc/perf/isa207-common.h
+@@ -232,8 +232,8 @@
+ #define MMCR1_COMBINE_SHIFT(pmc)	(35 - ((pmc) - 1))
+ #define MMCR1_PMCSEL_SHIFT(pmc)		(24 - (((pmc) - 1)) * 8)
+ #define MMCR1_FAB_SHIFT			36
+-#define MMCR1_DC_QUAL_SHIFT		47
+-#define MMCR1_IC_QUAL_SHIFT		46
++#define MMCR1_DC_IC_QUAL_MASK		0x3
++#define MMCR1_DC_IC_QUAL_SHIFT		46
+ 
+ /* MMCR1 Combine bits macro for power9 */
+ #define p9_MMCR1_COMBINE_SHIFT(pmc)	(38 - ((pmc - 1) * 2))
 -- 
 2.20.1
 
