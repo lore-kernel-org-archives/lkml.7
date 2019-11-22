@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2402C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B122068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6B62068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402441;
-	bh=lm4JUrKaHoWWUev9vI4Y+B/zYy7vn/Rm5z1uWi8gAJ4=;
+	s=default; t=1574402446;
+	bh=2fVdgC/fjirU6vo9EcK3UR87dC/f+jTse9YxNMAOxKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dlcmAc+Mlxkr7+9THQoOMzUZoKyxUbeNtUKROIjzGSyv3uXYAYaQQKFbXroI0htnz
-	 +UgW6jMkEMOSga2KdqsP1HlyYMNrMkVdO6ptcDwLAKyz+/tZW6dBUzg83r8B5oHJuR
-	 fQdo7ams8FC8YzwhoqOrZK+VLePY1OJ+NwU1DrH8=
+	b=1EU27wwXWKUlMmPOxULHV9OFCmJP5R8XV5H8TQeZqbHZCl8GT864i6qLU8g3hgfsF
+	 H4M4HSFTTuAoh5BE/+DEceFT/yNHVAdJ4ZGMgnXxVIA++HpMZps3RxJlsr0lqTSpw8
+	 S+3rCo9ZX3G8OZlevY23gvjixKnZ5BgkGqnD7Sfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfKVF5d (ORCPT
+        id S1729446AbfKVF53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35646 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbfKVF5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:21 -0500
+        id S1728314AbfKVF5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12D120731;
-        Fri, 22 Nov 2019 05:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD47B207FA;
+        Fri, 22 Nov 2019 05:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402240;
-        bh=lm4JUrKaHoWWUev9vI4Y+B/zYy7vn/Rm5z1uWi8gAJ4=;
+        s=default; t=1574402237;
+        bh=2fVdgC/fjirU6vo9EcK3UR87dC/f+jTse9YxNMAOxKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gKt5I9WYsn3i+q4pyOoR/dtDFrvcLse/HyoMkxe5E76RDFiv5OhW4od4KgJ38SsME
-         CQbnXybeyKDxzOybVBjPrPBxcCCsqa5qVI3/4261GFI5nqr9N1IJHC+CGxEFBuWDXu
-         U3qHt2zz88LKqRtkiO3jLISUlksSSAumRKGvqofM=
+        b=KfkF0P9VeLPAD2Q+U/vPSu2FqYBhInIkBtnq8WGvxkniUiwWTpqT2Qr6flFfgnnfz
+         Uoi+ZZ5g8g+r1x4hElkh7OKiYGUDslj8U0R1pg+cl6dGluoyvap/Oq+L1gbVyYU4wH
+         daFbHmVaipz9tDcE4MK5ibbLc+F/y4Jo+7EEVhII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 085/127] net: (cpts) fix a missing check of clk_prepare
-Date:   Fri, 22 Nov 2019 00:55:03 -0500
-Message-Id: <20191122055544.3299-84-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 082/127] net/net_namespace: Check the return value of register_pernet_subsys()
+Date:   Fri, 22 Nov 2019 00:55:00 -0500
+Message-Id: <20191122055544.3299-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,35 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 2d822f2dbab7f4c820f72eb8570aacf3f35855bd ]
+[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
 
-clk_prepare() could fail, so let's check its status, and if it fails,
-return its error code upstream.
+In net_ns_init(), register_pernet_subsys() could fail while registering
+network namespace subsystems. The fix checks the return value and
+sends a panic() on failure.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpts.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/core/net_namespace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index e7b76f6b4f67e..7d1281d812480 100644
---- a/drivers/net/ethernet/ti/cpts.c
-+++ b/drivers/net/ethernet/ti/cpts.c
-@@ -567,7 +567,9 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
- 		return ERR_PTR(PTR_ERR(cpts->refclk));
- 	}
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 60b88718b1d48..1af25d53f63ca 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -854,7 +854,8 @@ static int __init net_ns_init(void)
  
--	clk_prepare(cpts->refclk);
-+	ret = clk_prepare(cpts->refclk);
-+	if (ret)
-+		return ERR_PTR(ret);
+ 	mutex_unlock(&net_mutex);
  
- 	cpts->cc.read = cpts_systim_read;
- 	cpts->cc.mask = CLOCKSOURCE_MASK(32);
+-	register_pernet_subsys(&net_ns_ops);
++	if (register_pernet_subsys(&net_ns_ops))
++		panic("Could not register network namespace subsystems");
+ 
+ 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL,
+ 		      RTNL_FLAG_DOIT_UNLOCKED);
 -- 
 2.20.1
 
