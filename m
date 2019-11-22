@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC43C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4CDC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54AC2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048D32068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403082;
-	bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+	s=default; t=1574403087;
+	bh=yswybrNRsWsvoHS/VoCxngFKHac2PIA2wYGZakRfmRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b8o3cPvdcV830cARqSV8TuuiJ66XHYsH+PCpPLbnNl7YvlvrewDZcq7LeUBC0NXde
-	 5Iuqdu534ais4ctGxmQruM364Ul/wqXib5iBIeZ053CCL0EXSBO776rJe1hBwnUi3M
-	 SmpCpYA55LKQOj8BlX/dVRNrTS0rXa3wHn3aaIq8=
+	b=s99e7oOUkBUHY+Dhfwf1NbkSdXnpv14TI6eSY24v9LBVvd+gn3p0UdJj4qDg0s+2P
+	 AOYb8SQsMgCxtzYT8MtY3haNJobYF64/I5wS0rtbF9YAIuo7JztkF1BnO+OoHbJ2Rd
+	 lPnZim+EmVOC7iADzCLUaNT+6BRruR7CNmyWY2D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfKVGLV (ORCPT
+        id S1729174AbfKVF4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:11:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34392 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbfKVF4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:34 -0500
+        id S1729122AbfKVF4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00BA22070A;
-        Fri, 22 Nov 2019 05:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4A982072D;
+        Fri, 22 Nov 2019 05:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402193;
-        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+        s=default; t=1574402182;
+        bh=yswybrNRsWsvoHS/VoCxngFKHac2PIA2wYGZakRfmRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPIter8JCQ/ELTkZn8yIH+V3Xnd9H7M76npVv08dyQL9In7wuL3exdU27vxuN7kwU
-         apGpkPW0qqag1rMG4ikuCivUTFdjd+azahEbaW0eUrReq3lkxKeYQS3rraAGS+B+2g
-         wIRYUsUU3NtvedQuNBQUhfpc8DdhHJCJTj9FQBDE=
+        b=t+q+2/Glb6WU8ZwFmsNg6I5xhV4s9ySSqyHWo/FTXSizJQYC29G3EW0Wc6XYPKeX4
+         58vWNq37wQdFdSwiHZn5qVqsPsGSKO836PUTRdV4KXE5GZOIoDWG5/LCLAAYIK3NBv
+         jbtNzHQ6Cg0NClDmhLw1DARYURFEE0gyADeIIm0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 043/127] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
-Date:   Fri, 22 Nov 2019 00:54:21 -0500
-Message-Id: <20191122055544.3299-42-sashal@kernel.org>
+Cc:     Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 033/127] serial: 8250: Rate limit serial port rx interrupts during input overruns
+Date:   Fri, 22 Nov 2019 00:54:11 -0500
+Message-Id: <20191122055544.3299-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -60,55 +59,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
 
-[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
+[ Upstream commit 6d7f677a2afa1c82d7fc7af7f9159cbffd5dc010 ]
 
-The Port F Control Register 3 (PFCR3) contains only a single field.
-However, counting from left to right, it is the fourth field, not the
-first field.
-Insert the missing dummy configuration values (3 fields of 16 values) to
-fix this.
+When a serial port gets faulty or gets flooded with inputs, its interrupt
+handler starts to work double time to get the characters to the workqueue
+for the tty layer to handle them. When this busy time on the serial/tty
+subsystem happens during boot, where it is also busy on the userspace
+trying to initialise, some processes can continuously get preempted
+and will be on hold until the interrupts subside.
 
-The descriptor for the Port F Control Register 0 (PFCR0) lacks the
-description for the 4th field (PF0 Mode, PF0MD[2:0]).
-Add the missing configuration values to fix this.
+The fix is to backoff on processing received characters for a specified
+amount of time when an input overrun is seen (received a new character
+before the previous one is processed). This only stops receive and will
+continue to transmit characters to serial port. After the backoff period
+is done, it receive will be re-enabled. This is optional and will only
+be enabled by setting 'overrun-throttle-ms' in the dts.
 
-Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/tty/serial/8250/8250_core.c | 25 +++++++++++++++++++++++++
+ drivers/tty/serial/8250/8250_fsl.c  | 23 ++++++++++++++++++++++-
+ drivers/tty/serial/8250/8250_of.c   |  5 +++++
+ include/linux/serial_8250.h         |  4 ++++
+ 4 files changed, 56 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-index 8070765311dbf..e1c34e19222ee 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	},
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index d29b512a7d9fa..ceeea4b159c4b 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -953,6 +953,21 @@ static struct uart_8250_port *serial8250_find_match_or_unused(struct uart_port *
+ 	return NULL;
+ }
  
- 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
- 		PF12MD_100, PF12MD_101, 0, 0,
- 		0, 0, 0, 0, 0, 0, 0, 0 }
-@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		0, 0, 0, 0, 0, 0, 0, 0,
- 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
- 		PF1MD_100, PF1MD_101, 0, 0,
--		0, 0, 0, 0, 0, 0, 0, 0
--	 }
-+		0, 0, 0, 0, 0, 0, 0, 0,
-+		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
-+		PF0MD_100, PF0MD_101, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0 }
- 	},
++static void serial_8250_overrun_backoff_work(struct work_struct *work)
++{
++	struct uart_8250_port *up =
++	    container_of(to_delayed_work(work), struct uart_8250_port,
++			 overrun_backoff);
++	struct uart_port *port = &up->port;
++	unsigned long flags;
++
++	spin_lock_irqsave(&port->lock, flags);
++	up->ier |= UART_IER_RLSI | UART_IER_RDI;
++	up->port.read_status_mask |= UART_LSR_DR;
++	serial_out(up, UART_IER, up->ier);
++	spin_unlock_irqrestore(&port->lock, flags);
++}
++
+ /**
+  *	serial8250_register_8250_port - register a serial port
+  *	@up: serial port template
+@@ -1063,6 +1078,16 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+ 			ret = 0;
+ 		}
+ 	}
++
++	/* Initialise interrupt backoff work if required */
++	if (up->overrun_backoff_time_ms > 0) {
++		uart->overrun_backoff_time_ms = up->overrun_backoff_time_ms;
++		INIT_DELAYED_WORK(&uart->overrun_backoff,
++				  serial_8250_overrun_backoff_work);
++	} else {
++		uart->overrun_backoff_time_ms = 0;
++	}
++
+ 	mutex_unlock(&serial_mutex);
  
- 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
+ 	return ret;
+diff --git a/drivers/tty/serial/8250/8250_fsl.c b/drivers/tty/serial/8250/8250_fsl.c
+index 910bfee5a88b7..cc138c24ae889 100644
+--- a/drivers/tty/serial/8250/8250_fsl.c
++++ b/drivers/tty/serial/8250/8250_fsl.c
+@@ -48,8 +48,29 @@ int fsl8250_handle_irq(struct uart_port *port)
+ 
+ 	lsr = orig_lsr = up->port.serial_in(&up->port, UART_LSR);
+ 
+-	if (lsr & (UART_LSR_DR | UART_LSR_BI))
++	/* Process incoming characters first */
++	if ((lsr & (UART_LSR_DR | UART_LSR_BI)) &&
++	    (up->ier & (UART_IER_RLSI | UART_IER_RDI))) {
+ 		lsr = serial8250_rx_chars(up, lsr);
++	}
++
++	/* Stop processing interrupts on input overrun */
++	if ((orig_lsr & UART_LSR_OE) && (up->overrun_backoff_time_ms > 0)) {
++		unsigned long delay;
++
++		up->ier = port->serial_in(port, UART_IER);
++		if (up->ier & (UART_IER_RLSI | UART_IER_RDI)) {
++			port->ops->stop_rx(port);
++		} else {
++			/* Keep restarting the timer until
++			 * the input overrun subsides.
++			 */
++			cancel_delayed_work(&up->overrun_backoff);
++		}
++
++		delay = msecs_to_jiffies(up->overrun_backoff_time_ms);
++		schedule_delayed_work(&up->overrun_backoff, delay);
++	}
+ 
+ 	serial8250_modem_status(up);
+ 
+diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+index ec510e342e06c..c51044ba503c3 100644
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -232,6 +232,11 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+ 	if (of_property_read_bool(ofdev->dev.of_node, "auto-flow-control"))
+ 		port8250.capabilities |= UART_CAP_AFE;
+ 
++	if (of_property_read_u32(ofdev->dev.of_node,
++			"overrun-throttle-ms",
++			&port8250.overrun_backoff_time_ms) != 0)
++		port8250.overrun_backoff_time_ms = 0;
++
+ 	ret = serial8250_register_8250_port(&port8250);
+ 	if (ret < 0)
+ 		goto err_dispose;
+diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+index a27ef5f564317..791a6be0e3949 100644
+--- a/include/linux/serial_8250.h
++++ b/include/linux/serial_8250.h
+@@ -134,6 +134,10 @@ struct uart_8250_port {
+ 	void			(*dl_write)(struct uart_8250_port *, int);
+ 
+ 	struct uart_8250_em485 *em485;
++
++	/* Serial port overrun backoff */
++	struct delayed_work overrun_backoff;
++	u32 overrun_backoff_time_ms;
+ };
+ 
+ static inline struct uart_8250_port *up_to_u8250p(struct uart_port *up)
 -- 
 2.20.1
 
