@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E83C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A0BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE7B20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B04020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418905;
-	bh=i1i7cHnRw8mqsnFpsZPU0xEVm/PGqfyMQsM3ZrClmjQ=;
+	s=default; t=1574418908;
+	bh=youHC11LHjAs4CWKcmpmT/pWr3+p84Nsi0dY0gcXfR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPSak4fOvJZe+pOywDHzymKvrKwLQXGWMs3u8l9oMeHsHtNBSPTVHBOkNuhahx1Nh
-	 l1dhtnq9ha8Gqtm6dnE3JZ90gwYNDOCJl9nlyKkqumT9i/szBREHpvNJgRtAR6AuiS
-	 BD1eU1vaLFeqexVPJwoGEBbjsCRSi14H2xpowX3g=
+	b=z1G6nkZWw/4n7zyeAzWcOVjRqDtiob7N2HSsO6en79bJryLYDs5KklmS8OoW4g8ON
+	 4sZD9IOLQlcWRr8/rK2/l98qSdikuszKcQN/s8ZVN+nW6T284o7FVOSmpnm36o+HoJ
+	 NJ+GhC9xdfGIxmLi7Rq2TFp6Aj/QgGokK4aVoeos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfKVKfD (ORCPT
+        id S1728206AbfKVKfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:35:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbfKVKfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:35:00 -0500
+        id S1727561AbfKVKfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:35:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA6320715;
-        Fri, 22 Nov 2019 10:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739E920656;
+        Fri, 22 Nov 2019 10:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418900;
-        bh=i1i7cHnRw8mqsnFpsZPU0xEVm/PGqfyMQsM3ZrClmjQ=;
+        s=default; t=1574418903;
+        bh=youHC11LHjAs4CWKcmpmT/pWr3+p84Nsi0dY0gcXfR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZznfjJbz9LNboMr/5QrWIFRXIeRlGBI5swsykAPpQUM/POUpSzrGvVrjzJDMK1OP
-         0RVvaBLZjHEn51RyaWrPKxbzXFiil0gE9hkHBQPg1Azk/W8FRn27pVK/03fZayAnlo
-         3cYMb6WGm/QoZhxk0fumT6my5RuI7y/dAIHTg8k8=
+        b=hoU7WGjH17D45ooH8DLm04fTYQHUfddQ86bi7+wOFZNiyk7Jdaf0AQs/ZALwI3iqe
+         JmbjtKXFx5+cJAgxmzDkZyxp3D2ziUn+ElTQ6FZZAXu1ZFqvmI54FnOuGC94kdIBhM
+         G4k8zNQkpoM05vEZkhEUFVgdEDdTdqVxi9mv7SGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 091/159] net: smsc: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:28:02 +0100
-Message-Id: <20191122100812.012542676@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Ernst <justin.ernst@hpe.com>,
+        Borislav Petkov <bp@suse.de>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 092/159] EDAC: Raise the maximum number of memory controllers
+Date:   Fri, 22 Nov 2019 11:28:03 +0100
+Message-Id: <20191122100813.313867059@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,68 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Justin Ernst <justin.ernst@hpe.com>
 
-[ Upstream commit 6323d57f335ce1490d025cacc83fc10b07792130 ]
+[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+We observe an oops in the skx_edac module during boot:
 
-Found by coccinelle.
+  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
+  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
+  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
+  ...
+  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
+  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
+  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
+  Too many memory controllers: 16
+  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We observe there are two memory controllers per socket, with a limit
+of 16. Raise the maximum number of memory controllers from 16 to 2 *
+MAX_NUMNODES (1024).
+
+[ bp: This is just a band-aid fix until we've sorted out the whole issue
+  with the bus_type association and handling in EDAC and can get rid of
+  this arbitrary limit. ]
+
+Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Russ Anderson <russ.anderson@hpe.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac@vger.kernel.org
+Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/smsc/smc911x.c  | 3 ++-
- drivers/net/ethernet/smsc/smc91x.c   | 3 ++-
- drivers/net/ethernet/smsc/smsc911x.c | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ include/linux/edac.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/smsc/smc911x.c b/drivers/net/ethernet/smsc/smc911x.c
-index bd64eb982e527..37fb6dfc10875 100644
---- a/drivers/net/ethernet/smsc/smc911x.c
-+++ b/drivers/net/ethernet/smsc/smc911x.c
-@@ -511,7 +511,8 @@ static void smc911x_hardware_send_pkt(struct net_device *dev)
-  * now, or set the card to generates an interrupt when ready
-  * for the packet.
-  */
--static int smc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+smc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct smc911x_local *lp = netdev_priv(dev);
- 	unsigned int free;
-diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
-index 23a0388100834..7405f537beca7 100644
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -637,7 +637,8 @@ done:	if (!THROTTLE_TX_PKTS)
-  * now, or set the card to generates an interrupt when ready
-  * for the packet.
-  */
--static int smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct smc_local *lp = netdev_priv(dev);
- 	void __iomem *ioaddr = lp->base;
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index 219a99b7a631d..b62bf77a64f43 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -1677,7 +1677,8 @@ static int smsc911x_stop(struct net_device *dev)
- }
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index 4fe67b853de04..9bb4f3311e137 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -17,6 +17,7 @@
+ #include <linux/completion.h>
+ #include <linux/workqueue.h>
+ #include <linux/debugfs.h>
++#include <linux/numa.h>
  
- /* Entry point for transmitting a packet */
--static int smsc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+smsc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct smsc911x_data *pdata = netdev_priv(dev);
- 	unsigned int freespace;
+ struct device;
+ 
+@@ -778,6 +779,6 @@ struct mem_ctl_info {
+ /*
+  * Maximum number of memory controllers in the coherent fabric.
+  */
+-#define EDAC_MAX_MCS	16
++#define EDAC_MAX_MCS	2 * MAX_NUMNODES
+ 
+ #endif
 -- 
 2.20.1
 
