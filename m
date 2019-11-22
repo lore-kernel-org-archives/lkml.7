@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824D3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B1AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C88320855
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC782084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420643;
-	bh=nn7wuo1qLQGHzAKEC4nO1MUzJUASpsgxIwya/ME3rxQ=;
+	s=default; t=1574420648;
+	bh=omDMWs7oiMbcZbsR6yFJC92lzmGq0/GwmcRPEeaGxKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTfKbsmSHc/+uPoXsxK2BRETNhOkFsE8tfmVhsAXlVAchtCcI9bAt8k1SE5Wo7eKC
-	 q/AnI3w4HzruXCK9x5VB8SJO/zMIKrI2proLk+eCYfCMgc3mWBJ6Vj7gUS9V1qBOA1
-	 96CoKjLXsLe4dEJ3Bw1FytYBQzFzxtOEUZtKlsD8=
+	b=oYuu8z/aDVylFoa3ZKzh8LdwG+3RfhPUOYy+ey38rqq4krCExWY+6KbLUvONcua/p
+	 H8fixLXZ+/BOFOKcTDVwt3HkAE3CRhlsQ8pZ/8k8kvVXd12oMBXN912lHcwTcSPsVK
+	 oRZWfyHOG+zLcSv1rQD1tJv8BvCUwEjnszVMa0wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbfKVLEC (ORCPT
+        id S1731506AbfKVLEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:04:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731474AbfKVLDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:55 -0500
+        id S1731490AbfKVLEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5908520659;
-        Fri, 22 Nov 2019 11:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0CB020659;
+        Fri, 22 Nov 2019 11:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420634;
-        bh=nn7wuo1qLQGHzAKEC4nO1MUzJUASpsgxIwya/ME3rxQ=;
+        s=default; t=1574420641;
+        bh=omDMWs7oiMbcZbsR6yFJC92lzmGq0/GwmcRPEeaGxKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNUZ7yuZKNPQXpCmB/4tBFq/bXJHomPIlGqoax+mLCko8wy4pcoE4H9alRzgQ5auK
-         gpRFYPAT2anXkSzrIg5DVHpYjenw8RbhKPodERTvH2jQqzx0qUJDSc+suye2+SGxx5
-         eg0/8/jsE36w492cZdLYM7V6nzoLd2i8aS2s91qw=
+        b=vOSOKxdAnSjPzjnIogXYwPgHC0y+m74DO2byflhGvPWlXg8xlQr6CxS4m36NyiYlf
+         godrbU2KRqSjmhhOYnGWinUBJIRulS7/KCcbY+wzhARCwsN6BSSbbR6fe+IbRqChN0
+         2U8fLZrvEFNofnGgZfkQdevqs4becMkyZMC3wTks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/220] i2c: brcmstb: Allow enabling the driver on DSL SoCs
-Date:   Fri, 22 Nov 2019 11:28:05 +0100
-Message-Id: <20191122100921.367868186@linuxfoundation.org>
+Subject: [PATCH 4.19 177/220] media: venus: vdec: fix decoded data size
+Date:   Fri, 22 Nov 2019 11:29:02 +0100
+Message-Id: <20191122100925.580614080@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,42 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Vikash Garodia <vgarodia@codeaurora.org>
 
-[ Upstream commit e1eba2ea54a2de0e4c58d87270d25706bb77b844 ]
+[ Upstream commit ce32c0a530bd955206fe45c2eff77e581202d699 ]
 
-ARCH_BCM_63XX which is used by ARM-based DSL SoCs from Broadcom uses the
-same controller, make it possible to select the STB driver and update
-the Kconfig and help text a bit.
+Existing code returns the max of the decoded size and buffer size.
+It turns out that buffer size is always greater due to hardware
+alignment requirement. As a result, payload size given to client
+is incorrect. This change ensures that the bytesused is assigned
+to actual payload size, when available.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/Kconfig | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/media/platform/qcom/venus/vdec.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 8f803812ea244..ee6dd1b84fac8 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -433,12 +433,13 @@ config I2C_BCM_KONA
- 	  If you do not need KONA I2C interface, say N.
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index dfbbbf0f746f9..e40fdf97b0f03 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -888,8 +888,7 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
+ 		unsigned int opb_sz = venus_helper_get_opb_size(inst);
  
- config I2C_BRCMSTB
--	tristate "BRCM Settop I2C controller"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-+	tristate "BRCM Settop/DSL I2C controller"
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_63XX || \
-+		   COMPILE_TEST
- 	default y
- 	help
- 	  If you say yes to this option, support will be included for the
--	  I2C interface on the Broadcom Settop SoCs.
-+	  I2C interface on the Broadcom Settop/DSL SoCs.
- 
- 	  If you do not need I2C interface, say N.
- 
+ 		vb = &vbuf->vb2_buf;
+-		vb->planes[0].bytesused =
+-			max_t(unsigned int, opb_sz, bytesused);
++		vb2_set_plane_payload(vb, 0, bytesused ? : opb_sz);
+ 		vb->planes[0].data_offset = data_offset;
+ 		vb->timestamp = timestamp_us * NSEC_PER_USEC;
+ 		vbuf->sequence = inst->sequence_cap++;
 -- 
 2.20.1
 
