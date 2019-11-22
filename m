@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E00C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D359C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906C02073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E6E20731
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401833;
-	bh=ifwruHAoHqHKLv+HjbF5JGJp7pgttRgm2PgncmfAWrs=;
+	s=default; t=1574401838;
+	bh=ak0oafLdw9C8TV8kEB7ReTBdXAP8KMKwZSruFOSqZQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHLxUBqcAteyRqcbaTnRlQCBA8fU9sdiStsZGi/1UkDQIzK0zKuDAaSA6ccKAVRJm
-	 1BHzGezqenZJm2oSoLzPpdoXgawj5aGZ+UVtoVxpS8CfWonCCPnvt32+/i8MrZS0r1
-	 9srcQbzur4RgIaxFNRZJ6nl+i/68oN+d3jKKCfUc=
+	b=cXgfxZyKWpHcFPgHuJpObbpCZ/VkEv0Zgdd1JxOV7PW3LaGNAj21QhjohrIV5oFVG
+	 lEID5hqyiJnCHpntLUbjF1vXgcJNrYM/mTXipvwvNDjWY9LTkPZXlqUEu19hdwjvAu
+	 i/XHnxONZqpnO7PEcr9p0meMNyIrDACU+QDboC9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfKVFuc (ORCPT
+        id S1727796AbfKVFug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55008 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:50:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfKVFu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:29 -0500
+        id S1727743AbfKVFub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 459102070E;
-        Fri, 22 Nov 2019 05:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1800C2071B;
+        Fri, 22 Nov 2019 05:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401828;
-        bh=ifwruHAoHqHKLv+HjbF5JGJp7pgttRgm2PgncmfAWrs=;
+        s=default; t=1574401830;
+        bh=ak0oafLdw9C8TV8kEB7ReTBdXAP8KMKwZSruFOSqZQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VfaJo8jLZPKwwa0r//JrrvKBAgjxaNFkyNE4qqLAqDgshZ91g+LJ+dJ5kQfEuIwau
-         CwtLJWd28IDprh9rFlelG0ZF/+Dqivb2XdmQr2TUv/ZiQ5g0U24QBq36rhU+bd7QvX
-         pF4i96dpqaCBdRofT9naouugx1q+WvUmNaHvOWYo=
+        b=uw4HWBmQK2KhYnFeV8N5eSq/lPQnl6fNVBxCVnbmr3cZMUkxbn9LS+dfDzegh51He
+         6hb2R+6uxVQptECpME7Jd50cPlZ2HnxUXMdH67tsEaAXwTRm6iH4mMn8n0lCrP1umI
+         ujEoUblDsZlfxjpVDlBORzRJ6v9468T2P7o8fEV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roger Quadros <rogerq@ti.com>, Johan Hovold <johan@kernel.org>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 070/219] usb: ehci-omap: Fix deferred probe for phy handling
-Date:   Fri, 22 Nov 2019 00:46:42 -0500
-Message-Id: <20191122054911.1750-63-sashal@kernel.org>
+Cc:     Hans van Kranenburg <hans.van.kranenburg@mendix.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 072/219] btrfs: fix ncopies raid_attr for RAID56
+Date:   Fri, 22 Nov 2019 00:46:44 -0500
+Message-Id: <20191122054911.1750-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -64,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Hans van Kranenburg <hans.van.kranenburg@mendix.com>
 
-[ Upstream commit 8dc7623bf608495b6e6743e805807c7840673573 ]
+[ Upstream commit da612e31aee51bd13231c78a47c714b543bd3ad8 ]
 
-PHY model is being used on omap5 platforms even if port mode
-is not OMAP_EHCI_PORT_MODE_PHY. So don't guess if PHY is required
-or not based on PHY mode.
+RAID5 and RAID6 profile store one copy of the data, not 2 or 3. These
+values are not yet used anywhere so there's no change.
 
-If PHY is provided in device tree, it must be required. So, if
-devm_usb_get_phy_by_phandle() gives us an error code other
-than -ENODEV (no PHY) then error out.
-
-This fixes USB Ethernet on omap5-uevm if PHY happens to
-probe after EHCI thus causing a -EPROBE_DEFER.
-
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Hans van Kranenburg <hans.van.kranenburg@mendix.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-omap.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/btrfs/volumes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-omap.c b/drivers/usb/host/ehci-omap.c
-index 7e4c13346a1ee..7d20296cbe9f9 100644
---- a/drivers/usb/host/ehci-omap.c
-+++ b/drivers/usb/host/ehci-omap.c
-@@ -159,11 +159,12 @@ static int ehci_hcd_omap_probe(struct platform_device *pdev)
- 		/* get the PHY device */
- 		phy = devm_usb_get_phy_by_phandle(dev, "phys", i);
- 		if (IS_ERR(phy)) {
--			/* Don't bail out if PHY is not absolutely necessary */
--			if (pdata->port_mode[i] != OMAP_EHCI_PORT_MODE_PHY)
-+			ret = PTR_ERR(phy);
-+			if (ret == -ENODEV) { /* no PHY */
-+				phy = NULL;
- 				continue;
-+			}
- 
--			ret = PTR_ERR(phy);
- 			if (ret != -EPROBE_DEFER)
- 				dev_err(dev, "Can't get PHY for port %d: %d\n",
- 					i, ret);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index f84c18e86c816..5bbcdcff68a9e 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -96,7 +96,7 @@ const struct btrfs_raid_attr btrfs_raid_array[BTRFS_NR_RAID_TYPES] = {
+ 		.devs_min	= 2,
+ 		.tolerated_failures = 1,
+ 		.devs_increment	= 1,
+-		.ncopies	= 2,
++		.ncopies	= 1,
+ 		.raid_name	= "raid5",
+ 		.bg_flag	= BTRFS_BLOCK_GROUP_RAID5,
+ 		.mindev_error	= BTRFS_ERROR_DEV_RAID5_MIN_NOT_MET,
+@@ -108,7 +108,7 @@ const struct btrfs_raid_attr btrfs_raid_array[BTRFS_NR_RAID_TYPES] = {
+ 		.devs_min	= 3,
+ 		.tolerated_failures = 2,
+ 		.devs_increment	= 1,
+-		.ncopies	= 3,
++		.ncopies	= 1,
+ 		.raid_name	= "raid6",
+ 		.bg_flag	= BTRFS_BLOCK_GROUP_RAID6,
+ 		.mindev_error	= BTRFS_ERROR_DEV_RAID6_MIN_NOT_MET,
 -- 
 2.20.1
 
