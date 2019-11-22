@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86190C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3C0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC1720721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D3C20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420358;
-	bh=I3ZLCnIDcjBuO+pE/ZPwAvwz5deLJv3WIzNphLQ4FDQ=;
+	s=default; t=1574420364;
+	bh=GLgwkBO1KEs44BKp6ccObxLRmL9YCEqi1g0TfMe05Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dguQGlKqiovNYT59Qz06RzVkMcoj5NYdbIbu/Ce4+KgFX99G92moEEAYvHMi0dYE/
-	 HDsOBlNzZ9EYXpWf2rqgyk0fTGc4EjWHRzJgRP+QfdMrUyLVoj5xEfP+v9cWmq8bir
-	 0FQJCyY/DvrxLzWWefYlM2Ttj9D+UJdcqJWSKrZE=
+	b=N9wfyfuG8thk84F2lEW6WqiQPI+DLq7IHfpnNkro2+stMyRmXiNLYYoQm1H2fikEL
+	 /pMX3dsgf6DFbkuJVWJHk1dyjqHfs97iUlj0tutclaNUDNMhLnI671GUKXMZ6hQgzn
+	 yY1nlzvhYx/6+03r1Z0MWX+9b/lDwbUjMrBNWHDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbfKVK7R (ORCPT
+        id S1730905AbfKVK7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730387AbfKVK7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:14 -0500
+        id S1730894AbfKVK7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80F7620706;
-        Fri, 22 Nov 2019 10:59:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E95420730;
+        Fri, 22 Nov 2019 10:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420354;
-        bh=I3ZLCnIDcjBuO+pE/ZPwAvwz5deLJv3WIzNphLQ4FDQ=;
+        s=default; t=1574420360;
+        bh=GLgwkBO1KEs44BKp6ccObxLRmL9YCEqi1g0TfMe05Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbG+c69L4N2YWtcWMvIjapUP3oaNyXwODrTuYvx/qjdUBuMxyPnF/duDOTk69InFt
-         0FHzPpYyGnbLsorSHJP8QfARDPAfFyjzqeObTJ5EwnWGx3OFgrIAF7a6fUiju3dhfx
-         hUQXOVKUcAkHeKvD4bA0aLb/oNNcTfbLA0VtMTVM=
+        b=rYEJf0TS8tITcz09UojQ/mwTpKEeymMloiGdyPQtMRDqoNWV5rJ2w4Y0E8DWFQLlN
+         /ny7u8P0gQn2RtfoYsJ8Z56y1o9Ii2bCw2wRvy3siIKH17UmcTG2c2pS1fn1KpenB+
+         SFyAmmcsiKfTNbHXDwZDFsfwkIryJMkX2PnItF58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/220] iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
-Date:   Fri, 22 Nov 2019 11:26:39 +0100
-Message-Id: <20191122100914.815994641@linuxfoundation.org>
+Subject: [PATCH 4.19 026/220] ACPI / LPSS: Make acpi_lpss_find_device() also find PCI devices
+Date:   Fri, 22 Nov 2019 11:26:31 +0100
+Message-Id: <20191122100914.347957765@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,56 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 85c7a0f1ef624ef58173ef52ea77780257bdfe04 ]
+[ Upstream commit 1e30124ac60abc41d74793900f8b4034f29bcb3d ]
 
-In removing the pagetable-wide lock, we gained the possibility of the
-vanishingly unlikely case where we have a race between two concurrent
-unmappers splitting the same block entry. The logic to handle this is
-fairly straightforward - whoever loses the race frees their partial
-next-level table and instead dereferences the winner's newly-installed
-entry in order to fall back to a regular unmap, which intentionally
-echoes the pre-existing case of recursively splitting a 1GB block down
-to 4KB pages by installing a full table of 2MB blocks first.
+On some Cherry Trail systems the GPU ACPI fwnode has power-resources which
+point to the PMIC, which is connected over one of the LPSS I2C controllers.
 
-Unfortunately, the chump who implemented that logic failed to update the
-condition check for that fallback, meaning that if said race occurs at
-the last level (where the loser's unmap_idx is valid) then the unmap
-won't actually happen. Fix that to properly account for both the race
-and recursive cases.
+To get the suspend/resume ordering correct for this we need to be able to
+add device-links between the GPU and the I2c controller. The GPU is a PCI
+device, so this requires acpi_lpss_find_device() to also work on PCI devs.
 
-Fixes: 2c3d273eabe8 ("iommu/io-pgtable-arm: Support lockless operation")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-[will: re-jig control flow to avoid duplicate cmpxchg test]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/acpi/acpi_lpss.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 88641b4560bc8..2f79efd16a052 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -574,13 +574,12 @@ static size_t arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
- 			return 0;
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 7eda27d43b482..3ef22d50df302 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -16,6 +16,7 @@
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/mutex.h>
++#include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/clk-lpss.h>
+ #include <linux/platform_data/x86/pmc_atom.h>
+@@ -512,12 +513,18 @@ static int match_hid_uid(struct device *dev, void *data)
  
- 		tablep = iopte_deref(pte, data);
-+	} else if (unmap_idx >= 0) {
-+		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
-+		return size;
- 	}
+ static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
+ {
++	struct device *dev;
++
+ 	struct hid_uid data = {
+ 		.hid = hid,
+ 		.uid = uid,
+ 	};
  
--	if (unmap_idx < 0)
--		return __arm_lpae_unmap(data, iova, size, lvl, tablep);
--
--	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
--	return size;
-+	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+-	return bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
++	dev = bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
++	if (dev)
++		return dev;
++
++	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
  }
  
- static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
+ static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
 -- 
 2.20.1
 
