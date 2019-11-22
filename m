@@ -2,55 +2,52 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BDBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6A4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E5C20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AE720717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418938;
-	bh=0FGA/lGC82rofF93YqFcq8aB0jY9hs9zk6WqHjuxlvQ=;
+	s=default; t=1574418942;
+	bh=DzMQUX6s9k8wSUp8WtR4VzDixx38NDOCValpnxIZC6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UnYBjYQBM9OHhsx52U/YWuyQ6fIP6BJE8i1iJ36BiDa0nSIAnUz/i0rJ6C7l77D4J
-	 j/G/uf1mxxb6qgfdJYue50feG73lt+qyy/hAvrRX95aysBGu1eTUZE1aKozZHbDhcW
-	 ZiFharIL+5h/ONvTcF+Uj03LfFRaBF78xEgaDz4k=
+	b=doEiWfJu4V5yrAZJ19IF/546MJNty7pI0+Hh9v0lLg9+rWKT9Wc4TUbkJJmT4zrMu
+	 uZFf1KgS0/IWmWBfKwOwMuldiCCHFptIkeT4TU/p1dcugh8WEvlnmdJ0jzCv2UgSx5
+	 JnFbbYMvL4wTxJ3oHHh6d1Sv1AHK9aAGrxdUn4YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfKVKfg (ORCPT
+        id S1728274AbfKVKfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:35:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:35:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727717AbfKVKfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:35:33 -0500
+        id S1728269AbfKVKfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:35:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DDF220656;
-        Fri, 22 Nov 2019 10:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8372520637;
+        Fri, 22 Nov 2019 10:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418932;
-        bh=0FGA/lGC82rofF93YqFcq8aB0jY9hs9zk6WqHjuxlvQ=;
+        s=default; t=1574418936;
+        bh=DzMQUX6s9k8wSUp8WtR4VzDixx38NDOCValpnxIZC6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrTrU1IVjhH0ZRb3QkEs+1ss1/FDMmhKcvIGW/I/M1w5CrIJNgpEL+oYXS6k4PfdH
-         V1BpjQBTVErmX0R8Mct2UlxIwG901AIMY2c+bez1VEIivaZh5Pq2P0vk/YPUWRJ/8D
-         Sb33SInPkDys2pPNKle5ssTkbVcUBAcbZhFCpWwY=
+        b=Ums6rh/3+Im1NoMVRVUemRVsCKRj+JaltljIlsSys0JU9xLp8ycEOE0U7Eg3c0x2S
+         tctKK108Gt5nnXhmLrVmQsqcl7r+Ov+vhHrzkq+jrYfnXG4W9zvgCc0A6GJsRh4wAW
+         jHPTJlpi7Si12hHf8Colw3cJEGkPTJfjnzmfIIC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jari Ruusu <jari.ruusu@gmail.com>
-Subject: [PATCH 4.4 101/159] x86/atomic: Fix smp_mb__{before,after}_atomic()
-Date:   Fri, 22 Nov 2019 11:28:12 +0100
-Message-Id: <20191122100821.012496305@linuxfoundation.org>
+        John Johansen <john.johansen@canonical.com>,
+        Seth Arnold <seth.arnold@canonical.com>
+Subject: [PATCH 4.4 102/159] apparmor: fix uninitialized lsm_audit member
+Date:   Fri, 22 Nov 2019 11:28:13 +0100
+Message-Id: <20191122100821.546748569@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -63,143 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: John Johansen <john.johansen@canonical.com>
 
-commit 69d927bba39517d0980462efc051875b7f4db185 upstream.
+commit b6b1b81b3afba922505b57f4c812bba022f7c4a9 upstream.
 
-Recent probing at the Linux Kernel Memory Model uncovered a
-'surprise'. Strongly ordered architectures where the atomic RmW
-primitive implies full memory ordering and
-smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-fail for:
+BugLink: http://bugs.launchpad.net/bugs/1268727
 
-	*x = 1;
-	atomic_inc(u);
-	smp_mb__after_atomic();
-	r0 = *y;
+The task field in the lsm_audit struct needs to be initialized if
+a change_hat fails, otherwise the following oops will occur
 
-Because, while the atomic_inc() implies memory order, it
-(surprisingly) does not provide a compiler barrier. This then allows
-the compiler to re-order like so:
+BUG: unable to handle kernel paging request at 0000002fbead7d08
+IP: [<ffffffff8171153e>] _raw_spin_lock+0xe/0x50
+PGD 1e3f35067 PUD 0
+Oops: 0002 [#1] SMP
+Modules linked in: pppox crc_ccitt p8023 p8022 psnap llc ax25 btrfs raid6_pq xor xfs libcrc32c dm_multipath scsi_dh kvm_amd dcdbas kvm microcode amd64_edac_mod joydev edac_core psmouse edac_mce_amd serio_raw k10temp sp5100_tco i2c_piix4 ipmi_si ipmi_msghandler acpi_power_meter mac_hid lp parport hid_generic usbhid hid pata_acpi mpt2sas ahci raid_class pata_atiixp bnx2 libahci scsi_transport_sas [last unloaded: tipc]
+CPU: 2 PID: 699 Comm: changehat_twice Tainted: GF          O 3.13.0-7-generic #25-Ubuntu
+Hardware name: Dell Inc. PowerEdge R415/08WNM9, BIOS 1.8.6 12/06/2011
+task: ffff8802135c6000 ti: ffff880212986000 task.ti: ffff880212986000
+RIP: 0010:[<ffffffff8171153e>]  [<ffffffff8171153e>] _raw_spin_lock+0xe/0x50
+RSP: 0018:ffff880212987b68  EFLAGS: 00010006
+RAX: 0000000000020000 RBX: 0000002fbead7500 RCX: 0000000000000000
+RDX: 0000000000000292 RSI: ffff880212987ba8 RDI: 0000002fbead7d08
+RBP: ffff880212987b68 R08: 0000000000000246 R09: ffff880216e572a0
+R10: ffffffff815fd677 R11: ffffea0008469580 R12: ffffffff8130966f
+R13: ffff880212987ba8 R14: 0000002fbead7d08 R15: ffff8800d8c6b830
+FS:  00002b5e6c84e7c0(0000) GS:ffff880216e40000(0000) knlGS:0000000055731700
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000002fbead7d08 CR3: 000000021270f000 CR4: 00000000000006e0
+Stack:
+ ffff880212987b98 ffffffff81075f17 ffffffff8130966f 0000000000000009
+ 0000000000000000 0000000000000000 ffff880212987bd0 ffffffff81075f7c
+ 0000000000000292 ffff880212987c08 ffff8800d8c6b800 0000000000000026
+Call Trace:
+ [<ffffffff81075f17>] __lock_task_sighand+0x47/0x80
+ [<ffffffff8130966f>] ? apparmor_cred_prepare+0x2f/0x50
+ [<ffffffff81075f7c>] do_send_sig_info+0x2c/0x80
+ [<ffffffff81075fee>] send_sig_info+0x1e/0x30
+ [<ffffffff8130242d>] aa_audit+0x13d/0x190
+ [<ffffffff8130c1dc>] aa_audit_file+0xbc/0x130
+ [<ffffffff8130966f>] ? apparmor_cred_prepare+0x2f/0x50
+ [<ffffffff81304cc2>] aa_change_hat+0x202/0x530
+ [<ffffffff81308fc6>] aa_setprocattr_changehat+0x116/0x1d0
+ [<ffffffff8130a11d>] apparmor_setprocattr+0x25d/0x300
+ [<ffffffff812cee56>] security_setprocattr+0x16/0x20
+ [<ffffffff8121fc87>] proc_pid_attr_write+0x107/0x130
+ [<ffffffff811b7604>] vfs_write+0xb4/0x1f0
+ [<ffffffff811b8039>] SyS_write+0x49/0xa0
+ [<ffffffff8171a1bf>] tracesys+0xe1/0xe6
 
-	atomic_inc(u);
-	*x = 1;
-	smp_mb__after_atomic();
-	r0 = *y;
-
-Which the CPU is then allowed to re-order (under TSO rules) like:
-
-	atomic_inc(u);
-	r0 = *y;
-	*x = 1;
-
-And this very much was not intended. Therefore strengthen the atomic
-RmW ops to include a compiler barrier.
-
-NOTE: atomic_{or,and,xor} and the bitops already had the compiler
-barrier.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Acked-by: Seth Arnold <seth.arnold@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/atomic.h      |    8 ++++----
- arch/x86/include/asm/atomic64_64.h |    8 ++++----
- arch/x86/include/asm/barrier.h     |    4 ++--
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ security/apparmor/audit.c |    3 ++-
+ security/apparmor/file.c  |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -49,7 +49,7 @@ static __always_inline void atomic_add(i
- {
- 	asm volatile(LOCK_PREFIX "addl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
+--- a/security/apparmor/audit.c
++++ b/security/apparmor/audit.c
+@@ -200,7 +200,8 @@ int aa_audit(int type, struct aa_profile
  
- /**
-@@ -63,7 +63,7 @@ static __always_inline void atomic_sub(i
- {
- 	asm volatile(LOCK_PREFIX "subl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
+ 	if (sa->aad->type == AUDIT_APPARMOR_KILL)
+ 		(void)send_sig_info(SIGKILL, NULL,
+-				    sa->u.tsk ?  sa->u.tsk : current);
++			sa->type == LSM_AUDIT_DATA_TASK && sa->u.tsk ?
++				    sa->u.tsk : current);
  
- /**
-@@ -89,7 +89,7 @@ static __always_inline int atomic_sub_an
- static __always_inline void atomic_inc(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- 
- /**
-@@ -101,7 +101,7 @@ static __always_inline void atomic_inc(a
- static __always_inline void atomic_dec(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- 
- /**
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -44,7 +44,7 @@ static __always_inline void atomic64_add
- {
- 	asm volatile(LOCK_PREFIX "addq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -58,7 +58,7 @@ static inline void atomic64_sub(long i,
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -85,7 +85,7 @@ static __always_inline void atomic64_inc
- {
- 	asm volatile(LOCK_PREFIX "incq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -98,7 +98,7 @@ static __always_inline void atomic64_dec
- {
- 	asm volatile(LOCK_PREFIX "decq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- 
- /**
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -116,7 +116,7 @@ do {									\
- #endif
- 
- /* Atomic operations are already serializing on x86 */
--#define smp_mb__before_atomic()	barrier()
--#define smp_mb__after_atomic()	barrier()
-+#define smp_mb__before_atomic()	do { } while (0)
-+#define smp_mb__after_atomic()	do { } while (0)
- 
- #endif /* _ASM_X86_BARRIER_H */
+ 	if (sa->aad->type == AUDIT_APPARMOR_ALLOWED)
+ 		return complain_error(sa->aad->error);
+--- a/security/apparmor/file.c
++++ b/security/apparmor/file.c
+@@ -110,7 +110,8 @@ int aa_audit_file(struct aa_profile *pro
+ 	int type = AUDIT_APPARMOR_AUTO;
+ 	struct common_audit_data sa;
+ 	struct apparmor_audit_data aad = {0,};
+-	sa.type = LSM_AUDIT_DATA_NONE;
++	sa.type = LSM_AUDIT_DATA_TASK;
++	sa.u.tsk = NULL;
+ 	sa.aad = &aad;
+ 	aad.op = op,
+ 	aad.fs.request = request;
 
 
