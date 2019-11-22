@@ -2,100 +2,109 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFB8C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F1220706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E5E20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574429555;
+	bh=oTuWrUy7fpMEAfE4QBT9wkrjwjJJaY7iBKrVHeJAAso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LpSuTsQZXvg24qS6/1r12UuTDN/wMtL5oATpRtnM0ZmbPQvkYer3xlnagA2WSBuQy
+	 Th33tjfhx3kO9Q4K9LvtBa2CHBVueJOgntu+W/8A1Q+NjNVc6N0FTpGLwR5Co6i12b
+	 axhh6CF71v1VbSN5GFcxIF1zJ9XEOFzdQjnOyzzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbfKVNba (ORCPT
+        id S1727215AbfKVNce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:31:30 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47703 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKVNba (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:31:30 -0500
-Received: from [2001:67c:670:100:6a05:caff:fe2d:a9b1]
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1iY91y-0007Iq-PR; Fri, 22 Nov 2019 14:31:26 +0100
-Subject: Re: [Linux-stm32] [PATCH v2 1/1] drivers: watchdog: stm32_iwdg: set
- WDOG_HW_RUNNING at probe
-To:     Christophe ROULLIER <christophe.roullier@st.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-References: <20191122082442.21695-1-christophe.roullier@st.com>
- <ea80ec65-8621-453c-4d5b-af38d8afeb70@pengutronix.de>
- <70c319bd-866c-5305-e535-ead663652c5f@st.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <53b2f559-3456-d378-587d-d220920e9bf7@pengutronix.de>
-Date:   Fri, 22 Nov 2019 14:31:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 08:32:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:47614 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbfKVNcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 08:32:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA49731B;
+        Fri, 22 Nov 2019 05:32:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 617BF3F703;
+        Fri, 22 Nov 2019 05:32:32 -0800 (PST)
+Date:   Fri, 22 Nov 2019 13:32:30 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, Grigoryev Denis <grigoryev@fastwel.ru>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: Applied "tps6105x: add optional devicetree support" to the
+ regulator tree
+Message-ID: <20191122133230.GD6849@sirena.org.uk>
+References: <20191119154611.29625-2-TheSven73@gmail.com>
+ <applied-20191119154611.29625-2-TheSven73@gmail.com>
+ <20191122073124.GA3296@dell>
 MIME-Version: 1.0
-In-Reply-To: <70c319bd-866c-5305-e535-ead663652c5f@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:6a05:caff:fe2d:a9b1
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Qrgsu6vtpU/OV/zm"
+Content-Disposition: inline
+In-Reply-To: <20191122073124.GA3296@dell>
+X-Cookie: sillema sillema nika su
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christophe,
 
-On 11/22/19 2:15 PM, Christophe ROULLIER wrote:
->> On 11/22/19 9:24 AM, Christophe Roullier wrote:
->>> +	/*
->>> +	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
->>> +	 * (Means U-Boot/bootloaders leaves the watchdog running)
->>> +	 * When we get here we should make a decision to prevent
->>> +	 * any side effects before user space daemon will take care of it.
->>> +	 * The best option, taking into consideration that there is no
->>> +	 * way to read values back from hardware, is to enforce watchdog
->>> +	 * being run with deterministic values.
->> What about the "ONF: Watchdog enable status bit" in the IWDG_SR register?
+--Qrgsu6vtpU/OV/zm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks Ahmad for your feedback, it is a mistake in our ref manual. This 
-> bit is not present
-> 
-> in our iwdg IP, we will update our documentation accordingly.
+On Fri, Nov 22, 2019 at 07:31:24AM +0000, Lee Jones wrote:
+> On Wed, 20 Nov 2019, Mark Brown wrote:
 
-Thanks for the info. I think it would be nice to have this information in
-the driver as well, something like:
+> > Example: put chip in regulator mode:
 
-* The best option, taking into consideration that that the ONF
-* watchdog status bit is non-functional, is to enforce watchdog
-* being run with deterministic values.
+> > i2c0 {
+> > 	tps61052@33 {
+> > 		compatible =3D "ti,tps61052";
+> > 		reg =3D <0x33>;
+> >=20
+> > 		regulator {
+> >                             regulator-min-microvolt =3D <5000000>;
+> >                             regulator-max-microvolt =3D <5000000>;
+> >                             regulator-always-on;
+> > 		};
+> > 	};
+> > };
 
-This way it's clear that it's a deliberate choice to do it this way.
+> ?
 
-Cheers
-Ahmad
+Sorry, I completely missed that this was adding a MFD file - the binding
+only mentioned regulator stuff and I clearly didn't look at the
+filename.  Do you want me to drop it?
 
+--Qrgsu6vtpU/OV/zm
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | https://www.pengutronix.de/ |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3X420ACgkQJNaLcl1U
+h9A+dwf9F8AlkRemvtREyMZpewdCJ0ovvR/f76eStncNGq9odeCRfkw7R9l7SDZx
+gCd0WiEkEMecVYjARC8uYv6pJ/CyVDD0UvVp5ZmLc7cJRFgyKWzOfyIQoM+1BDwI
+nzPzQim+DdOmmjB+3/gxHQ4JAjBx9R9S+D/NwQGpLQdEQHhzrKDvLz3BY1mvLJCh
+1wBvAX2x/xnHwVkQ4wH4mmyQnvE2uWXeuv9kyv9b8iW/jREtFBrK9w/m8SyyVUjO
+8kInYGaOgmwHKX3PSzy+6tKNT8KpGPIdzLgUOji8JUxy0yK2cRfXPrQwzKGA3N1x
+ypeqE8aNQ6TS3kcHieEFIb3OVrD1Ag==
+=YBx2
+-----END PGP SIGNATURE-----
+
+--Qrgsu6vtpU/OV/zm--
