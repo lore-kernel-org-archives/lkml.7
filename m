@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D20C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F6CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893E42071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F342075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420270;
-	bh=aINBe0j896dO0o/clmYn1WdFrDDx1W1Boi3TVHdmbmg=;
+	s=default; t=1574420274;
+	bh=dQt3xAF/0dD9AaQxedCxFQzgzRaMzkywGvh9+OmquuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6z4zY8jxI8Bj0QaKnwVkb94KzdDGYT1aFexGq+1KLSEypdlJEI0VGn6CahcggQuN
-	 +lCxdUWL8Kqje1R+jRc/Jh6Ib84O6MvkMezXTk1zhvY7PVJxGbrP06DFf8yTjviY7+
-	 s6dyt19AHExlz8WWSUYYMB4WEDxOe+W3TeX8/57k=
+	b=rdZpjCmzXEgQ57iuwqBsgyiBlIN4ltk0ZhB16MrNC0Pf9BWrd1TRVP6Lq93zU2IN0
+	 DZetMcXGiMEZz8/Xno7M4Xl5MgBbc0HlOcjuw8oP0x0714shsz4MJx7PMewxWX0xHL
+	 5/dsGlAxvDLBatBReYiR+Uj3TKb/nL831X82FUcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfKVK5t (ORCPT
+        id S1730724AbfKVK5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:57:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46688 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:57:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730700AbfKVK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:40 -0500
+        id S1730464AbfKVK5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 503DE2072E;
-        Fri, 22 Nov 2019 10:57:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF6672072E;
+        Fri, 22 Nov 2019 10:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420259;
-        bh=aINBe0j896dO0o/clmYn1WdFrDDx1W1Boi3TVHdmbmg=;
+        s=default; t=1574420262;
+        bh=dQt3xAF/0dD9AaQxedCxFQzgzRaMzkywGvh9+OmquuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jvp3KRl+m8f8G9ncoaurIzUvCMtFvfM5zQRTo5vUIyBImbM+v1j2Qb7/6RB0vi+8u
-         xLcIcs3R3D+qixRzEmqweOYv1UnrhgTquBz1HEG/Swhz+4fWsP1sHqryydGkTwSF5r
-         HIxL7USGAsZfP93pA1MKd+K9ab2aAZGL2jl8hXXc=
+        b=r5tK9uMPWVn2FXQtpWNWp6HsnmQRn7XWVOuff02icyIIHrtiMmqmTl7HDdMAtrmW+
+         TLyBIAtb03L2GqNW5BlYcWxhkNX70WdKocxGTzpR26In9SrALEuwKjDqKvAmRu/+Tz
+         M47TMiVpTrIobaC9lOeviTnVkTce/4pwQFmeOGGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/220] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
-Date:   Fri, 22 Nov 2019 11:26:51 +0100
-Message-Id: <20191122100915.540558649@linuxfoundation.org>
+Subject: [PATCH 4.19 047/220] usb: dwc3: gadget: Check ENBLSLPM before sending ep command
+Date:   Fri, 22 Nov 2019 11:26:52 +0100
+Message-Id: <20191122100915.601546840@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,46 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
+[ Upstream commit 87dd96111b0bb8e616fcbd74dbf4bb4182f2c596 ]
 
-The driver may sleep in an interrupt handler.
-The function call path (from bottom to top) in Linux-4.17 is:
+When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
+GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an endpoint
+command.
 
-[FUNC] fotg210_ep_queue(GFP_KERNEL)
-drivers/usb/gadget/udc/fotg210-udc.c, 744:
-	fotg210_ep_queue in fotg210_get_status
-drivers/usb/gadget/udc/fotg210-udc.c, 768:
-	fotg210_get_status in fotg210_setup_packet
-drivers/usb/gadget/udc/fotg210-udc.c, 949:
-	fotg210_setup_packet in fotg210_irq (interrupt handler)
+Current implementation only save and restore GUSB2PHYCFG.SUSPHY
+configuration. We must save and clear both GUSB2PHYCFG.ENBLSLPM and
+GUSB2PHYCFG.SUSPHY settings. Restore them after the command is
+completed.
 
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
-If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
-can be also removed.
+DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
 
-This bug is found by my static analysis tool DSAC.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
-index 587c5037ff079..bc6abaea907d8 100644
---- a/drivers/usb/gadget/udc/fotg210-udc.c
-+++ b/drivers/usb/gadget/udc/fotg210-udc.c
-@@ -741,7 +741,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
- 	fotg210->ep0_req->length = 2;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 8398c33d08e7c..3e04004b4f1b7 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -271,27 +271,36 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+ 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+ 	struct dwc3		*dwc = dep->dwc;
+ 	u32			timeout = 1000;
++	u32			saved_config = 0;
+ 	u32			reg;
  
- 	spin_unlock(&fotg210->lock);
--	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
-+	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
- 	spin_lock(&fotg210->lock);
- }
+ 	int			cmd_status = 0;
+-	int			susphy = false;
+ 	int			ret = -EINVAL;
+ 
+ 	/*
+-	 * Synopsys Databook 2.60a states, on section 6.3.2.5.[1-8], that if
+-	 * we're issuing an endpoint command, we must check if
+-	 * GUSB2PHYCFG.SUSPHY bit is set. If it is, then we need to clear it.
++	 * When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
++	 * GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an
++	 * endpoint command.
+ 	 *
+-	 * We will also set SUSPHY bit to what it was before returning as stated
+-	 * by the same section on Synopsys databook.
++	 * Save and clear both GUSB2PHYCFG.ENBLSLPM and GUSB2PHYCFG.SUSPHY
++	 * settings. Restore them after the command is completed.
++	 *
++	 * DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
+ 	 */
+ 	if (dwc->gadget.speed <= USB_SPEED_HIGH) {
+ 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+ 		if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
+-			susphy = true;
++			saved_config |= DWC3_GUSB2PHYCFG_SUSPHY;
+ 			reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
+-			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 		}
++
++		if (reg & DWC3_GUSB2PHYCFG_ENBLSLPM) {
++			saved_config |= DWC3_GUSB2PHYCFG_ENBLSLPM;
++			reg &= ~DWC3_GUSB2PHYCFG_ENBLSLPM;
++		}
++
++		if (saved_config)
++			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 	}
+ 
+ 	if (DWC3_DEPCMD_CMD(cmd) == DWC3_DEPCMD_STARTTRANSFER) {
+@@ -380,9 +389,9 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+ 		dwc3_gadget_ep_get_transfer_index(dep);
+ 	}
+ 
+-	if (unlikely(susphy)) {
++	if (saved_config) {
+ 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+-		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
++		reg |= saved_config;
+ 		dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 	}
  
 -- 
 2.20.1
