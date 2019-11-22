@@ -2,98 +2,97 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81612C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06782C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B0B20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D062720715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NudE6m8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKVQgi (ORCPT
+        id S1727501AbfKVQgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:36:38 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:45398 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfKVQgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:36:38 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 2A23F20B9F;
-        Fri, 22 Nov 2019 17:36:36 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 19DE81FF32;
-        Fri, 22 Nov 2019 17:36:36 +0100 (CET)
-Subject: Re: [PATCH] crypto: picoxcell: add missed tasklet_kill
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jamie Iles <jamie@jamieiles.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191115023116.7070-1-hslester96@gmail.com>
- <20191122085512.m75tjfa3valqfgyv@gondor.apana.org.au>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <218e9053-42c7-098e-ecda-e0306361cc23@free.fr>
-Date:   Fri, 22 Nov 2019 17:36:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191122085512.m75tjfa3valqfgyv@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 22 Nov 2019 11:36:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:43296 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVQgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 11:36:53 -0500
+Received: by mail-pj1-f67.google.com with SMTP id a10so3248187pju.10;
+        Fri, 22 Nov 2019 08:36:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=D+UWHveIo6FHihN6iLKYJHZLO5XGbq5iDrl2TrjPdEY=;
+        b=NudE6m8b0+C+lesIyiJH3cHlgQpOtb7ed8r1UbZEKDp1CojGwyAuVqi5+C4HahBwYI
+         XXIjTX+l+hI/0RBqOcx9Lr9UnNyETGfmX1GNzSxWe0TAskD4zPkJQoiYxgg4TpDRNscH
+         oItXkG+61ojThm4Zc6eYDlB8fezXD4IShCECXE70Esfd6Ed+UNTpJjsdWt4CJchHJZzo
+         1PdmYpFmR/T2JnzrKEK/7EZb9AmaorQurRGRNK2BPMTiJel7Qtr4oo+KAlkzBYzwZ93+
+         OGyV3SKNUHfoykoAhgE4Vk3bSTZJe0wbN/sj95nGqORZZ5XrotjM4+ywa0CEJJqwRjMc
+         oThg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=D+UWHveIo6FHihN6iLKYJHZLO5XGbq5iDrl2TrjPdEY=;
+        b=kr2yg4kJv4KNjjll4BR5Qjq7udBcDKHmNc3hjyN/tDppCm7yV4DQZRdVNWjjhdPbuM
+         xESOHvGMxruB5ZrEA2NBcBPf6nry1QoFy6iHRVd+598uc7L2oENEl6PWonEkORolIUa4
+         V4qfAABrXsRrY1hhagXxK5CEuoL4tn7wH1byVboICTOS814fgSF2QooeE42Upx26HhV5
+         univh/2D9BV7hAgjl1xVUOoeczBoWXNX1jhY+ORc67stehZEM/2MU+dZLSYiC5QIf/Ta
+         c4gtVBFRGVXNrJu+Pcd+OoFWh+Yz5TzTQExiIjpGS8VmMEhG8EDh5b2fahi7mkCSlYAA
+         NdpA==
+X-Gm-Message-State: APjAAAV6GGknY3moUNksnTXRSfWK4tU1EDYWvDCNaVw3THRbkSGcRYWH
+        XCH3PUEDTmKlXN7A5TUjrYNdxbyU
+X-Google-Smtp-Source: APXvYqws9YfhwJnhkMkfv47bbUMQRwV6BMlkFaWUN509dm0p7EiIO2UfHYvaXH/eGf7zsaWTMvwbow==
+X-Received: by 2002:a17:90a:25ea:: with SMTP id k97mr19433680pje.110.1574440612634;
+        Fri, 22 Nov 2019 08:36:52 -0800 (PST)
+Received: from localhost (198-0-60-179-static.hfc.comcastbusiness.net. [198.0.60.179])
+        by smtp.gmail.com with ESMTPSA id d11sm6612582pgq.67.2019.11.22.08.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 08:36:51 -0800 (PST)
+Date:   Fri, 22 Nov 2019 08:36:50 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Brian Vazquez <brianvv@google.com>,
+        Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Yonghong Song <yhs@fb.com>, Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Brian Vazquez <brianvv@google.com>
+Message-ID: <5dd80ea2da121_690a2ae784a225c44f@john-XPS-13-9370.notmuch>
+In-Reply-To: <20191119193036.92831-2-brianvv@google.com>
+References: <20191119193036.92831-1-brianvv@google.com>
+ <20191119193036.92831-2-brianvv@google.com>
+Subject: RE: [PATCH v2 bpf-next 1/9] bpf: add
+ bpf_map_{value_size,update_value,map_copy_value} functions
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Nov 22 17:36:36 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/11/2019 09:55, Herbert Xu wrote:
+Brian Vazquez wrote:
+> This commit moves reusable code from map_lookup_elem and map_update_elem
+> to avoid code duplication in kernel/bpf/syscall.c.
+> 
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> ---
+>  kernel/bpf/syscall.c | 271 ++++++++++++++++++++++++-------------------
+>  1 file changed, 151 insertions(+), 120 deletions(-)
+> 
 
-> On Fri, Nov 15, 2019 at 10:31:16AM +0800, Chuhong Yuan wrote:
->> This driver forgets to kill tasklet when probe fails and remove.
->> Add the calls to fix it.
->>
->> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> 
-> Yes this driver does look buggy but I think your patch isn't
-> enough.
-> 
->> diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
->> index 3cbefb41b099..8d7c6bb2876e 100644
->> --- a/drivers/crypto/picoxcell_crypto.c
->> +++ b/drivers/crypto/picoxcell_crypto.c
->> @@ -1755,6 +1755,7 @@ static int spacc_probe(struct platform_device *pdev)
->>  	if (!ret)
->>  		return 0;
->>  
->> +	tasklet_kill(&engine->complete);
-> 
-> The tasklet is schedule by the IRQ handler so you should not kill
-> it until the IRQ handler has been unregistered.
-> 
-> This driver is also buggy because it registers the IRQ handler
-> before initialising the tasklet.  You must always be prepared for
-> spurious IRQs.  IOW, as soon as you register the IRQ handler you
-> must be prepared for it to be called.
-> 
->> @@ -1771,6 +1772,7 @@ static int spacc_remove(struct platform_device *pdev)
->>  	struct spacc_alg *alg, *next;
->>  	struct spacc_engine *engine = platform_get_drvdata(pdev);
->>  
->> +	tasklet_kill(&engine->complete);
-> 
-> Ditto.
-> 
-> However, the IRQ handler is registered through devm which makes it
-> hard to kill the tasklet after unregistering it.  We should probably
-> convert it to a normal request_irq so we can control how it's
-> unregistered.
+Nice bit of cleanup.
 
-Or inversely, registering the tasklet_kill() through devm, so that it
-is called *after* the ISR unregistration.
-
-Regards.
+Acked-by: John Fastabend <john.fastabend@gmail.com>
