@@ -2,140 +2,284 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E221CC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F62FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BBE20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E3C20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LQfNUKYH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWB0qAhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKVK3K (ORCPT
+        id S1726920AbfKVKaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:29:10 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:64361 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726722AbfKVK3J (ORCPT
+        Fri, 22 Nov 2019 05:30:30 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36585 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfKVKaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:29:09 -0500
-X-UUID: bd03a4824b2a405aa53f79f1e975962d-20191122
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ofn5YL5zLXO06e+0l5pAe6Qs84VAqzgdrrkyFWlZp5s=;
-        b=LQfNUKYHNBeXaej6wynzY9sIuVxeXH3y3sJY9xUw/w2ZjaIEJFSJ3m/Gf9mqm2AlRTjviM4RGsm3K7lSHV7ZfmRcFQzgzNtLglqXALTwBo3UnmagSW0IaEVhhV+IAUwfkgFGFTMMSFRALg8IBQUCfI+ASn6qFsjVXRdrmpKu+B0=;
-X-UUID: bd03a4824b2a405aa53f79f1e975962d-20191122
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2144609166; Fri, 22 Nov 2019 18:29:02 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 22 Nov 2019 18:28:55 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 22 Nov 2019 18:29:23 +0800
-Message-ID: <1574418540.11977.19.camel@mtkswgap22>
-Subject: Re: [PATCH v1 10/12] soc: mediatek: cmdq: add loop function
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 22 Nov 2019 18:29:00 +0800
-In-Reply-To: <1574415960.19450.23.camel@mtksdaap41>
-References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574327552-11806-11-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574415960.19450.23.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 22 Nov 2019 05:30:30 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k13so3180488pgh.3;
+        Fri, 22 Nov 2019 02:30:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KZF4nCg+mr6Tu7VsbFdxmJAwi8ka4CeGB3j0/tQUh5Q=;
+        b=fWB0qAhi80fT+Q/RQ4rWbGdN28X7xewAfOZCug4QaKIQuw3pBgWLvWdanya5EjKNsY
+         uA0MY2/5Ao72E5fmBT0xrPh2z2ouGbMatpGmufUyjoPziIAbW06cymmArvFfcFugSzEY
+         pCJSJXdezGTB1OqJIa3HgOYNZhrTLQRf0r4LobJn4Y/Z7hNCgl/+F4TzTK5euJxHLtuJ
+         jcPAcLm0gy5stx3QrMpA50j8kHh//UbZVdkJ7duKZH3Nj+/CD38YUmJ6CQ5ugSDaz5aF
+         SxeZ5g5SqpDasHHoTL0m887lrtqeSayGmJhke7iH+Et8bZZ5Way9/fR6ai9FmN4JhYhW
+         ytZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KZF4nCg+mr6Tu7VsbFdxmJAwi8ka4CeGB3j0/tQUh5Q=;
+        b=UgUn9kuDLqzlvY8P4ufaZmYeljm0RDu0Q5jYg9tsy914qILpgIFNlNYkIOBKtn5BzC
+         SDSstQ+Fm1+uXZPeYvJbsCxQxjPE57EpbVBqCtPpOREynS+VsItY3CNz2mGQSdpkKnD7
+         SiRJv2nOP8ej6kazJzhdOn9Kxm2YU4qJpUqh0fmQ7qKd2xlE2gaH4iAJbg4BI+DfzAqc
+         JUpkEmBi95TUvE0cKTTTIaTCJX3o/rwFa2o2G00IF7dzt2N7JtA3fYKVnhbbwdPGZGyY
+         eWuSbS860tDzSFGlldWWtjvI7I/ZApt4VSGksloaj1ua5Ws3dFi5jW3209ard9xPDONw
+         nISQ==
+X-Gm-Message-State: APjAAAVtLgnb89ku7pP8dEiIMEHcXJ3B51c+sSZvDtnMedb6cyWqSugP
+        Oiw5lW6x9OXds5PLdPdv2Lo=
+X-Google-Smtp-Source: APXvYqycOpmM/n3thMeej5yGENE2TyzgFM6MbEvwtSCL1aM0q8MUKsgmF/CiLfo61cTKps1pxWyPDA==
+X-Received: by 2002:aa7:9639:: with SMTP id r25mr16489748pfg.17.1574418628685;
+        Fri, 22 Nov 2019 02:30:28 -0800 (PST)
+Received: from cnn ([2402:3a80:46d:ffdd:5d90:34b2:635a:ec78])
+        by smtp.gmail.com with ESMTPSA id f59sm2247416pje.0.2019.11.22.02.30.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 02:30:28 -0800 (PST)
+Date:   Fri, 22 Nov 2019 16:00:22 +0530
+From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     joel@jms.id.au, vijaykhemka@fb.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Message-ID: <20191122103022.GA15913@cnn>
+References: <20191118123707.GA5560@cnn>
+ <b2f503f0-0f13-46bc-a1be-c82a42b85797@www.fastmail.com>
+ <D34D3A2F-9CD5-4924-8407-F6EB0A4C66B5@fb.com>
+ <20191121074843.GA10607@cnn>
+ <0fce7468-bb35-4d47-8d5d-abc228e99085@www.fastmail.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0fce7468-bb35-4d47-8d5d-abc228e99085@www.fastmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ0ssDQoNCk9uIEZyaSwgMjAxOS0xMS0yMiBhdCAxNzo0NiArMDgwMCwgQ0sgSHUgd3JvdGU6
-DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBUaHUsIDIwMTktMTEtMjEgYXQgMTc6MTIgKzA4MDAs
-IERlbm5pcyBZQyBIc2llaCB3cm90ZToNCj4gPiBBZGQgZmluYWxpemUgbG9vcCBmdW5jdGlvbiBp
-biBjbWRxIGhlbHBlciBmdW5jdGlvbnMgd2hpY2ggbG9vcCB3aG9sZSBwa3QNCj4gPiBpbiBnY2Ug
-aGFyZHdhcmUgdGhyZWFkIHdpdGhvdXQgY3B1IG9wZXJhdGlvbi4NCj4gPiANCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+
-ID4gLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIHwgICA0
-MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L3Nv
-Yy9tZWRpYXRlay9tdGstY21kcS5oICB8ICAgIDggKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDQ5IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2Mv
-bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21k
-cS1oZWxwZXIuYw0KPiA+IGluZGV4IDQyMzVjZjguLjNiMTAyNDEgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiArKysgYi9kcml2ZXJz
-L3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+IEBAIC0zODUsMTIgKzM4NSwyNyBA
-QCBpbnQgY21kcV9wa3RfYXNzaWduKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgcmVnX2lkeCwg
-dTMyIHZhbHVlKQ0KPiA+ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfYXNzaWduKTsN
-Cj4gPiAgDQo+ID4gK3N0YXRpYyBib29sIGNtZHFfcGt0X2ZpbmFsaXplZChzdHJ1Y3QgY21kcV9w
-a3QgKnBrdCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gKmluc3Q7DQo+
-ID4gKw0KPiA+ICsJaWYgKHBrdC0+Y21kX2J1Zl9zaXplIDwgMiAqIENNRFFfSU5TVF9TSVpFKQ0K
-PiA+ICsJCXJldHVybiBmYWxzZTsNCj4gPiArDQo+ID4gKwlpbnN0ID0gcGt0LT52YV9iYXNlICsg
-cGt0LT5jbWRfYnVmX3NpemUgLSAyICogQ01EUV9JTlNUX1NJWkU7DQo+ID4gKwlyZXR1cm4gaW5z
-dC0+b3AgPT0gQ01EUV9DT0RFX0VPQzsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBj
-bWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCkNCj4gPiAgew0KPiA+ICAJc3Ry
-dWN0IGNtZHFfY2xpZW50ICpjbCA9IHBrdC0+Y2w7DQo+ID4gIAlzdHJ1Y3QgY21kcV9pbnN0cnVj
-dGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gPiAgCWludCBlcnI7DQo+ID4gIA0KPiA+ICsJLyogZG8g
-bm90IGZpbmFsaXplIHR3aWNlICovDQo+ID4gKwlpZiAoY21kcV9wa3RfZmluYWxpemVkKHBrdCkp
-DQo+ID4gKwkJcmV0dXJuIDA7DQo+ID4gKw0KPiA+ICAJLyogaW5zZXJ0IEVPQyBhbmQgZ2VuZXJh
-dGUgSVJRIGZvciBlYWNoIGNvbW1hbmQgaXRlcmF0aW9uICovDQo+ID4gIAlpbnN0Lm9wID0gQ01E
-UV9DT0RFX0VPQzsNCj4gPiAgCWluc3QudmFsdWUgPSBDTURRX0VPQ19JUlFfRU47DQo+ID4gQEAg
-LTQwNiw2ICs0MjEsMzIgQEAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21k
-cV9wa3QgKnBrdCkNCj4gPiAgCXJldHVybiBlcnI7DQo+ID4gIH0NCj4gPiAgDQo+ID4gK2ludCBj
-bWRxX3BrdF9maW5hbGl6ZV9sb29wKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiA+ICt7DQo+ID4g
-KwlzdHJ1Y3QgY21kcV9jbGllbnQgKmNsID0gcGt0LT5jbDsNCj4gPiArCXN0cnVjdCBjbWRxX2lu
-c3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiA+ICsJaW50IGVycjsNCj4gPiArDQo+ID4gKwkv
-KiBkbyBub3QgZmluYWxpemUgdHdpY2UgKi8NCj4gPiArCWlmIChjbWRxX3BrdF9maW5hbGl6ZWQo
-cGt0KSkNCj4gPiArCQlyZXR1cm4gMDsNCj4gDQo+IFdoeSBub3QganVzdCBleHBvcnQgY21kcV9w
-a3RfZmluYWxpemUoKSBmb3IgdXNlciBhbmQgZG8gbm90IGNhbGwNCj4gY21kcV9wa3RfZmluYWxp
-emUoKSBpbiBjbWRxX3BrdF9mbHVzaF9hc3luYygpLCBzbyB5b3UgZG9uJ3QgbmVlZCB0bw0KPiBj
-aGVjayB0aGlzLg0KPiANCj4gSSB3b3VsZCBiZSBtb3JlIGxpa2UgdG8gZXhwb3J0IEFQSSBzdWNo
-IGFzIGNtZHFfcGt0X2VvYygpLA0KPiBjbWRxX3BrdF9qdW1wKCksIHRoaXMgd291bGQgcHJvdmlk
-ZSBtb3JlIGZsZXhpYmlsaXR5IGZvciB1c2VyIHRvDQo+IGFzc2VtYmxlIHRoZSBjb21tYW5kIGl0
-IHdhbnQuDQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudC4N
-Cg0KU2hvdWxkIHdlIGJhY2t3YXJkIGNvbXBhdGlibGUgd2l0aCBleGlzdGluZyBjbGllbnRzPyBS
-ZW1vdmUgZmluYWxpemUgaW4NCmZsdXNoIHdpbGwgY2F1c2UgZXhpc3RpbmcgY2xpZW50IGZsdXNo
-IHdpdGhvdXQgSVJRLg0KDQoNClJlZ2FyZHMsDQpEZW5uaXMNCg0KPiANCj4gPiArDQo+ID4gKwkv
-KiBpbnNlcnQgRU9DIGFuZCBnZW5lcmF0ZSBJUlEgZm9yIGVhY2ggY29tbWFuZCBpdGVyYXRpb24g
-Ki8NCj4gPiArCWluc3Qub3AgPSBDTURRX0NPREVfRU9DOw0KPiA+ICsJZXJyID0gY21kcV9wa3Rf
-YXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiArCWlmIChlcnIgPCAwKQ0KPiA+ICsJCXJl
-dHVybiBlcnI7DQo+ID4gKw0KPiA+ICsJLyogSlVNUCBhYmFvbHV0ZSB0byBiZWdpbiAqLw0KPiA+
-ICsJaW5zdC5vcCA9IENNRFFfQ09ERV9KVU1QOw0KPiA+ICsJaW5zdC5vZmZzZXQgPSAxOw0KPiA+
-ICsJaW5zdC52YWx1ZSA9IHBrdC0+cGFfYmFzZSA+PiBjbWRxX21ib3hfc2hpZnQoY2wtPmNoYW4p
-Ow0KPiA+ICsJZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiAr
-DQo+ID4gKwlyZXR1cm4gZXJyOw0KPiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0woY21kcV9wa3Rf
-ZmluYWxpemVfbG9vcCk7DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9pZCBjbWRxX3BrdF9mbHVzaF9h
-c3luY19jYihzdHJ1Y3QgY21kcV9jYl9kYXRhIGRhdGEpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBj
-bWRxX3BrdCAqcGt0ID0gKHN0cnVjdCBjbWRxX3BrdCAqKWRhdGEuZGF0YTsNCj4gPiBkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGlu
-dXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiBpbmRleCBiMzQ3NGYyLi43N2U4OTQ0IDEw
-MDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4g
-PiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gQEAgLTIw
-Myw2ICsyMDMsMTQgQEAgaW50IGNtZHFfcGt0X3BvbGxfbWFzayhzdHJ1Y3QgY21kcV9wa3QgKnBr
-dCwgdTggc3Vic3lzLA0KPiA+ICBpbnQgY21kcV9wa3RfYXNzaWduKHN0cnVjdCBjbWRxX3BrdCAq
-cGt0LCB1MTYgcmVnX2lkeCwgdTMyIHZhbHVlKTsNCj4gPiAgDQo+ID4gIC8qKg0KPiA+ICsgKiBj
-bWRxX3BrdF9maW5hbGl6ZV9sb29wKCkgLSBBcHBlbmQgRU9DIGFuZCBqdW1wIGNvbW1hbmQgdG8g
-bG9vcCBwa3QuDQo+ID4gKyAqIEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiA+ICsgKg0KPiA+ICsg
-KiBSZXR1cm46IDAgZm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVycm9yIGNvZGUgaXMgcmV0dXJuZWQN
-Cj4gPiArICovDQo+ID4gK2ludCBjbWRxX3BrdF9maW5hbGl6ZV9sb29wKHN0cnVjdCBjbWRxX3Br
-dCAqcGt0KTsNCj4gPiArDQo+ID4gKy8qKg0KPiA+ICAgKiBjbWRxX3BrdF9mbHVzaF9hc3luYygp
-IC0gdHJpZ2dlciBDTURRIHRvIGFzeW5jaHJvbm91c2x5IGV4ZWN1dGUgdGhlIENNRFENCj4gPiAg
-ICogICAgICAgICAgICAgICAgICAgICAgICAgIHBhY2tldCBhbmQgY2FsbCBiYWNrIGF0IHRoZSBl
-bmQgb2YgZG9uZSBwYWNrZXQNCj4gPiAgICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQo+IA0KPiAN
-Cg0K
 
+From 9a17872b5faf2c00ab0b572bac0072e44a3d8b91 Mon Sep 17 00:00:00 2001
+From: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+Date: Thu, 21 Nov 2019 11:57:07 +0530
+Subject: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+
+The Yosemite V2 is a facebook multi-node server
+platform that host four OCP server. The BMC
+in the Yosemite V2 platorm based on AST2500 SoC.
+
+This patch adds linux device tree entry related to
+Yosemite V2 specific devices connected to BMC SoC.
+
+Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+---
+ .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 152 +++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+new file mode 100644
+index 0000000..5f9a2e1
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright (c) 2018 Facebook Inc.
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Facebook Yosemitev2 BMC";
++	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
++	aliases {
++		serial0 = &uart1;
++		serial4 = &uart5;
++	};
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	iio-hwmon {
++		// VOLATAGE SENSOR
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
++		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
++		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
++		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "pnor";
++	};
++};
++
++&uart5 {
++	// BMC Console
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&adc {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++		&pinctrl_adc1_default
++		&pinctrl_adc2_default
++		&pinctrl_adc3_default
++		&pinctrl_adc4_default
++		&pinctrl_adc5_default
++		&pinctrl_adc6_default
++		&pinctrl_adc7_default
++		&pinctrl_adc8_default
++		&pinctrl_adc9_default
++		&pinctrl_adc10_default
++		&pinctrl_adc11_default
++		&pinctrl_adc12_default
++		&pinctrl_adc13_default
++		&pinctrl_adc14_default
++		&pinctrl_adc15_default>;
++};
++
++&i2c8 {
++	status = "okay";
++	//FRU EEPROM
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++	tmp421@4e {
++	//INLET TEMP
++		compatible = "ti,tmp421";
++		reg = <0x4e>;
++	};
++	//OUTLET TEMP
++	tmp421@4f {
++		compatible = "ti,tmp421";
++		reg = <0x4f>;
++	};
++};
++
++&i2c10 {
++	status = "okay";
++	//HSC
++	adm1278@40 {
++		compatible = "adi,adm1278";
++		reg = <0x40>;
++	};
++};
++
++&i2c11 {
++	status = "okay";
++	//MEZZ_TEMP_SENSOR
++	tmp421@1f {
++		compatible = "ti,tmp421";
++		reg = <0x1f>;
++	};
++};
++
++&i2c12 {
++	status = "okay";
++	//MEZZ_FRU
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&pwm_tacho {
++	status = "okay";
++	//FSC
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++};
+-- 
+2.7.4
+
+
+On Fri, Nov 22, 2019 at 09:16:39AM +1030, Andrew Jeffery wrote:
+> 
+> 
+> On Thu, 21 Nov 2019, at 18:18, Manikandan wrote:
+> > 
+> > Hi Andrew/Vijay,
+> > 
+> > Thanks for the review .
+> > 
+> > The following changes done in dts and tested in Facebook Yosemite V2 
+> > BMC platform,
+> >   1. LPC feature removed as not supported .
+> >   2. VUART feature removed as not supported.
+> >   3. Host UART feature removed as not in the current scope.
+> >   4. ADC pinctrl details added in dts.
+> 
+> Can you please re-send the patch as a v2 and inline to the mail rather than
+> as an attachment?
+> 
+> Cheers,
+> 
+> Andrew
