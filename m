@@ -4,52 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE6220714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAB52070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404000;
-	bh=5NqZWv/lrf+4gV1AJubypYGwHZ9tJ+dRz9dCQ+jRxVE=;
+	s=default; t=1574404008;
+	bh=uI7WqOCmD7pPLkF6NG+fgAmT0gxRGJ+luTIViUcMrsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5efGWFwsElvCDG4LeWzvuUxllQ8PIUQkBd+8T6c7moN01x2h4E0EvhP21enQIhxJ
-	 AbxyBtrWSfblydkofmzjWFRw2FOXlSiYg+hKwQ1ybVLRYOUXEpBaYxmOxR3iRWhHmt
-	 bHTDR0CyjiGgk6e+rMSE2EULiDnByn2TOUJGG6As=
+	b=lDL+FcGhoQe/hMi6SkWOQT0r2mY4LEa3gWNYDc4Vgg9btfuYaCHBcCr3vhCyCJHrQ
+	 2kNoZeuwbTuU9/icEzAYs8g1xX86GtYnlVmxtDJZaOWGcxSujHi5tbR0PALO4cOYvm
+	 NGM/MUxDqI2aP32PhsvcNWIUbDpR6Rz8G5PmfPdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfKVG0j (ORCPT
+        id S1728975AbfKVG0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:26:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:26:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbfKVFur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:47 -0500
+        id S1727838AbfKVFun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FDAB20726;
-        Fri, 22 Nov 2019 05:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 438B72070E;
+        Fri, 22 Nov 2019 05:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401847;
-        bh=5NqZWv/lrf+4gV1AJubypYGwHZ9tJ+dRz9dCQ+jRxVE=;
+        s=default; t=1574401842;
+        bh=uI7WqOCmD7pPLkF6NG+fgAmT0gxRGJ+luTIViUcMrsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXNXADBtlCp6WTkeO2bkbAJBQtoFyqxszwk3oLpjv17K/Yq1xBkfvN0YTVOarcvS5
-         UTXO0UreHZzj924LAsk3Qj+bnCxahhIzPUG0I3q114X27veM7WijYPW+hdVuPLbDUA
-         wua7edgmB88ooWSBJwceer4F48IFLlSk0vzCi6b0=
+        b=KGDjY7nQu9Minmqz1bq32PtsP2TampjnWNqDlBYiruYMcuzW6wpVQmUdhkn6rEajJ
+         1aPFtxQPv18ylFajvJUvtJaioEHphSCtjy06UyFwFlMiFDuupziPwWIYcGZllMjgh1
+         OK/E1ugv4BrnOIhkKmWw4Kct2tktz0nb53cwXPug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 085/219] memory: omap-gpmc: Get the header of the enum
-Date:   Fri, 22 Nov 2019 00:46:57 -0500
-Message-Id: <20191122054911.1750-78-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 082/219] kprobes: Blacklist symbols in arch-defined prohibited area
+Date:   Fri, 22 Nov 2019 00:46:54 -0500
+Message-Id: <20191122054911.1750-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -62,46 +68,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit a0752e9c3097b2c4fccd618802938e0951038dfa ]
+[ Upstream commit fb1a59fae8baa3f3c69b72a87ff94fc4fa5683ec ]
 
-Commit 21abf103818a
-("gpio: Pass a flag to gpiochip_request_own_desc()")
-started to pass an enum gpiod_flags but this file is
-not including the header file that defines that enum
-and the compiler spits:
+Blacklist symbols in arch-defined probe-prohibited areas.
+With this change, user can see all symbols which are prohibited
+to probe in debugfs.
 
-drivers/memory/omap-gpmc.c: In function
-			    'gpmc_probe_generic_child':
-drivers/memory/omap-gpmc.c:2174:9: error: type of formal
-				   parameter 4 is incomplete
-         0);
-         ^
+All archtectures which have custom prohibit areas should define
+its own arch_populate_kprobe_blacklist() function, but unless that,
+all symbols marked __kprobes are blacklisted.
 
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 21abf103818a ("gpio: Pass a flag to gpiochip_request_own_desc()")
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: Andrea Righi <righi.andrea@gmail.com>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yonghong Song <yhs@fb.com>
+Link: http://lkml.kernel.org/r/154503485491.26176.15823229545155174796.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/omap-gpmc.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/kprobes.h |  3 ++
+ kernel/kprobes.c        | 67 ++++++++++++++++++++++++++++++++---------
+ 2 files changed, 56 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index c215287e80cf3..1c6a7c16e0c17 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -21,6 +21,7 @@
- #include <linux/spinlock.h>
- #include <linux/io.h>
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/consumer.h> /* GPIO descriptor enum */
- #include <linux/interrupt.h>
- #include <linux/irqdomain.h>
- #include <linux/platform_device.h>
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 32cae0f35b9d4..9adb92ad24d3f 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -243,10 +243,13 @@ extern int arch_init_kprobes(void);
+ extern void show_registers(struct pt_regs *regs);
+ extern void kprobes_inc_nmissed_count(struct kprobe *p);
+ extern bool arch_within_kprobe_blacklist(unsigned long addr);
++extern int arch_populate_kprobe_blacklist(void);
+ extern bool arch_kprobe_on_func_entry(unsigned long offset);
+ extern bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset);
+ 
+ extern bool within_kprobe_blacklist(unsigned long addr);
++extern int kprobe_add_ksym_blacklist(unsigned long entry);
++extern int kprobe_add_area_blacklist(unsigned long start, unsigned long end);
+ 
+ struct kprobe_insn_cache {
+ 	struct mutex mutex;
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index b8efca9dc2cbb..c4f1acb2e7d20 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2090,6 +2090,47 @@ void dump_kprobe(struct kprobe *kp)
+ }
+ NOKPROBE_SYMBOL(dump_kprobe);
+ 
++int kprobe_add_ksym_blacklist(unsigned long entry)
++{
++	struct kprobe_blacklist_entry *ent;
++	unsigned long offset = 0, size = 0;
++
++	if (!kernel_text_address(entry) ||
++	    !kallsyms_lookup_size_offset(entry, &size, &offset))
++		return -EINVAL;
++
++	ent = kmalloc(sizeof(*ent), GFP_KERNEL);
++	if (!ent)
++		return -ENOMEM;
++	ent->start_addr = entry;
++	ent->end_addr = entry + size;
++	INIT_LIST_HEAD(&ent->list);
++	list_add_tail(&ent->list, &kprobe_blacklist);
++
++	return (int)size;
++}
++
++/* Add all symbols in given area into kprobe blacklist */
++int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
++{
++	unsigned long entry;
++	int ret = 0;
++
++	for (entry = start; entry < end; entry += ret) {
++		ret = kprobe_add_ksym_blacklist(entry);
++		if (ret < 0)
++			return ret;
++		if (ret == 0)	/* In case of alias symbol */
++			ret = 1;
++	}
++	return 0;
++}
++
++int __init __weak arch_populate_kprobe_blacklist(void)
++{
++	return 0;
++}
++
+ /*
+  * Lookup and populate the kprobe_blacklist.
+  *
+@@ -2101,26 +2142,24 @@ NOKPROBE_SYMBOL(dump_kprobe);
+ static int __init populate_kprobe_blacklist(unsigned long *start,
+ 					     unsigned long *end)
+ {
++	unsigned long entry;
+ 	unsigned long *iter;
+-	struct kprobe_blacklist_entry *ent;
+-	unsigned long entry, offset = 0, size = 0;
++	int ret;
+ 
+ 	for (iter = start; iter < end; iter++) {
+ 		entry = arch_deref_entry_point((void *)*iter);
+-
+-		if (!kernel_text_address(entry) ||
+-		    !kallsyms_lookup_size_offset(entry, &size, &offset))
++		ret = kprobe_add_ksym_blacklist(entry);
++		if (ret == -EINVAL)
+ 			continue;
+-
+-		ent = kmalloc(sizeof(*ent), GFP_KERNEL);
+-		if (!ent)
+-			return -ENOMEM;
+-		ent->start_addr = entry;
+-		ent->end_addr = entry + size;
+-		INIT_LIST_HEAD(&ent->list);
+-		list_add_tail(&ent->list, &kprobe_blacklist);
++		if (ret < 0)
++			return ret;
+ 	}
+-	return 0;
++
++	/* Symbols in __kprobes_text are blacklisted */
++	ret = kprobe_add_area_blacklist((unsigned long)__kprobes_text_start,
++					(unsigned long)__kprobes_text_end);
++
++	return ret ? : arch_populate_kprobe_blacklist();
+ }
+ 
+ /* Module notifier call back, checking kprobes on the module */
 -- 
 2.20.1
 
