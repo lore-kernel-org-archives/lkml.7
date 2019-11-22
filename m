@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4149EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E6620409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E4D20409
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404073;
-	bh=RuXCy8MiSHwkFqpJv3UmmnKuGufeTgueNF/f4E5Vf+I=;
+	s=default; t=1574404079;
+	bh=niKuEWpHYMiGBDyVgEHosl+UrqPkEyiUFP+M5ijO2mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QoQbqV77UR4UKVNNfmL4kxCD0/t7SBfE4szDKt3tw/+V6LJAB3VH12L5GRwlCjOuj
-	 QGe28cG2+Oqcla7g8vqmXyAP903CPM9yYllYXmI5Jmxcx7xtOYwSOT2d7iYPMExXF0
-	 MIMf9/QdbfTGuaIGSZba2nAzyPOtytTgS1GE61SU=
+	b=qPkFpw6Q+QxrBIb86zukAtmlo4wFMqRE+eUe0owk2UOdE43s7AVLJ1ozslT1p/cHi
+	 ZAOlUNemA0DPhPn7PcI5rNaBO888Lher4SHf2xhEiWj0HoyVEIWuK8lXxtsd3pT+A1
+	 +XYhMGb0ZlSB8LyrIhxHjlwvVncxqArrsoU7IehU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfKVFuU (ORCPT
+        id S1728143AbfKVG16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54756 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:27:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbfKVFuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:17 -0500
+        id S1727535AbfKVFuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 861BA2070A;
-        Fri, 22 Nov 2019 05:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA90520717;
+        Fri, 22 Nov 2019 05:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401816;
-        bh=RuXCy8MiSHwkFqpJv3UmmnKuGufeTgueNF/f4E5Vf+I=;
+        s=default; t=1574401819;
+        bh=niKuEWpHYMiGBDyVgEHosl+UrqPkEyiUFP+M5ijO2mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wv1rCSupUyREA1pDs6ddxP6Sxu50hafGBrnj82/gW+zHAwiZEjo4EriuiDMOux4H5
-         6+9bQZ22NeB6KN4xAof/A8If9ZDmi6SaQ5j4h27vuaqTeujlRT6yeMC8HMqcJ/vKLQ
-         NlQmXctYUnd3K1S3hb/nUcpe7p+WEtLKpsfSHJGs=
+        b=iZQm0y34LmLtXoAsjl8BJ7RnQjmM0IzdqqJBqz3f/OHtT1pqzdK3886GgPtUiLNhS
+         tTOBOePtR+Lr0pZSpcqQJz8+Jw129rTS+pJmFyw4reYvLKE2GwCeZRZDP5+IEnA5Vy
+         +wbPOFheGhtoX63L0rgugRCgDfGw6yQ2gNtp9nPc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Avraham Stern <avraham.stern@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/219] iwlwifi: mvm: force TCM re-evaluation on TCM resume
-Date:   Fri, 22 Nov 2019 00:46:32 -0500
-Message-Id: <20191122054911.1750-53-sashal@kernel.org>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 063/219] gpio: pca953x: Fix AI overflow on PCAL6524
+Date:   Fri, 22 Nov 2019 00:46:35 -0500
+Message-Id: <20191122054911.1750-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,64 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Avraham Stern <avraham.stern@intel.com>
+From: Marek Vasut <marek.vasut@gmail.com>
 
-[ Upstream commit 7bc2468277033e05401d5f8fd48a772f407338c2 ]
+[ Upstream commit 92f45ebe68181c2d7f76633ffae55bc9447d62cd ]
 
-When traffic load is not low or low latency is active, TCM schedules
-re-evaluation work so in case traffic stops TCM will detect that
-traffic load has become low or that low latency is no longer active.
-However, if TCM is paused when the re-evaluation work runs, it does
-not re-evaluate and the re-evaluation work is no longer scheduled.
-As a result, TCM will not indicate that low latency is no longer
-active or that traffic load is low when traffic stops.
+The PCAL_PINCTRL_MASK is too large. The extended register block on
+PCAL6524, which is the largest chip with this block, has the block
+limited to address range 0x40..0x7f. This is because the bit 7 in
+the command register is used for the Address Increment functionality.
 
-Fix this by forcing TCM re-evaluation when TCM is resumed in case
-low latency is active or traffic load is not low.
+Trim the mask to 0x60 to match the datasheet and to prevent accidental
+overwrite of the AI bit.
 
-Signed-off-by: Avraham Stern <avraham.stern@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/utils.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/gpio/gpio-pca953x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-index 6a5349401aa99..00712205c05f2 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-@@ -1804,6 +1804,7 @@ void iwl_mvm_pause_tcm(struct iwl_mvm *mvm, bool with_cancel)
- void iwl_mvm_resume_tcm(struct iwl_mvm *mvm)
- {
- 	int mac;
-+	bool low_latency = false;
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index e0657fc72d31f..0232c25a15864 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -58,7 +58,7 @@
+ #define PCA_GPIO_MASK		0x00FF
  
- 	spin_lock_bh(&mvm->tcm.lock);
- 	mvm->tcm.ts = jiffies;
-@@ -1815,10 +1816,23 @@ void iwl_mvm_resume_tcm(struct iwl_mvm *mvm)
- 		memset(&mdata->tx.pkts, 0, sizeof(mdata->tx.pkts));
- 		memset(&mdata->rx.airtime, 0, sizeof(mdata->rx.airtime));
- 		memset(&mdata->tx.airtime, 0, sizeof(mdata->tx.airtime));
-+
-+		if (mvm->tcm.result.low_latency[mac])
-+			low_latency = true;
- 	}
- 	/* The TCM data needs to be reset before "paused" flag changes */
- 	smp_mb();
- 	mvm->tcm.paused = false;
-+
-+	/*
-+	 * if the current load is not low or low latency is active, force
-+	 * re-evaluation to cover the case of no traffic.
-+	 */
-+	if (mvm->tcm.result.global_load > IWL_MVM_TRAFFIC_LOW)
-+		schedule_delayed_work(&mvm->tcm.work, MVM_TCM_PERIOD);
-+	else if (low_latency)
-+		schedule_delayed_work(&mvm->tcm.work, MVM_LL_PERIOD);
-+
- 	spin_unlock_bh(&mvm->tcm.lock);
- }
+ #define PCAL_GPIO_MASK		0x1f
+-#define PCAL_PINCTRL_MASK	0xe0
++#define PCAL_PINCTRL_MASK	0x60
  
+ #define PCA_INT			0x0100
+ #define PCA_PCAL		0x0200
 -- 
 2.20.1
 
