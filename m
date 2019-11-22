@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80029C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16099C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B7F2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A802068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403264;
-	bh=sadsCLSkfQewsBhR0p+TkkxkWdvvoH2esadazE9u5Gw=;
+	s=default; t=1574403267;
+	bh=72DEc1uVA0lJQcQ4ptWo7rkO3ToaqRBmPAoIfpoj9J0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncZZGgoOIYz8P0tuy3x1f5TMah7u2aEv8NOGupQmI+WYBihva6BU+GrSUb9YtrtsL
-	 dkY7J1PsgpJrYwhxqTeTWj025oCg7P7Gm4FhUi41p23gXc2PdVOFSLoeudt457Yw4k
-	 Y1umW353UF15VhHZAOfyqWrOoaqGdAH4ogBYFaQU=
+	b=HGW3BnBGgR3uPKW6sMbIM5kyizzXZb+wmcp6CYZLLQzvPycRdztVO/CTgOk/Ne4i/
+	 sXlbdMQuGHbYPkg22EJwNZ8SgT5RhTxunALjMT2Xh38OdV43ag/p7PUhqiVX4DO0iR
+	 0ztcTbeB+Q7y41YzPePOefGTVHSHO0dZ2AZWohHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfKVGOX (ORCPT
+        id S1728890AbfKVGO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:14:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51566 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:14:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfKVGOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:14:01 -0500
+        id S1729602AbfKVGOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:14:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4849B2070E;
-        Fri, 22 Nov 2019 06:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51B02068E;
+        Fri, 22 Nov 2019 06:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403241;
-        bh=sadsCLSkfQewsBhR0p+TkkxkWdvvoH2esadazE9u5Gw=;
+        s=default; t=1574403244;
+        bh=72DEc1uVA0lJQcQ4ptWo7rkO3ToaqRBmPAoIfpoj9J0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwzkp5rroEiQcps1318ccx6wBjqtXiNtyn+7J2Ud/4aBvr9EFzt2mP1Kc/JUQFZOA
-         7oCkQ2k4Y/l1Q8Vrv7qSWBWv/x+E6WZGccoqc886vaJHJotAVDs+Vwx95vTzhdrgiZ
-         j2CDIam7DYfBg5yq/dcnSGBw8Arl4BMfcw0IhSlE=
+        b=HjtU0WzPe0LcYvdPbJRjZDlUzgpNUgawpAOetVz9HhETxxggij14SsTMntSAydl+v
+         WB5iqE3IGh/BWGEeRw2SUapfuD6GWBgJ/f0UxblcleX78WPCLTsEhACm22GXX2bd0o
+         +XO4HxaCCZDrIsQLNA6Jle8HXHd3GH3VH6vcGtyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huang Shijie <sjhuang@iluvatar.ai>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Skidanov <alexey.skidanov@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 52/68] lib/genalloc.c: use vzalloc_node() to allocate the bitmap
-Date:   Fri, 22 Nov 2019 01:12:45 -0500
-Message-Id: <20191122061301.4947-51-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 55/68] tipc: fix memory leak in tipc_nl_compat_publ_dump
+Date:   Fri, 22 Nov 2019 01:12:48 -0500
+Message-Id: <20191122061301.4947-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -61,50 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Shijie <sjhuang@iluvatar.ai>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 6862d2fc81859f88c1f3f660886427893f2b4f3f ]
+[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
 
-Some devices may have big memory on chip, such as over 1G.  In some
-cases, the nbytes maybe bigger then 4M which is the bounday of the
-memory buddy system (4K default).
+There is a memory leak in case genlmsg_put fails.
 
-So use vzalloc_node() to allocate the bitmap.  Also use vfree to free
-it.
+Fix this by freeing *args* before return.
 
-Link: http://lkml.kernel.org/r/20181225015701.6289-1-sjhuang@iluvatar.ai
-Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Skidanov <alexey.skidanov@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Addresses-Coverity-ID: 1476406 ("Resource leak")
+Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/genalloc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/tipc/netlink_compat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index e4303fb2a7b28..38764572ddde8 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -187,7 +187,7 @@ int gen_pool_add_virt(struct gen_pool *pool, unsigned long virt, phys_addr_t phy
- 	int nbytes = sizeof(struct gen_pool_chunk) +
- 				BITS_TO_LONGS(nbits) * sizeof(long);
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 4f6fbd2f29add..392d72d65e602 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -926,8 +926,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
--	chunk = kzalloc_node(nbytes, GFP_KERNEL, nid);
-+	chunk = vzalloc_node(nbytes, nid);
- 	if (unlikely(chunk == NULL))
- 		return -ENOMEM;
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
+-	if (!hdr)
++	if (!hdr) {
++		kfree_skb(args);
+ 		return -EMSGSIZE;
++	}
  
-@@ -251,7 +251,7 @@ void gen_pool_destroy(struct gen_pool *pool)
- 		bit = find_next_bit(chunk->bits, end_bit, 0);
- 		BUG_ON(bit < end_bit);
- 
--		kfree(chunk);
-+		vfree(chunk);
- 	}
- 	kfree_const(pool->name);
- 	kfree(pool);
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
