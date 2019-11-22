@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA7EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC8EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B233820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618E820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421360;
-	bh=UVaB9uRriPUJ3gCh//YHEKoxCmJWEb6T3hdy2VJoApU=;
+	s=default; t=1574421363;
+	bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzbeBU3SA3vDtYZwiisOPH2UY/LZQCWUgpJDX69fwcg2/P3ppgm/r/XNJeXyiuRWR
-	 MfZECqw5kZdDsgCf+vCg5B5O4lxKXMV+kqMagJI2FcPP3NqoIKFX8I2KlC0yXhWwHl
-	 pShCZp+g4HqNMzoiCBamDRQeF1GBc3Dz2lXQ75EE=
+	b=bTrK+fCgGqK1suyJHbOI+NKVBV+VXobPnt8OjB8vemscMn0wi2nodeW1xhL4Y9qLL
+	 NSPtSUpamEHoLp0P7eA+rBBEoa4kc0txGx0w1y1jAgYEGe4O9D6BGonJL6NobbMvFy
+	 v1GMcSWQml49PdAMustOF5DCR12e/5imFTQ6sFI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfKVLP6 (ORCPT
+        id S1729804AbfKVKvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:15:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbfKVKvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:17 -0500
+        id S1729252AbfKVKvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B14E020854;
-        Fri, 22 Nov 2019 10:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56D02072E;
+        Fri, 22 Nov 2019 10:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419877;
-        bh=UVaB9uRriPUJ3gCh//YHEKoxCmJWEb6T3hdy2VJoApU=;
+        s=default; t=1574419871;
+        bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+V83I945lzpk5zZy4t1vVxgbB/VNQ9YqvflnKNFCMdKXAesGtsENzNwDm2ouXBHv
-         pqjItyiGWA8vYMaQdS5q8BC9uRK8tt0CKqjpdQwZMHzzxgKlVougeGqx9xWwSYdHWv
-         BdhLqnezUFuBDQWtFjSqy33hmsEfeXh//l5gK538=
+        b=a5IuxPDVBPlYapbtOLa/598cA279/Jk5onfmlabAhpsg51RFNYAsoQlfZ1iXZhPtQ
+         t8aEl/6cpGh8tr4xlUIbI3qJLz6DtVGcHQuX45b1jGNlrKFODxXbZ//bYtURLUVvq0
+         sQ9xfTW23RGk6+Zw0bTkmP8Tkl3YIJEj1ppCGP8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 040/122] powerpc/pseries: Fix how we iterate over the DTL entries
-Date:   Fri, 22 Nov 2019 11:28:13 +0100
-Message-Id: <20191122100754.122659764@linuxfoundation.org>
+Subject: [PATCH 4.14 038/122] cxgb4: Use proper enum in IEEE_FAUX_SYNC
+Date:   Fri, 22 Nov 2019 11:28:11 +0100
+Message-Id: <20191122100752.871426333@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,38 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 9258227e9dd1da8feddb07ad9702845546a581c9 ]
+[ Upstream commit 258b6d141878530ba1f8fc44db683822389de914 ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we look up dtl_idx in
-the lppaca to determine the number of entries in the buffer. Since
-lppaca is in big endian, we need to do an endian conversion before using
-this in our calculation to determine the number of entries in the
-buffer. Without this, we do not iterate over the existing entries in the
-DTL buffer properly.
+Clang warns when one enumerated type is implicitly converted to another.
 
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:390:4: warning: implicit
+conversion from enumeration type 'enum cxgb4_dcb_state' to different
+enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
+                        IEEE_FAUX_SYNC(dev, dcb);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h:70:10: note: expanded
+from macro 'IEEE_FAUX_SYNC'
+                                            CXGB4_DCB_STATE_FW_ALLSYNCED);
+                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use the equivalent value of the expected type to silence Clang while
+resulting in no functional change.
+
+CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index c762689e0eb33..ef6595153642e 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -184,7 +184,7 @@ static void dtl_stop(struct dtl *dtl)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
+index ccf24d3dc9824..2c418c405c508 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
+@@ -67,7 +67,7 @@
+ 	do { \
+ 		if ((__dcb)->dcb_version == FW_PORT_DCB_VER_IEEE) \
+ 			cxgb4_dcb_state_fsm((__dev), \
+-					    CXGB4_DCB_STATE_FW_ALLSYNCED); \
++					    CXGB4_DCB_INPUT_FW_ALLSYNCED); \
+ 	} while (0)
  
- static u64 dtl_current_index(struct dtl *dtl)
- {
--	return lppaca_of(dtl->cpu).dtl_idx;
-+	return be64_to_cpu(lppaca_of(dtl->cpu).dtl_idx);
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
- 
+ /* States we can be in for a port's Data Center Bridging.
 -- 
 2.20.1
 
