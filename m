@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350E9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041F120679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD3420679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421875;
-	bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
+	s=default; t=1574421882;
+	bh=kZ3eFbfzpF8RN+2f4cfw+2bjwJ52lRnc7ozYNT8kUPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dXt2xZ6ghyfW+MynwobO65NakMlKoj2C1wg0ac2SK2F/kBN5S9rJ6Zq8M/J88l4Xe
-	 hJPexFSdnJb7WONfu3oaea5dAqDXQBXpnzAt+t9QpvJG8ov2++ots73q+ZQUORja5e
-	 PYjqbzVFHzgqkUgDN6BrjZ4nz5SNXqwoTgHwLBAE=
+	b=Sdm4Fglyt91kkXtV3p3Pe0gtqz8ABHp0dPcJHLJX9nu9WMqvNkn7qNn4ZwBuwO0Ed
+	 0hu3U7qIF5Jd+wZyr7+yjWirq9SgCvfhuaz5a0c1Qk6w8mwTpwxNPfjtCrUus7NEw3
+	 +hgt5CuCxk+2rORFuGn/AhfXTHePGLJ8uP1U3Zmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbfKVKiu (ORCPT
+        id S1728635AbfKVKiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfKVKip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:45 -0500
+        id S1728628AbfKVKiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9911320637;
-        Fri, 22 Nov 2019 10:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5592073F;
+        Fri, 22 Nov 2019 10:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419124;
-        bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
+        s=default; t=1574419094;
+        bh=kZ3eFbfzpF8RN+2f4cfw+2bjwJ52lRnc7ozYNT8kUPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IW72KgJpW8CDJuGzMMlgJ8FX76uVBPZUKG8LAkZbZ1Ixelz5b+0u9HHS0YVU/nutU
-         9yXP527OnebBrDRci2cS0wHaeNTSJP51xUeZBaB/+wt5MzDANCe7BzY2QmK9JWt4av
-         zG2+MIKi7//bjuUHlN+IBiz+YzzuaPjPqWlef5dY=
+        b=uujFmvcpMYhMmjXh7AcDESITdTdypnuBI0Ae4GJMXmFKYCj+O1XqcPH5OOkOZjrQ3
+         KFY1IbY8kg8/k19qQ9IHtxTj7+KR+VTMH+Zkwo08yF2RT8kBLRXGQeCXmKbwnVwKaz
+         K10uwklL7i0dGwcBuBziSKgzPwwjcHKg8zOAQCAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 128/159] IB/mthca: Fix error return code in __mthca_init_one()
-Date:   Fri, 22 Nov 2019 11:28:39 +0100
-Message-Id: <20191122100832.990179210@linuxfoundation.org>
+Subject: [PATCH 4.4 154/159] ARM: 8802/1: Call syscall_trace_exit even when system call skipped
+Date:   Fri, 22 Nov 2019 11:29:05 +0100
+Message-Id: <20191122100847.872357164@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,35 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
 
-[ Upstream commit 39f2495618c5e980d2873ea3f2d1877dd253e07a ]
+[ Upstream commit f18aef742c8fbd68e280dff0a63ba0ca6ee8ad85 ]
 
-Fix to return a negative error code from the mthca_cmd_init() error
-handling case instead of 0, as done elsewhere in this function.
+On at least x86 and ARM64, and as documented in the ptrace man page
+a skipped system call will still cause a syscall exit ptrace stop.
 
-Fixes: 80fd8238734c ("[PATCH] IB/mthca: Encapsulate command interface init")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Previous to this commit 32-bit ARM did not, resulting in strace
+being confused when seccomp skips system calls.
+
+This change also impacts programs that use ptrace to skip system calls.
+
+Fixes: ad75b51459ae ("ARM: 7579/1: arch/allow a scno of -1 to not cause a SIGILL")
+Signed-off-by: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
+Signed-off-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
+Tested-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mthca/mthca_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/kernel/entry-common.S | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_main.c b/drivers/infiniband/hw/mthca/mthca_main.c
-index ded76c101dde3..834b06aacc2bf 100644
---- a/drivers/infiniband/hw/mthca/mthca_main.c
-+++ b/drivers/infiniband/hw/mthca/mthca_main.c
-@@ -989,7 +989,8 @@ static int __mthca_init_one(struct pci_dev *pdev, int hca_type)
- 		goto err_free_dev;
- 	}
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index e969b18d9ff93..d31f0300d2c98 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -261,16 +261,15 @@ __sys_trace:
+ 	cmp	scno, #-1			@ skip the syscall?
+ 	bne	2b
+ 	add	sp, sp, #S_OFF			@ restore stack
+-	b	ret_slow_syscall
  
--	if (mthca_cmd_init(mdev)) {
-+	err = mthca_cmd_init(mdev);
-+	if (err) {
- 		mthca_err(mdev, "Failed to init command interface, aborting.\n");
- 		goto err_free_dev;
- 	}
+-__sys_trace_return:
+-	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
++__sys_trace_return_nosave:
++	enable_irq_notrace
+ 	mov	r0, sp
+ 	bl	syscall_trace_exit
+ 	b	ret_slow_syscall
+ 
+-__sys_trace_return_nosave:
+-	enable_irq_notrace
++__sys_trace_return:
++	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
+ 	mov	r0, sp
+ 	bl	syscall_trace_exit
+ 	b	ret_slow_syscall
 -- 
 2.20.1
 
