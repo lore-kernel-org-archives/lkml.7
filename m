@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8D3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EABCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B8F2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4584A2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420241;
-	bh=5MH6Ax/vtJQFiVkOpwSaJoxC1Gi53ZAWxPTk71j1TkI=;
+	s=default; t=1574420246;
+	bh=dVkKHy3LVAeyGbXX2QiqmkHDLTuPBVn5XN5Znud65Ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUNIp7Dq7YsCMMiN5nFDlQC0g72pkl4RIpiyBioCE3GBURs2EarnasvCubwrO2EC3
-	 tmFP/7BEB+CrMSPgJyH1B48K/M5qGK2CPEG3hXyDnwfm6tlAwnePyHFGVYkTEDbWxZ
-	 WFLaPtFWH3/1GZJtnoFPwDHmtOPrKQR1aM2j6UdI=
+	b=HQZmCyEU8KSINqmHG5/jDjOeoVx0IJefJHiAUU60wWs0cuKMWK84ywsjcTEhNkAGm
+	 Mp+U5S0GqP7CdxDrhZSu1oswfZwNBezWPH69ip4Eg8oO2j8s9zNEKLsApDZbTygEod
+	 j/PEWPmFbfWGGVNgpSFM77kfFeXstC0pYYkmEMBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbfKVK5U (ORCPT
+        id S1730665AbfKVK5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:57:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:57:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730405AbfKVK5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:08 -0500
+        id S1730407AbfKVK5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E0BB2072E;
-        Fri, 22 Nov 2019 10:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCD8420718;
+        Fri, 22 Nov 2019 10:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420228;
-        bh=5MH6Ax/vtJQFiVkOpwSaJoxC1Gi53ZAWxPTk71j1TkI=;
+        s=default; t=1574420234;
+        bh=dVkKHy3LVAeyGbXX2QiqmkHDLTuPBVn5XN5Znud65Ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvnTW3rVsN8K3gTCFIV4Ou7Vfpdb0/aeE/5HYqfyuIN359esmjaTYm6FoDyduMQWv
-         XLrESa3F4NYHQRmYlyWBubUtvGKjcSsDDPMn1nltOOUra2KiQsoTtK4auqoJK/Hk3u
-         4FwYdEpbTmeRNVMyhYj8UL8MsLIDP4HIYhoWoRVQ=
+        b=xBgNVbUw8OBm5uN3cYG8ki+Mk7IiRT1YwDYUs4Nr5hrqjkVBp37pf3aDN8LHCtOZN
+         4oWZEzEwH+iLksLTJC/3MiKYYXnmOv2m7MOJrF+9ND4fW+CR/V9l6AFtUC4bLnDZqC
+         Z7uuExg/5jS/cHqA8EiBRQbwTanYIIWYDTiPMfF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoffer Dall <cdall@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/220] kvm: arm/arm64: Fix stage2_flush_memslot for 4 level page table
-Date:   Fri, 22 Nov 2019 11:26:41 +0100
-Message-Id: <20191122100914.936074739@linuxfoundation.org>
+Subject: [PATCH 4.19 038/220] ath10k: fix vdev-start timeout on error
+Date:   Fri, 22 Nov 2019 11:26:43 +0100
+Message-Id: <20191122100915.061528128@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,39 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Ben Greear <greearb@candelatech.com>
 
-[ Upstream commit d2db7773ba864df6b4e19643dfc54838550d8049 ]
+[ Upstream commit 833fd34d743c728afe6d127ef7bee67e7d9199a8 ]
 
-So far we have only supported 3 level page table with fixed IPA of
-40bits, where PUD is folded. With 4 level page tables, we need
-to check if the PUD entry is valid or not. Fix stage2_flush_memslot()
-to do this check, before walking down the table.
+The vdev-start-response message should cause the
+completion to fire, even in the error case.  Otherwise,
+the user still gets no useful information and everything
+is blocked until the timeout period.
 
-Acked-by: Christoffer Dall <cdall@kernel.org>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Add some warning text to print out the invalid status
+code to aid debugging, and propagate failure code.
+
+Signed-off-by: Ben Greear <greearb@candelatech.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/mmu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/core.h |  1 +
+ drivers/net/wireless/ath/ath10k/mac.c  |  2 +-
+ drivers/net/wireless/ath/ath10k/wmi.c  | 19 ++++++++++++++++---
+ drivers/net/wireless/ath/ath10k/wmi.h  |  8 +++++++-
+ 4 files changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 1344557a70852..bf330b493c1e7 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -412,7 +412,8 @@ static void stage2_flush_memslot(struct kvm *kvm,
- 	pgd = kvm->arch.pgd + stage2_pgd_index(addr);
- 	do {
- 		next = stage2_pgd_addr_end(addr, end);
--		stage2_flush_puds(kvm, pgd, addr, next);
-+		if (!stage2_pgd_none(*pgd))
-+			stage2_flush_puds(kvm, pgd, addr, next);
- 	} while (pgd++, addr = next, addr != end);
+diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+index 9feea02e7d373..5c9fc4070fd24 100644
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -1003,6 +1003,7 @@ struct ath10k {
+ 
+ 	struct completion install_key_done;
+ 
++	int last_wmi_vdev_start_status;
+ 	struct completion vdev_setup_done;
+ 
+ 	struct workqueue_struct *workqueue;
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 9d033da46ec2e..d3d33cc2adfde 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -968,7 +968,7 @@ static inline int ath10k_vdev_setup_sync(struct ath10k *ar)
+ 	if (time_left == 0)
+ 		return -ETIMEDOUT;
+ 
+-	return 0;
++	return ar->last_wmi_vdev_start_status;
  }
  
+ static int ath10k_monitor_vdev_start(struct ath10k *ar, int vdev_id)
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 40b36e73bb48c..aefc92d2c09b9 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -3248,18 +3248,31 @@ void ath10k_wmi_event_vdev_start_resp(struct ath10k *ar, struct sk_buff *skb)
+ {
+ 	struct wmi_vdev_start_ev_arg arg = {};
+ 	int ret;
++	u32 status;
+ 
+ 	ath10k_dbg(ar, ATH10K_DBG_WMI, "WMI_VDEV_START_RESP_EVENTID\n");
+ 
++	ar->last_wmi_vdev_start_status = 0;
++
+ 	ret = ath10k_wmi_pull_vdev_start(ar, skb, &arg);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to parse vdev start event: %d\n", ret);
+-		return;
++		ar->last_wmi_vdev_start_status = ret;
++		goto out;
+ 	}
+ 
+-	if (WARN_ON(__le32_to_cpu(arg.status)))
+-		return;
++	status = __le32_to_cpu(arg.status);
++	if (WARN_ON_ONCE(status)) {
++		ath10k_warn(ar, "vdev-start-response reports status error: %d (%s)\n",
++			    status, (status == WMI_VDEV_START_CHAN_INVALID) ?
++			    "chan-invalid" : "unknown");
++		/* Setup is done one way or another though, so we should still
++		 * do the completion, so don't return here.
++		 */
++		ar->last_wmi_vdev_start_status = -EINVAL;
++	}
+ 
++out:
+ 	complete(&ar->vdev_setup_done);
+ }
+ 
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
+index 36220258e3c7e..e341cfb3fcc26 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.h
++++ b/drivers/net/wireless/ath/ath10k/wmi.h
+@@ -6642,11 +6642,17 @@ struct wmi_ch_info_ev_arg {
+ 	__le32 rx_frame_count;
+ };
+ 
++/* From 10.4 firmware, not sure all have the same values. */
++enum wmi_vdev_start_status {
++	WMI_VDEV_START_OK = 0,
++	WMI_VDEV_START_CHAN_INVALID,
++};
++
+ struct wmi_vdev_start_ev_arg {
+ 	__le32 vdev_id;
+ 	__le32 req_id;
+ 	__le32 resp_type; /* %WMI_VDEV_RESP_ */
+-	__le32 status;
++	__le32 status; /* See wmi_vdev_start_status enum above */
+ };
+ 
+ struct wmi_peer_kick_ev_arg {
 -- 
 2.20.1
 
