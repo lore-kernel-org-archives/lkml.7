@@ -4,64 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F83C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9574520708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B210020726
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574459694;
-	bh=9PQ6dxU3nhyeBefuLWQcY67D0PKDnBv+FZ8XY/GmGz4=;
-	h=Date:From:To:CC:CC:Subject:References:In-Reply-To:List-ID:From;
-	b=FfGBnxKLKzjJfedPKOq9nsE30I/DYfP6htc7Ef0I33H33cCrCEOlnc3Tbohgd0UFw
-	 wU8dvdn+vST6f6ci13HxU7UsLaLNrZE6Nj5GcrzuOleFEhfR+1ahNMywBTz/rTX0Iw
-	 WJ7E9vi1V+YzXHjgEvo0hDEHCSdVJ5trODFC/HXg=
+	s=default; t=1574459700;
+	bh=/ek4fRD3WgXqtQPyV+i4SwaWfgCdNeL9y/3j8PvW75w=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=YeDhhsLGc/dCrAt8Gek7IIWAM5cXsB4PgB5OvyJ0g9eYwcjOq3hemZ2uVzJ3IlpF9
+	 WXle77BzCsjhsFHiCFEa9vmxSy2/MimZL+lFOg0w4+T8/fJUg53FqeebBc444/U/qT
+	 jOh8HVhwFtSijLylTAve4XVdJEP1XdL8jOy6vpS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfKVVyx (ORCPT
+        id S1726970AbfKVVy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:54:53 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39661 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKVVyx (ORCPT
+        Fri, 22 Nov 2019 16:54:59 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44560 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKVVy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:54:53 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x28so4125766pfo.6;
-        Fri, 22 Nov 2019 13:54:52 -0800 (PST)
+        Fri, 22 Nov 2019 16:54:59 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e6so3939741pgi.11;
+        Fri, 22 Nov 2019 13:54:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:subject:references
-         :in-reply-to;
-        bh=t2HwSc1htlVEI1Qu+RPZ9ikLWx9xCqbzSxq3Gf/JDYA=;
-        b=p0HxhYa+nqQve7+U8ZN2Rl3v+id1j+gsVJHILYbXJFdYZYBRQIMK/qr/kXUBoeYxG6
-         sv4mojKSZOn4qGiVctvbvjLGnTS7lOtYIfAjJUbafxGi34znJBjutNPiefiYLh5RxaD+
-         jnzcg74tLU9ZMq3lqB/5J3rI3mNF73mRp54/AbgI3drlgbgfO2IoaBaBj/+z+5rzUFgp
-         sujEJlD/BOYFTNuelcjTbv4WRiwmJSjCSW2vphBh6SQycOO4obWb4kTGtz4YeqUe9DFN
-         PlSh3ypJqFvTFcBgWwTyk8pabn4Krqtr5KAMD2yUg190ADlvGL94JancceEOKD/2PWrb
-         LqnQ==
-X-Gm-Message-State: APjAAAWKEzRnTeTHzcNQ16sxiuwZOKUkiH5JpjW1gOJcwtqABBQoP50D
-        CBv3zmA6TTzycRhghzL+xUc3S0fYk1elhw==
-X-Google-Smtp-Source: APXvYqwAp31X8OGAuaNU4P5qXanMYeMu8/BD2s1kxMCsmk78mRey5lpTfkNng8lsZevBGKtOml6l2Q==
-X-Received: by 2002:a63:ed4a:: with SMTP id m10mr18168890pgk.255.1574459691960;
-        Fri, 22 Nov 2019 13:54:51 -0800 (PST)
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=vUZH4y8eh4NB2dPAk/Cc1BhEazNVD7xMe1SSmflrcZo=;
+        b=K9wyh8aB003vb7au7D4M7pFLKCHopS8RgDkVkC5/54ankzU1PiuQo1wvV9lyU7AwCz
+         WGtrpb7TIfil3oYP/NPwKoi74w7/ciFoCZ6x+wp4t6EEMVP5uotY0IojxgJvzgLS8VLZ
+         P5YPLPqFllsaGeQFT5xWqPZsByqjI1Q8r6Uzqxhaft2CXP9Nd7f49VfegTJLy7gN1pqJ
+         rL9M/fegeXYemKJ7MbLYvzGrpEDH0ELTEPPj6VrAasiTcmFcUcheVwgnIm2HA77mt0ZG
+         CPcE2zzAo8lBAnL3qr0CkyRdTltWlmLFinrLvgs6gNjxMGABAWuumuOOhot138DQxdyI
+         PZzQ==
+X-Gm-Message-State: APjAAAU0Fc77ayTUB3nf3tsrep2N+N1q5loszyyFFMz5mIMDZrKFTRRQ
+        W+Dndldf6+fbF/G8+IDz6D0=
+X-Google-Smtp-Source: APXvYqwXXVtepuyNAEL3/jqrvqjkPhG10QkWZocQ7BGRU2iHUKyxhd063bjnvRsZgJBoxcyhA59Z7g==
+X-Received: by 2002:a63:5848:: with SMTP id i8mr18106137pgm.217.1574459696980;
+        Fri, 22 Nov 2019 13:54:56 -0800 (PST)
 Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id 7sm7779458pgk.25.2019.11.22.13.54.50
+        by smtp.gmail.com with ESMTPSA id w2sm8778210pfj.22.2019.11.22.13.54.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 13:54:51 -0800 (PST)
-Message-ID: <5dd8592b.1c69fb81.75c66.3b2a@mx.google.com>
-Date:   Fri, 22 Nov 2019 13:54:50 -0800
+        Fri, 22 Nov 2019 13:54:56 -0800 (PST)
+Message-ID: <5dd85930.1c69fb81.6e760.64b7@mx.google.com>
+Date:   Fri, 22 Nov 2019 13:54:55 -0800
 From:   Paul Burton <paulburton@kernel.org>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Mike Rapoport <rppt@kernel.org>
 CC:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        James Hogan <jhogan@kernel.org>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
 CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH 1/2] MIPS: SGI-IP27: Fix crash,  when CPUs are disabled via nr_cpus parameter
-References:  <20191119110857.28540-1-tbogendoerfer@suse.de>
-In-Reply-To:  <20191119110857.28540-1-tbogendoerfer@suse.de>
+Subject: Re: [PATCH 0/3] mips: get rid of __ARCH_USE_5LEVEL_HACK
+References:  <20191121162133.15833-1-rppt@kernel.org>
+In-Reply-To:  <20191121162133.15833-1-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,27 +72,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-Thomas Bogendoerfer wrote:
-> If number of CPUs are limited by the kernel commandline parameter nr_cpus
-> assignment of interrupts accourding to numa rules might not be possibe.
-> As a fallback use one of the online CPUs as interrupt destination.
+Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Hi,
+> 
+> These patches update the mips page table folding/unfolding to take into
+> account the 5th level.
+> 
+> Mike Rapoport (3):
+>   mips: fix build when "48 bits virtual memory" is enabled
+>   mips: drop __pXd_offset() macros that duplicate pXd_index() ones
+>   mips: add support for folded p4d page tables
+> 
+>  arch/mips/include/asm/fixmap.h     |  2 +-
+>  arch/mips/include/asm/pgalloc.h    |  4 +--
 
 Series applied to mips-next.
 
-> MIPS: SGI-IP27: Fix crash, when CPUs are disabled via nr_cpus parameter
->   commit e3d765a941f6
->   https://git.kernel.org/mips/c/e3d765a941f6
+> mips: fix build when "48 bits virtual memory" is enabled
+>   commit 3ed6751bb8fa
+>   https://git.kernel.org/mips/c/3ed6751bb8fa
 >   
->   Fixes: 69a07a41d908 ("MIPS: SGI-IP27: rework HUB interrupts")
->   Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+>   Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 >   Signed-off-by: Paul Burton <paulburton@kernel.org>
 > 
-> MIPS: PCI: remember nasid changed by set interrupt affinity
->   commit 37640adbefd6
->   https://git.kernel.org/mips/c/37640adbefd6
+> mips: drop __pXd_offset() macros that duplicate pXd_index() ones
+>   commit 31168f033e37
+>   https://git.kernel.org/mips/c/31168f033e37
 >   
->   Fixes: e6308b6d35ea ("MIPS: SGI-IP27: abstract chipset irq from bridge")
->   Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+>   Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> mips: add support for folded p4d page tables
+>   commit 2bee1b58484f
+>   https://git.kernel.org/mips/c/2bee1b58484f
+>   
+>   Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 >   Signed-off-by: Paul Burton <paulburton@kernel.org>
 
 Thanks,
