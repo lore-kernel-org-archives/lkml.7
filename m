@@ -2,38 +2,39 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1C4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C17C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4954120672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC5B20672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKVIYZ (ORCPT
+        id S1727113AbfKVIY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:24:25 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:60514 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfKVIYX (ORCPT
+        Fri, 22 Nov 2019 03:24:29 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:52461 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfKVIYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:24:23 -0500
-IronPort-SDR: FGnyb6Lp5OvJwp+osvKOpEuR/AyqWiS6oT4m0rrRoKc9MvwGIe8XkTXSfpKmlzacdnIdoN46CZ
- VmuXEiWb0QuT7d5NfzCpyBEl5fpmOnctFObDXFcKiRXh42AqVOL6SJTvlZjvCsvev6YhXE3X33
- y2uESeXnirpmhg/2cDDz2GiqS+2uAu2l3FnMGt1qnIgkus+K/ZuJurc6zqfnoN4U1eHCkTLBvW
- 7axRJDLlpS75XOgGRzjeqUmXXxqYAdjavfB6gHExCOB5AEIgxCD/LLiz4/n4L9rNmGSUjVqNKk
- eDs=
+        Fri, 22 Nov 2019 03:24:24 -0500
+IronPort-SDR: ewDxBn7sC45V0HzpCQoh7CeQW+cmbnBrOPikYepscSHphyelcghCvauDv5JHXOwhmXlrA6rS2a
+ FsZ5jD5PF3VvJu4FFUa4Cbp6QYqoXUsaPVvkyWh17VNHPaLt4KXZu5Itb1k7H5sqa814dt1E00
+ N41rCPJQWXBHimB97uo70OftC/sBQaB+JRAxmpcfoVeyIUZk/IydgIsug5CgJslvGX/y44vvQQ
+ 5npqm1XB0HW0dIHa28pw3zTeoW3l7E++WKj5iv9c052h38GxJ8fdZ/LasF5E4vU5vicuiCV2j5
+ +oQ=
 X-IronPort-AV: E=Sophos;i="5.69,229,1571731200"; 
-   d="scan'208";a="45291094"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:24:13 -0800
-IronPort-SDR: C3IfEUvY298/qipBdKiy3UCbbacTOf9HA5yUlE8UT8TnSfRaMJ3Da68IIPbzY3sHROgIBrjvMy
- 5qGYQGwsPBcaty00+milmYoYTRbqTbrtbScaszgf8fAXpvzTdn6+mqvAba8FNII40OplJBLBA4
- PZTuE4HY78UsMNi/r/YGCkstszmA/hUlmsmR3HuyS7rKoGr94oNFcoapXxGaVwl26pIoKUJYMZ
- NMJY/RlI5ZAnFByX649egjb/duirt8lR+9Z+1mcr3DIGWwu1jNNk2p/1r9QH2/p2Bdnr7KCZbW
- tC0=
+   d="scan'208";a="43358897"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:24:24 -0800
+IronPort-SDR: MrR4zNjtpf45UUZ275EPPwhlhjrWVr6lRivcHlinQUmyym7E5Tr2GvnhPLcQSDCkatvTKoCq0m
+ tXK38pE/4Eyam/bU/fJB6zk3k69aEQjw9ldpWlKVPtRH1kxuVXEm+LDY14F3kkBFsqBrssEr8d
+ 7bO/8OragAiTVuD8iGT3jMw4xox+G5+a0VLALiWJIYVh5tj/sxhzWTfK4+AkXuLyaa78YF/Zuu
+ esngP0v+lJYe70alknXdDv5jPDt2mHX/HDypunZ9QM7JHRdT1AX/b3dtEsjnkOuICDeiE70G3z
+ XuA=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
@@ -41,9 +42,9 @@ To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v6 02/48] Input: atmel_mxt_ts - rework sysfs init/remove
-Date:   Fri, 22 Nov 2019 17:23:16 +0900
-Message-ID: <20191122082402.18173-3-jiada_wang@mentor.com>
+Subject: [PATCH v6 05/48] Input: atmel_mxt_ts - output status from T48 Noise Supression
+Date:   Fri, 22 Nov 2019 17:23:19 +0900
+Message-ID: <20191122082402.18173-6-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191122082402.18173-1-jiada_wang@mentor.com>
 References: <20191122082402.18173-1-jiada_wang@mentor.com>
@@ -56,163 +57,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-An error in the sysfs init may otherwise interfere with the async return
-from the firmware loader
-
 Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 3114584ae77c2b03b6dad87174f010d002e9c05d)
-[gdavis: Forward port and fixup conflicts. Also fixed sysfs leaks in
-	 both the mxt_initialize() and mxt_probe() error return cases.]
+Acked-by: Benson Leung <bleung@chromium.org>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit 2895a6ff150a49f27a02938f8d262be238b296d8)
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: keep call mxt_initialize() before sysfs creation]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 64 +++++++++++++++++++-----
- 1 file changed, 52 insertions(+), 12 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 6e758af343ea..ffe8a80f4d0a 100644
+index 9088b2d3266b..41a69ec5395a 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2086,10 +2086,14 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 	return 0;
+@@ -324,6 +324,7 @@ struct mxt_data {
+ 	u16 T18_address;
+ 	u8 T19_reportid;
+ 	u16 T44_address;
++	u8 T48_reportid;
+ 	u8 T100_reportid_min;
+ 	u8 T100_reportid_max;
  
- err_free_mem:
-+	data->input_dev = NULL;
- 	input_free_device(input_dev);
- 	return error;
+@@ -978,6 +979,24 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+ 	data->update_input = true;
  }
  
-+static int mxt_sysfs_init(struct mxt_data *data);
-+static void mxt_sysfs_remove(struct mxt_data *data);
-+
- static int mxt_configure_objects(struct mxt_data *data,
- 				 const struct firmware *cfg);
- 
-@@ -2141,16 +2145,24 @@ static int mxt_initialize(struct mxt_data *data)
- 	if (error)
- 		return error;
- 
-+	error = mxt_sysfs_init(data);
-+	if (error)
-+		return error;
-+
- 	error = request_firmware_nowait(THIS_MODULE, true, MXT_CFG_NAME,
- 					&client->dev, GFP_KERNEL, data,
- 					mxt_config_cb);
- 	if (error) {
- 		dev_err(&client->dev, "Failed to invoke firmware loader: %d\n",
- 			error);
--		return error;
-+		goto err_free_sysfs;
- 	}
- 
- 	return 0;
-+
-+err_free_sysfs:
-+	mxt_sysfs_remove(data);
-+	return error;
- }
- 
- static int mxt_set_t7_power_cfg(struct mxt_data *data, u8 sleep)
-@@ -2803,6 +2815,7 @@ static int mxt_load_fw(struct device *dev, const char *fn)
- 		if (ret)
- 			goto release_firmware;
- 
-+		mxt_sysfs_remove(data);
- 		mxt_free_input_device(data);
- 		mxt_free_object_table(data);
- 	} else {
-@@ -2909,16 +2922,25 @@ static ssize_t mxt_update_fw_store(struct device *dev,
- 	return count;
- }
- 
-+static DEVICE_ATTR(update_fw, S_IWUSR, NULL, mxt_update_fw_store);
-+
-+static struct attribute *mxt_fw_attrs[] = {
-+	&dev_attr_update_fw.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group mxt_fw_attr_group = {
-+	.attrs = mxt_fw_attrs,
-+};
-+
- static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
--static DEVICE_ATTR(update_fw, S_IWUSR, NULL, mxt_update_fw_store);
- 
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
- 	&dev_attr_hw_version.attr,
- 	&dev_attr_object.attr,
--	&dev_attr_update_fw.attr,
- 	NULL
- };
- 
-@@ -2926,6 +2948,28 @@ static const struct attribute_group mxt_attr_group = {
- 	.attrs = mxt_attrs,
- };
- 
-+static int mxt_sysfs_init(struct mxt_data *data)
++static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
 +{
-+	struct i2c_client *client = data->client;
-+	int error;
++	struct device *dev = &data->client->dev;
++	u8 status, state;
 +
-+	error = sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
-+	if (error) {
-+		dev_err(&client->dev, "Failure %d creating sysfs group\n",
-+			error);
-+		return error;
-+	}
++	status = msg[1];
++	state  = msg[4];
++
++	dev_dbg(dev, "T48 state %d status %02X %s%s%s%s%s\n", state, status,
++		status & 0x01 ? "FREQCHG " : "",
++		status & 0x02 ? "APXCHG " : "",
++		status & 0x04 ? "ALGOERR " : "",
++		status & 0x10 ? "STATCHG " : "",
++		status & 0x20 ? "NLVLCHG " : "");
 +
 +	return 0;
 +}
 +
-+static void mxt_sysfs_remove(struct mxt_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+
-+	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-+}
-+
- static void mxt_start(struct mxt_data *data)
+ static int mxt_proc_message(struct mxt_data *data, u8 *message)
  {
- 	switch (data->suspend_mode) {
-@@ -3112,19 +3156,14 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	if (error)
- 		return error;
+ 	u8 report_id = message[0];
+@@ -987,6 +1006,8 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
  
--	error = sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
-+	error = sysfs_create_group(&client->dev.kobj, &mxt_fw_attr_group);
- 	if (error) {
--		dev_err(&client->dev, "Failure %d creating sysfs group\n",
-+		dev_err(&client->dev, "Failure %d creating fw sysfs group\n",
- 			error);
--		goto err_free_object;
-+		return error;
- 	}
- 
- 	return 0;
--
--err_free_object:
--	mxt_free_input_device(data);
--	mxt_free_object_table(data);
--	return error;
- }
- 
- static int mxt_remove(struct i2c_client *client)
-@@ -3132,7 +3171,8 @@ static int mxt_remove(struct i2c_client *client)
- 	struct mxt_data *data = i2c_get_clientdata(client);
- 
- 	disable_irq(data->irq);
--	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-+	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
-+	mxt_sysfs_remove(data);
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
- 
+ 	if (report_id == data->T6_reportid) {
+ 		mxt_proc_t6_messages(data, message);
++	} else if (report_id == data->T48_reportid) {
++		mxt_proc_t48_messages(data, message);
+ 	} else if (!data->input_dev) {
+ 		/*
+ 		 * Do not report events if input device
+@@ -1666,6 +1687,7 @@ static void mxt_free_object_table(struct mxt_data *data)
+ 	data->T18_address = 0;
+ 	data->T19_reportid = 0;
+ 	data->T44_address = 0;
++	data->T48_reportid = 0;
+ 	data->T100_reportid_min = 0;
+ 	data->T100_reportid_max = 0;
+ 	data->max_reportid = 0;
+@@ -1747,6 +1769,9 @@ static int mxt_parse_object_table(struct mxt_data *data,
+ 		case MXT_SPT_GPIOPWM_T19:
+ 			data->T19_reportid = min_id;
+ 			break;
++		case MXT_PROCG_NOISESUPPRESSION_T48:
++			data->T48_reportid = min_id;
++			break;
+ 		case MXT_TOUCH_MULTITOUCHSCREEN_T100:
+ 			data->multitouch = MXT_TOUCH_MULTITOUCHSCREEN_T100;
+ 			data->T100_reportid_min = min_id;
 -- 
 2.17.1
 
