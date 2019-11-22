@@ -2,181 +2,119 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70422C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F04BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F3E2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452550;
-	bh=ULAcIttZS8eCaJrle6uJdQS/dqKKtcubOIerMlTBcEU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=lMTvo8A/r6FcDv/iJLXJbg260674uOKZXb4Ksc1D+8t4PWG0+hnHoZdnYHw/Sq+Gh
-	 ZWg5Zsn/COYaLnbQgVhj25nzhS9CukXSCjYXzIl0X7kxyLYqb+h79cEt9ga7sUyrHk
-	 2fGz1rp5cjytJXR9lr3EyNkZrSUK9UAv1UV6fkI0=
+	by mail.kernel.org (Postfix) with ESMTP id D94062070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVX0TArG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfKVTzs (ORCPT
+        id S1727655AbfKVT4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:55:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:52186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfKVTzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:55:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 172C61396;
-        Fri, 22 Nov 2019 11:55:46 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 885AF3F6C4;
-        Fri, 22 Nov 2019 11:55:45 -0800 (PST)
-Date:   Fri, 22 Nov 2019 19:55:44 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     broonie@kernel.org, geert@linux-m68k.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, vkoul@kernel.org
-Subject: Applied "spi: pic32: Retire dma_request_slave_channel_compat()" to the spi tree
-In-Reply-To: <20191121092703.30465-1-peter.ujfalusi@ti.com>
-Message-Id: <applied-20191121092703.30465-1-peter.ujfalusi@ti.com>
-X-Patchwork-Hint: ignore
+        Fri, 22 Nov 2019 14:56:07 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:45115 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKVT4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:56:06 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m71so3455777pjb.12;
+        Fri, 22 Nov 2019 11:56:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n9AhKfMQ3HPLRIiKyptfIRvZgizFjbDOqmEqa663Z58=;
+        b=BVX0TArGcPO3YDBZ1LafMwPAR15j+hrvoSxKdby/vlgGLtkjC+A7JhWvh5o9gSNiTE
+         Bt4OVcSCoo5/+oRr6iuLxk8/cKicdPKysDTj5G3skdujO0R5SJxaZCsYvO55R/Bmn1AP
+         A8E+xxQUAFB0grXPt84HySzbvuCCZ+6qTT77L1PpF4eMfp2G1ufIWI1A/1E/z71kUSms
+         lRKlOJbrtUwWrPIE9H4rE5/aVvz7vTto6GpI7UgK50/oFXJGxuL2tgDPdZLV4fnkl+/b
+         tEJrlhihcOH8vHj781v8bRX1t2vZwO7URsESYDu85covo+QFOKt1vyTj6ccEufjTpYLI
+         B7iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n9AhKfMQ3HPLRIiKyptfIRvZgizFjbDOqmEqa663Z58=;
+        b=bzCXHziS7BzuZzMbZp7/d0VlgKsk5cjBkeS0tnOcU5oTuZ1o5Zl2LoiKWhZftsdzNb
+         zktUM59FaCqvyoUqCUzdasvFZdDP+vWy0umj979IrlRVgQWYEcVM4M8ceT/MVNEBWLR4
+         8j7g5GAxG90ls+qYS2sVRxkbVnWa0ehpNvXcjVJu3wQr6pL0GNg5DHUf6TcFnwcQCLy9
+         xfyr1p7VQ54HMZNZ8DCQ8Vpk1U9gySWttM2yncAk/9D059QXGsUC+sdGAbNJEcd7EYbm
+         d+GgqwBLpPqTyxYuuRZjOWxSogSTlEztI7Ex1dbWq3mb1cuzMF4MWf0z6pjbcdNnLCVB
+         UE/w==
+X-Gm-Message-State: APjAAAW1icZXNv6SLbepA+9CpqgNd02CJvOcJ6NyRfEjUlyJjnW2rwXZ
+        QDPHi7kTYhDDx1EhWwdYdf0=
+X-Google-Smtp-Source: APXvYqzRjYD+J/qSc85kWoXSUcfa5FtcVRfRnO8zjPR2ARo5UoSYf6mYRehLceXYgvAUaRHsU+rK9Q==
+X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr21479330pjq.46.1574452565243;
+        Fri, 22 Nov 2019 11:56:05 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r33sm3947913pjb.5.2019.11.22.11.56.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 11:56:04 -0800 (PST)
+Date:   Fri, 22 Nov 2019 11:56:02 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Lyude Paul <lyude@redhat.com>, linux-input@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 21/21] Input: synaptics - enable RMI mode
+ for X1 Extreme 2nd Generation
+Message-ID: <20191122195602.GC248138@dtor-ws>
+References: <20191122194931.24732-1-sashal@kernel.org>
+ <20191122194931.24732-21-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122194931.24732-21-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Nov 22, 2019 at 02:49:31PM -0500, Sasha Levin wrote:
+> From: Lyude Paul <lyude@redhat.com>
+> 
+> [ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
+> 
+> Just got one of these for debugging some unrelated issues, and noticed
+> that Lenovo seems to have gone back to using RMI4 over smbus with
+> Synaptics touchpads on some of their new systems, particularly this one.
+> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-   spi: pic32: Retire dma_request_slave_channel_compat()
+This will be reverted, do not pick up for stable.
 
-has been applied to the spi tree at
+> ---
+>  drivers/input/mouse/synaptics.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+> index 7db53eab70121..1962db0431dea 100644
+> --- a/drivers/input/mouse/synaptics.c
+> +++ b/drivers/input/mouse/synaptics.c
+> @@ -180,6 +180,7 @@ static const char * const smbus_pnp_ids[] = {
+>  	"LEN0096", /* X280 */
+>  	"LEN0097", /* X280 -> ALPS trackpoint */
+>  	"LEN009b", /* T580 */
+> +	"LEN0402", /* X1 Extreme 2nd Generation */
+>  	"LEN200f", /* T450s */
+>  	"LEN2054", /* E480 */
+>  	"LEN2055", /* E580 */
+> -- 
+> 2.20.1
+> 
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+Thanks.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From eb7e6dc6d9ffcce129ac04d4e7bd2dc015bd45a5 Mon Sep 17 00:00:00 2001
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Thu, 21 Nov 2019 11:27:03 +0200
-Subject: [PATCH] spi: pic32: Retire dma_request_slave_channel_compat()
-
-There is no reason to use the dma_request_slave_channel_compat() as no
-filter function and parameter is provided.
-
-Switch the driver to use dma_request_chan() instead and add support for
-deferred probing against DMA channel.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20191121092703.30465-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-pic32.c | 46 +++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/spi/spi-pic32.c b/drivers/spi/spi-pic32.c
-index 69f517ec59c6..156961b4ca86 100644
---- a/drivers/spi/spi-pic32.c
-+++ b/drivers/spi/spi-pic32.c
-@@ -606,25 +606,30 @@ static void pic32_spi_cleanup(struct spi_device *spi)
- 	gpio_direction_output(spi->cs_gpio, !(spi->mode & SPI_CS_HIGH));
- }
- 
--static void pic32_spi_dma_prep(struct pic32_spi *pic32s, struct device *dev)
-+static int pic32_spi_dma_prep(struct pic32_spi *pic32s, struct device *dev)
- {
- 	struct spi_master *master = pic32s->master;
--	dma_cap_mask_t mask;
-+	int ret = 0;
- 
--	dma_cap_zero(mask);
--	dma_cap_set(DMA_SLAVE, mask);
-+	master->dma_rx = dma_request_chan(dev, "spi-rx");
-+	if (IS_ERR(master->dma_rx)) {
-+		if (PTR_ERR(master->dma_rx) == -EPROBE_DEFER)
-+			ret = -EPROBE_DEFER;
-+		else
-+			dev_warn(dev, "RX channel not found.\n");
- 
--	master->dma_rx = dma_request_slave_channel_compat(mask, NULL, NULL,
--							  dev, "spi-rx");
--	if (!master->dma_rx) {
--		dev_warn(dev, "RX channel not found.\n");
-+		master->dma_rx = NULL;
- 		goto out_err;
- 	}
- 
--	master->dma_tx = dma_request_slave_channel_compat(mask, NULL, NULL,
--							  dev, "spi-tx");
--	if (!master->dma_tx) {
--		dev_warn(dev, "TX channel not found.\n");
-+	master->dma_tx = dma_request_chan(dev, "spi-tx");
-+	if (IS_ERR(master->dma_tx)) {
-+		if (PTR_ERR(master->dma_tx) == -EPROBE_DEFER)
-+			ret = -EPROBE_DEFER;
-+		else
-+			dev_warn(dev, "TX channel not found.\n");
-+
-+		master->dma_tx = NULL;
- 		goto out_err;
- 	}
- 
-@@ -634,14 +639,20 @@ static void pic32_spi_dma_prep(struct pic32_spi *pic32s, struct device *dev)
- 	/* DMA chnls allocated and prepared */
- 	set_bit(PIC32F_DMA_PREP, &pic32s->flags);
- 
--	return;
-+	return 0;
- 
- out_err:
--	if (master->dma_rx)
-+	if (master->dma_rx) {
- 		dma_release_channel(master->dma_rx);
-+		master->dma_rx = NULL;
-+	}
- 
--	if (master->dma_tx)
-+	if (master->dma_tx) {
- 		dma_release_channel(master->dma_tx);
-+		master->dma_tx = NULL;
-+	}
-+
-+	return ret;
- }
- 
- static void pic32_spi_dma_unprep(struct pic32_spi *pic32s)
-@@ -776,7 +787,10 @@ static int pic32_spi_probe(struct platform_device *pdev)
- 	master->unprepare_transfer_hardware	= pic32_spi_unprepare_hardware;
- 
- 	/* optional DMA support */
--	pic32_spi_dma_prep(pic32s, &pdev->dev);
-+	ret = pic32_spi_dma_prep(pic32s, &pdev->dev);
-+	if (ret)
-+		goto err_bailout;
-+
- 	if (test_bit(PIC32F_DMA_PREP, &pic32s->flags))
- 		master->can_dma	= pic32_spi_can_dma;
- 
 -- 
-2.20.1
-
+Dmitry
