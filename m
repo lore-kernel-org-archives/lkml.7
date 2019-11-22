@@ -2,397 +2,947 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B852DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBFEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77ABD20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fjP+NaiE"
+	by mail.kernel.org (Postfix) with ESMTP id A024020679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfKVLev (ORCPT
+        id S1727606AbfKVLfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:34:51 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55578 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726548AbfKVLeu (ORCPT
+        Fri, 22 Nov 2019 06:35:38 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:32800 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfKVLfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:34:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574422488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gIfSwOUY/v0QVfMKoqi+Vk2CDkjSRq7n4XLxIb64jks=;
-        b=fjP+NaiE9HL3o33EH/0cIangtDkvW9h6fmq8cS6DBRC/mABc7QqWT7TV8c/0DJ5EFVK1/f
-        YejXFfmiGmITy57aTteBZgn6mBATSReeCsWQ59y/xrfXJ3QOAwfF0h+zCjvw3hhx+rzD4T
-        CnNdLWRQWuWW3Rqmn/7X7P+CSUZH8xg=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396--7dWST9QO1ukdeQRRva4gQ-1; Fri, 22 Nov 2019 06:34:48 -0500
-Received: by mail-qt1-f199.google.com with SMTP id r12so4407551qtp.21
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 03:34:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iBfpklGhPRhrYly17NTSIYzOWKMZdLqNlgCmkwaLRhc=;
-        b=APROGTkcOP9yDfzGR3qKnmV1fAOOg65NrXdP7Wt5nt4zg1j+TlABoqy6oqUyIyUsWQ
-         FQ8HYVj3Xfw6tisWNBEYSDUUJWiIjIRCvjliVK+4g30a3ehF4w0V1ppwVFNHXcPQSwR8
-         orUDeoeWANBb8JPZJdiba6CyEKFneoseA8mzscc2VUY++QPSIq/Pt1w1Dy4dGR8G6e8G
-         KA0aYLy0vOcIGjHtZ+nR0XeItdUQzy/PMondp3HZ3nphdhA8+Ncd6seYGFWvuhhutMym
-         5DR2GYcFqwctt2tIdOcxuPupFWBZOfWlcr/Skfkg+mpLtf4t/7OR3t58nVST454UqcGS
-         IuZg==
-X-Gm-Message-State: APjAAAWiWPb922OIMLogDDxNX86fnyin/I5Wb8Wt1wXpPnlTt68n1naC
-        ItG6poJsl2VeQ2ojdna+HXjZbFOZ13LLQnMfax3PJDIyX14tVlra0zjdTugAZeSt3MR8Jdbf+4+
-        wokG38hY3ugDHgvjC3oBgFBHvtAo5TkUQIModCwNE
-X-Received: by 2002:aed:2ae7:: with SMTP id t94mr1549753qtd.130.1574422486326;
-        Fri, 22 Nov 2019 03:34:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwMkBxx6DSKZ005gn43Xcdt6eYIcz0G2xMHhijsoBwYi4p4KVNTeDrJzhN7eeIyuxwarewT7usIYpIHUagzd5M=
-X-Received: by 2002:aed:2ae7:: with SMTP id t94mr1549730qtd.130.1574422485923;
- Fri, 22 Nov 2019 03:34:45 -0800 (PST)
+        Fri, 22 Nov 2019 06:35:37 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 42B2C291E57
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v5 09/18] platform: chrome: sensorhub: Add FIFO support
+To:     Gwendal Grignou <gwendal@chromium.org>, dmitry.torokhov@gmail.com,
+        groeck@chromium.org, briannorris@chromium.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org, dianders@chromium.org,
+        fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191115093412.144922-1-gwendal@chromium.org>
+ <20191115093412.144922-10-gwendal@chromium.org>
+Message-ID: <f120afd8-4ce8-4d1f-8c87-1a5bbd3ce422@collabora.com>
+Date:   Fri, 22 Nov 2019 12:35:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
- <20191121194942.GY11621@lahna.fi.intel.com> <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
- <20191122103637.GA11621@lahna.fi.intel.com> <CAJZ5v0gifnGZcKr6mgc6C2EfqX13OyJnOac0uDxYNKN=A0cgMg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gifnGZcKr6mgc6C2EfqX13OyJnOac0uDxYNKN=A0cgMg@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Fri, 22 Nov 2019 12:34:34 +0100
-Message-ID: <CACO55tsN_B4Apk1sgMipU5FHRJ1vSPm8HdonrKxqm8Uuo9=6rQ@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: -7dWST9QO1ukdeQRRva4gQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191115093412.144922-10-gwendal@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 12:30 PM Rafael J. Wysocki <rafael@kernel.org> wrot=
-e:
->
-> On Fri, Nov 22, 2019 at 11:36 AM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 11:39:23PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Nov 21, 2019 at 8:49 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Thu, Nov 21, 2019 at 04:43:24PM +0100, Rafael J. Wysocki wrote:
-> > > > > On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-> > > > > <mika.westerberg@intel.com> wrote:
-> > > > > >
-> > > > > > On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote=
-:
-> > > > > > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki w=
-rote:
-> > > > > > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > > > > > <mika.westerberg@intel.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysoc=
-ki wrote:
-> > > > > > > > > > > last week or so I found systems where the GPU was und=
-er the "PCI
-> > > > > > > > > > > Express Root Port" (name from lspci) and on those sys=
-tems all of that
-> > > > > > > > > > > seems to work. So I am wondering if it's indeed just =
-the 0x1901 one,
-> > > > > > > > > > > which also explains Mikas case that Thunderbolt stuff=
- works as devices
-> > > > > > > > > > > never get populated under this particular bridge cont=
-roller, but under
-> > > > > > > > > > > those "Root Port"s
-> > > > > > > > > >
-> > > > > > > > > > It always is a PCIe port, but its location within the S=
-oC may matter.
-> > > > > > > > >
-> > > > > > > > > Exactly. Intel hardware has PCIe ports on CPU side (these=
- are called
-> > > > > > > > > PEG, PCI Express Graphics, ports), and the PCH side. I th=
-ink the IP is
-> > > > > > > > > still the same.
-> > > > > > > > >
-> > > > > > > > > > Also some custom AML-based power management is involved=
- and that may
-> > > > > > > > > > be making specific assumptions on the configuration of =
-the SoC and the
-> > > > > > > > > > GPU at the time of its invocation which unfortunately a=
-re not known to
-> > > > > > > > > > us.
-> > > > > > > > > >
-> > > > > > > > > > However, it looks like the AML invoked to power down th=
-e GPU from
-> > > > > > > > > > acpi_pci_set_power_state() gets confused if it is not i=
-n PCI D0 at
-> > > > > > > > > > that point, so it looks like that AML tries to access d=
-evice memory on
-> > > > > > > > > > the GPU (beyond the PCI config space) or similar which =
-is not
-> > > > > > > > > > accessible in PCI power states below D0.
-> > > > > > > > >
-> > > > > > > > > Or the PCI config space of the GPU when the parent root p=
-ort is in D3hot
-> > > > > > > > > (as it is the case here). Also then the GPU config space =
-is not
-> > > > > > > > > accessible.
-> > > > > > > >
-> > > > > > > > Why would the parent port be in D3hot at that point?  Would=
-n't that be
-> > > > > > > > a suspend ordering violation?
-> > > > > > >
-> > > > > > > No. We put the GPU into D3hot first,
-> > > > >
-> > > > > OK
-> > > > >
-> > > > > Does this involve any AML, like a _PS3 under the GPU object?
-> > > >
-> > > > I don't see _PS3 (nor _PS0) for that object. If I read it right the=
- GPU
-> > > > itself is not described in ACPI tables at all.
-> > >
-> > > OK
-> > >
-> > > > > > > then the root port and then turn
-> > > > > > > off the power resource (which is attached to the root port) r=
-esulting
-> > > > > > > the topology entering D3cold.
-> > > > > >
-> > > > > > I don't see that happening in the AML though.
-> > > > >
-> > > > > Which AML do you mean, specifically?  The _OFF method for the roo=
-t
-> > > > > port's _PR3 power resource or something else?
-> > > >
-> > > > The root port's _OFF method for the power resource returned by its =
-_PR3.
-> > >
-> > > OK, so without the $subject patch we (1) program the downstream
-> > > component (GPU) into D3hot, then we (2) program the port holding it
-> > > into D3hot and then we (3) let the AML (_OFF for the power resource
-> > > listed by _PR3 under the port object) run.
-> > >
-> > > Something strange happens at this point (and I guess that _OFF doesn'=
-t
-> > > even reach the point where it removes power from the port which is wh=
-y
-> > > we see a lock-up).
-> >
-> > It does not necessary lead to lock-up. Here is dmesg from Karol's
-> > system:
-> >
-> >   https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525=
-de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> >
-> > what seems to happen is that the GPU never "comes back" from D3cold so
-> > the driver starts breaking apart as the hardware is gone now.
->
-> I meant a lock-up in hardware to be precise, that causes it to stop to
-> respond (which causes it to appear to be permanently in D3cold).
->
-> I wonder if the port accepts PCI config space writes then.
->
+Hi Gwendal,
 
-the issue is not AML related at all as I am able to reproduce this
-issue without having to invoke any of that at all, I just need to poke
-into the PCI register directly to cut the power. The register is not
-documented, but effectively what the AML code is writing to as well.
-Of course it might also be that the code I was testing it was doing
-things in a non conformant way and I just hit a different issue as
-well, but in the end I don't think that the AML code is the root cause
-of all of that.
+Some comments below.
 
-> > > We know that skipping (1) makes things work and we kind of suspect
-> > > that skipping (3) would make things work either, but what about doing
-> > > (1) and (3) without (2)?
-> >
-> > You mean in this particular case or in general?
->
-> In this case in particular to start with.  Just do an experiment to
-> see what happens if we skip pci_raw_set_power_state() for the port
-> instead of skipping it for the downstream device.
->
-> > Because if the port has _PSx methods we need to put it into D3hot AFAIK=
-.
->
-> Yes, we need to run _PS3 then, but maybe we don't need to write to its
-> PMCSR directly.
->
-> > > > > > Basically the difference is that when Windows 7 or Linux (the _=
-REV=3D=3D5
-> > > > > > check) then we directly do link disable whereas in Windows 8+ w=
-e invoke
-> > > > > > LKDS() method that puts the link into L2/L3. None of the fields=
- they
-> > > > > > access seem to touch the GPU itself.
-> > > > >
-> > > > > So that may be where the problem is.
-> > > > >
-> > > > > Putting the downstream component into PCI D[1-3] is expected to p=
-ut
-> > > > > the link into L1, so I'm not sure how that plays with the later
-> > > > > attempt to put it into L2/L3 Ready.
-> > > >
-> > > > That should be fine. What I've seen the link goes into L1 when
-> > > > downstream component is put to D-state (not D0) and then it is put =
-back
-> > > > to L0 when L2/3 ready is propagated. Eventually it goes into L2 or =
-L3.
-> > >
-> > > Well, that's the expected behavior, but the observed behavior isn't a=
-s
-> > > expected. :-)
-> >
-> > Right :)
-> >
-> > > > > Also, L2/L3 Ready is expected to be transient, so finally power s=
-hould
-> > > > > be removed somehow.
-> > > >
-> > > > There is GPIO for both power and PERST, I think the line here:
-> > > >
-> > > >   \_SB.SGOV (0x01010004, Zero)
-> > > >
-> > > > is the one that removes power.
-> > >
-> > > OK
-> > >
-> > > > > > LKDS() for the first PEG port looks like this:
-> > > > > >
-> > > > > >    P0L2 =3D One
-> > > > > >    Sleep (0x10)
-> > > > > >    Local0 =3D Zero
-> > > > > >    While (P0L2)
-> > > > > >    {
-> > > > > >         If ((Local0 > 0x04))
-> > > > > >         {
-> > > > > >             Break
-> > > > > >         }
-> > > > > >
-> > > > > >         Sleep (0x10)
-> > > > > >         Local0++
-> > > > > >    }
-> > > > > >
-> > > > > > One thing that comes to mind is that the loop can end even if P=
-0L2 is
-> > > > > > not cleared as it does only 5 iterations with 16 ms sleep betwe=
-en. Maybe
-> > > > > > Sleep() is implemented differently in Windows? I mean Linux may=
- be
-> > > > > > "faster" here and return prematurely and if we leave the port i=
-nto D0
-> > > > > > this does not happen, or something. I'm just throwing out ideas=
- :)
-> > > > >
-> > > > > But this actually works for the downstream component in D0, doesn=
-'t it?
-> > > >
-> > > > It does and that leaves the link in L0 so it could be that then the
-> > > > above AML works better or something.
-> > >
-> > > That would be my guess.
-> > >
-> > > > That reminds me, ASPM may have something to do with this as well.
-> > >
-> > > Not really if D-states are involved.
-> > >
-> > > > > Also, if the downstream component is in D0, the port actually sho=
-uld
-> > > > > stay in D0 too, so what would happen with the $subject patch appl=
-ied?
-> > > >
-> > > > Parent port cannot be lower D-state than the child so I agree it sh=
-ould
-> > > > stay in D0 as well. However, it seems that what happens is that the
-> > > > issue goes away :)
-> > >
-> > > Well, at least this is kind of out of the spec.
-> > >
-> > > Note that pci_pm_suspend_noirq() won't let the port go into D3 if the
-> > > downstream device is in D0, so the $subject patch will not work as
-> > > expected in the suspend-to-idle case.
-> > >
-> > > Also we really should make up our minds on whether or not to force
-> > > PCIe ports to stay in D0 when downstream devices are in D0 and be
-> > > consequent about that.  Right now we do one thing during system-wide
-> > > suspend and the other one in PM-runtime, which is confusing.
-> > >
-> > > The current design is mostly based on the PCI PM Spec 1.2, so it woul=
-d
-> > > be consequent to follow system-wide suspend in PM-runtime and avoid
-> > > putting PCIe ports holding devices in D0 into any low-power states.
-> > > but that would make the approach in the $subject patch ineffective.
-> > >
-> > > Moreover, the fact that there are separate branches for "Windows 7"
-> > > and "Windows 8+" kind of suggest a change in the expected behavior
-> > > between Windows 7 and Windows 8, from the AML perspective.  I would
-> > > guess that Windows 7 followed PCI PM 1.2 and Windows 8 (and later)
-> > > does something else.
-> >
-> > My understanding (which may not be correct) is that up to Windows 7 it
-> > never put the devices into D3cold runtime. Only when the system entered
-> > Sx states it evaluated the _OFF methods.
->
-> I see.
->
-> > Starting from Windows 8 it started doing this runtime so devices can
-> > enter D3cold even when system is in S0.
->
-> Hmm.  So by setting _REV to 5 we effectively change the _OFF into a NOP?
->
-> > > Now, the structure of the "Windows 8+" branch
-> > > described by you suggests that, at least in the cases when it is goin=
-g
-> > > to remove power from the port eventually, it goes straight for the
-> > > link preparation (the L2/L3 Ready transition) and power removal
-> > > without bothering to program the downstream device and port into D3ho=
-t
-> > > (because that's kind of redundant).
-> > >
-> > > That hypothetical "Windows 8+" approach may really work universally,
-> > > because it doesn't seem to break any rules (going straight from D0 to
-> > > D3cold is not disallowed and doing that for both a port and a
-> > > downstream device at the same time is kind of OK either, as long as
-> > > the link is ready for that).
-> >
-> > I guess it depends on how you interpret the specs ;-) From PCIe 5.0 sec
-> > 5.8 we can see the supported PM state transitions and it shows that you
-> > get to D3cold through D3hot. Of course the device goes into D3cold if
-> > you simply remove its power so I agree with you as well. However, if
-> > there is _PS3 method we can't skip the D3hot phase.
->
-> That's my understanding too, but I'm wondering about direct PMCSR
-> writes.  It is unclear to me if they are necessary, or more precisely,
-> whether or not Windows 10, say, carries them out if ACPI PM is going
-> to be applied.
->
-> Maybe I'm going too far with my conclusions, but please let me know
-> what you think about the approach proposed at the end of
-> https://lore.kernel.org/linux-pm/CAJZ5v0iQttGB4m5TbzCtjp2C1j5qEkUhqhpWb++=
-LhSk3mbW=3DLw@mail.gmail.com/T/#t
-> ?
->
+On 15/11/19 10:34, Gwendal Grignou wrote:
+> cros_ec_sensorhub registers a listener and query motion sense FIFO,
+> spread to iio sensors registers.
+> 
+> To test, we can use libiio:
+> iiod&
+> iio_readdev -u ip:localhost -T 10000 -s 25 -b 16 cros-ec-gyro | od -x
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+> Changes in v5:
+> - Use a goto in cros_ec_sensorhub_ring_handler to centralize error
+>   handling
+> - Use devm_add_action_or_reset to not need a .remove entry point for
+>   cros_sensor_hub.
+> - Fix logic error in cros_ec_sensorhub_register_push_data.
+> - Update kernel_doc documentation.
+> - Remve the need for comments in variable declaration section.
+> Changes in v4:
+> - Keep defining cros_ec_sensorhub in kernel-doc format
+> - Fix logic error when checking if sensor index outside array.
+> - Check patch with --strict option
+>     Use sizeof(*obj) instead of sizeof(struct ...obj)
+>     Alignement
+>     Use uX instead of uintX_t
+>     Use !ptr instead of ptr != NULL
+> Changes in v3:
+> - Do not use ret !=
+> - Simplfy errpr handling by removing a goto
+> - Fix doxygen comments
+> - Replace suspend/resume entry points with regular driver entry point;
+>   There was an issue in the past where the sensor stack was preventing
+>   device to suspend, but the proper fix has been implemented in cros_ec
+>   code (6ad16b78a039b "platform/chrome: don't report EC_MKBP_EVENT_SENSOR_FIFO as wakeup")
+> - Reduce mutex scope by checking return code outside of it.
+> Changes in v2:
+> - Do not register a .remove routinge in plaform_driver. A
+>   devm_action_add is added later patch IIO driver register their
+> callback.
+> - Remove double lines, add lines before return calls.
+> - Handle FLUSH flag from EC.
+> 
+> - Use ktime_t for most timestamp measurements.
+> - Add doxygen comments
+> - Cleanup timestamp collection when processing FIFO.
+> - Rename fifo_toggle to fifo_enable
+> 
+>  drivers/platform/chrome/Makefile              |   3 +-
+>  drivers/platform/chrome/cros_ec_sensorhub.c   | 108 +++--
+>  .../platform/chrome/cros_ec_sensorhub_ring.c  | 427 ++++++++++++++++++
 
+If you join the files will be around 500 lines, not too much, there is any
+strong reason to have a separate files?
+
+>  .../linux/platform_data/cros_ec_sensorhub.h   |  91 ++++
+>  4 files changed, 600 insertions(+), 29 deletions(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> 
+> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+> index a164c40dc099..cb709048c003 100644
+> --- a/drivers/platform/chrome/Makefile
+> +++ b/drivers/platform/chrome/Makefile
+> @@ -17,7 +17,8 @@ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+>  obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
+>  obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+> -obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
+> +cros_ec_sensorsupport-objs			:= cros_ec_sensorhub_ring.o cros_ec_sensorhub.o
+> +obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorsupport.o
+
+In case you decided to not join sensorhub and ring files ...
+
+This will create a completely new module not tied to the config symbol, which is
+fine but I'd prefer have something like this instead:
+
+obj-$(CONFIG_CROS_EC_SENSORHUB)                += cros-ec-sensorhub.o
+cros-ec-sensorhub-objs                 := cros_ec_sensorhub.o
+cros-ec-sensorhub-objs                 += cros_ec_sensorhub_ring.o
+
+>  obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+>  obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+>  obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
+> index 85e3d3f25786..04fd60f747c0 100644
+> --- a/drivers/platform/chrome/cros_ec_sensorhub.c
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub.c
+> @@ -51,10 +51,8 @@ static int cros_ec_sensorhub_register(struct device *dev,
+>  	int ret, i, id, sensor_num;
+>  	struct cros_ec_dev *ec = sensorhub->ec;
+>  	int sensor_type[MOTIONSENSE_TYPE_MAX] = { 0 };
+> -	struct ec_params_motion_sense *params;
+> -	struct ec_response_motion_sense *resp;
+> -	struct cros_ec_command *msg;
+>  	char *name;
+> +	struct cros_ec_command *msg = sensorhub->msg;
+>  
+>  	sensor_num = cros_ec_get_sensor_count(ec);
+>  	if (sensor_num < 0) {
+> @@ -69,30 +67,21 @@ static int cros_ec_sensorhub_register(struct device *dev,
+>  		return -EINVAL;
+>  	}
+>  
+> -	/* Prepare a message to send INFO command to each sensor. */
+> -	msg = kzalloc(sizeof(*msg) + max(sizeof(*params), sizeof(*resp)),
+> -		      GFP_KERNEL);
+> -	if (!msg)
+> -		return -ENOMEM;
+> -
+>  	msg->version = 1;
+> -	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> -	msg->outsize = sizeof(*params);
+> -	msg->insize = sizeof(*resp);
+> -	params = (struct ec_params_motion_sense *)msg->data;
+> -	resp = (struct ec_response_motion_sense *)msg->data;
+> +	msg->insize = sizeof(struct ec_response_motion_sense);
+> +	msg->outsize = sizeof(struct ec_params_motion_sense);
+>  
+>  	id = 0;
+>  	for (i = 0; i < sensor_num; i++) {
+> -		params->cmd = MOTIONSENSE_CMD_INFO;
+> -		params->info.sensor_num = i;
+> +		sensorhub->params->cmd = MOTIONSENSE_CMD_INFO;
+> +		sensorhub->params->info.sensor_num = i;
+>  		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+>  		if (ret < 0) {
+>  			dev_warn(dev, "no info for EC sensor %d : %d/%d\n",
+>  				 i, ret, msg->result);
+>  			continue;
+>  		}
+> -		switch (resp->info.type) {
+> +		switch (sensorhub->resp->info.type) {
+>  		case MOTIONSENSE_TYPE_ACCEL:
+>  			name = "cros-ec-accel";
+>  			break;
+> @@ -115,14 +104,15 @@ static int cros_ec_sensorhub_register(struct device *dev,
+>  			name = "cros-ec-activity";
+>  			break;
+>  		default:
+> -			dev_warn(dev, "unknown type %d\n", resp->info.type);
+> +			dev_warn(dev, "unknown type %d\n",
+> +				 sensorhub->resp->info.type);
+>  			continue;
+>  		}
+>  		ret = cros_ec_sensorhub_allocate_single_sensor(dev, name, i);
+>  		if (ret)
+> -			goto error;
+> +			return ret;
+>  
+> -		sensor_type[resp->info.type]++;
+> +		sensor_type[sensorhub->resp->info.type]++;
+>  	}
+>  
+>  	if (sensor_type[MOTIONSENSE_TYPE_ACCEL] >= 2)
+> @@ -133,14 +123,9 @@ static int cros_ec_sensorhub_register(struct device *dev,
+>  		ret = cros_ec_sensorhub_allocate_single_sensor(dev,
+>  							"cros-ec-lid-angle", 0);
+>  		if (ret)
+> -			goto error;
+> +			return ret;
+>  	}
+> -	kfree(msg);
+>  	return 0;
+> -
+> -error:
+> -	kfree(msg);
+> -	return ret;
+>  }
+>  
+>  static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
+> @@ -148,13 +133,29 @@ static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
+>  	struct device *dev = &sensorhub_pdev->dev;
+>  	struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
+>  	int ret, i;
+> -	struct cros_ec_sensorhub *data =
+> -		devm_kzalloc(dev, sizeof(struct cros_ec_sensorhub), GFP_KERNEL);
+> +	struct cros_ec_sensorhub *data;
+> +	struct cros_ec_command *msg;
+>  
+> +	msg = devm_kzalloc(dev, sizeof(struct cros_ec_command) +
+> +			max((u16)sizeof(struct ec_params_motion_sense),
+
+Is this u16 cast needed? I think you can remove it.
+
+> +			    ec->ec_dev->max_response), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> +
+> +	data = devm_kzalloc(dev, sizeof(struct cros_ec_sensorhub), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+> +	data->dev = dev;
+>  	data->ec = ec;
+> +
+> +	mutex_init(&data->cmd_lock);
+> +	data->msg = msg;
+> +	data->params = (struct ec_params_motion_sense *)msg->data;
+> +	data->resp = (struct ec_response_motion_sense *)msg->data;
+> +
+>  	dev_set_drvdata(dev, data);
+>  
+>  	/* Check whether this EC is a sensor hub. */
+> @@ -179,12 +180,63 @@ static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * If the EC does not have a FIFO, the sensors will query their data
+> +	 * themselves via sysfs or a software trigger.
+> +	 */
+> +	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
+> +		ret = cros_ec_sensorhub_ring_add(data);
+> +		if (ret)
+> +			return ret;
+> +		/*
+> +		 * The msg and its data is not under the control of the ring
+> +		 * handler.
+> +		 */
+> +		return devm_add_action_or_reset(dev,
+> +						cros_ec_sensorhub_ring_remove,
+> +						data);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#if CONFIG_PM_SLEEP
+
+That should be #ifdef
+
+> +/*
+> + * When the EC is suspending, we must stop sending interrupt,
+> + * we may use the same interrupt line for waking up the device.
+> + * Tell the EC to stop sending non-interrupt event on the iio ring.
+> + */
+> +static int cros_ec_ring_suspend(struct device *dev)
+
+Not only here, but this name dance makes me more difficult to follow the code.
+Could we follow a name rule?
+
+aka cros_ec_sensorhub_suspend
+
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct cros_ec_sensorhub *sensorhub = platform_get_drvdata(pdev);
+> +	struct cros_ec_dev *ec = sensorhub->ec;
+> +
+> +	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO))
+> +		return cros_ec_sensorhub_ring_fifo_enable(sensorhub, false);
+>  	return 0;
+>  }
+>  
+> +static int cros_ec_ring_resume(struct device *dev)
+
+cros_ec_sensorhub_resume
+
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct cros_ec_sensorhub *sensorhub = platform_get_drvdata(pdev);
+> +	struct cros_ec_dev *ec = sensorhub->ec;
+> +
+> +	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO))
+> +		return cros_ec_sensorhub_ring_fifo_enable(sensorhub, true);
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(cros_ec_sensorhub_ring_pm_ops,
+
+cros_ec_sensorhub_pm_ops
+
+> +		cros_ec_ring_suspend,
+> +		cros_ec_ring_resume);
+
+s/cros_ec_ring/cros_ec_sensorhub/
+
+> +
+>  static struct platform_driver cros_ec_sensorhub_driver = {
+>  	.driver = {
+>  		.name = DRV_NAME,
+> +		.pm = &cros_ec_sensorhub_ring_pm_ops,
+
+cros_ec_sensorhub_pm_ops
+
+>  	},
+>  	.probe = cros_ec_sensorhub_probe,
+>  };
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> new file mode 100644
+> index 000000000000..32333f67e26a
+> --- /dev/null
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+
+Could we consider if makes sense have this in a separate file.
+
+> @@ -0,0 +1,427 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * cros_ec_sensorhub_ring - Driver for Chrome OS EC Sensor hub FIFO.
+> + *
+
+Remove the file name, is easy to forget to update that file name if at some
+point we rename the file for some reason, so just remove it, doesn't adds extra
+info.
+
+> + * Copyright 2019 Google LLC
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/cros_ec.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_data/cros_ec_commands.h>
+> +#include <linux/platform_data/cros_ec_proto.h>
+> +#include <linux/platform_data/cros_ec_sensorhub.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sort.h>
+> +#include <linux/slab.h>
+> +
+> +static inline int cros_sensorhub_send_sample(
+
+static inline int
+cros_sensorhub_send_sample(struct cros_ec_sensorhub *sensorhub,
+
+
+> +		struct cros_ec_sensorhub *sensorhub,
+> +		struct cros_ec_sensors_ring_sample *sample)
+> +{
+> +	int id = sample->sensor_id;
+> +	cros_ec_sensorhub_push_data_cb_t cb;
+> +	struct iio_dev *indio_dev;
+> +
+> +	if (id > CROS_EC_SENSOR_MAX)
+> +		return -EINVAL;
+> +
+> +	cb = sensorhub->push_data[id].push_data_cb;
+> +	if (!cb)
+> +		return 0;
+> +
+> +	indio_dev = sensorhub->push_data[id].indio_dev;
+> +
+> +	if (sample->flag & MOTIONSENSE_SENSOR_FLAG_FLUSH)
+> +		return 0;
+> +
+> +	return cb(indio_dev, sample->vector, sample->timestamp);
+> +}
+> +
+> +/**
+> + * cros_ec_sensorhub_register_push_data() - register the callback to the hub.
+> + *
+> + * @sensorhub : Sensor Hub object
+> + * @sensor_num : The sensor the caller is interested in.
+> + * @indio_dev : The iio device to use when a sample arrives.
+> + * @cb : The callback to call when a sample arrives.
+> + *
+> + * The callback cb will be used by cros_ec_sensorhub_ring to distribute events
+> + * from the EC.
+> + *
+> + * Return: 0 when callback is registered.
+
+and error otherwise?
+
+> + */
+> +int cros_ec_sensorhub_register_push_data(struct cros_ec_sensorhub *sensorhub,
+> +					 u8 sensor_num,
+> +					 struct iio_dev *indio_dev,
+> +					 cros_ec_sensorhub_push_data_cb_t cb)
+> +{
+> +	if (sensor_num >= CROS_EC_SENSOR_PDEV_MAX)
+> +		return -EINVAL;
+> +	if (sensorhub->push_data[sensor_num].indio_dev)
+> +		return -EINVAL;
+> +
+> +	sensorhub->push_data[sensor_num].indio_dev = indio_dev;
+> +	sensorhub->push_data[sensor_num].push_data_cb = cb;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_sensorhub_register_push_data);
+> +
+> +void cros_ec_sensorhub_unregister_push_data(struct cros_ec_sensorhub *sensorhub,
+> +					    u8 sensor_num)
+> +{
+> +	sensorhub->push_data[sensor_num].indio_dev = NULL;
+> +	sensorhub->push_data[sensor_num].push_data_cb = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_sensorhub_unregister_push_data);
+> +
+> +/**
+> + * cros_ec_sensorhub_ring_fifo_enable() - Enable or disable interrupt generation
+> + *  for FIFO events.
+> + * @sensorhub : Sensor Hub object
+> + * @on : true when events are requested.
+> + *
+> + * To be called before sleeping or when noone is listening.
+> + * Return: 0 on success.
+
+and error otherwise
+
+> + */
+> +int cros_ec_sensorhub_ring_fifo_enable(struct cros_ec_sensorhub *sensorhub,
+> +				       bool on)
+
+Again there is a name dance here, sometimes you use cros_ec_sensorhub_ring,
+others cros_ec_ring. If you decide to join the files use cros_ec_sensorhub_xxx
+
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&sensorhub->cmd_lock);
+> +	sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INT_ENABLE;
+> +	sensorhub->params->fifo_int_enable.enable = on;
+> +
+> +	sensorhub->msg->outsize = sizeof(struct ec_params_motion_sense);
+> +	sensorhub->msg->insize = sizeof(struct ec_response_motion_sense);
+> +
+> +	ret = cros_ec_cmd_xfer_status(sensorhub->ec->ec_dev, sensorhub->msg);
+> +	mutex_unlock(&sensorhub->cmd_lock);
+> +
+> +	/* We expect to receive a payload of 4 bytes, ignore. */
+> +	if (ret > 0)
+> +		ret = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * cros_ec_ring_process_event() - process one EC FIFO event
+> + *
+> + * @sensorhub: Sensorhub object.
+> + * @fifo_info: fifo information from the EC (includes b point, EC timebase).
+> + * @fifo_timestamp: EC IRQ, kernel timebase (aka c)
+> + * @current_timestamp: calculated event timestamp, kernel timebase (aka a')
+> + * @in: incoming FIFO event from EC (includes a point, EC timebase)
+> + * @out: outgoing event to user space (includes a')
+> + *
+> + * Process one EC event, add it in the ring if necessary.
+> + *
+> + * Return: true if out event has been populated.
+> + */
+> +static bool cros_ec_ring_process_event(struct cros_ec_sensorhub *sensorhub,
+> +				const struct cros_ec_fifo_info *fifo_info,
+> +				const ktime_t fifo_timestamp,
+> +				ktime_t *current_timestamp,
+> +				struct ec_response_motion_sensor_data *in,
+> +				struct cros_ec_sensors_ring_sample *out)
+> +{
+> +	int axis, async_flags;
+> +	const s64 now = cros_ec_get_time_ns();
+> +
+> +	/* Do not populate the filter based on asynchronous events. */
+> +	async_flags = in->flags &
+> +		(MOTIONSENSE_SENSOR_FLAG_ODR | MOTIONSENSE_SENSOR_FLAG_FLUSH);
+> +
+> +	if (in->flags & MOTIONSENSE_SENSOR_FLAG_TIMESTAMP && !async_flags) {
+> +		s64 a = in->timestamp;
+> +		s64 b = fifo_info->info.timestamp;
+> +		s64 c = fifo_timestamp;
+> +		s64 new_timestamp;
+> +
+> +		/*
+> +		 * disable filtering since we might add more jitter
+> +		 * if b is in a random point in time
+> +		 */
+> +		new_timestamp = c - b * 1000 + a * 1000;
+
+Are a,b,c really needed? They are not used anymore. For me the formula makes a
+bit of more sense using the variable names.
+
+> +
+> +		/*
+> +		 * The timestamp can be stale if we had to use the fifo
+> +		 * info timestamp.
+> +		 */
+> +		if (new_timestamp - *current_timestamp > 0)
+> +			*current_timestamp = new_timestamp;
+> +	}
+> +
+> +	if (in->flags & MOTIONSENSE_SENSOR_FLAG_FLUSH) {
+> +		out->sensor_id = in->sensor_num;
+> +		out->timestamp = *current_timestamp;
+> +		out->flag = in->flags;
+> +		/*
+> +		 * No other payload information provided with
+> +		 * flush ack.
+> +		 */
+> +		return true;
+> +	}
+> +
+> +	if (in->flags & MOTIONSENSE_SENSOR_FLAG_TIMESTAMP)
+> +		/* If we just have a timestamp, skip this entry. */
+> +		return false;
+> +
+> +	/* Regular sample */
+> +	out->sensor_id = in->sensor_num;
+> +	if (*current_timestamp - now > 0) {
+> +		/* If the timestamp is in the future. */
+> +		out->timestamp = now;
+> +	} else {
+> +		out->timestamp = *current_timestamp;
+> +	}
+> +
+
+The brackets are not needed here
+
+> +	out->flag = in->flags;
+> +	for (axis = 0; axis < 3; axis++)
+> +		out->vector[axis] = in->data[axis];
+> +
+> +	return true;
+> +}
+> +
+> +/**
+> + * cros_ec_sensorhub_ring_handler() - the trigger handler function
+> + *
+> + * @sensorhub: device information.
+> + *
+> + * Called by the notifier, process the EC sensor FIFO queue.
+> + */
+> +static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
+> +{
+> +	struct cros_ec_fifo_info *fifo_info = &sensorhub->fifo_info;
+> +	struct cros_ec_dev *ec = sensorhub->ec;
+> +	ktime_t fifo_timestamp, current_timestamp;
+> +	int i, j, number_data, ret;
+> +	unsigned long sensor_mask = 0;
+> +	struct ec_response_motion_sensor_data *in;
+> +	struct cros_ec_sensors_ring_sample *out, *last_out;
+> +
+> +	mutex_lock(&sensorhub->cmd_lock);
+> +
+> +	/* Get FIFO information if there are lost vectors. */
+> +	if (fifo_info->info.total_lost) {
+> +		/* Need to retrieve the number of lost vectors per sensor */
+> +		sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INFO;
+> +		sensorhub->msg->outsize = 1;
+> +		sensorhub->msg->insize =
+> +			sizeof(struct ec_response_motion_sense_fifo_info) +
+> +			sizeof(u16) * CROS_EC_SENSOR_MAX;
+> +
+> +		if (cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg) < 0)
+> +			goto error;
+> +
+> +		memcpy(fifo_info, &sensorhub->resp->fifo_info,
+> +		       sizeof(*fifo_info));
+> +
+> +		/*
+> +		 * Update collection time, will not be as precise as the
+> +		 * non-error case.
+> +		 */
+> +		fifo_timestamp = cros_ec_get_time_ns();
+> +	} else {
+> +		fifo_timestamp = sensorhub->fifo_timestamp[
+> +			CROS_EC_SENSOR_NEW_TS];
+> +	}
+> +
+> +	if (fifo_info->info.count > sensorhub->fifo_size ||
+> +	    fifo_info->info.size != sensorhub->fifo_size) {
+> +		dev_warn(sensorhub->dev,
+> +			 "Mismatch EC data: count %d, size %d - expected %d",
+> +			 fifo_info->info.count, fifo_info->info.size,
+> +			 sensorhub->fifo_size);
+> +		goto error;
+> +	}
+> +
+> +	/* Copy elements in the main fifo */
+> +	current_timestamp = sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS];
+> +	out = sensorhub->ring;
+> +	for (i = 0; i < fifo_info->info.count; i += number_data) {
+> +		sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_READ;
+> +		sensorhub->params->fifo_read.max_data_vector =
+> +			fifo_info->info.count - i;
+> +		sensorhub->msg->outsize =
+> +			sizeof(struct ec_params_motion_sense);
+> +		sensorhub->msg->insize =
+> +			sizeof(sensorhub->resp->fifo_read) +
+> +			sensorhub->params->fifo_read.max_data_vector *
+> +			  sizeof(struct ec_response_motion_sensor_data);
+> +		ret = cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg);
+> +		if (ret < 0) {
+> +			dev_warn(sensorhub->dev, "Fifo error: %d\n", ret);
+
+This warning is not needed, we will get an error if the command fails that is
+enough.
+
+> +			break;
+> +		}
+> +		number_data = sensorhub->resp->fifo_read.number_data;
+> +		if (number_data == 0) {
+> +			dev_dbg(sensorhub->dev, "Unexpected empty FIFO\n");
+> +			break;
+> +		}
+> +		if (number_data > fifo_info->info.count - i) {
+> +			dev_warn(sensorhub->dev,
+> +				 "Invalid EC data: too many entry received: %d, expected %d",
+> +				 number_data, fifo_info->info.count - i);
+
+Is a dev_warn but is ignored, so can we downgrade this to dev_dbg? Lets use
+dev_warn for something that really needs to be warned.
+
+> +			break;
+> +		}
+> +		if (out + number_data >
+> +		    sensorhub->ring + fifo_info->info.count) {
+> +			dev_warn(sensorhub->dev,
+> +				 "Too many samples: %d (%zd data) to %d entries for expected %d entries",
+> +				 i, out - sensorhub->ring, i + number_data,
+> +				 fifo_info->info.count);
+
+Same here, dev_dbg?
+
+> +			break;
+> +		}
+> +
+> +		for (in = sensorhub->resp->fifo_read.data, j = 0;
+> +		     j < number_data; j++, in++) {
+> +			if (cros_ec_ring_process_event(sensorhub, fifo_info,
+> +						       fifo_timestamp,
+> +						       &current_timestamp,
+> +						       in, out)) {
+> +				sensor_mask |= (1 << in->sensor_num);
+
+Use the BIT macro here, BIT(in->sensor_num)
+
+> +				out++;
+> +			}
+> +		}
+> +	}
+> +	mutex_unlock(&sensorhub->cmd_lock);
+> +	last_out = out;
+> +
+> +	if (out == sensorhub->ring)
+> +		/* Unexpected empty FIFO. */
+> +		goto ring_handler_end;
+> +
+> +	/*
+> +	 * Check if current_timestamp is ahead of the last sample.
+> +	 * Normally, the EC appends a timestamp after the last sample, but if
+> +	 * the AP is slow to respond to the IRQ, the EC may have added new
+> +	 * samples. Use the FIFO info timestamp as last timestamp then.
+> +	 */
+> +	if ((last_out - 1)->timestamp == current_timestamp)
+> +		current_timestamp = fifo_timestamp;
+> +
+> +	/* Warn on lost samples. */
+> +	for_each_set_bit(i, &sensor_mask, BITS_PER_LONG) {
+> +		int total_lost = fifo_info->info.total_lost;
+> +
+> +		if (total_lost) {
+> +			int lost = fifo_info->lost[i];
+> +
+> +			if (lost) {
+> +				dev_warn_ratelimited(sensorhub->dev,
+> +						     "Sensor %d: lost: %d out of %d\n",
+> +						     i, lost, total_lost);
+
+Same, maybe instead of have dev_warn_ratelimited we can use dev_dbg (and
+ratelimited) if it really appears too often.
+
+> +			}
+> +		}
+> +	}
+> +
+> +	/* push the event into the kfifo */
+> +	for (out = sensorhub->ring; out < last_out; out++)
+> +		cros_sensorhub_send_sample(sensorhub, out);
+> +
+> +ring_handler_end:
+> +	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] = current_timestamp;
+> +	return;
+> +
+> +error:
+> +	mutex_unlock(&sensorhub->cmd_lock);
+> +	return;
+> +}
+> +
+> +static int cros_ec_sensorhub_event(struct notifier_block *nb,
+> +				   unsigned long queued_during_suspend,
+> +				   void *_notify)
+> +{
+> +	struct cros_ec_sensorhub *sensorhub;
+> +	struct cros_ec_device *ec_dev;
+> +
+> +	sensorhub = container_of(nb, struct cros_ec_sensorhub, notifier);
+> +	ec_dev = sensorhub->ec->ec_dev;
+> +
+> +	if (ec_dev->event_data.event_type != EC_MKBP_EVENT_SENSOR_FIFO)
+> +		return NOTIFY_DONE;
+> +
+> +	if (ec_dev->event_size != sizeof(ec_dev->event_data.data.sensor_fifo)) {
+> +		dev_warn(ec_dev->dev, "Invalid fifo info size\n");
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	if (queued_during_suspend)
+> +		return NOTIFY_OK;
+> +
+> +	sensorhub->fifo_info.info = ec_dev->event_data.data.sensor_fifo.info;
+> +	sensorhub->fifo_timestamp[CROS_EC_SENSOR_NEW_TS] =
+> +		ec_dev->last_event_time;
+> +	cros_ec_sensorhub_ring_handler(sensorhub);
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +/**
+> + * cros_ec_sensorhub_ring_add() - Add/Remove the fifo functionality if the EC
+> + *  supports it.
+> + *
+> + * @sensorhub : Sensor Hub object
+> + *
+> + * Return: 0 on success.
+> + */
+> +int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
+> +{
+> +	struct cros_ec_dev *ec = sensorhub->ec;
+> +	int ret;
+> +
+> +	/* Retrieve FIFO information */
+> +	sensorhub->msg->version = 2;
+> +	sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INFO;
+> +	sensorhub->msg->outsize = 1;
+> +	sensorhub->msg->insize =
+> +		sizeof(struct ec_response_motion_sense_fifo_info) +
+> +		sizeof(u16) * CROS_EC_SENSOR_MAX;
+> +
+> +	ret = cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * Allocate the full fifo.
+> +	 * We need to copy the whole FIFO to set timestamps properly *
+> +	 */
+> +	sensorhub->fifo_size = sensorhub->resp->fifo_info.size;
+> +	sensorhub->ring = devm_kcalloc(sensorhub->dev, sensorhub->fifo_size,
+> +				       sizeof(*sensorhub->ring), GFP_KERNEL);
+> +	if (!sensorhub->ring)
+> +		return -ENOMEM;
+> +
+> +	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] =
+> +		cros_ec_get_time_ns();
+> +
+> +	/* register the notifier that will act as a top half interrupt. */
+> +	sensorhub->notifier.notifier_call = cros_ec_sensorhub_event;
+> +	ret = blocking_notifier_chain_register(&ec->ec_dev->event_notifier,
+> +					       &sensorhub->notifier);
+> +	if (ret < 0) {
+> +		dev_warn(sensorhub->dev, "failed to register notifier\n");
+
+Currently blocking_notifier_chain_register always returns 0. I'm fine to check
+the result just in case at some point that changes but the comment is not needed.
+
+> +		return ret;
+> +	}
+> +
+> +	/* Start collection samples. */
+> +	return cros_ec_sensorhub_ring_fifo_enable(sensorhub, true);
+> +}
+> +
+> +void cros_ec_sensorhub_ring_remove(void *arg)
+> +{
+> +	struct cros_ec_sensorhub *sensorhub = arg;
+> +	struct cros_ec_device *ec_dev = sensorhub->ec->ec_dev;
+> +
+> +	/* Disable the ring, prevent EC interrupt to the AP for nothing. */
+> +	cros_ec_sensorhub_ring_fifo_enable(sensorhub, false);
+> +	blocking_notifier_chain_unregister(&ec_dev->event_notifier,
+> +					   &sensorhub->notifier);
+> +}
+> diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
+> index 7421c956246f..5aaaa6cb012a 100644
+> --- a/include/linux/platform_data/cros_ec_sensorhub.h
+> +++ b/include/linux/platform_data/cros_ec_sensorhub.h
+> @@ -8,8 +8,20 @@
+>  #ifndef __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
+>  #define __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
+>  
+> +#include <linux/ktime.h>
+> +#include <linux/mutex.h>
+> +#include <linux/notifier.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  
+> +/* Maximal number of sensors supported by the EC. */
+> +#define CROS_EC_SENSOR_MAX 16
+> +
+> +/*
+> + * Maximal number of sensors supported by the hub:
+> + * We add one for the lid angle inclinometer sensor.
+> + */
+> +#define CROS_EC_SENSOR_PDEV_MAX (CROS_EC_SENSOR_MAX + 1)
+> +
+>  /**
+>   * struct cros_ec_sensor_platform - ChromeOS EC sensor platform information.
+>   * @sensor_num: Id of the sensor, as reported by the EC.
+> @@ -18,13 +30,92 @@ struct cros_ec_sensor_platform {
+>  	u8 sensor_num;
+>  };
+>  
+> +struct iio_dev;
+> +
+> +/**
+> + * typedef cros_ec_sensorhub_push_data_cb_t - Callback function to send datum
+> + *     to specific sensors
+> + *
+> + * @indio_dev: The IIO device that will process the sample.
+> + * @data: vector array of the ring sample.
+> + * @timestamp: Timestamp in host timespace when the sample was acquired by
+> + *             the EC.
+> + */
+> +typedef int (*cros_ec_sensorhub_push_data_cb_t)(struct iio_dev *indio_dev,
+> +						s16 *data,
+> +						s64 timestamp);
+> +
+> +struct cros_ec_sensorhub_sensor_push_data {
+> +	struct iio_dev *indio_dev;
+> +	cros_ec_sensorhub_push_data_cb_t push_data_cb;
+> +};
+> +
+> +enum {
+> +	CROS_EC_SENSOR_LAST_TS,
+> +	CROS_EC_SENSOR_NEW_TS,
+> +	CROS_EC_SENSOR_ALL_TS
+> +};
+> +
+> +struct __ec_todo_packed cros_ec_fifo_info {
+> +	struct ec_response_motion_sense_fifo_info info;
+> +	u16    lost[CROS_EC_SENSOR_MAX];
+> +};
+> +
+> +struct cros_ec_sensors_ring_sample {
+> +	u8  sensor_id;
+> +	u8  flag;
+> +	s16 vector[3];
+> +	s64 timestamp;
+> +} __packed;
+> +
+>  /**
+>   * struct cros_ec_sensorhub - Sensor Hub device data.
+>   *
+> + * @dev:          Device object, mostly used for logging.
+>   * @ec:           Embedded Controller where the hub is located.
+> + * @msg: Structure to send FIFO requests.
+> + * @params: pointer to parameters in msg.
+> + * @resp: pointer to responses in msg.
+> + * @cmd_lock : lock for sending msg.
+> + * @notifier: Notifier to kick the FIFO interrupt.
+> + * @ring: Preprocessed ring to store events.
+> + * @fifo_timestamp: array for event timestamp and spreading.
+> + * @fifo_info: copy of FIFO information coming from the EC.
+> + * @fifo_size: size of the ring.
+> + * @push_data: array of callback to send datums to iio sensor object.
+>   */
+>  struct cros_ec_sensorhub {
+> +	struct device *dev;
+>  	struct cros_ec_dev *ec;
+> +
+> +	struct cros_ec_command *msg;
+> +	struct ec_params_motion_sense *params;
+> +	struct ec_response_motion_sense *resp;
+> +	struct mutex cmd_lock;
+> +
+> +	struct notifier_block notifier;
+> +
+> +	struct cros_ec_sensors_ring_sample *ring;
+> +
+> +	ktime_t fifo_timestamp[CROS_EC_SENSOR_ALL_TS];
+> +	struct cros_ec_fifo_info fifo_info;
+> +	int    fifo_size;
+> +
+> +	struct cros_ec_sensorhub_sensor_push_data push_data[
+> +		CROS_EC_SENSOR_PDEV_MAX];
+>  };
+>  
+> +int cros_ec_sensorhub_register_push_data(struct cros_ec_sensorhub *sensorhub,
+> +					 u8 sensor_num,
+> +					 struct iio_dev *indio_dev,
+> +					 cros_ec_sensorhub_push_data_cb_t cb);
+> +
+> +void cros_ec_sensorhub_unregister_push_data(struct cros_ec_sensorhub *sensorhub,
+> +					    u8 sensor_num);
+> +
+> +int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub);
+> +void cros_ec_sensorhub_ring_remove(void *arg);
+> +int cros_ec_sensorhub_ring_fifo_enable(struct cros_ec_sensorhub *sensorhub,
+> +				       bool on);
+> +
+>  #endif   /* __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H */
+> 
