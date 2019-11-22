@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FB9C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A1DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDF02070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EE220707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400606;
-	bh=K8/nosl4hE+hkkP23VwLxak+ntPZZn18CaUsFIU+arU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cPuSQT7uYdO4rDxr2iT0km0UNwoM5/GFQ4LBwJqLoiWEQ7gw9F0bCQgRVnoBNRi9X
-	 fCJwj2CvfBKwpLVUAi3/4dRsvLQ5obgHEQOHeenBYvbYfA/WodE4DKlwlQg4AwaIyt
-	 8a/cQE/H6jd11ZwNc71TGQi4bIfLF/UWuGNfWmEA=
+	s=default; t=1574400611;
+	bh=rBaaCepDaC+PYJzZ8NE3MPbHgZYe5c/CjDWf7Ogf0ww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k9aTL12PHam1snvXfTiwa/r52P3JuK0B7o9Qnp3itvwDE0NwKuSYSCfseRaynujfw
+	 /yRydTl4CgRt5OVIhTHhozATQ0IxaEEBc5bErfWPXYp7MJJKRJaovvlVrLiGD7l1rl
+	 ebWnMI9Pfmq0jbYDrLUMiEBuiDFrtk8To6IyAMow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfKVFaF (ORCPT
+        id S1727188AbfKVFaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:30:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfKVFaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:05 -0500
+        id S1726603AbfKVFaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FA1B20707;
-        Fri, 22 Nov 2019 05:30:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1022C2070B;
+        Fri, 22 Nov 2019 05:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400604;
-        bh=K8/nosl4hE+hkkP23VwLxak+ntPZZn18CaUsFIU+arU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cO8HNhb0I4+RIYxQaTtyvH45VDd/VZ7P3wF7jA1KTYrHKPYLs6sNEnXWbG6Qzl0Sc
-         +6H2mU3ebeESkkbpIyQ3xokvUe8qIu0+2+oVQFoMOjWOzDVh88yvzBkmA9abneFt1j
-         LLWDyOl7QTmKMMIyjHkzSXbN76GaVCQsWnymJVqM=
+        s=default; t=1574400607;
+        bh=rBaaCepDaC+PYJzZ8NE3MPbHgZYe5c/CjDWf7Ogf0ww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=efTJx00lNbtNYT13GDQDrwf+t4QJGPx3fRlkYqt424PXixYEprP9w/w5k8Dd76uVl
+         zQMuzYrvSFvDRy/AbZXxr1eoISkZ2tNBlAfQIVe4gTk3h4G6aEvPxnPb648rgx4ayH
+         XSa89OX3I7tKayJVCYMMH8j4xxmmhmxR1KKdig24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 008/219] ARM: dts: imx51: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:26:30 -0500
-Message-Id: <20191122053001.752-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 010/219] ARM: dts: imx31: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:26:32 -0500
+Message-Id: <20191122053001.752-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
+References: <20191122053001.752-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,134 +63,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 6a9681168b83c62abfa457c709f2f4b126bd6b92 ]
+[ Upstream commit 013d37e4707e24c7b9bc3fc55aeda55ce9c2b262 ]
 
-Boards based on imx51 have duplicate memory nodes:
+Boards based on imx31 have duplicate memory nodes:
 
 - One coming from the board dts file: memory@
 
-- One coming from the imx51.dtsi file.
+- One coming from the imx31.dtsi file.
 
 Fix the duplication by removing the memory node from the dtsi file
 and by adding 'device_type = "memory";' in the board dts.
 
 Reported-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Tested-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx51-apf51.dts                 | 1 +
- arch/arm/boot/dts/imx51-babbage.dts               | 1 +
- arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi | 1 +
- arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi      | 1 +
- arch/arm/boot/dts/imx51-ts4800.dts                | 1 +
- arch/arm/boot/dts/imx51-zii-rdu1.dts              | 1 +
- arch/arm/boot/dts/imx51-zii-scu2-mezz.dts         | 1 +
- arch/arm/boot/dts/imx51-zii-scu3-esb.dts          | 1 +
- arch/arm/boot/dts/imx51.dtsi                      | 2 --
- 9 files changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx31-bug.dts  | 1 +
+ arch/arm/boot/dts/imx31-lite.dts | 1 +
+ arch/arm/boot/dts/imx31.dtsi     | 2 --
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx51-apf51.dts b/arch/arm/boot/dts/imx51-apf51.dts
-index 79d80036f74de..1eddf2908b3f2 100644
---- a/arch/arm/boot/dts/imx51-apf51.dts
-+++ b/arch/arm/boot/dts/imx51-apf51.dts
-@@ -22,6 +22,7 @@
- 	compatible = "armadeus,imx51-apf51", "fsl,imx51";
- 
- 	memory@90000000 {
-+		device_type = "memory";
- 		reg = <0x90000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-index ba60b0cb3cc13..99191466a8085 100644
---- a/arch/arm/boot/dts/imx51-babbage.dts
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -15,6 +15,7 @@
- 	};
- 
- 	memory@90000000 {
-+		device_type = "memory";
- 		reg = <0x90000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
-index 5761a66e8a0d3..82d8df097ef1f 100644
---- a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
-+++ b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+diff --git a/arch/arm/boot/dts/imx31-bug.dts b/arch/arm/boot/dts/imx31-bug.dts
+index 6ee4ff8e4e8f0..9eb960cc02cc5 100644
+--- a/arch/arm/boot/dts/imx31-bug.dts
++++ b/arch/arm/boot/dts/imx31-bug.dts
 @@ -17,6 +17,7 @@
- 	compatible = "digi,connectcore-ccxmx51-som", "fsl,imx51";
+ 	compatible = "buglabs,imx31-bug", "fsl,imx31";
  
- 	memory@90000000 {
+ 	memory@80000000 {
 +		device_type = "memory";
- 		reg = <0x90000000 0x08000000>;
+ 		reg = <0x80000000 0x8000000>; /* 128M */
  	};
  };
-diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-index f8902a338e49a..2e3125391bc49 100644
---- a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-+++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-@@ -23,6 +23,7 @@
- 	compatible = "eukrea,cpuimx51", "fsl,imx51";
- 
- 	memory@90000000 {
-+		device_type = "memory";
- 		reg = <0x90000000 0x10000000>; /* 256M */
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
-index 39eb067904c3d..4344632f79400 100644
---- a/arch/arm/boot/dts/imx51-ts4800.dts
-+++ b/arch/arm/boot/dts/imx51-ts4800.dts
+diff --git a/arch/arm/boot/dts/imx31-lite.dts b/arch/arm/boot/dts/imx31-lite.dts
+index db52ddccabc33..d17abdfb6330c 100644
+--- a/arch/arm/boot/dts/imx31-lite.dts
++++ b/arch/arm/boot/dts/imx31-lite.dts
 @@ -18,6 +18,7 @@
  	};
  
- 	memory@90000000 {
+ 	memory@80000000 {
 +		device_type = "memory";
- 		reg = <0x90000000 0x10000000>;
+ 		reg = <0x80000000 0x8000000>;
  	};
  
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index 6e80254c4562a..d0e0eb9c9adfa 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -53,6 +53,7 @@
- 
- 	/* Will be filled by the bootloader */
- 	memory@90000000 {
-+		device_type = "memory";
- 		reg = <0x90000000 0>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
-index 26cf08549df40..f5b2d768fe47f 100644
---- a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
-+++ b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
-@@ -18,6 +18,7 @@
- 
- 	/* Will be filled by the bootloader */
- 	memory@90000000 {
-+		device_type = "memory";
- 		reg = <0x90000000 0>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-index e6ebac8f43e4f..ad90d66ccca6c 100644
---- a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-+++ b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-@@ -18,6 +18,7 @@
- 
- 	/* Will be filled by the bootloader */
- 	memory@90000000 {
-+		device_type = "memory";
- 		reg = <0x90000000 0>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index ef2abc0978439..81f60c96a2e41 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -16,10 +16,8 @@
+diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
+index ca1419ca303c3..2fc64d2c7c88e 100644
+--- a/arch/arm/boot/dts/imx31.dtsi
++++ b/arch/arm/boot/dts/imx31.dtsi
+@@ -10,10 +10,8 @@
  	 * The decompressor and also some bootloaders rely on a
  	 * pre-existing /chosen node to be available to insert the
  	 * command line and merge other ATAGS info.
@@ -197,7 +124,7 @@ index ef2abc0978439..81f60c96a2e41 100644
 -	memory { device_type = "memory"; };
  
  	aliases {
- 		ethernet0 = &fec;
+ 		gpio0 = &gpio1;
 -- 
 2.20.1
 
