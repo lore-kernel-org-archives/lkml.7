@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC281C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE3DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A476C20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F3920718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420138;
-	bh=Px8LDoTDnzsd2k6eVGs/JHCeZgoJhRDfbj1HwYsvyKw=;
+	s=default; t=1574420143;
+	bh=xfiRYlBrrR42DVKHJwACyiYlj/Argp6WATZos1+CRlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZUxAevS1QJLX9bbY7KO5eDjev9pkS9HS8e8s/t6He+RBAiS9P7T5Ty6hJcMddDK6F
-	 MSfFJgWVi5FCFzE7lqaZMNrW9kAMEDt34mwpCYfIwt9qLYbXqkmbd463zIjJSGEuAx
-	 8bcH5JGktb6zPD2HwtYMza8VNRDzdTMZSYJOuZ4I=
+	b=SyMArvEuvlZoxRDssxL1H9CED3j+oo1evF4lkWlJpSvpHkr38cP9Yfcm++B/LyMKl
+	 ADTAwHSBxhZ1RCo/Xzwf0U9pBUFUzDUDILLkUszVV4Ca6eskG9UCsgMBBQwGtk0PZe
+	 ZvvDl1Hfn08kLa/ZIW7q1/WH4T7zP3GilK6qY2YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfKVKzh (ORCPT
+        id S1730498AbfKVKzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42362 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbfKVKzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:31 -0500
+        id S1730205AbfKVKzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E44AF20718;
-        Fri, 22 Nov 2019 10:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6213E20637;
+        Fri, 22 Nov 2019 10:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420130;
-        bh=Px8LDoTDnzsd2k6eVGs/JHCeZgoJhRDfbj1HwYsvyKw=;
+        s=default; t=1574420138;
+        bh=xfiRYlBrrR42DVKHJwACyiYlj/Argp6WATZos1+CRlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FpiGyZ/0yUHm3Y/gI27UFVJa17hgR8YHgGKC0wNRYrRaHdX/x/WL1HL6K5F1+nHtf
-         z+z2DqXVJMjKhT1JgHDsJmfIJogkZd9vNlIu/tXFJeq6AqPh60jyHjsc8I6is5PU3e
-         rvzIQNVwAaCVFDewqtRN4GGOopz7kfFGiriaLjlU=
+        b=G09i9nCxSXOY5taRVOwEy+7xcmVPrSP41Krs67Oytz+o31iCTt5aPA1fJoBUgavaM
+         nUlqqj9u4047xHprgGcJw6Mp3XO5+dge5BxFcNg+n+eogQ4SrZlhdsudG3p6VwQsT7
+         7COBBoSHG3MIrLab34AazM2jXtTLKRymOaJryqzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Solea <radu.solea@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Takeshi Saito <takeshi.saito.xv@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/122] crypto: mxs-dcp - Fix SHA null hashes and output length
-Date:   Fri, 22 Nov 2019 11:28:55 +0100
-Message-Id: <20191122100822.285855312@linuxfoundation.org>
+Subject: [PATCH 4.14 122/122] mmc: tmio: fix SCC error handling to avoid false positive CRC error
+Date:   Fri, 22 Nov 2019 11:29:35 +0100
+Message-Id: <20191122100838.472460553@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,131 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Solea <radu.solea@nxp.com>
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
 
-[ Upstream commit c709eebaf5c5faa8a0f140355f9cfe67e8f7afb1 ]
+[ Upstream commit 51b72656bb39fdcb8f3174f4007bcc83ad1d275f ]
 
-DCP writes at least 32 bytes in the output buffer instead of hash length
-as documented. Add intermediate buffer to prevent write out of bounds.
+If an SCC error occurs during a read/write command execution, a false
+positive CRC error message is output.
 
-When requested to produce null hashes DCP fails to produce valid output.
-Add software workaround to bypass hardware and return valid output.
+mmcblk0: response CRC error sending r/w cmd command, card status 0x900
 
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+check_scc_error() checks SCC_RVSREQ.RVSERR bit. RVSERR detects a
+correction error in the next (up or down) delay tap position. However,
+since the command is successful, only retuning needs to be executed.
+This has been confirmed by HW engineers.
+
+Thus, on SCC error, set retuning flag instead of setting an error code.
+
+Fixes: b85fb0a1c8ae ("mmc: tmio: Fix SCC error detection")
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+[wsa: updated comment and commit message, removed some braces]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxs-dcp.c | 47 +++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index a98a25733a222..4615dbee22d0a 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -28,9 +28,24 @@
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 01e51b7945750..2fd862dc97701 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -914,8 +914,9 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
+ 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
+ 		tmio_mmc_abort_dma(host);
  
- #define DCP_MAX_CHANS	4
- #define DCP_BUF_SZ	PAGE_SIZE
-+#define DCP_SHA_PAY_SZ  64
++	/* SCC error means retune, but executed command was still successful */
+ 	if (host->check_scc_error && host->check_scc_error(host))
+-		mrq->cmd->error = -EILSEQ;
++		mmc_retune_needed(host->mmc);
  
- #define DCP_ALIGNMENT	64
- 
-+/*
-+ * Null hashes to align with hw behavior on imx6sl and ull
-+ * these are flipped for consistency with hw output
-+ */
-+const uint8_t sha1_null_hash[] =
-+	"\x09\x07\xd8\xaf\x90\x18\x60\x95\xef\xbf"
-+	"\x55\x32\x0d\x4b\x6b\x5e\xee\xa3\x39\xda";
-+
-+const uint8_t sha256_null_hash[] =
-+	"\x55\xb8\x52\x78\x1b\x99\x95\xa4"
-+	"\x4c\x93\x9b\x64\xe4\x41\xae\x27"
-+	"\x24\xb9\x6f\x99\xc8\xf4\xfb\x9a"
-+	"\x14\x1c\xfc\x98\x42\xc4\xb0\xe3";
-+
- /* DCP DMA descriptor. */
- struct dcp_dma_desc {
- 	uint32_t	next_cmd_addr;
-@@ -48,6 +63,7 @@ struct dcp_coherent_block {
- 	uint8_t			aes_in_buf[DCP_BUF_SZ];
- 	uint8_t			aes_out_buf[DCP_BUF_SZ];
- 	uint8_t			sha_in_buf[DCP_BUF_SZ];
-+	uint8_t			sha_out_buf[DCP_SHA_PAY_SZ];
- 
- 	uint8_t			aes_key[2 * AES_KEYSIZE_128];
- 
-@@ -513,8 +529,6 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
- 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
- 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
- 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
--	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
--
- 	struct dcp_dma_desc *desc = &sdcp->coh->desc[actx->chan];
- 
- 	dma_addr_t digest_phys = 0;
-@@ -536,10 +550,23 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
- 	desc->payload = 0;
- 	desc->status = 0;
- 
-+	/*
-+	 * Align driver with hw behavior when generating null hashes
-+	 */
-+	if (rctx->init && rctx->fini && desc->size == 0) {
-+		struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
-+		const uint8_t *sha_buf =
-+			(actx->alg == MXS_DCP_CONTROL1_HASH_SELECT_SHA1) ?
-+			sha1_null_hash : sha256_null_hash;
-+		memcpy(sdcp->coh->sha_out_buf, sha_buf, halg->digestsize);
-+		ret = 0;
-+		goto done_run;
-+	}
-+
- 	/* Set HASH_TERM bit for last transfer block. */
- 	if (rctx->fini) {
--		digest_phys = dma_map_single(sdcp->dev, req->result,
--					     halg->digestsize, DMA_FROM_DEVICE);
-+		digest_phys = dma_map_single(sdcp->dev, sdcp->coh->sha_out_buf,
-+					     DCP_SHA_PAY_SZ, DMA_FROM_DEVICE);
- 		desc->control0 |= MXS_DCP_CONTROL0_HASH_TERM;
- 		desc->payload = digest_phys;
- 	}
-@@ -547,9 +574,10 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
- 	ret = mxs_dcp_start_dma(actx);
- 
- 	if (rctx->fini)
--		dma_unmap_single(sdcp->dev, digest_phys, halg->digestsize,
-+		dma_unmap_single(sdcp->dev, digest_phys, DCP_SHA_PAY_SZ,
- 				 DMA_FROM_DEVICE);
- 
-+done_run:
- 	dma_unmap_single(sdcp->dev, buf_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
- 
- 	return ret;
-@@ -567,6 +595,7 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
- 	const int nents = sg_nents(req->src);
- 
- 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
-+	uint8_t *out_buf = sdcp->coh->sha_out_buf;
- 
- 	uint8_t *src_buf;
- 
-@@ -621,11 +650,9 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
- 
- 		actx->fill = 0;
- 
--		/* For some reason, the result is flipped. */
--		for (i = 0; i < halg->digestsize / 2; i++) {
--			swap(req->result[i],
--			     req->result[halg->digestsize - i - 1]);
--		}
-+		/* For some reason the result is flipped */
-+		for (i = 0; i < halg->digestsize; i++)
-+			req->result[i] = out_buf[halg->digestsize - i - 1];
- 	}
- 
- 	return 0;
+ 	/* If SET_BLOCK_COUNT, continue with main command */
+ 	if (host->mrq && !mrq->cmd->error) {
 -- 
 2.20.1
 
