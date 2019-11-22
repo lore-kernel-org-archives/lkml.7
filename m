@@ -2,106 +2,136 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68817C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3F7C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6922068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027622068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QUuL2c+x"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="BIOGnljl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfKVFQT (ORCPT
+        id S1726690AbfKVFRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:16:19 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33102 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfKVFQS (ORCPT
+        Fri, 22 Nov 2019 00:17:42 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33096 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKVFRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:16:18 -0500
-Received: by mail-pf1-f194.google.com with SMTP id c184so2928656pfb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 21:16:18 -0800 (PST)
+        Fri, 22 Nov 2019 00:17:41 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so5490746oig.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 21:17:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pur8D56rYiQ0M1ceqnI28F7eCh0YYOJc2gZei1cSwYw=;
-        b=QUuL2c+xQxdrPyysEXsec8QavmH64GVr/WK5Xy2ffOtjwjSkRDU8nM231KQZ55gTT+
-         o95OPytdoXojkQe06wVttIqQ+d8ikveWepYkDjh3szE/vnrqQQwCVhIHbokE9ohTbJBr
-         Qir9fZmE4Y8oLlw+ShfjvkYD9U9A5TCKfg4Jw=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=keeodVCAfBP266uKFs6gORVjfgMY0eZ+dSw8j1koUJM=;
+        b=BIOGnljlLRD9J80W8RY8QHF75L0lSFekBNWZN8hg6Rk7ljv9ZJisk86mocS5aiKe4M
+         BRZGCQpb/a/2HBXTpqGHIr6gl5Yi174AJyQgmbRrjnEf1eD4TmgrawnUt12HU3lJfSnM
+         jsv9KaL9by0JkoV7d5CABQDDWhnr3Yv4lsOpRt/wfUrMC3daEO/UP2vIWl/f6F9SjRg6
+         vV8w8h+6ne19HZGi9F8YO59Tk42WwohDyYShHdM82hUpHeHhD6F2MdT47XhV3HW4jl3e
+         zBa9aicw9PLNxx2NdjnxS7BRDDf9mRGgi26FURoNfyPLFC4eL9NDJ4NpFIDQcLSbfchm
+         nJXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pur8D56rYiQ0M1ceqnI28F7eCh0YYOJc2gZei1cSwYw=;
-        b=hmSY0grBIaLIcNPpbQHi9Hf/paLRwaNbkr8pFYob8wrjNbQrdvv+CTAl87ZZnHJ9i9
-         3It3aoUGgyr03ILFjdmMZbmc2Ynv0htieJIuCyT/v9ojV1UqlbXQID6G67X4/RJus2kK
-         rvm8ML3CWRsKt11xSv82gGsmQ2J2NXc/yBSwk7dr0Z89V48IU0kWYPKoiQIqFws8Whmq
-         ADiBIdZEoTU05wKDm+cHBZ5hjdrQBw6ynvzZj/7PRsd7vglhqTqBZ2gZttle/Zho4Hto
-         zEgFnoTFkhnuwgRASRgcUpLvoSq+FQq3es8kjMlj50/7qHtHkunrSNVLMr3y3Bh7vvTL
-         QHqA==
-X-Gm-Message-State: APjAAAXpAJ2ZspsLyDWr7aeuniWulsUDT8aR5CT1kRx0XGViheb85EVg
-        lYX1PWldBv8PT18b1IgV86HUdA==
-X-Google-Smtp-Source: APXvYqwm6Bo6Fpvepq74mr6KZ7xSHs2WiOshfDeBDm7ixVWj28grrqSlnrpqRI/kf/OPwZ6eICDjRg==
-X-Received: by 2002:a63:fa0d:: with SMTP id y13mr13431599pgh.18.1574399777846;
-        Thu, 21 Nov 2019 21:16:17 -0800 (PST)
-Received: from hiroh.tok.corp.google.com ([2401:fa00:8f:2:3bf4:6372:5b56:dd4c])
-        by smtp.gmail.com with ESMTPSA id m7sm5756049pfb.153.2019.11.21.21.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 21:16:17 -0800 (PST)
-From:   Hirokazu Honda <hiroh@chromium.org>
-To:     ezequiel@collabora.com, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org
-Cc:     Hirokazu Honda <hiroh@chromium.org>
-Subject: [PATCH] media: hantro: Support H264 profile control
-Date:   Fri, 22 Nov 2019 14:16:08 +0900
-Message-Id: <20191122051608.128717-1-hiroh@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=keeodVCAfBP266uKFs6gORVjfgMY0eZ+dSw8j1koUJM=;
+        b=uAIWeQ4o444yvXk8UyeAitlRZe672Q2s0CLFl+ecoHYnx04YulKTBHYPVhSyr4hNl4
+         CT70VBeW5XPumHcRBMPKSQDbIqiF6N0O30kq+wJctk6I0aBskcvH/QOdCjmpdeWAd7dZ
+         INWuMiolxtGyPDbBID/hYqWaSgiP1SoHdoAxqvVBPKWxGKmkhcCkvE0cCQG+ssNFFQn/
+         AqE5WTcCrRSkQPI3MayIcK1ozzkM8+0UfskXT623h/VKilbIbz5fgn6XgFSrONwKc38X
+         um3eDwXWpPvgFsuOgNlPl1jmqzdnW5LkF5LFIGTFgr+FQcXktxHZWs77b7dClcaIYLdN
+         k6jQ==
+X-Gm-Message-State: APjAAAXt1aavLtvCJyeTePwPY6ZJo/NvGWhXdSIGeV50LKf9k5CjNxYH
+        D9ByXab0AhqK8nuurp0VdF35B/qftCvLM2HLNVX/Bw==
+X-Google-Smtp-Source: APXvYqyeVnRwhSQg9omPamcyvVHAk303c8e0hbTEeNPBnyGzGAg4XQG9mA2ytTDgrGbVNkDXXZO49Ddks50Gg2ZmNG8=
+X-Received: by 2002:aca:ead7:: with SMTP id i206mr11122498oih.0.1574399860567;
+ Thu, 21 Nov 2019 21:17:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191120092831.6198-1-pagupta@redhat.com> <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
+ <CAPcyv4hJ6gHX=NYz-CoXFSrN93HUT+Xh+DP+QAjzqgGmmghmGA@mail.gmail.com>
+ <1617854972.35808055.1574323227395.JavaMail.zimbra@redhat.com>
+ <CAPcyv4haUOM92uzCBfVyrANxnNHKucivq053MFBmGOL3vqMgwQ@mail.gmail.com> <560894997.35969622.1574397521533.JavaMail.zimbra@redhat.com>
+In-Reply-To: <560894997.35969622.1574397521533.JavaMail.zimbra@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 21 Nov 2019 21:17:29 -0800
+Message-ID: <CAPcyv4gsQXY5C5URF2vrTaD-0Q_CJ+ib3GVb1VFZAO+1Gdau2w@mail.gmail.com>
+Subject: Re: [PATCH] virtio pmem: fix async flush ordering
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
+        Keith Busch <keith.busch@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Hantro G1 decoder supports H.264 profiles from Baseline to High, with
-the exception of the Extended profile.
+On Thu, Nov 21, 2019 at 8:38 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+>
+>
+> > > > > >
+> > > > > > >  Remove logic to create child bio in the async flush function which
+> > > > > > >  causes child bio to get executed after parent bio
+> > > > > > >  'pmem_make_request'
+> > > > > > >  completes. This resulted in wrong ordering of REQ_PREFLUSH with
+> > > > > > >  the
+> > > > > > >  data write request.
+> > > > > > >
+> > > > > > >  Instead we are performing flush from the parent bio to maintain
+> > > > > > >  the
+> > > > > > >  correct order. Also, returning from function 'pmem_make_request'
+> > > > > > >  if
+> > > > > > >  REQ_PREFLUSH returns an error.
+> > > > > > >
+> > > > > > > Reported-by: Jeff Moyer <jmoyer@redhat.com>
+> > > > > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > > > >
+> > > > > > There's a slight change in behavior for the error path in the
+> > > > > > virtio_pmem driver.  Previously, all errors from virtio_pmem_flush
+> > > > > > were
+> > > > > > converted to -EIO.  Now, they are reported as-is.  I think this is
+> > > > > > actually an improvement.
+> > > > > >
+> > > > > > I'll also note that the current behavior can result in data
+> > > > > > corruption,
+> > > > > > so this should be tagged for stable.
+> > > > >
+> > > > > I added that and was about to push this out, but what about the fact
+> > > > > that now the guest will synchronously wait for flushing to occur. The
+> > > > > goal of the child bio was to allow that to be an I/O wait with
+> > > > > overlapping I/O, or at least not blocking the submission thread. Does
+> > > > > the block layer synchronously wait for PREFLUSH requests? If not I
+> > > > > think a synchronous wait is going to be a significant performance
+> > > > > regression. Are there any numbers to accompany this change?
+> > > >
+> > > > Why not just swap the parent child relationship in the PREFLUSH case?
+> > >
+> > > I we are already inside parent bio "make_request" function and we create
+> > > child
+> > > bio. How we exactly will swap the parent/child relationship for PREFLUSH
+> > > case?
+> > >
+> > > Child bio is queued after parent bio completes.
+> >
+> > Sorry, I didn't quite mean with bio_split, but issuing another request
+> > in front of the real bio. See md_flush_request() for inspiration.
+>
+> o.k. Thank you. Will try to post patch today to be considered for 5.4.
+>
 
-Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
-applications can query the driver for the list of supported profiles.
-
-Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
----
- drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index 6d9d41170832..9387619235d8 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] = {
- 			.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
- 			.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
- 		},
-+	}, {
-+		.codec = HANTRO_H264_DECODER,
-+		.cfg = {
-+			.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
-+			.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
-+			.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-+			.menu_skip_mask =
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-+			.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
-+		}
- 	}, {
- 	},
- };
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+I think it is too late for v5.4-final, but we can get it in the
+-stable queue. Let's take the time to do it right and get some testing
+on it.
