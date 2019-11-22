@@ -2,185 +2,132 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24875C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF37C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000A320679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F0220679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKVDIk (ORCPT
+        id S1726554AbfKVDUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 22:08:40 -0500
-Received: from mga14.intel.com ([192.55.52.115]:53712 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfKVDI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 22:08:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 19:08:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,228,1571727600"; 
-   d="scan'208";a="232540449"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Nov 2019 19:08:25 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
-        Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 3/5] iommu/vt-d: Consolidate device tlb invalidation
-Date:   Fri, 22 Nov 2019 11:04:47 +0800
-Message-Id: <20191122030449.28892-4-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191122030449.28892-1-baolu.lu@linux.intel.com>
-References: <20191122030449.28892-1-baolu.lu@linux.intel.com>
+        Thu, 21 Nov 2019 22:20:52 -0500
+Received: from cnshjsmin03.alcatel-sbell.com.cn ([116.246.26.71]:50881 "EHLO
+        cnshjsmin03.nokia-sbell.com" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726335AbfKVDUw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 22:20:52 -0500
+X-AuditID: ac189297-c7bff7000000115a-11-5dd753fdd173
+Received: from CNSHPPEXCH1603.nsn-intra.net (Unknown_Domain [135.251.51.103])
+        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by cnshjsmin03.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id 79.1A.04442.DF357DD5; Fri, 22 Nov 2019 11:20:29 +0800 (HKT)
+Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
+ CNSHPPEXCH1603.nsn-intra.net (135.251.51.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 22 Nov 2019 11:20:29 +0800
+Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
+ CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
+ Fri, 22 Nov 2019 11:20:29 +0800
+From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Guenter Roeck <groeck7@gmail.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+Thread-Topic: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+Thread-Index: AdWgVy1kREB4bw5dQ4u+4ZEezt20u///t7KA//7BtxCAAg65gP//bxeg
+Date:   Fri, 22 Nov 2019 03:20:29 +0000
+Message-ID: <60d07860dedf45f9bd3e41fd90a9b636@nokia-sbell.com>
+References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
+ <20191121141508.GA13249@roeck-us.net>
+ <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
+ <8c198e4e-488b-efd0-4caf-b2dddb830ea3@roeck-us.net>
+In-Reply-To: <8c198e4e-488b-efd0-4caf-b2dddb830ea3@roeck-us.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [135.251.51.115]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsXS/ts4Xfdv8PVYg4b1lhb7Oq8zWVzeNYfN
+        4sa6fewWTxaeYbJ4/PIfswOrx85Zd9k9Vq5ZA2R9b2D3+LxJLoAlissmJTUnsyy1SN8ugSvj
+        y27pgjOKFfNOnmNpYLyj0MXIySEhYCLRuOUVE4gtJHCISWLSHJkuRi4g+y+jxJIfCxghnE2M
+        Envm3mABqWITcJdo2rSODcQWEVCTaD7VwgZSxCzwgFHi/ZG9QA4Hh7BAisSXDh6ImlSJbxMO
+        MIGERQTcJFbv5QAJswioSrx70cUCEuYVsJPobCmEuOEio0TzskwQm1PAQWL9jj9gmxgFZCWm
+        PboPdiezgLjErSfzmSDuF5BYsuc8M4QtKvHy8T9WkJESAkoSfRvAljILaEqs36UP0akoMaX7
+        ITuIzSsgKHFy5hOWCYxis5AMnYXQMQtJxywkHQsYWVYxSifnFWdkFedm5hkY6+XlZ2cm6hYn
+        pebk6CXn525iBEbcGolJ03cwHjvgfYhRgINRiYf3ReW1WCHWxLLiytxDjBIczEoivHuuX4kV
+        4k1JrKxKLcqPLyrNSS0+xCjNwaIkztsyeWGskEB6YklqdmpqQWoRTJaJg1OqgTHd4lfH/a1V
+        SW069fMZb8QJ7uT1jeOZWV/o2J63e3L+xd/NqdE11w26xZ8ppMcf/5NS9F3A/8rVHUc3Fm2L
+        aujSnNnAqn/N+epFsbi8svT4rfWXPv/kv75Yr2b+Uq6zOsHMTyw3uuUf9313jUvMrNQ2Yt2+
+        FYeY9BjnbXvptvCtndbU4+m/ziixFGckGmoxFxUnAgCig5M9tAIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge device tlb invalidation into iommu->flush.dev_tlb_inv.
-
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/dmar.c        | 23 -----------------------
- drivers/iommu/intel-iommu.c | 31 +++++++++++++++++++++++++++++--
- drivers/iommu/intel-pasid.c |  3 ++-
- include/linux/intel-iommu.h |  2 --
- 4 files changed, 31 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 4b6090493f6d..8e26a36369ec 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -1307,29 +1307,6 @@ void qi_global_iec(struct intel_iommu *iommu)
- 	qi_submit_sync(&desc, iommu);
- }
- 
--void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
--			u16 qdep, u64 addr, unsigned mask)
--{
--	struct qi_desc desc;
--
--	if (mask) {
--		WARN_ON_ONCE(addr & ((1ULL << (VTD_PAGE_SHIFT + mask)) - 1));
--		addr |= (1ULL << (VTD_PAGE_SHIFT + mask - 1)) - 1;
--		desc.qw1 = QI_DEV_IOTLB_ADDR(addr) | QI_DEV_IOTLB_SIZE;
--	} else
--		desc.qw1 = QI_DEV_IOTLB_ADDR(addr);
--
--	if (qdep >= QI_DEV_IOTLB_MAX_INVS)
--		qdep = 0;
--
--	desc.qw0 = QI_DEV_IOTLB_SID(sid) | QI_DEV_IOTLB_QDEP(qdep) |
--		   QI_DIOTLB_TYPE | QI_DEV_IOTLB_PFSID(pfsid);
--	desc.qw2 = 0;
--	desc.qw3 = 0;
--
--	qi_submit_sync(&desc, iommu);
--}
--
- /*
-  * Disable Queued Invalidation interface.
-  */
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 283382584453..4eeb18942d3c 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1465,6 +1465,7 @@ static void iommu_flush_dev_iotlb(struct dmar_domain *domain,
- {
- 	u16 sid, qdep;
- 	unsigned long flags;
-+	struct intel_iommu *iommu;
- 	struct device_domain_info *info;
- 
- 	if (!domain->has_iotlb_device)
-@@ -1477,8 +1478,9 @@ static void iommu_flush_dev_iotlb(struct dmar_domain *domain,
- 
- 		sid = info->bus << 8 | info->devfn;
- 		qdep = info->ats_qdep;
--		qi_flush_dev_iotlb(info->iommu, sid, info->pfsid,
--				qdep, addr, mask);
-+		iommu = info->iommu;
-+		iommu->flush.dev_tlb_inv(iommu, sid, info->pfsid,
-+					 qdep, addr, mask);
- 	}
- 	spin_unlock_irqrestore(&device_domain_lock, flags);
- }
-@@ -3006,6 +3008,30 @@ qi_flush_pasid(struct intel_iommu *iommu, u16 did, u32 pasid, u64 granu)
- 	qi_submit_sync(&desc, iommu);
- }
- 
-+/* Device TLB invalidation */
-+static void
-+qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-+		   u16 qdep, u64 addr, unsigned int mask)
-+{
-+	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
-+
-+	if (mask) {
-+		WARN_ON_ONCE(addr & ((1ULL << (VTD_PAGE_SHIFT + mask)) - 1));
-+		addr |= (1ULL << (VTD_PAGE_SHIFT + mask - 1)) - 1;
-+		desc.qw1 = QI_DEV_IOTLB_ADDR(addr) | QI_DEV_IOTLB_SIZE;
-+	} else {
-+		desc.qw1 = QI_DEV_IOTLB_ADDR(addr);
-+	}
-+
-+	if (qdep >= QI_DEV_IOTLB_MAX_INVS)
-+		qdep = 0;
-+
-+	desc.qw0 = QI_DEV_IOTLB_SID(sid) | QI_DEV_IOTLB_QDEP(qdep) |
-+		   QI_DIOTLB_TYPE | QI_DEV_IOTLB_PFSID(pfsid);
-+
-+	qi_submit_sync(&desc, iommu);
-+}
-+
- static void intel_iommu_init_qi(struct intel_iommu *iommu)
- {
- 	/*
-@@ -3038,6 +3064,7 @@ static void intel_iommu_init_qi(struct intel_iommu *iommu)
- 		iommu->flush.cc_inv = qi_flush_context;
- 		iommu->flush.iotlb_inv = qi_flush_iotlb;
- 		iommu->flush.pc_inv = qi_flush_pasid;
-+		iommu->flush.dev_tlb_inv = qi_flush_dev_iotlb;
- 		pr_info("%s: Using Queued invalidation\n", iommu->name);
- 	}
- }
-diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-index dd736f673603..01dd9c86178b 100644
---- a/drivers/iommu/intel-pasid.c
-+++ b/drivers/iommu/intel-pasid.c
-@@ -388,7 +388,8 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
- 
--	qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-+	iommu->flush.dev_tlb_inv(iommu, sid, pfsid, qdep,
-+				 0, 64 - VTD_PAGE_SHIFT);
- }
- 
- void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index c32ff2a7d958..326146a36dbf 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -665,8 +665,6 @@ extern void dmar_disable_qi(struct intel_iommu *iommu);
- extern int dmar_reenable_qi(struct intel_iommu *iommu);
- extern void qi_global_iec(struct intel_iommu *iommu);
- 
--extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
--			u16 qdep, u64 addr, unsigned mask);
- extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
- 
- extern int dmar_ir_support(void);
--- 
-2.17.1
-
+PiBObywgdGhhdCB3b24ndCBiZSBuZWNlc3NhcnkuDQoNCm9rLCB0aGFuayB5b3UgdmVyeSBtdWNo
+IGFnYWluIDopDQoNClBlbmcgV2FuZw0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206
+IEd1ZW50ZXIgUm9lY2sgW21haWx0bzpncm9lY2s3QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIEd1
+ZW50ZXIgUm9lY2sNClNlbnQ6IEZyaWRheSwgTm92ZW1iZXIgMjIsIDIwMTkgMTA6NDEgQU0NClRv
+OiBXYW5nLCBQZW5nIDEuIChOU0IgLSBDTi9IYW5nemhvdSkgPHBlbmcuMS53YW5nQG5va2lhLXNi
+ZWxsLmNvbT4NCkNjOiBHdWVudGVyIFJvZWNrIDxncm9lY2s3QGdtYWlsLmNvbT47IHdpbUBsaW51
+eC13YXRjaGRvZy5vcmc7IGxpbnV4LXdhdGNoZG9nQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gd2F0Y2hkb2c6IG1h
+a2UgRGVzaWduV2FyZSB3YXRjaGRvZyBhbGxvdyB1c2VycyB0byBzZXQgYmlnZ2VyIHRpbWVvdXQg
+dmFsdWUNCg0KT24gMTEvMjEvMTkgNToxNiBQTSwgV2FuZywgUGVuZyAxLiAoTlNCIC0gQ04vSGFu
+Z3pob3UpIHdyb3RlOg0KPj4gUmV2aWV3ZWQtYnk6IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNr
+LXVzLm5ldD4NCj4gDQo+IFJvZWNrLCB0aGFua3MgZm9yIHlvdXIgdGltZSB0byBndWlkZSBtZSB0
+byBmaW5pc2ggdGhlIHJldmlldy4gRG8gSSBuZWVkIHRvIHJlLXNlbmQgYSBtYWlsIHdpdGggeW91
+ciBzaWduPw0KPiANCg0KTm8sIHRoYXQgd29uJ3QgYmUgbmVjZXNzYXJ5Lg0KDQpHdWVudGVyDQoN
+Cj4gUGVuZyBXYW5nDQo+IA0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBH
+dWVudGVyIFJvZWNrIFttYWlsdG86Z3JvZWNrN0BnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVu
+dGVyIA0KPiBSb2Vjaw0KPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMjEsIDIwMTkgMTA6MTUg
+UE0NCj4gVG86IFdhbmcsIFBlbmcgMS4gKE5TQiAtIENOL0hhbmd6aG91KSA8cGVuZy4xLndhbmdA
+bm9raWEtc2JlbGwuY29tPg0KPiBDYzogR3VlbnRlciBSb2VjayA8Z3JvZWNrN0BnbWFpbC5jb20+
+OyB3aW1AbGludXgtd2F0Y2hkb2cub3JnOyANCj4gbGludXgtd2F0Y2hkb2dAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djJdIHdhdGNoZG9nOiBtYWtlIERlc2lnbldhcmUgd2F0Y2hkb2cgYWxsb3cgdXNlcnMgDQo+IHRv
+IHNldCBiaWdnZXIgdGltZW91dCB2YWx1ZQ0KPiANCj4gT24gVGh1LCBOb3YgMjEsIDIwMTkgYXQg
+MTA6MzU6MTJBTSArMDAwMCwgV2FuZywgUGVuZyAxLiAoTlNCIC0gQ04vSGFuZ3pob3UpIHdyb3Rl
+Og0KPj4gIEZyb20gYWFiYWE0YjcwOWJkNDUxZTU2NmM5MDZlOGQxZGNhNDhmOTJmOWIxMiBNb24g
+U2VwIDE3IDAwOjAwOjAwIA0KPj4gMjAwMQ0KPj4gRnJvbTogUGVuZyBXYW5nIDxwZW5nLjEud2Fu
+Z0Bub2tpYS1zYmVsbC5jb20+DQo+PiBEYXRlOiBXZWQsIDIwIE5vdiAyMDE5IDE1OjEyOjU5ICsw
+ODAwDQo+PiBTdWJqZWN0OiBbUEFUQ0hdIHdhdGNoZG9nOiBtYWtlIERlc2lnbldhcmUgd2F0Y2hk
+b2cgYWxsb3cgdXNlcnMgdG8gDQo+PiBzZXQgYmlnZ2VyICB0aW1lb3V0IHZhbHVlDQo+Pg0KPj4g
+d2F0Y2hkb2dfZGV2LmMgcHJvdmlkZXMgbWVhbnMgdG8gYWxsb3cgdXNlcnMgdG8gc2V0IGJpZ2dl
+ciB0aW1lb3V0IA0KPj4gdmFsdWUgdGhhbiBIVyBjYW4gc3VwcG9ydCwgbWFrZSBEZXNpZ25XYXJl
+IHdhdGNoZG9nIGFsaWduIHdpdGggdGhpcy4NCj4+DQo+PiAtLS0NCj4+DQo+PiB2MiAtPiB2MToN
+Cj4+ICAgICAgICAgLSB1c2UgdG9wX3MgdG8gY29tcGFyZSB3aXRoIHdkZC0+bWF4X2h3X2hlYXJ0
+YmVhdF9tcw0KPj4gICAgICAgICAtIHVwZGF0ZSB3ZGQtPnRpbWVvdXQgaW4gY2FzZSBpdCdzIGdy
+ZWF0ZXIgdGhhbiBIVyBzdXBwb3J0cw0KPj4gICAgICAgICAtIGZpeCBjb21tZW50cyBlcnJvcg0K
+Pj4NCj4+IHYxOiBpbml0aWFsIHZlcnNpb24NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQZW5nIFdh
+bmcgPHBlbmcuMS53YW5nQG5va2lhLXNiZWxsLmNvbT4NCj4gDQo+IFJldmlld2VkLWJ5OiBHdWVu
+dGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+DQo+IA0KPj4gLS0tDQo+PiAgIGRyaXZlcnMv
+d2F0Y2hkb2cvZHdfd2R0LmMgfCAxMCArKysrKysrKystDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA5
+IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy93YXRjaGRvZy9kd193ZHQuYyBiL2RyaXZlcnMvd2F0Y2hkb2cvZHdfd2R0LmMgDQo+PiBpbmRl
+eCBmZWY3YzYxLi4xMmMxMTZlIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy93YXRjaGRvZy9kd193
+ZHQuYw0KPj4gKysrIGIvZHJpdmVycy93YXRjaGRvZy9kd193ZHQuYw0KPj4gQEAgLTExNCw3ICsx
+MTQsMTUgQEAgc3RhdGljIGludCBkd193ZHRfc2V0X3RpbWVvdXQoc3RydWN0IHdhdGNoZG9nX2Rl
+dmljZSAqd2RkLCB1bnNpZ25lZCBpbnQgdG9wX3MpDQo+PiAgIAl3cml0ZWwodG9wX3ZhbCB8IHRv
+cF92YWwgPDwgV0RPR19USU1FT1VUX1JBTkdFX1RPUElOSVRfU0hJRlQsDQo+PiAgIAkgICAgICAg
+ZHdfd2R0LT5yZWdzICsgV0RPR19USU1FT1VUX1JBTkdFX1JFR19PRkZTRVQpOw0KPj4gICANCj4+
+IC0Jd2RkLT50aW1lb3V0ID0gZHdfd2R0X3RvcF9pbl9zZWNvbmRzKGR3X3dkdCwgdG9wX3ZhbCk7
+DQo+PiArCS8qDQo+PiArCSAqIEluIGNhc2UgdXNlcnMgc2V0IGJpZ2dlciB0aW1lb3V0IHZhbHVl
+IHRoYW4gSFcgY2FuIHN1cHBvcnQsDQo+PiArCSAqIGtlcm5lbCh3YXRjaGRvZ19kZXYuYykgaGVs
+cHMgdG8gZmVlZCB3YXRjaGRvZyBiZWZvcmUNCj4+ICsJICogd2RkLT5tYXhfaHdfaGVhcnRiZWF0
+X21zDQo+PiArCSAqLw0KPj4gKwlpZiAoIHRvcF9zICogMTAwMCA8PSB3ZGQtPm1heF9od19oZWFy
+dGJlYXRfbXMgKQ0KPj4gKwkJd2RkLT50aW1lb3V0ID0gZHdfd2R0X3RvcF9pbl9zZWNvbmRzKGR3
+X3dkdCwgdG9wX3ZhbCk7DQo+PiArCWVsc2UNCj4+ICsJCXdkZC0+dGltZW91dCA9IHRvcF9zOw0K
+Pj4gICANCj4+ICAgCXJldHVybiAwOw0KPj4gICB9DQo+PiAtLQ0KPj4gMS44LjMuMQ0KPj4NCj4g
+DQoNCg==
