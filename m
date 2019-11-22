@@ -2,101 +2,95 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51E6C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C971BC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7597420706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7C22070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VjVfClqa"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JhjAtp9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfKVUVN (ORCPT
+        id S1727124AbfKVUVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:21:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44578 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKVUVN (ORCPT
+        Fri, 22 Nov 2019 15:21:33 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34787 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfKVUVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:21:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I7GabNt+5eo7tMhyga7wffGzqcP14sq3gRNQvRGj/vQ=; b=VjVfClqaLJlwztMw/cYTD1mT4
-        0HRoE++9wHXahlu3bZis3PHXhtHY6/F0cJyK9yO0g7UHsSk/LfbVurnfrymwhQ18xUbTmO3Kko0mZ
-        m4oa16hZ5dzUG2w6ZhSdMk7I4Fa3TJGVW9tPLySNNYDtbJ2H7nMqITOHxZu6lXVF6kFqt4aBd/BB/
-        4hg55o/OE+LwYumM51gsQ2ge6ZP9krbPjn/Tz5eqzORWrPM7sdHf5uS+r/IpXT8dE/NadL37WhtKf
-        qNJS3aEgmxrSdgaogBnin63fgJ60deWbSnWEW5UAs6jXDNd2xa1U68v5BA/GvYyVCGAEvVu6fA0cx
-        VYGOy4F0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iYFQM-0003bJ-U1; Fri, 22 Nov 2019 20:21:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 50DEB30068E;
-        Fri, 22 Nov 2019 21:19:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B3DD220B2867F; Fri, 22 Nov 2019 21:20:59 +0100 (CET)
-Date:   Fri, 22 Nov 2019 21:20:59 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        akpm@linux-foundation.org, cl@linux.com, keescook@chromium.org,
-        penberg@kernel.org, rientjes@google.com, thgarnie@google.com,
-        tytso@mit.edu, will@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: sched/urgent] sched/core: Avoid spurious lock dependencies
-Message-ID: <20191122202059.GA2844@hirez.programming.kicks-ass.net>
-References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
- <157363958888.29376.9190587096871610849.tip-bot2@tip-bot2>
- <20191122200122.wx7ltij2w7w37cbe@linutronix.de>
+        Fri, 22 Nov 2019 15:21:33 -0500
+Received: by mail-qk1-f195.google.com with SMTP id b188so7462471qkg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 12:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZJNST5spgJ+9+0zEr716mDrZrSEXVq6warPi8NwZbrs=;
+        b=JhjAtp9Hhcee9dePtJRpLRpEX/HZaH15EcThHJwgzedX9w3iqvQW1XlNZs9lmKnMB5
+         YHYRCtAhRXlYs+eaY/ppkhvKUDTXiE8JMKdVfpRw1/pEP9gch35FrKHITd/Z2d10XqkZ
+         lmRigj1GfsO+Njc212aBszSd9MJNmFB0E+XQwbOHM4YwkVTBK29vpHgqJOqrwDdBQtsp
+         6mwjwjiQtOiT5cPg8djKRQscdB1JKUiC/ubhBGKQfx34lMK/UVG1paKgZzCpk6izxgnX
+         ikNa4k+s/6pQodVJh3YK88nJk3YSVSr2RkrK7ws34RT+Sl3hMBC8ARskMN9jFT1LEudO
+         ma5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZJNST5spgJ+9+0zEr716mDrZrSEXVq6warPi8NwZbrs=;
+        b=acJI+HPwBJ5mImbxkIJWhLCoDuuCg2/NiTgMgMuyH3Q150wsjIMbAgK6KFSu7JlkBf
+         X0+MwY6kuyV3KyTnjBMZvUegXna0SJt2ajSD9DQNygTwl8TAp7s3BoorFlzSzHCJczXz
+         MJEVYQ7OOcWAoBPe4cdSWV1awrSzDAUCItTxNDo0kq8UMkIKRN94J7Tifp0m6Dq0iYK3
+         JDexlA+mKd7NcxZO2dJitWkLZBWdMjXlGr1S+LTJSt3FEZTd3LU1Ok6nR1Nhn4SOgaUy
+         uIgtlospUQ52U9ObFu3HBDpp0PM9RLJVKupGDGw9eRxIRmIyPTr9YDle9ZZzVYi5jgg6
+         S4Pg==
+X-Gm-Message-State: APjAAAXpRz3zPrebnPwLICSHQD6zEEcRWFx8lHLrf04glawu/7WzpKpD
+        UZlNKrWysewjEpth+ROg0b6Jyg==
+X-Google-Smtp-Source: APXvYqxrPOvst0p298a7SIdNeCNXyIrt9qTv1oLj3gIr0rfw32Pl2OLk5QHxmI1OaJ4/l7n/eDJ7vg==
+X-Received: by 2002:a37:7dc2:: with SMTP id y185mr4828809qkc.380.1574454092120;
+        Fri, 22 Nov 2019 12:21:32 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id h37sm4083006qth.78.2019.11.22.12.21.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Nov 2019 12:21:28 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iYFQm-0000J6-Do; Fri, 22 Nov 2019 16:21:28 -0400
+Date:   Fri, 22 Nov 2019 16:21:28 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH] infiniband: Fix Kconfig indentation
+Message-ID: <20191122202128.GA905@ziepe.ca>
+References: <20191120134138.15245-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122200122.wx7ltij2w7w37cbe@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191120134138.15245-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 09:01:22PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2019-11-13 10:06:28 [-0000], tip-bot2 for Peter Zijlstra wrote:
-> > sched/core: Avoid spurious lock dependencies
-> > 
-> > While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-> > when DEBUG_OBJETS, can end up doing allocations.
-> > 
-> > This then results in the following lock order:
-> > 
-> >   rq->lock
-> >     zone->lock.rlock
-> >       batched_entropy_u64.lock
-> > 
-> > Which in turn causes deadlocks when we do wakeups while holding that
-> > batched_entropy lock -- as the random code does.
+On Wed, Nov 20, 2019 at 09:41:38PM +0800, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 > 
-> Peter, can it _really_ cause deadlocks? My understanding was that the
-> batched_entropy_u64.lock is a per-CPU lock and can _not_ cause a
-> deadlock because it can be always acquired on multiple CPUs
-> simultaneously (and it is never acquired cross-CPU).
-> Lockdep is simply not smart enough to see that and complains about it
-> like it would complain about a regular lock in this case.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/infiniband/hw/bnxt_re/Kconfig | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-That part yes. That is, even holding a per-cpu lock you can do a wakeup
-to the local cpu and recurse back onto rq->lock.
+Applied to for-next, thanks
 
-However I don't think it can actually happen bceause this
-is init_idle, and we only ever do that on hotplug, so actually creating
-the concurrency required for the deadlock might be tricky.
-
-Still, moving that thing out from under the lock was simple and correct.
+Jason
