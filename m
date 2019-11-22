@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E91EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A87720726
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212A62072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418771;
-	bh=tOHwYIJ+ZNa6Ys/BfqqTmWqfcuoUDV1G9q0KLw6kepc=;
+	s=default; t=1574418774;
+	bh=7t+zd6ApZDLHyDBXxaHnsvqdU5V0/DfKsl898ThufDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ooNVgXBW8Ue/p8DQe1fQAXY3RQw+rK/CAYBga//NVwVwoQZW90ZrcNBANe+KFxmcZ
-	 hmTgzpntm21nBS8U1nOwQvkW4dS/HaRIL6L+9sMxQiFTCMhj9KfkceLOrUAyK2FvUn
-	 95XLg6R2ie9MwqDino6XF/x784iEH6U2t8dxHEm4=
+	b=EqZOlqa1gauVcW5BpaeVlSZXeSdxRABmC3BVxDaV9zkcxqYFOm0xsex8xKweMeqrc
+	 E0AKwIEr51aTdOQYDBzNfmc3YW3EXsNu0iE8uRmkKoqxXzSFjNf+AsIebAgEZemp1G
+	 VV0KuN7rLMrZNLFZyrTJxhAN6Tc9OUQ7Ytc1ea08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfKVKcu (ORCPT
+        id S1727806AbfKVKct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:32:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54680 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:32:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfKVKcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:32:48 -0500
+        id S1727785AbfKVKcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:32:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962422071C;
-        Fri, 22 Nov 2019 10:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E790E20726;
+        Fri, 22 Nov 2019 10:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418768;
-        bh=tOHwYIJ+ZNa6Ys/BfqqTmWqfcuoUDV1G9q0KLw6kepc=;
+        s=default; t=1574418765;
+        bh=7t+zd6ApZDLHyDBXxaHnsvqdU5V0/DfKsl898ThufDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1KyK+yMBXaetiAb6GfOA5iBGKw56dc25MHB6HmEaUgihKqFmisQTQAccgd18BmZj
-         6cu+QG1XIraJe/045BC+dKMBdPL0w+0maoQuJZZ4AShLgM9nnmsnMHt4Xba6Th0Fwl
-         JLN/LCBZ7MK/J+adFM3tapS79qxfnfocwc+H/BlA=
+        b=VBlderYvG8ubym8YNaMbdNqKXY1DFkrJbnRsKol0xYoKj1iafbti1F5at7c/+ASZW
+         ASXQsHubdvTVMqAWe96qOfvsohnoniDL8IgRvGQU+9TZ82YCRJkyZ0LQ/gjNyjLpnH
+         0a86Quwj+cHEleCH5zBAW4ptgsK7Cpq4egOp6J+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Stromdahl <erik.stromdahl@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Lao Wei <zrlw@qq.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 028/159] ath10k: wmi: disable softirqs while calling ieee80211_rx
-Date:   Fri, 22 Nov 2019 11:26:59 +0100
-Message-Id: <20191122100725.950086268@linuxfoundation.org>
+Subject: [PATCH 4.4 045/159] media: fix: media: pci: meye: validate offset to avoid arbitrary access
+Date:   Fri, 22 Nov 2019 11:27:16 +0100
+Message-Id: <20191122100738.056313239@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,48 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Stromdahl <erik.stromdahl@gmail.com>
+From: Lao Wei <zrlw@qq.com>
 
-[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
+[ Upstream commit eac7230fdb4672c2cb56f6a01a1744f562c01f80 ]
 
-This is done in order not to trig the below warning in
-ieee80211_rx_napi:
+Motion eye video4linux driver for Sony Vaio PictureBook desn't validate user-controlled parameter
+'vma->vm_pgoff', a malicious process might access all of kernel memory from user space by trying
+pass different arbitrary address.
+Discussion: http://www.openwall.com/lists/oss-security/2018/07/06/1
 
-WARN_ON_ONCE(softirq_count() == 0);
-
-ieee80211_rx_napi requires that softirq's are disabled during
-execution.
-
-The High latency bus drivers (SDIO and USB) sometimes call the wmi
-ep_rx_complete callback from non softirq context, resulting in a trigger
-of the above warning.
-
-Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
-softirq context) should be safe as the local_bh_disable and
-local_bh_enable functions (called from ieee80211_rx_ni) are fully
-reentrant.
-
-Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Lao Wei <zrlw@qq.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/pci/meye/meye.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index b867875aa6e66..f7ce99f67b5c5 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -2294,7 +2294,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
- 		   status->freq, status->band, status->signal,
- 		   status->rate_idx);
+diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
+index ba887e8e1b171..a85c5199ccd30 100644
+--- a/drivers/media/pci/meye/meye.c
++++ b/drivers/media/pci/meye/meye.c
+@@ -1469,7 +1469,7 @@ static int meye_mmap(struct file *file, struct vm_area_struct *vma)
+ 	unsigned long page, pos;
  
--	ieee80211_rx(ar->hw, skb);
-+	ieee80211_rx_ni(ar->hw, skb);
-+
- 	return 0;
- }
- 
+ 	mutex_lock(&meye.lock);
+-	if (size > gbuffers * gbufsize) {
++	if (size > gbuffers * gbufsize || offset > gbuffers * gbufsize - size) {
+ 		mutex_unlock(&meye.lock);
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
