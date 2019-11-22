@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F0FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA282070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639A920674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574422053;
-	bh=bEMiRdC2DTv+ADXauOoOV3CvMlfZpHZO/onVhiyscok=;
+	s=default; t=1574422056;
+	bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfNvVat7jYlNaGWd8dpASQdHQr3fuAX886w634G7ptNGvoBf+ecpHDTTeEhv4YxXS
-	 BHBEN7cjWGz3MgTSIdZCGN6wYtIZ5c1demiXuzbpMseZKoc7F2tseiyIqmgDJENmDq
-	 3LiWijaqlp3GfN9BV6aKoWfOCluGWovrzvEJNJJg=
+	b=0d+7iI3pDKDVvDQiKJ0B9IiriX7ly1RSJGuBdek1KyYY2iRcIYJQ6h41o9638X+VF
+	 b7hy5O/vwGwmc5o1KNfBKH/opzM3YUvVo3+QLvjEP0bujMZF8NUhiVo4PJFmmaBudF
+	 J6gQtoTp48IzE4G61cY7VFDse2vkyjlhUEIu6fwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfKVKcf (ORCPT
+        id S1727716AbfKVKce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:32:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54062 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:32:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727667AbfKVKcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:32:31 -0500
+        id S1727684AbfKVKc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:32:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1341420721;
-        Fri, 22 Nov 2019 10:32:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E6320726;
+        Fri, 22 Nov 2019 10:32:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418750;
-        bh=bEMiRdC2DTv+ADXauOoOV3CvMlfZpHZO/onVhiyscok=;
+        s=default; t=1574418747;
+        bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aKpLLmUP7qjgT1XaFa+ZZ/Dy12gcuagTN2IpUP2IOUDgTh7tMRSlNj+vaxZc2TQI
-         Ynczl8TmtVfkwkpHx92gorXTOViewSpC4SkI11UJ2p7Bb2Ej1CVDOLfZ5HHCGBkoni
-         sYZVCAcQQkTsyyyWbzUCcPMKE2+dkMxo+z7newX4=
+        b=jxsLNeWswcQcrIoqIpEFtC5BaSNzX8NndUUSNw9mxWAw9D7R6iKfRW2esRPOZnT3B
+         qSDVPYUiA499bgqqKrsRWjoPCCoUn2BiQQu6mMXEC0HtE5sWznvfQ22l2Sk/bSvZ7k
+         gSxUnn23j7nMN4Qsdt2DrKLIdjFTDBEInMsTW0S0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Matthew Wilcox <matthew.wilcox@oracle.com>,
+        George Kennedy <george.kennedy@oracle.com>,
+        Mark Kanda <mark.kanda@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 040/159] ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff" is set
-Date:   Fri, 22 Nov 2019 11:27:11 +0100
-Message-Id: <20191122100734.987439692@linuxfoundation.org>
+Subject: [PATCH 4.4 039/159] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
+Date:   Fri, 22 Nov 2019 11:27:10 +0100
+Message-Id: <20191122100734.323426078@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,72 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: George Kennedy <george.kennedy@oracle.com>
 
-[ Upstream commit 8148d2136002da2e2887caf6a07bbd9c033f14f3 ]
+[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
 
-One of the Freescale recommended sequences for power off with external
-PMIC is the following:
-...
-3.  SoC is programming PMIC for power off when standby is asserted.
-4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
+using it in debug message prints.
 
-See:
-http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-page 5083
-
-This patch implements step 4. of this sequence.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index a19d20f23e716..fff529c5f9b36 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
- 				   IMX6Q_GPR1_GINT);
+diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+index c6425e3df5a04..f1c7714377524 100644
+--- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
++++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+@@ -4371,6 +4371,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
+ 	OUTB(np, HS_PRT, HS_BUSY);
  }
  
-+static void imx6_pm_stby_poweroff(void)
-+{
-+	imx6_set_lpm(STOP_POWER_OFF);
-+	imx6q_suspend_finish(0);
++#define sym_printk(lvl, tp, cp, fmt, v...) do { \
++	if (cp)							\
++		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
++	else							\
++		starget_printk(lvl, tp->starget, fmt, ##v);	\
++} while (0)
 +
-+	mdelay(1000);
-+
-+	pr_emerg("Unable to poweroff system\n");
-+}
-+
-+static int imx6_pm_stby_poweroff_probe(void)
-+{
-+	if (pm_power_off) {
-+		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
-+			__func__, pm_power_off, pm_power_off);
-+		return -EBUSY;
-+	}
-+
-+	pm_power_off = imx6_pm_stby_poweroff;
-+	return 0;
-+}
-+
- void __init imx6_pm_ccm_init(const char *ccm_compat)
- {
- 	struct device_node *np;
-@@ -618,6 +640,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
- 	val = readl_relaxed(ccm_base + CLPCR);
- 	val &= ~BM_CLPCR_LPM;
- 	writel_relaxed(val, ccm_base + CLPCR);
-+
-+	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
-+		imx6_pm_stby_poweroff_probe();
- }
- 
- void __init imx6q_pm_init(void)
+ /*
+  *  chip exception handler for programmed interrupts.
+  */
+@@ -4416,7 +4423,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  been selected with ATN.  We do not want to handle that.
+ 	 */
+ 	case SIR_SEL_ATN_NO_MSG_OUT:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG OUT phase after selection with ATN\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4424,7 +4431,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  having reselected the initiator.
+ 	 */
+ 	case SIR_RESEL_NO_MSG_IN:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG IN phase after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4432,7 +4439,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  an IDENTIFY.
+ 	 */
+ 	case SIR_RESEL_NO_IDENTIFY:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No IDENTIFY after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4461,7 +4468,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	case SIR_RESEL_ABORTED:
+ 		np->lastmsg = np->msgout[0];
+ 		np->msgout[0] = M_NOOP;
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 			"message %x sent on bad reselection\n", np->lastmsg);
+ 		goto out;
+ 	/*
 -- 
 2.20.1
 
