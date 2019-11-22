@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF99DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E077FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E7D20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C0320637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419084;
-	bh=e1wBrB3GGsfoNvFx3VCcrXtM39XVDHUzUOTodt4IOHE=;
+	s=default; t=1574419087;
+	bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DaWCA9wEkrB/q0fUcps7V4gaGKlXxzSg237lhczaQMzVShw1QvNDPmJJRbXG/BFij
-	 uup7yvjajMef3oeVpB7RvbpuiAEFgkNgqM5W4HJQkgmyeO9a6u/F8k0SWxvvdA7MlP
-	 y56f5rGhNSTFHvPrVQDZzxKVLvhX/iJh5JPetnPw=
+	b=ZZ+QlinahwFcZyykFuAFyM3auqs0PHiF6H43nMLHxtDjqkP6dqH8qi9mJzEVIU/w1
+	 jpDaBpB1Nh7Sj0pjIne00eekPN+JPwK+1HW0YUpc2Y8Ed2lxO/7iVugYy9J9yq3IUn
+	 KNt/JTOAiVWgc/bYdAjEZ+4Q52bYOm5wivwBU7mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfKVKiC (ORCPT
+        id S1728112AbfKVKiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39952 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbfKVKh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:37:57 -0500
+        id S1728589AbfKVKiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84E2B2072D;
-        Fri, 22 Nov 2019 10:37:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B23820717;
+        Fri, 22 Nov 2019 10:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419077;
-        bh=e1wBrB3GGsfoNvFx3VCcrXtM39XVDHUzUOTodt4IOHE=;
+        s=default; t=1574419079;
+        bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jGmT+k2d3LRlqMrGD5IUbczQYN/t9c5vSe8KRc88jahviDj4HypQPHd+I+OAHxzKJ
-         VVgeUsE0mauURiOCQyZ/N128vrWBR/Mf3/JGY2KDG75lxYzW6aZeY7q8SqHfQl1wHc
-         G59pO2hk7oolHyMWPinwCWKZVz4WSbNAhNXdIkX8=
+        b=lic2qoIUEm2YorS9pG8+hpaAUBFifn2fZnnRYESTUEm+oOWHv2TBhHy+9ZEBYce2N
+         lRy4O+kAGymgjAsD1iwywY1OehF+qirqnZuLN1s7v2awp71fF5FoeRg9Mi2kUQWxnA
+         3QuREaGgvaFEnWHsG8tPQ7N2fUGPYZo8nR0tGGbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Smith <tim.smith@citrix.com>,
-        Mark Syms <mark.syms@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 149/159] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
-Date:   Fri, 22 Nov 2019 11:29:00 +0100
-Message-Id: <20191122100843.116471321@linuxfoundation.org>
+Subject: [PATCH 4.4 123/159] cxgb4: Use proper enum in IEEE_FAUX_SYNC
+Date:   Fri, 22 Nov 2019 11:28:34 +0100
+Message-Id: <20191122100831.537667921@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,62 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Smith <tim.smith@citrix.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
+[ Upstream commit 258b6d141878530ba1f8fc44db683822389de914 ]
 
-Flushing the workqueue can cause operations to happen which might
-call gfs2_log_reserve(), or get stuck waiting for locks taken by such
-operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
-will never wake because the only thing which can wake it is gfs2_logd()
-which was already stopped.
+Clang warns when one enumerated type is implicitly converted to another.
 
-This causes umount of a gfs2 filesystem to wedge permanently if, for
-example, the umount immediately follows a large delete operation.
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:390:4: warning: implicit
+conversion from enumeration type 'enum cxgb4_dcb_state' to different
+enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
+                        IEEE_FAUX_SYNC(dev, dcb);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h:70:10: note: expanded
+from macro 'IEEE_FAUX_SYNC'
+                                            CXGB4_DCB_STATE_FW_ALLSYNCED);
+                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When this occured, the following stack trace was obtained from the
-umount command
+Use the equivalent value of the expected type to silence Clang while
+resulting in no functional change.
 
-[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
-[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
-[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
-[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
-[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
-[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
-[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
-[<ffffffff811b79b9>] deactivate_super+0x59/0x60
-[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
-[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
-[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
-[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
-[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
-[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
-[<ffffffffffffffff>] 0xffffffffffffffff
+CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
 
-Signed-off-by: Tim Smith <tim.smith@citrix.com>
-Signed-off-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/super.c | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index 894fb01a91dab..a4eb38c1f5548 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -835,10 +835,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
- 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
- 		return error;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
+index ccf24d3dc9824..2c418c405c508 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
+@@ -67,7 +67,7 @@
+ 	do { \
+ 		if ((__dcb)->dcb_version == FW_PORT_DCB_VER_IEEE) \
+ 			cxgb4_dcb_state_fsm((__dev), \
+-					    CXGB4_DCB_STATE_FW_ALLSYNCED); \
++					    CXGB4_DCB_INPUT_FW_ALLSYNCED); \
+ 	} while (0)
  
-+	flush_workqueue(gfs2_delete_workqueue);
- 	kthread_stop(sdp->sd_quotad_process);
- 	kthread_stop(sdp->sd_logd_process);
- 
--	flush_workqueue(gfs2_delete_workqueue);
- 	gfs2_quota_sync(sdp->sd_vfs, 0);
- 	gfs2_statfs_sync(sdp->sd_vfs, 0);
- 
+ /* States we can be in for a port's Data Center Bridging.
 -- 
 2.20.1
 
