@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA216C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926CBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FA92068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591A02068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403466;
-	bh=OFhAvqBTsQOpEXKhS5GL21ntd+n5NcdSkGS1/oIoNes=;
+	s=default; t=1574403474;
+	bh=dC4Kdk5BlL5mVfoX77m9Qqd+m+VvEAHhCbrDMAN3XLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YdJ1syZRkYLfNDHWU8pAogk1J44G52EYy33Zjbup1Wmtocgz1coVTLNUDJfMQ8sJC
-	 bUE9MRXrWl9VGc0DvNg7KhQvRT/JVLxpoAsb3qcKwbRn5DjEOGvvjAPd1ieyFkNWFB
-	 jEKjPK4AadCSH9ZjMgCFFfgCpsNurq8otD+nis1g=
+	b=kUN0DjJnEcwZdMdvCoIMelxFmHd5CkJqh5VBOMz67q/Qde7f06INK86nvU+pre/Fo
+	 nIFVU8siWkfzc44u9hA4eIg94PhCA2/JiFRLcO106Lw4Wjc7TJZu9buV76HhJx5aW0
+	 8a/t7G9m9RqaT73ArgoJOO8KKTLZv5k6KhzDZ8XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfKVGRp (ORCPT
+        id S1728837AbfKVGNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:17:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbfKVGNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:25 -0500
+        id S1729220AbfKVGNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ED7520708;
-        Fri, 22 Nov 2019 06:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCED620707;
+        Fri, 22 Nov 2019 06:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403204;
-        bh=OFhAvqBTsQOpEXKhS5GL21ntd+n5NcdSkGS1/oIoNes=;
+        s=default; t=1574403197;
+        bh=dC4Kdk5BlL5mVfoX77m9Qqd+m+VvEAHhCbrDMAN3XLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTPdi7NiiRQ/QuQ0RtYEZXCwmhNIBLboO5kQ2ZFa3dX6tOxz0Fb41Wxbf/NiKRgmL
-         pVpc4y9RjHMV/lpj0p/6yxBxLItEQ0g5UPgM9Opg6OqUcXFZebaRCf304w/YLek81q
-         JV7aVL/o7kSzca3y3IvazmanHyELMptWx9m6pRBw=
+        b=kxxZVPy+2FRRN8qP4YzERUPPgJtEkmD1/ZtDPcdnoX8E+M6N4X39K70zLcDYDFGaI
+         IGlYQryj3H30K2xIxCyZmqmBVu97RLQZGWticP9EQaSdHhhDg77CnJWb8Q7Gn4EAUQ
+         JSWlM85uUeeO5+eDCuI26aYU5BeCEN2l8HeH9Zpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lepton Wu <ytht.net@gmail.com>, Jorgen Hansen <jhansen@vmware.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/68] VSOCK: bind to random port for VMADDR_PORT_ANY
-Date:   Fri, 22 Nov 2019 01:12:13 -0500
-Message-Id: <20191122061301.4947-19-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Bill O'Donnell <billodo@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 14/68] xfs: require both realtime inodes to mount
+Date:   Fri, 22 Nov 2019 01:12:07 -0500
+Message-Id: <20191122061301.4947-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,53 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lepton Wu <ytht.net@gmail.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
+[ Upstream commit 64bafd2f1e484e27071e7584642005d56516cb77 ]
 
-The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
-when VMM crashed, there is still orphaned vsock which is waiting for
-close timer, then it could cause connection time out for new started VM
-if they are trying to connect to same port with same guest cid since the
-new packets could hit that orphaned vsock. We could also fix this by doing
-more in vhost_vsock_reset_orphans, but any way, it should be better to start
-from a random local port instead of a fixed one.
+Since mkfs always formats the filesystem with the realtime bitmap and
+summary inodes immediately after the root directory, we should expect
+that both of them are present and loadable, even if there isn't a
+realtime volume attached.  There's no reason to skip this if rbmino ==
+NULLFSINO; in fact, this causes an immediate crash if the there /is/ a
+realtime volume and someone writes to it.
 
-Signed-off-by: Lepton Wu <ytht.net@gmail.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/af_vsock.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_rtalloc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 7f1d166ce6128..412d56614fd5e 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -89,6 +89,7 @@
- #include <linux/mutex.h>
- #include <linux/net.h>
- #include <linux/poll.h>
-+#include <linux/random.h>
- #include <linux/skbuff.h>
- #include <linux/smp.h>
- #include <linux/socket.h>
-@@ -483,9 +484,13 @@ static void vsock_pending_work(struct work_struct *work)
- static int __vsock_bind_stream(struct vsock_sock *vsk,
- 			       struct sockaddr_vm *addr)
- {
--	static u32 port = LAST_RESERVED_PORT + 1;
-+	static u32 port = 0;
- 	struct sockaddr_vm new_addr;
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index ab1bac6a3a1c0..919b6544b61a3 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1225,13 +1225,11 @@ xfs_rtmount_inodes(
+ 	xfs_sb_t	*sbp;
  
-+	if (!port)
-+		port = LAST_RESERVED_PORT + 1 +
-+			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
+ 	sbp = &mp->m_sb;
+-	if (sbp->sb_rbmino == NULLFSINO)
+-		return 0;
+ 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
+ 	if (error)
+ 		return error;
+ 	ASSERT(mp->m_rbmip != NULL);
+-	ASSERT(sbp->sb_rsumino != NULLFSINO);
 +
- 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
- 
- 	if (addr->svm_port == VMADDR_PORT_ANY) {
+ 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
+ 	if (error) {
+ 		IRELE(mp->m_rbmip);
 -- 
 2.20.1
 
