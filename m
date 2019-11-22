@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68368C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9929AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5B92071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6E520726
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418671;
-	bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
+	s=default; t=1574418674;
+	bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQI9IWi/f3A0MFlysAb2NUTu2COQHldxE+2CLsL2RtSSoy447AvYIQisgrIYkUz8s
-	 K1So6zJf/K9aE7NNOvAlaCklKCmlh4Ckua644uhmR09V0GUY6a+cCK5SQJvJeek8oK
-	 VXzhAz2YJDQ03nquW/8QWP5crGsPRxb/MR8QM6/k=
+	b=qom1cpWN4ZbtYvEZnONIQUzd2fRgui8yOsKc+RiAxWrde0kJxcxuc+bnzytDXqjgs
+	 r6E0Y3QbOc+8Jqxf5PfmLOGZoFrzxqMJJVRPYf7hj43HPeyj+jhnokNpHXUxzZGf4G
+	 LZ4TzhuF2UhLnexPqlj8pxklwRESPwjr7/L1Bbc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKVKbK (ORCPT
+        id S1727196AbfKVKbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50956 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbfKVKbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:08 -0500
+        id S1727113AbfKVKbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B106020708;
-        Fri, 22 Nov 2019 10:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAD5E20714;
+        Fri, 22 Nov 2019 10:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418668;
-        bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
+        s=default; t=1574418671;
+        bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StY2qZclZgjg8KoYf/QV2jZDqxS6YGOtJa8Mlo4Vzzyd+EFQemZt+0WQcaZJXUEpY
-         evDfxinV/T6Xm3zH9cMs0+68LcShqBDlSb2619yROYJZ90YeNut+wtrGJsI/qvIY0l
-         5Eb3Kv4WEiO6BmikZHLg1C54IViXfzD4FowMkdIw=
+        b=zqksB9qD3nWGYsG1aBOuCT/O5rKoRjOb6A283OrECVzQmjGvaiVhCUMXs+uds+Mxw
+         JSgytqwdjQp0NgNFMrryDrdClXZvze3ZweZwPN3+coghKcdbcvnf3dt9pOkSUbJWCK
+         d6bQf4BCjTnP/BUKjaG9q/2ebOiHQcERUoDrnQy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 012/159] iio: dac: mcp4922: fix error handling in mcp4922_write_raw
-Date:   Fri, 22 Nov 2019 11:26:43 +0100
-Message-Id: <20191122100718.354014416@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 013/159] ALSA: pcm: signedness bug in snd_pcm_plug_alloc()
+Date:   Fri, 22 Nov 2019 11:26:44 +0100
+Message-Id: <20191122100718.988371117@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,49 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0833627fc3f757a0dca11e2a9c46c96335a900ee ]
+[ Upstream commit 6f128fa41f310e1f39ebcea9621d2905549ecf52 ]
 
-Do not try to write negative values and make sure that the write goes well.
+The "frames" variable is unsigned so the error handling doesn't work
+properly.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/mcp4922.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
-index 3854d201a5d6c..68dd0be1ac076 100644
---- a/drivers/iio/dac/mcp4922.c
-+++ b/drivers/iio/dac/mcp4922.c
-@@ -94,17 +94,22 @@ static int mcp4922_write_raw(struct iio_dev *indio_dev,
- 		long mask)
- {
- 	struct mcp4922_state *state = iio_priv(indio_dev);
-+	int ret;
- 
- 	if (val2 != 0)
- 		return -EINVAL;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		if (val > GENMASK(chan->scan_type.realbits-1, 0))
-+		if (val < 0 || val > GENMASK(chan->scan_type.realbits - 1, 0))
- 			return -EINVAL;
- 		val <<= chan->scan_type.shift;
--		state->value[chan->channel] = val;
--		return mcp4922_spi_write(state, chan->channel, val);
-+
-+		ret = mcp4922_spi_write(state, chan->channel, val);
-+		if (!ret)
-+			state->value[chan->channel] = val;
-+		return ret;
-+
- 	default:
- 		return -EINVAL;
- 	}
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index a84a1d3d23e56..c6888d76ca5e9 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
 -- 
 2.20.1
 
