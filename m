@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80830C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D359CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC402068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18D12068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403170;
-	bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
+	s=default; t=1574403179;
+	bh=e6wAYEyaRwAiQNgGCCFmkB1X/uUjDUITQKSnTdmdXRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bPyEJlk+Vys4PWDkaRXigv4j90G6fRzSDQjSlm/5uTw624oudnvc9qzuqmAMlLah2
-	 koQLCidgJuOl3/Y26I4yU8DeIFKkcvC90NB4/ABKoZHbDIaT9j2sapykk9cxGHx4AC
-	 RJLq7+wotCe1WTuhlZ6R9LgdIZcxyNg1g7gQwuyk=
+	b=sUEH8BFcmxjmPiYTDa9Fd0imbKWqM3PS5n2oN3oO1ra1eapkKOitkTCjRtgHCgs1K
+	 lBoepH3FPD/OyDOfODdnmrBoIVDXy9enuh0ZGpzwS0+gaVfzbQxM/iDE1x4fcQcbPX
+	 sWtZr7kqSB6RPeval3C2sAjQWiOkRUMREzwDZHjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfKVF4L (ORCPT
+        id S1728658AbfKVF4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbfKVF4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:07 -0500
+        id S1728979AbfKVF4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B0C220717;
-        Fri, 22 Nov 2019 05:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8977A20659;
+        Fri, 22 Nov 2019 05:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402166;
-        bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
+        s=default; t=1574402160;
+        bh=e6wAYEyaRwAiQNgGCCFmkB1X/uUjDUITQKSnTdmdXRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Yf8DZNhYDzCTbB7zQOHOcsNMC435pbuKpZbnefXVXGdwUwd/T8sFSPSepSQNkXRn
-         hDYV+cJXdksStHs4EtTGarDdxtM+hB4TKqbYVRGq+cefikqeoAymMWWS6t0SMWcmm6
-         R1vCMDjBf4RIz5ZOhag/8HX2seTgPQ7VUiAldFC8=
+        b=KPKNEpq/x0k94UN+IVhMoMM20aPmOKH/QjFacAkbzjOhQpLO7ScYHWYYccJCBTQH2
+         on4nNbJc2sJyY97R/hHvSgSg9G/ufBy0x7UEedpGLrr1tluZyQeWYayqAAjFeOp7lQ
+         aCjl61ArR/PU+bp9wX3DnY3PMrmsdZpuMqGkuj44=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 019/127] rtl818x: fix potential use after free
-Date:   Fri, 22 Nov 2019 00:53:57 -0500
-Message-Id: <20191122055544.3299-18-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 014/127] ACPI / LPSS: Ignore acpi_device_fix_up_power() return value
+Date:   Fri, 22 Nov 2019 00:53:52 -0500
+Message-Id: <20191122055544.3299-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -61,41 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit afbb1947db94eacc5a13302eee88a9772fb78935 ]
+[ Upstream commit 1a2fa02f7489dc4d746f2a15fb77b3ce1affade8 ]
 
-entry is released via usb_put_urb just after calling usb_submit_urb.
-However, entry is used if the submission fails, resulting in a use after
-free bug. The patch fixes this.
+Ignore acpi_device_fix_up_power() return value. If we return an error
+we end up with acpi_default_enumeration() still creating a platform-
+device for the device and we end up with the device still being used
+but without the special LPSS related handling which is not useful.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Specicifically ignoring the error fixes the touchscreen no longer
+working after a suspend/resume on a Prowise PT301 tablet.
+
+This tablet has a broken _PS0 method on the touchscreen's I2C controller,
+causing acpi_device_fix_up_power() to fail, causing fallback to standard
+platform-dev handling and specifically causing acpi_lpss_save/restore_ctx
+to not run.
+
+The I2C controllers _PS0 method does actually turn on the device, but then
+does some more nonsense which fails when run during early boot trying to
+use I2C opregion handling on another not-yet registered I2C controller.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/acpi_lpss.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-index 9a1d15b3ce453..518caaaf8a987 100644
---- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-+++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
-@@ -444,12 +444,13 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
- 		skb_queue_tail(&priv->rx_queue, skb);
- 		usb_anchor_urb(entry, &priv->anchored);
- 		ret = usb_submit_urb(entry, GFP_KERNEL);
--		usb_put_urb(entry);
- 		if (ret) {
- 			skb_unlink(skb, &priv->rx_queue);
- 			usb_unanchor_urb(entry);
-+			usb_put_urb(entry);
- 			goto err;
- 		}
-+		usb_put_urb(entry);
- 	}
- 	return ret;
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 51592dd45b066..84124b8a7778a 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -500,12 +500,7 @@ static int acpi_lpss_create_device(struct acpi_device *adev,
+ 	 * have _PS0 and _PS3 without _PSC (and no power resources), so
+ 	 * acpi_bus_init_power() will assume that the BIOS has put them into D0.
+ 	 */
+-	ret = acpi_device_fix_up_power(adev);
+-	if (ret) {
+-		/* Skip the device, but continue the namespace scan. */
+-		ret = 0;
+-		goto err_out;
+-	}
++	acpi_device_fix_up_power(adev);
  
+ 	adev->driver_data = pdata;
+ 	pdev = acpi_create_platform_device(adev, dev_desc->properties);
 -- 
 2.20.1
 
