@@ -2,80 +2,135 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D15C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACA7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8695E20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848A420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6fh5q+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfKVN7H (ORCPT
+        id S1728180AbfKVOAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:59:07 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:55252 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfKVN7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:59:07 -0500
-Received: from localhost (unknown [111.199.189.14])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxzxac6dddevYBAA--.1171S2;
-        Fri, 22 Nov 2019 21:58:52 +0800 (CST)
-From:   Lichao Liu <liulichao@loongson.cn>
-To:     chenhc@lemote.com, jiaxun.yang@flygoat.com
-Cc:     ralf@linux-mips.org, paulburton@kernel.org, jhogan@kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lichao Liu <liulichao@loongson.cn>
-Subject: [PATCH] MIPS:Loongson64:Limit 8259.h by config
-Date:   Fri, 22 Nov 2019 21:58:51 +0800
-Message-Id: <20191122135851.5145-1-liulichao@loongson.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: AQAAf9Dxzxac6dddevYBAA--.1171S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrXF18WF1xury5ZFy8Jw43KFg_yoWxWrcEka
-        y2yw48G34fAry2y347ZrnrWrW7u34UuF13CFn8Ar1Sqas0vwn0gayDAr4DJr1rCrn8tr4r
-        Xay8Cry8urW7CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbc8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-        Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5GwCF
-        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vI
-        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-        1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUefOzUUUUU
-X-CM-SenderInfo: xolxzxpfkd0qxorr0wxvrqhubq/
+        Fri, 22 Nov 2019 09:00:11 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32999 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVOAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:00:11 -0500
+Received: by mail-io1-f65.google.com with SMTP id j13so8144274ioe.0;
+        Fri, 22 Nov 2019 06:00:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A3eKvaFo1JGhu6lnAN1aDIgq1Pf6mOkZOyokY6qopcs=;
+        b=A6fh5q+F4GC/hZejOwyrpnYhDN+x0FLlt7gyPcxFTCEIGdyK0qgh0s4KHaIE/kpvwL
+         GZe6kl/qQy1CA3jABX7M2XrVjU1Zhzlm2ku1Wc+JlO/h6PK3VeKoeiVmrbpPEJ3XVSgY
+         XxlsRPUSOrqz7G3hEWAINFGlOxlfyHaaz4pq9rKXsEZveAco7HAulJixh39Q+ehsQlwU
+         PA/+5WJ90zhFL/Hzyd8M3W28ZizEqlJxkdelyVrbTjtiZbV5U2CF6K1Pk5z/ZhFFQ7uI
+         cl9zcUjEI/iHMgBVeWDClGJoRidtWH9veioqpcuYZG045mi8fazgsc2AZ3DSYRA/exEc
+         MAGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A3eKvaFo1JGhu6lnAN1aDIgq1Pf6mOkZOyokY6qopcs=;
+        b=TaYqy+Finv9xdIkX72mYpA34hGiDQsia0KW0CgQDBnxL8LNLgLzKRJ6aA+5wGpYEeN
+         Icj4c15z3+2kS+evnCbBLY8aOvhGfgHyJb+WJwkU6L97n4eR7q3OZpmPfkzGLfC4nW7b
+         FmHSbMzbGfN5moUr/7Ve/Ai2m0B2lLDoJ81baJ4P+XLeSJ82oBDolc77K8mZepn5zavF
+         JctzLIqb5f7l+DiBZwtmmFqqb5uoLRUUOZyKN8HsnYdJJaUeZkyIpIDGbFaOfZZQ595u
+         8B8pkidr9o7VzJBszSnyh60sixIpq4BStWNCmeCgoYo9JcRAwYAmieiQBOcUjbcuIbTQ
+         x19A==
+X-Gm-Message-State: APjAAAWbIAdoWSOXuS2x+clbb5xvRaKkL7bD7GT9IOh/xW9qt5JnqtFO
+        49xVm6GKuvKz89t3bVeN//eunt257rmlu/4UDJ0ZQp3DUKs=
+X-Google-Smtp-Source: APXvYqwaUR+5DSTETTRFfyfpI1V27XTxBW6BS9bvv8ctDtLaBovtbrmFzfqebLHu+KU4PgEKnwitUz7Ur31g4V49TEM=
+X-Received: by 2002:a02:9f95:: with SMTP id a21mr14065328jam.16.1574431209771;
+ Fri, 22 Nov 2019 06:00:09 -0800 (PST)
+MIME-Version: 1.0
+References: <20191122054911.1750-1-sashal@kernel.org> <20191122054911.1750-133-sashal@kernel.org>
+In-Reply-To: <20191122054911.1750-133-sashal@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Fri, 22 Nov 2019 15:00:43 +0100
+Message-ID: <CAOi1vP9MCrPf44V2GMyODH185A0HJcuPsYfVkOAVGkcMRb+=iw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 140/219] libceph: drop last_piece logic from write_partial_message_data()
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all platform config CONFIG_I8259, So Use the macro CONFIG_I8259
-to control whether to include the asm/i8259.h header file.
+On Fri, Nov 22, 2019 at 6:51 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Ilya Dryomov <idryomov@gmail.com>
+>
+> [ Upstream commit 1f6b821aef78e3d79e8d598ae59fc7e23fb6c563 ]
+>
+> last_piece is for the last piece in the current data item, not in the
+> entire data payload of the message.  This is harmful for messages with
+> multiple data items.  On top of that, we don't need to signal the end
+> of a data payload either because it is always followed by a footer.
+>
+> We used to signal "more" unconditionally, until commit fe38a2b67bc6
+> ("libceph: start defining message data cursor").  Part of a large
+> series, it introduced cursor->last_piece and also mistakenly inverted
+> the hint by passing last_piece for "more".  This was corrected with
+> commit c2cfa1940097 ("libceph: Fix ceph_tcp_sendpage()'s more boolean
+> usage").
+>
+> As it is, last_piece is not helping at all: because Nagle algorithm is
+> disabled, for a simple message with two 512-byte data items we end up
+> emitting three packets: front + first data item, second data item and
+> footer.  Go back to the original pre-fe38a2b67bc6 behavior -- a single
+> packet in most cases.
+>
+> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  net/ceph/messenger.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+> index f7d7f32ac673c..6514816947fbe 100644
+> --- a/net/ceph/messenger.c
+> +++ b/net/ceph/messenger.c
+> @@ -1612,7 +1612,6 @@ static int write_partial_message_data(struct ceph_connection *con)
+>                 struct page *page;
+>                 size_t page_offset;
+>                 size_t length;
+> -               bool last_piece;
+>                 int ret;
+>
+>                 if (!cursor->resid) {
+> @@ -1620,10 +1619,9 @@ static int write_partial_message_data(struct ceph_connection *con)
+>                         continue;
+>                 }
+>
+> -               page = ceph_msg_data_next(cursor, &page_offset, &length,
+> -                                         &last_piece);
+> -               ret = ceph_tcp_sendpage(con->sock, page, page_offset,
+> -                                       length, !last_piece);
+> +               page = ceph_msg_data_next(cursor, &page_offset, &length, NULL);
+> +               ret = ceph_tcp_sendpage(con->sock, page, page_offset, length,
+> +                                       true);
+>                 if (ret <= 0) {
+>                         if (do_datacrc)
+>                                 msg->footer.data_crc = cpu_to_le32(crc);
 
-Signed-off-by: Lichao Liu <liulichao@loongson.cn>
----
- arch/mips/loongson64/pm.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Sasha,
 
-diff --git a/arch/mips/loongson64/pm.c b/arch/mips/loongson64/pm.c
-index 7c8556f09781..08238a58107f 100644
---- a/arch/mips/loongson64/pm.c
-+++ b/arch/mips/loongson64/pm.c
-@@ -9,7 +9,9 @@
- #include <linux/interrupt.h>
- #include <linux/pm.h>
- 
-+#ifdef CONFIG_I8259
- #include <asm/i8259.h>
-+#endif
- #include <asm/mipsregs.h>
- 
- #include <loongson.h>
--- 
-2.17.1
+This commit was part of a larger series and shouldn't be backported on
+its own.  Please drop it.
 
+Thanks,
+
+                Ilya
