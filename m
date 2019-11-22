@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D780FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A954AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2C42075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD662070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401907;
-	bh=W70HprwceHM95eqhp/i6jc2jryBT4sBo1lOQnbLjKaY=;
+	s=default; t=1574401919;
+	bh=M40l9of/5w28DtT7o9OfgX+vth97LDYxOA329hDtE/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoF0dqKLi2c+PfH4Tqk6yaVsS4gCC3ElNRrmMBb+zFp2kxiUu9hZ2o0CIXxRsYuk+
-	 YL0GUr9RFbuip3uxJi1/C14y0EOOUdRmNloTEmfXNEvFPWuL1mfO8u+T+2P7JjTYGM
-	 qdkQ1yChUPO4gHjrQEPv3dNsAPVMf+lwgvWeo9JQ=
+	b=Dzeas2Up0NWC3wZjRL+aBArGGC8ZCabw/R0/zXcHKKnc7AciJooM/ybvG9nF6RPZE
+	 vjKSL3hsM1BAQQeJMBkI87jobd1qum+juDjXN0ogkQ8wc56Dp7RFsG+fAmuzJhkFWZ
+	 q47My/RquFiexgiKFOil91FRBlYteP9kvFi+t6X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfKVFvq (ORCPT
+        id S1728358AbfKVFv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbfKVFvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:39 -0500
+        id S1728286AbfKVFvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6C4320731;
-        Fri, 22 Nov 2019 05:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F05192070A;
+        Fri, 22 Nov 2019 05:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401899;
-        bh=W70HprwceHM95eqhp/i6jc2jryBT4sBo1lOQnbLjKaY=;
+        s=default; t=1574401909;
+        bh=M40l9of/5w28DtT7o9OfgX+vth97LDYxOA329hDtE/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zraj3XOC9qzcRGFtsXh0a2lU6myxiXPguvCx76JH+RjWie28OV9ZdmaTH+bZG/n0t
-         N0Eclgduj7YxwXdEcyqteTunAKJC6DgA5C5p9rIlvo0Vt8VVFSdmnCi2yDkQgTuEnZ
-         ixuc76009S0J5qbXVZTkGd2KXSSNbwhcrt7rpNf4=
+        b=0rkQ++TFMXvT8iUUBigEzLP+NTt1gQIVvGGl1U15YtzKqduMeScHNXFEITn+ytFGh
+         lltUWGH6RAFsBRpXvlIQLokcf+folzcBPXqQb5xpATQJrXAdKWqbgx0m/p8NJPhezi
+         3qNsmEU5LJXvKm2mGs+69l/ocnId3woOx37uylRs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 131/219] regulator: tps65910: fix a missing check of return value
-Date:   Fri, 22 Nov 2019 00:47:43 -0500
-Message-Id: <20191122054911.1750-124-sashal@kernel.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        ceph-devel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 140/219] libceph: drop last_piece logic from write_partial_message_data()
+Date:   Fri, 22 Nov 2019 00:47:52 -0500
+Message-Id: <20191122054911.1750-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -58,36 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-[ Upstream commit cd07e3701fa6a4c68f8493ee1d12caa18d46ec6a ]
+[ Upstream commit 1f6b821aef78e3d79e8d598ae59fc7e23fb6c563 ]
 
-tps65910_reg_set_bits() may fail. The fix checks if it fails, and if so,
-returns with its error code.
+last_piece is for the last piece in the current data item, not in the
+entire data payload of the message.  This is harmful for messages with
+multiple data items.  On top of that, we don't need to signal the end
+of a data payload either because it is always followed by a footer.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+We used to signal "more" unconditionally, until commit fe38a2b67bc6
+("libceph: start defining message data cursor").  Part of a large
+series, it introduced cursor->last_piece and also mistakenly inverted
+the hint by passing last_piece for "more".  This was corrected with
+commit c2cfa1940097 ("libceph: Fix ceph_tcp_sendpage()'s more boolean
+usage").
+
+As it is, last_piece is not helping at all: because Nagle algorithm is
+disabled, for a simple message with two 512-byte data items we end up
+emitting three packets: front + first data item, second data item and
+footer.  Go back to the original pre-fe38a2b67bc6 behavior -- a single
+packet in most cases.
+
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/tps65910-regulator.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ceph/messenger.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/tps65910-regulator.c b/drivers/regulator/tps65910-regulator.c
-index 02ccdaa226a73..5ebb6ee73f077 100644
---- a/drivers/regulator/tps65910-regulator.c
-+++ b/drivers/regulator/tps65910-regulator.c
-@@ -1102,8 +1102,10 @@ static int tps65910_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pmic);
+diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+index f7d7f32ac673c..6514816947fbe 100644
+--- a/net/ceph/messenger.c
++++ b/net/ceph/messenger.c
+@@ -1612,7 +1612,6 @@ static int write_partial_message_data(struct ceph_connection *con)
+ 		struct page *page;
+ 		size_t page_offset;
+ 		size_t length;
+-		bool last_piece;
+ 		int ret;
  
- 	/* Give control of all register to control port */
--	tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
-+	err = tps65910_reg_set_bits(pmic->mfd, TPS65910_DEVCTRL,
- 				DEVCTRL_SR_CTL_I2C_SEL_MASK);
-+	if (err < 0)
-+		return err;
+ 		if (!cursor->resid) {
+@@ -1620,10 +1619,9 @@ static int write_partial_message_data(struct ceph_connection *con)
+ 			continue;
+ 		}
  
- 	switch (tps65910_chip_id(tps65910)) {
- 	case TPS65910:
+-		page = ceph_msg_data_next(cursor, &page_offset, &length,
+-					  &last_piece);
+-		ret = ceph_tcp_sendpage(con->sock, page, page_offset,
+-					length, !last_piece);
++		page = ceph_msg_data_next(cursor, &page_offset, &length, NULL);
++		ret = ceph_tcp_sendpage(con->sock, page, page_offset, length,
++					true);
+ 		if (ret <= 0) {
+ 			if (do_datacrc)
+ 				msg->footer.data_crc = cpu_to_le32(crc);
 -- 
 2.20.1
 
