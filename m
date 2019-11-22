@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F16C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5268C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60AB2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1282071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420093;
-	bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
+	s=default; t=1574420095;
+	bh=Xly+WwSRVQd4TwyrC8/aeq8ryWsEK+3hHMKmq1lem7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yHE0UFFQVcsQlvT65UsvcErwl75K7B8Yx/y1BMiWFMWedcISpeJ8w7sZEBqMQj7u9
-	 iwx8PHFmDXGaS7UGNBbczUA8M4eI1bSOJiB0u0JNuzLm4vACQ4/Y+WqxdtwDzIQb0W
-	 wXYhfsTY39qIJYwTNPCMiCtApkck9EhF12tUJjiA=
+	b=a3Qs2gL/O9Z3QvDZd5wXNzRiLrnDtVBERnwtYggQcaVDh6BO7pW1eqeNK/Dp1xbvn
+	 w0TodlP537VpzBL4tv8smdLUnWNvNkL9Dr9NwzTvjt+mnuf2EgG1Dg/fLNC0bSPWE6
+	 B4+TwD0u0U1Yh220YbdLGUpFaWSf+RF6TetzKYaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfKVKyw (ORCPT
+        id S1730391AbfKVKyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfKVKyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:49 -0500
+        id S1730383AbfKVKyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95CFC20706;
-        Fri, 22 Nov 2019 10:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488BB2073B;
+        Fri, 22 Nov 2019 10:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420089;
-        bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
+        s=default; t=1574420091;
+        bh=Xly+WwSRVQd4TwyrC8/aeq8ryWsEK+3hHMKmq1lem7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8JgdX0GoLMpqreDT56PXhWfREOasBCq0L95m4VcUKPogNatt+uXD83CuNWdnI7xg
-         1GbzSB9eVmLJ0TMwjHGPz6WZzN3S9v3wQkzvPWBCs/59pu0Hx1bc2G0sP9ynxglaDi
-         a40SGtayLDgzpfn5fu6MuZt/zcj/w8JrnytxWs8w=
+        b=xWRDvATT/aFIvEhUCVcbuYBqxTIKzggQFbdhxTHAY8l9TiyCEnqBZ0pwPPkZXEUxN
+         4s8twNDC2qj9wHKfvSIfoxXTvktqbWERSNIvto+moVgxvx8MpgZOuH4MUM9OWhtg0r
+         i9sFa9dTAt1E+TPv63OoxZcJeQ092M4syOs3VOE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 111/122] hwmon: (ina3221) Fix INA3221_CONFIG_MODE macros
-Date:   Fri, 22 Nov 2019 11:29:24 +0100
-Message-Id: <20191122100834.275800470@linuxfoundation.org>
+Subject: [PATCH 4.14 112/122] netfilter: nft_compat: do not dump private area
+Date:   Fri, 22 Nov 2019 11:29:25 +0100
+Message-Id: <20191122100834.767315450@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,41 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolin Chen <nicoleotsuka@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 791ebc9d34e9d212fc03742c31654b017d385926 ]
+[ Upstream commit d701d8117200399d85e63a737d2e4e897932f3b6 ]
 
-The three INA3221_CONFIG_MODE macros are not correctly defined here.
-The MODE3-1 bits are located at BIT 2-0 according to the datasheet.
+Zero pad private area, otherwise we expose private kernel pointer to
+userspace. This patch also zeroes the tail area after the ->matchsize
+and ->targetsize that results from XT_ALIGN().
 
-So this patch just fixes them by shifting all of them with a correct
-offset. However, this isn't a crital bug fix as the driver does not
-use any of them at this point.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 0ca743a55991 ("netfilter: nf_tables: add compatibility layer for x_tables")
+Reported-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/ina3221.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nft_compat.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-index e6b49500c52ae..8c9555313fc3d 100644
---- a/drivers/hwmon/ina3221.c
-+++ b/drivers/hwmon/ina3221.c
-@@ -38,9 +38,9 @@
- #define INA3221_WARN3			0x0c
- #define INA3221_MASK_ENABLE		0x0f
+diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
+index 7344ec7fff2a7..8281656808aee 100644
+--- a/net/netfilter/nft_compat.c
++++ b/net/netfilter/nft_compat.c
+@@ -291,6 +291,24 @@ nft_target_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
+ 		module_put(me);
+ }
  
--#define INA3221_CONFIG_MODE_SHUNT	BIT(1)
--#define INA3221_CONFIG_MODE_BUS		BIT(2)
--#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
-+#define INA3221_CONFIG_MODE_SHUNT	BIT(0)
-+#define INA3221_CONFIG_MODE_BUS		BIT(1)
-+#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(2)
++static int nft_extension_dump_info(struct sk_buff *skb, int attr,
++				   const void *info,
++				   unsigned int size, unsigned int user_size)
++{
++	unsigned int info_size, aligned_size = XT_ALIGN(size);
++	struct nlattr *nla;
++
++	nla = nla_reserve(skb, attr, aligned_size);
++	if (!nla)
++		return -1;
++
++	info_size = user_size ? : size;
++	memcpy(nla_data(nla), info, info_size);
++	memset(nla_data(nla) + info_size, 0, aligned_size - info_size);
++
++	return 0;
++}
++
+ static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ {
+ 	const struct xt_target *target = expr->ops->data;
+@@ -298,7 +316,8 @@ static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
  
- #define INA3221_RSHUNT_DEFAULT		10000
+ 	if (nla_put_string(skb, NFTA_TARGET_NAME, target->name) ||
+ 	    nla_put_be32(skb, NFTA_TARGET_REV, htonl(target->revision)) ||
+-	    nla_put(skb, NFTA_TARGET_INFO, XT_ALIGN(target->targetsize), info))
++	    nft_extension_dump_info(skb, NFTA_TARGET_INFO, info,
++				    target->targetsize, target->usersize))
+ 		goto nla_put_failure;
  
+ 	return 0;
+@@ -534,7 +553,8 @@ static int __nft_match_dump(struct sk_buff *skb, const struct nft_expr *expr,
+ 
+ 	if (nla_put_string(skb, NFTA_MATCH_NAME, match->name) ||
+ 	    nla_put_be32(skb, NFTA_MATCH_REV, htonl(match->revision)) ||
+-	    nla_put(skb, NFTA_MATCH_INFO, XT_ALIGN(match->matchsize), info))
++	    nft_extension_dump_info(skb, NFTA_MATCH_INFO, info,
++				    match->matchsize, match->usersize))
+ 		goto nla_put_failure;
+ 
+ 	return 0;
 -- 
 2.20.1
 
