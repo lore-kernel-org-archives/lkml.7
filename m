@@ -7,59 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E5AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15473C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF0E2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82DC207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420564;
-	bh=ccBzI2Hxcp+UN6EicYvhJ9LXXZoZN5mA1p4W63Ng3vg=;
+	s=default; t=1574420569;
+	bh=CRRHNqPWZVBDH3wUrp+1VH0/eHLL/17msIBzpwJ4APY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ERxrvuyvBKe0ICN14MebkiXDsqdUvn3YyeyXyMDBaWT1mhT32VBp8eGUBqCvxJhZY
-	 Z568jvti+T8MY7ZYr9iTrEXTshxyr91uAWwcBW/VCWIqW3YSMvqsTxrtu3T529bD1C
-	 tyath2x2Rfa/2QVxiiWIQaogTxcZ4qv8jPy64dBk=
+	b=Qq3KLScc9bsGWk+aU3P8wSy+gkZt37Tdo/KhoSik1MOk0OfbjVxZqlPBgNUh78eY5
+	 KTqtcedyvz2H34x4gmLbnljMPYHj/UK1j3/5i/QoH2aM/Bj+lRHLZXznVn2n6C1tNP
+	 isjSGypFUh4bxgTMipAgqyj76KprnPVm1YSXSrTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbfKVLCn (ORCPT
+        id S1731347AbfKVLCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56276 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbfKVLCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:38 -0500
+        id S1731335AbfKVLCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2814E207FC;
-        Fri, 22 Nov 2019 11:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10EF92075E;
+        Fri, 22 Nov 2019 11:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420557;
-        bh=ccBzI2Hxcp+UN6EicYvhJ9LXXZoZN5mA1p4W63Ng3vg=;
+        s=default; t=1574420563;
+        bh=CRRHNqPWZVBDH3wUrp+1VH0/eHLL/17msIBzpwJ4APY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AveORbk3PhJsKTEVUvOcuxogMmLBu/pJDfzBchqcoQ34NKL0qQEGPbI3CbBINF2qT
-         h6YxCOpb41GiStyc+wVGGozF7x6F6uUNU+yNDCNGQaiNs8TwosIlE5rfWmBijF1lP2
-         Xa6LTb/t3YCElbzSPa/mTpCzcHps9qzlS+adwC70=
+        b=I9syo7BJpeHeBtB0cQ4W7WId3WzBj0UajPdJwtlWVeWTHMzFIH9y/bMifDs3d/bSA
+         x1vPz8dQBbq9QIN/0rMZln19MoEuzVfh/bk1ia8Lewg3aQZ3ZQ+MW5gv/Xe1PJEPm9
+         9I+J1aDNDFIz9xVmdEB9BbwO4RDqNd/CJVVIhcdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Markus T Metzger <markus.t.metzger@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 147/220] x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately
-Date:   Fri, 22 Nov 2019 11:28:32 +0100
-Message-Id: <20191122100923.327851010@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 149/220] mmc: tmio: Fix SCC error detection
+Date:   Fri, 22 Nov 2019 11:28:34 +0100
+Message-Id: <20191122100923.460544655@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -72,131 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
 
-[ Upstream commit 07e1d88adaaeab247b300926f78cc3f950dbeda3 ]
+[ Upstream commit b85fb0a1c8aeaaa40d08945d51a6656b512173f0 ]
 
-On 64-bit kernels ptrace can read the FS/GS base using the register access
-APIs (PTRACE_PEEKUSER, etc.) or PTRACE_ARCH_PRCTL.
+SDR104, HS200 and HS400 need to check for SCC error. If SCC error is
+detected, retuning is necessary.
 
-Make both of these mechanisms return the actual FS/GS base.
-
-This will improve debuggability by providing the correct information
-to ptracer such as GDB.
-
-[ chang: Rebased and revised patch description. ]
-[ mingo: Revised the changelog some more. ]
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Markus T Metzger <markus.t.metzger@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1537312139-5580-2-git-send-email-chang.seok.bae@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+[Niklas: update commit message]
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c | 62 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 52 insertions(+), 10 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 516ec7586a5fb..8d4d506453106 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -40,6 +40,7 @@
- #include <asm/hw_breakpoint.h>
- #include <asm/traps.h>
- #include <asm/syscall.h>
-+#include <asm/mmu_context.h>
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 7d13ca9ea5347..94c43c3d3ae58 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -926,8 +926,8 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
+ 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
+ 		tmio_mmc_abort_dma(host);
  
- #include "tls.h"
+-	if (host->check_scc_error)
+-		host->check_scc_error(host);
++	if (host->check_scc_error && host->check_scc_error(host))
++		mrq->cmd->error = -EILSEQ;
  
-@@ -343,6 +344,49 @@ static int set_segment_reg(struct task_struct *task,
- 	return 0;
- }
- 
-+static unsigned long task_seg_base(struct task_struct *task,
-+				   unsigned short selector)
-+{
-+	unsigned short idx = selector >> 3;
-+	unsigned long base;
-+
-+	if (likely((selector & SEGMENT_TI_MASK) == 0)) {
-+		if (unlikely(idx >= GDT_ENTRIES))
-+			return 0;
-+
-+		/*
-+		 * There are no user segments in the GDT with nonzero bases
-+		 * other than the TLS segments.
-+		 */
-+		if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
-+			return 0;
-+
-+		idx -= GDT_ENTRY_TLS_MIN;
-+		base = get_desc_base(&task->thread.tls_array[idx]);
-+	} else {
-+#ifdef CONFIG_MODIFY_LDT_SYSCALL
-+		struct ldt_struct *ldt;
-+
-+		/*
-+		 * If performance here mattered, we could protect the LDT
-+		 * with RCU.  This is a slow path, though, so we can just
-+		 * take the mutex.
-+		 */
-+		mutex_lock(&task->mm->context.lock);
-+		ldt = task->mm->context.ldt;
-+		if (unlikely(idx >= ldt->nr_entries))
-+			base = 0;
-+		else
-+			base = get_desc_base(ldt->entries + idx);
-+		mutex_unlock(&task->mm->context.lock);
-+#else
-+		base = 0;
-+#endif
-+	}
-+
-+	return base;
-+}
-+
- #endif	/* CONFIG_X86_32 */
- 
- static unsigned long get_flags(struct task_struct *task)
-@@ -436,18 +480,16 @@ static unsigned long getreg(struct task_struct *task, unsigned long offset)
- 
- #ifdef CONFIG_X86_64
- 	case offsetof(struct user_regs_struct, fs_base): {
--		/*
--		 * XXX: This will not behave as expected if called on
--		 * current or if fsindex != 0.
--		 */
--		return task->thread.fsbase;
-+		if (task->thread.fsindex == 0)
-+			return task->thread.fsbase;
-+		else
-+			return task_seg_base(task, task->thread.fsindex);
- 	}
- 	case offsetof(struct user_regs_struct, gs_base): {
--		/*
--		 * XXX: This will not behave as expected if called on
--		 * current or if fsindex != 0.
--		 */
--		return task->thread.gsbase;
-+		if (task->thread.gsindex == 0)
-+			return task->thread.gsbase;
-+		else
-+			return task_seg_base(task, task->thread.gsindex);
- 	}
- #endif
- 	}
+ 	/* If SET_BLOCK_COUNT, continue with main command */
+ 	if (host->mrq && !mrq->cmd->error) {
 -- 
 2.20.1
 
