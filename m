@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100BBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84876C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39AD2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4A32075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452160;
-	bh=Mpu/ReJMOFNKMRYs/AEeNTxpA1xP5T5VDaCkFifPux0=;
+	s=default; t=1574452162;
+	bh=5eoak+mG+mcguMksu8j3IrzoHYAFKuEkrFK2NPhaFjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JcbH+zl7V+Dax9pmMCtImMlLw0yb8JJ0zH1d+wFEcmzTVxIU/CRcIlVpEG1XC25RO
-	 jHCS/NgvUT27MTzp9PXu0mVVXOjuPW/xNPCjlL/+nYjjMvO2U+iDTmn60RPfXh5V5j
-	 lgXCoamgUCBAFY8/TjNKkDZ8QDdKQaZOJ6biTpKQ=
+	b=j2CFkcJ+VX5Vg6cpmL5WudjnkX2sCIgiLbuPxOq44C8KhgWMmCoW3wK9g9S3E18LD
+	 ldonTzjhajaBzhEuJL+9a91+W1nwcbBW31i59DqaSxESWmLkxx933pxlKlNNpfZDE5
+	 H3O9PfcqTM6iSblhvWrc9NFXFSXSzxjVRVividl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfKVTtT (ORCPT
+        id S1727337AbfKVTtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbfKVTtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:16 -0500
+        id S1727295AbfKVTtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218CC2071F;
-        Fri, 22 Nov 2019 19:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2EA207FA;
+        Fri, 22 Nov 2019 19:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452155;
-        bh=Mpu/ReJMOFNKMRYs/AEeNTxpA1xP5T5VDaCkFifPux0=;
+        s=default; t=1574452158;
+        bh=5eoak+mG+mcguMksu8j3IrzoHYAFKuEkrFK2NPhaFjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d7SYN9Es6UgV4b4imWHsVlUHVg0gLAZXtyX3FCAV9pVQRrtkkXLMlIymcERFG3qTa
-         SidkQ78wmYDsEc4OdRYJxEOKg250wv/rqT2UgWrMvnqkZWx91lNqhUnvw9p7LyAdqg
-         93zFFzqRhBIGE3B8UanobHWAcLTfIqAJbUnr/fbw=
+        b=Q+0K1hu8wDDxqQwGp9/SGlLK/T1U94zGCWMrJ5AXuowjNUFLqeZEfbjHCqA6aPDzx
+         19rGP91JfBpWwbaPSJeAtWPIMXMaCLB6lU09bIid9pvOdD2HC/3ml3dyR9wlgd/VO4
+         rJpdAYfGv+8hz1dE9EqNfCzTBm76YUWvkVICTuec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunhao Tian <t123yh@outlook.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 13/25] drm/sun4i: tcon: Set min division of TCON0_DCLK to 1.
-Date:   Fri, 22 Nov 2019 14:48:46 -0500
-Message-Id: <20191122194859.24508-13-sashal@kernel.org>
+Cc:     Aleksander Morgado <aleksander@aleksander.es>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/25] net: usb: qmi_wwan: add support for Foxconn T77W968 LTE modules
+Date:   Fri, 22 Nov 2019 14:48:48 -0500
+Message-Id: <20191122194859.24508-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,42 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhao Tian <t123yh@outlook.com>
+From: Aleksander Morgado <aleksander@aleksander.es>
 
-[ Upstream commit 0b8e7bbde5e7e2c419567e1ee29587dae3b78ee3 ]
+[ Upstream commit 802753cb0b141cf5170ab97fe7e79f5ca10d06b0 ]
 
-The datasheet of V3s (and various other chips) wrote
-that TCON0_DCLK_DIV can be >= 1 if only dclk is used,
-and must >= 6 if dclk1 or dclk2 is used. As currently
-neither dclk1 nor dclk2 is used (no writes to these
-bits), let's set minimal division to 1.
+These are the Foxconn-branded variants of the Dell DW5821e modules,
+same USB layout as those.
 
-If this minimal division is 6, some common dot clock
-frequencies can't be produced (e.g. 30MHz will not be
-possible and will fallback to 25MHz), which is
-obviously not an expected behaviour.
+The QMI interface is exposed in USB configuration #1:
 
-Signed-off-by: Yunhao Tian <t123yh@outlook.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/linux-arm-kernel/MN2PR08MB57905AD8A00C08DA219377C989760@MN2PR08MB5790.namprd08.prod.outlook.com/
+P:  Vendor=0489 ProdID=e0b4 Rev=03.18
+S:  Manufacturer=FII
+S:  Product=T77W968 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+
+Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 8c31c9ab06f8b..fda1ae12069a7 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -423,7 +423,7 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 9f037c50054df..b55fd76348f9f 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1306,6 +1306,8 @@ static const struct usb_device_id products[] = {
+ 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
+ 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
+ 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
++	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
++	{QMI_FIXED_INTF(0x0489, 0xe0b5, 0)},	/* Foxconn T77W968 LTE with eSIM support*/
  
- 	WARN_ON(!tcon->quirks->has_channel_0);
- 
--	tcon->dclk_min_div = 6;
-+	tcon->dclk_min_div = 1;
- 	tcon->dclk_max_div = 127;
- 	sun4i_tcon0_mode_set_common(tcon, mode);
- 
+ 	/* 4. Gobi 1000 devices */
+ 	{QMI_GOBI1K_DEVICE(0x05c6, 0x9212)},	/* Acer Gobi Modem Device */
 -- 
 2.20.1
 
