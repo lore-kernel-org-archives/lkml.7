@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B62FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C5FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89FC2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4B820674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402645;
-	bh=72jCs5LQDH9usiA0Ws34AWzUDZph8U8sPwjFooyCfb8=;
+	s=default; t=1574402655;
+	bh=3pT4tzAQDoCWy1rARRfevvK6RgLlOffebbAAx/Ips6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rN/HHui0i2IIj9uafmWoYA6th8jxvavoXiU/mtLt/T2N2ca464qdtsu35BXwliXL+
-	 TrEY+cMkH/rHZEZUBhAaBRZ4D+fyMAt0y574vQ/3hxZNqY7C4Jb1GvY8l25nW/FbXI
-	 n4yD4bajTb/8YpjAyu0C+W0gPy3fvaItJxkTexBk=
+	b=KFtlk8CMeCDPUmvUyS1xNQPTKqOsJF3WFxGOcJ6kpeDqzkDXu41wsUoBcPAgEf337
+	 Y8RHQWlpNSwpVWuwbCwOGD2wj2C4eWCL0IkBsgk+LJj36DeUYi4M/r8KK7mxaWGIrH
+	 v+7q2ct+yhHrckoPYICPmcQ87v1MDLmqBGbzvrXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfKVGEE (ORCPT
+        id S1727096AbfKVGEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:04:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41938 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:04:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729839AbfKVGDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:03:01 -0500
+        id S1729419AbfKVGC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410D420714;
-        Fri, 22 Nov 2019 06:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C74312070E;
+        Fri, 22 Nov 2019 06:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402580;
-        bh=72jCs5LQDH9usiA0Ws34AWzUDZph8U8sPwjFooyCfb8=;
+        s=default; t=1574402578;
+        bh=3pT4tzAQDoCWy1rARRfevvK6RgLlOffebbAAx/Ips6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQZGv74yuBkDczYawIc7EGQDvw+ZDWawXyLrpuWJOaCR+HXMJgTk4cjKSgvNLRvek
-         DY9c543lsoybJf/MTl2BVme/bWV1p9eq4b90zWs+zu7EmECwh9BGqGkOSwa6vPSqBf
-         OqC3uztLNCbrltlDc4hPZiU0eSPA06CfRbKlkhJ8=
+        b=WnSQUM8YrrpdMuccbEqpXVnukf89I0YC7Rveg/+k2XI7x/YH5updkAJuUy050BLEv
+         M9cV63x4HxlWmw0DClYLzIYjKfM2Ir3FZ+2epG3hO55+lVZb268OYGCd6qaTiI4rNx
+         DbFljBxnKVUmai2wvwn7x895sxez7Khiljtqt/jc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bert Kenward <bkenward@solarflare.com>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 82/91] sfc: initialise found bitmap in efx_ef10_mtd_probe
-Date:   Fri, 22 Nov 2019 01:01:20 -0500
-Message-Id: <20191122060129.4239-81-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 80/91] decnet: fix DN_IFREQ_SIZE
+Date:   Fri, 22 Nov 2019 01:01:18 -0500
+Message-Id: <20191122060129.4239-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,35 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bert Kenward <bkenward@solarflare.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit c65285428b6e7797f1bb063f33b0ae7e93397b7b ]
+[ Upstream commit 50c2936634bcb1db78a8ca63249236810c11a80f ]
 
-The bitmap of found partitions in efx_ef10_mtd_probe was not
-initialised, causing partitions to be suppressed based off whatever
-value was in the bitmap at the start.
+Digging through the ioctls with Al because of the previous
+patches, we found that on 64-bit decnet's dn_dev_ioctl()
+is wrong, because struct ifreq::ifr_ifru is actually 24
+bytes (not 16 as expected from struct sockaddr) due to the
+ifru_map and ifru_settings members.
 
-Fixes: 3366463513f5 ("sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe")
-Signed-off-by: Bert Kenward <bkenward@solarflare.com>
+Clearly, decnet expects the ioctl to be called with a struct
+like
+  struct ifreq_dn {
+    char ifr_name[IFNAMSIZ];
+    struct sockaddr_dn ifr_addr;
+  };
+
+since it does
+  struct ifreq *ifr = ...;
+  struct sockaddr_dn *sdn = (struct sockaddr_dn *)&ifr->ifr_addr;
+
+This means that DN_IFREQ_SIZE is too big for what it wants on
+64-bit, as it is
+  sizeof(struct ifreq) - sizeof(struct sockaddr) +
+  sizeof(struct sockaddr_dn)
+
+This assumes that sizeof(struct sockaddr) is the size of ifr_ifru
+but that isn't true.
+
+Fix this to use offsetof(struct ifreq, ifr_ifru).
+
+This indeed doesn't really matter much - the result is that we
+copy in/out 8 bytes more than we should on 64-bit platforms. In
+case the "struct ifreq_dn" lands just on the end of a page though
+it might lead to faults.
+
+As far as I can tell, it has been like this forever, so it seems
+very likely that nobody cares.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sfc/ef10.c | 2 +-
+ net/decnet/dn_dev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index 34e2256c93f46..22bc3dc44298c 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -5159,7 +5159,7 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
- static int efx_ef10_mtd_probe(struct efx_nic *efx)
- {
- 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_PARTITIONS_OUT_LENMAX);
--	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT);
-+	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT) = { 0 };
- 	struct efx_mcdi_mtd_partition *parts;
- 	size_t outlen, n_parts_total, i, n_parts;
- 	unsigned int type;
+diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
+index b2c26b081134a..80554e7e9a0f6 100644
+--- a/net/decnet/dn_dev.c
++++ b/net/decnet/dn_dev.c
+@@ -55,7 +55,7 @@
+ #include <net/dn_neigh.h>
+ #include <net/dn_fib.h>
+ 
+-#define DN_IFREQ_SIZE (sizeof(struct ifreq) - sizeof(struct sockaddr) + sizeof(struct sockaddr_dn))
++#define DN_IFREQ_SIZE (offsetof(struct ifreq, ifr_ifru) + sizeof(struct sockaddr_dn))
+ 
+ static char dn_rt_all_end_mcast[ETH_ALEN] = {0xAB,0x00,0x00,0x04,0x00,0x00};
+ static char dn_rt_all_rt_mcast[ETH_ALEN]  = {0xAB,0x00,0x00,0x03,0x00,0x00};
 -- 
 2.20.1
 
