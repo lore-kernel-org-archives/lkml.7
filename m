@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EFFC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F4DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989CD2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BF12082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402269;
-	bh=/Ilz3DQrQMnik72iidlCKhIT7D03qFszYXIadrSkDLE=;
+	s=default; t=1574402273;
+	bh=TYfsVzZ4zwiOufA5oBSyagynvgD3Ixw6QqNPhHSGTfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfBl+znX/yBY4BWeeJdsdx6SgSn3IBvyXXmI/x22fVTTByPhCZ4xMYSaPJr+EPd/H
-	 dEYXwNNAzu4Z9PGHL2KWgb8QSeIcbYc/L/bS/n+mKycRwYegv44Ecfu1BgpMmxNQLO
-	 Jqeqx6uJqVfWFs7I/y6ZMiw1Zqs9yPZ3o9pPQYM8=
+	b=ga0LSn9yoaWhYQ/ScfYFD2927h0YZQwR8qWQo//bb3jmH1mpCol0f/G60vBl42N9s
+	 Jbq1Hih6g4CQrU1dH0LfghGDPi6n8Mn/kCjv1mXHfyVoMLxdJHp0mvWC3eAgS3ELJe
+	 iVk2gey0Bw5KRDRvcYdEyv5fVdjeJSXQD/hJw2/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfKVF5s (ORCPT
+        id S1729542AbfKVF5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbfKVF5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:36 -0500
+        id S1729476AbfKVF5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B621020717;
-        Fri, 22 Nov 2019 05:57:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B92072E;
+        Fri, 22 Nov 2019 05:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402254;
-        bh=/Ilz3DQrQMnik72iidlCKhIT7D03qFszYXIadrSkDLE=;
+        s=default; t=1574402256;
+        bh=TYfsVzZ4zwiOufA5oBSyagynvgD3Ixw6QqNPhHSGTfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXo2mnDvK68r69gl/ufoRXUEvkdGrmGqYXtO05ywXOJWBiLpdLGf6S0jGmSV8tmy1
-         JW2hBdouZGxpk1Cu0ZINjYZuauM0A8+QFuoeUiTn6C3ZbbsLzJb5NNBoLB/kihrpF4
-         7cA6k0jfFbkoDLpOme2s1ZYV0oJw2nJ6aK+D3yl4=
+        b=Ybgw8ZIqgQAdBE74FgRRy4uZZY20iRAJfXTgkSxAaIk2LxyoHCwHZCuU2Nwhw5qti
+         Hd0kOBQTvR7nBBxTRa3Dmtlg5h+aVVyiMkAr8LjSgZgfGkZdxSzKF2dYPPkc+/VLPd
+         6X4BhngDbrPJsH5FZO8xsTMBKHb0LnJ7VmIN/Ht4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@gmx.us>, Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 096/127] drivers/base/platform.c: kmemleak ignore a known leak
-Date:   Fri, 22 Nov 2019 00:55:14 -0500
-Message-Id: <20191122055544.3299-95-sashal@kernel.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 098/127] mtd: Check add_mtd_device() ret code
+Date:   Fri, 22 Nov 2019 00:55:16 -0500
+Message-Id: <20191122055544.3299-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -62,81 +58,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@gmx.us>
+From: Boris Brezillon <bbrezillon@kernel.org>
 
-[ Upstream commit 967d3010df8b6f6f9aa95c198edc5fe3646ebf36 ]
+[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
 
-unreferenced object 0xffff808ec6dc5a80 (size 128):
-  comm "swapper/0", pid 1, jiffies 4294938063 (age 2560.530s)
-  hex dump (first 32 bytes):
-    ff ff ff ff 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b  ........kkkkkkkk
-    6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  backtrace:
-    [<00000000476dcf8c>] kmem_cache_alloc_trace+0x430/0x500
-    [<000000004f708d37>] platform_device_register_full+0xbc/0x1e8
-    [<000000006c2a7ec7>] acpi_create_platform_device+0x370/0x450
-    [<00000000ef135642>] acpi_default_enumeration+0x34/0x78
-    [<000000003bd9a052>] acpi_bus_attach+0x2dc/0x3e0
-    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
-    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
-    [<000000002968643e>] acpi_bus_scan+0xb0/0x110
-    [<0000000010dd0bd7>] acpi_scan_init+0x1a8/0x410
-    [<00000000965b3c5a>] acpi_init+0x408/0x49c
-    [<00000000ed4b9fe2>] do_one_initcall+0x178/0x7f4
-    [<00000000a5ac5a74>] kernel_init_freeable+0x9d4/0xa9c
-    [<0000000070ea6c15>] kernel_init+0x18/0x138
-    [<00000000fb8fff06>] ret_from_fork+0x10/0x1c
-    [<0000000041273a0d>] 0xffffffffffffffff
+add_mtd_device() can fail. We should always check its return value
+and gracefully handle the failure case. Fix the call sites where this
+not done (in mtdpart.c) and add a __must_check attribute to the
+prototype to avoid this kind of mistakes.
 
-Then, faddr2line pointed out this line,
-
-/*
- * This memory isn't freed when the device is put,
- * I don't have a nice idea for that though.  Conceptually
- * dma_mask in struct device should not be a pointer.
- * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
- */
-pdev->dev.dma_mask =
-	kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
-
-Since this leak has existed for more than 8 years and it does not
-reference other parts of the memory, let kmemleak ignore it, so users
-don't need to waste time reporting this in the future.
-
-Link: http://lkml.kernel.org/r/20181206160751.36211-1-cai@gmx.us
-Signed-off-by: Qian Cai <cai@gmx.us>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mtd/mtdcore.h |  2 +-
+ drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 9045c5f3734e8..f1105de0d9fed 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -27,6 +27,7 @@
- #include <linux/clk/clk-conf.h>
- #include <linux/limits.h>
- #include <linux/property.h>
-+#include <linux/kmemleak.h>
+diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
+index 37accfd0400e5..24480b75a88dd 100644
+--- a/drivers/mtd/mtdcore.h
++++ b/drivers/mtd/mtdcore.h
+@@ -7,7 +7,7 @@
+ extern struct mutex mtd_table_mutex;
  
- #include "base.h"
- #include "power/power.h"
-@@ -526,6 +527,8 @@ struct platform_device *platform_device_register_full(
- 		if (!pdev->dev.dma_mask)
- 			goto err;
+ struct mtd_info *__mtd_next_device(int i);
+-int add_mtd_device(struct mtd_info *mtd);
++int __must_check add_mtd_device(struct mtd_info *mtd);
+ int del_mtd_device(struct mtd_info *mtd);
+ int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
+ int del_mtd_partitions(struct mtd_info *);
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index a308e707392d5..27d9785487d69 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -684,10 +684,22 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
+ 	list_add(&new->list, &mtd_partitions);
+ 	mutex_unlock(&mtd_partitions_mutex);
  
-+		kmemleak_ignore(pdev->dev.dma_mask);
+-	add_mtd_device(&new->mtd);
++	ret = add_mtd_device(&new->mtd);
++	if (ret)
++		goto err_remove_part;
+ 
+ 	mtd_add_partition_attrs(new);
+ 
++	return 0;
 +
- 		*pdev->dev.dma_mask = pdevinfo->dma_mask;
- 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
++err_remove_part:
++	mutex_lock(&mtd_partitions_mutex);
++	list_del(&new->list);
++	mutex_unlock(&mtd_partitions_mutex);
++
++	free_partition(new);
++	pr_info("%s:%i\n", __func__, __LINE__);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mtd_add_partition);
+@@ -778,22 +790,31 @@ int add_mtd_partitions(struct mtd_info *master,
+ {
+ 	struct mtd_part *slave;
+ 	uint64_t cur_offset = 0;
+-	int i;
++	int i, ret;
+ 
+ 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
+ 
+ 	for (i = 0; i < nbparts; i++) {
+ 		slave = allocate_partition(master, parts + i, i, cur_offset);
+ 		if (IS_ERR(slave)) {
+-			del_mtd_partitions(master);
+-			return PTR_ERR(slave);
++			ret = PTR_ERR(slave);
++			goto err_del_partitions;
+ 		}
+ 
+ 		mutex_lock(&mtd_partitions_mutex);
+ 		list_add(&slave->list, &mtd_partitions);
+ 		mutex_unlock(&mtd_partitions_mutex);
+ 
+-		add_mtd_device(&slave->mtd);
++		ret = add_mtd_device(&slave->mtd);
++		if (ret) {
++			mutex_lock(&mtd_partitions_mutex);
++			list_del(&slave->list);
++			mutex_unlock(&mtd_partitions_mutex);
++
++			free_partition(slave);
++			goto err_del_partitions;
++		}
++
+ 		mtd_add_partition_attrs(slave);
+ 		if (parts[i].types)
+ 			mtd_parse_part(slave, parts[i].types);
+@@ -802,6 +823,11 @@ int add_mtd_partitions(struct mtd_info *master,
  	}
+ 
+ 	return 0;
++
++err_del_partitions:
++	del_mtd_partitions(master);
++
++	return ret;
+ }
+ 
+ static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
