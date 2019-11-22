@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31280C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF782068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010B12068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402796;
-	bh=c92/BLyGFwnUnlC9RHs4LORE2AeBCegKXnWlVU3xO4I=;
+	s=default; t=1574402800;
+	bh=l9e2hJ799Qd1hFw0Io07yRAavMXghgoO0DXnzV0L1FI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K01iPU4NxoAhb9gi3QTe0PNyTroCQHhWCQbEIhgBFKlOz6hUh/kRad0+Qaq4N84ej
-	 JhFf8SLtk8duk0/kFDtOUvo8aEKCSiiRukMDeiL0O54hwiN3ui0BVOptWidjUydyfh
-	 C7Bc6fM0pI+GaYgfWwOkAcNYJxwQOte9MMZX9280=
+	b=DQ64EYvIVHcYS80w3d7QtOLxHLstv9jKGed1eL/RzIPkKWEdF0o75Ns10cWNJ9G96
+	 Y1vuTfZQKB0iJL5U4Bf3cerr9ykDZrfLZuljaEus84/j77gDmbw1JPt7/lax8R0DUy
+	 cN9+iJOraFkt3pvqKce2dl3SntrePz1VU2foulws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfKVGCR (ORCPT
+        id S1729410AbfKVGGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:06:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbfKVGCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:10 -0500
+        id S1727173AbfKVGCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE1632070B;
-        Fri, 22 Nov 2019 06:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70C7C2068E;
+        Fri, 22 Nov 2019 06:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402529;
-        bh=c92/BLyGFwnUnlC9RHs4LORE2AeBCegKXnWlVU3xO4I=;
+        s=default; t=1574402536;
+        bh=l9e2hJ799Qd1hFw0Io07yRAavMXghgoO0DXnzV0L1FI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XpWjC1WuzDOUFUZe8rGRu+XXPoK/UkVS7eX3tWrJcO+s3qDPhFctVa2P1nOriJgl0
-         coDD6VqJ9FxiarlLayhR1mU0rvXdJK5ll93LrFu9lLSKxA7A+WLC6dXYMCC/NAxaUd
-         5ni9386uu2qRJwJANqfKbzqLkBFB4nPYnGfhsGdA=
+        b=IS8QPWN/skgoRl3r/hDJa+0IOa5QT2HSLHP+I/kFI5VTgizoyVGsqfwdOvPqoDwS3
+         gOHsU6HEsyuOj/SLYoTXJ0FoMRgkJjeUy2L7EW+uyot8kq7tQfjgb9SoytFxU+6g2+
+         jhwiiwDGfqrWknuaQw7faN7mLU0nmQlhprADR/g4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 37/91] powerpc/book3s/32: fix number of bats in p/v_block_mapped()
-Date:   Fri, 22 Nov 2019 01:00:35 -0500
-Message-Id: <20191122060129.4239-36-sashal@kernel.org>
+Cc:     Anatoliy Glagolev <glagolig@gmail.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 43/91] scsi: qla2xxx: deadlock by configfs_depend_item
+Date:   Fri, 22 Nov 2019 01:00:41 -0500
+Message-Id: <20191122060129.4239-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,42 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Anatoliy Glagolev <glagolig@gmail.com>
 
-[ Upstream commit e93ba1b7eb5b188c749052df7af1c90821c5f320 ]
+[ Upstream commit 17b18eaa6f59044a5172db7d07149e31ede0f920 ]
 
-This patch fixes the loop in p_block_mapped() and v_block_mapped()
-to scan the entire bat_addrs[] array.
+The intent of invoking configfs_depend_item in commit 7474f52a82d51
+("tcm_qla2xxx: Perform configfs depend/undepend for base_tpg")
+was to prevent a physical Fibre Channel port removal when
+virtual (NPIV) ports announced through that physical port are active.
+The change does not work as expected: it makes enabled physical port
+dependent on target configfs subsystem (the port's parent), something
+the configfs guarantees anyway.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Besides, scheduling work in a worker thread and waiting for the work's
+completion is not really a valid workaround for the requirement not to call
+configfs_depend_item from a configfs callback: the call occasionally
+deadlocks.
+
+Thus, removing configfs_depend_item calls does not break anything and fixes
+the deadlock problem.
+
+Signed-off-by: Anatoliy Glagolev <glagolig@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/ppc_mmu_32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/tcm_qla2xxx.c | 48 +++++-------------------------
+ drivers/scsi/qla2xxx/tcm_qla2xxx.h |  3 --
+ 2 files changed, 8 insertions(+), 43 deletions(-)
 
-diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index 2a049fb8523d5..96c52271e9c2d 100644
---- a/arch/powerpc/mm/ppc_mmu_32.c
-+++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -52,7 +52,7 @@ struct batrange {		/* stores address ranges mapped by BATs */
- phys_addr_t v_block_mapped(unsigned long va)
+diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+index 0ad8ecef1e302..abdd6f93c8fe5 100644
+--- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
++++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+@@ -821,38 +821,14 @@ static ssize_t tcm_qla2xxx_tpg_enable_show(struct config_item *item,
+ 			atomic_read(&tpg->lport_tpg_enabled));
+ }
+ 
+-static void tcm_qla2xxx_depend_tpg(struct work_struct *work)
+-{
+-	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
+-				struct tcm_qla2xxx_tpg, tpg_base_work);
+-	struct se_portal_group *se_tpg = &base_tpg->se_tpg;
+-	struct scsi_qla_host *base_vha = base_tpg->lport->qla_vha;
+-
+-	if (!target_depend_item(&se_tpg->tpg_group.cg_item)) {
+-		atomic_set(&base_tpg->lport_tpg_enabled, 1);
+-		qlt_enable_vha(base_vha);
+-	}
+-	complete(&base_tpg->tpg_base_comp);
+-}
+-
+-static void tcm_qla2xxx_undepend_tpg(struct work_struct *work)
+-{
+-	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
+-				struct tcm_qla2xxx_tpg, tpg_base_work);
+-	struct se_portal_group *se_tpg = &base_tpg->se_tpg;
+-	struct scsi_qla_host *base_vha = base_tpg->lport->qla_vha;
+-
+-	if (!qlt_stop_phase1(base_vha->vha_tgt.qla_tgt)) {
+-		atomic_set(&base_tpg->lport_tpg_enabled, 0);
+-		target_undepend_item(&se_tpg->tpg_group.cg_item);
+-	}
+-	complete(&base_tpg->tpg_base_comp);
+-}
+-
+ static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
+ 		const char *page, size_t count)
  {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (va >= bat_addrs[b].start && va < bat_addrs[b].limit)
- 			return bat_addrs[b].phys + (va - bat_addrs[b].start);
- 	return 0;
-@@ -64,7 +64,7 @@ phys_addr_t v_block_mapped(unsigned long va)
- unsigned long p_block_mapped(phys_addr_t pa)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (pa >= bat_addrs[b].phys
- 	    	    && pa < (bat_addrs[b].limit-bat_addrs[b].start)
- 		              +bat_addrs[b].phys)
+ 	struct se_portal_group *se_tpg = to_tpg(item);
++	struct se_wwn *se_wwn = se_tpg->se_tpg_wwn;
++	struct tcm_qla2xxx_lport *lport = container_of(se_wwn,
++			struct tcm_qla2xxx_lport, lport_wwn);
++	struct scsi_qla_host *vha = lport->qla_vha;
+ 	struct tcm_qla2xxx_tpg *tpg = container_of(se_tpg,
+ 			struct tcm_qla2xxx_tpg, se_tpg);
+ 	unsigned long op;
+@@ -871,24 +847,16 @@ static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
+ 		if (atomic_read(&tpg->lport_tpg_enabled))
+ 			return -EEXIST;
+ 
+-		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_depend_tpg);
++		atomic_set(&tpg->lport_tpg_enabled, 1);
++		qlt_enable_vha(vha);
+ 	} else {
+ 		if (!atomic_read(&tpg->lport_tpg_enabled))
+ 			return count;
+ 
+-		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_undepend_tpg);
++		atomic_set(&tpg->lport_tpg_enabled, 0);
++		qlt_stop_phase1(vha->vha_tgt.qla_tgt);
+ 	}
+-	init_completion(&tpg->tpg_base_comp);
+-	schedule_work(&tpg->tpg_base_work);
+-	wait_for_completion(&tpg->tpg_base_comp);
+ 
+-	if (op) {
+-		if (!atomic_read(&tpg->lport_tpg_enabled))
+-			return -ENODEV;
+-	} else {
+-		if (atomic_read(&tpg->lport_tpg_enabled))
+-			return -EPERM;
+-	}
+ 	return count;
+ }
+ 
+diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.h b/drivers/scsi/qla2xxx/tcm_qla2xxx.h
+index 37e026a4823d6..8b70fa3105bd7 100644
+--- a/drivers/scsi/qla2xxx/tcm_qla2xxx.h
++++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.h
+@@ -48,9 +48,6 @@ struct tcm_qla2xxx_tpg {
+ 	struct tcm_qla2xxx_tpg_attrib tpg_attrib;
+ 	/* Returned by tcm_qla2xxx_make_tpg() */
+ 	struct se_portal_group se_tpg;
+-	/* Items for dealing with configfs_depend_item */
+-	struct completion tpg_base_comp;
+-	struct work_struct tpg_base_work;
+ };
+ 
+ struct tcm_qla2xxx_fc_loopid {
 -- 
 2.20.1
 
