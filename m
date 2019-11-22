@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ABBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46A5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC072075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8202075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420410;
-	bh=ZYrFksE4yNjkyeNCuIbjQzFI5EWbnQ4cFzJZE5BH2JE=;
+	s=default; t=1574420413;
+	bh=TXAeVPZQIlJLpRPoHXA1jv03E1+kjV0v9WTqAsq50W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnRqkZM6uxpjkfe/9PsCvkKmBNmcAdReCJOapnOAb/1VXV4ZNPgpoTzIaiY26WNDv
-	 NzaRxsn95R2UCwaSyLcqqyx1pQK87lCJbEmtgLRlrx+J6ff1Jsc8DYgu7Q7Jy6TJQY
-	 EHaq/795Fvrnx51Wz6KECAKRQNcMdxSekuZPk6d0=
+	b=c83Z3QkfX5sVhBaLO4lsNTEd+HOcooSelJenxxt8kxNgwxYjXN4m2ah6hG7dOYJaA
+	 dh8nrdfK7j5F9GpLhUkOEPoUkyoWQsGMQkH2TBEBHjDkZ2S4bc6hkLpScB6SHc15Nu
+	 KpgblRQs9EkSCYnoDdMu2BtwqEEc2Q/JbWfNOfwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbfKVLAJ (ORCPT
+        id S1731010AbfKVLAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:00:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51966 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:00:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730990AbfKVLAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:00:07 -0500
+        id S1730215AbfKVLAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:00:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFD32075E;
-        Fri, 22 Nov 2019 11:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4651F207DD;
+        Fri, 22 Nov 2019 11:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420407;
-        bh=ZYrFksE4yNjkyeNCuIbjQzFI5EWbnQ4cFzJZE5BH2JE=;
+        s=default; t=1574420409;
+        bh=TXAeVPZQIlJLpRPoHXA1jv03E1+kjV0v9WTqAsq50W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uv6fCID55b0KeqD7Zr2UaMR3qjZA/ANPfJmVsKI4ZH8oTYBof5qYOdS9e6juFDxus
-         L+PxwF+wlELIP7Ie+JI2unh0RznkMAFyuJzOAKVoqM+YzIKCurcBJBWCSqM7IPDy1n
-         1w2eKU6lWZTL7h5GT1uZIhwB0FDdH/kPEYIIXugk=
+        b=fW+ZCwSALVr4NCSRVg2vJPPqaJCXw2qzhHgRwvbihUAXE/TvZBAdtHqv1c2wfKadp
+         FVMDiWXLOpWAjX9dsHpcjBZBP/MPTOtJHYSLMu5exgBckRMRs2G5aokU3SMQPoLcC0
+         r0JJfN6JEv9rclwLIiAGxD+g45u+msAQMkVkUJRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Blanchard <anton@ozlabs.org>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/220] powerpc/time: Use clockevents_register_device(), fixing an issue with large decrementer
-Date:   Fri, 22 Nov 2019 11:27:41 +0100
-Message-Id: <20191122100919.626302041@linuxfoundation.org>
+Subject: [PATCH 4.19 097/220] powerpc/64s/radix: Explicitly flush ERAT with local LPID invalidation
+Date:   Fri, 22 Nov 2019 11:27:42 +0100
+Message-Id: <20191122100919.703593369@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,59 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Blanchard <anton@ozlabs.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 8b78fdb045de60a4eb35460092bbd3cffa925353 ]
+[ Upstream commit 053c5a753e951c5dd1729af2cf4d8107f2e6e09b ]
 
-We currently cap the decrementer clockevent at 4 seconds, even on systems
-with large decrementer support. Fix this by converting the code to use
-clockevents_register_device() which calculates the upper bound based on
-the max_delta passed in.
+Local radix TLB flush operations that operate on congruence classes
+have explicit ERAT flushes for POWER9. The process scoped LPID flush
+did not have a flush, so add it.
 
-Signed-off-by: Anton Blanchard <anton@ozlabs.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ arch/powerpc/mm/tlb-radix.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 70f145e024877..6a1f0a084ca35 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -984,10 +984,10 @@ static void register_decrementer_clockevent(int cpu)
- 	*dec = decrementer_clockevent;
- 	dec->cpumask = cpumask_of(cpu);
+diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+index 62be0e5732b70..796ff5de26d09 100644
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -429,6 +429,7 @@ static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
+ 		__tlbiel_lpid_guest(lpid, set, RIC_FLUSH_TLB);
  
-+	clockevents_config_and_register(dec, ppc_tb_freq, 2, decrementer_max);
-+
- 	printk_once(KERN_DEBUG "clockevent: %s mult[%x] shift[%d] cpu[%d]\n",
- 		    dec->name, dec->mult, dec->shift, cpu);
--
--	clockevents_register_device(dec);
+ 	asm volatile("ptesync": : :"memory");
++	asm volatile(PPC_INVALIDATE_ERAT : : :"memory");
  }
  
- static void enable_large_decrementer(void)
-@@ -1035,18 +1035,7 @@ static void __init set_decrementer_max(void)
  
- static void __init init_decrementer_clockevent(void)
- {
--	int cpu = smp_processor_id();
--
--	clockevents_calc_mult_shift(&decrementer_clockevent, ppc_tb_freq, 4);
--
--	decrementer_clockevent.max_delta_ns =
--		clockevent_delta2ns(decrementer_max, &decrementer_clockevent);
--	decrementer_clockevent.max_delta_ticks = decrementer_max;
--	decrementer_clockevent.min_delta_ns =
--		clockevent_delta2ns(2, &decrementer_clockevent);
--	decrementer_clockevent.min_delta_ticks = 2;
--
--	register_decrementer_clockevent(cpu);
-+	register_decrementer_clockevent(smp_processor_id());
- }
- 
- void secondary_cpu_time_init(void)
 -- 
 2.20.1
 
