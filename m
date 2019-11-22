@@ -2,247 +2,112 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2254C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEEEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BD0206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90449206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uS/xP7ZJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVN3K5FG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfKVCnH (ORCPT
+        id S1726568AbfKVCsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:43:07 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:41888 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfKVCnH (ORCPT
+        Thu, 21 Nov 2019 21:48:22 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39091 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfKVCsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:43:07 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191122024302epoutp03cae1388fd69b0eec8d9904428832ae96~ZW_S59XLv0230602306epoutp03T
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 02:43:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191122024302epoutp03cae1388fd69b0eec8d9904428832ae96~ZW_S59XLv0230602306epoutp03T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574390582;
-        bh=Px4SlZ5apSRJazVEKcmp2ZxkKUBgkoNX88YE/Ke2mS8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=uS/xP7ZJpaE7dm8BpmRQsfsNp+IZcUg8QFTfJ77zgVFHH52rWHPDbiGYlIP37BRb+
-         H+688o1yjmaaWNVvK3/KrJgnqApsp+/ffDa3RdZMSdKeWSj5vGtiMiqpEshOJ0LxEa
-         cGi/4/TDzTPyV5HKDyyQ+2Cumwklqc7PHY6czK3Y=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20191122024302epcas5p46e8dff0af37d1b4ae884d7573ce74928~ZW_SZSdhY0340703407epcas5p4L;
-        Fri, 22 Nov 2019 02:43:02 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        40.DD.04078.53B47DD5; Fri, 22 Nov 2019 11:43:02 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191122024301epcas5p15162a4693f1d585dcd42d9ff151d1c54~ZW_Rs2dWT2878528785epcas5p1p;
-        Fri, 22 Nov 2019 02:43:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191122024301epsmtrp1632ce3d4ffe6c33d6edf0028bac333cf~ZW_Rr_jHR1274412744epsmtrp1k;
-        Fri, 22 Nov 2019 02:43:01 +0000 (GMT)
-X-AuditID: b6c32a49-5edff70000000fee-f4-5dd74b3557fa
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B6.C7.03654.53B47DD5; Fri, 22 Nov 2019 11:43:01 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191122024259epsmtip1f209f41be9c8c724411192d7ce2ac4cd~ZW_PzFe0c2388123881epsmtip1Y;
-        Fri, 22 Nov 2019 02:42:59 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Andrew Murray'" <andrew.murray@arm.com>,
-        "'Anvesh Salveru'" <anvesh.s@samsung.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-In-Reply-To: <20191121160842.GC43905@e119886-lin.cambridge.arm.com>
-Subject: RE: [PATCH v4 1/2] phy: core: add phy_property_present method
-Date:   Fri, 22 Nov 2019 08:12:57 +0530
-Message-ID: <025701d5a0de$8e8b37d0$aba1a770$@samsung.com>
+        Thu, 21 Nov 2019 21:48:21 -0500
+Received: by mail-qt1-f195.google.com with SMTP id t8so6188709qtc.6;
+        Thu, 21 Nov 2019 18:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kcTUf2TDslgtfE0mrOTBMX2KCORD2HShVFksqMj/7OU=;
+        b=bVN3K5FGwZdk81xHSTnUk8DyzV8+J2Ui1N59igzM9LKSic8pC7zBOZLGg8Fs1KZYJ6
+         c6xGGIz7pSTAxBl+dD5sfhu1Di0ZHAcGh9TuuLTvfBKf5UrPK1RrUfQQOTW5i22yreiq
+         mUrMOiPzoE7fPMQQaLApKVfYyh9FgZNqdly6tXnR1U5vbJzVGWnsu9Ju06ThLp/FjQz4
+         OS5XuDtFyCShNwN4+JvG/0p+d6NZt2mS5OmH3PgsCqxalLDOBa0KuRU8euu3OtXU7Lha
+         PSzr0EG3ZTCWdpVI9yYBJxYPxQ8+NCTYDmbzFXtqO034W+l+GWO9/lVCAGQkpazDDJgH
+         +H0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kcTUf2TDslgtfE0mrOTBMX2KCORD2HShVFksqMj/7OU=;
+        b=fVcOVsv5QNOUblaSoMHKLqLdV4swZ1Hv+tRfdI4zy/1+np1tPkuqQGlWoPVtv1ciU/
+         J7I+WcTk6H9kFgbwRsl6SlFrHT1ZRdeOMHfCSoWtPbqBHj3K42ZjT4V/XaFFD/9FjYG6
+         FOdXRcwsg98gEd1w+gsn2hyqmj2hKtSoGrH+YWQxlbv1zpXkA0/arIUGHaaItT4/jRkj
+         CshEdgkkfLIvmgiSiDQ/HmkyAPPGoYnbk3NLlDHJaLdja70hUkmZzPEtCyV7k8TPR/Dx
+         AFSZVzdcEHTfaekNh4IuwxDLlPpgORF4WET8rUcAVc2Dr/kFQF7lBahkpTLKxKm1n6DH
+         j9Pg==
+X-Gm-Message-State: APjAAAU//tmQdZRSZvjse3fjy5vjw7gT/MTiMP6p3kJ6cua4xPgWT2qt
+        Tc094Wtx7bDAa8+x6YhNDYVEGTCHWB3/5F6/JGs=
+X-Google-Smtp-Source: APXvYqwhsbac3UJkuATVMCvOKUJHDGuFPAH/+wmphHO3f7ImjfzwCk5Np3Jdaiw+7WBV1H/QhvlD13ohb2a635elWM8=
+X-Received: by 2002:ac8:6d31:: with SMTP id r17mr12124199qtu.28.1574390899451;
+ Thu, 21 Nov 2019 18:48:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE1rVtOHv1BqgLHLDW+5IttHzLvfAFs3nFMAYnCwPkCRa1ydaisfipw
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLKsWRmVeSWpSXmKPExsWy7bCmpq6Z9/VYg/MHmSya/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
-        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGfdW
-        fGIqWKNaserzG/YGxvuyXYwcHBICJhIT9kt3MXJxCAnsZpTY1X2eCcL5xCgxtamJBcL5xiix
-        +d4nIIcTrOP9/FNsEIm9QC29/ewgCSGB14wSk14LgNhsAvoS537MYwWxRQSiJBbe28oK0sAs
-        8JFR4m/3ArAEp4CzRPu8CewgdwgLuEmsexgIEmYRUJU48OUxWAmvgKVE/4MN7BC2oMTJmU/A
-        jmAWkJfY/nYOM8RBChI/ny6D2uUmcevuTkaIGnGJl0ePsIPslRBYxC5xr/sB1AcuEv8OtrJB
-        2MISr45vYYewpSRe9rdB2fkSPxZPYoZobmGUmHx8LitEwl7iwJU5LCBHMwtoSqzfpQ+xjE+i
-        9/cTJkiY8kp0tAlBVKtJfH9+BupOGYmHzUuZIGwPiSvnfjNPYFScheS1WUhem4XkhVkIyxYw
-        sqxilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAhOZFqeOxhnnfM5xCjAwajEwzuh/Fqs
-        EGtiWXFl7iFGCQ5mJRHePdevxArxpiRWVqUW5ccXleakFh9ilOZgURLnncR6NUZIID2xJDU7
-        NbUgtQgmy8TBKdXAmHrQZYPEF758rZcrLKfeYNKc+lbqr+mJMw7XzzXN9VNXO8C90SBP+cGl
-        MB/rfYcO1/lmS06zaj9rkKtsEWalatdcbB7fwOlyXlKmYecL18epiUsPFqZH54RkyXftsmD6
-        sMEpwO+ta0oYS8TGB0c5l5lfPOZuEcGg3RTzjEV+vZ/QORdrg34lluKMREMt5qLiRADz7g5N
-        YAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsWy7bCSnK6p9/VYg79f+S2a/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
-        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGfdW
-        fGIqWKNaserzG/YGxvuyXYycHBICJhLv559i62Lk4hAS2M0ocfl3NzNEQkZi8uoVrBC2sMTK
-        f8/ZIYpeMkp0TTnHDpJgE9CXOPdjHliRiECUxN/PN1hAipgFfjNKLLv1ngWio4VJYsOFFWBj
-        OQWcJdrnTQDq5uAQFnCTWPcwECTMIqAqceDLY7BBvAKWEv0PNrBD2IISJ2c+YQEpZxbQk2jb
-        yAgSZhaQl9j+dg7UoQoSP58ug7rBTeLW3Z1QNeISL48eYZ/AKDwLyaRZCJNmIZk0C0nHAkaW
-        VYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwfGopbmD8fKS+EOMAhyMSjy8E8qvxQqx
-        JpYVV+YeYpTgYFYS4d1z/UqsEG9KYmVValF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NT
-        C1KLYLJMHJxSDYwNrKymbe7nrvvbNK4tu6kl+u1OM8dsvY3ezc83c+t+1Of3b71z5fjvdo6I
-        dSfseOZdiHuYvOpc74KgOVbrfx5hFLn65W/mg8lq1w9m3/3XuHv1lKiWp8IVDcd87EJifLM6
-        p/c/2npSIukx84MQu6sd+VF1RvyXfAOenwqfpZ4kXdV1c/LyM+pKLMUZiYZazEXFiQACbQoB
-        wwIAAA==
-X-CMS-MailID: 20191122024301epcas5p15162a4693f1d585dcd42d9ff151d1c54
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21
-References: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21@epcas5p1.samsung.com>
-        <1574306408-4360-2-git-send-email-anvesh.s@samsung.com>
-        <20191121160842.GC43905@e119886-lin.cambridge.arm.com>
+References: <20190808173028.1930-1-yamada.masahiro@socionext.com>
+ <CAEbi=3cZ29rmO55DcZSi8PmELay08HByabPETu_UOgXKZPk0cw@mail.gmail.com> <CAK7LNATw0V8yzh=62QefN+hHvUfaHNW1ZtSmLhtVJHJDqvbXMA@mail.gmail.com>
+In-Reply-To: <CAK7LNATw0V8yzh=62QefN+hHvUfaHNW1ZtSmLhtVJHJDqvbXMA@mail.gmail.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Fri, 22 Nov 2019 10:47:42 +0800
+Message-ID: <CAEbi=3e1WcdD2fkpoyPi6FjWpBD+kFNZtpucmrHtKPj4WvucGA@mail.gmail.com>
+Subject: Re: [PATCH] nds32: remove unneeded clean-files for DTB
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Nickhu <nickhu@andestech.com>, Vincent Chen <deanbo422@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B411=
+=E6=9C=8821=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=886:24=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> On Thu, Nov 21, 2019 at 6:46 PM Greentime Hu <green.hu@gmail.com> wrote:
+> >
+> > Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B4=
+8=E6=9C=889=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:31=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > >
+> > > These patterns are cleaned-up by the top-level Makefile
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > ---
+> > >
+> > >  arch/nds32/boot/dts/Makefile | 2 --
+> > >  1 file changed, 2 deletions(-)
+> > >
+> > > diff --git a/arch/nds32/boot/dts/Makefile b/arch/nds32/boot/dts/Makef=
+ile
+> > > index fff8ade7a84f..f84bd529b6fd 100644
+> > > --- a/arch/nds32/boot/dts/Makefile
+> > > +++ b/arch/nds32/boot/dts/Makefile
+> > > @@ -5,5 +5,3 @@ else
+> > >  BUILTIN_DTB :=3D
+> > >  endif
+> > >  obj-$(CONFIG_OF) +=3D $(BUILTIN_DTB)
+> > > -
+> > > -clean-files :=3D *.dtb *.dtb.S
+> >
+> > Thanks, Masahiro.
+> > Acked-by: Greentime Hu <green.hu@gmail.com>
+>
+>
+> Would you apply this to the nds32 tree?
 
-
-> -----Original Message-----
-> From: Andrew Murray <andrew.murray@arm.com>
-> Sent: Thursday, November 21, 2019 9:39 PM
-> To: Anvesh Salveru <anvesh.s@samsung.com>
-> Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
-> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
-> pankaj.dubey@samsung.com; lorenzo.pieralisi@arm.com;
-> bhelgaas@google.com; kishon@ti.com; robh+dt@kernel.org;
-> mark.rutland@arm.com
-> Subject: Re: [PATCH v4 1/2] phy: core: add phy_property_present method
-> 
-> On Thu, Nov 21, 2019 at 08:50:07AM +0530, Anvesh Salveru wrote:
-> > In some platforms, we need information of phy properties in the
-> > controller drivers. This patch adds a new phy_property_present()
-> > method which can be used to check if some property exists in PHY or
-> > not.
-> >
-> > In case of DesignWare PCIe controller, we need to write into
-> > controller register to specify about ZRX-DC compliance property of the
-> > PHY, which reduces the power consumption during lower power states.
-> >
-> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > ---
-> >  drivers/phy/phy-core.c  | 26 ++++++++++++++++++++++++++
-> > include/linux/phy/phy.h |  8 ++++++++
-> >  2 files changed, 34 insertions(+)
-> >
-> > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
-> > b04f4fe..0a62eca 100644
-> > --- a/drivers/phy/phy-core.c
-> > +++ b/drivers/phy/phy-core.c
-> > @@ -420,6 +420,32 @@ int phy_calibrate(struct phy *phy)
-> > EXPORT_SYMBOL_GPL(phy_calibrate);
-> >
-> >  /**
-> > + * phy_property_present() - checks if the property is present in PHY
-> > + * @phy: the phy returned by phy_get()
-> > + * @property: name of the property to check
-> > + *
-> > + * Used to check if the given property is present in PHY. PHY drivers
-> > + * can implement this callback function to expose PHY properties to
-> > + * controller drivers.
-> > + *
-> > + * Returns: true if property exists, false otherwise  */ bool
-> > +phy_property_present(struct phy *phy, const char *property) {
-> > +	bool ret;
-> > +
-> > +	if (!phy || !phy->ops->property_present)
-> > +		return false;
-> > +
-> > +	mutex_lock(&phy->mutex);
-> > +	ret = phy->ops->property_present(phy, property);
-> 
-> I don't understand why it is necessary to require every phy driver to
-implement
-> this. Why can't the phy-core driver look up the device node of the given
-phy?
-> 
-
-No specific reason.
-
-We just went ahead and implemented this similar to other API in phy-core.c
-file where it redirects call to platform specific phy driver. As  you
-pointed out in this case, it makes sense to keep it in phy-core driver
-itself, as platform specific phy driver is not going to do anything which is
-really dependent on the PHY. 
-We will wait for further review comments on this patch, and then will take
-up your suggestion in next patchset.
-
-Thanks for review.
-Pankaj Dubey
-> Thanks,
-> 
-> Andrew Murray
-> 
-> > +	mutex_unlock(&phy->mutex);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(phy_property_present);
-> > +
-> > +/**
-> >   * phy_configure() - Changes the phy parameters
-> >   * @phy: the phy returned by phy_get()
-> >   * @opts: New configuration to apply
-> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h index
-> > 15032f14..3dd8f3c 100644
-> > --- a/include/linux/phy/phy.h
-> > +++ b/include/linux/phy/phy.h
-> > @@ -61,6 +61,7 @@ union phy_configure_opts {
-> >   * @reset: resetting the phy
-> >   * @calibrate: calibrate the phy
-> >   * @release: ops to be performed while the consumer relinquishes the
-> > PHY
-> > + * @property_present: check if some property is present in PHY
-> >   * @owner: the module owner containing the ops
-> >   */
-> >  struct phy_ops {
-> > @@ -103,6 +104,7 @@ struct phy_ops {
-> >  	int	(*reset)(struct phy *phy);
-> >  	int	(*calibrate)(struct phy *phy);
-> >  	void	(*release)(struct phy *phy);
-> > +	bool	(*property_present)(struct phy *phy, const char *property);
-> >  	struct module *owner;
-> >  };
-> >
-> > @@ -217,6 +219,7 @@ static inline enum phy_mode phy_get_mode(struct
-> > phy *phy)  }  int phy_reset(struct phy *phy);  int
-> > phy_calibrate(struct phy *phy);
-> > +bool phy_property_present(struct phy *phy, const char *property);
-> >  static inline int phy_get_bus_width(struct phy *phy)  {
-> >  	return phy->attrs.bus_width;
-> > @@ -354,6 +357,11 @@ static inline int phy_calibrate(struct phy *phy)
-> >  	return -ENOSYS;
-> >  }
-> >
-> > +static inline bool phy_property_present(struct phy *phy, const char
-> > +*property) {
-> > +	return false;
-> > +}
-> > +
-> >  static inline int phy_configure(struct phy *phy,
-> >  				union phy_configure_opts *opts)
-> >  {
-> > --
-> > 2.7.4
-> >
-
+Yes, it will be queued in the nds32 next branch.
