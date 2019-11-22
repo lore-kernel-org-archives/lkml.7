@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F16C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4536FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155522068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC682068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402808;
-	bh=NeGNlvD4uAxrKBCUgf82c57Y6tijqlSLF42AuaAvVwI=;
+	s=default; t=1574402812;
+	bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNM3x2g8r6DSEHgBOknhuGPiwFU2pktCU0wHY5rxsaBT2OHTXg0GpXP+9W+vSkuo0
-	 BON3F5M2buxFp8txZrDr7TO5SBDmzjySqTuAptPcRlx1ZKt8lVF2r5Wf/+Uh8uRhdo
-	 i1k1h2KYfeiFKT7VainXED+mfTCHFOpO0HwLBbyE=
+	b=LpTDTDSdxYbK/c8owRvwmwnv4Kk2vulnDm5122r0isQAlVA9z44hA39yL7KkoVeX+
+	 ubYqP9JFGLkW+o64HhyeeceTiUN5slLPMD1jISFB5rpg+wNU/iTpMt8LiR/VnemPnM
+	 EFq48Y8UptuiWUDSP+wY7oCmRWoqM0q+vvApu/+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfKVGCQ (ORCPT
+        id S1728868AbfKVGGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:06:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbfKVGCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:09 -0500
+        id S1729647AbfKVGCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C38892068E;
-        Fri, 22 Nov 2019 06:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1222A20714;
+        Fri, 22 Nov 2019 06:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402528;
-        bh=NeGNlvD4uAxrKBCUgf82c57Y6tijqlSLF42AuaAvVwI=;
+        s=default; t=1574402533;
+        bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekRR5QPFBbmkft+TrpqXTMXHwKPaw3OC615OXAMX/JEWVgkyekmD3W0QBJNXXQgnS
-         wo43XQKDRnvC0mrCKcV/X5cJjEw7o74ZH5MEzx3spqAAYZCEB2iuk535Iesh+k826g
-         7iQz3t7O4qlQJQL2C9UF03lJzLBe8GI0RKbGmIVA=
+        b=JiICAdxUsXaFIVrmBFiMXWCEgbF0X7vF5JeM4KL2d/Hq8BKCbjWkpwRDmUThmndm1
+         5WckBTFdc2QkhNLC26WqKWR3Y7bhoLrteDefuGqqp6lpjb5thBUVdVuXOUSP8t2Cnp
+         3UQocA48IlvqBUeyiUtGNyHEvKMzHLSx6Kggp0pI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 36/91] IB/qib: Fix an error code in qib_sdma_verbs_send()
-Date:   Fri, 22 Nov 2019 01:00:34 -0500
-Message-Id: <20191122060129.4239-35-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, openrisc@lists.librecores.org
+Subject: [PATCH AUTOSEL 4.9 41/91] openrisc: Fix broken paths to arch/or32
+Date:   Fri, 22 Nov 2019 01:00:39 -0500
+Message-Id: <20191122060129.4239-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,36 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 5050ae5fa3d54c8e83e1e447cc7e3591110a7f57 ]
+[ Upstream commit 57ce8ba0fd3a95bf29ed741df1c52bd591bf43ff ]
 
-We accidentally return success on this error path.
+OpenRISC was mainlined as "openrisc", not "or32".
+vmlinux.lds is generated from vmlinux.lds.S.
 
-Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sdma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 2 +-
+ arch/openrisc/kernel/head.S  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
-index 891873b38a1e6..5f3f197678b78 100644
---- a/drivers/infiniband/hw/qib/qib_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_sdma.c
-@@ -600,8 +600,10 @@ int qib_sdma_verbs_send(struct qib_pportdata *ppd,
- 		dw = (len + 3) >> 2;
- 		addr = dma_map_single(&ppd->dd->pcidev->dev, sge->vaddr,
- 				      dw << 2, DMA_TO_DEVICE);
--		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr))
-+		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr)) {
-+			ret = -ENOMEM;
- 			goto unmap;
-+		}
- 		sdmadesc[0] = 0;
- 		make_sdma_desc(ppd, sdmadesc, (u64) addr, dw, dwoffset);
- 		/* SDmaUseLargeBuf has to be set in every descriptor */
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index fec8bf97d8064..c17e8451d9978 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -179,7 +179,7 @@ handler:							;\
+  *	 occured. in fact they never do. if you need them use
+  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
+  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
+- *       in 'arch/or32/kernel/head.S'
++ *       in 'arch/openrisc/kernel/head.S'
+  */
+ 
+ /* =====================================================[ exceptions] === */
+diff --git a/arch/openrisc/kernel/head.S b/arch/openrisc/kernel/head.S
+index f14793306b03f..98dd6860bc0b9 100644
+--- a/arch/openrisc/kernel/head.S
++++ b/arch/openrisc/kernel/head.S
+@@ -1596,7 +1596,7 @@ _string_esr_irq_bug:
+ 
+ /*
+  * .data section should be page aligned
+- *	(look into arch/or32/kernel/vmlinux.lds)
++ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
+  */
+ 	.section .data,"aw"
+ 	.align	8192
 -- 
 2.20.1
 
