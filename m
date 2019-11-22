@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF696C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B335C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86A52070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E411E20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421567;
-	bh=Zgkwqrff4/iY33NyPBf0FfOVn1J4uPqkRyaGWhNjPxM=;
+	s=default; t=1574421575;
+	bh=n3daIQABMSMyTN19xpigzsj0xSzVqhEfm8h/Km4hcpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=neY4IDCvRwz6nB7Mi7yM40siNe+PQdcFRZP0Pkda0EeijQjaP0tqoTNsDqLUw/mGm
-	 gVsnLCfYnkRj4izkb/6dgPtyxhDDtLo0wwf40DrhCsHIVZgV/oAhKxTeTjzxocZubA
-	 6b1nVW1lLNcMnQ+syZcFTe3nlhj2J0bMYBzwJ6aw=
+	b=Y9Y17Xo8N2Ikgv+rfncI0v4i+qgkRlN/gta5O/3/CzS2nkNwFFfyVtFLyX8b+bPgD
+	 K+D5ofLZO2tIVT9LpXN5tYdwyt7ebrCWPJORunTHiMeN6csmU5N/Pc1LRYAtedRX+e
+	 k/M4quQ0PbQNckdf7wOpy8T5Cm1GCNwZQ+E4BlQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbfKVKrn (ORCPT
+        id S1729446AbfKVLTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:47:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55712 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:19:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfKVKrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:40 -0500
+        id S1729783AbfKVKrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E821720637;
-        Fri, 22 Nov 2019 10:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D5C20637;
+        Fri, 22 Nov 2019 10:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419659;
-        bh=Zgkwqrff4/iY33NyPBf0FfOVn1J4uPqkRyaGWhNjPxM=;
+        s=default; t=1574419656;
+        bh=n3daIQABMSMyTN19xpigzsj0xSzVqhEfm8h/Km4hcpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rca6HGeiEXMG/vGT+mXRsvU0k/6tryAmflqgKqrneSWOXS1nE6w0JZDh8xOcmwiwM
-         kXqmKOkdkD/7h5ajMi/pbSq01IRJ8nHUlrEtrP1ymW/3NFiGq7CCq7XXinULGJD84i
-         g90WR8CPBl8G3tocBIcIoX1dH4iBEtXCh5gHGM0M=
+        b=S5FOLwcvDiPrxkIjf50ZCogYWgZaxh2oYr+C/3U7zlntNP7csWOto7hGRy3/GWahb
+         ZvwseJrgxjYvF8+4OwXcysYDszvjoyvmUTeCOaLHWmGrGDMqP7ll9dHRVlxl0cawao
+         lhikEHYIuYDPjJ8Ysp6Uz4T0cdcK1A4H+SdWTABU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
+        stable@vger.kernel.org, Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 188/222] clk: samsung: Use clk_hw API for calling clk framework from clk notifiers
-Date:   Fri, 22 Nov 2019 11:28:48 +0100
-Message-Id: <20191122100915.891944996@linuxfoundation.org>
+Subject: [PATCH 4.9 187/222] brcmfmac: fix full timeout waiting for action frame on-channel tx
+Date:   Fri, 22 Nov 2019 11:28:47 +0100
+Message-Id: <20191122100915.828498979@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,68 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
 
-[ Upstream commit 1da220e3a5d22fccda0bc8542997abc1d1741268 ]
+[ Upstream commit fbf07000960d9c8a13fdc17c6de0230d681c7543 ]
 
-clk_notifier_register() documentation states, that the provided notifier
-callbacks associated with the notifier must not re-enter into the clk
-framework by calling any top-level clk APIs. Fix this by replacing
-clk_get_rate() calls with clk_hw_get_rate(), which is safe in this
-context.
+The driver sends an action frame down and waits for a completion signal
+triggered by the received BRCMF_E_ACTION_FRAME_OFF_CHAN_COMPLETE event
+to continue the process. However, the action frame could be transmitted
+either on the current channel or on an off channel. For the on-channel
+case, only BRCMF_E_ACTION_FRAME_COMPLETE event will be received when
+the frame is transmitted, which make the driver always wait a full
+timeout duration. This patch has the completion signal be triggered by
+receiving the BRCMF_E_ACTION_FRAME_COMPLETE event for the on-channel
+case.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
+This change fixes WFA p2p certification 5.1.19 failure.
+
+Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-cpu.c | 6 +++---
- drivers/clk/samsung/clk-cpu.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ .../wireless/broadcom/brcm80211/brcmfmac/p2p.c  | 17 +++++++++++++++--
+ .../wireless/broadcom/brcm80211/brcmfmac/p2p.h  |  2 ++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index 8bf7e805fd349..1271315b0c25b 100644
---- a/drivers/clk/samsung/clk-cpu.c
-+++ b/drivers/clk/samsung/clk-cpu.c
-@@ -152,7 +152,7 @@ static int exynos_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
- 			struct exynos_cpuclk *cpuclk, void __iomem *base)
- {
- 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
--	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
-+	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
- 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
- 	unsigned long div0, div1 = 0, mux_reg;
- 	unsigned long flags;
-@@ -280,7 +280,7 @@ static int exynos5433_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
- 			struct exynos_cpuclk *cpuclk, void __iomem *base)
- {
- 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
--	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
-+	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
- 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
- 	unsigned long div0, div1 = 0, mux_reg;
- 	unsigned long flags;
-@@ -432,7 +432,7 @@ int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
- 	else
- 		cpuclk->clk_nb.notifier_call = exynos_cpuclk_notifier_cb;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index c91f5ef0be7c3..aac9c97d22557 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -1462,10 +1462,12 @@ int brcmf_p2p_notify_action_tx_complete(struct brcmf_if *ifp,
+ 		return 0;
  
--	cpuclk->alt_parent = __clk_lookup(alt_parent);
-+	cpuclk->alt_parent = __clk_get_hw(__clk_lookup(alt_parent));
- 	if (!cpuclk->alt_parent) {
- 		pr_err("%s: could not lookup alternate parent %s\n",
- 				__func__, alt_parent);
-diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
-index d4b6b517fe1b4..bd38c6aa38970 100644
---- a/drivers/clk/samsung/clk-cpu.h
-+++ b/drivers/clk/samsung/clk-cpu.h
-@@ -49,7 +49,7 @@ struct exynos_cpuclk_cfg_data {
+ 	if (e->event_code == BRCMF_E_ACTION_FRAME_COMPLETE) {
+-		if (e->status == BRCMF_E_STATUS_SUCCESS)
++		if (e->status == BRCMF_E_STATUS_SUCCESS) {
+ 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_COMPLETED,
+ 				&p2p->status);
+-		else {
++			if (!p2p->wait_for_offchan_complete)
++				complete(&p2p->send_af_done);
++		} else {
+ 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_NOACK, &p2p->status);
+ 			/* If there is no ack, we don't need to wait for
+ 			 * WLC_E_ACTION_FRAME_OFFCHAN_COMPLETE event
+@@ -1516,6 +1518,17 @@ static s32 brcmf_p2p_tx_action_frame(struct brcmf_p2p_info *p2p,
+ 	p2p->af_sent_channel = le32_to_cpu(af_params->channel);
+ 	p2p->af_tx_sent_jiffies = jiffies;
+ 
++	if (test_bit(BRCMF_P2P_STATUS_DISCOVER_LISTEN, &p2p->status) &&
++	    p2p->af_sent_channel ==
++	    ieee80211_frequency_to_channel(p2p->remain_on_channel.center_freq))
++		p2p->wait_for_offchan_complete = false;
++	else
++		p2p->wait_for_offchan_complete = true;
++
++	brcmf_dbg(TRACE, "Waiting for %s tx completion event\n",
++		  (p2p->wait_for_offchan_complete) ?
++		   "off-channel" : "on-channel");
++
+ 	timeout = wait_for_completion_timeout(&p2p->send_af_done,
+ 					      P2P_AF_MAX_WAIT_TIME);
+ 
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
+index 8ce9447533ef8..fbee511489046 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
+@@ -124,6 +124,7 @@ struct afx_hdl {
+  * @gon_req_action: about to send go negotiation requets frame.
+  * @block_gon_req_tx: drop tx go negotiation requets frame.
+  * @p2pdev_dynamically: is p2p device if created by module param or supplicant.
++ * @wait_for_offchan_complete: wait for off-channel tx completion event.
   */
- struct exynos_cpuclk {
- 	struct clk_hw				hw;
--	struct clk				*alt_parent;
-+	struct clk_hw				*alt_parent;
- 	void __iomem				*ctrl_base;
- 	spinlock_t				*lock;
- 	const struct exynos_cpuclk_cfg_data	*cfg;
+ struct brcmf_p2p_info {
+ 	struct brcmf_cfg80211_info *cfg;
+@@ -144,6 +145,7 @@ struct brcmf_p2p_info {
+ 	bool gon_req_action;
+ 	bool block_gon_req_tx;
+ 	bool p2pdev_dynamically;
++	bool wait_for_offchan_complete;
+ };
+ 
+ s32 brcmf_p2p_attach(struct brcmf_cfg80211_info *cfg, bool p2pdev_forced);
 -- 
 2.20.1
 
