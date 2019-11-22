@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B993C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6671620674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB1920674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403732;
-	bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
+	s=default; t=1574403740;
+	bh=oNBqdYSXAouMXgZlhci/zN6zu5Zhf9kVY0HjsV12KZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g7dodk4gyLa2voPpcpsnSPu8EKHlxfMfD16+qn2UpJpTxaaDG5OveieDOKSWkymIe
-	 H/rxm/vKBHQuQirSr4W0vClVjgdqLVVLQISpcJnRG2N52Grq2jWfJBdx0aCPc8ss0R
-	 55o7n61JLTcPRWWAiUKOowJfH+0tGwLSYgyKGBaQ=
+	b=HNpqOV8flEJeIumu1Q478sywlO/Pi62ksGDKDI+7q0tcE4Iaf98DN4l4hjZ0tk+5v
+	 UeYz8ZDLMjkdN5szr1BDuLeX3An9dt4BRIqkxCnlSQf8IDyF/V5470b+icWR6Pi3vq
+	 /xiqEgRfFWIsQP3+8DoQBU/GETuzmrlemwP265Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfKVFwG (ORCPT
+        id S1727947AbfKVGWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:22:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728332AbfKVFv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:56 -0500
+        id S1728385AbfKVFwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC3A2071B;
-        Fri, 22 Nov 2019 05:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9C2120731;
+        Fri, 22 Nov 2019 05:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401916;
-        bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
+        s=default; t=1574401924;
+        bh=oNBqdYSXAouMXgZlhci/zN6zu5Zhf9kVY0HjsV12KZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4zEyz+VsgNl4odT3/l7+RPaQjyZSxTNS/FvtDwBzHgUJZHYIRFC9dcSA6MQoeu1O
-         19kilF6wqRGxShRvaMaALq6ZjvB2sKkCfPD3PGE6PcACl05EdU3glDRfGha1EejBb2
-         sUz2x0Fwr5fcwbQljdU1BHYDSq5ZV8PqNz7SzEgE=
+        b=kDYHAhFlh8FWyYJUf161xbFhh2r+ZZsQk0fRIaQ+hQSzx7IMnRX/zqo5Z01x8fdyJ
+         Bizr3HwzflAo+tgM9sosvL50XKEyfkJ+ukoYyq0qhD8usGnYFCSVYPvHP5WZjVHb1U
+         LiyhuN4fecqUyrwZX7e1Xdoc7dDIwrsL+13lNy3E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH AUTOSEL 4.19 146/219] net: stmicro: fix a missing check of clk_prepare
-Date:   Fri, 22 Nov 2019 00:47:58 -0500
-Message-Id: <20191122054911.1750-139-sashal@kernel.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 153/219] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
+Date:   Fri, 22 Nov 2019 00:48:05 -0500
+Message-Id: <20191122054911.1750-146-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,35 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Wei Yang <richard.weiyang@gmail.com>
 
-[ Upstream commit f86a3b83833e7cfe558ca4d70b64ebc48903efec ]
+[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
 
-clk_prepare() could fail, so let's check its status, and if it fails,
-return its error code upstream.
+Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
+fail zone_reclaim() as full") changed the return value of
+node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
+after this commit.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While the return value of node_reclaim() when CONFIG_NUMA is n is not
+changed.  This will leads to call zone_watermark_ok() again.
+
+This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
+Since node_reclaim() is only called in page_alloc.c, move it to
+mm/internal.h.
+
+Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Matthew Wilcox <willy@infradead.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/swap.h |  6 ------
+ mm/internal.h        | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-index d07520fb969e6..62ccbd47c1db2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -59,7 +59,9 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- 		gmac->clk_enabled = 1;
- 	} else {
- 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_MII_RATE);
--		clk_prepare(gmac->tx_clk);
-+		ret = clk_prepare(gmac->tx_clk);
-+		if (ret)
-+			return ret;
- 	}
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 7bd0a6f2ac2b0..ee8f9f554a9e1 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -371,14 +371,8 @@ extern unsigned long vm_total_pages;
+ extern int node_reclaim_mode;
+ extern int sysctl_min_unmapped_ratio;
+ extern int sysctl_min_slab_ratio;
+-extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
+ #else
+ #define node_reclaim_mode 0
+-static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
+-				unsigned int order)
+-{
+-	return 0;
+-}
+ #endif
  
- 	return 0;
+ extern int page_evictable(struct page *page);
+diff --git a/mm/internal.h b/mm/internal.h
+index 87256ae1bef86..397183c8fe47b 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -444,6 +444,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
+ #define NODE_RECLAIM_SOME	0
+ #define NODE_RECLAIM_SUCCESS	1
+ 
++#ifdef CONFIG_NUMA
++extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
++#else
++static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
++				unsigned int order)
++{
++	return NODE_RECLAIM_NOSCAN;
++}
++#endif
++
+ extern int hwpoison_filter(struct page *p);
+ 
+ extern u32 hwpoison_filter_dev_major;
 -- 
 2.20.1
 
