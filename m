@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ECCC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F547C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB03620715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE5820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419459;
-	bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
+	s=default; t=1574419462;
+	bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pI+fc8WuluKHPJMnMIztrjZJGIRfyX8NUHEwHt/Nm1liNEiRuyZRC5aNkkqpNWvj9
-	 qrvXfIWoK3Mu9I9/DsPOS87Gt+8EQzXRFR3LEbQMsblRwGOeQsAIJLmL2//0hTT2X9
-	 jJm9h3dnRtLlA+VNgGCq9bn9NeD53SYjFVhT5eks=
+	b=xHkAOCRYSzv+R8Hlb5ejYjx608R7zTHc+HgevMhaGZQydFfQklhKAcFGyNGNATSOL
+	 LYEVy83y6qzu/emHQxniD11mpSWaWHawgkMdJcgni6hNeflBDO7+qE34NzFDvSgwwm
+	 jMYPBb7N8yQdSGewS0AjbytDrm/W9V+5mJRNolEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfKVKoS (ORCPT
+        id S1728943AbfKVKoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:44:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbfKVKoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:14 -0500
+        id S1728309AbfKVKoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600E220715;
-        Fri, 22 Nov 2019 10:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FBA020656;
+        Fri, 22 Nov 2019 10:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419453;
-        bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
+        s=default; t=1574419456;
+        bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VkDpaUykg1hqdzcIOPWfL3bcKPahOzHcx1Zy9F9yOgs1yPBxSRhy0pI8CAZ2LATZi
-         D22wsxX1xGYeqpoW6tRU8DbWJ1WxsyVHxOvtQ1iIsZnCWtqJumXiyzVktr3WYuie5L
-         +y+sgisqBT7fdrhqAGRgBaOjAz2ywBdm6QW9h9fU=
+        b=fSxkaUoBMVkGzRf7w4EG2uUxRW2zEP7X2VtfjSBGewzf47KBdccpXyu53PYXe8ihs
+         MDWRlUIry0U3/slP4jiMQt3qh1UQdvCXViTfcvF6sSGmWnIpewPaqv7PqnzmIgQklE
+         Cy1xoKa5F2ygWonTpj8t4Zr/AxnyT5foOggJtRME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Elder <paul.elder@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        stable@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 115/222] usb: gadget: uvc: Factor out video USB request queueing
-Date:   Fri, 22 Nov 2019 11:27:35 +0100
-Message-Id: <20191122100911.493792795@linuxfoundation.org>
+Subject: [PATCH 4.9 074/222] power: supply: max8998-charger: Fix platform data retrieval
+Date:   Fri, 22 Nov 2019 11:26:54 +0100
+Message-Id: <20191122100907.971386931@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,85 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
 
-[ Upstream commit 9d1ff5dcb3cd3390b1e56f1c24ae42c72257c4a3 ]
+[ Upstream commit cb90a2c6f77fe9b43d1e3f759bb2f13fe7fa1811 ]
 
-USB requests for video data are queued from two different locations in
-the driver, with the same code block occurring twice. Factor it out to a
-function.
+Since the max8998 MFD driver supports instantiation by DT, platform data
+retrieval is handled in MFD probe and cell drivers should get use
+the pdata field of max8998_dev struct to obtain them.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
-Tested-by: Paul Elder <paul.elder@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_video.c | 30 ++++++++++++++++---------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/power/supply/max8998_charger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index 0f01c04d7cbd8..540917f54506a 100644
---- a/drivers/usb/gadget/function/uvc_video.c
-+++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -129,6 +129,19 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
-  * Request handling
-  */
- 
-+static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
-+{
-+	int ret;
-+
-+	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+	if (ret < 0) {
-+		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
-+		usb_ep_set_halt(video->ep);
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * I somehow feel that synchronisation won't be easy to achieve here. We have
-  * three events that control USB requests submission:
-@@ -193,14 +206,13 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
- 
- 	video->encode(req, video, buf);
- 
--	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
--		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
--		usb_ep_set_halt(ep);
--		spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+	ret = uvcg_video_ep_queue(video, req);
-+	spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+
-+	if (ret < 0) {
- 		uvcg_queue_cancel(queue, 0);
- 		goto requeue;
- 	}
--	spin_unlock_irqrestore(&video->queue.irqlock, flags);
- 
- 	return;
- 
-@@ -320,15 +332,13 @@ int uvcg_video_pump(struct uvc_video *video)
- 		video->encode(req, video, buf);
- 
- 		/* Queue the USB request */
--		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+		ret = uvcg_video_ep_queue(video, req);
-+		spin_unlock_irqrestore(&queue->irqlock, flags);
-+
- 		if (ret < 0) {
--			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
--			usb_ep_set_halt(video->ep);
--			spin_unlock_irqrestore(&queue->irqlock, flags);
- 			uvcg_queue_cancel(queue, 0);
- 			break;
- 		}
--		spin_unlock_irqrestore(&queue->irqlock, flags);
- 	}
- 
- 	spin_lock_irqsave(&video->req_lock, flags);
+diff --git a/drivers/power/supply/max8998_charger.c b/drivers/power/supply/max8998_charger.c
+index b64cf0f141425..66438029bdd0c 100644
+--- a/drivers/power/supply/max8998_charger.c
++++ b/drivers/power/supply/max8998_charger.c
+@@ -85,7 +85,7 @@ static const struct power_supply_desc max8998_battery_desc = {
+ static int max8998_battery_probe(struct platform_device *pdev)
+ {
+ 	struct max8998_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+-	struct max8998_platform_data *pdata = dev_get_platdata(iodev->dev);
++	struct max8998_platform_data *pdata = iodev->pdata;
+ 	struct power_supply_config psy_cfg = {};
+ 	struct max8998_battery_data *max8998;
+ 	struct i2c_client *i2c;
 -- 
 2.20.1
 
