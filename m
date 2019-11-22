@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD72820637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F2420656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418838;
-	bh=38CvKTUEfYqjatSWeb66xhp68C1ENMnN+gyu0nGU6rs=;
+	s=default; t=1574418841;
+	bh=PZRlICB5aO4OWvYpbx6HZcXJmevUP+PXMNBT0wS6Slc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHXfgtHbKEUACqsDCxz3UMFAPxPVo97qQwu3/DV5tyLAUFmi0tLGvA575ijg2gzkt
-	 MqDOUBaU40+z3jDzd1b1kXBNLdPy3LtF/7cj5dgPClP+XNiYqTyah7mjYKoGkx8I4+
-	 uMVMpbxgJCxis0t4vUUFp1FxX6ZM1VsJ/vFt1H6U=
+	b=k4e5xqQNfZx7m8IYAkuXixq0x/EsDN71+Gsyhce7NrQV0R9Nb5LIowRg7RL7+yJtR
+	 hB7AnkHQIG3YBRVavZpmWp7O/7BXZTUJxdUwzYpS3gxLGMSo4QDZnLocBmB84jVRfK
+	 0CTXm71SxT+qB4zQNOGJxwQkpMU9myFomICmiLfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfKVKd4 (ORCPT
+        id S1727534AbfKVKd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:33:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbfKVKdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:53 -0500
+        id S1728017AbfKVKd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D55720656;
-        Fri, 22 Nov 2019 10:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3885C20714;
+        Fri, 22 Nov 2019 10:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418832;
-        bh=38CvKTUEfYqjatSWeb66xhp68C1ENMnN+gyu0nGU6rs=;
+        s=default; t=1574418835;
+        bh=PZRlICB5aO4OWvYpbx6HZcXJmevUP+PXMNBT0wS6Slc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vlcxc2MhU66FP/Pe5AF/9V4vFoEkLYn0PL2c84R/3n3sf+QN5rG0xOp4e2wWrJTMg
-         W1QA7taGY2gfHLGaGQ+eB+SAzJMnd6vlu/9Yem1+390dFBvpa4HiXpmnIj3JDmy7rV
-         BZJWZQAkENP9PBpxsnYXDQKAcbj1WXslMKyFaI3k=
+        b=np1GtKB4Ts+2Xcmiv5WikOjfmNG0U10aRezgOuAahZ5HLXl4rPOCFl3Y6I/wWmVMZ
+         VYwurTZLQWjZ2ANFb8w2uDkOd3s7ieIhTK7G4Xi+aZTR7dbv2kThCBMapZGdzo1Tq6
+         ON2dk5oLTLKolUi7LKtRpQ5QoH1gQfVulE6cU1vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 030/159] of: make PowerMac cache node search conditional on CONFIG_PPC_PMAC
-Date:   Fri, 22 Nov 2019 11:27:01 +0100
-Message-Id: <20191122100727.662574228@linuxfoundation.org>
+Subject: [PATCH 4.4 066/159] net: xilinx: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:27:37 +0100
+Message-Id: <20191122100755.166954662@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -59,32 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit f6707fd6241e483f6fea2caae82d876e422bb11a ]
+[ Upstream commit 81255af8d9d5565004792c295dde49344df450ca ]
 
-Cache nodes under the cpu node(s) is PowerMac specific according to the
-comment above, so make the code enforce that.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/xilinx/ll_temac_main.c       | 3 ++-
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 ++-
+ drivers/net/ethernet/xilinx/xilinx_emaclite.c     | 9 +++++----
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index c6e019208d171..27783223ca5cd 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2125,7 +2125,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
- 	/* OF on pmac has nodes instead of properties named "l2-cache"
- 	 * beneath CPU nodes.
- 	 */
--	if (!strcmp(np->type, "cpu"))
-+	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
- 		for_each_child_of_node(np, child)
- 			if (!strcmp(child->type, "cache"))
- 				return child;
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index 5a1068df7038c..ed6a88cf3281c 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -673,7 +673,8 @@ static inline int temac_check_tx_bd_space(struct temac_local *lp, int num_frag)
+ 	return 0;
+ }
+ 
+-static int temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t
++temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct temac_local *lp = netdev_priv(ndev);
+ 	struct cdmac_bd *cur_p;
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index f1e969128a4ee..7f1a57bb2ab10 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -656,7 +656,8 @@ static inline int axienet_check_tx_bd_space(struct axienet_local *lp,
+  * start the transmission. Additionally if checksum offloading is supported,
+  * it populates AXI Stream Control fields with appropriate values.
+  */
+-static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t
++axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	u32 ii;
+ 	u32 num_frag;
+diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+index 4cb8b85cbf2c2..909a008f99276 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
++++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+@@ -1008,9 +1008,10 @@ static int xemaclite_close(struct net_device *dev)
+  * deferred and the Tx queue is stopped so that the deferred socket buffer can
+  * be transmitted when the Emaclite device is free to transmit data.
+  *
+- * Return:	0, always.
++ * Return:	NETDEV_TX_OK, always.
+  */
+-static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
++static netdev_tx_t
++xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
+ {
+ 	struct net_local *lp = netdev_priv(dev);
+ 	struct sk_buff *new_skb;
+@@ -1031,7 +1032,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
+ 		/* Take the time stamp now, since we can't do this in an ISR. */
+ 		skb_tx_timestamp(new_skb);
+ 		spin_unlock_irqrestore(&lp->reset_lock, flags);
+-		return 0;
++		return NETDEV_TX_OK;
+ 	}
+ 	spin_unlock_irqrestore(&lp->reset_lock, flags);
+ 
+@@ -1040,7 +1041,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
+ 	dev->stats.tx_bytes += len;
+ 	dev_consume_skb_any(new_skb);
+ 
+-	return 0;
++	return NETDEV_TX_OK;
+ }
+ 
+ /**
 -- 
 2.20.1
 
