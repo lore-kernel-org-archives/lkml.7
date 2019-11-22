@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B993C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2592CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB1920674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43B52070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403740;
-	bh=oNBqdYSXAouMXgZlhci/zN6zu5Zhf9kVY0HjsV12KZc=;
+	s=default; t=1574403748;
+	bh=pkcgl8GLrGanjEtXFJT5zlPNjUrk/9i/0wS56xwsYuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNpqOV8flEJeIumu1Q478sywlO/Pi62ksGDKDI+7q0tcE4Iaf98DN4l4hjZ0tk+5v
-	 UeYz8ZDLMjkdN5szr1BDuLeX3An9dt4BRIqkxCnlSQf8IDyF/V5470b+icWR6Pi3vq
-	 /xiqEgRfFWIsQP3+8DoQBU/GETuzmrlemwP265Hs=
+	b=i1Vd68G6J21+SepzJPnukflBnBWtzwMB/dnmcyB85/eBwlYd1ioycYTPvnOluJmCt
+	 aE9A4Dprb97yGQHSdScRXH22ZC7UEL5pYSx80Ge3HXAMENpR4sgmbXBh5mh0uPRMOo
+	 OWmDJIPtSAYsOhP5mfbSqUHKKQDS7gAA9FPrXomE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfKVGWS (ORCPT
+        id S1728405AbfKVGW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:22:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:22:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbfKVFwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:05 -0500
+        id S1728364AbfKVFv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9C2120731;
-        Fri, 22 Nov 2019 05:52:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86A8820726;
+        Fri, 22 Nov 2019 05:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401924;
-        bh=oNBqdYSXAouMXgZlhci/zN6zu5Zhf9kVY0HjsV12KZc=;
+        s=default; t=1574401919;
+        bh=pkcgl8GLrGanjEtXFJT5zlPNjUrk/9i/0wS56xwsYuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kDYHAhFlh8FWyYJUf161xbFhh2r+ZZsQk0fRIaQ+hQSzx7IMnRX/zqo5Z01x8fdyJ
-         Bizr3HwzflAo+tgM9sosvL50XKEyfkJ+ukoYyq0qhD8usGnYFCSVYPvHP5WZjVHb1U
-         LiyhuN4fecqUyrwZX7e1Xdoc7dDIwrsL+13lNy3E=
+        b=o0GwlbDWFA0i6ykjPYkGxPjt4CSh6SRn0vtIzhMou14jMP+sceUrogP9ttqpuLIPc
+         Y1qrw/FjssGJx/OqUL1O6ih+ViIS6f6u3AlyrjR+bn9wBteCvuMwsQMhdsj9+xUzSL
+         hkzJ6tlY6AHMSh3LTvYMND+29yTYs9vUfPLs0PA8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 153/219] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
-Date:   Fri, 22 Nov 2019 00:48:05 -0500
-Message-Id: <20191122054911.1750-146-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 149/219] tipc: fix a missing check of genlmsg_put
+Date:   Fri, 22 Nov 2019 00:48:01 -0500
+Message-Id: <20191122054911.1750-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -63,75 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richard.weiyang@gmail.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
+[ Upstream commit 46273cf7e009231d2b6bc10a926e82b8928a9fb2 ]
 
-Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
-fail zone_reclaim() as full") changed the return value of
-node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
-after this commit.
+genlmsg_put could fail. The fix inserts a check of its return value, and
+if it fails, returns -EMSGSIZE.
 
-While the return value of node_reclaim() when CONFIG_NUMA is n is not
-changed.  This will leads to call zone_watermark_ok() again.
-
-This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
-Since node_reclaim() is only called in page_alloc.c, move it to
-mm/internal.h.
-
-Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h |  6 ------
- mm/internal.h        | 10 ++++++++++
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ net/tipc/netlink_compat.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 7bd0a6f2ac2b0..ee8f9f554a9e1 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -371,14 +371,8 @@ extern unsigned long vm_total_pages;
- extern int node_reclaim_mode;
- extern int sysctl_min_unmapped_ratio;
- extern int sysctl_min_slab_ratio;
--extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
- #else
- #define node_reclaim_mode 0
--static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
--				unsigned int order)
--{
--	return 0;
--}
- #endif
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 6494d6b5e1b24..fab0384d2b4b3 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -983,6 +983,8 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- extern int page_evictable(struct page *page);
-diff --git a/mm/internal.h b/mm/internal.h
-index 87256ae1bef86..397183c8fe47b 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -444,6 +444,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
- #define NODE_RECLAIM_SOME	0
- #define NODE_RECLAIM_SUCCESS	1
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
++	if (!hdr)
++		return -EMSGSIZE;
  
-+#ifdef CONFIG_NUMA
-+extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
-+#else
-+static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
-+				unsigned int order)
-+{
-+	return NODE_RECLAIM_NOSCAN;
-+}
-+#endif
-+
- extern int hwpoison_filter(struct page *p);
- 
- extern u32 hwpoison_filter_dev_major;
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
