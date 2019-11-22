@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CF3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF17C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB862075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9186320748
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452168;
-	bh=IR01qSHp6woWHUiQv3fVdxwTp4HmAqvzwqI58O3SPTA=;
+	s=default; t=1574452173;
+	bh=Ap9UGEDtCOa0CqpkdtyJj6I7eplB2kQVc4nQABh6S4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vps2sHIuwKCnzQUmKBgBWe5wmwMGwL+fBHgntXjCo+n/vgeCzLEobSvNwMFu4KFAC
-	 2PDUyTDjTbk0aB7mMWPQLQA+mb0DgV2vCcT59CoWI5zNPD4cPt6tNE4N6I0/rCSAgu
-	 7pKhtzkabiUBH9GeYdYuG9wFLiQeVu+VEB7IAWes=
+	b=kTx48tKGY68NoLY8iOQ/9W5VDbA+8tPSlIrJ0xk27zXXnKsbsMQA8G0tGZL7SQV8K
+	 +yPL6yosuxOMO1qF7wr9QQJMTd+nszU3Tx7/H/LjhwvZQV8hFh8DPedbTTzG6B7e2U
+	 fBiHKnKOP24YwgeQyc9KqOpPkwMD3dDxPClVE/Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKVTt0 (ORCPT
+        id S1727450AbfKVTtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48936 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfKVTtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:23 -0500
+        id S1727409AbfKVTt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 411F920748;
-        Fri, 22 Nov 2019 19:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8536E2072E;
+        Fri, 22 Nov 2019 19:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452162;
-        bh=IR01qSHp6woWHUiQv3fVdxwTp4HmAqvzwqI58O3SPTA=;
+        s=default; t=1574452166;
+        bh=Ap9UGEDtCOa0CqpkdtyJj6I7eplB2kQVc4nQABh6S4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=piwphkW3ZmE5H2T3QcIhlt/JjioEYOu07Fosygl2rSZ9uzdXKshrqGh3P6LfJl1NM
-         E1GC/M3LwI2MCIFXGcdU9X3CtZuud+41bj5FzpnHXthfe7/YhBKu1V1TUF4DmWGGv/
-         3vzgVnSxCPblA4mbPGlGQvDIWXq0LRNa6UsRL/VA=
+        b=HPyvn72WNqjC6CsHbpg8rjqJIduByU9pnTQsGeePrI91TwpW7OnUfyWHusutXmC3z
+         wBPzmDf8OPEwSS6mRZiQoVAGtakjJqvZLWtOxMEMXMd+mRricbTphDJZJsFM/EPDpV
+         YUsYHvHe3X3sm59EFm4IuguFwGyNO76gGGqPvTeE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/25] rsxx: add missed destroy_workqueue calls in remove
-Date:   Fri, 22 Nov 2019 14:48:52 -0500
-Message-Id: <20191122194859.24508-19-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        youling 257 <youling257@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/25] i2c: acpi: Force bus speed to 400KHz if a Silead touchscreen is present
+Date:   Fri, 22 Nov 2019 14:48:55 -0500
+Message-Id: <20191122194859.24508-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
@@ -58,36 +63,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit dcb77e4b274b8f13ac6482dfb09160cd2fae9a40 ]
+[ Upstream commit 7574c0db2e68c4d0bae9d415a683bdd8b2a761e9 ]
 
-The driver misses calling destroy_workqueue in remove like what is done
-when probe fails.
-Add the missed calls to fix it.
+Many cheap devices use Silead touchscreen controllers. Testing has shown
+repeatedly that these touchscreen controllers work fine at 400KHz, but for
+unknown reasons do not work properly at 100KHz. This has been seen on
+both ARM and x86 devices using totally different i2c controllers.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+On some devices the ACPI tables list another device at the same I2C-bus
+as only being capable of 100KHz, testing has shown that these other
+devices work fine at 400KHz (as can be expected of any recent I2C hw).
+
+This commit makes i2c_acpi_find_bus_speed() always return 400KHz if a
+Silead touchscreen controller is present, fixing the touchscreen not
+working on devices which ACPI tables' wrongly list another device on the
+same bus as only being capable of 100KHz.
+
+Specifically this fixes the touchscreen on the Jumper EZpad 6 m4 not
+working.
+
+Reported-by: youling 257 <youling257@gmail.com>
+Tested-by: youling 257 <youling257@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[wsa: rewording warning a little]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rsxx/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/i2c/i2c-core-acpi.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
-index f2c631ce793cc..14056dc450642 100644
---- a/drivers/block/rsxx/core.c
-+++ b/drivers/block/rsxx/core.c
-@@ -1014,8 +1014,10 @@ static void rsxx_pci_remove(struct pci_dev *dev)
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 32affd3fa8bd1..559c3b1284d73 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -43,6 +43,7 @@ struct i2c_acpi_lookup {
+ 	int index;
+ 	u32 speed;
+ 	u32 min_speed;
++	u32 force_speed;
+ };
  
- 	cancel_work_sync(&card->event_work);
+ static int i2c_acpi_fill_info(struct acpi_resource *ares, void *data)
+@@ -240,6 +241,19 @@ i2c_acpi_match_device(const struct acpi_device_id *matches,
+ 	return acpi_match_device(matches, &client->dev);
+ }
  
-+	destroy_workqueue(card->event_wq);
- 	rsxx_destroy_dev(card);
- 	rsxx_dma_destroy(card);
-+	destroy_workqueue(card->creg_ctrl.creg_wq);
++static const struct acpi_device_id i2c_acpi_force_400khz_device_ids[] = {
++	/*
++	 * These Silead touchscreen controllers only work at 400KHz, for
++	 * some reason they do not work at 100KHz. On some devices the ACPI
++	 * tables list another device at their bus as only being capable
++	 * of 100KHz, testing has shown that these other devices work fine
++	 * at 400KHz (as can be expected of any recent i2c hw) so we force
++	 * the speed of the bus to 400 KHz if a Silead device is present.
++	 */
++	{ "MSSL1680", 0 },
++	{}
++};
++
+ static acpi_status i2c_acpi_lookup_speed(acpi_handle handle, u32 level,
+ 					   void *data, void **return_value)
+ {
+@@ -258,6 +272,9 @@ static acpi_status i2c_acpi_lookup_speed(acpi_handle handle, u32 level,
+ 	if (lookup->speed <= lookup->min_speed)
+ 		lookup->min_speed = lookup->speed;
  
- 	spin_lock_irqsave(&card->irq_lock, flags);
- 	rsxx_disable_ier_and_isr(card, CR_INTR_ALL);
++	if (acpi_match_device_ids(adev, i2c_acpi_force_400khz_device_ids) == 0)
++		lookup->force_speed = 400000;
++
+ 	return AE_OK;
+ }
+ 
+@@ -295,7 +312,16 @@ u32 i2c_acpi_find_bus_speed(struct device *dev)
+ 		return 0;
+ 	}
+ 
+-	return lookup.min_speed != UINT_MAX ? lookup.min_speed : 0;
++	if (lookup.force_speed) {
++		if (lookup.force_speed != lookup.min_speed)
++			dev_warn(dev, FW_BUG "DSDT uses known not-working I2C bus speed %d, forcing it to %d\n",
++				 lookup.min_speed, lookup.force_speed);
++		return lookup.force_speed;
++	} else if (lookup.min_speed != UINT_MAX) {
++		return lookup.min_speed;
++	} else {
++		return 0;
++	}
+ }
+ EXPORT_SYMBOL_GPL(i2c_acpi_find_bus_speed);
+ 
 -- 
 2.20.1
 
