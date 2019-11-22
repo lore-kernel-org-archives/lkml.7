@@ -2,117 +2,98 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4535CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81612C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20ADD2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B0B20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKVQgL convert rfc822-to-8bit (ORCPT
+        id S1727437AbfKVQgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:36:11 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:35603 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKVQgL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:36:11 -0500
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iYBuj-0005bb-17
-        for linux-kernel@vger.kernel.org; Fri, 22 Nov 2019 16:36:09 +0000
-Received: by mail-pg1-f199.google.com with SMTP id s8so4163199pgv.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:36:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=8FJYPgYSY4gesD2/sebLKRkt9MrvJa8jfnyknbp4l4o=;
-        b=Y5RaYWDQjCT8BaJW/HYh8W1sT5KTRnxvWckg91ECVAbGnMAOon4v4uMqcEuF1Tg73F
-         8aMIyBLMf4tJJQqhfxKLOpq1KegApG6gGvntVbZxZtH3vYGMlVKzYA0cs2LPtgG+B6Wx
-         viRF+9J82vMS18mbteHeGyQgWs5n91LhufTki8gaRx9sllks2R8R9hpWeuakOPYQNNrv
-         4LN5leHz3TvJmxZLc4GYnqMviqQWLcpUCvRcx6fq2IKyPxuiglA34JuPf0jOgzaBysjQ
-         Ayc76sNwYTlRjRo8x6cxjpaGPzKZIDw0wo+HwpQgOT4kf3icvQLuI6n6NmZyyAUnQD3a
-         ABYg==
-X-Gm-Message-State: APjAAAUJTufBvPQBQYbOCccddd5wQcOGVCSYqS9upTnMr+99snVJTPBi
-        x72dSYSWcZRbowYipCyopHl5WrQJGe829YvpBHBvgwqZfkSACYlQ1B7hRQwy4vBYddSwYC1AGIl
-        r03uiGQKFcoIBhGJ8xHcRt7wd/EnueBR0ocCVQWJ8Ng==
-X-Received: by 2002:a63:ed4d:: with SMTP id m13mr15765257pgk.442.1574440567650;
-        Fri, 22 Nov 2019 08:36:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwPCSJNm7f9C9Cm8oj2X5Siho/+R/1BE7DfVp2adnTxETMsq3HbtcEMHMknZnvC2OTMjo7p2g==
-X-Received: by 2002:a63:ed4d:: with SMTP id m13mr15765242pgk.442.1574440567316;
-        Fri, 22 Nov 2019 08:36:07 -0800 (PST)
-Received: from 2001-b011-380f-3c42-689b-ad0d-de88-c579.dynamic-ip6.hinet.net (2001-b011-380f-3c42-689b-ad0d-de88-c579.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:689b:ad0d:de88:c579])
-        by smtp.gmail.com with ESMTPSA id z7sm8502076pfr.165.2019.11.22.08.36.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 08:36:06 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH] xhci: Increase STS_HALT timeout in xhci_suspend()
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20191104055217.10475-1-kai.heng.feng@canonical.com>
-Date:   Sat, 23 Nov 2019 00:36:04 +0800
-Cc:     "Atroshko, Yevhen" <Yevhen.Atroshko@amd.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <34F5BCC9-18EE-466D-BBAF-B3D3C1CD525B@canonical.com>
-References: <20191104055217.10475-1-kai.heng.feng@canonical.com>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Fri, 22 Nov 2019 11:36:38 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:45398 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfKVQgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 11:36:38 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 2A23F20B9F;
+        Fri, 22 Nov 2019 17:36:36 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 19DE81FF32;
+        Fri, 22 Nov 2019 17:36:36 +0100 (CET)
+Subject: Re: [PATCH] crypto: picoxcell: add missed tasklet_kill
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jamie Iles <jamie@jamieiles.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191115023116.7070-1-hslester96@gmail.com>
+ <20191122085512.m75tjfa3valqfgyv@gondor.apana.org.au>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <218e9053-42c7-098e-ecda-e0306361cc23@free.fr>
+Date:   Fri, 22 Nov 2019 17:36:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191122085512.m75tjfa3valqfgyv@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Nov 22 17:36:36 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On 22/11/2019 09:55, Herbert Xu wrote:
 
-> On Nov 4, 2019, at 13:52, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> On Fri, Nov 15, 2019 at 10:31:16AM +0800, Chuhong Yuan wrote:
+>> This driver forgets to kill tasklet when probe fails and remove.
+>> Add the calls to fix it.
+>>
+>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 > 
-> I've recently observed failed xHCI suspend attempt on AMD Raven Ridge
-> system:
-> kernel: xhci_hcd 0000:04:00.4: WARN: xHC CMD_RUN timeout
-> kernel: PM: suspend_common(): xhci_pci_suspend+0x0/0xd0 returns -110
-> kernel: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -110
-> kernel: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns -110
-> kernel: PM: Device 0000:04:00.4 failed to suspend async: error -110
+> Yes this driver does look buggy but I think your patch isn't
+> enough.
 > 
-> Similar to commit ac343366846a ("xhci: Increase STS_SAVE timeout in
-> xhci_suspend()") we also need to increase the HALT timeout to make it be
-> able to suspend again.
+>> diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
+>> index 3cbefb41b099..8d7c6bb2876e 100644
+>> --- a/drivers/crypto/picoxcell_crypto.c
+>> +++ b/drivers/crypto/picoxcell_crypto.c
+>> @@ -1755,6 +1755,7 @@ static int spacc_probe(struct platform_device *pdev)
+>>  	if (!ret)
+>>  		return 0;
+>>  
+>> +	tasklet_kill(&engine->complete);
+> 
+> The tasklet is schedule by the IRQ handler so you should not kill
+> it until the IRQ handler has been unregistered.
+> 
+> This driver is also buggy because it registers the IRQ handler
+> before initialising the tasklet.  You must always be prepared for
+> spurious IRQs.  IOW, as soon as you register the IRQ handler you
+> must be prepared for it to be called.
+> 
+>> @@ -1771,6 +1772,7 @@ static int spacc_remove(struct platform_device *pdev)
+>>  	struct spacc_alg *alg, *next;
+>>  	struct spacc_engine *engine = platform_get_drvdata(pdev);
+>>  
+>> +	tasklet_kill(&engine->complete);
+> 
+> Ditto.
+> 
+> However, the IRQ handler is registered through devm which makes it
+> hard to kill the tasklet after unregistering it.  We should probably
+> convert it to a normal request_irq so we can control how it's
+> unregistered.
 
-Seems like there are more broken AMD xHCI in the wild, so please merge this patch if there's no further concerns.
+Or inversely, registering the tasklet_kill() through devm, so that it
+is called *after* the ISR unregistration.
 
-Kai-Heng
-
-> 
-> Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> drivers/usb/host/xhci.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 6c17e3fe181a..53720c41891a 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -973,7 +973,7 @@ static bool xhci_pending_portevent(struct xhci_hcd *xhci)
-> int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup)
-> {
-> 	int			rc = 0;
-> -	unsigned int		delay = XHCI_MAX_HALT_USEC;
-> +	unsigned int		delay = XHCI_MAX_HALT_USEC * 2;
-> 	struct usb_hcd		*hcd = xhci_to_hcd(xhci);
-> 	u32			command;
-> 	u32			res;
-> -- 
-> 2.17.1
-> 
-
+Regards.
