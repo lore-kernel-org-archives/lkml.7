@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDBAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08772071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528A020718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419318;
-	bh=MS9vzgBV7doMrucn8+8vEnLYd4jnbrbZQAPY4YZ0r2Y=;
+	s=default; t=1574419320;
+	bh=fCHwIOGu3unDcLR2KdVSgi3LcxKQ2gDJuYvU66MMI3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ley3zXaGoFM1n3S+gUTwJtsl3TfrvOB9A64QejAJMCbLpySPDEZoMfQT5i9UvSubA
-	 TiP37yinmLHKVDq5o2U41ESlA4jPWIn26g+M9qfBuryPrgm40/rq2bhHNh8zLaQWRF
-	 i1iA73Qvn2RNudoF5ycA6l8rxqhbEk82MrpcvcKU=
+	b=zc4J9gx1nFVAB/gMbPqBW/JhbBAFr+CJ+JL/dkJyA7QjoHN5O1g/N5jTvMJvdp34T
+	 xvBiE4ooSxOTTrWjriFdf7KTj6NcTmP4aJ3fWhbsdk8Aw7TvT5TYWhc6vtxJUeN3sH
+	 enJEi7RDgAS9IDDQ2jQG6hbgCXpmap+LWVfCcFE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfKVKl4 (ORCPT
+        id S1727786AbfKVKl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:41:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46660 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:41:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728547AbfKVKlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:53 -0500
+        id S1729048AbfKVKl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 076A520715;
-        Fri, 22 Nov 2019 10:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B26D620707;
+        Fri, 22 Nov 2019 10:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419312;
-        bh=MS9vzgBV7doMrucn8+8vEnLYd4jnbrbZQAPY4YZ0r2Y=;
+        s=default; t=1574419315;
+        bh=fCHwIOGu3unDcLR2KdVSgi3LcxKQ2gDJuYvU66MMI3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5CnyF+nS1VoTMFb3p+uEHINPup50aqS9XQF33TPCKFHvlanH2WoQuJHxnZSshqkK
-         UWV6yQtDB764COwXui8UMbve5Hdgyk/FuEYQwlHuZII0XgQBK7/fZMlWNBXadsS6YR
-         xiOD6MRjvH+ppTw2x1HBGg0Ekkwr+v33v56dRLhw=
+        b=T7CfDjVDyw7bICgMwTK1ZZ/FpLrLtsoh4Et8ak5tN8vtTH8L8mOCa6PdHwH7oDX1B
+         SLtoMnNyvdwK8KLjxkYsEDKTWG/PkJR4jj/3x9tC/jc4rkRsvpVuNkJm+yF8rLIhIb
+         z4CzAC0HX2+2lAR6kU5RzhlkzE0J9f9lu78Q6wuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <andy.gross@linaro.org>,
+        stable@vger.kernel.org, Alan Modra <amodra@gmail.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 067/222] ARM: dts: qcom: ipq4019: fix cpu0s qcom,saw2 reg value
-Date:   Fri, 22 Nov 2019 11:26:47 +0100
-Message-Id: <20191122100904.492459711@linuxfoundation.org>
+Subject: [PATCH 4.9 068/222] powerpc/vdso: Correct call frame information
+Date:   Fri, 22 Nov 2019 11:26:48 +0100
+Message-Id: <20191122100905.013915167@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,42 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Alan Modra <amodra@gmail.com>
 
-[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
+[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
 
-while compiling an ipq4019 target, dtc will complain:
-regulator@b089000 unit address format error, expected "2089000"
+Call Frame Information is used by gdb for back-traces and inserting
+breakpoints on function return for the "finish" command.  This failed
+when inside __kernel_clock_gettime.  More concerning than difficulty
+debugging is that CFI is also used by stack frame unwinding code to
+implement exceptions.  If you have an app that needs to handle
+asynchronous exceptions for some reason, and you are unlucky enough to
+get one inside the VDSO time functions, your app will crash.
 
-The saw0 regulator reg value seems to be
-copied and pasted from qcom-ipq8064.dtsi.
+What's wrong:  There is control flow in __kernel_clock_gettime that
+reaches label 99 without saving lr in r12.  CFI info however is
+interpreted by the unwinder without reference to control flow: It's a
+simple matter of "Execute all the CFI opcodes up to the current
+address".  That means the unwinder thinks r12 contains the return
+address at label 99.  Disabuse it of that notion by resetting CFI for
+the return address at label 99.
 
-This patch fixes the reg value to match that of the
-unit address which in turn silences the warning.
-(There is no driver for qcom,saw2 right now.
-So this went unnoticed)
+Note that the ".cfi_restore lr" could have gone anywhere from the
+"mtlr r12" a few instructions earlier to the instruction at label 99.
+I put the CFI as late as possible, because in general that's best
+practice (and if possible grouped with other CFI in order to reduce
+the number of CFI opcodes executed when unwinding).  Using r12 as the
+return address is perfectly fine after the "mtlr r12" since r12 on
+that code path still contains the return address.
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+__get_datapage also has a CFI error.  That function temporarily saves
+lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
+use of r0 means the CFI at that point isn't correct, as r0 no longer
+contains the return address.  Fix that too.
+
+Signed-off-by: Alan Modra <amodra@gmail.com>
+Tested-by: Reza Arbab <arbab@linux.ibm.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/vdso32/datapage.S     | 1 +
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
+ arch/powerpc/kernel/vdso64/datapage.S     | 1 +
+ arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
+ 4 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 4b7d97275c621..5ee84e3cb3e97 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -211,7 +211,7 @@
- 
-                 saw0: regulator@b089000 {
-                         compatible = "qcom,saw2";
--                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
-+			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
-                         regulator;
-                 };
- 
+diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
+index 3745113fcc652..2a7eb5452aba7 100644
+--- a/arch/powerpc/kernel/vdso32/datapage.S
++++ b/arch/powerpc/kernel/vdso32/datapage.S
+@@ -37,6 +37,7 @@ data_page_branch:
+ 	mtlr	r0
+ 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+ 	lwz	r0,0(r3)
++  .cfi_restore lr
+ 	add	r3,r0,r3
+ 	blr
+   .cfi_endproc
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 6b2b69616e776..7b341b86216c2 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 */
+ 99:
+ 	li	r0,__NR_clock_gettime
++  .cfi_restore lr
+ 	sc
+ 	blr
+   .cfi_endproc
+diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
+index abf17feffe404..bf96686915116 100644
+--- a/arch/powerpc/kernel/vdso64/datapage.S
++++ b/arch/powerpc/kernel/vdso64/datapage.S
+@@ -37,6 +37,7 @@ data_page_branch:
+ 	mtlr	r0
+ 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+ 	lwz	r0,0(r3)
++  .cfi_restore lr
+ 	add	r3,r0,r3
+ 	blr
+   .cfi_endproc
+diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
+index 3820213248836..09b2a49f6dd53 100644
+--- a/arch/powerpc/kernel/vdso64/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
+@@ -124,6 +124,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 */
+ 99:
+ 	li	r0,__NR_clock_gettime
++  .cfi_restore lr
+ 	sc
+ 	blr
+   .cfi_endproc
 -- 
 2.20.1
 
