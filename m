@@ -2,140 +2,88 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40648C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1460C206C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D4hMWuJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 75C11206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfKVDA3 (ORCPT
+        id S1726554AbfKVDDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 22:00:29 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:50433 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfKVDA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 22:00:28 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191122030026epoutp037ef44d1f3bd4eb9ef9c2cc9b364a3266~ZXNfAIzCf1776317763epoutp03B
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 03:00:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191122030026epoutp037ef44d1f3bd4eb9ef9c2cc9b364a3266~ZXNfAIzCf1776317763epoutp03B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574391626;
-        bh=jR9JDOrzxDxFjd+KH+FnSxCDcPOdDJG/HnjXXkic4t8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=D4hMWuJQ631TjJVRG9xzpgbMUNFWuGkp9SHkikiX9l37rPlYvg0ydCmp5L6KpZwiJ
-         3UkYnPwVolY+sLLe6yTm3Rkt6MeuTHBYnJr8lL4d5vvJCt1VjKJ8tHQ08hsfQRXOl2
-         pOL3LvbfVjz+nBQxw2LbsJVKiUMWeOmL5UBP4juc=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191122030020epcas1p4375d4ec1b17cbe32a4ce3d5fe00f6b11~ZXNY-2wO-2233022330epcas1p4_;
-        Fri, 22 Nov 2019 03:00:20 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47K1Pv2krWzMqYkb; Fri, 22 Nov
-        2019 03:00:19 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BE.5C.04406.34F47DD5; Fri, 22 Nov 2019 12:00:19 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191122030016epcas1p13fc5d28cd56527a4d760758bae1b9e3e~ZXNWHlHxL2551125511epcas1p1D;
-        Fri, 22 Nov 2019 03:00:16 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191122030016epsmtrp13607f69341bf4b7660a0b7716ca92a3d~ZXNWG6hnj2174221742epsmtrp1I;
-        Fri, 22 Nov 2019 03:00:16 +0000 (GMT)
-X-AuditID: b6c32a38-947ff70000001136-b2-5dd74f4389fd
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        54.CB.03814.04F47DD5; Fri, 22 Nov 2019 12:00:16 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191122030016epsmtip15f756ff689bf918de48b6844e2131c92~ZXNV41NIx2923129231epsmtip1j;
-        Fri, 22 Nov 2019 03:00:16 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Markus Elfring'" <Markus.Elfring@web.de>
-Cc:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "'Christoph Hellwig'" <hch@lst.de>,
-        "'Daniel Wagner'" <dwagner@suse.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Nikolay Borisov'" <nborisov@suse.com>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>,
-        <linkinjeon@gmail.com>, <linux-fsdevel@vger.kernel.org>
-In-Reply-To: <498a958f-9066-09c6-7240-114234965c1a@web.de>
-Subject: RE: [PATCH v4 04/13] exfat: add directory operations
-Date:   Fri, 22 Nov 2019 12:00:16 +0900
-Message-ID: <004901d5a0e0$f7bf1030$e73d3090$@samsung.com>
+        Thu, 21 Nov 2019 22:03:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34986 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbfKVDDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 22:03:03 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 48413AE2C;
+        Fri, 22 Nov 2019 03:03:02 +0000 (UTC)
+Subject: Re: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+To:     James Tai <james.tai@realtek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+ <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+ <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
+ <6182b89f-cd7e-ce7c-56f7-e2f500321cde@suse.de>
+ <993d5da60a87443995347ee2a4c74959@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <6d44e7f8-1ae5-ed3d-ac3c-0ee7903d660b@suse.de>
+Date:   Fri, 22 Nov 2019 04:03:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQGvn6iTTExTp6OkCy7f8aJjab+B9AHpvZ4UAavVuMIBPbFUKae75+zw
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFJsWRmVeSWpSXmKPExsWy7bCmga6z//VYgxMtIhaHH09it2hevJ7N
-        YuXqo0wWW29JW1y/e4vZYs/ekywWl3fNYbP4P+s5q8X/Ny0sFlv+HWG1uPT+A4sDt8fOWXfZ
-        PfbPXcPusftmA5tH35ZVjB7rt1xl8dh8utrj8yY5j0Pb37B53H62jSWAMyrHJiM1MSW1SCE1
-        Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoWCWFssScUqBQQGJxsZK+
-        nU1RfmlJqkJGfnGJrVJqQUpOgaFBgV5xYm5xaV66XnJ+rpWhgYGRKVBlQk7G6tM/2Au+sVfs
-        P3iQsYHxJnsXIyeHhICJxMTTU4BsLg4hgR2MEmfOXmCFcD4xSkx8fYIRwvnGKLHv7VxWmJZv
-        ezYxQST2MkpsuHwGqv8Vo8Spj6uZQKrYBHQl/v3ZzwZiiwjoSUx6cxhsLrPATGaJIy/PsoAk
-        OAWsJI68PwvUwMEhLGArsacjDCTMIqAq8frebmYQm1fAUuJx910oW1Di5MwnYK3MAtoSyxa+
-        Zoa4SEFix9nXjBC73CRO9F5gg6gRkZjd2QZVs4xdYuYjfwjbRWLfpf9Q3whLvDq+BRoYUhIv
-        +9vYQc6REKiW+LgfqrWDUeLFd1sI21ji5voNrCAlzAKaEut36UOEFSV2/p7LCLGVT+Ld1x5W
-        iCm8Eh1tQhAlqhJ9lw4zQdjSEl3tH9gnMCrNQvLXLCR/zUJy/yyEZQsYWVYxiqUWFOempxYb
-        Fpggx/UmRnA61rLYwbjnnM8hRgEORiUe3gnl12KFWBPLiitzDzFKcDArifDuuX4lVog3JbGy
-        KrUoP76oNCe1+BCjKTDYJzJLiSbnA3NFXkm8oamRsbGxhYmZuZmpsZI4L8ePi7FCAumJJanZ
-        qakFqUUwfUwcnFINjLsPhx3VZHnX4hJ/ZfXjqWcWdBsvuiVxmks3f7LKmhXnDaXsDpVlKyxU
-        rH399ubKx48SK/asPh89f+Kd0iKGDTfPtrV7v7De32ixeMlD095JGjk2T95M1nxSU8Ewr+Tw
-        gye3/7VvqpZ1tpCZFf3nb8iCcvcl/7YHll6pV3zvKz+vqSPdXmcZ83YlluKMREMt5qLiRAAe
-        1t2x3QMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsWy7bCSnK6D//VYg/+HjC0OP57EbtG8eD2b
-        xcrVR5kstt6Strh+9xazxZ69J1ksLu+aw2bxf9ZzVov/b1pYLLb8O8Jqcen9BxYHbo+ds+6y
-        e+yfu4bdY/fNBjaPvi2rGD3Wb7nK4rH5dLXH501yHoe2v2HzuP1sG0sAZxSXTUpqTmZZapG+
-        XQJXRtPj50wF31gq5h04zNzAeJS5i5GTQ0LAROLbnk1MXYxcHEICuxklLrfugEpISxw7cQbI
-        5gCyhSUOHy6GqHnBKNF7/D0jSA2bgK7Evz/72UBsEQE9iUlvDrOCFDELLGSWODdnAiNEx1tG
-        iaNtu1hAqjgFrCSOvD/LBDJVWMBWYk9HGEiYRUBV4vW93WCLeQUsJR5334WyBSVOznwC1sos
-        oC3R+7CVEcZetvA11KEKEjvOvmaEOMJN4kTvBTaIGhGJ2Z1tzBMYhWchGTULyahZSEbNQtKy
-        gJFlFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcGxqae1gPHEi/hCjAAejEg/vhPJr
-        sUKsiWXFlbmHGCU4mJVEePdcvxIrxJuSWFmVWpQfX1Sak1p8iFGag0VJnFc+/1ikkEB6Yklq
-        dmpqQWoRTJaJg1OqgbH+koXwe9HsVUc+rlxW7iX/uzv85/qHPGqJshMbK1uqlrZoNM3yruNt
-        7TTYuVYtsH5NUYJl5od7TueFNu2sDpaYd/tdmOwdyRXHvv73M+CouLE3dUZw45aV9Zs5Zsyq
-        3fPu5bQbcXN7Mh6uyP65MeLfz0Id30cbueae1PA5dMbZXDd7d8DSlw5KLMUZiYZazEXFiQBG
-        0Cl6yQIAAA==
-X-CMS-MailID: 20191122030016epcas1p13fc5d28cd56527a4d760758bae1b9e3e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191121052917epcas1p259b8cb61ab86975cabc0cf4815a8dc38
-References: <20191121052618.31117-1-namjae.jeon@samsung.com>
-        <CGME20191121052917epcas1p259b8cb61ab86975cabc0cf4815a8dc38@epcas1p2.samsung.com>
-        <20191121052618.31117-5-namjae.jeon@samsung.com>
-        <498a958f-9066-09c6-7240-114234965c1a@web.de>
+In-Reply-To: <993d5da60a87443995347ee2a4c74959@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> =E2=80=A6=0D=0A>=20>=20+++=20b/fs/exfat/dir.c=0D=0A>=20=E2=80=A6=0D=0A>=
-=20>=20+static=20int=20exfat_readdir(struct=20inode=20*inode,=20struct=20ex=
-fat_dir_entry=0D=0A>=20*dir_entry)=0D=0A>=20>=20+=7B=0D=0A>=20=E2=80=A6=0D=
-=0A>=20>=20+=09=09=09if=20(=21ep)=20=7B=0D=0A>=20>=20+=09=09=09=09ret=20=3D=
-=20-EIO;=0D=0A>=20>=20+=09=09=09=09goto=20free_clu;=0D=0A>=20>=20+=09=09=09=
-=7D=0D=0A>=20=0D=0A>=20How=20do=20you=20think=20about=20to=20move=20a=20bit=
-=20of=20common=20exception=20handling=20code=0D=0A>=20(at=20similar=20place=
-s)?=0D=0ANot=20sure=20it=20is=20good.=20Other=20review=20comments=20are=20o=
-kay.=20Will=20fix=20them=20on=20v5.=0D=0A>=20=0D=0A>=20+=09=09=09if=20(=21e=
-p)=0D=0A>=20+=09=09=09=09goto=20e_io;=0D=0A>=20=0D=0A>=20=0D=0A>=20=E2=80=
-=A6=0D=0A>=20>=20+free_clu:=0D=0A>=20>=20+=09kfree(clu);=0D=0A>=20>=20+=09r=
-eturn=20ret;=0D=0A>=20=0D=0A>=20+=0D=0A>=20+e_io:=0D=0A>=20+=09ret=20=3D=20=
--EIO;=0D=0A>=20+=09goto=20free_clu;=0D=0A>=20=0D=0A>=20>=20+=7D=0D=0A=0D=0A
+Hi James,
+
+Am 20.11.19 um 08:58 schrieb James Tai:
+>> This conflicts with what I see in BSP irq mux code here:
+>> https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/drivers/ir
+>> qchip/irq-rtd16xx.h
+>>
+>> That does show UR0 as bit 2 for the iso irq mux, as for previous SoCs.
+>> Is that code wrong, or does the same UART0 IP block have two alternative
+>> interrupts for backwards compatibility? I therefore held back RTD1619 irq mux
+>> patches from my irqchip v4 series [1].
+>>
+> It is code wrong. The UR0 should remove from "irq-rtd16xx.h".
+
+Actually, I just tested that UR0 works! (rev A01) So we shouldn't remove
+it from the irqchip driver, given the mapping changes requested for v5.
+
+RTD1619 driver support and DT nodes pushed to my rtd1295-next branch.
+
+>> The BSP DT does assign non-mux interrupts to the UART node like you did:
+>> https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/arch/arm
+>> 64/boot/dts/realtek/rtd16xx/rtd-16xx.dtsi
+>> And I obviously trust that you tested your DT to produce serial output.
+
+We should obviously leave the new GIC interrupts in the DT.
+
+Regards,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
