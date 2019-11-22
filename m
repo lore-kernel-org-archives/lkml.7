@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F364DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1A2C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADBE2085B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1B22084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420827;
-	bh=uttykRXu6fmPslYpYmyO++JnZH4pK/+REWs7vK+7hN4=;
+	s=default; t=1574420829;
+	bh=mRKZx/dtkkwJ3Waki57KbIjqXykXG+/ubnEk0vOs8iM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yWJzo0LBEH/o1u8iQsAha8kUlJ0cZ/59U3vXKcCdIPMZpJShMRp+Z3H72tuXY5eX5
-	 6QsJAraBxudreIuieWBi3+17Wg13bvQnjDV780X7WGmjpE97h2K49L1CaxScRBBamC
-	 OmcnGRgK/bLrvY3nR+7ZpiuyFKp31le4Sy/APxVw=
+	b=Xa8ZkfGZVDypPT5uSoJ+RFKRK7FHXDqpfM5jptG9qQk6GQERJh9YDfu1sxK8hQ18/
+	 6R4VXLq6A87ywfgChIfYBaWtMIzHL07rZQBJ+nobxtTHOWby930BapL+Z04fNZtR0C
+	 3Wk9Zyy/5WiP0nRCdlv8mLcRe0YgM8484c6KCgnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbfKVLG6 (ORCPT
+        id S1731436AbfKVLGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35494 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731906AbfKVLGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:50 -0500
+        id S1731154AbfKVLGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0A922084D;
-        Fri, 22 Nov 2019 11:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA1F22084F;
+        Fri, 22 Nov 2019 11:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420809;
-        bh=uttykRXu6fmPslYpYmyO++JnZH4pK/+REWs7vK+7hN4=;
+        s=default; t=1574420806;
+        bh=mRKZx/dtkkwJ3Waki57KbIjqXykXG+/ubnEk0vOs8iM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e3NeOOJTuUmmYtcHUudMBYmZ1lz86aKpZ4mSwEr13L7gxbtoxd7o2LQRAlMcDAmrc
-         4BwESIBSvq/gLEmhkaNIyYqvjlX2hPoJ+fl50eBMVS2dGoMV2ZyGJ6LCooSeqOheWI
-         Hjw4QDYoGMa9UGhH7rIjmcA1yYJVd79i4pi2oY3E=
+        b=r+ANl7ZSMLjHk4vh7zrgLMV7Fmw7QJ3oVtLSu1FXBd2K/S5pNsHiHAbAjQCHd46KF
+         XxW+WPnDc6fYxcFHgw2hwTURGUxoDljqQiJKC8c+20a/29GFPBVy/NHo98n+o+ju4/
+         KVAyrBWOJtIPJvgfbGsh/QqHV9vz+DtQwTz8GIDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dan Williams <dan.j.williams@intel.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.3 5/6] arm64: uaccess: Ensure PAN is re-enabled after unhandled uaccess fault
-Date:   Fri, 22 Nov 2019 11:30:07 +0100
-Message-Id: <20191122100327.349833298@linuxfoundation.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 4/6] mm/memory_hotplug: fix updating the node span
+Date:   Fri, 22 Nov 2019 11:30:06 +0100
+Message-Id: <20191122100326.607203017@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100320.878809004@linuxfoundation.org>
 References: <20191122100320.878809004@linuxfoundation.org>
@@ -61,116 +65,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit 94bb804e1e6f0a9a77acf20d7c70ea141c6c821e upstream.
+commit 656d571193262a11c2daa4012e53e4d645bbce56 upstream.
 
-A number of our uaccess routines ('__arch_clear_user()' and
-'__arch_copy_{in,from,to}_user()') fail to re-enable PAN if they
-encounter an unhandled fault whilst accessing userspace.
+We recently started updating the node span based on the zone span to
+avoid touching uninitialized memmaps.
 
-For CPUs implementing both hardware PAN and UAO, this bug has no effect
-when both extensions are in use by the kernel.
+Currently, we will always detect the node span to start at 0, meaning a
+node can easily span too many pages.  pgdat_is_empty() will still work
+correctly if all zones span no pages.  We should skip over all zones
+without spanned pages and properly handle the first detected zone that
+spans pages.
 
-For CPUs implementing hardware PAN but not UAO, this means that a kernel
-using hardware PAN may execute portions of code with PAN inadvertently
-disabled, opening us up to potential security vulnerabilities that rely
-on userspace access from within the kernel which would usually be
-prevented by this mechanism. In other words, parts of the kernel run the
-same way as they would on a CPU without PAN implemented/emulated at all.
+Unfortunately, in contrast to the zone span (/proc/zoneinfo), the node
+span cannot easily be inspected and tested.  The node span gives no real
+guarantees when an architecture supports memory hotplug, meaning it can
+easily contain holes or span pages of different nodes.
 
-For CPUs not implementing hardware PAN and instead relying on software
-emulation via 'CONFIG_ARM64_SW_TTBR0_PAN=y', the impact is unfortunately
-much worse. Calling 'schedule()' with software PAN disabled means that
-the next task will execute in the kernel using the page-table and ASID
-of the previous process even after 'switch_mm()', since the actual
-hardware switch is deferred until return to userspace. At this point, or
-if there is a intermediate call to 'uaccess_enable()', the page-table
-and ASID of the new process are installed. Sadly, due to the changes
-introduced by KPTI, this is not an atomic operation and there is a very
-small window (two instructions) where the CPU is configured with the
-page-table of the old task and the ASID of the new task; a speculative
-access in this state is disastrous because it would corrupt the TLB
-entries for the new task with mappings from the previous address space.
+The node span is not really used after init on architectures that
+support memory hotplug.
 
-As Pavel explains:
+E.g., we use it in mm/memory_hotplug.c:try_offline_node() and in
+mm/kmemleak.c:kmemleak_scan().  These users seem to be fine.
 
-  | I was able to reproduce memory corruption problem on Broadcom's SoC
-  | ARMv8-A like this:
-  |
-  | Enable software perf-events with PERF_SAMPLE_CALLCHAIN so userland's
-  | stack is accessed and copied.
-  |
-  | The test program performed the following on every CPU and forking
-  | many processes:
-  |
-  |	unsigned long *map = mmap(NULL, PAGE_SIZE, PROT_READ|PROT_WRITE,
-  |				  MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-  |	map[0] = getpid();
-  |	sched_yield();
-  |	if (map[0] != getpid()) {
-  |		fprintf(stderr, "Corruption detected!");
-  |	}
-  |	munmap(map, PAGE_SIZE);
-  |
-  | From time to time I was getting map[0] to contain pid for a
-  | different process.
-
-Ensure that PAN is re-enabled when returning after an unhandled user
-fault from our uaccess routines.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Cc: <stable@vger.kernel.org>
-Fixes: 338d4f49d6f7 ("arm64: kernel: Add support for Privileged Access Never")
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-[will: rewrote commit message]
-Signed-off-by: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20191027222714.5313-1-david@redhat.com
+Fixes: 00d6c019b5bc ("mm/memory_hotplug: don't access uninitialized memmaps in shrink_pgdat_span()")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/lib/clear_user.S     |    1 +
- arch/arm64/lib/copy_from_user.S |    1 +
- arch/arm64/lib/copy_in_user.S   |    1 +
- arch/arm64/lib/copy_to_user.S   |    1 +
- 4 files changed, 4 insertions(+)
+ mm/memory_hotplug.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/arm64/lib/clear_user.S
-+++ b/arch/arm64/lib/clear_user.S
-@@ -48,5 +48,6 @@ EXPORT_SYMBOL(__arch_clear_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9:	mov	x0, x2			// return the original size
-+	uaccess_disable_not_uao x2, x3
- 	ret
- 	.previous
---- a/arch/arm64/lib/copy_from_user.S
-+++ b/arch/arm64/lib/copy_from_user.S
-@@ -66,5 +66,6 @@ EXPORT_SYMBOL(__arch_copy_from_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9998:	sub	x0, end, dst			// bytes not copied
-+	uaccess_disable_not_uao x3, x4
- 	ret
- 	.previous
---- a/arch/arm64/lib/copy_in_user.S
-+++ b/arch/arm64/lib/copy_in_user.S
-@@ -68,5 +68,6 @@ EXPORT_SYMBOL(__arch_copy_in_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9998:	sub	x0, end, dst			// bytes not copied
-+	uaccess_disable_not_uao x3, x4
- 	ret
- 	.previous
---- a/arch/arm64/lib/copy_to_user.S
-+++ b/arch/arm64/lib/copy_to_user.S
-@@ -65,5 +65,6 @@ EXPORT_SYMBOL(__arch_copy_to_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9998:	sub	x0, end, dst			// bytes not copied
-+	uaccess_disable_not_uao x3, x4
- 	ret
- 	.previous
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -447,6 +447,14 @@ static void update_pgdat_span(struct pgl
+ 					     zone->spanned_pages;
+ 
+ 		/* No need to lock the zones, they can't change. */
++		if (!zone->spanned_pages)
++			continue;
++		if (!node_end_pfn) {
++			node_start_pfn = zone->zone_start_pfn;
++			node_end_pfn = zone_end_pfn;
++			continue;
++		}
++
+ 		if (zone_end_pfn > node_end_pfn)
+ 			node_end_pfn = zone_end_pfn;
+ 		if (zone->zone_start_pfn < node_start_pfn)
 
 
