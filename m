@@ -2,116 +2,102 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0B7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC86C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9654A206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574391984;
-	bh=WHOYATGBc/KhbUsY17Xhsk4+WhbvgQ0BBAtu736vu44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KQJU9nzX/0Sllc/oMjzauIzCrHWBLMsyXh68F0BoQM3aPhu28hknbPrrNf5ct0dCu
-	 yjXQnAkYQa5TEmpaSfBfmI0H3vwjua8EiNS8an+DzkTCSphfGIs9K+aFgIO2l46Vjn
-	 TJR/GSPotRUp7JaxK7kPv/6CfZG0Oz3UHk5gfr70=
+	by mail.kernel.org (Postfix) with ESMTP id B67A720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKVDGX (ORCPT
+        id S1726690AbfKVDIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 22:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 22:08:22 -0500
+Received: from mga14.intel.com ([192.55.52.115]:53712 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfKVDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 22:06:23 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC833206B6;
-        Fri, 22 Nov 2019 03:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574391982;
-        bh=WHOYATGBc/KhbUsY17Xhsk4+WhbvgQ0BBAtu736vu44=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wsysb1M4c5Of6auNnd9WrnuX1d02JpYy2mPEoQ+5gjPFolt9aOvDJ6cbTtK9uowg+
-         F3B/IcMPpFYJm+VI2Tz9NzrY3GG//ps0Q2UFi7UhjzC2A/93e1c3Oiee0q/7qX97qx
-         1QSYrvkYUwciXyAbQHhi2Wmon4dgqLNThqpvPjsc=
-Date:   Thu, 21 Nov 2019 19:06:20 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v6 8/8] crypto, x86/sha: Eliminate casts on asm
- implementations
-Message-ID: <20191122030620.GD32523@sol.localdomain>
-References: <20191122010334.12081-1-keescook@chromium.org>
- <20191122010334.12081-9-keescook@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122010334.12081-9-keescook@chromium.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1726335AbfKVDIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 22:08:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 19:08:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,228,1571727600"; 
+   d="scan'208";a="232540432"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Nov 2019 19:08:19 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
+        Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 0/5] iommu/vt-d: Consolidate various cache flush ops
+Date:   Fri, 22 Nov 2019 11:04:44 +0800
+Message-Id: <20191122030449.28892-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 05:03:34PM -0800, Kees Cook wrote:
-> -asmlinkage void sha1_transform_ssse3(u32 *digest, const char *data,
-> -				     unsigned int rounds);
-> +asmlinkage void sha1_transform_ssse3(struct sha1_state *digest,
-> +				     const u8 *data, int rounds);
+Intel VT-d 3.0 introduces more caches and interfaces for software to
+flush when it runs in the scalable mode. Currently various cache flush
+helpers are scattered around. This consolidates them by putting them in
+the existing iommu_flush structure.
 
-Can you please use:
+/* struct iommu_flush - Intel IOMMU cache invalidation ops
+ *
+ * @cc_inv: invalidate context cache
+ * @iotlb_inv: Invalidate IOTLB and paging structure caches when software
+ *             has changed second-level tables.
+ * @p_iotlb_inv: Invalidate IOTLB and paging structure caches when software
+ *               has changed first-level tables.
+ * @pc_inv: invalidate pasid cache
+ * @dev_tlb_inv: invalidate cached mappings used by requests-without-PASID
+ *               from the Device-TLB on a endpoint device.
+ * @p_dev_tlb_inv: invalidate cached mappings used by requests-with-PASID
+ *                 from the Device-TLB on an endpoint device
+ */
+struct iommu_flush {
+        void (*cc_inv)(struct intel_iommu *iommu, u16 did,
+                       u16 sid, u8 fm, u64 type);
+        void (*iotlb_inv)(struct intel_iommu *iommu, u16 did, u64 addr,
+                          unsigned int size_order, u64 type);
+        void (*p_iotlb_inv)(struct intel_iommu *iommu, u16 did, u32 pasid,
+                            u64 addr, unsigned long npages, bool ih);
+        void (*pc_inv)(struct intel_iommu *iommu, u16 did, u32 pasid,
+                       u64 granu);
+        void (*dev_tlb_inv)(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+                            u16 qdep, u64 addr, unsigned int mask);
+        void (*p_dev_tlb_inv)(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+                              u32 pasid, u16 qdep, u64 addr,
+                              unsigned long npages);
+};
 
-asmlinkage void sha1_transform_ssse3(struct sha1_state *state,
-				     const u8 *data, int blocks);
+The name of each cache flush ops is defined according to the spec section 6.5
+so that people are easy to look up them in the spec.
 
-I.e., rename 'digest' => 'state' and 'rounds' => 'blocks'.
+Best regards,
+Lu Baolu
 
-(Or alternatively 'sst' instead of 'state' would be okay since that's what
-sha{1,256,512}_block_fn uses, but 'state' seems much clearer to me.)
+Lu Baolu (5):
+  iommu/vt-d: Extend iommu_flush for scalable mode
+  iommu/vt-d: Consolidate pasid cache invalidation
+  iommu/vt-d: Consolidate device tlb invalidation
+  iommu/vt-d: Consolidate pasid-based tlb invalidation
+  iommu/vt-d: Consolidate pasid-based device tlb invalidation
 
-Similarly for the other sha{1,256,512}_transform_*() functions.
+ drivers/iommu/dmar.c        |  61 ---------
+ drivers/iommu/intel-iommu.c | 246 +++++++++++++++++++++++++++++-------
+ drivers/iommu/intel-pasid.c |  39 +-----
+ drivers/iommu/intel-svm.c   |  60 ++-------
+ include/linux/intel-iommu.h |  39 ++++--
+ 5 files changed, 244 insertions(+), 201 deletions(-)
 
-'digest' is confusing because it would typically be understood to mean the final
-digest, or maybe also the hash chaining state (e.g. u32[5] for SHA-1) if it's
-interpreted loosely.  I don't think it would typically be understand to also
-include buffered data like struct sha1_state does.
+-- 
+2.17.1
 
-'rounds' is confusing because the parameter is actually the number of blocks,
-not the number of rounds -- the latter being fixed for each SHA-* algorithm.
-Since sha{1,256,512}_block_fn already call it 'blocks' and this patch has to
-update the type of this parameter anyway, let's use that.
-
->  #ifdef CONFIG_AS_AVX
-> -asmlinkage void sha1_transform_avx(u32 *digest, const char *data,
-> -				   unsigned int rounds);
-> +asmlinkage void sha1_transform_avx(struct sha1_state *digest,
-> +				   const u8 *data, int rounds);
->  
-
-This patch is also still missing updates to the corresponding comments in the
-assembly files:
-
-	sha1_transform_avx()
-	sha1_transform_avx2()
-	sha256_transform_avx()
-	sha256_transform_rorx()
-	sha512_transform_ssse3() [references to D, M, and L remain]
-	sha512_transform_avx()
-	sha512_transform_rorx()
-
-FWIW, this patch is also independent from 1-7, so it could be sent out
-separately if it makes things any easier for you.
-
-Thanks,
-
-- Eric
