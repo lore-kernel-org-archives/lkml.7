@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824CEC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B0CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55ECD205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420482071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419837;
-	bh=UVB7o8iqmR7C3+y6VH/vIkN3iHFqvvoejmzhLhkv7hY=;
+	s=default; t=1574419841;
+	bh=PdQVLVDvmxyVyKUrtgndumSRZV085gVoUxALfMKFSKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aU5Dar9ROl13vslJXTIDzkZU4c2Tk5tVZwXkFTU3cZ6OfTBxooBsPVag7IlPjia0V
-	 kNPqQ64FhEPbt5VA2T/F1V8POW+9vy9du45H8lIEYNx0RyjbcEs957FDJGw9t2NCHq
-	 0LuiZXUaWIfKA2erBGmxHuJAWku5JuebjN2zk5iY=
+	b=jqy5EFb3hukBjhswLjE7b7Uusm8Ka2Xz5rIDgYz1VMrk6ZIksdZ31knGtlmVjRrYE
+	 aGekXeJ3LeEw7dLRurqr8yWJwhrhEXsg2QChfZFmge3YvCP/Si9ZAkhtQBnBsBtcfS
+	 7sWHp9rnimh7rodMpVyE6y25bHGC/AmA5JK0TPok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfKVKud (ORCPT
+        id S1728502AbfKVKui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:50:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:50:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbfKVKu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:50:27 -0500
+        id S1729435AbfKVKud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:50:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64211205C9;
-        Fri, 22 Nov 2019 10:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5632A205C9;
+        Fri, 22 Nov 2019 10:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419826;
-        bh=UVB7o8iqmR7C3+y6VH/vIkN3iHFqvvoejmzhLhkv7hY=;
+        s=default; t=1574419832;
+        bh=PdQVLVDvmxyVyKUrtgndumSRZV085gVoUxALfMKFSKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEzNn0tvRu3nSb1AjXRu0016R2qKt/kQ1uZneDOtZ4CLhpvgOTRVHdTiSirdSEDiY
-         r4Lkpg5aZNjCSaxOSBZwIWbalnTGO7+xX5O+ufjQAzdmNCRLoI1S+7Rwp0g+0Z8Fvn
-         fgotXUwB/yOYE+pDsID9dh2h4ZXKmA84olBAs08E=
+        b=ikMxKO+SLQWQZmJSP9GJQaD+1l1WVEY80/qqvPiMT4rSXgAxKyo+BdU81bRdiU4PC
+         RRCy4b2Y6sYG/qaQWvarGtN+8tNZaoAnFpkig1KA2PGbOtao7kj7Gf4YKZ6ksVNbGu
+         TdmRErQLhyV3E04sI8Tn44ULBS8E4VmwZedzlqL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        stable@vger.kernel.org, Nick Kossifidis <mickflemm@gmail.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 022/122] ath10k: fix vdev-start timeout on error
-Date:   Fri, 22 Nov 2019 11:27:55 +0100
-Message-Id: <20191122100738.028989086@linuxfoundation.org>
+Subject: [PATCH 4.14 024/122] ath9k: fix reporting calculated new FFT upper max
+Date:   Fri, 22 Nov 2019 11:27:57 +0100
+Message-Id: <20191122100739.517562947@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,115 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Greear <greearb@candelatech.com>
+From: Simon Wunderlich <sw@simonwunderlich.de>
 
-[ Upstream commit 833fd34d743c728afe6d127ef7bee67e7d9199a8 ]
+[ Upstream commit 4fb5837ac2bd46a85620b297002c704e9958f64d ]
 
-The vdev-start-response message should cause the
-completion to fire, even in the error case.  Otherwise,
-the user still gets no useful information and everything
-is blocked until the timeout period.
+Since the debug print code is outside of the loop, it shouldn't use the loop
+iterator anymore but instead print the found maximum index.
 
-Add some warning text to print out the invalid status
-code to aid debugging, and propagate failure code.
-
-Signed-off-by: Ben Greear <greearb@candelatech.com>
+Cc: Nick Kossifidis <mickflemm@gmail.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/core.h |  1 +
- drivers/net/wireless/ath/ath10k/mac.c  |  2 +-
- drivers/net/wireless/ath/ath10k/wmi.c  | 19 ++++++++++++++++---
- drivers/net/wireless/ath/ath10k/wmi.h  |  8 +++++++-
- 4 files changed, 25 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath9k/common-spectral.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 949ebb3e967bb..be9ec265dfe55 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -881,6 +881,7 @@ struct ath10k {
+diff --git a/drivers/net/wireless/ath/ath9k/common-spectral.c b/drivers/net/wireless/ath/ath9k/common-spectral.c
+index a41bcbda1d9e8..37d5994eb1ccd 100644
+--- a/drivers/net/wireless/ath/ath9k/common-spectral.c
++++ b/drivers/net/wireless/ath/ath9k/common-spectral.c
+@@ -411,7 +411,7 @@ ath_cmn_process_ht20_40_fft(struct ath_rx_status *rs,
  
- 	struct completion install_key_done;
- 
-+	int last_wmi_vdev_start_status;
- 	struct completion vdev_setup_done;
- 
- 	struct workqueue_struct *workqueue;
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 8c4bb56c262f6..dff34448588f0 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -955,7 +955,7 @@ static inline int ath10k_vdev_setup_sync(struct ath10k *ar)
- 	if (time_left == 0)
- 		return -ETIMEDOUT;
- 
--	return 0;
-+	return ar->last_wmi_vdev_start_status;
- }
- 
- static int ath10k_monitor_vdev_start(struct ath10k *ar, int vdev_id)
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 4d6c2986c40dd..25f51ca060934 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -3133,18 +3133,31 @@ void ath10k_wmi_event_vdev_start_resp(struct ath10k *ar, struct sk_buff *skb)
- {
- 	struct wmi_vdev_start_ev_arg arg = {};
- 	int ret;
-+	u32 status;
- 
- 	ath10k_dbg(ar, ATH10K_DBG_WMI, "WMI_VDEV_START_RESP_EVENTID\n");
- 
-+	ar->last_wmi_vdev_start_status = 0;
-+
- 	ret = ath10k_wmi_pull_vdev_start(ar, skb, &arg);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to parse vdev start event: %d\n", ret);
--		return;
-+		ar->last_wmi_vdev_start_status = ret;
-+		goto out;
- 	}
- 
--	if (WARN_ON(__le32_to_cpu(arg.status)))
--		return;
-+	status = __le32_to_cpu(arg.status);
-+	if (WARN_ON_ONCE(status)) {
-+		ath10k_warn(ar, "vdev-start-response reports status error: %d (%s)\n",
-+			    status, (status == WMI_VDEV_START_CHAN_INVALID) ?
-+			    "chan-invalid" : "unknown");
-+		/* Setup is done one way or another though, so we should still
-+		 * do the completion, so don't return here.
-+		 */
-+		ar->last_wmi_vdev_start_status = -EINVAL;
-+	}
- 
-+out:
- 	complete(&ar->vdev_setup_done);
- }
- 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
-index d0e05aa437e36..947b74c64fec0 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -6480,11 +6480,17 @@ struct wmi_ch_info_ev_arg {
- 	__le32 rx_frame_count;
- };
- 
-+/* From 10.4 firmware, not sure all have the same values. */
-+enum wmi_vdev_start_status {
-+	WMI_VDEV_START_OK = 0,
-+	WMI_VDEV_START_CHAN_INVALID,
-+};
-+
- struct wmi_vdev_start_ev_arg {
- 	__le32 vdev_id;
- 	__le32 req_id;
- 	__le32 resp_type; /* %WMI_VDEV_RESP_ */
--	__le32 status;
-+	__le32 status; /* See wmi_vdev_start_status enum above */
- };
- 
- struct wmi_peer_kick_ev_arg {
+ 		ath_dbg(common, SPECTRAL_SCAN,
+ 			"Calculated new upper max 0x%X at %i\n",
+-			tmp_mag, i);
++			tmp_mag, fft_sample_40.upper_max_index);
+ 	} else
+ 	for (i = dc_pos; i < SPECTRAL_HT20_40_NUM_BINS; i++) {
+ 		if (fft_sample_40.data[i] == (upper_mag >> max_exp))
 -- 
 2.20.1
 
