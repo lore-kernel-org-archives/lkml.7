@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C9FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB144C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC7720721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CD82070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400475;
-	bh=WszExPIIwxHba7R4ODtPaqd+zT5cyG2VdXTU71sfmK8=;
+	s=default; t=1574400477;
+	bh=qcEG6w2/GDNSrFO6+mPfxkBVtMr5NJCSsxklqfbSFtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifOKClT+U1UmZUCrQqK33eaO1oCYYY75EzYmz3EubhXTh0QzbJAbtlLXDAKtGwQWV
-	 GrBbMoOjDpNfX+R8kyTwLfy8ILpOecuAEyBg3I5o3RKi/oGTJqRWdDdmHr3c1NZ7W+
-	 chqBQCCESilqefLO0AB3XmFfLU/Cb2Ybc/RHLE1g=
+	b=I9dMRnEL8NUfUj3/STqPqi6C9xgEfm2fqGym1HZA7zxvPnYwNwKZSpCtFwLXYFVCq
+	 KOKOMjcuSzTLijHp8IeQtIuf7HX94uVKFhMVSwV631fwE4KgTjO0wlRoFRNIct31Tp
+	 WOzu2LXUrce1riF3TTm23F/oMQ27q3cdYzHgGkOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKVF1v (ORCPT
+        id S1726822AbfKVF1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:27:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:27:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbfKVF1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:27:47 -0500
+        id S1726018AbfKVF1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:27:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F94B20707;
-        Fri, 22 Nov 2019 05:27:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D24820714;
+        Fri, 22 Nov 2019 05:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400467;
-        bh=WszExPIIwxHba7R4ODtPaqd+zT5cyG2VdXTU71sfmK8=;
+        s=default; t=1574400466;
+        bh=qcEG6w2/GDNSrFO6+mPfxkBVtMr5NJCSsxklqfbSFtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CccMh5BX1N/asJTkWhf6TapevK7C4HQtxO+2ODlACdDTh0HnL7EowQOijDIPz0s69
-         OT9iygJCmz0nZ1mwVPviHa3aGvU5jYkPfyRo1jPUYzfwa5tuMUAR7fephqJZGPNjY/
-         HCB0txclohscwezFu46IOa1nyRGHqGYIsXGVYJ7M=
+        b=RV5kF7WNXiOMfS46ORuZni/D43T81Uk/bH6N1i7C/beumXQ1uy8pQaonf8yUDTXPb
+         CwSnDRpAhK1qdq8J9BmOpzDLNTdIVLY1qFBDyrcanY6C4k6964i/OrTRhIWjy9qAjz
+         AnI7924k0tLXKlz69OUs06fBbLPaVRu+jXDMQVfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ding Tao <miyatsu@qq.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 004/219] arm64: dts: marvell: armada-37xx: Enable emmc on espressobin
-Date:   Fri, 22 Nov 2019 00:24:06 -0500
-Message-Id: <20191122052741.32499-4-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 003/219] scsi: lpfc: Fix dif and first burst use in write commands
+Date:   Fri, 22 Nov 2019 00:24:05 -0500
+Message-Id: <20191122052741.32499-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122052741.32499-1-sashal@kernel.org>
 References: <20191122052741.32499-1-sashal@kernel.org>
@@ -60,57 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Tao <miyatsu@qq.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 43ebc7c1b3ed8198b9acf3019eca16e722f7331c ]
+[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
 
-The ESPRESSObin board has a emmc interface available on U11: declare it
-and let the bootloader enable it if the emmc is present.
+When dif and first burst is used in a write command wqe, the driver was not
+properly setting fields in the io command request. This resulted in no dif
+bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
+by the hardware.
 
-[gregory.clement@bootlin.com: disable the emmc by default]
-Signed-off-by: Ding Tao <miyatsu@qq.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Correct the wqe initializaton when both dif and first burst are used.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/marvell/armada-3720-espressobin.dts   | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-index 3ab25ad402b90..846003bb480cd 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -60,9 +60,31 @@
- 	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
- 	marvell,pad-type = "sd";
- 	vqmmc-supply = <&vcc_sd_reg1>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio_pins>;
- 	status = "okay";
- };
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index 666495f21c246..425b83618a2e5 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -2732,6 +2732,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
  
-+/* U11 */
-+&sdhci0 {
-+	non-removable;
-+	bus-width = <8>;
-+	mmc-ddr-1_8v;
-+	mmc-hs400-1_8v;
-+	marvell,xenon-emmc;
-+	marvell,xenon-tun-count = <9>;
-+	marvell,pad-type = "fixed-1-8v";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc_pins>;
-+/*
-+ * This eMMC is not populated on all boards, so disable it by
-+ * default and let the bootloader enable it, if it is present
-+ */
-+	status = "disabled";
-+};
-+
- &spi0 {
- 	status = "okay";
+ 	/*
+ 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
+@@ -2837,6 +2838,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
  
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	return 0;
+ err:
+ 	if (lpfc_cmd->seg_cnt)
+@@ -3401,6 +3410,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
+ 	int prot_group_type = 0;
+ 	int fcpdl;
++	struct lpfc_vport *vport = phba->pport;
+ 
+ 	/*
+ 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
+@@ -3516,6 +3526,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
+ 	 */
+ 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
+ 
++	/*
++	 * For First burst, we may need to adjust the initial transfer
++	 * length for DIF
++	 */
++	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
++	    (fcpdl < vport->cfg_first_burst_size))
++		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
++
+ 	/*
+ 	 * If the OAS driver feature is enabled and the lun is enabled for
+ 	 * OAS, set the oas iocb related flags.
 -- 
 2.20.1
 
