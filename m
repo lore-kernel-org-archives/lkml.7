@@ -2,166 +2,79 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDAFC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EFEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1338320672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDEHS3WE"
+	by mail.kernel.org (Postfix) with ESMTP id B819420672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfKVWsp (ORCPT
+        id S1726792AbfKVWvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:48:45 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35881 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVWso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:48:44 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d7so3723186pls.3;
-        Fri, 22 Nov 2019 14:48:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0huokCXbHocAZIGMX/c3HM5bh9PEhnRGgnHytZrJQDA=;
-        b=DDEHS3WE529zL/qw3QVeilPLFKDV2WyWuo0yxpBJtoCi9HW+jhbMijVTilgXKZVaTG
-         nFGfBpPqCB4+jZy1nxI/MmErrqzZ+FiYK0ughrTVz3V7Utafj3qNu9pMyAWt10bl438B
-         woAUEHUDDDNWAcWvOp/fiF6Z7GitEIz37P2qo4FaNbfysgtxr7lTJ1ONxCepjAIzPTN1
-         FJcbUGAAdZVw6If864xwh3yyS0glRasOMqM0xSsbqjFRvtLkn1ycVioByNiEJUvynOrG
-         Ni+lCWhiL0i+U5oWGrfYdEoAFV4H32LabXWi51aQUUb4PSQGVeNhAG7/P9Y8kwOFZ2Et
-         2AOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0huokCXbHocAZIGMX/c3HM5bh9PEhnRGgnHytZrJQDA=;
-        b=JUOsBy0Qy2VGBP0GooOss0EehvKHlbaUjsYfGq6IKVK7DU3HrpY+aCRN60XgKEMtSn
-         iB1svoNKinYwEpPGXcEryVGnmvUpPqt62c39KXJgrhKMxnkKQU4QCRlvSEWoEAgvmeBS
-         0BJB9zkowBB/UoA3gTzo5SdaC+py5IboKf0HCqRrHgyid2KJj8zqt4hPTpW4YqZozum4
-         BxGDJ/Keuce3bGyxTb1d8Q2MRzNsVBu8bhVYamttL8klGpTcVlZPb0S2L4AXzXl0+J/Y
-         gR0UpnM7E79fAZPKZBfVIIBfN8m2fYa6Gh6Msak48Qq4Ho+AonybZJ1ebHz6aI/zr+I9
-         0F5w==
-X-Gm-Message-State: APjAAAWfu6T+L/FWbN70YdT0IDSgMmR6X/aeBDhBCUC090Rxsrh6oya1
-        Ui92ShLOBZuL5TvRSkmODZg=
-X-Google-Smtp-Source: APXvYqxj7VYmSOwpqPEcZ5ENTsGe+GG3HUaLo9ukNI6OqLpNjv/o+YEIei3ZdLi9Xgpf1haq4VcYeQ==
-X-Received: by 2002:a17:902:a709:: with SMTP id w9mr16819525plq.235.1574462923136;
-        Fri, 22 Nov 2019 14:48:43 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y26sm8834040pfo.76.2019.11.22.14.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 14:48:42 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:48:40 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     robin <robin@protonic.nl>, Marco Felsch <m.felsch@pengutronix.de>,
-        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
-        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "linux-arm-kernel @ lists . infradead . org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Message-ID: <20191122224840.GE248138@dtor-ws>
-References: <20190904062329.97520-1-robin@protonic.nl>
- <20190912201300.GA636@penguin>
- <803592d161b9ca75d6ac1c2c54e891a1@protonic.nl>
- <VE1PR04MB663896B94C68B5EF9AE0BE36898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20190916233701.GH237523@dtor-ws>
- <20191120092749.7rru5fj7eybs4tl6@pengutronix.de>
- <fb98fa1fde9a367d7ab33d04a5804684@protonic.nl>
- <VE1PR04MB6638D79F8C929100F6D96479894E0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        Fri, 22 Nov 2019 17:51:14 -0500
+Received: from mga01.intel.com ([192.55.52.88]:61839 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfKVWvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 17:51:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:51:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
+   d="scan'208";a="232805997"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Nov 2019 14:51:12 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iYHlf-0009ih-V7; Sat, 23 Nov 2019 06:51:11 +0800
+Date:   Sat, 23 Nov 2019 06:50:28 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Yangbo Lu <yangbo.lu@nxp.com>
+Cc:     kbuild-all@lists.01.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [linux-next:master 13276/13503]
+ drivers/net/dsa/ocelot/felix.c:351:6: sparse: sparse: symbol
+ 'felix_txtstamp' was not declared. Should it be static?
+Message-ID: <201911230623.rJBgtgcn%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638D79F8C929100F6D96479894E0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 01:17:56PM +0000, Robin Gong wrote:
-> 
-> On 2019-11-21 0:33, robin <robin@protonic.nl> wrote:
-> > On 2019-11-20 10:27, Marco Felsch wrote:
-> > > Hi Robin,
-> > >
-> > > On 19-09-16 16:37, Dmitry Torokhov wrote:
-> > >> On Mon, Sep 16, 2019 at 07:45:37AM +0000, Robin Gong wrote:
-> > >> > On 2019/9/13 15:31 robin <robin@protonic.nl> wrote:>
-> > >> > > Hi Dmitry,
-> > >> > >
-> > >> > > On 2019-09-12 22:13, Dmitry Torokhov wrote:
-> > >> > > > Hi Robin,
-> > >> > > >
-> > >> > > > On Wed, Sep 04, 2019 at 06:23:29AM +0000, Robin van der Gracht
-> > wrote:
-> > >> > > >> The first generation i.MX6 processors does not send an
-> > >> > > >> interrupt when the power key is pressed. It sends a power down
-> > >> > > >> request interrupt if the key is released before a hard
-> > >> > > >> shutdown (5 second press). This should allow software to bring down
-> > the SoC safely.
-> > >> > > >>
-> > >> > > >> For this driver to work as a regular power key with the older
-> > >> > > >> SoCs, we need to send a keypress AND release when we get the
-> > >> > > >> power down request irq.
-> > >> > > >>
-> > >> > > >> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-> > >> > > >> ---
-> > >> > > >> @@ -67,13 +83,17 @@ static irqreturn_t
-> > >> > > >> imx_snvs_pwrkey_interrupt(int irq, void *dev_id)  {
-> > >> > > >>  	struct platform_device *pdev = dev_id;
-> > >> > > >>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-> > >> > > >> +	unsigned long expire = jiffies;
-> > >> > > >>  	u32 lp_status;
-> > >> > > >>
-> > >> > > >>  	pm_wakeup_event(pdata->input->dev.parent, 0);
-> > >> > > >>
-> > >> > > >>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> > >> > > >> -	if (lp_status & SNVS_LPSR_SPO)
-> > >> > > >> -		mod_timer(&pdata->check_timer, jiffies +
-> > >> > > >> msecs_to_jiffies(DEBOUNCE_TIME));
-> > >> > > >> +	if (lp_status & SNVS_LPSR_SPO) {
-> > >> > > >> +		if (pdata->minor_rev > 0)
-> > >> > > >> +			expire = jiffies + msecs_to_jiffies(DEBOUNCE_TIME);
-> > >> > > >> +		mod_timer(&pdata->check_timer, expire);
-> > >> > > >
-> > >> > > > Why do we even need to fire the timer in case of the first
-> > >> > > > generation hardware? Just send press and release events directly from
-> > the ISR.
-> > >> > That timer looks like a software debounce to prevent unexpected and
-> > >> > meaningless interrupt/event caused by quick press/release.
-> > >>
-> > >> Right, but in case of the first generation hardware we schedule the
-> > >> timer immediately (expire == 0) and do not check state of the
-> > >> hardware in the timer handler, but rather simply emit down/up events,
-> > >> so we do not really get any benefit from the timer (again, I am
-> > >> talking about first generation hardware only).
-> > >
-> > > Did you prepared a v4? Just ask to avoid a duplicated work :)
-> > 
-> > No I haven't. Not sure what the public wants. Use timer, don't use timer..
-> > 
-> > v3 has had long term testing though ;)
-> Sorry for that I miss the mail.
-> Understood a little bit confusion about immediate timer for
-> the first press, just stand on the view of clean code shape.
-> But I'm okay if you prefer to remove timer in the first interrupt
-> generation.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   b9d3d01405061bb42358fe53f824e894a1922ced
+commit: c0bcf537667cf88bbcbb377d01d2b79c45265741 [13276/13503] net: dsa: ocelot: add hardware timestamping support for Felix
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-32-g233d4e1-dirty
+        git checkout c0bcf537667cf88bbcbb377d01d2b79c45265741
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Yes, please prepare v4 without the timer for the first generation of the
-hardware.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Thanks.
 
--- 
-Dmitry
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/net/dsa/ocelot/felix.c:351:6: sparse: sparse: symbol 'felix_txtstamp' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
