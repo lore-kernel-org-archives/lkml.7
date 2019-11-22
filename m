@@ -2,59 +2,59 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D54C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C0CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E802220704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FAC20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QzZFd4Wt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KWkzto2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKVEYZ (ORCPT
+        id S1726704AbfKVEY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 23:24:25 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33778 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfKVEYY (ORCPT
+        Thu, 21 Nov 2019 23:24:57 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46956 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfKVEY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 23:24:24 -0500
-Received: by mail-pg1-f196.google.com with SMTP id h27so2742819pgn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 20:24:24 -0800 (PST)
+        Thu, 21 Nov 2019 23:24:56 -0500
+Received: by mail-pl1-f193.google.com with SMTP id l4so2542879plt.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 20:24:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=msCu0QpwL+TYH2H0S7A59z3R+0BjpgNq8syAjSNxH5A=;
-        b=QzZFd4Wt0cjTgBvP+UjZIpNq8OdeXFjyWBUGkwQNhDzUO/E5lE8HQ3n2patQ2M+r9m
-         zXesz8Y+XLXINZllCrFNb573zAuEP14nU5vMhA35zfEDPfg0zZ0Mj2l4Dx8SvnN8BxrK
-         /62XxHPvUc/VlvonA0ZXgPMTuiQ5qOqgujCZc=
+        bh=Vl/L3GceOHYxcg4cTV/C8OsBfxoa2/C+RjQ/F5C0XIo=;
+        b=KWkzto2YidBehY5hy6CnYbfskxUqhiKN52tLynPMla94UhTtKFFQ67SOJ2g+PKqbjY
+         HF6tZ8W2aqp+g6NR4dPAwwwB298tgN7Sr32qMNr/vNkHGYXuEMhm61vAHMvIJJk4en6a
+         LOBdOYGyxlbDz0KvKvVIYxsiuJfH7LFYUu5aM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=msCu0QpwL+TYH2H0S7A59z3R+0BjpgNq8syAjSNxH5A=;
-        b=M7OYxoVaN3Ei0amjLwPKGI1jih0Ve9C4YB+Kk3V1I8/B6vJlH2JlRf5J6SP2H58m/c
-         8kZMlwrWy6tNt5QhA6v0bd1gB2zcpAPR60YLIbzDEHjOhxu7YXKTJVd7cmmf7XlL0BHJ
-         8nkna2s2c9zijG4awE6PWdNmyRDy8QR5QS0kxaooNljV3NU/RtCuxcsO4w7I7X0SLkr/
-         nHJkJ5xr4//kAncE1+6qwysmjjBBdzFzqIfDwjrIF/jjDs1bCrQz95tUJqFmSqTLLsRX
-         rW9f3xFfqMoH5ZOwaYfLjndNuum1tNxAfhpfnIY9AQuGiN2k85qfg0sKbGevx7GtpHmY
-         HdnA==
-X-Gm-Message-State: APjAAAWJafUTS2bscEOnfiYCBsAvEizqHaDB4nYNCzOM8V3S29qVqH6V
-        szOw6+xlZxvrBOeeNsGE4FTLeA==
-X-Google-Smtp-Source: APXvYqxFlBSAySyw6HLdZ4UGY2AFeTgBXYlW07/IOFHfDkALCilbw+dFP9Dlb7LglnlGPhiKvMMAAg==
-X-Received: by 2002:a63:5801:: with SMTP id m1mr13457168pgb.139.1574396663849;
-        Thu, 21 Nov 2019 20:24:23 -0800 (PST)
+        bh=Vl/L3GceOHYxcg4cTV/C8OsBfxoa2/C+RjQ/F5C0XIo=;
+        b=FMszrVIPYfoF89CzkLuAjcmK7tZGbl3GQlMWyLCD4MJl+meoc6vY/Ih/xirK5dvEhB
+         hqLCVi00kcCVyOxqavQrhxJS+HOZdIpGifafZTPI2JKErS58BZH6uFn8fM+y4Sn6PTT/
+         /c5PVs2slhLegOuB566BpOLerm0U2wbriwxpoqcZ/Me5FUewydGybXyD6GCeXq/PespV
+         TyCl9qZrNhEPQUp822s203jJtjIj0bWWehX7f1qBIstfl6yy/vGyWMD+GuQWVJQZi/+6
+         TZwxYAXO17ViKV4BU5q7c09cnCbpM1cdmLd2vxduJ5VSjb+Qk5A2XoTPVK1PpiCARE5O
+         qoCA==
+X-Gm-Message-State: APjAAAUmmAki+0WJn//QLFba90aqcyF63cI5TnoUoxcbdHnATHmflsgP
+        n1P96VpIjlCZkFF0rUszpAf8CQ==
+X-Google-Smtp-Source: APXvYqzR7Pewj2r6dUUfOv/6ROcwoWzNzrYgFMIJzyy+mJ8KW5vjsie2VAtXyT5q+9mmayBamWqEKw==
+X-Received: by 2002:a17:90a:86c3:: with SMTP id y3mr16294373pjv.102.1574396694254;
+        Thu, 21 Nov 2019 20:24:54 -0800 (PST)
 Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id r28sm5435801pfl.37.2019.11.21.20.24.21
+        by smtp.gmail.com with ESMTPSA id x203sm4812869pgx.61.2019.11.21.20.24.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 20:24:23 -0800 (PST)
+        Thu, 21 Nov 2019 20:24:53 -0800 (PST)
 From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-usb@vger.kernel.org
+To:     devicetree@vger.kernel.org
 Cc:     GregKroah-Hartman <gregkh@linuxfoundation.org>,
         RobHerring <robh+dt@kernel.org>,
         MarkRutland <mark.rutland@arm.com>,
@@ -62,11 +62,11 @@ Cc:     GregKroah-Hartman <gregkh@linuxfoundation.org>,
         SuwanKim <suwan.kim027@gmail.com>,
         "GustavoA . R . Silva" <gustavo@embeddedor.com>,
         IkjoonJang <ikjn@chromium.org>, JohanHovold <johan@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         drinkcat@chromium.org
-Subject: [PATCH v3 0/2] usb: override hub device bInterval with device
-Date:   Fri, 22 Nov 2019 12:24:17 +0800
-Message-Id: <20191122042417.205481-1-ikjn@chromium.org>
+Subject: [PATCH v3 1/2] dt-bindings: usb: add "hub,interval" property
+Date:   Fri, 22 Nov 2019 12:24:49 +0800
+Message-Id: <20191122042449.205621-1-ikjn@chromium.org>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,8 +75,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset enables hard wired hub device to use different bInterval
-from its descriptor when the hub has a combined device node.
+Add "hub,interval" property to usb-device, so hub device can override
+endpoint descriptor's bInterval.
 
 When we know reducing autosuspend delay for built-in HIDs is better for
 power saving, we can reduce it to the optimal value. But if a parent hub
@@ -84,14 +84,33 @@ has a long bInterval, mouse lags a lot from more frequent autosuspend.
 So this enables overriding bInterval for a hard wired hub device only
 when we know that reduces the power consumption.
 
-Ikjoon Jang (2):
-  dt-bindings: usb: add "hub,interval" property
-  usb: overridable hub bInterval by device node
-
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
- drivers/usb/core/config.c                            | 6 ++++++
- 2 files changed, 10 insertions(+)
+ 1 file changed, 4 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+index 036be172b1ae..44bef2ff2704 100644
+--- a/Documentation/devicetree/bindings/usb/usb-device.txt
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -66,6 +66,9 @@ Required properties for host-controller nodes with device nodes:
+ - #size-cells: shall be 0
+ 
+ 
++Optional properties for hub nodes
++- hub,interval: bInterval of status change endpoint. The range is 1-255.
++
+ Example:
+ 
+ &usb1 {	/* host controller */
+@@ -75,6 +78,7 @@ Example:
+ 	hub@1 {		/* hub connected to port 1 */
+ 		compatible = "usb5e3,608";
+ 		reg = <1>;
++		hub,interval = <8>;
+ 	};
+ 
+ 	device@2 {	/* device connected to port 2 */
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
