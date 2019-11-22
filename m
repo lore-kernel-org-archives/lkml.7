@@ -2,264 +2,94 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8955C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E462FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36DB20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjVD0toR"
+	by mail.kernel.org (Postfix) with ESMTP id B9BAC20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574443615;
+	bh=jer2wCWT+bZwPQW2LQTY2J7L5Ajg4tfaGeGPnT26wsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f1UBFRX5CotH3DkCigw+QH4XP7kYIw1IDwP/SmR7QEGI3urTFV+9VPKgv7M80UZxu
+	 dORohz8w35Wxl9C00ZMb4ElYbPGliH6q7WLi4bwzxLsJDVkHNN4V1SeVVNJXKGnZGE
+	 H7B80TKPSEr1pNIzeKosue18cVFqa1kKiQdKG+O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfKVRZf (ORCPT
+        id S1726840AbfKVR0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:25:35 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35251 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfKVRZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:25:35 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s8so3312484pji.2;
-        Fri, 22 Nov 2019 09:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=UaL62kWewKJMZ0i1SVqxDkLUi869qgCOxt0DnZYcMGg=;
-        b=EjVD0toRMvRNtvFyeoK8dxq0ijoA3W52VPDr9yvCLjryYQmqdCdpvWZv4yu+c5alPo
-         taH/G7simG5Ck9s4DUh5QI4uIyllt7SWfMgRqkUTgBzDP8UgDObfkjACaJzEahzCsrnE
-         HH5lwxUo05Df8hm+eZDiVDV9DPmQ+MIw57lGU2mbJ/8wO4U/2mUdQQuXpNYmsCuWrrQO
-         o8F4yRFu1M99HPaOpK1JJ+Fh5w6/tuXRkewn+SEphUKrqPT8CCnLua0p6Fz9k8WTi6WO
-         VaKk4YQtTWCAFysam+7d9QN5xdKfvoM6jVScPVqgKuEssfkI/9viVhQkqNXjOjRpJpAe
-         3L5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=UaL62kWewKJMZ0i1SVqxDkLUi869qgCOxt0DnZYcMGg=;
-        b=fcwJXYIAY2V4ujjadRkigJ+CTknoODOd/8CpK5VJZ8DfSZzgnsEJgQEOfs9LxbTwAi
-         5DrfNCPIXWsaNIKfNeV1hcCn5KBXY02HG9s7tLXIdoNDJDhBuwC1tsBZIFe71/OicMuN
-         wgJ6HykYvRJcaWREPT1zeOzOe757IowZ8DixZ2IFy82630a3MEfSqtzciKtZeHi9jyvk
-         /q5OxsrEQI7gUg9ouQSRP0jl6cv4GvpXw1vR3EAV/K+ebxfgGS5lSILbzEQwQn8NMc8L
-         VYIeewPHl1+YO0T33zOKKXSHzgV1k1Qh1O/Sc977X8mheATGmFDkC7K0mVtMEsaciuyZ
-         hx0w==
-X-Gm-Message-State: APjAAAWlaKMueFm9D3Skuzh92vvsYmng+fb5EZtaUQt2lBkVHqLU9Z3t
-        WLcjxrLNj2Gnt4d7Fyu4Mls=
-X-Google-Smtp-Source: APXvYqzpZ8cfQ+HrlvcOp5Gu3CXqChZ4cPowljvEGtxYcNfVJsco2Nj5syob5DmURTrA3rqXiea+9w==
-X-Received: by 2002:a17:90a:a63:: with SMTP id o90mr20175839pjo.81.1574443533903;
-        Fri, 22 Nov 2019 09:25:33 -0800 (PST)
-Received: from localhost (198-0-60-179-static.hfc.comcastbusiness.net. [198.0.60.179])
-        by smtp.gmail.com with ESMTPSA id x190sm8140281pfc.89.2019.11.22.09.25.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 09:25:33 -0800 (PST)
-Date:   Fri, 22 Nov 2019 09:25:32 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Brian Vazquez <brianvv@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Yonghong Song <yhs@fb.com>, Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Brian Vazquez <brianvv@google.com>
-Message-ID: <5dd81a0ca016a_690a2ae784a225c459@john-XPS-13-9370.notmuch>
-In-Reply-To: <20191119193036.92831-3-brianvv@google.com>
-References: <20191119193036.92831-1-brianvv@google.com>
- <20191119193036.92831-3-brianvv@google.com>
-Subject: RE: [PATCH v2 bpf-next 2/9] bpf: add generic support for lookup and
- lookup_and_delete batch ops
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 22 Nov 2019 12:26:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:50254 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfKVR0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:26:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85757FEC;
+        Fri, 22 Nov 2019 09:26:53 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 022DE3F6C4;
+        Fri, 22 Nov 2019 09:26:52 -0800 (PST)
+Date:   Fri, 22 Nov 2019 17:26:51 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, djkurtz@google.com,
+        pierre-louis.bossart@linux.intel.com, Akshu.Agrawal@amd.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND PATCH v11 1/6] ASoC: amd:Create multiple I2S platform
+ device endpoints
+Message-ID: <20191122172651.GF6849@sirena.org.uk>
+References: <1574336761-16717-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1574336761-16717-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DO5DiztRLs659m5i"
+Content-Disposition: inline
+In-Reply-To: <1574336761-16717-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Cookie: sillema sillema nika su
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Vazquez wrote:
-> This commit introduces generic support for the bpf_map_lookup_batch and
-> bpf_map_lookup_and_delete_batch ops. This implementation can be used by
-> almost all the bpf maps since its core implementation is relying on the
-> existing map_get_next_key, map_lookup_elem and map_delete_elem
-> functions. The bpf syscall subcommands introduced are:
-> 
->   BPF_MAP_LOOKUP_BATCH
->   BPF_MAP_LOOKUP_AND_DELETE_BATCH
-> 
-> The UAPI attribute is:
-> 
->   struct { /* struct used by BPF_MAP_*_BATCH commands */
->          __aligned_u64   in_batch;       /* start batch,
->                                           * NULL to start from beginning
->                                           */
->          __aligned_u64   out_batch;      /* output: next start batch */
->          __aligned_u64   keys;
->          __aligned_u64   values;
->          __u32           count;          /* input/output:
->                                           * input: # of key/value
->                                           * elements
->                                           * output: # of filled elements
->                                           */
->          __u32           map_fd;
->          __u64           elem_flags;
->          __u64           flags;
->   } batch;
-> 
-> in_batch/out_batch are opaque values use to communicate between
-> user/kernel space, in_batch/out_batch must be of key_size length.
-> 
-> To start iterating from the beginning in_batch must be null,
-> count is the # of key/value elements to retrieve. Note that the 'keys'
-> buffer must be a buffer of key_size * count size and the 'values' buffer
-> must be value_size * count, where value_size must be aligned to 8 bytes
-> by userspace if it's dealing with percpu maps. 'count' will contain the
-> number of keys/values successfully retrieved. Note that 'count' is an
-> input/output variable and it can contain a lower value after a call.
-> 
-> If there's no more entries to retrieve, ENOENT will be returned. If error
-> is ENOENT, count might be > 0 in case it copied some values but there were
-> no more entries to retrieve.
-> 
-> Note that if the return code is an error and not -EFAULT,
-> count indicates the number of elements successfully processed.
-> 
-> Suggested-by: Stanislav Fomichev <sdf@google.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> Signed-off-by: Yonghong Song <yhs@fb.com>
-> ---
->  include/linux/bpf.h      |  11 +++
->  include/uapi/linux/bpf.h |  19 +++++
->  kernel/bpf/syscall.c     | 176 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 206 insertions(+)
-> 
 
-Couple additional comments if we are getting a new rev anyways 
+--DO5DiztRLs659m5i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[...]
+On Thu, Nov 21, 2019 at 05:15:56PM +0530, Ravulapati Vishnu vardhan rao wrote:
+> Creates Platform Device endpoints for multiple
+> I2S instances: SP and  BT endpoints device.
+> Pass PCI resources like MMIO, irq to the platform devices.
 
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index cc714c9d5b4cc..d0d3d0e0eaca4 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -1127,6 +1127,124 @@ static int map_get_next_key(union bpf_attr *attr)
->  	return err;
->  }
->  
-> +static int __generic_map_lookup_batch(struct bpf_map *map,
-> +				      const union bpf_attr *attr,
-> +				      union bpf_attr __user *uattr,
-> +				      bool do_delete)
-> +{
-> +	void __user *ubatch = u64_to_user_ptr(attr->batch.in_batch);
-> +	void __user *uobatch = u64_to_user_ptr(attr->batch.out_batch);
-> +	void __user *values = u64_to_user_ptr(attr->batch.values);
-> +	void __user *keys = u64_to_user_ptr(attr->batch.keys);
-> +	void *buf, *prev_key, *key, *value;
-> +	u32 value_size, cp, max_count;
-> +	bool first_key = false;
-> +	int err, retry = 3;
-                 ^^^^^^^^^^
-define magic value maybe MAP_LOOKUP_RETRIES
-> +
-> +	if (attr->batch.elem_flags & ~BPF_F_LOCK)
-> +		return -EINVAL;
-> +	}
+Please when you're posting stuff don't put these RESEND tags on some
+patches in the series, they're not helpful - having them in some but not
+all patches is inconsistent, you're sending a new version of the series
+here.
 
-[...]
+--DO5DiztRLs659m5i
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +	value_size = bpf_map_value_size(map);
-> +
-> +	max_count = attr->batch.count;
-> +	if (!max_count)
-> +		return 0;
-> +
-> +	err = -ENOMEM;
-> +	buf = kmalloc(map->key_size + value_size, GFP_USER | __GFP_NOWARN);
+-----BEGIN PGP SIGNATURE-----
 
-Should we also set __GFP_NORETRY or __GFP_RETRY_MAYFAIL perhaps?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3YGloACgkQJNaLcl1U
+h9Cv0wf7BLPxHi6VlmnTYgV2HFFERU+rkkk/A78kSRLvCcFbJT+mzHY7PvqTNDSi
+G8OoUscWHgFVfVvsfGQV3fscMC9RFpQQJeKsw0/4Z9YPWhrkUZGlSnWJi0oW63oF
+lmhUmzsmhCgIlSPHFcDZcNTuY0prLy9zEfQqlnk2zVWBJ5TTpK94bzio19HYKCK2
+NgVJx8eFAyGRSDBC2hy2qxOYQ3gOARdwADsmq43KR1oVT2Ru66QZT6V6ZVgFurJr
+unKYQoLepbAC4SHNMrMGIvTAdVJKJfl5/8kuRaWOrUCw8XSjerYeG2g1WxJwm/TD
+u3Gnrw8NkkWUT3XcAFMbZ+vJcvokjw==
+=+sSD
+-----END PGP SIGNATURE-----
 
-> +	if (!buf)
-> +		goto err_put;
-> +
-> +	err = -EFAULT;
-> +	first_key = false;
-> +	if (ubatch && copy_from_user(buf, ubatch, map->key_size))
-> +		goto free_buf;
-> +	key = buf;
-> +	value = key + map->key_size;
-> +	if (!ubatch) {
-> +		prev_key = NULL;
-> +		first_key = true;
-> +	}
-> +
-> +
-
-nit: extra newline not needed
-
-> +	for (cp = 0; cp < max_count; cp++) {
-> +		if (cp || first_key) {
-> +			rcu_read_lock();
-> +			err = map->ops->map_get_next_key(map, prev_key, key);
-> +			rcu_read_unlock();
-> +			if (err)
-> +				break;
-> +		}
-> +		err = bpf_map_copy_value(map, key, value,
-> +					 attr->batch.elem_flags, do_delete);
-> +
-> +		if (err == -ENOENT) {
-> +			if (retry) {
-> +				retry--;
-> +				continue;
-> +			}
-> +			err = -EINTR;
-> +			break;
-> +		}
-> +
-> +		if (err)
-> +			goto free_buf;
-> +
-> +		if (copy_to_user(keys + cp * map->key_size, key,
-> +				 map->key_size)) {
-> +			err = -EFAULT;
-> +			goto free_buf;
-> +		}
-> +		if (copy_to_user(values + cp * value_size, value, value_size)) {
-> +			err = -EFAULT;
-> +			goto free_buf;
-
-You could do the same here as in the retry==0 above case, break and report
-back up to user cp values?
-
-> +		}
-> +
-> +		prev_key = key;
-> +		retry = 3;
-                ^^^^^^^^^
-same nit as above, use define so we can tune this if needed.
-
-> +	}
-> +	if (!err) {
-> +		rcu_read_lock();
-> +		err = map->ops->map_get_next_key(map, prev_key, key);
-> +		rcu_read_unlock();
-> +	}
-> +
-> +	if ((copy_to_user(&uattr->batch.count, &cp, sizeof(cp)) ||
-> +		    (copy_to_user(uobatch, key, map->key_size))))
-> +		err = -EFAULT;
-> +
-> +free_buf:
-> +	kfree(buf);
-> +err_put:
-> +	return err;
-> +}
+--DO5DiztRLs659m5i--
