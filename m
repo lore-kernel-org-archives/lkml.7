@@ -2,139 +2,144 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20D0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1E1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F16C20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0746B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574419414;
+	bh=FOVcOpNfuIOcgBF8jxuJLGTmJrkqwb7DmspDQpK4ivA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PgLu2J66iMJjIKebHydLOhSasCwmzOtGM6JuAwVj13foy2BUCvThyH6x42kmOx2t5
+	 etphlmnvNoX/0Yhpzs6ooEqaXttu6CTxOMN9Y8SLo0hcWsyJYpE0SrB6urXklWLB+Y
+	 W9ijDtzhj0nGDgoLHKNYQuicmaEo15v6tGI+SYzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfKVKna (ORCPT
+        id S1727731AbfKVKnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:30 -0500
-Received: from mga18.intel.com ([134.134.136.126]:47785 "EHLO mga18.intel.com"
+        Fri, 22 Nov 2019 05:43:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729217AbfKVKnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 02:43:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
-   d="scan'208";a="216341366"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 02:43:20 -0800
-Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 12:43:20 +0200
-Date:   Fri, 22 Nov 2019 12:43:19 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1729245AbfKVKna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:30 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B4C20637;
+        Fri, 22 Nov 2019 10:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574419409;
+        bh=FOVcOpNfuIOcgBF8jxuJLGTmJrkqwb7DmspDQpK4ivA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o9JVlAxH2lurc1vVXrg9bOGt9QSRJtxO4o8eOm79UKS0ZDOvhIiJtUhAUQ1egpPv6
+         nB4FgVLFWn8QLuaCPsz8B/o6OTGwYVyYBHRG9VS/WiMo3y9SO4bXTQTHTC5mpJHnEd
+         b2aHpmsbyQC0QwWGeVHZVUucq6Nebet0pKXDu4+0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v3 2/2] gpio: sch: Hook into ACPI SCI handler to catch
- GPIO edge events
-Message-ID: <20191122104319.GC11621@lahna.fi.intel.com>
-References: <cover.1574277614.git.jan.kiszka@siemens.com>
- <bf556de14a3d093072e50b6a6cf3c64bd62b1730.1574277614.git.jan.kiszka@siemens.com>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 101/222] ARM: dts: ste: Fix SPI controller node names
+Date:   Fri, 22 Nov 2019 11:27:21 +0100
+Message-Id: <20191122100910.674324587@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+References: <20191122100830.874290814@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf556de14a3d093072e50b6a6cf3c64bd62b1730.1574277614.git.jan.kiszka@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 08:20:14PM +0100, Jan Kiszka wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> The ACPI description on the Quark platform does not provide the required
-> information to do establish generic handling. Therefore, we need to hook
-> from the driver directly into SCI handler of the ACPI subsystem in order
-> to catch and report GPIO-related events.
-> 
-> Validated on the Quark-based IOT2000 platform.
-> 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+From: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[ Upstream commit 2f967f9e9fa076affb711da1a8389b5d33814fc6 ]
 
-Below one minor stylistic comment.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-> ---
->  drivers/gpio/gpio-sch.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-> index 6a9c5500800c..75c95da145d8 100644
-> --- a/drivers/gpio/gpio-sch.c
-> +++ b/drivers/gpio/gpio-sch.c
-> @@ -155,6 +155,31 @@ static const struct gpio_chip sch_gpio_chip = {
->  	.to_irq			= sch_gpio_to_irq,
->  };
->  
-> +static u32 sch_sci_handler(void *context)
-> +{
-> +	struct sch_gpio *sch = context;
-> +	unsigned long core_status, resume_status;
-> +	unsigned int resume_gpios, offset;
-> +
-> +	core_status = inl(sch->iobase + GTS);
-> +	resume_status = inl(sch->iobase + GTS + 0x20);
-> +
-> +	if (core_status == 0 && resume_status == 0)
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/ste-dbx5x0.dtsi     | 4 ++--
+ arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
+ arch/arm/boot/dts/ste-snowball.dts    | 2 +-
+ arch/arm/boot/dts/ste-u300.dts        | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-You can also write this like
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 45869c3234358..5f1769209526a 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -864,7 +864,7 @@
+ 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x80002000 0x1000>;
+ 			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+@@ -878,7 +878,7 @@
+ 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 		};
+ 
+-		ssp@80003000 {
++		spi@80003000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x80003000 0x1000>;
+ 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+index ece222d51717c..cf8d03bc42c15 100644
+--- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
++++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+@@ -57,7 +57,7 @@
+ 			};
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			/*
+ 			 * On the first generation boards, this SSP/SPI port was connected
+ 			 * to the AB8500.
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index 386eee6de2320..272d36c3d223b 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -386,7 +386,7 @@
+ 			pinctrl-1 = <&i2c3_sleep_mode>;
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&ssp0_snowball_mode>;
+ 		};
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index 2f5107ffeef04..ea6768b96a9df 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -441,7 +441,7 @@
+ 			dma-names = "rx";
+ 		};
+ 
+-		spi: ssp@c0006000 {
++		spi: spi@c0006000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0xc0006000 0x1000>;
+ 			interrupt-parent = <&vica>;
+-- 
+2.20.1
 
-	if (!core_status &&& !resume_status)
 
-> +		return ACPI_INTERRUPT_NOT_HANDLED;
-> +
-> +	for_each_set_bit(offset, &core_status, sch->resume_base)
-> +		generic_handle_irq(sch->irq_base + offset);
-> +
-> +	resume_gpios = sch->chip.ngpio - sch->resume_base;
-> +	for_each_set_bit(offset, &resume_status, resume_gpios)
-> +		generic_handle_irq(sch->irq_base + sch->resume_base + offset);
-> +
-> +	outl(core_status, sch->iobase + GTS);
-> +	outl(resume_status, sch->iobase + GTS + 0x20);
-> +
-> +	return ACPI_INTERRUPT_HANDLED;
-> +}
-> +
->  static int sch_irq_type(struct irq_data *d, unsigned int type)
->  {
->  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> @@ -215,6 +240,7 @@ static int sch_gpio_probe(struct platform_device *pdev)
->  	struct irq_chip_type *ct;
->  	struct sch_gpio *sch;
->  	struct resource *res;
-> +	acpi_status status;
->  	int irq_base, ret;
->  
->  	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
-> @@ -303,6 +329,10 @@ static int sch_gpio_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	status = acpi_install_sci_handler(sch_sci_handler, sch);
-> +	if (ACPI_FAILURE(status))
-> +		return -EINVAL;
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.16.4
+
