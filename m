@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27467C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7F5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F082053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771472053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403567;
-	bh=z8Iyzpjt8JKb+vgUozi+1J3dLfGgj3QCzA7NIlEf3K4=;
+	s=default; t=1574403577;
+	bh=cLe4GfX3E+Qhpoe7pEAgaJTKy8YO6Tx/QDZhLXEeOIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LaiL9MEMgghXqJAUtfC/fUsHYmBVs6/OhzddSwAvhGjYJDt1O+EZfvHFfbn0X1HBE
-	 kIZLKDRmN2w1dshQr7Vf/pzd7bO9Ed/ew58KENRIHlbGOWYIv2ujnSnicrucKIylPC
-	 JprQK8Gbr70myp18lAZ1aU9FhDDEY5qreBJXLEw0=
+	b=mOQLiswB7ftbFs7R89gMD60gbYIYQAmpJStrb9RjT+ETDX0Lt6S0SoK+r3EMlZVCU
+	 +U7s2y7GnCQoYMV4ShBhb7/cszLny2PfHtu03QWgl79sCKhQMsSMSuqoxQBvpG7v2+
+	 jXQUd16V4DFf2o6wjCUsa4C74x5U+M/h4IKRGWxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfKVGTZ (ORCPT
+        id S1729207AbfKVGTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:19:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33642 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:19:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728971AbfKVFz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:55:57 -0500
+        id S1728943AbfKVFzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:55:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC552071F;
-        Fri, 22 Nov 2019 05:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2050C20659;
+        Fri, 22 Nov 2019 05:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402156;
-        bh=z8Iyzpjt8JKb+vgUozi+1J3dLfGgj3QCzA7NIlEf3K4=;
+        s=default; t=1574402150;
+        bh=cLe4GfX3E+Qhpoe7pEAgaJTKy8YO6Tx/QDZhLXEeOIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8WNone71pn1pHUiHJNQF92ui1Ki/ftyrsMBBae2tjEarHOLXOTJtteq9azUWZh8p
-         xicbUWb6o6WQbYyw3S4+xzdusc0QC8RVlLJf1YhxfPr7CY7oTU3wgIxA8/A93Gb2tH
-         /8PQA1upBKLYDCk7vjl7hV7CWS0LgdTZKjAscc2Q=
+        b=lm9DeAeaUamfBfNkWq039ajw2s2V4gJCMD4ZO/kFawqEF0ErulMM3oVqXpi/V6cFm
+         Hwf6XD35W2bhlH/xFwtMoR5GiF+9Td8gE5tqHtCkM5iMl5+aHLdwFEcjAhCJPSmW5r
+         GhrUyNrnCiE/2yIcBoUExl1gCIeDhHjLjHyVTVak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gal Pressman <galpress@amazon.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Yuval Shaia <yuval.shaia@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 011/127] RDMA/vmw_pvrdma: Use atomic memory allocation in create AH
-Date:   Fri, 22 Nov 2019 00:53:49 -0500
-Message-Id: <20191122055544.3299-10-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 006/127] parisc: Fix serio address output
+Date:   Fri, 22 Nov 2019 00:53:44 -0500
+Message-Id: <20191122055544.3299-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -61,36 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit a276a4d93bf1580d737f38d1810e5f4b166f3edd ]
+[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
 
-Create address handle callback should not sleep, use GFP_ATOMIC instead of
-GFP_KERNEL for memory allocation.
+We want the hpa addresses printed in the serio modules, not some
+virtual ioremap()ed address, e.g.:
 
-Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
-Cc: Adit Ranadive <aditr@vmware.com>
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Reviewed-by: Yuval Shaia <yuval.shaia@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+ serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
+ serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
+
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/serio/gscps2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
-index aa533f08e0171..5c7aa6ff15382 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
-@@ -550,7 +550,7 @@ struct ib_ah *pvrdma_create_ah(struct ib_pd *pd, struct rdma_ah_attr *ah_attr,
- 	if (!atomic_add_unless(&dev->num_ahs, 1, dev->dsr->caps.max_ah))
- 		return ERR_PTR(-ENOMEM);
+diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
+index aa9f29b875dea..d84e3b70215ad 100644
+--- a/drivers/input/serio/gscps2.c
++++ b/drivers/input/serio/gscps2.c
+@@ -382,9 +382,9 @@ static int __init gscps2_probe(struct parisc_device *dev)
+ 		goto fail;
+ #endif
  
--	ah = kzalloc(sizeof(*ah), GFP_KERNEL);
-+	ah = kzalloc(sizeof(*ah), GFP_ATOMIC);
- 	if (!ah) {
- 		atomic_dec(&dev->num_ahs);
- 		return ERR_PTR(-ENOMEM);
+-	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
++	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
+ 		ps2port->port->name,
+-		ps2port->addr,
++		hpa,
+ 		ps2port->padev->irq,
+ 		ps2port->port->phys);
+ 
 -- 
 2.20.1
 
