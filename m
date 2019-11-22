@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60516C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDBB20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C8420730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421557;
-	bh=2J1mxRa+UGmjHyj449D+d+vcyB70N18KWkkpwLISlyE=;
+	s=default; t=1574421563;
+	bh=uwR+ZkkgiwpN6ZchteRgte5Qy/AWfYAwBCYwH+Xv/ZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IfRgaR9TGZ3YwRI7aAZLeRUSKb7F+qSqDVK3gMfhixyx+jNLJcumqfZdiJGn1Doe
-	 ArJrCToeTt6bz/jfN2qOsYkITDq8OdmLrHAbY3NQyVzdzcGR8EK06xJviora8qlk6F
-	 pqty3n5F4RBZFVztbpyHqptbe9cgbRcgSCikFquk=
+	b=QSKtJTSKZcRwiDVf0xUA6PAYJDG9muks60Xo9Hnm78+oTAvA1QsJvPCa423TS4ASC
+	 hvhWxwVNLPEya2OIVnOww5T9GEqczijodIKHu57U444szuPb1KaGphQx1CG+ciROiT
+	 vyY/pzaIgvypIb0wjatFS1hCPEXDJnvTWddLV5ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfKVKsI (ORCPT
+        id S1729822AbfKVKsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:48:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56390 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:48:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729837AbfKVKsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:04 -0500
+        id S1728281AbfKVKr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6675B20637;
-        Fri, 22 Nov 2019 10:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765B820715;
+        Fri, 22 Nov 2019 10:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419682;
-        bh=2J1mxRa+UGmjHyj449D+d+vcyB70N18KWkkpwLISlyE=;
+        s=default; t=1574419677;
+        bh=uwR+ZkkgiwpN6ZchteRgte5Qy/AWfYAwBCYwH+Xv/ZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQRP7/0lIrftO/WyLzksBw8a1S45EYjuzOnqrK2BXLdMGI2767LG1WRMCCEb44EUv
-         Bq8olla4hVDFOIuZjXYM8lB3cqaOKVgTZ9orCjLh8fQTNd1Hf0QjPdoppDZn1UJCVH
-         knBAzfyCvY6HVU54KzjFvVJa6wbK/ENG9vzRflkI=
+        b=zzhvlcZj/5LrBjU7vWbhoOb6IT3tsbhoYB2Jxf3LbiQB2gmsJnH9V2U7+hFORmi9o
+         eS+mvB/xdx8AdO6Jef1JZ9QPbnzOuLU4XgGKkLoAEwPj8xFWilKtzAcTSZrN6mrsW9
+         MhmHgH1kkcKmbn2S5R3LPwiMaiceiXm6MjuO79jA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Solea <radu.solea@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 195/222] crypto: mxs-dcp - Fix SHA null hashes and output length
-Date:   Fri, 22 Nov 2019 11:28:55 +0100
-Message-Id: <20191122100916.307295667@linuxfoundation.org>
+Subject: [PATCH 4.9 193/222] Input: silead - try firmware reload after unsuccessful resume
+Date:   Fri, 22 Nov 2019 11:28:53 +0100
+Message-Id: <20191122100916.197821172@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,131 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Solea <radu.solea@nxp.com>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit c709eebaf5c5faa8a0f140355f9cfe67e8f7afb1 ]
+[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
 
-DCP writes at least 32 bytes in the output buffer instead of hash length
-as documented. Add intermediate buffer to prevent write out of bounds.
+A certain silead controller (Chip ID: 0x56810000) loses its firmware
+after suspend, causing the resume to fail. This patch tries to load
+the firmware, should a resume error occur and retries the resuming.
 
-When requested to produce null hashes DCP fails to produce valid output.
-Add software workaround to bypass hardware and return valid output.
-
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxs-dcp.c | 47 +++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+ drivers/input/touchscreen/silead.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index decaed448ebbb..7483adf120084 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -28,9 +28,24 @@
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index f502c8488be86..867772878c0c8 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -504,20 +504,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+ static int __maybe_unused silead_ts_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	bool second_try = false;
+ 	int error, status;
  
- #define DCP_MAX_CHANS	4
- #define DCP_BUF_SZ	PAGE_SIZE
-+#define DCP_SHA_PAY_SZ  64
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
  
- #define DCP_ALIGNMENT	64
++ retry:
+ 	error = silead_ts_reset(client);
+ 	if (error)
+ 		return error;
  
-+/*
-+ * Null hashes to align with hw behavior on imx6sl and ull
-+ * these are flipped for consistency with hw output
-+ */
-+const uint8_t sha1_null_hash[] =
-+	"\x09\x07\xd8\xaf\x90\x18\x60\x95\xef\xbf"
-+	"\x55\x32\x0d\x4b\x6b\x5e\xee\xa3\x39\xda";
-+
-+const uint8_t sha256_null_hash[] =
-+	"\x55\xb8\x52\x78\x1b\x99\x95\xa4"
-+	"\x4c\x93\x9b\x64\xe4\x41\xae\x27"
-+	"\x24\xb9\x6f\x99\xc8\xf4\xfb\x9a"
-+	"\x14\x1c\xfc\x98\x42\xc4\xb0\xe3";
-+
- /* DCP DMA descriptor. */
- struct dcp_dma_desc {
- 	uint32_t	next_cmd_addr;
-@@ -48,6 +63,7 @@ struct dcp_coherent_block {
- 	uint8_t			aes_in_buf[DCP_BUF_SZ];
- 	uint8_t			aes_out_buf[DCP_BUF_SZ];
- 	uint8_t			sha_in_buf[DCP_BUF_SZ];
-+	uint8_t			sha_out_buf[DCP_SHA_PAY_SZ];
- 
- 	uint8_t			aes_key[2 * AES_KEYSIZE_128];
- 
-@@ -513,8 +529,6 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
- 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
- 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
- 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
--	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
--
- 	struct dcp_dma_desc *desc = &sdcp->coh->desc[actx->chan];
- 
- 	dma_addr_t digest_phys = 0;
-@@ -536,10 +550,23 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
- 	desc->payload = 0;
- 	desc->status = 0;
- 
-+	/*
-+	 * Align driver with hw behavior when generating null hashes
-+	 */
-+	if (rctx->init && rctx->fini && desc->size == 0) {
-+		struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
-+		const uint8_t *sha_buf =
-+			(actx->alg == MXS_DCP_CONTROL1_HASH_SELECT_SHA1) ?
-+			sha1_null_hash : sha256_null_hash;
-+		memcpy(sdcp->coh->sha_out_buf, sha_buf, halg->digestsize);
-+		ret = 0;
-+		goto done_run;
++	if (second_try) {
++		error = silead_ts_load_fw(client);
++		if (error)
++			return error;
 +	}
 +
- 	/* Set HASH_TERM bit for last transfer block. */
- 	if (rctx->fini) {
--		digest_phys = dma_map_single(sdcp->dev, req->result,
--					     halg->digestsize, DMA_FROM_DEVICE);
-+		digest_phys = dma_map_single(sdcp->dev, sdcp->coh->sha_out_buf,
-+					     DCP_SHA_PAY_SZ, DMA_FROM_DEVICE);
- 		desc->control0 |= MXS_DCP_CONTROL0_HASH_TERM;
- 		desc->payload = digest_phys;
+ 	error = silead_ts_startup(client);
+ 	if (error)
+ 		return error;
+ 
+ 	status = silead_ts_get_status(client);
+ 	if (status != SILEAD_STATUS_OK) {
++		if (!second_try) {
++			second_try = true;
++			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
++			goto retry;
++		}
+ 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
+ 		return -ENODEV;
  	}
-@@ -547,9 +574,10 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
- 	ret = mxs_dcp_start_dma(actx);
- 
- 	if (rctx->fini)
--		dma_unmap_single(sdcp->dev, digest_phys, halg->digestsize,
-+		dma_unmap_single(sdcp->dev, digest_phys, DCP_SHA_PAY_SZ,
- 				 DMA_FROM_DEVICE);
- 
-+done_run:
- 	dma_unmap_single(sdcp->dev, buf_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
- 
- 	return ret;
-@@ -567,6 +595,7 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
- 	const int nents = sg_nents(req->src);
- 
- 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
-+	uint8_t *out_buf = sdcp->coh->sha_out_buf;
- 
- 	uint8_t *src_buf;
- 
-@@ -621,11 +650,9 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
- 
- 		actx->fill = 0;
- 
--		/* For some reason, the result is flipped. */
--		for (i = 0; i < halg->digestsize / 2; i++) {
--			swap(req->result[i],
--			     req->result[halg->digestsize - i - 1]);
--		}
-+		/* For some reason the result is flipped */
-+		for (i = 0; i < halg->digestsize; i++)
-+			req->result[i] = out_buf[halg->digestsize - i - 1];
- 	}
- 
- 	return 0;
 -- 
 2.20.1
 
