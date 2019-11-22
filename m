@@ -2,54 +2,50 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
-	NUMERIC_HTTP_ADDR,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01C2C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2933DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B140F20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DAD20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421946;
-	bh=3rZPxfTf7N5hxgSrjTnCcZpBO3sWeSMsoa4lZEydftM=;
+	s=default; t=1574421949;
+	bh=edcdRs8qjLW9Buch9MPov4jh7ZiXSUmJVTFNJjzWTOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4XQANakDkgvjXpX75PbFmhijcIM7JliZQbgRyYWJF94VN98FmD9GS+LyMcscq70x
-	 V9OK0iLGQoRq5TeTHQvEUFmBbysDyy7rWp6vWvgau7UGfx9S+Gjf9qLYbqL/RVQQ3k
-	 irf5fMYtPeZ9ym5pJ8XS4m0Cgd+wi8tvk+sbYcb8=
+	b=zTQQewj+Mbi4DkousxT2s+SV7jid5rC5lil4M5PD6QSV537LTPtvcEJiXuQ26oUQf
+	 K6APRfX3oy7F611NuLfs/S9Sy5BowrI717bS15EbYpyTH97M7eppaClFSYhBuN0ckt
+	 x/Y8RSEswtT3RSzDFsKFBhNtLv/a0sXECU0jjO/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfKVKgA (ORCPT
+        id S1728293AbfKVKft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:36:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:35:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbfKVKf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:35:58 -0500
+        id S1728288AbfKVKfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:35:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D8F20715;
-        Fri, 22 Nov 2019 10:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16C7120715;
+        Fri, 22 Nov 2019 10:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418956;
-        bh=3rZPxfTf7N5hxgSrjTnCcZpBO3sWeSMsoa4lZEydftM=;
+        s=default; t=1574418944;
+        bh=edcdRs8qjLW9Buch9MPov4jh7ZiXSUmJVTFNJjzWTOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HQ1zIPuzONTvvCwaGIEtBqqvR9jgG/keD8ZZuYY80biZwRESWwnCuhig/gaYf11+t
-         n8TieI0Q3vT9JTT8xe36q447ZjYKqiaU0o+p33UlFYP0r90bxB0LckKjZ0gNfEa8Ji
-         ZuiWVMAQlxB7NLHfKcPa9HxNODLq7p4/mqydpQLw=
+        b=xTVI54vZCS0NEJDkkYttvVLJDZ/bFgXUFhQFjuZy73oLalCWlRUt9qC0mDqpXl2W9
+         6ZHhVhOF6lAvIbb3npdcxyWwE6QOFjLTwRSKSDtU8YiGWY89I6Bil+MxSpD9KFe3r6
+         uNNh43PTQKAUl0L/WiwSecKfZduMiheGGXBDb8y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tavis Ormandy <taviso@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.4 108/159] fbdev: Ditch fb_edid_add_monspecs
-Date:   Fri, 22 Nov 2019 11:28:19 +0100
-Message-Id: <20191122100826.016377123@linuxfoundation.org>
+        stable@vger.kernel.org, John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 4.4 104/159] apparmor: fix module parameters can be changed after policy is locked
+Date:   Fri, 22 Nov 2019 11:28:15 +0100
+Message-Id: <20191122100823.450440259@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,237 +58,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: John Johansen <john.johansen@canonical.com>
 
-commit 3b8720e63f4a1fc6f422a49ecbaa3b59c86d5aaf upstream.
+commit 58acf9d911c8831156634a44d0b022d683e1e50c upstream.
 
-It's dead code ever since
+the policy_lock parameter is a one way switch that prevents policy
+from being further modified. Unfortunately some of the module parameters
+can effectively modify policy by turning off enforcement.
 
-commit 34280340b1dc74c521e636f45cd728f9abf56ee2
-Author: Geert Uytterhoeven <geert+renesas@glider.be>
-Date:   Fri Dec 4 17:01:43 2015 +0100
+split policy_admin_capable into a view check and a full admin check,
+and update the admin check to test the policy_lock parameter.
 
-    fbdev: Remove unused SH-Mobile HDMI driver
-
-Also with this gone we can remove the cea_modes db. This entire thing
-is massively incomplete anyway, compared to the CEA parsing that
-drm_edid.c does.
-
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Tavis Ormandy <taviso@gmail.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190721201956.941-1-daniel.vetter@ffwll.ch
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbmon.c  |   95 --------------------------------------
- drivers/video/fbdev/core/modedb.c |   57 ----------------------
- include/linux/fb.h                |    3 -
- 3 files changed, 155 deletions(-)
+ security/apparmor/include/policy.h |    2 ++
+ security/apparmor/lsm.c            |   22 ++++++++++------------
+ security/apparmor/policy.c         |   18 +++++++++++++++++-
+ 3 files changed, 29 insertions(+), 13 deletions(-)
 
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -997,97 +997,6 @@ void fb_edid_to_monspecs(unsigned char *
- 	DPRINTK("========================================\n");
+--- a/security/apparmor/include/policy.h
++++ b/security/apparmor/include/policy.h
+@@ -403,6 +403,8 @@ static inline int AUDIT_MODE(struct aa_p
+ 	return profile->audit;
  }
  
--/**
-- * fb_edid_add_monspecs() - add monitor video modes from E-EDID data
-- * @edid:	128 byte array with an E-EDID block
-- * @spacs:	monitor specs to be extended
-- */
--void fb_edid_add_monspecs(unsigned char *edid, struct fb_monspecs *specs)
--{
--	unsigned char *block;
--	struct fb_videomode *m;
--	int num = 0, i;
--	u8 svd[64], edt[(128 - 4) / DETAILED_TIMING_DESCRIPTION_SIZE];
--	u8 pos = 4, svd_n = 0;
--
--	if (!edid)
--		return;
--
--	if (!edid_checksum(edid))
--		return;
--
--	if (edid[0] != 0x2 ||
--	    edid[2] < 4 || edid[2] > 128 - DETAILED_TIMING_DESCRIPTION_SIZE)
--		return;
--
--	DPRINTK("  Short Video Descriptors\n");
--
--	while (pos < edid[2]) {
--		u8 len = edid[pos] & 0x1f, type = (edid[pos] >> 5) & 7;
--		pr_debug("Data block %u of %u bytes\n", type, len);
--		if (type == 2) {
--			for (i = pos; i < pos + len; i++) {
--				u8 idx = edid[pos + i] & 0x7f;
--				svd[svd_n++] = idx;
--				pr_debug("N%sative mode #%d\n",
--					 edid[pos + i] & 0x80 ? "" : "on-n", idx);
--			}
--		} else if (type == 3 && len >= 3) {
--			/* Check Vendor Specific Data Block.  For HDMI,
--			   it is always 00-0C-03 for HDMI Licensing, LLC. */
--			if (edid[pos + 1] == 3 && edid[pos + 2] == 0xc &&
--			    edid[pos + 3] == 0)
--				specs->misc |= FB_MISC_HDMI;
--		}
--		pos += len + 1;
--	}
--
--	block = edid + edid[2];
--
--	DPRINTK("  Extended Detailed Timings\n");
--
--	for (i = 0; i < (128 - edid[2]) / DETAILED_TIMING_DESCRIPTION_SIZE;
--	     i++, block += DETAILED_TIMING_DESCRIPTION_SIZE)
--		if (PIXEL_CLOCK)
--			edt[num++] = block - edid;
--
--	/* Yikes, EDID data is totally useless */
--	if (!(num + svd_n))
--		return;
--
--	m = kzalloc((specs->modedb_len + num + svd_n) *
--		       sizeof(struct fb_videomode), GFP_KERNEL);
--
--	if (!m)
--		return;
--
--	memcpy(m, specs->modedb, specs->modedb_len * sizeof(struct fb_videomode));
--
--	for (i = specs->modedb_len; i < specs->modedb_len + num; i++) {
--		get_detailed_timing(edid + edt[i - specs->modedb_len], &m[i]);
--		if (i == specs->modedb_len)
--			m[i].flag |= FB_MODE_IS_FIRST;
--		pr_debug("Adding %ux%u@%u\n", m[i].xres, m[i].yres, m[i].refresh);
--	}
--
--	for (i = specs->modedb_len + num; i < specs->modedb_len + num + svd_n; i++) {
--		int idx = svd[i - specs->modedb_len - num];
--		if (!idx || idx >= ARRAY_SIZE(cea_modes)) {
--			pr_warning("Reserved SVD code %d\n", idx);
--		} else if (!cea_modes[idx].xres) {
--			pr_warning("Unimplemented SVD code %d\n", idx);
--		} else {
--			memcpy(&m[i], cea_modes + idx, sizeof(m[i]));
--			pr_debug("Adding SVD #%d: %ux%u@%u\n", idx,
--				 m[i].xres, m[i].yres, m[i].refresh);
--		}
--	}
--
--	kfree(specs->modedb);
--	specs->modedb = m;
--	specs->modedb_len = specs->modedb_len + num + svd_n;
--}
--
- /*
-  * VESA Generalized Timing Formula (GTF)
-  */
-@@ -1498,9 +1407,6 @@ void fb_edid_to_monspecs(unsigned char *
++bool policy_view_capable(void);
++bool policy_admin_capable(void);
+ bool aa_may_manage_policy(int op);
+ 
+ #endif /* __AA_POLICY_H */
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -749,51 +749,49 @@ __setup("apparmor=", apparmor_enabled_se
+ /* set global flag turning off the ability to load policy */
+ static int param_set_aalockpolicy(const char *val, const struct kernel_param *kp)
  {
- 	specs = NULL;
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_admin_capable())
+ 		return -EPERM;
+-	if (aa_g_lock_policy)
+-		return -EACCES;
+ 	return param_set_bool(val, kp);
  }
--void fb_edid_add_monspecs(unsigned char *edid, struct fb_monspecs *specs)
--{
--}
- void fb_destroy_modedb(struct fb_videomode *modedb)
+ 
+ static int param_get_aalockpolicy(char *buffer, const struct kernel_param *kp)
  {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_view_capable())
+ 		return -EPERM;
+ 	return param_get_bool(buffer, kp);
  }
-@@ -1608,7 +1514,6 @@ EXPORT_SYMBOL(fb_firmware_edid);
  
- EXPORT_SYMBOL(fb_parse_edid);
- EXPORT_SYMBOL(fb_edid_to_monspecs);
--EXPORT_SYMBOL(fb_edid_add_monspecs);
- EXPORT_SYMBOL(fb_get_mode);
- EXPORT_SYMBOL(fb_validate_mode);
- EXPORT_SYMBOL(fb_destroy_modedb);
---- a/drivers/video/fbdev/core/modedb.c
-+++ b/drivers/video/fbdev/core/modedb.c
-@@ -289,63 +289,6 @@ static const struct fb_videomode modedb[
- };
+ static int param_set_aabool(const char *val, const struct kernel_param *kp)
+ {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_admin_capable())
+ 		return -EPERM;
+ 	return param_set_bool(val, kp);
+ }
  
- #ifdef CONFIG_FB_MODE_HELPERS
--const struct fb_videomode cea_modes[65] = {
--	/* #1: 640x480p@59.94/60Hz */
--	[1] = {
--		NULL, 60, 640, 480, 39722, 48, 16, 33, 10, 96, 2, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #3: 720x480p@59.94/60Hz */
--	[3] = {
--		NULL, 60, 720, 480, 37037, 60, 16, 30, 9, 62, 6, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #5: 1920x1080i@59.94/60Hz */
--	[5] = {
--		NULL, 60, 1920, 1080, 13763, 148, 88, 15, 2, 44, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_INTERLACED, 0,
--	},
--	/* #7: 720(1440)x480iH@59.94/60Hz */
--	[7] = {
--		NULL, 60, 1440, 480, 18554/*37108*/, 114, 38, 15, 4, 124, 3, 0,
--		FB_VMODE_INTERLACED, 0,
--	},
--	/* #9: 720(1440)x240pH@59.94/60Hz */
--	[9] = {
--		NULL, 60, 1440, 240, 18554, 114, 38, 16, 4, 124, 3, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #18: 720x576pH@50Hz */
--	[18] = {
--		NULL, 50, 720, 576, 37037, 68, 12, 39, 5, 64, 5, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #19: 1280x720p@50Hz */
--	[19] = {
--		NULL, 50, 1280, 720, 13468, 220, 440, 20, 5, 40, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #20: 1920x1080i@50Hz */
--	[20] = {
--		NULL, 50, 1920, 1080, 13480, 148, 528, 15, 5, 528, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_INTERLACED, 0,
--	},
--	/* #32: 1920x1080p@23.98/24Hz */
--	[32] = {
--		NULL, 24, 1920, 1080, 13468, 148, 638, 36, 4, 44, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #35: (2880)x480p4x@59.94/60Hz */
--	[35] = {
--		NULL, 60, 2880, 480, 9250, 240, 64, 30, 9, 248, 6, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--};
--
- const struct fb_videomode vesa_modes[] = {
- 	/* 0 640x350-85 VESA */
- 	{ NULL, 85, 640, 350, 31746,  96, 32, 60, 32, 64, 3,
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -716,8 +716,6 @@ extern int fb_parse_edid(unsigned char *
- extern const unsigned char *fb_firmware_edid(struct device *device);
- extern void fb_edid_to_monspecs(unsigned char *edid,
- 				struct fb_monspecs *specs);
--extern void fb_edid_add_monspecs(unsigned char *edid,
--				 struct fb_monspecs *specs);
- extern void fb_destroy_modedb(struct fb_videomode *modedb);
- extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
- extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
-@@ -791,7 +789,6 @@ struct dmt_videomode {
+ static int param_get_aabool(char *buffer, const struct kernel_param *kp)
+ {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_view_capable())
+ 		return -EPERM;
+ 	return param_get_bool(buffer, kp);
+ }
  
- extern const char *fb_mode_option;
- extern const struct fb_videomode vesa_modes[];
--extern const struct fb_videomode cea_modes[65];
- extern const struct dmt_videomode dmt_modes[];
+ static int param_set_aauint(const char *val, const struct kernel_param *kp)
+ {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_admin_capable())
+ 		return -EPERM;
+ 	return param_set_uint(val, kp);
+ }
  
- struct fb_modelist {
+ static int param_get_aauint(char *buffer, const struct kernel_param *kp)
+ {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_view_capable())
+ 		return -EPERM;
+ 	return param_get_uint(buffer, kp);
+ }
+ 
+ static int param_get_audit(char *buffer, struct kernel_param *kp)
+ {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_view_capable())
+ 		return -EPERM;
+ 
+ 	if (!apparmor_enabled)
+@@ -805,7 +803,7 @@ static int param_get_audit(char *buffer,
+ static int param_set_audit(const char *val, struct kernel_param *kp)
+ {
+ 	int i;
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_admin_capable())
+ 		return -EPERM;
+ 
+ 	if (!apparmor_enabled)
+@@ -826,7 +824,7 @@ static int param_set_audit(const char *v
+ 
+ static int param_get_mode(char *buffer, struct kernel_param *kp)
+ {
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_admin_capable())
+ 		return -EPERM;
+ 
+ 	if (!apparmor_enabled)
+@@ -838,7 +836,7 @@ static int param_get_mode(char *buffer,
+ static int param_set_mode(const char *val, struct kernel_param *kp)
+ {
+ 	int i;
+-	if (!capable(CAP_MAC_ADMIN))
++	if (!policy_admin_capable())
+ 		return -EPERM;
+ 
+ 	if (!apparmor_enabled)
+--- a/security/apparmor/policy.c
++++ b/security/apparmor/policy.c
+@@ -916,6 +916,22 @@ static int audit_policy(int op, gfp_t gf
+ 			&sa, NULL);
+ }
+ 
++bool policy_view_capable(void)
++{
++	struct user_namespace *user_ns = current_user_ns();
++	bool response = false;
++
++	if (ns_capable(user_ns, CAP_MAC_ADMIN))
++		response = true;
++
++	return response;
++}
++
++bool policy_admin_capable(void)
++{
++	return policy_view_capable() && !aa_g_lock_policy;
++}
++
+ /**
+  * aa_may_manage_policy - can the current task manage policy
+  * @op: the policy manipulation operation being done
+@@ -930,7 +946,7 @@ bool aa_may_manage_policy(int op)
+ 		return 0;
+ 	}
+ 
+-	if (!capable(CAP_MAC_ADMIN)) {
++	if (!policy_admin_capable()) {
+ 		audit_policy(op, GFP_KERNEL, NULL, "not policy admin", -EACCES);
+ 		return 0;
+ 	}
 
 
