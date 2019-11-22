@@ -2,59 +2,64 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
-	NUMERIC_HTTP_ADDR,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5708C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6A5C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AA92072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30386207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419864;
-	bh=6Z+G+COGPjXzNfhuUuQehBnFKTpcoGKfJp1s4WRAswU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DcbSEEFurpuACrlho0kaSNUEzAvakK59iM4FUlhS9OtTm+s9NsEKe3bg+7tMrXmRG
-	 V00zMzYMpUVs/TMEIybAluJzHQpg0aKb48oKVvLsTkdVU94TmGfqZ/Dp1R6TuzOmQA
-	 bdrugeSmNx9WNWU5qAaKlDKB2zwB/FpEQoJdIexU=
+	s=default; t=1574419869;
+	bh=A810buF4A5yzH6mzGFbUbNWPiRUxcWYqMmSRGZ3hVqQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rditaOQ2lmDa6llvaAomxdl4tfbM/BIPk97RSLmrm8xO3R0Ie+bBsUnacjP/eaW+9
+	 9AOzsbr5LwnNiWm3jXFM8/KHokWvqbJrm3BP4r3U/YscNXFnIcOlHbjhU70u4sXGgR
+	 dxz7hXwrByZptoFKeFBYM7XbcmySdE7fE6t+/8yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfKVKvD (ORCPT
+        id S1729751AbfKVKvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbfKVKvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:00 -0500
+        id S1729516AbfKVKvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370972072E;
-        Fri, 22 Nov 2019 10:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF87320715;
+        Fri, 22 Nov 2019 10:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419859;
-        bh=6Z+G+COGPjXzNfhuUuQehBnFKTpcoGKfJp1s4WRAswU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jgQ26OuqvirsjtsORGzBgMH7wppkurjXwQCjvTTCPphPpRfY2XpMtF9SofMJKq/wI
-         qW0LAaM73pjJAa3w65Y9Pgeiue1pQjozpcbIn7nI5HiBzft1jxpyqqYeiu5z1BjZM6
-         UQrDpl8z3So+o2wpxjc32C38fvY5A6ISiukdnAOI=
+        s=default; t=1574419862;
+        bh=A810buF4A5yzH6mzGFbUbNWPiRUxcWYqMmSRGZ3hVqQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2t0uTzR8e8MdoKiivwWSQNcWSHWHnBJJtO+Kd5WV0CUsIFPpQgzn6RL/mhwNV1Fw7
+         AV97eOuDXWo+beQZwgKq8MdiFmiiwrUwMd7DSPxG/lI8VXqqt60Kb7AI28obu/dQMz
+         hTnyUMphDM298GEeOXVEGs5X29rle1bJDAdqlJr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tavis Ormandy <taviso@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.14 009/122] fbdev: Ditch fb_edid_add_monspecs
-Date:   Fri, 22 Nov 2019 11:27:42 +0100
-Message-Id: <20191122100728.878663679@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 000/122] 4.14.156-stable review
+Date:   Fri, 22 Nov 2019 11:27:33 +0100
+Message-Id: <20191122100722.177052205@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
-References: <20191122100722.177052205@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.156-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.156-rc1
+X-KernelTest-Deadline: 2019-11-24T10:08+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,237 +67,536 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+This is the start of the stable review cycle for the 4.14.156 release.
+There are 122 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 3b8720e63f4a1fc6f422a49ecbaa3b59c86d5aaf upstream.
+Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+Anything received after that time might be too late.
 
-It's dead code ever since
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.156-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-commit 34280340b1dc74c521e636f45cd728f9abf56ee2
-Author: Geert Uytterhoeven <geert+renesas@glider.be>
-Date:   Fri Dec 4 17:01:43 2015 +0100
+thanks,
 
-    fbdev: Remove unused SH-Mobile HDMI driver
+greg k-h
 
-Also with this gone we can remove the cea_modes db. This entire thing
-is massively incomplete anyway, compared to the CEA parsing that
-drm_edid.c does.
+-------------
+Pseudo-Shortlog of commits:
 
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Tavis Ormandy <taviso@gmail.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190721201956.941-1-daniel.vetter@ffwll.ch
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.156-rc1
 
----
- drivers/video/fbdev/core/fbmon.c  |   95 --------------------------------------
- drivers/video/fbdev/core/modedb.c |   57 ----------------------
- include/linux/fb.h                |    3 -
- 3 files changed, 155 deletions(-)
+Takeshi Saito <takeshi.saito.xv@renesas.com>
+    mmc: tmio: fix SCC error handling to avoid false positive CRC error
 
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -997,97 +997,6 @@ void fb_edid_to_monspecs(unsigned char *
- 	DPRINTK("========================================\n");
- }
- 
--/**
-- * fb_edid_add_monspecs() - add monitor video modes from E-EDID data
-- * @edid:	128 byte array with an E-EDID block
-- * @spacs:	monitor specs to be extended
-- */
--void fb_edid_add_monspecs(unsigned char *edid, struct fb_monspecs *specs)
--{
--	unsigned char *block;
--	struct fb_videomode *m;
--	int num = 0, i;
--	u8 svd[64], edt[(128 - 4) / DETAILED_TIMING_DESCRIPTION_SIZE];
--	u8 pos = 4, svd_n = 0;
--
--	if (!edid)
--		return;
--
--	if (!edid_checksum(edid))
--		return;
--
--	if (edid[0] != 0x2 ||
--	    edid[2] < 4 || edid[2] > 128 - DETAILED_TIMING_DESCRIPTION_SIZE)
--		return;
--
--	DPRINTK("  Short Video Descriptors\n");
--
--	while (pos < edid[2]) {
--		u8 len = edid[pos] & 0x1f, type = (edid[pos] >> 5) & 7;
--		pr_debug("Data block %u of %u bytes\n", type, len);
--		if (type == 2) {
--			for (i = pos; i < pos + len; i++) {
--				u8 idx = edid[pos + i] & 0x7f;
--				svd[svd_n++] = idx;
--				pr_debug("N%sative mode #%d\n",
--					 edid[pos + i] & 0x80 ? "" : "on-n", idx);
--			}
--		} else if (type == 3 && len >= 3) {
--			/* Check Vendor Specific Data Block.  For HDMI,
--			   it is always 00-0C-03 for HDMI Licensing, LLC. */
--			if (edid[pos + 1] == 3 && edid[pos + 2] == 0xc &&
--			    edid[pos + 3] == 0)
--				specs->misc |= FB_MISC_HDMI;
--		}
--		pos += len + 1;
--	}
--
--	block = edid + edid[2];
--
--	DPRINTK("  Extended Detailed Timings\n");
--
--	for (i = 0; i < (128 - edid[2]) / DETAILED_TIMING_DESCRIPTION_SIZE;
--	     i++, block += DETAILED_TIMING_DESCRIPTION_SIZE)
--		if (PIXEL_CLOCK != 0)
--			edt[num++] = block - edid;
--
--	/* Yikes, EDID data is totally useless */
--	if (!(num + svd_n))
--		return;
--
--	m = kzalloc((specs->modedb_len + num + svd_n) *
--		       sizeof(struct fb_videomode), GFP_KERNEL);
--
--	if (!m)
--		return;
--
--	memcpy(m, specs->modedb, specs->modedb_len * sizeof(struct fb_videomode));
--
--	for (i = specs->modedb_len; i < specs->modedb_len + num; i++) {
--		get_detailed_timing(edid + edt[i - specs->modedb_len], &m[i]);
--		if (i == specs->modedb_len)
--			m[i].flag |= FB_MODE_IS_FIRST;
--		pr_debug("Adding %ux%u@%u\n", m[i].xres, m[i].yres, m[i].refresh);
--	}
--
--	for (i = specs->modedb_len + num; i < specs->modedb_len + num + svd_n; i++) {
--		int idx = svd[i - specs->modedb_len - num];
--		if (!idx || idx >= ARRAY_SIZE(cea_modes)) {
--			pr_warn("Reserved SVD code %d\n", idx);
--		} else if (!cea_modes[idx].xres) {
--			pr_warn("Unimplemented SVD code %d\n", idx);
--		} else {
--			memcpy(&m[i], cea_modes + idx, sizeof(m[i]));
--			pr_debug("Adding SVD #%d: %ux%u@%u\n", idx,
--				 m[i].xres, m[i].yres, m[i].refresh);
--		}
--	}
--
--	kfree(specs->modedb);
--	specs->modedb = m;
--	specs->modedb_len = specs->modedb_len + num + svd_n;
--}
--
- /*
-  * VESA Generalized Timing Formula (GTF)
-  */
-@@ -1497,9 +1406,6 @@ int fb_parse_edid(unsigned char *edid, s
- void fb_edid_to_monspecs(unsigned char *edid, struct fb_monspecs *specs)
- {
- }
--void fb_edid_add_monspecs(unsigned char *edid, struct fb_monspecs *specs)
--{
--}
- void fb_destroy_modedb(struct fb_videomode *modedb)
- {
- }
-@@ -1607,7 +1513,6 @@ EXPORT_SYMBOL(fb_firmware_edid);
- 
- EXPORT_SYMBOL(fb_parse_edid);
- EXPORT_SYMBOL(fb_edid_to_monspecs);
--EXPORT_SYMBOL(fb_edid_add_monspecs);
- EXPORT_SYMBOL(fb_get_mode);
- EXPORT_SYMBOL(fb_validate_mode);
- EXPORT_SYMBOL(fb_destroy_modedb);
---- a/drivers/video/fbdev/core/modedb.c
-+++ b/drivers/video/fbdev/core/modedb.c
-@@ -289,63 +289,6 @@ static const struct fb_videomode modedb[
- };
- 
- #ifdef CONFIG_FB_MODE_HELPERS
--const struct fb_videomode cea_modes[65] = {
--	/* #1: 640x480p@59.94/60Hz */
--	[1] = {
--		NULL, 60, 640, 480, 39722, 48, 16, 33, 10, 96, 2, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #3: 720x480p@59.94/60Hz */
--	[3] = {
--		NULL, 60, 720, 480, 37037, 60, 16, 30, 9, 62, 6, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #5: 1920x1080i@59.94/60Hz */
--	[5] = {
--		NULL, 60, 1920, 1080, 13763, 148, 88, 15, 2, 44, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_INTERLACED, 0,
--	},
--	/* #7: 720(1440)x480iH@59.94/60Hz */
--	[7] = {
--		NULL, 60, 1440, 480, 18554/*37108*/, 114, 38, 15, 4, 124, 3, 0,
--		FB_VMODE_INTERLACED, 0,
--	},
--	/* #9: 720(1440)x240pH@59.94/60Hz */
--	[9] = {
--		NULL, 60, 1440, 240, 18554, 114, 38, 16, 4, 124, 3, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #18: 720x576pH@50Hz */
--	[18] = {
--		NULL, 50, 720, 576, 37037, 68, 12, 39, 5, 64, 5, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #19: 1280x720p@50Hz */
--	[19] = {
--		NULL, 50, 1280, 720, 13468, 220, 440, 20, 5, 40, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #20: 1920x1080i@50Hz */
--	[20] = {
--		NULL, 50, 1920, 1080, 13480, 148, 528, 15, 5, 528, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_INTERLACED, 0,
--	},
--	/* #32: 1920x1080p@23.98/24Hz */
--	[32] = {
--		NULL, 24, 1920, 1080, 13468, 148, 638, 36, 4, 44, 5,
--		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--	/* #35: (2880)x480p4x@59.94/60Hz */
--	[35] = {
--		NULL, 60, 2880, 480, 9250, 240, 64, 30, 9, 248, 6, 0,
--		FB_VMODE_NONINTERLACED, 0,
--	},
--};
--
- const struct fb_videomode vesa_modes[] = {
- 	/* 0 640x350-85 VESA */
- 	{ NULL, 85, 640, 350, 31746,  96, 32, 60, 32, 64, 3,
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -725,8 +725,6 @@ extern int fb_parse_edid(unsigned char *
- extern const unsigned char *fb_firmware_edid(struct device *device);
- extern void fb_edid_to_monspecs(unsigned char *edid,
- 				struct fb_monspecs *specs);
--extern void fb_edid_add_monspecs(unsigned char *edid,
--				 struct fb_monspecs *specs);
- extern void fb_destroy_modedb(struct fb_videomode *modedb);
- extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
- extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
-@@ -800,7 +798,6 @@ struct dmt_videomode {
- 
- extern const char *fb_mode_option;
- extern const struct fb_videomode vesa_modes[];
--extern const struct fb_videomode cea_modes[65];
- extern const struct dmt_videomode dmt_modes[];
- 
- struct fb_modelist {
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/time: Fix clockevent_decrementer initalisation for PR KVM
+
+Alan Mikhak <alan.mikhak@sifive.com>
+    tools: PCI: Fix broken pcitest compilation
+
+Roger Quadros <rogerq@ti.com>
+    ARM: dts: omap5: Fix dual-role mode on Super-Speed port
+
+Ido Schimmel <idosch@mellanox.com>
+    mlxsw: spectrum_switchdev: Check notification relevance based on upper device
+
+Huibin Hong <huibin.hong@rock-chips.com>
+    spi: rockchip: initialize dma_slave_config properly
+
+Felix Fietkau <nbd@nbd.name>
+    mac80211: minstrel: fix sampling/reporting of CCK rates in HT mode
+
+Felix Fietkau <nbd@nbd.name>
+    mac80211: minstrel: fix CCK rate group streams value
+
+Felix Fietkau <nbd@nbd.name>
+    mac80211: minstrel: fix using short preamble CCK rates on HT clients
+
+zhong jiang <zhongjiang@huawei.com>
+    misc: cxl: Fix possible null pointer dereference
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nft_compat: do not dump private area
+
+Nicolin Chen <nicoleotsuka@gmail.com>
+    hwmon: (ina3221) Fix INA3221_CONFIG_MODE macros
+
+Thierry Reding <treding@nvidia.com>
+    hwmon: (pwm-fan) Silence error on probe deferral
+
+Linus Walleij <linus.walleij@linaro.org>
+    pinctrl: gemini: Fix up TVC clock group
+
+Colin Ian King <colin.king@canonical.com>
+    orangefs: rate limit the client not running info message
+
+Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
+    ARM: 8802/1: Call syscall_trace_exit even when system call skipped
+
+Trent Piepho <tpiepho@impinj.com>
+    spi: spidev: Fix OF tree warning logic
+
+Linus Walleij <linus.walleij@linaro.org>
+    pinctrl: gemini: Mask and set properly
+
+Hieu Tran Dang <dangtranhieu2012@gmail.com>
+    spi: fsl-lpspi: Prevent FIFO under/overrun by default
+
+Marek Vasut <marex@denx.de>
+    gpio: syscon: Fix possible NULL ptr usage
+
+Bjorn Helgaas <bhelgaas@google.com>
+    x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+
+Colin Ian King <colin.king@canonical.com>
+    media: cx231xx: fix potential sign-extension overflow on large shift
+
+Tim Smith <tim.smith@citrix.com>
+    GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
+
+Wenwen Wang <wang6495@umn.edu>
+    media: isif: fix a NULL pointer dereference bug
+
+He Zhe <zhe.he@windriver.com>
+    printk: Give error on attempt to set log buffer length to over 2G
+
+Vignesh R <vigneshr@ti.com>
+    mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
+
+Nathan Chancellor <natechancellor@gmail.com>
+    backlight: lm3639: Unconditionally call led_classdev_unregister
+
+Borislav Petkov <bp@suse.de>
+    proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
+
+Vasily Gorbik <gor@linux.ibm.com>
+    s390/kasan: avoid vdso instrumentation
+
+Rajmohan Mani <rajmohan.mani@intel.com>
+    media: dw9714: Fix error handling in probe function
+
+Shenghui Wang <shhuiw@foxmail.com>
+    bcache: recal cached_dev_sectors on detach
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    reset: Fix potential use-after-free in __of_reset_control_get()
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    fbdev: sbuslib: integer overflow in sbusfb_ioctl_helper()
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    fbdev: sbuslib: use checked version of put_user()
+
+Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+    mmc: tmio: Fix SCC error detection
+
+Andy Lutomirski <luto@kernel.org>
+    x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately
+
+Sara Sharon <sara.sharon@intel.com>
+    iwlwifi: mvm: don't send keys when entering D3
+
+Ronald Tschalär <ronald@innovation.ch>
+    ACPI / SBS: Fix rare oops when removing modules
+
+Li RongQing <lirongqing@baidu.com>
+    xfrm: use correct size to initialise sp->ovec
+
+Radu Solea <radu.solea@nxp.com>
+    crypto: mxs-dcp - Fix AES issues
+
+Radu Solea <radu.solea@nxp.com>
+    crypto: mxs-dcp - Fix SHA null hashes and output length
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    dmaengine: rcar-dmac: set scatter/gather max segment size
+
+Borislav Petkov <bp@suse.de>
+    x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
+
+Lianbo Jiang <lijiang@redhat.com>
+    kexec: Allocate decrypted control pages for kdump if SME is enabled
+
+Suman Anna <s-anna@ti.com>
+    remoteproc: Check for NULL firmwares in sysfs interface
+
+Julian Sax <jsbc@gmx.de>
+    Input: silead - try firmware reload after unsuccessful resume
+
+Martin Kepplinger <martink@posteo.de>
+    Input: st1232 - set INPUT_PROP_DIRECT property
+
+Hans Verkuil <hans.verkuil@cisco.com>
+    media: cec-gpio: select correct Signal Free Time
+
+Rami Rosen <ramirose@gmail.com>
+    dmaengine: ioat: fix prototype of ioat_enumerate_channels
+
+Olga Kornievskaia <kolga@netapp.com>
+    NFSv4.x: fix lock recovery during delegation recall
+
+Florian Fainelli <f.fainelli@gmail.com>
+    i2c: brcmstb: Allow enabling the driver on DSL SoCs
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    clk: samsung: Use clk_hw API for calling clk framework from clk notifiers
+
+Joonyoung Shim <jy0922.shim@samsung.com>
+    clk: samsung: exynos5420: Define CLK_SECKEY gate clock only or Exynos5420
+
+Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+    qtnfmac: drop error reports for out-of-bounds key indexes
+
+Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+    qtnfmac: pass sgi rate info flag to wireless core
+
+Chung-Hsien Hsu <stanley.hsu@cypress.com>
+    brcmfmac: fix full timeout waiting for action frame on-channel tx
+
+Chung-Hsien Hsu <stanley.hsu@cypress.com>
+    brcmfmac: reduce timeout for action frame scan
+
+Borislav Petkov <bp@suse.de>
+    cpu/SMT: State SMT is disabled even with nosmt and without "=force"
+
+Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+    mtd: physmap_of: Release resources on error
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: cypress_m8: fix interrupt-out transfer length
+
+Cameron Kaiser <spectre@floodgap.com>
+    KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
+
+Michael Pobega <mpobega@neverware.com>
+    ALSA: hda/sigmatel - Disable automute for Elo VuPoint
+
+Jacopo Mondi <jacopo+renesas@jmondi.org>
+    media: i2c: adv748x: Support probing a single output
+
+Nathan Chancellor <natechancellor@gmail.com>
+    media: pxa_camera: Fix check for pdev->dev.of_node
+
+Matthias Reichl <hias@horus.com>
+    media: rc: ir-rc6-decoder: enable toggle bit for Kathrein RCU-676 remote
+
+Nathan Chancellor <natechancellor@gmail.com>
+    ata: ep93xx: Use proper enums for directions
+
+Anton Blanchard <anton@ozlabs.org>
+    powerpc/time: Use clockevents_register_device(), fixing an issue with large decrementer
+
+Bob Moore <robert.moore@intel.com>
+    ACPICA: Never run _REG on system_memory and system_IO
+
+Nathan Chancellor <natechancellor@gmail.com>
+    IB/mlx4: Avoid implicit enumerated type conversion
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    IB/mthca: Fix error return code in __mthca_init_one()
+
+Radoslaw Tyl <radoslawx.tyl@intel.com>
+    ixgbe: Fix crash with VFs and flow director on interface flap
+
+Nathan Chancellor <natechancellor@gmail.com>
+    i40e: Use proper enum in i40e_ndo_set_vf_link_state
+
+Radoslaw Tyl <radoslawx.tyl@intel.com>
+    ixgbe: Fix ixgbe TX hangs with XDP_TX beyond queue limit
+
+NeilBrown <neilb@suse.com>
+    md: allow metadata updates while suspending an array - fix
+
+Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+    clocksource/drivers/sh_cmt: Fix clocksource width for 32-bit machines
+
+Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+    clocksource/drivers/sh_cmt: Fixup for 64-bit machines
+
+Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+    tools: PCI: Fix compilation warnings
+
+Chen Yu <yu.c.chen@intel.com>
+    PM / hibernate: Check the success of generating md5 digest before hibernation
+
+Nathan Chancellor <natechancellor@gmail.com>
+    mtd: rawnand: sh_flctl: Use proper enum for flctl_dma_fifo0_transfer
+
+Tudor Ambarus <tudor.ambarus@microchip.com>
+    ARM: dts: at91: at91sam9x5cm: fix addressable nand flash size
+
+Tudor Ambarus <tudor.ambarus@microchip.com>
+    ARM: dts: at91: sama5d4_xplained: fix addressable nand flash size
+
+zhong jiang <zhongjiang@huawei.com>
+    powerpc/xive: Move a dereference below a NULL test
+
+Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+    powerpc/pseries: Fix how we iterate over the DTL entries
+
+Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+    powerpc/pseries: Fix DTL buffer registration
+
+Nathan Chancellor <natechancellor@gmail.com>
+    cxgb4: Use proper enum in IEEE_FAUX_SYNC
+
+Nathan Chancellor <natechancellor@gmail.com>
+    cxgb4: Use proper enum in cxgb4_dcb_handle_fw_update
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    mei: samples: fix a signedness bug in amt_host_if_call()
+
+Chuck Lever <chuck.lever@oracle.com>
+    sunrpc: Fix connect metrics
+
+Nishanth Menon <nm@ti.com>
+    clk: keystone: Enable TISCI clocks if K3_ARCH
+
+Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+    ext4: fix build error when DX_DEBUG is defined
+
+Nathan Chancellor <natechancellor@gmail.com>
+    dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
+
+Nathan Chancellor <natechancellor@gmail.com>
+    dmaengine: ep93xx: Return proper enum in ep93xx_dma_chan_direction
+
+Alexey Kardashevskiy <aik@ozlabs.ru>
+    KVM: PPC: Inform the userspace about TCE update failures
+
+Guenter Roeck <linux@roeck-us.net>
+    watchdog: w83627hf_wdt: Support NCT6796D, NCT6797D, NCT6798D
+
+Miquel Raynal <miquel.raynal@bootlin.com>
+    irqchip/irq-mvebu-icu: Fix wrong private data retrieval
+
+Andrew Zaborowski <andrew.zaborowski@intel.com>
+    nl80211: Fix a GET_KEY reply attribute
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: gadget: Check ENBLSLPM before sending ep command
+
+Jia-Ju Bai <baijiaju1990@gmail.com>
+    usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
+
+Simon Wunderlich <sw@simonwunderlich.de>
+    ath9k: fix reporting calculated new FFT upper max
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ata: ahci_brcm: Allow using driver or DSL SoCs
+
+Ben Greear <greearb@candelatech.com>
+    ath10k: fix vdev-start timeout on error
+
+Anshuman Khandual <anshuman.khandual@arm.com>
+    arm64/numa: Report correct memblock range for the dummy node
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    kvm: arm/arm64: Fix stage2_flush_memslot for 4 level page table
+
+Robin Murphy <robin.murphy@arm.com>
+    iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
+
+Dennis Dalessandro <dennis.dalessandro@intel.com>
+    IB/hfi1: Ensure ucast_dlid access doesnt exceed bounds
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    SUNRPC: Fix priority queue fairness
+
+Philipp Rossak <embed3d@gmail.com>
+    ARM: dts: sun8i: h3-h5: ir register size should be the whole memory block
+
+Jaegeuk Kim <jaegeuk@kernel.org>
+    f2fs: return correct errno in f2fs_gc
+
+Yunsheng Lin <linyunsheng@huawei.com>
+    net: hns3: Fix for netdev not up problem when setting mtu
+
+H. Nikolaus Schaller <hns@goldelico.com>
+    ARM: dts: omap5: enable OTG role for DWC3 controller
+
+Vignesh R <vigneshr@ti.com>
+    ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
+
+YueHaibing <yuehaibing@huawei.com>
+    net: xen-netback: fix return type of ndo_start_xmit function
+
+YueHaibing <yuehaibing@huawei.com>
+    net: ovs: fix return type of ndo_start_xmit function
+
+Daniel Vetter <daniel.vetter@ffwll.ch>
+    fbdev: Ditch fb_edid_add_monspecs
+
+Pavel Tatashin <pasha.tatashin@soleen.com>
+    arm64: uaccess: Ensure PAN is re-enabled after unhandled uaccess fault
+
+David Hildenbrand <david@redhat.com>
+    mm/memory_hotplug: fix updating the node span
+
+David Hildenbrand <david@redhat.com>
+    mm/memory_hotplug: don't access uninitialized memmaps in shrink_pgdat_span()
+
+Matthew Wilcox (Oracle) <willy@infradead.org>
+    idr: Fix idr_get_next race with idr_remove
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    net: cdc_ncm: Signedness bug in cdc_ncm_set_dgram_size()
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "OPP: Protect dev_list with opp_table lock"
+
+Julia Lawall <Julia.Lawall@lip6.fr>
+    tee: optee: add missing of_node_put after of_device_is_available
+
+Leilk Liu <leilk.liu@mediatek.com>
+    spi: mediatek: use correct mata->xfer_len when in fifo transfer
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts        |   2 +-
+ arch/arm/boot/dts/at91sam9x5cm.dtsi                |   2 +-
+ arch/arm/boot/dts/dra7.dtsi                        |   2 +
+ arch/arm/boot/dts/omap5-board-common.dtsi          |   5 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |   2 +-
+ arch/arm/kernel/entry-common.S                     |   9 +-
+ arch/arm64/lib/clear_user.S                        |   1 +
+ arch/arm64/lib/copy_from_user.S                    |   1 +
+ arch/arm64/lib/copy_in_user.S                      |   1 +
+ arch/arm64/lib/copy_to_user.S                      |   1 +
+ arch/arm64/mm/numa.c                               |   2 +-
+ arch/powerpc/kernel/time.c                         |  19 ++--
+ arch/powerpc/kvm/book3s.c                          |   3 +
+ arch/powerpc/kvm/book3s_64_vio.c                   |   8 +-
+ arch/powerpc/kvm/book3s_64_vio_hv.c                |   6 +-
+ arch/powerpc/platforms/pseries/dtl.c               |   4 +-
+ arch/powerpc/sysdev/xive/common.c                  |   7 +-
+ arch/s390/kernel/vdso32/Makefile                   |   3 +-
+ arch/s390/kernel/vdso64/Makefile                   |   3 +-
+ arch/x86/Kconfig                                   |   3 +-
+ arch/x86/include/asm/kexec.h                       |   2 +-
+ arch/x86/kernel/ptrace.c                           |  62 ++++++++++--
+ arch/x86/power/hibernate_64.c                      |  11 +--
+ drivers/acpi/acpica/acevents.h                     |   2 +
+ drivers/acpi/acpica/aclocal.h                      |   2 +-
+ drivers/acpi/acpica/evregion.c                     |  17 +++-
+ drivers/acpi/acpica/evrgnini.c                     |   6 +-
+ drivers/acpi/acpica/evxfregn.c                     |   1 -
+ drivers/acpi/osl.c                                 |   1 +
+ drivers/acpi/sbshc.c                               |   2 +
+ drivers/ata/Kconfig                                |   3 +-
+ drivers/ata/pata_ep93xx.c                          |   8 +-
+ drivers/base/power/opp/core.c                      |  21 +---
+ drivers/base/power/opp/cpu.c                       |   2 -
+ drivers/base/power/opp/opp.h                       |   2 +-
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/keystone/Kconfig                       |   2 +-
+ drivers/clk/samsung/clk-cpu.c                      |   6 +-
+ drivers/clk/samsung/clk-cpu.h                      |   2 +-
+ drivers/clk/samsung/clk-exynos5420.c               |   3 +-
+ drivers/clocksource/sh_cmt.c                       |  78 +++++++--------
+ drivers/crypto/mxs-dcp.c                           |  80 ++++++++++++---
+ drivers/dma/ioat/init.c                            |   7 +-
+ drivers/dma/sh/rcar-dmac.c                         |   3 +
+ drivers/dma/timb_dma.c                             |   2 +-
+ drivers/gpio/gpio-syscon.c                         |   2 +-
+ drivers/hwmon/ina3221.c                            |   6 +-
+ drivers/hwmon/pwm-fan.c                            |   8 +-
+ drivers/i2c/busses/Kconfig                         |   7 +-
+ drivers/infiniband/hw/mthca/mthca_main.c           |   3 +-
+ drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.c   |   3 +-
+ drivers/input/touchscreen/silead.c                 |  13 +++
+ drivers/input/touchscreen/st1232.c                 |   1 +
+ drivers/iommu/io-pgtable-arm.c                     |   9 +-
+ drivers/irqchip/irq-mvebu-icu.c                    |   2 +-
+ drivers/md/bcache/super.c                          |   1 +
+ drivers/md/md.c                                    |  22 +++--
+ drivers/media/cec/cec-pin.c                        |  20 ++++
+ drivers/media/i2c/adv748x/adv748x-core.c           |  25 ++++-
+ drivers/media/i2c/adv748x/adv748x-csi2.c           |  18 ++--
+ drivers/media/i2c/adv748x/adv748x.h                |   2 +
+ drivers/media/i2c/dw9714.c                         |   3 +-
+ drivers/media/platform/davinci/isif.c              |   3 +-
+ drivers/media/platform/pxa_camera.c                |   2 +-
+ drivers/media/rc/ir-rc6-decoder.c                  |   9 +-
+ drivers/media/usb/cx231xx/cx231xx-video.c          |   2 +-
+ drivers/mfd/ti_am335x_tscadc.c                     |  13 +++
+ drivers/misc/cxl/guest.c                           |   2 -
+ drivers/mmc/host/tmio_mmc_core.c                   |   5 +-
+ drivers/mtd/maps/physmap_of_core.c                 |  27 +----
+ drivers/mtd/nand/sh_flctl.c                        |   4 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c     |   4 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h     |   2 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hns3_enet.c |   8 +-
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c |   2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |  24 +++--
+ .../ethernet/mellanox/mlxsw/spectrum_switchdev.c   |   9 +-
+ drivers/net/usb/cdc_ncm.c                          |   2 +-
+ drivers/net/wireless/ath/ath10k/core.h             |   1 +
+ drivers/net/wireless/ath/ath10k/mac.c              |   2 +-
+ drivers/net/wireless/ath/ath10k/wmi.c              |  19 +++-
+ drivers/net/wireless/ath/ath10k/wmi.h              |   8 +-
+ drivers/net/wireless/ath/ath9k/common-spectral.c   |   2 +-
+ .../net/wireless/broadcom/brcm80211/brcmfmac/p2p.c |  26 +++--
+ .../net/wireless/broadcom/brcm80211/brcmfmac/p2p.h |   2 +
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c        |   4 +-
+ drivers/net/wireless/quantenna/qtnfmac/cfg80211.c  |  13 ++-
+ drivers/net/wireless/quantenna/qtnfmac/commands.c  |   3 +
+ drivers/net/xen-netback/interface.c                |   3 +-
+ drivers/pinctrl/pinctrl-gemini.c                   |  47 +++++++--
+ drivers/remoteproc/remoteproc_sysfs.c              |   5 +
+ drivers/reset/core.c                               |  15 +--
+ drivers/spi/spi-fsl-lpspi.c                        |   2 +-
+ drivers/spi/spi-mt65xx.c                           |   4 +-
+ drivers/spi/spi-rockchip.c                         |   3 +
+ drivers/spi/spidev.c                               |   8 +-
+ drivers/tee/optee/core.c                           |   4 +-
+ drivers/usb/dwc3/gadget.c                          |  29 ++++--
+ drivers/usb/gadget/udc/fotg210-udc.c               |   2 +-
+ drivers/usb/serial/cypress_m8.c                    |   2 +-
+ drivers/video/backlight/lm3639_bl.c                |   6 +-
+ drivers/video/fbdev/core/fbmon.c                   |  95 ------------------
+ drivers/video/fbdev/core/modedb.c                  |  57 -----------
+ drivers/video/fbdev/sbuslib.c                      |  28 +++---
+ drivers/watchdog/w83627hf_wdt.c                    |   8 +-
+ fs/ext4/namei.c                                    |   2 +-
+ fs/f2fs/gc.c                                       |   2 +-
+ fs/gfs2/super.c                                    |   2 +-
+ fs/nfs/delegation.c                                |   6 +-
+ fs/orangefs/orangefs-sysfs.c                       |   2 +-
+ fs/proc/vmcore.c                                   |  10 ++
+ include/linux/fb.h                                 |   3 -
+ include/linux/platform_data/dma-ep93xx.h           |   2 +-
+ include/linux/sunrpc/sched.h                       |   2 -
+ include/rdma/ib_verbs.h                            |   2 +-
+ kernel/cpu.c                                       |   1 +
+ kernel/kexec_core.c                                |   6 ++
+ kernel/printk/printk.c                             |  18 ++--
+ lib/idr.c                                          |  20 +++-
+ mm/memory_hotplug.c                                |  77 ++++-----------
+ net/mac80211/rc80211_minstrel_ht.c                 |  20 ++--
+ net/netfilter/nft_compat.c                         |  24 ++++-
+ net/openvswitch/vport-internal_dev.c               |   5 +-
+ net/sunrpc/sched.c                                 | 109 ++++++++++-----------
+ net/sunrpc/xprt.c                                  |  14 +--
+ net/sunrpc/xprtrdma/transport.c                    |   6 +-
+ net/sunrpc/xprtsock.c                              |  10 +-
+ net/wireless/nl80211.c                             |   2 +-
+ net/xfrm/xfrm_input.c                              |   2 +-
+ samples/mei/mei-amt-version.c                      |   2 +-
+ sound/pci/hda/patch_sigmatel.c                     |  20 ++++
+ tools/pci/pcitest.c                                |   7 +-
+ tools/testing/radix-tree/idr-test.c                |  52 ++++++++++
+ virt/kvm/arm/mmu.c                                 |   3 +-
+ 135 files changed, 857 insertions(+), 649 deletions(-)
 
 
