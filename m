@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7088C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E18C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D05E2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABF02068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402526;
-	bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+	s=default; t=1574402529;
+	bh=zZruYX87mevRMIX7WAXQ0HW9SLzcEcLIwjQKbU+516E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eoxXhJ7eeeVYD6S09yNodVaJBDbKudk/4w1RbW2YVGmT/LTABX65OQ8eYUhgKIb1T
-	 RNyMDr7HdH5LNMeOsJzZa68QoHLBa8vGIxFJF/+LCJFGWRw4wJXG9L+L6GvXkh8c+6
-	 FxU8rq4OPgRRkPq9gEy9GHP8ePPO3hdJkrUyoCI4=
+	b=sx6KarSCcLnE/c3x6hpm1j/jano8xrBXuhazaGSZq+NIPOUqGMMuGyVKC+PZ0y2dJ
+	 sWqdMC+1gY3DehxE4symig4aECnRd+6HZgDDuLNczIs/9vJ+OddoT6mtT8cjbrkUJl
+	 DuM81tSDMq1sZCiG/1uRvMrVZ2KpDu0J4WFMozzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbfKVGCF (ORCPT
+        id S1729596AbfKVGCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40444 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729500AbfKVGCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:01 -0500
+        id S1729514AbfKVGCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502522068E;
-        Fri, 22 Nov 2019 06:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EA3A2071F;
+        Fri, 22 Nov 2019 06:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402521;
-        bh=2ruCfQM2uGTJfrjE1Ri3MmU/nY3aN8p9UYu2mdRhDEo=;
+        s=default; t=1574402524;
+        bh=zZruYX87mevRMIX7WAXQ0HW9SLzcEcLIwjQKbU+516E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5ZpWQp9Bvk5RybFFjQKLeyCX+jx0m7dQzYkhBwxiXBoR+HZXtXgHJjKH8IQGryRb
-         mQ4qBta4TzAOfs98vL4GbrDwzmUFBXNF/FrVdchQSaKGxWPexc1aSEITIFUHfVjZj3
-         0xOZ/N/oxXNLAXnHHBNYObcgylTXu3FwW2OS+1VQ=
+        b=B5qWF4mwCJV/AXfEeBhRO212TbRysJdNQQ9X1poqrEckTfQ/cskt4VHN+MKY6SVGS
+         WlkBNXD2XuppZGaf5XJjvKLTKeQ41jwKVyZcrdb7eI6jCFBLRe5HOF+SAjZKXIrIat
+         eKO8RAndMJ90707fQUmscA0YiEKYOzVK853/K2XY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 29/91] pinctrl: sh-pfc: sh7264: Fix PFCR3 and PFCR0 register configuration
-Date:   Fri, 22 Nov 2019 01:00:27 -0500
-Message-Id: <20191122060129.4239-28-sashal@kernel.org>
+Cc:     Sweet Tea <sweettea@redhat.com>,
+        John Dorminy <jdorminy@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.9 32/91] dm flakey: Properly corrupt multi-page bios.
+Date:   Fri, 22 Nov 2019 01:00:30 -0500
+Message-Id: <20191122060129.4239-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -60,55 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sweet Tea <sweettea@redhat.com>
 
-[ Upstream commit 1b99d0c80bbe1810572c2cb77b90f67886adfa8d ]
+[ Upstream commit a00f5276e26636cbf72f24f79831026d2e2868e7 ]
 
-The Port F Control Register 3 (PFCR3) contains only a single field.
-However, counting from left to right, it is the fourth field, not the
-first field.
-Insert the missing dummy configuration values (3 fields of 16 values) to
-fix this.
+The flakey target is documented to be able to corrupt the Nth byte in
+a bio, but does not corrupt byte indices after the first biovec in the
+bio. Change the corrupting function to actually corrupt the Nth byte
+no matter in which biovec that index falls.
 
-The descriptor for the Port F Control Register 0 (PFCR0) lacks the
-description for the 4th field (PF0 Mode, PF0MD[2:0]).
-Add the missing configuration values to fix this.
+A test device generating two-page bios, atop a flakey device configured
+to corrupt a byte index on the second page, verified both the failure
+to corrupt before this patch and the expected corruption after this
+change.
 
-Fixes: a8d42fc4217b1ea1 ("sh-pfc: Add sh7264 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: John Dorminy <jdorminy@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/md/dm-flakey.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-index 8070765311dbf..e1c34e19222ee 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-@@ -1716,6 +1716,9 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	},
+diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
+index 3643cba713518..742c1fa870dae 100644
+--- a/drivers/md/dm-flakey.c
++++ b/drivers/md/dm-flakey.c
+@@ -258,20 +258,31 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
  
- 	{ PINMUX_CFG_REG("PFCR3", 0xfffe38a8, 16, 4) {
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PF12MD_000, PF12MD_001, 0, PF12MD_011,
- 		PF12MD_100, PF12MD_101, 0, 0,
- 		0, 0, 0, 0, 0, 0, 0, 0 }
-@@ -1759,8 +1762,10 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		0, 0, 0, 0, 0, 0, 0, 0,
- 		PF1MD_000, PF1MD_001, PF1MD_010, PF1MD_011,
- 		PF1MD_100, PF1MD_101, 0, 0,
--		0, 0, 0, 0, 0, 0, 0, 0
--	 }
-+		0, 0, 0, 0, 0, 0, 0, 0,
-+		PF0MD_000, PF0MD_001, PF0MD_010, PF0MD_011,
-+		PF0MD_100, PF0MD_101, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0 }
- 	},
+ static void corrupt_bio_data(struct bio *bio, struct flakey_c *fc)
+ {
+-	unsigned bio_bytes = bio_cur_bytes(bio);
+-	char *data = bio_data(bio);
++	unsigned int corrupt_bio_byte = fc->corrupt_bio_byte - 1;
++
++	struct bvec_iter iter;
++	struct bio_vec bvec;
++
++	if (!bio_has_data(bio))
++		return;
  
- 	{ PINMUX_CFG_REG("PFIOR0", 0xfffe38b2, 16, 1) {
+ 	/*
+-	 * Overwrite the Nth byte of the data returned.
++	 * Overwrite the Nth byte of the bio's data, on whichever page
++	 * it falls.
+ 	 */
+-	if (data && bio_bytes >= fc->corrupt_bio_byte) {
+-		data[fc->corrupt_bio_byte - 1] = fc->corrupt_bio_value;
+-
+-		DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
+-			"(rw=%c bi_opf=%u bi_sector=%llu cur_bytes=%u)\n",
+-			bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
+-			(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
+-			(unsigned long long)bio->bi_iter.bi_sector, bio_bytes);
++	bio_for_each_segment(bvec, bio, iter) {
++		if (bio_iter_len(bio, iter) > corrupt_bio_byte) {
++			char *segment = (page_address(bio_iter_page(bio, iter))
++					 + bio_iter_offset(bio, iter));
++			segment[corrupt_bio_byte] = fc->corrupt_bio_value;
++			DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
++				"(rw=%c bi_opf=%u bi_sector=%llu size=%u)\n",
++				bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
++				(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
++				(unsigned long long)bio->bi_iter.bi_sector, bio->bi_iter.bi_size);
++			break;
++		}
++		corrupt_bio_byte -= bio_iter_len(bio, iter);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
