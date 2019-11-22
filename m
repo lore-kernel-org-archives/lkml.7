@@ -2,147 +2,150 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B184DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39798C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810F620718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B07720718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nA5YGCJv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwMro+DW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfKVNT6 (ORCPT
+        id S1727868AbfKVNUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:19:58 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:47034 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfKVNT6 (ORCPT
+        Fri, 22 Nov 2019 08:20:13 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33989 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfKVNUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:19:58 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so7292294ljp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 05:19:57 -0800 (PST)
+        Fri, 22 Nov 2019 08:20:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so8640071wrr.1;
+        Fri, 22 Nov 2019 05:20:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ky4ZxywYAc+Y33e81VVZxLUui9CmXsPpxMd7CkRfNgs=;
-        b=nA5YGCJv7mfGExcfpgFDbA51hzmZP8EaXOT8OIj85jOGLkm0sKOfjCpHKhWfCRX69w
-         Utvi1zv9EQCtFN2AQG8xmomFl81pCO8P8g8CU1Pv4On5nxehd9L6F431xv6DCnjFhZc1
-         zQd+gkPVR1pBH8hk1+YSPQeTZ/gqWTmPuq5GfDTABnrjLYfrG0ftjeZELZm2MMlG9A0y
-         QBdtF3gt4BUc7app399ydHOGAV/cz5f+zb25BiH4OYagOAeVkSnqXfvKYikMQ49lHfAP
-         TWHj/xZDFI9LBF265eoybrPJt9nBL2orV+H/yvBzr7UE8xxYxWQVylGR8Ho2p0OKLUR4
-         vXXQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6sg6rDS5zsmnONV3JVTno5+5UKGIXJNaE0e1hOOttVA=;
+        b=LwMro+DWviHvcawXAIPhdJi5PSeHe95tuxMmk4eMaDwhHeli14vHK63rrBLaytZBX4
+         gaSOx7PJ3CGfHdepQUlIq3YTfnqBQOzl+iT4n0q/aBWAeOUJpLc0clmfZ7HK/j6OK/N+
+         pe/SrMQuc5TA4FWwm/mEBbHxIXRc+0H6ENtlw3uqXJw9RA8i0By7ESmIVWmxQKJixodi
+         pDSUWqfK3QeRlK45U4Zzm18W1zZ1bN6spDNvo5Dihj5gbZrw9cktKqKRaUaMw7iETrJL
+         nJ/K8N5R4ZvmyvqZ6GvAC9dqrOZg8uVAPAYpPEFV3HYzGjeIrzXp3uvwj8VLaDhtDiLp
+         sIUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ky4ZxywYAc+Y33e81VVZxLUui9CmXsPpxMd7CkRfNgs=;
-        b=EOCL0wn2aPitJsjj5/RJ535DcALriKkSfewcctMP9+mKqBvkPkrG3uebeg48GHXZLv
-         BB2ajFp4taRz9VSF0gd/9nLVeGHJaH+XkuyKGDKTE8HY/7/kZ7xoFeP4HB9/lSC00Qum
-         l3S5aFjsWTsfDvxO5Orf+x1asdKiyB+b6lsPdIsMXMR2Ry3mOiB6aH6QXkldE2prbQAE
-         6BgC0Z6hEl1Mik/PwPJw2TyBFdilw5178wZD+umXMuboa11xveh3aFmYImbvUVk4CPYo
-         PACN3Xsi7hXK+88AhqWaArBlC3WSgmCuRe4mrwCgJJsDwbmU2zXgsren81gnBnxO4ZB5
-         G9pQ==
-X-Gm-Message-State: APjAAAVV/SQ1t5QYKitnn0XyK3DskdK7a/wgLnKI9Cx3PR7TZts/AfKu
-        E2x59ADm614Z1y7IM9ltTsRVQr8QVoq0YIOGJtNspg==
-X-Google-Smtp-Source: APXvYqzsXRJ0uHFXWFY2JziwYUuhBbAM6FTAlyCIQvNWywzWDx3C30LPctoTeZgyo6clI/qIvp12Yv4j+nKffbYsfl0=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr12308656ljd.183.1574428796307;
- Fri, 22 Nov 2019 05:19:56 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6sg6rDS5zsmnONV3JVTno5+5UKGIXJNaE0e1hOOttVA=;
+        b=d1i9chdBrQ6JVKmCQxVYT8XdkEDMZO61kBL9Ju3hOkzYuwmW/mPTj6tpkgpVj/jDli
+         fsH/wwfn/c7SggyGOLRZy2cJ6Rmr9xsbwnkd1QIrE2GQJQ11VeN1+IwjRcZWkoa714+M
+         3yjVtfiU9qm/9vS5Jj9H/SAi/9Y2PtTMygJp5w6fjniueOQvTGk0caG3rZKW96cAC5ws
+         7z3n/K55c38hzsOCuW5vMuzw0huz4hcdh8h6FY6GR/z+Fx/7v5hddMu9g5K4Gf+eGj9F
+         llszNb6DpLd5rHjN3uv5mT8q6XfDF3sdMKUTzb7XewTOd/OfcuFP94/h15pem2qMudfx
+         wHrA==
+X-Gm-Message-State: APjAAAV+gKpApOAQWoHO5rrUlb+W5ajHKv/iN2fVnJc2CFBfzFCeU7Gp
+        wDe9r2xz+xsdehqPkKFoSCU=
+X-Google-Smtp-Source: APXvYqzrCqSjrtUVRHlaOa9Gk4HuJFCQ1LF9bmXEW4d7Zmwj4NkDmsR4lDd8rOe+2g7t/R+8gHhFoQ==
+X-Received: by 2002:adf:dd10:: with SMTP id a16mr18371366wrm.213.1574428810111;
+        Fri, 22 Nov 2019 05:20:10 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id 16sm3808746wmf.0.2019.11.22.05.20.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 05:20:08 -0800 (PST)
+Date:   Fri, 22 Nov 2019 14:20:07 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 5/6] arm64: tegra: Enable GPIO controllers nodes for
+ P2972-0000 platform
+Message-ID: <20191122132007.GC1315704@ulmo>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+ <20191122104505.8986-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <cover.1573456283.git.baolin.wang@linaro.org> <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
- <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
- <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com>
- <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
- <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com> <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com>
-In-Reply-To: <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 14:19:44 +0100
-Message-ID: <CACRpkdbzN8_YFT0Di88Oi1j+TTMT-VJLSbv6J8jxP+AsA3j1Dg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Add MMC software queue support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Paolo Valente <paolo.valente@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
+Content-Disposition: inline
+In-Reply-To: <20191122104505.8986-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 10:50 AM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> I suppose to make the submission non-blocking, all operations that
-> currently block in the submission path may have to be changed first.
->
-> For the case of a partition switch (same for retune), I suppose
-> something like this can be done:
->
-> - in queue_rq() check whether a partition switch is needed. If not,
->   submit the current rq
-> - if a partition switch is needed, submit the partition switch cmd
->   instead, and return busy status
-> - when the completion arrives for the partition switch, call back into
->   blk_mq to have it call queue_rq again.
->
-> Or possibly even (this might not be possible without signifcant
-> restructuring):
->
-> - when preparing a request that would require a partition switch,
->   insert another meta-request to switch the partition ahead of it.
->
-> I do realize that this is a significant departure from how it was done
-> in the past, but it seems cleaner that way to me.
+--nmemrqcdn5VTmUEE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This partition business really need a proper overhaul.
+On Fri, Nov 22, 2019 at 04:15:04PM +0530, Vidya Sagar wrote:
+> Enable GPIO controllers nodes for P2972-0000 platform which are required
+> by other controllers in the SoC for example when PCIe C5 controller
+> operates in endpoint mode.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-I outlined the work elsewhere but the problem is that the
-eMMC "partitions" such as boot partitions and the usecase-defined
-"general" partition (notice SD cards do not have this problem)
-are badly integrated with the Linux partition manager.
+The GPIO controllers are enabled by default, so there's no need to
+explicitly enable them.
 
-Instead of mapping these partitions 1:1 to the Linux
-partitions they are separate block devices with their own
-block queue while still having a name that suggest they
-are just a partition of the device. Which they are. The
-only thing peculiar with them is that the firmware in the
-card are aware of them, I think the partitions that are
-not primary may trade update correctness for speed,
-such that e.g. boot partitions may have extra redundant
-pages in the device so that they never become corrupted.
-But card vendors would have to comment.
+Thierry
 
-This has peculiar side effects yielding weird user experiences
-such that
-dd if=/dev/mmcblk0 of=my-mmc-backup.img
-will actually NOT make a backup of the whole device,
-only the primary partition.
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
+m64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> index 353a6a22196d..7eb64b816e08 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> @@ -37,6 +37,14 @@
+>  			status =3D "okay";
+>  		};
+> =20
+> +		gpio@2200000 {
+> +			status =3D "okay";
+> +		};
+> +
+> +		gpio@c2f0000 {
+> +			status =3D "okay";
+> +		};
+> +
+>  		pwm@c340000 {
+>  			status =3D "okay";
+>  		};
+> --=20
+> 2.17.1
+>=20
 
-This should be fixed. My preferred solution would be to just
-catenate the logical blocks for these partitions beyond those
-of the primary partition, stash these offsets away somewhere
-and when they are accessed, insert special partition switch
-commands into the block scheduler just like you said.
+--nmemrqcdn5VTmUEE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Right now the MMC core is trying to coordinate the uses of
-different partitions by arbitrating different requests from
-typically 4 different block devices instead which isn't very
-good to say the least.
+-----BEGIN PGP SIGNATURE-----
 
-Also each block device eats memory
-and it should really just be one block device.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3X4IcACgkQ3SOs138+
+s6FpAQ/+JotZz8/2JN3IdtE0k+8HWLGaEx1OOv0qlI9Im7TRT6KIdSgkmlOjyWc8
+3JJ8fSte/65M3AqAJl+321hN4dhmnh4VDxHXfKsmx3q5PaZr02AByCD8sCNqkpt2
+/mDeVZ8rwWhtGOA3L20pPbRLeEKNlhzWPX02saLkTSH2eL34fHu/eg1YZAeW9Cu8
+oNg3i/2aqHKoyMoUvXE9MlrbibcGQAB3ZL9samNeotzBYF0r/jUTPVe/8Hb/M8+l
+9VFAHuw8Rv5VQCiHkiwtBZccd40PXeNISeGsrIuDPYY2MY8qmJncvYYqJLtsILyg
+R2bztDz4+5F77NLP92ktl6AXfO6pR0bG+PYMMauh95yxtJ9it5I51LKXTOXSxXCy
+fBmzIyR4rWYMtZE8TH8bahyR0nScsIFUlYT74w4CRchW5j4OEd/AhV/CECdPVOU0
+j9ANfV1g+OCPx/J3NOSxmIJDrDIjOwKqNCofb1ijc11kVketJ1ubmObS8bgu3oLV
+uE32RVxblix0IT0geVDMDP4r4z7nDNE6PmCptvhtyiVmtdSWKoMLod1nxZ7qGbT2
+BrEEozE/f/kNpQvLDp1uhCdtkgOi+hxqPze6p5FJhrJJ1ftzB+mdinqgOU9Jm8yQ
+En+CE7rFd5SFf2RRD/5r+bb93b8DBwNYbh1B0AGjT5EpTqi2Qbg=
+=kby4
+-----END PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+--nmemrqcdn5VTmUEE--
