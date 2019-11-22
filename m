@@ -2,52 +2,54 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FDBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D639CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF2B2085B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5D820872
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420858;
-	bh=Sdmu46wqyOZ8xb4qgKmubdm8/s9CbLdUeDfQxVPweYg=;
+	s=default; t=1574420867;
+	bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8+fId52EdtnQYjccv9oR711hJqWeHnxGv6I0D3dvK0/yqhevJJ+ZHnv5RANvlZwg
-	 HUwcG+EHra1FlA8iSBIgwdrVqK+JMttVfSYbDzUGhZEMxJaoxect8Xh/JX1/+tq2Vr
-	 RMoAzLbFWUQPQqOF+DAdDGWCyfCnhpaztO2tB36M=
+	b=pqqSTPsgA4m9SUKVjj+tbogFl57RnuOT8cqzOaNYCZdWQLQKAGMcMZDOpHl80quui
+	 Sm5+4YbS1S3EkGGfmpETQTbsByD2OYJC80gmGnZ7bMU6DF6K5kQ0+0CAul+6vFWjmt
+	 lUBbYHiB5cncA5R6qWuPA68FM1iMPPX8uLs7R/10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731736AbfKVLFh (ORCPT
+        id S1731414AbfKVLHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:05:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33116 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:07:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730755AbfKVLFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:05:33 -0500
+        id S1731728AbfKVLFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA172075E;
-        Fri, 22 Nov 2019 11:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E1220840;
+        Fri, 22 Nov 2019 11:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420732;
-        bh=Sdmu46wqyOZ8xb4qgKmubdm8/s9CbLdUeDfQxVPweYg=;
+        s=default; t=1574420735;
+        bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ljMJI6FUEFvqyHwj7pQNanZwR9bicERvdNOyjpPyI2z8VakDcA38q68AOxv/uKd6z
-         OzsAPXV/WIc/uIUat3rp3G5Knr4EGNmSJpt5nfzddtHmfZ5IjF7/KuzFw7mZHlBlpB
-         AK2Dop1Elvk2tIBBiSnpqOBUzDqq3KnxmYH3NSsQ=
+        b=a63Hclo4I0spReMkO8ztfeiAHkFPxaq5YwcVPF1Xd/cx8lCyqrI2e/i6sD2DrHrCm
+         cDBJO0wvUheAH+W4Al8Z3WIFFNXbdR97pEetPJip4FiDOcz7Jfxc3co5fsxTSaa2eh
+         3oNdIHaGTf+aJFwAMXtZu9cyJvtIBzC+kaJWwVw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 206/220] netfilter: nft_compat: do not dump private area
-Date:   Fri, 22 Nov 2019 11:29:31 +0100
-Message-Id: <20191122100928.615120804@linuxfoundation.org>
+Subject: [PATCH 4.19 171/220] backlight: lm3639: Unconditionally call led_classdev_unregister
+Date:   Fri, 22 Nov 2019 11:28:56 +0100
+Message-Id: <20191122100925.124648045@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,70 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit d701d8117200399d85e63a737d2e4e897932f3b6 ]
+[ Upstream commit 7cea645ae9c5a54aa7904fddb2cdf250acd63a6c ]
 
-Zero pad private area, otherwise we expose private kernel pointer to
-userspace. This patch also zeroes the tail area after the ->matchsize
-and ->targetsize that results from XT_ALIGN().
+Clang warns that the address of a pointer will always evaluated as true
+in a boolean context.
 
-Fixes: 0ca743a55991 ("netfilter: nf_tables: add compatibility layer for x_tables")
-Reported-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+drivers/video/backlight/lm3639_bl.c:403:14: warning: address of
+'pchip->cdev_torch' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_torch)
+        ~~   ~~~~~~~^~~~~~~~~~
+drivers/video/backlight/lm3639_bl.c:405:14: warning: address of
+'pchip->cdev_flash' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_flash)
+        ~~   ~~~~~~~^~~~~~~~~~
+2 warnings generated.
+
+These statements have been present since 2012, introduced by
+commit 0f59858d5119 ("backlight: add new lm3639 backlight
+driver"). Given that they have been called unconditionally since
+then presumably without any issues, removing the always true if
+statements to fix the warnings without any real world changes.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/119
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_compat.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ drivers/video/backlight/lm3639_bl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
-index 1245e02239d90..469f9da5073bf 100644
---- a/net/netfilter/nft_compat.c
-+++ b/net/netfilter/nft_compat.c
-@@ -269,6 +269,24 @@ nft_target_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
- 	kfree(expr->ops);
- }
+diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
+index cd50df5807ead..086611c7bc03c 100644
+--- a/drivers/video/backlight/lm3639_bl.c
++++ b/drivers/video/backlight/lm3639_bl.c
+@@ -400,10 +400,8 @@ static int lm3639_remove(struct i2c_client *client)
  
-+static int nft_extension_dump_info(struct sk_buff *skb, int attr,
-+				   const void *info,
-+				   unsigned int size, unsigned int user_size)
-+{
-+	unsigned int info_size, aligned_size = XT_ALIGN(size);
-+	struct nlattr *nla;
-+
-+	nla = nla_reserve(skb, attr, aligned_size);
-+	if (!nla)
-+		return -1;
-+
-+	info_size = user_size ? : size;
-+	memcpy(nla_data(nla), info, info_size);
-+	memset(nla_data(nla) + info_size, 0, aligned_size - info_size);
-+
-+	return 0;
-+}
-+
- static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
- {
- 	const struct xt_target *target = expr->ops->data;
-@@ -276,7 +294,8 @@ static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ 	regmap_write(pchip->regmap, REG_ENABLE, 0x00);
  
- 	if (nla_put_string(skb, NFTA_TARGET_NAME, target->name) ||
- 	    nla_put_be32(skb, NFTA_TARGET_REV, htonl(target->revision)) ||
--	    nla_put(skb, NFTA_TARGET_INFO, XT_ALIGN(target->targetsize), info))
-+	    nft_extension_dump_info(skb, NFTA_TARGET_INFO, info,
-+				    target->targetsize, target->usersize))
- 		goto nla_put_failure;
- 
- 	return 0;
-@@ -504,7 +523,8 @@ static int __nft_match_dump(struct sk_buff *skb, const struct nft_expr *expr,
- 
- 	if (nla_put_string(skb, NFTA_MATCH_NAME, match->name) ||
- 	    nla_put_be32(skb, NFTA_MATCH_REV, htonl(match->revision)) ||
--	    nla_put(skb, NFTA_MATCH_INFO, XT_ALIGN(match->matchsize), info))
-+	    nft_extension_dump_info(skb, NFTA_MATCH_INFO, info,
-+				    match->matchsize, match->usersize))
- 		goto nla_put_failure;
- 
+-	if (&pchip->cdev_torch)
+-		led_classdev_unregister(&pchip->cdev_torch);
+-	if (&pchip->cdev_flash)
+-		led_classdev_unregister(&pchip->cdev_flash);
++	led_classdev_unregister(&pchip->cdev_torch);
++	led_classdev_unregister(&pchip->cdev_flash);
+ 	if (pchip->bled)
+ 		device_remove_file(&(pchip->bled->dev), &dev_attr_bled_mode);
  	return 0;
 -- 
 2.20.1
