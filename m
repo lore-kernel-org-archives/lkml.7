@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC51C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE26820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3A320409
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403866;
-	bh=TvnrklSzh6sXwmGAPCZ0w0s7Anb3NdKGb5fXdATgkoM=;
+	s=default; t=1574403870;
+	bh=El87W87gUKdjkEIOxGKkTeim2N3L71k5D8CTxcsCHFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XmxXCb0JaMn/iVC1t3DFSbFjMbc++hegnokk414iwwvUwXagL6rrFd4tWomuh/ih2
-	 n3tqkWNiFQuS/OmT9bQaQp9PKU8aVTjCKk2+1c41JDF9kwjZ8mGHvx4Mdx3qNcNGmZ
-	 BrrVKB2h/mc60Dstli54ZL9FhkFeD+SV/32pB1Go=
+	b=pVJfbsLhRQymJKBVbGS0QldPqQZHxEa812r+Hn8Hiqga6zvEvkiJZMdpqrm8fOP+8
+	 MCfk1Qj9i4oq1ikus6W2QcHoiCFHogvO1nqtNG3RlAeUc5hUmBKfc32l1dQufkRGEO
+	 /ek/r7T8QJTkj/G7thmjz0DBOXrtGK9VIgzNbzPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfKVGYZ (ORCPT
+        id S1728130AbfKVFv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:24:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56536 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbfKVFv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:27 -0500
+        id S1728064AbfKVFvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F05E520730;
-        Fri, 22 Nov 2019 05:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5089520726;
+        Fri, 22 Nov 2019 05:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401886;
-        bh=TvnrklSzh6sXwmGAPCZ0w0s7Anb3NdKGb5fXdATgkoM=;
+        s=default; t=1574401875;
+        bh=El87W87gUKdjkEIOxGKkTeim2N3L71k5D8CTxcsCHFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjBRgD5vn3SiH6VbMmCocfyJxrFm1QCi1oEPmPP5/dm9fpCyEEC+YrQiBNnzD6U4t
-         LhJ1TyM3a2SAA3XstJEvCNZIgdMp34tWMgSBXMcRtFsZhNnXhiqmKL/oEL6WLMIfyn
-         MBVV2usZJFScR2iaw9HXAW+kWrL0/1q/DzlDF3xg=
+        b=avvIwrxFIydr4B/XC+5jVyws4fvaKrr67//slw3Pd5wSzi/SQZ44xz54JSbabvfn5
+         UgCaF32KupFjR7NvyOgbPr5Jh3LQhXxE0j2VvXDRmnOtR0cRdzsUNpGLI0lnPsMTHY
+         yj0OWJhIkTN6um24B7vWDlwKNAWKShW9lSoystMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 120/219] powerpc/prom: fix early DEBUG messages
-Date:   Fri, 22 Nov 2019 00:47:32 -0500
-Message-Id: <20191122054911.1750-113-sashal@kernel.org>
+Cc:     Alexander Shiyan <shc_work@mail.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 110/219] serial: max310x: Fix tx_empty() callback
+Date:   Fri, 22 Nov 2019 00:47:22 -0500
+Message-Id: <20191122054911.1750-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,53 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Alexander Shiyan <shc_work@mail.ru>
 
-[ Upstream commit b18f0ae92b0a1db565c3e505fa87b6971ad3b641 ]
+[ Upstream commit a8da3c7873ea57acb8f9cea58c0af477522965aa ]
 
-This patch fixes early DEBUG messages in prom.c:
-- Use %px instead of %p to see the addresses
-- Cast memblock_phys_mem_size() with (unsigned long long) to
-avoid build failure when phys_addr_t is not 64 bits.
+Function max310x_tx_empty() accesses the IRQSTS register, which is
+cleared by IC when reading, so if there is an interrupt status, we
+will lose it. This patch implement the transmitter check only by
+the current FIFO level.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/prom.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/max310x.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index c4d7078e5295f..8e88f78e57dba 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -129,7 +129,7 @@ static void __init move_device_tree(void)
- 		p = __va(memblock_alloc(size, PAGE_SIZE));
- 		memcpy(p, initial_boot_params, size);
- 		initial_boot_params = p;
--		DBG("Moved device tree to 0x%p\n", p);
-+		DBG("Moved device tree to 0x%px\n", p);
- 	}
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index bd3e6cf81af5c..0c35c3c5e3734 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -844,12 +844,9 @@ static void max310x_wq_proc(struct work_struct *ws)
  
- 	DBG("<- move_device_tree\n");
-@@ -689,7 +689,7 @@ void __init early_init_devtree(void *params)
+ static unsigned int max310x_tx_empty(struct uart_port *port)
  {
- 	phys_addr_t limit;
+-	unsigned int lvl, sts;
++	u8 lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
  
--	DBG(" -> early_init_devtree(%p)\n", params);
-+	DBG(" -> early_init_devtree(%px)\n", params);
+-	lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
+-	sts = max310x_port_read(port, MAX310X_IRQSTS_REG);
+-
+-	return ((sts & MAX310X_IRQ_TXEMPTY_BIT) && !lvl) ? TIOCSER_TEMT : 0;
++	return lvl ? 0 : TIOCSER_TEMT;
+ }
  
- 	/* Too early to BUG_ON(), do it by hand */
- 	if (!early_init_dt_verify(params))
-@@ -749,7 +749,7 @@ void __init early_init_devtree(void *params)
- 	memblock_allow_resize();
- 	memblock_dump_all();
- 
--	DBG("Phys. mem: %llx\n", memblock_phys_mem_size());
-+	DBG("Phys. mem: %llx\n", (unsigned long long)memblock_phys_mem_size());
- 
- 	/* We may need to relocate the flat tree, do it now.
- 	 * FIXME .. and the initrd too? */
+ static unsigned int max310x_get_mctrl(struct uart_port *port)
 -- 
 2.20.1
 
