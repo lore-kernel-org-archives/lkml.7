@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D359CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F249DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18D12068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58462068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403179;
-	bh=e6wAYEyaRwAiQNgGCCFmkB1X/uUjDUITQKSnTdmdXRU=;
+	s=default; t=1574403182;
+	bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sUEH8BFcmxjmPiYTDa9Fd0imbKWqM3PS5n2oN3oO1ra1eapkKOitkTCjRtgHCgs1K
-	 lBoepH3FPD/OyDOfODdnmrBoIVDXy9enuh0ZGpzwS0+gaVfzbQxM/iDE1x4fcQcbPX
-	 sWtZr7kqSB6RPeval3C2sAjQWiOkRUMREzwDZHjA=
+	b=Zez5a/PyytAtLzSnfM2MNtsxmaQ8dLNplv8oztbmoye/4egKhL1rxV0EpDNklElE7
+	 cWMSoCNedqndiZWbcglfMthaXFghT/i9B6yWQPhNCld+N0wKrRboAdBmMaB6x5IC5B
+	 TX5w3fh9q0Z5rYCOFQ1wGBjjnzaSVM7De7uXFKk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfKVF4F (ORCPT
+        id S1727875AbfKVGNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbfKVF4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:00 -0500
+        id S1728991AbfKVF4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8977A20659;
-        Fri, 22 Nov 2019 05:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 618ED20731;
+        Fri, 22 Nov 2019 05:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402160;
-        bh=e6wAYEyaRwAiQNgGCCFmkB1X/uUjDUITQKSnTdmdXRU=;
+        s=default; t=1574402165;
+        bh=+101NAiM32AfaI/JI1P5ZDUUQ7lZCyxXo7+NbrFvf4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPKNEpq/x0k94UN+IVhMoMM20aPmOKH/QjFacAkbzjOhQpLO7ScYHWYYccJCBTQH2
-         on4nNbJc2sJyY97R/hHvSgSg9G/ufBy0x7UEedpGLrr1tluZyQeWYayqAAjFeOp7lQ
-         aCjl61ArR/PU+bp9wX3DnY3PMrmsdZpuMqGkuj44=
+        b=YHFleNsUi6Wb3Z9FruRjlqqgntDeNr/TquqK2MmAkkWlJgvCgvX/kjH5yTPYMjxpq
+         PDt/z8A5ZXxBVaeM/Z/QXd6dvByCwtaN9mdXMWwWqQ7N7YzN2+uynoMvE/zKwFOiBD
+         Klo18mxOMllolHdEMAae5PvX0mQHdo0Gh3s3XpGY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 014/127] ACPI / LPSS: Ignore acpi_device_fix_up_power() return value
-Date:   Fri, 22 Nov 2019 00:53:52 -0500
-Message-Id: <20191122055544.3299-13-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 018/127] mwifiex: debugfs: correct histogram spacing, formatting
+Date:   Fri, 22 Nov 2019 00:53:56 -0500
+Message-Id: <20191122055544.3299-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,52 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 1a2fa02f7489dc4d746f2a15fb77b3ce1affade8 ]
+[ Upstream commit 4cb777c64e030778c569f605398d7604d8aabc0f ]
 
-Ignore acpi_device_fix_up_power() return value. If we return an error
-we end up with acpi_default_enumeration() still creating a platform-
-device for the device and we end up with the device still being used
-but without the special LPSS related handling which is not useful.
+Currently, snippets of this file look like:
 
-Specicifically ignoring the error fixes the touchscreen no longer
-working after a suspend/resume on a Prowise PT301 tablet.
+rx rates (in Mbps): 0=1M   1=2M2=5.5M  3=11M   4=6M   5=9M  6=12M
+7=18M  8=24M  9=36M  10=48M  11=54M12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)
+44-53=MCS0-9(VHT:BW20)54-63=MCS0-9(VHT:BW40)64-73=MCS0-9(VHT:BW80)
+...
+noise_flr[--96dBm] = 22
+noise_flr[--95dBm] = 149
+noise_flr[--94dBm] = 9
+noise_flr[--93dBm] = 2
 
-This tablet has a broken _PS0 method on the touchscreen's I2C controller,
-causing acpi_device_fix_up_power() to fail, causing fallback to standard
-platform-dev handling and specifically causing acpi_lpss_save/restore_ctx
-to not run.
+We're missing some spaces, and we're adding a minus sign ('-') on values
+that are already negative signed integers.
 
-The I2C controllers _PS0 method does actually turn on the device, but then
-does some more nonsense which fails when run during early boot trying to
-use I2C opregion handling on another not-yet registered I2C controller.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/debugfs.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 51592dd45b066..84124b8a7778a 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -500,12 +500,7 @@ static int acpi_lpss_create_device(struct acpi_device *adev,
- 	 * have _PS0 and _PS3 without _PSC (and no power resources), so
- 	 * acpi_bus_init_power() will assume that the BIOS has put them into D0.
- 	 */
--	ret = acpi_device_fix_up_power(adev);
--	if (ret) {
--		/* Skip the device, but continue the namespace scan. */
--		ret = 0;
--		goto err_out;
--	}
-+	acpi_device_fix_up_power(adev);
+diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+index 6f4239be609d0..49ca84ef1a992 100644
+--- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
++++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+@@ -296,15 +296,13 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
+ 		     "total samples = %d\n",
+ 		     atomic_read(&phist_data->num_samples));
  
- 	adev->driver_data = pdata;
- 	pdev = acpi_create_platform_device(adev, dev_desc->properties);
+-	p += sprintf(p, "rx rates (in Mbps): 0=1M   1=2M");
+-	p += sprintf(p, "2=5.5M  3=11M   4=6M   5=9M  6=12M\n");
+-	p += sprintf(p, "7=18M  8=24M  9=36M  10=48M  11=54M");
+-	p += sprintf(p, "12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
++	p += sprintf(p,
++		     "rx rates (in Mbps): 0=1M   1=2M 2=5.5M  3=11M   4=6M   5=9M  6=12M\n"
++		     "7=18M  8=24M  9=36M  10=48M  11=54M 12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
+ 
+ 	if (ISSUPP_11ACENABLED(priv->adapter->fw_cap_info)) {
+-		p += sprintf(p, "44-53=MCS0-9(VHT:BW20)");
+-		p += sprintf(p, "54-63=MCS0-9(VHT:BW40)");
+-		p += sprintf(p, "64-73=MCS0-9(VHT:BW80)\n\n");
++		p += sprintf(p,
++			     "44-53=MCS0-9(VHT:BW20) 54-63=MCS0-9(VHT:BW40) 64-73=MCS0-9(VHT:BW80)\n\n");
+ 	} else {
+ 		p += sprintf(p, "\n");
+ 	}
+@@ -333,7 +331,7 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
+ 	for (i = 0; i < MWIFIEX_MAX_NOISE_FLR; i++) {
+ 		value = atomic_read(&phist_data->noise_flr[i]);
+ 		if (value)
+-			p += sprintf(p, "noise_flr[-%02ddBm] = %d\n",
++			p += sprintf(p, "noise_flr[%02ddBm] = %d\n",
+ 				(int)(i-128), value);
+ 	}
+ 	for (i = 0; i < MWIFIEX_MAX_SIG_STRENGTH; i++) {
 -- 
 2.20.1
 
