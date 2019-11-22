@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5470C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82812C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF15520674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EB420674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403789;
-	bh=pnHoMJ/VIf/bpAE19w6W//LfMUwzElYtDIiJ9wLpwgo=;
+	s=default; t=1574403796;
+	bh=CrI0/ZIICBLBt4Quh91vZZVcOFT//RP6JUGfUOsnkPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jjt7a2IJXbPac5pkUrnbVBzV/UgAj+Wr8e26fgbKexr+lxCHEaU9/O3wZf4OdcFFr
-	 XHw/N1YANbV04Mgqojxg4Sa7fw6uIiwleTARbpOlaTKkrOY3rNviC6UQBvIVLieOdB
-	 wsNx3ksmh/QHV2ZS0JFBwzbxIbCxwsAemSU3/YPg=
+	b=bZDCGYtLeSKq0En2C0wKY26uKGB6Ka9VX4LQhJ1fb+pZoipc5+KLPtdXFhVUHV993
+	 7KkM5keaur5j3aCImTt4lCP3PRKIoHQxEq1O/YSxMu6yfchkKIte7qSO/pB6Jov1KK
+	 2d50ISsAPrvaXu/ZF32w6zxf82M38nCqghdMpUEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfKVGXI (ORCPT
+        id S1726976AbfKVFvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:23:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbfKVFvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:51 -0500
+        id S1728235AbfKVFvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0916520717;
-        Fri, 22 Nov 2019 05:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F003820731;
+        Fri, 22 Nov 2019 05:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401910;
-        bh=pnHoMJ/VIf/bpAE19w6W//LfMUwzElYtDIiJ9wLpwgo=;
+        s=default; t=1574401901;
+        bh=CrI0/ZIICBLBt4Quh91vZZVcOFT//RP6JUGfUOsnkPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rVpGJBIFVn9ld64xGBlidcb1MVObsr3xoN5VZeHEw3BojbKasOoWgHvZzvT8HspwT
-         SxNFD44RR/9DN4U6ZaidiTDa+ysR7PIycotTimvc05BqzBn8GRexr5J7G0MyCf7qhG
-         auL0SqARIlpdOlIeg1irbs6IBU/WN59fBpFLR1to=
+        b=tWzc91neL8NozOhwlDILI92fsFlDkNxKRbxlS17XWcGhFXdX0y4q486ee2tv/T+bj
+         zjlUaWJuzZCv32svg9JwX8SC0Pabt2blY8mJ0qTTJIdgIgGiGKtd01VuzmacWPj94S
+         oC2svGPAerbd2LTqR1+mBkG+jU766Do/pSoDBRsg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiuyang Sun <sunqiuyang@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 141/219] f2fs: fix block address for __check_sit_bitmap
-Date:   Fri, 22 Nov 2019 00:47:53 -0500
-Message-Id: <20191122054911.1750-134-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 133/219] powerpc/pseries: Fix node leak in update_lmb_associativity_index()
+Date:   Fri, 22 Nov 2019 00:47:45 -0500
+Message-Id: <20191122054911.1750-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,34 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuyang Sun <sunqiuyang@huawei.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 9249dded7b5cb539a8c8698b25d08a3c15261470 ]
+[ Upstream commit 47918bc68b7427e961035949cc1501a864578a69 ]
 
-Should use lstart (logical start address) instead of start (in dev) here.
-This fixes a bug in multi-device scenarios.
+In update_lmb_associativity_index() we lookup dr_node using
+of_find_node_by_path() which takes a reference for us. In the
+non-error case we forget to drop the reference. Note that
+find_aa_index() does modify properties of the node, but doesn't need
+an extra reference held once it's returned.
 
-Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/hotplug-memory.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 10d5dcdb34be6..01cb87b12d40b 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1101,7 +1101,7 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 		list_move_tail(&dc->list, wait_list);
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index f99cd31b6fd1a..8a1c2c8963214 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -202,6 +202,7 @@ static u32 lookup_lmb_associativity_index(struct drmem_lmb *lmb)
  
- 		/* sanity check on discard range */
--		__check_sit_bitmap(sbi, start, start + len);
-+		__check_sit_bitmap(sbi, lstart, lstart + len);
+ 	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
  
- 		bio->bi_private = dc;
- 		bio->bi_end_io = f2fs_submit_discard_endio;
++	of_node_put(dr_node);
+ 	dlpar_free_cc_nodes(lmb_node);
+ 	return aa_index;
+ }
 -- 
 2.20.1
 
