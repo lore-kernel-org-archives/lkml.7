@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50672C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD795C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AC1207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B648520679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420578;
-	bh=eHQG1+45UnU0f2+tIK6SyHL4QPGWNo5WyA4FhoQxtTo=;
+	s=default; t=1574420581;
+	bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDmIGdPa0pXp9c11NPzEWss7SvvnonQubHIEDX2SgLMnHluCrOl21RXZo56aUfQ02
-	 Ne7+9deROdrDIKkiIeHQjG65xlF6pO2FflgIz9cDUSLReYAnk07KZO1guo4hZ61Eq0
-	 jKZGejQYXRqJugK4Y+bSmjSW3PQ889x/iyVzluik=
+	b=YglZGQnCacN8Hyx62sWuzk42nm/5oFrKcyofhPdoVhsOeIhS8658Cx8ccfmlZM4Z7
+	 lt4eVWskztyYbbqry33X32tnEJyPDkw4PgNhrUqud7I4p5kBAC39ATaU0pUDBowo9Y
+	 lpiqQbd9RC/wI4ooaTqun667CA1QWGScCaV95guE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbfKVLC4 (ORCPT
+        id S1731386AbfKVLDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56718 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731023AbfKVLCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:53 -0500
+        id S1731028AbfKVLCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD458207FA;
-        Fri, 22 Nov 2019 11:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D0052075E;
+        Fri, 22 Nov 2019 11:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420572;
-        bh=eHQG1+45UnU0f2+tIK6SyHL4QPGWNo5WyA4FhoQxtTo=;
+        s=default; t=1574420574;
+        bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3nKADSxQVzPkG2n+ptOA1HEdul8Rm0arjl2MJ5KJ3cDynQjB7n2gQJYmPbJ/a4Uo
-         bekQybriS15IlWUKhjal1j86v0Y6ViElMte6W+6j2ot48fiI3Vq0ZQSdIAk80A/opc
-         GHEyxEfQGkNNisgPEHdvepL2Od1lSzDEAaYm3q34=
+        b=w6vHqwSr2jP4WhvtZvzLGLX84PvpkrEBWl0QpydOp3ErJxaWjcm6uI7M+l7PH+072
+         tiUpAQg7EY09dmVPOgRdhBppUD5mMjnfu6V1jT6Udr8Cn+cNhWvMR5RiMLpV6mskUN
+         OAuCihBrQ4n4cweIEpN7KCxqUWWSNiasUjtajeIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Mathieu Malaterre <malat@debian.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 151/220] atmel_lcdfb: support native-mode display-timings
-Date:   Fri, 22 Nov 2019 11:28:36 +0100
-Message-Id: <20191122100923.595617511@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>,
+        Peter Malone <peter.malone@gmail.com>
+Subject: [PATCH 4.19 152/220] fbdev: sbuslib: use checked version of put_user()
+Date:   Fri, 22 Nov 2019 11:28:37 +0100
+Message-Id: <20191122100923.662799247@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,114 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 60e5e48dba72c6b59a7a9c7686ba320766913368 ]
+[ Upstream commit d8bad911e5e55e228d59c0606ff7e6b8131ca7bf ]
 
-When a device tree set a display-timing using native-mode
-then according to the bindings doc this should:
+I'm not sure why the code assumes that only the first put_user() needs
+an access_ok() check.  I have made all the put_user() and get_user()
+calls checked.
 
-    native-mode:
-    The native mode for the display, in case multiple
-    modes are provided.
-    When omitted, assume the first node is the native.
-
-The atmel_lcdfb used the last timing subnode and did not
-respect the timing mode specified with native-mode.
-
-Introduce use of of_get_videomode() which allowed
-a nice simplification of the code while also
-added support for native-mode.
-
-As a nice side-effect this fixes a memory leak where the
-data used for timings and the display_np was not freed.
-
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: Peter Malone <peter.malone@gmail.com>,
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/atmel_lcdfb.c | 43 +++++++------------------------
- 1 file changed, 9 insertions(+), 34 deletions(-)
+ drivers/video/fbdev/sbuslib.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
-index 076d24afbd728..4ed55e6bbb840 100644
---- a/drivers/video/fbdev/atmel_lcdfb.c
-+++ b/drivers/video/fbdev/atmel_lcdfb.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <video/of_videomode.h>
- #include <video/of_display_timing.h>
- #include <linux/regulator/consumer.h>
- #include <video/videomode.h>
-@@ -1028,11 +1029,11 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
- 	struct device *dev = &sinfo->pdev->dev;
- 	struct device_node *np =dev->of_node;
- 	struct device_node *display_np;
--	struct device_node *timings_np;
--	struct display_timings *timings;
- 	struct atmel_lcdfb_power_ctrl_gpio *og;
- 	bool is_gpio_power = false;
-+	struct fb_videomode fb_vm;
- 	struct gpio_desc *gpiod;
-+	struct videomode vm;
- 	int ret = -ENOENT;
- 	int i;
+diff --git a/drivers/video/fbdev/sbuslib.c b/drivers/video/fbdev/sbuslib.c
+index a436d44f1b7fb..90c51330969c2 100644
+--- a/drivers/video/fbdev/sbuslib.c
++++ b/drivers/video/fbdev/sbuslib.c
+@@ -106,11 +106,11 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		struct fbtype __user *f = (struct fbtype __user *) arg;
  
-@@ -1105,44 +1106,18 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
- 	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
- 	pdata->lcdcon_pol_negative = of_property_read_bool(display_np, "atmel,lcdcon-backlight-inverted");
- 
--	timings = of_get_display_timings(display_np);
--	if (!timings) {
--		dev_err(dev, "failed to get display timings\n");
--		ret = -EINVAL;
-+	ret = of_get_videomode(display_np, &vm, OF_USE_NATIVE_MODE);
-+	if (ret) {
-+		dev_err(dev, "failed to get videomode from DT\n");
- 		goto put_display_node;
+ 		if (put_user(type, &f->fb_type) ||
+-		    __put_user(info->var.yres, &f->fb_height) ||
+-		    __put_user(info->var.xres, &f->fb_width) ||
+-		    __put_user(fb_depth, &f->fb_depth) ||
+-		    __put_user(0, &f->fb_cmsize) ||
+-		    __put_user(fb_size, &f->fb_cmsize))
++		    put_user(info->var.yres, &f->fb_height) ||
++		    put_user(info->var.xres, &f->fb_width) ||
++		    put_user(fb_depth, &f->fb_depth) ||
++		    put_user(0, &f->fb_cmsize) ||
++		    put_user(fb_size, &f->fb_cmsize))
+ 			return -EFAULT;
+ 		return 0;
  	}
+@@ -125,10 +125,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		unsigned int index, count, i;
  
--	timings_np = of_get_child_by_name(display_np, "display-timings");
--	if (!timings_np) {
--		dev_err(dev, "failed to find display-timings node\n");
--		ret = -ENODEV;
-+	ret = fb_videomode_from_videomode(&vm, &fb_vm);
-+	if (ret < 0)
- 		goto put_display_node;
--	}
+ 		if (get_user(index, &c->index) ||
+-		    __get_user(count, &c->count) ||
+-		    __get_user(ured, &c->red) ||
+-		    __get_user(ugreen, &c->green) ||
+-		    __get_user(ublue, &c->blue))
++		    get_user(count, &c->count) ||
++		    get_user(ured, &c->red) ||
++		    get_user(ugreen, &c->green) ||
++		    get_user(ublue, &c->blue))
+ 			return -EFAULT;
  
--	for (i = 0; i < of_get_child_count(timings_np); i++) {
--		struct videomode vm;
--		struct fb_videomode fb_vm;
--
--		ret = videomode_from_timings(timings, &vm, i);
--		if (ret < 0)
--			goto put_timings_node;
--		ret = fb_videomode_from_videomode(&vm, &fb_vm);
--		if (ret < 0)
--			goto put_timings_node;
--
--		fb_add_videomode(&fb_vm, &info->modelist);
--	}
--
--	/*
--	 * FIXME: Make sure we are not referencing any fields in display_np
--	 * and timings_np and drop our references to them before returning to
--	 * avoid leaking the nodes on probe deferral and driver unbind.
--	 */
--
--	return 0;
-+	fb_add_videomode(&fb_vm, &info->modelist);
+ 		cmap.len = 1;
+@@ -165,10 +165,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		u8 red, green, blue;
  
--put_timings_node:
--	of_node_put(timings_np);
- put_display_node:
- 	of_node_put(display_np);
- 	return ret;
+ 		if (get_user(index, &c->index) ||
+-		    __get_user(count, &c->count) ||
+-		    __get_user(ured, &c->red) ||
+-		    __get_user(ugreen, &c->green) ||
+-		    __get_user(ublue, &c->blue))
++		    get_user(count, &c->count) ||
++		    get_user(ured, &c->red) ||
++		    get_user(ugreen, &c->green) ||
++		    get_user(ublue, &c->blue))
+ 			return -EFAULT;
+ 
+ 		if (index + count > cmap->len)
 -- 
 2.20.1
 
