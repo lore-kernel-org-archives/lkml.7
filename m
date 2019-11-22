@@ -2,72 +2,122 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24D7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5B8C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C703920730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421305;
-	bh=ifgfHgV49YcPx8kfrpEB/pTuXJnJCq8CYBm1IT5+Mr8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Deyt+pv9rjPtRXhrueSLKD97GF+h2YOgL3vioDRr43FJxdyWmvQ66ZfbeoQqjWYYY
-	 NXymsRGeBrnXAYyUlBL/fS7BZG/LlfKKEDQCAez7nxvkbzfD4Y8S09Ofh2uVUCkY9w
-	 2gAAT9zkpfRsOY/2oPWtoK4iIT+OnxRRWbCC6gvc=
+	by mail.kernel.org (Postfix) with ESMTP id ECFC12071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbfKVLPF (ORCPT
+        id S1727305AbfKVLPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:15:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbfKVLPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:15:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F742070E;
-        Fri, 22 Nov 2019 11:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574421300;
-        bh=ifgfHgV49YcPx8kfrpEB/pTuXJnJCq8CYBm1IT5+Mr8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=akcMeEEhNVQ1VdQfaigVjxBzNeeZwSIJS1+1WdyTMuyOfJwvUl+RA70E5BxdkSi9O
-         dNWDFFc8AYEOpSzAcL1aykduSR2aj+5t/mNJGt9iqCH2+C960sUq/wJkBYHRlVfVx6
-         uWX20twpjKgKAJRl4HqUv0QDR+84V0Qw5QQY5cEE=
-Date:   Fri, 22 Nov 2019 12:14:10 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] {tty: serial, nand: onenand}: remove variable 'ufstat'
- set but not used
-Message-ID: <20191122111410.GA2024666@kroah.com>
-References: <1574421159-113624-1-git-send-email-chenwandun@huawei.com>
+        Fri, 22 Nov 2019 06:15:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34110 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729023AbfKVLPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:15:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 21586B2F6;
+        Fri, 22 Nov 2019 11:15:04 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4FA541E484C; Fri, 22 Nov 2019 12:15:02 +0100 (CET)
+Date:   Fri, 22 Nov 2019 12:15:02 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
+ routines
+Message-ID: <20191122111502.GC26721@quack2.suse.cz>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-3-jhubbard@nvidia.com>
+ <20191121080356.GA24784@lst.de>
+ <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
+ <20191121095411.GC18190@quack2.suse.cz>
+ <9d0846af-2c4f-7cda-dfcb-1f642943afea@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574421159-113624-1-git-send-email-chenwandun@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <9d0846af-2c4f-7cda-dfcb-1f642943afea@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 07:12:39PM +0800, Chen Wandun wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Thu 21-11-19 18:54:02, John Hubbard wrote:
+> On 11/21/19 1:54 AM, Jan Kara wrote:
+> > On Thu 21-11-19 00:29:59, John Hubbard wrote:
+> > > > 
+> > > > Otherwise this looks fine and might be a worthwhile cleanup to feed
+> > > > Andrew for 5.5 independent of the gut of the changes.
+> > > > 
+> > > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > > 
+> > > 
+> > > Thanks for the reviews! Say, it sounds like your view here is that this
+> > > series should be targeted at 5.6 (not 5.5), is that what you have in mind?
+> > > And get the preparatory patches (1-9, and maybe even 10-16) into 5.5?
+> > 
+> > One more note :) If you are going to push pin_user_pages() interfaces
+> > (which I'm fine with), it would probably make sense to push also the
+> > put_user_pages() -> unpin_user_pages() renaming so that that inconsistency
+> > in naming does not exist in the released upstream kernel.
+> > 
+> > 								Honza
 > 
-> drivers/tty/serial/samsung_tty.c: In function s3c24xx_serial_rx_chars_dma:
-> drivers/tty/serial/samsung_tty.c:549:24: warning: variable ufstat set but not used [-Wunused-but-set-variable]
-> 
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+> Yes, that's what this patch series does. But I'm not sure if "push" here
+> means, "push out: defer to 5.6", "push (now) into 5.5", or "advocate for"?
 
-Your subject line is really odd, can you please fix that up and resend?
+I meant to include the patch in the "for 5.5" batch.
 
-thanks,
+> I will note that it's not going to be easy to rename in one step, now
+> that this is being split up. Because various put_user_pages()-based items
+> are going into 5.5 via different maintainer trees now. Probably I'd need
+> to introduce unpin_user_page() alongside put_user_page()...thoughts?
 
-greg k-h
+Yes, I understand that moving that patch from the end of the series would
+cause fair amount of conflicts. I was hoping that you could generate the
+patch with sed/Coccinelle and then rebasing what remains for 5.6 on top of
+that patch should not be that painful so overall it should not be that much
+work. But I may be wrong so if it proves to be too tedious, let's just
+postpone the renaming to 5.6. I don't find having both unpin_user_page()
+and put_user_page() a better alternative to current state. Thanks!
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
