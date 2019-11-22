@@ -2,100 +2,206 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F77C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620B7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAB12068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWztAYWa"
+	by mail.kernel.org (Postfix) with ESMTP id 45AF720714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKVRFg (ORCPT
+        id S1727351AbfKVRHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:05:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51592 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfKVRFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:05:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KLTSCBo9GrmIxlML9NXjcKsTYOt38qaSPc5RYyNYTYc=; b=PWztAYWaNbzXORsPKRgBq4QlE
-        4TgQmDJM1ReeJUdFtb3/bZVCVfM3Y7u1EPllMHxvYPlj15uNy4CsrWGTauI5AGatcgsKKZNpXfG8N
-        iAadYJ86yptwYD+K1utQD3x1qgmZBxWesKOON4nYpS+5VJ35TJl4PDtBR0ATF8UwtDxB7xV3re4Iz
-        9gfdK1WuwwQF0umMcYrksozzGN9W8JqOl9Wo8EDF305QWZ8/bPd3JNjoxrL+GKyA6DxjVVBLYO1Bj
-        IlrN5zgxjbHE0kgFfmA02phF0XdI0gzsz4PCxztld7lenv+k7pEwLmeHJoU6NBzNLfZKoFBH1pmXK
-        PNRgunFMg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iYCNC-0005Gu-U8; Fri, 22 Nov 2019 17:05:34 +0000
-Date:   Fri, 22 Nov 2019 09:05:34 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
-Message-ID: <20191122170534.GV20752@bombadil.infradead.org>
-References: <20191122100912.732983531@linuxfoundation.org>
- <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
- <20191122151631.GA2083451@kroah.com>
+        Fri, 22 Nov 2019 12:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfKVRHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:07:49 -0500
+Received: from oasis.local.home (unknown [66.170.99.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D2E20658;
+        Fri, 22 Nov 2019 17:07:47 +0000 (UTC)
+Date:   Fri, 22 Nov 2019 12:07:46 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, mingo@redhat.com,
+        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
+        daidavid1@codeaurora.org, okukatla@codeaurora.org,
+        evgreen@chromium.org, mka@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] interconnect: Add basic tracepoints
+Message-ID: <20191122120746.62027203@oasis.local.home>
+In-Reply-To: <20191122152712.19105-4-georgi.djakov@linaro.org>
+References: <20191122152712.19105-1-georgi.djakov@linaro.org>
+        <20191122152712.19105-4-georgi.djakov@linaro.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122151631.GA2083451@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 04:16:31PM +0100, Greg Kroah-Hartman wrote:
-> On Fri, Nov 22, 2019 at 06:47:05AM -0800, Guenter Roeck wrote:
-> > On 11/22/19 2:26 AM, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.19.86 release.
-> > > There are 220 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > I see the following warning (at least for arm64, ppc64, and x86_64).
-> > This seems to be caused by "idr: Fix idr_get_next race with idr_remove".
-> > v4.14.y is also affected. Mainline and v5.3.y are not affected.
+On Fri, 22 Nov 2019 17:27:12 +0200
+Georgi Djakov <georgi.djakov@linaro.org> wrote:
+> index 28f2ab0824d5..725029ae7a2c 100644
+> --- a/drivers/interconnect/Makefile
+> +++ b/drivers/interconnect/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> +CFLAGS_core.o				:= -I$(src)
+>  icc-core-objs				:= core.o
+>  
+>  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 1ddad8ef3cf0..b218a2609f6b 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -19,6 +19,9 @@
+>  #include <linux/of.h>
+>  #include <linux/overflow.h>
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> +
 
-That makes sense; the code in question is different after 4.19.
-Thanks for the report; it's very clear.
+You may want to move this below the include of internal.h, as you don't
+want CREATE_TRACE_POINTS defined when including any other header, or it
+can cause issues if that header has some tracepoint header inside it.
 
-> Willy, this looks like something from your patch, is it to be expected?
+It may not be the case now, but could cause for headaches in the
+future, if other headers get included in internal.h.
 
-It's harmless; the problem is that we can't check whether the dereference
-is safe.  The caller isn't holding the RCU lock, and the IDR code doesn't
-know what lock is being held to make this dereference safe.  Do you want
-a changelog for this oneliner which disables the checking?
+>  #include "internal.h"
+>  
+>  static DEFINE_IDR(icc_idr);
+> @@ -435,6 +438,8 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  
+>  		/* aggregate requests for this node */
+>  		aggregate_requests(node);
+> +
+> +		trace_icc_set_bw(path, node, i, avg_bw, peak_bw);
+>  	}
+>  
+>  	ret = apply_constraints(path);
+> @@ -453,6 +458,8 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  
+>  	mutex_unlock(&icc_lock);
+>  
+> +	trace_icc_set_bw_end(path, ret);
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(icc_set_bw);
+> diff --git a/drivers/interconnect/trace.h b/drivers/interconnect/trace.h
+> new file mode 100644
+> index 000000000000..d2421bf7b389
+> --- /dev/null
+> +++ b/drivers/interconnect/trace.h
+> @@ -0,0 +1,90 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Interconnect framework tracepoints
+> + * Copyright (c) 2019, Linaro Ltd.
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM interconnect
+> +
+> +#if !defined(_TRACE_INTERCONNECT_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_INTERCONNECT_H
+> +
+> +#include <linux/interconnect.h>
+> +#include <linux/tracepoint.h>
+> +
+> +#include "internal.h"
 
-diff --git a/lib/idr.c b/lib/idr.c
-index 49e7918603c7..6ff3b1c36e0a 100644
---- a/lib/idr.c
-+++ b/lib/idr.c
-@@ -237,7 +237,7 @@ void *idr_get_next(struct idr *idr, int *nextid)
- 
- 	id = (id < base) ? 0 : id - base;
- 	radix_tree_for_each_slot(slot, &idr->idr_rt, &iter, id) {
--		entry = radix_tree_deref_slot(slot);
-+		entry = rcu_dereference_raw(*slot);
- 		if (!entry)
- 			continue;
- 		if (!radix_tree_deref_retry(entry))
+And you include it here too, perhaps it is best not to have it here,
+and then just have it before trace.h is called?
+
+The rest looks good. Besides the comments above:
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> +
+> +TRACE_EVENT(icc_set_bw,
+> +
+> +	TP_PROTO(struct icc_path *p, struct icc_node *n, int i,
+> +		 u32 avg_bw, u32 peak_bw),
+> +
+> +	TP_ARGS(p, n, i, avg_bw, peak_bw),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(path_name, p->name)
+> +		__string(dev, dev_name(p->reqs[i].dev))
+> +		__string(node_name, n->name)
+> +		__field(u32, avg_bw)
+> +		__field(u32, peak_bw)
+> +		__field(u32, node_avg_bw)
+> +		__field(u32, node_peak_bw)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(path_name, p->name);
+> +		__assign_str(dev, dev_name(p->reqs[i].dev));
+> +		__assign_str(node_name, n->name);
+> +		__entry->avg_bw = avg_bw;
+> +		__entry->peak_bw = peak_bw;
+> +		__entry->node_avg_bw = n->avg_bw;
+> +		__entry->node_peak_bw = n->peak_bw;
+> +	),
+> +
+> +	TP_printk("path=%s dev=%s node=%s avg_bw=%u peak_bw=%u agg_avg=%u agg_peak=%u",
+> +		  __get_str(path_name),
+> +		  __get_str(dev),
+> +		  __get_str(node_name),
+> +		  __entry->avg_bw,
+> +		  __entry->peak_bw,
+> +		  __entry->node_avg_bw,
+> +		  __entry->node_peak_bw)
+> +);
+> +
+> +TRACE_EVENT(icc_set_bw_end,
+> +
+> +	TP_PROTO(struct icc_path *p, int ret),
+> +
+> +	TP_ARGS(p, ret),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(path_name, p->name)
+> +		__string(dev, dev_name(p->reqs[0].dev))
+> +		__field(int, ret)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(path_name, p->name);
+> +		__assign_str(dev, dev_name(p->reqs[0].dev));
+> +		__entry->ret = ret;
+> +	),
+> +
+> +	TP_printk("path=%s dev=%s ret=%d",
+> +		  __get_str(path_name),
+> +		  __get_str(dev),
+> +		  __entry->ret)
+> +);
+> +
+> +#endif /* _TRACE_INTERCONNECT_H */
+> +
+> +/* This part must be outside protection */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +#include <trace/define_trace.h>
+
