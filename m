@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB662C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF14C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9709D20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851EC20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419027;
-	bh=GAknvF9Xra1VDxZSBLEx+eB5pfkKd1dvyjA3FwvGZAM=;
+	s=default; t=1574419030;
+	bh=BfsY3M/4bqCtzOYH+rqzQMH+VaQOEdNiiE1gHRZMQnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XI0EeyL0cm0GzJ92Pp6NzZ/MQUvYGfGu4vsBVL5A91iQv4jFYGhZj52QL9GgpdKkx
-	 ogJueI8vlCyfZPHh8bJV3vanFY1vtMZZNcuC96lvlgLv9MA4J9pPCm1C5b9E2OOiQq
-	 mxC1FO2KixU+E+5wfnsTc7+rpRtFm2ridHQNDwrI=
+	b=N14dyx6eBX9QobHneJKL5RJwi8ki0kboJGVYnqx8GPfsLJiEsjRwGqMDdznwygfpI
+	 LG/91TYS/JnQ36Uwat3CCruOXESxPC3Y/mSns5afsTkYABUhHN9I9Bgub753JjNe6q
+	 Y/qpR+8ok00hCl8wYi36L3WNfhPlad+dY5wrmn0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfKVKhG (ORCPT
+        id S1728506AbfKVKhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:37:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:37:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbfKVKhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:37:04 -0500
+        id S1727142AbfKVKhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:37:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 829C52071C;
-        Fri, 22 Nov 2019 10:37:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C46A20721;
+        Fri, 22 Nov 2019 10:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419024;
-        bh=GAknvF9Xra1VDxZSBLEx+eB5pfkKd1dvyjA3FwvGZAM=;
+        s=default; t=1574419026;
+        bh=BfsY3M/4bqCtzOYH+rqzQMH+VaQOEdNiiE1gHRZMQnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iU2KeyUKvVpEV1icHnD4tFzHxoGVhcE/zc+5plfSZ6v8OnbRogx7blat5/pwrQLx0
-         dTbraHKIcjlopNg6rzuLdv05QFwwVS/In7P+CoaXhAPN2gAfh49IjV+wh3shx+HOF/
-         v92mW0n9Z7Q4svFmrqYK6GFqrxOqNpoKdncNWtXY=
+        b=D/7bZDg/ddk99EqU4tnQOFE+Sja1T6Qph2uoXc3gbz4KATqKkKzKbFDJhw4j84Xnf
+         yjRgh5gRc4atv6QjzYAk8Z9JEXayVLXCBwEGtZGdei4XhFGKSINxdRqdRWwV47/mIE
+         nytVx0adpctpdjBq1M5soD6gMehtrWGHcrEJ1yRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org,
+        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 132/159] USB: serial: cypress_m8: fix interrupt-out transfer length
-Date:   Fri, 22 Nov 2019 11:28:43 +0100
-Message-Id: <20191122100834.189827261@linuxfoundation.org>
+Subject: [PATCH 4.4 133/159] mtd: physmap_of: Release resources on error
+Date:   Fri, 22 Nov 2019 11:28:44 +0100
+Message-Id: <20191122100834.682397672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -59,36 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
-[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
+[ Upstream commit ef0de747f7ad179c7698a5b0e28db05f18ecbf57 ]
 
-Fix interrupt-out transfer length which was being set to the
-transfer-buffer length rather than the size of the outgoing packet.
+During probe, if there was an error the memory region and the memory
+map were not properly released.This can lead a system unusable if
+deferred probe is in use.
 
-Note that no slab data was leaked as the whole transfer buffer is always
-cleared before each transfer.
+Replace mem_request and map with devm_ioremap_resource
 
-Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/cypress_m8.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/maps/physmap_of.c | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
-index 244acb1299a95..e92cd1eceefa2 100644
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -773,7 +773,7 @@ static void cypress_send(struct usb_serial_port *port)
+diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+index e46b4e9836668..77e7542fa8e42 100644
+--- a/drivers/mtd/maps/physmap_of.c
++++ b/drivers/mtd/maps/physmap_of.c
+@@ -28,7 +28,6 @@
+ struct of_flash_list {
+ 	struct mtd_info *mtd;
+ 	struct map_info map;
+-	struct resource *res;
+ };
  
- 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
- 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
--		port->interrupt_out_buffer, port->interrupt_out_size,
-+		port->interrupt_out_buffer, actual_size,
- 		cypress_write_int_callback, port, priv->write_urb_interval);
- 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
- 	if (result) {
+ struct of_flash {
+@@ -53,18 +52,10 @@ static int of_flash_remove(struct platform_device *dev)
+ 			mtd_concat_destroy(info->cmtd);
+ 	}
+ 
+-	for (i = 0; i < info->list_size; i++) {
++	for (i = 0; i < info->list_size; i++)
+ 		if (info->list[i].mtd)
+ 			map_destroy(info->list[i].mtd);
+ 
+-		if (info->list[i].map.virt)
+-			iounmap(info->list[i].map.virt);
+-
+-		if (info->list[i].res) {
+-			release_resource(info->list[i].res);
+-			kfree(info->list[i].res);
+-		}
+-	}
+ 	return 0;
+ }
+ 
+@@ -223,10 +214,11 @@ static int of_flash_probe(struct platform_device *dev)
+ 
+ 		err = -EBUSY;
+ 		res_size = resource_size(&res);
+-		info->list[i].res = request_mem_region(res.start, res_size,
+-						       dev_name(&dev->dev));
+-		if (!info->list[i].res)
++		info->list[i].map.virt = devm_ioremap_resource(&dev->dev, &res);
++		if (IS_ERR(info->list[i].map.virt)) {
++			err = PTR_ERR(info->list[i].map.virt);
+ 			goto err_out;
++		}
+ 
+ 		err = -ENXIO;
+ 		width = of_get_property(dp, "bank-width", NULL);
+@@ -242,15 +234,6 @@ static int of_flash_probe(struct platform_device *dev)
+ 		info->list[i].map.bankwidth = be32_to_cpup(width);
+ 		info->list[i].map.device_node = dp;
+ 
+-		err = -ENOMEM;
+-		info->list[i].map.virt = ioremap(info->list[i].map.phys,
+-						 info->list[i].map.size);
+-		if (!info->list[i].map.virt) {
+-			dev_err(&dev->dev, "Failed to ioremap() flash"
+-				" region\n");
+-			goto err_out;
+-		}
+-
+ 		simple_map_init(&info->list[i].map);
+ 
+ 		/*
 -- 
 2.20.1
 
