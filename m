@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCB4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35690C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A75C20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D2120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403239;
-	bh=2FKCwtfQ/zR6VWzJaxtMgHi64PjCKJ4x79baPcmlda4=;
+	s=default; t=1574403252;
+	bh=5PDxv2/YHr0FuhBfzhJ5z8m8H8XgdsUBLgg/TREY904=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfKla5gWdBntCuMX71yJcJGwnxNjN+hIy1X9+lhjYf5TzqIYOsRHUnS/tj4VdvHoY
-	 vAwrQrLn2adkoxtONMW5rA5ktv7PAkQM4N1aXTlxrSLffOj6UT5dJHmGRFqgJ86oV/
-	 rCh+3fqiT+iyeWXDwe50JDUlPFdUEAuvd0a4ZYE0=
+	b=UMNHDKcrfcWGelxaIkzAWELuOG6pDf1FQWLxDdX8NM1NRjp+72uWrHmhGpeYbJVt/
+	 x1YolvHea/I4CZ/vkeBBH1qTWdWaa/9UQXdIzDyzrOIeqjKc9ipvNif1i/0GLwa/Zc
+	 NiThPJbu+T95ILqqH5sge0KXjuYhrX9/nHqWBbWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfKVGN5 (ORCPT
+        id S1729655AbfKVGOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51036 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:14:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbfKVGNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:41 -0500
+        id S1729516AbfKVGNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2015920708;
-        Fri, 22 Nov 2019 06:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F7920707;
+        Fri, 22 Nov 2019 06:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403221;
-        bh=2FKCwtfQ/zR6VWzJaxtMgHi64PjCKJ4x79baPcmlda4=;
+        s=default; t=1574403233;
+        bh=5PDxv2/YHr0FuhBfzhJ5z8m8H8XgdsUBLgg/TREY904=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOtnlqnscfEYvv+RJpeukhgxpHnppSpxddaZuIYAVoFNKtLHn6l/5jkJz5KeuI62B
-         EW1HE3tdFTj9iMlo9Xr8PAWouuVQkiKG8Z7Oj6ZhoGy81bWGNJd15rARKRU1G9OWCj
-         zkIcp08X/SBFmJdc0c8ecfsC5cezKA3TTt89tAUk=
+        b=tPCEyiSzDAG0kp8PS1X9YxgJWMXVW40Xx8+Du3tVnsitWak7tBU19mcetK1nfCY1r
+         IWL16f6V3ZvvV0jXswAGBtBPxl+l1fQKFL3/GAoIypnFNW5DzVMYIuXXF5YjiWWpWt
+         YaY/F1PuWiIWM1uWsNPxEC8XaZ97v08cZCVVxY1A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Sergey Gorenko <sergeygo@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 35/68] RDMA/srp: Propagate ib_post_send() failures to the SCSI mid-layer
-Date:   Fri, 22 Nov 2019 01:12:28 -0500
-Message-Id: <20191122061301.4947-34-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 46/68] net/net_namespace: Check the return value of register_pernet_subsys()
+Date:   Fri, 22 Nov 2019 01:12:39 -0500
+Message-Id: <20191122061301.4947-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -62,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 2ee00f6a98c36f7e4ba07cc33f24cc5a69060cc9 ]
+[ Upstream commit 0eb987c874dc93f9c9d85a6465dbde20fdd3884c ]
 
-This patch avoids that the SCSI mid-layer keeps retrying forever if
-ib_post_send() fails. This was discovered while testing immediate
-data support and passing a too large num_sge value to ib_post_send().
+In net_ns_init(), register_pernet_subsys() could fail while registering
+network namespace subsystems. The fix checks the return value and
+sends a panic() on failure.
 
-Cc: Sergey Gorenko <sergeygo@mellanox.com>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Cc: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/core/net_namespace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 3dbc3ed263c21..3b4188efc2835 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -2135,6 +2135,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 087ce1598b746..01bfe28b20a19 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -778,7 +778,8 @@ static int __init net_ns_init(void)
  
- 	if (srp_post_send(ch, iu, len)) {
- 		shost_printk(KERN_ERR, target->scsi_host, PFX "Send failed\n");
-+		scmnd->result = DID_ERROR << 16;
- 		goto err_unmap;
- 	}
+ 	mutex_unlock(&net_mutex);
  
+-	register_pernet_subsys(&net_ns_ops);
++	if (register_pernet_subsys(&net_ns_ops))
++		panic("Could not register network namespace subsystems");
+ 
+ 	rtnl_register(PF_UNSPEC, RTM_NEWNSID, rtnl_net_newid, NULL, NULL);
+ 	rtnl_register(PF_UNSPEC, RTM_GETNSID, rtnl_net_getid, rtnl_net_dumpid,
 -- 
 2.20.1
 
