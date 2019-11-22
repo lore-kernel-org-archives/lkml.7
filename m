@@ -2,56 +2,59 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCADC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3904220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F83320718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419134;
-	bh=Embar7vqklFB3d4ql639GIaXNxv9S0DkcaLHSsQDqCY=;
+	s=default; t=1574419137;
+	bh=TouJknRDEZdGz1srNxLurtOibmJZvnZDVVRYkwHtcLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yUGrCB3FtUuauCMlHikNeBhvxazaWm2qg9TBZY5gj2+t48KC7q5r/JQOS1nOR/Vv1
-	 JLx5eVtqjC2kIzsKjooTQMAc1Qvw39wvGxwHKFTDxXBhLUvrpq28NFjH3ZaIjRn89f
-	 6Q6o6g7DeWSJRCTNxlMGl2RfaOGKxVQYV2jp8PQc=
+	b=HE390ra4B/Ki6orNuMP56zg/SgmDRq/01u6p7GRqOahw1nZS8HW+NE96W4tBeaKoM
+	 wK+J2BicEO2cCTMTX56pgAkEtE6MJjiZMeDKPMUKTrs+EXHoSlWWjJ62iyNX9/bWne
+	 mg87ITe2GpCelBdIXt3wnWjn4IWrzmgagmI5P/q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfKVKiw (ORCPT
+        id S1728725AbfKVKi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41516 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbfKVKiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:50 -0500
+        id S1728715AbfKVKix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9702C20637;
-        Fri, 22 Nov 2019 10:38:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A91E20717;
+        Fri, 22 Nov 2019 10:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419130;
-        bh=Embar7vqklFB3d4ql639GIaXNxv9S0DkcaLHSsQDqCY=;
+        s=default; t=1574419132;
+        bh=TouJknRDEZdGz1srNxLurtOibmJZvnZDVVRYkwHtcLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IkL0x12ssnurIaj0PQrnDdir35XPq5lP3CRK7LWyIHKkQutyHzDTN/Hh+u/VAUeUS
-         2p5Z+KwljkpApZj1WlauWl8yA5KIQuQHKG5zaQXf34WBZrJAoO+gAMdqWxvf63AB7a
-         NFLTo6A+Q8gJitwBvG9GNuI7vTRe3MpE5rI9Y9GI=
+        b=gTyALJHS3sG5JkvoYY1XcjFlh1Kw9sq9bGwhxTpTzFXKIGc8LVVDezmfvFAf4DXff
+         eVK2IVbcBP23YGxLYiSj4vAtm0gFrtfIhPxPcHKJYrQazd3VoBwKhdrV7YYfIlwVQU
+         tyzGsUj7DkpKB+HxjEoVAB/b3wWtQTYg7iKtjSKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 120/159] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
-Date:   Fri, 22 Nov 2019 11:28:31 +0100
-Message-Id: <20191122100831.185586994@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 001/222] ax88172a: fix information leak on short answers
+Date:   Fri, 22 Nov 2019 11:25:41 +0100
+Message-Id: <20191122100831.087455634@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
-References: <20191122100704.194776704@linuxfoundation.org>
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+References: <20191122100830.874290814@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,45 +63,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
+[ Upstream commit a9a51bd727d141a67b589f375fe69d0e54c4fe22 ]
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+If a malicious device gives a short MAC it can elicit up to
+5 bytes of leaked memory out of the driver. We need to check for
+ETH_ALEN instead.
 
-drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
-enumeration type 'enum dma_transfer_direction' to different enumeration
-type 'enum dma_data_direction' [-Wenum-conversion]
-                td_desc->desc_list_len, DMA_MEM_TO_DEV);
-                                        ^~~~~~~~~~~~~~
-1 warning generated.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dma/timb_dma.c | 2 +-
+ drivers/net/usb/ax88172a.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index 559cd4073698c..cf741187c9bb6 100644
---- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -552,7 +552,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
+--- a/drivers/net/usb/ax88172a.c
++++ b/drivers/net/usb/ax88172a.c
+@@ -215,7 +215,7 @@ static int ax88172a_bind(struct usbnet *
+ 
+ 	/* Get the MAC address */
+ 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
+-	if (ret < 0) {
++	if (ret < ETH_ALEN) {
+ 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
+ 		goto free;
  	}
- 
- 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
--		td_desc->desc_list_len, DMA_MEM_TO_DEV);
-+		td_desc->desc_list_len, DMA_TO_DEVICE);
- 
- 	return &td_desc->txd;
- }
--- 
-2.20.1
-
 
 
