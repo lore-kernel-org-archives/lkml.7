@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9984C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A8AC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F432070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C332070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421169;
-	bh=/h7+WxnT0pQCjhRylNYlpEwLKKiUKIyEzlcqA3+++JY=;
+	s=default; t=1574421176;
+	bh=ovoyqWI14Df1eJWOmr2Kpy+YWKyrlJN+s3cI1lS9jL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TViBoZ6NcuXuPdI+qVE+Sp0Rvl3dGmFOsuUQpGQAiCApiolozwCgEhZkL0nDETwTY
-	 1mRFCr3sQTedS/0hdydQWETJgjLvJdFWdn6guVDlYE/oq28t/KDfLFuVQmKHlVv7c8
-	 n8QDgQl3Rl8TP1EDW/hkrHLYX2n6e/XHQVyUy8Jw=
+	b=yyeEp7xqrGLPmyW7SZKnXOUv9vwX2rW0W2B6Q0u6RMC4igC3qEZs3xeV7YFG/mHPy
+	 bkm3tQH/MA9fIRsmjEhIw4JjfRawR6toHYe1De9kZfyAImzL2SRV61HvVkTlzZQIsU
+	 ffyWqwEZhoGkDDC3Xwnr0y5HN+l1hm6GS95E7e1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfKVLMs (ORCPT
+        id S1728673AbfKVK4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:12:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:56:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730669AbfKVK50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:26 -0500
+        id S1730192AbfKVK4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:56:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983D720718;
-        Fri, 22 Nov 2019 10:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6671F20715;
+        Fri, 22 Nov 2019 10:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420245;
-        bh=/h7+WxnT0pQCjhRylNYlpEwLKKiUKIyEzlcqA3+++JY=;
+        s=default; t=1574420191;
+        bh=ovoyqWI14Df1eJWOmr2Kpy+YWKyrlJN+s3cI1lS9jL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LhRUYdDSZBn8crz0plgGpLz+QxjE/ScBveS9QtrY91N37sSWZlou/v9zU5HE3YymQ
-         24bJRgOSvdd68EvFfnCph5sIzuLKWBSat5RbmOiJZERMnuJZKaVlNPXArhCxalm5pL
-         gV/5Bm7Yb+QfMgfwgS7n2WJySukdaxRDloCnIoc8=
+        b=UbOOvuaBVJ5n2zKPcbN66a0MpyhyK4PYKuo84Tu3w4wOOyNUR4ORmNZTcisY1+Yl9
+         rnhCkMOP4vF8tLJ5zBHvuJqTdQU+NerrvUWatkhCSS59ChDcvSO4EJqniOIItuC92F
+         czz0kneqsMZqmdI2v+8EEVxDy2VGjarhxKreab2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
+        Wei Wang <weiwan@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/220] PM / devfreq: Fix handling of min/max_freq == 0
-Date:   Fri, 22 Nov 2019 11:26:47 +0100
-Message-Id: <20191122100915.310523363@linuxfoundation.org>
+Subject: [PATCH 4.19 024/220] tcp: up initial rmem to 128KB and SYN rwin to around 64KB
+Date:   Fri, 22 Nov 2019 11:26:29 +0100
+Message-Id: <20191122100914.228710869@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,126 +64,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Yuchung Cheng <ycheng@google.com>
 
-[ Upstream commit df5cf4a36178c5d4f2b8b9469cb2f722e64cd102 ]
+[ Upstream commit a337531b942bd8a03e7052444d7e36972aac2d92 ]
 
-Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
-devfreq device") initializes df->min/max_freq with the min/max OPP when
-the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
-available min/max frequency") adds df->scaling_min/max_freq and the
-following to the frequency adjustment code:
+Previously TCP initial receive buffer is ~87KB by default and
+the initial receive window is ~29KB (20 MSS). This patch changes
+the two numbers to 128KB and ~64KB (rounding down to the multiples
+of MSS) respectively. The patch also simplifies the calculations s.t.
+the two numbers are directly controlled by sysctl tcp_rmem[1]:
 
-  max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+  1) Initial receiver buffer budget (sk_rcvbuf): while this should
+     be configured via sysctl tcp_rmem[1], previously tcp_fixup_rcvbuf()
+     always override and set a larger size when a new connection
+     establishes.
 
-With the current handling of min/max_freq this is incorrect:
+  2) Initial receive window in SYN: previously it is set to 20
+     packets if MSS <= 1460. The number 20 was based on the initial
+     congestion window of 10: the receiver needs twice amount to
+     avoid being limited by the receive window upon out-of-order
+     delivery in the first window burst. But since this only
+     applies if the receiving MSS <= 1460, connection using large MTU
+     (e.g. to utilize receiver zero-copy) may be limited by the
+     receive window.
 
-Even though df->max_freq is now initialized to a value != 0 user space
-can still set it to 0, in this case max_freq would be 0 instead of
-df->scaling_max_freq as intended. In consequence the frequency adjustment
-is not performed:
+With this patch TCP memory configuration is more straight-forward and
+more properly sized to modern high-speed networks by default. Several
+popular stacks have been announcing 64KB rwin in SYNs as well.
 
-  if (max_freq && freq > max_freq) {
-	freq = max_freq;
-
-To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
-when the user passes a value of 0. This also prevents df->max_freq from
-being set below the min OPP when df->min_freq is 0, and similar for
-min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
-checks for this case can be removed.
-
-Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: Wei Wang <weiwan@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 42 ++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 12 deletions(-)
+ net/ipv4/tcp.c        |  4 ++--
+ net/ipv4/tcp_input.c  | 25 ++-----------------------
+ net/ipv4/tcp_output.c | 25 ++++---------------------
+ 3 files changed, 8 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 62ead442a8721..8e21bedc74c38 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -327,11 +327,11 @@ int update_devfreq(struct devfreq *devfreq)
- 	max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
- 	min_freq = MAX(devfreq->scaling_min_freq, devfreq->min_freq);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 647ba447bf1ab..a7a804bece7ac 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3910,8 +3910,8 @@ void __init tcp_init(void)
+ 	init_net.ipv4.sysctl_tcp_wmem[2] = max(64*1024, max_wshare);
  
--	if (min_freq && freq < min_freq) {
-+	if (freq < min_freq) {
- 		freq = min_freq;
- 		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
+ 	init_net.ipv4.sysctl_tcp_rmem[0] = SK_MEM_QUANTUM;
+-	init_net.ipv4.sysctl_tcp_rmem[1] = 87380;
+-	init_net.ipv4.sysctl_tcp_rmem[2] = max(87380, max_rshare);
++	init_net.ipv4.sysctl_tcp_rmem[1] = 131072;
++	init_net.ipv4.sysctl_tcp_rmem[2] = max(131072, max_rshare);
+ 
+ 	pr_info("Hash tables configured (established %u bind %u)\n",
+ 		tcp_hashinfo.ehash_mask + 1, tcp_hashinfo.bhash_size);
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 14a6a489937c1..0e2b07be08585 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -426,26 +426,7 @@ static void tcp_grow_window(struct sock *sk, const struct sk_buff *skb)
  	}
--	if (max_freq && freq > max_freq) {
-+	if (freq > max_freq) {
- 		freq = max_freq;
- 		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+ }
+ 
+-/* 3. Tuning rcvbuf, when connection enters established state. */
+-static void tcp_fixup_rcvbuf(struct sock *sk)
+-{
+-	u32 mss = tcp_sk(sk)->advmss;
+-	int rcvmem;
+-
+-	rcvmem = 2 * SKB_TRUESIZE(mss + MAX_TCP_HEADER) *
+-		 tcp_default_init_rwnd(mss);
+-
+-	/* Dynamic Right Sizing (DRS) has 2 to 3 RTT latency
+-	 * Allow enough cushion so that sender is not limited by our window
+-	 */
+-	if (sock_net(sk)->ipv4.sysctl_tcp_moderate_rcvbuf)
+-		rcvmem <<= 2;
+-
+-	if (sk->sk_rcvbuf < rcvmem)
+-		sk->sk_rcvbuf = min(rcvmem, sock_net(sk)->ipv4.sysctl_tcp_rmem[2]);
+-}
+-
+-/* 4. Try to fixup all. It is made immediately after connection enters
++/* 3. Try to fixup all. It is made immediately after connection enters
+  *    established state.
+  */
+ void tcp_init_buffer_space(struct sock *sk)
+@@ -454,8 +435,6 @@ void tcp_init_buffer_space(struct sock *sk)
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	int maxwin;
+ 
+-	if (!(sk->sk_userlocks & SOCK_RCVBUF_LOCK))
+-		tcp_fixup_rcvbuf(sk);
+ 	if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK))
+ 		tcp_sndbuf_expand(sk);
+ 
+@@ -485,7 +464,7 @@ void tcp_init_buffer_space(struct sock *sk)
+ 	tp->snd_cwnd_stamp = tcp_jiffies32;
+ }
+ 
+-/* 5. Recalculate window clamp after socket hit its memory bounds. */
++/* 4. Recalculate window clamp after socket hit its memory bounds. */
+ static void tcp_clamp_window(struct sock *sk)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 2697e4397e46c..53f910bb55087 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -179,21 +179,6 @@ static inline void tcp_event_ack_sent(struct sock *sk, unsigned int pkts,
+ 	inet_csk_clear_xmit_timer(sk, ICSK_TIME_DACK);
+ }
+ 
+-
+-u32 tcp_default_init_rwnd(u32 mss)
+-{
+-	/* Initial receive window should be twice of TCP_INIT_CWND to
+-	 * enable proper sending of new unsent data during fast recovery
+-	 * (RFC 3517, Section 4, NextSeg() rule (2)). Further place a
+-	 * limit when mss is larger than 1460.
+-	 */
+-	u32 init_rwnd = TCP_INIT_CWND * 2;
+-
+-	if (mss > 1460)
+-		init_rwnd = max((1460 * init_rwnd) / mss, 2U);
+-	return init_rwnd;
+-}
+-
+ /* Determine a window scaling and initial window to offer.
+  * Based on the assumption that the given amount of space
+  * will be offered. Store the results in the tp structure.
+@@ -228,7 +213,10 @@ void tcp_select_initial_window(const struct sock *sk, int __space, __u32 mss,
+ 	if (sock_net(sk)->ipv4.sysctl_tcp_workaround_signed_windows)
+ 		(*rcv_wnd) = min(space, MAX_TCP_WINDOW);
+ 	else
+-		(*rcv_wnd) = space;
++		(*rcv_wnd) = min_t(u32, space, U16_MAX);
++
++	if (init_rcv_wnd)
++		*rcv_wnd = min(*rcv_wnd, init_rcv_wnd * mss);
+ 
+ 	(*rcv_wscale) = 0;
+ 	if (wscale_ok) {
+@@ -241,11 +229,6 @@ void tcp_select_initial_window(const struct sock *sk, int __space, __u32 mss,
+ 			(*rcv_wscale)++;
+ 		}
  	}
-@@ -1171,17 +1171,26 @@ static ssize_t min_freq_store(struct device *dev, struct device_attribute *attr,
- 	struct devfreq *df = to_devfreq(dev);
- 	unsigned long value;
- 	int ret;
--	unsigned long max;
- 
- 	ret = sscanf(buf, "%lu", &value);
- 	if (ret != 1)
- 		return -EINVAL;
- 
- 	mutex_lock(&df->lock);
--	max = df->max_freq;
--	if (value && max && value > max) {
--		ret = -EINVAL;
--		goto unlock;
-+
-+	if (value) {
-+		if (value > df->max_freq) {
-+			ret = -EINVAL;
-+			goto unlock;
-+		}
-+	} else {
-+		unsigned long *freq_table = df->profile->freq_table;
-+
-+		/* Get minimum frequency according to sorting order */
-+		if (freq_table[0] < freq_table[df->profile->max_state - 1])
-+			value = freq_table[0];
-+		else
-+			value = freq_table[df->profile->max_state - 1];
- 	}
- 
- 	df->min_freq = value;
-@@ -1206,17 +1215,26 @@ static ssize_t max_freq_store(struct device *dev, struct device_attribute *attr,
- 	struct devfreq *df = to_devfreq(dev);
- 	unsigned long value;
- 	int ret;
--	unsigned long min;
- 
- 	ret = sscanf(buf, "%lu", &value);
- 	if (ret != 1)
- 		return -EINVAL;
- 
- 	mutex_lock(&df->lock);
--	min = df->min_freq;
--	if (value && min && value < min) {
--		ret = -EINVAL;
--		goto unlock;
-+
-+	if (value) {
-+		if (value < df->min_freq) {
-+			ret = -EINVAL;
-+			goto unlock;
-+		}
-+	} else {
-+		unsigned long *freq_table = df->profile->freq_table;
-+
-+		/* Get maximum frequency according to sorting order */
-+		if (freq_table[0] < freq_table[df->profile->max_state - 1])
-+			value = freq_table[df->profile->max_state - 1];
-+		else
-+			value = freq_table[0];
- 	}
- 
- 	df->max_freq = value;
+-
+-	if (!init_rcv_wnd) /* Use default unless specified otherwise */
+-		init_rcv_wnd = tcp_default_init_rwnd(mss);
+-	*rcv_wnd = min(*rcv_wnd, init_rcv_wnd * mss);
+-
+ 	/* Set the clamp no higher than max representable value */
+ 	(*window_clamp) = min_t(__u32, U16_MAX << (*rcv_wscale), *window_clamp);
+ }
 -- 
 2.20.1
 
