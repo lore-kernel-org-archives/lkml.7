@@ -2,190 +2,130 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFF3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FD2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CA42068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574441613;
-	bh=JQc+KsF5lzYeruxmK9jO7TjWnowAWT5i/fC5nqNh9ss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RJ4FADV0QrC2Gtr+JZYuP0FDs7qIgX694JCOb3Nb4Aegq/HeY3qVivW8rSiVrBZ/K
-	 BkbCdq2ScDiPo3Z32s2U3fgr1AtWnA+kEsARIZBVidMcpDOH+nYO7J61MZ0hn2MOC9
-	 EXipKRYSIX5FDIurkcXyI2Wdhe+Sm7MKesiflfqA=
+	by mail.kernel.org (Postfix) with ESMTP id 51C9B20672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfKVQxc (ORCPT
+        id S1727139AbfKVQ6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:53:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39064 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 11:58:20 -0500
+Received: from mga07.intel.com ([134.134.136.100]:51805 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfKVQxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:53:31 -0500
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3102320672;
-        Fri, 22 Nov 2019 16:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574441610;
-        bh=JQc+KsF5lzYeruxmK9jO7TjWnowAWT5i/fC5nqNh9ss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BxYNl3gOYcqHLHgxDw4SbW5djxQLCNTFdwfPdsxPK6/g+yjSx35G1d/ade4NlhvJO
-         3cx1Ze3kd0wePIUlDcplMgcxiE73WnQG82V0APZ+6a9njWyp6h34pdJ1cJf66T/vV9
-         uo3T2Le8MANxKTaxOC2SP8iFvn9+Jc6Gu0YIy9NM=
-Date:   Fri, 22 Nov 2019 08:53:28 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
+        id S1726620AbfKVQ6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 11:58:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 08:58:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
+   d="scan'208";a="201580258"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga008.jf.intel.com with ESMTP; 22 Nov 2019 08:58:19 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: Fix deadlock in f2fs_gc() context during atomic
- files handling
-Message-ID: <20191122165328.GA74621@jaegeuk-macbookpro.roam.corp.google.com>
-References: <1573641063-21232-1-git-send-email-stummala@codeaurora.org>
+Subject: [PATCH] KVM: x86: Grab KVM's srcu lock when setting nested state
+Date:   Fri, 22 Nov 2019 08:58:18 -0800
+Message-Id: <20191122165818.32558-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573641063-21232-1-git-send-email-stummala@codeaurora.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13, Sahitya Tummala wrote:
-> The FS got stuck in the below stack when the storage is almost
-> full/dirty condition (when FG_GC is being done).
-> 
-> schedule_timeout
-> io_schedule_timeout
-> congestion_wait
-> f2fs_drop_inmem_pages_all
-> f2fs_gc
-> f2fs_balance_fs
-> __write_node_page
-> f2fs_fsync_node_pages
-> f2fs_do_sync_file
-> f2fs_ioctl
-> 
-> The root cause for this issue is there is a potential infinite loop
-> in f2fs_drop_inmem_pages_all() for the case where gc_failure is true
-> and when there an inode whose i_gc_failures[GC_FAILURE_ATOMIC] is
-> not set. Fix this by keeping track of the total atomic files
-> currently opened and using that to exit from this condition.
-> 
-> Fix-suggested-by: Chao Yu <yuchao0@huawei.com>
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> ---
-> v2:
-> - change fix as per Chao's suggestion
-> - decrement sbi->atomic_files protected under sbi->inode_lock[ATOMIC_FILE] and
->   only when atomic flag is cleared for the first time, otherwise, the count
->   goes to an invalid/high value as f2fs_drop_inmem_pages() can be called from
->   two contexts at the same time.
-> 
->  fs/f2fs/f2fs.h    |  1 +
->  fs/f2fs/file.c    |  1 +
->  fs/f2fs/segment.c | 21 +++++++++++++++------
->  3 files changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index c681f51..e04a665 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1297,6 +1297,7 @@ struct f2fs_sb_info {
->  	unsigned int gc_mode;			/* current GC state */
->  	unsigned int next_victim_seg[2];	/* next segment in victim section */
->  	/* for skip statistic */
-> +	unsigned int atomic_files;              /* # of opened atomic file */
->  	unsigned long long skipped_atomic_files[2];	/* FG_GC and BG_GC */
->  	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
->  
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index f6c038e..22c4949 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -1919,6 +1919,7 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
->  	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
->  	if (list_empty(&fi->inmem_ilist))
->  		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
-> +	sbi->atomic_files++;
->  	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
->  
->  	/* add inode in inmem_list first and set atomic_file */
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index da830fc..0b7a33b 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -288,6 +288,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
->  	struct list_head *head = &sbi->inode_list[ATOMIC_FILE];
->  	struct inode *inode;
->  	struct f2fs_inode_info *fi;
-> +	unsigned int count = sbi->atomic_files;
-> +	unsigned int looped = 0;
->  next:
->  	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
->  	if (list_empty(head)) {
-> @@ -296,22 +298,26 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
->  	}
->  	fi = list_first_entry(head, struct f2fs_inode_info, inmem_ilist);
->  	inode = igrab(&fi->vfs_inode);
-> +	if (inode)
-> +		list_move_tail(&fi->inmem_ilist, head);
->  	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
->  
->  	if (inode) {
->  		if (gc_failure) {
-> -			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
-> -				goto drop;
-> -			goto skip;
-> +			if (!fi->i_gc_failures[GC_FAILURE_ATOMIC])
-> +				goto skip;
->  		}
-> -drop:
->  		set_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
->  		f2fs_drop_inmem_pages(inode);
-> +skip:
->  		iput(inode);
->  	}
-> -skip:
->  	congestion_wait(BLK_RW_ASYNC, HZ/50);
->  	cond_resched();
-> +	if (gc_failure) {
-> +		if (++looped >= count)
+Acquire kvm->srcu for the duration of ->set_nested_state() to fix a bug
+where nVMX derefences ->memslots without holding ->srcu or ->slots_lock.
 
-There is a race condition when handling sbi->atomic_files?
+The other half of nested migration, ->get_nested_state(), does not need
+to acquire ->srcu as it is a purely a dump of internal KVM (and CPU)
+state to userspace.
 
-> +			return;
-> +	}
->  	goto next;
->  }
->  
-> @@ -327,13 +333,16 @@ void f2fs_drop_inmem_pages(struct inode *inode)
->  		mutex_unlock(&fi->inmem_lock);
->  	}
->  
-> -	clear_inode_flag(inode, FI_ATOMIC_FILE);
->  	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
->  	stat_dec_atomic_write(inode);
->  
->  	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
->  	if (!list_empty(&fi->inmem_ilist))
->  		list_del_init(&fi->inmem_ilist);
-> +	if (f2fs_is_atomic_file(inode)) {
-> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
-> +		sbi->atomic_files--;
-> +	}
->  	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
->  }
->  
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Detected as an RCU lockdep splat that is 100% reproducible by running
+KVM's state_test selftest with CONFIG_PROVE_LOCKING=y.  Note that the
+failing function, kvm_is_visible_gfn(), is only checking the validity of
+a gfn, it's not actually accessing guest memory (which is more or less
+unsupported during vmx_set_nested_state() due to incorrect MMU state),
+i.e. vmx_set_nested_state() itself isn't fundamentally broken.  In any
+case, setting nested state isn't a fast path so there's no reason to go
+out of our way to avoid taking ->srcu.
+
+  =============================
+  WARNING: suspicious RCU usage
+  5.4.0-rc7+ #94 Not tainted
+  -----------------------------
+  include/linux/kvm_host.h:626 suspicious rcu_dereference_check() usage!
+
+               other info that might help us debug this:
+
+  rcu_scheduler_active = 2, debug_locks = 1
+  1 lock held by evmcs_test/10939:
+   #0: ffff88826ffcb800 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0x85/0x630 [kvm]
+
+  stack backtrace:
+  CPU: 1 PID: 10939 Comm: evmcs_test Not tainted 5.4.0-rc7+ #94
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  Call Trace:
+   dump_stack+0x68/0x9b
+   kvm_is_visible_gfn+0x179/0x180 [kvm]
+   mmu_check_root+0x11/0x30 [kvm]
+   fast_cr3_switch+0x40/0x120 [kvm]
+   kvm_mmu_new_cr3+0x34/0x60 [kvm]
+   nested_vmx_load_cr3+0xbd/0x1f0 [kvm_intel]
+   nested_vmx_enter_non_root_mode+0xab8/0x1d60 [kvm_intel]
+   vmx_set_nested_state+0x256/0x340 [kvm_intel]
+   kvm_arch_vcpu_ioctl+0x491/0x11a0 [kvm]
+   kvm_vcpu_ioctl+0xde/0x630 [kvm]
+   do_vfs_ioctl+0xa2/0x6c0
+   ksys_ioctl+0x66/0x70
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x54/0x200
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7f59a2b95f47
+
+Fixes: 8fcc4b5923af5 ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/x86.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5d530521f11d..656878a9802e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4421,6 +4421,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 	case KVM_SET_NESTED_STATE: {
+ 		struct kvm_nested_state __user *user_kvm_nested_state = argp;
+ 		struct kvm_nested_state kvm_state;
++		int idx;
+ 
+ 		r = -EINVAL;
+ 		if (!kvm_x86_ops->set_nested_state)
+@@ -4444,7 +4445,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		    && !(kvm_state.flags & KVM_STATE_NESTED_GUEST_MODE))
+ 			break;
+ 
++		idx = srcu_read_lock(&vcpu->kvm->srcu);
+ 		r = kvm_x86_ops->set_nested_state(vcpu, user_kvm_nested_state, &kvm_state);
++		srcu_read_unlock(&vcpu->kvm->srcu, idx);
+ 		break;
+ 	}
+ 	case KVM_GET_SUPPORTED_HV_CPUID: {
+-- 
+2.24.0
+
