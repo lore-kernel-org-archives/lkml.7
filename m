@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC77C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C509C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4372070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A102084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420903;
-	bh=RgYw0oBSLwQBhdw3WvYdr72j1tYCT0JVBwh8M+A/DAk=;
+	s=default; t=1574420910;
+	bh=m+qnqZ/ShNKNjyAacelus/FWNvJ3XrIxXhEmoCmrUqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bq2HhnOjqeEwpmok9UXhDuTKCZsTffbomoPzhCdMb8wxnCxZfjLv/5MtjinNp6uEE
-	 MZJcCp3rMJA9xJFc9xKSRjfGLUfOG9FvNUrdyaZht58CLd2pLqh6JFjS3lqt3LY/QJ
-	 q4HZuK0h7z0msE3JRviYkigpX3SnZ/QrZ07bIT1k=
+	b=0Qb2kTsCFGeSoexIIkusjBAoVcR2pxT8Bzzbfzdr69Qa4vU5vFwkZdR4ekn/0J6wa
+	 WVYH0FkJ9FCbEycXJCM8Apv2LElvsxW2Qqbrv9lgs+UdfVAbj23qSZYYiv6dTR7zXq
+	 WnEVnf5PiBO1nPWqCGelrLZgsOk4KHiNTg5AyZr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbfKVLIW (ORCPT
+        id S1730066AbfKVLI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:08:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:08:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730596AbfKVLEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:22 -0500
+        id S1731527AbfKVLEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38F8520870;
-        Fri, 22 Nov 2019 11:04:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCB920659;
+        Fri, 22 Nov 2019 11:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420661;
-        bh=RgYw0oBSLwQBhdw3WvYdr72j1tYCT0JVBwh8M+A/DAk=;
+        s=default; t=1574420652;
+        bh=m+qnqZ/ShNKNjyAacelus/FWNvJ3XrIxXhEmoCmrUqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwjybFPNRxSDCKv87xU1Wpj2O70Gw91YA6lGLytkduuMJApVR568t+eolqEIm6HgA
-         4MzmgtiWX+qpC8KERgzw8Vx9egyctc/5DW8C/fJ3S1m7Hq7R/BKj/TzvqI8pAsgjj6
-         Y/zmJgBZLKsZW8qHkFgLGtijAn/7EP5cl6IzwoRI=
+        b=eREajUEGjnKTwQGmQ3/w49UbdJCuLIKK9t2Wx6mAPWYph8/VXsfYVf0F7b9d75lk/
+         cN3EuECApCTkA/8u/WRItS4BMgYRKoXwB4efqVJvUJVKf9AUfQdKcmsF8d9M0Lx72e
+         qZ3m5METfmKinJUROBbMDhI54Mzgh9RUd7lX6i5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 184/220] lightnvm: do no update csecs and sos on 1.2
-Date:   Fri, 22 Nov 2019 11:29:09 +0100
-Message-Id: <20191122100927.483665470@linuxfoundation.org>
+Subject: [PATCH 4.19 181/220] lightnvm: pblk: guarantee emeta on line close
+Date:   Fri, 22 Nov 2019 11:29:06 +0100
+Message-Id: <20191122100927.321487329@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -63,34 +63,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Javier González <javier@javigon.com>
 
-[ Upstream commit 6fd05cad5ee1290b276dd8ed90a1e019b1fa577a ]
+[ Upstream commit 9cc85bc761f83da41935cdd6edcdb7c122bc90bf ]
 
-1.2 devices exposes their data and metadata size through the separate
-identify command. Make sure that the NVMe LBA format does not override
-these values.
+If a line is recovered from open chunks, the memory structures for
+emeta have not necessarily been properly set on line initialization.
+When closing a line, make sure that emeta is consistent so that the line
+can be recovered on the fast path on next reboot.
+
+Also, remove a couple of empty lines at the end of the function.
 
 Signed-off-by: Javier González <javier@cnexlabs.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/lightnvm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/lightnvm/pblk-core.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/lightnvm.c b/drivers/nvme/host/lightnvm.c
-index 6fe5923c95d4a..a69553e75f38e 100644
---- a/drivers/nvme/host/lightnvm.c
-+++ b/drivers/nvme/host/lightnvm.c
-@@ -968,6 +968,9 @@ void nvme_nvm_update_nvm_info(struct nvme_ns *ns)
- 	struct nvm_dev *ndev = ns->ndev;
- 	struct nvm_geo *geo = &ndev->geo;
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index fd322565fb0f9..8dce31dbf2cbc 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -1773,6 +1773,17 @@ void pblk_line_close_meta(struct pblk *pblk, struct pblk_line *line)
+ 	wa->pad = cpu_to_le64(atomic64_read(&pblk->pad_wa));
+ 	wa->gc = cpu_to_le64(atomic64_read(&pblk->gc_wa));
  
-+	if (geo->version == NVM_OCSSD_SPEC_12)
-+		return;
++	if (le32_to_cpu(emeta_buf->header.identifier) != PBLK_MAGIC) {
++		emeta_buf->header.identifier = cpu_to_le32(PBLK_MAGIC);
++		memcpy(emeta_buf->header.uuid, pblk->instance_uuid, 16);
++		emeta_buf->header.id = cpu_to_le32(line->id);
++		emeta_buf->header.type = cpu_to_le16(line->type);
++		emeta_buf->header.version_major = EMETA_VERSION_MAJOR;
++		emeta_buf->header.version_minor = EMETA_VERSION_MINOR;
++		emeta_buf->header.crc = cpu_to_le32(
++			pblk_calc_meta_header_crc(pblk, &emeta_buf->header));
++	}
 +
- 	geo->csecs = 1 << ns->lba_shift;
- 	geo->sos = ns->ms;
+ 	emeta_buf->nr_valid_lbas = cpu_to_le64(line->nr_valid_lbas);
+ 	emeta_buf->crc = cpu_to_le32(pblk_calc_emeta_crc(pblk, emeta_buf));
+ 
+@@ -1790,8 +1801,6 @@ void pblk_line_close_meta(struct pblk *pblk, struct pblk_line *line)
+ 	spin_unlock(&l_mg->close_lock);
+ 
+ 	pblk_line_should_sync_meta(pblk);
+-
+-
  }
+ 
+ static void pblk_save_lba_list(struct pblk *pblk, struct pblk_line *line)
 -- 
 2.20.1
 
