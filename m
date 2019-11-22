@@ -2,148 +2,95 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A356C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31037C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167DE20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0FB120714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fkgsDrpJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q3de4ll9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfKVQZW (ORCPT
+        id S1727309AbfKVQ1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:25:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51212 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726638AbfKVQZV (ORCPT
+        Fri, 22 Nov 2019 11:27:39 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32772 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKVQ1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:25:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574439921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dHdyHfkNKosHl51NLrMjsjBT0ZayHryhZQGO5Md7wqE=;
-        b=fkgsDrpJ7qdIE/ZntwpIM9t+ZRHI9I5rZef9UUq/cc683neCdFAK8wWNTagVaOZypEDPJj
-        F+K+n9KUBq5NYuzGaOwTp4CB7XaPiP4Wwhxu7MRK5Lrnr7mbChG+Wwwa5B+JEmHUw5zgXm
-        0Omj5nQeZygrjnBujNrvFfvvSS1obTQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-FxwrXjrrPBO6LPh4PmY5hA-1; Fri, 22 Nov 2019 11:25:17 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07B7B184CAA8;
-        Fri, 22 Nov 2019 16:25:15 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 659181CB;
-        Fri, 22 Nov 2019 16:25:13 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Weiny\, Ira" <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH] virtio pmem: fix async flush ordering
-References: <20191120092831.6198-1-pagupta@redhat.com>
-        <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com>
-        <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
-        <x49h82vevw1.fsf@segfault.boston.devel.redhat.com>
-        <CAPcyv4idC=LgkwP+A1GKJ1CWkzUZ_RVBDCVfA3yAL9TNw1zZmw@mail.gmail.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 22 Nov 2019 11:25:11 -0500
-In-Reply-To: <CAPcyv4idC=LgkwP+A1GKJ1CWkzUZ_RVBDCVfA3yAL9TNw1zZmw@mail.gmail.com>
-        (Dan Williams's message of "Fri, 22 Nov 2019 08:13:05 -0800")
-Message-ID: <x49d0djev4o.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 22 Nov 2019 11:27:38 -0500
+Received: by mail-io1-f66.google.com with SMTP id j13so8743484ioe.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:27:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XlWqqCQ+zgEV72jaObyUbNZTFY8rKw/Sl0dnc6Dl/5A=;
+        b=Q3de4ll9e8KMpxI6muGFZLyE6AtK8cNP9PPf7FhGVILpdUDr2/fmfkA6lyoQW2n2TR
+         n/d4o06GOFMQKFA/uxZwpohzLAewPAEWEl1D0i3RqNxIxxH3yCaK3+CaFFHK91qnMiPa
+         JnHQ+AP3izQjZA8A7uZRODuPBE2ygcvsWnFI25OD4yGrQjWYMpxYHzNoBfGTKyRlkLvS
+         lG3ibCe/VgG0y5KwtrkoVOJ5YlJfrK5JwIHTw3ruMuM/D9c50iLAd7Svfuxmw08j9X+n
+         DuWPON1UvQXTEWc4VQAk+szrUVfQdjN8OJ0oQAhQyoo1I43xjI01M6nie/C6DSNvvJir
+         GZtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XlWqqCQ+zgEV72jaObyUbNZTFY8rKw/Sl0dnc6Dl/5A=;
+        b=nNg5QfL5g4IJEs5Xg0UkrS/N/VYPqnl1+yPSUs3wNhpRgA0HU6X9+Hbyxjwc0D5CDG
+         1Qqk2Ge3M6v4WWRvTc9OmBo1WOQIZIQ5u80ap13sVxA8cJQbT+uML/be9BusFq6uELrZ
+         Ee906NOID8A0SxSPR8qApK8oc+M8SeGInMUnx11IG8Z4lAZQePOPTXgVJ+6mc5pV0Pfc
+         B/zTfX60xXqvokA0Mza3RXj8rfZCdxPr8OhOo4aRfiaVLoerAIGYt93j4lDBRoHU50ze
+         QjA4K+TCACmtYzWO715CmYqRPSdRjiDV90SBGFSpqPCL+Tke5vKTAn/ch2isfmuvtAVj
+         tMZw==
+X-Gm-Message-State: APjAAAU+wCxijYHC1zi80RgILXPMUtbquO5rMrt3rUPKohBevq9LrI0b
+        SPe7vOfmn43CDZK9N3BKA7/35hf6uFL5eUL4BtdslA==
+X-Google-Smtp-Source: APXvYqyif/FcVg31H4mCMrqc1tAv9+xfOMC4ku1jEbZz0D4MzKrvW2UuCa7rSztTlQQZp6E44d6wzwy8qjw4Fx0IG+w=
+X-Received: by 2002:a6b:c389:: with SMTP id t131mr13745566iof.50.1574440057783;
+ Fri, 22 Nov 2019 08:27:37 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: FxwrXjrrPBO6LPh4PmY5hA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+References: <20191115223356.27675-1-mathieu.poirier@linaro.org> <20191121203555.GC813260@kroah.com>
+In-Reply-To: <20191121203555.GC813260@kroah.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 22 Nov 2019 09:27:26 -0700
+Message-ID: <CANLsYkyumUDrP6ic0towr68S6pxL1psZHVP0XTRC+Tf82O4wQQ@mail.gmail.com>
+Subject: Re: [stable 4.19+][PATCH 01/20] i2c: stm32f7: fix first byte to send
+ in slave mode
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "# 4 . 7" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-
-> On Fri, Nov 22, 2019 at 8:09 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->>
->> Dan Williams <dan.j.williams@intel.com> writes:
->>
->> > On Wed, Nov 20, 2019 at 9:26 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->> >>
->> >> Pankaj Gupta <pagupta@redhat.com> writes:
->> >>
->> >> >  Remove logic to create child bio in the async flush function which
->> >> >  causes child bio to get executed after parent bio 'pmem_make_reque=
-st'
->> >> >  completes. This resulted in wrong ordering of REQ_PREFLUSH with th=
-e
->> >> >  data write request.
->> >> >
->> >> >  Instead we are performing flush from the parent bio to maintain th=
-e
->> >> >  correct order. Also, returning from function 'pmem_make_request' i=
-f
->> >> >  REQ_PREFLUSH returns an error.
->> >> >
->> >> > Reported-by: Jeff Moyer <jmoyer@redhat.com>
->> >> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
->> >>
->> >> There's a slight change in behavior for the error path in the
->> >> virtio_pmem driver.  Previously, all errors from virtio_pmem_flush we=
-re
->> >> converted to -EIO.  Now, they are reported as-is.  I think this is
->> >> actually an improvement.
->> >>
->> >> I'll also note that the current behavior can result in data corruptio=
-n,
->> >> so this should be tagged for stable.
->> >
->> > I added that and was about to push this out, but what about the fact
->> > that now the guest will synchronously wait for flushing to occur. The
->> > goal of the child bio was to allow that to be an I/O wait with
->> > overlapping I/O, or at least not blocking the submission thread. Does
->> > the block layer synchronously wait for PREFLUSH requests?
->>
->> You *have* to wait for the preflush to complete before issuing the data
->> write.  See the "Explicit cache flushes" section in
->> Documentation/block/writeback_cache_control.rst.
+On Thu, 21 Nov 2019 at 13:35, Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> I'm not debating the ordering, or that the current implementation is
-> obviously broken. I'm questioning whether the bio tagged with PREFLUSH
-> is a barrier for future I/Os. My reading is that it is only a gate for
-> past writes, and it can be queued. I.e. along the lines of
-> md_flush_request().
+> On Fri, Nov 15, 2019 at 03:33:37PM -0700, Mathieu Poirier wrote:
+> > From: Fabrice Gasnier <fabrice.gasnier@st.com>
+> >
+> > commit 915da2b794ce4fc98b1acf64d64354f22a5e4931 upstream
+>
+> That commit is not in Linus's tree :(
 
-Sorry, I misunderstood your question.
+:o(  Apologies for that - probably a copy/paste problem.
 
-For a write bio with REQ_PREFLUSH set, the PREFLUSH has to be done
-before the data attached to the bio is written.  That preflush is not an
-I/O barrier.  In other words, for unrelated I/O (any other bio in the
-system), it does not impart any specific ordering requirements.  Upper
-layers are expected to wait for any related I/O completions before
-issuing a flush request.
+>
+> I'll stop here.  Please check all of these and resend the whole thing.
+>
+> Also, does this series also apply fully to 5.3.y?
 
-So yes, you can queue the bio to a worker thread and return to the
-caller.  In fact, this is what I had originally suggested to Pankaj.
+Normally it should have and that is what I assumed.  I just did a
+quick test and I'm wrong - as you probably noticed since you're
+pointing it out.  Forget the whole thing and I'll send another set (or
+two).
 
-Cheers,
-Jeff
-
+>
+> thanks,
+>
+> greg k-h
