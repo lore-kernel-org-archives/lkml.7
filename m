@@ -2,87 +2,93 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9875C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D1C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FC9206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5782068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="TTtFu67d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxDbIDPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKVB1L (ORCPT
+        id S1726942AbfKVB2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:27:11 -0500
-Received: from onstation.org ([52.200.56.107]:33778 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbfKVB06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:26:58 -0500
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id B635A4FE48;
-        Fri, 22 Nov 2019 01:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1574386018;
-        bh=fYnaunSzeUztsvg24uhUc/JRPip4E9qdhSh557hA/nU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTtFu67dU3/KFQBtae+aBO0uLSAzgTr5FnJE+GZBdaoiarPaUndLiOBzZrOc2fvJO
-         i69TN56y014l8kJYpBlMiVBKlaD8RDYEGANKpX+tBfGWaPBmEhX+z5MzVUfN61bd6X
-         JRkOkA/CyORl2IfXmK7/7u1/nFDK2cXMNw0I3gqQ=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
-        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 3/4] drm/msm/a3xx: set interconnect bandwidth vote
-Date:   Thu, 21 Nov 2019 20:26:44 -0500
-Message-Id: <20191122012645.7430-4-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191122012645.7430-1-masneyb@onstation.org>
-References: <20191122012645.7430-1-masneyb@onstation.org>
+        Thu, 21 Nov 2019 20:28:16 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:44930 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfKVB2Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 20:28:16 -0500
+Received: by mail-pj1-f66.google.com with SMTP id w8so2306322pjh.11;
+        Thu, 21 Nov 2019 17:28:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jz0EfbEsNQAkLV1wwCUeENwLvrycSeRUXKL40gy/RCM=;
+        b=gxDbIDPYIbaftf7A4iOgIRzb23HlGkbLpGLUuAq4rCDqhPb8h/RIvKtQNc12FC2idM
+         7nn/5LsyE4zA5Cdz7WrlYcjWvxUTgH4Wi/LwLB3/MJhsQcVDUY3IkbA3s689X7Efgfmk
+         vg0WKi4KJLHFmo52alK5yzza58kJGm7Qh/xinCfrgxsg9BXzv19+PHY/7+K4XbXqza5j
+         LeMBreu9a1MBTqOkSKKwjRWpl3+EpdgF9kPMj1sTUcjpNkprJQ8SO2Zw6Z+XA6QeZwUi
+         9v1jFB4RSP0sArRWdnawWXddEbm2iRGau2s0CjBuFmkiVTZ/XiVaLRqp6sSNLOaPD5V9
+         3JKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jz0EfbEsNQAkLV1wwCUeENwLvrycSeRUXKL40gy/RCM=;
+        b=lP1gAM0riOxtEh/mKPol+ua77XiGNtt7VswRW48akFprqFwf/kevxEw5h1Zn+ozqNi
+         hQ88Fi/yAj5vXtMUPvX+tyD42VBraMz0rp1f2vU9jcHrJA2RNmhR3vFzi6ux8xomSCNj
+         HwianDgQrZZusxfUyUVNhRpqoG68QDjkE9GaLmOuw4HLEQ3msudRx2buNxKfXtFEamYZ
+         tglqrbwi8rCAl1lDcjPmIaKFL/wKxTF+Kv9sDSJ/8sQbx21jYDGUeCY8jWnNbJHG8YiP
+         mlFGBZe3hChdhZY5sbTO4J7bRFi5SbTTJhX2vyvKaZrlqDZXvKA+TYGHneNPvpKXjp1k
+         eYmg==
+X-Gm-Message-State: APjAAAVk0d+LQgzFP2UzR02lRA+ye52m6zY3U8MxHEMQgZDOAR5rg1BI
+        KnzvAWRSW9om2G2lnLcrH1I=
+X-Google-Smtp-Source: APXvYqwQ0a8d7FAp9NIk01KOrDsBzyhRPEoCvYfC3bVx5KzdzXfAszdCqSwZKauFekRinPKYyfVQbg==
+X-Received: by 2002:a17:902:4a:: with SMTP id 68mr11876690pla.158.1574386095677;
+        Thu, 21 Nov 2019 17:28:15 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id y4sm4404935pgy.27.2019.11.21.17.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 17:28:14 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:28:12 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] zram: Fix Kconfig indentation
+Message-ID: <20191122012812.GA161597@google.com>
+References: <20191121132935.29604-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121132935.29604-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the two interconnect paths for the GPU to maximum speed for now to
-work towards getting the GPU working upstream. We can revisit a later
-time to optimize this for battery life.
+Cc-ing Andrew
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+id: 20191121132935.29604-1-krzk@kernel.org
 
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index 07ddcc529573..eff0ecd4e81a 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -504,6 +504,14 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
- 		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
- 	}
- 
-+	/*
-+	 * Set the ICC path to maximum speed for now by multiplying the fastest
-+	 * frequency by the bus width (8). We'll want to scale this later on to
-+	 * improve battery life.
-+	 */
-+	icc_set_bw(gpu->icc_path, 0, Bps_to_icc(gpu->fast_rate) * 8);
-+	icc_set_bw(gpu->ocmem_icc_path, 0, Bps_to_icc(gpu->fast_rate) * 8);
-+
- 	return gpu;
- 
- fail:
--- 
-2.21.0
+On (19/11/21 21:29), Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+
+	-ss
