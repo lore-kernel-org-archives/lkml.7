@@ -4,51 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF669C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5032071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF582071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452487;
-	bh=7eOKCjZ0cR1AnFiTqy5GIYb61+R5OBdQSidlgyrGhpk=;
+	s=default; t=1574452496;
+	bh=1onni7qI1StNp13OOOaMTO2TDuBSUXH5Q66vVgyAGyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQy1uwGmERrygVJu3hIbWi4I4O0aLG0I+pj7oPrST2Khqb4q46RB5VyH+FDARM2+y
-	 d9ufRQx6r2H2D8i21sWpsQLTIs03p1ZKkOfaqQPRsMC3OqwvXorWop4nE0nbIWO2aH
-	 vNbAbE8th2LGgmxiawY9jjoimO1XmQjWFBmwtnvw=
+	b=gUvZq/NXzO/YjaKuf1pPoAIKESfaf8g5xiQD5OYNNuHRY6bFyNAtm4dWmXEsCM+cA
+	 bmfX7rknEA+lK8TavZA9PACcGmI0WMvgwTNJf/LLCUeqrXKue1YirO+DxS4pDsJ6xg
+	 iInIc9bVbvQYAyvW67lwaj06XktEdd9K4lknWPko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfKVTyq (ORCPT
+        id S1727724AbfKVTyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:54:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48152 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:54:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfKVTtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:08 -0500
+        id S1727116AbfKVTtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE6B12071F;
-        Fri, 22 Nov 2019 19:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFE9420726;
+        Fri, 22 Nov 2019 19:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452147;
-        bh=7eOKCjZ0cR1AnFiTqy5GIYb61+R5OBdQSidlgyrGhpk=;
+        s=default; t=1574452145;
+        bh=1onni7qI1StNp13OOOaMTO2TDuBSUXH5Q66vVgyAGyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSbgRK9ooIGhqcz7OCdl+nyIkAik6snuY7AQJpBQHdnVLIn7Cd+R4dRjJWHDZME4E
-         MpCkYZmAiFCJcgwqWAFO9BISSYyUvto3YelH/vo56sbI+d+Kk5u+XevdTQ7jKyvb5/
-         C6D2QpobTEBLwzX4yzm/dgGinz46a/TasVlGmgKU=
+        b=wN31UCefoEKR4KMDNPCTHqbnvsUX+BqOAin7dU9rmoFQ2seKGql/eIHTsFxrF2s0o
+         V8+MQZ5jCRFz+276T+51/VVghrld+iGbjuBS8XA3RowSXfKonmxxnOnbQAhEiOvVVb
+         kW3VZe8+GqQ5KBPr3QA8tvdgdmNTZK6MO6vvspG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-nfc@lists.01.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/25] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
-Date:   Fri, 22 Nov 2019 14:48:40 -0500
-Message-Id: <20191122194859.24508-7-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/25] exportfs_decode_fh(): negative pinned may become positive without the parent locked
+Date:   Fri, 22 Nov 2019 14:48:38 -0500
+Message-Id: <20191122194859.24508-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
@@ -61,70 +57,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit a71a29f50de1ef97ab55c151a1598eb12dde379d ]
+[ Upstream commit a2ece088882666e1dc7113744ac912eb161e3f87 ]
 
-I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
-result in a NULL pointer dereference at the moment:
-
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    Oops: 0002 [#1] PREEMPT SMP NOPTI
-    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
-    RIP: 0010:skb_queue_tail+0x25/0x50
-    Call Trace:
-     nci_recv_frame+0x36/0x90 [nci]
-     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
-     ? preempt_count_add+0x68/0xa0
-     ? irq_forced_thread_fn+0x80/0x80
-     irq_thread_fn+0x20/0x60
-     irq_thread+0xee/0x180
-     ? wake_threads_waitq+0x30/0x30
-     kthread+0xfb/0x130
-     ? irq_thread_check_affinity+0xd0/0xd0
-     ? kthread_park+0x90/0x90
-     ret_from_fork+0x1f/0x40
-
-Afterward the kernel must be rebooted to work properly again.
-
-This happens because it attempts to call nci_recv_frame() with skb == NULL.
-However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
-NULL checks for skb, causing the NULL pointer dereference.
-
-Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
-Make sure to log it so it is obvious that a communication error occurred.
-The error above then becomes:
-
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
-    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
-
-Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/nxp-nci/i2c.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/exportfs/expfs.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
-index ba695e392c3b7..0df745cad601a 100644
---- a/drivers/nfc/nxp-nci/i2c.c
-+++ b/drivers/nfc/nxp-nci/i2c.c
-@@ -236,8 +236,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index 63707abcbeb3e..808cae6d5f50f 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -517,26 +517,33 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
+ 		 * inode is actually connected to the parent.
+ 		 */
+ 		err = exportfs_get_name(mnt, target_dir, nbuf, result);
+-		if (!err) {
+-			inode_lock(target_dir->d_inode);
+-			nresult = lookup_one_len(nbuf, target_dir,
+-						 strlen(nbuf));
+-			inode_unlock(target_dir->d_inode);
+-			if (!IS_ERR(nresult)) {
+-				if (nresult->d_inode) {
+-					dput(result);
+-					result = nresult;
+-				} else
+-					dput(nresult);
+-			}
++		if (err) {
++			dput(target_dir);
++			goto err_result;
+ 		}
  
- 	if (r == -EREMOTEIO) {
- 		phy->hard_fault = r;
--		skb = NULL;
--	} else if (r < 0) {
-+		if (info->mode == NXP_NCI_MODE_FW)
-+			nxp_nci_fw_recv_frame(phy->ndev, NULL);
-+	}
-+	if (r < 0) {
- 		nfc_err(&client->dev, "Read failed with error %d\n", r);
- 		goto exit_irq_handled;
- 	}
++		inode_lock(target_dir->d_inode);
++		nresult = lookup_one_len(nbuf, target_dir, strlen(nbuf));
++		if (!IS_ERR(nresult)) {
++			if (unlikely(nresult->d_inode != result->d_inode)) {
++				dput(nresult);
++				nresult = ERR_PTR(-ESTALE);
++			}
++		}
++		inode_unlock(target_dir->d_inode);
+ 		/*
+ 		 * At this point we are done with the parent, but it's pinned
+ 		 * by the child dentry anyway.
+ 		 */
+ 		dput(target_dir);
+ 
++		if (IS_ERR(nresult)) {
++			err = PTR_ERR(nresult);
++			goto err_result;
++		}
++		dput(result);
++		result = nresult;
++
+ 		/*
+ 		 * And finally make sure the dentry is actually acceptable
+ 		 * to NFSD.
 -- 
 2.20.1
 
