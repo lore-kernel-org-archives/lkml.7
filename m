@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056EBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D8A20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E942071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419201;
-	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+	s=default; t=1574419206;
+	bh=fp4JUvyBejBKU6QRe+D7+l2nCEkoKaaJfl7XBKfJXvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e65NPsrC3uAyGM2aUidYOgKE/+x7gTz6W3HnnlOBJslHHZ9RsLpZu1Zczhto5rvpC
-	 1GDpNBQR0ltk8/a+ZjlatYIH1XDUva4sS1sv5dkBIIC/09GKtTEzNk8up7EZMAgwfX
-	 lCXk8zIoD1u4cPXAx5QMFGELBdG4ZlgYjRb3alqw=
+	b=lSCwDS4z6dXXCsExR+bz+5+rKTspko08ACgRpld8XgXT0Y/pvcdpl0aWWuZUbngJ9
+	 +bnIYifNN5l2UgWQxpJ2837YztInP9VI/YN+q8cBtPA5IlNykyQasA1Ntu/ECfcyVL
+	 V12fV+mzxVQ5mWlxFDzb8xt4e71/lStbYPiPXbwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKVKj7 (ORCPT
+        id S1728846AbfKVKkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:39:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43416 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:40:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbfKVKjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:39:55 -0500
+        id S1728829AbfKVKj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:39:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E0902071F;
-        Fri, 22 Nov 2019 10:39:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFED02071F;
+        Fri, 22 Nov 2019 10:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419194;
-        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+        s=default; t=1574419197;
+        bh=fp4JUvyBejBKU6QRe+D7+l2nCEkoKaaJfl7XBKfJXvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTmz7cBj2Ra+nAzzdzKhiPAX5gpxPeXNGd1QNusB0NJrMoXzlHvB73e61gGPk29wg
-         OBZSAzAvy1hPm3uGKCTTBBVvhn0WzSV2IlBQf7+DNwlWhM1i9FQm0NfL6tMZxN653s
-         grdjcG4GPRMVjXy+tYj1A6LPMcM/Cdv0SmE9fC/E=
+        b=LpOct5KkIfyxSWJ/vrlkgdCqi7iGewGtCrphLTOOCR1SQ98dZsEzyqEjjJr3DkMyO
+         M8W5NV3F46ijLbkpK2J6pJzlVBLn48FvL1XbfGikNPbF9YGTc93knFEY+NwiHi0bvY
+         //NzyP8sAfBJ8mPjqL7huC92IIwFQJr83vcVMCSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 022/222] ALSA: seq: Do error checks at creating system ports
-Date:   Fri, 22 Nov 2019 11:26:02 +0100
-Message-Id: <20191122100837.381830286@linuxfoundation.org>
+Subject: [PATCH 4.9 031/222] i40e: Prevent deleting MAC address from VF when set by PF
+Date:   Fri, 22 Nov 2019 11:26:11 +0100
+Message-Id: <20191122100842.982289419@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,69 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Patryk Małek <patryk.malek@intel.com>
 
-[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
+[ Upstream commit 5907cf6c5bbe78be2ed18b875b316c6028b20634 ]
 
-snd_seq_system_client_init() doesn't check the errors returned from
-its port creations.  Let's do it properly and handle the error paths.
+To prevent VF from deleting MAC address that was assigned by the
+PF we need to check for that scenario when we try to delete a MAC
+address from a VF.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Patryk Małek <patryk.malek@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_system.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
-index 8ce1d0b40dce1..ce1f1e4727ab1 100644
---- a/sound/core/seq/seq_system.c
-+++ b/sound/core/seq/seq_system.c
-@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
- {
- 	struct snd_seq_port_callback pcallbacks;
- 	struct snd_seq_port_info *port;
-+	int err;
- 
- 	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!port)
-@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 
- 	/* register announcement port */
- 	strcpy(port->name, "Announce");
-@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 	announce_port = port->addr.port;
- 
- 	kfree(port);
- 	return 0;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 54b8ee2583f14..7484ad3c955db 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2000,6 +2000,16 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
+ 			ret = I40E_ERR_INVALID_MAC_ADDR;
+ 			goto error_param;
+ 		}
 +
-+ error_port:
-+	snd_seq_system_client_done();
-+	kfree(port);
-+	return err;
- }
- 
- 
- /* unregister our internal client */
--void __exit snd_seq_system_client_done(void)
-+void snd_seq_system_client_done(void)
- {
- 	int oldsysclient = sysclient;
++		if (vf->pf_set_mac &&
++		    ether_addr_equal(al->list[i].addr,
++				     vf->default_lan_addr.addr)) {
++			dev_err(&pf->pdev->dev,
++				"MAC addr %pM has been set by PF, cannot delete it for VF %d, reset VF to change MAC addr\n",
++				vf->default_lan_addr.addr, vf->vf_id);
++			ret = I40E_ERR_PARAM;
++			goto error_param;
++		}
+ 	}
+ 	vsi = pf->vsi[vf->lan_vsi_idx];
  
 -- 
 2.20.1
