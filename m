@@ -2,145 +2,285 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F938C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E862071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAE920721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6E4DMv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKVPIl (ORCPT
+        id S1727097AbfKVPIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:08:41 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:52367 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfKVPIk (ORCPT
+        Fri, 22 Nov 2019 10:08:55 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46104 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVPIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:08:40 -0500
-Received: from localhost.localdomain ([78.238.229.36]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MNccf-1iDS4A3GTj-00P4Ht; Fri, 22 Nov 2019 16:08:33 +0100
-From:   Laurent Vivier <laurent@vivier.eu>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Laurent Vivier <laurent@vivier.eu>
-Subject: [RFC v2] binfmt_misc: pass binfmt_misc flags to the interpreter
-Date:   Fri, 22 Nov 2019 16:08:30 +0100
-Message-Id: <20191122150830.15855-1-laurent@vivier.eu>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:NEbcxsm+SkmB3SNa2ecYAw74OLAO27N+abnqS0hw6qizot3DkL/
- oIZPMS1Fl4h2KcTVxsaiMjun8uGWTNb3MBUF3AgUHh1PAyXn9mp+dZOb+WIXeHyIeJ9aNXg
- SiJpEBEOeG4f9FM1q6B8fWmzCXye4JNtGJzNOG9SludRw/0uTQKV/UC/MlrsdGlT8vjHQ3J
- Mfd7+LCmAsMD1tVcKE+EA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:r7soFzH1jcU=:wSVdgrQR0o0d3Ul5DZ+2Qw
- c1obj69GkbQmgRldov7tQJuXqhHluogD7Uk688a/NiNREejKTACBYmQHFsbUEtfq+szeImKYx
- JjIE6ePBCuxrNjpGMTFG/p2oEIIbvlYdyGBVSPJs7hToLg1keKbCJ1HgvksG2Gu9BM/II+nnt
- KeBYDVyNhcFJVT79wqqia8c5XvWfMiuPwQP1SYIki2ZOxuOqJM6iuJT4IClsnHmUEbRZFiJs8
- TJskALBuBaw26JHOasAjsfHZfd5eObd3HD1nIF9BrcIC/WNyMcrLvyVDY67Baq5bxCELAS2mY
- /G5nPERmhK2bCvrcJDaBSPQb2t8/VWAX+4he6j7hjOS4FnxgpLwbtz+t/OCEuHCRa/yZSxSwb
- +vArW9GYM02zGTqZ0LwdJ2l2Sqh7s3ucWM5gA8r/JlxbxvFvLfpx04dARJTfGoo3vU5gH4aQf
- gwe6dkZucPNqHr0McZ2qcLmltnnX67TyZ1X82c2JHiEuiX39CfqQMAcbmhsr37uVB00nU7sdF
- WFV6bT8MJI59ZVu3GGuz3zXg5YhIh4WoY8UwOQyRD4qRPNbFRewzfmaIi0cftTYg0mp2M18yu
- eVqVRNNWmQKCHRUgHtqyru6RjUuKhP4HXdTyp6PeZ8/Mo89FzkK8Pq9SDjsM7xDo0MoREKuUD
- nTMTccJtiElBBF/R6zfIwsdCd3oTjeBzUUzC0WYQ5v4RjXvxcwcbj59y20NFhrT9D0Fe39hy+
- wKFjdglhZugsU+gTyT9Oe9yqVeXQzAbh6m1BYrEpNi/pab/HOe4Xtm9SmnpMEW3fKRV9vBJMt
- cbssmiip3eTNkCb4Xtj5OCV943C9EUcLQ2dl0+Q4WNQtDBi5s8lhv1Vb+iQTS3q83XlhOOkQZ
- 4rDn+dXTriymz8iDH75A==
+        Fri, 22 Nov 2019 10:08:54 -0500
+Received: by mail-pg1-f194.google.com with SMTP id r18so3443288pgu.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 07:08:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=+pVRv0zmwM6r6qh3u7jefx+roN9IpRfJikQs29Fs7Mc=;
+        b=r6E4DMv1Ew1POCiZziHs0YwoBfyHUTq3KYUrRgtfb4vl0UK6dNOFfiH6gUaxO4D+Si
+         nAKdspmLW+9QlY4Dohyh1Y82LJgbTL0/J+mKWoqN6tCCVfh66MKivVt6hmQuVvIqEEjr
+         ycvmCeYBRQQ4BnbJ9FFQzrsZ9+nU3Hfhf57i6taLJTOwMXrUiGLUZgn9OLRcdhzXVGhV
+         kOMfXA52pUudqEQZhIJNepSok+DmAQGPD9MLwvVpKOf2srwXLYtceFOIueJOR75AMNjj
+         0C/TK8wEk3A4oDUYhjl8zavOjysg3uzc3fAFPCObboqKbmjcJFey4/qAn6W8vVKxstfY
+         XZ7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=+pVRv0zmwM6r6qh3u7jefx+roN9IpRfJikQs29Fs7Mc=;
+        b=UT4j+c0WJRDgbFHAbAPDUP2bCu/acYs8yeJH++uA8oI97HekMVrNDPe26tFuu+Xani
+         sdr1aeyrb6AuFA1xNtjsrIham+pEnG9izaPArjQpEDx9k9u3VXURgwTWVj4KGPJbXPqp
+         JMlT1+d5N/XaxkYGXILlPi/lRG0lYSNSBFXkT1KgaykU3yxgW/PpAT6mU5/wrrhtWUM7
+         CIuHzEeBxWhmxfkgorye811i4iyq87okTfZHFIYiPl+izgfbBSkr/aeJRk4AIhsYvRSM
+         pMHZ4nH/uHNOhqsUjlkHN4gwsJRJbcaR+KhH97BQB2F89qsJrgTDB6RwSPutfdUC9dp5
+         oiKw==
+X-Gm-Message-State: APjAAAX0LILhMb5bRYaPxfbHgxiwqvIkVEqOaOLwGF4+RZ2hKb/G3KPz
+        SeM554dMQvgYZCZLB/zzDLc8eg==
+X-Google-Smtp-Source: APXvYqwe1jPYdLfnbYJnZ7Jm1S+hvm/1eSFcyEKVujxjm7ccMO9vt6z4GOxkwjZGiWr/k4y4nLji/w==
+X-Received: by 2002:a63:c18:: with SMTP id b24mr11367250pgl.291.1574435333618;
+        Fri, 22 Nov 2019 07:08:53 -0800 (PST)
+Received: from localhost.localdomain ([240e:362:496:8600:f5af:2744:25c3:d01a])
+        by smtp.gmail.com with ESMTPSA id a19sm8066021pfn.144.2019.11.22.07.08.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 22 Nov 2019 07:08:52 -0800 (PST)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v9 1/4] uacce: Add documents for uacce
+Date:   Fri, 22 Nov 2019 23:07:38 +0800
+Message-Id: <1574435261-6031-2-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574435261-6031-1-git-send-email-zhangfei.gao@linaro.org>
+References: <1574435261-6031-1-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be useful to the interpreter to know which flags are in use.
+From: Kenneth Lee <liguozhu@hisilicon.com>
 
-For instance, knowing if the preserve-argv[0] is in use would
-allow to skip the pathname argument.
+Uacce (Unified/User-space-access-intended Accelerator Framework) is
+a kernel module targets to provide Shared Virtual Addressing (SVA)
+between the accelerator and process.
 
-This patch uses an unused auxiliary vector, AT_FLAGS,  to pass the
-content of the binfmt flags (special flags: P, F, C, O).
+This patch add document to explain how it works.
 
-Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 ---
+ Documentation/misc-devices/uacce.rst | 176 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 176 insertions(+)
+ create mode 100644 Documentation/misc-devices/uacce.rst
 
-Notes:
-    v2: only pass special flags (remove Magic and Enabled flags)
-
- fs/binfmt_elf.c         | 2 +-
- fs/binfmt_elf_fdpic.c   | 2 +-
- fs/binfmt_misc.c        | 6 ++++++
- include/linux/binfmts.h | 2 +-
- 4 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index c5642bcb6b46..7a34c03e5857 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -250,7 +250,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
- 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
- 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
--	NEW_AUX_ENT(AT_FLAGS, 0);
-+	NEW_AUX_ENT(AT_FLAGS, bprm->fmt_flags);
- 	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
- 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
- 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index d86ebd0dcc3d..8fe839be125e 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -647,7 +647,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
- 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
- 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
- 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
--	NEW_AUX_ENT(AT_FLAGS,	0);
-+	NEW_AUX_ENT(AT_FLAGS,	bprm->fmt_flags);
- 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
- 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
- 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index cdb45829354d..25a392f23409 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -48,6 +48,9 @@ enum {Enabled, Magic};
- #define MISC_FMT_OPEN_BINARY (1 << 30)
- #define MISC_FMT_CREDENTIALS (1 << 29)
- #define MISC_FMT_OPEN_FILE (1 << 28)
-+#define MISC_FMT_FLAGS_MASK (MISC_FMT_PRESERVE_ARGV0 | MISC_FMT_OPEN_BINARY | \
-+			     MISC_FMT_CREDENTIALS | MISC_FMT_OPEN_FILE)
+diff --git a/Documentation/misc-devices/uacce.rst b/Documentation/misc-devices/uacce.rst
+new file mode 100644
+index 0000000..1db412e
+--- /dev/null
++++ b/Documentation/misc-devices/uacce.rst
+@@ -0,0 +1,176 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- 
- typedef struct {
- 	struct list_head list;
-@@ -149,6 +152,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 	if (!fmt)
- 		return retval;
- 
-+	/* pass special flags to the interpreter */
-+	bprm->fmt_flags = fmt->flags & MISC_FMT_FLAGS_MASK;
++Introduction of Uacce
++---------------------
 +
- 	/* Need to be able to load the file after exec */
- 	retval = -ENOENT;
- 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index b40fc633f3be..dae0d0d7b84d 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -60,7 +60,7 @@ struct linux_binprm {
- 				   different for binfmt_{misc,script} */
- 	unsigned interp_flags;
- 	unsigned interp_data;
--	unsigned long loader, exec;
-+	unsigned long loader, exec, fmt_flags;
- 
- 	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
- 
++Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
++provide Shared Virtual Addressing (SVA) between accelerators and processes.
++So accelerator can access any data structure of the main cpu.
++This differs from the data sharing between cpu and io device, which share
++only data content rather than address.
++Because of the unified address, hardware and user space of process can
++share the same virtual address in the communication.
++Uacce takes the hardware accelerator as a heterogeneous processor, while
++IOMMU share the same CPU page tables and as a result the same translation
++from va to pa.
++
++::
++
++         __________________________       __________________________
++        |                          |     |                          |
++        |  User application (CPU)  |     |   Hardware Accelerator   |
++        |__________________________|     |__________________________|
++
++                     |                                 |
++                     | va                              | va
++                     V                                 V
++                 __________                        __________
++                |          |                      |          |
++                |   MMU    |                      |  IOMMU   |
++                |__________|                      |__________|
++                     |                                 |
++                     |                                 |
++                     V pa                              V pa
++                 _______________________________________
++                |                                       |
++                |              Memory                   |
++                |_______________________________________|
++
++
++
++Architecture
++------------
++
++Uacce is the kernel module, taking charge of iommu and address sharing.
++The user drivers and libraries are called WarpDrive.
++
++The uacce device, built around the IOMMU SVA API, can access multiple
++address spaces, including the one without PASID.
++
++A virtual concept, queue, is used for the communication. It provides a
++FIFO-like interface. And it maintains a unified address space between the
++application and all involved hardware.
++
++::
++
++                             ___________________                  ________________
++                            |                   |   user API     |                |
++                            | WarpDrive library | ------------>  |  user driver   |
++                            |___________________|                |________________|
++                                     |                                    |
++                                     |                                    |
++                                     | queue fd                           |
++                                     |                                    |
++                                     |                                    |
++                                     v                                    |
++     ___________________         _________                                |
++    |                   |       |         |                               | mmap memory
++    | Other framework   |       |  uacce  |                               | r/w interface
++    | crypto/nic/others |       |_________|                               |
++    |___________________|                                                 |
++             |                       |                                    |
++             | register              | register                           |
++             |                       |                                    |
++             |                       |                                    |
++             |                _________________       __________          |
++             |               |                 |     |          |         |
++              -------------  |  Device Driver  |     |  IOMMU   |         |
++                             |_________________|     |__________|         |
++                                     |                                    |
++                                     |                                    V
++                                     |                            ___________________
++                                     |                           |                   |
++                                     --------------------------  |  Device(Hardware) |
++                                                                 |___________________|
++
++
++How does it work
++----------------
++
++Uacce uses mmap and IOMMU to play the trick.
++
++Uacce creates a chrdev for every device registered to it. New queue is
++created when user application open the chrdev. The file descriptor is used
++as the user handle of the queue.
++The accelerator device present itself as an Uacce object, which exports as
++a chrdev to the user space. The user application communicates with the
++hardware by ioctl (as control path) or share memory (as data path).
++
++The control path to the hardware is via file operation, while data path is
++via mmap space of the queue fd.
++
++The queue file address space:
++
++::
++
++   /**
++   * enum uacce_qfrt: qfrt type
++   * @UACCE_QFRT_MMIO: device mmio region
++   * @UACCE_QFRT_DUS: device user share region
++   */
++  enum uacce_qfrt {
++          UACCE_QFRT_MMIO = 0,
++          UACCE_QFRT_DUS = 1,
++  };
++
++All regions are optional and differ from device type to type.
++Each region can be mmapped only once, otherwise -EEXIST returns.
++
++The device mmio region is mapped to the hardware mmio space. It is generally
++used for doorbell or other notification to the hardware. It is not fast enough
++as data channel.
++
++The device user share region is used for share data buffer between user process
++and device.
++
++
++The Uacce register API
++----------------------
++
++The register API is defined in uacce.h.
++
++::
++
++  struct uacce_interface {
++    char name[UACCE_MAX_NAME_SIZE];
++    unsigned int flags;
++    const struct uacce_ops *ops;
++  };
++
++According to the IOMMU capability, uacce_interface flags can be:
++
++::
++
++  /**
++   * UACCE Device flags:
++   * UACCE_DEV_SVA: Shared Virtual Addresses
++   *              Support PASID
++   *              Support device page faults (PCI PRI or SMMU Stall)
++   */
++  #define UACCE_DEV_SVA               BIT(0)
++
++  struct uacce_device *uacce_alloc(struct device *parent,
++                                   struct uacce_interface *interface);
++  int uacce_register(struct uacce_device *uacce);
++  void uacce_remove(struct uacce_device *uacce);
++
++uacce_register results can be:
++
++a. If uacce module is not compiled, ERR_PTR(-ENODEV)
++
++b. Succeed with the desired flags
++
++c. Succeed with the negotiated flags, for example
++
++  uacce_interface.flags = UACCE_DEV_SVA but uacce->flags = ~UACCE_DEV_SVA
++
++  So user driver need check return value as well as the negotiated uacce->flags.
++
++
++The user driver
++---------------
++
++The queue file mmap space will need a user driver to wrap the communication
++protocol. Uacce provides some attributes in sysfs for the user driver to
++match the right accelerator accordingly.
++More details in Documentation/ABI/testing/sysfs-driver-uacce.
 -- 
-2.21.0
+2.7.4
 
