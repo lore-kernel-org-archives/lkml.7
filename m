@@ -2,121 +2,136 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36378C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0772020706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BB620706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQRc7C3C"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y43nUX9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfKVMqW (ORCPT
+        id S1727636AbfKVMrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:46:22 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39678 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfKVMqW (ORCPT
+        Fri, 22 Nov 2019 07:47:17 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40344 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727193AbfKVMrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:46:22 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so5362250wrt.6;
-        Fri, 22 Nov 2019 04:46:20 -0800 (PST)
+        Fri, 22 Nov 2019 07:47:17 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d22so6361187oic.7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:47:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bDXNK5v9qKr7OQwTjxq99LXUWs6eeVepuS3dcsLFtW4=;
-        b=KQRc7C3C3W4oWTdKKQFt1duNp43vDWUBDrRy7K4xUZzxwE5/3K3pQV1f7S5lOS4QN5
-         LVUMD2p4rkzT2VaJ4eD0Whbg54UIeDGEmgrLtzzjuD4uRRh6ohbYwXcQ2fsDQ2jxy068
-         dIzGjNN2eBWyWmc2BRE599Pq8TuJ/wW6lX8IL6tDRFEeGi23bx+QHI+xLQRvNs05rH9n
-         c2Q+TuA5/l3kQHkRRAy9NYfQTzBi7gZtoBJu1LRTqHvLIjLzACB8orjGOmE6XpTEX2mK
-         kxL1Q+XQdHUGQEtZfz4s8mJqcImvL77qqOAGGkFWpf1dndmo5XaQWWLrr8w2pjoEUwJR
-         Qttw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=u5HN2aZVdj7m+hEI/tOay7oYBKK4V1c4Qj4MJYDq/G8=;
+        b=y43nUX9f2O6pPgD2zT2J76e5OrIx6dYRFy/3LTBk/WB5BUPyt5Tw9+g349oglCGlpc
+         S7PtdBt9Bhyo4VczYhRGS72HwuwJWIhNbUpNqO1xxjcNMF/pd3d6bCjqUDt2FjuXgpx4
+         H6RR2+YNKVH9W6DgH5Rg1+Si8iE6MOvVwW5eVga9QVLjZY67y/mqbQs7CoJHy/AxXsdY
+         o9M+cpQJO+3WCBE6a9ylZPf0Y3+ILeYjYyankYt0PeP3F6eODLhifc90Mq0uOSL95ij3
+         yrrZDRKqDelRApbxvKFD6mIDbqBSUWLXTc2DEJSWsZT49fVT1Sme4YtNpeaS537MhXfU
+         aVOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bDXNK5v9qKr7OQwTjxq99LXUWs6eeVepuS3dcsLFtW4=;
-        b=sfZ2G0sDCulXJ13rvDdD9QgrTiTvf6flhjDuTLYUwsSYdv6p/IE164OIGGd01QYXcP
-         Gfq/X+EAaZxjEJxa5V6dEyfcHRrHZi7SP8ybawXZapDkueBCk8YyYA2CWUb1sAxYgnu7
-         pIE/Uew8VeIkMvOKlltRE9tvHrRVMEJuGTcwnmRcX3MtNEC1MEZMun3ECuoiN+eRqbqk
-         gNj48L4XlaFy4hhgUDMGW94i5tyYV3oVTWfHv063mAOnqQJ1p1nyzs9fq1iHYGJSemRi
-         X3jefQtJSOaiu0VT44fw4T8VIo8bUhkCH1Q3VxDzSXfHQ/G8411LYT19cp3cdlTyQq0I
-         EeYQ==
-X-Gm-Message-State: APjAAAVSTU5m3HLvnJKtBZ1BdVKpqoizvd2TVkOy3YKIgd/9Q5qDFXwq
-        Fu05Yeh/J7q6kVnYbtrYiv8=
-X-Google-Smtp-Source: APXvYqyGWX+rpJz20h7BkrtsSPSMbI2yhMEZ//p5Lx12ldQjaqQpRtHl1+9DJBO/Gk3XUoWVhM5xYQ==
-X-Received: by 2002:a5d:518c:: with SMTP id k12mr17605096wrv.104.1574426779895;
-        Fri, 22 Nov 2019 04:46:19 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id t16sm2669042wmt.38.2019.11.22.04.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 04:46:18 -0800 (PST)
-Date:   Fri, 22 Nov 2019 13:46:17 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 7/8] rtc: tegra: remove set but unused variable
-Message-ID: <20191122124617.GA1315704@ulmo>
-References: <20191122102212.400158-1-alexandre.belloni@bootlin.com>
- <20191122102212.400158-8-alexandre.belloni@bootlin.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=u5HN2aZVdj7m+hEI/tOay7oYBKK4V1c4Qj4MJYDq/G8=;
+        b=ICUSd0/vGo5uW935IJi7rF9I3tFWtUPcj4V0MvlhVpA6tU2Q9vsz/BBNt1GStU7I4H
+         9tXQye85GftD76X7SEH0DkMPx2dh5O/HnCqFezN9Y7ptWBAgfaokT3gLUxHNi1TgtarR
+         EunVR/HxnbfLEWhoK+W77T46ASlPZgDCO7gNgyB5X5SN01udCO3A4BzS6oNBFrQPUQBg
+         1J4GdyDArxqDubeyytWC3DpAPGeWSnmp0RHNnZVqlAItPZRQ1ttPQ1iDP+5RIDXSWHA5
+         qjKQgTUS/Q9gmbJxWvAIIylfkWOHfCv3hAOZlfVL9QO1z2JoVDKlseJWeZrQRzuw6uKf
+         vD0A==
+X-Gm-Message-State: APjAAAWQST5g7RQSWEqH/bnnTKfKNtmHfEkr+SNJSIt0mhw5gs1g+Qe/
+        VukGvNenlV1fJILDYksDbCB2oOQYiIQLNGkH2FEzWA==
+X-Google-Smtp-Source: APXvYqxdARFB1pPQ8THn95OiREH9UoH/eBJsQ+rkNZxsd+lQ6YYGrLy7l38RStqRCSsPvKjSawxBrhh8+xlo54P8RSA=
+X-Received: by 2002:aca:d904:: with SMTP id q4mr12198515oig.21.1574426835323;
+ Fri, 22 Nov 2019 04:47:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
-Content-Disposition: inline
-In-Reply-To: <20191122102212.400158-8-alexandre.belloni@bootlin.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+In-Reply-To: <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 22 Nov 2019 13:47:04 +0100
+Message-ID: <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pt., 22 lis 2019 o 13:41 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> Hi Khouloud,
+>
+> thanks for your patch!
+>
+> I just have a semantic comment:
+>
+> On Wed, Nov 20, 2019 at 3:21 PM Khouloud Touil <ktouil@baylibre.com> wrot=
+e:
+>
+> > Instead of modifying all the memory drivers to check this pin, make
+> > the NVMEM subsystem check if the write-protect GPIO being passed
+> > through the nvmem_config or defined in the device tree and pull it
+> > low whenever writing to the memory.
+>
+> It is claimed that this should be pulled low to assert it so by
+> definition it is active low.
+>
+> > +  wp-gpios:
+> > +    description:
+> > +      GPIO to which the write-protect pin of the chip is connected.
+> > +    maxItems: 1
+>
+> Mandate that the flag in the second cell should be GPIO_ACTIVE_LOW
+>
+> >  patternProperties:
+> >    "^.*@[0-9a-f]+$":
+> >      type: object
+> > @@ -66,6 +71,7 @@ examples:
+> >        qfprom: eeprom@700000 {
+> >            #address-cells =3D <1>;
+> >            #size-cells =3D <1>;
+> > +          wp-gpios =3D <&gpio1 3 0>;
+>
+> #include <dt-bindings/gpio/gpio.h>
+> wp-gpios =3D <&gpio1 3 GPIO_ACTIVE_LOW>;
+>
+> This will in Linux have the semantic effect that you need to
+> set the output high with gpio_set_val(d, 1) to assert it
+> (drive it low) but that really doesn't matter to the device tree
+> bindings, those are OS-agnostic: if the line is active low then
+> it should use this flag.
+>
+> It has the upside that the day you need a write-protect that
+> is active high, it is simple to support that use case too.
+>
 
---ZGiS0Q5IWpPtfppv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Linus,
 
-On Fri, Nov 22, 2019 at 11:22:11AM +0100, Alexandre Belloni wrote:
-> Fix the following warning:
-> drivers/rtc/rtc-tegra.c: In function =E2=80=98tegra_rtc_read_time=E2=80=
-=99:
-> drivers/rtc/rtc-tegra.c:106:11: warning: variable =E2=80=98msec=E2=80=99 =
-set but not used [-Wunused-but-set-variable]
->=20
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/rtc/rtc-tegra.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+what about the existing bindings for at24 that don't mandate the
+active-low flag? I'm afraid this would break the support for this
+specific chip or lead to code duplication if we had this in both nvmem
+and at24 with different logic.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Bartosz
 
---ZGiS0Q5IWpPtfppv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3X2I8ACgkQ3SOs138+
-s6FlCw//ce/vcaSSR1eDEaIkl+t8qLZ/7jPZ2XG4Qurs6y0mO7DOM8rIYY8JYT3p
-r6xx3tL59DWK4q5JM/As+n/aCnltdeP7/N4zYAX4OqBnmCuXFVwMJKVI+6dKYMuS
-CEeb7U/gjWGy+cT8sgRTDYu9JdHaBrLVthJ+egI9HCZwXsssuWbsCPtqgotJwrgY
-a3gnytR4C44HSxpl80j94rH6kMbbOxoJ88Wt3b1BxVbpixMISeXdDWvbPjQOsyWG
-LyYex1CLjoh/xIXKArNQ3kcyGUtMWvVaUzFwZNYS7NSTSKeEtJLjTQz2s+iHueIv
-VR4OPuQ5MM8JHJea1gCCBeuzamu5HjI8lCV4L+rcZre3pGKhYiXy22UwQUCRb54W
-sfi7HSvA32cfeCAOJW3BeuAznILWOnRtypqQqb4pNA1e+I8J3P/WllLNYI4sImXi
-etjgaGB1Qi15GR/Do/CjN03GS0wq/qgXbmyjnln4sOHsVEtRnm7jv9lcedkvlKeq
-Ps26vJC6NV9dw5OVV8Zr6uI3fk7VjThsnvAyqwY+FpurbQrbanQKWrA8mZpzYDV2
-Ytbv5ftlO0dRlGlhOgH2YWUpVYBAOifOHlKvRl5PatA6MaFhTYCithXJd33P++TY
-ev8YnqXS41FTDoDUG0uuk5g2m0+AtiCN8lGKspYOO9YVdhm/4x8=
-=Lkzk
------END PGP SIGNATURE-----
-
---ZGiS0Q5IWpPtfppv--
+> Yours,
+> Linus Walleij
