@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E561C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275BCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5FC20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68452070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404024;
-	bh=Ig6GLgtVxG8RAfqsFCQe+ELgsgqLjsT/38hfFIajrIY=;
+	s=default; t=1574404028;
+	bh=efje1ZhyiC3VPDJkQ01pBKauyaU20c2yrRgBi42Ebhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=npgCRBGzL7vATnN/gjoNzcruZ/YXGxWEJDr9YCgLsNl3NH6BiNFj+prdKeD0BIbFk
-	 +BHgGA2YjYzst2gZnaJwwvujP7pH5CNNiX5LtP8bi2QcHq/8DL77EDL7mHh3qPCd+L
-	 6ZtW+1dc+nSNFB/EDrEShRqPwZ5Tmkeu9TCNANW0=
+	b=tdFUlZlZ+w1cJUCOHLBTGi2JGWRz4Dd3zdlHU1gM4TvSYHx3tt8ZklDQqbPhEmTte
+	 ZJ3rayNwt9EZukKskvIJcIPHoycEYqfa2bpUSweL7/32CM+bxnC1ipYQoihLQPzStl
+	 g7jUJ06w4RRsa9Hswbw4I7ZSP7Rkg8Z3VtG8vFiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfKVFuf (ORCPT
+        id S1728534AbfKVG1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:27:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfKVFua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:30 -0500
+        id S1727783AbfKVFuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39282070A;
-        Fri, 22 Nov 2019 05:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F77C20731;
+        Fri, 22 Nov 2019 05:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401829;
-        bh=Ig6GLgtVxG8RAfqsFCQe+ELgsgqLjsT/38hfFIajrIY=;
+        s=default; t=1574401835;
+        bh=efje1ZhyiC3VPDJkQ01pBKauyaU20c2yrRgBi42Ebhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2u/orVw4eWwRUsL15jfmo11VQwPJtk181UfXq939KtYBpC28Y8ru84TUIBIwb720
-         N2MUSOcnQRz831BItJIrg67Ccjtjel9/nq9TTNIoOEofWjfeQ1i5bvOLqPMJSpVNUJ
-         VW6ZwKbA8twmq8L2uw1hIgEwjXLj/N+eejxHX0YQ=
+        b=kOsvhJjT8IB25ffALcA12OHJF7PWJMIoIzaT7jwr+Y/9+OSoTfvbV5KjXYQq2P6l4
+         nUdZxb90Jgf357s+awqDLkzoWWw0zcKVTLZ/CvTcZ2vRo2BgnNP9aFHycsFwLJU1An
+         mxseKc/6dwDmBF1HGBK3pdZ/2khS885r0xlvFaLU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 071/219] btrfs: Check for missing device before bio submission in btrfs_map_bio
-Date:   Fri, 22 Nov 2019 00:46:43 -0500
-Message-Id: <20191122054911.1750-64-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 076/219] serial: sh-sci: Fix crash in rx_timer_fn() on PIO fallback
+Date:   Fri, 22 Nov 2019 00:46:48 -0500
+Message-Id: <20191122054911.1750-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,61 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit fc8a168aa9ab1680c2bd52bf9db7c994e0f2524f ]
+[ Upstream commit 2e948218b7c1262a3830823d6620eb227e3d4e3a ]
 
-Before btrfs_map_bio submits all stripe bios it does a number of checks
-to ensure the device for every stripe is present. However, it doesn't do
-a DEV_STATE_MISSING check, instead this is relegated to the lower level
-btrfs_schedule_bio (in the async submission case, sync submission
-doesn't check DEV_STATE_MISSING at all). Additionally
-btrfs_schedule_bios does the duplicate device->bdev check which has
-already been performed in btrfs_map_bio.
+When falling back to PIO, active_rx must be set to a different value
+than cookie_rx[i], else sci_dma_rx_find_active() will incorrectly find a
+match, leading to a NULL pointer dereference in rx_timer_fn() later.
 
-This patch moves the DEV_STATE_MISSING check in btrfs_map_bio and
-removes the duplicate device->bdev check. Doing so ensures that no bio
-cloning/submission happens for both async/sync requests in the face of
-missing device. This makes the async io submission path slightly shorter
-in terms of instruction count. No functional changes.
+Use zero instead, which is the same value as after driver
+initialization.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/tty/serial/sh-sci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index a8297e7489d98..f84c18e86c816 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -6106,12 +6106,6 @@ static noinline void btrfs_schedule_bio(struct btrfs_device *device,
- 	int should_queue = 1;
- 	struct btrfs_pending_bios *pending_bios;
- 
--	if (test_bit(BTRFS_DEV_STATE_MISSING, &device->dev_state) ||
--	    !device->bdev) {
--		bio_io_error(bio);
--		return;
--	}
--
- 	/* don't bother with additional async steps for reads, right now */
- 	if (bio_op(bio) == REQ_OP_READ) {
- 		btrfsic_submit_bio(bio);
-@@ -6240,7 +6234,8 @@ blk_status_t btrfs_map_bio(struct btrfs_fs_info *fs_info, struct bio *bio,
- 
- 	for (dev_nr = 0; dev_nr < total_devs; dev_nr++) {
- 		dev = bbio->stripes[dev_nr].dev;
--		if (!dev || !dev->bdev ||
-+		if (!dev || !dev->bdev || test_bit(BTRFS_DEV_STATE_MISSING,
-+						   &dev->dev_state) ||
- 		    (bio_op(first_bio) == REQ_OP_WRITE &&
- 		    !test_bit(BTRFS_DEV_STATE_WRITEABLE, &dev->dev_state))) {
- 			bbio_error(bbio, first_bio, logical);
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 5550289e6678b..9e1a6af23ca2b 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1359,7 +1359,7 @@ static int sci_submit_rx(struct sci_port *s, bool port_lock_held)
+ 		dmaengine_terminate_async(chan);
+ 	for (i = 0; i < 2; i++)
+ 		s->cookie_rx[i] = -EINVAL;
+-	s->active_rx = -EINVAL;
++	s->active_rx = 0;
+ 	s->chan_rx = NULL;
+ 	sci_start_rx(port);
+ 	if (!port_lock_held)
 -- 
 2.20.1
 
