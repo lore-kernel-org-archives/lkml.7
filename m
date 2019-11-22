@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926F7C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6287E207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6A02073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420335;
-	bh=UVaB9uRriPUJ3gCh//YHEKoxCmJWEb6T3hdy2VJoApU=;
+	s=default; t=1574420339;
+	bh=8OznHZtnyeuyoa0ykOvMSTWxOaJVdKSRPp8ZeapPiWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNvdQafHeGqJ9Mfps0Q7IdvHgBcNda8JuARUuB3L+GDpJTCbLh3zT0YSeNlSP1mq1
-	 xLfQyoUVELaJyxVMdIKqLDMlae0vmDHqHSl9JMYmWYQ231itWX1OGAPxfpceKSnOhf
-	 hSw2WZKR0ZG520BnIWSWsU7ohSwIDjaEgBuYI3ls=
+	b=iREQSNyCJHYV53WNpsYvjkIg0ePQBrqEwgAewmOudLZ5At9qzc359bX1wVuxjARj5
+	 LsJp3u9xSgmlke9IKDCSkx6Uw+91D47IMb07i+s846cTXC/N3xHmoezYaBErRkq0Gf
+	 PxrVx9iHMiSQ8qU/5ikpbLK/1lyS/JtWvP+047qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbfKVK6y (ORCPT
+        id S1730848AbfKVK65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:58:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49306 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbfKVK6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:51 -0500
+        id S1730840AbfKVK6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CB720721;
-        Fri, 22 Nov 2019 10:58:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A584A20706;
+        Fri, 22 Nov 2019 10:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420330;
-        bh=UVaB9uRriPUJ3gCh//YHEKoxCmJWEb6T3hdy2VJoApU=;
+        s=default; t=1574420333;
+        bh=8OznHZtnyeuyoa0ykOvMSTWxOaJVdKSRPp8ZeapPiWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MaREX8G7/NDrKY7oqQDFYYDlzvBMMs7erh2V9e2tFrgjNnI7hqzNAJtD0ZUKHnGyM
-         2Ip9H8PRWa2k/xPh0YRTLeWsEGi+BLVxmgd9d5vCgxaVJdkGMv4rnhkRjg9tfGLK25
-         d29lfOXEljRwLi/iDP89DbHq+PadBVYg8+nf+4iQ=
+        b=Ygc2jkj+yf0pL8lwLClt7y6F6xwpM/9SdAXj+8yfS6WLMXIeWx7QBRa2d71AfBrGm
+         SX8/fDKGRQW7EMujV+Jp6QCUMjCd2q60iGHYR4k76/4MRu0opz09D6DumPwdOyk51Y
+         JZwmN8lxYUU0imRxwTQGF72fo8SGkJdHYnfMv3Os=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/220] powerpc/pseries: Fix how we iterate over the DTL entries
-Date:   Fri, 22 Nov 2019 11:27:13 +0100
-Message-Id: <20191122100917.052524496@linuxfoundation.org>
+Subject: [PATCH 4.19 069/220] powerpc/xive: Move a dereference below a NULL test
+Date:   Fri, 22 Nov 2019 11:27:14 +0100
+Message-Id: <20191122100917.144994583@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,38 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit 9258227e9dd1da8feddb07ad9702845546a581c9 ]
+[ Upstream commit cd5ff94577e004e0a4457e70d0ef3a030f4010b8 ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we look up dtl_idx in
-the lppaca to determine the number of entries in the buffer. Since
-lppaca is in big endian, we need to do an endian conversion before using
-this in our calculation to determine the number of entries in the
-buffer. Without this, we do not iterate over the existing entries in the
-DTL buffer properly.
+Move the dereference of xc below the NULL test.
 
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/sysdev/xive/common.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index c762689e0eb33..ef6595153642e 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -184,7 +184,7 @@ static void dtl_stop(struct dtl *dtl)
- 
- static u64 dtl_current_index(struct dtl *dtl)
+diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
+index 0b24b10312213..f3af53abd40fb 100644
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -1009,12 +1009,13 @@ static void xive_ipi_eoi(struct irq_data *d)
  {
--	return lppaca_of(dtl->cpu).dtl_idx;
-+	return be64_to_cpu(lppaca_of(dtl->cpu).dtl_idx);
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
+ 	struct xive_cpu *xc = __this_cpu_read(xive_cpu);
  
+-	DBG_VERBOSE("IPI eoi: irq=%d [0x%lx] (HW IRQ 0x%x) pending=%02x\n",
+-		    d->irq, irqd_to_hwirq(d), xc->hw_ipi, xc->pending_prio);
+-
+ 	/* Handle possible race with unplug and drop stale IPIs */
+ 	if (!xc)
+ 		return;
++
++	DBG_VERBOSE("IPI eoi: irq=%d [0x%lx] (HW IRQ 0x%x) pending=%02x\n",
++		    d->irq, irqd_to_hwirq(d), xc->hw_ipi, xc->pending_prio);
++
+ 	xive_do_source_eoi(xc->hw_ipi, &xc->ipi_data);
+ 	xive_do_queue_eoi(xc);
+ }
 -- 
 2.20.1
 
