@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547F3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6C4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0132070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8471720715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419888;
-	bh=Ws/++C/6yz3D2eqU9vCnRueTeOtZH2HVRq3VtWoVuao=;
+	s=default; t=1574419891;
+	bh=ENLaFmlq2o6BrANfDwjWLVdeKtxLU22mhH9zgrr8jqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWxKXMVxb84CNDOvxksQUl06O4ONlkUoptZvQEwXGt9B8mBtVmI7X8LeVSOPJfz2P
-	 1m5En73fPcKNoRqKs4jtLFXGdNMNH4q2nd8d5Ui5D3QepzEQ5Nf85ztQ/RRX8TRVHS
-	 1oqO4btITT6LJvp6dJB9KP0SO8JP0Z2hYUx3p3j4=
+	b=uK6jUEIWuKV5XQDP6uE8UCAiGP1MiwTStGxjv13oGTochnhAc8yQt3C9kcK+k3zfm
+	 iEnvorXpgXIe6R6tdJ/e9tQUXY92xsVtz/1Rz4rhpZI//e50o/dIJsPiq0qyD8UlGG
+	 0ph75ZPt/6AQKKybHHW3RayifJJMTvR1EB+pVe88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbfKVKv0 (ORCPT
+        id S1729184AbfKVKv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbfKVKvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:23 -0500
+        id S1729802AbfKVKv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C57C20715;
-        Fri, 22 Nov 2019 10:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521A120715;
+        Fri, 22 Nov 2019 10:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419883;
-        bh=Ws/++C/6yz3D2eqU9vCnRueTeOtZH2HVRq3VtWoVuao=;
+        s=default; t=1574419885;
+        bh=ENLaFmlq2o6BrANfDwjWLVdeKtxLU22mhH9zgrr8jqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YoUc3bN0hlJIAKwHENOaVeW80Ninv6GCZV6tlBiA2vfjShsUqoipN8qxyG+2tkRbF
-         URVH33FrBwa5PMg3fJhtb1qB6YJatAKUP3DUAvJgS+kHpgo57P2IaikUHq3yroVVj2
-         NxEfhhMKCWLfPqyr/4fSGaPcNRDbOoSZYDvgR2gM=
+        b=FaHRu4+hPohoMsemSKRgD30XuKZ19k1XUKz1fQLmzsvOh7Ntpw1N2+dxrz3bGNvFe
+         gPWX/YZeXhwUkzxoFIuBnRDrK2ZiDlnf2gRGs6JiWitnpUbbc5NcWw+lxgeXazSqHA
+         tlzlPRwsv691kzeP1YHMAKhSOyarGHjONVuwVp9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tudor Ambarus <tudor.ambarus@microchip.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/122] ARM: dts: at91: sama5d4_xplained: fix addressable nand flash size
-Date:   Fri, 22 Nov 2019 11:28:15 +0100
-Message-Id: <20191122100754.977428648@linuxfoundation.org>
+Subject: [PATCH 4.14 043/122] ARM: dts: at91: at91sam9x5cm: fix addressable nand flash size
+Date:   Fri, 22 Nov 2019 11:28:16 +0100
+Message-Id: <20191122100755.167362534@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -63,28 +63,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-[ Upstream commit df90fc64367ffdb6f1b5c0f0c4940d44832b0174 ]
+[ Upstream commit 6f270d88a0c4a11725afd8fd2001ae408733afbf ]
 
-sama5d4_xplained comes with a 4Gb NAND flash. Increase the rootfs
-size to match this limit.
+at91sam9x5cm comes with a 2Gb NAND flash. Fix the rootfs size to
+match this limit.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-sama5d4_xplained.dts | 2 +-
+ arch/arm/boot/dts/at91sam9x5cm.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-index cf712444b2c2c..10f2fb9e0ea61 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -240,7 +240,7 @@
+diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+index bdeaa0b64a5bf..0a673a7082be1 100644
+--- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+@@ -88,7 +88,7 @@
  
  						rootfs@800000 {
  							label = "rootfs";
--							reg = <0x800000 0x0f800000>;
-+							reg = <0x800000 0x1f800000>;
+-							reg = <0x800000 0x1f800000>;
++							reg = <0x800000 0x0f800000>;
  						};
  					};
  				};
