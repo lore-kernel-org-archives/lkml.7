@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55706C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AA920708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A0D20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419038;
-	bh=LM8ruIL8X/Y2yzIg+sD0At4KY49iLx9uJ24+giuOoa8=;
+	s=default; t=1574419041;
+	bh=fI/sHNHGSc0l4/Uf78vJqDg2ySHPHwPPg75JGYqJpZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kV3aZOvwNGxRE+rNGhRuHwmiLByC1afT8gdf0UXc7psZZipNll2KRmzBmzfU+AX9z
-	 guh79y3sAknxKv8ao97jSxaSKuIq1ruMnh2wRH+/+I/4PJm/ooavmpFeVq3iPmS1N1
-	 7W3x16/HFD6lAQq9+Sz9gxBatIPoGf7VsfAI4aaM=
+	b=yfcywVBGqa3V862mVc5ggC8iGiIznWZpC/HQrQiLcInjMZMZWEZyxPa284FGnGfYO
+	 T5CpgDxwdGUD/cZZBugcBJyrEWNKpHggbTPB5BV7cBEdrhHU9qqRi7AeSNOEnRezxm
+	 EwfsPMYWtonazL7vJxz9/oEYGM9UUxr2/V9C4q2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfKVKhR (ORCPT
+        id S1728528AbfKVKhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:37:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:37:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbfKVKhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:37:12 -0500
+        id S1728006AbfKVKhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:37:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D6F20656;
-        Fri, 22 Nov 2019 10:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBEF820656;
+        Fri, 22 Nov 2019 10:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419032;
-        bh=LM8ruIL8X/Y2yzIg+sD0At4KY49iLx9uJ24+giuOoa8=;
+        s=default; t=1574419038;
+        bh=fI/sHNHGSc0l4/Uf78vJqDg2ySHPHwPPg75JGYqJpZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LM+hKKVgDm8U8exCvRME0BfsTOBmKMwikNq93pQU+UqVt2UeO83Vx3pmaQDPyr35+
-         +IlfCblz0Tuqtyn/I9w9OAq/owuQ8TNrNswAlbM2IyxWreC8bZmnSIUG//6+z6LV+c
-         miIZbfwo4sNp41KkhzENnGnN/f4a1e1fgnEqbQFI=
+        b=PZvaXT+g5/WilqxL53OqkBoii6s64w+q/i+h9wsx4r2YiRFlzu2utae8vYAqH+G5y
+         iOanGqgNDNDSTmgoHZYHyYYavldiLBfOEKS0Fvl5cwcb9fFCxAOdI0auj4x+MgzAxC
+         UxW7vsTOQ7NFphQkGpRwMMPQ3yN/WuVCmAtIEMi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Martin Kepplinger <martink@posteo.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 135/159] NFSv4.x: fix lock recovery during delegation recall
-Date:   Fri, 22 Nov 2019 11:28:46 +0100
-Message-Id: <20191122100835.368468901@linuxfoundation.org>
+Subject: [PATCH 4.4 137/159] Input: st1232 - set INPUT_PROP_DIRECT property
+Date:   Fri, 22 Nov 2019 11:28:48 +0100
+Message-Id: <20191122100836.203593565@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,55 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Martin Kepplinger <martink@posteo.de>
 
-[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
+[ Upstream commit 20bbb312079494a406c10c90932e3c80837c9d94 ]
 
-Running "./nfstest_delegation --runtest recall26" uncovers that
-client doesn't recover the lock when we have an appending open,
-where the initial open got a write delegation.
+This is how userspace checks for touchscreen devices most reliably.
 
-Instead of checking for the passed in open context against
-the file lock's open context. Check that the state is the same.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Martin Kepplinger <martink@posteo.de>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/st1232.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 5dac3382405ce..b50315ad0391a 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -101,7 +101,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
- 	return nfs4_do_check_delegation(inode, flags, false);
- }
+diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
+index e943678ce54cd..f1c574d6be17f 100644
+--- a/drivers/input/touchscreen/st1232.c
++++ b/drivers/input/touchscreen/st1232.c
+@@ -203,6 +203,7 @@ static int st1232_ts_probe(struct i2c_client *client,
+ 	input_dev->id.bustype = BUS_I2C;
+ 	input_dev->dev.parent = &client->dev;
  
--static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
-+static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
- {
- 	struct inode *inode = state->inode;
- 	struct file_lock *fl;
-@@ -116,7 +116,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
- 	spin_lock(&flctx->flc_lock);
- restart:
- 	list_for_each_entry(fl, list, fl_list) {
--		if (nfs_file_open_context(fl->fl_file) != ctx)
-+		if (nfs_file_open_context(fl->fl_file)->state != state)
- 			continue;
- 		spin_unlock(&flctx->flc_lock);
- 		status = nfs4_lock_delegation_recall(fl, state, stateid);
-@@ -163,7 +163,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
- 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
- 		if (!err)
--			err = nfs_delegation_claim_locks(ctx, state, stateid);
-+			err = nfs_delegation_claim_locks(state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
- 			err = -EAGAIN;
- 		mutex_unlock(&sp->so_delegreturn_mutex);
++	__set_bit(INPUT_PROP_DIRECT, input_dev->propbit);
+ 	__set_bit(EV_SYN, input_dev->evbit);
+ 	__set_bit(EV_KEY, input_dev->evbit);
+ 	__set_bit(EV_ABS, input_dev->evbit);
 -- 
 2.20.1
 
