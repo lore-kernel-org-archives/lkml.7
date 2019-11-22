@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F86C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C580C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5577B2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2099B2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421260;
-	bh=fPTTL918haYPzKywCNCsAU+vg6L7/gNh4/5v3ts11vI=;
+	s=default; t=1574421267;
+	bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d+KtslkyJNubKqbXxCJvkzADn1+bKxqgmyXAK+77rhaPgNIIzm69aaagWWV1L54mi
-	 52fsB5IB56nyePAe4Pet53zDymV5i9+YCbarPbB6VtmWnoAYGDmvHiN2KPg0itJTSi
-	 f6TrBhPE7iqZYOhEpOzahQyDYiLFpez0T+AWfaME=
+	b=yxrXhiZxddu6S9qBqkXU5ejP51GEQ5fVhYYodqIaXX6JmrT0LXn58Wdyoi823R/dE
+	 bAujsYpoiXD3T9SmWiKlH66m4p7gsH2YxazTks6+mHbgAa5rg4vBeHgXxJTCt9zgZ5
+	 52GQavKzpHCr+cRjG/GM+TqnSc9rUma93SwlV39M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfKVLOT (ORCPT
+        id S1730239AbfKVKxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38878 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:53:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbfKVKxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:51 -0500
+        id S1730224AbfKVKxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF57D20637;
-        Fri, 22 Nov 2019 10:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2147820715;
+        Fri, 22 Nov 2019 10:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420031;
-        bh=fPTTL918haYPzKywCNCsAU+vg6L7/gNh4/5v3ts11vI=;
+        s=default; t=1574420020;
+        bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3EZFMMqPyMWV0hdlYSqNjuDjUi8VyyXGS1LywfND/bgZYZRk++GPMCOADqK61Y+c
-         R/8rpUHoOuiIN0kjjqTXQJ+9dtqb7OY+xju1eQk2Dw6RfWo/4sJkpgpK+UP6ERHMh+
-         jrd6H5Lh3yW7fkboLHK5Z3JsNMv1vuApR32mIdSw=
+        b=zxetFUFyJ6E1l+v0ovPIzci9CxUYjXch7m1RwFXg9v4OU7DR76nBe7nhd3fDDlH/+
+         cSN/MH2yBv6qsYsygBtJU+nerudDegIZiisgwSSrlvXVFWvtF72he4sZdBsPBEySSj
+         N6jTlMDm25W/ElfxZDMRM6MIkZ7r1dq0gdleQWFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajmohan Mani <rajmohan.mani@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 093/122] media: dw9714: Fix error handling in probe function
-Date:   Fri, 22 Nov 2019 11:29:06 +0100
-Message-Id: <20191122100829.189606172@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Peter Malone <peter.malone@gmail.com>
+Subject: [PATCH 4.14 089/122] fbdev: sbuslib: use checked version of put_user()
+Date:   Fri, 22 Nov 2019 11:29:02 +0100
+Message-Id: <20191122100827.630697809@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,36 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajmohan Mani <rajmohan.mani@intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit f9a0b14240a2d0bd196d35e8aac73df6eabd6382 ]
+[ Upstream commit d8bad911e5e55e228d59c0606ff7e6b8131ca7bf ]
 
-Fixed the case where v4l2_async_unregister_subdev()
-is called unnecessarily in the error handling path
-in probe function.
+I'm not sure why the code assumes that only the first put_user() needs
+an access_ok() check.  I have made all the put_user() and get_user()
+calls checked.
 
-Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: Peter Malone <peter.malone@gmail.com>,
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/dw9714.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/sbuslib.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
-index 95af4fc99cd04..c1273bcd59011 100644
---- a/drivers/media/i2c/dw9714.c
-+++ b/drivers/media/i2c/dw9714.c
-@@ -182,7 +182,8 @@ static int dw9714_probe(struct i2c_client *client)
- 	return 0;
+diff --git a/drivers/video/fbdev/sbuslib.c b/drivers/video/fbdev/sbuslib.c
+index a436d44f1b7fb..90c51330969c2 100644
+--- a/drivers/video/fbdev/sbuslib.c
++++ b/drivers/video/fbdev/sbuslib.c
+@@ -106,11 +106,11 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		struct fbtype __user *f = (struct fbtype __user *) arg;
  
- err_cleanup:
--	dw9714_subdev_cleanup(dw9714_dev);
-+	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
-+	media_entity_cleanup(&dw9714_dev->sd.entity);
- 	dev_err(&client->dev, "Probe failed: %d\n", rval);
- 	return rval;
- }
+ 		if (put_user(type, &f->fb_type) ||
+-		    __put_user(info->var.yres, &f->fb_height) ||
+-		    __put_user(info->var.xres, &f->fb_width) ||
+-		    __put_user(fb_depth, &f->fb_depth) ||
+-		    __put_user(0, &f->fb_cmsize) ||
+-		    __put_user(fb_size, &f->fb_cmsize))
++		    put_user(info->var.yres, &f->fb_height) ||
++		    put_user(info->var.xres, &f->fb_width) ||
++		    put_user(fb_depth, &f->fb_depth) ||
++		    put_user(0, &f->fb_cmsize) ||
++		    put_user(fb_size, &f->fb_cmsize))
+ 			return -EFAULT;
+ 		return 0;
+ 	}
+@@ -125,10 +125,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		unsigned int index, count, i;
+ 
+ 		if (get_user(index, &c->index) ||
+-		    __get_user(count, &c->count) ||
+-		    __get_user(ured, &c->red) ||
+-		    __get_user(ugreen, &c->green) ||
+-		    __get_user(ublue, &c->blue))
++		    get_user(count, &c->count) ||
++		    get_user(ured, &c->red) ||
++		    get_user(ugreen, &c->green) ||
++		    get_user(ublue, &c->blue))
+ 			return -EFAULT;
+ 
+ 		cmap.len = 1;
+@@ -165,10 +165,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		u8 red, green, blue;
+ 
+ 		if (get_user(index, &c->index) ||
+-		    __get_user(count, &c->count) ||
+-		    __get_user(ured, &c->red) ||
+-		    __get_user(ugreen, &c->green) ||
+-		    __get_user(ublue, &c->blue))
++		    get_user(count, &c->count) ||
++		    get_user(ured, &c->red) ||
++		    get_user(ugreen, &c->green) ||
++		    get_user(ublue, &c->blue))
+ 			return -EFAULT;
+ 
+ 		if (index + count > cmap->len)
 -- 
 2.20.1
 
