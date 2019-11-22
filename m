@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB04C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5612073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712BF20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421700;
-	bh=H0/qcPuyNj8VHYkAGniOjGUPht77ncyCRxdKZH54tbM=;
+	s=default; t=1574421710;
+	bh=l2m3Bh9vF4Mn39FY35Lc/9YluNkiD+znKwgEkD5vbu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8giyglSAt0XBze2sdpo7FYoFiVPira7rQt4w99rDcfrxHPcvo10qfOa4RNapOn3T
-	 6ZPhHcnmX7YGU1kkAAB3N4S1pMsaj6c+qhdSs8Ryid6S9qJiydo+VALxXqskGFnr2r
-	 F6weDHNKfZMYOpU5YT6SfUxI9RuaYiN/lG/dFVqg=
+	b=UjSjnYcEnD6qeB4KPxKCkAphwBfyVpYLqOuMX2dIH/TMiY8GWwuU8BUotjgR+SWIn
+	 sfySjYNLHiWxfvlhC9uq2sVcTM3NVHrudEtJCvYjXYaARUnMgIJW/bHPA8Zh8svZQY
+	 RVuenA2CzLFiIuug/hgVuNbIPDEo7KEJW0pbPSYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfKVKpB (ORCPT
+        id S1729836AbfKVLVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:21:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727605AbfKVKo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:56 -0500
+        id S1729360AbfKVKon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D72820717;
-        Fri, 22 Nov 2019 10:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFEBF20637;
+        Fri, 22 Nov 2019 10:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419496;
-        bh=H0/qcPuyNj8VHYkAGniOjGUPht77ncyCRxdKZH54tbM=;
+        s=default; t=1574419483;
+        bh=l2m3Bh9vF4Mn39FY35Lc/9YluNkiD+znKwgEkD5vbu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ErUdIiNzRoLHYsfFb9uyHKtZLDC1L1yvjZ9EBQF6q//W96ylpilhFE28VU3vo3v/9
-         TTCBPY7MyBjDb3GSKam6Qb1BKd7iXvCSs1cdvMV/9BDl5eEbqzuYA0t21GMEZQuw+0
-         Q0r/hU49bhPzFhJqWiAxppaVkQSGvo42imHPl5AM=
+        b=mHXmoQ3gXY5zMx/jMLPTilg5oxU1x1SkDnByE2ZMkgdJcr/X2YaZid8oWbuPRn8J4
+         Rs8K3opW/8nqfUpHTecLRMpVYFEm9zEFFEnbmk5Ncvb6CJctCIvsNiEX2Jt78Lrlhh
+         de/6UovVL3/oznLz5s/5hcv5pRAS9oGvMHAyQ1XY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Manszewski <c.manszewski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 132/222] crypto: s5p-sss: Fix Fix argument list alignment
-Date:   Fri, 22 Nov 2019 11:27:52 +0100
-Message-Id: <20191122100912.483336062@linuxfoundation.org>
+Subject: [PATCH 4.9 128/222] net: smsc: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:27:48 +0100
+Message-Id: <20191122100912.240247629@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -63,43 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Manszewski <c.manszewski@samsung.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6c12b6ba45490eeb820fdceccf5a53f42a26799c ]
+[ Upstream commit 6323d57f335ce1490d025cacc83fc10b07792130 ]
 
-Fix misalignment of continued argument list.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Signed-off-by: Christoph Manszewski <c.manszewski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/s5p-sss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/smsc/smc911x.c  | 3 ++-
+ drivers/net/ethernet/smsc/smc91x.c   | 3 ++-
+ drivers/net/ethernet/smsc/smsc911x.c | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index 500e4090e2fd4..5a37c075ee553 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -298,7 +298,7 @@ static void s5p_unset_indata(struct s5p_aes_dev *dev)
+diff --git a/drivers/net/ethernet/smsc/smc911x.c b/drivers/net/ethernet/smsc/smc911x.c
+index cb49c9654f0a7..323b3ac16bc0e 100644
+--- a/drivers/net/ethernet/smsc/smc911x.c
++++ b/drivers/net/ethernet/smsc/smc911x.c
+@@ -514,7 +514,8 @@ static void smc911x_hardware_send_pkt(struct net_device *dev)
+  * now, or set the card to generates an interrupt when ready
+  * for the packet.
+  */
+-static int smc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++smc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smc911x_local *lp = netdev_priv(dev);
+ 	unsigned int free;
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 73212590d04a3..b0c72167badec 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -637,7 +637,8 @@ done:	if (!THROTTLE_TX_PKTS)
+  * now, or set the card to generates an interrupt when ready
+  * for the packet.
+  */
+-static int smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+ 	void __iomem *ioaddr = lp->base;
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+index 734caa7a557be..4143659615e10 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -1776,7 +1776,8 @@ static int smsc911x_stop(struct net_device *dev)
  }
  
- static int s5p_make_sg_cpy(struct s5p_aes_dev *dev, struct scatterlist *src,
--			    struct scatterlist **dst)
-+			   struct scatterlist **dst)
+ /* Entry point for transmitting a packet */
+-static int smsc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++smsc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
  {
- 	void *pages;
- 	int len;
-@@ -510,7 +510,7 @@ static int s5p_set_indata_start(struct s5p_aes_dev *dev,
- }
- 
- static int s5p_set_outdata_start(struct s5p_aes_dev *dev,
--				struct ablkcipher_request *req)
-+				 struct ablkcipher_request *req)
- {
- 	struct scatterlist *sg;
- 	int err;
+ 	struct smsc911x_data *pdata = netdev_priv(dev);
+ 	unsigned int freespace;
 -- 
 2.20.1
 
