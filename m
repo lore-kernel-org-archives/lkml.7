@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24292070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B9A2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403673;
-	bh=UbjP11MIT97gaXxas0EP18cGt2Ib3JuutiwvMza+Zog=;
+	s=default; t=1574403678;
+	bh=SuHJO9KBBvsWwPusjwAJI4z2nSO4KEDYibgE4E+Y0e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sK3h/LjsByexs64x3FtTHs4A/QIENzjy6oSWuh2qGL4LRTs8HmeSLZjUxs6sfq84c
-	 F8jH3BEe7PaKcfxTMAqLbA8FyqcTO0oZdgh8Rzn2DiT56ukvhHRpVYrVysC/IwNAw4
-	 vq7oxGvoE6sLW/ztURZVNqjtmnT5bRdtmnHAGBvI=
+	b=ZMifGM57bAK245DZDCimXuhEqGJuwpAIUIvRUH/tyM4lqh+/FSfJrOx0JaOQ3cJlV
+	 2vFlTvyCYcH57qOKTso29/VeC4romWrKjF83dt3+VhJYtTfFsJ3d+gTclIxvnMIFsD
+	 mM0+tBMqzhAC8qZvMvk1rMGjMl/kmB/I+GpWwOys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfKVGVM (ORCPT
+        id S1728520AbfKVFwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:21:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:52:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbfKVFw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:26 -0500
+        id S1728485AbfKVFwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8D32068F;
-        Fri, 22 Nov 2019 05:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 636A520717;
+        Fri, 22 Nov 2019 05:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401945;
-        bh=UbjP11MIT97gaXxas0EP18cGt2Ib3JuutiwvMza+Zog=;
+        s=default; t=1574401938;
+        bh=SuHJO9KBBvsWwPusjwAJI4z2nSO4KEDYibgE4E+Y0e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=muIGaA4MobVjZFGEufJI3cVDaUgGCrO3+/iIR8UVJ3PEyhQLYMiH3D59plRrTnKtm
-         oUtDA32T2IKmLIPGCQY6oiOt49F11LvpvFpOeVrZ/oHFDwVaYvflIsByv5ww7ad/4w
-         ZNYTYWTwfuyp35Q41NdmHw2bRUKDlUwXwX70XkeM=
+        b=NDtzdJbY4BrMkC5TLNllgu+iAe1XBMCFDLfrlcwQmaoL+xEf3KcAtU/FhW2PrQDds
+         T4l7CEvxy7ytSDiWMwqVp8OYbp45tg8lorVW16l5lm4oyhyAbL8U7Ayqzan9IclFd7
+         NuqSJJ/HdrSVnrhUhFwv45xepaaFV5NU3shgwDAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 169/219] mtd: Check add_mtd_device() ret code
-Date:   Fri, 22 Nov 2019 00:48:21 -0500
-Message-Id: <20191122054911.1750-162-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 163/219] firmware: arm_sdei: Fix DT platform device creation
+Date:   Fri, 22 Nov 2019 00:48:15 -0500
+Message-Id: <20191122054911.1750-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -58,111 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
+[ Upstream commit acafce48b07bf5f9994a38e7fe237193d43d092e ]
 
-add_mtd_device() can fail. We should always check its return value
-and gracefully handle the failure case. Fix the call sites where this
-not done (in mtdpart.c) and add a __must_check attribute to the
-prototype to avoid this kind of mistakes.
+It turns out the dt-probing part of this wasn't tested properly after it
+was merged. commit 3aa0582fdb82 ("of: platform: populate /firmware/ node
+from of_platform_default_populate_init()") changed the core-code to
+generate the platform devices, meaning the driver's attempt fails, and it
+bails out.
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+Fix this by removing the manual platform-device creation for DT systems,
+core code has always done this for us.
+
+CC: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.h |  2 +-
- drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 6 deletions(-)
+ drivers/firmware/arm_sdei.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
-index 9887bda317cd9..b31c868019ada 100644
---- a/drivers/mtd/mtdcore.h
-+++ b/drivers/mtd/mtdcore.h
-@@ -7,7 +7,7 @@
- extern struct mutex mtd_table_mutex;
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index dffb47c6b4801..c64c7da738297 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -1009,7 +1009,6 @@ static struct platform_driver sdei_driver = {
  
- struct mtd_info *__mtd_next_device(int i);
--int add_mtd_device(struct mtd_info *mtd);
-+int __must_check add_mtd_device(struct mtd_info *mtd);
- int del_mtd_device(struct mtd_info *mtd);
- int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
- int del_mtd_partitions(struct mtd_info *);
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 0bbb23b014f1b..b9b308cde0a5d 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -612,10 +612,22 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
- 	list_add(&new->list, &mtd_partitions);
- 	mutex_unlock(&mtd_partitions_mutex);
- 
--	add_mtd_device(&new->mtd);
-+	ret = add_mtd_device(&new->mtd);
-+	if (ret)
-+		goto err_remove_part;
- 
- 	mtd_add_partition_attrs(new);
- 
-+	return 0;
-+
-+err_remove_part:
-+	mutex_lock(&mtd_partitions_mutex);
-+	list_del(&new->list);
-+	mutex_unlock(&mtd_partitions_mutex);
-+
-+	free_partition(new);
-+	pr_info("%s:%i\n", __func__, __LINE__);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mtd_add_partition);
-@@ -706,22 +718,31 @@ int add_mtd_partitions(struct mtd_info *master,
+ static bool __init sdei_present_dt(void)
  {
- 	struct mtd_part *slave;
- 	uint64_t cur_offset = 0;
--	int i;
-+	int i, ret;
+-	struct platform_device *pdev;
+ 	struct device_node *np, *fw_np;
  
- 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
+ 	fw_np = of_find_node_by_name(NULL, "firmware");
+@@ -1019,11 +1018,7 @@ static bool __init sdei_present_dt(void)
+ 	np = of_find_matching_node(fw_np, sdei_of_match);
+ 	if (!np)
+ 		return false;
+-
+-	pdev = of_platform_device_create(np, sdei_driver.driver.name, NULL);
+ 	of_node_put(np);
+-	if (!pdev)
+-		return false;
  
- 	for (i = 0; i < nbparts; i++) {
- 		slave = allocate_partition(master, parts + i, i, cur_offset);
- 		if (IS_ERR(slave)) {
--			del_mtd_partitions(master);
--			return PTR_ERR(slave);
-+			ret = PTR_ERR(slave);
-+			goto err_del_partitions;
- 		}
- 
- 		mutex_lock(&mtd_partitions_mutex);
- 		list_add(&slave->list, &mtd_partitions);
- 		mutex_unlock(&mtd_partitions_mutex);
- 
--		add_mtd_device(&slave->mtd);
-+		ret = add_mtd_device(&slave->mtd);
-+		if (ret) {
-+			mutex_lock(&mtd_partitions_mutex);
-+			list_del(&slave->list);
-+			mutex_unlock(&mtd_partitions_mutex);
-+
-+			free_partition(slave);
-+			goto err_del_partitions;
-+		}
-+
- 		mtd_add_partition_attrs(slave);
- 		/* Look for subpartitions */
- 		parse_mtd_partitions(&slave->mtd, parts[i].types, NULL);
-@@ -730,6 +751,11 @@ int add_mtd_partitions(struct mtd_info *master,
- 	}
- 
- 	return 0;
-+
-+err_del_partitions:
-+	del_mtd_partitions(master);
-+
-+	return ret;
+ 	return true;
  }
- 
- static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
