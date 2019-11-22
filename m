@@ -2,113 +2,161 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EE6C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5445C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228F020715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4F220718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XGeQmD4U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wPFNW57z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfKVMet (ORCPT
+        id S1727494AbfKVMjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:34:49 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:45752 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbfKVMes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:34:48 -0500
-Received: from zn.tnic (p200300EC2F0E9700A4FB1BDEE3C09F73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:9700:a4fb:1bde:e3c0:9f73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2DD01EC0D07;
-        Fri, 22 Nov 2019 13:34:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574426087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dij5MNPx/IwHCLqmKnuYF4M7pmGAodazP5F2XXl3Cs8=;
-        b=XGeQmD4UYTJDu20ffLIR31lLxhKYQGLyFnCyFmhO65BmnOS8AQpTG2pF6I6ftZbm5sUj+p
-        L+C+VxtDHyXeUZhM1Hzp2OTMT8xd9gZ1Cd/fihs3BuPUt73v76ydlnIBy1LZ5UZDdBYXw9
-        KmqHHh11jj2sDKm7WTl8uMy/ui/YgGM=
-Date:   Fri, 22 Nov 2019 13:34:40 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 04/19] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
- at boot
-Message-ID: <20191122123433.GH6289@zn.tnic>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-5-sean.j.christopherson@intel.com>
- <20191121103925.GB20907@linux.intel.com>
- <20191121104145.GC20907@linux.intel.com>
- <20191121110533.GD6540@zn.tnic>
- <20191121221234.GE16617@linux.intel.com>
+        Fri, 22 Nov 2019 07:39:32 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39476 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVMjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 07:39:32 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w24so6037014otk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:39:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pIaE2t8kEhzDVYCOk21I3VO5ugELTHI5U7MvhDfP+Bw=;
+        b=wPFNW57zKwWO86/8XbUcXJJRoWhRtgaz8SFbCVb3kzCZs5NoKJ5NAi5XITr/5axrWF
+         7t/bmKwgoI/qdkwMUMKfuO+JQl+KF3HA6koatw564ZgsHkf3LTN617naBAfhOMLIk1jZ
+         UHtrysleLqU2AQjrR/Qy+bepkiaXKqSBtTLbQlDmapNYB9kdfzlMSB4DFre/jEwUF15D
+         P4ChWAELcH4Fly7afKA1+MiGJLmLKPBjBPpU+ZSFXBtlLmgYQEerSeMbL04k3cDXdeYH
+         u658C2PbUnrGIPJl+JsiWXXiN0wUe5kS+NfcvxGIKAHHshIVt2KylgTsXH3ib1SkOmx6
+         Rosg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pIaE2t8kEhzDVYCOk21I3VO5ugELTHI5U7MvhDfP+Bw=;
+        b=hgD/gKbxN7DRHgEsGBnEP4KIyDTw3H/GoP91/toYaf9FuOhAekgejqxEAUyIt7EQ7X
+         SlYrg43VSmsbUOWtfvoAEZbYuMzTS+vWR85hodWrLbWMsDvfcP1H66Xm3s/V+LJTkFsT
+         9wjVyFtOEMUmLruFu1dZNtch0gnyWsh4T9KJjGMpVC4wP1W/7eO8SkcFQqAX+rFa8Lj2
+         B8JNisbV5egpLy6/m4IIGd2iv09pf1vtipG9PhSidf1RRlz2i+2YQeCnllosaJKyZO6p
+         p3GQ2/949ImaQWZat8QYeUlum/j6nAXjN7jmEeZFxzwU4RdjXWLaXw6pZt0u8TZ3sP/y
+         dd4w==
+X-Gm-Message-State: APjAAAWLxpRq7y/jGBVvK2HEEfSY7bqXpWcfRkrSRnUyvmeUwDmP/Xz1
+        tBDo49W9k7HgE5nDlqMxP9u/+kDZ7BmWaEjCznQXEA==
+X-Google-Smtp-Source: APXvYqxKHhBekxA9nnYnqjLUFq+26q+Pt7iPthEshyRausyypcoh9ry3D5ayg7l4W/Vg0xxTE7p87Rqo7hkmAImYaDM=
+X-Received: by 2002:a9d:17ca:: with SMTP id j68mr10551757otj.250.1574426371219;
+ Fri, 22 Nov 2019 04:39:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191121221234.GE16617@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+ <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+ <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
+ <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
+ <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com> <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
+In-Reply-To: <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 22 Nov 2019 13:39:20 +0100
+Message-ID: <CAMpxmJUq_YLU4ha1hTzDUKYMxD36Yb-6C3SraMHgZywx=bm=eA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 02:12:34PM -0800, Sean Christopherson wrote:
-> Any objection to keeping the MSR name as MSR_IA32_FEATURE_CONTOL?  I'd like
-> to have some anchor back to the name used in the SDM.
-> 
-> Any opinions/thoughts on the name of the Kconfig?  Currently it's
-> X86_FEATURE_CONTROL_MSR, which gets a bit long with CONFIG_ on the front.
-> I also overlooked that we have MSR_MISC_FEATURE_CONTROL, so having IA32 in
-> the Kconfig would probably be a good idea.  X86_IA32 is rather redundant,
-> so maybe IA32_FEAT_CTL or IA32_FEATURE_CONTROL?
+pt., 22 lis 2019 o 13:28 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Tue, Nov 19, 2019 at 5:42 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napis=
+a=C5=82(a):
+> > > On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
+> > > <bgolaszewski@baylibre.com> wrote:
+>
+> > > > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=
+=C5=82(a):
+> > > Is it really so? The bgpio_lock does protect the registers used
+> > > by regmap-mmio but unless the interrupt code is also using the
+> > > same registers it is fine to have a different lock for those.
+> > >
+> > > Is the interrupt code really poking into the very same registers
+> > > as passed to bgpio_init()?
+> > >
+> > > Of course it could be seen as a bit dirty to poke around in the
+> > > same memory space with regmap and the bgpio_* accessors
+> > > but in practice it's no problem if they never touch the same
+> > > things.
+> > >
+> > > Yours,
+> > > Linus Walleij
+> >
+> > I'm wondering if it won't cause any inconsistencies when for example
+> > interrupts are being triggered on input lines while we're also reading
+> > their values? Seems to me it's just more clear to use a single lock
+> > for a register range. Most drivers using gpio-mmio do just that in
+> > their irq-related routines.
+>
+> OK good point. Just one lock for the whole thing is likely
+> more maintainable even if it works with two different locks.
+>
+> > Anyway: even without using bgpio_lock this code is inconsistent: if
+> > we're using regmap for interrupt registers, we should either decide to
+> > rely on locking provided by regmap or disable it and use a locally
+> > defined lock.
+>
+> OK makes sense, let's say we use the bgpio_lock everywhere
+> for this.
+>
+> Yash: are you OK with this? (Haven't read the new patch set
+> yet, maybe it is already fixed...)
+>
+> > Also: if we're using regmap, then let's use it
+> > everywhere, not only when it's convenient for updating registers.
+>
+> I think what you are saying is that we should extend gpio-mmio.c
+> with some optional regmap API (or create a separate MMIO library
+> for regmap consumers) which makes sense, but it feels a bit
+> heavy task to toss at contributors.
+>
+> We could add it to the TODO file, where I already have some
+> item like this for port-mapped I/O.
+>
 
-Well, what I'd do is since we have MSR_MISC_FEATURE_CONTROL too, I'd
-call all code and defines pertaining to the 0x3a MSR
+It's been on my personal TODO list too for some time as it seems it
+could benefit some i2c drivers too. Also: I think such a helper could
+eventually completely replace the generic drivers such as gpio-mmio
+and gpio-reg.
 
-<bla>_IA32_FEAT_CTL
+In other words: good idea to put it into the TODO. If there are no
+objections I was thinking about starting the work soon aiming at v5.6,
+as soon as we get the recent changes in uAPI out of the way.
 
-I.e.,
+Bart
 
-CONFIG_IA32_FEAT_CTL,
-MSR_IA32_FEAT_CTL,
-...
-
-and leave a comment over the MSR definition containing the SDM name.
-
-This way, you have a clear distinction between the IA32 and the MISC
-feature control.
-
-But this is just me and I realize we're pretty much deep inside the bike
-shed. :)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> Yours,
+> Linus Walleij
