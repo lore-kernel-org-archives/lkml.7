@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78ADC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABAC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F212070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDED20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421219;
-	bh=CyxFmt8RNp2/3hmmxtbe3/3gSyvkKx15wfdi3MWjiG4=;
+	s=default; t=1574421235;
+	bh=5ZZg/xigrTA2+oyrMBGTOMx97kcHllNc7EFKeSaV/nQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpEC7UcQm5llE85SvkILuw+eQjWBcfAO4Apg03QMKR3H5EJ+cUWXaOGICpNUaEkry
-	 ucftCWa39sILeR3Cd97+TvQonmS72S1Dm0+rery7ISjXh13hzuWUtjq8h81lii4WE8
-	 51T+WAJHlHb7DdQ19Bs4f+ykgpFke8XI8iMdVtkM=
+	b=WVSAfTlYJ1tD5Jv8cYKXmTKITvKGtR1/2jpORkNox4Gwohn5PZoW+oGhXsHbnHEpZ
+	 7jFYFuhxgrK/8gbhH1gdQ7dcfDZxpfiyiS+VpatHunE6v6Rst3gs7w/x9bT/kZlVry
+	 nIGLjIjhiql42nFDI2DhrihvAsBmOhqu5fl/IsSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbfKVLNi (ORCPT
+        id S1730346AbfKVKyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:13:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42226 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730467AbfKVKz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:28 -0500
+        id S1727991AbfKVKyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E8D20718;
-        Fri, 22 Nov 2019 10:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10EF620706;
+        Fri, 22 Nov 2019 10:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420127;
-        bh=CyxFmt8RNp2/3hmmxtbe3/3gSyvkKx15wfdi3MWjiG4=;
+        s=default; t=1574420071;
+        bh=5ZZg/xigrTA2+oyrMBGTOMx97kcHllNc7EFKeSaV/nQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CRzwYqfpYuGbib4iUYFgXXydH48t7+C3Te11cEX08p5jmxL50DToqaPjtSysQtcUX
-         P9vQKme5MfoMedGueogsOoDgDLwEFU3OCbZMzT1kgvsRHJOy7Xwz2wJQn0f9IDgXhe
-         4ThOGKcsslmucCNP5N3XzbdYy302//Vx76bHlpSM=
+        b=vPj6wGbVT9wKmO/kQ45Ay0l1k4eSSw+5RrXporQnB4c2QNg6jtXsK6X8n16aZjno3
+         eW8HwPrIllHm2EAWRVIecz48I0OBdO1rYbSE0ZuMF1E6zL2XM8ZQpMW3X6+8aOx4yX
+         taOGaCR8aGFFba23jyyC2M3c/5ax/C41Zw5MJwUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 081/122] dmaengine: rcar-dmac: set scatter/gather max segment size
-Date:   Fri, 22 Nov 2019 11:28:54 +0100
-Message-Id: <20191122100820.928960169@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/122] pinctrl: gemini: Mask and set properly
+Date:   Fri, 22 Nov 2019 11:29:18 +0100
+Message-Id: <20191122100832.406597374@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,41 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 97d49c59e219acac576e16293a6b8cb99302f62f ]
+[ Upstream commit d17f477c5bc6b4a5dd9f51ae263870da132a8e89 ]
 
-Fix warning when running with CONFIG_DMA_API_DEBUG_SG=y by allocating a
-device_dma_parameters structure and filling in the max segment size.
+The code was written under the assumption that the
+regmap_update_bits() would mask the bits in the mask and
+set the bits in the value.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+It missed the points that it will not set bits in the value
+unless these are also masked in the mask. Set value bits
+that are not in the mask will simply be ignored.
+
+Fixes: 06351d133dea ("pinctrl: add a Gemini SoC pin controller")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pinctrl/pinctrl-gemini.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 19c7433e83097..f7ca57125ac7c 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -200,6 +200,7 @@ struct rcar_dmac {
- 	struct dma_device engine;
- 	struct device *dev;
- 	void __iomem *iomem;
-+	struct device_dma_parameters parms;
+diff --git a/drivers/pinctrl/pinctrl-gemini.c b/drivers/pinctrl/pinctrl-gemini.c
+index 39e6221e71000..05441dc2519d2 100644
+--- a/drivers/pinctrl/pinctrl-gemini.c
++++ b/drivers/pinctrl/pinctrl-gemini.c
+@@ -2164,7 +2164,8 @@ static int gemini_pmx_set_mux(struct pinctrl_dev *pctldev,
+ 		 func->name, grp->name);
  
- 	unsigned int n_channels;
- 	struct rcar_dmac_chan *channels;
-@@ -1764,6 +1765,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &before);
+-	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL, grp->mask,
++	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL,
++			   grp->mask | grp->value,
+ 			   grp->value);
+ 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &after);
  
- 	dmac->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, dmac);
-+	dmac->dev->dma_parms = &dmac->parms;
-+	dma_set_max_seg_size(dmac->dev, RCAR_DMATCR_MASK);
- 	dma_set_mask_and_coherent(dmac->dev, DMA_BIT_MASK(40));
- 
- 	ret = rcar_dmac_parse_of(&pdev->dev, dmac);
 -- 
 2.20.1
 
