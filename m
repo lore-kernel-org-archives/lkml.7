@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C77BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F4DC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4917F2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E8C2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420381;
-	bh=iHrSDbtmO6iDPDxEj/3JzV833eWtqf2Bv0P7k8m6R14=;
+	s=default; t=1574420385;
+	bh=c86+t2Pau/6rMXsnImuEiH8ZWVcRyQ28R/oiS7P5xNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oj+Yt3e2t2KaOWq/vnkifgsevOngccRxatjxb6qWxOGminzS7oGMiRaL1ziL7lW2G
-	 YE6pfbC0NoRPJ0/LLv1eDZWWnoadVo1gVsSRjy8N9BnW6tVgILV/wtVnSEgiN/eOxC
-	 uCFh4Hihkd5n/6UnG98WCLhL7xb58H2GRXUyqUWc=
+	b=vKEp3UydeRZKa3rxjU8yxStBpjKT5B3HfoL64iLeUQb7fverjCsSRdYSWzRFFPTCh
+	 +9nq2QLFWgo6uRb/oMemWHWXZSph2pxtiw2ekIh7Y36LHPWXfGTQ7kt04E/nFulvmd
+	 Os7Ybf9JrshbMGrRg/o5FwXoYsRESm+fNdROTxGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbfKVK7k (ORCPT
+        id S1730952AbfKVK7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbfKVK7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:38 -0500
+        id S1730921AbfKVK7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E11720706;
-        Fri, 22 Nov 2019 10:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDD0A20721;
+        Fri, 22 Nov 2019 10:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420377;
-        bh=iHrSDbtmO6iDPDxEj/3JzV833eWtqf2Bv0P7k8m6R14=;
+        s=default; t=1574420380;
+        bh=c86+t2Pau/6rMXsnImuEiH8ZWVcRyQ28R/oiS7P5xNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXu/dg5aW1uaD2ei0JFD7VHWMD+C/Vyf07mVRgDyGWvqybBFNPu1Ws1Ht5NAA/yty
-         FH8+aSApAvsvxhqHQuDFN9ue0SfT7SDiEil1T0ict80xMtHZ9QT6JSEGV2zcoCv4qA
-         MYhcoAxhWfpc5+FZs7FPpciEa4LajMu0zRNkS0Ps=
+        b=2ZiwikPT/6IamcqPelHTtFLwvCaOW/E8iaL66lgXObspLeyENz+PQClDsmusxgY37
+         BkqFzVSiQKrGTQX9YM7ZxLeBiZjofzZ4eFpEzeH40T95qJs9qRhQ+L+1lhttMpK7SO
+         1KlFo8HkZ4TThZZyk9WAS7cczy6DOVP3+MjKiY2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/220] RDMA/hns: Bugfix for CM test
-Date:   Fri, 22 Nov 2019 11:27:32 +0100
-Message-Id: <20191122100918.844138442@linuxfoundation.org>
+Subject: [PATCH 4.19 088/220] RDMA/hns: Limit the size of extend sge of sq
+Date:   Fri, 22 Nov 2019 11:27:33 +0100
+Message-Id: <20191122100918.939448112@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,31 +62,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit 15fc056fba7b17b9abfbe80a12f188403fc949fb ]
+[ Upstream commit 05ad5482a5904c416bcfd74afd7193e206e563ce ]
 
-It will print the warning when the MSB bit of SLID is not zero running
-cm_req_handler function that test CM. It needs to fixed zero when test
-RoCE device.
+The hip08 split two hardware version. The version id are 0x20 and 0x21
+according to the PCI revison. The max size of extend sge of sq is limited
+to 2M for 0x20 version and 8M for 0x21 version. It may be exceeded to 2M
+according to the algorithm that compute the product of wqe count and
+extend sge number of every wqe. But the product always less than 8M.
 
 Signed-off-by: Lijun Ou <oulijun@huawei.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hns/hns_roce_device.h |  1 +
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  |  1 +
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |  1 +
+ drivers/infiniband/hw/hns/hns_roce_qp.c     | 19 +++++++++++++++++++
+ 4 files changed, 22 insertions(+)
 
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 0bf9949842177..ebfb0998bcedb 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -665,6 +665,7 @@ struct hns_roce_caps {
+ 	u32		max_sq_sg;	/* 2 */
+ 	u32		max_sq_inline;	/* 32 */
+ 	u32		max_rq_sg;	/* 2 */
++	u32		max_extend_sg;
+ 	int		num_qps;	/* 256k */
+ 	int             reserved_qps;
+ 	u32		max_wqes;	/* 16k */
 diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index c8a3864f19122..7a7232927b126 100644
+index 7a7232927b126..9e7923cf85773 100644
 --- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
 +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -2268,6 +2268,7 @@ static int hns_roce_v2_poll_one(struct hns_roce_cq *hr_cq,
- 		wc->src_qp = (u8)roce_get_field(cqe->byte_32,
- 						V2_CQE_BYTE_32_RMT_QPN_M,
- 						V2_CQE_BYTE_32_RMT_QPN_S);
-+		wc->slid = 0;
- 		wc->wc_flags |= (roce_get_bit(cqe->byte_32,
- 					      V2_CQE_BYTE_32_GRH_S) ?
- 					      IB_WC_GRH : 0);
+@@ -1194,6 +1194,7 @@ static int hns_roce_v2_profile(struct hns_roce_dev *hr_dev)
+ 	caps->num_cqs		= HNS_ROCE_V2_MAX_CQ_NUM;
+ 	caps->max_cqes		= HNS_ROCE_V2_MAX_CQE_NUM;
+ 	caps->max_sq_sg		= HNS_ROCE_V2_MAX_SQ_SGE_NUM;
++	caps->max_extend_sg	= HNS_ROCE_V2_MAX_EXTEND_SGE_NUM;
+ 	caps->max_rq_sg		= HNS_ROCE_V2_MAX_RQ_SGE_NUM;
+ 	caps->max_sq_inline	= HNS_ROCE_V2_MAX_SQ_INLINE;
+ 	caps->num_uars		= HNS_ROCE_V2_UAR_NUM;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+index cd276b0b16471..2c3e600db9ce7 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+@@ -50,6 +50,7 @@
+ #define HNS_ROCE_V2_MAX_CQE_NUM			0x10000
+ #define HNS_ROCE_V2_MAX_RQ_SGE_NUM		0x100
+ #define HNS_ROCE_V2_MAX_SQ_SGE_NUM		0xff
++#define HNS_ROCE_V2_MAX_EXTEND_SGE_NUM		0x200000
+ #define HNS_ROCE_V2_MAX_SQ_INLINE		0x20
+ #define HNS_ROCE_V2_UAR_NUM			256
+ #define HNS_ROCE_V2_PHY_UAR_NUM			1
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index cb926ced40219..54d22868ffba5 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -31,6 +31,7 @@
+  * SOFTWARE.
+  */
+ 
++#include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <rdma/ib_addr.h>
+ #include <rdma/ib_umem.h>
+@@ -372,6 +373,16 @@ static int hns_roce_set_user_sq_size(struct hns_roce_dev *hr_dev,
+ 	if (hr_qp->sq.max_gs > 2)
+ 		hr_qp->sge.sge_cnt = roundup_pow_of_two(hr_qp->sq.wqe_cnt *
+ 							(hr_qp->sq.max_gs - 2));
++
++	if ((hr_qp->sq.max_gs > 2) && (hr_dev->pci_dev->revision == 0x20)) {
++		if (hr_qp->sge.sge_cnt > hr_dev->caps.max_extend_sg) {
++			dev_err(hr_dev->dev,
++				"The extended sge cnt error! sge_cnt=%d\n",
++				hr_qp->sge.sge_cnt);
++			return -EINVAL;
++		}
++	}
++
+ 	hr_qp->sge.sge_shift = 4;
+ 
+ 	/* Get buf size, SQ and RQ  are aligned to page_szie */
+@@ -465,6 +476,14 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
+ 		hr_qp->sge.sge_shift = 4;
+ 	}
+ 
++	if ((hr_qp->sq.max_gs > 2) && hr_dev->pci_dev->revision == 0x20) {
++		if (hr_qp->sge.sge_cnt > hr_dev->caps.max_extend_sg) {
++			dev_err(dev, "The extended sge cnt error! sge_cnt=%d\n",
++				hr_qp->sge.sge_cnt);
++			return -EINVAL;
++		}
++	}
++
+ 	/* Get buf size, SQ and RQ are aligned to PAGE_SIZE */
+ 	page_size = 1 << (hr_dev->caps.mtt_buf_pg_sz + PAGE_SHIFT);
+ 	hr_qp->sq.offset = 0;
 -- 
 2.20.1
 
