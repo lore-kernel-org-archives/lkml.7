@@ -2,32 +2,33 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E41C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942A3C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7BC20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735DB20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfKVWkt (ORCPT
+        id S1727275AbfKVWlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:40:49 -0500
-Received: from mga01.intel.com ([192.55.52.88]:61229 "EHLO mga01.intel.com"
+        Fri, 22 Nov 2019 17:41:01 -0500
+Received: from mga01.intel.com ([192.55.52.88]:61220 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfKVWkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:40:04 -0500
+        id S1726089AbfKVWkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 17:40:02 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:40:03 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:40:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
-   d="scan'208";a="409029675"
+   d="scan'208";a="409029646"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Nov 2019 14:40:03 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 22 Nov 2019 14:40:01 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -37,9 +38,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/13] KVM: x86: Refactor emulate tracepoint to explicitly take context
-Date:   Fri, 22 Nov 2019 14:39:52 -0800
-Message-Id: <20191122223959.13545-7-sean.j.christopherson@intel.com>
+Subject: [PATCH 03/13] KVM: x86: Move emulation-only helpers to emulate.c
+Date:   Fri, 22 Nov 2019 14:39:49 -0800
+Message-Id: <20191122223959.13545-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122223959.13545-1-sean.j.christopherson@intel.com>
 References: <20191122223959.13545-1-sean.j.christopherson@intel.com>
@@ -50,109 +51,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly pass the emulation context to the emulate tracepoint in
-preparation of dynamically allocation the emulation context.
+Move ctxt_virt_addr_bits() and emul_is_noncanonical_address() from x86.h
+to emulate.c.  This eliminates all references to struct x86_emulate_ctxt
+from x86.h, and sets the stage for a future patch to stop including
+kvm_emulate.h in asm/kvm_host.h.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/trace.h | 22 +++++++++++-----------
- arch/x86/kvm/x86.c   | 13 ++++++++-----
- 2 files changed, 19 insertions(+), 16 deletions(-)
+ arch/x86/kvm/emulate.c | 15 +++++++++++++++
+ arch/x86/kvm/x86.h     | 15 ---------------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index 7c741a0c5f80..c00bcc52c51c 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -731,8 +731,9 @@ TRACE_EVENT(kvm_skinit,
- 	})
- 
- TRACE_EVENT(kvm_emulate_insn,
--	TP_PROTO(struct kvm_vcpu *vcpu, __u8 failed),
--	TP_ARGS(vcpu, failed),
-+	TP_PROTO(struct kvm_vcpu *vcpu, struct x86_emulate_ctxt *ctxt,
-+		 __u8 failed),
-+	TP_ARGS(vcpu, ctxt, failed),
- 
- 	TP_STRUCT__entry(
- 		__field(    __u64, rip                       )
-@@ -745,13 +746,10 @@ TRACE_EVENT(kvm_emulate_insn,
- 
- 	TP_fast_assign(
- 		__entry->csbase = kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS);
--		__entry->len = vcpu->arch.emulate_ctxt.fetch.ptr
--			       - vcpu->arch.emulate_ctxt.fetch.data;
--		__entry->rip = vcpu->arch.emulate_ctxt._eip - __entry->len;
--		memcpy(__entry->insn,
--		       vcpu->arch.emulate_ctxt.fetch.data,
--		       15);
--		__entry->flags = kei_decode_mode(vcpu->arch.emulate_ctxt.mode);
-+		__entry->len = ctxt->fetch.ptr - ctxt->fetch.data;
-+		__entry->rip = ctxt->_eip - __entry->len;
-+		memcpy(__entry->insn, ctxt->fetch.data, 15);
-+		__entry->flags = kei_decode_mode(ctxt->mode);
- 		__entry->failed = failed;
- 		),
- 
-@@ -764,8 +762,10 @@ TRACE_EVENT(kvm_emulate_insn,
- 		)
- 	);
- 
--#define trace_kvm_emulate_insn_start(vcpu) trace_kvm_emulate_insn(vcpu, 0)
--#define trace_kvm_emulate_insn_failed(vcpu) trace_kvm_emulate_insn(vcpu, 1)
-+#define trace_kvm_emulate_insn_start(vcpu, ctxt)	\
-+	trace_kvm_emulate_insn(vcpu, ctxt, 0)
-+#define trace_kvm_emulate_insn_failed(vcpu, ctxt)	\
-+	trace_kvm_emulate_insn(vcpu, ctxt, 1)
- 
- TRACE_EVENT(
- 	vcpu_match_mmio,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 9dc6762edb96..8147bea8eda4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6370,10 +6370,13 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 952d1a4f4d7e..596fa52e5ecb 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -670,6 +670,21 @@ static void set_segment_selector(struct x86_emulate_ctxt *ctxt, u16 selector,
+ 	ctxt->ops->set_segment(ctxt, selector, &desc, base3, seg);
  }
- EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
  
--static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
-+static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
-+				    int emulation_type)
- {
-+	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++static inline u8 ctxt_virt_addr_bits(struct x86_emulate_ctxt *ctxt)
++{
++	return (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_LA57) ? 57 : 48;
++}
 +
- 	++vcpu->stat.insn_emulation_fail;
--	trace_kvm_emulate_insn_failed(vcpu);
-+	trace_kvm_emulate_insn_failed(vcpu, ctxt);
++static inline bool emul_is_noncanonical_address(u64 la,
++						struct x86_emulate_ctxt *ctxt)
++{
++#ifdef CONFIG_X86_64
++	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
++#else
++	return false;
++#endif
++}
++
+ /*
+  * x86 defines three classes of vector instructions: explicitly
+  * aligned, explicitly unaligned, and the rest, which change behaviour
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 29391af8871d..84649ec1b7f5 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -154,11 +154,6 @@ static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
+ 	return kvm_read_cr4_bits(vcpu, X86_CR4_LA57) ? 57 : 48;
+ }
  
- 	if (emulation_type & EMULTYPE_VMWARE_GP) {
- 		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-@@ -6701,7 +6704,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+-static inline u8 ctxt_virt_addr_bits(struct x86_emulate_ctxt *ctxt)
+-{
+-	return (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_LA57) ? 57 : 48;
+-}
+-
+ static inline u64 get_canonical(u64 la, u8 vaddr_bits)
+ {
+ 	return ((int64_t)la << (64 - vaddr_bits)) >> (64 - vaddr_bits);
+@@ -173,16 +168,6 @@ static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
+ #endif
+ }
  
- 		r = x86_decode_insn(ctxt, insn, insn_len);
- 
--		trace_kvm_emulate_insn_start(vcpu);
-+		trace_kvm_emulate_insn_start(vcpu, ctxt);
- 		++vcpu->stat.insn_emulation;
- 		if (r != EMULATION_OK)  {
- 			if ((emulation_type & EMULTYPE_TRAP_UD) ||
-@@ -6722,7 +6725,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
- 				inject_emulated_exception(ctxt);
- 				return 1;
- 			}
--			return handle_emulation_failure(vcpu, emulation_type);
-+			return handle_emulation_failure(ctxt, emulation_type);
- 		}
- 	}
- 
-@@ -6768,7 +6771,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
- 					emulation_type))
- 			return 1;
- 
--		return handle_emulation_failure(vcpu, emulation_type);
-+		return handle_emulation_failure(ctxt, emulation_type);
- 	}
- 
- 	if (ctxt->have_exception) {
+-static inline bool emul_is_noncanonical_address(u64 la,
+-						struct x86_emulate_ctxt *ctxt)
+-{
+-#ifdef CONFIG_X86_64
+-	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
+-#else
+-	return false;
+-#endif
+-}
+-
+ static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
+ 					gva_t gva, gfn_t gfn, unsigned access)
+ {
 -- 
 2.24.0
 
