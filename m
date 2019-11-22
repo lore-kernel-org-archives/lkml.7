@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EEFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38808C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587522071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011312071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452253;
-	bh=VGdfGs9h3cSYxsGKZnzJVCmowXsyRBWswwV9Sd61kNU=;
+	s=default; t=1574452262;
+	bh=1hRyEXSMYVpQ/2jXc23KVPuovQHkAUSs3LuBAgLqh8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyV7mLhcSbC1Wr7WDOfSqjuv3ofom+hlDqEF9oF1iswu447ockdKOrDJ5XSwkZLyj
-	 lM47cJUq2DqUEZkrnhAhIMVwDus/c3og5tJh5vvH9JBfJl5MGKJOdFpivLDPL8KM5D
-	 NnW3ij783fp4f4O4AMPqbpLVBGXW9ug9lC8LNDuo=
+	b=hEwS26l3mPknbBx6x7mq9w3vEBt147QGEjv8cNmd3mqkSwg7GrfuAQ6Lmza/qhH7z
+	 o2Dh8OB/5pnPQkFayL0rF1Uyrihn6diQyFYoty+dU/zq/oHIDpgTo1EtUahfXKYkF/
+	 m/f3EHtdGHoqr85O3B41X955tmmFLz/PESMglY9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfKVTuw (ORCPT
+        id S1727947AbfKVTvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:50:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51244 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:51:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbfKVTuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:50:23 -0500
+        id S1727780AbfKVTuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:50:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32F52207FA;
-        Fri, 22 Nov 2019 19:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C1F20731;
+        Fri, 22 Nov 2019 19:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452223;
-        bh=VGdfGs9h3cSYxsGKZnzJVCmowXsyRBWswwV9Sd61kNU=;
+        s=default; t=1574452219;
+        bh=1hRyEXSMYVpQ/2jXc23KVPuovQHkAUSs3LuBAgLqh8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wE4691YTOg/vYWtYDRBL5uR7ILr0GdzuUhresnUhnqvkDmlIlOM6HR/LIp/aFBd6X
-         lhbHrEJN/KIihShgMjtXBEk/5u8EtQsNOMqoWn4AjL3IXowk0Xsc1BYL16+EFb/F7t
-         K5LlbWtfpnHBvDE/ciO4nMoMt8npIWTkaY8+qj0g=
+        b=hLWju5LT3OBDMMGBZKi+Q3Zck0Rg12LGTqd6RBy4bE+dE4VyULSGDjf14fE9PE0SW
+         t8L5ihlCwEZV8cfjrDXaqqHLDYUUTNQfwinDWaHZp3RCSQWF08EOAUgaXpB2ILcx74
+         zlaaEacUEgqOzIayZh7L9I9I2p7FyA2t/9N6rAhk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 7/9] slcan: Fix memory leak in error path
-Date:   Fri, 22 Nov 2019 14:50:12 -0500
-Message-Id: <20191122195014.25065-7-sashal@kernel.org>
+Cc:     paulhsia <paulhsia@chromium.org>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 4/9] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
+Date:   Fri, 22 Nov 2019 14:50:09 -0500
+Message-Id: <20191122195014.25065-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122195014.25065-1-sashal@kernel.org>
 References: <20191122195014.25065-1-sashal@kernel.org>
@@ -62,54 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: paulhsia <paulhsia@chromium.org>
 
-[ Upstream commit ed50e1600b4483c049ce76e6bd3b665a6a9300ed ]
+[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
 
-This patch is fixing memory leak reported by Syzkaller:
+If the nullity check for `substream->runtime` is outside of the lock
+region, it is possible to have a null runtime in the critical section
+if snd_pcm_detach_substream is called right before the lock.
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xffffffffffffffff
-
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: paulhsia <paulhsia@chromium.org>
+Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/slcan.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/core/pcm_lib.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-index 9a3f15cb7ef48..9b9dfa167ffbd 100644
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -613,6 +613,7 @@ static int slcan_open(struct tty_struct *tty)
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 3ce2b87717623..950730709d28a 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -1877,11 +1877,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ 	struct snd_pcm_runtime *runtime;
+ 	unsigned long flags;
  
- err_exit:
- 	rtnl_unlock();
+-	if (PCM_RUNTIME_CHECK(substream))
++	if (snd_BUG_ON(!substream))
+ 		return;
+-	runtime = substream->runtime;
+ 
+ 	snd_pcm_stream_lock_irqsave(substream, flags);
++	if (PCM_RUNTIME_CHECK(substream))
++		goto _unlock;
++	runtime = substream->runtime;
++
+ 	if (!snd_pcm_running(substream) ||
+ 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
+ 		goto _end;
+@@ -1892,6 +1895,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ #endif
+  _end:
+ 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
++ _unlock:
+ 	snd_pcm_stream_unlock_irqrestore(substream, flags);
+ }
+ 
 -- 
 2.20.1
 
