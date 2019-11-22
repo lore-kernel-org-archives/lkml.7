@@ -2,136 +2,106 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFCCC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68817C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378102068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574399211;
-	bh=o9P+CVnroeoeDkGZ+LQ16OPYhmH/QzjmVRjx/5JnAL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NOJvIUZC4LyPfSa4W5G+moB0z0L2NVOEl8AEkbXanxJQBox1/mC898orufki68hki
-	 gdzopkmEMab5rV+lreh+A0EVhjsjP5AuXBwQTUFqAg5RNQx46pgCsuJDcpIpWdJILU
-	 YBkie1B/2NWsLyTx1OXo8VQ9KgjyKY1+0TgMbjXg=
+	by mail.kernel.org (Postfix) with ESMTP id 3D6922068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QUuL2c+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKVFGu (ORCPT
+        id S1726603AbfKVFQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:06:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfKVFGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:06:50 -0500
-Received: from localhost (unknown [171.61.94.63])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D6B82068E;
-        Fri, 22 Nov 2019 05:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574399209;
-        bh=o9P+CVnroeoeDkGZ+LQ16OPYhmH/QzjmVRjx/5JnAL8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YN+4aXsR/BUW7qoSgA3XoVlN2adRpnGpvvqamoVtbMt5egAYIfqbBn1kVrG8VbhgG
-         ei56tZpdkKvB3SpLzzGmSyVSN2OzoVkeisNubyhnQwa0sF1qjSfQdhmQ+dzrvK/dNa
-         3PmARuGyKD7z/K1Abqmy3SixFKUfDIp9O+O0ZjF8=
-Date:   Fri, 22 Nov 2019 10:36:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH RFC v5 2/2] dmaengine: avalon-test: Intel Avalon-MM DMA
- Interface for PCIe test
-Message-ID: <20191122050643.GM82508@vkoul-mobl>
-References: <cover.1573052725.git.a.gordeev.box@gmail.com>
- <948f34471b74a8a20747311cc1d7733d00d77645.1573052725.git.a.gordeev.box@gmail.com>
- <20191114050331.GL952516@vkoul-mobl>
- <20191114155331.GA19187@AlexGordeev-DPL-IR1335>
+        Fri, 22 Nov 2019 00:16:19 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33102 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKVFQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:16:18 -0500
+Received: by mail-pf1-f194.google.com with SMTP id c184so2928656pfb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 21:16:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pur8D56rYiQ0M1ceqnI28F7eCh0YYOJc2gZei1cSwYw=;
+        b=QUuL2c+xQxdrPyysEXsec8QavmH64GVr/WK5Xy2ffOtjwjSkRDU8nM231KQZ55gTT+
+         o95OPytdoXojkQe06wVttIqQ+d8ikveWepYkDjh3szE/vnrqQQwCVhIHbokE9ohTbJBr
+         Qir9fZmE4Y8oLlw+ShfjvkYD9U9A5TCKfg4Jw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pur8D56rYiQ0M1ceqnI28F7eCh0YYOJc2gZei1cSwYw=;
+        b=hmSY0grBIaLIcNPpbQHi9Hf/paLRwaNbkr8pFYob8wrjNbQrdvv+CTAl87ZZnHJ9i9
+         3It3aoUGgyr03ILFjdmMZbmc2Ynv0htieJIuCyT/v9ojV1UqlbXQID6G67X4/RJus2kK
+         rvm8ML3CWRsKt11xSv82gGsmQ2J2NXc/yBSwk7dr0Z89V48IU0kWYPKoiQIqFws8Whmq
+         ADiBIdZEoTU05wKDm+cHBZ5hjdrQBw6ynvzZj/7PRsd7vglhqTqBZ2gZttle/Zho4Hto
+         zEgFnoTFkhnuwgRASRgcUpLvoSq+FQq3es8kjMlj50/7qHtHkunrSNVLMr3y3Bh7vvTL
+         QHqA==
+X-Gm-Message-State: APjAAAXpAJ2ZspsLyDWr7aeuniWulsUDT8aR5CT1kRx0XGViheb85EVg
+        lYX1PWldBv8PT18b1IgV86HUdA==
+X-Google-Smtp-Source: APXvYqwm6Bo6Fpvepq74mr6KZ7xSHs2WiOshfDeBDm7ixVWj28grrqSlnrpqRI/kf/OPwZ6eICDjRg==
+X-Received: by 2002:a63:fa0d:: with SMTP id y13mr13431599pgh.18.1574399777846;
+        Thu, 21 Nov 2019 21:16:17 -0800 (PST)
+Received: from hiroh.tok.corp.google.com ([2401:fa00:8f:2:3bf4:6372:5b56:dd4c])
+        by smtp.gmail.com with ESMTPSA id m7sm5756049pfb.153.2019.11.21.21.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 21:16:17 -0800 (PST)
+From:   Hirokazu Honda <hiroh@chromium.org>
+To:     ezequiel@collabora.com, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org
+Cc:     Hirokazu Honda <hiroh@chromium.org>
+Subject: [PATCH] media: hantro: Support H264 profile control
+Date:   Fri, 22 Nov 2019 14:16:08 +0900
+Message-Id: <20191122051608.128717-1-hiroh@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114155331.GA19187@AlexGordeev-DPL-IR1335>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-11-19, 16:53, Alexander Gordeev wrote:
-> On Thu, Nov 14, 2019 at 10:33:31AM +0530, Vinod Koul wrote:
-> > On 06-11-19, 20:22, Alexander Gordeev wrote:
-> > > This is a sample implementation of a driver using "avalon-dma" to
-> > > perform data transfers between target device memory and system memory:
-> > > 
-> > >     +----------+    +----------+            +----------+
-> > >     |   RAM    |<-->|  Avalon  |<---PCIe--->|   Host   |
-> > >     +----------+    +----------+            +----------+
-> > >
-> > > The target device is expected to use only Avalon-MM DMA Interface for
-> > > PCIe to initiate DMA transactions - without custom hardware specifics
-> > > to make such transfers possible.
-> > > 
-> > > Unlike "dmatest" driver, the contents of DMAed data is not manipulated by
-> > > "avalon-test" in any way. It is basically pass-through and the the data
-> > > are fully dependent on the target device implementation. Thus, it is up
-> > > to the users to analyze received or provide meaningful transmitted data.
-> > 
-> > Is this the only reason why you have not used dmatest. If so, why not
-> > add the feature to dmatest to optionally not check the DMAed data
-> > contents?
-> 
-> The main reason is that "dmatest" does not support DMA_SLAVE type of
-> transactions.
+The Hantro G1 decoder supports H.264 profiles from Baseline to High, with
+the exception of the Extended profile.
 
-That is correct, but it can be added!
+Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
+applications can query the driver for the list of supported profiles.
 
-> I considered adding DMA_SLAVE to "dmatest". But it would break the 
-> current neat design and does not appear solving the issue of data
-> verification. Simply besause in general DMA_SLAVE case there is no
+Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+---
+ drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Am not sure why it break the current design. We have to skip the
-verification part. It would not only help you but also other to have
-this support in dmatest
-
-> data integrity criteria easily available to the driver. I.e if the
-> data is a sensor image then verifying it in the driver would be
-> pointless.
-
-The biggest issue with slave and dmatest is how to setup slave
-
-> So in case of "avalon-test" I offloaded the task of data verification
-> to the user. The driver itself just streams user data to/from device.
-> 
-> In fact, this approach is not "avalon-dma" specific and could be used
-> with any "dmaengine" compatible driver. Moreover, it would be quite
-> useful for bringing up devices in embedded systems. I.e one could
-> master a raw display frame in user space and DMA it via the driver -
-> without graphic stack involved.
-
-Right and having it in dmatest makes more sense for everyone :)
-
-> The only missing functionality I could think of is using DMABUFs, but that
-> is very easy to add.
-> 
-> Actually, "avalon-test" is rather a presentation of how I tested
-> "avalon-dma". I understand "dmatest" is more easy to trust and I could
-> probably make it working with DMA_SLAVE type. But that would entail
-> hardware design requirements:
-> 
->   - DMA slave should both respond to read and write transactions;
->   - data read should always be the same as data written;
-> 
-> I have such version of hardware design, but I doubt majorify of devices
-> out there can honor the above requirements. 
-> 
-> Summarizing - I would suggest not to change "dmatest" and bring in a
-> generalized version of "avalon-test" if you find it useful for a wider
-> audience.
-
-I would still think adding to dmatest makes more sense!
-
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 6d9d41170832..9387619235d8 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] = {
+ 			.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+ 			.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+ 		},
++	}, {
++		.codec = HANTRO_H264_DECODER,
++		.cfg = {
++			.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
++			.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
++			.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
++			.menu_skip_mask =
++			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
++			.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
++		}
+ 	}, {
+ 	},
+ };
 -- 
-~Vinod
+2.24.0.432.g9d3f5f5b63-goog
+
