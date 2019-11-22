@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E16C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58FB120706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767BD20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420061;
-	bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
+	s=default; t=1574420069;
+	bh=mVeXe/oLVm/UKSIJ1sNGQhVuu2K8tzzVlbBA6ZHxeuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZyCh9ktxx51mOYtdgcC7AEmTkfNmZjNYLfma3AfFCUR4aO/4tmB2o3aRiQ4AfLZEj
-	 CKCb/I2jE3Ec+fPKpn6wI201MFTaHMqMPGUvYIpz7UwiaxvAo5fxrCQDpMXd8GfsIF
-	 Pv2SRF/Sa7Q0JRgE7lTZNKsRX1+SLjf8yZDviy/o=
+	b=mA3b+0Lkl0sX5c0tqWck0HG0dxWnaIba3jHNuPAAEgDhe8Y9guFhL9t58ac4c1Xo8
+	 KolusfhCAOJDQCHytdvMyTrqoohInBXk2HWmWvsGzQGkFxHtm9qVXdtV/o65iWRsGK
+	 4TR3dGftkfIs96OkIlzVADqS0W+vqzA3faNymAKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbfKVKyU (ORCPT
+        id S1730331AbfKVKy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39686 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfKVKyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:17 -0500
+        id S1730162AbfKVKy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCA02071F;
-        Fri, 22 Nov 2019 10:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E8CF20706;
+        Fri, 22 Nov 2019 10:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420057;
-        bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
+        s=default; t=1574420065;
+        bh=mVeXe/oLVm/UKSIJ1sNGQhVuu2K8tzzVlbBA6ZHxeuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xI6F6MosOtQ54ddglgtfJLjLEp4bCA5UF2gCYPlb3i90EnW4De0x2IVULFSFAUpQe
-         0bvL+ymvZZ+5YGu9kSrmZIftsufns+NMbAJBI2cRsUjJLyjxqneCEibu/Yd2gNsh8l
-         qcWgcAq99pzUp+gFNMkyPESzNm3M+XKa0kw5p2lg=
+        b=fvD4+tRBK25I3++vXpaC8WvRACMkNwP2D9bX1I2DqqxcOSCfRZ0XQBlpVIeU6wWaz
+         v3d4WVmuECBh3AuNMc6G38atJH1oI9S43T7DYk4cQBLSqr28q2Xl+c3VHpdfVbYCzR
+         kkfvfj5x+E1kOBM6UZSvjviBR8mXOXb3dVLPMgQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/122] media: cx231xx: fix potential sign-extension overflow on large shift
-Date:   Fri, 22 Nov 2019 11:29:14 +0100
-Message-Id: <20191122100831.513095593@linuxfoundation.org>
+Subject: [PATCH 4.14 077/122] Input: silead - try firmware reload after unsuccessful resume
+Date:   Fri, 22 Nov 2019 11:28:50 +0100
+Message-Id: <20191122100817.398890378@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,41 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
+[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
 
-Shifting the u8 value[3] by an int can lead to sign-extension
-overflow. For example, if value[3] is 0xff and the shift is 24 then it
-is promoted to int and then the top bit is sign-extended so that all
-upper 32 bits are set.  Fix this by casting value[3] to a u32 before
-the shift.
+A certain silead controller (Chip ID: 0x56810000) loses its firmware
+after suspend, causing the resume to fail. This patch tries to load
+the firmware, should a resume error occur and retries the resuming.
 
-Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
-
-Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/silead.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
-index 179b8481a870d..fd33c2e9327da 100644
---- a/drivers/media/usb/cx231xx/cx231xx-video.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-video.c
-@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
- 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
- 				(u16)reg->reg, value, 4);
- 		reg->val = value[0] | value[1] << 8 |
--			value[2] << 16 | value[3] << 24;
-+			value[2] << 16 | (u32)value[3] << 24;
- 		reg->size = 4;
- 		break;
- 	case 1:	/* AFE - read byte */
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 0dbcf105f7db3..7c0eeef29b3cb 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -534,20 +534,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+ static int __maybe_unused silead_ts_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	bool second_try = false;
+ 	int error, status;
+ 
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
+ 
++ retry:
+ 	error = silead_ts_reset(client);
+ 	if (error)
+ 		return error;
+ 
++	if (second_try) {
++		error = silead_ts_load_fw(client);
++		if (error)
++			return error;
++	}
++
+ 	error = silead_ts_startup(client);
+ 	if (error)
+ 		return error;
+ 
+ 	status = silead_ts_get_status(client);
+ 	if (status != SILEAD_STATUS_OK) {
++		if (!second_try) {
++			second_try = true;
++			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
++			goto retry;
++		}
+ 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
+ 		return -ENODEV;
+ 	}
 -- 
 2.20.1
 
