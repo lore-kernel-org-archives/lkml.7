@@ -2,53 +2,53 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC05CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F24CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A252072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5881A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419765;
-	bh=7NbcbOX9UA3F0MFEH7FNxiYd1n69q/bArO3OE8ol0a0=;
+	s=default; t=1574419768;
+	bh=/crUOwCOLDRvI/AH1z5HIHAZHy54kr4aKlH4Jtg9IJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eb1ky6McSg71QcYKvIiJPXBNjqfPr9WASUb+rqGZH9GQ+Cdjp5g7uKgi6Id9nwgxd
-	 tEfQBOl8EupecwYSfaY2dfHr1A/8Ke6esynW2lH9wdRKcSKwXj/WbpOlpVsbczsE+t
-	 GYIcwNSaMd802rDrEh94RbQL2b/ANwq+dcRyFYjc=
+	b=hH/jyv+tiockXj6NWLUcPFiKQ+8S9WcK8OpqmQ0s/217hEoIWt5lPTkbn9duhKOif
+	 nNBMQnqVT0v+zBV9Jq986iGHLxTacyo9ML5SFbt90rNDA6DZwTx5MRDV8YXsVhNMKx
+	 fCCGozm3GZbOCF8RB5zqeyu9hjH6flUCCZK+Gm0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbfKVKtY (ORCPT
+        id S1730006AbfKVKtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:49:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:49:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729086AbfKVKtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:49:17 -0500
+        id S1729655AbfKVKtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:49:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E77142071F;
-        Fri, 22 Nov 2019 10:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E87820718;
+        Fri, 22 Nov 2019 10:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419756;
-        bh=7NbcbOX9UA3F0MFEH7FNxiYd1n69q/bArO3OE8ol0a0=;
+        s=default; t=1574419753;
+        bh=/crUOwCOLDRvI/AH1z5HIHAZHy54kr4aKlH4Jtg9IJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sxPuR7lyyThikTIY4TvtJP4mRcBoF2Ig4N1B3SMxmeEL6s9UPBPfbeVVdmw4WPje0
-         zrsaWCWvJ+1pJHsVr2yAqcKjOf/6/dqnVwW9t63xikpeg8QtTDXYsjEwUUtEATWWj8
-         l7QrfktGgTxYF3aGpiFXUx7A3O3q8hTY39Zp21Fw=
+        b=z0mIWGRW98c4p5HsxALdQzTpyLfeIgCzJ2F1R+wfBCGJtcvCRGtQpeRp2biJIC9Nq
+         irTyzOf+RLGq45WpGjXm7sKTrFDCiiY5y/8aEuu9SB5/ic6rAjg7e2+nAFesHB3/4M
+         MdB5/AsdViMozDTw+3mqosM0DWU4NL45mEFrjZos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.9 222/222] arm64: uaccess: Ensure PAN is re-enabled after unhandled uaccess fault
-Date:   Fri, 22 Nov 2019 11:29:22 +0100
-Message-Id: <20191122100918.689070544@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 221/222] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
+Date:   Fri, 22 Nov 2019 11:29:21 +0100
+Message-Id: <20191122100918.589485989@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,121 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
+From: Roger Quadros <rogerq@ti.com>
 
-commit 94bb804e1e6f0a9a77acf20d7c70ea141c6c821e upstream.
+[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
 
-A number of our uaccess routines ('__arch_clear_user()' and
-'__arch_copy_{in,from,to}_user()') fail to re-enable PAN if they
-encounter an unhandled fault whilst accessing userspace.
+OMAP5's Super-Speed USB port has a software mailbox register
+that needs to be fed with VBUS and ID events from an external
+VBUS/ID comparator.
 
-For CPUs implementing both hardware PAN and UAO, this bug has no effect
-when both extensions are in use by the kernel.
+Without this, Host role will not work correctly.
 
-For CPUs implementing hardware PAN but not UAO, this means that a kernel
-using hardware PAN may execute portions of code with PAN inadvertently
-disabled, opening us up to potential security vulnerabilities that rely
-on userspace access from within the kernel which would usually be
-prevented by this mechanism. In other words, parts of the kernel run the
-same way as they would on a CPU without PAN implemented/emulated at all.
-
-For CPUs not implementing hardware PAN and instead relying on software
-emulation via 'CONFIG_ARM64_SW_TTBR0_PAN=y', the impact is unfortunately
-much worse. Calling 'schedule()' with software PAN disabled means that
-the next task will execute in the kernel using the page-table and ASID
-of the previous process even after 'switch_mm()', since the actual
-hardware switch is deferred until return to userspace. At this point, or
-if there is a intermediate call to 'uaccess_enable()', the page-table
-and ASID of the new process are installed. Sadly, due to the changes
-introduced by KPTI, this is not an atomic operation and there is a very
-small window (two instructions) where the CPU is configured with the
-page-table of the old task and the ASID of the new task; a speculative
-access in this state is disastrous because it would corrupt the TLB
-entries for the new task with mappings from the previous address space.
-
-As Pavel explains:
-
-  | I was able to reproduce memory corruption problem on Broadcom's SoC
-  | ARMv8-A like this:
-  |
-  | Enable software perf-events with PERF_SAMPLE_CALLCHAIN so userland's
-  | stack is accessed and copied.
-  |
-  | The test program performed the following on every CPU and forking
-  | many processes:
-  |
-  |	unsigned long *map = mmap(NULL, PAGE_SIZE, PROT_READ|PROT_WRITE,
-  |				  MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-  |	map[0] = getpid();
-  |	sched_yield();
-  |	if (map[0] != getpid()) {
-  |		fprintf(stderr, "Corruption detected!");
-  |	}
-  |	munmap(map, PAGE_SIZE);
-  |
-  | From time to time I was getting map[0] to contain pid for a
-  | different process.
-
-Ensure that PAN is re-enabled when returning after an unhandled user
-fault from our uaccess routines.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Cc: <stable@vger.kernel.org>
-Fixes: 338d4f49d6f7 ("arm64: kernel: Add support for Privileged Access Never")
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-[will: rewrote commit message]
-[will: backport for 4.9.y stable kernels]
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/lib/clear_user.S     |    2 ++
- arch/arm64/lib/copy_from_user.S |    2 ++
- arch/arm64/lib/copy_in_user.S   |    2 ++
- arch/arm64/lib/copy_to_user.S   |    2 ++
- 4 files changed, 8 insertions(+)
+ arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/lib/clear_user.S
-+++ b/arch/arm64/lib/clear_user.S
-@@ -62,5 +62,7 @@ ENDPROC(__arch_clear_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9:	mov	x0, x2			// return the original size
-+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(1)), ARM64_ALT_PAN_NOT_UAO, \
-+	    CONFIG_ARM64_PAN)
- 	ret
- 	.previous
---- a/arch/arm64/lib/copy_from_user.S
-+++ b/arch/arm64/lib/copy_from_user.S
-@@ -80,5 +80,7 @@ ENDPROC(__arch_copy_from_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9998:	sub	x0, end, dst			// bytes not copied
-+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(1)), ARM64_ALT_PAN_NOT_UAO, \
-+	    CONFIG_ARM64_PAN)
- 	ret
- 	.previous
---- a/arch/arm64/lib/copy_in_user.S
-+++ b/arch/arm64/lib/copy_in_user.S
-@@ -81,5 +81,7 @@ ENDPROC(__arch_copy_in_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9998:	sub	x0, end, dst			// bytes not copied
-+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(1)), ARM64_ALT_PAN_NOT_UAO, \
-+	    CONFIG_ARM64_PAN)
- 	ret
- 	.previous
---- a/arch/arm64/lib/copy_to_user.S
-+++ b/arch/arm64/lib/copy_to_user.S
-@@ -79,5 +79,7 @@ ENDPROC(__arch_copy_to_user)
- 	.section .fixup,"ax"
- 	.align	2
- 9998:	sub	x0, end, dst			// bytes not copied
-+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(1)), ARM64_ALT_PAN_NOT_UAO, \
-+	    CONFIG_ARM64_PAN)
- 	ret
- 	.previous
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+index 3e9e3d90f2b4f..e412373fe7bfd 100644
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -695,6 +695,7 @@
+ };
+ 
+ &dwc3 {
++	extcon = <&extcon_usb3>;
+ 	dr_mode = "otg";
+ };
+ 
+-- 
+2.20.1
+
 
 
