@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC767C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764BFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7742071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D942072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401829;
-	bh=KvXmXgsOBUm4pN/y4t22krllwunUSh8WzMwx6xR7Cok=;
+	s=default; t=1574401832;
+	bh=ZhYdnqrQS3F5kpXHrKSeIvpgv9N6bcqn9/aggzXh2+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bn217d+LONjdaCCXPTlMQZQ+RCvrGDGzfaX5y/GfpRYZW9SAdZVJ48XskTRuxxn9t
-	 STvUyC/fM0mHh/Wzjb4OcqcuOgAy4kw7X0RBiggG0/ia2JSfQkCzSUf41pIUwuBvi9
-	 OTfMJS0BCOROmNGRs426H8WkzNHLA3eWU2KMYBOY=
+	b=RUzHmrgijso5CMGIwUhkiSICu2OA9qJ1t2gQOkhIK3VauqhuzwNta+sy/EyYjQiD4
+	 rpL11pE7uaPEx9mpYoWx38Mvp6HvlwJwU9Y3DjFmvkYW8eiHZremhaHUbOqRgSYtyn
+	 ydgvC/aI91DzE6zw+gh5v74t7BTrZg5Q1GykInLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfKVFu2 (ORCPT
+        id S1727742AbfKVFub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54924 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbfKVFuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:25 -0500
+        id S1726836AbfKVFu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B60DB2070A;
-        Fri, 22 Nov 2019 05:50:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4A120717;
+        Fri, 22 Nov 2019 05:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401824;
-        bh=KvXmXgsOBUm4pN/y4t22krllwunUSh8WzMwx6xR7Cok=;
+        s=default; t=1574401826;
+        bh=ZhYdnqrQS3F5kpXHrKSeIvpgv9N6bcqn9/aggzXh2+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t1WeQAAKnGDLNRej4TrRZX1G6jafd/Ay+jUUNmwE1zrVz+REDCr1usPME47Poyq/2
-         LFFCe0q0oaIJKzpHtoX5ClBjaqP2gWNpffjXvPIEiO3Gwumf+iaajmX2EuMMbDKTVB
-         7N+6adoIbH/Px0ojOZHh9OHAMux49SPwUuYH8Lp0=
+        b=t6ElRlx0LRre2ou7+frSRVjLZ6l1L3ByvzJpPAJbORXLnfovfGcNiwsT4gfIETp2m
+         ygkXSCIJv0gVHs+18iTMQfdObbVBSdRkuUCnu+RjxdnFgjs6nzh40GbmPm/mbKDeVp
+         uO9+z0iSB37m/RJ/ZK5y57D/URwSJxZhqZBNi+sU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lepton Wu <ytht.net@gmail.com>, Jorgen Hansen <jhansen@vmware.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/219] VSOCK: bind to random port for VMADDR_PORT_ANY
-Date:   Fri, 22 Nov 2019 00:46:39 -0500
-Message-Id: <20191122054911.1750-60-sashal@kernel.org>
+Cc:     Boris Brezillon <boris.brezillon@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 069/219] mtd: rawnand: sunxi: Write pageprog related opcodes to WCMD_SET
+Date:   Fri, 22 Nov 2019 00:46:41 -0500
+Message-Id: <20191122054911.1750-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lepton Wu <ytht.net@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
 
-[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
+[ Upstream commit 732774437ae01d9882e60314e303898e63c7f038 ]
 
-The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
-when VMM crashed, there is still orphaned vsock which is waiting for
-close timer, then it could cause connection time out for new started VM
-if they are trying to connect to same port with same guest cid since the
-new packets could hit that orphaned vsock. We could also fix this by doing
-more in vhost_vsock_reset_orphans, but any way, it should be better to start
-from a random local port instead of a fixed one.
+The opcodes used by the controller when doing batched page prog should
+be written in NFC_REG_WCMD_SET not FC_REG_RCMD_SET. Luckily, the
+default NFC_REG_WCMD_SET value matches the one we set in the driver
+which explains why we didn't notice the problem.
 
-Signed-off-by: Lepton Wu <ytht.net@gmail.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 614049a8d904 ("mtd: nand: sunxi: add support for DMA assisted operations")
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/af_vsock.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/raw/sunxi_nand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index b2724fb06bbbb..62ec9182f234d 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -107,6 +107,7 @@
- #include <linux/mutex.h>
- #include <linux/net.h>
- #include <linux/poll.h>
-+#include <linux/random.h>
- #include <linux/skbuff.h>
- #include <linux/smp.h>
- #include <linux/socket.h>
-@@ -480,9 +481,13 @@ static void vsock_pending_work(struct work_struct *work)
- static int __vsock_bind_stream(struct vsock_sock *vsk,
- 			       struct sockaddr_vm *addr)
- {
--	static u32 port = LAST_RESERVED_PORT + 1;
-+	static u32 port = 0;
- 	struct sockaddr_vm new_addr;
+diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
+index 1f0b7ee38df56..5b5f4d25a3e12 100644
+--- a/drivers/mtd/nand/raw/sunxi_nand.c
++++ b/drivers/mtd/nand/raw/sunxi_nand.c
+@@ -1397,7 +1397,7 @@ static int sunxi_nfc_hw_ecc_write_page_dma(struct mtd_info *mtd,
+ 	sunxi_nfc_randomizer_enable(mtd);
  
-+	if (!port)
-+		port = LAST_RESERVED_PORT + 1 +
-+			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
-+
- 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
+ 	writel((NAND_CMD_RNDIN << 8) | NAND_CMD_PAGEPROG,
+-	       nfc->regs + NFC_REG_RCMD_SET);
++	       nfc->regs + NFC_REG_WCMD_SET);
  
- 	if (addr->svm_port == VMADDR_PORT_ANY) {
+ 	dma_async_issue_pending(nfc->dmac);
+ 
 -- 
 2.20.1
 
