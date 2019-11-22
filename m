@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9929AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16C1C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6E520726
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA8420715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418674;
-	bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
+	s=default; t=1574418677;
+	bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qom1cpWN4ZbtYvEZnONIQUzd2fRgui8yOsKc+RiAxWrde0kJxcxuc+bnzytDXqjgs
-	 r6E0Y3QbOc+8Jqxf5PfmLOGZoFrzxqMJJVRPYf7hj43HPeyj+jhnokNpHXUxzZGf4G
-	 LZ4TzhuF2UhLnexPqlj8pxklwRESPwjr7/L1Bbc4=
+	b=WWlkgh9TATDZd1rx+skomlqCV1oo5PMTBfgGlW6HA84JciYtbAY8MYeUqoTSRHTOd
+	 Hdhd1mwFLX+enPE1DcSxpJj6HwplFSz4O/c25u/kJcWYXha/s27bjimq/hJIjlLAnh
+	 f+7OVfU24rD9P7USUgYZ2xfmryufYXduEI5UkMGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKVKbN (ORCPT
+        id S1727216AbfKVKbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51090 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbfKVKbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:12 -0500
+        id S1726546AbfKVKbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAD5E20714;
-        Fri, 22 Nov 2019 10:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F54F20715;
+        Fri, 22 Nov 2019 10:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418671;
-        bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
+        s=default; t=1574418674;
+        bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqksB9qD3nWGYsG1aBOuCT/O5rKoRjOb6A283OrECVzQmjGvaiVhCUMXs+uds+Mxw
-         JSgytqwdjQp0NgNFMrryDrdClXZvze3ZweZwPN3+coghKcdbcvnf3dt9pOkSUbJWCK
-         d6bQf4BCjTnP/BUKjaG9q/2ebOiHQcERUoDrnQy0=
+        b=qzmaXdSSNgmKhc8hkkBKozuuUViRl1OQ/U7h2CiUMKBSyS4do7ng7+vWuIVvBxeAP
+         74gqHjuJ1BuCECi8/4iCCNQOmm4get2J9D5XyFUVvSg4M+TAAZkRwPubEWa88EUmnJ
+         rSX4LVRP2IXs6b9lWpFajXJChenjoMN0rmcEhVIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 013/159] ALSA: pcm: signedness bug in snd_pcm_plug_alloc()
-Date:   Fri, 22 Nov 2019 11:26:44 +0100
-Message-Id: <20191122100718.988371117@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Foster <jayfoster@ieee.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 014/159] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
+Date:   Fri, 22 Nov 2019 11:26:45 +0100
+Message-Id: <20191122100719.375961994@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -59,42 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jay Foster <jayfoster@ieee.org>
 
-[ Upstream commit 6f128fa41f310e1f39ebcea9621d2905549ecf52 ]
+[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
 
-The "frames" variable is unsigned so the error handling doesn't work
-properly.
+Fix a typo. No functional change made by this patch.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jay Foster <jayfoster@ieee.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_plugin.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
-index a84a1d3d23e56..c6888d76ca5e9 100644
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
- 		while (plugin->next) {
- 			if (plugin->dst_frames)
- 				frames = plugin->dst_frames(plugin, frames);
--			if (snd_BUG_ON(frames <= 0))
-+			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
- 				return -ENXIO;
- 			plugin = plugin->next;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
-@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
- 		while (plugin->prev) {
- 			if (plugin->src_frames)
- 				frames = plugin->src_frames(plugin, frames);
--			if (snd_BUG_ON(frames <= 0))
-+			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
- 				return -ENXIO;
- 			plugin = plugin->prev;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index af8b708ac312a..53a5a0e311e9d 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -546,7 +546,7 @@
+ 					};
+ 				};
+ 
+-				uart1 {
++				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+ 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB4 periph A with pullup */
 -- 
 2.20.1
 
