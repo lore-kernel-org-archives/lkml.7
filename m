@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DE9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1E1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6F720714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3EB20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418687;
-	bh=T1HMhi80T0r4Z48YLTNxWYaKRA822E5fSoTlYrs4cMo=;
+	s=default; t=1574418690;
+	bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BRgRQ8L/G74pI8j3+HcXRAbaJyzFvQD+fYI79D0vrNU4nm9Yin1dtowWqRfa4p1N8
-	 BhOh3fqpEPm7KCP3HfMW2ZYXDtAC7Ga4m3DkhmhhmJ76IleB4r/0fwO9aUzeJ/doZz
-	 FxPPQz4eC/6Q1DDVBqhjJ283Aq8cvETP7QB9qFKc=
+	b=EogoRkxtcZge9nC+c9sj3sSIefcG5Z4FjC9Pp/cBRsiEX1lkqkCCo9URePrniaoyD
+	 HneLUcqaTBacf7b21nyHbL3KkCZad9rC1KQ/Z1AJ6FK7Hs1iZin6qSSqJ1KVauOvhu
+	 1jtPDYhiqwkVrh7ViozG1JCtiuh+I5rsBdYj4Sk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfKVKb0 (ORCPT
+        id S1727315AbfKVKb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51502 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727263AbfKVKbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:23 -0500
+        id S1727289AbfKVKb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B409A20708;
-        Fri, 22 Nov 2019 10:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 657F320717;
+        Fri, 22 Nov 2019 10:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418683;
-        bh=T1HMhi80T0r4Z48YLTNxWYaKRA822E5fSoTlYrs4cMo=;
+        s=default; t=1574418685;
+        bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdfjKLaDeaywvDlQBCTo8xh1PP3bKFzpTx5KnQUa3eBk1aGSaKS1MvnsCNMQ9tWY0
-         0ec1tYi8/Mpi0zubSrUluxAY6wLHJuG871w3jX6oys/LfzJnXIpmHbpeeiSMopyf0g
-         zKMgZzZqXvqS6ptz2INYPjTX68KNAIHVCJPOjUco=
+        b=zwwGbjGsgsq4hTflqtFnv3udpsk9THDX6SXOhe5kalq+an1TIKy7AoRomcO+L5lau
+         iCic+Ih3YR6+udObEc/TQf91zcVBuGBG80aovYZaOFLyBXvEJ1juEkFNYLueRxCKjv
+         1rlktd1iEvbiP2EV+cr9L8i9YRCJKyKSFidu2GA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 017/159] ASoC: dpcm: Properly initialise hw->rate_max
-Date:   Fri, 22 Nov 2019 11:26:48 +0100
-Message-Id: <20191122100720.162399840@linuxfoundation.org>
+        stable@vger.kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Burton <paul.burton@mips.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@linux-mips.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 018/159] MIPS: BCM47XX: Enable USB power on Netgear WNDR3400v3
+Date:   Fri, 22 Nov 2019 11:26:49 +0100
+Message-Id: <20191122100720.475073737@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,40 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit e33ffbd9cd39da09831ce62c11025d830bf78d9e ]
+[ Upstream commit feef7918667b84f9d5653c501542dd8d84ae32af ]
 
-If the CPU DAI does not initialise rate_max, say if using
-using KNOT or CONTINUOUS, then the rate_max field will be
-initialised to 0. A value of zero in the rate_max field of
-the hardware runtime will cause the sound card to support no
-sample rates at all. Obviously this is not desired, just a
-different mechanism is being used to apply the constraints. As
-such update the setting of rate_max in dpcm_init_runtime_hw
-to be consistent with the non-DPCM cases and set rate_max to
-UINT_MAX if nothing is defined on the CPU DAI.
+Setting GPIO 21 high seems to be required to enable power to USB ports
+on the WNDR3400v3. As there is already similar code for WNR3500L,
+make the existing USB power GPIO code generic and use that.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20259/
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/bcm47xx/workarounds.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 1c0d44c86c018..78813057167d7 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1541,7 +1541,7 @@ static void dpcm_init_runtime_hw(struct snd_pcm_runtime *runtime,
- 				 u64 formats)
+diff --git a/arch/mips/bcm47xx/workarounds.c b/arch/mips/bcm47xx/workarounds.c
+index e81ce4623070e..06fb94370c7c9 100644
+--- a/arch/mips/bcm47xx/workarounds.c
++++ b/arch/mips/bcm47xx/workarounds.c
+@@ -4,9 +4,8 @@
+ #include <bcm47xx_board.h>
+ #include <bcm47xx.h>
+ 
+-static void __init bcm47xx_workarounds_netgear_wnr3500l(void)
++static void __init bcm47xx_workarounds_enable_usb_power(int usb_power)
  {
- 	runtime->hw.rate_min = stream->rate_min;
--	runtime->hw.rate_max = stream->rate_max;
-+	runtime->hw.rate_max = min_not_zero(stream->rate_max, UINT_MAX);
- 	runtime->hw.channels_min = stream->channels_min;
- 	runtime->hw.channels_max = stream->channels_max;
- 	if (runtime->hw.formats)
+-	const int usb_power = 12;
+ 	int err;
+ 
+ 	err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
+@@ -22,7 +21,10 @@ void __init bcm47xx_workarounds(void)
+ 
+ 	switch (board) {
+ 	case BCM47XX_BOARD_NETGEAR_WNR3500L:
+-		bcm47xx_workarounds_netgear_wnr3500l();
++		bcm47xx_workarounds_enable_usb_power(12);
++		break;
++	case BCM47XX_BOARD_NETGEAR_WNDR3400_V3:
++		bcm47xx_workarounds_enable_usb_power(21);
+ 		break;
+ 	default:
+ 		/* No workaround(s) needed */
 -- 
 2.20.1
 
