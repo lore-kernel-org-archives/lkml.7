@@ -2,110 +2,143 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FB9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20781C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245FC20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED18520707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FdpLtI8r"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PiBwbXUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfKVKDl (ORCPT
+        id S1726880AbfKVKE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:03:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28152 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726526AbfKVKDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:03:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574417020;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZZxSBnToU8Q+4liQ4absw6sZ2OBAyuvw5i8iX6n4XC4=;
-        b=FdpLtI8raAPZqHD/7rt6JwytG4uObC+jOGIZ9je2lAgBGKe9e5bEV0526qvxXMRZtJ77O5
-        ZbBp4Z53zxgwKMF9UnDJUsGcAplYYT6zysLrfJEjzvzGlTKnhQPJNtL4/dY1Pm82F1N3jV
-        BQ7tUYdhjy2wHwvyVhZd2Df2Qj0kOG8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-NFZgtFxTMoCPeqWMEtUm5Q-1; Fri, 22 Nov 2019 05:03:37 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70EC2801E5D;
-        Fri, 22 Nov 2019 10:03:34 +0000 (UTC)
-Received: from [10.36.118.121] (unknown [10.36.118.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10CF110372C0;
-        Fri, 22 Nov 2019 10:03:30 +0000 (UTC)
-Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
-To:     Pengfei Li <fly@kernel.page>, akpm@linux-foundation.org
-Cc:     mgorman@techsingularity.net, mhocko@kernel.org, vbabka@suse.cz,
-        cl@linux.com, iamjoonsoo.kim@lge.com, guro@fb.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20191121151811.49742-1-fly@kernel.page>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <1bb37491-72a7-feaa-722d-a5825813a409@redhat.com>
-Date:   Fri, 22 Nov 2019 11:03:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191121151811.49742-1-fly@kernel.page>
+        Fri, 22 Nov 2019 05:04:58 -0500
+Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:18563
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726417AbfKVKE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:04:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZQDht7dRWtYC/Rq6o6cEZZrUBioR+Rb5fgEzyw+lEELNJ5AUKxUsM9B0Jn3pE2Zi2plKFQb+u0E7j9Gv3H4tB42XwWX31rnko/pE/m1CBGPsiKm1K50weSCSi0ra1mXN7UuuvqGgu0rXg3GTYFVmIHG26XMLVYrCwmdBMZypFmudwhWVd4EFGSvHHXfCtbD4BwhOZ+BJosTes4AUh0TwalunDXdkZQvbwPsRFdEh31KP4qY5p/8jnrp3AeOS8vN+NxHGZ0PjCUng2SqbAWcBL8X5IiWJln08TRPuojVk3IL4HCrKeTYDKlYGpqsonQ7rhIO1/+t494yfgkFd6hpHWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nasq4Kzwbp+1Bz7M3ImYiiVEpr7ppoY09uVt22CM3HI=;
+ b=inO15Zbqf1gwR9mR0fG1r3T/fy+lqvnn/tUFtHDxWu80bzUFj1vHfdvVkgBtk9YsS2KNh2ScFzPkacW5u2VHYCPUk0CGj1Qf3UqwybNth2UJ1gRioLI6AwSNlnPToFJg5Vpqcs2c3zJ5ykXLODcfgMoW+O1qdQGlEeTsA1G9lAcXnTaNIkwHYoyHPgBRjwbhy8AoK1wMOdNZY7XKgyKOH6UPI+NJvgsFGeVGKFYQ2P8bYL44M4Jlol8q47k84TdR8vsoCXmECMyQknnkFrW1VpXrLQrDbnZPUMZuQX3D932CszvIIPSrBMJDFQzTtJrZ1kwOWMiPLEDJAo4edjRTSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nasq4Kzwbp+1Bz7M3ImYiiVEpr7ppoY09uVt22CM3HI=;
+ b=PiBwbXUNH929Hs6RqkvhdDQBN/Eve2Quzmr4W/J7yZ8Gi5eMxBwP5AsuNjJWu10baGDptd8llNYIf5jjWBqP5iDVRjAbhtS5K4RVVtXPk8ub8vYL+OqxLD9TuWp6EvuP1us3jfcwqd8SMqGWqlUPdfUUMijXYv9Zdye7djuyMNA=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4594.eurprd04.prod.outlook.com (52.135.149.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.30; Fri, 22 Nov 2019 10:04:53 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2474.021; Fri, 22 Nov 2019
+ 10:04:53 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH V2] clk: imx: clk-imx7ulp: Add missing sentinel of
+ ulp_div_table
+Thread-Topic: [PATCH V2] clk: imx: clk-imx7ulp: Add missing sentinel of
+ ulp_div_table
+Thread-Index: AQHVoRxJ5RRsuDSV80CDoqBvpvLXvA==
+Date:   Fri, 22 Nov 2019 10:04:53 +0000
+Message-ID: <1574416982-3467-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: NFZgtFxTMoCPeqWMEtUm5Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR02CA0201.apcprd02.prod.outlook.com
+ (2603:1096:201:20::13) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8573dbcd-70a8-40c0-e920-08d76f336b76
+x-ms-traffictypediagnostic: AM0PR04MB4594:|AM0PR04MB4594:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB459471BE5692C620F63D374F88490@AM0PR04MB4594.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:873;
+x-forefront-prvs: 02296943FF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(346002)(366004)(39860400002)(199004)(189003)(81166006)(6636002)(256004)(14444005)(2501003)(52116002)(4326008)(305945005)(5660300002)(110136005)(2906002)(71200400001)(81156014)(86362001)(66946007)(44832011)(478600001)(102836004)(3846002)(66446008)(71190400001)(6116002)(2616005)(14454004)(26005)(8676002)(386003)(6506007)(8936002)(50226002)(186003)(54906003)(2201001)(316002)(66066001)(25786009)(64756008)(66476007)(6436002)(66556008)(7736002)(4744005)(6512007)(36756003)(6486002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4594;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0WemzPL8aN9nSrZ/N6O7KabnSk75+w8tfys0FmDF7xq05VqsqU1tiK3zqsOsBMji03xNi/7psbqERd3f6C4YdLFHZ0UqSPRHQtCY1Nhou3BUrjc386atgzB5IcsaMn17WDsAqoBXq9/cOxzLH9PGRiwlFFSWjLuDobMJ5UNSb20qC4YcpX9pUKaOAe4sf0Lvu/lLVrByjy2cRIlic/Aa2HyEvGg97Z2w4r1lKwYybNpTXwmJk8ZZK5qgoZN6IcQ0d7TPOlJpMAzE+5vGlPzqa20I0RPM7LxRjnnsUg6NGw7VziHvTOyxKHdSRSWauI0xlegSCn5WQsXi65QLadsVr9WfVEG9pt7AUW83d5/BP7Qz+F2MHv7lUTxGuVk+RE1LQFT1g1fd4ovH2kbwBnJUFgwQHQ7kYxss7JgUJohamOMJI/gdToga4dt5OkSiIXii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8573dbcd-70a8-40c0-e920-08d76f336b76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 10:04:53.6702
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mwALuZk3u1VELHZEj/rJLcBeY1KCL6mEoEhroi534XX6mZBegc5aYe9MLQ4J0yaXklIfOG6rX3BY6JnWmBbN2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4594
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.11.19 16:17, Pengfei Li wrote:
-> Motivation
-> ----------
-> Currently if we want to iterate through all the nodes we have to
-> traverse all the zones from the zonelist.
->=20
-> So in order to reduce the number of loops required to traverse node,
-> this series of patches modified the zonelist to nodelist.
->=20
-> Two new macros have been introduced:
-> 1) for_each_node_nlist
-> 2) for_each_node_nlist_nodemask
->=20
->=20
-> Benefit
-> -------
-> 1. For a NUMA system with N nodes, each node has M zones, the number
->     of loops is reduced from N*M times to N times when traversing node.
->=20
-> 2. The size of pg_data_t is much reduced.
->=20
->=20
-> Test Result
-> -----------
-> Currently I have only performed a simple page allocation benchmark
-> test on my laptop, and the results show that the performance of a
-> system with only one node is almost unaffected.
->=20
+From: Peng Fan <peng.fan@nxp.com>
 
-So you are seeing no performance changes. I am wondering why do we need=20
-this, then - because your motivation sounds like a performance=20
-improvement? (not completely against this, just trying to understand the=20
-value of this :) )
+There should be a sentinel of ulp_div_table, otherwise _get_table_div
+may access data out of the array.
 
+Fixes: b1260067ac3d ("clk: imx: add imx7ulp clk driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
+V2:
+ cc stable mail list
+
+ drivers/clk/imx/clk-imx7ulp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
+index 3fdf3d494f0a..281191b55b3a 100644
+--- a/drivers/clk/imx/clk-imx7ulp.c
++++ b/drivers/clk/imx/clk-imx7ulp.c
+@@ -40,6 +40,7 @@ static const struct clk_div_table ulp_div_table[] =3D {
+ 	{ .val =3D 5, .div =3D 16, },
+ 	{ .val =3D 6, .div =3D 32, },
+ 	{ .val =3D 7, .div =3D 64, },
++	{ /* sentinel */ },
+ };
+=20
+ static const int pcc2_uart_clk_ids[] __initconst =3D {
 --=20
-
-Thanks,
-
-David / dhildenb
+2.16.4
 
