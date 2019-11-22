@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659D4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366892068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3553020707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403056;
-	bh=JgZyYSBf2SW/EqWNhdaCW9RzKKTKsfeBvai0anq+xy4=;
+	s=default; t=1574403064;
+	bh=vdwaTwkiAhmYG/mez884oyyzASldPyX2HzsGMIGaA/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5QfADOoiKwo8OsgK7F4uVadDojkfmP+RkogO25ooI+5S7LzKvmPpVPcREfjoSR3P
-	 4x3WdCWM81zY4cqYTR+PzovXNxHeg9kxI4Ne7c6jlZJ+joBQ3usaggC7t/jV1dV+ml
-	 u5R8bt7ydNloY5Osksr+cxySpqzYByAJZqeMn5BM=
+	b=TP24ncLFtsodplPsxnxPXg8Uz5S4uNh6uTI+y+4XxvPfQrm7720DgFH4JMojGqraj
+	 pSop107Onj4n37j/ovnqCQzMNgtNU1yueg958p5pSVyDXDjD3O0qwF5QBHAH72fXeY
+	 /kUxZRUgaVak+hxh7ddlctzLvseTp6YnjiBvILUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbfKVGKz (ORCPT
+        id S1729213AbfKVF4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:10:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34508 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729223AbfKVF4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:41 -0500
+        id S1728379AbfKVF4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9814A20717;
-        Fri, 22 Nov 2019 05:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521A720659;
+        Fri, 22 Nov 2019 05:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402200;
-        bh=JgZyYSBf2SW/EqWNhdaCW9RzKKTKsfeBvai0anq+xy4=;
+        s=default; t=1574402190;
+        bh=vdwaTwkiAhmYG/mez884oyyzASldPyX2HzsGMIGaA/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rsXOYk9YXfgJTmz/JDEOeAbR0M7DGsH3r53IdtoYjiJ0ofSKDH3XoRoI3kdlqQJVj
-         tvOlDnRpW9i8yBWyrbr54//9fu56x4lXe/l5nx6M+NBKRt/Aai/XciQm2x9PB90FEK
-         2GOsCfbJSH7miAh8McXe5JNtS2Dl/ydCgZ22jAw0=
+        b=lVKsZl4XUrzgUOTGd3I0+A0DH7oSKKEPYXF5T+Zm0mkrLczmG89dKH/YMGsNT0FCv
+         6bXNk+4i/+NRl6K9vVtYZdzJCxce22b2BC9XgiEEoahqR8DxcpJ4EIyjexAWhEzt9W
+         dyMirfQnI9LqaouhtiA7KBmZd2LT6hvS9WMII3Aw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Bowler <nbowler@draconx.ca>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/127] xfs: Fix bulkstat compat ioctls on x32 userspace.
-Date:   Fri, 22 Nov 2019 00:54:27 -0500
-Message-Id: <20191122055544.3299-48-sashal@kernel.org>
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 040/127] bnxt_en: Return linux standard errors in bnxt_ethtool.c
+Date:   Fri, 22 Nov 2019 00:54:18 -0500
+Message-Id: <20191122055544.3299-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,92 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Bowler <nbowler@draconx.ca>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 7ca860e3c1a74ad6bd8949364073ef1044cad758 ]
+[ Upstream commit 7c675421afef18253a86ffc383f57bc15ef32ea8 ]
 
-The bulkstat family of ioctls are problematic on x32, because there is
-a mixup of native 32-bit and 64-bit conventions.  The xfs_fsop_bulkreq
-struct contains pointers and 32-bit integers so that matches the native
-32-bit layout, and that means the ioctl implementation goes into the
-regular compat path on x32.
+Currently firmware specific errors are returned directly in flash_device
+and reset ethtool hooks. Modify it to return linux standard errors
+to userspace when flashing operations fail.
 
-However, the 'ubuffer' member of that struct in turn refers to either
-struct xfs_inogrp or xfs_bstat (or an array of these).  On x32, those
-structures match the native 64-bit layout.  The compat implementation
-writes out the 32-bit version of these structures.  This is not the
-expected format for x32 userspace, causing problems.
-
-Fortunately the functions which actually output these xfs_inogrp and
-xfs_bstat structures have an easy way to select which output format
-is required, so we just need a little tweak to select the right format
-on x32.
-
-Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_ioctl32.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
+ .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 56 +++++++++++++------
+ 1 file changed, 39 insertions(+), 17 deletions(-)
 
-diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index d3c0e4b8bf421..5f616a6a5358d 100644
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -252,6 +252,32 @@ xfs_compat_ioc_bulkstat(
- 	int			done;
- 	int			error;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index a22336fef66b2..4879371ad0c75 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1339,14 +1339,22 @@ static int bnxt_flash_nvram(struct net_device *dev,
+ 	rc = hwrm_send_message(bp, &req, sizeof(req), FLASH_NVRAM_TIMEOUT);
+ 	dma_free_coherent(&bp->pdev->dev, data_len, kmem, dma_handle);
  
-+	/*
-+	 * Output structure handling functions.  Depending on the command,
-+	 * either the xfs_bstat and xfs_inogrp structures are written out
-+	 * to userpace memory via bulkreq.ubuffer.  Normally the compat
-+	 * functions and structure size are the correct ones to use ...
-+	 */
-+	inumbers_fmt_pf inumbers_func = xfs_inumbers_fmt_compat;
-+	bulkstat_one_pf	bs_one_func = xfs_bulkstat_one_compat;
-+	size_t bs_one_size = sizeof(struct compat_xfs_bstat);
-+
-+#ifdef CONFIG_X86_X32
-+	if (in_x32_syscall()) {
-+		/*
-+		 * ... but on x32 the input xfs_fsop_bulkreq has pointers
-+		 * which must be handled in the "compat" (32-bit) way, while
-+		 * the xfs_bstat and xfs_inogrp structures follow native 64-
-+		 * bit layout convention.  So adjust accordingly, otherwise
-+		 * the data written out in compat layout will not match what
-+		 * x32 userspace expects.
-+		 */
-+		inumbers_func = xfs_inumbers_fmt;
-+		bs_one_func = xfs_bulkstat_one;
-+		bs_one_size = sizeof(struct xfs_bstat);
++	if (rc == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
++		netdev_info(dev,
++			    "PF does not have admin privileges to flash the device\n");
++		rc = -EACCES;
++	} else if (rc) {
++		rc = -EIO;
 +	}
-+#endif
-+
- 	/* done = 1 if there are more stats to get and if bulkstat */
- 	/* should be called again (unused here, but used in dmapi) */
+ 	return rc;
+ }
  
-@@ -283,15 +309,15 @@ xfs_compat_ioc_bulkstat(
+ static int bnxt_firmware_reset(struct net_device *dev,
+ 			       u16 dir_type)
+ {
+-	struct bnxt *bp = netdev_priv(dev);
+ 	struct hwrm_fw_reset_input req = {0};
++	struct bnxt *bp = netdev_priv(dev);
++	int rc;
  
- 	if (cmd == XFS_IOC_FSINUMBERS_32) {
- 		error = xfs_inumbers(mp, &inlast, &count,
--				bulkreq.ubuffer, xfs_inumbers_fmt_compat);
-+				bulkreq.ubuffer, inumbers_func);
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_SINGLE_32) {
- 		int res;
+ 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FW_RESET, -1, -1);
  
--		error = xfs_bulkstat_one_compat(mp, inlast, bulkreq.ubuffer,
--				sizeof(compat_xfs_bstat_t), NULL, &res);
-+		error = bs_one_func(mp, inlast, bulkreq.ubuffer,
-+				bs_one_size, NULL, &res);
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_32) {
- 		error = xfs_bulkstat(mp, &inlast, &count,
--			xfs_bulkstat_one_compat, sizeof(compat_xfs_bstat_t),
-+			bs_one_func, bs_one_size,
- 			bulkreq.ubuffer, &done);
- 	} else
- 		error = -EINVAL;
+@@ -1380,7 +1388,15 @@ static int bnxt_firmware_reset(struct net_device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
++	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
++	if (rc == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
++		netdev_info(dev,
++			    "PF does not have admin privileges to reset the device\n");
++		rc = -EACCES;
++	} else if (rc) {
++		rc = -EIO;
++	}
++	return rc;
+ }
+ 
+ static int bnxt_flash_firmware(struct net_device *dev,
+@@ -1587,9 +1603,9 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	struct hwrm_nvm_install_update_output *resp = bp->hwrm_cmd_resp_addr;
+ 	struct hwrm_nvm_install_update_input install = {0};
+ 	const struct firmware *fw;
++	int rc, hwrm_err = 0;
+ 	u32 item_len;
+ 	u16 index;
+-	int rc;
+ 
+ 	bnxt_hwrm_fw_set_time(bp);
+ 
+@@ -1632,15 +1648,16 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 			memcpy(kmem, fw->data, fw->size);
+ 			modify.host_src_addr = cpu_to_le64(dma_handle);
+ 
+-			rc = hwrm_send_message(bp, &modify, sizeof(modify),
+-					       FLASH_PACKAGE_TIMEOUT);
++			hwrm_err = hwrm_send_message(bp, &modify,
++						     sizeof(modify),
++						     FLASH_PACKAGE_TIMEOUT);
+ 			dma_free_coherent(&bp->pdev->dev, fw->size, kmem,
+ 					  dma_handle);
+ 		}
+ 	}
+ 	release_firmware(fw);
+-	if (rc)
+-		return rc;
++	if (rc || hwrm_err)
++		goto err_exit;
+ 
+ 	if ((install_type & 0xffff) == 0)
+ 		install_type >>= 16;
+@@ -1648,12 +1665,10 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	install.install_type = cpu_to_le32(install_type);
+ 
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+-	rc = _hwrm_send_message(bp, &install, sizeof(install),
+-				INSTALL_PACKAGE_TIMEOUT);
+-	if (rc) {
+-		rc = -EOPNOTSUPP;
++	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
++				      INSTALL_PACKAGE_TIMEOUT);
++	if (hwrm_err)
+ 		goto flash_pkg_exit;
+-	}
+ 
+ 	if (resp->error_code) {
+ 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
+@@ -1661,12 +1676,11 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
+ 			install.flags |= cpu_to_le16(
+ 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
+-			rc = _hwrm_send_message(bp, &install, sizeof(install),
+-						INSTALL_PACKAGE_TIMEOUT);
+-			if (rc) {
+-				rc = -EOPNOTSUPP;
++			hwrm_err = _hwrm_send_message(bp, &install,
++						      sizeof(install),
++						      INSTALL_PACKAGE_TIMEOUT);
++			if (hwrm_err)
+ 				goto flash_pkg_exit;
+-			}
+ 		}
+ 	}
+ 
+@@ -1677,6 +1691,14 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	}
+ flash_pkg_exit:
+ 	mutex_unlock(&bp->hwrm_cmd_lock);
++err_exit:
++	if (hwrm_err == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
++		netdev_info(dev,
++			    "PF does not have admin privileges to flash the device\n");
++		rc = -EACCES;
++	} else if (hwrm_err) {
++		rc = -EOPNOTSUPP;
++	}
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
