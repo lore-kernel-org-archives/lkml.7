@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EBEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66F92070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF162070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421278;
-	bh=h/qoJpUfQOrBJEA7qGpILdqu+csxqNFYDokiCl2xkys=;
+	s=default; t=1574421287;
+	bh=65esZw1aId9cAb4fmPQLAQBAEwuFCvYbnG/uf8OmSco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wlL9Xii08AeypNQviCjq0zoD4AQ8gk/suZo9+nOoKk+FoM8n4zg8JAvBOuhMMK8ei
-	 t90Y4q+8ftQvKTNY7DLfH9iscuOMK2ZM628OCfHbUF424Uiq95gWdlG7YXtJQMqy9e
-	 wjrUxaC+rdh7kQY47Rjo8U5wl8PmqZu0j92+RSPw=
+	b=IXnv6C/nsvLVIkleXH8RldC+z6hKRlKD2tciaG/x513kLdw134JXA0LXCTMNtDBOf
+	 Nel/Y7NZ17zN9+AJePk3i+YOzJO272hW2aQVyfQ5TEdQV7T7BkzkF5Vle+v4tIT6Me
+	 Ry4s/Ed/KhO8fO4b5x174D5q4BhXLhFwi9sdyHms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfKVLOi (ORCPT
+        id S1730174AbfKVKxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:14:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:53:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728271AbfKVKxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:31 -0500
+        id S1729969AbfKVKxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDDF320656;
-        Fri, 22 Nov 2019 10:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC2620656;
+        Fri, 22 Nov 2019 10:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420009;
-        bh=h/qoJpUfQOrBJEA7qGpILdqu+csxqNFYDokiCl2xkys=;
+        s=default; t=1574419989;
+        bh=65esZw1aId9cAb4fmPQLAQBAEwuFCvYbnG/uf8OmSco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7l5Mty4bqUGq495AB4vAik+k2QUXgOSLa5qEzb3IC9BkeiDF+hD5aoqkeGE7e2/l
-         j/3y0XlEpHNBGpGZvo6mYzkdBUTVPufzOLS7fYRkAfwXcv21B7Iglqi17dfFCMhaby
-         nvMNAnvOswg/ia+blOOH8rk+OsRM6X/J2WSAtb8Y=
+        b=WiBzalm4dvEQ4h/D3wz6/vkbS35fci9RXzdKFKOzeX7Ki//YkRZjnAsgvGFD8oeEA
+         YtlokMTfmdekf2E0jhVhuGGUDcP82j8F+qHc1YFgxwHa6CzH9wsORaU9e9I4YNweHH
+         YdAOqQvdhcYwGjb3x+oCtPgNbXKqosgwpbuPA+sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
+        Theodore Tso <tytso@mit.edu>,
+        Lukas Czerner <lczerner@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/122] ACPI / SBS: Fix rare oops when removing modules
-Date:   Fri, 22 Nov 2019 11:28:58 +0100
-Message-Id: <20191122100824.823949891@linuxfoundation.org>
+Subject: [PATCH 4.14 033/122] ext4: fix build error when DX_DEBUG is defined
+Date:   Fri, 22 Nov 2019 11:28:06 +0100
+Message-Id: <20191122100749.435343080@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,61 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronald Tschalär <ronald@innovation.ch>
+From: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
 
-[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
+[ Upstream commit 799578ab16e86b074c184ec5abbda0bc698c7b0b ]
 
-There was a small race when removing the sbshc module where
-smbus_alarm() had queued acpi_smbus_callback() for deferred execution
-but it hadn't been run yet, so that when it did run hc had been freed
-and the module unloaded, resulting in an invalid paging request.
+Enabling DX_DEBUG triggers the build error below.  info is an attribute
+of  the dxroot structure.
 
-A similar race existed when removing the sbs module with regards to
-acpi_sbs_callback() (which is called from acpi_smbus_callback()).
+linux/fs/ext4/namei.c:2264:12: error: ‘info’
+undeclared (first use in this function); did you mean ‘insl’?
+	   	  info->indirect_levels));
 
-We therefore need to ensure no callbacks are pending or executing before
-the cleanups are done and the modules are removed.
-
-Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: e08ac99fa2a2 ("ext4: add largedir feature")
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/osl.c   | 1 +
- drivers/acpi/sbshc.c | 2 ++
- 2 files changed, 3 insertions(+)
+ fs/ext4/namei.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 191e86c62037a..9da7e7d874bd8 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -1116,6 +1116,7 @@ void acpi_os_wait_events_complete(void)
- 	flush_workqueue(kacpid_wq);
- 	flush_workqueue(kacpi_notify_wq);
- }
-+EXPORT_SYMBOL(acpi_os_wait_events_complete);
- 
- struct acpi_hp_work {
- 	struct work_struct work;
-diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
-index 7a3431018e0ab..5008ead4609a4 100644
---- a/drivers/acpi/sbshc.c
-+++ b/drivers/acpi/sbshc.c
-@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
- 	hc->callback = NULL;
- 	hc->context = NULL;
- 	mutex_unlock(&hc->lock);
-+	acpi_os_wait_events_complete();
- 	return 0;
- }
- 
-@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
- 
- 	hc = acpi_driver_data(device);
- 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
-+	acpi_os_wait_events_complete();
- 	kfree(hc);
- 	device->driver_data = NULL;
- 	return 0;
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 162e853dc5d65..212b01861d941 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2293,7 +2293,7 @@ static int ext4_dx_add_entry(handle_t *handle, struct ext4_filename *fname,
+ 			dxroot->info.indirect_levels += 1;
+ 			dxtrace(printk(KERN_DEBUG
+ 				       "Creating %d level index...\n",
+-				       info->indirect_levels));
++				       dxroot->info.indirect_levels));
+ 			err = ext4_handle_dirty_dx_node(handle, dir, frame->bh);
+ 			if (err)
+ 				goto journal_error;
 -- 
 2.20.1
 
