@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F30C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67E92071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE9F20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419090;
-	bh=rNvF+D9boZoPCiNVhtlnr9pBgxIcp4oAPRekViOg1Ms=;
+	s=default; t=1574419094;
+	bh=mwos+MVeoqtMRotueUyVTiTBMiid/z7oNgxPt77TpPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AfCLNQX7rEWa3Iza94fAZ9gyBqEiT9cIkAj/Ujn87mDBG8VCwYd/kb+AADSG3Aijh
-	 oivzyde7hw0h700hnz0hHtGKCZ0zNJxQ6VgyoGPncb6dbLm6Tb6wKhXZttE6FwwGZ7
-	 ZJzkQaV9p/Khqe4scjDqC0+TSvdQVMY/7x3NBIxU=
+	b=HfYXOmyiy963bg9puKM2HQQsnkZjQPRauv1CxQ7958SpsGzaR8jL0h8R1Tioep+c/
+	 qxpO0xeUR9MLhYEGTJDEjnFL2JCmTCqD5PWb2EJyWJj1yKUK0BxPJm3PD5ZcsAD9BM
+	 eaaL3X+3C5J2f+VfkB0tEPpuGzlJu8PMj4zp6S6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfKVKiJ (ORCPT
+        id S1728627AbfKVKiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40168 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbfKVKiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:06 -0500
+        id S1727297AbfKVKiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E627C20708;
-        Fri, 22 Nov 2019 10:38:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39F3D20717;
+        Fri, 22 Nov 2019 10:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419085;
-        bh=rNvF+D9boZoPCiNVhtlnr9pBgxIcp4oAPRekViOg1Ms=;
+        s=default; t=1574419088;
+        bh=mwos+MVeoqtMRotueUyVTiTBMiid/z7oNgxPt77TpPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQPztIvia0LjRuNxJ/pozDp9vwV5fC04iJkfBecZ9Moy0jiU53Pl+g4d4oK2gsiE8
-         3zMniqXXbEGB0F/a3aFAs5wJUiJd+omJDnmMvskaZjdq2PyuwCKXdinW5u6ukFLKCS
-         8j9GmcQ+IFIbxhmto+U+OcNova/4LoMmQedO93pE=
+        b=r+SzjdkiyAWF/VaTCjYs1MFOMA4mCyibQoEupu/g49+Qwz0Sj5620SZxHSSuz2aiI
+         0G1upF5qPBUcvuWVrTr7cUSzVpQ1+P+4mLb1mR8DBWTEfjhikgWYOEYwinWG8FvTop
+         XiaP5U/hZt0g0txiHH629E29k3L/91vU9bXlhQ4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
-        dan.j.williams@intel.com, dyoung@redhat.com,
-        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 151/159] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
-Date:   Fri, 22 Nov 2019 11:29:02 +0100
-Message-Id: <20191122100844.637485011@linuxfoundation.org>
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 152/159] gpio: syscon: Fix possible NULL ptr usage
+Date:   Fri, 22 Nov 2019 11:29:03 +0100
+Message-Id: <20191122100844.892559679@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -70,65 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
+and chip->set is valid pointer. This happens in case the controller uses
+the default GPIO setter. Always use chip->set to access the setter to avoid
+possible NULL pointer dereferencing.
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
-
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
-
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: baiyaowei@cmss.chinamobile.com
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kexec.h | 2 +-
+ drivers/gpio/gpio-syscon.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index d2434c1cad055..414f9b52e58e6 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,7 +66,7 @@ struct kimage;
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 7b25fdf648023..f579938552cc5 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -127,7 +127,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
+ 				   BIT(offs % SYSCON_REG_BITS));
+ 	}
  
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+-	priv->data->set(chip, offset, val);
++	chip->set(chip, offset, val);
  
- /*
-  * CPU does not save ss and sp on stack if execution is already
+ 	return 0;
+ }
 -- 
 2.20.1
 
