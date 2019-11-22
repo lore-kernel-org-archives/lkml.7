@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2DBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A8EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C500220707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7927D2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403280;
-	bh=v2yq6QuBQJWjhwP+bGg0C5drFr5wc3WHgW3vI2tG9V8=;
+	s=default; t=1574403283;
+	bh=ciyw++3xZyqHxnZ7BrAdNCJ4ZxjMZGzMxtvQRKjfYxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bn7q7e9zoam/KdVAGYZuyih+bhENDHl1+UFafMNFFfnxhdSX6+M3R1celBYZe735d
-	 4VXrO4ETD4aSuJy3bN32TRWwZeYy8mqEjmOleVlbgQmUQi87OlEAqlopAy5SzQEETc
-	 gupxThVmGqMMoJe6Od/eF92eN+CAgGBED2aOyBrg=
+	b=Vq196DBwiaJ8SGMkodjCenbctg//A8UXTpjrD13WzNHexI5M09LIgUA3bXa1VcZh1
+	 6qDUOX5nYDJ98hIKJ8TkqjELvs2W+V58/Insxbbq+BMBPAsdEqDVXvN/w6ueK8lQnQ
+	 sY+maVnj6KFVDncTpXYK10FnsgZBCFj43gRE/D+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbfKVGOj (ORCPT
+        id S1728776AbfKVGOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:14:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51920 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:14:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbfKVGOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:14:20 -0500
+        id S1729689AbfKVGOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:14:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE58A20707;
-        Fri, 22 Nov 2019 06:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79EFE20718;
+        Fri, 22 Nov 2019 06:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403259;
-        bh=v2yq6QuBQJWjhwP+bGg0C5drFr5wc3WHgW3vI2tG9V8=;
+        s=default; t=1574403255;
+        bh=ciyw++3xZyqHxnZ7BrAdNCJ4ZxjMZGzMxtvQRKjfYxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9G61iSVM2qLV2TX+OVljOYZomPg/5KVEbfGJZJQ2e8zbSqvS7tZl2kl8ilkjVBhr
-         pXIi+CqI3bk+t65h/jR2rr/ESmARhHA4ptOo/dhb5NJg0yYzuvzmTma4P7utWrVgzV
-         L1rPXhOslnOQkvE2puOOhidLaJZ1bvdHJaMO97Io=
+        b=uONDs7wz4t3DbfqQVKUuaS6RPqj0iH4iNNb7Qi2ucAHGJ6N0Mo1tG2bK/b2Ehe/vW
+         1NdNS0xMI+sfOV8Q6y8wxxvX6BHI+Z/eJ7DEEIbh2Hj1Sv0SytuO+fmNTj3TKMPxzR
+         tumCuFUXb/Xl6+D3pKIYdjZAfcB+hZei/EpIWyw0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 68/68] mtd: Remove a debug trace in mtdpart.c
-Date:   Fri, 22 Nov 2019 01:13:01 -0500
-Message-Id: <20191122061301.4947-67-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, Jian Luo <luojian5@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 64/68] scsi: libsas: Support SATA PHY connection rate unmatch fixing during discovery
+Date:   Fri, 22 Nov 2019 01:12:57 -0500
+Message-Id: <20191122061301.4947-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -58,33 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit bda2ab56356b9acdfab150f31c4bac9846253092 ]
+[ Upstream commit cec9771d2e954650095aa37a6a97722c8194e7d2 ]
 
-Commit 2b6f0090a333 ("mtd: Check add_mtd_device() ret code") contained
-a leftover of the debug session that led to this bug fix. Remove this
-pr_info().
+   +----------+             +----------+
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
+   |initiator |             |          |
+   | device   |--- 3.0 G ---| Expander |--- 6.0 G --- SAS  disk
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SATA disk  -->failed to connect
+   |          |             |          |
+   |          |             |          |--- 6.0 G --- SATA disk  -->failed to connect
+   |          |             |          |
+   +----------+             +----------+
 
-Fixes: 2b6f0090a333 ("mtd: Check add_mtd_device() ret code")
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+According to Serial Attached SCSI - 1.1 (SAS-1.1):
+If an expander PHY attached to a SATA PHY is using a physical link rate
+greater than the maximum connection rate supported by the pathway from an
+STP initiator port, a management application client should use the SMP PHY
+CONTROL function (see 10.4.3.10) to set the PROGRAMMED MAXIMUM PHYSICAL
+LINK RATE field of the expander PHY to the maximum connection rate
+supported by the pathway from that STP initiator port.
+
+Currently libsas does not support checking if this condition occurs, nor
+rectifying when it does.
+
+Such a condition is not at all common, however it has been seen on some
+pre-silicon environments where the initiator PHY only supports a 1.5 Gbit
+maximum linkrate, mated with 12G expander PHYs and 3/6G SATA phy.
+
+This patch adds support for checking and rectifying this condition during
+initial device discovery only.
+
+We do support checking min pathway connection rate during revalidation phase,
+when new devices can be detected in the topology. However we do not
+support in the case of the the user reprogramming PHY linkrates, such that
+min pathway condition is not met/maintained.
+
+A note on root port PHY rates:
+The libsas root port PHY rates calculation is broken. Libsas sets the
+rates (min, max, and current linkrate) of a root port to the same linkrate
+of the first PHY member of that same port. In doing so, it assumes that
+all other PHYs which subsequently join the port to have the same
+negotiated linkrate, when they could actually be different.
+
+In practice this doesn't happen, as initiator and expander PHYs are
+normally initialised with consistent min/max linkrates.
+
+This has not caused an issue so far, so leave alone for now.
+
+Tested-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdpart.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/libsas/sas_expander.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 9b48be05cd1af..59772510452a5 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -624,7 +624,6 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
- 	mutex_unlock(&mtd_partitions_mutex);
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 400eee9d77832..ba16231665a5e 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -806,6 +806,26 @@ static struct domain_device *sas_ex_discover_end_dev(
  
- 	free_partition(new);
--	pr_info("%s:%i\n", __func__, __LINE__);
- 
- 	return ret;
- }
+ #ifdef CONFIG_SCSI_SAS_ATA
+ 	if ((phy->attached_tproto & SAS_PROTOCOL_STP) || phy->attached_sata_dev) {
++		if (child->linkrate > parent->min_linkrate) {
++			struct sas_phy_linkrates rates = {
++				.maximum_linkrate = parent->min_linkrate,
++				.minimum_linkrate = parent->min_linkrate,
++			};
++			int ret;
++
++			pr_notice("ex %016llx phy%02d SATA device linkrate > min pathway connection rate, attempting to lower device linkrate\n",
++				   SAS_ADDR(child->sas_addr), phy_id);
++			ret = sas_smp_phy_control(parent, phy_id,
++						  PHY_FUNC_LINK_RESET, &rates);
++			if (ret) {
++				pr_err("ex %016llx phy%02d SATA device could not set linkrate (%d)\n",
++				       SAS_ADDR(child->sas_addr), phy_id, ret);
++				goto out_free;
++			}
++			pr_notice("ex %016llx phy%02d SATA device set linkrate successfully\n",
++				  SAS_ADDR(child->sas_addr), phy_id);
++			child->linkrate = child->min_linkrate;
++		}
+ 		res = sas_get_ata_info(child, phy);
+ 		if (res)
+ 			goto out_free;
 -- 
 2.20.1
 
