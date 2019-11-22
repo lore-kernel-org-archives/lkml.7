@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BFBC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D322070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E2E2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402491;
-	bh=1P+JhWcNEDUHQp8AcPsVmL+tkyIZYHZtGb1E3NhEtE4=;
+	s=default; t=1574402498;
+	bh=7Ry9jrHQuYnZY7uOPI526vZCkCbcI2sx4X8O3i8qnwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gr4RzsVQqEKTit8I7b0/hqulaA/JVTHKbZ/QpsOe/3QraRUfx/aBlkaV42bEj6Fnx
-	 QjqMcQLLFl5XhlTzyrRZHjSA0xsn/odxYcqGFhe6Alots32yvwG+WLDQ1w8FNMBbXU
-	 flNZG91zQ9jI/aZF0hFG+gR6tycik69vKN5uFoYQ=
+	b=iZ8/JqzN5AdO3JyhxnH2taAQOwMYAfym9dn1ch1tn9MsHufltC7paUaez/KmefhGm
+	 mAu5B0DALFlNS6TuhYsp03aJ6qdnnVX21Cog2xakHI5GTlbY4acoeLKsTDIIlpR9W8
+	 GtQWk6b8T/p4MMdNC9Fc8Q97t19G3N2uOQ58hn1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfKVGB3 (ORCPT
+        id S1728986AbfKVGBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:01:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbfKVF5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:16 -0500
+        id S1728926AbfKVGBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F9C2072E;
-        Fri, 22 Nov 2019 05:57:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD51B2068F;
+        Fri, 22 Nov 2019 06:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402236;
-        bh=1P+JhWcNEDUHQp8AcPsVmL+tkyIZYHZtGb1E3NhEtE4=;
+        s=default; t=1574402494;
+        bh=7Ry9jrHQuYnZY7uOPI526vZCkCbcI2sx4X8O3i8qnwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tp8NOVGNwezmRdzYQFJ6+xBYrpkyzgzbS4Mt4qzdfAnDmSpK4KedwkwYg4FNcUkw
-         enVhPmg5lXPnEq6Aw3hu33gGFDB9ciGHYCSfs4So/DUDovuxGYBar2fA5S2HGgkDrK
-         twYTQ8CCCvB3QldiF05NoatNEyUSpkCgMYGhaFug=
+        b=SJw+dbLq3zC1Bhc+ukxiH219Ofj8vSE4zWbkFsZXOcUW8YUOTsTnvajOClPo8mQ5c
+         Iimo6oeRkOTj1SHVAuoOLpKpPjTzRqwNNJ9IQGT+pWSum1fa22rcuTA7Rmfz3LjZeD
+         B8+zqTHB5W0VQ9BBQHQFJ/LL6jGIfU93up/CjSw0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 081/127] net/netlink_compat: Fix a missing check of nla_parse_nested
-Date:   Fri, 22 Nov 2019 00:54:59 -0500
-Message-Id: <20191122055544.3299-80-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/91] parisc: Fix HP SDC hpa address output
+Date:   Fri, 22 Nov 2019 01:00:03 -0500
+Message-Id: <20191122060129.4239-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
+In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
+References: <20191122060129.4239-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 89dfd0083751d00d5d7ead36f6d8b045bf89c5e1 ]
+[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
 
-In tipc_nl_compat_sk_dump(), if nla_parse_nested() fails, it could return
-an error. To be consistent with other invocations of the function call,
-on error, the fix passes the return value upstream.
+Show the hpa address of the HP SDC instead of a hashed value, e.g.:
+HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/input/serio/hp_sdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index ad4dcc663c6de..1c8ac0c11008c 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -1021,8 +1021,11 @@ static int tipc_nl_compat_sk_dump(struct tipc_nl_compat_msg *msg,
- 		u32 node;
- 		struct nlattr *con[TIPC_NLA_CON_MAX + 1];
+diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
+index 852858e5d8d08..92f541db98a09 100644
+--- a/drivers/input/serio/hp_sdc.c
++++ b/drivers/input/serio/hp_sdc.c
+@@ -887,8 +887,8 @@ static int __init hp_sdc_init(void)
+ 			"HP SDC NMI", &hp_sdc))
+ 		goto err2;
  
--		nla_parse_nested(con, TIPC_NLA_CON_MAX,
--				 sock[TIPC_NLA_SOCK_CON], NULL, NULL);
-+		err = nla_parse_nested(con, TIPC_NLA_CON_MAX,
-+				       sock[TIPC_NLA_SOCK_CON], NULL, NULL);
-+
-+		if (err)
-+			return err;
+-	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
+-	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
++	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
++	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
  
- 		node = nla_get_u32(con[TIPC_NLA_CON_NODE]);
- 		tipc_tlv_sprintf(msg->rep, "  connected to <%u.%u.%u:%u>",
+ 	hp_sdc_status_in8();
+ 	hp_sdc_data_in8();
 -- 
 2.20.1
 
