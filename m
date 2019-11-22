@@ -2,110 +2,78 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B785EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C35C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9264A20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E553206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfKVBXk (ORCPT
+        id S1726638AbfKVBZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:23:40 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7162 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726265AbfKVBXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:23:40 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D9A5B40ED3F3102114FE;
-        Fri, 22 Nov 2019 09:23:38 +0800 (CST)
-Received: from [127.0.0.1] (10.184.213.217) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 22 Nov 2019
- 09:23:32 +0800
-Subject: Re: [PATCH] tmpfs: use ida to get inode number
-To:     Hugh Dickins <hughd@google.com>
-CC:     Matthew Wilcox <willy@infradead.org>, <viro@zeniv.linux.org.uk>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-        "J. R. Okajima" <hooanon05g@gmail.com>
-References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
- <20191120154552.GS20752@bombadil.infradead.org>
- <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
- <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
- <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
- <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
-From:   "zhengbin (A)" <zhengbin13@huawei.com>
-Message-ID: <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
-Date:   Fri, 22 Nov 2019 09:23:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 21 Nov 2019 20:25:49 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47273 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfKVBZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 20:25:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 17:25:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,228,1571727600"; 
+   d="scan'208";a="210108101"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 17:25:46 -0800
+Date:   Fri, 22 Nov 2019 09:32:45 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     kernel test robot <lkp@intel.com>, LKP <lkp@lists.01.org>,
+        linaro-mm-sig@lists.linaro.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: 2989f64510 ("dma-buf: Add selftests for dma-fence"): WARNING:
+ CPU: 0 PID: 1 at lib/debugobjects.c:524 __debug_object_init
+Message-ID: <20191122013244.GC313@intel.com>
+References: <5dd63a8f.BFdOlqs/XZAJHDfR%lkp@intel.com>
+ <157432116576.24852.2065478066028556019@skylake-alporthouse-com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.184.213.217]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157432116576.24852.2065478066028556019@skylake-alporthouse-com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 07:26:05AM +0000, Chris Wilson wrote:
+> Quoting kernel test robot (2019-11-21 07:19:43)
+> > Greetings,
+> > 
+> > 0day kernel testing robot got the below dmesg and the first bad commit is
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > 
+> > commit 2989f6451084aed3f8cc9992477f7a9bf57a3716
+> > Author:     Chris Wilson <chris@chris-wilson.co.uk>
+> > AuthorDate: Mon Aug 19 10:59:27 2019 +0100
+> > Commit:     Chris Wilson <chris@chris-wilson.co.uk>
+> > CommitDate: Mon Aug 19 18:09:46 2019 +0100
+> 
+> That's a belated report, fixed by
+Hi Chris, thanks for the feedback, we will double check this report and
+provide update later.
 
-On 2019/11/22 3:53, Hugh Dickins wrote:
-> On Thu, 21 Nov 2019, zhengbin (A) wrote:
->> On 2019/11/21 12:52, Hugh Dickins wrote:
->>> Just a rushed FYI without looking at your patch or comments.
->>>
->>> Internally (in Google) we do rely on good tmpfs inode numbers more
->>> than on those of other get_next_ino() filesystems, and carry a patch
->>> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
->>> number space for each superblock) - essentially,
->>>
->>> 	ino = sbinfo->next_ino++;
->>> 	/* Avoid 0 in the low 32 bits: might appear deleted */
->>> 	if (unlikely((unsigned int)ino == 0))
->>> 		ino = sbinfo->next_ino++;
->>>
->>> Which I think would be faster, and need less memory, than IDA.
->>> But whether that is of general interest, or of interest to you,
->>> depends upon how prevalent 32-bit executables built without
->>> __FILE_OFFSET_BITS=64 still are these days.
->> So how google think about this? inode number > 32-bit, but 32-bit executables
->> cat not handle this?
-> Google is free to limit what executables are run on its machines,
-> and how they are built, so little problem here.
->
-> A general-purpose 32-bit Linux distribution does not have that freedom,
-> does not want to limit what the user runs.  But I thought that by now
-> they (and all serious users of 32-bit systems) were building their own
-> executables with _FILE_OFFSET_BITS=64 (I was too generous with the
-> underscores yesterday); and I thought that defined __USE_FILE_OFFSET64,
-> and that typedef'd ino_t to be __ino64_t.  And the 32-bit kernel would
-> have __ARCH_WANT_STAT64, which delivers st_ino as unsigned long long.
->
-> So I thought that a modern, professional 32-bit executable would be
-> dealing in 64-bit inode numbers anyway.  But I am not a system builder,
-> so perhaps I'm being naive.  And of course some users may have to support
-> some old userspace, or apps that assign inode numbers to "int" or "long"
-> or whatever.  I have no insight into the extent of that problem.
-
-So how to solve this problem?
-
-1. tmpfs use ida or other data structure
-
-2. tmpfs use 64-bit, each superblock a inode number space
-
-3. do not do anything, If somebody hits this bug, let them solve for themselves
-
-4. (last_ino change to 64-bit)get_next_ino -->other filesystems will be ok, but it was rejected before
-
->
-> Hugh
->
-> .
->
-
+> 
+> commit 6ac3a0ebfcc2f0c75ca0ca6974389ce421aa5cbd
+> Author: Chris Wilson <chris@chris-wilson.co.uk>
+> Date:   Tue Aug 20 13:21:18 2019 +0100
+> 
+> 	dmabuf: Mark up onstack timer for selftests
+> 
+> No?
+> -Chris
