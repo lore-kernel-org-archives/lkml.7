@@ -2,104 +2,72 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2487C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24D7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C10F2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C703920730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421301;
-	bh=dlyw4oCcyKNR2SNh/XhvBtQMONKlvoPuARJ9KYHE57U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z9COA297wZJiWAKqcWleTqkk4bChrIJWNjR7hf8WmjsmRoCyvSJAMU2s3vsuNW76b
-	 h8LoyW16YRs4D3mYJfIiG/FwdooJuAf0BYCtyj/Mgtcwd0D5rpHdSrBP+xQxkYW3iO
-	 ajdbP/Zml/7/yd63779QQQNkUaeT6kAWLvV9mUSE=
+	s=default; t=1574421305;
+	bh=ifgfHgV49YcPx8kfrpEB/pTuXJnJCq8CYBm1IT5+Mr8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Deyt+pv9rjPtRXhrueSLKD97GF+h2YOgL3vioDRr43FJxdyWmvQ66ZfbeoQqjWYYY
+	 NXymsRGeBrnXAYyUlBL/fS7BZG/LlfKKEDQCAez7nxvkbzfD4Y8S09Ofh2uVUCkY9w
+	 2gAAT9zkpfRsOY/2oPWtoK4iIT+OnxRRWbCC6gvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfKVLPA (ORCPT
+        id S1730595AbfKVLPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:15:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36494 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:15:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbfKVKwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:52:42 -0500
+        id S1729023AbfKVLPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:15:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEC4420637;
-        Fri, 22 Nov 2019 10:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F742070E;
+        Fri, 22 Nov 2019 11:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419962;
-        bh=dlyw4oCcyKNR2SNh/XhvBtQMONKlvoPuARJ9KYHE57U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tizuWH14nwnvjWDRZTOLKYpy318R6PvLnXod+6lIFwaNbndAhbo0YE5jeMJomDMTE
-         1yvwaVPV4ne6hrqGDSR9JEoTedBtZpZSaYulksf2OLM/4V9fxKMSIOKVi5mJ/uNjTa
-         9jVuXnZoYslwJTZQWsuIxtI9lCqnk7wkFuGYSy6s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 031/122] dmaengine: ep93xx: Return proper enum in ep93xx_dma_chan_direction
-Date:   Fri, 22 Nov 2019 11:28:04 +0100
-Message-Id: <20191122100746.696950050@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
-References: <20191122100722.177052205@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1574421300;
+        bh=ifgfHgV49YcPx8kfrpEB/pTuXJnJCq8CYBm1IT5+Mr8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=akcMeEEhNVQ1VdQfaigVjxBzNeeZwSIJS1+1WdyTMuyOfJwvUl+RA70E5BxdkSi9O
+         dNWDFFc8AYEOpSzAcL1aykduSR2aj+5t/mNJGt9iqCH2+C960sUq/wJkBYHRlVfVx6
+         uWX20twpjKgKAJRl4HqUv0QDR+84V0Qw5QQY5cEE=
+Date:   Fri, 22 Nov 2019 12:14:10 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Chen Wandun <chenwandun@huawei.com>
+Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] {tty: serial, nand: onenand}: remove variable 'ufstat'
+ set but not used
+Message-ID: <20191122111410.GA2024666@kroah.com>
+References: <1574421159-113624-1-git-send-email-chenwandun@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574421159-113624-1-git-send-email-chenwandun@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, Nov 22, 2019 at 07:12:39PM +0800, Chen Wandun wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/tty/serial/samsung_tty.c: In function s3c24xx_serial_rx_chars_dma:
+> drivers/tty/serial/samsung_tty.c:549:24: warning: variable ufstat set but not used [-Wunused-but-set-variable]
+> 
+> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 
-[ Upstream commit 9524d6b265f9b2b9a61fceb2ee2ce1c2a83e39ca ]
+Your subject line is really odd, can you please fix that up and resend?
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+thanks,
 
-In file included from drivers/dma/ep93xx_dma.c:30:
-./include/linux/platform_data/dma-ep93xx.h:88:10: warning: implicit
-conversion from enumeration type 'enum dma_data_direction' to different
-enumeration type 'enum dma_transfer_direction' [-Wenum-conversion]
-                return DMA_NONE;
-                ~~~~~~ ^~~~~~~~
-1 warning generated.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/platform_data/dma-ep93xx.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
-index f8f1f6b952a62..eb9805bb3fe8a 100644
---- a/include/linux/platform_data/dma-ep93xx.h
-+++ b/include/linux/platform_data/dma-ep93xx.h
-@@ -85,7 +85,7 @@ static inline enum dma_transfer_direction
- ep93xx_dma_chan_direction(struct dma_chan *chan)
- {
- 	if (!ep93xx_dma_chan_is_m2p(chan))
--		return DMA_NONE;
-+		return DMA_TRANS_NONE;
- 
- 	/* even channels are for TX, odd for RX */
- 	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
--- 
-2.20.1
-
-
-
+greg k-h
