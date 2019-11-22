@@ -2,52 +2,52 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2524C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2103C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815AC2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C555F205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419845;
-	bh=QNKsw1ScWAI/B1oICO7w9vn1HmKyrpOW0OpdHrOzMbg=;
+	s=default; t=1574419849;
+	bh=1tGftarjUnn0WkDsVLhvxVIToADcwZUnJ117RERnNJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qzJjPE/VDLgQ3sWM2wexJ/pHofS2ex1LkNHHiLKiZ2Px+X9m6+a9eickONg6UkCy9
-	 qCVI0D0CwvH2udQvEE64PyPfZPDF1rUubkveWWf7SdKXMAezD0+H1TLXyDtSqPehum
-	 p4hqp3JIulZ3D9KlhByk+xIPwI6gb71QdA3ZXD9A=
+	b=2H8znuAE6Wb7cpAsrR5aZEWWEFk1pNmD04bl/Aj+Ee6yHfW9RB4Q0cu+5LpMDUMz3
+	 zGjtV2zXQ7tYUa7M2VnmuhAP0/nYdSwdlPDoRzgoCB4i1nhqvijkA+7fE3ViSmHRNC
+	 VD5a+0hJ0af2PTHkifs4QH+RbxVruWpSNgRuloJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfKVKuo (ORCPT
+        id S1728637AbfKVKus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:50:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:50:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727173AbfKVKug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:50:36 -0500
+        id S1728305AbfKVKup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:50:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB13205C9;
-        Fri, 22 Nov 2019 10:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4CA205C9;
+        Fri, 22 Nov 2019 10:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419836;
-        bh=QNKsw1ScWAI/B1oICO7w9vn1HmKyrpOW0OpdHrOzMbg=;
+        s=default; t=1574419844;
+        bh=1tGftarjUnn0WkDsVLhvxVIToADcwZUnJ117RERnNJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJMEOfIP7s6pRDDG/FFxjdYO3JJxWlt/GtOratC1cNtGgwT7z+inBKh8KdbP4tLDG
-         MG7VF4hiSesw13icbUPhTWWKeFRjuMgNB+vt9J3CcrNaLlSyBwgOojEz9Rw9yi38Qd
-         zGXhnAoQk+fYO1TBvEw+nzSgkAGMDdz/zkDocfDQ=
+        b=aN2WjPVqkmcIRm8SNvsUUenclm++hcr0hJvlVuDVvoeYH7o1BSGQp/V+DZN84FKkF
+         6vW+iPPZtQTkSWdbBUC949THuwE5m9ijSV5Ob9VXWBamZwh/W0r9kH7LjX1u5aPNfk
+         4Wn1Bb4+Kq4kUwvyiOVB6jwiZiqxcJ+bSS4i4lK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 025/122] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
-Date:   Fri, 22 Nov 2019 11:27:58 +0100
-Message-Id: <20191122100740.548126868@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.14 004/122] net: cdc_ncm: Signedness bug in cdc_ncm_set_dgram_size()
+Date:   Fri, 22 Nov 2019 11:27:37 +0100
+Message-Id: <20191122100724.495414966@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,49 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
+commit a56dcc6b455830776899ce3686735f1172e12243 upstream.
 
-The driver may sleep in an interrupt handler.
-The function call path (from bottom to top) in Linux-4.17 is:
+This code is supposed to test for negative error codes and partial
+reads, but because sizeof() is size_t (unsigned) type then negative
+error codes are type promoted to high positive values and the condition
+doesn't work as expected.
 
-[FUNC] fotg210_ep_queue(GFP_KERNEL)
-drivers/usb/gadget/udc/fotg210-udc.c, 744:
-	fotg210_ep_queue in fotg210_get_status
-drivers/usb/gadget/udc/fotg210-udc.c, 768:
-	fotg210_get_status in fotg210_setup_packet
-drivers/usb/gadget/udc/fotg210-udc.c, 949:
-	fotg210_setup_packet in fotg210_irq (interrupt handler)
+Fixes: 332f989a3b00 ("CDC-NCM: handle incomplete transfer of MTU")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
-If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
-can be also removed.
-
-This bug is found by my static analysis tool DSAC.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
+ drivers/net/usb/cdc_ncm.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
-index d17d7052605ba..6866a0be249e4 100644
---- a/drivers/usb/gadget/udc/fotg210-udc.c
-+++ b/drivers/usb/gadget/udc/fotg210-udc.c
-@@ -744,7 +744,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
- 	fotg210->ep0_req->length = 2;
- 
- 	spin_unlock(&fotg210->lock);
--	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
-+	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
- 	spin_lock(&fotg210->lock);
- }
- 
--- 
-2.20.1
-
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -579,7 +579,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+ 			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+-	if (err < sizeof(max_datagram_size)) {
++	if (err != sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
 
 
