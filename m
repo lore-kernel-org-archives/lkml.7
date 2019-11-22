@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B70C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCB4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 269DC2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A75C20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403237;
-	bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
+	s=default; t=1574403239;
+	bh=2FKCwtfQ/zR6VWzJaxtMgHi64PjCKJ4x79baPcmlda4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gX0wtiIcxgqJ2y9gS1CkXFHI6lMElYpC/2u0F6wmmBwEcfBpXGK1MbpNwx+zcmie6
-	 Mc5xG1uF1ejX0ftUGhjS3Ze7RFFpt+JGxvYHtmWrF3FZ0StR6dacP4833+hFYusKeI
-	 NGk9QU6JQrkmt3kwkVCVDZrwtxDbzb7QG3lyNPtE=
+	b=yfKla5gWdBntCuMX71yJcJGwnxNjN+hIy1X9+lhjYf5TzqIYOsRHUnS/tj4VdvHoY
+	 vAwrQrLn2adkoxtONMW5rA5ktv7PAkQM4N1aXTlxrSLffOj6UT5dJHmGRFqgJ86oV/
+	 rCh+3fqiT+iyeWXDwe50JDUlPFdUEAuvd0a4ZYE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfKVGN4 (ORCPT
+        id S1729165AbfKVGN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50972 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729439AbfKVGNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:40 -0500
+        id S1728156AbfKVGNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13B9D20718;
-        Fri, 22 Nov 2019 06:13:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2015920708;
+        Fri, 22 Nov 2019 06:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403219;
-        bh=KfUUKl4OJ/iRiB6WP0nLVctzTrRXlSgHQu7Wc1fD4IY=;
+        s=default; t=1574403221;
+        bh=2FKCwtfQ/zR6VWzJaxtMgHi64PjCKJ4x79baPcmlda4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qeH+R4ohdNFfMPpWRN+LluCdlARyNunXbdmd+DBfxaw1I6Q4WGogQF/Cg1i0kwWwR
-         qR0W3IvxVcOerrj8HLFdYB0K+NUFXCuZ6BOQtjIWL4j6EA6jIdsJX5x1K5KLLlcH/4
-         EgIdlHNtAwNSPnIGjFqbCDCvDOvNGd0SdeOSANV0=
+        b=GOtnlqnscfEYvv+RJpeukhgxpHnppSpxddaZuIYAVoFNKtLHn6l/5jkJz5KeuI62B
+         EW1HE3tdFTj9iMlo9Xr8PAWouuVQkiKG8Z7Oj6ZhoGy81bWGNJd15rARKRU1G9OWCj
+         zkIcp08X/SBFmJdc0c8ecfsC5cezKA3TTt89tAUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, openrisc@lists.librecores.org
-Subject: [PATCH AUTOSEL 4.4 34/68] openrisc: Fix broken paths to arch/or32
-Date:   Fri, 22 Nov 2019 01:12:27 -0500
-Message-Id: <20191122061301.4947-33-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Sergey Gorenko <sergeygo@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 35/68] RDMA/srp: Propagate ib_post_send() failures to the SCSI mid-layer
+Date:   Fri, 22 Nov 2019 01:12:28 -0500
+Message-Id: <20191122061301.4947-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,47 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 57ce8ba0fd3a95bf29ed741df1c52bd591bf43ff ]
+[ Upstream commit 2ee00f6a98c36f7e4ba07cc33f24cc5a69060cc9 ]
 
-OpenRISC was mainlined as "openrisc", not "or32".
-vmlinux.lds is generated from vmlinux.lds.S.
+This patch avoids that the SCSI mid-layer keeps retrying forever if
+ib_post_send() fails. This was discovered while testing immediate
+data support and passing a too large num_sge value to ib_post_send().
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+Cc: Sergey Gorenko <sergeygo@mellanox.com>
+Cc: Max Gurtovoy <maxg@mellanox.com>
+Cc: Laurence Oberman <loberman@redhat.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/openrisc/kernel/entry.S | 2 +-
- arch/openrisc/kernel/head.S  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/srp/ib_srp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
-index fec8bf97d8064..c17e8451d9978 100644
---- a/arch/openrisc/kernel/entry.S
-+++ b/arch/openrisc/kernel/entry.S
-@@ -179,7 +179,7 @@ handler:							;\
-  *	 occured. in fact they never do. if you need them use
-  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
-  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
-- *       in 'arch/or32/kernel/head.S'
-+ *       in 'arch/openrisc/kernel/head.S'
-  */
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index 3dbc3ed263c21..3b4188efc2835 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -2135,6 +2135,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
  
- /* =====================================================[ exceptions] === */
-diff --git a/arch/openrisc/kernel/head.S b/arch/openrisc/kernel/head.S
-index f14793306b03f..98dd6860bc0b9 100644
---- a/arch/openrisc/kernel/head.S
-+++ b/arch/openrisc/kernel/head.S
-@@ -1596,7 +1596,7 @@ _string_esr_irq_bug:
+ 	if (srp_post_send(ch, iu, len)) {
+ 		shost_printk(KERN_ERR, target->scsi_host, PFX "Send failed\n");
++		scmnd->result = DID_ERROR << 16;
+ 		goto err_unmap;
+ 	}
  
- /*
-  * .data section should be page aligned
-- *	(look into arch/or32/kernel/vmlinux.lds)
-+ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
-  */
- 	.section .data,"aw"
- 	.align	8192
 -- 
 2.20.1
 
