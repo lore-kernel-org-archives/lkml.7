@@ -2,120 +2,147 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95106C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D16C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B3620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgamuQAA"
+	by mail.kernel.org (Postfix) with ESMTP id EF6EF2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574455363;
+	bh=9jUl9hYzeTjE4cdYpV/s+MeWKqCO1YmPWEPxwsM65fc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gOQz8OQbeoIJNHGs0qGsS6RlN+mgrfrID34GQZ2EeCyEfAN7gcLKT5qrH0ZmdD/JE
+	 gcAoFXGRSjX8xUdI6cvhr3sm5tvmM2PI+RH8qXl9Pl3p5QtPAWzPM3YQ4a7ls3zpFn
+	 ge1c2d2OINF6ChHXDLvL8c7TrehaDbWvUi0ai1GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfKVUmZ (ORCPT
+        id S1727237AbfKVUmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:42:25 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33743 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVUmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:42:24 -0500
-Received: by mail-pf1-f193.google.com with SMTP id c184so4048822pfb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 12:42:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=lkSiArHUwBNm+WvcY+WNVziWupycIGgOCaH0d9L4oKM=;
-        b=TgamuQAAJ93US1tb5tbp9AaWRgBUc4Y04v2m6yGq64/K/nhuBIIi7E9Uxp1tPVF6zI
-         kuXABQZmoKhNRMV8088BHMa7GQH8QnBWQMIXoJC8ciamallOPVfart3gsrgCz3+p05hp
-         RwyC8u1/Sg5N1O3sXuaBhQTLdClNrQN5+YuI20SDPa5w6Lf4In70bewKP7xC5Y8Zi9LH
-         yXY5m7mR1CiKUybUMuRgYiMnFb97Kq4NIgfTHpxwp0DZ9WH3e1njW0D7SrVJBslG59Nn
-         yrsJkRiphkh7XMe9ecLBBnBH2CfphLOKBmiyF/DL4lazvY3ORclXJplPyVgNuXTYHYUO
-         wUBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=lkSiArHUwBNm+WvcY+WNVziWupycIGgOCaH0d9L4oKM=;
-        b=BxpGH16J6tXJXkHIuWP1iC5ErcJ531JkH2+aqP+iB/vINg/uNzkl8LQ/m1/cIQC1AA
-         yaLG6Wg9do+1PfpU3N8FGSTb9soZ85tIkZulS9eVidOk5DhMPXcqcravMreDWQ2S22f/
-         1ShznFATWmNVNKKtg++DACSZJ8WLExzL4CCQZ4WomBnMfdwNoXq87QBQy0nMiAWth+H1
-         sVBmQu9HlX9+pSCrYxQ3LJqFzIO7aWDYLbKmtoofa5/RPOWoauIysIXgbd6AKPriQCVb
-         951T2eES/uxXa4Z9M8oqlwh5QJnCuyRUpZszPNEFJc2ly6+bJtbT/98pW5c/THReETl6
-         Fx2w==
-X-Gm-Message-State: APjAAAWkojgF4GpyAlDE7aph/2H6loB6mBX55+QiIdaRteQk1txKb3aP
-        WNBrB/GxVcZbRU1MwSNO5kU=
-X-Google-Smtp-Source: APXvYqyT0NnGGcHmV/xr/2z5gLJLLyY78cNeCEVHdicx7gpTJF6MBh0vm/Nf3aE9N5tat3em6Dux9g==
-X-Received: by 2002:a63:3181:: with SMTP id x123mr4283097pgx.267.1574455343576;
-        Fri, 22 Nov 2019 12:42:23 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id q184sm8516014pfc.111.2019.11.22.12.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 12:42:22 -0800 (PST)
-Date:   Fri, 22 Nov 2019 12:42:20 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: vt: keyboard: reject invalid keycodes
-Message-ID: <20191122204220.GA129459@dtor-ws>
+        Fri, 22 Nov 2019 15:42:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfKVUml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 15:42:41 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E902071F;
+        Fri, 22 Nov 2019 20:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574455360;
+        bh=9jUl9hYzeTjE4cdYpV/s+MeWKqCO1YmPWEPxwsM65fc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=grvZmVnp3E4aSgHsuDL8R9hsxFoXmcVDe1FFYydprJZffl+G69JkxdyzngFxrcn9n
+         tuZX8+loec9bMb6bUrnjv1LH6VWVodFipQ0gxLXNErnz2fqYd+g0jj/6o8URXNUw8q
+         k8uOCOCL8DsGMYDbLbqgu/tEJWOgtmcrAsomh3Mg=
+Received: by mail-qk1-f169.google.com with SMTP id i19so7505520qki.2;
+        Fri, 22 Nov 2019 12:42:40 -0800 (PST)
+X-Gm-Message-State: APjAAAVU5I8WO4l4eDS1ACPNiSfVcMHnw2TeOBPOsmoOJigbxRqiNSTv
+        EqTbhw4x0Tb4b0JI3aQBtlr/mqrfVkGjDmqjxw==
+X-Google-Smtp-Source: APXvYqzExydS4DW+2bikInq6s91Icq739PAoRhN/xA1oiv1V1aVfW6Akcvty1vRELGSZbb4NmevP6V97kU8lXmtYCVI=
+X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr15274456qka.152.1574455359578;
+ Fri, 22 Nov 2019 12:42:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120071302.227777-1-saravanak@google.com> <CAL_Jsq+f1+xRv36z0o--u4SskTG-WxUdssJ-CP32RUZbtVuQ3w@mail.gmail.com>
+ <CAGETcx-GV1kTAVbqcCLGVPoN16RpSrDw4gcxSgAVqWCb1NOzXA@mail.gmail.com>
+In-Reply-To: <CAGETcx-GV1kTAVbqcCLGVPoN16RpSrDw4gcxSgAVqWCb1NOzXA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 22 Nov 2019 14:42:27 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLHGvSWsUrDJObLqCnnwe=pwWJpeXtToMj_sHgLQGev7A@mail.gmail.com>
+Message-ID: <CAL_JsqLHGvSWsUrDJObLqCnnwe=pwWJpeXtToMj_sHgLQGev7A@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Add device link support for
+ interrupt-parent, dmas and -gpio(s)
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not try to handle keycodes that are too big, otherwise we risk doing
-out-of-bounds writes:
+On Fri, Nov 22, 2019 at 1:34 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Fri, Nov 22, 2019 at 5:35 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 1:13 AM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Add support for creating device links out of more DT properties.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/of/property.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > > index 0fa04692e3cc..dedbf82da838 100644
+> > > --- a/drivers/of/property.c
+> > > +++ b/drivers/of/property.c
+> > > @@ -1188,7 +1188,11 @@ DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
+> > >  DEFINE_SIMPLE_PROP(iommus, "iommus", "#iommu-cells")
+> > >  DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
+> > >  DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
+> > > +DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
+> >
+> > This one is not going to work most of the time (ignoring the fact that
+> > the primary controller doesn't have a struct device) because the
+> > interrupt-parent is typically in a parent node.
+>
+> Just to make sure, I'm not parsing this property incorrectly, right?
+>
+> Are you saying it's listed at the parent of a bunch of devices and the
+> interrupt-parent is inherited and won't really create device links for
+> those child devices?
+> I mainly added this to make sure IRQ controllers are probed in the
+> right order. Also, if this delays the parent device probe, by the time
+> the child devices are added, the interrupt parent most likely would
+> already be probed.
+>
+> > You could make it work
+> > by specifying 'interrupt-parent' in every node, but that's not a
+> > pattern I want to encourage.
+>
+> I'm trying to take care of the basic per-device properties first.
+> Adding support for inherited properties isn't too difficult, I just
+> need to get to those at some point. Also, for inherited properties, we
+> can't really block probing because the child device might not depend
+> on that resource. Inherited properties are mainly relevant only for
+> sync_state() callbacks.
 
-BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
-Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
-...
- kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
- kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
- input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
- input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
- input_pass_values drivers/input/input.c:949 [inline]
- input_set_keycode+0x290/0x320 drivers/input/input.c:954
- evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
- evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+You're looking at the wrong property. You need to look for
+'interrupts' and 'interrupts-extended'. Pretty good chance if the
+device has interrupts, then it needs them. The latter is easy. It's
+just like the others you have (phandle + cells). If you have
+'interrupts' then you need to walk the interrupt tree the same way the
+OF IRQ code already does.
 
-In this case we were dealing with a fuzzed HID device that declared over
-12K buttons, and while HID layer should not be reporting to us such big
-keycodes, we should also be defensive and reject invalid data ourselves as
-well.
+> > There's also all the other ways the
+> > parent can be determined. Any parent node with 'interrupt-controller'
+> > or 'interrupt-map' property is the parent. And there's
+> > 'interrupts-extended' too.
+>
+> Now I'm confused. Not sure if you are referring to actual device
+> parent now or if you are talking about an "interrupt supplier".
 
-Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/tty/vt/keyboard.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes. both. The interrupt tree may or may not mirror the device node
+tree. Or you could have a mixture. You've got to handle both cases.
+But really, you just need to use the code that's already there to do
+all that and deal with all these conditions. Essentially, you need to
+copy of_irq_get(), but get the struct device from the irq_domain.
 
-diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-index 515fc095e3b4..15d33fa0c925 100644
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -1491,7 +1491,7 @@ static void kbd_event(struct input_handle *handle, unsigned int event_type,
- 
- 	if (event_type == EV_MSC && event_code == MSC_RAW && HW_RAW(handle->dev))
- 		kbd_rawcode(value);
--	if (event_type == EV_KEY)
-+	if (event_type == EV_KEY && event_code <= KEY_MAX)
- 		kbd_keycode(event_code, value, HW_RAW(handle->dev));
- 
- 	spin_unlock(&kbd_event_lock);
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
-
--- 
-Dmitry
+Rob
