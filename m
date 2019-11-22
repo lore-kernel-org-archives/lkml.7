@@ -2,138 +2,157 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C580C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DEAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2099B2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421267;
-	bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxrXhiZxddu6S9qBqkXU5ejP51GEQ5fVhYYodqIaXX6JmrT0LXn58Wdyoi823R/dE
-	 bAujsYpoiXD3T9SmWiKlH66m4p7gsH2YxazTks6+mHbgAa5rg4vBeHgXxJTCt9zgZ5
-	 52GQavKzpHCr+cRjG/GM+TqnSc9rUma93SwlV39M=
+	by mail.kernel.org (Postfix) with ESMTP id 6ABBC20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbfKVKxo (ORCPT
+        id S1730425AbfKVLOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:53:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730224AbfKVKxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2147820715;
-        Fri, 22 Nov 2019 10:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420020;
-        bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zxetFUFyJ6E1l+v0ovPIzci9CxUYjXch7m1RwFXg9v4OU7DR76nBe7nhd3fDDlH/+
-         cSN/MH2yBv6qsYsygBtJU+nerudDegIZiisgwSSrlvXVFWvtF72he4sZdBsPBEySSj
-         N6jTlMDm25W/ElfxZDMRM6MIkZ7r1dq0gdleQWFU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Peter Malone <peter.malone@gmail.com>
-Subject: [PATCH 4.14 089/122] fbdev: sbuslib: use checked version of put_user()
-Date:   Fri, 22 Nov 2019 11:29:02 +0100
-Message-Id: <20191122100827.630697809@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
-References: <20191122100722.177052205@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 06:14:33 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43820 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729812AbfKVKxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:33 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8E4B590A9B10BA22F71E;
+        Fri, 22 Nov 2019 18:53:30 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.225) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 22 Nov 2019
+ 18:53:27 +0800
+Subject: Re: [PATCH] powerpc/pseries: remove variable 'status' set but not
+ used
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <mahesh@linux.vnet.ibm.com>, <paulus@samba.org>
+References: <1573873650-62511-1-git-send-email-chenwandun@huawei.com>
+ <87blt8csyx.fsf@mpe.ellerman.id.au>
+ <b1591f1d-ddd6-1cd5-afd6-c42eb4671a03@linux.ibm.com>
+From:   Chen Wandun <chenwandun@huawei.com>
+Message-ID: <dec2820f-dfb5-49a8-63fb-f75a3f469ba1@huawei.com>
+Date:   Fri, 22 Nov 2019 18:53:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b1591f1d-ddd6-1cd5-afd6-c42eb4671a03@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+OK, I will make a modification and repost the patch.
 
-[ Upstream commit d8bad911e5e55e228d59c0606ff7e6b8131ca7bf ]
+Thanks
+Chen Wandun
 
-I'm not sure why the code assumes that only the first put_user() needs
-an access_ok() check.  I have made all the put_user() and get_user()
-calls checked.
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Peter Malone <peter.malone@gmail.com>,
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/fbdev/sbuslib.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/video/fbdev/sbuslib.c b/drivers/video/fbdev/sbuslib.c
-index a436d44f1b7fb..90c51330969c2 100644
---- a/drivers/video/fbdev/sbuslib.c
-+++ b/drivers/video/fbdev/sbuslib.c
-@@ -106,11 +106,11 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
- 		struct fbtype __user *f = (struct fbtype __user *) arg;
- 
- 		if (put_user(type, &f->fb_type) ||
--		    __put_user(info->var.yres, &f->fb_height) ||
--		    __put_user(info->var.xres, &f->fb_width) ||
--		    __put_user(fb_depth, &f->fb_depth) ||
--		    __put_user(0, &f->fb_cmsize) ||
--		    __put_user(fb_size, &f->fb_cmsize))
-+		    put_user(info->var.yres, &f->fb_height) ||
-+		    put_user(info->var.xres, &f->fb_width) ||
-+		    put_user(fb_depth, &f->fb_depth) ||
-+		    put_user(0, &f->fb_cmsize) ||
-+		    put_user(fb_size, &f->fb_cmsize))
- 			return -EFAULT;
- 		return 0;
- 	}
-@@ -125,10 +125,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
- 		unsigned int index, count, i;
- 
- 		if (get_user(index, &c->index) ||
--		    __get_user(count, &c->count) ||
--		    __get_user(ured, &c->red) ||
--		    __get_user(ugreen, &c->green) ||
--		    __get_user(ublue, &c->blue))
-+		    get_user(count, &c->count) ||
-+		    get_user(ured, &c->red) ||
-+		    get_user(ugreen, &c->green) ||
-+		    get_user(ublue, &c->blue))
- 			return -EFAULT;
- 
- 		cmap.len = 1;
-@@ -165,10 +165,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
- 		u8 red, green, blue;
- 
- 		if (get_user(index, &c->index) ||
--		    __get_user(count, &c->count) ||
--		    __get_user(ured, &c->red) ||
--		    __get_user(ugreen, &c->green) ||
--		    __get_user(ublue, &c->blue))
-+		    get_user(count, &c->count) ||
-+		    get_user(ured, &c->red) ||
-+		    get_user(ugreen, &c->green) ||
-+		    get_user(ublue, &c->blue))
- 			return -EFAULT;
- 
- 		if (index + count > cmap->len)
--- 
-2.20.1
-
-
+On 2019/11/21 5:34, Tyrel Datwyler wrote:
+> On 11/18/19 9:53 PM, Michael Ellerman wrote:
+>> Chen Wandun <chenwandun@huawei.com> writes:
+>>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>>
+>>> arch/powerpc/platforms/pseries/ras.c: In function ras_epow_interrupt:
+>>> arch/powerpc/platforms/pseries/ras.c:319:6: warning: variable status set but not used [-Wunused-but-set-variable]
+>>
+>> Thanks for the patch.
+>>
+>> But it almost certainly is wrong to not check the status.
+> 
+> Agreed, I started drafting a NACK response, but got sidetracked.
+> 
+>>
+>> It's calling firmware and just assuming that the call succeeded. It then
+>> goes on to use the result that should have been written by firmware, but
+>> is now potentially random junk.
+>>
+>> So I'd much rather a patch to change it to check the status.
+> 
+> +1
+> 
+>>
+>>> diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+>>> index 1d7f973..4a61d0f 100644
+>>> --- a/arch/powerpc/platforms/pseries/ras.c
+>>> +++ b/arch/powerpc/platforms/pseries/ras.c
+>>> @@ -316,12 +316,11 @@ static irqreturn_t ras_hotplug_interrupt(int irq, void *dev_id)
+>>>   /* Handle environmental and power warning (EPOW) interrupts. */
+>>>   static irqreturn_t ras_epow_interrupt(int irq, void *dev_id)
+>>>   {
+>>> -	int status;
+>>>   	int state;
+>>>   	int critical;
+>>>   
+>>> -	status = rtas_get_sensor_fast(EPOW_SENSOR_TOKEN, EPOW_SENSOR_INDEX,
+>>> -				      &state);
+>>> +	rtas_get_sensor_fast(EPOW_SENSOR_TOKEN, EPOW_SENSOR_INDEX,
+>>> +			     &state);
+>>
+>> This is calling a helper which already does some translation of the
+>> return value, any value < 0 indicates an error.
+> 
+> There are three possible architected failures here: Hardware, Non-existant
+> sensor, and an DR isolation error which namely would be reported in the status
+> as -EIO, -EINVAL, and -EFAULT. Further, the EPOW sensor is required, and is not
+> a DR entity so we can never get an -EINVAL or -EFAULT (baring broken firmware).
+> This leaves -EIO (HARDWARE_ERROR) and as I mention further down this will
+> generate its own error log in response. So, I don't think we need to do any
+> reporting here, and just return.
+> 
+>>
+>>> @@ -330,12 +329,12 @@ static irqreturn_t ras_epow_interrupt(int irq, void *dev_id)
+>>>   
+>>>   	spin_lock(&ras_log_buf_lock);
+>>>   
+>>> -	status = rtas_call(ras_check_exception_token, 6, 1, NULL,
+>>> -			   RTAS_VECTOR_EXTERNAL_INTERRUPT,
+>>> -			   virq_to_hw(irq),
+>>> -			   RTAS_EPOW_WARNING,
+>>> -			   critical, __pa(&ras_log_buf),
+>>> -				rtas_get_error_log_max());
+>>> +	rtas_call(ras_check_exception_token, 6, 1, NULL,
+>>> +		  RTAS_VECTOR_EXTERNAL_INTERRUPT,
+>>> +		  virq_to_hw(irq),
+>>> +		  RTAS_EPOW_WARNING,
+>>> +		  critical, __pa(&ras_log_buf),
+>>> +		  rtas_get_error_log_max());
+>>
+>> This is directly calling firmware.
+>>
+>> As documented in LoPAPR, a negative status indicates an error, 0
+>> indicates a new error log was found (ie. the function should continue),
+>> or 1 there was no error log (ie. nothing to do).
+> 
+> It is highly unlikely that we will find no new error log since we are processing
+> an interrupt that supposedly fired to tell us there is a new one. However, the
+> ras_log_buf is never zeroed so in the unlikely case there is no new error log we
+> will parse stale data from the previous log. Better safe than sorry and just return.
+> 
+> In the case of an error the only error code we supposedly can get here is -1
+> (HARDWARE_ERROR), and the RTAS handling will generate an error log in response
+> to that. So, I don't think we need to report anything here. I would suggest for
+> the (status != 0) case that you just return.
+> 
+> -Tyrel
+> 
+>>
+>> cheers
+>>
+>>>   	log_error(ras_log_buf, ERR_TYPE_RTAS_LOG, 0);
+>>>   
+>>> -- 
+>>> 2.7.4
+> 
+> 
+> .
+> 
 
