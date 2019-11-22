@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43549C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D78C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1804020637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F0620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403643;
-	bh=EXOHNontjrs9tf8tmpw/5AGqGwMHf8WFi3vd8JcVRN8=;
+	s=default; t=1574403647;
+	bh=DVaKPiUmHGKWMJgDHNMiWfSzaP1Ywwb9Top1BdaLCeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yKaX12seIYDqyAaVGWpy2t7ma5AwMnrjuDyFW7ODAuGU8587Sb3WvBTZg5NyU0QpX
-	 C1nOdwVH7oRIJjMKWyV4KFhul1pSH3L6Oz2/9T2PJMqA+ySQhWo+jlq/bp+tPoKZka
-	 jd0EtMNOw3Zhq5DKZmkHPKwJpIct0WBU4fKI0Un0=
+	b=tMX4rJkKQnpUIY7bdxN/0TLz49hMGyxgtbWuu+mv/tAKbDEGg2dJTzbPTQYBj1B1L
+	 tRVhY7Y56cF1OG5yi6eqQRUE3/it+IeQhRsrcQcRpRrm6D3x2GhKB4k1kTyOvkwdp1
+	 /JyFEyUfmpGUmj5AWxh+n+kbbLKYBWvbo/34/mQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfKVFwg (ORCPT
+        id S1728952AbfKVGUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:20:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbfKVFwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:30 -0500
+        id S1728576AbfKVFwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFAA20721;
-        Fri, 22 Nov 2019 05:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 143672073B;
+        Fri, 22 Nov 2019 05:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401949;
-        bh=EXOHNontjrs9tf8tmpw/5AGqGwMHf8WFi3vd8JcVRN8=;
+        s=default; t=1574401953;
+        bh=DVaKPiUmHGKWMJgDHNMiWfSzaP1Ywwb9Top1BdaLCeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FoPFMTOPdcjjv8tPpgucS8zUEWZKeNV0ejjePYEsJh7bWx6g/OLqv8PbMLOzNbWHq
-         8iG0vWKda0khozFirNubLO7unQ9Gz6sHnSXUUSw4jkRif4K13AfXXREbsfSqobd8et
-         wh8xNaFIM+GhDhlwxPqUbTOrvSs4/POLXKUUC9EI=
+        b=fxuUXIo/dVhzdK+qgDJHdYtJXTqnHMjp2yum9t9gl3dcES2MmpIJBovzDmD9vmaUU
+         dhpVrOlUtb12lNWrQ3AB5yf9gyHCMNHkapll/MegtW2QVQGI9JrDx7l48jsK3XDd88
+         IMuDBFTMbTz9N7rsWUlUrDf5IAFAEqdJdw6svvhI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 172/219] ata: ahci: mvebu: do Armada 38x configuration only on relevant SoCs
-Date:   Fri, 22 Nov 2019 00:48:24 -0500
-Message-Id: <20191122054911.1750-165-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 176/219] gpu: ipu-v3: pre: don't trigger update if buffer address doesn't change
+Date:   Fri, 22 Nov 2019 00:48:28 -0500
+Message-Id: <20191122054911.1750-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,156 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 96dbcb40e4b1a387cdb9b21f43638c759aebb5a4 ]
+[ Upstream commit eb0200a4357da100064971689d3a0e9e3cf57f33 ]
 
-At the beginning, only Armada 38x SoCs where supported by the
-ahci_mvebu.c driver. Commit 15d3ce7b63bd ("ata: ahci_mvebu: add
-support for Armada 3700 variant") introduced Armada 3700 support. As
-opposed to Armada 38x SoCs, the 3700 variants do not have to configure
-mbus and the regret option. This patch took care of avoiding such
-configuration when not needed in the probe function, but failed to do
-the same in the resume path. While doing so looks harmless by
-experience, let's clean the driver logic and avoid doing this useless
-configuration with Armada 3700 SoCs.
+On a NOP double buffer update where current buffer address is the same
+as the next buffer address, the SDW_UPDATE bit clears too late. As we
+are now using this bit to determine when it is safe to signal flip
+completion to userspace this will delay completion of atomic commits
+where one plane doesn't change the buffer by a whole frame period.
 
-Because the logic is very similar between these two places, it has
-been decided to factorize this code and put it in a "Armada 38x
-configuration function". This function is part of a new
-(per-compatible) platform data structure, so that the addition of such
-configuration function for Armada 3700 will be eased.
+Fix this by remembering the last buffer address and just skip the
+double buffer update if it would not change the buffer address.
 
-Fixes: 15d3ce7b63bd ("ata: ahci_mvebu: add support for Armada 3700 variant")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+[p.zabel@pengutronix.de: initialize last_bufaddr in ipu_pre_configure]
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci_mvebu.c | 68 ++++++++++++++++++++++++++++++----------
- 1 file changed, 51 insertions(+), 17 deletions(-)
+ drivers/gpu/ipu-v3/ipu-pre.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/ata/ahci_mvebu.c b/drivers/ata/ahci_mvebu.c
-index f9cb51be38ebf..a54214291481f 100644
---- a/drivers/ata/ahci_mvebu.c
-+++ b/drivers/ata/ahci_mvebu.c
-@@ -28,6 +28,10 @@
- #define AHCI_WINDOW_BASE(win)	(0x64 + ((win) << 4))
- #define AHCI_WINDOW_SIZE(win)	(0x68 + ((win) << 4))
- 
-+struct ahci_mvebu_plat_data {
-+	int (*plat_config)(struct ahci_host_priv *hpriv);
-+};
-+
- static void ahci_mvebu_mbus_config(struct ahci_host_priv *hpriv,
- 				   const struct mbus_dram_target_info *dram)
- {
-@@ -62,6 +66,22 @@ static void ahci_mvebu_regret_option(struct ahci_host_priv *hpriv)
- 	writel(0x80, hpriv->mmio + AHCI_VENDOR_SPECIFIC_0_DATA);
- }
- 
-+static int ahci_mvebu_armada_380_config(struct ahci_host_priv *hpriv)
-+{
-+	const struct mbus_dram_target_info *dram;
-+	int rc = 0;
-+
-+	dram = mv_mbus_dram_info();
-+	if (dram)
-+		ahci_mvebu_mbus_config(hpriv, dram);
-+	else
-+		rc = -ENODEV;
-+
-+	ahci_mvebu_regret_option(hpriv);
-+
-+	return rc;
-+}
-+
- /**
-  * ahci_mvebu_stop_engine
-  *
-@@ -126,13 +146,10 @@ static int ahci_mvebu_resume(struct platform_device *pdev)
- {
- 	struct ata_host *host = platform_get_drvdata(pdev);
- 	struct ahci_host_priv *hpriv = host->private_data;
--	const struct mbus_dram_target_info *dram;
-+	const struct ahci_mvebu_plat_data *pdata = hpriv->plat_data;
- 
--	dram = mv_mbus_dram_info();
--	if (dram)
--		ahci_mvebu_mbus_config(hpriv, dram);
--
--	ahci_mvebu_regret_option(hpriv);
-+	if (pdata->plat_config)
-+		pdata->plat_config(hpriv);
- 
- 	return ahci_platform_resume_host(&pdev->dev);
- }
-@@ -154,28 +171,31 @@ static struct scsi_host_template ahci_platform_sht = {
- 
- static int ahci_mvebu_probe(struct platform_device *pdev)
- {
-+	const struct ahci_mvebu_plat_data *pdata;
- 	struct ahci_host_priv *hpriv;
--	const struct mbus_dram_target_info *dram;
- 	int rc;
- 
-+	pdata = of_device_get_match_data(&pdev->dev);
-+	if (!pdata)
-+		return -EINVAL;
-+
- 	hpriv = ahci_platform_get_resources(pdev, 0);
- 	if (IS_ERR(hpriv))
- 		return PTR_ERR(hpriv);
- 
-+	hpriv->plat_data = (void *)pdata;
-+
- 	rc = ahci_platform_enable_resources(hpriv);
- 	if (rc)
- 		return rc;
- 
- 	hpriv->stop_engine = ahci_mvebu_stop_engine;
- 
--	if (of_device_is_compatible(pdev->dev.of_node,
--				    "marvell,armada-380-ahci")) {
--		dram = mv_mbus_dram_info();
--		if (!dram)
--			return -ENODEV;
--
--		ahci_mvebu_mbus_config(hpriv, dram);
--		ahci_mvebu_regret_option(hpriv);
-+	pdata = hpriv->plat_data;
-+	if (pdata->plat_config) {
-+		rc = pdata->plat_config(hpriv);
-+		if (rc)
-+			goto disable_resources;
- 	}
- 
- 	rc = ahci_platform_init_host(pdev, hpriv, &ahci_mvebu_port_info,
-@@ -190,9 +210,23 @@ static int ahci_mvebu_probe(struct platform_device *pdev)
- 	return rc;
- }
- 
-+static const struct ahci_mvebu_plat_data ahci_mvebu_armada_380_plat_data = {
-+	.plat_config = ahci_mvebu_armada_380_config,
-+};
-+
-+static const struct ahci_mvebu_plat_data ahci_mvebu_armada_3700_plat_data = {
-+	.plat_config = NULL,
-+};
-+
- static const struct of_device_id ahci_mvebu_of_match[] = {
--	{ .compatible = "marvell,armada-380-ahci", },
--	{ .compatible = "marvell,armada-3700-ahci", },
-+	{
-+		.compatible = "marvell,armada-380-ahci",
-+		.data = &ahci_mvebu_armada_380_plat_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-3700-ahci",
-+		.data = &ahci_mvebu_armada_3700_plat_data,
-+	},
- 	{ },
+diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
+index 2f8db9d625514..4a28f3fbb0a28 100644
+--- a/drivers/gpu/ipu-v3/ipu-pre.c
++++ b/drivers/gpu/ipu-v3/ipu-pre.c
+@@ -106,6 +106,7 @@ struct ipu_pre {
+ 	void			*buffer_virt;
+ 	bool			in_use;
+ 	unsigned int		safe_window_end;
++	unsigned int		last_bufaddr;
  };
- MODULE_DEVICE_TABLE(of, ahci_mvebu_of_match);
+ 
+ static DEFINE_MUTEX(ipu_pre_list_mutex);
+@@ -185,6 +186,7 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
+ 
+ 	writel(bufaddr, pre->regs + IPU_PRE_CUR_BUF);
+ 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
++	pre->last_bufaddr = bufaddr;
+ 
+ 	val = IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(0) |
+ 	      IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(active_bpp) |
+@@ -242,7 +244,11 @@ void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr)
+ 	unsigned short current_yblock;
+ 	u32 val;
+ 
++	if (bufaddr == pre->last_bufaddr)
++		return;
++
+ 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
++	pre->last_bufaddr = bufaddr;
+ 
+ 	do {
+ 		if (time_after(jiffies, timeout)) {
 -- 
 2.20.1
 
