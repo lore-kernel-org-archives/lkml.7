@@ -2,214 +2,109 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EE8C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E6F2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E52+dKeq"
+	by mail.kernel.org (Postfix) with ESMTP id 9510C2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574447744;
+	bh=J3Yljzx3XaQC6g2ft6NtiE1kMYlK6BDIFiX1HvU4KzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hthDILsWLjzINraZ8WeMteJAMeRzEFrp6nAc3xEJOYv1QGaF7SXOa27oQkaBZ+nZ5
+	 of8SYP5RB8L+XBwxcZEXt6O/wBA15ZntyX4rUhYKS0p2Ii8KDm6O+sOw5uI/aAZxUV
+	 p90iyD/GOsguqotnp93d9TcIC99AmucvMdo+0dUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfKVSa3 (ORCPT
+        id S1726775AbfKVSfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:30:29 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:55352 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfKVSa3 (ORCPT
+        Fri, 22 Nov 2019 13:35:43 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38475 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKVSfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:30:29 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAMIONjJ118773;
-        Fri, 22 Nov 2019 18:29:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=NQkUG/QqIaYEKdkqScvUyHBIBLEDQ0mhob5S2Y4ohUs=;
- b=E52+dKeqaDVgHp94Xqj3jHLM1YYCYmkprL5gAi578Gtmpf3gxI2rIwdhX15tENum/b7y
- QyUWHpbp7GZKc6EGvcRfjyWE28WHIehtMcCFtjf1LeptGUjkvIuyaFAYRUh50C/FESMA
- l3r7A107MhuGCihEsCCeMpXGeMBK3z01PSmiaw0qyVBqMK+B4pkFiq40g1pObipkF3am
- vBJLxqjfrDssLbo28BvNTRnU9xYq2vqgPk/4YGQ8kz8KJE/HQB3mwSc8BJkLZKOC8mXa
- Vb7FcATdRhp6eJLhhjpsPxkIHK1JaAr/4+Lsp8uWpH/Bllo8K0adXV0C46H9CiMV/Mgq Ag== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2wa92qc8cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 18:29:29 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAMITCF4189474;
-        Fri, 22 Nov 2019 18:29:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2wegqs4gna-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 18:29:29 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAMIS5d5000570;
-        Fri, 22 Nov 2019 18:28:05 GMT
-Received: from [10.39.199.17] (/10.39.199.17)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 22 Nov 2019 10:28:05 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v6 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <201911202212.CdyX1gua%lkp@intel.com>
-Date:   Fri, 22 Nov 2019 13:28:02 -0500
-Cc:     kbuild-all@lists.01.org, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B1A1B09F-C44E-45F7-80EB-09E30AEFD358@oracle.com>
-References: <20191107174622.61718-4-alex.kogan@oracle.com>
- <201911202212.CdyX1gua%lkp@intel.com>
-To:     kbuild test robot <lkp@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9449 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911220153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9449 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911220153
+        Fri, 22 Nov 2019 13:35:43 -0500
+Received: by mail-pg1-f195.google.com with SMTP id t3so3263486pgl.5;
+        Fri, 22 Nov 2019 10:35:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C496R21wUL9ca4CtsQrqNT8rS3xWsFNgWAAHeXrAZps=;
+        b=n8nLnWy+o67EYWdosNVhPdW5U3vZ9/2ygaDthy1kGO/ljoymyc/kekWtI327mkENhq
+         dHCflQSONcF5Ic0s7NZKG5H61a4ZnpP7xbEqv0sVr0xikdo1Ogp+QaZj0+zT86Zs6/dI
+         RHubSY2jqD9QMzPZTia64QKh5ndoqw1fF71ZEIoeGRIu+I01YezsSoeSyGx0kBb01v4S
+         BSuDlUxcH94LsfWtVgQCfuWAW9swS/64kkHE3NKD9nhD49VbiDtrt8M+o4rDu5NjWYhJ
+         LjZenRWRb3Op60hFd9QdcjR6znGMiPDb5wqBi+6lWQBkQm2F0O13JpHXUu7fKVNOsVWL
+         2hag==
+X-Gm-Message-State: APjAAAWCV0TcNNRx+Gpj/yp7HQH27GX0/41GdKcB4Dm+GIUCscb8ZVYJ
+        B+aWmFdJiCcb5F4It6ZaxieTIUkrZi69tQ==
+X-Google-Smtp-Source: APXvYqzDXWJQrZuIC1f1s93w/jXpX0SxxCUgm3qLPAVjqBr/839u4wmTH6F6WvmyS4MIEmnILpQcnw==
+X-Received: by 2002:a62:1b50:: with SMTP id b77mr19201572pfb.187.1574447742174;
+        Fri, 22 Nov 2019 10:35:42 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id i13sm7949307pfo.39.2019.11.22.10.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 10:35:41 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:36:21 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Lichao Liu <liulichao@loongson.cn>
+Cc:     chenhc@lemote.com, jiaxun.yang@flygoat.com, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS:Loongson64:Limit 8259.h by config
+Message-ID: <20191122183621.67p7vuvfzhpoldna@lantea.localdomain>
+References: <20191122135851.5145-1-liulichao@loongson.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191122135851.5145-1-liulichao@loongson.cn>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lichao,
 
+On Fri, Nov 22, 2019 at 09:58:51PM +0800, Lichao Liu wrote:
+> Not all platform config CONFIG_I8259, So Use the macro CONFIG_I8259
+> to control whether to include the asm/i8259.h header file.
 
-> On Nov 20, 2019, at 10:16 AM, kbuild test robot <lkp@intel.com> wrote:
->=20
-> Hi Alex,
->=20
-> Thank you for the patch! Yet something to improve:
->=20
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v5.4-rc8 next-20191120]
-> [if your patch is applied to the wrong git tree, please drop us a note =
-to help
-> improve the system. BTW, we also suggest to use '--base' option to =
-specify the
-> base tree in git format-patch, please see =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__stackoverflow.com_a=
-_37406982&d=3DDwIBAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DH=
-vhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=3DBxEt1232ccGlMGDinAB0QAUaTFy=
-l-m5sp4C-crHjpoU&s=3DOzzQqg4fTDV55X-y4vbnGeXoJaPHSvO_EfrUQnMVRHc&e=3D ]
->=20
-> url:    =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.com_0day-2Dc=
-i_linux_commits_Alex-2DKogan_locking-2Dqspinlock-2DRename-2Dmcs-2Dlock-2Du=
-nlock-2Dmacros-2Dand-2Dmake-2Dthem-2Dmore-2Dgeneric_20191109-2D180535&d=3D=
-DwIBAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4omdCk-GE=
-1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=3DBxEt1232ccGlMGDinAB0QAUaTFyl-m5sp4C-crHjp=
-oU&s=3DuE7ZeYXOFiu09PUVjnCntEe2rR5x_QxS6dEW9twpfok&e=3D=20
-> base:   =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_pub_=
-scm_linux_kernel_git_torvalds_linux.git&d=3DDwIBAg&c=3DRoP1YumCXCgaWHvlZYR=
-8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=
-=3DBxEt1232ccGlMGDinAB0QAUaTFyl-m5sp4C-crHjpoU&s=3DaAKxuXc_c7OF0ffioQfVsIB=
-6H-4Sd9PYxSM7kurm2ig&e=3D  0058b0a506e40d9a2c62015fe92eb64a44d78cd9
-> config: i386-randconfig-f003-20191120 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->        # save the attached .config to linux build tree
->        make ARCH=3Di386=20
->=20
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->=20
-> All error/warnings (new ones prefixed by >>):
->=20
->   In file included from include/linux/export.h:42:0,
->                    from include/linux/linkage.h:7,
->                    from include/linux/kernel.h:8,
->                    from include/linux/list.h:9,
->                    from include/linux/smp.h:12,
->                    from kernel/locking/qspinlock.c:16:
->   kernel/locking/qspinlock_cna.h: In function 'cna_init_nodes':
->>> include/linux/compiler.h:350:38: error: call to =
-'__compiletime_assert_80' declared with attribute error: BUILD_BUG_ON =
-failed: sizeof(struct cna_node) > sizeof(struct qnode)
->     _compiletime_assert(condition, msg, __compiletime_assert_, =
-__LINE__)
->                                         ^
->   include/linux/compiler.h:331:4: note: in definition of macro =
-'__compiletime_assert'
->       prefix ## suffix();    \
->       ^~~~~~
->   include/linux/compiler.h:350:2: note: in expansion of macro =
-'_compiletime_assert'
->     _compiletime_assert(condition, msg, __compiletime_assert_, =
-__LINE__)
->     ^~~~~~~~~~~~~~~~~~~
->   include/linux/build_bug.h:39:37: note: in expansion of macro =
-'compiletime_assert'
->    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), =
-msg)
->                                        ^~~~~~~~~~~~~~~~~~
->   include/linux/build_bug.h:50:2: note: in expansion of macro =
-'BUILD_BUG_ON_MSG'
->     BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
->     ^~~~~~~~~~~~~~~~
->>> kernel/locking/qspinlock_cna.h:80:2: note: in expansion of macro =
-'BUILD_BUG_ON'
->     BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
->     ^~~~~~~~~~~~
+Generally including headers is harmless - it's quite common to include
+headers which might or might not be used, and if nothing from the header
+is used then its inclusion simply makes no difference. The compiler will
+see the header contents & discard them, no big deal.
 
-Consider the following definition of qnode:
-
-struct qnode {
-	struct mcs_spinlock mcs;
-#if defined(CONFIG_PARAVIRT_SPINLOCKS) || =
-defined(CONFIG_NUMA_AWARE_SPINLOCKS)
-	long reserved[2];
-#endif
-};
-
-and this is how cna_node is defined:
-
-struct cna_node {
-	struct mcs_spinlock	mcs;
-	int			numa_node;
-	u32			encoded_tail;
-	u32			pre_scan_result; /* 0, 1, 2 or encoded =
-tail */
-	u32			intra_count;
-};
-
-Since long is 32 bit on i386, we get the compilation error above.
-
-We can try and squeeze CNA-specific fields into 64 bit on i386 (or any =
-32bit=20
-architecture for that matter). Note that an encoded tail pointer =
-requires up=20
-to 24 bits, and we have two of those. We would want different field =
-encodings=20
-for 32 vs 64bit architectures, and this all will be quite ugly.
-
-So instead we should probably either change the definition of @reserved =
-in qnode=20
-to long long, or perhaps disable CNA on 32bit architectures altogether?
-I would certainly prefer the former, especially as it requires the least =
-amount=20
-of code/config changes.
-
-Any objections / thoughts?
+So can you describe why you want to add the #ifdef here? What's
+problematic about including asm/i8259.h when CONFIG_I8259=n?
 
 Thanks,
-=E2=80=94 Alex
+    Paul
 
+> Signed-off-by: Lichao Liu <liulichao@loongson.cn>
+> ---
+>  arch/mips/loongson64/pm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/mips/loongson64/pm.c b/arch/mips/loongson64/pm.c
+> index 7c8556f09781..08238a58107f 100644
+> --- a/arch/mips/loongson64/pm.c
+> +++ b/arch/mips/loongson64/pm.c
+> @@ -9,7 +9,9 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/pm.h>
+>  
+> +#ifdef CONFIG_I8259
+>  #include <asm/i8259.h>
+> +#endif
+>  #include <asm/mipsregs.h>
+>  
+>  #include <loongson.h>
+> -- 
+> 2.17.1
+> 
