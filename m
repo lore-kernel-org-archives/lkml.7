@@ -2,131 +2,168 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BFFC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE6720707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574416691;
-	bh=Cuc/IiXzyQEEw80jQjdU7jZhygmXvO8znC+p5H9OQLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qxKQXlLake1ywa65LRpUTXgIt8XS8nu96KGRXUHeq3VCl83Ls1LAJqF6otew+mUor
-	 klr4svOwwjWhvLDa8xwf2dND/rj0/G+mYwbldeNQfj3c23dteaxD6sdXwEt+rvBeKO
-	 Ikncl9gcMRbLORVxRKqrCW9lTxmtkehCv2zsh12U=
+	by mail.kernel.org (Postfix) with ESMTP id 249F02070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UlNet/e/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfKVJ6K (ORCPT
+        id S1726760AbfKVKCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 04:58:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfKVJ6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 04:58:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E26D020707;
-        Fri, 22 Nov 2019 09:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574416688;
-        bh=Cuc/IiXzyQEEw80jQjdU7jZhygmXvO8znC+p5H9OQLw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aZOZIyR+dvY6bOrR8vOgdbyYClJax1rGIKfP45kPORPGSVn5jkiDHColtsP5IAwZB
-         47nVbkg93iTHw7fLQDsNkPAD06jW2aTVgYLTXVt/secLN2grNIcdkJAHUZBDb80SqJ
-         1CGhsgzJpqbNOJeQXNy79Bt4r6ZnYGdWT5USQ7jE=
-Date:   Fri, 22 Nov 2019 10:58:05 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        pasha.tatashin@soleen.com
-Subject: Re: [PATCH] [Backport to stable 4.9.y] arm64: uaccess: Ensure PAN is
- re-enabled after unhandled uaccess fault
-Message-ID: <20191122095805.GA1882462@kroah.com>
-References: <20191122095116.12244-1-will@kernel.org>
+        Fri, 22 Nov 2019 05:02:23 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26764 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726100AbfKVKCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:02:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574416940;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q5brik//Uj78Imdw+Nasd8kB1YSOqMDawTRFR2gNwAc=;
+        b=UlNet/e/vMxmEgMGO0nLCJF4wOK2DyUJzQBVA06EoBW0Uf8YSunAwwqZKvDdcwKx35Ow+2
+        T8nixD5EaFVqgKi0LRGYd9GpKvqNxtR6y0CGBtU0KDLK/DGIuZpHr3+1+pnWv9OUfZo5IO
+        kOEpqX/pzaZNbW+C/BSq5aWcc85WsQY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-Jw1Np3e6OH-AOQ2HPnuygQ-1; Fri, 22 Nov 2019 05:02:17 -0500
+Received: by mail-wm1-f71.google.com with SMTP id z3so2859974wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 02:02:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TxlQ/8hM2ybpNrpWCxq4vBt3O3dzk/gjN30vFVF3w9c=;
+        b=hhdguYTCh+l7aDq9fwZdDv/q87Wn1EDe7O9CLS9oE3bVXKPufB71ihN63FJ8ZIo00y
+         wgQSEC3eukF8yQwqNz7aEWwXq5y4FVJihEKTVGmKXewqYReYa2/eCoes/yikk9Zsz4A2
+         yKGnvrWwQGnvTWjkrao7VLkPalSuZbHeLpCtzJnvumhvKXsY29xvGpBh9gaZJ82kWiJg
+         uNByKpj4AD/KUdcNUsQffCSteQPxLLQYh0g1oNnlvLfLFGCOHPywKQQcL3qTzhn1iL8N
+         y5tnFYnJ4/zwGOEWAg4WOVIncImMP1FFb17kVTz36R1K6P49y05HDNapwJ/CRUdymVhT
+         kDwA==
+X-Gm-Message-State: APjAAAWGqk0ZW76kvtL4jrvDl6QapfHOirdHSqXOItgI3nki69NUDtUV
+        j47zDXDNL83lG5OvvkuKrQyrepVpV0/ed2CdaXv8J3b9kWSYr09XVsCZOrP0KrPQ/vuBEfLVA95
+        /sjSZn4SWg9gBBu0d25eTHUR+
+X-Received: by 2002:a1c:3d8a:: with SMTP id k132mr904876wma.144.1574416936568;
+        Fri, 22 Nov 2019 02:02:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwnfT8kemugquSzuCzADN8nk7bWDwXV59utNsTdM9vDxjzVAVfFfI24LbFsDpJ3AH0GMJIOQA==
+X-Received: by 2002:a1c:3d8a:: with SMTP id k132mr904842wma.144.1574416936299;
+        Fri, 22 Nov 2019 02:02:16 -0800 (PST)
+Received: from steredhat.homenet.telecomitalia.it (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id v19sm2111293wrg.38.2019.11.22.02.02.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 02:02:15 -0800 (PST)
+Date:   Fri, 22 Nov 2019 11:02:12 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@gmail.com>, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [PATCH net-next 4/6] vsock: add vsock_loopback transport
+Message-ID: <20191122100212.u3mvt6qkay7zexz7@steredhat.homenet.telecomitalia.it>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-5-sgarzare@redhat.com>
+ <20191121093458.GB439743@stefanha-x1.localdomain>
+ <20191121095948.bc7lc3ptsh6jxizw@steredhat>
+ <20191121152517.zfedz6hg6ftcb2ks@steredhat>
+ <20191122092546.GA464656@stefanha-x1.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191122092546.GA464656@stefanha-x1.localdomain>
+X-MC-Unique: Jw1Np3e6OH-AOQ2HPnuygQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191122095116.12244-1-will@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 09:51:16AM +0000, Will Deacon wrote:
-> From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> 
-> commit 94bb804e1e6f0a9a77acf20d7c70ea141c6c821e upstream.
-> 
-> A number of our uaccess routines ('__arch_clear_user()' and
-> '__arch_copy_{in,from,to}_user()') fail to re-enable PAN if they
-> encounter an unhandled fault whilst accessing userspace.
-> 
-> For CPUs implementing both hardware PAN and UAO, this bug has no effect
-> when both extensions are in use by the kernel.
-> 
-> For CPUs implementing hardware PAN but not UAO, this means that a kernel
-> using hardware PAN may execute portions of code with PAN inadvertently
-> disabled, opening us up to potential security vulnerabilities that rely
-> on userspace access from within the kernel which would usually be
-> prevented by this mechanism. In other words, parts of the kernel run the
-> same way as they would on a CPU without PAN implemented/emulated at all.
-> 
-> For CPUs not implementing hardware PAN and instead relying on software
-> emulation via 'CONFIG_ARM64_SW_TTBR0_PAN=y', the impact is unfortunately
-> much worse. Calling 'schedule()' with software PAN disabled means that
-> the next task will execute in the kernel using the page-table and ASID
-> of the previous process even after 'switch_mm()', since the actual
-> hardware switch is deferred until return to userspace. At this point, or
-> if there is a intermediate call to 'uaccess_enable()', the page-table
-> and ASID of the new process are installed. Sadly, due to the changes
-> introduced by KPTI, this is not an atomic operation and there is a very
-> small window (two instructions) where the CPU is configured with the
-> page-table of the old task and the ASID of the new task; a speculative
-> access in this state is disastrous because it would corrupt the TLB
-> entries for the new task with mappings from the previous address space.
-> 
-> As Pavel explains:
-> 
->   | I was able to reproduce memory corruption problem on Broadcom's SoC
->   | ARMv8-A like this:
->   |
->   | Enable software perf-events with PERF_SAMPLE_CALLCHAIN so userland's
->   | stack is accessed and copied.
->   |
->   | The test program performed the following on every CPU and forking
->   | many processes:
->   |
->   |	unsigned long *map = mmap(NULL, PAGE_SIZE, PROT_READ|PROT_WRITE,
->   |				  MAP_SHARED | MAP_ANONYMOUS, -1, 0);
->   |	map[0] = getpid();
->   |	sched_yield();
->   |	if (map[0] != getpid()) {
->   |		fprintf(stderr, "Corruption detected!");
->   |	}
->   |	munmap(map, PAGE_SIZE);
->   |
->   | From time to time I was getting map[0] to contain pid for a
->   | different process.
-> 
-> Ensure that PAN is re-enabled when returning after an unhandled user
-> fault from our uaccess routines.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> Tested-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: <stable@vger.kernel.org>
-> Fixes: 338d4f49d6f7 ("arm64: kernel: Add support for Privileged Access Never")
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> [will: rewrote commit message]
-> [will: backport for 4.9.y stable kernels]
+On Fri, Nov 22, 2019 at 09:25:46AM +0000, Stefan Hajnoczi wrote:
+> On Thu, Nov 21, 2019 at 04:25:17PM +0100, Stefano Garzarella wrote:
+> > On Thu, Nov 21, 2019 at 10:59:48AM +0100, Stefano Garzarella wrote:
+> > > On Thu, Nov 21, 2019 at 09:34:58AM +0000, Stefan Hajnoczi wrote:
+> > > > On Tue, Nov 19, 2019 at 12:01:19PM +0100, Stefano Garzarella wrote:
+> > > > > +static struct workqueue_struct *vsock_loopback_workqueue;
+> > > > > +static struct vsock_loopback *the_vsock_loopback;
+> > > >=20
+> > > > the_vsock_loopback could be a static global variable (not a pointer=
+) and
+> > > > vsock_loopback_workqueue could also be included in the struct.
+> > > >=20
+> > > > The RCU pointer is really a way to synchronize vsock_loopback_send_=
+pkt()
+> > > > and vsock_loopback_cancel_pkt() with module exit.  There is no othe=
+r
+> > > > reason for using a pointer.
+> > > >=20
+> > > > It's cleaner to implement the synchronization once in af_vsock.c (o=
+r
+> > > > virtio_transport_common.c) instead of making each transport do it.
+> > > > Maybe try_module_get() and related APIs provide the necessary seman=
+tics
+> > > > so that core vsock code can hold the transport module while it's be=
+ing
+> > > > used to send/cancel a packet.
+> > >=20
+> > > Right, the module cannot be unloaded until open sockets, so here the
+> > > synchronization is not needed.
+> > >=20
+> > > The synchronization come from virtio-vsock device that can be
+> > > hot-unplugged while sockets are still open, but that can't happen her=
+e.
+> > >=20
+> > > I will remove the pointers and RCU in the v2.
+> > >=20
+> > > Can I keep your R-b or do you prefer to watch v2 first?
+>=20
+> I'd like to review v2.
+>=20
 
-Thanks for this and the 4.4.y backport, both now queued up.
+Sure!
 
-greg k-h
+> > > > > +MODULE_ALIAS_NETPROTO(PF_VSOCK);
+> > > >=20
+> > > > Why does this module define the alias for PF_VSOCK?  Doesn't anothe=
+r
+> > > > module already define this alias?
+> > >=20
+> > > It is a way to load this module when PF_VSOCK is starting to be used.
+> > > MODULE_ALIAS_NETPROTO(PF_VSOCK) is already defined in vmci_transport
+> > > and hyperv_transport. IIUC it is used for the same reason.
+> > >=20
+> > > In virtio_transport we don't need it because it will be loaded when
+> > > the PCI device is discovered.
+> > >=20
+> > > Do you think there's a better way?
+> > > Should I include the vsock_loopback transport directly in af_vsock
+> > > without creating a new module?
+> > >=20
+> >=20
+> > That last thing I said may not be possible:
+> > I remembered that I tried, but DEPMOD found a cyclic dependency because
+> > vsock_transport use virtio_transport_common that use vsock, so if I
+> > include vsock_transport in the vsock module, DEPMOD is not happy.
+> >=20
+> > Do you think it's okay in this case to keep MODULE_ALIAS_NETPROTO(PF_VS=
+OCK)
+> > or is there a better way?
+>=20
+> The reason I asked is because the semantics of duplicate module aliases
+> aren't clear to me.  Do all modules with the same alias get loaded?
+> Or just the first?  Or ...?
+
+It wasn't clear to me either, but when I tried, I saw that all modules
+with the same alias got loaded.
+
+Stefano
+
