@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C6AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A109C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D182073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DBBE2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420165;
-	bh=DGzxKgyrW12ZxPj6aJKqTQ+5fMeJA1J/Xw/awWrHAsE=;
+	s=default; t=1574420169;
+	bh=fCpRbnO/C4K2SYmAOtHa5kjvmeYmsk7heKkZ5Wjfqeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rc+SAtQ60O9c9MvVVc6Q5R9j/+wdfIS0oUgrOLtCZfofnkTjUwnxqVL/TDmG9FjNp
-	 T7HYrJJ17cV/b4IR4SlzYuw7vFCzQ3KeGO6hXJYW8xht+0/f8JHAXUBCiKI1ruH+ev
-	 mWsOA/bRW6K/enWbbVadCW/fEsLuT00SXSQGqr3s=
+	b=kBEg5KUIPioxfuzWdwbyHp9GFBLRF0jhDOa+HRSh9ggFGCayeLkLQc95BASrEmchm
+	 HY1qQXC1Sp2NTrP5iMEdkUz7az5Lz9ljHg+HrOETHKiR68UUagdf/UCN66qXDlWmCC
+	 GzIwCU6mXCalep9JLI9QTntQDYNITsR4I7AOHufU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbfKVK4F (ORCPT
+        id S1730555AbfKVK4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:56:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43544 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:56:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbfKVK4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:56:03 -0500
+        id S1727584AbfKVK4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:56:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 065152077B;
-        Fri, 22 Nov 2019 10:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3490720748;
+        Fri, 22 Nov 2019 10:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420162;
-        bh=DGzxKgyrW12ZxPj6aJKqTQ+5fMeJA1J/Xw/awWrHAsE=;
+        s=default; t=1574420165;
+        bh=fCpRbnO/C4K2SYmAOtHa5kjvmeYmsk7heKkZ5Wjfqeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSOA7vVLduh7NLpVMSqWKTpDDyvXiM1YknPFOgv43z63HRy71JQwoPYIyrcdSTFnW
-         H+JtBOR4vsISbugwZbFnOjhHGDelhSagFFMgPVsqxe79OLRkcv+6D0VtB8dAr2qgNf
-         dAFWdezgxe1TfNjbiHtM63Jz1fpdb/qq3j/kUSeo=
+        b=dJkr7d9c7qWYgWPkbiemEUz+dfTIoCuIRxtLY9u7P5+vnARPCTE7DT/q9nrxEb7ib
+         Q93qTWI8KskzR7tUBcmubKHyAZeT45noDrAVWLi4ci0y/x5qkadWU/9Mcx38fYqaFY
+         vKSrwdW+2ZhvePFFyFQFjQ+N5Kp7Cao0EijhAP+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Wei Liu <wei.liu2@citrix.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/220] net: ovs: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:26:20 +0100
-Message-Id: <20191122100913.681306881@linuxfoundation.org>
+Subject: [PATCH 4.19 016/220] net: xen-netback: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:26:21 +0100
+Message-Id: <20191122100913.735000966@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit eddf11e18dff0e8671e06ce54e64cfc843303ab9 ]
+[ Upstream commit a9ca7f17c6d240e269a24cbcd76abf9a940309dd ]
 
 The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
 which is a typedef for an enum type, so make sure the implementation in
@@ -72,35 +73,27 @@ return type to netdev_tx_t.
 Found by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Wei Liu <wei.liu2@citrix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/vport-internal_dev.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/xen-netback/interface.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
-index d2356a284646c..3ebf8ba7c3898 100644
---- a/net/openvswitch/vport-internal_dev.c
-+++ b/net/openvswitch/vport-internal_dev.c
-@@ -43,7 +43,8 @@ static struct internal_dev *internal_dev_priv(struct net_device *netdev)
+diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
+index 27b6b141cb71f..4cafc31b98b7c 100644
+--- a/drivers/net/xen-netback/interface.c
++++ b/drivers/net/xen-netback/interface.c
+@@ -173,7 +173,8 @@ static u16 xenvif_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 				[skb_get_hash_raw(skb) % size];
  }
  
- /* Called with rcu_read_lock_bh. */
--static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
+-static int xenvif_start_xmit(struct sk_buff *skb, struct net_device *dev)
 +static netdev_tx_t
-+internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
++xenvif_start_xmit(struct sk_buff *skb, struct net_device *dev)
  {
- 	int len, err;
- 
-@@ -62,7 +63,7 @@ static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
- 	} else {
- 		netdev->stats.tx_errors++;
- 	}
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- static int internal_dev_open(struct net_device *netdev)
+ 	struct xenvif *vif = netdev_priv(dev);
+ 	struct xenvif_queue *queue = NULL;
 -- 
 2.20.1
 
