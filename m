@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F36C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A65C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FDC2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E110A2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402346;
-	bh=fartVLOhnNSRIT/tr81MwxpOnOPAeQcYz5Tr9R0c+A4=;
+	s=default; t=1574402350;
+	bh=fIDkp3nQknwUGs/jEnpCYRRi9+4jX4CW2Ox9ygyMYls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHNyGc1g6Zk+YJWxEERleBxFbGaUOEF6WdsDdxF9nDarT2w4GvtE5+P/XQVVdmBDY
-	 PTbbbNqU2sRAqfx80el9+bBiUpqDGInjOEaU4o0zgn5RX/St279Gl92Cc4rFbzYWlz
-	 7KPzkh3Yuj8w26YV5OEOnBDXska9sH1gh7EDpdp4=
+	b=kQ41GZAOs4ZsRNLpwjlCJ1oGksKVzu1+ajTksdOQkzcxIgSk9kfmtsq2aj/CXHpHL
+	 XkkFTE6OJZeqIZ5d9czPcMtATppu/BrvyvcHtOvyiYL6bZ5uUQkXFSE7cCVvrUcBJn
+	 cIndT0aYakrODOg1tzCBY2l04kN0WS6/SlTaGE4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfKVF7E (ORCPT
+        id S1729567AbfKVF55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:59:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36616 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbfKVF57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:59 -0500
+        id S1729524AbfKVF5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28BCD20717;
-        Fri, 22 Nov 2019 05:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A7632072E;
+        Fri, 22 Nov 2019 05:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402279;
-        bh=fartVLOhnNSRIT/tr81MwxpOnOPAeQcYz5Tr9R0c+A4=;
+        s=default; t=1574402267;
+        bh=fIDkp3nQknwUGs/jEnpCYRRi9+4jX4CW2Ox9ygyMYls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRuxfQK8Mi96FG++I53fhohHrJZT5Nr+/Gt6DhryIQVaaOotEsEkhTxfhZDidEaaS
-         LHSxNjnp4RuXsZSMBVJj+U9yv4Y/cG8GH0eH+dSgdMbilwXQdlqvswCnduGRGyOgst
-         PAA8Fx6OwHVoM/CZQYhkxL/K+FxnXtOySuPFiwjw=
+        b=v3Wa0/wvpsiLSWNor5KI0eKR4ToFTraBRPfcxSom8C3JkthhHTbBZz3kpBIpB2nr2
+         0N9PZUwcAwcJ8PR8KeXP+MX2kqxVEHJ7MBpkEqBVF7lyGlmc3DQP9wENweU2Gm/dz7
+         DaIsDuxHpupRe/vPP0qkrdTJNzWjOKhksvsLecEs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 118/127] net: hns3: Change fw error code NOT_EXEC to NOT_SUPPORTED
-Date:   Fri, 22 Nov 2019 00:55:35 -0500
-Message-Id: <20191122055544.3299-116-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 107/127] decnet: fix DN_IFREQ_SIZE
+Date:   Fri, 22 Nov 2019 00:55:25 -0500
+Message-Id: <20191122055544.3299-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -61,49 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 4a402f47cfce904051cd8b31bef4fe2910d9dce9 ]
+[ Upstream commit 50c2936634bcb1db78a8ca63249236810c11a80f ]
 
-According to firmware error code definition, the error code of 2
-means NOT_SUPPORTED, this patch changes it to NOT_SUPPORTED.
+Digging through the ioctls with Al because of the previous
+patches, we found that on 64-bit decnet's dn_dev_ioctl()
+is wrong, because struct ifreq::ifr_ifru is actually 24
+bytes (not 16 as expected from struct sockaddr) due to the
+ifru_map and ifru_settings members.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Clearly, decnet expects the ioctl to be called with a struct
+like
+  struct ifreq_dn {
+    char ifr_name[IFNAMSIZ];
+    struct sockaddr_dn ifr_addr;
+  };
+
+since it does
+  struct ifreq *ifr = ...;
+  struct sockaddr_dn *sdn = (struct sockaddr_dn *)&ifr->ifr_addr;
+
+This means that DN_IFREQ_SIZE is too big for what it wants on
+64-bit, as it is
+  sizeof(struct ifreq) - sizeof(struct sockaddr) +
+  sizeof(struct sockaddr_dn)
+
+This assumes that sizeof(struct sockaddr) is the size of ifr_ifru
+but that isn't true.
+
+Fix this to use offsetof(struct ifreq, ifr_ifru).
+
+This indeed doesn't really matter much - the result is that we
+copy in/out 8 bytes more than we should on 64-bit platforms. In
+case the "struct ifreq_dn" lands just on the end of a page though
+it might lead to faults.
+
+As far as I can tell, it has been like this forever, so it seems
+very likely that nobody cares.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 2 ++
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ net/decnet/dn_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 8b511e6e0ce9d..396ea0db71023 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -251,6 +251,8 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
- 			if ((enum hclge_cmd_return_status)desc_ret ==
- 			    HCLGE_CMD_EXEC_SUCCESS)
- 				retval = 0;
-+			else if (desc_ret == HCLGE_CMD_NOT_SUPPORTED)
-+				retval = -EOPNOTSUPP;
- 			else
- 				retval = -EIO;
- 			hw->cmq.last_status = (enum hclge_cmd_status)desc_ret;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 758cf39481312..3823ae6303ad6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -52,7 +52,7 @@ struct hclge_cmq_ring {
- enum hclge_cmd_return_status {
- 	HCLGE_CMD_EXEC_SUCCESS	= 0,
- 	HCLGE_CMD_NO_AUTH	= 1,
--	HCLGE_CMD_NOT_EXEC	= 2,
-+	HCLGE_CMD_NOT_SUPPORTED	= 2,
- 	HCLGE_CMD_QUEUE_FULL	= 3,
- };
+diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
+index df042b6d80b83..22876a197ebec 100644
+--- a/net/decnet/dn_dev.c
++++ b/net/decnet/dn_dev.c
+@@ -56,7 +56,7 @@
+ #include <net/dn_neigh.h>
+ #include <net/dn_fib.h>
  
+-#define DN_IFREQ_SIZE (sizeof(struct ifreq) - sizeof(struct sockaddr) + sizeof(struct sockaddr_dn))
++#define DN_IFREQ_SIZE (offsetof(struct ifreq, ifr_ifru) + sizeof(struct sockaddr_dn))
+ 
+ static char dn_rt_all_end_mcast[ETH_ALEN] = {0xAB,0x00,0x00,0x04,0x00,0x00};
+ static char dn_rt_all_rt_mcast[ETH_ALEN]  = {0xAB,0x00,0x00,0x03,0x00,0x00};
 -- 
 2.20.1
 
