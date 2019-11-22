@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27687C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6AED2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218652068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402846;
-	bh=H8nhKXKNYwhdnZ1oxHBgqJQ/mhf3pJpP7CyzoovXYOM=;
+	s=default; t=1574402852;
+	bh=72si8NNBzDHWEy6P8LB/sxnbv3JGkev8Astuf7ElLT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGhSkTIgW3B/G4u65xgclbQosiw09U8XbEvG7+3qKD+fjmxBnwXtvROLPIFMzd0nH
-	 TJwMh0a67DCPEspQdxPSIr0p/V4zEb4h2zt0uMpMSvEg0iJM6+s0TrSuTdhaLusaZF
-	 yjRHelSjaKZDJZF9WU9WFZO2qE7iZ6K9CAZysvt0=
+	b=XD2pdSNtsGMbaOroLcMKVFQmL0C6mxHgeh/gAk9Epmamo1wasDflHKToFM2wCK2GA
+	 L5yfr99zp7+aOIeRQ1A4purIfmaHH8u2Rij8n7dXwH7RPXaJOqJGR2QYHNUrMQVtho
+	 2+qeZCZEsITaIBOLtReqSENzFeFO3KLxwwVUUTds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfKVGHY (ORCPT
+        id S1729427AbfKVGB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:07:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:01:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbfKVGCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:00 -0500
+        id S1728118AbfKVGBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B0920714;
-        Fri, 22 Nov 2019 06:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828B52070B;
+        Fri, 22 Nov 2019 06:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402519;
-        bh=H8nhKXKNYwhdnZ1oxHBgqJQ/mhf3pJpP7CyzoovXYOM=;
+        s=default; t=1574402515;
+        bh=72si8NNBzDHWEy6P8LB/sxnbv3JGkev8Astuf7ElLT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjE5IACapaKc3V9RlVpBq9VMCplpCP/wSDm+M8JxSEf48cflE8amWX/GUjikjquVF
-         gJlSgZKU29SM0pPwg+jI3s2+UlcvUcHqTXMnw9agQcJT4Zrwtg2/SsvB6zCH//CS66
-         /oOen0z6TsNYKNkBfw6RhPLr550so2a6ei81YkDM=
+        b=BHnaP7Cjety9pc+KiQQVJVGvgHG52wGh6UQ2Ns11C3GsLzKIVCgX26x4uDOwEAPr1
+         Olo7Xe8T+3f25vu6l70LfsLeuR8GdXXU5L7zilPdVu/sve/LCP0kO4lvF6sivDO0uL
+         vfI0cC8vM9TfXm2Hdw051Wvaf0jGNgdizU0FVbWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Mueller <mimu@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 28/91] KVM: s390: unregister debug feature on failing arch init
-Date:   Fri, 22 Nov 2019 01:00:26 -0500
-Message-Id: <20191122060129.4239-27-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/91] HID: intel-ish-hid: fixes incorrect error handling
+Date:   Fri, 22 Nov 2019 01:00:22 -0500
+Message-Id: <20191122060129.4239-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -63,65 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Mueller <mimu@linux.ibm.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 308c3e6673b012beecb96ef04cc65f4a0e7cdd99 ]
+[ Upstream commit 6e0856d317440a950b17c00a9283114f025e5699 ]
 
-Make sure the debug feature and its allocated resources get
-released upon unsuccessful architecture initialization.
+The memory chunk allocated by hid_allocate_device() should be released
+by hid_destroy_device(), not kfree().
 
-A related indication of the issue will be reported as kernel
-message.
-
-Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Message-Id: <20181130143215.69496-2-mimu@linux.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 0b28cb4bcb1("HID: intel-ish-hid: ISH HID client driver")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/hid/intel-ish-hid/ishtp-hid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 37c254677ccda..d8fd2eadcda7f 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -319,19 +319,30 @@ static void kvm_s390_cpu_feat_init(void)
- 
- int kvm_arch_init(void *opaque)
- {
-+	int rc;
-+
- 	kvm_s390_dbf = debug_register("kvm-trace", 32, 1, 7 * sizeof(long));
- 	if (!kvm_s390_dbf)
- 		return -ENOMEM;
- 
- 	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view)) {
--		debug_unregister(kvm_s390_dbf);
--		return -ENOMEM;
-+		rc = -ENOMEM;
-+		goto out_debug_unreg;
- 	}
- 
- 	kvm_s390_cpu_feat_init();
- 
- 	/* Register floating interrupt controller interface. */
--	return kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
-+	rc = kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
-+	if (rc) {
-+		pr_err("Failed to register FLIC rc=%d\n", rc);
-+		goto out_debug_unreg;
-+	}
-+	return 0;
-+
-+out_debug_unreg:
-+	debug_unregister(kvm_s390_dbf);
-+	return rc;
+diff --git a/drivers/hid/intel-ish-hid/ishtp-hid.c b/drivers/hid/intel-ish-hid/ishtp-hid.c
+index 277983aa1d90a..d0b902285fc3a 100644
+--- a/drivers/hid/intel-ish-hid/ishtp-hid.c
++++ b/drivers/hid/intel-ish-hid/ishtp-hid.c
+@@ -222,7 +222,7 @@ int ishtp_hid_probe(unsigned int cur_hid_dev,
+ err_hid_device:
+ 	kfree(hid_data);
+ err_hid_data:
+-	kfree(hid);
++	hid_destroy_device(hid);
+ 	return rv;
  }
  
- void kvm_arch_exit(void)
 -- 
 2.20.1
 
