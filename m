@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03997C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE2EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1B720637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2EFA20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419260;
-	bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+	s=default; t=1574419264;
+	bh=cz9yANBsZW2qAh4Evu4ZWcIfTP6aODRHbacB8e9E0Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0j2/mN1fnEI8dLkMIfuWUs22YT1Nom/rbbXUeainv6OZ+t5GMIL1JjozHeEPkmkZk
-	 f/PhjIkqbg5zS4pkCyWb2Ol6d0nw5Ccq8QozwZ2LQpVIRi2zM2tn/uXViYSivLQq7U
-	 QWS/JGvpROkPJ2S702+SyuWXnkfxe+FAu/gbGQjc=
+	b=p+RmUsL3v2I6iGpP2InCSEDlwfUJiDF1fFdyLcKmMfHcbIxofOvVi6EctGWFXI1te
+	 tkn1UAMyT2qvQrrgSbrF3pyngJM6wgBV11+Lp2a1r5i+HmD8DkuoViUTcRXafcE6oD
+	 SxGSvm112dXGg/eBWVoZUWtS4hK3gCX/7OnC2aeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbfKVKk7 (ORCPT
+        id S1728974AbfKVKlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:40:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728963AbfKVKk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:40:56 -0500
+        id S1728551AbfKVKlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B86C620637;
-        Fri, 22 Nov 2019 10:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045F22071F;
+        Fri, 22 Nov 2019 10:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419256;
-        bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+        s=default; t=1574419259;
+        bh=cz9yANBsZW2qAh4Evu4ZWcIfTP6aODRHbacB8e9E0Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vON+vK9ruulMx4sLQyChIvt8K4D8ho2AVvrQtHmAdJtRAkpAuVX1S6VYf70QExXsh
-         iALHpt4Mqs/IlrSt2WaoRq7+9KqVgtc1S0ugR9gK9qI9aYOjZ0YvruWzKg7IfebK6B
-         LCbViE2di0J642BEHEOs0lbbK+4nP0adcLgU//CE=
+        b=A55ASMvHa35gPowENgN3BMwY+QAuebAv//FPP6bvjQJfTGLFd/rfGPiINdHTNMRSd
+         jpGwoVZC1FoOpe46lohdbE1y5C32SesmIHex2WxUmSDErt81c5J0vG4bxLoiBDEpTj
+         eXnrej2jpyPeNc0b5H8pjxaDS9DRTsXnZK4r4vh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 050/222] dmaengine: dma-jz4780: Further residue status fix
-Date:   Fri, 22 Nov 2019 11:26:30 +0100
-Message-Id: <20191122100854.095019917@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 024/222] gfs2: Dont set GFS2_RDF_UPTODATE when the lvb is updated
+Date:   Fri, 22 Nov 2019 11:26:04 +0100
+Message-Id: <20191122100838.381317027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,44 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
+[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
+The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
+a rgrp buffer is valid. It's cleared when the glock is invalidated,
+signifying that the buffer data is now invalid. But before this
+patch, function update_rgrp_lvb was setting the flag when it
+determined it had a valid lvb. But that's an invalid assumption:
+just because you have a valid lvb doesn't mean you have valid
+buffers. After all, another node may have made the lvb valid,
+and this node just fetched it from the glock via dlm.
 
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
+Consider this scenario:
+1. The file system is mounted with RGRPLVB option.
+2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
+   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
+3. Since loops == 0 and the allocation target (ap->target) is
+   bigger than the largest known chunk of blocks in the rgrp
+   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
+   the call to gfs2_rgrp_bh_get there as well.
+4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
+   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
+   to this invalid assumption.
+5. The next time update_rgrp_lvb is called, it sees the bit is set
+   and just returns 0, assuming both the lvb and rgrp are both
+   uptodate. But since this is a smaller allocation, or space has
+   been freed by another node, thus adjusting the lvb values,
+   it decides to use the rgrp for allocations, with invalid rd_free
+   due to the fact it was never updated.
 
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
+This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
+flag anymore. That way, it has no choice but to fetch the latest
+values.
 
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
+ fs/gfs2/rgrp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 803cfb4523b08..aca2d6fd92d56 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -580,7 +580,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 					to_jz4780_dma_desc(vdesc), 0);
- 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
- 
+diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
+index 0731267072706..f77a38755aea6 100644
+--- a/fs/gfs2/rgrp.c
++++ b/fs/gfs2/rgrp.c
+@@ -1211,7 +1211,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
+ 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
+ 	rl_flags &= ~GFS2_RDF_MASK;
+ 	rgd->rd_flags &= GFS2_RDF_MASK;
+-	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
++	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
+ 	if (rgd->rd_rgl->rl_unlinked == 0)
+ 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
+ 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
 -- 
 2.20.1
 
