@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B380DC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879A82084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18AE2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420554;
-	bh=JlvttV+ytTpJjDcou2x+3Ji1QNx3Gd14PbB1YenipxA=;
+	s=default; t=1574420560;
+	bh=seh6PmXvSTkNpVGMUR2DlyeDVyJ5I38GlRYzKWTGXiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWCnxLHsCfwrF8faCKk+8nrjHg2IG1zXGFsf5QIASC937jS9NGcZW41TOpnq47/o7
-	 25uwDTKBLY/sEW/KBthy9OQsB412+byxAoWRmAL0AMGcbVJ3YA57m8VvjNd9BlkEH2
-	 fbk8+jRyYbtOxaiTeuDSkKdCIfFdKtzp8VNQIkek=
+	b=bhoBv19K+Uw5h1OwyPMDaraoI80iugNLNGbBwF2+TuFG6oNGJ669BLbOc78zbzmMc
+	 SDyamTIVWu8b+3swBcKMUqEm6Jgq5mTjDep3/ythSZVd+7gm2pb1o7MvU7XVn7c/7y
+	 ltjO2voOZO+TgbHDI1Efu4bQXd9NviOvJeWURh+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbfKVLCd (ORCPT
+        id S1731327AbfKVLCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730373AbfKVLCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:24 -0500
+        id S1730991AbfKVLCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBED1207DD;
-        Fri, 22 Nov 2019 11:02:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A507220840;
+        Fri, 22 Nov 2019 11:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420543;
-        bh=JlvttV+ytTpJjDcou2x+3Ji1QNx3Gd14PbB1YenipxA=;
+        s=default; t=1574420555;
+        bh=seh6PmXvSTkNpVGMUR2DlyeDVyJ5I38GlRYzKWTGXiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kSGYFz4EtjeBRcMhAMNqP9mWkDJvUTiu52yNDL3kv76VQKrajVjuuiM2OfEV15wBQ
-         e3X3X0WDAsWFQslj4QUDwOpY7CMQ9VyyVRXaj4Squ1gnPjEpgCGA8YNO5RWIH7OJ2D
-         C+wdADfq8Q6I9EStRz0/l8QkwrM8CMkQJ2zDub4Y=
+        b=m732d10en112HLLS7Qj1z4RcqAwzOvdl8Z1QSnrEsfJLqD94HxmN2h1+ISZ0RqDRd
+         Xn9cZcTiRFmHEkbU/HsJIl3o1eTw2sr0v8tNqQjH53M/AWZqwCeMHyNScYTQrjkHkH
+         ki3Y1BgkU5G59JtHW/pjWXoeLmXySaKdSAKQXhms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Solea <radu.solea@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 142/220] crypto: mxs-dcp - Fix AES issues
-Date:   Fri, 22 Nov 2019 11:28:27 +0100
-Message-Id: <20191122100922.993710960@linuxfoundation.org>
+Subject: [PATCH 4.19 146/220] xsk: proper AF_XDP socket teardown ordering
+Date:   Fri, 22 Nov 2019 11:28:31 +0100
+Message-Id: <20191122100923.263721887@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,119 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Solea <radu.solea@nxp.com>
+From: Björn Töpel <bjorn.topel@intel.com>
 
-[ Upstream commit fadd7a6e616b89c7f4f7bfa7b824f290bab32c3c ]
+[ Upstream commit 541d7fdd7694560404c502f64298a90ffe017e6b ]
 
-The DCP driver does not obey cryptlen, when doing android CTS this
-results in passing to hardware input stream lengths which are not
-multiple of block size.
+The AF_XDP socket struct can exist in three different, implicit
+states: setup, bound and released. Setup is prior the socket has been
+bound to a device. Bound is when the socket is active for receive and
+send. Released is when the process/userspace side of the socket is
+released, but the sock object is still lingering, e.g. when there is a
+reference to the socket in an XSKMAP after process termination.
 
-Add a check to prevent future erroneous stream lengths from reaching the
-hardware and adjust the scatterlist walking code to obey cryptlen.
+The Rx fast-path code uses the "dev" member of struct xdp_sock to
+check whether a socket is bound or relased, and the Tx code uses the
+struct xdp_umem "xsk_list" member in conjunction with "dev" to
+determine the state of a socket.
 
-Also properly copy-out the IV for chaining.
+However, the transition from bound to released did not tear the socket
+down in correct order.
 
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+On the Rx side "dev" was cleared after synchronize_net() making the
+synchronization useless. On the Tx side, the internal queues were
+destroyed prior removing them from the "xsk_list".
+
+This commit corrects the cleanup order, and by doing so
+xdp_del_sk_umem() can be simplified and one synchronize_net() can be
+removed.
+
+Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+Fixes: ac98d8aab61b ("xsk: wire upp Tx zero-copy functions")
+Reported-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxs-dcp.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ net/xdp/xdp_umem.c | 11 +++--------
+ net/xdp/xsk.c      | 13 ++++++++-----
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index 3425ccc012168..b926098f70ffd 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -225,6 +225,12 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
- 	dma_addr_t dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
- 					     DCP_BUF_SZ, DMA_FROM_DEVICE);
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 8cab91c482ff5..d9117ab035f7c 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -32,14 +32,9 @@ void xdp_del_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
+ {
+ 	unsigned long flags;
  
-+	if (actx->fill % AES_BLOCK_SIZE) {
-+		dev_err(sdcp->dev, "Invalid block size!\n");
-+		ret = -EINVAL;
-+		goto aes_done_run;
-+	}
+-	if (xs->dev) {
+-		spin_lock_irqsave(&umem->xsk_list_lock, flags);
+-		list_del_rcu(&xs->list);
+-		spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+-
+-		if (umem->zc)
+-			synchronize_net();
+-	}
++	spin_lock_irqsave(&umem->xsk_list_lock, flags);
++	list_del_rcu(&xs->list);
++	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+ }
+ 
+ int xdp_umem_query(struct net_device *dev, u16 queue_id)
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index 661504042d304..ff15207036dc5 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -343,12 +343,18 @@ static int xsk_release(struct socket *sock)
+ 	local_bh_enable();
+ 
+ 	if (xs->dev) {
++		struct net_device *dev = xs->dev;
 +
- 	/* Fill in the DMA descriptor. */
- 	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
- 		    MXS_DCP_CONTROL0_INTERRUPT |
-@@ -254,6 +260,7 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
- 
- 	ret = mxs_dcp_start_dma(actx);
- 
-+aes_done_run:
- 	dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
- 			 DMA_TO_DEVICE);
- 	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
-@@ -280,13 +287,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 
- 	uint8_t *out_tmp, *src_buf, *dst_buf = NULL;
- 	uint32_t dst_off = 0;
-+	uint32_t last_out_len = 0;
- 
- 	uint8_t *key = sdcp->coh->aes_key;
- 
- 	int ret = 0;
- 	int split = 0;
--	unsigned int i, len, clen, rem = 0;
-+	unsigned int i, len, clen, rem = 0, tlen = 0;
- 	int init = 0;
-+	bool limit_hit = false;
- 
- 	actx->fill = 0;
- 
-@@ -305,6 +314,11 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 	for_each_sg(req->src, src, nents, i) {
- 		src_buf = sg_virt(src);
- 		len = sg_dma_len(src);
-+		tlen += len;
-+		limit_hit = tlen > req->nbytes;
-+
-+		if (limit_hit)
-+			len = req->nbytes - (tlen - len);
- 
- 		do {
- 			if (actx->fill + len > out_off)
-@@ -321,13 +335,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 			 * If we filled the buffer or this is the last SG,
- 			 * submit the buffer.
- 			 */
--			if (actx->fill == out_off || sg_is_last(src)) {
-+			if (actx->fill == out_off || sg_is_last(src) ||
-+				limit_hit) {
- 				ret = mxs_dcp_run_aes(actx, req, init);
- 				if (ret)
- 					return ret;
- 				init = 0;
- 
- 				out_tmp = out_buf;
-+				last_out_len = actx->fill;
- 				while (dst && actx->fill) {
- 					if (!split) {
- 						dst_buf = sg_virt(dst);
-@@ -350,6 +366,19 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 				}
- 			}
- 		} while (len);
-+
-+		if (limit_hit)
-+			break;
-+	}
-+
-+	/* Copy the IV for CBC for chaining */
-+	if (!rctx->ecb) {
-+		if (rctx->enc)
-+			memcpy(req->info, out_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
-+		else
-+			memcpy(req->info, in_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
+ 		/* Wait for driver to stop using the xdp socket. */
+-		synchronize_net();
+-		dev_put(xs->dev);
++		xdp_del_sk_umem(xs->umem, xs);
+ 		xs->dev = NULL;
++		synchronize_net();
++		dev_put(dev);
  	}
  
- 	return ret;
++	xskq_destroy(xs->rx);
++	xskq_destroy(xs->tx);
++
+ 	sock_orphan(sk);
+ 	sock->sk = NULL;
+ 
+@@ -707,9 +713,6 @@ static void xsk_destruct(struct sock *sk)
+ 	if (!sock_flag(sk, SOCK_DEAD))
+ 		return;
+ 
+-	xskq_destroy(xs->rx);
+-	xskq_destroy(xs->tx);
+-	xdp_del_sk_umem(xs->umem, xs);
+ 	xdp_put_umem(xs->umem);
+ 
+ 	sk_refcnt_debug_dec(sk);
 -- 
 2.20.1
 
