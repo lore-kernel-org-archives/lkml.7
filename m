@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80035C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF99DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505032072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E7D20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419079;
-	bh=jIJzKKrRiPN4sYSrKyogbBy6hg42/byJJuVxrEWKYyQ=;
+	s=default; t=1574419084;
+	bh=e1wBrB3GGsfoNvFx3VCcrXtM39XVDHUzUOTodt4IOHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gTD3glndJttHX9cPnh5Sa2vlspCwIl1R7ECzqOSxY1b4C0GL3gMc/BgoLCa/7qYcS
-	 sLb4SirCgLrDmvkCyYrXPsHQpbJC4tI6up2iD9akFA7sRovkXXjep5SYgpQDP2npOc
-	 R3pClDA3sZ7jsDqKGMqSOAFgp/TJVyRiHf4nenKc=
+	b=DaWCA9wEkrB/q0fUcps7V4gaGKlXxzSg237lhczaQMzVShw1QvNDPmJJRbXG/BFij
+	 uup7yvjajMef3oeVpB7RvbpuiAEFgkNgqM5W4HJQkgmyeO9a6u/F8k0SWxvvdA7MlP
+	 y56f5rGhNSTFHvPrVQDZzxKVLvhX/iJh5JPetnPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfKVKh6 (ORCPT
+        id S1728081AbfKVKiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:37:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39850 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbfKVKhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:37:54 -0500
+        id S1727893AbfKVKh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:37:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9E420708;
-        Fri, 22 Nov 2019 10:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E2B2072D;
+        Fri, 22 Nov 2019 10:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419073;
-        bh=jIJzKKrRiPN4sYSrKyogbBy6hg42/byJJuVxrEWKYyQ=;
+        s=default; t=1574419077;
+        bh=e1wBrB3GGsfoNvFx3VCcrXtM39XVDHUzUOTodt4IOHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJ8WpmCoPITx3i45vdLinO84b4+bN+CcHE3uEkdL8RCgKY8mYN5SkRe1lCDdiZV1b
-         H/EZkacTc63APuDHFXnQF5fE8bNd5h5yVJZgIZulm4gESezjqfYTebz2XbZLvzuuqz
-         GshAlkihQdhRAfTOFX/G+wu9vBjbR/gpGUAzMcC8=
+        b=jGmT+k2d3LRlqMrGD5IUbczQYN/t9c5vSe8KRc88jahviDj4HypQPHd+I+OAHxzKJ
+         VVgeUsE0mauURiOCQyZ/N128vrWBR/Mf3/JGY2KDG75lxYzW6aZeY7q8SqHfQl1wHc
+         G59pO2hk7oolHyMWPinwCWKZVz4WSbNAhNXdIkX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Tim Smith <tim.smith@citrix.com>,
+        Mark Syms <mark.syms@citrix.com>,
+        Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 148/159] media: isif: fix a NULL pointer dereference bug
-Date:   Fri, 22 Nov 2019 11:28:59 +0100
-Message-Id: <20191122100842.976178160@linuxfoundation.org>
+Subject: [PATCH 4.4 149/159] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
+Date:   Fri, 22 Nov 2019 11:29:00 +0100
+Message-Id: <20191122100843.116471321@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,47 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Tim Smith <tim.smith@citrix.com>
 
-[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
+[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
 
-In isif_probe(), there is a while loop to get the ISIF base address and
-linearization table0 and table1 address. In the loop body, the function
-platform_get_resource() is called to get the resource. If
-platform_get_resource() returns NULL, the loop is terminated and the
-execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
-first iteration because platform_get_resource() returns NULL and the
-execution goes to 'fail_nobase_res'. Given that there is another while loop
-at 'fail_nobase_res' and i equals to 0, one iteration of the second while
-loop will be executed. However, the second while loop does not check the
-return value of platform_get_resource(). This can cause a NULL pointer
-dereference bug if the return value is a NULL pointer.
+Flushing the workqueue can cause operations to happen which might
+call gfs2_log_reserve(), or get stuck waiting for locks taken by such
+operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
+will never wake because the only thing which can wake it is gfs2_logd()
+which was already stopped.
 
-This patch avoids the above issue by adding a check in the second while
-loop after the call to platform_get_resource().
+This causes umount of a gfs2 filesystem to wedge permanently if, for
+example, the umount immediately follows a large delete operation.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+When this occured, the following stack trace was obtained from the
+umount command
+
+[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
+[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
+[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
+[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
+[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
+[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
+[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
+[<ffffffff811b79b9>] deactivate_super+0x59/0x60
+[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
+[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
+[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
+[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
+[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
+[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
+[<ffffffffffffffff>] 0xffffffffffffffff
+
+Signed-off-by: Tim Smith <tim.smith@citrix.com>
+Signed-off-by: Mark Syms <mark.syms@citrix.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/isif.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/gfs2/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
-index 99faea2e84c6b..78e37cf3470f2 100644
---- a/drivers/media/platform/davinci/isif.c
-+++ b/drivers/media/platform/davinci/isif.c
-@@ -1106,7 +1106,8 @@ static int isif_probe(struct platform_device *pdev)
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index 894fb01a91dab..a4eb38c1f5548 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -835,10 +835,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
+ 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
+ 		return error;
  
- 	while (i >= 0) {
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
--		release_mem_region(res->start, resource_size(res));
-+		if (res)
-+			release_mem_region(res->start, resource_size(res));
- 		i--;
- 	}
- 	vpfe_unregister_ccdc_device(&isif_hw_dev);
++	flush_workqueue(gfs2_delete_workqueue);
+ 	kthread_stop(sdp->sd_quotad_process);
+ 	kthread_stop(sdp->sd_logd_process);
+ 
+-	flush_workqueue(gfs2_delete_workqueue);
+ 	gfs2_quota_sync(sdp->sd_vfs, 0);
+ 	gfs2_statfs_sync(sdp->sd_vfs, 0);
+ 
 -- 
 2.20.1
 
