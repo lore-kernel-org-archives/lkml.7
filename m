@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB69CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447D7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C3C20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A30F20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419345;
-	bh=XO4jExzsjGqVGycvgNA7RUSP7N/Lq6fZtpDKT8aTcWE=;
+	s=default; t=1574419348;
+	bh=nl6Vclgv9ewfJPYnz2RDeFn5PkpJj7SCpo04XJ7eSoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tkyGXg+UtkyU1Q22We4G4Y/QShAjU8izWrYW37Cnny7cVRRgfYtwK8G09OWmsDkMn
-	 PQnLYDHC6mpCFLlzzoiy+NAajiN0wyEDLQvK04Y/DNHJN8cfszll79TJGe0kxZooYW
-	 ctU1nfL9K/x2J8aTK8mD6yPqjR1S6fmiuCtbVlBA=
+	b=qYaLEzpaNxtw8preyVAT+F2Qr86j/w/G6drcWWU3W/snx92TvCuXpM2PYNn6lVVHN
+	 60erOOOGiZ0q21A/SFoiz6/vGAWDXv2p9HYzrRzzrAD2Q3UQb55eJTrAFnwX+uAqTd
+	 KLyftkWVdBV2uNQwI+BCzQLSJTr+jB7TZQg4a/5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbfKVKmY (ORCPT
+        id S1727315AbfKVKm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:42:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47406 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729098AbfKVKmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:42:22 -0500
+        id S1729117AbfKVKmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:42:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 826EA20637;
-        Fri, 22 Nov 2019 10:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC0320637;
+        Fri, 22 Nov 2019 10:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419341;
-        bh=XO4jExzsjGqVGycvgNA7RUSP7N/Lq6fZtpDKT8aTcWE=;
+        s=default; t=1574419344;
+        bh=nl6Vclgv9ewfJPYnz2RDeFn5PkpJj7SCpo04XJ7eSoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KWfGdcwJ51kZqX156Wsj7Cl2qiLRDxcKu91+bM0cyhpvXb2AV/j5RkNawDvk7saQL
-         saukZm+PxAoxo++HOXLs43spIWe2IeRu4Qr2HpsR3vypnl+qwdbLX+AvvQmjkbU5ox
-         ADqhImxtbk2zluqMZn931O/M2XIxWaMST/6Pu1EE=
+        b=sZ3BZHMOQA1dJYU9931fJox/qxoXzIYEpLQX5/OAP0QegUoQI0+jy+qQaGZkBKSsM
+         s9x/ol6sxpX0q/AyhzlAkU8afpejkoUzrEFBpjBhRGIl6QBr19C9sTtdt9YoldhFJt
+         rodi73SsG2g1FoZCItHlHl6dYZjHcdP2VrD8//mU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 080/222] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Fri, 22 Nov 2019 11:27:00 +0100
-Message-Id: <20191122100909.177901944@linuxfoundation.org>
+Subject: [PATCH 4.9 081/222] PCI/ACPI: Correct error message for ASPM disabling
+Date:   Fri, 22 Nov 2019 11:27:01 +0100
+Message-Id: <20191122100909.283787908@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,60 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Sinan Kaya <okaya@kernel.org>
 
-[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
+[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
 
-Calling napi_schedule() from process context does not ensure that the
-NET_RX softirq is run in a timely fashion. So trigger it manually.
+If _OSC execution fails today for platforms without an _OSC entry, code is
+printing a misleading message saying disabling ASPM as follows:
 
-This is no big issue with current code. A call to ndo_open() is usually
-followed by a ndo_set_rx_mode() call, and for qeth this contains a
-spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
-early.
-Nevertheless it's best to not depend on this behaviour, and just fix
-the issue at its source like all other drivers do. For instance see
-commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
 
-Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We need to ensure that platform supports ASPM to begin with.
+
+Reported-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 3 +++
- drivers/s390/net/qeth_l3_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/acpi/pci_root.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 6ba4e921d2fd3..51152681aba6e 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -991,7 +991,10 @@ static int __qeth_l2_open(struct net_device *dev)
- 
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 6e6ba1baf9c48..b40a61d9ad9ec 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -3005,7 +3005,10 @@ static int __qeth_l3_open(struct net_device *dev)
- 
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index b66815f35be6b..317ecc2e5757b 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -454,8 +454,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
+ 	decode_osc_support(root, "OS supports", support);
+ 	status = acpi_pci_osc_support(root, support);
+ 	if (ACPI_FAILURE(status)) {
+-		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+-			 acpi_format_exception(status));
++		dev_info(&device->dev, "_OSC failed (%s)%s\n",
++			 acpi_format_exception(status),
++			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
+ 		*no_aspm = 1;
+ 		return;
+ 	}
 -- 
 2.20.1
 
