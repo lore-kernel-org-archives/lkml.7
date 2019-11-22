@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA71C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF9BC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E517B2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A6420672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfKVIZc (ORCPT
+        id S1727460AbfKVIZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:25:32 -0500
+        Fri, 22 Nov 2019 03:25:28 -0500
 Received: from esa2.mentor.iphmx.com ([68.232.141.98]:52499 "EHLO
         esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfKVIZa (ORCPT
+        with ESMTP id S1727431AbfKVIZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:25:30 -0500
-IronPort-SDR: YzdUC/D3KGPrX5o5ONYcCBKzRY1/frBUGZshUMM5WPUDJ2xSb0qSmR3kQafdNFU6IxN892oSYd
- deq7fYksu45zLfoIopHg+22zU4GyRK3rHuJMtQ7xiSHOm94cYS/FsNNHL+FEaf2jVFJG76SfLb
- b8Y4PblrJofGELTiu+sjoMNK3WwidqwFakvRpnYDsvxwIj3i8RHsom0EPniFh38ALVIz7jBCq3
- OzDFRtMhcGNBV6uFDHSKE8/yeojkgG/BlZTRE0cjcQUacGRfwRVbOdnTtWZEZYGzq33hoWQjPQ
- H3I=
+        Fri, 22 Nov 2019 03:25:23 -0500
+IronPort-SDR: oWmG1OcHbjPK7HCR/H+anRdGgLSQCzMiDK/B6Z7xLRS1n+h93hoKGeUN2NgnPihjtFIhuEN3Dm
+ UcH/27zxTZXj8Zb2sT6zv56F07NHwQjnQILyGSlnVd4LGNfi43ff0Dl1ZOjvY+IV8aRPQR8MNH
+ OsyDfa4to7hMKhXssfyLbQS472Q4H/Bl3m0Ydv56bkq9KILzAA93cJmUjj1uRfrg4kzGdUINke
+ 18mP5nYOtGPRSZgcza+a4WUtDJlWAP8NdwPCPVycfEJkUWZcneb6HVXmt0+h3YC6zDdi1shZh5
+ pxs=
 X-IronPort-AV: E=Sophos;i="5.69,229,1571731200"; 
-   d="scan'208";a="43358930"
+   d="scan'208";a="43358926"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:25:29 -0800
-IronPort-SDR: QUEAV1pzUhF/EIwJ56uup30aSTa8AFA2SBwkUW4v+4x/oZsQ3QAHAWAsIPF2qsSHYf1I7tuq4x
- FdCN7CpRy1BTjXLvAf6XYCao03NoyvdBocGa5G+NdMc6x4QcEpG/COyQCr+rSMvOEtwPkj7xit
- mkl5vxzscGhXsvsT+vN4VQxwlv5XDyG5qEGoZ0+ROUw/8XeI2w2LXa5nI3O5r5JrMjQbDV0v3Z
- NB2/AZb9ix/08xBiHjRyuSAmb+UtTw+NA7TtYz8cf5R6QRs/m/nPnWfHrlGlGn+K73/nPXQhaL
- AQs=
+  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:25:23 -0800
+IronPort-SDR: XHDpIymJMyYDdAjqR0Y1jJHBxOaFPThvO/K2HKvRV3E2/McOUcR1S9QNKErPtfD9KM/6soLhij
+ wivM2lJQyN8qR9HYtrdivBlUTmuELPvcAOba7CjSkMtWd49w9bp9PviTDXsofdPBtjegGiYQ57
+ wIWUowCWXxGe4/TUAl1KtAkl3nzAEGR4PF/wrsNa5PSU6bFPDgd+UwJX/m7FkMfZocGHRsO+1z
+ +Bm6B8dtJTuFhMU11o+HIx6GbGBsnO+ybq2It9nSSMm1rYU7VNerzH+dLu/3H3r2Weg9Fsv38D
+ 43E=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
@@ -41,9 +41,9 @@ To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v6 23/48] Input: atmel_mxt_ts - rename bl_completion to chg_completion
-Date:   Fri, 22 Nov 2019 17:23:37 +0900
-Message-ID: <20191122082402.18173-24-jiada_wang@mentor.com>
+Subject: [PATCH v6 21/48] Input: atmel_mxt_ts - combine bootloader version query with probe
+Date:   Fri, 22 Nov 2019 17:23:35 +0900
+Message-ID: <20191122082402.18173-22-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191122082402.18173-1-jiada_wang@mentor.com>
 References: <20191122082402.18173-1-jiada_wang@mentor.com>
@@ -56,108 +56,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nick Dyer <nick.dyer@itdev.co.uk>
 
+This removes some complexity from the bootloader state machine, and means
+that we always output some debug about the version as soon as we start
+talking to the bootloader.
+
 Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit dda8453bfb44216645ede798918a314d4fca2481)
-[gdavis: Resolve forward port conflicts due to applying upstream
-	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
-	 data support").]
+(cherry picked from ndyer/linux/for-upstream commit a2d141f170c80fea6663af98aab0be32abc0ddb0)
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: call complete(&data->chg_completion) only when in_bootloader is TRUE]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 45 +++++++-----------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 1c5230f7a9af..520dc9670b38 100644
+index 04627db23ad2..d38ae9525e35 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -381,9 +381,6 @@ struct mxt_data {
- 	u8 T100_reportid_max;
- 	u16 T107_address;
+@@ -558,47 +558,31 @@ static int mxt_probe_bootloader(struct mxt_data *data, bool alt_address)
+ {
+ 	struct device *dev = &data->client->dev;
+ 	int error;
+-	u8 val;
+-	bool crc_failure;
++	u8 buf[3];
++	bool crc_failure, extended_id;
  
--	/* for fw update in bootloader */
--	struct completion bl_completion;
--
- 	/* for reset handling */
- 	struct completion reset_completion;
+ 	error = mxt_lookup_bootloader_address(data, alt_address);
+ 	if (error)
+ 		return error;
  
-@@ -395,6 +392,9 @@ struct mxt_data {
+-	error = mxt_bootloader_read(data, &val, 1);
++	/* Check bootloader status and version information */
++	error = mxt_bootloader_read(data, buf, sizeof(buf));
+ 	if (error)
+ 		return error;
  
- 	enum mxt_suspend_mode suspend_mode;
+-	/* Check app crc fail mode */
+-	crc_failure = (val & ~MXT_BOOT_STATUS_MASK) == MXT_APP_CRC_FAIL;
++	crc_failure = (buf[0] & ~MXT_BOOT_STATUS_MASK) == MXT_APP_CRC_FAIL;
++	extended_id = buf[0] & MXT_BOOT_EXTENDED_ID;
  
-+	/* for power up handling */
-+	struct completion chg_completion;
-+
- 	/* Indicates whether device is in suspend */
- 	bool suspended;
- 
-@@ -611,7 +611,7 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
- 	 * CHG assertion before reading the status byte.
- 	 * Once the status byte has been read, the line is deasserted.
- 	 */
--	ret = mxt_wait_for_completion(data, &data->bl_completion,
-+	ret = mxt_wait_for_completion(data, &data->chg_completion,
- 				      MXT_FW_CHG_TIMEOUT);
- 	if (ret) {
- 		/*
-@@ -1402,8 +1402,7 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
- 	struct mxt_data *data = dev_id;
- 
- 	if (data->in_bootloader) {
--		/* bootloader state transition completion */
--		complete(&data->bl_completion);
-+		complete(&data->chg_completion);
- 		return IRQ_HANDLED;
- 	}
- 
-@@ -2167,9 +2166,9 @@ static void mxt_regulator_enable(struct mxt_data *data)
- 	msleep(MXT_CHG_DELAY);
- 
- retry_wait:
--	reinit_completion(&data->bl_completion);
-+	reinit_completion(&data->chg_completion);
- 	data->in_bootloader = true;
--	error = mxt_wait_for_completion(data, &data->bl_completion,
-+	error = mxt_wait_for_completion(data, &data->chg_completion,
- 					MXT_POWERON_DELAY);
- 	if (error == -EINTR)
- 		goto retry_wait;
-@@ -3334,7 +3333,7 @@ static int mxt_enter_bootloader(struct mxt_data *data)
- 		enable_irq(data->irq);
- 	}
- 
--	reinit_completion(&data->bl_completion);
-+	reinit_completion(&data->chg_completion);
+-	dev_err(dev, "Detected bootloader, status:%02X%s\n",
+-			val, crc_failure ? ", APP_CRC_FAIL" : "");
++	dev_info(dev, "Found bootloader addr:%02x ID:%u%s%u%s\n",
++		 data->bootloader_addr,
++		 extended_id ? (buf[1] & MXT_BOOT_ID_MASK) : buf[0],
++		 extended_id ? " version:" : "",
++		 extended_id ? buf[2] : 0,
++		 crc_failure ? ", APP_CRC_FAIL" : "");
  
  	return 0;
  }
-@@ -3370,7 +3369,7 @@ static int mxt_load_fw(struct device *dev)
- 	}
  
- 	/* Wait for flash. */
--	ret = mxt_wait_for_completion(data, &data->bl_completion,
-+	ret = mxt_wait_for_completion(data, &data->chg_completion,
- 				      MXT_FW_RESET_TIME);
+-static u8 mxt_get_bootloader_version(struct mxt_data *data, u8 val)
+-{
+-	struct device *dev = &data->client->dev;
+-	u8 buf[3];
+-
+-	if (val & MXT_BOOT_EXTENDED_ID) {
+-		if (mxt_bootloader_read(data, &buf[0], 3) != 0) {
+-			dev_err(dev, "%s: i2c failure\n", __func__);
+-			return val;
+-		}
+-
+-		dev_dbg(dev, "Bootloader ID:%d Version:%d\n", buf[1], buf[2]);
+-
+-		return buf[0];
+-	} else {
+-		dev_dbg(dev, "Bootloader ID:%d\n", val & MXT_BOOT_ID_MASK);
+-
+-		return val;
+-	}
+-}
+-
+ static int mxt_check_bootloader(struct mxt_data *data, unsigned int state,
+ 				bool wait)
+ {
+@@ -632,9 +616,6 @@ static int mxt_check_bootloader(struct mxt_data *data, unsigned int state,
  	if (ret)
- 		goto disable_irq;
-@@ -3381,7 +3380,7 @@ static int mxt_load_fw(struct device *dev)
- 	 * the CHG line after bootloading has finished, so ignore potential
- 	 * errors.
- 	 */
--	mxt_wait_for_completion(data, &data->bl_completion, MXT_FW_RESET_TIME);
-+	mxt_wait_for_completion(data, &data->chg_completion, MXT_FW_RESET_TIME);
+ 		return ret;
  
- 	data->in_bootloader = false;
- disable_irq:
-@@ -3802,7 +3801,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	data->irq = client->irq;
- 	i2c_set_clientdata(client, data);
+-	if (state == MXT_WAITING_BOOTLOAD_CMD)
+-		val = mxt_get_bootloader_version(data, val);
+-
+ 	switch (state) {
+ 	case MXT_WAITING_BOOTLOAD_CMD:
+ 	case MXT_WAITING_FRAME_DATA:
+@@ -3283,7 +3264,7 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 		msleep(MXT_RESET_TIME);
  
--	init_completion(&data->bl_completion);
-+	init_completion(&data->chg_completion);
- 	init_completion(&data->reset_completion);
- 	init_completion(&data->crc_completion);
+ 		/* Do not need to scan since we know family ID */
+-		ret = mxt_lookup_bootloader_address(data, 0);
++		ret = mxt_probe_bootloader(data, 0);
+ 		if (ret)
+ 			return ret;
  
 -- 
 2.17.1
