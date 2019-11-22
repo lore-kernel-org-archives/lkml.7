@@ -2,122 +2,69 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6142EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357A92071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421009;
-	bh=a09o/6erw4XFpEHbgbqRKQCSfOoCeDDbbaY/XHSBdzU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOGPh4/ncoUP5URLa+KMtaAV0tyLMN/Za7zS/KR2hQPGgMwdNmaWYQcplsNKBHQ19
-	 mCSPbecKBg7VXO9wsRXz8oCmsvXCtTvq8PrtY1Yxz0n2e4dCQUWw3LySd0TdF6ptz+
-	 mrbaPIffaqyZ0unGaQ4vOZTvvHaIrPVB4BF7W0V4=
+	by mail.kernel.org (Postfix) with ESMTP id 8F6342070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbfKVLKH (ORCPT
+        id S1731279AbfKVLKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:10:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:10:09 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:53960 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731302AbfKVLC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFED207FC;
-        Fri, 22 Nov 2019 11:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420549;
-        bh=a09o/6erw4XFpEHbgbqRKQCSfOoCeDDbbaY/XHSBdzU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BdG8v2qUylOII/2rdoabh1vJQliV8KrNTXbXZq7lzY/Z3htV+JvXKz5p43dDjBQuD
-         10I4UYsXoTeoDfyG6EzafjZXvJ6E4TxCTKu4As0n0eUxwyAnDRriEo+U9yA2ds7QUZ
-         2UU2o6WUTOqOO7cAHw24tz+1q75lsAwSENsKqNRQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 144/220] ACPI / SBS: Fix rare oops when removing modules
-Date:   Fri, 22 Nov 2019 11:28:29 +0100
-Message-Id: <20191122100923.126452267@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730107AbfKVLKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:10:07 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iY6ou-0005Dm-L0; Fri, 22 Nov 2019 19:09:48 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iY6os-0002jT-ES; Fri, 22 Nov 2019 19:09:46 +0800
+Date:   Fri, 22 Nov 2019 19:09:46 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Tudor.Ambarus@microchip.com
+Cc:     Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] crypto: atmel-tdes - Set the IV after {en,de}crypt
+Message-ID: <20191122110946.jwyfy2q7gabugcjc@gondor.apana.org.au>
+References: <20191115134854.30190-1-tudor.ambarus@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115134854.30190-1-tudor.ambarus@microchip.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronald Tschalär <ronald@innovation.ch>
+On Fri, Nov 15, 2019 at 01:49:06PM +0000, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> The req->iv of the skcipher_request is expected to contain the
+> last ciphertext block when the {en,de}crypt operation is done.
+> In case of in-place decryption, copy the ciphertext in an
+> intermediate buffer before decryption.
+> 
+> This fixes the following tcrypt tests:
+> alg: skcipher: atmel-cbc-des encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+> 00000000: fe dc ba 98 76 54 32 10
+> alg: skcipher: atmel-cbc-tdes encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+> 00000000: 7d 33 88 93 0f 93 b2 42
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+>  drivers/crypto/atmel-tdes.c | 40 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
 
-[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
-
-There was a small race when removing the sbshc module where
-smbus_alarm() had queued acpi_smbus_callback() for deferred execution
-but it hadn't been run yet, so that when it did run hc had been freed
-and the module unloaded, resulting in an invalid paging request.
-
-A similar race existed when removing the sbs module with regards to
-acpi_sbs_callback() (which is called from acpi_smbus_callback()).
-
-We therefore need to ensure no callbacks are pending or executing before
-the cleanups are done and the modules are removed.
-
-Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/osl.c   | 1 +
- drivers/acpi/sbshc.c | 2 ++
- 2 files changed, 3 insertions(+)
-
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index ed73f6fb0779b..b48874b8e1ea0 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -1132,6 +1132,7 @@ void acpi_os_wait_events_complete(void)
- 	flush_workqueue(kacpid_wq);
- 	flush_workqueue(kacpi_notify_wq);
- }
-+EXPORT_SYMBOL(acpi_os_wait_events_complete);
- 
- struct acpi_hp_work {
- 	struct work_struct work;
-diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
-index 7a3431018e0ab..5008ead4609a4 100644
---- a/drivers/acpi/sbshc.c
-+++ b/drivers/acpi/sbshc.c
-@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
- 	hc->callback = NULL;
- 	hc->context = NULL;
- 	mutex_unlock(&hc->lock);
-+	acpi_os_wait_events_complete();
- 	return 0;
- }
- 
-@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
- 
- 	hc = acpi_driver_data(device);
- 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
-+	acpi_os_wait_events_complete();
- 	kfree(hc);
- 	device->driver_data = NULL;
- 	return 0;
+All applied.  Thanks.
 -- 
-2.20.1
-
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
