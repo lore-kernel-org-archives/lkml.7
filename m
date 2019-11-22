@@ -2,148 +2,107 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5E9C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7060720708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B4A20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GnqUaOqh"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UBj+tYl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKVH6V (ORCPT
+        id S1726825AbfKVH6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:58:21 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35085 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfKVH6V (ORCPT
+        Fri, 22 Nov 2019 02:58:48 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31415 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726248AbfKVH6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 02:58:21 -0500
-Received: by mail-wr1-f67.google.com with SMTP id s5so7465911wrw.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 23:58:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=w67p8xtPdt4/A9arfHNMFL65WBSDvCsMKuFi+DGBUsw=;
-        b=GnqUaOqhAGPj1mSB54UkQHX4DC7zQbAMKGlzXTenoyFS7SJHIG7SkYKpS3E591jesy
-         icCdTroOZhl3lQG0MC4noVz3GcrSdZ3Q0UiheNxmIgcCRphi4DzocgH6+akJKPMp54rE
-         Zs9Tj8Bf38qwZUAhUiOtHylkX7OAbM9jDrZB5FWjgT724BNcW6t+rVhc+VS8nys/Yq+k
-         X83hu5TH1/dV5m34mQ8wWV4jNtwESzBy6NBTfIFEUeVfVZCMG1ar96ADpDaRKm2evh/s
-         wU/EBeaQJwE6HVdRYf8a3cY4MJpP0lZ+WrIwOTf4uiILzOSMn/yTgbEWMC2AfBJNxcrp
-         x3+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=w67p8xtPdt4/A9arfHNMFL65WBSDvCsMKuFi+DGBUsw=;
-        b=CVQGlvn1enu/R9zhusX1o6i0uOZ3xKyqAlKCKokLgxJrGZLY4HSKGvNtfvDAcZbmJq
-         1c2BzV+tu8WVo5qku97RS9Jr862GzX/MC+c94/d1Y59utFdDc8nWz5dtayunf6EnZ/gp
-         GLytpVErlHGdYfXNFLceT1HxwEgpq5ww+wgzpT9cXvrKw71Me4veNnB7MtzV2/g9gdsh
-         6nFckAdInDVQyEfIDX7njWgtUqAIb+c8vSoVpPSCMgYKIuY1JB2a+fZrOOSaLw+S/Xws
-         8qrmSeUa1IMRjiDTs1BpoM+I0zN4RIxcFyaeqrEBZrD/pML4E6bc43b08D7tVgM3bqko
-         sniw==
-X-Gm-Message-State: APjAAAWrRHYSLm5fyahVFC9obkJwyBp1SjcQf1ZXu5rvcKiXuIIe96iD
-        qbCelqkFbjNJOqYKmPXEVjQFPg==
-X-Google-Smtp-Source: APXvYqzcaOQ0bWkk1yg8dpRwylAawt7qFh0J8UP4pvucZ/KaMyU92DHdCC4aa6RA4P2POZCfKVRT4Q==
-X-Received: by 2002:adf:f50b:: with SMTP id q11mr16206077wro.343.1574409498689;
-        Thu, 21 Nov 2019 23:58:18 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id j67sm2673521wmb.43.2019.11.21.23.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 23:58:18 -0800 (PST)
-Date:   Fri, 22 Nov 2019 07:58:04 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     enric.balletbo@collabora.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-iio@vger.kernel.org,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-i2c@vger.kernel.org, Enrico Granata <egranata@chromium.org>,
-        linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Alexandru M Stan <amstan@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: Re: [PATCH] platform/chrome: cros_ec: Rename cros_ec_dev to
- cros_ec_mfd_dev
-Message-ID: <20191122075804.GB3296@dell>
-References: <20191121164458.1.Ie5c276b95210779fc2ca5651e46552236795b6b9@changeid>
+        Fri, 22 Nov 2019 02:58:47 -0500
+X-UUID: 995ad331f2ab4f46a3820f39bf312b57-20191122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=biiWaCmeF2zekF9ph9b3ZsgnAyXW/XZddTvqnNdWtZI=;
+        b=UBj+tYl7o9PnBzb8JAMkkcAghNv1ZKFDCo9BnYhfPiCD+tgcKL5SWitrbPEE07xrbjCFBmvsH/G+upGp27sMPLuxWXBotj+fV6v4HMdYPyl9nkdv9QeTBV5eIvEwp+FdjeN7tZTgqjoPB+f2ewwuSZU/YumK1cR4RBquWG74viE=;
+X-UUID: 995ad331f2ab4f46a3820f39bf312b57-20191122
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 62595625; Fri, 22 Nov 2019 15:58:42 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkexhb02.mediatek.inc (172.21.101.103) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 22 Nov 2019 15:59:03 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 22 Nov 2019 15:59:04 +0800
+Message-ID: <1574409521.12825.0.camel@mtksdaap41>
+Subject: Re: [PATCH] drm/mediatek: Check return value of
+ mtk_drm_ddp_comp_for_plane.
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "open list:DRM DRIVERS FOR MEDIATEK" 
+        <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 Nov 2019 15:58:41 +0800
+In-Reply-To: <20191118061806.52781-1-pihsun@chromium.org>
+References: <20191118061806.52781-1-pihsun@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191121164458.1.Ie5c276b95210779fc2ca5651e46552236795b6b9@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019, Raul E Rangel wrote:
+SGksIFBpLUhzdW46DQoNCk9uIE1vbiwgMjAxOS0xMS0xOCBhdCAxNDoxOCArMDgwMCwgUGktSHN1
+biBTaGloIHdyb3RlOg0KPiBUaGUgbXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUgY2FuIHJldHVy
+biBOVUxMLCBidXQgdGhlIHVzYWdlIGRvZXNuJ3QNCj4gY2hlY2sgZm9yIGl0LiBBZGQgY2hlY2sg
+Zm9yIGl0Lg0KDQpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiAN
+Cj4gRml4ZXM6IGQ2YjUzZjY4MzU2ZiAoImRybS9tZWRpYXRlazogQWRkIGhlbHBlciB0byBnZXQg
+Y29tcG9uZW50IGZvciBhIHBsYW5lIikNCj4gU2lnbmVkLW9mZi1ieTogUGktSHN1biBTaGloIDxw
+aWhzdW5AY2hyb21pdW0ub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2NydGMuYyB8IDEzICsrKysrKysrKy0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fY3J0Yy5jDQo+IGluZGV4IGY4MGE4YmE3NTk3Ny4uNGM0Zjk3NmM5OTRlIDEwMDY0
+NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC0zMTAsNyAr
+MzEwLDkgQEAgc3RhdGljIGludCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9j
+cnRjICptdGtfY3J0YykNCj4gIA0KPiAgCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0
+ZShwbGFuZS0+c3RhdGUpOw0KPiAgCQljb21wID0gbXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUo
+Y3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+IC0JCW10a19kZHBfY29tcF9sYXllcl9jb25m
+aWcoY29tcCwgbG9jYWxfbGF5ZXIsIHBsYW5lX3N0YXRlKTsNCj4gKwkJaWYgKGNvbXApDQo+ICsJ
+CQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmlnKGNvbXAsIGxvY2FsX2xheWVyLA0KPiArCQkJCQkJ
+ICBwbGFuZV9zdGF0ZSk7DQo+ICAJfQ0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+IEBAIC0zODYsOCAr
+Mzg4LDkgQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2NvbmZpZyhzdHJ1Y3QgZHJtX2NydGMg
+KmNydGMpDQo+ICAJCQljb21wID0gbXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUoY3J0YywgcGxh
+bmUsDQo+ICAJCQkJCQkJICAmbG9jYWxfbGF5ZXIpOw0KPiAgDQo+IC0JCQltdGtfZGRwX2NvbXBf
+bGF5ZXJfY29uZmlnKGNvbXAsIGxvY2FsX2xheWVyLA0KPiAtCQkJCQkJICBwbGFuZV9zdGF0ZSk7
+DQo+ICsJCQlpZiAoY29tcCkNCj4gKwkJCQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmlnKGNvbXAs
+IGxvY2FsX2xheWVyLA0KPiArCQkJCQkJCSAgcGxhbmVfc3RhdGUpOw0KPiAgCQkJcGxhbmVfc3Rh
+dGUtPnBlbmRpbmcuY29uZmlnID0gZmFsc2U7DQo+ICAJCX0NCj4gIAkJbXRrX2NydGMtPnBlbmRp
+bmdfcGxhbmVzID0gZmFsc2U7DQo+IEBAIC00MDEsNyArNDA0LDkgQEAgaW50IG10a19kcm1fY3J0
+Y19wbGFuZV9jaGVjayhzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBkcm1fcGxhbmUgKnBs
+YW5lLA0KPiAgCXN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXA7DQo+ICANCj4gIAljb21wID0gbXRr
+X2RybV9kZHBfY29tcF9mb3JfcGxhbmUoY3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+IC0J
+cmV0dXJuIG10a19kZHBfY29tcF9sYXllcl9jaGVjayhjb21wLCBsb2NhbF9sYXllciwgc3RhdGUp
+Ow0KPiArCWlmIChjb21wKQ0KPiArCQlyZXR1cm4gbXRrX2RkcF9jb21wX2xheWVyX2NoZWNrKGNv
+bXAsIGxvY2FsX2xheWVyLCBzdGF0ZSk7DQo+ICsJcmV0dXJuIDA7DQo+ICB9DQo+ICANCj4gIHN0
+YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9taWNfZW5hYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0
+YywNCj4gDQo+IGJhc2UtY29tbWl0OiA1YTZmY2JlYWJlM2UyMDQ1OWVkODUwNDY5MGIyNTE1ZGFj
+YzUyNDZmDQoNCg==
 
-> It's very confusing having cros_ec_dev and cros_ec_device. This makes it
-> clear you are dealing with the mfd device.
-
-An MFD isn't really a thing. It's a Linuxisum that doesn't really
-describe anything meaningful. IMHO it would make more sense to follow
-the same hierarchical structure that platform devices use:
-
-  s/cros_ec_mfd_dev/cros_ec_parent/
-
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> ---
-> This is based on top of the i2c acpi tunnel patches:
-> https://lore.kernel.org/patchwork/project/lkml/list/?series=419791
-> 
->  drivers/i2c/busses/i2c-cros-ec-tunnel.c       |  2 +-
->  drivers/iio/accel/cros_ec_accel_legacy.c      |  2 +-
->  .../common/cros_ec_sensors/cros_ec_sensors.c  |  2 +-
->  .../cros_ec_sensors/cros_ec_sensors_core.c    |  2 +-
->  .../cros_ec_sensors/cros_ec_sensors_ring.c    |  2 +-
->  drivers/iio/light/cros_ec_light_prox.c        |  2 +-
->  drivers/iio/pressure/cros_ec_baro.c           |  2 +-
->  .../media/platform/cros-ec-cec/cros-ec-cec.c  |  2 +-
->  drivers/mfd/cros_ec_dev.c                     | 14 ++++-----
->  drivers/platform/chrome/cros_ec_chardev.c     | 21 +++++++-------
->  drivers/platform/chrome/cros_ec_debugfs.c     | 16 +++++-----
->  drivers/platform/chrome/cros_ec_lightbar.c    | 29 ++++++++++---------
->  drivers/platform/chrome/cros_ec_pd_sysfs.c    |  6 ++--
->  drivers/platform/chrome/cros_ec_pd_update.c   | 20 ++++++-------
->  drivers/platform/chrome/cros_ec_sysfs.c       | 16 +++++-----
->  drivers/platform/chrome/cros_ec_vbc.c         |  8 ++---
->  drivers/platform/chrome/cros_usbpd_logger.c   |  6 ++--
->  drivers/power/supply/cros_usbpd-charger.c     |  6 ++--
->  drivers/rtc/rtc-cros-ec.c                     |  2 +-
->  include/linux/mfd/cros_ec.h                   |  8 ++---
->  .../linux/platform_data/cros_ec_pd_update.h   |  4 +--
->  21 files changed, 87 insertions(+), 85 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
