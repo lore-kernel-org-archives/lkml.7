@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBD7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EFE2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DA22053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404135;
-	bh=Zim3oUanFEmUHT0Cy6nsnBShFv0GEZ4ifLMG6yApetk=;
+	s=default; t=1574404140;
+	bh=27Aee2Qu0qErbEERw1oJDBvvzhWM8S0QTIaSKnmGKpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzRZiBIholx4LwETVFlEuRBFXY1dq+PV5G19n5d5naReZxMwZOc+uAX4Wmz45Y2cv
-	 cNj6JqBykPx/NG6l6uAADXbzBM8IqRy/qkqM4WSShbQL3Wdsx8eivPCS8R+H5DW3zj
-	 cqTEql4h7Srm9ta3JjLdcqjYiCnQTrrVbwu4LGtI=
+	b=vspVYceArwWONMdIS+GJ+3vhHhA+yfbKWKEz69uUCbA1Itm++nnaxdevRDyg/0Anc
+	 WOnTfH5yYmzIUxA42uGa6hqT40dqA1Upxq4gFAeH1VeTI4B9+jAvruuegwHeLdPIcA
+	 wrk7ls8v65d6JbC6jo9X6bQl0yTAp0KfiNhpqnh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfKVFuF (ORCPT
+        id S1728876AbfKVG26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:28:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727372AbfKVFt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:56 -0500
+        id S1727488AbfKVFuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DC1E2070A;
-        Fri, 22 Nov 2019 05:49:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 834B42070A;
+        Fri, 22 Nov 2019 05:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401795;
-        bh=Zim3oUanFEmUHT0Cy6nsnBShFv0GEZ4ifLMG6yApetk=;
+        s=default; t=1574401804;
+        bh=27Aee2Qu0qErbEERw1oJDBvvzhWM8S0QTIaSKnmGKpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dUQbUgtyhTjP+XUZBsrsbF1gNJE/oFRsvIBojYWQKqu27lwq8itYt6c5yWtIlKY6O
-         2i55w5/hpjgvXooDHyNXKILE7eNgxVHHnj553Ww8fXPcujQMLbtmxj5wjoV2v8w3zm
-         VWmuWgXgrbBs3YVmfPzvJHqAIRDCAZ2O43+p+LfE=
+        b=F6k/ipXHRJVy7RKxeiLC7C3Q6Gj5Q4zFJTkGyWvhTUZ2OUAVE9rJiWBy66W1AgEOH
+         5CwL39KtLYi3D5QI2y0VWOWJMxChJdm4gNefOalF5j49MyIV/uqEKEtFQtm9+ex3ky
+         8UqeJA0lzADHyFzoWCo/u3cwYVuwuP8aZ8bTvgyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/219] crypto: user - support incremental algorithm dumps
-Date:   Fri, 22 Nov 2019 00:46:14 -0500
-Message-Id: <20191122054911.1750-35-sashal@kernel.org>
+Cc:     Shenghui Wang <shhuiw@foxmail.com>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 049/219] bcache: do not check if debug dentry is ERR or NULL explicitly on remove
+Date:   Fri, 22 Nov 2019 00:46:21 -0500
+Message-Id: <20191122054911.1750-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,114 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit 0ac6b8fb23c724b015d9ca70a89126e8d1563166 ]
+[ Upstream commit ae17102316550b4b230a283febe31b2a9ff30084 ]
 
-CRYPTO_MSG_GETALG in NLM_F_DUMP mode sometimes doesn't return all
-registered crypto algorithms, because it doesn't support incremental
-dumps.  crypto_dump_report() only permits itself to be called once, yet
-the netlink subsystem allocates at most ~64 KiB for the skb being dumped
-to.  Thus only the first recvmsg() returns data, and it may only include
-a subset of the crypto algorithms even if the user buffer passed to
-recvmsg() is large enough to hold all of them.
+debugfs_remove and debugfs_remove_recursive will check if the dentry
+pointer is NULL or ERR, and will do nothing in that case.
 
-Fix this by using one of the arguments in the netlink_callback structure
-to keep track of the current position in the algorithm list.  Then
-userspace can do multiple recvmsg() on the socket after sending the dump
-request.  This is the way netlink dumps work elsewhere in the kernel;
-it's unclear why this was different (probably just an oversight).
+Remove the check in cache_set_free and bch_debug_init.
 
-Also fix an integer overflow when calculating the dump buffer size hint.
-
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/crypto_user.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
+ drivers/md/bcache/debug.c | 3 +--
+ drivers/md/bcache/super.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/crypto_user.c b/crypto/crypto_user.c
-index 3cca814348a26..74cb166097cd2 100644
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -296,30 +296,33 @@ static int crypto_report(struct sk_buff *in_skb, struct nlmsghdr *in_nlh,
+diff --git a/drivers/md/bcache/debug.c b/drivers/md/bcache/debug.c
+index 06da66b2488ae..8c53d874ada4a 100644
+--- a/drivers/md/bcache/debug.c
++++ b/drivers/md/bcache/debug.c
+@@ -249,8 +249,7 @@ void bch_debug_init_cache_set(struct cache_set *c)
  
- static int crypto_dump_report(struct sk_buff *skb, struct netlink_callback *cb)
+ void bch_debug_exit(void)
  {
--	struct crypto_alg *alg;
-+	const size_t start_pos = cb->args[0];
-+	size_t pos = 0;
- 	struct crypto_dump_info info;
--	int err;
--
--	if (cb->args[0])
--		goto out;
--
--	cb->args[0] = 1;
-+	struct crypto_alg *alg;
-+	int res;
- 
- 	info.in_skb = cb->skb;
- 	info.out_skb = skb;
- 	info.nlmsg_seq = cb->nlh->nlmsg_seq;
- 	info.nlmsg_flags = NLM_F_MULTI;
- 
-+	down_read(&crypto_alg_sem);
- 	list_for_each_entry(alg, &crypto_alg_list, cra_list) {
--		err = crypto_report_alg(alg, &info);
--		if (err)
--			goto out_err;
-+		if (pos >= start_pos) {
-+			res = crypto_report_alg(alg, &info);
-+			if (res == -EMSGSIZE)
-+				break;
-+			if (res)
-+				goto out;
-+		}
-+		pos++;
- 	}
--
-+	cb->args[0] = pos;
-+	res = skb->len;
- out:
--	return skb->len;
--out_err:
--	return err;
-+	up_read(&crypto_alg_sem);
-+	return res;
+-	if (!IS_ERR_OR_NULL(bcache_debug))
+-		debugfs_remove_recursive(bcache_debug);
++	debugfs_remove_recursive(bcache_debug);
  }
  
- static int crypto_dump_report_done(struct netlink_callback *cb)
-@@ -503,7 +506,7 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	if ((type == (CRYPTO_MSG_GETALG - CRYPTO_MSG_BASE) &&
- 	    (nlh->nlmsg_flags & NLM_F_DUMP))) {
- 		struct crypto_alg *alg;
--		u16 dump_alloc = 0;
-+		unsigned long dump_alloc = 0;
+ void __init bch_debug_init(struct kobject *kobj)
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 2321643974dab..3124399e2607a 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1485,8 +1485,7 @@ static void cache_set_free(struct closure *cl)
+ 	struct cache *ca;
+ 	unsigned int i;
  
- 		if (link->dump == NULL)
- 			return -EINVAL;
-@@ -511,16 +514,16 @@ static int crypto_user_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		down_read(&crypto_alg_sem);
- 		list_for_each_entry(alg, &crypto_alg_list, cra_list)
- 			dump_alloc += CRYPTO_REPORT_MAXSIZE;
-+		up_read(&crypto_alg_sem);
+-	if (!IS_ERR_OR_NULL(c->debug))
+-		debugfs_remove(c->debug);
++	debugfs_remove(c->debug);
  
- 		{
- 			struct netlink_dump_control c = {
- 				.dump = link->dump,
- 				.done = link->done,
--				.min_dump_alloc = dump_alloc,
-+				.min_dump_alloc = min(dump_alloc, 65535UL),
- 			};
- 			err = netlink_dump_start(crypto_nlsk, skb, nlh, &c);
- 		}
--		up_read(&crypto_alg_sem);
- 
- 		return err;
- 	}
+ 	bch_open_buckets_free(c);
+ 	bch_btree_cache_free(c);
 -- 
 2.20.1
 
