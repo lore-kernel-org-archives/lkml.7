@@ -2,146 +2,148 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5E9C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746DC20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7060720708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e2dfL6iL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GnqUaOqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfKVH5A (ORCPT
+        id S1726747AbfKVH6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:57:00 -0500
-Received: from mail-eopbgr10044.outbound.protection.outlook.com ([40.107.1.44]:61262
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbfKVH5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 02:57:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JFtNn3CdKNluBlyS3DdJFrDC0+ZgA2oGLrQt9ti+K/Xb/FHYFAzNVqgrGvn4oI/Ci+6g5vVF0I+F77RplwlF3Xvc4rT7N/Z+z7FquaEGv1t1gNVIg6rb9eavdqqPHoODrF6GHqbSFAAc55YM0kgzazdss/ppEa9H5okgyC8oQ1iLPcXGoc2H9eBg2gVtb8g4rtF8+1WJlC0YsrZhaRCwn9kYgRcSWSoGOOEQsLHt/u3dVJk37DI+N2pDGhj4SJW5NkuXxu2WHqF1RfpkXGM/rJidutwQHCm5WB4A1vb6fPsGMECIuyMsBcQ9rFKVJcUPfqTnddLv19177NOmzE34Eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nzi+V84V86ZKbhw7QU9ksxpenLpTZvyv6Ll5XQlrEuA=;
- b=D+kDOZJnciUr23iDwNMwQXmWx402ZEQMrfznS3NF2KOYam7eLGUCo+440Y1L6c0Q3po+dKaGXizjEAGoys22KXzry1Ltty3BKk43fV/LQUuuqnecRMQ3i2Xy0txiPqp4bl+H5HbiwILVik6IStfDtvjXaG3SdornyynkGirI95rJzL/yosUSeRCFyCp8AuaW1E2M6oChpgz09+o2gXwgJ+DEoJkWXzbqjgIuoOzBCN49TXEt389msGGqzZosJ2mYdWmfJhBe20jQHsQ8j2orlyySKMyzSb09K8fz66sjZLZ6cUtzkoNCsDrIa8Mbcypryb5zFANUsW+6C8/eAFN3vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nzi+V84V86ZKbhw7QU9ksxpenLpTZvyv6Ll5XQlrEuA=;
- b=e2dfL6iLaub887SrYZRS/s9IoAWrbcuxkdQZs4uGWzrd7V9KInWC3zPtuxWF9RMkgmb058DVFCqNHN+Oneem3zcUnynNkL8yThaWvqNHmmh17GcT4MpxaU12l4BmnO/eKt5zyzyoFoCkfCW6tW9H+XtO2NninWR0N18474TPfz8=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5937.eurprd04.prod.outlook.com (20.178.114.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.16; Fri, 22 Nov 2019 07:56:53 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2474.021; Fri, 22 Nov 2019
- 07:56:53 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Abel Vesa <abel.vesa@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
-Thread-Topic: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
-Thread-Index: AQHVnuLWT6CchFdcV0y5WK5bSM6NyqeW1t9Q
-Date:   Fri, 22 Nov 2019 07:56:52 +0000
-Message-ID: <AM0PR04MB4481B956515863CC096852B888490@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1574172496-12987-1-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1574172496-12987-1-git-send-email-abel.vesa@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5ca59c18-3495-40a1-1061-08d76f2189be
-x-ms-traffictypediagnostic: AM0PR04MB5937:|AM0PR04MB5937:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB593722CB849613A319CC475888490@AM0PR04MB5937.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1091;
-x-forefront-prvs: 02296943FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(199004)(189003)(3846002)(71200400001)(316002)(54906003)(110136005)(99286004)(256004)(305945005)(86362001)(74316002)(7736002)(55016002)(8936002)(9686003)(6436002)(6636002)(229853002)(71190400001)(6506007)(33656002)(7696005)(186003)(5660300002)(76116006)(44832011)(66476007)(64756008)(25786009)(66446008)(102836004)(66556008)(14454004)(66946007)(52536014)(478600001)(6246003)(446003)(11346002)(2906002)(6116002)(4326008)(81156014)(8676002)(76176011)(26005)(66066001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5937;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kXmfkc6z+G+BzjYbA11X5HKYI8c2iwSi3BRfhlDMZ59T8C0aHXm41Isk2L6vmatYwVbrjDmAl9R7nDSKTkrjENMhvdybA+Sq+op5cRpuj6kEmuB3Ow1YkoHutGAy+F9Ezzi9nLID5KCt34MSWJn93/KqcXwWVDW9hbqaeF6BQHQohudkpIMB5kpHx4u9qhra451vf92OASiTHtdQGiWIFpDkbtil7eQW1g80gejf68oKU3GrQuv4JsR43bCbuQMyoDe9+A2lWZbL+CVpJMDTDzdO49Hs7ZPw2VSZiByyrUIwGY9c72uZ+cuos7iTA5SBCvj9iZ9FPo1Rr7wZjPPSNFBGq5OcS4de18T9SWhyJRDQc3uzcz+xsnTu1ssYNfLxOCIyzUY699krFRIUu2C3vyMr3X8xU3hwTE/TqthoiqNbBLd9pHDtUKP6vv6Ls3FV
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Nov 2019 02:58:21 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35085 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfKVH6V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 02:58:21 -0500
+Received: by mail-wr1-f67.google.com with SMTP id s5so7465911wrw.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 23:58:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=w67p8xtPdt4/A9arfHNMFL65WBSDvCsMKuFi+DGBUsw=;
+        b=GnqUaOqhAGPj1mSB54UkQHX4DC7zQbAMKGlzXTenoyFS7SJHIG7SkYKpS3E591jesy
+         icCdTroOZhl3lQG0MC4noVz3GcrSdZ3Q0UiheNxmIgcCRphi4DzocgH6+akJKPMp54rE
+         Zs9Tj8Bf38qwZUAhUiOtHylkX7OAbM9jDrZB5FWjgT724BNcW6t+rVhc+VS8nys/Yq+k
+         X83hu5TH1/dV5m34mQ8wWV4jNtwESzBy6NBTfIFEUeVfVZCMG1ar96ADpDaRKm2evh/s
+         wU/EBeaQJwE6HVdRYf8a3cY4MJpP0lZ+WrIwOTf4uiILzOSMn/yTgbEWMC2AfBJNxcrp
+         x3+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=w67p8xtPdt4/A9arfHNMFL65WBSDvCsMKuFi+DGBUsw=;
+        b=CVQGlvn1enu/R9zhusX1o6i0uOZ3xKyqAlKCKokLgxJrGZLY4HSKGvNtfvDAcZbmJq
+         1c2BzV+tu8WVo5qku97RS9Jr862GzX/MC+c94/d1Y59utFdDc8nWz5dtayunf6EnZ/gp
+         GLytpVErlHGdYfXNFLceT1HxwEgpq5ww+wgzpT9cXvrKw71Me4veNnB7MtzV2/g9gdsh
+         6nFckAdInDVQyEfIDX7njWgtUqAIb+c8vSoVpPSCMgYKIuY1JB2a+fZrOOSaLw+S/Xws
+         8qrmSeUa1IMRjiDTs1BpoM+I0zN4RIxcFyaeqrEBZrD/pML4E6bc43b08D7tVgM3bqko
+         sniw==
+X-Gm-Message-State: APjAAAWrRHYSLm5fyahVFC9obkJwyBp1SjcQf1ZXu5rvcKiXuIIe96iD
+        qbCelqkFbjNJOqYKmPXEVjQFPg==
+X-Google-Smtp-Source: APXvYqzcaOQ0bWkk1yg8dpRwylAawt7qFh0J8UP4pvucZ/KaMyU92DHdCC4aa6RA4P2POZCfKVRT4Q==
+X-Received: by 2002:adf:f50b:: with SMTP id q11mr16206077wro.343.1574409498689;
+        Thu, 21 Nov 2019 23:58:18 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id j67sm2673521wmb.43.2019.11.21.23.58.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 23:58:18 -0800 (PST)
+Date:   Fri, 22 Nov 2019 07:58:04 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     enric.balletbo@collabora.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-iio@vger.kernel.org,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, Enrico Granata <egranata@chromium.org>,
+        linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Alexandru M Stan <amstan@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: [PATCH] platform/chrome: cros_ec: Rename cros_ec_dev to
+ cros_ec_mfd_dev
+Message-ID: <20191122075804.GB3296@dell>
+References: <20191121164458.1.Ie5c276b95210779fc2ca5651e46552236795b6b9@changeid>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ca59c18-3495-40a1-1061-08d76f2189be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 07:56:53.0163
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: caqGq/Gj7FoH1cKKfowZRu/eITf3d2bVfLPFvtg4cgMo5keXc6ZtvBHOlYbEALcA4O8KTOXHoBwC2YnOc2eMFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5937
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191121164458.1.Ie5c276b95210779fc2ca5651e46552236795b6b9@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
->=20
-> These changes are cleanups for the clk_hw based API i.MX clock drivers
-> switch longterm effort. As mentioned in the commit messages, the end goal
-> here is to have all the i.MX drivers use clk_hw based API only.
->=20
-> I've put these all in a single patchset since they do not impact in any w=
-ay the
-> expected behavior of the drivers and they are quite obvious trivial ones.
-> More patches to follow for the older i.MX platforms but those might not b=
-e as
-> harmless (and trivial) as these ones.
+On Thu, 21 Nov 2019, Raul E Rangel wrote:
 
-For the patchset,
+> It's very confusing having cros_ec_dev and cros_ec_device. This makes it
+> clear you are dealing with the mfd device.
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+An MFD isn't really a thing. It's a Linuxisum that doesn't really
+describe anything meaningful. IMHO it would make more sense to follow
+the same hierarchical structure that platform devices use:
 
->=20
-> Abel Vesa (9):
->   clk: imx: Replace all the clk based helpers with macros
->   clk: imx: pllv1: Switch to clk_hw based API
->   clk: imx: pllv2: Switch to clk_hw based API
->   clk: imx: imx7ulp composite: Rename to show is clk_hw based
->   clk: imx: Rename sccg and frac pll register to suggest clk_hw
->   clk: imx: Rename the imx_clk_pllv4 to imply it's clk_hw based
->   clk: imx: Rename the imx_clk_pfdv2 to imply it's clk_hw based
->   clk: imx: Rename the imx_clk_divider_gate to imply it's clk_hw based
->   clk: imx7up: Rename the clks to hws
->=20
->  drivers/clk/imx/clk-composite-7ulp.c |   2 +-
->  drivers/clk/imx/clk-divider-gate.c   |   2 +-
->  drivers/clk/imx/clk-frac-pll.c       |   7 +-
->  drivers/clk/imx/clk-imx7ulp.c        | 182
-> +++++++++++++++++------------------
->  drivers/clk/imx/clk-pfdv2.c          |   2 +-
->  drivers/clk/imx/clk-pllv1.c          |  14 ++-
->  drivers/clk/imx/clk-pllv2.c          |  14 ++-
->  drivers/clk/imx/clk-pllv4.c          |   2 +-
->  drivers/clk/imx/clk-sccg-pll.c       |   4 +-
->  drivers/clk/imx/clk.h                |  69 +++++++------
->  10 files changed, 153 insertions(+), 145 deletions(-)
->=20
-> --
-> 2.7.4
+  s/cros_ec_mfd_dev/cros_ec_parent/
 
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> ---
+> This is based on top of the i2c acpi tunnel patches:
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=419791
+> 
+>  drivers/i2c/busses/i2c-cros-ec-tunnel.c       |  2 +-
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |  2 +-
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  2 +-
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |  2 +-
+>  .../cros_ec_sensors/cros_ec_sensors_ring.c    |  2 +-
+>  drivers/iio/light/cros_ec_light_prox.c        |  2 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |  2 +-
+>  .../media/platform/cros-ec-cec/cros-ec-cec.c  |  2 +-
+>  drivers/mfd/cros_ec_dev.c                     | 14 ++++-----
+>  drivers/platform/chrome/cros_ec_chardev.c     | 21 +++++++-------
+>  drivers/platform/chrome/cros_ec_debugfs.c     | 16 +++++-----
+>  drivers/platform/chrome/cros_ec_lightbar.c    | 29 ++++++++++---------
+>  drivers/platform/chrome/cros_ec_pd_sysfs.c    |  6 ++--
+>  drivers/platform/chrome/cros_ec_pd_update.c   | 20 ++++++-------
+>  drivers/platform/chrome/cros_ec_sysfs.c       | 16 +++++-----
+>  drivers/platform/chrome/cros_ec_vbc.c         |  8 ++---
+>  drivers/platform/chrome/cros_usbpd_logger.c   |  6 ++--
+>  drivers/power/supply/cros_usbpd-charger.c     |  6 ++--
+>  drivers/rtc/rtc-cros-ec.c                     |  2 +-
+>  include/linux/mfd/cros_ec.h                   |  8 ++---
+>  .../linux/platform_data/cros_ec_pd_update.h   |  4 +--
+>  21 files changed, 87 insertions(+), 85 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
