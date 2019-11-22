@@ -2,116 +2,78 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B289C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0460AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C0C20870
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420733;
-	bh=UOl0yxohjGVB5kn0B0kvKXhbib289mdwk/+Id492Zgo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbFOVsdTyAB7pVGbJn3raEtTzU+OUr3PP0yU46wPYpwtMKs3oZExl+2m1TtCiWcS5
-	 g37Nl+FvX2r03DMECPkSBExbWp6G8W7ueki/CfrJ7sYliL20B55v7ZKhPIEHHn5vNp
-	 mwj6YBIA5G3g/niyYOUSeTeMgDNI/wKGzxczZPm4=
+	by mail.kernel.org (Postfix) with ESMTP id CEA9620840
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbfKVLFb (ORCPT
+        id S1731743AbfKVLFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:05:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730755AbfKVLF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:05:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A862E20870;
-        Fri, 22 Nov 2019 11:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420729;
-        bh=UOl0yxohjGVB5kn0B0kvKXhbib289mdwk/+Id492Zgo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7M8sJEwpa1hPmcWXFDGuqPILg2ugBCyiUsUdEgtX6F3j+DEQJLa9rH7mQD4ThX76
-         hgcsivNGXn75I/2c7XN/NzliXr+CVCEFYAc2rDO5W+A0JJT7J0fvBBKg92LCy9oryD
-         inB1xO9sm+BePCo87Og0OWL4L0NGQiyMpSH6T+44=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 205/220] net: sched: avoid writing on noop_qdisc
-Date:   Fri, 22 Nov 2019 11:29:30 +0100
-Message-Id: <20191122100928.564216161@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 06:05:38 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7165 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728326AbfKVLFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:35 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5BB24C7723AC9CBA3167;
+        Fri, 22 Nov 2019 19:05:33 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 22 Nov 2019 19:05:24 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH] {tty: serial, nand: onenand}: remove variable 'ufstat' set but not used
+Date:   Fri, 22 Nov 2019 19:12:39 +0800
+Message-ID: <1574421159-113624-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-[ Upstream commit f98ebd47fd0da1717267ce1583a105d8cc29a16a ]
+drivers/tty/serial/samsung_tty.c: In function s3c24xx_serial_rx_chars_dma:
+drivers/tty/serial/samsung_tty.c:549:24: warning: variable ufstat set but not used [-Wunused-but-set-variable]
 
-While noop_qdisc.gso_skb and noop_qdisc.skb_bad_txq are not used
-in other places, it seems not correct to overwrite their fields
-in dev_init_scheduler_queue().
-
-noop_qdisc is essentially a shared and read-only object, even if
-it is not marked as const because of some implementation detail.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 ---
- net/sched/sch_generic.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/tty/serial/samsung_tty.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 30e32df5f84a7..8a4d01e427a22 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -577,6 +577,18 @@ struct Qdisc noop_qdisc = {
- 	.dev_queue	=	&noop_netdev_queue,
- 	.running	=	SEQCNT_ZERO(noop_qdisc.running),
- 	.busylock	=	__SPIN_LOCK_UNLOCKED(noop_qdisc.busylock),
-+	.gso_skb = {
-+		.next = (struct sk_buff *)&noop_qdisc.gso_skb,
-+		.prev = (struct sk_buff *)&noop_qdisc.gso_skb,
-+		.qlen = 0,
-+		.lock = __SPIN_LOCK_UNLOCKED(noop_qdisc.gso_skb.lock),
-+	},
-+	.skb_bad_txq = {
-+		.next = (struct sk_buff *)&noop_qdisc.skb_bad_txq,
-+		.prev = (struct sk_buff *)&noop_qdisc.skb_bad_txq,
-+		.qlen = 0,
-+		.lock = __SPIN_LOCK_UNLOCKED(noop_qdisc.skb_bad_txq.lock),
-+	},
- };
- EXPORT_SYMBOL(noop_qdisc);
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 83fd516..ab3c7d1 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -546,7 +546,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport);
  
-@@ -1253,8 +1265,6 @@ static void dev_init_scheduler_queue(struct net_device *dev,
+ static irqreturn_t s3c24xx_serial_rx_chars_dma(void *dev_id)
+ {
+-	unsigned int utrstat, ufstat, received;
++	unsigned int utrstat, received;
+ 	struct s3c24xx_uart_port *ourport = dev_id;
+ 	struct uart_port *port = &ourport->port;
+ 	struct s3c24xx_uart_dma *dma = ourport->dma;
+@@ -556,7 +556,7 @@ static irqreturn_t s3c24xx_serial_rx_chars_dma(void *dev_id)
+ 	struct dma_tx_state state;
  
- 	rcu_assign_pointer(dev_queue->qdisc, qdisc);
- 	dev_queue->qdisc_sleeping = qdisc;
--	__skb_queue_head_init(&qdisc->gso_skb);
--	__skb_queue_head_init(&qdisc->skb_bad_txq);
- }
+ 	utrstat = rd_regl(port, S3C2410_UTRSTAT);
+-	ufstat = rd_regl(port, S3C2410_UFSTAT);
++	rd_regl(port, S3C2410_UFSTAT);
  
- void dev_init_scheduler(struct net_device *dev)
+ 	spin_lock_irqsave(&port->lock, flags);
+ 
 -- 
-2.20.1
-
-
+2.7.4
 
