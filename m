@@ -2,52 +2,54 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1C7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D414C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3DB20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612F22070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421448;
-	bh=DaQLybh/xJL6ICV5KQelju/IXatkVj3q7xwN1oiX+YI=;
+	s=default; t=1574421454;
+	bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vbrO6nX0EFNzIqRh56Y60+7OxHAMVCyzZuXC3xjcHWPrCJ/cMQRiZKjwsyzdLD2w0
-	 JHGQNQ9vKQ2x8iyBlOM7/rPwwBqY2G8oUWFVsuQ8Bl+esVey5DTvQPXUnTHTjo3ad+
-	 pc+dWRWd9R4i2wQQJYymDn/7KIZNj90/TUIVpKcE=
+	b=Xwjb9iayBazr7I0Zjxp64CII7pNgHVNRTKn1Rs1wR9HiRFWx3LJuz6QuHk6WP/Z86
+	 evWDLQpfji6/SCeNR8jmmdqN0dPduK20qdyzy8IJ4zMQ8E/1Pyx/H9rNnlLY4f5CCc
+	 eoyZQuwNvynQBmUx2vZIKdvJSHsucGfo5YnTz9Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730448AbfKVLR1 (ORCPT
+        id S1730507AbfKVLRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:17:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:17:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728851AbfKVKsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:38 -0500
+        id S1728801AbfKVKsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:48:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBFD520637;
-        Fri, 22 Nov 2019 10:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A44FF205C9;
+        Fri, 22 Nov 2019 10:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419718;
-        bh=DaQLybh/xJL6ICV5KQelju/IXatkVj3q7xwN1oiX+YI=;
+        s=default; t=1574419715;
+        bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4BrNISl85is1zvBMwJeqJhZJtO2ORC5GV7T70tEFvjbnFZEzq4PEiN3k520FOzxP
-         cKwCg5wUj7QD5za2trrUATPHE4OZSyPWYZSeEl2iMcQZAcOkRwT4lEKpEGrRpYZ8FB
-         EARXm4EorLDTMPug5TJUMgCe2ciHi5/scdaSTIOs=
+        b=EsDwliwxVQC5tAjdHJfSL58YRXrjeLceAoPKz0e9eNtSmv4ZnC6/XqIMyDwqhMTRd
+         mTsWc27i+RVJ6U9r3JxxDt0WFThKkYLdcnk5pkvvJDEE0si8r1ivzBhha1P5qR45m0
+         cYgOWli37gMoOTJ5RP1Cs+NQx4457CwDlNr10uhk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 206/222] mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
-Date:   Fri, 22 Nov 2019 11:29:06 +0100
-Message-Id: <20191122100917.186392777@linuxfoundation.org>
+Subject: [PATCH 4.9 205/222] backlight: lm3639: Unconditionally call led_classdev_unregister
+Date:   Fri, 22 Nov 2019 11:29:05 +0100
+Message-Id: <20191122100917.099846929@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,49 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c974ac771479327b5424f60d58845e31daddadea ]
+[ Upstream commit 7cea645ae9c5a54aa7904fddb2cdf250acd63a6c ]
 
-If a child device like touchscreen is wakeup capable, then keep ADC
-interface on, so that a touching resistive screen will generate wakeup
-event to the system.
+Clang warns that the address of a pointer will always evaluated as true
+in a boolean context.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
+drivers/video/backlight/lm3639_bl.c:403:14: warning: address of
+'pchip->cdev_torch' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_torch)
+        ~~   ~~~~~~~^~~~~~~~~~
+drivers/video/backlight/lm3639_bl.c:405:14: warning: address of
+'pchip->cdev_flash' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_flash)
+        ~~   ~~~~~~~^~~~~~~~~~
+2 warnings generated.
+
+These statements have been present since 2012, introduced by
+commit 0f59858d5119 ("backlight: add new lm3639 backlight
+driver"). Given that they have been called unconditionally since
+then presumably without any issues, removing the always true if
+statements to fix the warnings without any real world changes.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/119
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/ti_am335x_tscadc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/video/backlight/lm3639_bl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
-index 60286adbd6a1c..e56f0844b98de 100644
---- a/drivers/mfd/ti_am335x_tscadc.c
-+++ b/drivers/mfd/ti_am335x_tscadc.c
-@@ -295,11 +295,24 @@ static int ti_tscadc_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
+index cd50df5807ead..086611c7bc03c 100644
+--- a/drivers/video/backlight/lm3639_bl.c
++++ b/drivers/video/backlight/lm3639_bl.c
+@@ -400,10 +400,8 @@ static int lm3639_remove(struct i2c_client *client)
  
-+static int __maybe_unused ti_tscadc_can_wakeup(struct device *dev, void *data)
-+{
-+	return device_may_wakeup(dev);
-+}
-+
- static int __maybe_unused tscadc_suspend(struct device *dev)
- {
- 	struct ti_tscadc_dev	*tscadc = dev_get_drvdata(dev);
+ 	regmap_write(pchip->regmap, REG_ENABLE, 0x00);
  
- 	regmap_write(tscadc->regmap, REG_SE, 0x00);
-+	if (device_for_each_child(dev, NULL, ti_tscadc_can_wakeup)) {
-+		u32 ctrl;
-+
-+		regmap_read(tscadc->regmap, REG_CTRL, &ctrl);
-+		ctrl &= ~(CNTRLREG_POWERDOWN);
-+		ctrl |= CNTRLREG_TSCSSENB;
-+		regmap_write(tscadc->regmap, REG_CTRL, ctrl);
-+	}
- 	pm_runtime_put_sync(dev);
- 
+-	if (&pchip->cdev_torch)
+-		led_classdev_unregister(&pchip->cdev_torch);
+-	if (&pchip->cdev_flash)
+-		led_classdev_unregister(&pchip->cdev_flash);
++	led_classdev_unregister(&pchip->cdev_torch);
++	led_classdev_unregister(&pchip->cdev_flash);
+ 	if (pchip->bled)
+ 		device_remove_file(&(pchip->bled->dev), &dev_attr_bled_mode);
  	return 0;
 -- 
 2.20.1
