@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D4C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCADC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E7920718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3904220637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419128;
-	bh=uZ8AOgJ9LAjIUjnvJ3css1oOtMwLwVoIUPAeWo0udMg=;
+	s=default; t=1574419134;
+	bh=Embar7vqklFB3d4ql639GIaXNxv9S0DkcaLHSsQDqCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HSIy2vEFTEmGSlDyW+jcKLhq/z7/fA0KIue3dZg9STW4/9r51WnI8/IBnYvLwmQz8
-	 f9+7epmNVGRcwExcO85aa/FYXJrF04nIDcrDaehpXs3rKh54PC+pvpf7eHjcm4FOon
-	 swCYEkE+0bQ3N9iNrmSRz8TA7yvHGxS2EGeDMh60=
+	b=yUGrCB3FtUuauCMlHikNeBhvxazaWm2qg9TBZY5gj2+t48KC7q5r/JQOS1nOR/Vv1
+	 JLx5eVtqjC2kIzsKjooTQMAc1Qvw39wvGxwHKFTDxXBhLUvrpq28NFjH3ZaIjRn89f
+	 6Q6o6g7DeWSJRCTNxlMGl2RfaOGKxVQYV2jp8PQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfKVKir (ORCPT
+        id S1728714AbfKVKiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfKVKil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:41 -0500
+        id S1728226AbfKVKiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C79420717;
-        Fri, 22 Nov 2019 10:38:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9702C20637;
+        Fri, 22 Nov 2019 10:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419120;
-        bh=uZ8AOgJ9LAjIUjnvJ3css1oOtMwLwVoIUPAeWo0udMg=;
+        s=default; t=1574419130;
+        bh=Embar7vqklFB3d4ql639GIaXNxv9S0DkcaLHSsQDqCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLBhAbKgwlgcRovUTWcjUEmyYMlhe+COnDWFOOFwa2bP3nQIXZ/AXQuTUVwlvjMmV
-         HcnLGUdEdI2zkw07frQilIdP7uaGs97JYrpiTcHZykphRFoAjYHN7WJW705hoXPoNg
-         cqdBzWrP9yPwBGZkt8ES5aWC6cLpmq9i2OwKKs18=
+        b=IkL0x12ssnurIaj0PQrnDdir35XPq5lP3CRK7LWyIHKkQutyHzDTN/Hh+u/VAUeUS
+         2p5Z+KwljkpApZj1WlauWl8yA5KIQuQHKG5zaQXf34WBZrJAoO+gAMdqWxvf63AB7a
+         NFLTo6A+Q8gJitwBvG9GNuI7vTRe3MpE5rI9Y9GI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 127/159] ixgbe: Fix crash with VFs and flow director on interface flap
-Date:   Fri, 22 Nov 2019 11:28:38 +0100
-Message-Id: <20191122100832.307803950@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 120/159] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
+Date:   Fri, 22 Nov 2019 11:28:31 +0100
+Message-Id: <20191122100831.185586994@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
+[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
 
-This patch fix crash when we have restore flow director filters after reset
-adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
-rx_ring array, as it has a VF identifier in the upper 32 bits.
+Clang warns when implicitly converting from one enumerated type to
+another. Avoid this by using the equivalent value from the expected
+type.
 
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
+enumeration type 'enum dma_transfer_direction' to different enumeration
+type 'enum dma_data_direction' [-Wenum-conversion]
+                td_desc->desc_list_len, DMA_MEM_TO_DEV);
+                                        ^~~~~~~~~~~~~~
+1 warning generated.
+
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/dma/timb_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index a5b443171b8bd..4521181aa0ed9 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -4532,6 +4532,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	struct hlist_node *node2;
- 	struct ixgbe_fdir_filter *filter;
-+	u64 action;
- 
- 	spin_lock(&adapter->fdir_perfect_lock);
- 
-@@ -4540,12 +4541,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 
- 	hlist_for_each_entry_safe(filter, node2,
- 				  &adapter->fdir_filter_list, fdir_node) {
-+		action = filter->action;
-+		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
-+			action =
-+			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
-+
- 		ixgbe_fdir_write_perfect_filter_82599(hw,
- 				&filter->filter,
- 				filter->sw_idx,
--				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
-+				(action == IXGBE_FDIR_DROP_QUEUE) ?
- 				IXGBE_FDIR_DROP_QUEUE :
--				adapter->rx_ring[filter->action]->reg_idx);
-+				adapter->rx_ring[action]->reg_idx);
+diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
+index 559cd4073698c..cf741187c9bb6 100644
+--- a/drivers/dma/timb_dma.c
++++ b/drivers/dma/timb_dma.c
+@@ -552,7 +552,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
  	}
  
- 	spin_unlock(&adapter->fdir_perfect_lock);
+ 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
+-		td_desc->desc_list_len, DMA_MEM_TO_DEV);
++		td_desc->desc_list_len, DMA_TO_DEVICE);
+ 
+ 	return &td_desc->txd;
+ }
 -- 
 2.20.1
 
