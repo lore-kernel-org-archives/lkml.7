@@ -2,144 +2,220 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB124C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0ABC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848E22070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aIOLCYqV"
+	by mail.kernel.org (Postfix) with ESMTP id 99B4820672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKVIVk (ORCPT
+        id S1726714AbfKVIYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:21:40 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:61583 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfKVIVk (ORCPT
+        Fri, 22 Nov 2019 03:24:07 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:52454 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfKVIYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:21:40 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191122082137epoutp035c40f6c66752f4defa9589def7738a43~Zbl6Rmvyo0526805268epoutp03V
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:21:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191122082137epoutp035c40f6c66752f4defa9589def7738a43~Zbl6Rmvyo0526805268epoutp03V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574410897;
-        bh=dPZkvk9rCr5QXvbQHGywDicbdDPuogBkdkrVGHH2yT8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=aIOLCYqVCE8Xgr4KChFBrVekY1kaB0Rj3e1XApKqgItBnUT1DF7T2iqUhEeLt4/Qc
-         E44bC6/FL3ec4W3gWGgwZppm7WUPJTp/iTAVKeK2HWhISpwe2lk9OqTSj07nIGzcpR
-         PRLTtocvF/BDQzypV+XkNu6j321VrxJWbDykSz6k=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191122082136epcas1p31646194ba715527873e33c0fbbb30ef9~Zbl50LZZE0668106681epcas1p3r;
-        Fri, 22 Nov 2019 08:21:36 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47K8Xb3VPszMqYkn; Fri, 22 Nov
-        2019 08:21:35 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EE.9D.51241.F8A97DD5; Fri, 22 Nov 2019 17:21:35 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191122082134epcas1p1643b57445bfd70ed3e68c45ad6859904~Zbl4N8O7x2895428954epcas1p1R;
-        Fri, 22 Nov 2019 08:21:34 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191122082134epsmtrp1c9c41d95390f43f71f55b07efcba9c67~Zbl4NPZJZ3273632736epsmtrp1a;
-        Fri, 22 Nov 2019 08:21:34 +0000 (GMT)
-X-AuditID: b6c32a39-163ff7000001c829-bc-5dd79a8fe323
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C6.46.10238.E8A97DD5; Fri, 22 Nov 2019 17:21:34 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191122082134epsmtip1b3b308c3e4f4b6e47dc61f7c034458b1~Zbl38dOgK1289612896epsmtip1j;
-        Fri, 22 Nov 2019 08:21:34 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Markus Elfring'" <Markus.Elfring@web.de>
-Cc:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "'Christoph Hellwig'" <hch@lst.de>,
-        "'Daniel Wagner'" <dwagner@suse.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Nikolay Borisov'" <nborisov@suse.com>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>,
-        <linkinjeon@gmail.com>, <linux-fsdevel@vger.kernel.org>
-In-Reply-To: <0e17c0a7-9b40-12a4-3f3f-500b9abb66de@web.de>
-Subject: RE: [PATCH v4 04/13] exfat: add directory operations
-Date:   Fri, 22 Nov 2019 17:21:34 +0900
-Message-ID: <00a001d5a10d$da529670$8ef7c350$@samsung.com>
+        Fri, 22 Nov 2019 03:24:07 -0500
+IronPort-SDR: SUcOU6aUObpxoaLaJLnjyT3vatGLBCm6tFY0Nx1ZZYoYE31k/4AXA8/UEs5FplGmGWtF6yW4Zo
+ H1MbN9sjk/Xc7S1a9NInSYB0pWMamh3fsorYmpZmoML/xSj0rUT5rpDEZtVgbmaqCCuI2IgfBK
+ wlasOEj+Kl47s2DDZiIxPRDEae9NsLKe9EqjBoSKJk9OGGM3wW9+HQM0CjKKzguShMsgOut/60
+ tgDO0lYZCNxODyrV7Lxhhb4wwG3KmKD9PkZmD6ZPZ/KJTB021G4qbIvUMOkk30A8BUMFeNOLmk
+ xhE=
+X-IronPort-AV: E=Sophos;i="5.69,229,1571731200"; 
+   d="scan'208";a="43358877"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:24:06 -0800
+IronPort-SDR: mQ3OUjG+DEPUT0ZsCjj9ZsTimaRlX03xP8cr0pwYRuF+I+cMSkypv7ltJYgNJzFAWGWAXnrw2F
+ NtxXzYMNuWjGT+gC4vr4tsOpaf4o9oPf0xhkqGkwVDjpi3DJ2G99OD0DZLAHbiAkkeURS7Vc2I
+ thEPSD0QqPG+wPqPahtzuiqHnky8BC8o0koc6vYkwXtkQK7GHGg8+vk5NBR9H6vN1lOEzu5ldq
+ NcC0v8vLH7BU7a2DcRErEz6SYTdVlcRIaTob/kxjaxAgpAyFcdNF0/CdtEJFo7OzTLb43JRVIE
+ bTg=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v6 00/48] atmel_mxt_ts misc
+Date:   Fri, 22 Nov 2019 17:23:14 +0900
+Message-ID: <20191122082402.18173-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQGvn6iTTExTp6OkCy7f8aJjab+B9AHpvZ4UAavVuMIBPbFUKQFtJvFCAqneanynm4lfkA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0wTWRjdy0xnpmjXa0X9gsZ0x2AEbWmtxamxZBOJmWRNlmj0h6apExgL
-        sa90WvCRTYgiImtAZTVSNcGQNYqPKiIUAdHiE4NGUQkomgiCKBF0fWPQtqNZ/p177jnf9537
-        YAh1G5XI5Lp8otclOFgqnqxrTdZrywKdVn13zUyutXcvzW2rClLc8RNX47jz3TO4zp5ugmtq
-        vklyHRcOUdy3wICC+zZUSHK1Y1cU3L3hEfL3CXxDoIfmWw6fpPnGrgKKL62tRnyw9gHJn7u1
-        hf+vZhYfrh+i+Ef9dWSmco1jSY4oZItejejKcmfnuuwW9o+VtqU2U5reoDWYuUWsxiU4RQub
-        sTxTuyzXERmW1eQJDn+EyhQkiU1NX+J1+32iJsct+Sys6Ml2eAx6j04SnJLfZddluZ2LDXr9
-        AlNEuc6RU97QRnheMBsrm8vJAnSDKUFKBvBC2F89RpSgeEaNQwj6t5Yo5MVbBIP/nqSiKjX+
-        gOBT4ZyfjvMDf5OyqBlBZfgqJS9eIjhz6jURVVFYC2NfW2LuBKyDvUOtsbIEriDgymA7Gd1Q
-        4sUQuvMuYmCYKdgCTcWrozSJk6CooywmUWEzVDT3UjKeDDcr+mI8gefB0SOvCHkiDYTaXyG5
-        12rY908/LWsS4ODOolg2wNU0VHUcI2VDBlT2HFXIeAq8vF5LyzgRBsuK6Og8gLfAm5Yf9YsR
-        vPhokbERuoJnFFEJgZMheCFVpn+DhtHDSG77K7x+v0shV1FBcZFaliRB6b3WOBnPgJIdI/Ru
-        xAbGBQuMCxYYFyDwf7NKRFajaaJHctpFyeAxjb/rGhR7xynmELp2e3kYYQaxE1W78x9a1Qoh
-        T9rkDCNgCDZB1dR536pWZQubNotet83rd4hSGJki576HSJya5Y78CpfPZjAtMBqN3MK0RWkm
-        IztdxXy6a1Vju+ATN4iiR/T+9MUxysQCtG7+nM/a5Fn1qX0jutl5c0ffbzYeCDbSmfMLfzE9
-        ymhvf5i+Lf3t+kbd6Xr7tKp4W1+X9XTW/QFq5ejnS8Ejf+bV2Z6YhbVfQ6cCSTV/GZ83+cL6
-        u88eL00NzR3AZy/eduSXleqHh5V+zQqXeWcK/WWS4fKq7U/L89t6kSLYXZHynCWlHMGQQngl
-        4Ts1zK953QMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsWy7bCSnG7frOuxBn8mGFscfjyJ3aJ58Xo2
-        i5WrjzJZbL0lbXH97i1miz17T7JYXN41h83i/6znrBb/37SwWGz5d4TV4tL7DywO3B47Z91l
-        99g/dw27x+6bDWwefVtWMXqs33KVxWPz6WqPz5vkPA5tf8PmcfvZNpYAzigum5TUnMyy1CJ9
-        uwSujDdfmtkL3rFW/N60mLWBcQ9LFyMnh4SAicTW591ANheHkMBuRomeQ93sEAlpiWMnzjB3
-        MXIA2cIShw8Xg4SFBF4wSvTvtgOx2QR0Jf792c8GYosI6ElMenOYFWQOs8BCZolzcyYwQgw9
-        ySSxu30X2DZOASuJHee/gA0VFrCV2NMRBhJmEVCVaLvcD1bCK2ApMXPvYzYIW1Di5MwnYHFm
-        AW2J3oetjDD2soWvmSHuVJDYcfY1I8QRYRJTpzxjh6gRkZjd2cY8gVF4FpJRs5CMmoVk1Cwk
-        LQsYWVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgRHppbmDsbLS+IPMQpwMCrx8E4o
-        vxYrxJpYVlyZe4hRgoNZSYR3z/UrsUK8KYmVValF+fFFpTmpxYcYpTlYlMR5n+YdixQSSE8s
-        Sc1OTS1ILYLJMnFwSjUwFlqeW/T3kMTh38L/9gRWb3vdd/3twrO87SeZBE4sv+1d5W+e/OmW
-        z5cfBT5HJnMxaa/tnPj9rptHcqOD5PXFR28ECm/f27mnMTSA9VnBkozIZPM1mmK7Vu84GPht
-        ys7TN3bO2yy023uCrXhvAlePhIHMDK513FbTQ64tTFj9fodT8p3ZktsTHimxFGckGmoxFxUn
-        AgAVuiAIyAIAAA==
-X-CMS-MailID: 20191122082134epcas1p1643b57445bfd70ed3e68c45ad6859904
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191121052917epcas1p259b8cb61ab86975cabc0cf4815a8dc38
-References: <20191121052618.31117-1-namjae.jeon@samsung.com>
-        <CGME20191121052917epcas1p259b8cb61ab86975cabc0cf4815a8dc38@epcas1p2.samsung.com>
-        <20191121052618.31117-5-namjae.jeon@samsung.com>
-        <498a958f-9066-09c6-7240-114234965c1a@web.de>
-        <004901d5a0e0$f7bf1030$e73d3090$@samsung.com>
-        <0e17c0a7-9b40-12a4-3f3f-500b9abb66de@web.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch-set forward ports Nick Dyer's work in ndyer/linux github repository
+as long as some other features and fixes
 
-> >> =E2=80=A6=0D=0A>=20>>>=20+++=20b/fs/exfat/dir.c=0D=0A>=20>>=20=E2=80=
-=A6=0D=0A>=20>>>=20+static=20int=20exfat_readdir(struct=20inode=20*inode,=
-=20struct=20exfat_dir_entry=0D=0A>=20>>=20*dir_entry)=0D=0A>=20>>>=20+=7B=
-=0D=0A>=20>>=20=E2=80=A6=0D=0A>=20>>>=20+=09=09=09if=20(=21ep)=20=7B=0D=0A>=
-=20>>>=20+=09=09=09=09ret=20=3D=20-EIO;=0D=0A>=20>>>=20+=09=09=09=09goto=20=
-free_clu;=0D=0A>=20>>>=20+=09=09=09=7D=0D=0A>=20>>=0D=0A>=20>>=20How=20do=
-=20you=20think=20about=20to=20move=20a=20bit=20of=20common=20exception=20ha=
-ndling=20code=0D=0A>=20>>=20(at=20similar=20places)?=0D=0A>=20>=20Not=20sur=
-e=20it=20is=20good.=0D=0A>=20=0D=0A>=20The=20software=20development=20opini=
-ons=20can=20vary=20also=20for=20this=20change=20pattern=0D=0A>=20according=
-=20to=20different=20design=20goals.=0D=0A>=20Is=20such=20a=20transformation=
-=20just=20another=20possibility=20to=20reduce=20duplicate=0D=0A>=20source=
-=20code=20a=20bit?=0D=0AI=20changed=20it=20without=20unnecessary=20goto=20a=
-buse.=20Look=20at=20the=20next=20version=20later.=0D=0AThanks=21=0D=0A>=20=
-=0D=0A>=20Regards,=0D=0A>=20Markus=0D=0A=0D=0A
+Balasubramani Vivekanandan (2):
+  Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c
+    transaction
+  Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
+
+Dean Jenkins (1):
+  Input: atmel_mxt_ts: return error from
+    mxt_process_messages_until_invalid()
+
+Deepak Das (6):
+  Input: Atmel: improve error handling in mxt_start()
+  Input: Atmel: improve error handling in mxt_initialize()
+  Input: Atmel: improve error handling in mxt_update_cfg()
+  Input: Atmel: Improve error handling in mxt_initialize_input_device()
+  Input: Atmel: handle ReportID "0x00" while processing T5 messages
+  Input: Atmel: use T44 object to process T5 messages
+
+George G. Davis (1):
+  input: atmel_mxt_ts: export GPIO reset line via sysfs
+
+Jiada Wang (3):
+  Input: introduce input_mt_report_slot_inactive
+  Input: atmel_mxt_ts - eliminate data->raw_info_block
+  Input: atmel_mxt_ts - Fix compilation warning
+
+Karl Tsou (1):
+  Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Kautuk Consul (2):
+  Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+  Input: atmel_mxt_ts - rely on calculated_crc rather than file
+    config_crc
+
+Naveen Chakka (2):
+  input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+    status
+  input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+
+Nick Dyer (26):
+  Input: atmel_mxt_ts - rework sysfs init/remove
+  Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when
+    necessary
+  Input: atmel_mxt_ts - split large i2c transfers into blocks
+  Input: atmel_mxt_ts - output status from T48 Noise Supression
+  Input: atmel_mxt_ts - output status from T42 Touch Suppression
+  Input: atmel_mxt_ts - implement T9 vector/orientation support
+  Input: atmel_mxt_ts - implement T15 Key Array support
+  Input: atmel_mxt_ts - handle reports from T47 Stylus object
+  Input: atmel_mxt_ts - implement support for T107 active stylus
+  Input: atmel_mxt_ts - release touch state during suspend
+  Input: atmel_mxt_ts - add regulator control support
+  Input: atmel_mxt_ts - report failures in suspend/resume
+  Input: atmel_mxt_ts - allow specification of firmware file name
+  Input: atmel_mxt_ts - handle cfg filename via pdata/sysfs
+  Input: atmel_mxt_ts - allow input name to be specified in platform
+    data
+  Input: atmel_mxt_ts - refactor firmware flash to extract context into
+    struct
+  Input: atmel_mxt_ts - refactor code to enter bootloader into separate
+    func
+  Input: atmel_mxt_ts - combine bootloader version query with probe
+  Input: atmel_mxt_ts - improve bootloader state machine handling
+  Input: atmel_mxt_ts - rename bl_completion to chg_completion
+  Input: atmel_mxt_ts - make bootloader interrupt driven
+  Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
+  Input: atmel_mxt_ts - implement I2C retries
+  Input: atmel_mxt_ts - orientation is not present in hover
+  Input: atmel_mxt_ts - implement debug output for messages
+  Input: atmel_mxt_ts - implement improved debug message interface
+
+Nikhil Ravindran (1):
+  Input: atmel_mxt_ts: Add support for run self-test routine.
+
+Sanjeev Chugh (1):
+  Input: atmel_mxt_ts: Implement synchronization during various
+    operation
+
+karl tsou (1):
+  Input: atmel_mxt_ts - add config checksum attribute to sysfs
+
+keerthikumarp (1):
+  input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel
+    touch panel controller in detachable displays.
+
+---
+v6:
+Fix issue in commit ("Input: introduce input_mt_report_slot_inactive")
+reported by kernel test robot
+
+v5:
+Following commits have been updated to address warnings & errors
+reported by kbuild test robot 
+Input: atmel_mxt_ts - make bootloader interrupt driven
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Following commit has been updated
+Input: introduce input_mt_report_slot_inactive
+
+v4:
+Following commit in v3 patch-set has been removed
+Input: switch to use return value of input_mt_report_slot_state
+
+Following commit has been updated to address checkpatch warning
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+v3:
+Following commits have been updated compared to v2 patchset
+Input: atmel_mxt_ts - implement debug output for messages
+- added inline comment
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msg
+- changed dev_info() to dev_dbg()
+
+v2:
+Following commit in v1 patchset has been split into two commits
+Input: introduce input_mt_report_slot_inactive
+
+Following commits have been updated compared to v1 patchset
+Input: atmel_mxt_ts - split large i2c transfers into blocks
+Input: atmel_mxt_ts - output status from T42 Touch Suppression
+
+Following commits in v1 patchset have been squashed
+Input: touchscreen: Atmel: Add device tree support for T15 key array objects
+Input: atmel_mxt_ts - check data->input_dev is not null in mxt_input_sync()
+Input: atmel_mxt_ts - check firmware format before entering bootloader
+Input: atmel_mxt_ts: update stale use_retrigen_workaround flag
+input: atmel_mxt_ts: move bootloader probe from mxt_initialize()
+input: Atmel: limit the max bytes transferred while reading T5 messages
+Input: atmel_mxt_ts: Use msecs_to_jiffies() instead of HZ
+Input: atmel_mxt_ts: Use complete when in_bootloader true
+Input: atmel_mxt_ts: Prevent crash due to freeing of input device
+input: atmel_mxt_ts: Add NULL check for sysfs attribute debug_msg_attr
+
+Following commits in v1 patchset have been dropped:
+Input: atmel_mxt_ts - configure and use gpios as real gpios
+Input: touchscreen: Atmel: Enable IRQ_DISABLE_UNLAZY flag for interrupt
+Input: atmel_mxt_ts - add memory access interface via sysfs
+Input: atmel_mxt_ts: Remove sysfs attributes during driver detach
+Input: atmel_mxt_ts: Avoid race condition in freeing of input device
+
+
+v1: initial version
+---
+ .../bindings/input/atmel,maxtouch.txt         |   14 +
+ MAINTAINERS                                   |    1 +
+ drivers/hid/hid-alps.c                        |    3 +-
+ drivers/hid/hid-multitouch.c                  |    6 +-
+ drivers/input/input-mt.c                      |    2 +-
+ drivers/input/misc/xen-kbdfront.c             |    2 +-
+ drivers/input/mouse/elan_i2c_core.c           |    2 +-
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 2266 ++++++++++++++---
+ drivers/input/touchscreen/cyttsp4_core.c      |    5 +-
+ drivers/input/touchscreen/cyttsp_core.c       |    2 +-
+ drivers/input/touchscreen/melfas_mip4.c       |    4 +-
+ drivers/input/touchscreen/mms114.c            |    2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c    |    2 +-
+ drivers/input/touchscreen/stmfts.c            |    2 +-
+ include/dt-bindings/input/atmel_mxt_ts.h      |   22 +
+ include/linux/input/mt.h                      |    5 +
+ 16 files changed, 1984 insertions(+), 356 deletions(-)
+ create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
+
+-- 
+2.17.1
+
