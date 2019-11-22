@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A45C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDA6C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF752070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1CF2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403703;
-	bh=KG6ooScHarpxP6/uZ0p1fKUiCMRXaGr7NhSoKbbuXzU=;
+	s=default; t=1574403707;
+	bh=MBxeDnP2vJ6YQSAW4kvOLr2ixbZPyUPv7eGEKXCsK1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqBWfllW0v0jUWz7Zm2WAjVnC3mCt4IVBIuoX8QLST1H3OoQrl4YYXnrLb1X3TZco
-	 Bqd6DeFhSz8uID7D8pwG5V46NJItF04yLCL05ChPhu4pHQxH3mv70Evb5BFC7trqFV
-	 5rtzl3wfL6qhZUPhqiduYksLUDa5L4WMbAFzIsAw=
+	b=a+hbFwyIX6O4nTVeyfhzL5tnoGtp8HCfaqrdIpzPolnZ9GK7LlTRnStk/MFL0Lggz
+	 ByOpSb9gFVXkiFIG0QnSywDIh3PgWWBPWilT9zsvcKi+nD/HD0glvYqFyQ4smYgmdX
+	 D6Lax5oqmaZqt3MRXMo3TSpz7+Ush3b1AnkL+L0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfKVFwN (ORCPT
+        id S1729555AbfKVGVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57624 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:21:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbfKVFwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:09 -0500
+        id S1728442AbfKVFwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 115272071B;
-        Fri, 22 Nov 2019 05:52:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89E892084B;
+        Fri, 22 Nov 2019 05:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401928;
-        bh=KG6ooScHarpxP6/uZ0p1fKUiCMRXaGr7NhSoKbbuXzU=;
+        s=default; t=1574401932;
+        bh=MBxeDnP2vJ6YQSAW4kvOLr2ixbZPyUPv7eGEKXCsK1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szSHzuqWymcR5A0LWClU6i1hforFTJVWo2mSPgnEVVqj1SBPUaX55tcX9gbf8zCiX
-         rZEFKmq0uSUVfVA+/lDNYdi2NTJa9VM0cCexN7AcrY7lLPaVHwKayIoEi+wVmGh0B0
-         vH5hWD4pn0hTCUzf0ckHvopmVLrE4jhSOVeJ+OpU=
+        b=ejXSKt8lgPc8c3+6bJPLR1zllH7ErlFYereR1p0lfrqdRBG43An9XLdKqZ44JD+tl
+         rMoD3uvXsYT95LwPj3RNo40r0WzYFQjqmywq1ZKPb5d1b4Df6deF6H//pTDTiUwS7B
+         b64GM4prghzxpsEcIDMXxm+olrEg97zHMkp37C9A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Lu <aaron.lu@intel.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pankaj gupta <pagupta@redhat.com>,
-        Pawel Staszewski <pstaszewski@itcare.pl>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 155/219] mm/page_alloc.c: use a single function to free page
-Date:   Fri, 22 Nov 2019 00:48:07 -0500
-Message-Id: <20191122054911.1750-148-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 158/219] netfilter: nf_tables: fix a missing check of nla_put_failure
+Date:   Fri, 22 Nov 2019 00:48:10 -0500
+Message-Id: <20191122054911.1750-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -67,97 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Lu <aaron.lu@intel.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 742aa7fb52c56fb3b307e704f93e67b698959cc2 ]
+[ Upstream commit eb8950861c1bfd3eecc8f6faad213e3bca0dc395 ]
 
-There are multiple places of freeing a page, they all do the same things
-so a common function can be used to reduce code duplicate.
+If nla_nest_start() may fail. The fix checks its return value and goes
+to nla_put_failure if it fails.
 
-It also avoids bug fixed in one function but left in another.
-
-Link: http://lkml.kernel.org/r/20181119134834.17765-3-aaron.lu@intel.com
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Pankaj gupta <pagupta@redhat.com>
-Cc: Pawel Staszewski <pstaszewski@itcare.pl>
-Cc: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c | 37 ++++++++++++++-----------------------
- 1 file changed, 14 insertions(+), 23 deletions(-)
+ net/netfilter/nf_tables_api.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index dcc46d955df2e..74fb5c338e8fb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4451,16 +4451,19 @@ unsigned long get_zeroed_page(gfp_t gfp_mask)
- }
- EXPORT_SYMBOL(get_zeroed_page);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 24fddf0322790..4c1a88b7ba285 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -5735,6 +5735,8 @@ static int nf_tables_fill_flowtable_info(struct sk_buff *skb, struct net *net,
+ 		goto nla_put_failure;
  
--void __free_pages(struct page *page, unsigned int order)
-+static inline void free_the_page(struct page *page, unsigned int order)
- {
--	if (put_page_testzero(page)) {
--		if (order == 0)
--			free_unref_page(page);
--		else
--			__free_pages_ok(page, order);
--	}
-+	if (order == 0)		/* Via pcp? */
-+		free_unref_page(page);
-+	else
-+		__free_pages_ok(page, order);
- }
- 
-+void __free_pages(struct page *page, unsigned int order)
-+{
-+	if (put_page_testzero(page))
-+		free_the_page(page, order);
-+}
- EXPORT_SYMBOL(__free_pages);
- 
- void free_pages(unsigned long addr, unsigned int order)
-@@ -4509,14 +4512,8 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
- {
- 	VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
- 
--	if (page_ref_sub_and_test(page, count)) {
--		unsigned int order = compound_order(page);
--
--		if (order == 0)
--			free_unref_page(page);
--		else
--			__free_pages_ok(page, order);
--	}
-+	if (page_ref_sub_and_test(page, count))
-+		free_the_page(page, compound_order(page));
- }
- EXPORT_SYMBOL(__page_frag_cache_drain);
- 
-@@ -4581,14 +4578,8 @@ void page_frag_free(void *addr)
- {
- 	struct page *page = virt_to_head_page(addr);
- 
--	if (unlikely(put_page_testzero(page))) {
--		unsigned int order = compound_order(page);
--
--		if (order == 0)		/* Via pcp? */
--			free_unref_page(page);
--		else
--			__free_pages_ok(page, order);
--	}
-+	if (unlikely(put_page_testzero(page)))
-+		free_the_page(page, compound_order(page));
- }
- EXPORT_SYMBOL(page_frag_free);
- 
+ 	nest = nla_nest_start(skb, NFTA_FLOWTABLE_HOOK);
++	if (!nest)
++		goto nla_put_failure;
+ 	if (nla_put_be32(skb, NFTA_FLOWTABLE_HOOK_NUM, htonl(flowtable->hooknum)) ||
+ 	    nla_put_be32(skb, NFTA_FLOWTABLE_HOOK_PRIORITY, htonl(flowtable->priority)))
+ 		goto nla_put_failure;
 -- 
 2.20.1
 
