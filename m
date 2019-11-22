@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A0BC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF898C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B04020708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8F72071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418908;
-	bh=youHC11LHjAs4CWKcmpmT/pWr3+p84Nsi0dY0gcXfR8=;
+	s=default; t=1574418912;
+	bh=Cg+4qi4q+XTTYzZRmspi7f+I4Y5Jitg8gRm9nE/UjfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1G6nkZWw/4n7zyeAzWcOVjRqDtiob7N2HSsO6en79bJryLYDs5KklmS8OoW4g8ON
-	 4sZD9IOLQlcWRr8/rK2/l98qSdikuszKcQN/s8ZVN+nW6T284o7FVOSmpnm36o+HoJ
-	 NJ+GhC9xdfGIxmLi7Rq2TFp6Aj/QgGokK4aVoeos=
+	b=Gt2Io5Uh8JTesHLet99+A2reykxQivaxXivhRDlbjBxfAiMbpUyCD2yPl6J3Lfi7k
+	 OVelkmx25iuPLRnShq0QovtfcOMs6h+fSErNh61Mn0lXlp6c2dmWJuMCtFYCTCU0iX
+	 glJfTh0bSCA/W60YlfIM/WGpPu3Lhx031ZGjen/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfKVKfH (ORCPT
+        id S1728213AbfKVKfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:35:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:35:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfKVKfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:35:03 -0500
+        id S1728202AbfKVKfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:35:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739E920656;
-        Fri, 22 Nov 2019 10:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB10B20715;
+        Fri, 22 Nov 2019 10:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418903;
-        bh=youHC11LHjAs4CWKcmpmT/pWr3+p84Nsi0dY0gcXfR8=;
+        s=default; t=1574418906;
+        bh=Cg+4qi4q+XTTYzZRmspi7f+I4Y5Jitg8gRm9nE/UjfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hoU7WGjH17D45ooH8DLm04fTYQHUfddQ86bi7+wOFZNiyk7Jdaf0AQs/ZALwI3iqe
-         JmbjtKXFx5+cJAgxmzDkZyxp3D2ziUn+ElTQ6FZZAXu1ZFqvmI54FnOuGC94kdIBhM
-         G4k8zNQkpoM05vEZkhEUFVgdEDdTdqVxi9mv7SGg=
+        b=ZG2UN2KgTVnUY7/Uuae/KFYieaItJJVRNeRIwc58Z1N4pcV6b6eRNt/oFUI1uliR4
+         hteyFb5EyhNS0muPxJexsFo+rbgCsF1werdKEBq3ylwGgeeH7rz7p/kbgE5jdXnFOk
+         Eton6zjzXjyP4fvbkpe5H8V0iordOrgHirVmjpx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Ernst <justin.ernst@hpe.com>,
-        Borislav Petkov <bp@suse.de>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 092/159] EDAC: Raise the maximum number of memory controllers
-Date:   Fri, 22 Nov 2019 11:28:03 +0100
-Message-Id: <20191122100813.313867059@linuxfoundation.org>
+        stable@vger.kernel.org, Shahed Shaikh <Shahed.Shaikh@cavium.com>,
+        Ariel Elior <ariel.elior@cavium.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 075/159] bnx2x: Ignore bandwidth attention in single function mode
+Date:   Fri, 22 Nov 2019 11:27:46 +0100
+Message-Id: <20191122100759.367500457@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,61 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Ernst <justin.ernst@hpe.com>
+From: Shahed Shaikh <Shahed.Shaikh@cavium.com>
 
-[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
+[ Upstream commit 75a110a1783ef8324ffd763b24f4ac268253cbca ]
 
-We observe an oops in the skx_edac module during boot:
+This is a workaround for FW bug -
+MFW generates bandwidth attention in single function mode, which
+is only expected to be generated in multi function mode.
+This undesired attention in SF mode results in incorrect HW
+configuration and resulting into Tx timeout.
 
-  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
-  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  ...
-  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
-  Too many memory controllers: 16
-  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
-
-We observe there are two memory controllers per socket, with a limit
-of 16. Raise the maximum number of memory controllers from 16 to 2 *
-MAX_NUMNODES (1024).
-
-[ bp: This is just a band-aid fix until we've sorted out the whole issue
-  with the bus_type association and handling in EDAC and can get rid of
-  this arbitrary limit. ]
-
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Russ Anderson <russ.anderson@hpe.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac@vger.kernel.org
-Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
+Signed-off-by: Shahed Shaikh <Shahed.Shaikh@cavium.com>
+Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/edac.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index 4fe67b853de04..9bb4f3311e137 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -17,6 +17,7 @@
- #include <linux/completion.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/numa.h>
- 
- struct device;
- 
-@@ -778,6 +779,6 @@ struct mem_ctl_info {
- /*
-  * Maximum number of memory controllers in the coherent fabric.
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index d450d8b3708cd..82960603da332 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -3532,6 +3532,16 @@ static void bnx2x_drv_info_iscsi_stat(struct bnx2x *bp)
   */
--#define EDAC_MAX_MCS	16
-+#define EDAC_MAX_MCS	2 * MAX_NUMNODES
- 
- #endif
+ static void bnx2x_config_mf_bw(struct bnx2x *bp)
+ {
++	/* Workaround for MFW bug.
++	 * MFW is not supposed to generate BW attention in
++	 * single function mode.
++	 */
++	if (!IS_MF(bp)) {
++		DP(BNX2X_MSG_MCP,
++		   "Ignoring MF BW config in single function mode\n");
++		return;
++	}
++
+ 	if (bp->link_vars.link_up) {
+ 		bnx2x_cmng_fns_init(bp, true, CMNG_FNS_MINMAX);
+ 		bnx2x_link_sync_notify(bp);
 -- 
 2.20.1
 
