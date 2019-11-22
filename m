@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5580C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18A0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E85F20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A725A20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420401;
-	bh=B2KYIyJoPWeC/UNCnJwJ0lmKqBLfynwxhRwcJ6I1OCA=;
+	s=default; t=1574420404;
+	bh=DQTeCkJ2KBezvBPt10XsX8eI318QCbKRiA3j0R1qspQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PvgoJ5GVSFjDl9WGz0lTAb7HpECzEp9Ph4bcmw6MNeec/S+P4A9wWW1cMfj2IrX4G
-	 skn6P4PsD+7Rui0Be0rmN4oTM4KCVVAUtmiORPBLHPWCOXQQ91UhdP/TI48FkR7TFk
-	 J4lagA/v02aE7QdkaDqbn2jvATD97XemzUrhpwuE=
+	b=KnbSntgHAdhRB2HEzJ4JI7KT92cpy5XyngtjyXizA/brhJtZhAlCharWEIGpwnfgd
+	 kkyJ0oLjILdUUZAyycAmvpDlRGd1UWB6uEkZHGwER+5iBNAy4rw3apDbv1VJYiTlp/
+	 SfqmwKKnAVjYFOrzVAYbb+F1DFGNLIezo9/LGesY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbfKVLAA (ORCPT
+        id S1730985AbfKVLAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:00:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:00:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbfKVK76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:58 -0500
+        id S1728201AbfKVLAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:00:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C26820721;
-        Fri, 22 Nov 2019 10:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69792071F;
+        Fri, 22 Nov 2019 11:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420397;
-        bh=B2KYIyJoPWeC/UNCnJwJ0lmKqBLfynwxhRwcJ6I1OCA=;
+        s=default; t=1574420401;
+        bh=DQTeCkJ2KBezvBPt10XsX8eI318QCbKRiA3j0R1qspQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQwN/+eViaqTndfaYBqpwYSMORPV7EH4HQ1JqKOyfXky+YsYwNG0kogksEn7UkeZn
-         h7FbF3Kkj+OkuEQbLs9AppYFoIpbF/Dset5obQbG+OUNJfX5eIeOAdohPDCL7R12DV
-         NpaRwCSfERp/Ahb0RNXQcDAYil5E+y+gYOiJo78A=
+        b=EXHdMP2MPWl2vJwGGYdVjDyXGczYEOnc6jiOmOb73Lu4t4oJNWd91vgyDYt7rbx45
+         TkaaeK6ZW2KwmTBARBImN1zV5+GkRNWUq0Go45G8boYGhIJA/tGTF0SW+nWrt3wsJv
+         BCG1TcG+NISDKACvVtVHSQ6UGv2KDH4/dhtvUHO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
+        stable@vger.kernel.org,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/220] ACPICA: Never run _REG on system_memory and system_IO
-Date:   Fri, 22 Nov 2019 11:27:38 +0100
-Message-Id: <20191122100919.368561070@linuxfoundation.org>
+Subject: [PATCH 4.19 094/220] cpuidle: menu: Fix wakeup statistics updates for polling state
+Date:   Fri, 22 Nov 2019 11:27:39 +0100
+Message-Id: <20191122100919.455143250@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,132 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Moore <robert.moore@intel.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 8b1cafdcb4b75c5027c52f1e82b47ebe727ad7ed ]
+[ Upstream commit 5f26bdceb9c0a5e6c696aa2899d077cd3ae93413 ]
 
-These address spaces are defined by the ACPI spec to be
-"always available", and thus _REG should never be run on them.
-Provides compatibility with other ACPI implementations.
+If the CPU exits the "polling" state due to the time limit in the
+loop in poll_idle(), this is not a real wakeup and it just means
+that the "polling" state selection was not adequate.  The governor
+mispredicted short idle duration, but had a more suitable state been
+selected, the CPU might have spent more time in it.  In fact, there
+is no reason to expect that there would have been a wakeup event
+earlier than the next timer in that case.
 
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Handling such cases as regular wakeups in menu_update() may cause the
+menu governor to make suboptimal decisions going forward, but ignoring
+them altogether would not be correct either, because every time
+menu_select() is invoked, it makes a separate new attempt to predict
+the idle duration taking distinct time to the closest timer event as
+input and the outcomes of all those attempts should be recorded.
+
+For this reason, make menu_update() always assume that if the
+"polling" state was exited due to the time limit, the next proper
+wakeup event for the CPU would be the next timer event (not
+including the tick).
+
+Fixes: a37b969a61c1 "cpuidle: poll_state: Add time limit to poll_idle()"
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/acevents.h |  2 ++
- drivers/acpi/acpica/aclocal.h  |  2 +-
- drivers/acpi/acpica/evregion.c | 17 +++++++++++++++--
- drivers/acpi/acpica/evrgnini.c |  6 +-----
- drivers/acpi/acpica/evxfregn.c |  1 -
- 5 files changed, 19 insertions(+), 9 deletions(-)
+ drivers/cpuidle/governors/menu.c | 10 ++++++++++
+ drivers/cpuidle/poll_state.c     |  6 +++++-
+ include/linux/cpuidle.h          |  1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
-index 298180bf7e3c1..bfcc68b9f708d 100644
---- a/drivers/acpi/acpica/acevents.h
-+++ b/drivers/acpi/acpica/acevents.h
-@@ -230,6 +230,8 @@ acpi_ev_default_region_setup(acpi_handle handle,
- 
- acpi_status acpi_ev_initialize_region(union acpi_operand_object *region_obj);
- 
-+u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
-+
- /*
-  * evsci - SCI (System Control Interrupt) handling/dispatch
-  */
-diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
-index 0f28a38a43ea1..99b0da8991098 100644
---- a/drivers/acpi/acpica/aclocal.h
-+++ b/drivers/acpi/acpica/aclocal.h
-@@ -395,9 +395,9 @@ struct acpi_simple_repair_info {
- /* Info for running the _REG methods */
- 
- struct acpi_reg_walk_info {
--	acpi_adr_space_type space_id;
- 	u32 function;
- 	u32 reg_run_count;
-+	acpi_adr_space_type space_id;
- };
- 
- /*****************************************************************************
-diff --git a/drivers/acpi/acpica/evregion.c b/drivers/acpi/acpica/evregion.c
-index 70c2bd169f669..49decca4e08ff 100644
---- a/drivers/acpi/acpica/evregion.c
-+++ b/drivers/acpi/acpica/evregion.c
-@@ -653,6 +653,19 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
- 
- 	ACPI_FUNCTION_TRACE(ev_execute_reg_methods);
- 
-+	/*
-+	 * These address spaces do not need a call to _REG, since the ACPI
-+	 * specification defines them as: "must always be accessible". Since
-+	 * they never change state (never become unavailable), no need to ever
-+	 * call _REG on them. Also, a data_table is not a "real" address space,
-+	 * so do not call _REG. September 2018.
-+	 */
-+	if ((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) ||
-+	    (space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
-+	    (space_id == ACPI_ADR_SPACE_DATA_TABLE)) {
-+		return_VOID;
-+	}
-+
- 	info.space_id = space_id;
- 	info.function = function;
- 	info.reg_run_count = 0;
-@@ -714,8 +727,8 @@ acpi_ev_reg_run(acpi_handle obj_handle,
- 	}
- 
- 	/*
--	 * We only care about regions.and objects that are allowed to have address
--	 * space handlers
-+	 * We only care about regions and objects that are allowed to have
-+	 * address space handlers
- 	 */
- 	if ((node->type != ACPI_TYPE_REGION) && (node != acpi_gbl_root_node)) {
- 		return (AE_OK);
-diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-index 39284deedd885..17df5dacd43cf 100644
---- a/drivers/acpi/acpica/evrgnini.c
-+++ b/drivers/acpi/acpica/evrgnini.c
-@@ -16,9 +16,6 @@
- #define _COMPONENT          ACPI_EVENTS
- ACPI_MODULE_NAME("evrgnini")
- 
--/* Local prototypes */
--static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
--
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_ev_system_memory_region_setup
-@@ -33,7 +30,6 @@ static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
-  * DESCRIPTION: Setup a system_memory operation region
-  *
-  ******************************************************************************/
--
- acpi_status
- acpi_ev_system_memory_region_setup(acpi_handle handle,
- 				   u32 function,
-@@ -313,7 +309,7 @@ acpi_ev_pci_config_region_setup(acpi_handle handle,
-  *
-  ******************************************************************************/
- 
--static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
-+u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
+diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
+index e26a40971b263..6d7f6b9bb373a 100644
+--- a/drivers/cpuidle/governors/menu.c
++++ b/drivers/cpuidle/governors/menu.c
+@@ -512,6 +512,16 @@ static void menu_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+ 		 * duration predictor do a better job next time.
+ 		 */
+ 		measured_us = 9 * MAX_INTERESTING / 10;
++	} else if ((drv->states[last_idx].flags & CPUIDLE_FLAG_POLLING) &&
++		   dev->poll_time_limit) {
++		/*
++		 * The CPU exited the "polling" state due to a time limit, so
++		 * the idle duration prediction leading to the selection of that
++		 * state was inaccurate.  If a better prediction had been made,
++		 * the CPU might have been woken up from idle by the next timer.
++		 * Assume that to be the case.
++		 */
++		measured_us = data->next_timer_us;
+ 	} else {
+ 		/* measured value */
+ 		measured_us = cpuidle_get_last_residency(dev);
+diff --git a/drivers/cpuidle/poll_state.c b/drivers/cpuidle/poll_state.c
+index 3f86d23c592ec..36ff5a1d94226 100644
+--- a/drivers/cpuidle/poll_state.c
++++ b/drivers/cpuidle/poll_state.c
+@@ -17,6 +17,8 @@ static int __cpuidle poll_idle(struct cpuidle_device *dev,
  {
- 	acpi_status status;
- 	struct acpi_pnp_device_id *hid;
-diff --git a/drivers/acpi/acpica/evxfregn.c b/drivers/acpi/acpica/evxfregn.c
-index 091415b14fbf1..3b3a25d9f0e6d 100644
---- a/drivers/acpi/acpica/evxfregn.c
-+++ b/drivers/acpi/acpica/evxfregn.c
-@@ -193,7 +193,6 @@ acpi_remove_address_space_handler(acpi_handle device,
- 				 */
- 				region_obj =
- 				    handler_obj->address_space.region_list;
--
- 			}
+ 	u64 time_start = local_clock();
  
- 			/* Remove this Handler object from the list */
++	dev->poll_time_limit = false;
++
+ 	local_irq_enable();
+ 	if (!current_set_polling_and_test()) {
+ 		unsigned int loop_count = 0;
+@@ -27,8 +29,10 @@ static int __cpuidle poll_idle(struct cpuidle_device *dev,
+ 				continue;
+ 
+ 			loop_count = 0;
+-			if (local_clock() - time_start > POLL_IDLE_TIME_LIMIT)
++			if (local_clock() - time_start > POLL_IDLE_TIME_LIMIT) {
++				dev->poll_time_limit = true;
+ 				break;
++			}
+ 		}
+ 	}
+ 	current_clr_polling();
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 4325d6fdde9b6..317aecaed8970 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -81,6 +81,7 @@ struct cpuidle_device {
+ 	unsigned int		registered:1;
+ 	unsigned int		enabled:1;
+ 	unsigned int		use_deepest_state:1;
++	unsigned int		poll_time_limit:1;
+ 	unsigned int		cpu;
+ 
+ 	int			last_residency;
 -- 
 2.20.1
 
