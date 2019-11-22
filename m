@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF31C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C739C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D7E2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE442071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402008;
-	bh=fQn98bLhgm6bfWPbcu3qdZ9JqgF7NX3bu10YEr5k6fc=;
+	s=default; t=1574402013;
+	bh=KPDAVAKouFyIEFHXh9DD1GFKn0HUaQo3/0x6ooC9+u4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TREKTIVAdP1IKSSpA09eq9FPU1CFRjeWEtUMt3h1gsl6KhFxMWeG1sOURDaJSzYnv
-	 5r6jnEKOXy9HO7sVEBih0Cymws/zzO/8+62kvRlzCbQAq99lNjcWyr1I2p/9DQv42i
-	 tGNfSp5bVTyM1oUQJS/666J+5cccGiHn3qu/JHQY=
+	b=2BHuOJHLiUiZRLZ2tv59oVYZKLHObo4xaNxSU/YcTnU2qNwELNWG0PEe25cqkQw4o
+	 FB7W/fbeAqujaZZgq5TuverttlCFP7PxWRAEDQp1/aZHA1ZtnkMc0fnpwjfwxyp+Dj
+	 cDhuBLSo6s9FLCTWrF5StB/QCT/uqbgL0UavA3sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfKVFx0 (ORCPT
+        id S1728879AbfKVFxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:53:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:53:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbfKVFxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:53:17 -0500
+        id S1728838AbfKVFxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:53:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95E72084D;
-        Fri, 22 Nov 2019 05:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 374DB2068F;
+        Fri, 22 Nov 2019 05:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401996;
-        bh=fQn98bLhgm6bfWPbcu3qdZ9JqgF7NX3bu10YEr5k6fc=;
+        s=default; t=1574401999;
+        bh=KPDAVAKouFyIEFHXh9DD1GFKn0HUaQo3/0x6ooC9+u4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zk14JjbbSgnW+M7qIrO0C2Uky8b0kUB6V7xbAmsgH82NMANtEaprhZ/68sDpcA/VV
-         yoo/SlhjGKKulqyHB4fg6VB9W4PuQdzM44Y/ipyZmLBUjoXFKtDJwUKthXRIOGrbGz
-         O3jPIpXI5ZwDFC93baT8bnF4LO5eAVlgcpemdXfg=
+        b=jKSUjAGXxPi2CgJ4Nx5lkpjgX4IPlgsNgfwDLJ8ug+h1kV/Mg8ZzE4PjbtFEFqy7L
+         YyqS5/VqIZoZi6/0uv/OAMpe6ewZ4CUpERrbw1V3ciQsEdZ6Iig4hEfcK8VZ2KOgwR
+         bVnggGkaj69UJAFOQxQTZLqm3tHY0q5h06TYbmFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 214/219] RDMA/hns: Use GFP_ATOMIC in hns_roce_v2_modify_qp
-Date:   Fri, 22 Nov 2019 00:49:05 -0500
-Message-Id: <20191122054911.1750-206-sashal@kernel.org>
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 217/219] powerpc/pseries/dlpar: Fix a missing check in dlpar_parse_cc_property()
+Date:   Fri, 22 Nov 2019 00:49:08 -0500
+Message-Id: <20191122054911.1750-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,34 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit 4e69cf1fe2c52d189acdd06c1fd99cc258aba61f ]
+[ Upstream commit efa9ace68e487ddd29c2b4d6dd23242158f1f607 ]
 
-The the below commit, hns_roce_v2_modify_qp is called inside spinlock
-while using GFP_KERNEL. Change it to GFP_ATOMIC.
+In dlpar_parse_cc_property(), 'prop->name' is allocated by kstrdup().
+kstrdup() may return NULL, so it should be checked and handle error.
+And prop should be freed if 'prop->name' is NULL.
 
-Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/dlpar.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 9ab3ab3c4219f..2caa95ed966c5 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -3442,7 +3442,7 @@ static int hns_roce_v2_modify_qp(struct ib_qp *ibqp,
- 	struct device *dev = hr_dev->dev;
- 	int ret = -EINVAL;
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index e3010b14aea51..c5ffcadab7302 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -63,6 +63,10 @@ static struct property *dlpar_parse_cc_property(struct cc_workarea *ccwa)
  
--	context = kcalloc(2, sizeof(*context), GFP_KERNEL);
-+	context = kcalloc(2, sizeof(*context), GFP_ATOMIC);
- 	if (!context)
- 		return -ENOMEM;
+ 	name = (char *)ccwa + be32_to_cpu(ccwa->name_offset);
+ 	prop->name = kstrdup(name, GFP_KERNEL);
++	if (!prop->name) {
++		dlpar_free_cc_property(prop);
++		return NULL;
++	}
  
+ 	prop->length = be32_to_cpu(ccwa->prop_length);
+ 	value = (char *)ccwa + be32_to_cpu(ccwa->prop_offset);
 -- 
 2.20.1
 
