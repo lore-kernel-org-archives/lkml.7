@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB56C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B5BC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BFB20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4771820708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421581;
-	bh=P+UQtROkCA51/TMMU3JLQRCuGXr6mCdR6xtD5hFuvU4=;
+	s=default; t=1574421589;
+	bh=n3L8c49TwuPiA6F7l7w64tmiblH3+gobPtPSx1j/Ylg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VaUqaJsz424E+wekZiZTHG6PL6cI6Jw5/VKbRZfQp9xzc4wjj+rzRL2o3CcxiVza9
-	 IhMv7ITjmX9tL+Eqk8b4JjWyjuz8Y4xVHETLi3wrJ2VYY9q70pZFqrNi8lYQi8QR04
-	 0oFalLCe79PLzCPR+eCdw9NulCFMUnDoZ2KBj7sQ=
+	b=N15ypvAh3IN6cACn8CHTavx89FR8cF1i9glmRgmN/NrHIrpaGZkieYLM8dht+o7nC
+	 P2HehV9S3OBjfWUkmmXM7RcaIydhnNc36Wq1ZPHHZyVhzkRswS9IVgtfDldWBXLxuF
+	 TXDaZJEOtbLPjg2gQ14A/nOSKn4Ke9Ep/tIbhwz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbfKVLTk (ORCPT
+        id S1729698AbfKVKqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:19:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:46:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbfKVKrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:19 -0500
+        id S1729685AbfKVKqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:46:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A21D20656;
-        Fri, 22 Nov 2019 10:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8740A20721;
+        Fri, 22 Nov 2019 10:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419638;
-        bh=P+UQtROkCA51/TMMU3JLQRCuGXr6mCdR6xtD5hFuvU4=;
+        s=default; t=1574419609;
+        bh=n3L8c49TwuPiA6F7l7w64tmiblH3+gobPtPSx1j/Ylg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DfwyjoByUpsXEKmB5q6agsRtfUFQ4+CTnU6rwf9nxVAix5QuKo8iLJ++dEgnTCLRk
-         HqSqbnCoHaJxoq7KDBfDV+zRoOT9se22di2qBmOSlzqtaVMhYdTvp4gnIRsW420Tzu
-         IMHxlWBWSoQxFSagSu5Hitiv+KONFePEMXNxvhis=
+        b=Imnh/QnulNeOA/gm8ByfumhLPMcjKSqUVhp9Clih2NPwQFxcF2mcge1bDWW/S4s6M
+         MdzNBelC28hu8Ve59alexhOvlAwOa4CgZXt3Wg4tIsJgvTjO0gsG42Y6KkWtygfPO5
+         912u2xD9gf8glOlLqwffoNO/xmVgops+CCMKRMfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cameron Kaiser <spectre@floodgap.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Nick Kossifidis <mickflemm@gmail.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 182/222] KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
-Date:   Fri, 22 Nov 2019 11:28:42 +0100
-Message-Id: <20191122100915.509282448@linuxfoundation.org>
+Subject: [PATCH 4.9 164/222] ath9k: fix reporting calculated new FFT upper max
+Date:   Fri, 22 Nov 2019 11:28:24 +0100
+Message-Id: <20191122100914.451807866@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,42 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cameron Kaiser <spectre@floodgap.com>
+From: Simon Wunderlich <sw@simonwunderlich.de>
 
-[ Upstream commit 1006284c5e411872333967b1970c2ca46a9e225f ]
+[ Upstream commit 4fb5837ac2bd46a85620b297002c704e9958f64d ]
 
-When an OS (currently only classic Mac OS) is running in KVM-PR and makes a
-linked jump from code with split hack addressing enabled into code that does
-not, LR is not correctly updated and reflects the previously munged PC.
+Since the debug print code is outside of the loop, it shouldn't use the loop
+iterator anymore but instead print the found maximum index.
 
-To fix this, this patch undoes the address munge when exiting split
-hack mode so that code relying on LR being a proper address will now
-execute. This does not affect OS X or other operating systems running
-on KVM-PR.
-
-Signed-off-by: Cameron Kaiser <spectre@floodgap.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Cc: Nick Kossifidis <mickflemm@gmail.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath9k/common-spectral.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-index 73c3c127d8584..209cad89a11a5 100644
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -78,8 +78,11 @@ void kvmppc_unfixup_split_real(struct kvm_vcpu *vcpu)
- {
- 	if (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) {
- 		ulong pc = kvmppc_get_pc(vcpu);
-+		ulong lr = kvmppc_get_lr(vcpu);
- 		if ((pc & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
- 			kvmppc_set_pc(vcpu, pc & ~SPLIT_HACK_MASK);
-+		if ((lr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
-+			kvmppc_set_lr(vcpu, lr & ~SPLIT_HACK_MASK);
- 		vcpu->arch.hflags &= ~BOOK3S_HFLAG_SPLIT_HACK;
- 	}
- }
+diff --git a/drivers/net/wireless/ath/ath9k/common-spectral.c b/drivers/net/wireless/ath/ath9k/common-spectral.c
+index eedf86b67cf51..807fbe31e9303 100644
+--- a/drivers/net/wireless/ath/ath9k/common-spectral.c
++++ b/drivers/net/wireless/ath/ath9k/common-spectral.c
+@@ -411,7 +411,7 @@ ath_cmn_process_ht20_40_fft(struct ath_rx_status *rs,
+ 
+ 		ath_dbg(common, SPECTRAL_SCAN,
+ 			"Calculated new upper max 0x%X at %i\n",
+-			tmp_mag, i);
++			tmp_mag, fft_sample_40.upper_max_index);
+ 	} else
+ 	for (i = dc_pos; i < SPECTRAL_HT20_40_NUM_BINS; i++) {
+ 		if (fft_sample_40.data[i] == (upper_mag >> max_exp))
 -- 
 2.20.1
 
