@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82858C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3872C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD21207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD8420840
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420594;
-	bh=G6ZmbjlEdVI5jq0wy0vOQ6tyqnphqoGqRLRcQP8vXYM=;
+	s=default; t=1574420599;
+	bh=eTpx9tamZQwPzwO6LWZ1fM9HmGoF86TvRZSkGzpGxuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VilTPfjlb4/6liuEFF0nGcX4b9b+hgGzcPYmj6zbxMNo1jbqrFmx8ITJ+XaPw0AfT
-	 FmnWH3vwqMj6VCCyyK+PaQMkZ09vPCigua3KC1S4IWElnEhcV8VaxBoFoBQnmgxL50
-	 rfaYbT6GSSrIuW+7Gz0lv7q6O01JGoIpOov393VA=
+	b=tT3xYQ2Nwg5XevIlaOf8pkJdWd3UBhrcn5Rj1aXiNlSIXaYfABv7A5WNehabBpJRs
+	 pdIBrKPlVgL/gX+TSKYp/SeYKcvVhsYCMNwcUJV7LweYp3mTF3CnXs7ZL5SLllo8tO
+	 U1kGX9T2py7bui7K9J9u2G4MOoXdTJhM+IPDHwEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfKVLDM (ORCPT
+        id S1731073AbfKVLDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731391AbfKVLDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:03 -0500
+        id S1730939AbfKVLDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6704E2073F;
-        Fri, 22 Nov 2019 11:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 337892084F;
+        Fri, 22 Nov 2019 11:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420582;
-        bh=G6ZmbjlEdVI5jq0wy0vOQ6tyqnphqoGqRLRcQP8vXYM=;
+        s=default; t=1574420585;
+        bh=eTpx9tamZQwPzwO6LWZ1fM9HmGoF86TvRZSkGzpGxuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ceeM0VL9+eRAdu1nHiiCtnvhezJCV2/akawT8YIe3Izo85tTZo9ApEVmvyg6p80Ty
-         E1wzyk8b7wr11j5pvszLjod/xSzs7yoEv9RTqIh7kJplJFp2mJ5I/2RWbYMX+UdtJt
-         feUl+N1QnN0v4hoeqk+y0TcqhXNlxREbm/8A9vzA=
+        b=SNHC/nQhvcQoSevsDtWX362NGgFcoMmkr6PGGBtJc7A4OM7YNIcmrUDwJcyZ1QHcN
+         RuVIluT4CvmO9U8SicM4vefO4hy579TjahaqpBavQTh0/5QqI8Ubr0njHrToIMH65E
+         8Eq1wXqepjMzkxh+KWgRV7mo64yA92kEzaqcDBUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
+        Tang Junhui <tang.junhui.linux@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 155/220] reset: Fix potential use-after-free in __of_reset_control_get()
-Date:   Fri, 22 Nov 2019 11:28:40 +0100
-Message-Id: <20191122100923.863834722@linuxfoundation.org>
+Subject: [PATCH 4.19 156/220] bcache: account size of buckets used in uuid write to ca->meta_sectors_written
+Date:   Fri, 22 Nov 2019 11:28:41 +0100
+Message-Id: <20191122100923.929643756@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,67 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit b790c8ea5593d6dc3580adfad8e117eeb56af874 ]
+[ Upstream commit 7a55948d38eb9b274cbbdd56dc1dd4b96ebfbe04 ]
 
-Calling of_node_put() decreases the reference count of a device tree
-object, and may free some data.
+UUIDs are considered as metadata. __uuid_write should add the number
+of buckets (in sectors) written to disk to ca->meta_sectors_written.
+Currently only 1 bucket is used in uuid write.
 
-However, the of_phandle_args structure embedding it is passed to
-reset_controller_dev.of_xlate() after that, so it may still be accessed.
+Steps to test:
+1) create a fresh backing device and a fresh cache device separately.
+   The backing device didn't attach to any cache set.
+2) cd /sys/block/<cache device>/bcache
+   cat metadata_written      // record the output value
+   cat bucket_size
+3) attach the backing device to cache set
+4) cat metadata_written
+   The output value is almost the same as the value in step 2
+   before the change.
+   After the change, the value is bigger about 1 bucket size.
 
-Move the call to of_node_put() down to fix this.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-[p.zabel@pengutronix.de: moved of_node_put after mutex_unlock]
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Reviewed-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/core.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/md/bcache/super.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 225e34c56b94a..d1887c0ed5d3f 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -496,28 +496,29 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
- 			break;
- 		}
- 	}
--	of_node_put(args.np);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 2321643974dab..c4da2fe623e9e 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -418,6 +418,7 @@ static int __uuid_write(struct cache_set *c)
+ {
+ 	BKEY_PADDED(key) k;
+ 	struct closure cl;
++	struct cache *ca;
  
- 	if (!rcdev) {
--		mutex_unlock(&reset_list_mutex);
--		return ERR_PTR(-EPROBE_DEFER);
-+		rstc = ERR_PTR(-EPROBE_DEFER);
-+		goto out;
- 	}
+ 	closure_init_stack(&cl);
+ 	lockdep_assert_held(&bch_register_lock);
+@@ -429,6 +430,10 @@ static int __uuid_write(struct cache_set *c)
+ 	uuid_io(c, REQ_OP_WRITE, 0, &k.key, &cl);
+ 	closure_sync(&cl);
  
- 	if (WARN_ON(args.args_count != rcdev->of_reset_n_cells)) {
--		mutex_unlock(&reset_list_mutex);
--		return ERR_PTR(-EINVAL);
-+		rstc = ERR_PTR(-EINVAL);
-+		goto out;
- 	}
- 
- 	rstc_id = rcdev->of_xlate(rcdev, &args);
- 	if (rstc_id < 0) {
--		mutex_unlock(&reset_list_mutex);
--		return ERR_PTR(rstc_id);
-+		rstc = ERR_PTR(rstc_id);
-+		goto out;
- 	}
- 
- 	/* reset_list_mutex also protects the rcdev's reset_control list */
- 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
- 
-+out:
- 	mutex_unlock(&reset_list_mutex);
-+	of_node_put(args.np);
- 
- 	return rstc;
- }
++	/* Only one bucket used for uuid write */
++	ca = PTR_CACHE(c, &k.key, 0);
++	atomic_long_add(ca->sb.bucket_size, &ca->meta_sectors_written);
++
+ 	bkey_copy(&c->uuid_bucket, &k.key);
+ 	bkey_put(c, &k.key);
+ 	return 0;
 -- 
 2.20.1
 
