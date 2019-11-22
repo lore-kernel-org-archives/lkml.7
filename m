@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10EDC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF90C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4C52071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CEB2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402163;
-	bh=SX2sF24SxxN0DTRfvAZ+p3qN/yPB1GS57zgjqYDAA+o=;
+	s=default; t=1574402168;
+	bh=as36yyMTcOQBSa+zdeo2KYFdGCCRtc4a2mshTBBRIh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rENkDKGU0zXUyDOR/f6L3y3JrVZX1QMbXCqkt5c2jlZVCjER3hIUsmg4xWmiJBK1
-	 nNYVZAt/Fdw5SHZU+2nT0rtXk+1vvtNtWGQDvJsfc2D6KCdG+k4K96RG6jfsOH9+OZ
-	 NID0rJZcqjIRhTdyEO7ln7wXIQQm99dS0UqVNgbA=
+	b=tlvdLla6KpkxGWOg/+P19ZhmmDZdYcBVOZSDeJNVv7PfnyGiXW9YWxbfShWxELEmX
+	 KPTJ4yuCxf5d8AJ829HNlpbsG5wsX5VhRhGOvu9dLVIfMXif7tYQOY0CZFXwXlD0Fn
+	 Av6z+HHTNc5Yo+bos/Zj/oarDmBM2RYbrnS1GPQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfKVF4C (ORCPT
+        id S1728537AbfKVF4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33598 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfKVFz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:55:56 -0500
+        id S1728990AbfKVF4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA6620717;
-        Fri, 22 Nov 2019 05:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23CD120659;
+        Fri, 22 Nov 2019 05:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402155;
-        bh=SX2sF24SxxN0DTRfvAZ+p3qN/yPB1GS57zgjqYDAA+o=;
+        s=default; t=1574402164;
+        bh=as36yyMTcOQBSa+zdeo2KYFdGCCRtc4a2mshTBBRIh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzAj0Vc9yar85tYggVzWTDW15L/YtAPvrKz8cPCe+eMqfpDxaVdSzcW0iPJJzoKCZ
-         dxKm4VkjU9kbEvBSxt4eKvmbkYglwe50XGF++yn6/1k0yrc18i1Enraod39ptHVR74
-         0XaAWDf8APZ548kICWAdTlIfQXC0uxA4N0YokuJY=
+        b=FPmHDmzYL5TPo6oZ6jRajGnjk0rsmRg7rgMWvjOu3OUPtKXi+qCI/WA98UuK0/iwA
+         hzzLSacvNejcJlgA9OFcS6vpaV8hxhjE3bSTzHk6Vlh2/OPqttaMh4qCuI+Ak0CNET
+         S2FvsorQKOhIt1BaqKYN7i8S4bLiP8ItmYGcBgHQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
+Cc:     Pan Bian <bianpan2016@163.com>, Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 010/127] ARM: OMAP1: fix USB configuration for device-only setups
-Date:   Fri, 22 Nov 2019 00:53:48 -0500
-Message-Id: <20191122055544.3299-9-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 017/127] mwifiex: fix potential NULL dereference and use after free
+Date:   Fri, 22 Nov 2019 00:53:55 -0500
+Message-Id: <20191122055544.3299-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -60,49 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit c7b7b5cbd0c859b1546a5a3455d457708bdadf4c ]
+[ Upstream commit 1dcd9429212b98bea87fc6ec92fb50bf5953eb47 ]
 
-Currently we do USB configuration only if the host mode (CONFIG_USB)
-is enabled. But it should be done also in the case of device-only setups,
-so change the condition to CONFIG_USB_SUPPORT. This allows to use
-omap_udc on Palm Tungsten E.
+There are two defects: (1) passing a NULL bss to
+mwifiex_save_hidden_ssid_channels will result in NULL dereference,
+(2) using bss after dropping the reference to it via cfg80211_put_bss.
+To fix them, the patch moves the buggy code to the branch that bss is
+not NULL and puts it before cfg80211_put_bss.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap1/Makefile           | 2 +-
- arch/arm/mach-omap1/include/mach/usb.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-omap1/Makefile b/arch/arm/mach-omap1/Makefile
-index e8ccf51c6f292..ec0235899de20 100644
---- a/arch/arm/mach-omap1/Makefile
-+++ b/arch/arm/mach-omap1/Makefile
-@@ -25,7 +25,7 @@ obj-y					+= $(i2c-omap-m) $(i2c-omap-y)
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 67c3342210777..c013c94fbf15f 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1901,15 +1901,17 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
+ 					    ETH_ALEN))
+ 					mwifiex_update_curr_bss_params(priv,
+ 								       bss);
+-				cfg80211_put_bss(priv->wdev.wiphy, bss);
+-			}
  
- led-y := leds.o
- 
--usb-fs-$(CONFIG_USB)			:= usb.o
-+usb-fs-$(CONFIG_USB_SUPPORT)		:= usb.o
- obj-y					+= $(usb-fs-m) $(usb-fs-y)
- 
- # Specific board support
-diff --git a/arch/arm/mach-omap1/include/mach/usb.h b/arch/arm/mach-omap1/include/mach/usb.h
-index 77867778d4ec7..5429d86c7190d 100644
---- a/arch/arm/mach-omap1/include/mach/usb.h
-+++ b/arch/arm/mach-omap1/include/mach/usb.h
-@@ -11,7 +11,7 @@
- 
- #include <linux/platform_data/usb-omap1.h>
- 
--#if IS_ENABLED(CONFIG_USB)
-+#if IS_ENABLED(CONFIG_USB_SUPPORT)
- void omap1_usb_init(struct omap_usb_config *pdata);
- #else
- static inline void omap1_usb_init(struct omap_usb_config *pdata)
+-			if ((chan->flags & IEEE80211_CHAN_RADAR) ||
+-			    (chan->flags & IEEE80211_CHAN_NO_IR)) {
+-				mwifiex_dbg(adapter, INFO,
+-					    "radar or passive channel %d\n",
+-					    channel);
+-				mwifiex_save_hidden_ssid_channels(priv, bss);
++				if ((chan->flags & IEEE80211_CHAN_RADAR) ||
++				    (chan->flags & IEEE80211_CHAN_NO_IR)) {
++					mwifiex_dbg(adapter, INFO,
++						    "radar or passive channel %d\n",
++						    channel);
++					mwifiex_save_hidden_ssid_channels(priv,
++									  bss);
++				}
++
++				cfg80211_put_bss(priv->wdev.wiphy, bss);
+ 			}
+ 		}
+ 	} else {
 -- 
 2.20.1
 
