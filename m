@@ -2,158 +2,104 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EA2C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BACC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314D02071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9452071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSwzsfgF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAGbQgf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfKVPmU (ORCPT
+        id S1726970AbfKVPnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:42:20 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51124 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfKVPmT (ORCPT
+        Fri, 22 Nov 2019 10:43:22 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40991 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfKVPnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:42:19 -0500
-Received: by mail-wm1-f67.google.com with SMTP id l17so7929858wmh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 07:42:16 -0800 (PST)
+        Fri, 22 Nov 2019 10:43:22 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m4so7873656ljj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 07:43:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=AhkChjhhkTkmXD5KEPPeHkdoCCiZF1hLVImO/Bt3nAc=;
-        b=aSwzsfgF+FrDcZPZkK7Kc12bjuxIIjPk+vg8NZ6HA6HDVyJkkIbok9MxpDrJGNLwR5
-         BahHSFXCDpo3nCLRNmZU+UDaVbshPM3bdDiGZCtSZKjY8nngLHp+cZ2WWcIIndO2PVW4
-         k9RL30RQbE0gRT4+6uPwLBiXse9LqXvuNTqaBZglspWwX/YKjS81CgJUtnBLW9jRUKZV
-         YGZDZhuvcp76mcUk6inUco9vhLAtOF/lyiDybRQOWXDnuSwG1G2OLAUnzM3ZwJKDl5N4
-         LpM8KmKM1EVVh8rA2UUgzTEhb10YykYols92/j6szA9n/osKzVvo5VTsg8Ng69jzhUoL
-         Cc+g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GQzy1iQq7/UigF4z8t1UMdfHuT9DigedXPRNYTx8QBY=;
+        b=XAGbQgf1cU8rD/kywGu8E//J0deKp6oSzrY4nW/7iQnOC7Z85qIiCXWxldnCOmfQM0
+         5rD4pSqDLOxxYiQ22XtpA+ZQtIqNcfUSFvLURlIPtJQVgPu6ai8DLyrFL71pg9GiQ9pG
+         J3lCWTccy2Ay+ptCBd2t+/YVxqaTPHmAVMWaO+1JJ8kbJonQBCsyOGxhUYGEl3GzmSzI
+         ho5z7STf9Rfad2+G+J/cpfc9GQGp4z9GERHGxEaTUbyQm6+2MI6V46dhpZKOLPjpFlk3
+         RbOEvF5G831FamUvktmD2bDhXniv+mEfiO+c9474NZJJF1jmAgNlIrUF58CkzGAeBa0J
+         jdeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=AhkChjhhkTkmXD5KEPPeHkdoCCiZF1hLVImO/Bt3nAc=;
-        b=uHd8/y8j0S0FkmgwhO8KIXV2HI+GkpdYylX5fmmYOPaZX8BQuSAyaqzYgrawZWWKgi
-         0Lmma/wh/GS/aT+uZ7u54azK4DDn8PXJaf6+8tRqxbwKGwDOQfNJzhcTybqg6UKTVCkf
-         cULrPH/3L5iwma8OVDPBz5jr/izhPkg87/VGr92inRskk9Jm3CYmuF44noPanYMD1fEz
-         wiuYun2lPIaUqERihQkSh0h7bPhKIVrOeRv7byIr464xoPJa/YhT+sJ11Z+KNQxlfbEF
-         7zptRyk0ufv9zi4Dyx2icW5xmVDqAKbJpcKW6g/V/cMmqvIaeP8Na8TMhHzYUgYfftkp
-         /IpA==
-X-Gm-Message-State: APjAAAWuIyTePMz6BgTHC4VWhWMaRWtp4r9vax1i2jDJ/aljhmDj1J87
-        JIfaneCE1KogZ80Uzd/0w86YCQ==
-X-Google-Smtp-Source: APXvYqzzqRL1QYWSXUelmlMsvjdjFQdleOlUNxeQzpX82DJGcr9OjHzO71ZUqqC1Ps9+JGEupqMQ5w==
-X-Received: by 2002:a1c:f00a:: with SMTP id a10mr5395739wmb.167.1574437335675;
-        Fri, 22 Nov 2019 07:42:15 -0800 (PST)
-Received: from [192.168.0.102] (88-147-68-93.dyn.eolo.it. [88.147.68.93])
-        by smtp.gmail.com with ESMTPSA id b3sm3777562wmj.44.2019.11.22.07.42.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 07:42:15 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 0/2] block, bfq: make bfq disable iocost and present a
- double interface
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <DE7EFCFA-D8A6-48EB-AE46-0C7D813A2095@linaro.org>
-Date:   Fri, 22 Nov 2019 16:42:10 +0100
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <14200A37-0721-4444-B8A7-BE03CEDE84FB@linaro.org>
-References: <20191001193316.3330-1-paolo.valente@linaro.org>
- <19BC0425-559E-433A-ACAD-B12FA02E20E4@linaro.org>
- <94E51269-62DC-427A-A81C-3851ABC818BC@linaro.org>
- <DE7EFCFA-D8A6-48EB-AE46-0C7D813A2095@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GQzy1iQq7/UigF4z8t1UMdfHuT9DigedXPRNYTx8QBY=;
+        b=A/k5HaJ62dEuXbE/vt+T5iQY34i8PI/vFKrAzns9ARk+tKVQ3dY59BxvD6iB3LPqkD
+         9ucOLJXWEvyoLhP2Yd2f2BftfkLPxFUo25wNpyubo3RYATJ+FgxkIC6DDiMgq/lWs6b4
+         ayAUUGoQGqu5C4bDv1ImMmHL9YrvvaB95Bo4/EIfHKHZIGQ6PqatS1+YCVL4NZ7NEM8O
+         5MNG0GT+g3Mjyk6Yro4SHoAdcV5wDs1Jyl8liMtmeWwPNWQvsG6yIvO1wZSvVm5bFyar
+         C5D5rw6on+N0/XOVfyIrn8qJmmQ4Cn1yXdEAI4UGfs8NhTx+0+F/ETJzOzXpr+cgJNG1
+         AEoQ==
+X-Gm-Message-State: APjAAAWtOcJ4xyMeMydQEem71CIbcgKw7nUOZshbPuxxHeP9nRVLwQ/8
+        wrzD1wrnYoD8ScGKJe2TVmQCDvim3TKEv/292vhPMKsZpLw=
+X-Google-Smtp-Source: APXvYqwcugeW4edWhYbow6P3IthY8AWt+/SiEG9o6A9ekVZjqmWysrxtVlxvnwXZwUzSHLS/mgbF3SgO93jwQdxuQ3k=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr536136ljm.233.1574437400356;
+ Fri, 22 Nov 2019 07:43:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20191120181857.97174-1-stephan@gerhold.net> <20191120181857.97174-4-stephan@gerhold.net>
+ <CACRpkda-rm=1hz_p2YCqBVgxsM9cmKYJVUg+T91MyBrgmtDP-w@mail.gmail.com> <20191122140944.GA2872@gerhold.net>
+In-Reply-To: <20191122140944.GA2872@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 16:43:08 +0100
+Message-ID: <CACRpkdYfUikKaB-9HO_heLZrGC346XZVKxvifMPJizeYSPjShg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: arm: Document compatibles for Ux500 boards
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jens,
-5.5 has arrived too, and this version should do what you asked.  Can
-you please consider this series?
+On Fri, Nov 22, 2019 at 3:10 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> On Wed, Nov 20, 2019 at 09:22:19PM +0100, Linus Walleij wrote:
+> > On Wed, Nov 20, 2019 at 7:20 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> >
+> > > The device-specific compatible values used by the Ux500 boards
+> > > were not documented so far. Add a new simple schema to document them.
+> > >
+> > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> >
+> > Nice, thanks!
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > I expect Rob to merge these patches as they are bindings-only,
+> > alternatively I can take them in the Ux500 DTS pull request
+> > for the next kernel cycle.
+> >
+>
+> For this patch it would be easier if you take it through the Ux500 tree,
+> as I have another patch series that adds a new board to it.
 
-Thanks,
-Paolo
+OK I applied it for v5.6 on my ux500-dts branch.
 
-> Il giorno 4 nov 2019, alle ore 07:55, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
-> Hi Jens,
-> no issue has been raised in more than a month, and this version was
-> requested by Tejun and is backed by you. So can it be queued for 5.5?
->=20
-> Thanks,
-> Paolo
->=20
->> Il giorno 23 ott 2019, alle ore 07:44, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>=20
->> ping
->>=20
->>> Il giorno 9 ott 2019, alle ore 16:25, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>>=20
->>> Jens, Tejun,
->>> can we proceed with this double-interface solution?
->>>=20
->>> Thanks,
->>> Paolo
->>>=20
->>>> Il giorno 1 ott 2019, alle ore 21:33, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>>>=20
->>>> Hi Jens,
->>>>=20
->>>> the first patch in this series is Tejun's patch for making BFQ =
-disable
->>>> io.cost. The second patch makes BFQ present both the bfq-prefixes
->>>> parameters and non-prefixed parameters, as suggested by Tejun [1].
->>>>=20
->>>> In the first patch I've tried to use macros not to repeat code
->>>> twice. checkpatch complains that these macros should be enclosed in
->>>> parentheses. I don't see how to do it. I'm willing to switch to any
->>>> better solution.
->>>>=20
->>>> Thanks,
->>>> Paolo
->>>>=20
->>>> [1] https://lkml.org/lkml/2019/9/18/736
->>>>=20
->>>> Paolo Valente (1):
->>>> block, bfq: present a double cgroups interface
->>>>=20
->>>> Tejun Heo (1):
->>>> blkcg: Make bfq disable iocost when enabled
->>>>=20
->>>> Documentation/admin-guide/cgroup-v2.rst |   8 +-
->>>> Documentation/block/bfq-iosched.rst     |  40 ++--
->>>> block/bfq-cgroup.c                      | 260 =
-++++++++++++------------
->>>> block/bfq-iosched.c                     |  32 +++
->>>> block/blk-iocost.c                      |   5 +-
->>>> include/linux/blk-cgroup.h              |   5 +
->>>> kernel/cgroup/cgroup.c                  |   2 +
->>>> 7 files changed, 201 insertions(+), 151 deletions(-)
->>>>=20
->>>> --
->>>> 2.20.1
->>>=20
->>=20
->=20
+> The vendor-prefix patches are independent, so Rob can merge them if that
+> is easier?
 
+Let's see if Rob wants to take them, else I will merge them as well.
+
+Yours,
+Linus Walleij
