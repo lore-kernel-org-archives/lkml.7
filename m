@@ -2,141 +2,212 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE45C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A00C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41FD20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947C72068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaW6nMbB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d67RED8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKVFiu (ORCPT
+        id S1726735AbfKVFjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:38:50 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38560 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVFiu (ORCPT
+        Fri, 22 Nov 2019 00:39:25 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34241 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVFjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:38:50 -0500
-Received: by mail-pj1-f68.google.com with SMTP id f7so2571488pjw.5;
-        Thu, 21 Nov 2019 21:38:49 -0800 (PST)
+        Fri, 22 Nov 2019 00:39:25 -0500
+Received: by mail-ed1-f65.google.com with SMTP id i7so513415edt.1;
+        Thu, 21 Nov 2019 21:39:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=8dvSdtqu6VrgOIk7nTpyJSf73Tmmywkq2XApZ/zllzc=;
-        b=EaW6nMbB1mOof5a3IlyBBXHvxW8PED1/Or4QY1TwmjN8VpPwdYEWZ0HE+Q0OilJT3y
-         WBSl3pT4KsVj77SaZh9PH8+5K889vJb+hDm553b4JPJmx4nHg3clpTHHm7J9VOowdo4D
-         /qXR8SPHlqW389eh3qqDQV6P7WjEHgZ/62/aSoR7JjI39X9jMsZOqNueCUAcG5B4syfR
-         ODEb0riAbPJbr9SrFGt2w0t3zS0EeTJa3b+sgAV2eLxQk2+PcYH6Z8M6oPISod6hXJ7J
-         sCkEyxxG5MkugPGFSJdJQLnEfmhWpLSSzCFqibmovpnIMt7zCqhq2pD9xlFfPBPxF23u
-         XBXg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Um/vn9bBYtf12y/Lgwvm7NJKYttcP2/tI6ziOTvhmjI=;
+        b=d67RED8w1bdDQ9XDuvT9H80V0hS5Rsp3CAFAXqJjJXNb+KkTKg7MMs+PUMmzk4nnsK
+         uIwbw5Y6KYlAv6DKFjufsTLOrYVlPZN0/Zh+QJ5YC17QeXERUF/xAOpIfvoonvhvfp2O
+         fzUDZttHcPf2LRvFURX+HV/wECLykQsrs1frAkazUNuqlxSFrnoNplf9ZMo3/asIaVS6
+         yFUB2fKKqflOK89aubwSqvRy0CP1JW+2SaOHqAH1jsldTcs90ska+S+ZN516F+YJup20
+         BZ+OklhMWlfKbZjFgf4MXJfnUWosAdbSF9dm0XGPj9WXHQX7+3yAoe49H0KvKxR8zPlO
+         5S1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=8dvSdtqu6VrgOIk7nTpyJSf73Tmmywkq2XApZ/zllzc=;
-        b=A2+ppskKO4+sHhKVaV4vEL58b6VBSpeYxAJI3wrMbgnBYKXbzTPiIJFsIe4O9RvdrO
-         f62loP5yVp/PefMb0MpbJ7nz4GrRqyUU8bwsltkG7rA80nxT9Z46IHGDW0YSHJQtnu1L
-         RowJ+s3G4rbqQ7oy8kOqzoe/05MgEh1IJ2UUbGR/qqu4OMagS+Gr0frBHLwu2yo2jc90
-         2eSImE6YC3gkQ3v9liyo3DocAQzpi4j3sLAdAc8exi4MTt1qFREmPo8ydLJg1gKlIPGz
-         CRQkK8vz1n2MtEdHGSPi/47wPgy/wVnOrqtpy6Nk9Cp+HFqm3v3DusneWzndBqNxLhQf
-         bKtw==
-X-Gm-Message-State: APjAAAUZvIme9TG+TsvRZK/3HlWmsvgRbhFskjY2E3+vyjrq+kGIi22u
-        KMrsqxjpymTBK7/Vw2T19y94hISj
-X-Google-Smtp-Source: APXvYqxqyvqbkhGAU6fdMSAquhZz1M7mkoymP0Y7QWhxl9QYqwhhUBPdfTpaSUnZASPyAt9xkbdQ7Q==
-X-Received: by 2002:a17:90a:d204:: with SMTP id o4mr15832121pju.40.1574401129319;
-        Thu, 21 Nov 2019 21:38:49 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j4sm1323616pjf.25.2019.11.21.21.38.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 21:38:48 -0800 (PST)
-Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>,
-        Guenter Roeck <groeck7@gmail.com>
-Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
-From:   Guenter Roeck <guenter@roeck-us.net>
-Message-ID: <2b2a1beb-d735-210c-847a-e3211f9efeca@roeck-us.net>
-Date:   Thu, 21 Nov 2019 21:38:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Um/vn9bBYtf12y/Lgwvm7NJKYttcP2/tI6ziOTvhmjI=;
+        b=jN8OeuKwsGKIWYMLIElwSBcZwaFwMEmaDjn110hWmM4BIMfCFl/5WnguuZ355Cyd0j
+         HQgUoKLg1a51GyImbx6ZhDoLr0f7YVFAtVAxqM2DZh6cADiplK8IoD072mPrW3oTJrAH
+         oP5o5Zktd/RzQA6xfoH1oq/pwykdC8O9oJAGdGndrepN5aIPqNhZ0l8oZSOrhKQwIMmd
+         UAI5cz2Y4zIbaCGOVxGuC7qZ2h0Y9k972DSeLvMAtkZnbM/DK5U7InbNeubKHqM6iyOj
+         HeOQgi0ChXwDIH0l2DbSmXdY2yeXQfd/bJggNkUU1eDZ/UTLm8X79vTQlcFrRSlmrnzs
+         Z7xw==
+X-Gm-Message-State: APjAAAWTgKHI+U4e12E244/0TvqokzG/Kus+r/SgzcWhXe9N+q9JXErh
+        iiM+m5TAARJnJsBDQthbj9ki6NgQVfWpYm4fLIg=
+X-Google-Smtp-Source: APXvYqzcBSa9R45ssY+bmqXE4fR9Zg8VJJinlweHbT+4/6Djl+F/FaW0a+KMitUWqytA1jl4y2PAftiwvQ3nP1yqIek=
+X-Received: by 2002:a17:906:6b01:: with SMTP id q1mr19481961ejr.162.1574401161025;
+ Thu, 21 Nov 2019 21:39:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191118073728.28366-1-hslester96@gmail.com> <20191122052320.GQ82508@vkoul-mobl>
+In-Reply-To: <20191122052320.GQ82508@vkoul-mobl>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Fri, 22 Nov 2019 13:39:10 +0800
+Message-ID: <CANhBUQ0FdCjRfbQAN6ZpygYmi8T5i24rP4_Rb-LKevcPD6CFkw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dmaengine: ti: edma: add missed pm_runtime_disable
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 2:35 AM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
->  From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
-> From: Peng Wang <peng.1.wang@nokia-sbell.com>
-> Date: Wed, 20 Nov 2019 15:12:59 +0800
-> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
->   timeout value
+On Fri, Nov 22, 2019 at 1:23 PM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> watchdog_dev.c provides means to allow users to set bigger timeout value
-> than HW can support, make DesignWare watchdog align with this.
+> On 18-11-19, 15:37, Chuhong Yuan wrote:
+> > The driver forgets to call pm_runtime_disable in probe failure and
+> > remove.
+> > Add the calls and modify probe failure handling to fix it.
+> >
+> > Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> >  drivers/dma/ti/edma.c | 43 ++++++++++++++++++++++++++++---------------
+> >  1 file changed, 28 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> > index ba7c4f07fcd6..8be32fd9f762 100644
+> > --- a/drivers/dma/ti/edma.c
+> > +++ b/drivers/dma/ti/edma.c
+> > @@ -2282,16 +2282,18 @@ static int edma_probe(struct platform_device *pdev)
+> >       ret = pm_runtime_get_sync(dev);
+> >       if (ret < 0) {
+> >               dev_err(dev, "pm_runtime_get_sync() failed\n");
+> > -             return ret;
+> > +             goto err_disable_pm;
 >
-> ---
+> Why would you disable here when sync has returned error?
 >
-> v2 -> v1:
->         - use top_s to compare with wdd->max_hw_heartbeat_ms
->         - update wdd->timeout in case it's greater than HW supports
->         - fix comments error
+
+Since pm_runtime_enable is called before sync, we cannot directly return
+without disabling it as the original implementation does.
+
+> >       }
+> >
+> >       ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> >       if (ret)
+> > -             return ret;
+> > +             goto err_disable_pm;
+> >
+> >       ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
+> > -     if (!ecc)
+> > -             return -ENOMEM;
+> > +     if (!ecc) {
+> > +             ret = -ENOMEM;
+> > +             goto err_disable_pm;
+> > +     }
+> >
+> >       ecc->dev = dev;
+> >       ecc->id = pdev->id;
+> > @@ -2306,30 +2308,37 @@ static int edma_probe(struct platform_device *pdev)
+> >               mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >               if (!mem) {
+> >                       dev_err(dev, "no mem resource?\n");
+> > -                     return -ENODEV;
+> > +                     ret = -ENODEV;
+> > +                     goto err_disable_pm;
+> >               }
+> >       }
+> >       ecc->base = devm_ioremap_resource(dev, mem);
+> > -     if (IS_ERR(ecc->base))
+> > -             return PTR_ERR(ecc->base);
+> > +     if (IS_ERR(ecc->base)) {
+> > +             ret = PTR_ERR(ecc->base);
+> > +             goto err_disable_pm;
+> > +     }
+> >
+> >       platform_set_drvdata(pdev, ecc);
+> >
+> >       /* Get eDMA3 configuration from IP */
+> >       ret = edma_setup_from_hw(dev, info, ecc);
+> >       if (ret)
+> > -             return ret;
+> > +             goto err_disable_pm;
+> >
+> >       /* Allocate memory based on the information we got from the IP */
+> >       ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
+> >                                       sizeof(*ecc->slave_chans), GFP_KERNEL);
+> > -     if (!ecc->slave_chans)
+> > -             return -ENOMEM;
+> > +     if (!ecc->slave_chans) {
+> > +             ret = -ENOMEM;
+> > +             goto err_disable_pm;
+> > +     }
+> >
+> >       ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
+> >                                      sizeof(unsigned long), GFP_KERNEL);
+> > -     if (!ecc->slot_inuse)
+> > -             return -ENOMEM;
+> > +     if (!ecc->slot_inuse) {
+> > +             ret = -ENOMEM;
+> > +             goto err_disable_pm;
+> > +     }
+> >
+> >       ecc->default_queue = info->default_queue;
+> >
+> > @@ -2368,7 +2377,7 @@ static int edma_probe(struct platform_device *pdev)
+> >                                      ecc);
+> >               if (ret) {
+> >                       dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
+> > -                     return ret;
+> > +                     goto err_disable_pm;
+> >               }
+> >               ecc->ccint = irq;
+> >       }
+> > @@ -2384,7 +2393,7 @@ static int edma_probe(struct platform_device *pdev)
+> >                                      ecc);
+> >               if (ret) {
+> >                       dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
+> > -                     return ret;
+> > +                     goto err_disable_pm;
+> >               }
+> >               ecc->ccerrint = irq;
+> >       }
+> > @@ -2392,7 +2401,8 @@ static int edma_probe(struct platform_device *pdev)
+> >       ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
+> >       if (ecc->dummy_slot < 0) {
+> >               dev_err(dev, "Can't allocate PaRAM dummy slot\n");
+> > -             return ecc->dummy_slot;
+> > +             ret = ecc->dummy_slot;
+> > +             goto err_disable_pm;
+> >       }
+> >
+> >       queue_priority_mapping = info->queue_priority_mapping;
+> > @@ -2473,6 +2483,8 @@ static int edma_probe(struct platform_device *pdev)
+> >
+> >  err_reg1:
+> >       edma_free_slot(ecc, ecc->dummy_slot);
+> > +err_disable_pm:
+> > +     pm_runtime_disable(dev);
+> >       return ret;
+> >  }
+> >
+> > @@ -2503,6 +2515,7 @@ static int edma_remove(struct platform_device *pdev)
+> >       if (ecc->dma_memcpy)
+> >               dma_async_device_unregister(ecc->dma_memcpy);
+> >       edma_free_slot(ecc, ecc->dummy_slot);
+> > +     pm_runtime_disable(dev);
+> >
+> >       return 0;
+> >  }
+> > --
+> > 2.24.0
 >
-> v1: initial version
->
-> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
-
-Sigh. I should have paid closer attention. Signed-off-by: has to be ahead of ---,
-
-and the change log after it. The above format messes up everything.
-
-Also, please run checkpatch and fix the problems it reports.
-
-Sorry for not noticing it earlier. Please fix the problems and resubmit.
-
-Thanks,
-
-Guenter
-
-> ---
->   drivers/watchdog/dw_wdt.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index fef7c61..12c116e 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
->   
-> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +	/*
-> +	 * In case users set bigger timeout value than HW can support,
-> +	 * kernel(watchdog_dev.c) helps to feed watchdog before
-> +	 * wdd->max_hw_heartbeat_ms
-> +	 */
-> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
-> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +	else
-> +		wdd->timeout = top_s;
->   
->   	return 0;
->   }
-
-
+> --
+> ~Vinod
