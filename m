@@ -2,84 +2,141 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39314C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8B420715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wko8uZW+"
+	by mail.kernel.org (Postfix) with ESMTP id 6B3B520715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKVPck (ORCPT
+        id S1727197AbfKVPdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:32:40 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46150 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVPcj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:32:39 -0500
-Received: by mail-qt1-f193.google.com with SMTP id r20so8189614qtp.13;
-        Fri, 22 Nov 2019 07:32:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=3dYqDBTtgP5XtAXKi8VqGBK1T+2eM5ua2xkGVDRu3sU=;
-        b=Wko8uZW+HZHX101h/glfPk2TwQpX8eA3RoRJBlvcPjKO1YFB1gAZNm/aJKbEeWM2mC
-         WoLhmD4VPMBtvS724RLDe7TmnR9C2GjaykNl6ZO1A5l3gqQ/aYDLVCAIzyho/j5jW5tM
-         B1rZjzj+OpHMmHNyz8V25I1+PEwBD/01txRDavVizPaFck1cRiLwIxIbMOwbV8FE13oy
-         HPfw2WK0ktZbufdrr35VjTjsi26eWHz+N4cfFynalx0qoX25B8r7BWjCYanXuYI60lY5
-         /ZveS/yy8OKJQKS4CvmE4p6zvLrqrRcRxOuhDnK09lgIRspFCyM6HKpJGJwgeQYtRHOg
-         OQqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=3dYqDBTtgP5XtAXKi8VqGBK1T+2eM5ua2xkGVDRu3sU=;
-        b=CD7rWBQcn67sgAR4FYU0Wr0MSy0tzKxScSCG342hq8JKMgV4/iIVLCWQDLQebMsbpD
-         JRONRqIVJsj2RhRZGmeHGN9Pj762NmOHkIF1dRFNN+3MwfOgsW9FAVX/fmJwWv1WLSLT
-         2Y7MgF2Z7rpOclCgsFEfT4vRsH+ZRbSiZBIt2IY7uEMwgK3hCxUkER6Pgra2Z0jUEjlX
-         iK07j9sXmOCNcMdPHDT4MBBVZ3bDa1qkrHXfU0LbOaGc8g/A45XI7UaAjqlMq1E+Ldm/
-         77uWed8GJPaeZSFOzLOJV7Gow1DkN7qd1mLkhWbsYXuPWJTW3+2FHxX20VjOd7b+HODc
-         4NDg==
-X-Gm-Message-State: APjAAAVXLz/QA5WhVsxxva5Py1riHeYppLjTiR9QqMryGYjIUXy/qtqx
-        IxLGfJ82GribpNsmMKRVw8w=
-X-Google-Smtp-Source: APXvYqxpWhu362qs5B2IRWYx9RpSlMLPqgpS0sjhL2aS+shabDbMr8Vc1kJtregaLu4VwhXrb0Nxtw==
-X-Received: by 2002:ac8:661a:: with SMTP id c26mr14774515qtp.317.1574436758716;
-        Fri, 22 Nov 2019 07:32:38 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id v189sm3149907qkc.37.2019.11.22.07.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 07:32:37 -0800 (PST)
-Date:   Fri, 22 Nov 2019 10:32:36 -0500
-Message-ID: <20191122103236.GB1112895@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenwandun@huawei.com
-Subject: Re: [PATCH] net: dsa: ocelot: fix "should it be static?" warnings
-In-Reply-To: <1574425965-97890-1-git-send-email-chenwandun@huawei.com>
-References: <1574425965-97890-1-git-send-email-chenwandun@huawei.com>
+        Fri, 22 Nov 2019 10:33:18 -0500
+Received: from thoth.sbs.de ([192.35.17.2]:33792 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726613AbfKVPdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 10:33:17 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id xAMFX7ka032603
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Nov 2019 16:33:07 +0100
+Received: from [139.25.68.37] ([139.25.68.37])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id xAMFX64q016437;
+        Fri, 22 Nov 2019 16:33:07 +0100
+Subject: Re: [PATCH v3 1/2] gpio: sch: Add edge event support
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <cover.1574277614.git.jan.kiszka@siemens.com>
+ <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
+ <20191122111219.GW32742@smile.fi.intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <5d7399ce-1776-18ef-3bb5-6e3e8e7e7524@siemens.com>
+Date:   Fri, 22 Nov 2019 16:33:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191122111219.GW32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 20:32:45 +0800, Chen Wandun <chenwandun@huawei.com> wrote:
-> Fix following sparse warnings:
-> drivers/net/dsa/ocelot/felix.c:351:6: warning: symbol 'felix_txtstamp' was not declared. Should it be static?
+On 22.11.19 12:12, Andy Shevchenko wrote:
+> On Wed, Nov 20, 2019 at 08:20:13PM +0100, Jan Kiszka wrote:
+>> From: Jan Kiszka <jan.kiszka@siemens.com>
+>>
+>> Add the required infrastructure consisting of an irq_chip_generic with
+>> its irq_chip_type callbacks to enable and report edge events of the pins
+>> to the gpio core. The actual hook-up of the event interrupt will happen
+>> separately.
 > 
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+>> +static int sch_irq_type(struct irq_data *d, unsigned int type)
+>> +{
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+>> +	struct sch_gpio *sch = gc->private;
+>> +	unsigned int gpio_num = d->irq - sch->irq_base;
+>> +	unsigned long flags;
+>> +	int rising = 0;
+>> +	int falling = 0;
+>> +
+>> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+>> +	case IRQ_TYPE_EDGE_RISING:
+>> +		rising = 1;
+>> +		break;
+>> +	case IRQ_TYPE_EDGE_FALLING:
+>> +		falling = 1;
+>> +		break;
+>> +	case IRQ_TYPE_EDGE_BOTH:
+>> +		rising = 1;
+>> +		falling = 1;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	spin_lock_irqsave(&sch->lock, flags);
+>> +	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
+>> +	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
+>> +	spin_unlock_irqrestore(&sch->lock, flags);
+> 
+> Won't we need to set up IRQ handler here and use handle_bad_irq() during
+> initialization phase?
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Why? This is just defining the edge type, not whether an interrupt could 
+be generated or not. Also, we only have edge events here, so no reason 
+to switch types.
+
+> 
+>> +
+>> +	return 0;
+>> +}
+> 
+>> +	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
+>> +					NUMA_NO_NODE);
+>> +	if (irq_base < 0)
+>> +		return irq_base;
+>> +	sch->irq_base = irq_base;
+>> +
+>> +	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
+>> +					 NULL, handle_simple_irq);
+>> +	if (!gc)
+>> +		return -ENOMEM;
+>> +
+>> +	gc->private = sch;
+>> +	ct = gc->chip_types;
+>> +
+>> +	ct->chip.irq_mask = sch_irq_mask;
+>> +	ct->chip.irq_unmask = sch_irq_unmask;
+>> +	ct->chip.irq_set_type = sch_irq_type;
+>> +
+>> +	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
+>> +					  IRQ_MSK(sch->chip.ngpio),
+>> +					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
+>> +	if (ret)
+>> +		return ret;
+> 
+> Shan't we do this in the (similar) way how it's done in pinctrl-cherryview.c
+> driver? (Keep in mind later patches which are going to be v5.5)
+> 
+
+Can you be a bit more specific for me? Do you mean the pattern 
+gpiochip_irqchip_add / gpiochip_set_chained_irqchip? What would be the 
+difference / benefit? And how would I link sch_sci_handler to that pattern?
+
+Jan
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
