@@ -2,107 +2,94 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B49FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FF32068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574381120;
-	bh=lQraUDMcSPPoYY1vovwqM8KwzabPpYDphPJ4whTlDXc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CmyeTwTrEWr8Dt0OVFTpZt6OLzlgqom30r92nf/yWUERFzxEaEv6tSOCHChM4oLq+
-	 +njl1aST4B0gwsrOPIRhIxjXmZpFb8aGB1zdkzzUAoy3EZDhYGxq4CcgrQFZikeNWO
-	 AblCt0F/4o1gJFapOxuvM64LfoZZr3vs+cDouKe4=
+	by mail.kernel.org (Postfix) with ESMTP id 96819206C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:07:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OYINSOs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKVAFT (ORCPT
+        id S1726685AbfKVAHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 19:05:19 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45546 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfKVAFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 19:05:19 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n21so5198398ljg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 16:05:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fpjzlQz2fMpAHDjP1l/+UaY8JIYWZ9EvltjrvoH1rb8=;
-        b=MsxvqvFNl+4QDyZ13r6+5C2c7UUENK3f0XIzfYj8rl4l9ErTmGnoIokoX2t9ycbhDd
-         dURXH1TKtvtnuBCRkQJoYpEABlDfiL5pSGHhZA/F2gkmZtLQQLl467dc7CkWRkXveqZ4
-         KGQaZSAe6hmaqEPsRDmZ66IrONQOmcHs1okqI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fpjzlQz2fMpAHDjP1l/+UaY8JIYWZ9EvltjrvoH1rb8=;
-        b=cKRb+W5DuZKK3FfjQJYkJu7wN7ZpFBWLR9nWp8/hXYVK2IuceXu1G2OHTzmlhY1eF4
-         Z3GgDV06TBQC32qytLEUc6Gm73sKOFJjRm0np7780WGcGn8ht4cDYGsod6NK45U/1QgZ
-         pGzidG4C5+ru4SEb67ppuHaC08BeOvE0BXufN6l+/bnFuYHur+xOMlAA9zmU39xyHmbk
-         28X/xHfg7lJb7+ZNPxLQY6DNlhDFSEdmcBk5rKAUP/gyP97762FvFUkj1h2mixOkI0ui
-         Yy5o35EH17KzAfbIgiW7clYXpLjevSIW0+baFf8r/w/IqwePVguJm5Krp8WlLTuFzfKF
-         nhKA==
-X-Gm-Message-State: APjAAAW4nEWVSE1MJQrLDgVdoyU5XnKwP5iD3a8FXSTnoXib5lkRwteF
-        D0G1QIYOYDXeCiu0rPuMs8GT3h49xBc=
-X-Google-Smtp-Source: APXvYqxG5aDZqyb0peRRT4N/0YNYSGhq6KG9HLyvt7ozO1MdW0E+hM2J55BkN/tEeXFIvaCBp4g7Cg==
-X-Received: by 2002:a2e:974a:: with SMTP id f10mr9993240ljj.25.1574381116821;
-        Thu, 21 Nov 2019 16:05:16 -0800 (PST)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id k19sm2266286ljg.18.2019.11.21.16.05.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 16:05:15 -0800 (PST)
-Received: by mail-lf1-f53.google.com with SMTP id m30so2226651lfp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 16:05:15 -0800 (PST)
-X-Received: by 2002:ac2:434f:: with SMTP id o15mr9727805lfl.190.1574381114883;
- Thu, 21 Nov 2019 16:05:14 -0800 (PST)
+        Thu, 21 Nov 2019 19:07:32 -0500
+Received: from ozlabs.org ([203.11.71.1]:54319 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfKVAHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 19:07:32 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JxZT2NMmz9sPT;
+        Fri, 22 Nov 2019 11:07:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574381249;
+        bh=+Q23UOxI0xuUC+pc88ITU9qv6sl8Q6tM19Ex8pgLKq8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OYINSOs5hT/PaK+Cic/lgcFeYAqyvXfm3v9/y76RnaiaynhNCb+0SGrTFcRq4QvPP
+         Xz5Od39hKwTsXbIAHNpSMwq/rGGP9YL0MjhonAOPdye9SGRjNf1Ac/SNTszTwqfx+7
+         mHaxYLFzNVGdwQ30wc2/HyZqUmET7JxwN1oGxRhIqdzyI2A37Eg/NRVYzAQPzlRNej
+         tcDW4dR3o3z7vTsFXkzEUclekJgkj+znpk9+ZjgCVF0epUue7uJmbVxi+EqOwMqAZv
+         hkU+CDr8UBfx0norqz7OI8xLf33tmGCHWf2dDUK2OVA2tbvSR5IebQUeiWdhia2qDo
+         0FlJwzlCTWHnA==
+Date:   Fri, 22 Nov 2019 11:07:11 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the bluetooth tree
+Message-ID: <20191122110711.3e894cc6@canb.auug.org.au>
 MIME-Version: 1.0
-References: <d6a7ca69-2f65-5bf4-edbd-2644a1f3f124@rasmusvillemoes.dk>
-In-Reply-To: <d6a7ca69-2f65-5bf4-edbd-2644a1f3f124@rasmusvillemoes.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 21 Nov 2019 16:04:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgf+qpDY31ojxqPdkSHT6f+E9yGM_L16iNhv9owEpbx7Q@mail.gmail.com>
-Message-ID: <CAHk-=wgf+qpDY31ojxqPdkSHT6f+E9yGM_L16iNhv9owEpbx7Q@mail.gmail.com>
-Subject: Re: can we get rid of the cpumask_t typedef?
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/QX8d/X.PSDGU/eDy_wN+Bsb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 12:55 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> The cpumask_t alias for "struct cpumask" doesn't seem to qualify for the
-> kernel's requirement for when a typedef is warranted. It's also somewhat
-> easily confused with cpumask_var_t which has very good reasons for being
-> a typedef. "struct cpumask" outnumbers "cpumask_t" about 5:2.
->
-> The motivation for this is that kbuild informed me about some driver
-> that I just enabled for ARM happens to include asm/irq.h, and for magic
-> reasons no other previous header happens to pull in cpumask.h. So the
-> build fails
->
-> >> arch/arm/include/asm/irq.h:34:50: error: unknown type name 'cpumask_t'
->     extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
+--Sig_/QX8d/X.PSDGU/eDy_wN+Bsb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes. Please just add a forward declaration of 'struct cpumask', and
-change that cpumask_t to use that instead.
+Hi all,
 
-I'm not sure we need to remove it entirely (there's a fair number of
-users), but we can/should deprecate it, and certainly use 'struct
-cpumask' in function declarations etc so that you don't need to go
-through some include file hell.
+After merging the bluetooth tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-           Linus
+net/bluetooth/hci_core.c: In function 'hci_dev_do_open':
+net/bluetooth/hci_core.c:1447:8: warning: 'invalid_bdaddr' may be used unin=
+itialized in this function [-Wmaybe-uninitialized]
+ 1447 |   bool invalid_bdaddr;
+      |        ^~~~~~~~~~~~~~
+
+Introduced by commit
+
+  cadbc2f459be ("Bluetooth: Move error check into the right if-clause")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/QX8d/X.PSDGU/eDy_wN+Bsb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3XJq8ACgkQAVBC80lX
+0GwWxggAmaqJAvo2iVtdkyCxAqQeEF2IrMuc+hwQW+NDRIRrvQJj6dEBiGOU50tU
+yl2RVKxNdkQ3JDs6pY904taWykj2TSeMkJGEJG3tRmcsvcfFoR/toZ4v5S+aH7oz
+iZOUbtH82E0TBEVwLb+CSksUhpU7Cw4Kx0ZEExbqGFpBGpBqFDUwYqTl08TrVGwV
+GGi0bQZqlxTo3vWMz/yG5ro1pZQ1NpSl7PoqPppEX37r4cmL+Ag479TiqubJf2xS
+ALQGxlFqonLOr3vH0F24tEo5D2WgBbMREz94OeLqCTfnWQhqJaQweZq73878Qu/1
+9JIXz1iJpEZyAhFbbWWjhJHysj6pRA==
+=fcrP
+-----END PGP SIGNATURE-----
+
+--Sig_/QX8d/X.PSDGU/eDy_wN+Bsb--
