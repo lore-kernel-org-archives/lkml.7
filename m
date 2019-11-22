@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE83C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F418C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7492E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065DF20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419881;
-	bh=6r+JJYD0lQTpwxkp1+u+3SUOZCOH5567WtYs3wa8vqY=;
+	s=default; t=1574419883;
+	bh=HSeu81ZhvvwV6IqE4gBPPXBakWr3J/9nmvn+yNdGt48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1CZwAx2o9ND2uefG7rQSFo8eGdruVjOxtBQDK3F9ufvg9qc7a9BkStk2cqm73IA/
-	 BHK7fpS73dFzuWk1sNXJPRFpfyAgC9XTCo9/vgm4LyRe2atxTUL9dvVwA8NYOKtFyi
-	 Q0j7W6Vy/jaNx67Xgc7yaMJb9R7+oBfwWUpuczio=
+	b=py9yavHp8O/Yr/5d8YX5Jz0KE5hNQn+lSnz7wpKf9Z60zJHWPfFQAPLm69hVSJ/Lk
+	 3vJ6Vxs/Zb9vrZOBzmdH39uS2krPzc3qWBlkvgiUYfNCnaF2CTFoQ6c9zT9P0K2YOd
+	 dMmnRO0pxNT2AZeWXvZrNa9EMvSZTSSsLrvaRGbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfKVKvU (ORCPT
+        id S1729931AbfKVKvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729812AbfKVKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:14 -0500
+        id S1729197AbfKVKvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9229C20637;
-        Fri, 22 Nov 2019 10:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 699592072E;
+        Fri, 22 Nov 2019 10:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419874;
-        bh=6r+JJYD0lQTpwxkp1+u+3SUOZCOH5567WtYs3wa8vqY=;
+        s=default; t=1574419879;
+        bh=HSeu81ZhvvwV6IqE4gBPPXBakWr3J/9nmvn+yNdGt48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hADUbZKRrft3H3ca9qmmgG/sgDGGSQVN+HlZfPRWNkXM+fpha+3N2Bi21ThCLv4Z4
-         TxetfjeJM8FtysUUcuicPeusydPvRH2rEA5I2yS2887qrip2Q0lIkL9EiMPpFh3XiJ
-         8SdKtB+n1UJpwA3OdH+u/Uorp4/gJ+rm/wrM11z0=
+        b=Wc1PFpCGAWrRK/gGtSEyd8y7kcVPN8ebGAgUmbws/8b7k+NDsQTl64J/dlUdMqveS
+         V+JvyueMHH8fb+lOBBDC3LSCrOPuutvLHLmYBq/un4/fLRNDp0xMjAml1izx9EPzHH
+         d9ISpVzN/dPXOk7iKRPkm1sutMak1vS82cpM1Ykw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 039/122] powerpc/pseries: Fix DTL buffer registration
-Date:   Fri, 22 Nov 2019 11:28:12 +0100
-Message-Id: <20191122100753.187660927@linuxfoundation.org>
+Subject: [PATCH 4.14 041/122] powerpc/xive: Move a dereference below a NULL test
+Date:   Fri, 22 Nov 2019 11:28:14 +0100
+Message-Id: <20191122100754.420452462@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit db787af1b8a6b4be428ee2ea7d409dafcaa4a43c ]
+[ Upstream commit cd5ff94577e004e0a4457e70d0ef3a030f4010b8 ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we register the DTL
-buffer for a cpu when the associated file under powerpc/dtl in debugfs
-is opened. When doing so, we need to set the size of the buffer being
-registered in the second u32 word of the buffer. This needs to be in big
-endian, but we are not doing the conversion resulting in the below error
-showing up in dmesg:
+Move the dereference of xc below the NULL test.
 
-	dtl_start: DTL registration for cpu 0 (hw 0) failed with -4
-
-Fix this in the obvious manner.
-
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/sysdev/xive/common.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index 18014cdeb590a..c762689e0eb33 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -149,7 +149,7 @@ static int dtl_start(struct dtl *dtl)
+diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
+index 818fc5351591c..110d8bb16ebbb 100644
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -1008,12 +1008,13 @@ static void xive_ipi_eoi(struct irq_data *d)
+ {
+ 	struct xive_cpu *xc = __this_cpu_read(xive_cpu);
  
- 	/* Register our dtl buffer with the hypervisor. The HV expects the
- 	 * buffer size to be passed in the second word of the buffer */
--	((u32 *)dtl->buf)[1] = DISPATCH_LOG_BYTES;
-+	((u32 *)dtl->buf)[1] = cpu_to_be32(DISPATCH_LOG_BYTES);
- 
- 	hwcpu = get_hard_smp_processor_id(dtl->cpu);
- 	addr = __pa(dtl->buf);
+-	DBG_VERBOSE("IPI eoi: irq=%d [0x%lx] (HW IRQ 0x%x) pending=%02x\n",
+-		    d->irq, irqd_to_hwirq(d), xc->hw_ipi, xc->pending_prio);
+-
+ 	/* Handle possible race with unplug and drop stale IPIs */
+ 	if (!xc)
+ 		return;
++
++	DBG_VERBOSE("IPI eoi: irq=%d [0x%lx] (HW IRQ 0x%x) pending=%02x\n",
++		    d->irq, irqd_to_hwirq(d), xc->hw_ipi, xc->pending_prio);
++
+ 	xive_do_source_eoi(xc->hw_ipi, &xc->ipi_data);
+ 	xive_do_queue_eoi(xc);
+ }
 -- 
 2.20.1
 
