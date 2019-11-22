@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6871C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACC4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B066D20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2135020718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419602;
-	bh=h18vsG2/dOzyz5ekVxrrjJAtpSd/yKL1s/yBtgCB0t8=;
+	s=default; t=1574419605;
+	bh=RN5s4WwjmeKO7kh5V7ierCiAzxj8M84zs8kaJC64wO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C57wFolgwXL2quFH6O1cF0p3VfvrqNOik0cvyt2WiAI8pJOANL9K1z25aj+tULfjz
-	 dOJ+9Guu9Hl/D6ziLb6H2wTe3Y2gGvweheJ3+39/FQjUQV02tcB0jVJ+TSKxtPGzQ8
-	 CekcdLLWQupKrD72WkgUz3YfgrMC/l61hjkfsA/I=
+	b=TeL92vZJuahIds3bIZ3TgJuFRwLrRceaoh+Jg9+xnlvD3DX1f8f8He9NRmnKUH38O
+	 qlUyZrMSOpDbZ2viXl/y+ragfkj8hxd9vw0PKGefbfZnB6XHVXJl1A8aflgEQ+zcgD
+	 Z5KEI8kYilOyWxCEnVtT9w9I1DTJaPXYhoyM+lsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfKVKql (ORCPT
+        id S1728440AbfKVKqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:46:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:46:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727746AbfKVKqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:46:38 -0500
+        id S1729672AbfKVKqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:46:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2AE5205C9;
-        Fri, 22 Nov 2019 10:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9209205C9;
+        Fri, 22 Nov 2019 10:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419597;
-        bh=h18vsG2/dOzyz5ekVxrrjJAtpSd/yKL1s/yBtgCB0t8=;
+        s=default; t=1574419600;
+        bh=RN5s4WwjmeKO7kh5V7ierCiAzxj8M84zs8kaJC64wO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhO3x5bKVME22TqgYNxtPKTo11IxqrOi6Oqm0RQrJIPCd6kPX4IbnuJWJfWZLOxCB
-         VP5i10e1jqABx1M7KOMR5VD8VxnIcMuQTmohhGEldX9mOFaBycOCdXyu7QyeTacSAy
-         /IHQkT11fURgoO/4a2b8mbxjnMeq8u+t2kRrTmE4=
+        b=PhdkL7DRwCKhuNHTnPm5d+AvjkiVU7xe6wSmdAgMxlcpRq/dV9fSUxWMNV9YtAYNK
+         nvUEaseYa4II4f52B8MBCvreYqXnBHdTwGOOGGIxkhqwYq/wGz9Z8ThqLRrS3+mqkJ
+         qJlKWlX2FncG98HU5sA8r+UCAYv9XW8uQXnHd2Qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gage Eads <gage.eads@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Jason Yan <yanaijie@huawei.com>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 123/222] vfio/pci: Mask buggy SR-IOV VF INTx support
-Date:   Fri, 22 Nov 2019 11:27:43 +0100
-Message-Id: <20191122100911.959197110@linuxfoundation.org>
+Subject: [PATCH 4.9 124/222] scsi: libsas: always unregister the old device if going to discover new
+Date:   Fri, 22 Nov 2019 11:27:44 +0100
+Message-Id: <20191122100912.015779336@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,100 +67,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit db04264fe9bc0f2b62e036629f9afb530324b693 ]
+[ Upstream commit 32c850bf587f993b2620b91e5af8a64a7813f504 ]
 
-The SR-IOV spec requires that VFs must report zero for the INTx pin
-register as VFs are precluded from INTx support.  It's much easier for
-the host kernel to understand whether a device is a VF and therefore
-whether a non-zero pin register value is bogus than it is to do the
-same in userspace.  Override the INTx count for such devices and
-virtualize the pin register to provide a consistent view of the device
-to the user.
+If we went into sas_rediscover_dev() the attached_sas_addr was already insured
+not to be zero. So it's unnecessary to check if the attached_sas_addr is zero.
 
-As this is clearly a spec violation, warn about it to support hardware
-validation, but also provide a known whitelist as it doesn't do much
-good to continue complaining if the hardware vendor doesn't plan to
-fix it.
+And although if the sas address is not changed, we always have to unregister
+the old device when we are going to register a new one. We cannot just leave
+the device there and bring up the new.
 
-Known devices with this issue: 8086:270c
-
-Tested-by: Gage Eads <gage.eads@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+CC: chenxiang <chenxiang66@hisilicon.com>
+CC: John Garry <john.garry@huawei.com>
+CC: Johannes Thumshirn <jthumshirn@suse.de>
+CC: Ewan Milne <emilne@redhat.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Tomas Henzl <thenzl@redhat.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c        |  8 ++++++--
- drivers/vfio/pci/vfio_pci_config.c | 27 +++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 2 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index a1a712d18e028..da3f0ed18c769 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -426,10 +426,14 @@ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
- {
- 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
- 		u8 pin;
-+
-+		if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) ||
-+		    vdev->nointx || vdev->pdev->is_virtfn)
-+			return 0;
-+
- 		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
--		if (IS_ENABLED(CONFIG_VFIO_PCI_INTX) && !vdev->nointx && pin)
--			return 1;
- 
-+		return pin ? 1 : 0;
- 	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
- 		u8 pos;
- 		u16 flags;
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 06a20ea183dd6..84905d074c4ff 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1608,6 +1608,15 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
- 	return 0;
- }
- 
-+/*
-+ * Nag about hardware bugs, hopefully to have vendors fix them, but at least
-+ * to collect a list of dependencies for the VF INTx pin quirk below.
-+ */
-+static const struct pci_device_id known_bogus_vf_intx_pin[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x270c) },
-+	{}
-+};
-+
- /*
-  * For each device we allocate a pci_config_map that indicates the
-  * capability occupying each dword and thus the struct perm_bits we
-@@ -1673,6 +1682,24 @@ int vfio_config_init(struct vfio_pci_device *vdev)
- 	if (pdev->is_virtfn) {
- 		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
- 		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
-+
-+		/*
-+		 * Per SR-IOV spec rev 1.1, 3.4.1.18 the interrupt pin register
-+		 * does not apply to VFs and VFs must implement this register
-+		 * as read-only with value zero.  Userspace is not readily able
-+		 * to identify whether a device is a VF and thus that the pin
-+		 * definition on the device is bogus should it violate this
-+		 * requirement.  We already virtualize the pin register for
-+		 * other purposes, so we simply need to replace the bogus value
-+		 * and consider VFs when we determine INTx IRQ count.
-+		 */
-+		if (vconfig[PCI_INTERRUPT_PIN] &&
-+		    !pci_match_id(known_bogus_vf_intx_pin, pdev))
-+			pci_warn(pdev,
-+				 "Hardware bug: VF reports bogus INTx pin %d\n",
-+				 vconfig[PCI_INTERRUPT_PIN]);
-+
-+		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 400eee9d77832..d44f18f773c0f 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -2049,14 +2049,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
+ 		return res;
  	}
  
- 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
+-	/* delete the old link */
+-	if (SAS_ADDR(phy->attached_sas_addr) &&
+-	    SAS_ADDR(sas_addr) != SAS_ADDR(phy->attached_sas_addr)) {
+-		SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
+-			    SAS_ADDR(dev->sas_addr), phy_id,
+-			    SAS_ADDR(phy->attached_sas_addr));
+-		sas_unregister_devs_sas_addr(dev, phy_id, last);
+-	}
++	/* we always have to delete the old device when we went here */
++	SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
++		    SAS_ADDR(dev->sas_addr), phy_id,
++		    SAS_ADDR(phy->attached_sas_addr));
++	sas_unregister_devs_sas_addr(dev, phy_id, last);
+ 
+ 	return sas_discover_new(dev, phy_id);
+ }
 -- 
 2.20.1
 
