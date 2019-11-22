@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916E2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6057A2089D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA2F2088F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420777;
-	bh=7uykPxA/I2LccFSMWbafqDlyn70uAtU8Wu+4C3s1Uj4=;
+	s=default; t=1574420781;
+	bh=omy4etwwr7CNjSz7GlHf580AUNLJFjAUQ8HjxqEHb1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUng8GMVm7nrLvnNbl6ZBbEc/rjAHmWEhGrVPt0H1xfBZw+jWcz8QctqEg0/TBybs
-	 E2eXL8XSSoAtixfbybm+JsPSg+8GZhrFONbBhvOfvD31MjWSoyaXtwVqBsIrFGeHjp
-	 7JprR8hFTTYpF1lyvwt6j5zU43vZ7uiQNjpb9fPA=
+	b=gFXFrfknhWZagYO7w/jkafofLYhxCl1hojQpWMD7pfZWs5psEMP0Y/KNUksfpYgw5
+	 XNffjupad+0wHP9BjbtVqwV4zfS1VVgJ5da+AzP4o5LosNhvGpzYAWcumroa1lY2Q/
+	 xyG4mJ8ZiiNAw2zcDzvpo5SZaA1+gtSdfxaxAXNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfKVLGQ (ORCPT
+        id S1731847AbfKVLGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbfKVLGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:11 -0500
+        id S1731827AbfKVLGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5082075E;
-        Fri, 22 Nov 2019 11:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05FF42075E;
+        Fri, 22 Nov 2019 11:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420770;
-        bh=7uykPxA/I2LccFSMWbafqDlyn70uAtU8Wu+4C3s1Uj4=;
+        s=default; t=1574420776;
+        bh=omy4etwwr7CNjSz7GlHf580AUNLJFjAUQ8HjxqEHb1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5G5EXlJY10mnQzQhAnsPuV68Fx+9lLlBG67GVwUSbPhxkbSELjkO/nQ3ZapzCLyS
-         6RGCWSWrwN/5Eh82whn/YynJg7K61a9LYv7ciT1odIgtVI05Egj8BzaCbBWJOOyyx4
-         6cy+7vcyWUgbCxFaqiEqz28Hy8oY7V7SCVxG2kCY=
+        b=vy7yAERn99IJrAp621W8nCRKLEfbXi04gSkUDFarEo7neogJ3mv8hceBV+r14zqGX
+         b2BZ+lHzFO4eddWZoeUOmx+Ag2MtUkhnl9s4hmDeJ++Qc8UIvcEEy/Q6lvh/CaN7Gn
+         WqLDCEetLtLQTvkv4UwgkwF/jBqQKnujb2cUgRhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 176/220] media: cx231xx: fix potential sign-extension overflow on large shift
-Date:   Fri, 22 Nov 2019 11:29:01 +0100
-Message-Id: <20191122100925.510342763@linuxfoundation.org>
+Subject: [PATCH 4.19 215/220] ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
+Date:   Fri, 22 Nov 2019 11:29:40 +0100
+Message-Id: <20191122100929.111123338@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,41 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
+[ Upstream commit c8afd03486c26accdda4846e5561aa3f8e862a9d ]
 
-Shifting the u8 value[3] by an int can lead to sign-extension
-overflow. For example, if value[3] is 0xff and the shift is 24 then it
-is promoted to int and then the top bit is sign-extended so that all
-upper 32 bits are set.  Fix this by casting value[3] to a u32 before
-the shift.
+Commit 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from
+resume_noirq") makes acpi_lpss_{suspend_late,resume_early}() bail early
+on BYT/CHT as resume_from_noirq is set.
 
-Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
+This means that on resume from hibernate dw_i2c_plat_resume() doesn't get
+called by the restore_early callback, acpi_lpss_resume_early(). Instead it
+should be called by the restore_noirq callback matching how things are done
+when resume_from_noirq is set and we are doing a regular resume.
 
-Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
+Change the restore_noirq callback to acpi_lpss_resume_noirq so that
+dw_i2c_plat_resume() gets properly called when resume_from_noirq is set
+and we are resuming from hibernate.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Likewise also change the poweroff_noirq callback so that
+dw_i2c_plat_suspend gets called properly.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202139
+Fixes: 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq")
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpi_lpss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
-index f7fcd733a2ca8..963739fa86718 100644
---- a/drivers/media/usb/cx231xx/cx231xx-video.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-video.c
-@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
- 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
- 				(u16)reg->reg, value, 4);
- 		reg->val = value[0] | value[1] << 8 |
--			value[2] << 16 | value[3] << 24;
-+			value[2] << 16 | (u32)value[3] << 24;
- 		reg->size = 4;
- 		break;
- 	case 1:	/* AFE - read byte */
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index dec9024fc49ec..b21c241aaab9f 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -1139,8 +1139,8 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
+ 		.thaw_noirq = acpi_subsys_thaw_noirq,
+ 		.poweroff = acpi_subsys_suspend,
+ 		.poweroff_late = acpi_lpss_suspend_late,
+-		.poweroff_noirq = acpi_subsys_suspend_noirq,
+-		.restore_noirq = acpi_subsys_resume_noirq,
++		.poweroff_noirq = acpi_lpss_suspend_noirq,
++		.restore_noirq = acpi_lpss_resume_noirq,
+ 		.restore_early = acpi_lpss_resume_early,
+ #endif
+ 		.runtime_suspend = acpi_lpss_runtime_suspend,
 -- 
 2.20.1
 
