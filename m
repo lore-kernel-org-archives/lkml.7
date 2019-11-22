@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB4AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35558C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DDF20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9B720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418844;
-	bh=ni71MLyzBp4qGD+CQpM45gvt8cp3Xgd0N9OQp3oizTI=;
+	s=default; t=1574418848;
+	bh=yZBjIYUSvTUH+vh5HgsliBEQ/jj7faC66rAHinOBbjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fjvSsz0+kSl02+ggECdGB1EH+TBTRPN5Ii6s1dE+Mo10Wf13oWCquX+rFGuDBwIJX
-	 meLqmN/hGnQqzuC+JITvqb9LdS+NpSala6kci/qDWjwkkg1wajSQPyiKlxRPVULxeg
-	 /cVSk6sUvbsYUoTmxEVO+6kSZHrdkajZYJpaWt2k=
+	b=qeD+uFFLEJXW0EV3k6JX1TeGtVLOh/q60XizNtsF0A4Cjnd8zhlpN2RgLIcPZaCNj
+	 bFzMFDeQJWGSdB5GRvByrLBLcfPjqeKgcNYtjZfhQ9rsp9L25WPR0CoKTlleone5TI
+	 twiCiOIGVYfbELaPCtOqSDB/WFtP58lE13Buhb+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKVKeD (ORCPT
+        id S1728048AbfKVKeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:34:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:34:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfKVKd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:59 -0500
+        id S1727568AbfKVKeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:34:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 058AC20708;
-        Fri, 22 Nov 2019 10:33:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CD6A20708;
+        Fri, 22 Nov 2019 10:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418838;
-        bh=ni71MLyzBp4qGD+CQpM45gvt8cp3Xgd0N9OQp3oizTI=;
+        s=default; t=1574418841;
+        bh=yZBjIYUSvTUH+vh5HgsliBEQ/jj7faC66rAHinOBbjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WQzVPwughiDOgR0Pw9BYT4+n83jVCobpEIq7gdMK6BscIKyyvzNRtyMeP91cBMwSK
-         faV5VDR4tiAhwa4eVnY8ZBJIIrphCFOCONn9zFjpqubh5nJvjStAJSQWlH1UNfDcpV
-         L61jF1Kve+2dcIJ3E9Xeh2jsAgiDPAS9gt4Rp1T4=
+        b=RU1/xljAvoIt2sLsoXkzgoB8bxAF8ypbt9U9nF03M/FZaUZbeL63SH/QnIemb8Ys5
+         QlbZ/NEtEhHZAauGkb803w84AIWEwCoWzHfz8J1wgFQAe8GZ/8SwUf9knUZDhErbNb
+         QmFCIiUqsJnkjt5efMkdmu4XpLhcQsiiOTkByAa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/159] net: broadcom: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:27:38 +0100
-Message-Id: <20191122100755.326456105@linuxfoundation.org>
+Subject: [PATCH 4.4 068/159] net: amd: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:27:39 +0100
+Message-Id: <20191122100755.461419551@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
+[ Upstream commit fe72352e37ae8478f4c97975a9831f0c50f22e73 ]
 
 The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
 which is a typedef for an enum type, so make sure the implementation in
@@ -75,52 +75,123 @@ Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
- drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/amd/am79c961a.c     | 2 +-
+ drivers/net/ethernet/amd/atarilance.c    | 6 ++++--
+ drivers/net/ethernet/amd/declance.c      | 2 +-
+ drivers/net/ethernet/amd/sun3lance.c     | 6 ++++--
+ drivers/net/ethernet/amd/sunlance.c      | 2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c | 4 ++--
+ 6 files changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index ec5834087e4b4..c01ab06863b3d 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -571,12 +571,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
+diff --git a/drivers/net/ethernet/amd/am79c961a.c b/drivers/net/ethernet/amd/am79c961a.c
+index 87e727b921dc0..1ad401fed4698 100644
+--- a/drivers/net/ethernet/amd/am79c961a.c
++++ b/drivers/net/ethernet/amd/am79c961a.c
+@@ -440,7 +440,7 @@ static void am79c961_timeout(struct net_device *dev)
  /*
-  * tx request callback
+  * Transmit a packet
   */
--static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+-static int
 +static netdev_tx_t
-+bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ am79c961_sendpacket(struct sk_buff *skb, struct net_device *dev)
  {
- 	struct bcm_enet_priv *priv;
- 	struct bcm_enet_desc *desc;
- 	u32 len_stat;
+ 	struct dev_priv *priv = netdev_priv(dev);
+diff --git a/drivers/net/ethernet/amd/atarilance.c b/drivers/net/ethernet/amd/atarilance.c
+index b10964e8cb546..a1dc65136d9fa 100644
+--- a/drivers/net/ethernet/amd/atarilance.c
++++ b/drivers/net/ethernet/amd/atarilance.c
+@@ -339,7 +339,8 @@ static unsigned long lance_probe1( struct net_device *dev, struct lance_addr
+                                    *init_rec );
+ static int lance_open( struct net_device *dev );
+ static void lance_init_ring( struct net_device *dev );
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev );
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb,
++				    struct net_device *dev);
+ static irqreturn_t lance_interrupt( int irq, void *dev_id );
+ static int lance_rx( struct net_device *dev );
+ static int lance_close( struct net_device *dev );
+@@ -770,7 +771,8 @@ static void lance_tx_timeout (struct net_device *dev)
+ 
+ /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+ 
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
++static netdev_tx_t
++lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	struct lance_ioreg	 *IO = lp->iobase;
+diff --git a/drivers/net/ethernet/amd/declance.c b/drivers/net/ethernet/amd/declance.c
+index b584b78237dfd..5e994f981feae 100644
+--- a/drivers/net/ethernet/amd/declance.c
++++ b/drivers/net/ethernet/amd/declance.c
+@@ -893,7 +893,7 @@ static void lance_tx_timeout(struct net_device *dev)
+ 	netif_wake_queue(dev);
+ }
+ 
+-static int lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	volatile struct lance_regs *ll = lp->ll;
+diff --git a/drivers/net/ethernet/amd/sun3lance.c b/drivers/net/ethernet/amd/sun3lance.c
+index 3d8c6b2cdea4c..09271665712da 100644
+--- a/drivers/net/ethernet/amd/sun3lance.c
++++ b/drivers/net/ethernet/amd/sun3lance.c
+@@ -235,7 +235,8 @@ struct lance_private {
+ static int lance_probe( struct net_device *dev);
+ static int lance_open( struct net_device *dev );
+ static void lance_init_ring( struct net_device *dev );
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev );
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb,
++				    struct net_device *dev);
+ static irqreturn_t lance_interrupt( int irq, void *dev_id);
+ static int lance_rx( struct net_device *dev );
+ static int lance_close( struct net_device *dev );
+@@ -511,7 +512,8 @@ static void lance_init_ring( struct net_device *dev )
+ }
+ 
+ 
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
++static netdev_tx_t
++lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	int entry, len;
+diff --git a/drivers/net/ethernet/amd/sunlance.c b/drivers/net/ethernet/amd/sunlance.c
+index 8914170fccfff..babb0a5fb8de4 100644
+--- a/drivers/net/ethernet/amd/sunlance.c
++++ b/drivers/net/ethernet/amd/sunlance.c
+@@ -1106,7 +1106,7 @@ static void lance_tx_timeout(struct net_device *dev)
+ 	netif_wake_queue(dev);
+ }
+ 
+-static int lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	int entry, skblen, len;
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+index 64034ff081a0c..23fc244eb8a4d 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -1390,7 +1390,7 @@ static int xgbe_close(struct net_device *netdev)
+ 	return 0;
+ }
+ 
+-static int xgbe_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t xgbe_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct xgbe_prv_data *pdata = netdev_priv(netdev);
+ 	struct xgbe_hw_if *hw_if = &pdata->hw_if;
+@@ -1399,7 +1399,7 @@ static int xgbe_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	struct xgbe_ring *ring;
+ 	struct xgbe_packet_data *packet;
+ 	struct netdev_queue *txq;
 -	int ret;
 +	netdev_tx_t ret;
  
- 	priv = netdev_priv(dev);
+ 	DBGPR("-->xgbe_xmit: skb->len = %d\n", skb->len);
  
-diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
-index f557a2aaec231..73a7c8a504702 100644
---- a/drivers/net/ethernet/broadcom/sb1250-mac.c
-+++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
-@@ -300,7 +300,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
- static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
- static uint64_t sbmac_addr2reg(unsigned char *ptr);
- static irqreturn_t sbmac_intr(int irq, void *dev_instance);
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
- static void sbmac_setmulti(struct sbmac_softc *sc);
- static int sbmac_init(struct platform_device *pldev, long long base);
- static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
-@@ -2033,7 +2033,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
-  *  Return value:
-  *  	   nothing
-  ********************************************************************* */
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct sbmac_softc *sc = netdev_priv(dev);
- 	unsigned long flags;
 -- 
 2.20.1
 
