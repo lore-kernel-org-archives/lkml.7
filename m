@@ -4,227 +4,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4497C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99451C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA0A20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C0B20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ENayHrXV"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="4PV7O2xI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKVJqG (ORCPT
+        id S1727212AbfKVJqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 04:46:06 -0500
-Received: from mail-eopbgr800079.outbound.protection.outlook.com ([40.107.80.79]:32288
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        Fri, 22 Nov 2019 04:46:13 -0500
+Received: from mail-eopbgr680046.outbound.protection.outlook.com ([40.107.68.46]:37694
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726802AbfKVJpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 04:45:39 -0500
+        id S1727138AbfKVJqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 04:46:10 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QREfbtL1r4ZC19dYer52NhlmgszAeYKHFOv6s263rsUPZ61hbXCGOC/3v0SFCWp8Y1NTCswEUOpBefPr3l4ZVubxx3Dc3pPIwmeqKTB9iEWEhzFgWd0LlpmaKPwmEcxzzt3lMJBSdab+2wuQPRLj+pt9UeliFXokuoyNXl+eepZ31WX/RK6+ewBbRAMz6Sh00CivB3ekLB+h0/OeqGDHZnadPM765WF4CA+mRKL31DNwYLFkFzH9/0rrSjk2+eet2JcQxuSSzrGG5MkFEDHR3/7WeMLIsWN9d/mNRejRN3rSce9umukiOZjQyGJBNr5RUAxKG0QdMVfDza9cJ8ODtw==
+ b=c/zkyiPffchDQqZTdRX3qsAGiTDiVFdd8Hntb+h0G5xt6SD3scRZmnSwKrkG3HLt5rqmyEEHM6KNUFYW8ZZFxwRFloD0RptSoa3YCJ2LXeIe9frgkEhN3LlMvHum8S6+KKN//pmgr6dHzlHaqYgVnoZjsJdk0UlKmWE9YAP03Ob5LXkMS7TMDp/eLYXE/DXM5Ju26SnQaYFdfmWRlGSpj3gesgrqir4VLDvlOGVSiykxxo09OHqU+dyZE8T4XK5SKop9+4TJZfE/sef1ndaBzo2FTR3Ce0YOGpaM7uKMzl9wyv3r24FiwNd3UqUCz+9caRPdvrYOPyLKW9aGTbiCXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My5GEXzjq+YdSFxcfZdDk/JzMNz28rCI+oq70GAKch8=;
- b=QWMe2iJFTxiZy+yAlRggIpsqJFgLgBlbulDp4yWwPdWfF1HLqqdrpAl+rcF++ihbc2Ct3RrMqdt+XP2hl2igIJAYEFWwZIlot3R1nZB3ZTW8KYKJgbalBPo3A2KiF1qGgLrxu1so3Wt0HPjqduXFSBDZR5i+TwVG4xQeqE3+Omh3gGVFXSxRvSHkPeUlo57nh5CnBzEQasruiAHjoxDQnTDaaoL4epK8PYeSj4DvN8h3fHWzvdTCpPyLVHuZ96btj0UxUMAolazZMadF4fyZ/Rc3qeFfs3TSWurGL/SxMYJ7d2krVE97lmWKhdKeKwCQpTh+HTZOVSwvvm+b8kybfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+ bh=mn47bwPpuwfRtPF1wOQvW1Z98oETzTmK8xV3skX2Q38=;
+ b=kC8LbPauP1isq50uogbW+XPpuAX3jcG0spqzP+XiLRkXpa0TJpjTPV3wFIEjaQtqz3huRGeEiWDZY7xgLYmYl4/Lr4Y8x6mzrlTlwnVzZCMANnQ3ls4HrgqEUXGjDBdfJlGtXEdkb54RU3ADiOu0ojf3T8mo+tC1enO/zdFPKRyeBIthFVlc1Z1BiIREtIAhLEZH0h0PoTwDbVGm3OtbZ29UoH9uRq5anmYEUJCGN4O+Y9b7DZdbhsxkCI8PM/+sDJzIKGCK6GquowdziZCsp+rYVL9M5VyCZS8r6RH5ubd1Ig1kuiqL1LlSqC8JsaFYMjhu++RLY2Be+WqqRdMwsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My5GEXzjq+YdSFxcfZdDk/JzMNz28rCI+oq70GAKch8=;
- b=ENayHrXVe+CUDC+FARwK+8OEc4iJ8+4H6B01ym+IFAbS8O6VQVdQby4mRpspu3rfqPT4tLrLG23F27rU14SCKLVgZ6bkJlA83KbGGi5HhuZx9bSS6WBPQ7HYQ+mMc+EqZyI1YQweUC3fX701i8QnjhMDUP5BRL81Srt+2ayKGus=
-Received: from MN2PR02CA0031.namprd02.prod.outlook.com (2603:10b6:208:fc::44)
- by DM5PR0201MB3413.namprd02.prod.outlook.com (2603:10b6:4:7d::12) with
+ bh=mn47bwPpuwfRtPF1wOQvW1Z98oETzTmK8xV3skX2Q38=;
+ b=4PV7O2xIC1Is3kHeeciSccWchYQndaUtLLcPNdLeqnYjVmkGSFBYO/FCz36o3ua1RDV/fT/b7ERv44BAKALj6BsXOocECa/s4G6yraiCvz2Ai6pLRQhEJ8TQS0ka1/4AAmPiUUWwSG7Q/fViec7cNWKnjmo+YBN508bXtyuH48Q=
+Received: from MWHPR12CA0039.namprd12.prod.outlook.com (2603:10b6:301:2::25)
+ by SN1PR12MB2397.namprd12.prod.outlook.com (2603:10b6:802:26::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16; Fri, 22 Nov
- 2019 09:45:35 +0000
-Received: from SN1NAM02FT049.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::202) by MN2PR02CA0031.outlook.office365.com
- (2603:10b6:208:fc::44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.18 via Frontend
- Transport; Fri, 22 Nov 2019 09:45:35 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT049.mail.protection.outlook.com (10.152.72.166) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Fri, 22 Nov 2019 09:45:34 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iY5VO-0008SL-Dq; Fri, 22 Nov 2019 01:45:34 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iY5VJ-0002pC-Bt; Fri, 22 Nov 2019 01:45:29 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAM9jLiW003475;
-        Fri, 22 Nov 2019 01:45:22 -0800
-Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iY5VB-0002ob-PK; Fri, 22 Nov 2019 01:45:21 -0800
-From:   Rajan Vaja <rajan.vaja@xilinx.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, michal.simek@xilinx.com,
-        jolly.shah@xilinx.com, m.tretter@pengutronix.de,
-        gustavo@embeddedor.com, dan.carpenter@oracle.com,
-        tejas.patel@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: [PATCH v2 6/6] clk: zynqmp: Add support for clock with CLK_DIVIDER_POWER_OF_TWO flag
-Date:   Fri, 22 Nov 2019 01:43:34 -0800
-Message-Id: <1574415814-19797-7-git-send-email-rajan.vaja@xilinx.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.21; Fri, 22 Nov
+ 2019 09:46:07 +0000
+Received: from BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eae::208) by MWHPR12CA0039.outlook.office365.com
+ (2603:10b6:301:2::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2474.16 via Frontend
+ Transport; Fri, 22 Nov 2019 09:46:07 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ BN8NAM11FT006.mail.protection.outlook.com (10.13.177.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.2451.23 via Frontend Transport; Fri, 22 Nov 2019 09:46:06 +0000
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 22 Nov
+ 2019 03:46:06 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Fri, 22 Nov 2019 03:46:03 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
+        <pierre-louis.bossart@linux.intel.com>, <Akshu.Agrawal@amd.com>,
+        "Ravulapati Vishnu vardhan rao" <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH v12 4/6] ASoC: amd: add ACP3x TDM mode support
+Date:   Fri, 22 Nov 2019 15:14:24 +0530
+Message-ID: <1574415866-29715-5-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
-References: <1573564580-9006-1-git-send-email-rajan.vaja@xilinx.com>
- <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(136003)(376002)(189003)(199004)(26005)(6666004)(356004)(478600001)(54906003)(36756003)(2906002)(44832011)(47776003)(11346002)(446003)(70206006)(48376002)(70586007)(2616005)(8676002)(8936002)(81166006)(50226002)(336012)(9786002)(81156014)(426003)(50466002)(4326008)(76176011)(7416002)(106002)(305945005)(36386004)(5660300002)(107886003)(16586007)(186003)(7696005)(316002)(51416003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0201MB3413;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+In-Reply-To: <1574415866-29715-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+References: <1574415866-29715-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(136003)(428003)(189003)(199004)(109986005)(1671002)(48376002)(47776003)(7696005)(76176011)(2616005)(446003)(426003)(26005)(186003)(50466002)(86362001)(11346002)(51416003)(336012)(36756003)(2906002)(4326008)(70206006)(305945005)(316002)(16586007)(70586007)(54906003)(53416004)(50226002)(356004)(6666004)(478600001)(8936002)(81166006)(8676002)(81156014)(5660300002)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR12MB2397;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b7e8aea9-e3fc-4a8f-fc66-08d76f30b90b
-X-MS-TrafficTypeDiagnostic: DM5PR0201MB3413:
-X-Microsoft-Antispam-PRVS: <DM5PR0201MB3413B5D9B9F88BD1CF3D0832B7490@DM5PR0201MB3413.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1186;
+X-MS-Office365-Filtering-Correlation-Id: ae62920f-c2d8-42ec-3a9f-08d76f30cc17
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2397:
+X-Microsoft-Antispam-PRVS: <SN1PR12MB2397E6BFA143E96BE607F687E7490@SN1PR12MB2397.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
 X-Forefront-PRVS: 02296943FF
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wJiay6tkmJr1pNWMFXn85jWOt6mdL+ZLAnBydbVQk21YkTp0hmA7XU3zo+7MF0BV1ogZWHy1fDNpbbp6wPBcWCBcM/oDBgYLui4R9s5GZ2KGq0qMPK6JsvQC+SQiLoC6xyOZ6n8i+E44iixhSpr4AJYhvLHry4Daznw0aAe9B0Jjx8jGl+YkzsXU3SLQyLT3W01UN4pGCnfTWhzRAqlJk1eE5xp7tgalsOeZQrXrIBf/nn7VoMbm2y+wdTyHKC77z/ZugnCwJ0WoB5Iv3cQBbwpEL4/Z7XZMRDoRkYLRAlVG08eFmN5hnRD2ztAgCeP/UY9XrYUsxekaA7lfM3Cilb5i0BlVl7O48b21OSIo+Tb/WOYLm59XlfLV0O5v4j9d6sIyVdaaWESoRIH3E1mNJBGQvgQ6VKXtL/tsVL3t1CyhFjneRNSjL1q1B/IufI4o
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2019 09:45:34.8427
+X-Microsoft-Antispam-Message-Info: MmtirQw6YzxkqW5rW3rVc0c7snPJz9+NjStA66TflbcK38zZsqJ++ftdatJGW0aqFS7L+KS/WhSWgLrrj+ZW8NiUd2gWZZO8lqHzz1q1bv/FSUItrDEo53PoMi7Rz3leYE4qgVV7RntzeoVRD3mNsHwHcCY5RgTdA8gEI5MUSd0Bhvv7eQ6tXipoZaykAbEiOEVAJYFlhjYArwK4oMTZdHHJT6Q9Kpz8H9Iy1JdIHsZZSgqHIFhsk/e9WRe+EcuWVZbNGBKXq4T4/TalHmdyqa7LTX5odJDp23/YAfxOVj8z6+C2NsEgA836BLnUafw5FyhwIeM/g9yPt6lqe2RYzSrhL8fg1ASjFbInRpgUwglDGdH11oxSuDv11sx0ws6pJacDvqOJ7XLIsAj73Gi0yosxJRXkTassSjnu3aPIfLegzUrhxLtznEYvkXmxBT8M
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2019 09:46:06.8981
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7e8aea9-e3fc-4a8f-fc66-08d76f30b90b
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae62920f-c2d8-42ec-3a9f-08d76f30cc17
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0201MB3413
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2397
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejas Patel <tejas.patel@xilinx.com>
+ACP3x I2S (CPU DAI) can act in normal I2S and TDM modes. Added support
+for TDM mode. Desired mode can be selected from ASoC machine driver.
 
-Existing clock divider functions is not checking for
-base of divider. So, if any clock divider is power of 2
-then clock rate calculation will be wrong.
-
-Add support to calculate divider value for the clocks
-with CLK_DIVIDER_POWER_OF_TWO flag.
-
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 ---
- drivers/clk/zynqmp/divider.c | 36 +++++++++++++++++++++++++++++++-----
- 1 file changed, 31 insertions(+), 5 deletions(-)
+ sound/soc/amd/raven/acp3x-i2s.c | 24 ++++++++++++++++++++----
+ sound/soc/amd/raven/acp3x.h     |  1 +
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-index e0d49cc..1d5a416 100644
---- a/drivers/clk/zynqmp/divider.c
-+++ b/drivers/clk/zynqmp/divider.c
-@@ -2,7 +2,7 @@
- /*
-  * Zynq UltraScale+ MPSoC Divider support
-  *
-- *  Copyright (C) 2016-2018 Xilinx
-+ *  Copyright (C) 2016-2019 Xilinx
-  *
-  * Adjustable divider clock implementation
-  */
-@@ -45,9 +45,26 @@ struct zynqmp_clk_divider {
- };
+diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
+index 7f05782..cea7311 100644
+--- a/sound/soc/amd/raven/acp3x-i2s.c
++++ b/sound/soc/amd/raven/acp3x-i2s.c
+@@ -70,11 +70,27 @@ static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai,
  
- static inline int zynqmp_divider_get_val(unsigned long parent_rate,
--					 unsigned long rate)
-+					 unsigned long rate, u16 flags)
- {
--	return DIV_ROUND_CLOSEST(parent_rate, rate);
-+	int up, down;
-+	unsigned long up_rate, down_rate;
-+
-+	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
-+		up = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
-+		down = DIV_ROUND_DOWN_ULL((u64)parent_rate, rate);
-+
-+		up = __roundup_pow_of_two(up);
-+		down = __rounddown_pow_of_two(down);
-+
-+		up_rate = DIV_ROUND_UP_ULL((u64)parent_rate, up);
-+		down_rate = DIV_ROUND_UP_ULL((u64)parent_rate, down);
-+
-+		return (rate - up_rate) <= (down_rate - rate) ? up : down;
-+
-+	} else {
-+		return DIV_ROUND_CLOSEST(parent_rate, rate);
-+	}
- }
- 
- /**
-@@ -79,6 +96,9 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
- 	else
- 		value = div >> 16;
- 
-+	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-+		value = 1 << value;
-+
- 	if (!value) {
- 		WARN(!(divider->flags & CLK_DIVIDER_ALLOW_ZERO),
- 		     "%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
-@@ -157,10 +177,13 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
- 		else
- 			bestdiv  = bestdiv >> 16;
- 
-+		if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-+			bestdiv = 1 << bestdiv;
-+
- 		return DIV_ROUND_UP_ULL((u64)*prate, bestdiv);
+ 	frm_len = FRM_LEN | (slots << 15) | (slot_len << 18);
+ 	if (adata->substream_type == SNDRV_PCM_STREAM_PLAYBACK) {
+-		reg_val = mmACP_BTTDM_ITER;
+-		frmt_val = mmACP_BTTDM_TXFRMT;
++		switch (adata->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_val = mmACP_BTTDM_ITER;
++			frmt_reg = mmACP_BTTDM_TXFRMT;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			reg_val = mmACP_I2STDM_ITER;
++			frmt_reg = mmACP_I2STDM_TXFRMT;
++		}
+ 	} else {
+-		reg_val = mmACP_BTTDM_IRER;
+-		frmt_val = mmACP_BTTDM_RXFRMT;
++		switch (adata->i2s_instance) {
++		case I2S_BT_INSTANCE:
++			reg_val = mmACP_BTTDM_IRER;
++			frmt_reg = mmACP_BTTDM_RXFRMT;
++			break;
++		case I2S_SP_INSTANCE:
++		default:
++			reg_val = mmACP_I2STDM_IRER;
++			frmt_reg = mmACP_I2STDM_RXFRMT;
++		}
  	}
- 
--	bestdiv = zynqmp_divider_get_val(*prate, rate);
-+	bestdiv = zynqmp_divider_get_val(*prate, rate, divider->flags);
- 
- 	/*
- 	 * In case of two divisors, compute best divider values and return
-@@ -198,7 +221,7 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
- 	int ret;
- 	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
- 
--	value = zynqmp_divider_get_val(parent_rate, rate);
-+	value = zynqmp_divider_get_val(parent_rate, rate, divider->flags);
- 	if (div_type == TYPE_DIV1) {
- 		div = value & 0xFFFF;
- 		div |= 0xffff << 16;
-@@ -207,6 +230,9 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
- 		div |= value << 16;
- 	}
- 
-+	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-+		div = __ffs(div);
-+
- 	ret = eemi_ops->clock_setdivider(clk_id, div);
- 
- 	if (ret)
+ 	val = rv_readl(adata->acp3x_base + reg_val);
+ 	rv_writel(val | 0x2, adata->acp3x_base + reg_val);
+diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
+index ed1acbc..3c28644 100644
+--- a/sound/soc/amd/raven/acp3x.h
++++ b/sound/soc/amd/raven/acp3x.h
+@@ -78,6 +78,7 @@ struct acp3x_platform_info {
+ struct i2s_dev_data {
+ 	bool tdm_mode;
+ 	unsigned int i2s_irq;
++	u16 i2s_instance;
+ 	u32 tdm_fmt;
+ 	u32 substream_type;
+ 	void __iomem *acp3x_base;
 -- 
 2.7.4
 
