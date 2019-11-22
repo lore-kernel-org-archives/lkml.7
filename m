@@ -2,132 +2,80 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903EAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE59C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 609DC206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:23:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lDIFDmcB"
+	by mail.kernel.org (Postfix) with ESMTP id ABA9F206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfKVAX0 (ORCPT
+        id S1726638AbfKVAZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 19:23:26 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36096 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfKVAXZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 19:23:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=o7hbwuPirwuuz0Y/+39p2Uj5Rp0ENQjemwmV/bfiS70=; b=lDIFDmcB6YuQuSGSZlFob0XEu
-        OhD474Hwuwm4BhvW39/sq97d2A4scUWTlIgruSePYHHLwXTuvZd9/Q20du1X8udEiazjEEIqAUIWF
-        Ir3W3OqWGvDVGQuJGVzMMS9QvGdJeCJBEURWMFWoIRXJr89V0FnZOv5Fa4HiHRPT1MZPxq470Pz9W
-        z5ULDYDLKDSWnIOfRhi5FYvorVItrtOwGT8cxcze5eJnY61upZfjtjtUWo4mHYCgXKtaL3NLOx1Sn
-        Ytk+lSYp6UglSzuJ8T0FIybi3aks+UMtn/vFO/bX4FlWtUHHxWicL/seNL8s7AagS6b9LXVAjpFlG
-        iRmWpUnlQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42882)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iXwj5-0001as-MI; Fri, 22 Nov 2019 00:23:07 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iXwiw-0003Br-8q; Fri, 22 Nov 2019 00:22:58 +0000
-Date:   Fri, 22 Nov 2019 00:22:58 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
-        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH 1/3] arm/arm64/xen: use C inlines for privcmd_call
-Message-ID: <20191122002258.GD25745@shell.armlinux.org.uk>
-References: <20191121184805.414758-1-pasha.tatashin@soleen.com>
- <20191121184805.414758-2-pasha.tatashin@soleen.com>
+        Thu, 21 Nov 2019 19:25:53 -0500
+Received: from mga11.intel.com ([192.55.52.93]:13408 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfKVAZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 19:25:53 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 16:25:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="219280751"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga002.jf.intel.com with ESMTP; 21 Nov 2019 16:25:44 -0800
+Date:   Thu, 21 Nov 2019 16:37:54 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 4/6] x86/split_lock: Enumerate split lock detection
+ if the IA32_CORE_CAPABILITIES MSR is not supported
+Message-ID: <20191122003754.GF199273@romley-ivt3.sc.intel.com>
+References: <1574297603-198156-5-git-send-email-fenghua.yu@intel.com>
+ <D4D6F51D-D791-4B78-8FCA-5D419B1D079C@amacapital.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191121184805.414758-2-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D4D6F51D-D791-4B78-8FCA-5D419B1D079C@amacapital.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 01:48:03PM -0500, Pavel Tatashin wrote:
-> privcmd_call requires to enable access to userspace for the
-> duration of the hypercall.
+On Thu, Nov 21, 2019 at 02:07:38PM -0800, Andy Lutomirski wrote:
 > 
-> Currently, this is done via assembly macros. Change it to C
-> inlines instead.
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->  arch/arm/include/asm/assembler.h |  2 +-
->  arch/arm/include/asm/uaccess.h   | 32 ++++++++++++++++++++++++++------
->  arch/arm/xen/enlighten.c         |  2 +-
->  arch/arm/xen/hypercall.S         | 15 ++-------------
->  arch/arm64/xen/hypercall.S       | 19 ++-----------------
->  include/xen/arm/hypercall.h      | 23 ++++++++++++++++++++---
->  6 files changed, 52 insertions(+), 41 deletions(-)
+> > On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > 
+> > ﻿Architecturally the split lock detection feature is enumerated by
+> > IA32_CORE_CAPABILITIES MSR and future CPU models will indicate presence
+> > of the feature by setting bit 5. But the feature is present in a few
+> > older models where split lock detection is enumerated by the CPU models.
+> > 
+> > Use a "x86_cpu_id" table to list the older CPU models with the feature.
+> > 
 > 
-> diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-> index 99929122dad7..8e9262a0f016 100644
-> --- a/arch/arm/include/asm/assembler.h
-> +++ b/arch/arm/include/asm/assembler.h
-> @@ -480,7 +480,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
->  	.macro	uaccess_disable, tmp, isb=1
->  #ifdef CONFIG_CPU_SW_DOMAIN_PAN
->  	/*
-> -	 * Whenever we re-enter userspace, the domains should always be
-> +	 * Whenever we re-enter kernel, the domains should always be
->  	 * set appropriately.
->  	 */
->  	mov	\tmp, #DACR_UACCESS_DISABLE
-> diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-> index 98c6b91be4a8..79d4efa3eb62 100644
-> --- a/arch/arm/include/asm/uaccess.h
-> +++ b/arch/arm/include/asm/uaccess.h
-> @@ -16,6 +16,23 @@
->  
->  #include <asm/extable.h>
->  
-> +#ifdef CONFIG_CPU_SW_DOMAIN_PAN
-> +static __always_inline void uaccess_enable(void)
-> +{
-> +	unsigned long val = DACR_UACCESS_ENABLE;
-> +
-> +	asm volatile("mcr p15, 0, %0, c3, c0, 0" : : "r" (val));
-> +	isb();
-> +}
-> +
-> +static __always_inline void uaccess_disable(void)
-> +{
-> +	unsigned long val = DACR_UACCESS_ENABLE;
-> +
-> +	asm volatile("mcr p15, 0, %0, c3, c0, 0" : : "r" (val));
-> +	isb();
-> +}
+> This may need to be disabled if the HYPERVISOR bit is set.
 
-Rather than inventing these, why not use uaccess_save_and_enable()..
-uaccess_restore() around the Xen call?
+How about just keeping this patch set as basic enabling code and
+keep HYPERVISOR out of scope as of now? KVM folks will have better
+handling of split lock in KVM once this patch set is available in
+the kernel.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Thanks.
+
+-Fenghua
