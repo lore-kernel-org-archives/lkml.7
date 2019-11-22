@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9805C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FB4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA98020730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4961F207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452155;
-	bh=8NshHneGRG7k7YiIYNZXeV+IEn+KbPHnQmV0vh4/T0Q=;
+	s=default; t=1574452157;
+	bh=kBjnG/eZkeii9sVMHiGtkUajug7tvFEukRI603lJuxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QLf8yZPeRKbyb0FAVwU8JUR0FRz+tv1m+ipyN+EVOq6v1MbXL+f44IuVuXEtrGsNj
-	 X0TfHA5pKJ5VIIm/CBZpUnVjc7WmNhr8liWcD9WyKwxk1e2Kk0JUPlmAgDw7+UnIbg
-	 DV16N8/nTPbCaf1fQ8BQfW4ynoFdcmKzldN+bmb0=
+	b=poJnCDE3JEiad/WRp3ouB25POjig/aIxWMmBlWzRjBLyhszAatcITFYr35ApJyctY
+	 D2R1mqHlzgtiAz930IpaS5Bve4p/6+N5Tkb+H3wtl02r2j5qy/52hDO45bTl3PVnwi
+	 DdQSWv8wlEm8p1Oy9pzAKz7yZNoItLYdy+E96z7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKVTtO (ORCPT
+        id S1727270AbfKVTtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48266 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727184AbfKVTtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:10 -0500
+        id S1727212AbfKVTtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EFE120731;
-        Fri, 22 Nov 2019 19:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C7892075E;
+        Fri, 22 Nov 2019 19:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452149;
-        bh=8NshHneGRG7k7YiIYNZXeV+IEn+KbPHnQmV0vh4/T0Q=;
+        s=default; t=1574452151;
+        bh=kBjnG/eZkeii9sVMHiGtkUajug7tvFEukRI603lJuxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0eomDsk1ER/+/KUNQQ7L3Hc1vILZ713pDWUGnNkmCASHr2ZM3e8zAAvBSFzhC/TU
-         YnrD11LLfQ6AZDlYeIKZk+1Fv8UQXJInyXe9aEHlOHmyTIifpKFhQMxsxnT7E/M4js
-         E2kknHiM5NF0vxIS9hNdqPpxshX+3ieyLs/rcp+M=
+        b=c1xOk05AuU2xuggQHD5DVlKwBlHc+NTFbDMTnzfnO96HUS7hbtJVSss+TPuoxYEoy
+         3vwlpc+vB/qcdcUIDzxihPBUDxe3d2ff+rwHyJ0pLfvA4Wyc5E6vfRq/wkZoAIPM2Y
+         5XF5MrUEE+NoYHZXeEgv+DJjLaD8YSZLrljQNDtw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/25] Input: cyttsp4_core - fix use after free bug
-Date:   Fri, 22 Nov 2019 14:48:42 -0500
-Message-Id: <20191122194859.24508-9-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        akpm@linux-foundation.org, bigeasy@linutronix.de, cl@linux.com,
+        keescook@chromium.org, penberg@kernel.org, rientjes@google.com,
+        thgarnie@google.com, tytso@mit.edu, will@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/25] sched/core: Avoid spurious lock dependencies
+Date:   Fri, 22 Nov 2019 14:48:43 -0500
+Message-Id: <20191122194859.24508-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
@@ -59,49 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 79aae6acbef16f720a7949f8fc6ac69816c79d62 ]
+[ Upstream commit ff51ff84d82aea5a889b85f2b9fb3aa2b8691668 ]
 
-The device md->input is used after it is released. Setting the device
-data to NULL is unnecessary as the device is never used again. Instead,
-md->input should be assigned NULL to avoid accessing the freed memory
-accidently. Besides, checking md->si against NULL is superfluous as it
-points to a variable address, which cannot be NULL.
+While seemingly harmless, __sched_fork() does hrtimer_init(), which,
+when DEBUG_OBJETS, can end up doing allocations.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Link: https://lore.kernel.org/r/1572936379-6423-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This then results in the following lock order:
+
+  rq->lock
+    zone->lock.rlock
+      batched_entropy_u64.lock
+
+Which in turn causes deadlocks when we do wakeups while holding that
+batched_entropy lock -- as the random code does.
+
+Solve this by moving __sched_fork() out from under rq->lock. This is
+safe because nothing there relies on rq->lock, as also evident from the
+other __sched_fork() callsite.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: akpm@linux-foundation.org
+Cc: bigeasy@linutronix.de
+Cc: cl@linux.com
+Cc: keescook@chromium.org
+Cc: penberg@kernel.org
+Cc: rientjes@google.com
+Cc: thgarnie@google.com
+Cc: tytso@mit.edu
+Cc: will@kernel.org
+Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
+Link: https://lkml.kernel.org/r/20191001091837.GK4536@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/cyttsp4_core.c | 7 -------
- 1 file changed, 7 deletions(-)
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/cyttsp4_core.c b/drivers/input/touchscreen/cyttsp4_core.c
-index 727c3232517cd..c84ee739a8d50 100644
---- a/drivers/input/touchscreen/cyttsp4_core.c
-+++ b/drivers/input/touchscreen/cyttsp4_core.c
-@@ -2000,11 +2000,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 78ecdfae25b69..2befd2c4ce9e6 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5413,10 +5413,11 @@ void init_idle(struct task_struct *idle, int cpu)
+ 	struct rq *rq = cpu_rq(cpu);
+ 	unsigned long flags;
  
- 	/* get sysinfo */
- 	md->si = &cd->sysinfo;
--	if (!md->si) {
--		dev_err(dev, "%s: Fail get sysinfo pointer from core p=%p\n",
--			__func__, md->si);
--		goto error_get_sysinfo;
--	}
++	__sched_fork(0, idle);
++
+ 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
+ 	raw_spin_lock(&rq->lock);
  
- 	rc = cyttsp4_setup_input_device(cd);
- 	if (rc)
-@@ -2014,8 +2009,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
- 
- error_init_input:
- 	input_free_device(md->input);
--error_get_sysinfo:
--	input_set_drvdata(md->input, NULL);
- error_alloc_failed:
- 	dev_err(dev, "%s failed.\n", __func__);
- 	return rc;
+-	__sched_fork(0, idle);
+ 	idle->state = TASK_RUNNING;
+ 	idle->se.exec_start = sched_clock();
+ 	idle->flags |= PF_IDLE;
 -- 
 2.20.1
 
