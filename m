@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187B1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D4C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E630920715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E7920718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419124;
-	bh=u2HPfRf/Kr1Qq6s8M6REfzpCPG/qBcR8on1BXqhMHJw=;
+	s=default; t=1574419128;
+	bh=uZ8AOgJ9LAjIUjnvJ3css1oOtMwLwVoIUPAeWo0udMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCl1MZiJ7ZmCiG0ZIH7ZrGAFdXuVRdrcIlgTbWYx9oENYG6nQ/0cA/O3QfEFJLCo8
-	 oW33q9kdWXj2YnUGK4JkntuIcaXPTeW5fvg5B3yhxO28p6/hdRTaLXzsTpxawh40KL
-	 n2h7oiYaLzgbHUDBfsEG7ITLhiNo15CS+i5ZNOo4=
+	b=HSIy2vEFTEmGSlDyW+jcKLhq/z7/fA0KIue3dZg9STW4/9r51WnI8/IBnYvLwmQz8
+	 f9+7epmNVGRcwExcO85aa/FYXJrF04nIDcrDaehpXs3rKh54PC+pvpf7eHjcm4FOon
+	 swCYEkE+0bQ3N9iNrmSRz8TA7yvHGxS2EGeDMh60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfKVKin (ORCPT
+        id S1728208AbfKVKir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41154 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727934AbfKVKii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:38 -0500
+        id S1728682AbfKVKil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A304220715;
-        Fri, 22 Nov 2019 10:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C79420717;
+        Fri, 22 Nov 2019 10:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419118;
-        bh=u2HPfRf/Kr1Qq6s8M6REfzpCPG/qBcR8on1BXqhMHJw=;
+        s=default; t=1574419120;
+        bh=uZ8AOgJ9LAjIUjnvJ3css1oOtMwLwVoIUPAeWo0udMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIw2ROTxzNOX8Jn4127vQ8kkJNoFt4ekJqT1QnuG3Nq6gzYzo3PnkzYi9pEfTMdQw
-         9d6gg9vm6LL1gGFHDyowM4mYcVSRzpooBumg9PWACIyaUogoLwL/YsqqCUyD8fUfEK
-         Ai1Rn4XZanOMubi3o4g0L7H2LG2LuFZgDwiH+a1o=
+        b=iLBhAbKgwlgcRovUTWcjUEmyYMlhe+COnDWFOOFwa2bP3nQIXZ/AXQuTUVwlvjMmV
+         HcnLGUdEdI2zkw07frQilIdP7uaGs97JYrpiTcHZykphRFoAjYHN7WJW705hoXPoNg
+         cqdBzWrP9yPwBGZkt8ES5aWC6cLpmq9i2OwKKs18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        stable@vger.kernel.org, Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 126/159] mtd: rawnand: sh_flctl: Use proper enum for flctl_dma_fifo0_transfer
-Date:   Fri, 22 Nov 2019 11:28:37 +0100
-Message-Id: <20191122100831.929962570@linuxfoundation.org>
+Subject: [PATCH 4.4 127/159] ixgbe: Fix crash with VFs and flow director on interface flap
+Date:   Fri, 22 Nov 2019 11:28:38 +0100
+Message-Id: <20191122100832.307803950@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,60 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit e2bfa4ca23d9b5a7bdfcf21319fad9b59e38a05c ]
+[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
 
-Clang warns when one enumerated type is converted implicitly to another:
+This patch fix crash when we have restore flow director filters after reset
+adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
+rx_ring array, as it has a VF identifier in the upper 32 bits.
 
-drivers/mtd/nand/raw/sh_flctl.c:483:46: warning: implicit conversion
-from enumeration type 'enum dma_transfer_direction' to different
-enumeration type 'enum dma_data_direction' [-Wenum-conversion]
-                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
-                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-drivers/mtd/nand/raw/sh_flctl.c:542:46: warning: implicit conversion
-from enumeration type 'enum dma_transfer_direction' to different
-enumeration type 'enum dma_data_direction' [-Wenum-conversion]
-                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
-                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-2 warnings generated.
-
-Use the proper enums from dma_data_direction to satisfy Clang.
-
-DMA_MEM_TO_DEV = DMA_TO_DEVICE = 1
-DMA_DEV_TO_MEM = DMA_FROM_DEVICE = 2
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/sh_flctl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/sh_flctl.c b/drivers/mtd/nand/sh_flctl.c
-index 1f2785ee909fe..c00a180306e50 100644
---- a/drivers/mtd/nand/sh_flctl.c
-+++ b/drivers/mtd/nand/sh_flctl.c
-@@ -428,7 +428,7 @@ static void read_fiforeg(struct sh_flctl *flctl, int rlen, int offset)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index a5b443171b8bd..4521181aa0ed9 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -4532,6 +4532,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
++	u64 action;
  
- 	/* initiate DMA transfer */
- 	if (flctl->chan_fifo0_rx && rlen >= 32 &&
--		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
-+		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE) > 0)
- 			goto convert;	/* DMA success */
+ 	spin_lock(&adapter->fdir_perfect_lock);
  
- 	/* do polling transfer */
-@@ -487,7 +487,7 @@ static void write_ec_fiforeg(struct sh_flctl *flctl, int rlen,
+@@ -4540,12 +4541,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
  
- 	/* initiate DMA transfer */
- 	if (flctl->chan_fifo0_tx && rlen >= 32 &&
--		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
-+		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE) > 0)
- 			return;	/* DMA success */
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
++		action = filter->action;
++		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
++			action =
++			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+ 				&filter->filter,
+ 				filter->sw_idx,
+-				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
++				(action == IXGBE_FDIR_DROP_QUEUE) ?
+ 				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[filter->action]->reg_idx);
++				adapter->rx_ring[action]->reg_idx);
+ 	}
  
- 	/* do polling transfer */
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
