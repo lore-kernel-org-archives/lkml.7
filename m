@@ -2,195 +2,87 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329A5C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744BD20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oM6RXqw8"
+	by mail.kernel.org (Postfix) with ESMTP id F2EE92070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574455508;
+	bh=0xs/+QvGrlu/SO1x23n6mxq5TK2F7dvKyVFmZDbTrUY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pWtjYXgRQb0CbLNWGSjeYLOR9XJSXGYBz/2X4IExwuYf6a1W2+QK3OaDotbF1sIg3
+	 EWxHGl7vd7mB3MVwiANSCAnbZNtO6haL2tjDtgMEiYDVSaYNaPUJtRSwQTvuIn9ss7
+	 2pOiUWf+LMBO/OfqgMlCD3+56bYU5Zw2MHA0KsQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfKVUnN (ORCPT
+        id S1726865AbfKVUpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:43:13 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43916 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVUnN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:43:13 -0500
-Received: by mail-qk1-f194.google.com with SMTP id p14so7453515qkm.10;
-        Fri, 22 Nov 2019 12:43:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nEv2txPCVLSV4T8XOiHXL1dnMJXAnHX5LR4vdUFzACU=;
-        b=oM6RXqw8iLUj+Ehpij017e9+fohwwSATEdVEux0stfyhSaBNuVE4s2ePhoaz9gQ+eq
-         w5NqPEJNCP7qvXVDFjISFHQDQospQu4Bae0VYYelBzc45G5XLegFqss/jpkSiqRpbKG2
-         4EmXGtuDST1iGrfeU3YcNafHvAElHMXBucuCN0MjmcZZsLmbMaU2ZKKDKoOoeVpywgfw
-         0MeQLkcrnL8oaHJPmVE8quA35e0RX9znxT+PGYCp5yHhVYty961LC5uI5eTbWDIlE2Tp
-         ghAM2dC9GJwvm3tZbMNVNN+WkBcvf6LP4++VoHMpT1kJfOsJi7PDSot0TGC8zA86X8L5
-         FBng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nEv2txPCVLSV4T8XOiHXL1dnMJXAnHX5LR4vdUFzACU=;
-        b=QipIfKs2yjEIfOFmOpPujXzRQvuVgZ0Ee3AGuUHE/EEz8rFAb/PeOYnVUImkYNtZ1U
-         QjrzRkZ0EptODQEkJ7XJkg5nKCc1J4VlwX44hpLJ7T9N41IEZS78iv2v7xyy9+2HkIq5
-         T0slJ9CD/O5LLpdyw1+FtpJBMtjarZGWBsfrMjZtDDB1YlJVq5J1WihixfUhBeHiEETf
-         w/ilN7QZZQlzVGZn6r50gw2H3cQ1sxuCJaGBJNStHEJefqX49IMNmYLswRbaYhtzAUSY
-         O6iiX5LKkUJ23UPVM6iH9ZiSJjVucs5pzK9YP08KlVfMIKn372NGMxhWxIAav4IX+4qX
-         f9yA==
-X-Gm-Message-State: APjAAAUZOZdJ5k6CDxzM5UcwIbDJS/MMo7TlLbh4pChTFUKK6CZf31F8
-        xQJWEPyvDUGxetSEM1QyxGPJZI8Cd177Rw==
-X-Google-Smtp-Source: APXvYqzZ+Vrc859YA7hWLp2f/AWDMMqsUIwomolrDMwRF6M3dwopg7/M920/sk0ddph/3rw7YjcR5g==
-X-Received: by 2002:a37:9146:: with SMTP id t67mr9276700qkd.98.1574455391169;
-        Fri, 22 Nov 2019 12:43:11 -0800 (PST)
-Received: from localhost.localdomain ([177.220.176.157])
-        by smtp.gmail.com with ESMTPSA id d18sm3461078qko.112.2019.11.22.12.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 12:43:10 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 61954C3AB5; Fri, 22 Nov 2019 17:43:07 -0300 (-03)
-Date:   Fri, 22 Nov 2019 17:43:07 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Aaron Conole <aconole@redhat.com>
-Cc:     netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org, paulb@mellanox.com,
-        Florian Westphal <fw@strlen.de>
-Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
-Message-ID: <20191122204307.GG388551@localhost.localdomain>
-References: <20191108210714.12426-1-aconole@redhat.com>
- <20191108210714.12426-2-aconole@redhat.com>
- <20191114162949.GB3419@localhost.localdomain>
- <f7to8x8yj6k.fsf@dhcp-25.97.bos.redhat.com>
- <20191118224054.GB388551@localhost.localdomain>
- <f7tv9rbmyrv.fsf@dhcp-25.97.bos.redhat.com>
+        Fri, 22 Nov 2019 15:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbfKVUpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 15:45:06 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D21CC20704;
+        Fri, 22 Nov 2019 20:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574455506;
+        bh=0xs/+QvGrlu/SO1x23n6mxq5TK2F7dvKyVFmZDbTrUY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ygwblalajMOSeZc+XzZxGLQ64wXdyxnHVF+s7oFIGlCiovyBdLza/SgSvEgjjaMr5
+         EPGyhuqKLC8oQV41eOdu2B6pEECW0MgwpJAHtesaCzg0P5CtsfUZd1198u8TyU8z1s
+         uHc5Q5OTfdY/gwFFPV4JnKkAHlaoRdzN3lI8/Q+g=
+Subject: Re: [PATCH 5.3 0/6] 5.3.13-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191122100320.878809004@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <30001ff5-2c8b-49e4-bc41-a43e0284df2c@kernel.org>
+Date:   Fri, 22 Nov 2019 13:45:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7tv9rbmyrv.fsf@dhcp-25.97.bos.redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191122100320.878809004@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 03:39:16PM -0500, Aaron Conole wrote:
-> Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
+On 11/22/19 3:30 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.13 release.
+> There are 6 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> > On Mon, Nov 18, 2019 at 04:21:39PM -0500, Aaron Conole wrote:
-> >> Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
-> >> 
-> >> > On Fri, Nov 08, 2019 at 04:07:14PM -0500, Aaron Conole wrote:
-> >> >> The act_ct TC module shares a common conntrack and NAT infrastructure
-> >> >> exposed via netfilter.  It's possible that a packet needs both SNAT and
-> >> >> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
-> >> >> this because it runs through the NAT table twice - once on ingress and
-> >> >> again after egress.  The act_ct action doesn't have such capability.
-> >> >> 
-> >> >> Like netfilter hook infrastructure, we should run through NAT twice to
-> >> >> keep the symmetry.
-> >> >> 
-> >> >> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
-> >> >> 
-> >> >> Signed-off-by: Aaron Conole <aconole@redhat.com>
-> >> >> ---
-> >> >>  net/sched/act_ct.c | 13 ++++++++++++-
-> >> >>  1 file changed, 12 insertions(+), 1 deletion(-)
-> >> >> 
-> >> >> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-> >> >> index fcc46025e790..f3232a00970f 100644
-> >> >> --- a/net/sched/act_ct.c
-> >> >> +++ b/net/sched/act_ct.c
-> >> >> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
-> >> >>  			  bool commit)
-> >> >>  {
-> >> >>  #if IS_ENABLED(CONFIG_NF_NAT)
-> >> >> +	int err;
-> >> >>  	enum nf_nat_manip_type maniptype;
-> >> >>  
-> >> >>  	if (!(ct_action & TCA_CT_ACT_NAT))
-> >> >> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
-> >> >>  		return NF_ACCEPT;
-> >> >>  	}
-> >> >>  
-> >> >> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> >> >> +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> >> >> +	if (err == NF_ACCEPT &&
-> >> >> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
-> >> >> +		if (maniptype == NF_NAT_MANIP_SRC)
-> >> >> +			maniptype = NF_NAT_MANIP_DST;
-> >> >> +		else
-> >> >> +			maniptype = NF_NAT_MANIP_SRC;
-> >> >> +
-> >> >> +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> >> >> +	}
-> >> >
-> >> > I keep thinking about this and I'm not entirely convinced that this
-> >> > shouldn't be simpler. More like:
-> >> >
-> >> > if (DNAT)
-> >> > 	DNAT
-> >> > if (SNAT)
-> >> > 	SNAT
-> >> >
-> >> > So it always does DNAT before SNAT, similarly to what iptables would
-> >> > do on PRE/POSTROUTING chains.
-> >> 
-> >> I can rewrite the whole function, but I wanted to start with the smaller
-> >> fix that worked.  I also think it needs more testing then (since it's
-> >> something of a rewrite of the function).
-> >> 
-> >> I guess it's not too important - do you think it gives any readability
-> >> to do it this way?  If so, I can respin the patch changing it like you
-> >> describe.
-> >
-> > I didn't mean a rewrite, but just to never handle SNAT before DNAT. So
-> > the fix here would be like:
-> >
-> > -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> > +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> > +	if (err == NF_ACCEPT && maniptype == NF_NAT_MANIP_DST &&
-> > +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
-> > +		maniptype = NF_NAT_MANIP_SRC;
-> > +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> > +	}
-> > +	return err;
+> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> Anything received after that time might be too late.
 > 
-> But the maniptype of the first call could be NAT_MANIP_SRC.  In fact,
-> that's what I see if the packet is reply direction && !related.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.13-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Interesting, ok.
+Compiled and booted on my test system. No dmesg regressions.
 
-> 
-> So, we need the block to invert the manipulation type.  Otherwise, we
-> miss the DNAT manipulation.
-> 
-> So I don't think I can use that block.
-
-Thanks for digging on it.
-
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-
-> 
-> >> >> +	return err;
-> >> >>  #else
-> >> >>  	return NF_ACCEPT;
-> >> >>  #endif
-> >> >> -- 
-> >> >> 2.21.0
-> >> >> 
-> >> 
-> 
+thanks,
+-- Shuah
