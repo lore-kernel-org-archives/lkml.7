@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A852068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7E22068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402739;
-	bh=5UKKWctJDQZ8xRe1z8NZtBEcyGxr87Z4366ykrJckvA=;
+	s=default; t=1574402745;
+	bh=IRIFf4jSVFyly0lxBpHg7bfrDIjAbhsrihdGmuphs/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zl5sG8jTieI/NOarSM8EPckWdG8ItvWkffpXCCEigQx0wylE7iW4QbcppBx50laCg
-	 BoL0+HDy28bW9VzROc0q8RGv1Gb9Ju0lgi4Sh5CikGkTqwvuLuYKgfPhNPHc2pT39A
-	 NNHiUaIZse09aUHMqxxh/kLuZsK+mn4IE0pyy7gk=
+	b=ajcjuPDAczeiTDOPTzJJM0ZSZ8PQzaLb3aPmigBbm6S/vvRL0EQLMDPGRk24x/Ren
+	 pt8/j5DIYwRA9E/+AmuLBpDnkoCGWoshFHaxXGr7cwynf+YLbh/oP9mulgFYOTc026
+	 E1oiCy+ST8TLVeKRo7pJ7ovAcZj5V8cZKtgGgEhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfKVGFi (ORCPT
+        id S1729026AbfKVGFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:05:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfKVGCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:37 -0500
+        id S1729739AbfKVGCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9637E20714;
-        Fri, 22 Nov 2019 06:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7672071B;
+        Fri, 22 Nov 2019 06:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402557;
-        bh=5UKKWctJDQZ8xRe1z8NZtBEcyGxr87Z4366ykrJckvA=;
+        s=default; t=1574402552;
+        bh=IRIFf4jSVFyly0lxBpHg7bfrDIjAbhsrihdGmuphs/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqqicVhDFw6xYecwRJtOt+7h8Zt4pbdHvYfpu6u5cgGACOdE1N9oDI/AFjmtQH2gC
-         HmseyxsQfy+cfMyJ8FS6389BK9VFALGm9dzBute3qbPswuei6kctnu7SfUdJhSUshu
-         rAlZh8WFlZHcxFddmAytCkCnCB1rqe6Q7Y0/YjOM=
+        b=HBLrEUyHydnB2kD6kJ3cwZSIQR3Fp+4YhwN0eLps7c6VMqR72//2Gu78HYtf6S0Pu
+         y9iAUWkHIKLobDgp42vxbRCY23AC8NEfjU/aswiF0hJYWCPDpPV8stLxxXhreynm0v
+         PVLlP+K5qf0KNQGQ6dsxZp48e3LrKv7EQGV8xic0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 62/91] um: Make GCOV depend on !KCOV
-Date:   Fri, 22 Nov 2019 01:01:00 -0500
-Message-Id: <20191122060129.4239-61-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Scott Wood <oss@buserror.net>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 57/91] powerpc/83xx: handle machine check caused by watchdog timer
+Date:   Fri, 22 Nov 2019 01:00:55 -0500
+Message-Id: <20191122060129.4239-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -58,32 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 550ed0e2036663b35cec12374b835444f9c60454 ]
+[ Upstream commit 0deae39cec6dab3a66794f3e9e83ca4dc30080f1 ]
 
-Both do more or less the same thing and are mutually exclusive.
-If both are enabled the build will fail.
-Sooner or later we can kill UML's GCOV.
+When the watchdog timer is set in interrupt mode, it causes a
+machine check when it times out. The purpose of this mode is to
+ease debugging, not to crash the kernel and reboot the machine.
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
+This patch implements a special handling for that, in order to not
+crash the kernel if the watchdog times out while in interrupt or
+within the idle task.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[scottwood: added missing #include]
+Signed-off-by: Scott Wood <oss@buserror.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/Kconfig.debug | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/cputable.h |  1 +
+ arch/powerpc/include/asm/reg.h      |  2 ++
+ arch/powerpc/kernel/cputable.c      | 10 ++++++----
+ arch/powerpc/platforms/83xx/misc.c  | 17 +++++++++++++++++
+ 4 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/arch/um/Kconfig.debug b/arch/um/Kconfig.debug
-index 68205fd3b08c8..6ae7f0f434a9c 100644
---- a/arch/um/Kconfig.debug
-+++ b/arch/um/Kconfig.debug
-@@ -18,6 +18,7 @@ config GPROF
- config GCOV
- 	bool "Enable gcov support"
- 	depends on DEBUG_INFO
-+	depends on !KCOV
- 	help
- 	  This option allows developers to retrieve coverage data from a UML
- 	  session.
+diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+index 4e54282c29b44..cf51aea47510c 100644
+--- a/arch/powerpc/include/asm/cputable.h
++++ b/arch/powerpc/include/asm/cputable.h
+@@ -44,6 +44,7 @@ extern int machine_check_e500(struct pt_regs *regs);
+ extern int machine_check_e200(struct pt_regs *regs);
+ extern int machine_check_47x(struct pt_regs *regs);
+ int machine_check_8xx(struct pt_regs *regs);
++int machine_check_83xx(struct pt_regs *regs);
+ 
+ extern void cpu_down_flush_e500v2(void);
+ extern void cpu_down_flush_e500mc(void);
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index ceb168cd3b814..26aeeaad32678 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -663,6 +663,8 @@
+ #define   SRR1_PROGTRAP		0x00020000 /* Trap */
+ #define   SRR1_PROGADDR		0x00010000 /* SRR0 contains subsequent addr */
+ 
++#define   SRR1_MCE_MCP		0x00080000 /* Machine check signal caused interrupt */
++
+ #define SPRN_HSRR0	0x13A	/* Save/Restore Register 0 */
+ #define SPRN_HSRR1	0x13B	/* Save/Restore Register 1 */
+ #define   HSRR1_DENORM		0x00100000 /* Denorm exception */
+diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
+index 6a82ef039c509..7471ed48f41fa 100644
+--- a/arch/powerpc/kernel/cputable.c
++++ b/arch/powerpc/kernel/cputable.c
+@@ -1162,6 +1162,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.machine_check		= machine_check_generic,
+ 		.platform		= "ppc603",
+ 	},
++#ifdef CONFIG_PPC_83xx
+ 	{	/* e300c1 (a 603e core, plus some) on 83xx */
+ 		.pvr_mask		= 0x7fff0000,
+ 		.pvr_value		= 0x00830000,
+@@ -1172,7 +1173,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.icache_bsize		= 32,
+ 		.dcache_bsize		= 32,
+ 		.cpu_setup		= __setup_cpu_603,
+-		.machine_check		= machine_check_generic,
++		.machine_check		= machine_check_83xx,
+ 		.platform		= "ppc603",
+ 	},
+ 	{	/* e300c2 (an e300c1 core, plus some, minus FPU) on 83xx */
+@@ -1186,7 +1187,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.icache_bsize		= 32,
+ 		.dcache_bsize		= 32,
+ 		.cpu_setup		= __setup_cpu_603,
+-		.machine_check		= machine_check_generic,
++		.machine_check		= machine_check_83xx,
+ 		.platform		= "ppc603",
+ 	},
+ 	{	/* e300c3 (e300c1, plus one IU, half cache size) on 83xx */
+@@ -1200,7 +1201,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.icache_bsize		= 32,
+ 		.dcache_bsize		= 32,
+ 		.cpu_setup		= __setup_cpu_603,
+-		.machine_check		= machine_check_generic,
++		.machine_check		= machine_check_83xx,
+ 		.num_pmcs		= 4,
+ 		.oprofile_cpu_type	= "ppc/e300",
+ 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
+@@ -1217,12 +1218,13 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.icache_bsize		= 32,
+ 		.dcache_bsize		= 32,
+ 		.cpu_setup		= __setup_cpu_603,
+-		.machine_check		= machine_check_generic,
++		.machine_check		= machine_check_83xx,
+ 		.num_pmcs		= 4,
+ 		.oprofile_cpu_type	= "ppc/e300",
+ 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
+ 		.platform		= "ppc603",
+ 	},
++#endif
+ 	{	/* default match, we assume split I/D cache & TB (non-601)... */
+ 		.pvr_mask		= 0x00000000,
+ 		.pvr_value		= 0x00000000,
+diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
+index d75c9816a5c92..2b6589fe812dd 100644
+--- a/arch/powerpc/platforms/83xx/misc.c
++++ b/arch/powerpc/platforms/83xx/misc.c
+@@ -14,6 +14,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/pci.h>
+ 
++#include <asm/debug.h>
+ #include <asm/io.h>
+ #include <asm/hw_irq.h>
+ #include <asm/ipic.h>
+@@ -150,3 +151,19 @@ void __init mpc83xx_setup_arch(void)
+ 
+ 	mpc83xx_setup_pci();
+ }
++
++int machine_check_83xx(struct pt_regs *regs)
++{
++	u32 mask = 1 << (31 - IPIC_MCP_WDT);
++
++	if (!(regs->msr & SRR1_MCE_MCP) || !(ipic_get_mcp_status() & mask))
++		return machine_check_generic(regs);
++	ipic_clear_mcp_status(mask);
++
++	if (debugger_fault_handler(regs))
++		return 1;
++
++	die("Watchdog NMI Reset", regs, 0);
++
++	return 1;
++}
 -- 
 2.20.1
 
