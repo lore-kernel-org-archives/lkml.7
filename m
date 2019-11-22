@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB28FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A134FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72DAF207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9772070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402227;
-	bh=AdbyIqRS5cklHI4/34lbBdZESZsUf8IC0zfP30HwNIY=;
+	s=default; t=1574402229;
+	bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LBbHuMeU4spdjG2xDDYcjc4EwY2qF+pmfYkDyyZLZvjMpW4ZDOuOyFRKRw6aIMxHn
-	 NDQ7SpuwSo20TToNxUqNd4nCPv4879FNpUeEDj+JHv+faOcY7e1/CyTelKDw1bx7Ue
-	 rKevi9W4/hqMdd61J5eYxxh+9mSerqx3UEDH5JDE=
+	b=gEpsHvOA91lqSWlTbheuvKjZMAP6dKLhwx25qAJmJsbO1zjQ9BZvpPe3nhve7myeo
+	 plRvROSCfwlk+QJ8b1n+d8YdbIhXecNeg3Ob/sslpg/U83QbDcMQSEfYnmQlfSpbr3
+	 vDJu29lv7S/4fXLIBVt15FUuJ+itJVEywjKlJx+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfKVF5F (ORCPT
+        id S1729365AbfKVF5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbfKVF46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:58 -0500
+        id S1727309AbfKVF5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304D42071B;
-        Fri, 22 Nov 2019 05:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494AD20659;
+        Fri, 22 Nov 2019 05:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402217;
-        bh=AdbyIqRS5cklHI4/34lbBdZESZsUf8IC0zfP30HwNIY=;
+        s=default; t=1574402220;
+        bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tDRTA5TVmmIFNpY9ATJ0SpMsyskGb5Emo3Ea0iXEEfT3GCBNyq+XhfRWfr8qtgccO
-         gV18Abs82siBp9Ik/TFZjCrv0HmOztPVqE2c58iYyN6J+UzdPSou/KHFQnacHfFp8U
-         FBgvOBJA9yZ6CzpGo3X4WqfecbkUrjmQLlq6qWYI=
+        b=G0VbUFQLZJF0tfl2zkG7voZ3Dhoz8W9c3ZGCKB8Zf9LQ/KjT/CN2mIfObv7cEgz+l
+         vkVYJcnTEoQ4S5zTE91Ik+76g1hXZQCSiRyv4SQUglfdeJGD048/nND4Rod/W7mdSN
+         dJahuvJuOUcslI++K17NveKLUufr4Yxv/02p+h54=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 065/127] powerpc/prom: fix early DEBUG messages
-Date:   Fri, 22 Nov 2019 00:54:43 -0500
-Message-Id: <20191122055544.3299-64-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 067/127] powerpc/44x/bamboo: Fix PCI range
+Date:   Fri, 22 Nov 2019 00:54:45 -0500
+Message-Id: <20191122055544.3299-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,53 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit b18f0ae92b0a1db565c3e505fa87b6971ad3b641 ]
+[ Upstream commit 3cfb9ebe906b51f2942b1e251009bb251efd2ba6 ]
 
-This patch fixes early DEBUG messages in prom.c:
-- Use %px instead of %p to see the addresses
-- Cast memblock_phys_mem_size() with (unsigned long long) to
-avoid build failure when phys_addr_t is not 64 bits.
+The bamboo dts has a bug: it uses a non-naturally aligned range
+for PCI memory space. This isnt' supported by the code, thus
+causing PCI to break on this system.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+This is due to the fact that while the chip memory map has 1G
+reserved for PCI memory, it's only 512M aligned. The code doesn't
+know how to split that into 2 different PMMs and fails, so limit
+the region to 512M.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/prom.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/boot/dts/bamboo.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index f830562974417..d96b284150904 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -128,7 +128,7 @@ static void __init move_device_tree(void)
- 		p = __va(memblock_alloc(size, PAGE_SIZE));
- 		memcpy(p, initial_boot_params, size);
- 		initial_boot_params = p;
--		DBG("Moved device tree to 0x%p\n", p);
-+		DBG("Moved device tree to 0x%px\n", p);
- 	}
+diff --git a/arch/powerpc/boot/dts/bamboo.dts b/arch/powerpc/boot/dts/bamboo.dts
+index aa68911f6560a..084b82ba74933 100644
+--- a/arch/powerpc/boot/dts/bamboo.dts
++++ b/arch/powerpc/boot/dts/bamboo.dts
+@@ -268,8 +268,10 @@
+ 			/* Outbound ranges, one memory and one IO,
+ 			 * later cannot be changed. Chip supports a second
+ 			 * IO range but we don't use it for now
++			 * The chip also supports a larger memory range but
++			 * it's not naturally aligned, so our code will break
+ 			 */
+-			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x40000000
++			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x20000000
+ 				  0x02000000 0x00000000 0x00000000 0x00000000 0xe0000000 0x00000000 0x00100000
+ 				  0x01000000 0x00000000 0x00000000 0x00000000 0xe8000000 0x00000000 0x00010000>;
  
- 	DBG("<- move_device_tree\n");
-@@ -662,7 +662,7 @@ void __init early_init_devtree(void *params)
- {
- 	phys_addr_t limit;
- 
--	DBG(" -> early_init_devtree(%p)\n", params);
-+	DBG(" -> early_init_devtree(%px)\n", params);
- 
- 	/* Too early to BUG_ON(), do it by hand */
- 	if (!early_init_dt_verify(params))
-@@ -722,7 +722,7 @@ void __init early_init_devtree(void *params)
- 	memblock_allow_resize();
- 	memblock_dump_all();
- 
--	DBG("Phys. mem: %llx\n", memblock_phys_mem_size());
-+	DBG("Phys. mem: %llx\n", (unsigned long long)memblock_phys_mem_size());
- 
- 	/* We may need to relocate the flat tree, do it now.
- 	 * FIXME .. and the initrd too? */
 -- 
 2.20.1
 
