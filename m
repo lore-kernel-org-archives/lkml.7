@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3752AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3D0C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B142084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBB32072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401930;
-	bh=XrgJf33ZX605w5/MqKEYzTarUruBrWyg+SRbs6OYdtc=;
+	s=default; t=1574401935;
+	bh=/PKAD3AkTjyL9c8QHOk65inIyuVXFHetGmXfEQaBdZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CEMkmv6lPiC50KM66TYjlnjbJyVlAzAbydrSuMqCd0EHQfzpddrd2A83D2JjIVgh
-	 nGo4i3PlQH74TGIpM+gLPk1qmEsG2qZlLiHNo/45yisbpmHkO3deba4vpOalf+tbxK
-	 elKFLR0dh8qdk83uw0xe6vGYMn2DZlN/vgVrXQ3U=
+	b=xH1fmMYsANQM8QGPELPkD/BOpHsilrz3EIe1WOH+ggeYkKhtnC+VKg3Ck7cZxBeen
+	 hInv+j9Lp8vNZ5ofjG6hKMHWZbMaaDs4JuG1PneG4CHQ9sXa2Cc7G1rrPvxg8dF4lh
+	 inazAypmraMf+c5ZN5y3f4oad8xxvx3Sj3id2Djc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbfKVFwI (ORCPT
+        id S1728458AbfKVFwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:52:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbfKVFwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:00 -0500
+        id S1728425AbfKVFwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A78112068F;
-        Fri, 22 Nov 2019 05:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E20BE20721;
+        Fri, 22 Nov 2019 05:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401920;
-        bh=XrgJf33ZX605w5/MqKEYzTarUruBrWyg+SRbs6OYdtc=;
+        s=default; t=1574401929;
+        bh=/PKAD3AkTjyL9c8QHOk65inIyuVXFHetGmXfEQaBdZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2L0S9UsmAM8rDpfUDqYewUQjpjGJCiOHi0pq7PMK7ApcZNA7dKaIQZB9mEMdsGlK
-         fQ6kpFO6ARUTiKujEvMMSALlieoMfJ+Y4sFpIcc9UPA1GCNhgZPxxOdEUol8wK1cNk
-         iANZYb/l9Egc8HBZ2tSFIYBgpRNVFyEuWi2rI6n8=
+        b=Eh4Y/MZnnh2MimFV3TlPe+Cup/L4JvqYCsNhjbQFOiCZ6IF8yz2QJbb2b/c2RNlw2
+         71t/OLKxnxH7rbvw9bdGMelERLssJZWDBsOdBTrz5YGahi+HLrlwFI9SMc4710H33X
+         Ef5NLgtwiDrIukvxtYBkZlZYS5h6YUdm6WmPYlk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 150/219] net: marvell: fix a missing check of acpi_match_device
-Date:   Fri, 22 Nov 2019 00:48:02 -0500
-Message-Id: <20191122054911.1750-143-sashal@kernel.org>
+Cc:     Wentao Wang <witallwang@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 156/219] mm/page_alloc.c: deduplicate __memblock_free_early() and memblock_free()
+Date:   Fri, 22 Nov 2019 00:48:08 -0500
+Message-Id: <20191122054911.1750-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,35 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Wentao Wang <witallwang@gmail.com>
 
-[ Upstream commit 92ee77d148bf06d8c52664be4d1b862583fd5c0e ]
+[ Upstream commit d31cfe7bff9109476da92c245b56083e9b48d60a ]
 
-When acpi_match_device fails, its return value is NULL. Directly using
-the return value without a check may result in a NULL-pointer
-dereference. The fix checks if acpi_match_device fails, and if so,
-returns -EINVAL.
-
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/C8ECE1B7A767434691FEEFA3A01765D72AFB8E78@MX203CL03.corp.emc.com
+Signed-off-by: Wentao Wang <witallwang@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/memblock.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 9b608d23ff7ee..9d95add05e3e6 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -5131,6 +5131,8 @@ static int mvpp2_probe(struct platform_device *pdev)
- 	if (has_acpi_companion(&pdev->dev)) {
- 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
- 					    &pdev->dev);
-+		if (!acpi_id)
-+			return -EINVAL;
- 		priv->hw_version = (unsigned long)acpi_id->driver_data;
- 	} else {
- 		priv->hw_version =
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 237944479d25a..bb4e32c6b19e9 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1537,12 +1537,7 @@ void * __init memblock_virt_alloc_try_nid(
+  */
+ void __init __memblock_free_early(phys_addr_t base, phys_addr_t size)
+ {
+-	phys_addr_t end = base + size - 1;
+-
+-	memblock_dbg("%s: [%pa-%pa] %pF\n",
+-		     __func__, &base, &end, (void *)_RET_IP_);
+-	kmemleak_free_part_phys(base, size);
+-	memblock_remove_range(&memblock.reserved, base, size);
++	memblock_free(base, size);
+ }
+ 
+ /**
 -- 
 2.20.1
 
