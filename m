@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EEDC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEAAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FCA2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97E22068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402295;
-	bh=Nh+HcfVHCez8hEtRqsXlfDz3c1EZS0DjrPKmFW0Nb7M=;
+	s=default; t=1574402298;
+	bh=EdxHinHYPcPse218dukcZpO0bocSEKqsp7nvcOd+QtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KSCn84wmxF3IJ1YGMf+IeLaesHrXNjcEQn7pO8e+rNxsQRZe+QnL2sCeyGdJtXffN
-	 p081TkNiZqQ/r2Bg8E5Cad48uWMj3r21hKDhavPzyo83FKLvPTZ7t2/7wfLngCbeTr
-	 v/SV/r6rNVHj6W5muO9Ci14WZjNPI0UidWa664Dg=
+	b=lbTxwcNSnwMr5+SxKDz8MN6F4rnTxTjINVoXaAekMM9QpMLMgDSU16qQpiXW6xcbM
+	 OAZhy3MHKfgpE68Ztm/sAWBOs6gJeuOfVPx2WZTdi8a11WMlPjdWNcqpo1Nq9mhg/P
+	 vTK9LSj+dNYNQjrHVbe6oMRctrkXk6zWf2x4R1wM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfKVF6N (ORCPT
+        id S1727193AbfKVF6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:58:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36588 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:58:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729574AbfKVF56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:58 -0500
+        id S1729599AbfKVF6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:58:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C70832072E;
-        Fri, 22 Nov 2019 05:57:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7724920659;
+        Fri, 22 Nov 2019 05:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402277;
-        bh=Nh+HcfVHCez8hEtRqsXlfDz3c1EZS0DjrPKmFW0Nb7M=;
+        s=default; t=1574402282;
+        bh=EdxHinHYPcPse218dukcZpO0bocSEKqsp7nvcOd+QtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BA7acYJz4I5D+VE+Mvav2N6zreakivsWmqvDbvaw5PUB0I0qFBixHFhLB0Eot2rXR
-         z3XI9/8qlNvbJPfowgcwwfexdvTe+p1+N2GmpEzmiOwcVNn3MkLvbdzZXUCcw9E7vE
-         f7RaXxMThPyJIOaRKd5r65nXiF75xR+qIwaKgnBI=
+        b=zMQU3r1ogvHRHp+8IoUzBrVpv6zaVl9PSNAPDHWd+QePO77/hvZ46LwFtE6LMKYXc
+         Weq/wYBn56cOiA7EMu6ibRbXs8wX4ysx/vykVKZjuvSlnmLCtZjPHHAW5huwOnBOYN
+         zGziH5qh84neyqt2lDOVNyToqyQ660UXQYG8itWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Sun <sironhide0null@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 117/127] bpf: drop refcount if bpf_map_new_fd() fails in map_create()
-Date:   Fri, 22 Nov 2019 00:55:34 -0500
-Message-Id: <20191122055544.3299-115-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, Jian Luo <luojian5@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 121/127] scsi: libsas: Support SATA PHY connection rate unmatch fixing during discovery
+Date:   Fri, 22 Nov 2019 00:55:38 -0500
+Message-Id: <20191122055544.3299-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -62,43 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Sun <sironhide0null@gmail.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 352d20d611414715353ee65fc206ee57ab1a6984 ]
+[ Upstream commit cec9771d2e954650095aa37a6a97722c8194e7d2 ]
 
-In bpf/syscall.c, map_create() first set map->usercnt to 1, a file
-descriptor is supposed to return to userspace. When bpf_map_new_fd()
-fails, drop the refcount.
+   +----------+             +----------+
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SAS  disk
+   |initiator |             |          |
+   | device   |--- 3.0 G ---| Expander |--- 6.0 G --- SAS  disk
+   |          |             |          |
+   |          |--- 3.0 G ---|          |--- 6.0 G --- SATA disk  -->failed to connect
+   |          |             |          |
+   |          |             |          |--- 6.0 G --- SATA disk  -->failed to connect
+   |          |             |          |
+   +----------+             +----------+
 
-Fixes: bd5f5f4ecb78 ("bpf: Add BPF_MAP_GET_FD_BY_ID")
-Signed-off-by: Peng Sun <sironhide0null@gmail.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+According to Serial Attached SCSI - 1.1 (SAS-1.1):
+If an expander PHY attached to a SATA PHY is using a physical link rate
+greater than the maximum connection rate supported by the pathway from an
+STP initiator port, a management application client should use the SMP PHY
+CONTROL function (see 10.4.3.10) to set the PROGRAMMED MAXIMUM PHYSICAL
+LINK RATE field of the expander PHY to the maximum connection rate
+supported by the pathway from that STP initiator port.
+
+Currently libsas does not support checking if this condition occurs, nor
+rectifying when it does.
+
+Such a condition is not at all common, however it has been seen on some
+pre-silicon environments where the initiator PHY only supports a 1.5 Gbit
+maximum linkrate, mated with 12G expander PHYs and 3/6G SATA phy.
+
+This patch adds support for checking and rectifying this condition during
+initial device discovery only.
+
+We do support checking min pathway connection rate during revalidation phase,
+when new devices can be detected in the topology. However we do not
+support in the case of the the user reprogramming PHY linkrates, such that
+min pathway condition is not met/maintained.
+
+A note on root port PHY rates:
+The libsas root port PHY rates calculation is broken. Libsas sets the
+rates (min, max, and current linkrate) of a root port to the same linkrate
+of the first PHY member of that same port. In doing so, it assumes that
+all other PHYs which subsequently join the port to have the same
+negotiated linkrate, when they could actually be different.
+
+In practice this doesn't happen, as initiator and expander PHYs are
+normally initialised with consistent min/max linkrates.
+
+This has not caused an issue so far, so leave alone for now.
+
+Tested-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 34110450a78f2..f5c1d5479ba3d 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -348,12 +348,12 @@ static int map_create(union bpf_attr *attr)
- 	err = bpf_map_new_fd(map);
- 	if (err < 0) {
- 		/* failed to allocate fd.
--		 * bpf_map_put() is needed because the above
-+		 * bpf_map_put_with_uref() is needed because the above
- 		 * bpf_map_alloc_id() has published the map
- 		 * to the userspace and the userspace may
- 		 * have refcnt-ed it through BPF_MAP_GET_FD_BY_ID.
- 		 */
--		bpf_map_put(map);
-+		bpf_map_put_with_uref(map);
- 		return err;
- 	}
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 259ee0d3c3e61..819a655473588 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -817,6 +817,26 @@ static struct domain_device *sas_ex_discover_end_dev(
  
+ #ifdef CONFIG_SCSI_SAS_ATA
+ 	if ((phy->attached_tproto & SAS_PROTOCOL_STP) || phy->attached_sata_dev) {
++		if (child->linkrate > parent->min_linkrate) {
++			struct sas_phy_linkrates rates = {
++				.maximum_linkrate = parent->min_linkrate,
++				.minimum_linkrate = parent->min_linkrate,
++			};
++			int ret;
++
++			pr_notice("ex %016llx phy%02d SATA device linkrate > min pathway connection rate, attempting to lower device linkrate\n",
++				   SAS_ADDR(child->sas_addr), phy_id);
++			ret = sas_smp_phy_control(parent, phy_id,
++						  PHY_FUNC_LINK_RESET, &rates);
++			if (ret) {
++				pr_err("ex %016llx phy%02d SATA device could not set linkrate (%d)\n",
++				       SAS_ADDR(child->sas_addr), phy_id, ret);
++				goto out_free;
++			}
++			pr_notice("ex %016llx phy%02d SATA device set linkrate successfully\n",
++				  SAS_ADDR(child->sas_addr), phy_id);
++			child->linkrate = child->min_linkrate;
++		}
+ 		res = sas_get_ata_info(child, phy);
+ 		if (res)
+ 			goto out_free;
 -- 
 2.20.1
 
