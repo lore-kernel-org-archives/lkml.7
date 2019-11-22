@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93535C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AA1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A8B2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A70E20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420949;
-	bh=N/hyzp1OWfb2l1l5eiOD5E610sSGkUzaZnDfc14bxfk=;
+	s=default; t=1574420952;
+	bh=RCjXUI6866u57JwmTNcRqya4SFDlPhHwx59HYYacEfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3P53x4p7romn+kO7/oEYL0KE5rSfKfk9Tc2eQWZKqwljDkm28HM1b8/tbP2ur2aU
-	 NGyja03Pc+dgdCo1SXtTFL2EkNxgCAj89mRwNtjb5Jspr8cnN4pq82O3H8BXvR/kVk
-	 Z/M6QgkQLpF1zPmHAmAIeR8FaipOWfxgRQx72WJE=
+	b=CDhmuTirQlz903Zc4tGeQ+D5Hv3dQGc/V4SJwH1kk6R0sk5W+whWH6Ne1uxzVEb16
+	 wbnrHSisxAp+80XTuxSEaOqmKqRfc+h2EOVtMVkc8HzX1lUDuQrBM+cKCInBK/MH6X
+	 iA7DoRlQg4z0AA+fbMalFU6D/2ZovoAee6N8TGQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfKVLDa (ORCPT
+        id S1731497AbfKVLJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:09:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbfKVLDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:18 -0500
+        id S1729219AbfKVLD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECEF2073F;
-        Fri, 22 Nov 2019 11:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0C29207DD;
+        Fri, 22 Nov 2019 11:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420596;
-        bh=N/hyzp1OWfb2l1l5eiOD5E610sSGkUzaZnDfc14bxfk=;
+        s=default; t=1574420608;
+        bh=RCjXUI6866u57JwmTNcRqya4SFDlPhHwx59HYYacEfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9uX2xNLo0vWTvSYPjqCF6ZRDzTnJ9/S1yBVPdz/K6kNYoL/Cj56iukjS3jfnEb7P
-         Kxar59fOaLDC/jc8GYZ7CfiBMfBXS3p+5k6lL9nZM6oHG3eHzA355hMIxQ0CvemJ1w
-         0JD79p8XWtrtgJjOjQRpta1MthnPElWkewd7xcWc=
+        b=NUhJtTl9a52yMDZgjTT/qXT2I+HxlbQJYJHJcMi13MeHY1GZ76emTjXRa+WssYTM9
+         UC8OHV+KhUBNoaAFeuq3vtr07Xfqw47DovT5zQRyppyDIx9cPG+uBgn64VbyYRreJq
+         qVZj2BKZAksvVbFbVQkpnDQiX0m1dvkyc/Z0vDWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 124/220] media: ov5640: fix framerate update
-Date:   Fri, 22 Nov 2019 11:28:09 +0100
-Message-Id: <20191122100921.669666315@linuxfoundation.org>
+Subject: [PATCH 4.19 163/220] mtd: devices: m25p80: Make sure WRITE_EN is issued before each write
+Date:   Fri, 22 Nov 2019 11:28:48 +0100
+Message-Id: <20191122100924.480680302@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,47 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugues Fruchet <hugues.fruchet@st.com>
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 
-[ Upstream commit 0929983e49c81c1d413702cd9b83bb06c4a2555c ]
+[ Upstream commit 3baa8ec88c2feb902328e59a4dcf0f0aaab7d2ff ]
 
-Changing framerate right before streamon had no effect,
-the new framerate value was taken into account only at
-next streamon, fix this.
+Some SPI controllers can't write nor->page_size bytes in a single step
+because their TX FIFO is too small, but when that happens we should
+make sure a WRITE_EN command before each write access and READ_SR command
+after each write access is issued.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+The core is already taking care of that, so all we have to do here is
+return the actual number of bytes that were written during the
+spi_mem_exec_op() operation.
+
+Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/mtd/devices/m25p80.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index a3bbef682fb8e..2023df14f8282 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -2572,8 +2572,6 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
- 	if (frame_rate < 0)
- 		frame_rate = OV5640_15_FPS;
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 270d3c9580c51..c4a1d04b8c800 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -90,7 +90,6 @@ static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
+ 				   SPI_MEM_OP_ADDR(nor->addr_width, to, 1),
+ 				   SPI_MEM_OP_NO_DUMMY,
+ 				   SPI_MEM_OP_DATA_OUT(len, buf, 1));
+-	size_t remaining = len;
+ 	int ret;
  
--	sensor->current_fr = frame_rate;
--	sensor->frame_interval = fi->interval;
- 	mode = ov5640_find_mode(sensor, frame_rate, mode->hact,
- 				mode->vact, true);
- 	if (!mode) {
-@@ -2581,7 +2579,10 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
- 		goto out;
- 	}
+ 	/* get transfer protocols. */
+@@ -101,22 +100,16 @@ static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
+ 	if (nor->program_opcode == SPINOR_OP_AAI_WP && nor->sst_write_second)
+ 		op.addr.nbytes = 0;
  
--	if (mode != sensor->current_mode) {
-+	if (mode != sensor->current_mode ||
-+	    frame_rate != sensor->current_fr) {
-+		sensor->current_fr = frame_rate;
-+		sensor->frame_interval = fi->interval;
- 		sensor->current_mode = mode;
- 		sensor->pending_mode_change = true;
- 	}
+-	while (remaining) {
+-		op.data.nbytes = remaining < UINT_MAX ? remaining : UINT_MAX;
+-		ret = spi_mem_adjust_op_size(flash->spimem, &op);
+-		if (ret)
+-			return ret;
+-
+-		ret = spi_mem_exec_op(flash->spimem, &op);
+-		if (ret)
+-			return ret;
++	ret = spi_mem_adjust_op_size(flash->spimem, &op);
++	if (ret)
++		return ret;
++	op.data.nbytes = len < op.data.nbytes ? len : op.data.nbytes;
+ 
+-		op.addr.val += op.data.nbytes;
+-		remaining -= op.data.nbytes;
+-		op.data.buf.out += op.data.nbytes;
+-	}
++	ret = spi_mem_exec_op(flash->spimem, &op);
++	if (ret)
++		return ret;
+ 
+-	return len;
++	return op.data.nbytes;
+ }
+ 
+ /*
 -- 
 2.20.1
 
