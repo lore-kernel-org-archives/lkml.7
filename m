@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7935C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47970C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8166E20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDE9207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420685;
-	bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
+	s=default; t=1574420689;
+	bh=dONCx61Ia/sj7WTQHEcMz5HEIkjAqNopjr/Sy89EPhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KhlQt5hqNbk9QGIWQJPrgvtUxGtvM5nlT6dx1JFY3ZPDU+zjidXYbZ/xa0qb+dTM5
-	 A8pcQqVoCF5gQlqFaUurZxCaNqXqGAAqMedhxxunsn1BbwhT3caHF36jtqqARiHkR9
-	 C9uOuYiyqWr1ZQFh0CgbOwYXRvaVKnH+kYdreiME=
+	b=AYa+M+Nt7U2HcE242T06aa+l8dfhBZ4hKV+9PHNm2B7xRWAzBS1MIgiyAD4Xp0l/z
+	 NUB7IqGv26KeApZ0B4NuyIX6kZPtzNSexw21ls8GrwhkIeV98pjQoBSvh3KBZnwfA7
+	 NMZRZiojW/dSl7EBvuFG8efISEcq1Q69bg0Wfd6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731605AbfKVLEo (ORCPT
+        id S1730610AbfKVLEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59874 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:04:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731592AbfKVLEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:43 -0500
+        id S1731592AbfKVLEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBB3120854;
-        Fri, 22 Nov 2019 11:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED601207FC;
+        Fri, 22 Nov 2019 11:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420682;
-        bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
+        s=default; t=1574420685;
+        bh=dONCx61Ia/sj7WTQHEcMz5HEIkjAqNopjr/Sy89EPhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=recG/xlFwP7zth13JHoLE2avzrTnGvwwX2b9Bn5MvJfKapT+fk/9kGfqcpn2jPzpH
-         RIU+AP87eP0+VhMrq4/e0NNMxrfaNPhYo9om09fSWqreQw/1tVodaJjZcEfX7NWPAg
-         R40ltE/YJRIy8Axf8hPx/KRWc2ZppCEXz5hTADLo=
+        b=BzLz4t7QUyJnv/zTH+6ub8E4AHft6+pd1ergaUOhp/FRpEUrK8/eMT2Wm7tSjqJVG
+         MMB5kS3VzxKj/Si7pxkENzKw/09hOgWDwoVLrWpmAfGbTJYAow67azaYYsQmFsAsJ+
+         Pli5sozteL5u8wZhdK08gV/YPPM0z2h8rUf48PR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Hieu Tran Dang <dangtranhieu2012@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 190/220] gpio: syscon: Fix possible NULL ptr usage
-Date:   Fri, 22 Nov 2019 11:29:15 +0100
-Message-Id: <20191122100927.791893500@linuxfoundation.org>
+Subject: [PATCH 4.19 191/220] spi: fsl-lpspi: Prevent FIFO under/overrun by default
+Date:   Fri, 22 Nov 2019 11:29:16 +0100
+Message-Id: <20191122100927.844347489@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,35 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Hieu Tran Dang <dangtranhieu2012@gmail.com>
 
-[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
+[ Upstream commit de8978c388c66b8fca192213ec9f0727e964c652 ]
 
-The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
-and chip->set is valid pointer. This happens in case the controller uses
-the default GPIO setter. Always use chip->set to access the setter to avoid
-possible NULL pointer dereferencing.
+Certain devices don't work well when a transmit FIFO underrun or
+receive FIFO overrun occurs. Example is the SAF400x radio chip when
+running at high speed which leads to garbage being sent to/received from
+the chip. In which case, it should stall waiting for further data to be
+available before proceeding. This patch unset the NOSTALL bit in CFGR1
+by default to prevent this issue.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Hieu Tran Dang <dangtranhieu2012@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-syscon.c | 2 +-
+ drivers/spi/spi-fsl-lpspi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 87c18a5445137..7f3da34c78746 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -122,7 +122,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
- 				   BIT(offs % SYSCON_REG_BITS));
- 	}
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index e6d5cc6ab108b..51670976faa35 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -276,7 +276,7 @@ static int fsl_lpspi_config(struct fsl_lpspi_data *fsl_lpspi)
  
--	priv->data->set(chip, offset, val);
-+	chip->set(chip, offset, val);
+ 	fsl_lpspi_set_watermark(fsl_lpspi);
  
- 	return 0;
- }
+-	temp = CFGR1_PCSCFG | CFGR1_MASTER | CFGR1_NOSTALL;
++	temp = CFGR1_PCSCFG | CFGR1_MASTER;
+ 	if (fsl_lpspi->config.mode & SPI_CS_HIGH)
+ 		temp |= CFGR1_PCSPOL;
+ 	writel(temp, fsl_lpspi->base + IMX7ULP_CFGR1);
 -- 
 2.20.1
 
