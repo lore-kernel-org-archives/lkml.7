@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAB9C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8518CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4772070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9332070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452350;
-	bh=zS1CtbHCBF4bK+RK/MZJvOJkzdCeTQNOmmZaInhmvGE=;
+	s=default; t=1574452358;
+	bh=UvXNQJIdPf8WAaILk8OqsujAnyi0cKyXbCQAAaoulws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i73aiXqoGFsoz3TQr91uzyj6ub1JCdrtrk4zK1o90kw4Dr7Q+7ywBk3jeLaekqRH1
-	 3iM6ItA9nb3JPXjleJy4rlIwOeyq0OTMm426pypi9TX5WRVxew3vxf2ZXOAFc47Xzt
-	 hytjTW+DPZLnx6HvMEHWC7A9+nFLLmoBMDctTI50=
+	b=ZOBYKsPJoOb15hO60M03S8jbUblgw1OncEegjR3frB3IORP58A9mYVnOTvKaJaD+S
+	 RjppbODDfp/EX8g58MWOrquH4cfQh+Nx8+udyXlJw4rrgqLKHzGfftVM494lShoLug
+	 TrZLFx9XQQfBlXINA2q5YUggRcWCB3I0XOHLsUq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfKVTw3 (ORCPT
+        id S1727625AbfKVTwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:52:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:52:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfKVTtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:50 -0500
+        id S1727589AbfKVTts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC4C2075B;
-        Fri, 22 Nov 2019 19:49:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E28802072D;
+        Fri, 22 Nov 2019 19:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452190;
-        bh=zS1CtbHCBF4bK+RK/MZJvOJkzdCeTQNOmmZaInhmvGE=;
+        s=default; t=1574452187;
+        bh=UvXNQJIdPf8WAaILk8OqsujAnyi0cKyXbCQAAaoulws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDs+YMTf1y/gF4vcovX9Gx1KUcpHgX0mNrSxf1Ir8GeWcbCZXM0RNPdoyqTuszUke
-         TjkIdTXx72NBwLIYwmVMDm+kSDOOtLUxW/N1uu4tRsLgP4bHBbZkU8NqHOFXOwfjKm
-         uuHqPG6eHZx9S/YB9g1PyVnp3lzdME+plOLc3IP0=
+        b=lSVG0ZDoCCWdiMjiVgjxHcIadyptifA1GNCFKsw8rUXjzztav1JGLXGsfomAAqLen
+         XLU0ofXvZrihj+zbAIKJdXYTTkNh/Q0D6rtyWbp0BrqfXl28LC+5EqkYjC+PK23BCa
+         +POI288DGXlSoe9F5ohK3Pk/l/a7I9gUb0YNssOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/21] slcan: Fix memory leak in error path
-Date:   Fri, 22 Nov 2019 14:49:25 -0500
-Message-Id: <20191122194931.24732-15-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/21] slip: Fix memory leak in slip_open error path
+Date:   Fri, 22 Nov 2019 14:49:23 -0500
+Message-Id: <20191122194931.24732-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194931.24732-1-sashal@kernel.org>
 References: <20191122194931.24732-1-sashal@kernel.org>
@@ -64,9 +63,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit ed50e1600b4483c049ce76e6bd3b665a6a9300ed ]
+[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
 
-This patch is fixing memory leak reported by Syzkaller:
+Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
+by Syzkaller in slcan. Same issue exists in slip.c and this patch is
+addressing the leak in slip.c.
+
+Here is the slcan memory leak trace reported by Syzkaller:
 
 BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
   comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
@@ -86,23 +89,23 @@ BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
     [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
     [<0000000053d0332e>] do_syscall_64+0x16f/0x580
     [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xffffffffffffffff
+    [<000000008ea75434>] 0xfffffffffffffff
 
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
 Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/slcan.c | 1 +
+ drivers/net/slip/slip.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-index 5d067c1b987f8..49427f44dc5ba 100644
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -613,6 +613,7 @@ static int slcan_open(struct tty_struct *tty)
+diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+index 436dd78c396a7..2901b7db9d2e1 100644
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -859,6 +859,7 @@ static int slip_open(struct tty_struct *tty)
  	sl->tty = NULL;
  	tty->disc_data = NULL;
  	clear_bit(SLF_INUSE, &sl->flags);
