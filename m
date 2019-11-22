@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190F3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80830C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51072068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC402068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403160;
-	bh=q0IQ3eHYV/IpWj7aMT2inLwi4bdUUv+hebDTvaEJu7w=;
+	s=default; t=1574403170;
+	bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLhtvZu2ECnqawu4RlZsbCKmYhIrf6qNqpuSZMZ8bzDh4BopwMledP+FUuiTLKD5i
-	 yXffcJTKhQ0ysva/8gPCFO/Bq7SAeHvIG17MMv5e35gW9/T2fQv9hg0vWhGdNtdMBP
-	 JU2avdw5jYS7WCPp72e6WAg93ddMf10vCVasqjpg=
+	b=bPyEJlk+Vys4PWDkaRXigv4j90G6fRzSDQjSlm/5uTw624oudnvc9qzuqmAMlLah2
+	 koQLCidgJuOl3/Y26I4yU8DeIFKkcvC90NB4/ABKoZHbDIaT9j2sapykk9cxGHx4AC
+	 RJLq7+wotCe1WTuhlZ6R9LgdIZcxyNg1g7gQwuyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfKVF4P (ORCPT
+        id S1729032AbfKVF4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729020AbfKVF4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:09 -0500
+        id S1729009AbfKVF4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C512071B;
-        Fri, 22 Nov 2019 05:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0C220717;
+        Fri, 22 Nov 2019 05:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402168;
-        bh=q0IQ3eHYV/IpWj7aMT2inLwi4bdUUv+hebDTvaEJu7w=;
+        s=default; t=1574402166;
+        bh=nqrDeAiqwjw67y0i2EHRlzpeX2mJIKdZBClni9COesA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6h1QL/oQMpPJ0cay6HUnuz6UXf683JMIzpjjOx7xu3AgCgpq6rWjuAHLlITGxXOz
-         IRXWptEIT6j7dMemRuhPgp07DnvKx0WCD4EupjsBMCHyc7gnKPqlY0o+RF3kogbfDu
-         DIBovyuLH3JYDXVk4B4XU+bUMDiIGJTfZ8cHerL0=
+        b=1Yf8DZNhYDzCTbB7zQOHOcsNMC435pbuKpZbnefXVXGdwUwd/T8sFSPSepSQNkXRn
+         hDYV+cJXdksStHs4EtTGarDdxtM+hB4TKqbYVRGq+cefikqeoAymMWWS6t0SMWcmm6
+         R1vCMDjBf4RIz5ZOhag/8HX2seTgPQ7VUiAldFC8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Pan Bian <bianpan2016@163.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 021/127] ubi: Put MTD device after it is not used
-Date:   Fri, 22 Nov 2019 00:53:59 -0500
-Message-Id: <20191122055544.3299-20-sashal@kernel.org>
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 019/127] rtl818x: fix potential use after free
+Date:   Fri, 22 Nov 2019 00:53:57 -0500
+Message-Id: <20191122055544.3299-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -62,36 +63,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit b95f83ab762dd6211351b9140f99f43644076ca8 ]
+[ Upstream commit afbb1947db94eacc5a13302eee88a9772fb78935 ]
 
-The MTD device reference is dropped via put_mtd_device, however its
-field ->index is read and passed to ubi_msg. To fix this, the patch
-moves the reference dropping after calling ubi_msg.
+entry is released via usb_put_urb just after calling usb_submit_urb.
+However, entry is used if the submission fails, resulting in a use after
+free bug. The patch fixes this.
 
 Signed-off-by: Pan Bian <bianpan2016@163.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/build.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
-index 6445c693d9359..0104d9537329f 100644
---- a/drivers/mtd/ubi/build.c
-+++ b/drivers/mtd/ubi/build.c
-@@ -1092,10 +1092,10 @@ int ubi_detach_mtd_dev(int ubi_num, int anyway)
- 	ubi_wl_close(ubi);
- 	ubi_free_internal_volumes(ubi);
- 	vfree(ubi->vtbl);
--	put_mtd_device(ubi->mtd);
- 	vfree(ubi->peb_buf);
- 	vfree(ubi->fm_buf);
- 	ubi_msg(ubi, "mtd%d is detached", ubi->mtd->index);
-+	put_mtd_device(ubi->mtd);
- 	put_device(&ubi->dev);
- 	return 0;
- }
+diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+index 9a1d15b3ce453..518caaaf8a987 100644
+--- a/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
++++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/dev.c
+@@ -444,12 +444,13 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
+ 		skb_queue_tail(&priv->rx_queue, skb);
+ 		usb_anchor_urb(entry, &priv->anchored);
+ 		ret = usb_submit_urb(entry, GFP_KERNEL);
+-		usb_put_urb(entry);
+ 		if (ret) {
+ 			skb_unlink(skb, &priv->rx_queue);
+ 			usb_unanchor_urb(entry);
++			usb_put_urb(entry);
+ 			goto err;
+ 		}
++		usb_put_urb(entry);
+ 	}
+ 	return ret;
+ 
 -- 
 2.20.1
 
