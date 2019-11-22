@@ -2,142 +2,188 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9285FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BD4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66434204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="iihz00c2"
+	by mail.kernel.org (Postfix) with ESMTP id A2568206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfKVC5s (ORCPT
+        id S1726666AbfKVDAJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:57:48 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36464 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfKVC5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:57:48 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k13so2649830pgh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 18:57:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=biLVQ1AkvF5aueMS3h63jwqjzMqooy/ltImr9VK7zXA=;
-        b=iihz00c2qO6qdKXF25QKRNnIzZ3qfhPH+FVj0sOPRn/AkAsMGEgMoJWHFhq1APm8e9
-         mlY2bdkSMK3bfFqemMBu4IZwF8378ceynXZuw1qdbLvs0GdMreYxkyLx136jmSrfEHtv
-         ML++5hzkuZpeOm77Z3Pbih3YgyLAWmPvtjyBFVdY9V7hSN4GAS7vWEEIB359GQn0G+NX
-         IcsFhT8F7QqIKqymepUFuLMx3f9xzFesX+BqevZn07g7z0Dh9KQ0d546sfvl+2mUaOZ2
-         YSUuItpMaVOTO5qIyt71P4r9ONIp87cRSFIP0gVAEMUYCvP7KEEhiuhVc1xwd37F8D53
-         22dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=biLVQ1AkvF5aueMS3h63jwqjzMqooy/ltImr9VK7zXA=;
-        b=lUoZ6RUw0pKep3qvCIpuP9FMpSHJNKfwDHWuX7qp7vGGQ4wiUpxNA0wlvfjc6BzHOL
-         oLnOZGkKZRwcDLQtmIN0H0aIc7TG1U8Ld6InrLIsh9RHPQ7yFC8jsYwHwTGKALtTEpKS
-         /mRv+eoEdRipfJ3Kg711jg0cvOmoTZibKbGosLu+N4ODpD4TjE2DmitAAlgMSG1TqGMX
-         ek5yR1UIOnjojTHPEAx26U0ZEdiwYEZ1tsml6rEhioydAes5xdQFTNQgOsfjc2VLtSGO
-         5SoVZ1gas/SGU7xTKXqUK9nxv7ewVA3hj0TnXA3zcaE9F3tEs7ILHM1UDo0xTP0VGadH
-         72Fw==
-X-Gm-Message-State: APjAAAXqBvvxr9krxTS7e5ab9hzyt5zF/aA/hKvnnnmoCl9lJkwccIlK
-        zb2PnMzi/ZuLGq/UvRYZkEWxBA==
-X-Google-Smtp-Source: APXvYqzA6XSQho+2rXXXt8WxNZbNv/OVvaYZ+jXMHILfYgKzs5VVQA1D0cOnmMAjOg+Stjruiy5+Zg==
-X-Received: by 2002:a63:ed4a:: with SMTP id m10mr13154193pgk.255.1574391467192;
-        Thu, 21 Nov 2019 18:57:47 -0800 (PST)
-Received: from [100.111.14.2] (50.sub-174-194-197.myvzw.com. [174.194.197.50])
-        by smtp.gmail.com with ESMTPSA id a6sm877767pja.30.2019.11.21.18.57.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 18:57:46 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by kernel parameter
-Date:   Thu, 21 Nov 2019 18:57:44 -0800
-Message-Id: <863BD058-5DB8-4C87-B799-29CCB5376FE2@amacapital.net>
-References: <fee43477-337a-8de3-9788-e8c8d58d0116@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thu, 21 Nov 2019 22:00:09 -0500
+Received: from mail-oln040092255097.outbound.protection.outlook.com ([40.92.255.97]:5788
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbfKVDAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 22:00:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BQqALV8DbgVLQSH/rIIauk8M5PuAbagJXNrfIwDnNzzK5x9oxqkzQ5UBoBWqDKJqmHK4DPzYcXtAE7nfQYKeg0VGvbuWf/W/K2vxWVsW6vNfp/sEivK6mkacJ4Fk9C94N9Bjf5x+t9hdUgP2ovGtaH+BhxSviLGLiQcmb6Wfs2aK3FUPGLjVwBeJVNRZ3U46ZVqFHoymjedocdg9RQDsM71VGupDe6sOold3N0Tak+rQ29of9SmaOKPkHqL9rYG0C9LnRh/+i10WotZaAK6yXl40tQd94hA8M0XMKg/7QVoZtGWDTAVdoKHNgDqNy8OBV4eM8s68xdKfwgO1s7pjXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o/GcbV9eN0WgES9CQbv7Y6I1dEDn1ZQ6wNvdFCBd6WY=;
+ b=U9XAs6azQ8CW4alOidz2QrpZfyjT+nFl8z2xOCtEURWlbF9QTWEpwIQwBlCE+fxfUXT6A6jJ5RjEhMqL7SP6H66B9Gp7r4CO52RFKKtUZHWb6ybqgDIVGmyOqOolx/UUKZhRbh7V32ZBsq7iUOi6CPOWMCHkul8qAVxBJpd2nZkd6MU8JRdj+cdOV3ziuGZidk8Yz+HXIUyoizSOU+EN0OHU5f6hk55V3rnjVBmf5HH1yt3FDu2IdxO3xtB7VJzKh3AuBTE4Ziy11h45hXiINERHCrrgkm6yvFtcC7lckOWZcRIfAN35mFHstLJaWmQlC0nyEInbK3REETYIzagAZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT025.eop-APC01.prod.protection.outlook.com
+ (10.152.250.58) by SG2APC01HT080.eop-APC01.prod.protection.outlook.com
+ (10.152.251.239) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17; Fri, 22 Nov
+ 2019 02:59:22 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.53) by
+ SG2APC01FT025.mail.protection.outlook.com (10.152.250.187) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17 via Frontend Transport; Fri, 22 Nov 2019 02:59:22 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::b880:961e:dd88:8b5d]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::b880:961e:dd88:8b5d%12]) with mapi id 15.20.2474.021; Fri, 22 Nov
+ 2019 02:59:21 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-In-Reply-To: <fee43477-337a-8de3-9788-e8c8d58d0116@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-X-Mailer: iPhone Mail (17A878)
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
+ override host bridge bus window
+Thread-Topic: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
+ override host bridge bus window
+Thread-Index: AQHVoODWhXDf7VZ4p029AmCe5Y+Ysg==
+Date:   Fri, 22 Nov 2019 02:59:21 +0000
+Message-ID: <PSXP216MB0438B640B2BC48B5338FDE0280490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0240.ausprd01.prod.outlook.com
+ (2603:10c6:220:19::36) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:DE8E3D50627D1C8A59071D7E0002EC3B8162861E6079A3F6CC2750BC570F26EA;UpperCasedChecksum:7E2DAAEE16A46673DA033213D44B6553DC091E9E77C2E0CD2DDFE4F3963DBF4F;SizeAsReceived:7465;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [huFbT3C3rH+HQt/TKD7PxVm7mg2jFEsp]
+x-microsoft-original-message-id: <20191122025913.GA4291@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 9d482bc3-2aa0-4251-c43e-08d76ef7f928
+x-ms-exchange-slblob-mailprops: Z/LFrRplwz5CBrXgV5KURwZ8ebthhMcysJBJNDQBvnHOrXN/rJNobuCwLzru0MU+01aEwIu57G8FJLmQV2NS5wBXOmgeh1dD7i/pIt1w/7L6gbXq/dwfBo/ZDhEcPopWVKoejQE0Kjqfq/UZKeBn9rlFdZDRIf0MX4lyoYITuq0Frd6bWuFl78Jkm0Bml/nbTA/xD+88q7LofvN2QK3O9Wp5P2vwC+iIoB45dLAIarG7u3OJ0pLMIuzBWFK2VzcIxNrqHkqkrwBnJddKsCm5rLS2NmMp0cIck2z9ReQAQOrQRFXvHf+vT6t3GQxdFcf2tsTB4BxA0IdOojh5RSRhoJqAAy4QYzmTuxGEYzGlRjuREoNFfnxl1rCT+f3ohNT9iGjqk1E1xxcZLfRr092OPPlQoLOzS1HB2bubK/hxXqRBY0MG5seAStIt5eRiALeA4n2eZuvOC9p9TqPd3BKkWhpyGPhxK/G4xpHxPCamRkZSzEssX46K41KL3jnZ1p49m91vY3ppYZb7ugtrtV7JQTi9Zw3SyO5gANErMxksGxHePIyL6jKa5TEFHARskYWMy6iarNGlfViWGmM85PeG45hZ1XNav2sOdGVmeV13VO/csEcTi2zYKtTVQyDvydm24kQ66jw3+XfTz4HYTiJoPPrXYVy3PqNotKVG36K1gP+O7hurNCD52uKAoCFFymPMaGYXXbg4uIH0Tc15gaMotFLb4CfKUSitD/G/9BsBHieeYlNhhKN0P/0lvR1crufb
+x-ms-traffictypediagnostic: SG2APC01HT080:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Tu+DLVLCgHDZs0ndqen9wzzV5K3RFQ1du1OEl7NOaUOzhFwKajJ50MSbvoyI4FHvgbDli7DsKIEUHhbi2hGtC/CwDnAGmA9dy2LQf7Q7s/F64eu25CJnQtElaj8txHEk4gYMdwBDqDHdWik0jEWkI/r9It3+fQSx3KYK60EOUBO4goKnbSKPRhIFxvu3dzHW
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5C7CA53BFA5424498163D27086D2390B@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d482bc3-2aa0-4251-c43e-08d76ef7f928
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 02:59:21.6778
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
-> On Nov 21, 2019, at 6:39 PM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->=20
-> =EF=BB=BFOn 11/22/2019 10:21 AM, Andy Lutomirski wrote:
->>>> On Nov 21, 2019, at 5:52 PM, Sean Christopherson <sean.j.christopherson=
-@intel.com> wrote:
->>>=20
->>> =EF=BB=BFOn Thu, Nov 21, 2019 at 03:53:29PM -0800, Fenghua Yu wrote:
->>>>> On Thu, Nov 21, 2019 at 03:18:46PM -0800, Andy Lutomirski wrote:
->>>>>=20
->>>>>> On Nov 21, 2019, at 2:29 PM, Luck, Tony <tony.luck@intel.com> wrote:
->>>>>>=20
->>>>>>> It would be really, really nice if we could pass this feature throug=
-h to a VM. Can we?
->>>>>>=20
->>>>>> It's hard because the MSR is core scoped rather than thread scoped.  S=
-o on an HT
->>>>>> enabled system a pair of logical processors gets enabled/disabled tog=
-ether.
->>>>>>=20
->>>>>=20
->>>>> Well that sucks.
->>>>>=20
->>>>> Could we pass it through if the host has no HT?  Debugging is *so* muc=
-h
->>>>> easier in a VM.  And HT is a bit dubious these days anyway.
->>>>=20
->>>> I think it's doable to pass it through to KVM. The difficulty is to dis=
-able
->>>> split lock detection in KVM because that will disable split lock on the=
- whole
->>>> core including threads for the host. Without disabling split lock in KV=
-M,
->>>> it's doable to debug split lock in KVM.
->>>>=20
->>>> Sean and Xiaoyao are working on split lock for KVM (in separate patch s=
-et).
->>>> They may have insight on how to do this.
->>>=20
->>> Yes, with SMT off KVM could allow the guest to enable split lock #AC, bu=
-t
->>> for the initial implementation we'd want to allow it if and only if spli=
-t
->>> lock #AC is disabled in the host kernel.  Otherwise we have to pull in t=
-he
->>> logic to control whether or not a guest can disable split lock #AC, what=
+I want to be able to override the bus resource from ACPI, but nocrs does 
+not do it. I am putting this out here to get a feel for the sentiment 
+for doing something like this.
 
->>> to do if a split lock #AC happens when it's enabled by the host but
->>> disabled by the guest, etc...
->> What=E2=80=99s the actual issue?  There=E2=80=99s a window around entry a=
-nd exit when a split lock in the host might not give #AC, but as long as no u=
-ser code is run, this doesn=E2=80=99t seem like a big problem.
-> The problem is that guest can trigger split locked memory access just by d=
-isabling split lock #AC even when host has it enabled. In this situation, th=
-ere is bus lock held on the hardware without #AC triggered, which is conflic=
-t with the purpose that host enables split lock #AC
+What is my motivation for doing this?
 
-Fair enough. You need some way to get this enabled in guests eventually, tho=
-ugh.=
+I have a Gigabyte Z170X Designare motherboard which only gives resource 
+[bus 00-7e]. I want the full [bus 00-ff] because I am trying to add as 
+many Thunderbolt 3 ports with add-in cards as possible. Thunderbolt 
+consumes bus numbers quickly. An Intel Ice Lake implementation (ideal) 
+consumes 42 busses per port, but prior solutions consume 50 busses per 
+port and have additional busses required for the NHI and USB 
+controllers, as well as the bridges from the root port.
+
+Why not change nocrs to do this? Why the new kernel parameter?
+
+I imagine that on systems with multiple PCI root complexes, things will 
+get hairy if we do this, if they are not placed on separate segments / 
+domains by the firmware. I do not own such a beast, but from what I 
+understand, the firmware normally places them on the same segment / 
+domain with non-overlapping bus numbers. But we may still want to use 
+nocrs for other reasons. I need to use nocrs to allow Linux to allocate 
+vast amounts of MMIO and MMIO_PREF under the Thunderbolt root ports 
+without the BIOS support for Thunderbolt. Hence, they should be kept 
+separate.
+
+Why do this in general?
+
+The bus resource is still a resource which is specified from ACPI, just 
+like those overridden by nocrs. Even if we do not use pci=nocrs to 
+override it, it should be possible to override it, just as it is 
+possible to override _CRS.
+
+Topics for discussion include, but are not limited to:
+
+	Is my code great, good, bad, ugly, or does it need work, etc?
+
+	Which way to skin the cat / achieve the end goal, in terms of 
+	code?
+
+	Should this be done?
+
+	Is pci=nobbn a good name for the new parameter?
+
+	Should the documentation notice say to report a bug if you use 
+	this, like the nocrs one does?
+
+	What are the potential risks and fallout if it is done, if any? 
+	My stance on this is that it will be limited to people who use 
+	the parameter, so it should be safe.
+
+	What would it take to convince you to support this?
+
+	In relation to arch/x86/pci/acpi.c in the function 
+	pci_acpi_root_prepare_resources(): When using CRS, we remove the 
+	resource that satisfies resource_is_pcicfg_ioport() without the 
+	dev_printk(). But when doing nocrs, we remove it along with all 
+	of the others and do the dev_printk() notice. Should it be 
+	changed in another patch to skip printing the notice for this 
+	resource when using nocrs?
+
+Lastly (semi-unrelated), you may notice that the email linkage is 
+broken. It is because I made the mistake of using an @outlook email 
+address. It interferes with the encoding. If I send patches with git 
+send-email, the encoding is broken. If I use mutt -H, the encoding 
+works, but the linkage is broken. I have heard that Gmail also has 
+problems, but I tested it the other day with an old Gmail address I 
+have, and it appears to work. But I am open for suggestions on what my 
+new email domain for kernel development should be. I hope I can use a 
+consumer email provider, and not mess with hosting my own domain (it 
+sounds like a lot of work). I will switch over soon and send an email 
+from this account to confirm that the new account is actually me.
+
+Thanks for any comments or insights.
+
+Kind regards,
+
+Nicholas Johnson
+
+Nicholas Johnson (1):
+  PCI: Add pci=nobbn to ignore ACPI _BBN method to override host bridge
+    bus window
+
+ Documentation/admin-guide/kernel-parameters.txt |  2 ++
+ arch/x86/include/asm/pci_x86.h                  |  1 +
+ arch/x86/pci/acpi.c                             | 11 +++++++++++
+ arch/x86/pci/common.c                           |  3 +++
+ 4 files changed, 17 insertions(+)
+
+-- 
+2.24.0
+
