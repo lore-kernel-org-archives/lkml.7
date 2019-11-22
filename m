@@ -2,97 +2,213 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD70C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0159C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8218520679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A9320679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="meHKQL5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKVCY4 (ORCPT
+        id S1726554AbfKVCfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:24:56 -0500
-Received: from mga03.intel.com ([134.134.136.65]:62927 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfKVCY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:24:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 18:24:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,228,1571727600"; 
-   d="scan'208";a="381944069"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 21 Nov 2019 18:24:55 -0800
-Received: from [10.226.38.71] (unknown [10.226.38.71])
-        by linux.intel.com (Postfix) with ESMTP id D9F7258044E;
-        Thu, 21 Nov 2019 18:24:52 -0800 (PST)
-Subject: Re: [PATCH v8 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
- <b59afc497e41404fea06aa48d633cba183ee944d.1573797249.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYZi-0LRjih8+2cgWZ6u-eFN5+3sW1eV2ujYRd0UBoEKQ@mail.gmail.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <bf8396af-3ace-7463-0fef-890b2f5cc487@linux.intel.com>
-Date:   Fri, 22 Nov 2019 10:24:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 21 Nov 2019 21:35:33 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:37865 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfKVCfd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 21:35:33 -0500
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191122023529epoutp03d5368921b563b3192e9007bd1db03fce~ZW3s8GXbi2717927179epoutp03Z
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 02:35:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191122023529epoutp03d5368921b563b3192e9007bd1db03fce~ZW3s8GXbi2717927179epoutp03Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574390129;
+        bh=tHRJjMBTQKQJAHt3WUrqgcQ8vEqoveSa1k+dp1SwBbc=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=meHKQL5iZIDq4aPudogDtJTnWzGnlwKhmQaFU6plL6045AuNwXdz4dw+dckopD+U4
+         04Trix0Z8hPhbCh8Eif83Fd+BTiAkOxP41T8fHwBe4hSKXpGgEjk7wW0SZOvtxmEqE
+         1ojSUshQ459o+50GbxA8wOjyRb2A7h/IFZsZLUJQ=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191122023528epcas5p31255afb402417cd2a8993089245a86d4~ZW3sXaRdK1176411764epcas5p3w;
+        Fri, 22 Nov 2019 02:35:28 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D1.69.04403.07947DD5; Fri, 22 Nov 2019 11:35:28 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191122023528epcas5p2f890e915e4b1ed5198b840d9992e9ba4~ZW3r7k1Ln1917619176epcas5p2K;
+        Fri, 22 Nov 2019 02:35:28 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191122023528epsmtrp1338ef5e134a8a6377f4485b199947888~ZW3r6xRwI0958709587epsmtrp1x;
+        Fri, 22 Nov 2019 02:35:28 +0000 (GMT)
+X-AuditID: b6c32a4a-3cbff70000001133-02-5dd74970a5ac
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        44.88.03814.07947DD5; Fri, 22 Nov 2019 11:35:28 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.111.85.21]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191122023526epsmtip2b51b50e830452a5d2c14a76b4d78a58d~ZW3qVqFk60866008660epsmtip2h;
+        Fri, 22 Nov 2019 02:35:26 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Gustavo Pimentel'" <Gustavo.Pimentel@synopsys.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Cc:     <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+In-Reply-To: <DM6PR12MB40102536205C74F4E41EBD69DA4E0@DM6PR12MB4010.namprd12.prod.outlook.com>
+Subject: RE: [PATCH v4 2/2] PCI: dwc: add support to handle ZRX-DC Compliant
+ PHYs
+Date:   Fri, 22 Nov 2019 08:05:25 +0530
+Message-ID: <025601d5a0dd$80a214a0$81e63de0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYZi-0LRjih8+2cgWZ6u-eFN5+3sW1eV2ujYRd0UBoEKQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQE1rVtOHv1BqgLHLDW+5IttHzLvfAIdtnviAzgxAgcBnpO1nKieu6gg
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf0gTYRjmu9t2N2t5TmNvS6IGRhprJRUXhYaVXBEWGf0RTbvympb7wc4f
+        LShES1TU0op01VIykzUJxsyaRWHZKtpStBRMQlDStAQVM2aW2y3yv+d9n+d5n++Bj8TlH8RK
+        MsuQw5kNbLZKEiZ69DI2Vm3a26vdWFK1lS760yqmve56Md1QmEm7B0oIumm6lqA7h8sldLf7
+        loT22jwSetw/QtD3ersw+tKzV8TOJYzD5kDME+sAwdQ5cxmnvVTCVLrsiHE9n0KMp68VY6ac
+        qw6SR8N2ZHDZWXmcWZNwPCxzzlYqMvmjzzZPrStAfkUZkpJAbYbSF15RGQoj5VQbgoF345gw
+        TCK46fgiEYYZBG39I6J/ljttnSHLMwRvKqtDwxiCmu6qoEpCacA3axMHcBTVgMDxQxMQ4ZQd
+        QcdcS5CQUlqwzXvxAI6kUqFq4AYKYBEVA9N9TcFDMmob+AeHxAKOgLe1Q8E9Tq2HxvoxXHjS
+        avg13BgKSwZHd1lIo4DRjldEIBgoGwHXf18LddgNhbffhsyR8M3jIgSshNHLxSFshNm71bhg
+        vojgque2WCAS4UXPrYVD5EJCLDx0a4SwZVDhH8ICa6BkUFIsF9Rr4efX96GoaBgsuocJmIF5
+        Vw1+Ba2xLqpmXVTNuqiC9X9YHRLZ0QrOxOt1HL/FFG/g8jfwrJ7PNeg2nDTqnSj4zeL2PUaN
+        vv3tiCKRaqnsSv4nrVzM5vEWfTsCEldFyZ729mjlsgzWco4zG9PNudkc345WkiKVQlYt/nhM
+        TunYHO4Mx5k48z8WI6XKAhT+Oq3GYpxPUkx8Vz94etwyRfS0nDtrj1GZo1JjktcmqFsOSTln
+        7yThPp8P+gPlPs+JLqxhuTcv/RrW2tPfp8S61J/jSUNB2uAF9n5zxdJTp0tMRZd9iSlpnbhu
+        LoWfCK+QziTNJkdEd92xNO5IPLxrj+/IdnZZvJdO2tiRohLxmeymONzMs38BkLMDz2IDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsWy7bCSvG6B5/VYgwdnJC2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGX3X
+        5rAXrJSp+DqtpoFxqXgXIyeHhICJxPzdF1i6GLk4hAR2M0p8eT2PDSIhIzF59QpWCFtYYuW/
+        5+wQRS8ZJVq+/mEESbAJ6Euc+zGPFSQhIrCMUeLD3e3MIA6zwCZGibeLn7JBtMxjkjjyfCnY
+        XE6BWIl5/84yg9jCAoESh/dvYQGxWQRUJb7cWAFm8wpYSvx++IQVwhaUODnzCVicWUBbovdh
+        KyOMvWzha2aI+xQkfj5dBlYvIuAmseZyF1S9uMTLo0fYJzAKz0IyahaSUbOQjJqFpGUBI8sq
+        RsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgqNTS2sF44kT8IUYBDkYlHt4J5ddihVgT
+        y4orcw8xSnAwK4nw7rl+JVaINyWxsiq1KD++qDQntfgQozQHi5I4r3z+sUghgfTEktTs1NSC
+        1CKYLBMHp1QDY/8mvir7p7UBPYImL9LNLvnYai1/zdN+e9ZemTOqp978fMV5vPjzSZ1FWT3m
+        u0sX1VzZF3IsfAtPuL/VYUfBNw/2ZU89NW1zoopIx+4nq/a86U6e4dCwp+yG3SNnYauUozpi
+        8y2Ui8QZFzBLS8dan26foO4oPOe45brtJ+/9Ojufy8fkhfhdHyWW4oxEQy3mouJEAD8RexHG
+        AgAA
+X-CMS-MailID: 20191122023528epcas5p2f890e915e4b1ed5198b840d9992e9ba4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f
+References: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+        <CGME20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f@epcas5p4.samsung.com>
+        <1574306408-4360-3-git-send-email-anvesh.s@samsung.com>
+        <DM6PR12MB40102536205C74F4E41EBD69DA4E0@DM6PR12MB4010.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Linus,
 
-On 21/11/2019 9:53 PM, Linus Walleij wrote:
-> On Fri, Nov 15, 2019 at 10:25 AM Rahul Tanwar
-> <rahul.tanwar@linux.intel.com> wrote:
->
->> Add dt bindings document for pinmux & GPIO controller driver of
->> Intel Lightning Mountain SoC.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> Patch applied, you worked hard to get these bindings done in the
-> right YAML format and all.
->
-> I have some generic bindings from Rob merged simultaneously
-> so it'd be great if you could investigate whether it is possible
-> to follow up with a patch to switch over from some of the local
-> grammar and toward including pinmux-node.yaml and
-> pincfg-node.yaml into these bindings.
->
-> The method for inclusion of external generic files can be seen
-> in e.g. the display panel bindings, like how
-> panel-common.yaml is included into other bindings under
-> display/panel/*.yaml.
->
-> Tell us if you have any problems with this!
+> -----Original Message-----
+> From: Gustavo Pimentel <Gustavo.Pimentel=40synopsys.com>
+> Sent: Thursday, November 21, 2019 7:25 PM
+> To: Anvesh Salveru <anvesh.s=40samsung.com>; linux-kernel=40vger.kernel.o=
+rg;
+> linux-pci=40vger.kernel.org
+> Cc: jingoohan1=40gmail.com; pankaj.dubey=40samsung.com;
+> lorenzo.pieralisi=40arm.com; andrew.murray=40arm.com; bhelgaas=40google.c=
+om;
+> kishon=40ti.com; robh+dt=40kernel.org; mark.rutland=40arm.com
+> Subject: RE: =5BPATCH v4 2/2=5D PCI: dwc: add support to handle ZRX-DC Co=
+mpliant
+> PHYs
+>=20
+> On Thu, Nov 21, 2019 at 3:20:8, Anvesh Salveru <anvesh.s=40samsung.com>
+> wrote:
+>=20
+> > Many platforms use DesignWare controller but the PHY can be different
+> > in different platforms. If the PHY is compliant is to ZRX-DC
+> > specification it helps in low power consumption during power states.
+> >
+> > If current data rate is 8.0 GT/s or higher and PHY is not compliant to
+> > ZRX-DC specification, then after every 100ms link should transition to
+> > recovery state during the low power states.
+> >
+> > DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+> > GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+> >
+> > Platforms with ZRX-DC compliant PHY can set phy_zrxdc_compliant
+> > variable to specify this property to the controller.
+> >
+> > Signed-off-by: Anvesh Salveru <anvesh.s=40samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c =7C 6 ++++++
+> > drivers/pci/controller/dwc/pcie-designware.h =7C 4 ++++
+> >  2 files changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 820488d..36a01b7 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > =40=40 -556,4 +556,10 =40=40 void dw_pcie_setup(struct dw_pcie *pci)
+> >  		       PCIE_PL_CHK_REG_CHK_REG_START;
+> >  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
+> val);
+> >  	=7D
+> > +
+> > +	if (pci->phy_zrxdc_compliant) =7B
+> > +		val =3D dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > +		val &=3D =7EPORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
+> > +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > +	=7D
+> >  =7D
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 5a18e94..f43f986 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > =40=40 -60,6 +60,9 =40=40
+> >  =23define PCIE_MSI_INTR0_MASK		0x82C
+> >  =23define PCIE_MSI_INTR0_STATUS		0x830
+> >
+> > +=23define PCIE_PORT_GEN3_RELATED		0x890
+> > +=23define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL	BIT(0)
+> > +
+> >  =23define PCIE_ATU_VIEWPORT		0x900
+> >  =23define PCIE_ATU_REGION_INBOUND		BIT(31)
+> >  =23define PCIE_ATU_REGION_OUTBOUND	0
+> > =40=40 -249,6 +252,7 =40=40 struct dw_pcie =7B
+> >  	void __iomem		*atu_base;
+> >  	u32			num_viewport;
+> >  	u8			iatu_unroll_enabled;
+> > +	bool			phy_zrxdc_compliant;
+>=20
+> Typically is used u8 instead of bool, due to platform compatibility.
+> I'd guess that checkpatch script should have reported this. Did you use i=
+t?
 
-Thanks. Yes, i have gone through Rob's generic pinctrl bindings patch
-seriesand i was double minded if you should still proceed with this
-patch or waitfor generic bindings patch to get merged.
+Checkpatch didn't report any error/warning.=20
+We used bool here as phy_zrxdc_compliant will store the value returned by o=
+f_property_read_bool API.=20
+I can see many places in drivers/pci/ where this API is used the value is s=
+tored in bool itself.
 
-I will take it up to revise this patch to include external generic
-files from Robas soon as kernel 5.5 is released.
+>=20
+> >  	struct pcie_port	pp;
+> >  	struct dw_pcie_ep	ep;
+> >  	const struct dw_pcie_ops *ops;
+> > --
+> > 2.7.4
+>=20
 
-Regards,
-Rahul
+
