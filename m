@@ -2,160 +2,213 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9E5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72A220658
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="E7pvN+Es"
+	by mail.kernel.org (Postfix) with ESMTP id 97F222071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfKVTnM (ORCPT
+        id S1726961AbfKVTpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:43:12 -0500
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:47781
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726729AbfKVTnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:43:10 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uwwx2VkhgBTHn8OpB9M/vWBRo/KuUdsGedAtVKNNkG1afnssY56/MYXBjciKHZF78BwQTRmrvmVMvt1tfpUeSs6xcLEs2uxb+zlN0BQMW7iVfLFUn1smY3E/SK+c0gGH/p1SDSHEo72pLce5YpoFi25vfgBrPitsaogC+iPLsjz5WkQjB2aEgBHk0/on1KjlD+qtu7cPaNB7ZKHE24g+EfpZT6A/7LQxV5waDGKUJ6qwLvT7vTdXSwp24K5cWEDDAXNIg7t2jvFOCFtla8VzKyjJ8mVOXjMAxVsE1HgaVi5mdgCVFPi/5T5SIkrPl7CQpsONqsv47scpnplweB0geg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMVTJs3gA21QbjgXI/0Pv/F3ftSB8rP6iacsqtlb4GU=;
- b=P2kOSkw5cIgZDTgfeILLoW8B3Z7cI8+dpGNRChHTJLPawL/DbJHbNVrFrdlk7e4K/Ygl4Hh+YlkukSXwP4xrh+HtqLcW0hC3PEnwaDo6hfBwGFBMHK7zJhpbfuDQhSJPZw4egR+gX8jlEqZj16mmI/r6Bo43SfsX2wlWzHpeYWk/HEPDRUWl7SWdtmYb6VYn2ljcjhrmKbQlKOrDfPvF4n6fqvdpoz5+pGwSTdgI0woHPB1KiuA0xK8DvlXrQGy/gdYNJRGdRzDL+Qti93moQAmkjG6/xhuFfJOEzUDn3vUf2TXD3yzNqcW009xj47d7ibQ2sR/typMdymGRpqbxzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMVTJs3gA21QbjgXI/0Pv/F3ftSB8rP6iacsqtlb4GU=;
- b=E7pvN+Esz3xmvUNC0ZZAhIoii7zM/uxSadML1Cg6Bjq1MH7uGlzE8RxOHUPRm64596g93nlrXAs/2ewgXAju6jsIQT6DNLS9Omdg1axFNfUAtXFQ9VvUnl77lqb1+mcKtsQf8qYC5vwjkgFlCu8HI9I/T/gNjLNQvROMSwq6WE0=
-Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com (10.172.225.17) by
- DB6PR0501MB2549.eurprd05.prod.outlook.com (10.168.77.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.16; Fri, 22 Nov 2019 19:43:06 +0000
-Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com
- ([fe80::99be:5f3a:9871:ecd1]) by DB6PR0501MB2712.eurprd05.prod.outlook.com
- ([fe80::99be:5f3a:9871:ecd1%12]) with mapi id 15.20.2474.021; Fri, 22 Nov
- 2019 19:43:06 +0000
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     "minyard@acm.org" <minyard@acm.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH] ipmi: fix ipmb_poll()'s return type
-Thread-Topic: [PATCH] ipmi: fix ipmb_poll()'s return type
-Thread-Index: AQHVoWy9dzHT4ezyPkGsfMiFXFnBaaeXlxkg
-Date:   Fri, 22 Nov 2019 19:43:06 +0000
-Message-ID: <DB6PR0501MB27127F64884DEA1AF3E4620ADA490@DB6PR0501MB2712.eurprd05.prod.outlook.com>
-References: <20191120000741.30657-1-luc.vanoostenryck@gmail.com>
- <20191122194041.GB3527@minyard.net>
-In-Reply-To: <20191122194041.GB3527@minyard.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Asmaa@mellanox.com; 
-x-originating-ip: [216.156.69.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0c59618a-b592-4395-ba42-08d76f843206
-x-ms-traffictypediagnostic: DB6PR0501MB2549:
-x-microsoft-antispam-prvs: <DB6PR0501MB2549E74BEC90F4DC6370A07ADA490@DB6PR0501MB2549.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 02296943FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(136003)(346002)(396003)(13464003)(199004)(189003)(102836004)(186003)(316002)(6506007)(53546011)(25786009)(110136005)(7696005)(54906003)(52536014)(71200400001)(11346002)(446003)(5660300002)(80792005)(71190400001)(256004)(26005)(76176011)(4326008)(55016002)(8676002)(14444005)(7736002)(305945005)(9686003)(66066001)(2906002)(6246003)(74316002)(86362001)(229853002)(81166006)(81156014)(76116006)(2501003)(14454004)(66476007)(8936002)(64756008)(66556008)(478600001)(3846002)(66946007)(66446008)(99286004)(6116002)(33656002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2549;H:DB6PR0501MB2712.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Bhy+7VwUzGSo5o1zKncK8uNJ8ShwHq5LD/lYmNqyTByxhVtrTecMrPebP1u3zSa+N8wL7zFyi+rrZi61bKASeCmCozaWTCdIKt9ETOFHnWjmXw8gTlu2i5MloqhEAZVFUo03YS9sNV7K4WCo6yCNXKnbPUCcwo30pnHTAWULa3wIvlZtb4FC5oHsyFfz+6K7uumMvmUDk0gY2tbPhQbFCw8GIWY5iQL0kG0y3tcLgq/vK8Q9zB93/RGELjYSVPh3gUFWvjtWyGTYTEzjkFC0eUO+7YnU5gC57ngvQ9dsMlZAqzFKBs53sb4HUcQV8Kv18GT1heVDqSprFo2CJjtGrulLnCWY4NJ/hSXa2n3yXxsQkAF/FcP0g4Q6RacKFXjtL9jpRMPEHLv9/SVxmpx65+GryCbygttHKrJXD/6GyrP/5z3EnQPuH7w0GkVgr4nk
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Nov 2019 14:45:47 -0500
+Received: from mga14.intel.com ([192.55.52.115]:16767 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbfKVTpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:45:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 11:45:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
+   d="scan'208";a="210518682"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga006.jf.intel.com with ESMTP; 22 Nov 2019 11:45:45 -0800
+Date:   Fri, 22 Nov 2019 11:45:45 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Marios Pomonis <pomonis@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nick Finco <nifi@google.com>, Andrew Honig <ahonig@google.com>
+Subject: Re: [PATCH] KVM: x86: Extend Spectre-v1 mitigation
+Message-ID: <20191122194545.GC31235@linux.intel.com>
+References: <20191122184039.7189-1-pomonis@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c59618a-b592-4395-ba42-08d76f843206
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 19:43:06.0662
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ijQ+HftZDk4dExIDnqJ1DxOE37ZENIqjpS5Xo8N5PLNEDJoiYRktftqOf/wOcj6UxJqim8Ka/ykR/PmopkGxGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2549
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122184039.7189-1-pomonis@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Asmaa Mnebhi <asmaa@mellanox.com>
+On Fri, Nov 22, 2019 at 10:40:39AM -0800, Marios Pomonis wrote:
+> From: Nick Finco <nifi@google.com>
+> 
+> This extends the Spectre-v1 mitigation introduced in
+> commit 75f139aaf896 ("KVM: x86: Add memory barrier on vmcs field lookup")
+> and commit 085331dfc6bb ("x86/kvm: Update spectre-v1 mitigation") in light
+> of the Spectre-v1/L1TF combination described here:
+> https://xenbits.xen.org/xsa/advisory-289.html
+> 
+> As reported in the link, an attacker can use the cache-load part of a
+> Spectre-v1 gadget to bring memory into the L1 cache, then use L1TF to
+> leak the loaded memory. Note that this attack is not fully mitigated by
+> core scheduling; an attacker could employ L1TF on the same thread that
+> loaded the memory in L1 instead of relying on neighboring hyperthreads.
+> 
+> This patch uses array_index_nospec() to prevent index computations from
+> causing speculative loads into the L1 cache. These cases involve a
+> bounds check followed by a memory read using the index; this is more
+> common than the full Spectre-v1 pattern. In some cases, the index
+> computation can be eliminated entirely by small amounts of refactoring.
+> 
+> Signed-off-by: Nick Finco <nifi@google.com>
+> Signed-off-by: Marios Pomonis <pomonis@google.com>
 
------Original Message-----
-From: Corey Minyard <tcminyard@gmail.com> On Behalf Of Corey Minyard
-Sent: Friday, November 22, 2019 2:41 PM
-To: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: linux-kernel@vger.kernel.org; openipmi-developer@lists.sourceforge.net;=
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Asmaa Mnebhi <Asmaa@mella=
-nox.com>
-Subject: Re: [PATCH] ipmi: fix ipmb_poll()'s return type
++cc stable?
 
-On Wed, Nov 20, 2019 at 01:07:41AM +0100, Luc Van Oostenryck wrote:
-> ipmb_poll() is defined as returning 'unsigned int' but the .poll=20
-> method is declared as returning '__poll_t', a bitwise type.
->=20
-> Fix this by using the proper return type and using the EPOLL constants=20
-> instead of the POLL ones, as required for __poll_t.
-
-Copying the author for comment, but this looks ok with me.
-
--corey
-
->=20
-> CC: Corey Minyard <minyard@acm.org>
-> CC: openipmi-developer@lists.sourceforge.net
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> Acked-by: Andrew Honig <ahonig@google.com>
 > ---
->  drivers/char/ipmi/ipmb_dev_int.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/char/ipmi/ipmb_dev_int.c=20
-> b/drivers/char/ipmi/ipmb_dev_int.c
-> index 285e0b8f9a97..2ea51147c3e8 100644
-> --- a/drivers/char/ipmi/ipmb_dev_int.c
-> +++ b/drivers/char/ipmi/ipmb_dev_int.c
-> @@ -154,16 +154,16 @@ static ssize_t ipmb_write(struct file *file, const =
-char __user *buf,
->  	return ret ? : count;
->  }
-> =20
-> -static unsigned int ipmb_poll(struct file *file, poll_table *wait)
-> +static __poll_t ipmb_poll(struct file *file, poll_table *wait)
+>  arch/x86/kvm/emulate.c       | 11 ++++++++---
+>  arch/x86/kvm/hyperv.c        | 10 ++++++----
+>  arch/x86/kvm/i8259.c         |  6 +++++-
+>  arch/x86/kvm/ioapic.c        | 15 +++++++++------
+>  arch/x86/kvm/lapic.c         | 13 +++++++++----
+>  arch/x86/kvm/mtrr.c          |  8 ++++++--
+>  arch/x86/kvm/pmu.h           | 18 ++++++++++++++----
+>  arch/x86/kvm/vmx/pmu_intel.c | 24 ++++++++++++++++--------
+>  arch/x86/kvm/vmx/vmx.c       | 22 ++++++++++++++++------
+>  arch/x86/kvm/x86.c           | 18 ++++++++++++++----
+>  10 files changed, 103 insertions(+), 42 deletions(-)
+
+Can you split this up into multiple patches?  I assume this needs to be
+backported to stable, and throwing everything into a single patch will
+make the process unnecessarily painful.  Reviewing things would also be
+a lot easier.
+
+...
+
+> @@ -5828,6 +5836,8 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
 >  {
->  	struct ipmb_dev *ipmb_dev =3D to_ipmb_dev(file);
-> -	unsigned int mask =3D POLLOUT;
-> +	__poll_t mask =3D EPOLLOUT;
-> =20
->  	mutex_lock(&ipmb_dev->file_mutex);
->  	poll_wait(file, &ipmb_dev->wait_queue, wait);
-> =20
->  	if (atomic_read(&ipmb_dev->request_queue_len))
-> -		mask |=3D POLLIN;
-> +		mask |=3D EPOLLIN;
->  	mutex_unlock(&ipmb_dev->file_mutex);
-> =20
->  	return mask;
-> --
-> 2.24.0
->=20
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	u32 exit_reason = vmx->exit_reason;
+> +	u32 bounded_exit_reason = array_index_nospec(exit_reason,
+> +						kvm_vmx_max_exit_handlers);
+>  	u32 vectoring_info = vmx->idt_vectoring_info;
+>  
+>  	trace_kvm_exit(exit_reason, vcpu, KVM_ISA_VMX);
+> @@ -5911,7 +5921,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	if (exit_reason < kvm_vmx_max_exit_handlers
+> -	    && kvm_vmx_exit_handlers[exit_reason]) {
+> +	    && kvm_vmx_exit_handlers[bounded_exit_reason]) {
+>  #ifdef CONFIG_RETPOLINE
+>  		if (exit_reason == EXIT_REASON_MSR_WRITE)
+>  			return kvm_emulate_wrmsr(vcpu);
+> @@ -5926,7 +5936,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+>  		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
+>  			return handle_ept_misconfig(vcpu);
+>  #endif
+> -		return kvm_vmx_exit_handlers[exit_reason](vcpu);
+> +		return kvm_vmx_exit_handlers[bounded_exit_reason](vcpu);
+>  	} else {
+>  		vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n",
+>  				exit_reason);
+
+Oof, using exit_reason for the comparison is subtle.  Rather than
+precompute the bounded exit reason, what about refactoring the code so
+that the array_index_nospec() tomfoolery can be done after the actual
+bounds check?  This would also avoid the nospec stuff when using the
+direct retpoline handling.
+
+---
+ arch/x86/kvm/vmx/vmx.c | 56 ++++++++++++++++++++++--------------------
+ 1 file changed, 30 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d39475e2d44e..14c2efd66300 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5910,34 +5910,38 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	if (exit_reason < kvm_vmx_max_exit_handlers
+-	    && kvm_vmx_exit_handlers[exit_reason]) {
++	if (exit_reason >= kvm_vmx_max_exit_handlers)
++		goto unexpected_vmexit;
++
+ #ifdef CONFIG_RETPOLINE
+-		if (exit_reason == EXIT_REASON_MSR_WRITE)
+-			return kvm_emulate_wrmsr(vcpu);
+-		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
+-			return handle_preemption_timer(vcpu);
+-		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
+-			return handle_interrupt_window(vcpu);
+-		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
+-			return handle_external_interrupt(vcpu);
+-		else if (exit_reason == EXIT_REASON_HLT)
+-			return kvm_emulate_halt(vcpu);
+-		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
+-			return handle_ept_misconfig(vcpu);
++	if (exit_reason == EXIT_REASON_MSR_WRITE)
++		return kvm_emulate_wrmsr(vcpu);
++	else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
++		return handle_preemption_timer(vcpu);
++	else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
++		return handle_interrupt_window(vcpu);
++	else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
++		return handle_external_interrupt(vcpu);
++	else if (exit_reason == EXIT_REASON_HLT)
++		return kvm_emulate_halt(vcpu);
++	else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
++		return handle_ept_misconfig(vcpu);
+ #endif
+-		return kvm_vmx_exit_handlers[exit_reason](vcpu);
+-	} else {
+-		vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n",
+-				exit_reason);
+-		dump_vmcs();
+-		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+-		vcpu->run->internal.suberror =
+-			KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON;
+-		vcpu->run->internal.ndata = 1;
+-		vcpu->run->internal.data[0] = exit_reason;
+-		return 0;
+-	}
++
++	exit_reason = array_index_nospec(exit_reason, kvm_vmx_max_exit_handlers);
++	if (!kvm_vmx_exit_handlers[exit_reason])
++		goto unexpected_vmexit;
++
++	return kvm_vmx_exit_handlers[exit_reason](vcpu);
++
++unexpected_vmexit:
++	vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n", exit_reason);
++	dump_vmcs();
++	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++	vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON;
++	vcpu->run->internal.ndata = 1;
++	vcpu->run->internal.data[0] = exit_reason;
++	return 0;
+ }
+ 
+ /*
+-- 
+2.24.0
+
