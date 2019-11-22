@@ -2,83 +2,178 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342C5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3199FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE2520704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061FE2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rbT//6qY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Se850C/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfKVUiG (ORCPT
+        id S1727135AbfKVUj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:38:06 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34793 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVUiF (ORCPT
+        Fri, 22 Nov 2019 15:39:29 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31821 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726526AbfKVUj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:38:05 -0500
-Received: by mail-io1-f68.google.com with SMTP id z193so9593882iof.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 12:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z4EY+L0eGZ4WSKeWrVoqmJLDgGRBkaxrsR16Y79FkEg=;
-        b=rbT//6qY1fpKENEcz7UjkdeZ0G9BIwLj3plBAuSXus5TwMrw37kWVyChPz6Y7phbBX
-         KzH6HO8sBlEjFs9AgEzBpqHjRC6sZxChsXaTv+QFyEuHrpuHqFnAdXcMzSbS87poMWc2
-         sgmmUJn0hYiuILV9ecWSMWZwV9royWKR2DEt/rYKT19McfBOfZzSnLJFTE2RnfK54/6a
-         UodMlkeomEdMoYn+dSoZCu1iCkqP/eFbOd9KrmYA+SaGUq0yqpCOLm++NeM2l70f+W4V
-         io5QbPZUd3Mr0SPlKhBOzBHw97cmnhvGFl9P5gPBjeNgE0NNDYBSyk7H0YHnURaf3zaB
-         iZSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z4EY+L0eGZ4WSKeWrVoqmJLDgGRBkaxrsR16Y79FkEg=;
-        b=rrkhnM1Ng8MIKT9pM4LKCa7+WBWaEvdsdSaAxn0NEPtCHX42eK2rP8Ybmi5LBZWtoC
-         aU04AFuUPeJHvGlVXgjK4OGkM6iAHKIznDPsQgR1S/pnpg9MrGTVmMgcZdRXeaQ0iD/4
-         zOGnBNYK/vFPVeM/xpqGLnpB/g7Ju8+nW8vIAtXAK/NmjcZIIK7eHWNMFQCP2yUw57si
-         C9QyPKaYpeYJvnzVbsWOerLps6vWzOHmYeyHUgT0RcsQY4/jx628FuK1TNMoXkLcS5jp
-         YN3NHoQaeK/LemMtRlYRr/2b9u08kaU4YaJkpryW76tGVR7LjOtBL8ig/xxVp3fv/SB0
-         W1FA==
-X-Gm-Message-State: APjAAAX3qdxuo8E4kDczLQBJmMy3/pMRZ9hq4bRnO7+mAiXiAhMSmyVz
-        J+RDU6gGQR1IfgigCCXhn3FdQlWQUbDBP1Ar6brkkA==
-X-Google-Smtp-Source: APXvYqw5ZsjN6vcHfYbxED9Va4YQZrgZvX410QXLamUq6cXoprh45iLKHBNFHyA73grdoto1ozpgBov3t05ZstVzb7Q=
-X-Received: by 2002:a5d:9b08:: with SMTP id y8mr15622207ion.108.1574455084320;
- Fri, 22 Nov 2019 12:38:04 -0800 (PST)
+        Fri, 22 Nov 2019 15:39:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574455167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V/dlCJK+i6cXX9AuNkha8Hfa/aQ9TDGvh5ka3yqobAs=;
+        b=Se850C/Ogt11AV1fMU2ytvwZGYSwBqA15N+fQEHr4Ive0LxPc6HWly5Wcj14BdmoFlfARN
+        7KBRGKsW7BURaR41KXzjqcLteYGyfLSovDtIS2OAp9m08KmaZmRezJc2DHumbnFu+IcCQQ
+        J3gwlqymFyAQ4mqZv6d4vPIby04SNTc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-DMVZQvRcOuKSr86Ijn8kOQ-1; Fri, 22 Nov 2019 15:39:24 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C7DE8038A1;
+        Fri, 22 Nov 2019 20:39:21 +0000 (UTC)
+Received: from dhcp-25.97.bos.redhat.com (unknown [10.18.25.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D4B4E6084E;
+        Fri, 22 Nov 2019 20:39:17 +0000 (UTC)
+From:   Aaron Conole <aconole@redhat.com>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, paulb@mellanox.com,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
+References: <20191108210714.12426-1-aconole@redhat.com>
+        <20191108210714.12426-2-aconole@redhat.com>
+        <20191114162949.GB3419@localhost.localdomain>
+        <f7to8x8yj6k.fsf@dhcp-25.97.bos.redhat.com>
+        <20191118224054.GB388551@localhost.localdomain>
+Date:   Fri, 22 Nov 2019 15:39:16 -0500
+In-Reply-To: <20191118224054.GB388551@localhost.localdomain> (Marcelo Ricardo
+        Leitner's message of "Mon, 18 Nov 2019 19:40:54 -0300")
+Message-ID: <f7tv9rbmyrv.fsf@dhcp-25.97.bos.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20191122201549.18321-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20191122201549.18321-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 22 Nov 2019 12:37:53 -0800
-Message-ID: <CALMp9eSL0LPjOBtKpTuL-SAYUiwjrL9raMnSdX3hyW9WkO4B-g@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Remove a spurious export of a static function
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: DMVZQvRcOuKSr86Ijn8kOQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 12:15 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
+
+> On Mon, Nov 18, 2019 at 04:21:39PM -0500, Aaron Conole wrote:
+>> Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
+>>=20
+>> > On Fri, Nov 08, 2019 at 04:07:14PM -0500, Aaron Conole wrote:
+>> >> The act_ct TC module shares a common conntrack and NAT infrastructure
+>> >> exposed via netfilter.  It's possible that a packet needs both SNAT a=
+nd
+>> >> DNAT manipulation, due to e.g. tuple collision.  Netfilter can suppor=
+t
+>> >> this because it runs through the NAT table twice - once on ingress an=
+d
+>> >> again after egress.  The act_ct action doesn't have such capability.
+>> >>=20
+>> >> Like netfilter hook infrastructure, we should run through NAT twice t=
+o
+>> >> keep the symmetry.
+>> >>=20
+>> >> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+>> >>=20
+>> >> Signed-off-by: Aaron Conole <aconole@redhat.com>
+>> >> ---
+>> >>  net/sched/act_ct.c | 13 ++++++++++++-
+>> >>  1 file changed, 12 insertions(+), 1 deletion(-)
+>> >>=20
+>> >> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+>> >> index fcc46025e790..f3232a00970f 100644
+>> >> --- a/net/sched/act_ct.c
+>> >> +++ b/net/sched/act_ct.c
+>> >> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>> >>  =09=09=09  bool commit)
+>> >>  {
+>> >>  #if IS_ENABLED(CONFIG_NF_NAT)
+>> >> +=09int err;
+>> >>  =09enum nf_nat_manip_type maniptype;
+>> >> =20
+>> >>  =09if (!(ct_action & TCA_CT_ACT_NAT))
+>> >> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>> >>  =09=09return NF_ACCEPT;
+>> >>  =09}
+>> >> =20
+>> >> -=09return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>> >> +=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>> >> +=09if (err =3D=3D NF_ACCEPT &&
+>> >> +=09    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+>> >> +=09=09if (maniptype =3D=3D NF_NAT_MANIP_SRC)
+>> >> +=09=09=09maniptype =3D NF_NAT_MANIP_DST;
+>> >> +=09=09else
+>> >> +=09=09=09maniptype =3D NF_NAT_MANIP_SRC;
+>> >> +
+>> >> +=09=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>> >> +=09}
+>> >
+>> > I keep thinking about this and I'm not entirely convinced that this
+>> > shouldn't be simpler. More like:
+>> >
+>> > if (DNAT)
+>> > =09DNAT
+>> > if (SNAT)
+>> > =09SNAT
+>> >
+>> > So it always does DNAT before SNAT, similarly to what iptables would
+>> > do on PRE/POSTROUTING chains.
+>>=20
+>> I can rewrite the whole function, but I wanted to start with the smaller
+>> fix that worked.  I also think it needs more testing then (since it's
+>> something of a rewrite of the function).
+>>=20
+>> I guess it's not too important - do you think it gives any readability
+>> to do it this way?  If so, I can respin the patch changing it like you
+>> describe.
 >
-> A recent change inadvertantly exported a static function, which results
-Nit: inadvertently
-> in modpost throwing a warning.  Fix it.
+> I didn't mean a rewrite, but just to never handle SNAT before DNAT. So
+> the fix here would be like:
 >
-> Fixes: cbbaa2727aa3 ("KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+> -=09return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> +=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> +=09if (err =3D=3D NF_ACCEPT && maniptype =3D=3D NF_NAT_MANIP_DST &&
+> +=09    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+> +=09=09maniptype =3D NF_NAT_MANIP_SRC;
+> +=09=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> +=09}
+> +=09return err;
+
+But the maniptype of the first call could be NAT_MANIP_SRC.  In fact,
+that's what I see if the packet is reply direction && !related.
+
+So, we need the block to invert the manipulation type.  Otherwise, we
+miss the DNAT manipulation.
+
+So I don't think I can use that block.
+
+>> >> +=09return err;
+>> >>  #else
+>> >>  =09return NF_ACCEPT;
+>> >>  #endif
+>> >> --=20
+>> >> 2.21.0
+>> >>=20
+>>=20
+
