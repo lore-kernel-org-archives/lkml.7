@@ -2,149 +2,141 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F63C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE45C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05B72068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41FD20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pwj48DzQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaW6nMbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfKVFhH (ORCPT
+        id S1726704AbfKVFiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:37:07 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36169 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbfKVFhH (ORCPT
+        Fri, 22 Nov 2019 00:38:50 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38560 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVFiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:37:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574401026;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eKkONTtWVn2eOzE/ZmOcrElOUkXfPmqcjl279Q5P6lw=;
-        b=Pwj48DzQ9qQ/UmCuOYaEw8tRNYu4WoZELV/8Z5S17SuXYsftabY+jxq/jey/a383PIFG0x
-        ttTpxnOkQmySKNgtC/grCBzeMU970ib1aGy2VXXbIcf4lCLmIKbQT0Uzk9I6iEcZuwAbKL
-        YPDsmvmlzmpWaEk5FJmjTW6muWKhwoQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-T_UOHI-YNQGQjE4f7guipw-1; Fri, 22 Nov 2019 00:37:02 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D69E11800D41;
-        Fri, 22 Nov 2019 05:37:00 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B6730100EA05;
-        Fri, 22 Nov 2019 05:37:00 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 895A218095FF;
-        Fri, 22 Nov 2019 05:37:00 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 00:37:00 -0500 (EST)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
-        Keith Busch <keith.busch@intel.com>
-Message-ID: <838611538.35971353.1574401020319.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAPcyv4gsQXY5C5URF2vrTaD-0Q_CJ+ib3GVb1VFZAO+1Gdau2w@mail.gmail.com>
-References: <20191120092831.6198-1-pagupta@redhat.com> <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com> <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com> <CAPcyv4hJ6gHX=NYz-CoXFSrN93HUT+Xh+DP+QAjzqgGmmghmGA@mail.gmail.com> <1617854972.35808055.1574323227395.JavaMail.zimbra@redhat.com> <CAPcyv4haUOM92uzCBfVyrANxnNHKucivq053MFBmGOL3vqMgwQ@mail.gmail.com> <560894997.35969622.1574397521533.JavaMail.zimbra@redhat.com> <CAPcyv4gsQXY5C5URF2vrTaD-0Q_CJ+ib3GVb1VFZAO+1Gdau2w@mail.gmail.com>
-Subject: Re: [PATCH] virtio pmem: fix async flush ordering
+        Fri, 22 Nov 2019 00:38:50 -0500
+Received: by mail-pj1-f68.google.com with SMTP id f7so2571488pjw.5;
+        Thu, 21 Nov 2019 21:38:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=8dvSdtqu6VrgOIk7nTpyJSf73Tmmywkq2XApZ/zllzc=;
+        b=EaW6nMbB1mOof5a3IlyBBXHvxW8PED1/Or4QY1TwmjN8VpPwdYEWZ0HE+Q0OilJT3y
+         WBSl3pT4KsVj77SaZh9PH8+5K889vJb+hDm553b4JPJmx4nHg3clpTHHm7J9VOowdo4D
+         /qXR8SPHlqW389eh3qqDQV6P7WjEHgZ/62/aSoR7JjI39X9jMsZOqNueCUAcG5B4syfR
+         ODEb0riAbPJbr9SrFGt2w0t3zS0EeTJa3b+sgAV2eLxQk2+PcYH6Z8M6oPISod6hXJ7J
+         sCkEyxxG5MkugPGFSJdJQLnEfmhWpLSSzCFqibmovpnIMt7zCqhq2pD9xlFfPBPxF23u
+         XBXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=8dvSdtqu6VrgOIk7nTpyJSf73Tmmywkq2XApZ/zllzc=;
+        b=A2+ppskKO4+sHhKVaV4vEL58b6VBSpeYxAJI3wrMbgnBYKXbzTPiIJFsIe4O9RvdrO
+         f62loP5yVp/PefMb0MpbJ7nz4GrRqyUU8bwsltkG7rA80nxT9Z46IHGDW0YSHJQtnu1L
+         RowJ+s3G4rbqQ7oy8kOqzoe/05MgEh1IJ2UUbGR/qqu4OMagS+Gr0frBHLwu2yo2jc90
+         2eSImE6YC3gkQ3v9liyo3DocAQzpi4j3sLAdAc8exi4MTt1qFREmPo8ydLJg1gKlIPGz
+         CRQkK8vz1n2MtEdHGSPi/47wPgy/wVnOrqtpy6Nk9Cp+HFqm3v3DusneWzndBqNxLhQf
+         bKtw==
+X-Gm-Message-State: APjAAAUZvIme9TG+TsvRZK/3HlWmsvgRbhFskjY2E3+vyjrq+kGIi22u
+        KMrsqxjpymTBK7/Vw2T19y94hISj
+X-Google-Smtp-Source: APXvYqxqyvqbkhGAU6fdMSAquhZz1M7mkoymP0Y7QWhxl9QYqwhhUBPdfTpaSUnZASPyAt9xkbdQ7Q==
+X-Received: by 2002:a17:90a:d204:: with SMTP id o4mr15832121pju.40.1574401129319;
+        Thu, 21 Nov 2019 21:38:49 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j4sm1323616pjf.25.2019.11.21.21.38.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 21:38:48 -0800 (PST)
+Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>,
+        Guenter Roeck <groeck7@gmail.com>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
+From:   Guenter Roeck <guenter@roeck-us.net>
+Message-ID: <2b2a1beb-d735-210c-847a-e3211f9efeca@roeck-us.net>
+Date:   Thu, 21 Nov 2019 21:38:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Originating-IP: [10.67.116.214, 10.4.195.30]
-Thread-Topic: virtio pmem: fix async flush ordering
-Thread-Index: yct1AVHQcm+1LDSyVVEj51GYlhrF5A==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: T_UOHI-YNQGQjE4f7guipw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/21/19 2:35 AM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+>  From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
+> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+> Date: Wed, 20 Nov 2019 15:12:59 +0800
+> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
+>   timeout value
+>
+> watchdog_dev.c provides means to allow users to set bigger timeout value
+> than HW can support, make DesignWare watchdog align with this.
+>
+> ---
+>
+> v2 -> v1:
+>         - use top_s to compare with wdd->max_hw_heartbeat_ms
+>         - update wdd->timeout in case it's greater than HW supports
+>         - fix comments error
+>
+> v1: initial version
+>
+> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
 
-> > > > > >
-> > > > > > I added that and was about to push this out, but what about the
-> > > > > > fact
-> > > > > > that now the guest will synchronously wait for flushing to occu=
-r.
-> > > > > > The
-> > > > > > goal of the child bio was to allow that to be an I/O wait with
-> > > > > > overlapping I/O, or at least not blocking the submission thread=
-.
-> > > > > > Does
-> > > > > > the block layer synchronously wait for PREFLUSH requests? If no=
-t I
-> > > > > > think a synchronous wait is going to be a significant performan=
-ce
-> > > > > > regression. Are there any numbers to accompany this change?
-> > > > >
-> > > > > Why not just swap the parent child relationship in the PREFLUSH c=
-ase?
-> > > >
-> > > > I we are already inside parent bio "make_request" function and we
-> > > > create
-> > > > child
-> > > > bio. How we exactly will swap the parent/child relationship for
-> > > > PREFLUSH
-> > > > case?
-> > > >
-> > > > Child bio is queued after parent bio completes.
-> > >
-> > > Sorry, I didn't quite mean with bio_split, but issuing another reques=
-t
-> > > in front of the real bio. See md_flush_request() for inspiration.
-> >
-> > o.k. Thank you. Will try to post patch today to be considered for 5.4.
-> >
->=20
-> I think it is too late for v5.4-final, but we can get it in the
-> -stable queue. Let's take the time to do it right and get some testing
-> on it.
+Sigh. I should have paid closer attention. Signed-off-by: has to be ahead of ---,
 
-Sure.
+and the change log after it. The above format messes up everything.
 
-Just sharing probable patch for early feedback, if I am doing it correctly?
-I will test it thoroughly.
+Also, please run checkpatch and fix the problems it reports.
+
+Sorry for not noticing it earlier. Please fix the problems and resubmit.
 
 Thanks,
-Pankaj
 
-=3D=3D=3D=3D=3D=3D=3D=3D
+Guenter
 
-diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
-index 10351d5b49fa..c683e0e2515c 100644
---- a/drivers/nvdimm/nd_virtio.c
-+++ b/drivers/nvdimm/nd_virtio.c
-@@ -112,6 +112,12 @@ int async_pmem_flush(struct nd_region *nd_region, stru=
-ct bio *bio)
-                bio_copy_dev(child, bio);
-                child->bi_opf =3D REQ_PREFLUSH;
-                child->bi_iter.bi_sector =3D -1;
-+
-+               if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
-+                       struct request_queue *q =3D bio->bi_disk->queue;
-+                       q->make_request_fn(q, child);
-+                       return 0;
-+               }
-                bio_chain(child, bio);
-                submit_bio(child);
-                return 0;
+> ---
+>   drivers/watchdog/dw_wdt.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index fef7c61..12c116e 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+>   
+> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	/*
+> +	 * In case users set bigger timeout value than HW can support,
+> +	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> +	 * wdd->max_hw_heartbeat_ms
+> +	 */
+> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
+> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	else
+> +		wdd->timeout = top_s;
+>   
+>   	return 0;
+>   }
 
-=20
 
