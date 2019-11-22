@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F2EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6402C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029DD20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C11D20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419334;
-	bh=7fjEwiSTXkaGr+C2UuO1PVeK6otW8t2730r5OGPfeSI=;
+	s=default; t=1574419336;
+	bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08WgwKZSq735CiTxyAOSMqm9QwTueEPlyLJtFXGlm2urUbnE4jkO6HC5vcA6iWiRx
-	 XXMYYCAgtQS3cIQNausLTvs4xbkuncoZwQtfMF5dRWY70c+hcnpwu5G1/b/1F3AMT0
-	 D0/JI0tNiCoqiM2q9ZT+Lc6A2AvC+PEioJYUZpas=
+	b=eygEfEzzCFsbg4GAwwEydA61ZWLbZrmtZpVDxCTMtgvhvwkIO+qOxZCgLw3ZzKpXl
+	 SpZc4TanwdewVPVcfuJXcnI1W1ZydA2budWwEHtZw4Bb9XqDXvNTEh+wOVYWogO3vY
+	 xQZin+M5c0fsaktKFb+m3nTDuhbUNSMNZk+Zp/iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbfKVKmM (ORCPT
+        id S1729088AbfKVKmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:42:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbfKVKmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:42:08 -0500
+        id S1727216AbfKVKmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:42:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FAF020718;
-        Fri, 22 Nov 2019 10:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9C1020707;
+        Fri, 22 Nov 2019 10:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419327;
-        bh=7fjEwiSTXkaGr+C2UuO1PVeK6otW8t2730r5OGPfeSI=;
+        s=default; t=1574419330;
+        bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLyC6/y8a0uXSfPbHrUewX9RJ2x0gF4SkIjSxgBaGkD3MPjl1NCJQPaxz9UI0Hhwh
-         XjiicBohg/7IEHL3Yk4tgOSTqF9dO5HqC8gxALMcQ6fV3Ii3PIUgdgCLqYfbAZBK3p
-         SILkMvBvnBrVjz42Mc/pNPFs4vaklm1ZhBbBwjvE=
+        b=DHnYFip0vJduSLl8zegAVU60BJY2chyH5vdWZxFrSTm21pUsbAHwpKkAtQuaQwtQi
+         kbz+nVBnN8AywF9Gq5uBSM8MphhllcwdtmyGz2qFfVMwKXXxeLfuCiqa+bnQ34MfO3
+         0SXaQrE+OSZ6DoUz3MWsdQVGRLmbVASCPyrKLquw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mitch Williams <mitch.a.williams@intel.com>,
+        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
         Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 029/222] i40e: use correct length for strncpy
-Date:   Fri, 22 Nov 2019 11:26:09 +0100
-Message-Id: <20191122100841.743459007@linuxfoundation.org>
+Subject: [PATCH 4.9 030/222] i40e: hold the rtnl lock on clearing interrupt scheme
+Date:   Fri, 22 Nov 2019 11:26:10 +0100
+Message-Id: <20191122100842.072314712@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,36 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mitch Williams <mitch.a.williams@intel.com>
+From: Patryk Małek <patryk.malek@intel.com>
 
-[ Upstream commit 7eb74ff891b4e94b8bac48f648a21e4b94ddee64 ]
+[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
 
-Caught by GCC 8. When we provide a length for strncpy, we should not
-include the terminating null. So we must tell it one less than the size
-of the destination buffer.
+Hold the rtnl lock when we're clearing interrupt scheme
+in i40e_shutdown and in i40e_remove.
 
-Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Signed-off-by: Patryk Małek <patryk.malek@intel.com>
 Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_ptp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ptp.c b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-index f1feceab758a5..41cbcb0ac2d94 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-@@ -604,7 +604,8 @@ static long i40e_ptp_create_clock(struct i40e_pf *pf)
- 	if (!IS_ERR_OR_NULL(pf->ptp_clock))
- 		return 0;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 886378c5334fa..043b69b5843b0 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -11360,6 +11360,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 	mutex_destroy(&hw->aq.asq_mutex);
  
--	strncpy(pf->ptp_caps.name, i40e_driver_name, sizeof(pf->ptp_caps.name));
-+	strncpy(pf->ptp_caps.name, i40e_driver_name,
-+		sizeof(pf->ptp_caps.name) - 1);
- 	pf->ptp_caps.owner = THIS_MODULE;
- 	pf->ptp_caps.max_adj = 999999999;
- 	pf->ptp_caps.n_ext_ts = 0;
+ 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
++	rtnl_lock();
+ 	i40e_clear_interrupt_scheme(pf);
+ 	for (i = 0; i < pf->num_alloc_vsi; i++) {
+ 		if (pf->vsi[i]) {
+@@ -11368,6 +11369,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 			pf->vsi[i] = NULL;
+ 		}
+ 	}
++	rtnl_unlock();
+ 
+ 	for (i = 0; i < I40E_MAX_VEB; i++) {
+ 		kfree(pf->veb[i]);
+@@ -11513,7 +11515,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
+ 	wr32(hw, I40E_PFPM_WUFC,
+ 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
+ 
++	/* Since we're going to destroy queues during the
++	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
++	 * whole section
++	 */
++	rtnl_lock();
+ 	i40e_clear_interrupt_scheme(pf);
++	rtnl_unlock();
+ 
+ 	if (system_state == SYSTEM_POWER_OFF) {
+ 		pci_wake_from_d3(pdev, pf->wol_en);
 -- 
 2.20.1
 
