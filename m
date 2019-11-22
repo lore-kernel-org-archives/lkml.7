@@ -2,145 +2,163 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA71C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA22620708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uY2pBRUE"
+	by mail.kernel.org (Postfix) with ESMTP id E517B2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfKVIZa (ORCPT
+        id S1727488AbfKVIZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:25:30 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35050 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727422AbfKVIZX (ORCPT
+        Fri, 22 Nov 2019 03:25:32 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:52499 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfKVIZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:25:23 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAM8Ca4X024404;
-        Fri, 22 Nov 2019 09:24:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=7YG8hMLBlcZH9okyAWH+GnK29WW6bCIlSdmP8Pj50xc=;
- b=uY2pBRUENT6U808IvNJJEG1i+oGTu0K6UkQAwayp/bbNLUqHRt9u83Jqvaf1v6+JQ1wX
- ZzasUcvdG1WuL2QXjKyxjm4ZHPunMVyUzigvdsys15VzAg1s+wEXi79EcXcey5j4w8kZ
- kRZlk3OFfdvyix+IwF9Q2LP1kuMrqpbkfeBH8vesx0GA4qf+apH7eBthFt/oEkb0Jepd
- S3uGBnUyRC1OBGWU1fXyLh84+FanVB/Fads5+NlEGbvQH+OqHO6LNcfI1zE+g3/qNqXE
- uTvLcGCdf1FyCHLE848tYP3K0BzCoMkFGw9DYq6zcyOtc9ZinZl1a09RUBSnEmVNuHqA tQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9ujfmpv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 09:24:48 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9B356100034;
-        Fri, 22 Nov 2019 09:24:47 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B3552AD9F3;
-        Fri, 22 Nov 2019 09:24:47 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov 2019 09:24:46
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <linux-watchdog@vger.kernel.org>, <christophe.roullier@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
-Date:   Fri, 22 Nov 2019 09:24:42 +0100
-Message-ID: <20191122082442.21695-1-christophe.roullier@st.com>
+        Fri, 22 Nov 2019 03:25:30 -0500
+IronPort-SDR: YzdUC/D3KGPrX5o5ONYcCBKzRY1/frBUGZshUMM5WPUDJ2xSb0qSmR3kQafdNFU6IxN892oSYd
+ deq7fYksu45zLfoIopHg+22zU4GyRK3rHuJMtQ7xiSHOm94cYS/FsNNHL+FEaf2jVFJG76SfLb
+ b8Y4PblrJofGELTiu+sjoMNK3WwidqwFakvRpnYDsvxwIj3i8RHsom0EPniFh38ALVIz7jBCq3
+ OzDFRtMhcGNBV6uFDHSKE8/yeojkgG/BlZTRE0cjcQUacGRfwRVbOdnTtWZEZYGzq33hoWQjPQ
+ H3I=
+X-IronPort-AV: E=Sophos;i="5.69,229,1571731200"; 
+   d="scan'208";a="43358930"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:25:29 -0800
+IronPort-SDR: QUEAV1pzUhF/EIwJ56uup30aSTa8AFA2SBwkUW4v+4x/oZsQ3QAHAWAsIPF2qsSHYf1I7tuq4x
+ FdCN7CpRy1BTjXLvAf6XYCao03NoyvdBocGa5G+NdMc6x4QcEpG/COyQCr+rSMvOEtwPkj7xit
+ mkl5vxzscGhXsvsT+vN4VQxwlv5XDyG5qEGoZ0+ROUw/8XeI2w2LXa5nI3O5r5JrMjQbDV0v3Z
+ NB2/AZb9ix/08xBiHjRyuSAmb+UtTw+NA7TtYz8cf5R6QRs/m/nPnWfHrlGlGn+K73/nPXQhaL
+ AQs=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v6 23/48] Input: atmel_mxt_ts - rename bl_completion to chg_completion
+Date:   Fri, 22 Nov 2019 17:23:37 +0900
+Message-ID: <20191122082402.18173-24-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122082402.18173-1-jiada_wang@mentor.com>
+References: <20191122082402.18173-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_07:2019-11-21,2019-11-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the watchdog hardware is already enabled during the boot process,
-when the Linux watchdog driver loads, it should start/reset the watchdog
-and tell the watchdog framework. As a result, ping can be generated from
-the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
-until the userspace watchdog daemon takes over control
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
-
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit dda8453bfb44216645ede798918a314d4fca2481)
+[gdavis: Resolve forward port conflicts due to applying upstream
+	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+	 data support").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: call complete(&data->chg_completion) only when in_bootloader is TRUE]
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
-Changes since v1:
-According to Guenter
-I follow the guidance from intel-mid_wdt.c
-and I added test to check if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
-because we need to be flexible (depends on customer config, but watchdog
-not always start by bootloader (Uboot, ..))
-I've tested some config and it is working as expected:
-Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set + daemon watchdog in userland ON ==> No reset IWDG2
-Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set ==> Reset IWDG2
-Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
-Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
-Watchdog disable in Uboot + HANDLE_BOOT_ENABLE is not set ==> No reset IWDG2
-Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
-Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON ==> No reset IWDG2
-Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
+ drivers/input/touchscreen/atmel_mxt_ts.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-Thanks,
-Christophe
-
- drivers/watchdog/stm32_iwdg.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index a3a329011a06..7f454a6e17ba 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -50,6 +50,9 @@
- #define TIMEOUT_US	100000
- #define SLEEP_US	1000
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 1c5230f7a9af..520dc9670b38 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -381,9 +381,6 @@ struct mxt_data {
+ 	u8 T100_reportid_max;
+ 	u16 T107_address;
  
-+static bool handle_boot_enabled =
-+	IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED);
-+
- struct stm32_iwdg_data {
- 	bool has_pclk;
- 	u32 max_prescaler;
-@@ -262,6 +265,24 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
- 	watchdog_init_timeout(wdd, 0, dev);
+-	/* for fw update in bootloader */
+-	struct completion bl_completion;
+-
+ 	/* for reset handling */
+ 	struct completion reset_completion;
  
-+	/*
-+	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
-+	 * (Means U-Boot/bootloaders leaves the watchdog running)
-+	 * When we get here we should make a decision to prevent
-+	 * any side effects before user space daemon will take care of it.
-+	 * The best option, taking into consideration that there is no
-+	 * way to read values back from hardware, is to enforce watchdog
-+	 * being run with deterministic values.
-+	 */
-+	if (handle_boot_enabled) {
-+		ret = stm32_iwdg_start(wdd);
-+		if (ret)
-+			return ret;
+@@ -395,6 +392,9 @@ struct mxt_data {
+ 
+ 	enum mxt_suspend_mode suspend_mode;
+ 
++	/* for power up handling */
++	struct completion chg_completion;
 +
-+		/* Make sure the watchdog is serviced */
-+		set_bit(WDOG_HW_RUNNING, &wdd->status);
-+	}
-+
- 	ret = devm_watchdog_register_device(dev, wdd);
+ 	/* Indicates whether device is in suspend */
+ 	bool suspended;
+ 
+@@ -611,7 +611,7 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
+ 	 * CHG assertion before reading the status byte.
+ 	 * Once the status byte has been read, the line is deasserted.
+ 	 */
+-	ret = mxt_wait_for_completion(data, &data->bl_completion,
++	ret = mxt_wait_for_completion(data, &data->chg_completion,
+ 				      MXT_FW_CHG_TIMEOUT);
+ 	if (ret) {
+ 		/*
+@@ -1402,8 +1402,7 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
+ 	struct mxt_data *data = dev_id;
+ 
+ 	if (data->in_bootloader) {
+-		/* bootloader state transition completion */
+-		complete(&data->bl_completion);
++		complete(&data->chg_completion);
+ 		return IRQ_HANDLED;
+ 	}
+ 
+@@ -2167,9 +2166,9 @@ static void mxt_regulator_enable(struct mxt_data *data)
+ 	msleep(MXT_CHG_DELAY);
+ 
+ retry_wait:
+-	reinit_completion(&data->bl_completion);
++	reinit_completion(&data->chg_completion);
+ 	data->in_bootloader = true;
+-	error = mxt_wait_for_completion(data, &data->bl_completion,
++	error = mxt_wait_for_completion(data, &data->chg_completion,
+ 					MXT_POWERON_DELAY);
+ 	if (error == -EINTR)
+ 		goto retry_wait;
+@@ -3334,7 +3333,7 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 		enable_irq(data->irq);
+ 	}
+ 
+-	reinit_completion(&data->bl_completion);
++	reinit_completion(&data->chg_completion);
+ 
+ 	return 0;
+ }
+@@ -3370,7 +3369,7 @@ static int mxt_load_fw(struct device *dev)
+ 	}
+ 
+ 	/* Wait for flash. */
+-	ret = mxt_wait_for_completion(data, &data->bl_completion,
++	ret = mxt_wait_for_completion(data, &data->chg_completion,
+ 				      MXT_FW_RESET_TIME);
  	if (ret)
- 		return ret;
+ 		goto disable_irq;
+@@ -3381,7 +3380,7 @@ static int mxt_load_fw(struct device *dev)
+ 	 * the CHG line after bootloading has finished, so ignore potential
+ 	 * errors.
+ 	 */
+-	mxt_wait_for_completion(data, &data->bl_completion, MXT_FW_RESET_TIME);
++	mxt_wait_for_completion(data, &data->chg_completion, MXT_FW_RESET_TIME);
+ 
+ 	data->in_bootloader = false;
+ disable_irq:
+@@ -3802,7 +3801,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	data->irq = client->irq;
+ 	i2c_set_clientdata(client, data);
+ 
+-	init_completion(&data->bl_completion);
++	init_completion(&data->chg_completion);
+ 	init_completion(&data->reset_completion);
+ 	init_completion(&data->crc_completion);
+ 
 -- 
 2.17.1
 
