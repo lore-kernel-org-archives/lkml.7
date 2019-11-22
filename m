@@ -2,97 +2,143 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BE2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1340CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F244D20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB6A20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfKVQ3J (ORCPT
+        id S1727471AbfKVQ3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:29:09 -0500
-Received: from smtprelay0034.hostedemail.com ([216.40.44.34]:39181 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726633AbfKVQ3I (ORCPT
+        Fri, 22 Nov 2019 11:29:13 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9850 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726633AbfKVQ3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:29:08 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 5E36A182CED2A;
-        Fri, 22 Nov 2019 16:29:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: mom43_1547a037e0e3d
-X-Filterd-Recvd-Size: 2884
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 22 Nov 2019 16:29:06 +0000 (UTC)
-Message-ID: <799a49ee8fc8041a00332e0866554ddc04a2b8b0.camel@perches.com>
-Subject: Re: [PATCH v2] iommu/iova: silence warnings under memory pressure
-From:   Joe Perches <joe@perches.com>
-To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
-Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Date:   Fri, 22 Nov 2019 08:28:41 -0800
-In-Reply-To: <1574434760.9585.18.camel@lca.pw>
-References: <20191122025510.4319-1-cai@lca.pw>
-         <7fd08d481a372ea0b600f95c12166ab54ed5e267.camel@perches.com>
-         <1574434760.9585.18.camel@lca.pw>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 22 Nov 2019 11:29:13 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMGHboh034819
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 11:29:11 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wdkdg0p0e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 11:29:10 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Fri, 22 Nov 2019 16:28:52 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 22 Nov 2019 16:28:48 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAMGSl1v49152224
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Nov 2019 16:28:47 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 852B7A405B;
+        Fri, 22 Nov 2019 16:28:47 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29C80A405F;
+        Fri, 22 Nov 2019 16:28:47 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.141])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Nov 2019 16:28:47 +0000 (GMT)
+Subject: Re: WARNING bisected (was Re: [PATCH v7 08/10] mm: rework non-root
+ kmem_cache lifecycle management)
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "shakeelb@google.com" <shakeelb@google.com>,
+        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20190611231813.3148843-9-guro@fb.com>
+ <20191121111739.3054-1-borntraeger@de.ibm.com>
+ <20191121165807.GA201621@localhost.localdomain>
+ <c6a2696b-6e35-de7c-8387-b21285b6776f@de.ibm.com>
+ <20191121184524.GA4758@localhost.localdomain>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Fri, 22 Nov 2019 17:28:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
+In-Reply-To: <20191121184524.GA4758@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112216-4275-0000-0000-00000384F6EE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112216-4276-0000-0000-0000389878BD
+Message-Id: <903c101d-45bc-1e52-3c01-1e65cd4ef43e@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-22_03:2019-11-21,2019-11-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=765
+ adultscore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911220140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-22 at 09:59 -0500, Qian Cai wrote:
-> On Thu, 2019-11-21 at 20:37 -0800, Joe Perches wrote:
-> > On Thu, 2019-11-21 at 21:55 -0500, Qian Cai wrote:
-> > > When running heavy memory pressure workloads, this 5+ old system is
-> > > throwing endless warnings below because disk IO is too slow to recover
-> > > from swapping. Since the volume from alloc_iova_fast() could be large,
-> > > once it calls printk(), it will trigger disk IO (writing to the log
-> > > files) and pending softirqs which could cause an infinite loop and make
-> > > no progress for days by the ongoimng memory reclaim. This is the counter
-> > > part for Intel where the AMD part has already been merged. See the
-> > > commit 3d708895325b ("iommu/amd: Silence warnings under memory
-> > > pressure"). Since the allocation failure will be reported in
-> > > intel_alloc_iova(), so just call printk_ratelimted() there and silence
-> > > the one in alloc_iova_mem() to avoid the expensive warn_alloc().
-> > 
-> > []
-> > > v2: use dev_err_ratelimited() and improve the commit messages.
-> > 
-> > []
-> > > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> > 
-> > []
-> > > @@ -3401,7 +3401,8 @@ static unsigned long intel_alloc_iova(struct device *dev,
-> > >  	iova_pfn = alloc_iova_fast(&domain->iovad, nrpages,
-> > >  				   IOVA_PFN(dma_mask), true);
-> > >  	if (unlikely(!iova_pfn)) {
-> > > -		dev_err(dev, "Allocating %ld-page iova failed", nrpages);
-> > > +		dev_err_ratelimited(dev, "Allocating %ld-page iova failed",
-> > > +				    nrpages);
-> > 
-> > Trivia:
-> > 
-> > This should really have a \n termination on the format string
-> > 
-> > 		dev_err_ratelimited(dev, "Allocating %ld-page iova failed\n",
-> > 
-> > 
-> 
-> Why do you say so? It is right now printing with a newline added anyway.
-> 
->  hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+On 21.11.19 19:45, Roman Gushchin wrote:
+> I see. Do you know, which kmem_cache it is? If not, can you, please,
+> figure it out?
 
-If another process uses pr_cont at the same time,
-it can be interleaved.
-
+The release function for that ref is kmemcg_cache_shutdown. 
 
