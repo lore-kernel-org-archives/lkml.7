@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEFCC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC3FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A712071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A75220718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421113;
-	bh=k8Y5H6Z36lm9qTZE69Um8n6ih5/V0cui+ibzPJzQNgE=;
+	s=default; t=1574421116;
+	bh=/kUxBZofQMik3Dzfcnk3DamI5JTvSzhgcjGK39WSwNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hc6qFHlZ2EF6d0Rta76SJkVsNdXNBqnaOCGV4F0bywXEuD+r22cm247sGJ3lnd69j
-	 SnK8qdhJctyDO45jkySBmTIDikN7o7fbP3/MNBEJcvi9Ert9pujJ/cuHGZ/MW5EGRK
-	 EEDid/WeZVbKegJwUeP4d9EOCy8qLu5ZW2fs6TwE=
+	b=QV+UkeIItdQHcM7obVlesA4NPS8qyt9Sd+//PsrggIM0NCFLbPC8/E9gajSN7cwgr
+	 tzzWYz3MtaCmMZNVbmCCoCBveDChmhlGFkH5ddqqVF55MoAeS9fFOcos6BnyyQdR58
+	 mbFBxmZyp+xLOF+wIRrQ9egqzMRm1fmv8X6c4e8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbfKVK7G (ORCPT
+        id S1730329AbfKVK6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49580 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730507AbfKVK67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:59 -0500
+        id S1730320AbfKVK6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F4420706;
-        Fri, 22 Nov 2019 10:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1916520679;
+        Fri, 22 Nov 2019 10:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420339;
-        bh=k8Y5H6Z36lm9qTZE69Um8n6ih5/V0cui+ibzPJzQNgE=;
+        s=default; t=1574420324;
+        bh=/kUxBZofQMik3Dzfcnk3DamI5JTvSzhgcjGK39WSwNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F4Y3jJjQ1Gm2kOdTlJGDaYCZvsgCi/2l3M/IX7aBjOPwaXVRSa00eSp8NTg/beYiC
-         FRe4/Z18L/WMeQwj1CtBvgdGpmtA2acqxyotECsd2JUohqBmF5eqADA9/HBsC0nyn9
-         3Ky299flvfYwiEJ5qlmrdwBS+lzzDgPhyIchWt5s=
+        b=tSgJVgtbDKkRjvces4Wyqv4V23LVi1CVmSdpr5YTULQqW5ad4vEZRJghSQKFqZ8gC
+         7zENd/yJvUexIClcziIWdcdfAWXb3sj0w3hWu+zvIS8bFz9cVYVmDQTKzSywuaGmiE
+         i6lvt5qxyQZ+6h4a3uEPh5Hfx40bMTKFGvUlsyFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/220] ARM: dts: at91: at91sam9x5cm: fix addressable nand flash size
-Date:   Fri, 22 Nov 2019 11:27:16 +0100
-Message-Id: <20191122100917.312639816@linuxfoundation.org>
+Subject: [PATCH 4.19 066/220] cxgb4: Use proper enum in IEEE_FAUX_SYNC
+Date:   Fri, 22 Nov 2019 11:27:11 +0100
+Message-Id: <20191122100916.877422284@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,33 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 6f270d88a0c4a11725afd8fd2001ae408733afbf ]
+[ Upstream commit 258b6d141878530ba1f8fc44db683822389de914 ]
 
-at91sam9x5cm comes with a 2Gb NAND flash. Fix the rootfs size to
-match this limit.
+Clang warns when one enumerated type is implicitly converted to another.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:390:4: warning: implicit
+conversion from enumeration type 'enum cxgb4_dcb_state' to different
+enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
+                        IEEE_FAUX_SYNC(dev, dcb);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h:70:10: note: expanded
+from macro 'IEEE_FAUX_SYNC'
+                                            CXGB4_DCB_STATE_FW_ALLSYNCED);
+                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use the equivalent value of the expected type to silence Clang while
+resulting in no functional change.
+
+CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9x5cm.dtsi | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index 4908ee07e6287..993eabe1cf7a5 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -100,7 +100,7 @@
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
+index 02040b99c78a0..484ee82900903 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
+@@ -67,7 +67,7 @@
+ 	do { \
+ 		if ((__dcb)->dcb_version == FW_PORT_DCB_VER_IEEE) \
+ 			cxgb4_dcb_state_fsm((__dev), \
+-					    CXGB4_DCB_STATE_FW_ALLSYNCED); \
++					    CXGB4_DCB_INPUT_FW_ALLSYNCED); \
+ 	} while (0)
  
- 						rootfs@800000 {
- 							label = "rootfs";
--							reg = <0x800000 0x1f800000>;
-+							reg = <0x800000 0x0f800000>;
- 						};
- 					};
- 				};
+ /* States we can be in for a port's Data Center Bridging.
 -- 
 2.20.1
 
