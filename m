@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659D4C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D39FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3553020707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BBD2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403064;
-	bh=vdwaTwkiAhmYG/mez884oyyzASldPyX2HzsGMIGaA/8=;
+	s=default; t=1574403067;
+	bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TP24ncLFtsodplPsxnxPXg8Uz5S4uNh6uTI+y+4XxvPfQrm7720DgFH4JMojGqraj
-	 pSop107Onj4n37j/ovnqCQzMNgtNU1yueg958p5pSVyDXDjD3O0qwF5QBHAH72fXeY
-	 /kUxZRUgaVak+hxh7ddlctzLvseTp6YnjiBvILUg=
+	b=ayt8w9cR6pLyWu6u6P2+bCTzyKqHTqIfueGBBcI2R7AswAPd8r6vVkbJI2oIgYQOF
+	 thkcYOTHU5S6DBNxbWGRVe8EcMhO/qTjAhf3qrIOf816Zt8Sbfch5vsIMCqm/Px70A
+	 MsbVvjM14M02zBJ5sst8y8s5UkIQovy/PEns+6T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfKVF4j (ORCPT
+        id S1729199AbfKVF4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34316 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728379AbfKVF4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:31 -0500
+        id S1729147AbfKVF41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521A720659;
-        Fri, 22 Nov 2019 05:56:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 149862071F;
+        Fri, 22 Nov 2019 05:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402190;
-        bh=vdwaTwkiAhmYG/mez884oyyzASldPyX2HzsGMIGaA/8=;
+        s=default; t=1574402186;
+        bh=puEy/f7+ZYZ6FdHQS/eQpBxy58+YBZzkDNytPQt3Aww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lVKsZl4XUrzgUOTGd3I0+A0DH7oSKKEPYXF5T+Zm0mkrLczmG89dKH/YMGsNT0FCv
-         6bXNk+4i/+NRl6K9vVtYZdzJCxce22b2BC9XgiEEoahqR8DxcpJ4EIyjexAWhEzt9W
-         dyMirfQnI9LqaouhtiA7KBmZd2LT6hvS9WMII3Aw=
+        b=t0+y3+AGfuGZ/i70OG2tq9mZXQ+d1vkKCV1qOuVmY0hE43dHtJfQPD1MbvlL9IQeU
+         0xi06HaEC3WAHU/U92f5AXqZQB2GXCtW4h52a9cPhSlTR1FSiSr/mzXvfYUkAqDMQ5
+         Bki2SUFu8VHmyVCiRcGJKaH0sJiBiNBwR7mwZn/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 040/127] bnxt_en: Return linux standard errors in bnxt_ethtool.c
-Date:   Fri, 22 Nov 2019 00:54:18 -0500
-Message-Id: <20191122055544.3299-39-sashal@kernel.org>
+Cc:     Martin Schiller <ms@dev.tdt.de>, John Crispin <john@phrozen.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 037/127] pinctrl: xway: fix gpio-hog related boot issues
+Date:   Fri, 22 Nov 2019 00:54:15 -0500
+Message-Id: <20191122055544.3299-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -60,147 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit 7c675421afef18253a86ffc383f57bc15ef32ea8 ]
+[ Upstream commit 9b4924da4711674e62d97d4f5360446cc78337af ]
 
-Currently firmware specific errors are returned directly in flash_device
-and reset ethtool hooks. Modify it to return linux standard errors
-to userspace when flashing operations fail.
+This patch is based on commit a86caa9ba5d7 ("pinctrl: msm: fix gpio-hog
+related boot issues").
 
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It fixes the issue that the gpio ranges needs to be defined before
+gpiochip_add().
+
+Therefore, we also have to swap the order of registering the pinctrl
+driver and registering the gpio chip.
+
+You also have to add the "gpio-ranges" property to the pinctrl device
+node to get it finally working.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Acked-by: John Crispin <john@phrozen.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 56 +++++++++++++------
- 1 file changed, 39 insertions(+), 17 deletions(-)
+ drivers/pinctrl/pinctrl-xway.c | 39 +++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index a22336fef66b2..4879371ad0c75 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -1339,14 +1339,22 @@ static int bnxt_flash_nvram(struct net_device *dev,
- 	rc = hwrm_send_message(bp, &req, sizeof(req), FLASH_NVRAM_TIMEOUT);
- 	dma_free_coherent(&bp->pdev->dev, data_len, kmem, dma_handle);
- 
-+	if (rc == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
-+		netdev_info(dev,
-+			    "PF does not have admin privileges to flash the device\n");
-+		rc = -EACCES;
-+	} else if (rc) {
-+		rc = -EIO;
-+	}
- 	return rc;
- }
- 
- static int bnxt_firmware_reset(struct net_device *dev,
- 			       u16 dir_type)
- {
--	struct bnxt *bp = netdev_priv(dev);
- 	struct hwrm_fw_reset_input req = {0};
-+	struct bnxt *bp = netdev_priv(dev);
-+	int rc;
- 
- 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FW_RESET, -1, -1);
- 
-@@ -1380,7 +1388,15 @@ static int bnxt_firmware_reset(struct net_device *dev,
- 		return -EINVAL;
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index f9e98a7d4f0ce..1b0c5958c56a7 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1748,14 +1748,6 @@ static int pinmux_xway_probe(struct platform_device *pdev)
  	}
+ 	xway_pctrl_desc.pins = xway_info.pads;
  
--	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
-+	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
-+	if (rc == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
-+		netdev_info(dev,
-+			    "PF does not have admin privileges to reset the device\n");
-+		rc = -EACCES;
-+	} else if (rc) {
-+		rc = -EIO;
-+	}
-+	return rc;
- }
- 
- static int bnxt_flash_firmware(struct net_device *dev,
-@@ -1587,9 +1603,9 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 	struct hwrm_nvm_install_update_output *resp = bp->hwrm_cmd_resp_addr;
- 	struct hwrm_nvm_install_update_input install = {0};
- 	const struct firmware *fw;
-+	int rc, hwrm_err = 0;
- 	u32 item_len;
- 	u16 index;
--	int rc;
- 
- 	bnxt_hwrm_fw_set_time(bp);
- 
-@@ -1632,15 +1648,16 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 			memcpy(kmem, fw->data, fw->size);
- 			modify.host_src_addr = cpu_to_le64(dma_handle);
- 
--			rc = hwrm_send_message(bp, &modify, sizeof(modify),
--					       FLASH_PACKAGE_TIMEOUT);
-+			hwrm_err = hwrm_send_message(bp, &modify,
-+						     sizeof(modify),
-+						     FLASH_PACKAGE_TIMEOUT);
- 			dma_free_coherent(&bp->pdev->dev, fw->size, kmem,
- 					  dma_handle);
- 		}
- 	}
- 	release_firmware(fw);
--	if (rc)
--		return rc;
-+	if (rc || hwrm_err)
-+		goto err_exit;
- 
- 	if ((install_type & 0xffff) == 0)
- 		install_type >>= 16;
-@@ -1648,12 +1665,10 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 	install.install_type = cpu_to_le32(install_type);
- 
- 	mutex_lock(&bp->hwrm_cmd_lock);
--	rc = _hwrm_send_message(bp, &install, sizeof(install),
--				INSTALL_PACKAGE_TIMEOUT);
--	if (rc) {
--		rc = -EOPNOTSUPP;
-+	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
-+				      INSTALL_PACKAGE_TIMEOUT);
-+	if (hwrm_err)
- 		goto flash_pkg_exit;
+-	/* register the gpio chip */
+-	xway_chip.parent = &pdev->dev;
+-	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to register gpio chip\n");
+-		return ret;
 -	}
- 
- 	if (resp->error_code) {
- 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
-@@ -1661,12 +1676,11 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
- 			install.flags |= cpu_to_le16(
- 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
--			rc = _hwrm_send_message(bp, &install, sizeof(install),
--						INSTALL_PACKAGE_TIMEOUT);
--			if (rc) {
--				rc = -EOPNOTSUPP;
-+			hwrm_err = _hwrm_send_message(bp, &install,
-+						      sizeof(install),
-+						      INSTALL_PACKAGE_TIMEOUT);
-+			if (hwrm_err)
- 				goto flash_pkg_exit;
--			}
- 		}
+-
+ 	/* setup the data needed by pinctrl */
+ 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
+ 	xway_pctrl_desc.npins	= xway_chip.ngpio;
+@@ -1777,10 +1769,33 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ 		return ret;
  	}
  
-@@ -1677,6 +1691,14 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 	}
- flash_pkg_exit:
- 	mutex_unlock(&bp->hwrm_cmd_lock);
-+err_exit:
-+	if (hwrm_err == HWRM_ERR_CODE_RESOURCE_ACCESS_DENIED) {
-+		netdev_info(dev,
-+			    "PF does not have admin privileges to flash the device\n");
-+		rc = -EACCES;
-+	} else if (hwrm_err) {
-+		rc = -EOPNOTSUPP;
+-	/* finish with registering the gpio range in pinctrl */
+-	xway_gpio_range.npins = xway_chip.ngpio;
+-	xway_gpio_range.base = xway_chip.base;
+-	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	/* register the gpio chip */
++	xway_chip.parent = &pdev->dev;
++	xway_chip.owner = THIS_MODULE;
++	xway_chip.of_node = pdev->dev.of_node;
++	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register gpio chip\n");
++		return ret;
 +	}
- 	return rc;
++
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
++		/* finish with registering the gpio range in pinctrl */
++		xway_gpio_range.npins = xway_chip.ngpio;
++		xway_gpio_range.base = xway_chip.base;
++		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
++	}
++
+ 	dev_info(&pdev->dev, "Init done\n");
+ 	return 0;
  }
- 
 -- 
 2.20.1
 
