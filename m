@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBAEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512FA2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0622070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402422;
-	bh=/L/TkAQJT0J4xvQNLca+HqP2gcZgkXxvLBXfz2f2Gc0=;
+	s=default; t=1574402431;
+	bh=o9816u5OsEbHFRuAXluz7Z0uYEzXbJH1oU+cElehACQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GMitn8tYA85UyiTg+sRkbUlJJPjp3gyPjtXwMQXFBd8Jp5aT6XuXgm1XfOUccGxl3
-	 H9LF1nOBFqg7cl05CxlZCsVKP+u8t2SkFqE/iy42hhoF8iigTLk+dP5I37NF8TnWrT
-	 1TkmR16V4v6IykvoGfP6iMbqmlusGxs0XYLi/e3M=
+	b=wGgAtbHVnUeHvsCzSI1WRF5BQ0O7lpmbzN/gZFyOzM4U2RS7zbVNVLFpQ7wpS1M2U
+	 cTza8WD1OzdrKoMP/iCa52zkYhGjrQFBhEYpQfYQwR2qr56XCLKfQsFOCXLNhHgcpO
+	 PerVRAiBa/urcvi52BzrJoNQHTLsZOExOPyktyYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfKVGAV (ORCPT
+        id S1728313AbfKVGA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:00:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:00:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729495AbfKVF5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:39 -0500
+        id S1729483AbfKVF5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7BF20721;
-        Fri, 22 Nov 2019 05:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4490020717;
+        Fri, 22 Nov 2019 05:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402259;
-        bh=/L/TkAQJT0J4xvQNLca+HqP2gcZgkXxvLBXfz2f2Gc0=;
+        s=default; t=1574402258;
+        bh=o9816u5OsEbHFRuAXluz7Z0uYEzXbJH1oU+cElehACQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSE+/c2jXKG1H49Mj7w6jShfqVvXaq42+gcZy6x5BzPBFUiLulAPbmFc2yZJEyTcs
-         cyIKdva6fiOwcDD6e+f4HN4Zwh+OxXGqMdXEbstt0le7pGGRUn5CVM8JXYhfJssauZ
-         GLCRgO6T+AqylpR5RhJ6pU+UMs4WlX2qyHCHNmr0=
+        b=MrCExwlvY4I8QVpekQr0tkiCtz09dsvq2oplHcfmQtYVAVFARJzjaOx2bKtk6VuyQ
+         kaYWSXDypHKMW28DjGDOGX/xihhn/TkYCZuMHLgssJ6J9Dz+wPSc+WFIgSVpr3SZuZ
+         f6FY4jjr/qhJkht2V18CHLGxtpwTHrCGWtl+a8ac=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ying Xue <ying.xue@windriver.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 100/127] net/core/neighbour: tell kmemleak about hash tables
-Date:   Fri, 22 Nov 2019 00:55:18 -0500
-Message-Id: <20191122055544.3299-99-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 099/127] tipc: fix memory leak in tipc_nl_compat_publ_dump
+Date:   Fri, 22 Nov 2019 00:55:17 -0500
+Message-Id: <20191122055544.3299-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,81 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 85704cb8dcfd88d351bfc87faaeba1c8214f3177 ]
+[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
 
-This fixes false-positive kmemleak reports about leaked neighbour entries:
+There is a memory leak in case genlmsg_put fails.
 
-unreferenced object 0xffff8885c6e4d0a8 (size 1024):
-  comm "softirq", pid 0, jiffies 4294922664 (age 167640.804s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 20 2c f3 83 ff ff ff ff  ........ ,......
-    08 c0 ef 5f 84 88 ff ff 01 8c 7d 02 01 00 00 00  ..._......}.....
-  backtrace:
-    [<00000000748509fe>] ip6_finish_output2+0x887/0x1e40
-    [<0000000036d7a0d8>] ip6_output+0x1ba/0x600
-    [<0000000027ea7dba>] ip6_send_skb+0x92/0x2f0
-    [<00000000d6e2111d>] udp_v6_send_skb.isra.24+0x680/0x15e0
-    [<000000000668a8be>] udpv6_sendmsg+0x18c9/0x27a0
-    [<000000004bd5fa90>] sock_sendmsg+0xb3/0xf0
-    [<000000008227b29f>] ___sys_sendmsg+0x745/0x8f0
-    [<000000008698009d>] __sys_sendmsg+0xde/0x170
-    [<00000000889dacf1>] do_syscall_64+0x9b/0x400
-    [<0000000081cdb353>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000005767ed39>] 0xffffffffffffffff
+Fix this by freeing *args* before return.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Addresses-Coverity-ID: 1476406 ("Resource leak")
+Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/tipc/netlink_compat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index eb3efeabac91d..9a28a21a51f05 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -18,6 +18,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 91d51a595ac23..bbd05707c4e07 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -974,8 +974,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- #include <linux/slab.h>
-+#include <linux/kmemleak.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -361,12 +362,14 @@ static struct neigh_hash_table *neigh_hash_alloc(unsigned int shift)
- 	ret = kmalloc(sizeof(*ret), GFP_ATOMIC);
- 	if (!ret)
- 		return NULL;
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		buckets = kzalloc(size, GFP_ATOMIC);
--	else
-+	} else {
- 		buckets = (struct neighbour __rcu **)
- 			  __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
- 					   get_order(size));
-+		kmemleak_alloc(buckets, size, 0, GFP_ATOMIC);
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
+-	if (!hdr)
++	if (!hdr) {
++		kfree_skb(args);
+ 		return -EMSGSIZE;
 +	}
- 	if (!buckets) {
- 		kfree(ret);
- 		return NULL;
-@@ -386,10 +389,12 @@ static void neigh_hash_free_rcu(struct rcu_head *head)
- 	size_t size = (1 << nht->hash_shift) * sizeof(struct neighbour *);
- 	struct neighbour __rcu **buckets = nht->hash_buckets;
  
--	if (size <= PAGE_SIZE)
-+	if (size <= PAGE_SIZE) {
- 		kfree(buckets);
--	else
-+	} else {
-+		kmemleak_free(buckets);
- 		free_pages((unsigned long)buckets, get_order(size));
-+	}
- 	kfree(nht);
- }
- 
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
