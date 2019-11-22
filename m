@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FF7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0E02068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F61B2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402680;
-	bh=YBmn3/Vt4SXeeCCxdUnbFSsQrjzvI2/wa7gF+wvhn00=;
+	s=default; t=1574402685;
+	bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGVYdGyW5tGJxfIGsSOPoLs4W3mb0RcyB0Oruh2qA+KfeI1QNZyvvd+h3HavpsC/Y
-	 TB7OHCMfVoWgVxUfARnpQf9CjjgLT1CXK9POzw292oGCyXS9GFzZN0JRakwsWMqMcY
-	 QKRy76D23/9/5zloOpH22u/dIQejkxtimKG+L118=
+	b=adDehnyKhM5C8aQxPE0/zWUBa18f24hMmZ/32EIzhXmM3dP+JRQLs7hrQosBYCCng
+	 fIICP5sHHmX3PWjyi9ILZxwbVQmU0TAGKwMnKA3sGqUsGJHUzRNGKlic7vf8Qet7kl
+	 BBBCEbAVwlD/kxScyShWeiDmaIS86zR1LuirLFt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbfKVGCx (ORCPT
+        id S1728742AbfKVGEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:04:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729795AbfKVGCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:46 -0500
+        id S1728837AbfKVGCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0AC320718;
-        Fri, 22 Nov 2019 06:02:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A6432073B;
+        Fri, 22 Nov 2019 06:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402565;
-        bh=YBmn3/Vt4SXeeCCxdUnbFSsQrjzvI2/wa7gF+wvhn00=;
+        s=default; t=1574402571;
+        bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2v+J2YKNSvJB/uUgjQtTPRxeZDuLqV04AD6Djv/XEUTeKlrMkDOZ5VGMWGrv+AYoX
-         ALWfE62VYHEqRzJwNoUzC6rmwjNaEF9R6Kc9qKRQ2Jp2OoaPcFsZmHHa7eFI/tOaMh
-         W/cZP4pk16WiOrJLdHGBBmEyk4I0anvtAec8Vvvw=
+        b=QymDANbJs/McXBogcJQ/WsD/orD3C4qmzpS6IOriPEYrvWkYkj53YrQnYuwlj/1mX
+         c0qcNjQK/CZ0VukN9XRU3hERxeplNbVnbza3mOquKEf8SJd9xQTWvafZQTzrcH3Z9O
+         9yySpnbwL8OxWKD0+tRukqoF0hE0Nc2KMBJ9OBgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
+Cc:     Olof Johansson <olof@lixom.net>,
+        Huang Shijie <sjhuang@iluvatar.ai>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Skidanov <alexey.skidanov@intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.9 69/91] vmscan: return NODE_RECLAIM_NOSCAN in node_reclaim() when CONFIG_NUMA is n
-Date:   Fri, 22 Nov 2019 01:01:07 -0500
-Message-Id: <20191122060129.4239-68-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 73/91] lib/genalloc.c: include vmalloc.h
+Date:   Fri, 22 Nov 2019 01:01:11 -0500
+Message-Id: <20191122060129.4239-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -63,75 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richard.weiyang@gmail.com>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit 8b09549c2bfd9f3f8f4cdad74107ef4f4ff9cdd7 ]
+[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
 
-Commit fa5e084e43eb ("vmscan: do not unconditionally treat zones that
-fail zone_reclaim() as full") changed the return value of
-node_reclaim().  The original return value 0 means NODE_RECLAIM_SOME
-after this commit.
+Fixes build break on most ARM/ARM64 defconfigs:
 
-While the return value of node_reclaim() when CONFIG_NUMA is n is not
-changed.  This will leads to call zone_watermark_ok() again.
+  lib/genalloc.c: In function 'gen_pool_add_virt':
+  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
+  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  lib/genalloc.c: In function 'gen_pool_destroy':
+  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
 
-This patch fixes the return value by adjusting to NODE_RECLAIM_NOSCAN.
-Since node_reclaim() is only called in page_alloc.c, move it to
-mm/internal.h.
-
-Link: http://lkml.kernel.org/r/20181113080436.22078-1-richard.weiyang@gmail.com
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
+Cc: Huang Shijie <sjhuang@iluvatar.ai>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Skidanov <alexey.skidanov@intel.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h |  6 ------
- mm/internal.h        | 10 ++++++++++
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ lib/genalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 2228907d08ffd..d13617c7bcc4f 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -335,14 +335,8 @@ extern unsigned long vm_total_pages;
- extern int node_reclaim_mode;
- extern int sysctl_min_unmapped_ratio;
- extern int sysctl_min_slab_ratio;
--extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
- #else
- #define node_reclaim_mode 0
--static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
--				unsigned int order)
--{
--	return 0;
--}
- #endif
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index f365d71cdc774..7e85d1e37a6ea 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -35,6 +35,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+ #include <linux/of_device.h>
++#include <linux/vmalloc.h>
  
- extern int page_evictable(struct page *page);
-diff --git a/mm/internal.h b/mm/internal.h
-index 3e2d016947479..f6df7cb8cbc0a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -442,6 +442,16 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
- #define NODE_RECLAIM_SOME	0
- #define NODE_RECLAIM_SUCCESS	1
- 
-+#ifdef CONFIG_NUMA
-+extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
-+#else
-+static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
-+				unsigned int order)
-+{
-+	return NODE_RECLAIM_NOSCAN;
-+}
-+#endif
-+
- extern int hwpoison_filter(struct page *p);
- 
- extern u32 hwpoison_filter_dev_major;
+ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+ {
 -- 
 2.20.1
 
