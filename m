@@ -2,91 +2,142 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3442C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98209C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A199020708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574422083;
-	bh=kWDkKmlSBskNXl3EeNSbF3ef+vbB83Y/aOnQrvMZQnk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UTnpvHiQDTBbOwbyRKN100xt12M7HwZ8o4DnlIJcdI2BqsjtwpkTxR6N7Y4NbtuXG
-	 IykgQGtG5xUvzKlVU1smFcYOv81X7xq4yxqH9zdpdO5ViGswwXNzaUNszPFn5eAQA5
-	 vBTRZuWG53JMsuVE/2pizD2DiSUdjla3Rn3/VWPo=
+	by mail.kernel.org (Postfix) with ESMTP id 7938E20672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfKVKbe (ORCPT
+        id S1728061AbfKVL2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbfKVKbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:32 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5126420708;
-        Fri, 22 Nov 2019 10:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418691;
-        bh=kWDkKmlSBskNXl3EeNSbF3ef+vbB83Y/aOnQrvMZQnk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M5t5z9C7rkPIIOVP4T+2lbJlY/b8OFVB7yqifTXQktvqrdezMtXKw8DuE4ThBCutR
-         khMoaFUWdQTUtuRpFOVydphk5fmPdbomBjxpOcjhHtxF5jAKGwgJRlSrEr4iSdKM4O
-         fmVobtIGvfqrdzBe6gUGYPUBAFigQh1U0uBv2jfM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 002/159] ax88172a: fix information leak on short answers
-Date:   Fri, 22 Nov 2019 11:26:33 +0100
-Message-Id: <20191122100706.861611940@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
-References: <20191122100704.194776704@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 22 Nov 2019 06:28:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42984 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727191AbfKVL2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:28:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EB634AF19;
+        Fri, 22 Nov 2019 11:28:06 +0000 (UTC)
+Date:   Fri, 22 Nov 2019 12:28:05 +0100
+Message-ID: <s5h4kyw5ewq.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     syzbot <syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com>,
+        alsa-devel@alsa-project.org, andreyknvl@google.com,
+        benquike@gmail.com, g@b4.vu, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        wang6495@umn.edu
+Subject: Re: general protection fault in snd_usb_create_mixer
+In-Reply-To: <20191121204956.GE617@kadam>
+References: <0000000000002129080597dce70d@google.com>
+        <20191121204956.GE617@kadam>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+On Thu, 21 Nov 2019 21:49:56 +0100,
+Dan Carpenter wrote:
+> 
+> On Thu, Nov 21, 2019 at 07:25:09AM -0800, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    46178223 usb: gadget: add raw-gadget interface
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=176f9836e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a36ab65c6653d7ccdd62
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1447d3bae00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ef3a86e00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+> > 
+> > usb 1-1: 208:241 : does not exist
+> > usb 1-1: 208:242 : does not exist
+> > usb 1-1: 208:243 : does not exist
+> > usb 1-1: 208:244 : does not exist
+> > usb 1-1: 208:245 : does not exist
+> > usb 1-1: 208:246 : does not exist
+> > usb 1-1: 208:247 : does not exist
+> > usb 1-1: 208:248 : does not exist
+> > usb 1-1: 208:249 : does not exist
+> > usb 1-1: 208:250 : does not exist
+> 
+> These error messages are because:
+> 
+> sound/usb/card.c
+>    128  static int snd_usb_create_stream(struct snd_usb_audio *chip, int ctrlif, int interface)
+>    129  {
+>    130          struct usb_device *dev = chip->dev;
+>    131          struct usb_host_interface *alts;
+>    132          struct usb_interface_descriptor *altsd;
+>    133          struct usb_interface *iface = usb_ifnum_to_if(dev, interface);
+>    134  
+>    135          if (!iface) {
+>    136                  dev_err(&dev->dev, "%u:%d : does not exist\n",
+>    137                          ctrlif, interface);
+>    138                  return -EINVAL;
+>    139          }
+> 
+> "iface" is NULL.  The caller ignores the -EINVAL (correctly I think).
+> 
+> Then the NULL dereference happens in snd_usb_mixer_controls_badd()
+> 
+> sound/usb/mixer.c
+>   2903  static int snd_usb_mixer_controls_badd(struct usb_mixer_interface *mixer,
+>   2904                                         int ctrlif)
+>   2905  {
+>   2906          struct usb_device *dev = mixer->chip->dev;
+>   2907          struct usb_interface_assoc_descriptor *assoc;
+>   2908          int badd_profile = mixer->chip->badd_profile;
+>   2909          struct uac3_badd_profile *f;
+>   2910          const struct usbmix_ctl_map *map;
+>   2911          int p_chmask = 0, c_chmask = 0, st_chmask = 0;
+>   2912          int i;
+>   2913  
+>   2914          assoc = usb_ifnum_to_if(dev, ctrlif)->intf_assoc;
+>   2915  
+>   2916          /* Detect BADD capture/playback channels from AS EP descriptors */
+>   2917          for (i = 0; i < assoc->bInterfaceCount; i++) {
+>   2918                  int intf = assoc->bFirstInterface + i;
+>   2919  
+>   2920                  struct usb_interface *iface;
+>   2921                  struct usb_host_interface *alts;
+>   2922                  struct usb_interface_descriptor *altsd;
+>   2923                  unsigned int maxpacksize;
+>   2924                  char dir_in;
+>   2925                  int chmask, num;
+>   2926  
+>   2927                  if (intf == ctrlif)
+>   2928                          continue;
+>   2929  
+>   2930                  iface = usb_ifnum_to_if(dev, intf);
+>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> iface is not checked.
+> 
+> Should it be "if (!iface) continue;?"
 
-[ Upstream commit a9a51bd727d141a67b589f375fe69d0e54c4fe22 ]
-
-If a malicious device gives a short MAC it can elicit up to
-5 bytes of leaked memory out of the driver. We need to check for
-ETH_ALEN instead.
-
-Reported-by: syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/ax88172a.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/net/usb/ax88172a.c
-+++ b/drivers/net/usb/ax88172a.c
-@@ -243,7 +243,7 @@ static int ax88172a_bind(struct usbnet *
- 
- 	/* Get the MAC address */
- 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf);
--	if (ret < 0) {
-+	if (ret < ETH_ALEN) {
- 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
- 		goto free;
- 	}
+Right, that should fix the problem.  Although the interface number
+referred in snd_usb_mixer_controls_badd() can be different from the
+one checked in snd_usb_create_stream(), the culprit is the missing
+NULL check there.
 
 
+thanks,
+
+Takashi
