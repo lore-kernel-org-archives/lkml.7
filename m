@@ -2,171 +2,100 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CABFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F77C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AAB2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAB12068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ScO2cTUd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWztAYWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKVREw (ORCPT
+        id S1727205AbfKVRFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:04:52 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16524 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726638AbfKVREv (ORCPT
+        Fri, 22 Nov 2019 12:05:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51592 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVRFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:04:51 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMH2xbe027518;
-        Fri, 22 Nov 2019 18:04:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=sDlyBHMmlDnVJUfbwI/v8Ci33r9NaPZf6a4Vey8Cbh4=;
- b=ScO2cTUdmzsMRx1QAf4QZar2ZaUZEc12ba4mdm4u7pMakoBTTWtHjMldqJLSE6ge5dtZ
- 6V0mo1M1cEILb8Zqk1VOVvnOi+EFLip7Vedl1nJLslGa4QiDrBKjotMOHhgua68LhYMK
- D8Gh+HeFWxdWeelAkapKLmmL27ZBIIpSvUFPu9dHm8dRN6OPfdTU3gy66SzMncLAZjRm
- lPdDFP+RNFDakISeeQQwZvH7gMXyMGel25qt9YBjhabbIKKnXKhGEHouNNMoBd6nmALb
- 5ytpF5EEhAjaxkQSj/mhfJygeXV7XM5UUrhDXtwMy6l79dJjmemaGarDpWnWsw5734Uo YA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9ujhv5w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 18:04:29 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 048E210002A;
-        Fri, 22 Nov 2019 18:04:27 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B3BFF2FF5FE;
-        Fri, 22 Nov 2019 18:04:27 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 22 Nov 2019 18:04:27
- +0100
-From:   Christophe Kerello <christophe.kerello@st.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: mtd: Use mtd device name instead of mtd->name when registering nvmem device
-Date:   Fri, 22 Nov 2019 18:03:42 +0100
-Message-ID: <1574442222-19759-1-git-send-email-christophe.kerello@st.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 22 Nov 2019 12:05:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KLTSCBo9GrmIxlML9NXjcKsTYOt38qaSPc5RYyNYTYc=; b=PWztAYWaNbzXORsPKRgBq4QlE
+        4TgQmDJM1ReeJUdFtb3/bZVCVfM3Y7u1EPllMHxvYPlj15uNy4CsrWGTauI5AGatcgsKKZNpXfG8N
+        iAadYJ86yptwYD+K1utQD3x1qgmZBxWesKOON4nYpS+5VJ35TJl4PDtBR0ATF8UwtDxB7xV3re4Iz
+        9gfdK1WuwwQF0umMcYrksozzGN9W8JqOl9Wo8EDF305QWZ8/bPd3JNjoxrL+GKyA6DxjVVBLYO1Bj
+        IlrN5zgxjbHE0kgFfmA02phF0XdI0gzsz4PCxztld7lenv+k7pEwLmeHJoU6NBzNLfZKoFBH1pmXK
+        PNRgunFMg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iYCNC-0005Gu-U8; Fri, 22 Nov 2019 17:05:34 +0000
+Date:   Fri, 22 Nov 2019 09:05:34 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
+Message-ID: <20191122170534.GV20752@bombadil.infradead.org>
+References: <20191122100912.732983531@linuxfoundation.org>
+ <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
+ <20191122151631.GA2083451@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-22_03:2019-11-21,2019-11-22 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122151631.GA2083451@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MTD currently allows to have same partition name on different devices.
-Since nvmen device registration has been added, it is not more possible
-to have same partition name on different devices. We get following
-logs:
-sysfs: cannot create duplicate filename XXX
-Failed to register NVMEM device
+On Fri, Nov 22, 2019 at 04:16:31PM +0100, Greg Kroah-Hartman wrote:
+> On Fri, Nov 22, 2019 at 06:47:05AM -0800, Guenter Roeck wrote:
+> > On 11/22/19 2:26 AM, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 4.19.86 release.
+> > > There are 220 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > 
+> > I see the following warning (at least for arm64, ppc64, and x86_64).
+> > This seems to be caused by "idr: Fix idr_get_next race with idr_remove".
+> > v4.14.y is also affected. Mainline and v5.3.y are not affected.
 
-To avoid such issue, the proposed patch uses the mtd device name instead of
-the partition name.
+That makes sense; the code in question is different after 4.19.
+Thanks for the report; it's very clear.
 
-Fixes: c4dfa25ab307 ("mtd: add support for reading MTD devices via the nvmem API")
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
----
-Hi,
+> Willy, this looks like something from your patch, is it to be expected?
 
-With latest mtd-next branch, we get following logs on our STM32MP1 eval board.
+It's harmless; the problem is that we can't check whether the dereference
+is safe.  The caller isn't holding the RCU lock, and the IDR code doesn't
+know what lock is being held to make this dereference safe.  Do you want
+a changelog for this oneliner which disables the checking?
 
-[    1.979089] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xd3
-[    1.984055] nand: Micron MT29F8G08ABACAH4
-[    1.988000] nand: 1024 MiB, SLC, erase size: 256 KiB, page size: 4096, OOB size: 224
-[    1.996378] Bad block table found at page 262080, version 0x01
-[    2.001945] Bad block table found at page 262016, version 0x01
-[    2.008002] 4 fixed-partitions partitions found on MTD device 58002000.nand-controller
-[    2.015398] Creating 4 MTD partitions on "58002000.nand-controller":
-[    2.021751] 0x000000000000-0x000000200000 : "fsbl"
-[    2.028506] 0x000000200000-0x000000400000 : "ssbl1"
-[    2.033741] 0x000000400000-0x000000600000 : "ssbl2"
-[    2.038924] 0x000000600000-0x000040000000 : "UBI"
-[    2.051336] spi-nor spi0.0: mx66l51235l (65536 Kbytes)
-[    2.055123] 4 fixed-partitions partitions found on MTD device spi0.0
-[    2.061378] Creating 4 MTD partitions on "spi0.0":
-[    2.066243] 0x000000000000-0x000000040000 : "fsbl"
-[    2.071429] sysfs: cannot create duplicate filename '/bus/nvmem/devices/fsbl'
-[    2.078157] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc4-00031-g589e1b6 #176
-[    2.085781] Hardware name: STM32 (Device Tree Support)
-[    2.090957] [<c0312830>] (unwind_backtrace) from [<c030cbe4>] (show_stack+0x10/0x14)
-[    2.098693] [<c030cbe4>] (show_stack) from [<c0e8d340>] (dump_stack+0xb4/0xc8)
-[    2.105929] [<c0e8d340>] (dump_stack) from [<c050fcdc>] (sysfs_warn_dup+0x58/0x64)
-[    2.113509] [<c050fcdc>] (sysfs_warn_dup) from [<c0510010>] (sysfs_do_create_link_sd+0xe4/0xe8)
-[    2.122224] [<c0510010>] (sysfs_do_create_link_sd) from [<c0956f60>] (bus_add_device+0x80/0xfc)
-[    2.130938] [<c0956f60>] (bus_add_device) from [<c0953f54>] (device_add+0x35c/0x608)
-[    2.138697] [<c0953f54>] (device_add) from [<c0d12e0c>] (nvmem_register.part.2+0x180/0x624)
-[    2.147065] [<c0d12e0c>] (nvmem_register.part.2) from [<c09ea5c8>] (add_mtd_device+0x2d8/0x4b8)
-[    2.155776] [<c09ea5c8>] (add_mtd_device) from [<c09edbd4>] (add_mtd_partitions+0x84/0x16c)
-[    2.164140] [<c09edbd4>] (add_mtd_partitions) from [<c09ed9ac>] (parse_mtd_partitions+0x220/0x3c4)
-[    2.173118] [<c09ed9ac>] (parse_mtd_partitions) from [<c09ea8d4>] (mtd_device_parse_register+0x40/0x164)
-[    2.182622] [<c09ea8d4>] (mtd_device_parse_register) from [<c0a22dfc>] (spi_nor_probe+0xd0/0x190)
-[    2.191513] [<c0a22dfc>] (spi_nor_probe) from [<c0a370a0>] (spi_drv_probe+0x80/0xa4)
-[    2.199268] [<c0a370a0>] (spi_drv_probe) from [<c0957f8c>] (really_probe+0x234/0x34c)
-[    2.207111] [<c0957f8c>] (really_probe) from [<c095821c>] (driver_probe_device+0x60/0x174)
-[    2.215391] [<c095821c>] (driver_probe_device) from [<c0956378>] (bus_for_each_drv+0x58/0xb8)
-[    2.223932] [<c0956378>] (bus_for_each_drv) from [<c0957ce4>] (__device_attach+0xd0/0x13c)
-[    2.232212] [<c0957ce4>] (__device_attach) from [<c0957060>] (bus_probe_device+0x84/0x8c)
-[    2.240404] [<c0957060>] (bus_probe_device) from [<c0953fb4>] (device_add+0x3bc/0x608)
-[    2.248334] [<c0953fb4>] (device_add) from [<c0a377b4>] (spi_add_device+0x9c/0x14c)
-[    2.256003] [<c0a377b4>] (spi_add_device) from [<c0a37b98>] (of_register_spi_device+0x234/0x370)
-[    2.264807] [<c0a37b98>] (of_register_spi_device) from [<c0a384ec>] (spi_register_controller+0x578/0x734)
-[    2.274394] [<c0a384ec>] (spi_register_controller) from [<c0a386dc>] (devm_spi_register_controller+0x34/0x6c)
-[    2.284331] [<c0a386dc>] (devm_spi_register_controller) from [<c0a4d0b8>] (stm32_qspi_probe+0x338/0x3bc)
-[    2.293831] [<c0a4d0b8>] (stm32_qspi_probe) from [<c0959ee0>] (platform_drv_probe+0x48/0x98)
-[    2.302285] [<c0959ee0>] (platform_drv_probe) from [<c0957f8c>] (really_probe+0x234/0x34c)
-[    2.310566] [<c0957f8c>] (really_probe) from [<c095821c>] (driver_probe_device+0x60/0x174)
-[    2.318847] [<c095821c>] (driver_probe_device) from [<c09584d8>] (device_driver_attach+0x58/0x60)
-[    2.327735] [<c09584d8>] (device_driver_attach) from [<c0958560>] (__driver_attach+0x80/0xbc)
-[    2.336276] [<c0958560>] (__driver_attach) from [<c09562cc>] (bus_for_each_dev+0x74/0xb4)
-[    2.344469] [<c09562cc>] (bus_for_each_dev) from [<c09572c4>] (bus_add_driver+0x164/0x1e8)
-[    2.352749] [<c09572c4>] (bus_add_driver) from [<c0958fd8>] (driver_register+0x74/0x108)
-[    2.360854] [<c0958fd8>] (driver_register) from [<c0302ec8>] (do_one_initcall+0x54/0x22c)
-[    2.369047] [<c0302ec8>] (do_one_initcall) from [<c1501024>] (kernel_init_freeable+0x150/0x1ec)
-[    2.377762] [<c1501024>] (kernel_init_freeable) from [<c0ea5e74>] (kernel_init+0x8/0x114)
-[    2.385951] [<c0ea5e74>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-[    2.393525] Exception stack(0xe68c1fb0 to 0xe68c1ff8)
-[    2.398583] 1fa0:                                     00000000 00000000 00000000 00000000
-[    2.406777] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    2.414967] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    2.421879] mtd mtd4: Failed to register NVMEM device
-
-Before nvmen device registration was added, it was possible to have same partition name on different devices.
-Instead of using the partition name, this patch proposes to use the MTD device name (mtdX).
-
-Regards,
-Christophe Kerello.
-
- drivers/mtd/mtdcore.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 5fac435..559b693 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -551,7 +551,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
+diff --git a/lib/idr.c b/lib/idr.c
+index 49e7918603c7..6ff3b1c36e0a 100644
+--- a/lib/idr.c
++++ b/lib/idr.c
+@@ -237,7 +237,7 @@ void *idr_get_next(struct idr *idr, int *nextid)
  
- 	config.id = -1;
- 	config.dev = &mtd->dev;
--	config.name = mtd->name;
-+	config.name = dev_name(&mtd->dev);
- 	config.owner = THIS_MODULE;
- 	config.reg_read = mtd_nvmem_reg_read;
- 	config.size = mtd->size;
--- 
-1.9.1
-
+ 	id = (id < base) ? 0 : id - base;
+ 	radix_tree_for_each_slot(slot, &idr->idr_rt, &iter, id) {
+-		entry = radix_tree_deref_slot(slot);
++		entry = rcu_dereference_raw(*slot);
+ 		if (!entry)
+ 			continue;
+ 		if (!radix_tree_deref_retry(entry))
