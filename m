@@ -2,147 +2,165 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20247C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFCC52070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF19C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UkcU0Xtu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFawcsOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfKVVaG (ORCPT
+        id S1726869AbfKVVbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:30:06 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36393 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKVVaF (ORCPT
+        Fri, 22 Nov 2019 16:31:42 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33238 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfKVVbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:30:05 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k13so3937537pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 13:30:05 -0800 (PST)
+        Fri, 22 Nov 2019 16:31:42 -0500
+Received: by mail-pj1-f65.google.com with SMTP id o14so3589058pjr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 13:31:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7t6M7j4eqiF4dAhaLb38TLT0fseDmfpNVbu55ek7TJs=;
-        b=UkcU0XtuucvAShhb0pzKP6YFeq4hY9MgO+n6mEWZfPueG4LkIw8qA/WAhVfRd7v2mE
-         ZmhEKbsTpCo64S5pwoid3Js7ErRM5+b5naWqAs2ECtx6og9T5GPgofcFR70vUsmai/tZ
-         wUuheWp6w/Bv5y4QdnOLThkxxiHCSb/23IkmE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HbJjs9npQivb+peN/P+/x5LBE//DdoQclSZUko6OYFA=;
+        b=RFawcsOwCqAQEn5boyIcXR16Ki/HBDzNNs0+cfhfK/kOpeyl3s8AHaiARmdz+ZidjB
+         tJ2SwyEjjvDTYo3b8eRbD4+idgXO6jzJhsyQsU1N9jFOBUKU/ICLSLcrNrwVSAG26FRt
+         mgbyxJR2ijBrYIlmXhPJo5cnY7XAXQ2RV9AGiTEH0Ie5M7qcw0YKVIywOI+Y1qNXGqUD
+         vjmWo0N4xOcDGJEox/RXx1+0KyCIDwXccWf5MjxA9sNtL6+MUWVe9cZxWK76dKG76+wX
+         rEezAue56G/PQbfE7FrX69tJh7oZX4SgtzibTF05UKvBRhgEORQef9S4SFRKg6WHZIa9
+         2JHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7t6M7j4eqiF4dAhaLb38TLT0fseDmfpNVbu55ek7TJs=;
-        b=lgGjgf1IAg4ym9IGqnYo8/bWiXxE2fu6K/BcnxQmxG8vHjJvTOsp8AFdLMyMVEfuue
-         RBRE8ayfA1CyLESd4iHcGLK8O3bWZOGr0BDj9/e+VMKFxzZ/nS6vmUtMhwpxTF0djdzI
-         0alO7Eltc9ERn77m8+zybmyMZAC3kg/0W8iPoREE+DJRctkXEsJVbj3+UoanJ8/HGpCn
-         LlkvFQpamaaI14zCm23C4W3gM+BEaJYWMo9+REyRPqUr2fWEWODiTADyeysb3oneTP1z
-         xHPobNZDrFEDOXle5v7WsBL+BYK7poFKu1XAfIOG+0+btFyTZmlB+Rc3r7d4GPQowdyX
-         3/OQ==
-X-Gm-Message-State: APjAAAV8SFUF6JSOEXfGLBPYrBVTlsSchRA5xPvSnpAOSluj6Iv00dvk
-        I24qP5AUVjuVWfNAwt5kFloSY2tEqW8XyQ==
-X-Google-Smtp-Source: APXvYqwiN/mWcSIoSkuvttbGyx3kyPi5/7BOGNQ2jQdusDflTn8/lXnX1PxEvK/e1tB66wnR/JRJog==
-X-Received: by 2002:a65:68ce:: with SMTP id k14mr11031165pgt.374.1574458204763;
-        Fri, 22 Nov 2019 13:30:04 -0800 (PST)
-Received: from yichengli2.mtv.corp.google.com ([2620:15c:202:201:900:2031:8afd:85a7])
-        by smtp.gmail.com with ESMTPSA id t15sm8019237pgb.0.2019.11.22.13.30.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 13:30:04 -0800 (PST)
-From:   Yicheng Li <yichengli@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     bleung@chromium.org, yichengli@chromium.org, gwendal@chromium.org,
-        enric.balletbo@collabora.com
-Subject: [PATCH v2] mfd / platform: cros_ec: Query EC protocol version if EC transitions between RO/RW
-Date:   Fri, 22 Nov 2019 13:29:05 -0800
-Message-Id: <20191122212905.35679-1-yichengli@chromium.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HbJjs9npQivb+peN/P+/x5LBE//DdoQclSZUko6OYFA=;
+        b=WXK18u9mpPtuR7Us9RVUHZ1sKjm0K+iByPtGqwLEsQmJoBDXagnatoklVL5iST1GU/
+         raZxGznDlF5rBGqYlDBUY4QWjgfLDr54X3LBFNsYmwHOuc8Jq9fKZBSGKQw34UjNFCx3
+         l2/J4DcqH1+OK41UNr7b2CukLMLRXad8Hu/MngcDcE9S3jG3BByyJqmEAMKuE3AHJCW8
+         va2ysh3mQj3lCmUy6nR6fLZaUHrClwjnxRhCfXBIERZ2kMuRl83aaWWQV3MQf4LQrpzI
+         uMuommdKD+DYMQSUQYORytyBPhYNdwttSSY47QvXP/gta2fuWnbqpMQowuQnF0uTRjuS
+         GDBw==
+X-Gm-Message-State: APjAAAVHC4k2CSQaMNfMYPTPcwBiaUcCPXSBtDF0MNQy5W1jqlJLBhpN
+        Rbvr8/qMyOucxtckSrR4p5OyxGn33GCmWRjYHPV3dw==
+X-Google-Smtp-Source: APXvYqwp9oirAfneUwU+SoycQWx2Iqme1ayHmlDX0a5gLCpzGo05spCaML0qO0qityULcE1WRKI5UM8d92l2Uk+Stzw=
+X-Received: by 2002:a17:902:9682:: with SMTP id n2mr16075888plp.336.1574458300970;
+ Fri, 22 Nov 2019 13:31:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000109c040597dc5843@google.com> <Pine.LNX.4.44L0.1911221150350.1511-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1911221150350.1511-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Sat, 23 Nov 2019 06:31:30 +0900
+Message-ID: <CAAeHK+xQo8S8mmMgrOHOwC3iOnZJOZvYNaAei-tMrJA36R6OMQ@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in hub_event
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RO and RW of EC may have different EC protocol version. If EC transitions
-between RO and RW, but AP does not reboot (this is true for fingerprint
-microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
-still uses the protocol version queried before transition, which can
-cause problems. In the case of fingerprint microcontroller, this causes
-AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
-interrupt handler, which in turn prevents RO to clear the interrupt
-line to AP, in an infinite loop.
+On Sat, Nov 23, 2019 at 1:51 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Thu, 21 Nov 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    46178223 usb: gadget: add raw-gadget interface
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15a05836e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1061395ae00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13653d1ce00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com
+> >
+> > rcu: INFO: rcu_sched self-detected stall on CPU
+>
+> > RIP: 0010:hid_apply_multiplier drivers/hid/hid-core.c:1058 [inline]
+> > RIP: 0010:hid_setup_resolution_multiplier+0x33b/0x990
+> > drivers/hid/hid-core.c:1114
 
-Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
-might have been a transition between RO and RW, so re-query the protocol.
+I'm not sure, but the stack trace reminds me of this issue, so this
+report might be related:
 
-Signed-off-by: Yicheng Li <yichengli@chromium.org>
----
- drivers/platform/chrome/cros_ec.c           | 23 +++++++++++++++++++++
- include/linux/platform_data/cros_ec_proto.h |  5 +++++
- 2 files changed, 28 insertions(+)
+https://groups.google.com/d/msg/syzkaller-bugs/X0zVbh8aFEM/NsPcshjxBgAJ
 
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 9b2d07422e17..a72514ac3ce7 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -104,6 +104,22 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
- 	return ret;
- }
- 
-+static int cros_ec_ready_event(struct notifier_block *nb,
-+	unsigned long queued_during_suspend, void *_notify)
-+{
-+	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
-+						     notifier_ready);
-+	u32 host_event = cros_ec_get_host_event(ec_dev);
-+
-+	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
-+		mutex_lock(&ec_dev->lock);
-+		cros_ec_query_all(ec_dev);
-+		mutex_unlock(&ec_dev->lock);
-+		return NOTIFY_OK;
-+
-+	return NOTIFY_DONE;
-+}
-+
- /**
-  * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
-  * @ec_dev: Device to register.
-@@ -201,6 +217,13 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
- 		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
- 			err);
- 
-+	/* Register the notifier for EC_HOST_EVENT_INTERFACE_READY event. */
-+	ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
-+	err = blocking_notifier_chain_register(&ec_dev->event_notifier,
-+					       &ec_dev->notifier_ready);
-+	if (err)
-+		return err;
-+
- 	dev_info(dev, "Chrome EC device registered\n");
- 
- 	return 0;
-diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index 0d4e4aaed37a..4b016d5dbf50 100644
---- a/include/linux/platform_data/cros_ec_proto.h
-+++ b/include/linux/platform_data/cros_ec_proto.h
-@@ -161,6 +161,11 @@ struct cros_ec_device {
- 	int event_size;
- 	u32 host_event_wake_mask;
- 	u32 last_resume_result;
-+	/*
-+	 * The notifier block to let the kernel re-query EC communication
-+	 * protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
-+	 */
-+	struct notifier_block notifier_ready;
- 
- 	/* The platform devices used by the mfd driver */
- 	struct platform_device *ec;
--- 
-2.21.0
-
+>
+> Diagnostic patch.
+>
+> #syz test: https://github.com/google/kasan.git 46178223
+>
+>  drivers/hid/hid-core.c |   17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+>
+> Index: usb-devel/drivers/hid/hid-core.c
+> ===================================================================
+> --- usb-devel.orig/drivers/hid/hid-core.c
+> +++ usb-devel/drivers/hid/hid-core.c
+> @@ -1055,8 +1055,13 @@ static void hid_apply_multiplier(struct
+>          */
+>         multiplier_collection = &hid->collection[multiplier->usage->collection_index];
+>         while (multiplier_collection->parent_idx != -1 &&
+> -              multiplier_collection->type != HID_COLLECTION_LOGICAL)
+> +              multiplier_collection->type != HID_COLLECTION_LOGICAL) {
+> +               hid_info(hid, "collection %d %px parent %d\n",
+> +       multiplier_collection - hid->collection, multiplier_collection,
+> +       multiplier_collection->parent_idx);
+>                 multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
+> +       }
+> +       hid_info(hid, "Got collection\n");
+>
+>         effective_multiplier = hid_calculate_multiplier(hid, multiplier);
+>
+> @@ -1069,6 +1074,7 @@ static void hid_apply_multiplier(struct
+>                                                       effective_multiplier);
+>                 }
+>         }
+> +       hid_info(hid, "Applied multiplier\n");
+>  }
+>
+>  /*
+> @@ -1103,16 +1109,23 @@ void hid_setup_resolution_multiplier(str
+>
+>         rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
+>         list_for_each_entry(rep, &rep_enum->report_list, list) {
+> +               hid_info(hid, "Start report %px maxfield %d\n",
+> +       rep, rep->maxfield);
+>                 for (i = 0; i < rep->maxfield; i++) {
+>                         /* Ignore if report count is out of bounds. */
+>                         if (rep->field[i]->report_count < 1)
+>                                 continue;
+>
+> +                       hid_info(hid, "Field %d %px maxusage %d\n",
+> +       i, rep->field[i], rep->field[i]->maxusage);
+>                         for (j = 0; j < rep->field[i]->maxusage; j++) {
+>                                 usage = &rep->field[i]->usage[j];
+> -                               if (usage->hid == HID_GD_RESOLUTION_MULTIPLIER)
+> +                               if (usage->hid == HID_GD_RESOLUTION_MULTIPLIER) {
+> +                                       hid_info(hid, "Usage %d %px\n",
+> +       j, usage);
+>                                         hid_apply_multiplier(hid,
+>                                                              rep->field[i]);
+> +                               }
+>                         }
+>                 }
+>         }
+>
