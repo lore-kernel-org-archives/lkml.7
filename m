@@ -2,96 +2,166 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B95C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCC0C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472BB2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7Owfb0y"
+	by mail.kernel.org (Postfix) with ESMTP id 6AB9C2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfKVWKH (ORCPT
+        id S1726803AbfKVWNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:10:07 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45894 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKVWKH (ORCPT
+        Fri, 22 Nov 2019 17:13:21 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:60356 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726638AbfKVWNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:10:07 -0500
-Received: by mail-il1-f196.google.com with SMTP id o18so8380864ils.12;
-        Fri, 22 Nov 2019 14:10:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=bBifFU+n+ullPalYVdHCIouKPhTwiN8vd2nuMuI0EP4=;
-        b=N7Owfb0ymE4k55Cz4Tylc3lGqajuxdOLCaNNOL3y3YMqPUW3gcx8W6yj+Dpbm0wi1Y
-         9DY8gf1IHSaJjwBIxHM9apHriu6PKCVWVyYNrK++aBHkQFO9JfB+ytCOwfLOYhZUqlKG
-         JRtLyAL0FaN4vVtBMhgeAMmyTPm8AhrVAyIQm0foeg1A/UFKM3MgetBxBsNo2En9mCxM
-         +8va9/9q+3jKh8fifbJLgo/lXfFEdQFEHN7aHwuL30xIygancJoCqz13j6Ij9dHgb2/I
-         W5K4QaLAe34D7CngLE5MALsc0iuXyeqfX8nR0+B7okTbb68K227iK0fzCuiqvX12wmhT
-         66wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bBifFU+n+ullPalYVdHCIouKPhTwiN8vd2nuMuI0EP4=;
-        b=Fs3xb68juJOWaHzzR34ADXE171ooHk9Nca0mZgYkrvTZC++om09JdZuzOPK7SZxAUM
-         eerd5whoGlV44zY3SuMx1xE2Tqmpvt6WST7tNvCxEvUvZIdGPZIZuy1aETlDQRVuBhvR
-         tiz9HWoyCXnXPY5uHsrxfKn56vVNHvtDehDejwKO8t8JXFMgDI2G5kZGMwkHnTlEOKGF
-         LHDJoe9a1ZXMPu3sa/7Lr++crdKSJN6lZL7b74KuBGNY2bT0qFEGw26tnvAyrleh3Xyy
-         VOHuOVbMBW4S0xECu3zBQtc+Vje+HVD09PErcFptGd0EblRU+HeZa9hufFziJ9xjcD4K
-         wjWw==
-X-Gm-Message-State: APjAAAXPshLqIZI1oKhCSSjHVNl/CtOk3VlRg2Y4LWUvjxYj5xJE27ZD
-        i7UFps6yPHaJA8wXxiT6LV8=
-X-Google-Smtp-Source: APXvYqzYxev0mehw5aRdi6YyMlpR/8LUw3GUw9sxPjIdE6W/F2xPhVpIyLMPatJ4Vp8FiB6YoHO2yw==
-X-Received: by 2002:a92:8605:: with SMTP id g5mr19067812ild.172.1574460605747;
-        Fri, 22 Nov 2019 14:10:05 -0800 (PST)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id x62sm398741ill.86.2019.11.22.14.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 14:10:05 -0800 (PST)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] dma-buf: Fix memory leak in sync_file_merge()
-Date:   Fri, 22 Nov 2019 16:09:55 -0600
-Message-Id: <20191122220957.30427-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Nov 2019 17:13:21 -0500
+Received: (qmail 8878 invoked by uid 2102); 22 Nov 2019 17:13:20 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 Nov 2019 17:13:20 -0500
+Date:   Fri, 22 Nov 2019 17:13:20 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Pete Zaitcev <zaitcev@redhat.com>
+cc:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
+        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
+        <kstewart@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <viro@zeniv.linux.org.uk>
+Subject: Re: possible deadlock in mon_bin_vma_fault
+In-Reply-To: <20191122145243.6ece9bed@suzdal.zaitcev.lan>
+Message-ID: <Pine.LNX.4.44L0.1911221700420.1511-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of sync_file_merge() the allocated sync_file is
-leaked if number of fences overflows. Release sync_file by goto err.
+On Fri, 22 Nov 2019, Pete Zaitcev wrote:
 
-Fixes: a02b9dc90d84 ("dma-buf/sync_file: refactor fence storage in struct sync_file")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/dma-buf/sync_file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > It would be more elegant to do the rp->mmap_active test before calling
+> > kcalloc and mon_alloc_buf.  But of course that's a pretty minor thing.
+> 
+> Indeed it feels wrong that so much work gets discarded. However, memory
+> allocations can block, right? In the same time, our main objective here is
+> to make sure that when a page fault happens, we fill in the page that VMA
+> is intended to refer, and not one that was re-allocated. Therefore, I'm
+> trying to avoid a situation where:
+> 
+> 1. thread A checks mmap_active, finds it at zero and proceeds into the
+> reallocation ioctl
+> 2. thread A sleeps in get_free_page()
+> 3. thread B runs mmap() and succeeds
+> 4. thread A obtains its pages and proceeds to substitute the buffer
+> 5. thread B (or any other) pagefaults and ends with the new, unexpected page
+> 
+> The code is not pretty, but I don't see an alternative. Heck, I would
+> love you to find more races if you can.
 
-diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
-index 25c5c071645b..91185db9a952 100644
---- a/drivers/dma-buf/sync_file.c
-+++ b/drivers/dma-buf/sync_file.c
-@@ -221,7 +221,7 @@ static struct sync_file *sync_file_merge(const char *name, struct sync_file *a,
- 	a_fences = get_fences(a, &a_num_fences);
- 	b_fences = get_fences(b, &b_num_fences);
- 	if (a_num_fences > INT_MAX - b_num_fences)
--		return NULL;
-+		goto err;
+The alternative is to have the routines for mmap() hold fetch_lock
+instead of b_lock.  mmap() is allowed to sleep, so that would be okay.  
+Then you would also hold fetch_lock while checking mmap_active and
+doing the memory allocations.  That would prevent any races -- in your
+example above, thread A would acquire fetch_lock in step 1, so thread B
+would block in step 3 until step 4 was finished.  Hence B would end up 
+mapping the correct pages.
+
+In practice, I don't see this being a routine problem.  How often do 
+multiple threads independently try to mmap the same usbmon buffer?
+
+Still, let's see syzbot reacts to your current patch.  The line below 
+is how you ask syzbot to test a candidate patch.
+
+Alan Stern
+
+#syz test: linux-4.19.y f6e27dbb1afa
+
+commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
+Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
+Date:   Thu Nov 21 17:24:00 2019 -0600
+
+    usb: Fix a deadlock in usbmon between mmap and read
+    
+    Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
+    Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+
+diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+index ac2b4fcc265f..f48a23adbc35 100644
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
  
- 	num_fences = a_num_fences + b_num_fences;
+ 		mutex_lock(&rp->fetch_lock);
+ 		spin_lock_irqsave(&rp->b_lock, flags);
+-		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+-		kfree(rp->b_vec);
+-		rp->b_vec  = vec;
+-		rp->b_size = size;
+-		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+-		rp->cnt_lost = 0;
++		if (rp->mmap_active) {
++			mon_free_buff(vec, size/CHUNK_SIZE);
++			kfree(vec);
++			ret = -EBUSY;
++		} else {
++			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
++			kfree(rp->b_vec);
++			rp->b_vec  = vec;
++			rp->b_size = size;
++			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
++			rp->cnt_lost = 0;
++		}
+ 		spin_unlock_irqrestore(&rp->b_lock, flags);
+ 		mutex_unlock(&rp->fetch_lock);
+ 		}
+@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
+ static void mon_bin_vma_open(struct vm_area_struct *vma)
+ {
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active++;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
  
--- 
-2.17.1
+ static void mon_bin_vma_close(struct vm_area_struct *vma)
+ {
++	unsigned long flags;
++
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active--;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
+ 
+ /*
+@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
+ 	unsigned long offset, chunk_idx;
+ 	struct page *pageptr;
+ 
+-	mutex_lock(&rp->fetch_lock);
+ 	offset = vmf->pgoff << PAGE_SHIFT;
+-	if (offset >= rp->b_size) {
+-		mutex_unlock(&rp->fetch_lock);
++	if (offset >= rp->b_size)
+ 		return VM_FAULT_SIGBUS;
+-	}
+ 	chunk_idx = offset / CHUNK_SIZE;
+ 	pageptr = rp->b_vec[chunk_idx].pg;
+ 	get_page(pageptr);
+-	mutex_unlock(&rp->fetch_lock);
+ 	vmf->page = pageptr;
+ 	return 0;
+ }
+
+
 
