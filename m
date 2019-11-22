@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9052C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D3BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A8320707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA0D2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403512;
-	bh=gcm9D1eUheQLlw2fc2wABD7hVL2JXYAau9rxESbVgN8=;
+	s=default; t=1574403517;
+	bh=7Ry9jrHQuYnZY7uOPI526vZCkCbcI2sx4X8O3i8qnwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwoHkMHW8FjwXxY2SXEEeHSZ6bFCiK1EkTyaaR+kvMQ7q1YsCvUjcPRSExD+UfHek
-	 KMFtooVHaQZYzcYNkERy35DcaACvnxOYJW/XOQvi7N++sPruk6qBuxyDhSlNdXX+jO
-	 iaVMdqpC3iuZOTcZd10jt14tAmr5RAb+h2QjX5Jc=
+	b=ZAL0MDxJmaJj/2llkFLQGtJ39xdz5nZRs5/rVFSUxibeXlKv91yVEsfkMxjaKv+ff
+	 8NcQ1q/zFPvbkfFzq8qIzZlcWP5lsMTor/kAZknEoTh7nE4SrIP8DlUJQQ9iqE7YI8
+	 /7lRU8QYw7Q2xzib+/johdcdWlhUGCjWl6EsoWdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfKVGSb (ORCPT
+        id S1727571AbfKVGNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:18:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728767AbfKVGNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:12 -0500
+        id S1728207AbfKVGNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8B720707;
-        Fri, 22 Nov 2019 06:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1912068F;
+        Fri, 22 Nov 2019 06:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403191;
-        bh=gcm9D1eUheQLlw2fc2wABD7hVL2JXYAau9rxESbVgN8=;
+        s=default; t=1574403187;
+        bh=7Ry9jrHQuYnZY7uOPI526vZCkCbcI2sx4X8O3i8qnwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=in7WL6mXX4UbhgStcFugnI5hcdkyPeRzabbDbtYg1zryWO8/lv8mE8vYmKHLqHkpl
-         VDv/kX6rKMrOeexPeGCI1PkEQ8FnZdz+/aZOJghiYg+0DA8tHrbElbgmXx6WQh8AFD
-         Ijd3R4IvSxscYurNq/BUnbEiKhCXNfj+WF3EDq6U=
+        b=n/NlV1elcRcupZP+dujyIzRuJDHvU0vKpMflZ+aZWWwZyH+OX10QYm+uSzmIHyjrL
+         qQoIo5F0MHvF0BsDjQpUUi/eHlqGWxgjmFDhG/Ewtl9SOkBRrIUYvCAfgI42hExONj
+         mXzS1oL3Y17N3+wYHuP1c2rKaiSF/JR+3+/wfCvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/68] ACPI / LPSS: Ignore acpi_device_fix_up_power() return value
-Date:   Fri, 22 Nov 2019 01:12:02 -0500
-Message-Id: <20191122061301.4947-8-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 05/68] parisc: Fix HP SDC hpa address output
+Date:   Fri, 22 Nov 2019 01:11:58 -0500
+Message-Id: <20191122061301.4947-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,52 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 1a2fa02f7489dc4d746f2a15fb77b3ce1affade8 ]
+[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
 
-Ignore acpi_device_fix_up_power() return value. If we return an error
-we end up with acpi_default_enumeration() still creating a platform-
-device for the device and we end up with the device still being used
-but without the special LPSS related handling which is not useful.
+Show the hpa address of the HP SDC instead of a hashed value, e.g.:
+HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
 
-Specicifically ignoring the error fixes the touchscreen no longer
-working after a suspend/resume on a Prowise PT301 tablet.
-
-This tablet has a broken _PS0 method on the touchscreen's I2C controller,
-causing acpi_device_fix_up_power() to fail, causing fallback to standard
-platform-dev handling and specifically causing acpi_lpss_save/restore_ctx
-to not run.
-
-The I2C controllers _PS0 method does actually turn on the device, but then
-does some more nonsense which fails when run during early boot trying to
-use I2C opregion handling on another not-yet registered I2C controller.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/input/serio/hp_sdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 572755e557d6a..e54e6170981b4 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -405,12 +405,7 @@ static int acpi_lpss_create_device(struct acpi_device *adev,
- 	 * have _PS0 and _PS3 without _PSC (and no power resources), so
- 	 * acpi_bus_init_power() will assume that the BIOS has put them into D0.
- 	 */
--	ret = acpi_device_fix_up_power(adev);
--	if (ret) {
--		/* Skip the device, but continue the namespace scan. */
--		ret = 0;
--		goto err_out;
--	}
-+	acpi_device_fix_up_power(adev);
+diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
+index 852858e5d8d08..92f541db98a09 100644
+--- a/drivers/input/serio/hp_sdc.c
++++ b/drivers/input/serio/hp_sdc.c
+@@ -887,8 +887,8 @@ static int __init hp_sdc_init(void)
+ 			"HP SDC NMI", &hp_sdc))
+ 		goto err2;
  
- 	adev->driver_data = pdata;
- 	pdev = acpi_create_platform_device(adev);
+-	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
+-	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
++	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
++	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
+ 
+ 	hp_sdc_status_in8();
+ 	hp_sdc_data_in8();
 -- 
 2.20.1
 
