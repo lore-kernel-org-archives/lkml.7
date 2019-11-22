@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769E1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C565BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F69520674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3142084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420630;
-	bh=j7hhSDZ7CtrD2nv5ImgbrakypO9BBw85VDk4h55n7J4=;
+	s=default; t=1574420632;
+	bh=jaHaRyda7MXr3YsDxYA2f/RYFTQs0cy+RIHpbN7vCdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cg/1qGgmacwWoGTrZlsUYZYglBppYEBieiljunmEOK8cOsSo5dmmDvf+EZqkCBdme
-	 pjgv6eaKcQ5a2wnT1QCwQ7iVgt8i8jGEQwlybV7/lDSSKuOwWseSaXGmKqHul8OFpl
-	 a1UmG2DcqYdNndsM3+2Li5vRJz2+e/x8g//kTDZM=
+	b=o1iLVRJQd2L3EpXjwla3bCVO27Nc3W0yFnVkUgMnInsfx9zXj6xnuIdbp2ozCD68L
+	 52GL/QPE8pm5igczfuayAUpYfG8GROEuUumDZVW/ZSD2XAsB13EnHNDXUYTtk8lFKP
+	 PTiN7UTBppSinNPLDYYqyGg0bDaRgmRB0qCyuYSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbfKVLDt (ORCPT
+        id S1731464AbfKVLDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731029AbfKVLDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:43 -0500
+        id S1731127AbfKVLDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41BF1207DD;
-        Fri, 22 Nov 2019 11:03:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8559D20659;
+        Fri, 22 Nov 2019 11:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420622;
-        bh=j7hhSDZ7CtrD2nv5ImgbrakypO9BBw85VDk4h55n7J4=;
+        s=default; t=1574420626;
+        bh=jaHaRyda7MXr3YsDxYA2f/RYFTQs0cy+RIHpbN7vCdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmjNdGjx+Rfig4gyUyR8cYbRQNe7Qg86LAyVs3y7CUVs20gsqA0oldegddl0ydW55
-         zL87zozX3J8vxl7YjK+bYsExqVM5xQN3/pX9Oceaoz404X9rqDvqPe0UAn7h3/Gqne
-         O1q/zYHMTt3i4qJFfrGG26CL949O6ezstKwUAxJU=
+        b=n+mCxlAefLzmkcf9sHimwUxFdqQFJ0PuvVrIz9jBmxxmbMGHdXDikXKTXOIXyAMya
+         iv8mC5Hu9sv0UwVQuI2CJqCJp9bY6pD7ADWPH+xxgZ2sPgoPQbs83hkH89meIYX5+8
+         Txp4TaRTur6WsDRpJyuyaMu+jt0ZqNqXqhPxm4B0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/220] gfs2: slow the deluge of io error messages
-Date:   Fri, 22 Nov 2019 11:28:11 +0100
-Message-Id: <20191122100921.851990005@linuxfoundation.org>
+Subject: [PATCH 4.19 127/220] i2c: omap: use core to detect no zero length quirk
+Date:   Fri, 22 Nov 2019 11:28:12 +0100
+Message-Id: <20191122100921.943738763@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -59,87 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit b524abcc01483b2ac093cc6a8a2a7375558d2b64 ]
+[ Upstream commit f37b2bb6ac3e6ebf855d9d4f05cc6932a8e5b463 ]
 
-When an io error is hit, it calls gfs2_io_error_bh_i for every
-journal buffer it can't write. Since we changed gfs2_io_error_bh_i
-recently to withdraw later in the cycle, it sends a flood of
-errors to the console. This patch checks for the file system already
-being withdrawn, and if so, doesn't send more messages. It doesn't
-stop the flood of messages, but it slows it down and keeps it more
-reasonable.
+And don't reimplement in the driver.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/incore.h |  1 +
- fs/gfs2/log.c    |  7 +++++--
- fs/gfs2/util.c   | 13 +++++++------
- 3 files changed, 13 insertions(+), 8 deletions(-)
+ drivers/i2c/busses/i2c-omap.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
-index b96d39c28e17c..5d72e8b66a269 100644
---- a/fs/gfs2/incore.h
-+++ b/fs/gfs2/incore.h
-@@ -623,6 +623,7 @@ enum {
- 	SDF_RORECOVERY		= 7, /* read only recovery */
- 	SDF_SKIP_DLM_UNLOCK	= 8,
- 	SDF_FORCE_AIL_FLUSH     = 9,
-+	SDF_AIL1_IO_ERROR	= 10,
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 2ac86096ddd95..cd9c65f3d404f 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -661,9 +661,6 @@ static int omap_i2c_xfer_msg(struct i2c_adapter *adap,
+ 	dev_dbg(omap->dev, "addr: 0x%04x, len: %d, flags: 0x%x, stop: %d\n",
+ 		msg->addr, msg->len, msg->flags, stop);
+ 
+-	if (msg->len == 0)
+-		return -EINVAL;
+-
+ 	omap->receiver = !!(msg->flags & I2C_M_RD);
+ 	omap_i2c_resize_fifo(omap, msg->len, omap->receiver);
+ 
+@@ -1179,6 +1176,10 @@ static const struct i2c_algorithm omap_i2c_algo = {
+ 	.functionality	= omap_i2c_func,
  };
  
- enum gfs2_freeze_state {
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index cd85092723dea..90b5c8d0c56ac 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -108,7 +108,9 @@ __acquires(&sdp->sd_ail_lock)
- 		gfs2_assert(sdp, bd->bd_tr == tr);
- 
- 		if (!buffer_busy(bh)) {
--			if (!buffer_uptodate(bh)) {
-+			if (!buffer_uptodate(bh) &&
-+			    !test_and_set_bit(SDF_AIL1_IO_ERROR,
-+					      &sdp->sd_flags)) {
- 				gfs2_io_error_bh(sdp, bh);
- 				*withdraw = true;
- 			}
-@@ -206,7 +208,8 @@ static void gfs2_ail1_empty_one(struct gfs2_sbd *sdp, struct gfs2_trans *tr,
- 		gfs2_assert(sdp, bd->bd_tr == tr);
- 		if (buffer_busy(bh))
- 			continue;
--		if (!buffer_uptodate(bh)) {
-+		if (!buffer_uptodate(bh) &&
-+		    !test_and_set_bit(SDF_AIL1_IO_ERROR, &sdp->sd_flags)) {
- 			gfs2_io_error_bh(sdp, bh);
- 			*withdraw = true;
- 		}
-diff --git a/fs/gfs2/util.c b/fs/gfs2/util.c
-index 59c811de0dc7a..6a02cc890daf9 100644
---- a/fs/gfs2/util.c
-+++ b/fs/gfs2/util.c
-@@ -256,12 +256,13 @@ void gfs2_io_error_bh_i(struct gfs2_sbd *sdp, struct buffer_head *bh,
- 			const char *function, char *file, unsigned int line,
- 			bool withdraw)
- {
--	fs_err(sdp,
--	       "fatal: I/O error\n"
--	       "  block = %llu\n"
--	       "  function = %s, file = %s, line = %u\n",
--	       (unsigned long long)bh->b_blocknr,
--	       function, file, line);
-+	if (!test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
-+		fs_err(sdp,
-+		       "fatal: I/O error\n"
-+		       "  block = %llu\n"
-+		       "  function = %s, file = %s, line = %u\n",
-+		       (unsigned long long)bh->b_blocknr,
-+		       function, file, line);
- 	if (withdraw)
- 		gfs2_lm_withdraw(sdp, NULL);
- }
++static const struct i2c_adapter_quirks omap_i2c_quirks = {
++	.flags = I2C_AQ_NO_ZERO_LEN,
++};
++
+ #ifdef CONFIG_OF
+ static struct omap_i2c_bus_platform_data omap2420_pdata = {
+ 	.rev = OMAP_I2C_IP_VERSION_1,
+@@ -1453,6 +1454,7 @@ omap_i2c_probe(struct platform_device *pdev)
+ 	adap->class = I2C_CLASS_DEPRECATED;
+ 	strlcpy(adap->name, "OMAP I2C adapter", sizeof(adap->name));
+ 	adap->algo = &omap_i2c_algo;
++	adap->quirks = &omap_i2c_quirks;
+ 	adap->dev.parent = &pdev->dev;
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 	adap->bus_recovery_info = &omap_i2c_bus_recovery_info;
 -- 
 2.20.1
 
