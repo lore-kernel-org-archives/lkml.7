@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DD7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEFCC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC8B20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A712071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421109;
-	bh=urMkjndaCFT8P0B6YUlwM2kbeo3+BVId8Tiq7RtV6pc=;
+	s=default; t=1574421113;
+	bh=k8Y5H6Z36lm9qTZE69Um8n6ih5/V0cui+ibzPJzQNgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HFVomPfQQNoxgpWRjVvqFppyVCwSEelF8dN9SYydQjgrPa3UjL9PEjD1XBluBUBZn
-	 +hQpoA9trXhUnVWxtbYhFZAMLGOQdfHzxY08dcKFLAMzfI45gowbgqVcjMokOZrK3r
-	 oy8tTHJtwu1M2qkQ9dfoSU+AUVLj3gi3V2JaoysY=
+	b=hc6qFHlZ2EF6d0Rta76SJkVsNdXNBqnaOCGV4F0bywXEuD+r22cm247sGJ3lnd69j
+	 SnK8qdhJctyDO45jkySBmTIDikN7o7fbP3/MNBEJcvi9Ert9pujJ/cuHGZ/MW5EGRK
+	 EEDid/WeZVbKegJwUeP4d9EOCy8qLu5ZW2fs6TwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfKVLLr (ORCPT
+        id S1730410AbfKVK7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:11:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49864 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730868AbfKVK7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:08 -0500
+        id S1730507AbfKVK67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A528F20706;
-        Fri, 22 Nov 2019 10:59:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F4420706;
+        Fri, 22 Nov 2019 10:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420348;
-        bh=urMkjndaCFT8P0B6YUlwM2kbeo3+BVId8Tiq7RtV6pc=;
+        s=default; t=1574420339;
+        bh=k8Y5H6Z36lm9qTZE69Um8n6ih5/V0cui+ibzPJzQNgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=df8cISyilpwZ5Trkg1pj1rU4BCijUM1Ds0XlA3dQU3bmxE+WsoXVAPx+M0Zznxymp
-         lqgFO99cy4DLe6Yru5V7qpGBE5zWDo2xKkFPdFfpNi8t6slQqcomfE2DRQ56yBdYor
-         uwXl8icW8JE/BIiJWDCvWDVIXStQJx7cKNSZfhLw=
+        b=F4Y3jJjQ1Gm2kOdTlJGDaYCZvsgCi/2l3M/IX7aBjOPwaXVRSa00eSp8NTg/beYiC
+         FRe4/Z18L/WMeQwj1CtBvgdGpmtA2acqxyotECsd2JUohqBmF5eqADA9/HBsC0nyn9
+         3Ky299flvfYwiEJ5qlmrdwBS+lzzDgPhyIchWt5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/220] mt76x2: disable WLAN core before probe
-Date:   Fri, 22 Nov 2019 11:26:37 +0100
-Message-Id: <20191122100914.699320675@linuxfoundation.org>
+Subject: [PATCH 4.19 071/220] ARM: dts: at91: at91sam9x5cm: fix addressable nand flash size
+Date:   Fri, 22 Nov 2019 11:27:16 +0100
+Message-Id: <20191122100917.312639816@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -59,55 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-[ Upstream commit 62e04f8a31fcc375c978b7f83b4229a10c3e746d ]
+[ Upstream commit 6f270d88a0c4a11725afd8fd2001ae408733afbf ]
 
-If the WLAN core is still active during initialization, it might cause
-the MCU or DMA to hang. This can happen during soft reboot, so disable
-the core + clock early to avoid this issue.
+at91sam9x5cm comes with a 2Gb NAND flash. Fix the rootfs size to
+match this limit.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c | 4 ++++
- drivers/net/wireless/mediatek/mt76/mt76x2_pci.c         | 1 +
- 2 files changed, 5 insertions(+)
+ arch/arm/boot/dts/at91sam9x5cm.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c
-index 324b2a4b8b67c..54a9e1dfaf7a4 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2_init_common.c
-@@ -72,6 +72,9 @@ void mt76x2_reset_wlan(struct mt76x2_dev *dev, bool enable)
- {
- 	u32 val;
+diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+index 4908ee07e6287..993eabe1cf7a5 100644
+--- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+@@ -100,7 +100,7 @@
  
-+	if (!enable)
-+		goto out;
-+
- 	val = mt76_rr(dev, MT_WLAN_FUN_CTRL);
- 
- 	val &= ~MT_WLAN_FUN_CTRL_FRC_WL_ANT_SEL;
-@@ -87,6 +90,7 @@ void mt76x2_reset_wlan(struct mt76x2_dev *dev, bool enable)
- 	mt76_wr(dev, MT_WLAN_FUN_CTRL, val);
- 	udelay(20);
- 
-+out:
- 	mt76x2_set_wlan_state(dev, enable);
- }
- EXPORT_SYMBOL_GPL(mt76x2_reset_wlan);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c b/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c
-index e66f047ea4481..26cfda24ce085 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2_pci.c
-@@ -53,6 +53,7 @@ mt76pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return -ENOMEM;
- 
- 	mt76_mmio_init(&dev->mt76, pcim_iomap_table(pdev)[0]);
-+	mt76x2_reset_wlan(dev, false);
- 
- 	dev->mt76.rev = mt76_rr(dev, MT_ASIC_VERSION);
- 	dev_info(dev->mt76.dev, "ASIC revision: %08x\n", dev->mt76.rev);
+ 						rootfs@800000 {
+ 							label = "rootfs";
+-							reg = <0x800000 0x1f800000>;
++							reg = <0x800000 0x0f800000>;
+ 						};
+ 					};
+ 				};
 -- 
 2.20.1
 
