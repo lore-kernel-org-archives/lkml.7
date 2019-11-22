@@ -2,117 +2,96 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA3AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEBDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20C52071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FD42071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PPcd75AM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QYUK0Gul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKVQIz (ORCPT
+        id S1727227AbfKVQJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:08:55 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57816 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726546AbfKVQIz (ORCPT
+        Fri, 22 Nov 2019 11:09:20 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42068 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfKVQJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:08:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574438934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aChokPuSf/E1/myJnN2scacEgSwoRMHnNtyJ+8WYM+U=;
-        b=PPcd75AMJjannlJf7Bcq4CKSt/4O0/Tio3udOIxTQ9TFlE5W3pLXAr+xqKuB0seprqMJwj
-        CF9BuiN+LlAnYkJSrI50Hgghrg+7BICQbagYV5/AmdqX2CYsJFcQz2FSQi2GY3XQVmO7x8
-        AOI/ISOeTVfVZ4D5r1lBEg/jV9wumvc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-179-paFjoYLyMj6EbrgB8Ql3JA-1; Fri, 22 Nov 2019 11:08:51 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 889F01005510;
-        Fri, 22 Nov 2019 16:08:49 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B08A8516;
-        Fri, 22 Nov 2019 16:08:48 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Weiny\, Ira" <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH] virtio pmem: fix async flush ordering
-References: <20191120092831.6198-1-pagupta@redhat.com>
-        <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com>
-        <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 22 Nov 2019 11:08:46 -0500
-In-Reply-To: <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
-        (Dan Williams's message of "Wed, 20 Nov 2019 23:23:46 -0800")
-Message-ID: <x49h82vevw1.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 22 Nov 2019 11:09:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E8fZNk5GMi/4XEmun1xOwx3M/04axr0mW//Zh4kLYAg=; b=QYUK0Gul8xiB+05zNOo77mhQZ
+        n6q9HCqPxquRQEiCfDZEQPrssz0+G+ULz8X5ryj7WT1Myd0cHuFQmH0F89fso3+jfuo4SWaHUdbrx
+        +1b6haCmJVyE+j0XJs8PcVmF5YHtNalh3+tpdsTFzH2qUsKn+qWpqb1Vob943XVebTR+vd22y4q8A
+        QWMUIwjmy474gBD4zUbM2292iSONAdkwfILU4FkiFPkzbcSVKQ8CqdsdaMZ25V8oiF5vCykVEQXno
+        QnUJRwB3YX4o5ViWiNSRFD7iZPBVG/M8FITABF8cFG8tJrd3gO1g8xx8zhIbtnpLMDysi6Fwf/uMu
+        iC2EkvuPw==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iYBUk-0000Hn-O1; Fri, 22 Nov 2019 16:09:18 +0000
+Subject: Re: [PATCH -next] staging: hp100: Fix build error without ETHERNET
+To:     YueHaibing <yuehaibing@huawei.com>, gregkh@linuxfoundation.org,
+        perex@perex.cz, davem@davemloft.net, joe@perches.com,
+        tglx@linutronix.de
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20191113021306.35464-1-yuehaibing@huawei.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c0b78573-48d4-d33e-8684-5a3c4d5e81a9@infradead.org>
+Date:   Fri, 22 Nov 2019 08:09:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: paFjoYLyMj6EbrgB8Ql3JA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191113021306.35464-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On 11/12/19 6:13 PM, YueHaibing wrote:
+> It should depends on ETHERNET, otherwise building fails:
+> 
+> drivers/staging/hp/hp100.o: In function `hp100_pci_remove':
+> hp100.c:(.text+0x165): undefined reference to `unregister_netdev'
+> hp100.c:(.text+0x214): undefined reference to `free_netdev'
+> 
+> Fixes: 52340b82cf1a ("hp100: Move 100BaseVG AnyLAN driver to staging")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-> On Wed, Nov 20, 2019 at 9:26 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->>
->> Pankaj Gupta <pagupta@redhat.com> writes:
->>
->> >  Remove logic to create child bio in the async flush function which
->> >  causes child bio to get executed after parent bio 'pmem_make_request'
->> >  completes. This resulted in wrong ordering of REQ_PREFLUSH with the
->> >  data write request.
->> >
->> >  Instead we are performing flush from the parent bio to maintain the
->> >  correct order. Also, returning from function 'pmem_make_request' if
->> >  REQ_PREFLUSH returns an error.
->> >
->> > Reported-by: Jeff Moyer <jmoyer@redhat.com>
->> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
->>
->> There's a slight change in behavior for the error path in the
->> virtio_pmem driver.  Previously, all errors from virtio_pmem_flush were
->> converted to -EIO.  Now, they are reported as-is.  I think this is
->> actually an improvement.
->>
->> I'll also note that the current behavior can result in data corruption,
->> so this should be tagged for stable.
->
-> I added that and was about to push this out, but what about the fact
-> that now the guest will synchronously wait for flushing to occur. The
-> goal of the child bio was to allow that to be an I/O wait with
-> overlapping I/O, or at least not blocking the submission thread. Does
-> the block layer synchronously wait for PREFLUSH requests?
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-You *have* to wait for the preflush to complete before issuing the data
-write.  See the "Explicit cache flushes" section in
-Documentation/block/writeback_cache_control.rst.
+Thanks.
 
--Jeff
+> ---
+>  drivers/staging/hp/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/staging/hp/Kconfig b/drivers/staging/hp/Kconfig
+> index fb395cf..f20ab21 100644
+> --- a/drivers/staging/hp/Kconfig
+> +++ b/drivers/staging/hp/Kconfig
+> @@ -6,6 +6,7 @@
+>  config NET_VENDOR_HP
+>  	bool "HP devices"
+>  	default y
+> +	depends on ETHERNET
+>  	depends on ISA || EISA || PCI
+>  	---help---
+>  	  If you have a network (Ethernet) card belonging to this class, say Y.
+> 
+
+
+-- 
+~Randy
 
