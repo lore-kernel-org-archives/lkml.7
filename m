@@ -2,53 +2,54 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E57EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BCEC33C9A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4795420672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAD820672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421891;
-	bh=pzCrFdyTu6amgVjmgFdPH1l5OGz2X7021cO4ee28UHY=;
+	s=default; t=1574421895;
+	bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIdy8KvrldWcPD36J635Eoep833AEahCG+kjG4Jc6E5ax3avKlhRgcBJ08CMlFJn/
-	 MnDI+YDIW358OtSv+Zyq2O/vtOEU156ZmeAv3zZx/W76sg+etzS74xS7l4H5uPNj2E
-	 6EKj3KC2v4yZZ4Lqc1RMuznmy0ffCGC9K7Und3WY=
+	b=LMZCWQYmIadO1MOB5x35OYfyj32BDq6GZwm0IsgqbEkPEx2JThlKK3BKtSnc5taVy
+	 EuQgJa0Uab9JQ/8logCf/Z9BTcShA+x80TJTUI5Ch5FrWZ/dYn6xAbUAoTsy2rkxey
+	 cPxcI+F6Bdhqk5sCygWZII13qWJu1X67ecnZdw6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfKVLYu (ORCPT
+        id S1728588AbfKVKhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:24:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:37:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbfKVKiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:03 -0500
+        id S1727706AbfKVKhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:37:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B8620637;
-        Fri, 22 Nov 2019 10:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F88F20708;
+        Fri, 22 Nov 2019 10:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419082;
-        bh=pzCrFdyTu6amgVjmgFdPH1l5OGz2X7021cO4ee28UHY=;
+        s=default; t=1574419067;
+        bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neXynS8JRnIWGhYjrYvPq9YrjTnj63MYUo9sC8ofmHITS1MWPZoVLBO2weBZXgd2s
-         oXcDfbutX0ZZeWSDRO/pIpAASmTr1UhjgUozlRmBq1ZY1k/HX/3apYuMPsf6K0TAhE
-         GU3fDgWdfh7GzG81wnImJTLOmpi+N418tX76OVLA=
+        b=BKQroPfpglQIcrxeak4SjIHpk0NbhH8dgeHdijfhKxwRp9wQSoyOFZRuQ9HMBFMjV
+         1alLPH9N0W8co2pPooqkMMwR228or3SA/XrUr3GXcMIU6owlgI7In4XiGUfzEH6/vV
+         uCmJF/SQusrSrfsEKj3XBolYqEAiqfQQjeGkuNj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 150/159] media: cx231xx: fix potential sign-extension overflow on large shift
-Date:   Fri, 22 Nov 2019 11:29:01 +0100
-Message-Id: <20191122100843.765167158@linuxfoundation.org>
+Subject: [PATCH 4.4 146/159] backlight: lm3639: Unconditionally call led_classdev_unregister
+Date:   Fri, 22 Nov 2019 11:28:57 +0100
+Message-Id: <20191122100841.344611282@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,41 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
+[ Upstream commit 7cea645ae9c5a54aa7904fddb2cdf250acd63a6c ]
 
-Shifting the u8 value[3] by an int can lead to sign-extension
-overflow. For example, if value[3] is 0xff and the shift is 24 then it
-is promoted to int and then the top bit is sign-extended so that all
-upper 32 bits are set.  Fix this by casting value[3] to a u32 before
-the shift.
+Clang warns that the address of a pointer will always evaluated as true
+in a boolean context.
 
-Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
+drivers/video/backlight/lm3639_bl.c:403:14: warning: address of
+'pchip->cdev_torch' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_torch)
+        ~~   ~~~~~~~^~~~~~~~~~
+drivers/video/backlight/lm3639_bl.c:405:14: warning: address of
+'pchip->cdev_flash' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_flash)
+        ~~   ~~~~~~~^~~~~~~~~~
+2 warnings generated.
 
-Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
+These statements have been present since 2012, introduced by
+commit 0f59858d5119 ("backlight: add new lm3639 backlight
+driver"). Given that they have been called unconditionally since
+then presumably without any issues, removing the always true if
+statements to fix the warnings without any real world changes.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/119
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/backlight/lm3639_bl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
-index d0d8f08e37c87..de80925ee4cbd 100644
---- a/drivers/media/usb/cx231xx/cx231xx-video.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-video.c
-@@ -1346,7 +1346,7 @@ int cx231xx_g_register(struct file *file, void *priv,
- 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
- 				(u16)reg->reg, value, 4);
- 		reg->val = value[0] | value[1] << 8 |
--			value[2] << 16 | value[3] << 24;
-+			value[2] << 16 | (u32)value[3] << 24;
- 		reg->size = 4;
- 		break;
- 	case 1:	/* AFE - read byte */
+diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
+index cd50df5807ead..086611c7bc03c 100644
+--- a/drivers/video/backlight/lm3639_bl.c
++++ b/drivers/video/backlight/lm3639_bl.c
+@@ -400,10 +400,8 @@ static int lm3639_remove(struct i2c_client *client)
+ 
+ 	regmap_write(pchip->regmap, REG_ENABLE, 0x00);
+ 
+-	if (&pchip->cdev_torch)
+-		led_classdev_unregister(&pchip->cdev_torch);
+-	if (&pchip->cdev_flash)
+-		led_classdev_unregister(&pchip->cdev_flash);
++	led_classdev_unregister(&pchip->cdev_torch);
++	led_classdev_unregister(&pchip->cdev_flash);
+ 	if (pchip->bled)
+ 		device_remove_file(&(pchip->bled->dev), &dev_attr_bled_mode);
+ 	return 0;
 -- 
 2.20.1
 
