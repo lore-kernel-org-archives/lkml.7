@@ -2,94 +2,105 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F69C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EF4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E4520707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tDUTxm8k"
+	by mail.kernel.org (Postfix) with ESMTP id A0FA520707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKVTJS (ORCPT
+        id S1727090AbfKVTJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:09:18 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:32972 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfKVTJS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:09:18 -0500
-Received: by mail-il1-f193.google.com with SMTP id y16so389301iln.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 11:09:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DOCK+6WxJDwJCu7vsybHbWscysPdbKKXNyZNo+L4M5E=;
-        b=tDUTxm8k09/6nKUoonMkeRC3xoHYns2IJ0puK0Ivfig4go4qPq9RS575RpGmwvlsgp
-         S5o8dQvshaTp0DYs4GC8/8xswR/vdXTNZ9DZHt7lUXkcvYA43W6FYPSWMEYOUtosu4Fc
-         bFxPDaJKEk+iX8tLu5k+me+En3AZ19/nkTyeOz0uLM/YT5HI5tej3eATwLo7vdsvhY29
-         TOcr8XRvLhJAhO/PmWb0AHA/i+4qklOMxWReYsDgnsrusqkXAJcayeKqi/8i/spmNY5G
-         +xlH4pCf79qBXJdVMFJwyXfJaujbMDsi57G0qb42EmYSoDaSPVuFGELlyLgOxJD9sRT0
-         HJ2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DOCK+6WxJDwJCu7vsybHbWscysPdbKKXNyZNo+L4M5E=;
-        b=jyvpKx8LXNgwTE95VbBFVKOhWURawSFxNeUJcX0b1mM7dD6sxrLgiCxuJBy0DoiqZS
-         2y47Y506zQho5hwyxTBwJEVk2tUGA9NsuMwSCXAGiYf3SKeqjmHkLZjC/6+3JIk+TuC+
-         7SHHBSmf5V/JrQG83cdYaEvlPSZt3c0E7mr9paJkl9BKmYEILxKfx+TyEi9/WxkY0Qbq
-         s2dFUqJ2kQ6LxdnhjItJJTZlgkGnsXs7zMjx688gIpQZ1a7J43b4SZbg2ScKyO/brRuD
-         9Xp7X7qW9M7p99Gyg3MfXzrIStOyoGTKcuTsKrzqb5GE17Zzw+N5GdoA7AmZuQ8xZnyx
-         u+tg==
-X-Gm-Message-State: APjAAAW6HgKQpy27jZPtnbNOUIxJyvg3OLLKU3m/eeDhQoKQKqdZ2KfR
-        gEdEMNFq5IeEssl43Vu9nFW/APl8ZU1CNQ==
-X-Google-Smtp-Source: APXvYqzeVAaG7s6dU+b45QldZWAxzgDdqcWVeffhI9sbJGd8FrXhO2litKgzEV1J/LChGDJTbS6oSg==
-X-Received: by 2002:a92:1b49:: with SMTP id b70mr17872727ilb.180.1574449756698;
-        Fri, 22 Nov 2019 11:09:16 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h15sm3172651ilh.85.2019.11.22.11.09.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 11:09:15 -0800 (PST)
-Subject: Re: [PATCH] block: Replace bio_check_ro()'s WARN_ON()
-To:     Christoph Hellwig <hch@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20180824211535.GA22251@beast> <201911221052.0FDE1A1@keescook>
- <20191122190707.GA2136@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <94976fb5-12d3-557d-7f31-347d6116b18c@kernel.dk>
-Date:   Fri, 22 Nov 2019 12:09:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 14:09:28 -0500
+Received: from mga05.intel.com ([192.55.52.43]:37384 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfKVTJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:09:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 11:09:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
+   d="scan'208";a="259799981"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Nov 2019 11:09:27 -0800
+Date:   Fri, 22 Nov 2019 11:09:27 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 12/19] x86/vmx: Introduce VMX_FEATURES_*
+Message-ID: <20191122190927.GB31235@linux.intel.com>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-13-sean.j.christopherson@intel.com>
+ <20191121165250.GK6540@zn.tnic>
+ <20191121215017.GC16617@linux.intel.com>
+ <20191122183641.GJ6289@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20191122190707.GA2136@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122183641.GJ6289@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/22/19 12:07 PM, Christoph Hellwig wrote:
-> On Fri, Nov 22, 2019 at 10:53:22AM -0800, Kees Cook wrote:
->> Friendly ping! I keep tripping over this. Can this please get applied so
->> we can silence syzbot and avoid needless WARNs? :)
+On Fri, Nov 22, 2019 at 07:36:41PM +0100, Borislav Petkov wrote:
+> On Thu, Nov 21, 2019 at 01:50:17PM -0800, Sean Christopherson wrote:
+> > As for why I want to keep these out of cpu_has()... VMX has a concept of
+> > features being fixed "on", e.g. early CPUs don't allow disabling off CR3
+> > interception.  A cpu_has() approach doesn't work well since it loses the
+> > information regarding which bits are fixed-1.  KVM also has several module
+> > params that can be used to disable use of features, i.e. we don't want
+> > cpu_has() for VMX features because the KVM-specific variables need to be
+> > the canonical reference.
 > 
-> What call stack reaches this?  Upper layers should never submit a write
-> bio on a read-only queue, and we need to fix that in the upper layer.
+> Well, you can use the cpu_has() machinery for stuff like that too - we
+> can clear bits there too: clear_cpu_cap() - and since clearing those
+> bits are only for /proc/cpuinfo reporting, it's not like anything would
+> break if that flag is gone. Just saying, in case you want to use the
+> machinery for that.
 
-It's an fsync, the trace is here:
+It doesn't fit the KVM use case very well.  There is an obnoxious amount
+of legacy KVM code that exists only to support old processors (10+ years
+old), but that we can't get rid of because people are still actively
+running KVM on old hardware.  KVM provides module params so that we can
+easily test those flows on modern hardware, e.g. for certain changes I'll
+reload and retest KVM 2-3 times with different settings.
 
-https://syzkaller.appspot.com/x/log.txt?x=159503d2e00000
+In theory we could do something like recompute VMX_FEATURE_* when KVM is
+loaded, but that'd be a bit ugly and there are also tenative plans to move
+the relevant module params under an ioctl() so that they can be toggled on
+a per-VM basis to help automate testing, and IIRC for customers running
+certain legacy workloads alongside normal VMs
 
--- 
-Jens Axboe
-
+> And that would avoid some of the duplication of having KVM-specific
+> variables *and* VMX_FEATURE_* flags, where latter are not really
+> toggleable but only for /proc/cpuinfo. Especially if you wanna enforce
+> "developers to define a VMX_FEATURE flag when adding support for a new
+> hardware feature."
