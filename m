@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F6CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F1EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F342075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC9E2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420274;
-	bh=dQt3xAF/0dD9AaQxedCxFQzgzRaMzkywGvh9+OmquuM=;
+	s=default; t=1574420278;
+	bh=k5ZRh2ikyUYWBdoD1qh1lHWr6fCnKfqiDBwbD6/ssmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdZpjCmzXEgQ57iuwqBsgyiBlIN4ltk0ZhB16MrNC0Pf9BWrd1TRVP6Lq93zU2IN0
-	 DZetMcXGiMEZz8/Xno7M4Xl5MgBbc0HlOcjuw8oP0x0714shsz4MJx7PMewxWX0xHL
-	 5/dsGlAxvDLBatBReYiR+Uj3TKb/nL831X82FUcE=
+	b=ZckuqHIVWMo8spxE6EB019yNa7X3oiV/GBf7osNUU2aL5j04X+pLMlxpvf1TkBolw
+	 dpV+dM/rgW2STVHedu5/dYap++1Z5pcGwk4XSZDKkZg9TndPLuZx4x574ptshrcO5g
+	 T6HAHpzSxAFPZdn5Y3IHv6p7rnYSGE/r0Mlb0a/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbfKVK5x (ORCPT
+        id S1730740AbfKVK55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:57:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46794 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730464AbfKVK5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:43 -0500
+        id S1730717AbfKVK5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6672072E;
-        Fri, 22 Nov 2019 10:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D474120718;
+        Fri, 22 Nov 2019 10:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420262;
-        bh=dQt3xAF/0dD9AaQxedCxFQzgzRaMzkywGvh9+OmquuM=;
+        s=default; t=1574420268;
+        bh=k5ZRh2ikyUYWBdoD1qh1lHWr6fCnKfqiDBwbD6/ssmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r5tK9uMPWVn2FXQtpWNWp6HsnmQRn7XWVOuff02icyIIHrtiMmqmTl7HDdMAtrmW+
-         TLyBIAtb03L2GqNW5BlYcWxhkNX70WdKocxGTzpR26In9SrALEuwKjDqKvAmRu/+Tz
-         M47TMiVpTrIobaC9lOeviTnVkTce/4pwQFmeOGGY=
+        b=gxQ9l1NRVi0ZZm8SvrlwxOCeIO+JFCr1b4xqyZxquZvs+qXNjfWQCCxXppxGLTXYj
+         WSE32ajBIp4glUoIj+5lKouMqth/YWn92n63ETR1O4/tYm57Wf4c+epEyxrFTttiZR
+         /XLVgHLeLhJwsS4PRJ9EKorQ5d7yVscBSOZj5yDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 047/220] usb: dwc3: gadget: Check ENBLSLPM before sending ep command
-Date:   Fri, 22 Nov 2019 11:26:52 +0100
-Message-Id: <20191122100915.601546840@linuxfoundation.org>
+Subject: [PATCH 4.19 049/220] irqchip/irq-mvebu-icu: Fix wrong private data retrieval
+Date:   Fri, 22 Nov 2019 11:26:54 +0100
+Message-Id: <20191122100915.728633762@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,89 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 87dd96111b0bb8e616fcbd74dbf4bb4182f2c596 ]
+[ Upstream commit 2b4dab69dcca13c5be2ddaf1337ae4accd087de6 ]
 
-When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
-GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an endpoint
-command.
+The irq_domain structure has an host_data pointer that just stores
+private data. It is meant to not be touched by the IRQ core. However,
+when it comes to MSI, the MSI layer adds its own private data there
+with a structure that also has a host_data pointer.
 
-Current implementation only save and restore GUSB2PHYCFG.SUSPHY
-configuration. We must save and clear both GUSB2PHYCFG.ENBLSLPM and
-GUSB2PHYCFG.SUSPHY settings. Restore them after the command is
-completed.
+Because this IRQ domain is an MSI domain, to access private data we
+should do a d->host_data->host_data, also wrapped as
+'platform_msi_get_host_data()'.
 
-DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
+This bug was lying there silently because the 'icu' structure retrieved
+this way was just called by dev_err(), only producing a
+'(NULL device *):' output on the console.
 
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/irqchip/irq-mvebu-icu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 8398c33d08e7c..3e04004b4f1b7 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -271,27 +271,36 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
- 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
- 	struct dwc3		*dwc = dep->dwc;
- 	u32			timeout = 1000;
-+	u32			saved_config = 0;
- 	u32			reg;
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index 13063339b416d..a2a3acd744911 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -105,7 +105,7 @@ static int
+ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+ 			       unsigned long *hwirq, unsigned int *type)
+ {
+-	struct mvebu_icu *icu = d->host_data;
++	struct mvebu_icu *icu = platform_msi_get_host_data(d);
+ 	unsigned int icu_group;
  
- 	int			cmd_status = 0;
--	int			susphy = false;
- 	int			ret = -EINVAL;
- 
- 	/*
--	 * Synopsys Databook 2.60a states, on section 6.3.2.5.[1-8], that if
--	 * we're issuing an endpoint command, we must check if
--	 * GUSB2PHYCFG.SUSPHY bit is set. If it is, then we need to clear it.
-+	 * When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
-+	 * GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an
-+	 * endpoint command.
- 	 *
--	 * We will also set SUSPHY bit to what it was before returning as stated
--	 * by the same section on Synopsys databook.
-+	 * Save and clear both GUSB2PHYCFG.ENBLSLPM and GUSB2PHYCFG.SUSPHY
-+	 * settings. Restore them after the command is completed.
-+	 *
-+	 * DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
- 	 */
- 	if (dwc->gadget.speed <= USB_SPEED_HIGH) {
- 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
- 		if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
--			susphy = true;
-+			saved_config |= DWC3_GUSB2PHYCFG_SUSPHY;
- 			reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
--			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 		}
-+
-+		if (reg & DWC3_GUSB2PHYCFG_ENBLSLPM) {
-+			saved_config |= DWC3_GUSB2PHYCFG_ENBLSLPM;
-+			reg &= ~DWC3_GUSB2PHYCFG_ENBLSLPM;
-+		}
-+
-+		if (saved_config)
-+			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 	}
- 
- 	if (DWC3_DEPCMD_CMD(cmd) == DWC3_DEPCMD_STARTTRANSFER) {
-@@ -380,9 +389,9 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
- 		dwc3_gadget_ep_get_transfer_index(dep);
- 	}
- 
--	if (unlikely(susphy)) {
-+	if (saved_config) {
- 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
--		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
-+		reg |= saved_config;
- 		dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 	}
- 
+ 	/* Check the count of the parameters in dt */
 -- 
 2.20.1
 
