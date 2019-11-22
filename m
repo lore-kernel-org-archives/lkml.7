@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28973C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80C32068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4A22068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RRL8pris"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OiGVLPEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKVGiA (ORCPT
+        id S1726880AbfKVGiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:38:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59234 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726690AbfKVGiA (ORCPT
+        Fri, 22 Nov 2019 01:38:01 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35953 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726391AbfKVGiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 01:38:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,42 +29,43 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aGdiHJQ3wd2tnmCCk4UsV27B6S6gW6jgkzpLlT5/3dc=;
-        b=RRL8pris7IdJ+6m5viDBJTxRSX0RPLmu7Yw3eRnqimOPbOakAxF74cJ6kcOt8PPXjdfU80
-        UildU/4G2hDvPg8mcNYrWcawoetNuon9p861tnmvKEzoXE8yfcZMdi3jokEPCa+1ioWbJe
-        lD/uyRCCfHyP0pHEE+sUj6Lm36RhG7E=
+        bh=kO/f20OK8ehETRWvdOhwDSCz6FJfjfQn0GgthZnU0Rc=;
+        b=OiGVLPEhhszZ08NhUsVnCAzZLQTHi5Pr/l/afZGSx9aXBpGP2HPK3BYM1TR7TYGx/xsdpP
+        dxL/EP1ej7bSd0xiadpvzXSRwzSPw+YfeLE/Ir+t+vIRODyKIy/n+JiTBZCamz87rjomqD
+        LgjFLGfISWVNlgaHmax7M2PUDOOYyuE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-128-YVlJdhMFMU2QLu8_ieEFqQ-1; Fri, 22 Nov 2019 01:37:56 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-194-TBtFseKXMp6LDL4WsY81WA-1; Fri, 22 Nov 2019 01:37:55 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89F2E100551C;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22958593CE;
         Fri, 22 Nov 2019 06:37:54 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 05EDB6E70E;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 05F975DF2C;
         Fri, 22 Nov 2019 06:37:50 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 0AA0217536; Fri, 22 Nov 2019 07:37:50 +0100 (CET)
+        id 2B368A1E0; Fri, 22 Nov 2019 07:37:50 +0100 (CET)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     robh@kernel.org, intel-gfx@lists.freedesktop.org,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/2] drm: call drm_gem_object_funcs.mmap with fake offset
-Date:   Fri, 22 Nov 2019 07:37:48 +0100
-Message-Id: <20191122063749.27113-2-kraxel@redhat.com>
+Subject: [PATCH v2 2/2] drm: share address space for dma bufs
+Date:   Fri, 22 Nov 2019 07:37:49 +0100
+Message-Id: <20191122063749.27113-3-kraxel@redhat.com>
 In-Reply-To: <20191122063749.27113-1-kraxel@redhat.com>
 References: <20191122063749.27113-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: YVlJdhMFMU2QLu8_ieEFqQ-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: TBtFseKXMp6LDL4WsY81WA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -73,109 +74,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fake offset is going to stay, so change the calling convention for
-drm_gem_object_funcs.mmap to include the fake offset.  Update all users
-accordingly.
+Use the shared address space of the drm device (see drm_open() in
+drm_file.c) for dma-bufs too.  That removes a difference betweem drm
+device mmap vmas and dma-buf mmap vmas and fixes corner cases like
+dropping ptes (using madvise(DONTNEED) for example) not working
+properly.
 
-Note that this reverts 83b8a6f242ea ("drm/gem: Fix mmap fake offset
-handling for drm_gem_object_funcs.mmap") and on top then adds the fake
-offset to  drm_gem_prime_mmap to make sure all paths leading to
-obj->funcs->mmap are consistent.
+Also remove amdgpu driver's private dmabuf update.  It is not needed
+any more now that we are doing this for everybody.
 
-Fixes: 83b8a6f242ea ("drm/gem: Fix mmap fake offset handling for drm_gem_ob=
-ject_funcs.mmap")
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- include/drm/drm_gem.h                  | 4 +---
- drivers/gpu/drm/drm_gem.c              | 3 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 3 +++
- drivers/gpu/drm/drm_prime.c            | 3 +++
- drivers/gpu/drm/ttm/ttm_bo_vm.c        | 7 -------
- 5 files changed, 7 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 4 +---
+ drivers/gpu/drm/drm_prime.c                 | 4 +++-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-index 97a48165642c..0b375069cd48 100644
---- a/include/drm/drm_gem.h
-+++ b/include/drm/drm_gem.h
-@@ -159,9 +159,7 @@ struct drm_gem_object_funcs {
- =09 *
- =09 * The callback is used by by both drm_gem_mmap_obj() and
- =09 * drm_gem_prime_mmap().  When @mmap is present @vm_ops is not
--=09 * used, the @mmap callback must set vma->vm_ops instead. The @mmap
--=09 * callback is always called with a 0 offset. The caller will remove
--=09 * the fake offset as necessary.
-+=09 * used, the @mmap callback must set vma->vm_ops instead.
- =09 */
- =09int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/=
+amd/amdgpu/amdgpu_dma_buf.c
+index d5bcdfefbad6..586db4fb46bd 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+@@ -361,10 +361,8 @@ struct dma_buf *amdgpu_gem_prime_export(struct drm_gem=
+_object *gobj,
+ =09=09return ERR_PTR(-EPERM);
 =20
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 2f2b889096b0..56f42e0f2584 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1106,9 +1106,6 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsi=
-gned long obj_size,
- =09=09return -EINVAL;
+ =09buf =3D drm_gem_prime_export(gobj, flags);
+-=09if (!IS_ERR(buf)) {
+-=09=09buf->file->f_mapping =3D gobj->dev->anon_inode->i_mapping;
++=09if (!IS_ERR(buf))
+ =09=09buf->ops =3D &amdgpu_dmabuf_ops;
+-=09}
 =20
- =09if (obj->funcs && obj->funcs->mmap) {
--=09=09/* Remove the fake offset */
--=09=09vma->vm_pgoff -=3D drm_vma_node_start(&obj->vma_node);
--
- =09=09ret =3D obj->funcs->mmap(obj, vma);
- =09=09if (ret)
- =09=09=09return ret;
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_g=
-em_shmem_helper.c
-index 0810d3ef6961..a421a2eed48a 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -528,6 +528,9 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, stru=
-ct vm_area_struct *vma)
- =09struct drm_gem_shmem_object *shmem;
- =09int ret;
-=20
-+=09/* Remove the fake offset */
-+=09vma->vm_pgoff -=3D drm_vma_node_start(&obj->vma_node);
-+
- =09shmem =3D to_drm_gem_shmem_obj(obj);
-=20
- =09ret =3D drm_gem_shmem_get_pages(shmem);
+ =09return buf;
+ }
 diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index 0814211b0f3f..a9633bd241bb 100644
+index a9633bd241bb..c3fc341453c0 100644
 --- a/drivers/gpu/drm/drm_prime.c
 +++ b/drivers/gpu/drm/drm_prime.c
-@@ -714,6 +714,9 @@ int drm_gem_prime_mmap(struct drm_gem_object *obj, stru=
-ct vm_area_struct *vma)
- =09int ret;
-=20
- =09if (obj->funcs && obj->funcs->mmap) {
-+=09=09/* Add the fake offset */
-+=09=09vma->vm_pgoff +=3D drm_vma_node_start(&obj->vma_node);
-+
- =09=09ret =3D obj->funcs->mmap(obj, vma);
- =09=09if (ret)
- =09=09=09return ret;
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_v=
-m.c
-index e6495ca2630b..3e8c3de91ae4 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -514,13 +514,6 @@ EXPORT_SYMBOL(ttm_bo_mmap);
- int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *=
-bo)
+@@ -240,6 +240,7 @@ void drm_prime_destroy_file_private(struct drm_prime_fi=
+le_private *prime_fpriv)
+ struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
+ =09=09=09=09      struct dma_buf_export_info *exp_info)
  {
- =09ttm_bo_get(bo);
--
--=09/*
--=09 * FIXME: &drm_gem_object_funcs.mmap is called with the fake offset
--=09 * removed. Add it back here until the rest of TTM works without it.
--=09 */
--=09vma->vm_pgoff +=3D drm_vma_node_start(&bo->base.vma_node);
--
- =09ttm_bo_mmap_vma_setup(bo, vma);
- =09return 0;
++=09struct drm_gem_object *obj =3D exp_info->priv;
+ =09struct dma_buf *dma_buf;
+=20
+ =09dma_buf =3D dma_buf_export(exp_info);
+@@ -247,7 +248,8 @@ struct dma_buf *drm_gem_dmabuf_export(struct drm_device=
+ *dev,
+ =09=09return dma_buf;
+=20
+ =09drm_dev_get(dev);
+-=09drm_gem_object_get(exp_info->priv);
++=09drm_gem_object_get(obj);
++=09dma_buf->file->f_mapping =3D obj->dev->anon_inode->i_mapping;
+=20
+ =09return dma_buf;
  }
 --=20
 2.18.1
