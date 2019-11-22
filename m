@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7440C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87623C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBE12053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8F12053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403597;
-	bh=geeeVQ63UDrNG1JfFxbc//qDRyzxsQyqhEbu7hEACLY=;
+	s=default; t=1574403600;
+	bh=ePJ2pkZNK2a4mQjfJXGV5Pv+SMUz7DMtBlOvjCi1n7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bCcEmtDByebyetpzidYAGisWuo76eSS2zQSF3666o/rfdBwFftU9RLhE5SpHhvSVi
-	 9sGSkKe/dAJnbZopdebDw/KFvktL2+qM5dFcQpcLmEJc2etQfqVIVVXaFpBCQ7wMpi
-	 ZTgr/auxK5DkjThVZ9MWKO9LdOK8BH/W/LM19pK0=
+	b=XdFRQwR6MY8e+xwuiTeIp6lTQgaMBwT+ozR1vRUxAzILoagppVPc2Eb/qheoJriU0
+	 PqI+3U9WJfdbNdmvpdvK0oWLPyENsXsoa/COs2cj4gwHFxvZgpFJWEOr5I7N3SnG/r
+	 ExgoA5oii3aifFIhg6Tih5siKxwo+i+vM5SuSy2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfKVGT4 (ORCPT
+        id S1728687AbfKVFws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:19:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbfKVFws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 00:52:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728617AbfKVFwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CE472071F;
-        Fri, 22 Nov 2019 05:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4A72071F;
+        Fri, 22 Nov 2019 05:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401967;
-        bh=geeeVQ63UDrNG1JfFxbc//qDRyzxsQyqhEbu7hEACLY=;
+        s=default; t=1574401958;
+        bh=ePJ2pkZNK2a4mQjfJXGV5Pv+SMUz7DMtBlOvjCi1n7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQKXNHRMhIHkF1a9Ioi7N1d1dFy1wHjAJUCvUFKj3HYCsUJgqJWOe+jSRGPZ7X6HT
-         AsLUAmRy0GRzEQokhnN9klEkxAHfedpbMV5BrEHTFjZ39BKUgQS3hMjcwYoUP1mTAA
-         wL1oY8qH/p/ZcQz4gPNKhkFngZs1ZxrJYqLWWzKw=
+        b=C7n3M9KkLNHLdJa8OmwOGM/laX+CcSrKZd1jVNAPUS4ajQAfwMc+Hzu8Va3HQLvDf
+         /PXEPVDDaLssgvxK7SUo9WfhaNs079fX6z8r364+Q32J02pv3qBpfw8/SmJnXGSzNR
+         U6u9jkdT7lwcYzxq0381bFfd5kBHXEnnckY5nn00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 188/219] ASoC: samsung: i2s: Fix prescaler setting for the secondary DAI
-Date:   Fri, 22 Nov 2019 00:48:40 -0500
-Message-Id: <20191122054911.1750-181-sashal@kernel.org>
+Cc:     Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 180/219] net/smc: prevent races between smc_lgr_terminate() and smc_conn_free()
+Date:   Fri, 22 Nov 2019 00:48:32 -0500
+Message-Id: <20191122054911.1750-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,61 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Karsten Graul <kgraul@linux.ibm.com>
 
-[ Upstream commit 323fb7b947b265753de34703dbbf8acc8ea3a4de ]
+[ Upstream commit 77f838ace755d2f466536c44dac6c856f62cd901 ]
 
-Make sure i2s->rclk_srcrate is properly initialized also during
-playback through the secondary DAI.
+To prevent races between smc_lgr_terminate() and smc_conn_free() add an
+extra check of the lgr field before accessing it, and cancel a delayed
+free_work when a new smc connection is created.
+This fixes the problem that free_work cleared the lgr variable but
+smc_lgr_terminate() or smc_conn_free() still access it in parallel.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/i2s.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/smc/smc_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index ce00fe2f6aae3..d4bde4834ce5f 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -604,6 +604,7 @@ static int i2s_set_fmt(struct snd_soc_dai *dai,
- 	unsigned int fmt)
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index 18daebcef1813..2c9baf8bf1189 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -128,6 +128,8 @@ static void smc_lgr_unregister_conn(struct smc_connection *conn)
  {
- 	struct i2s_dai *i2s = to_info(dai);
-+	struct i2s_dai *other = get_other_dai(i2s);
- 	int lrp_shift, sdf_shift, sdf_mask, lrp_rlow, mod_slave;
- 	u32 mod, tmp = 0;
- 	unsigned long flags;
-@@ -661,7 +662,8 @@ static int i2s_set_fmt(struct snd_soc_dai *dai,
- 		 * CLK_I2S_RCLK_SRC clock is not exposed so we ensure any
- 		 * clock configuration assigned in DT is not overwritten.
- 		 */
--		if (i2s->rclk_srcrate == 0 && i2s->clk_data.clks == NULL)
-+		if (i2s->rclk_srcrate == 0 && i2s->clk_data.clks == NULL &&
-+		    other->clk_data.clks == NULL)
- 			i2s_set_sysclk(dai, SAMSUNG_I2S_RCLKSRC_0,
- 							0, SND_SOC_CLOCK_IN);
- 		break;
-@@ -699,6 +701,7 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
- {
- 	struct i2s_dai *i2s = to_info(dai);
-+	struct i2s_dai *other = get_other_dai(i2s);
- 	u32 mod, mask = 0, val = 0;
- 	struct clk *rclksrc;
- 	unsigned long flags;
-@@ -784,6 +787,9 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- 	i2s->frmclk = params_rate(params);
+ 	struct smc_link_group *lgr = conn->lgr;
  
- 	rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
-+	if (!rclksrc || IS_ERR(rclksrc))
-+		rclksrc = other->clk_table[CLK_I2S_RCLK_SRC];
-+
- 	if (rclksrc && !IS_ERR(rclksrc))
- 		i2s->rclk_srcrate = clk_get_rate(rclksrc);
- 
++	if (!lgr)
++		return;
+ 	write_lock_bh(&lgr->conns_lock);
+ 	if (conn->alert_token_local) {
+ 		__smc_lgr_unregister_conn(conn);
+@@ -612,6 +614,8 @@ int smc_conn_create(struct smc_sock *smc, bool is_smcd, int srv_first_contact,
+ 			local_contact = SMC_REUSE_CONTACT;
+ 			conn->lgr = lgr;
+ 			smc_lgr_register_conn(conn); /* add smc conn to lgr */
++			if (delayed_work_pending(&lgr->free_work))
++				cancel_delayed_work(&lgr->free_work);
+ 			write_unlock_bh(&lgr->conns_lock);
+ 			break;
+ 		}
 -- 
 2.20.1
 
