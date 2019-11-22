@@ -2,273 +2,201 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE170C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859DAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8116204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSCWEAf/"
+	by mail.kernel.org (Postfix) with ESMTP id 56DEB206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKVBgo (ORCPT
+        id S1726574AbfKVBkI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:36:44 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33182 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfKVBgo (ORCPT
+        Thu, 21 Nov 2019 20:40:08 -0500
+Received: from mail.windriver.com ([147.11.1.11]:64416 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfKVBkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:36:44 -0500
-Received: by mail-qt1-f196.google.com with SMTP id y39so6054143qty.0;
-        Thu, 21 Nov 2019 17:36:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=j/rdj823c44COpV5cCERJMmYJupdnu4Z7k72/Pj6nfc=;
-        b=qSCWEAf/Oq25XXc6GCeTD36O8i45C0HfRm0uyrEsaXcsOiov5e0aVxeBkVOixUvM8L
-         HUUQKoqTZMF8wXSwjdueBDo4NjMgycaHrY4DSmsQwwQo/OvJ3bACYTuQaXUBbW79OjXW
-         SNjNMxPDz6BCIgRhFsD/71hKWZg6w6fW8aP2Ee/in667aFydGJG9j/UdJrUOfnNXlABZ
-         iqWBUjPNRdlcN+vkmerEMbBPyLhf+ZUCsNaK7IMJktmcNW/1SxiIEIZWgFEVZf4OTSUL
-         DJYxY/Hes8TV9SmInbbK0rZZN0eeN7T8ISRb/zIiNc22XCdM3Y7Kz9/aNuGEZ1KBtflo
-         FYog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=j/rdj823c44COpV5cCERJMmYJupdnu4Z7k72/Pj6nfc=;
-        b=a2iIWCdZuhCd4nASb//jbPN3ZngAGDW9dSuef42Csp/6EPtiXAu2GfWYJCiSVcLT0Q
-         zvdeKoaoLwuI4yGQZBaIJ8n9h5YIxr/wjGOkuuoySzFimYOOxhIz0nD0/WrgLLa5A10d
-         NsuTAWVrnX+9+KEVHN6v/uQjuRAF5rPWxYF41zTh0DPyvd6O27+jLasJ5hlIHkTe/K35
-         Dd9YHRhIG72gtXK6hPy0s3gE2ACjuzxYVr83ZNOGDnj79DSEm2O9hveF4pKP1KfXK8q/
-         zfVl8WFcoQ0nJhsitsTKJueypL/P1zdjjNqWkmxGQRJsTEhE9cih2eGCOIbH59Py+3in
-         Haqw==
-X-Gm-Message-State: APjAAAVhEeJzIww7/Lab/SGAYP2o1P6gUOOGZoFVIebaf4XhIkcuMrqH
-        2Z2HVdze6JZP3UOF7REX/KtncPs4
-X-Google-Smtp-Source: APXvYqyPKeZrhMbgH8kJUD7OD1ngbGnzaM8S4gillMotJpVwQTjf7ylLCo8pDCds0mDFBg+mBkuY1A==
-X-Received: by 2002:ac8:2441:: with SMTP id d1mr1579575qtd.386.1574386601064;
-        Thu, 21 Nov 2019 17:36:41 -0800 (PST)
-Received: from ubuntu.default ([191.254.197.220])
-        by smtp.gmail.com with ESMTPSA id y28sm2485073qtk.65.2019.11.21.17.36.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 17:36:40 -0800 (PST)
-From:   Julio Faracco <jcfaracco@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     dnmendes76@gmail.com, Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] drivers: net: virtio_net: Implement a dev_watchdog handler
-Date:   Thu, 21 Nov 2019 22:36:36 -0300
-Message-Id: <20191122013636.1041-1-jcfaracco@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 21 Nov 2019 20:40:08 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xAM1dqh2013247
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 21 Nov 2019 17:39:53 -0800 (PST)
+Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.75]) by
+ ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0468.000; Thu,
+ 21 Nov 2019 17:39:52 -0800
+From:   "Liu, Yongxin" <Yongxin.Liu@windriver.com>
+To:     "Liu, Yongxin" <Yongxin.Liu@windriver.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+CC:     "mario.limonciello@dell.com" <mario.limonciello@dell.com>
+Subject: RE: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather
+ than unregister"
+Thread-Topic: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather
+ than unregister"
+Thread-Index: AQHVm3ZtvRF1oVEA1UCC8bXYi76Qu6eWcVmg
+Date:   Fri, 22 Nov 2019 01:39:50 +0000
+Message-ID: <597B109EC20B76429F71A8A97770610D19F0D0B8@ALA-MBD.corp.ad.wrs.com>
+References: <20191115052710.46880-1-yongxin.liu@windriver.com>
+In-Reply-To: <20191115052710.46880-1-yongxin.liu@windriver.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [128.224.158.159]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver virtio_net is not handling error events for TX provided by
-dev_watchdog. This event is reached when transmission queue is having
-problems to transmit packets. This could happen for any reason. To
-enable it, driver should have .ndo_tx_timeout implemented.
+Add more logs for this issue.
 
-This commit brings back virtnet_reset method to recover TX queues from a
-error state. That function is called by schedule_work method and it puts
-the reset function into work queue.
+When loading wmi driver module,
 
-As the error cause is unknown at this moment, it would be better to
-reset all queues.
+    device class 'wmi_bus': registering
+    bus: 'wmi': registered
+    bus: 'platform': add driver acpi-wmi
+    bus: 'platform': driver_probe_device: matched device PNP0C14:00 with driver acpi-wmi
+    bus: 'platform': really_probe: probing driver acpi-wmi with device PNP0C14:00
+    acpi-wmi PNP0C14:00: no default pinctrl state
+    device: 'wakeup28': device_add
+    device: 'wmi_bus-PNP0C14:00': device_add
+    PM: Adding info for No Bus:wmi_bus-PNP0C14:00
+    device: '86CCFD48-205E-4A77-9C48-2021CBEDE341': device_add
+    bus: 'wmi': add device 86CCFD48-205E-4A77-9C48-2021CBEDE341
+    PM: Adding info for wmi:86CCFD48-205E-4A77-9C48-2021CBEDE341
+    driver: 'acpi-wmi': driver_bound: bound to device 'PNP0C14:00'
+    bus: 'platform': really_probe: bound device PNP0C14:00 to driver acpi-wmi
+    bus: 'platform': driver_probe_device: matched device PNP0C14:01 with driver acpi-wmi
+    bus: 'platform': really_probe: probing driver acpi-wmi with device PNP0C14:01
+    acpi-wmi PNP0C14:01: no default pinctrl state
+    device: 'wakeup29': device_add
+    device: 'wmi_bus-PNP0C14:01': device_add
+    PM: Adding info for No Bus:wmi_bus-PNP0C14:01
+    device: '2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B': device_add
+    bus: 'wmi': add device 2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
+    PM: Adding info for wmi:2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
+    device: 'A6FEA33E-DABF-46F5-BFC8-460D961BEC9F': device_add
+    bus: 'wmi': add device A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
+    PM: Adding info for wmi:A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
+    device: '05901221-D566-11D1-B2F0-00A0C9062910': device_add
+    bus: 'wmi': add device 05901221-D566-11D1-B2F0-00A0C9062910
+    PM: Adding info for wmi:05901221-D566-11D1-B2F0-00A0C9062910
+    driver: 'acpi-wmi': driver_bound: bound to device 'PNP0C14:01'
+    bus: 'platform': really_probe: bound device PNP0C14:01 to driver acpi-wmi
+    bus: 'platform': driver_probe_device: matched device PNP0C14:02 with driver acpi-wmi
+    bus: 'platform': really_probe: probing driver acpi-wmi with device PNP0C14:02
+    acpi-wmi PNP0C14:02: no default pinctrl state
+    device: 'wakeup30': device_add
+    device: 'wmi_bus-PNP0C14:02': device_add
+    PM: Adding info for No Bus:wmi_bus-PNP0C14:02
+    acpi PNP0C14:02: duplicate WMI GUID 05901221-D566-11D1-B2F0-00A0C9062910 (first instance was on PNP0C14:01)
+    device: '1F13AB7F-6220-4210-8F8E-8BB5E71EE969': device_add
+    bus: 'wmi': add device 1F13AB7F-6220-4210-8F8E-8BB5E71EE969
+    PM: Adding info for wmi:1F13AB7F-6220-4210-8F8E-8BB5E71EE969
+    driver: 'acpi-wmi': driver_bound: bound to device 'PNP0C14:02'
+    bus: 'platform': really_probe: bound device PNP0C14:02 to driver acpi-wmi
 
-Signed-off-by: Julio Faracco <jcfaracco@gmail.com>
-Signed-off-by: Daiane Mendes <dnmendes76@gmail.com>
-Cc: Jason Wang <jasowang@redhat.com>
----
-v1-v2: Tag `net-next` was included to indentify where patch would be
-applied.
----
- drivers/net/virtio_net.c | 95 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 4d7d5434cc5d..31890d77eaf2 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -75,6 +75,7 @@ struct virtnet_sq_stats {
- 	u64 xdp_tx;
- 	u64 xdp_tx_drops;
- 	u64 kicks;
-+	u64 tx_timeouts;
- };
- 
- struct virtnet_rq_stats {
-@@ -98,6 +99,7 @@ static const struct virtnet_stat_desc virtnet_sq_stats_desc[] = {
- 	{ "xdp_tx",		VIRTNET_SQ_STAT(xdp_tx) },
- 	{ "xdp_tx_drops",	VIRTNET_SQ_STAT(xdp_tx_drops) },
- 	{ "kicks",		VIRTNET_SQ_STAT(kicks) },
-+	{ "tx_timeouts",	VIRTNET_SQ_STAT(tx_timeouts) },
- };
- 
- static const struct virtnet_stat_desc virtnet_rq_stats_desc[] = {
-@@ -211,6 +213,9 @@ struct virtnet_info {
- 	/* Work struct for config space updates */
- 	struct work_struct config_work;
- 
-+	/* Work struct for resetting the virtio-net driver. */
-+	struct work_struct reset_work;
-+
- 	/* Does the affinity hint is set for virtqueues? */
- 	bool affinity_hint_set;
- 
-@@ -1721,7 +1726,7 @@ static void virtnet_stats(struct net_device *dev,
- 	int i;
- 
- 	for (i = 0; i < vi->max_queue_pairs; i++) {
--		u64 tpackets, tbytes, rpackets, rbytes, rdrops;
-+		u64 tpackets, tbytes, terrors, rpackets, rbytes, rdrops;
- 		struct receive_queue *rq = &vi->rq[i];
- 		struct send_queue *sq = &vi->sq[i];
- 
-@@ -1729,6 +1734,7 @@ static void virtnet_stats(struct net_device *dev,
- 			start = u64_stats_fetch_begin_irq(&sq->stats.syncp);
- 			tpackets = sq->stats.packets;
- 			tbytes   = sq->stats.bytes;
-+			terrors  = sq->stats.tx_timeouts;
- 		} while (u64_stats_fetch_retry_irq(&sq->stats.syncp, start));
- 
- 		do {
-@@ -1743,6 +1749,7 @@ static void virtnet_stats(struct net_device *dev,
- 		tot->rx_bytes   += rbytes;
- 		tot->tx_bytes   += tbytes;
- 		tot->rx_dropped += rdrops;
-+		tot->tx_errors  += terrors;
- 	}
- 
- 	tot->tx_dropped = dev->stats.tx_dropped;
-@@ -2578,6 +2585,33 @@ static int virtnet_set_features(struct net_device *dev,
- 	return 0;
- }
- 
-+static void virtnet_tx_timeout(struct net_device *dev)
-+{
-+	struct virtnet_info *vi = netdev_priv(dev);
-+	u32 i;
-+
-+	netdev_warn(dev, "TX timeout stats:\n");
-+	/* find the stopped queue the same way dev_watchdog() does */
-+	for (i = 0; i < vi->curr_queue_pairs; i++) {
-+		struct send_queue *sq = &vi->sq[i];
-+
-+		if (!netif_xmit_stopped(netdev_get_tx_queue(dev, i))) {
-+			netdev_warn(dev, " Available send queue: %d, sq: %s, vq: %d, name: %s\n",
-+				    i, sq->name, sq->vq->index, sq->vq->name);
-+			continue;
-+		}
-+
-+		u64_stats_update_begin(&sq->stats.syncp);
-+		sq->stats.tx_timeouts++;
-+		u64_stats_update_end(&sq->stats.syncp);
-+
-+		netdev_warn(dev, " Unavailable send queue: %d, sq: %s, vq: %d, name: %s\n",
-+			    i, sq->name, sq->vq->index, sq->vq->name);
-+	}
-+
-+	schedule_work(&vi->reset_work);
-+}
-+
- static const struct net_device_ops virtnet_netdev = {
- 	.ndo_open            = virtnet_open,
- 	.ndo_stop   	     = virtnet_close,
-@@ -2593,6 +2627,7 @@ static const struct net_device_ops virtnet_netdev = {
- 	.ndo_features_check	= passthru_features_check,
- 	.ndo_get_phys_port_name	= virtnet_get_phys_port_name,
- 	.ndo_set_features	= virtnet_set_features,
-+	.ndo_tx_timeout		= virtnet_tx_timeout,
- };
- 
- static void virtnet_config_changed_work(struct work_struct *work)
-@@ -2982,6 +3017,62 @@ static int virtnet_validate(struct virtio_device *vdev)
- 	return 0;
- }
- 
-+static void _remove_vq_common(struct virtnet_info *vi)
-+{
-+	vi->vdev->config->reset(vi->vdev);
-+
-+	/* Free unused buffers in both send and recv, if any. */
-+	free_unused_bufs(vi);
-+
-+	_free_receive_bufs(vi);
-+
-+	free_receive_page_frags(vi);
-+
-+	virtnet_del_vqs(vi);
-+}
-+
-+static int _virtnet_reset(struct virtnet_info *vi)
-+{
-+	struct virtio_device *vdev = vi->vdev;
-+	int ret;
-+
-+	virtio_config_disable(vdev);
-+	vdev->failed = vdev->config->get_status(vdev) & VIRTIO_CONFIG_S_FAILED;
-+
-+	virtnet_freeze_down(vdev);
-+	_remove_vq_common(vi);
-+
-+	virtio_add_status(vdev, VIRTIO_CONFIG_S_ACKNOWLEDGE);
-+	virtio_add_status(vdev, VIRTIO_CONFIG_S_DRIVER);
-+
-+	ret = virtio_finalize_features(vdev);
-+	if (ret)
-+		goto err;
-+
-+	ret = virtnet_restore_up(vdev);
-+	if (ret)
-+		goto err;
-+
-+	ret = _virtnet_set_queues(vi, vi->curr_queue_pairs);
-+	if (ret)
-+		goto err;
-+
-+	virtio_add_status(vdev, VIRTIO_CONFIG_S_DRIVER_OK);
-+	virtio_config_enable(vdev);
-+	return 0;
-+err:
-+	virtio_add_status(vdev, VIRTIO_CONFIG_S_FAILED);
-+	return ret;
-+}
-+
-+static void virtnet_reset(struct work_struct *work)
-+{
-+	struct virtnet_info *vi =
-+		container_of(work, struct virtnet_info, reset_work);
-+
-+	_virtnet_reset(vi);
-+}
-+
- static int virtnet_probe(struct virtio_device *vdev)
- {
- 	int i, err = -ENOMEM;
-@@ -3011,6 +3102,7 @@ static int virtnet_probe(struct virtio_device *vdev)
- 	dev->netdev_ops = &virtnet_netdev;
- 	dev->features = NETIF_F_HIGHDMA;
- 
-+	dev->watchdog_timeo = 5 * HZ;
- 	dev->ethtool_ops = &virtnet_ethtool_ops;
- 	SET_NETDEV_DEV(dev, &vdev->dev);
- 
-@@ -3068,6 +3160,7 @@ static int virtnet_probe(struct virtio_device *vdev)
- 	vdev->priv = vi;
- 
- 	INIT_WORK(&vi->config_work, virtnet_config_changed_work);
-+	INIT_WORK(&vi->reset_work, virtnet_reset);
- 
- 	/* If we can receive ANY GSO packets, we must allocate large ones. */
- 	if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
--- 
-2.17.1
+When unloading wmi driver module, without this patch, there is calltrace.
+
+    bus: 'platform': remove driver acpi-wmi
+    device: '1F13AB7F-6220-4210-8F8E-8BB5E71EE969': device_unregister
+    bus: 'wmi': remove device 1F13AB7F-6220-4210-8F8E-8BB5E71EE969
+    PM: Removing info for wmi:1F13AB7F-6220-4210-8F8E-8BB5E71EE969
+    device: 'wmi_bus-PNP0C14:00': device_unregister
+    PM: Removing info for No Bus:wmi_bus-PNP0C14:00
+    device: 'wakeup29': device_unregister
+    device: '2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B': device_unregister
+    bus: 'wmi': remove device 2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
+    PM: Removing info for wmi:2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
+    device: 'A6FEA33E-DABF-46F5-BFC8-460D961BEC9F': device_unregister
+    bus: 'wmi': remove device A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
+    PM: Removing info for wmi:A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
+    device: '05901221-D566-11D1-B2F0-00A0C9062910': device_unregister
+    bus: 'wmi': remove device 05901221-D566-11D1-B2F0-00A0C9062910
+    PM: Removing info for wmi:05901221-D566-11D1-B2F0-00A0C9062910
+    device: 'wmi_bus-PNP0C14:01': device_unregister
+    PM: Removing info for No Bus:wmi_bus-PNP0C14:01
+    device: 'wmi_bus-PNP0C14:01': device_create_release
+    device: 'wakeup28': device_unregister
+    device: '86CCFD48-205E-4A77-9C48-2021CBEDE341': device_unregister
+    ------------[ cut here ]------------
+    sysfs group 'power' not found for kobject '86CCFD48-205E-4A77-9C48-2021CBEDE341'
+    WARNING: CPU: 8 PID: 636 at fs/sysfs/group.c:280 sysfs_remove_group+0x80/0x90
+    Modules linked in: wmi(-) snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic i915 snd_hda_intel snd_intel_nhlt intel_rapl_msr snd_hda_codec intel_rapl_common   x86_pkg_temp_thermal intel_powerclamp coretemp crct10dif_pclmul crct10dif_common snd_hda_core snd_pcm iTCO_wdt iTCO_vendor_support sch_fq_codel watchdog aesni_intel video thermal idma64 glue_helper efi_pstore snd_timer i2c_i801 crypto_simd backlight acpi_pad efivars openvswitch cryptd fan nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4     [last unloaded: wmi_bmof]
+    CPU: 8 PID: 636 Comm: rmmod Tainted: G        W         5.4.0-rc7 #1
+    Hardware name: Intel Corporation CoffeeLake Client Platform/CoffeeLake S 82 UDIMM RVP, BIOS CNLSFWX1.R00.X151.B01.1807201217 07/20/2018
+    RIP: 0010:sysfs_remove_group+0x80/0x90
+    Code: e8 a5 b3 ff ff 5b 41 5c 41 5d 5d c3 48 89 df e8 46 ae ff ff eb c6 49 8b 55 00 48 c7 c7 c8 9b bc 9b 49 8b 34 24 e8 30 7b cd ff <0f> 0b 5b 41 5c 41 5d 5d c3 0f 1f 80 00 00 00 00 0f 1f 44 00 00 48
+    RSP: 0018:ffffbaacc063bd38 EFLAGS: 00010282
+    RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+    RDX: 0000000000000001 RSI: ffffffff9a586023 RDI: ffffffff9a586023
+    RBP: ffffbaacc063bd50 R08: 0000000000000001 R09: 0000000000000000
+    R10: 00000000ffba64cc R11: 0000000000000000 R12: ffffffff9b8d9d20
+    R13: ffff9c3843c85000 R14: dead000000000100 R15: ffff9c384facc000
+    FS:  00007f5a591fa740(0000) GS:ffff9c385ac00000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 000055b3f2513d28 CR3: 0000000441ed6005 CR4: 00000000003606e0
+    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+    Call Trace:
+     dpm_sysfs_remove+0x58/0x60
+     device_del+0x77/0x380
+     ? acpi_ut_release_mutex+0x71/0x76
+     device_unregister+0x41/0x60
+     acpi_wmi_remove+0xdd/0x120 [wmi]
+     platform_drv_remove+0x25/0x50
+     device_release_driver_internal+0xec/0x1b0
+     driver_detach+0x4d/0xa0
+     bus_remove_driver+0x80/0xe0
+     driver_unregister+0x2f/0x50
+     platform_driver_unregister+0x12/0x20
+     acpi_wmi_exit+0x10/0x169 [wmi]
+     __x64_sys_delete_module+0x15b/0x240
+     ? lockdep_hardirqs_on+0xe8/0x1c0
+     ? do_syscall_64+0x17/0x1c0
+     ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    do_syscall_64+0x55/0x1c0
+    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    RIP: 0033:0x7f5a592f6767
+    Code: 73 01 c3 48 8b 0d 19 c7 0b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e9 c6 0b 00 f7 d8 64 89 01 48
+    RSP: 002b:00007ffd85909808 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+    RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f5a592f6767
+    RDX: 000000000000000a RSI: 0000000000000800 RDI: 000055b3f25097c8
+    RBP: 00007ffd85909858 R08: 0000000000000000 R09: 0000000000000000
+    R10: 00007f5a59366ac0 R11: 0000000000000206 R12: 00007ffd85909a20
+    R13: 00007ffd85909e36 R14: 000055b3f25092a0 R15: 000055b3f2509760
+    irq event stamp: 7152
+    hardirqs last  enabled at (7151): [<ffffffff9b2b26ec>] _raw_spin_unlock_irq+0x2c/0x50
+    hardirqs last disabled at (7152): [<ffffffff9a401eba>] trace_hardirqs_off_thunk+0x1a/0x20
+    softirqs last  enabled at (7146): [<ffffffff9b6002d9>] __do_softirq+0x2d9/0x4ef
+    softirqs last disabled at (7133): [<ffffffff9a504ba4>] irq_exit+0xc4/0xd0
+    ---[ end trace 61882efbb33d050e ]---
+    bus: 'wmi': remove device 86CCFD48-205E-4A77-9C48-2021CBEDE341
+    PM: Removing info for wmi:86CCFD48-205E-4A77-9C48-2021CBEDE341
+    device: 'wmi_bus-PNP0C14:00': device_create_release
+    device: 'wmi_bus-PNP0C14:02': device_unregister
+    PM: Removing info for No Bus:wmi_bus-PNP0C14:02
+    device: 'wmi_bus-PNP0C14:02': device_create_release
+    device: 'wakeup27': device_unregister
+    driver: 'acpi-wmi': driver_release
+    bus: 'wmi': unregistering
+    device class 'wmi_bus': unregistering
+    class 'wmi_bus': release.
+    class 'wmi_bus' does not have a release() function, be careful
+
+
+Thanks,
+Yongxin
+
 
