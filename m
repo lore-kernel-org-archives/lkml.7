@@ -2,188 +2,139 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05114C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3D4C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB232070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5972071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SWM/hJn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfKVWN1 (ORCPT
+        id S1726976AbfKVWNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:13:27 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:50994 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKVWNZ (ORCPT
+        Fri, 22 Nov 2019 17:13:39 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41702 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKVWNj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:13:25 -0500
-Received: by mail-il1-f198.google.com with SMTP id l63so7296324ili.17
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 14:13:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=WTLZqtqfoN0AmabcgLeW8pAz7p65L6LdXI/HHqQhgkA=;
-        b=hYoeNjMg+WMJXcSQxNxK0byV3fNvWpd7fNpqsTeNNDYt1Ot86dqXekae9aA2nTU7LS
-         0tEN2GsXbCkoLizOTS6qqnQfeZPGah+ez/dB9FomyVdlBtDcYaQeOHFNQAuOUKFU98lI
-         rWO/JKUo/TrfyahLtJIAdBpRsmlFE7JxiDTx6zAzF8JWbNz0ciV3KXgNkS0o4Mzfclh2
-         9stsxZv2pQDbSwanA8CZCNri7S/z+4EzvMhvjTz9GyN5FNkSuBAUhuScq3d4yf5aeL1T
-         TuuD2pA3Ijd60LCQ4vjE5GY86ElVvy1806T5hYn+totFll6Z/rnXDVuLn9uTrNv9iuNW
-         ckFA==
-X-Gm-Message-State: APjAAAUFlzZ97j2kfCkyDRGTj+ssvSaNLN2k06NwoJKf2myz9/+o4kkQ
-        eQsa5FjxGeKDs63Nh517r2B5WoT4xRbBzywlKPB8zsIGIB7s
-X-Google-Smtp-Source: APXvYqw3FjkUoue1G/FkUXlf6zNVDpp+pCA+okAW2RjsLWgXj3bTqBh1EyLeiMnNelvMSWTsowFF0AYfCdPDaxl3R0+63Ko15FXG
+        Fri, 22 Nov 2019 17:13:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HNjTOsYjIKXP47ZunP1SpB9bIgwH2bYkpYUKHNcPIGY=; b=SWM/hJn9CunaaW/5SMStJOizB
+        w9rFZWz87gdbW8X6/40V6lF9ZGfPe74T2e2t+WPE9m36JOorBaAShksHPeXzU27KBR5tOiAqkSbsL
+        CRpAcMEez+4y4n95Tg386hRo29yFNdTkuYNKI587sh2JZDXA+Y/sHH7c37LuBMj3KJV/QpIPXpS9g
+        WyfxmwyuuzXIuousw7nXwqkGGALG74HUrOTE+ET89/voJBoP+X7gtfSz42JDnPvbZJhp4okI4aR5x
+        hZM/cXiaR4M26XEZVmS6V+scJ3AzgjboraAljFpNMrbuMPpgCWnJh1KOG2MPmXi6ClFT5PLop7xkC
+        tT1PnKjIw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iYHB9-0002B2-OR; Fri, 22 Nov 2019 22:13:27 +0000
+Date:   Fri, 22 Nov 2019 14:13:27 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "zhengbin (A)" <zhengbin13@huawei.com>
+Cc:     Hugh Dickins <hughd@google.com>, viro@zeniv.linux.org.uk,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        houtao1@huawei.com, yi.zhang@huawei.com,
+        "J. R. Okajima" <hooanon05g@gmail.com>
+Subject: Re: [PATCH] tmpfs: use ida to get inode number
+Message-ID: <20191122221327.GW20752@bombadil.infradead.org>
+References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
+ <20191120154552.GS20752@bombadil.infradead.org>
+ <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
+ <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
+ <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
+ <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
+ <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:9a17:: with SMTP id t23mr19431650ili.40.1574460802802;
- Fri, 22 Nov 2019 14:13:22 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:13:22 -0800
-In-Reply-To: <Pine.LNX.4.44L0.1911221700420.1511-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dd2ff40597f6b812@google.com>
-Subject: Re: Re: possible deadlock in mon_bin_vma_fault
-From:   syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, jrdr.linux@gmail.com,
-        keescook@chromium.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk, zaitcev@redhat.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Fri, 22 Nov 2019, Pete Zaitcev wrote:
+On Fri, Nov 22, 2019 at 09:23:30AM +0800, zhengbin (A) wrote:
+> On 2019/11/22 3:53, Hugh Dickins wrote:
+> > On Thu, 21 Nov 2019, zhengbin (A) wrote:
+> >> On 2019/11/21 12:52, Hugh Dickins wrote:
+> >>> Just a rushed FYI without looking at your patch or comments.
+> >>>
+> >>> Internally (in Google) we do rely on good tmpfs inode numbers more
+> >>> than on those of other get_next_ino() filesystems, and carry a patch
+> >>> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
+> >>> number space for each superblock) - essentially,
+> >>>
+> >>> 	ino = sbinfo->next_ino++;
+> >>> 	/* Avoid 0 in the low 32 bits: might appear deleted */
+> >>> 	if (unlikely((unsigned int)ino == 0))
+> >>> 		ino = sbinfo->next_ino++;
+> >>>
+> >>> Which I think would be faster, and need less memory, than IDA.
+> >>> But whether that is of general interest, or of interest to you,
+> >>> depends upon how prevalent 32-bit executables built without
+> >>> __FILE_OFFSET_BITS=64 still are these days.
+> >> So how google think about this? inode number > 32-bit, but 32-bit executables
+> >> cat not handle this?
+> > Google is free to limit what executables are run on its machines,
+> > and how they are built, so little problem here.
+> >
+> > A general-purpose 32-bit Linux distribution does not have that freedom,
+> > does not want to limit what the user runs.  But I thought that by now
+> > they (and all serious users of 32-bit systems) were building their own
+> > executables with _FILE_OFFSET_BITS=64 (I was too generous with the
+> > underscores yesterday); and I thought that defined __USE_FILE_OFFSET64,
+> > and that typedef'd ino_t to be __ino64_t.  And the 32-bit kernel would
+> > have __ARCH_WANT_STAT64, which delivers st_ino as unsigned long long.
+> >
+> > So I thought that a modern, professional 32-bit executable would be
+> > dealing in 64-bit inode numbers anyway.  But I am not a system builder,
+> > so perhaps I'm being naive.  And of course some users may have to support
+> > some old userspace, or apps that assign inode numbers to "int" or "long"
+> > or whatever.  I have no insight into the extent of that problem.
+> 
+> So how to solve this problem?
+> 
+> 1. tmpfs use ida or other data structure
+> 
+> 2. tmpfs use 64-bit, each superblock a inode number space
+> 
+> 3. do not do anything, If somebody hits this bug, let them solve for themselves
+> 
+> 4. (last_ino change to 64-bit)get_next_ino -->other filesystems will be ok, but it was rejected before
 
->> > It would be more elegant to do the rp->mmap_active test before calling
->> > kcalloc and mon_alloc_buf.  But of course that's a pretty minor thing.
+5. Extend the sbitmap API to allow for growing the bitmap.  I had a
+look at doing that, and it looks hard.  There are a lot of things which
+are set up at initialisation and changing them mid-use seems tricky.
+Ccing Jens in case he has an opinion.
 
->> Indeed it feels wrong that so much work gets discarded. However, memory
->> allocations can block, right? In the same time, our main objective here  
->> is
->> to make sure that when a page fault happens, we fill in the page that VMA
->> is intended to refer, and not one that was re-allocated. Therefore, I'm
->> trying to avoid a situation where:
+6. Creating a percpu IDA.  This doesn't seem too hard.  We need a percpu
+pointer to an IDA leaf (128 bytes), and a percpu integer which is the
+current base for this CPU.  At allocation time, find and set the first
+free bit in the leaf, and add on the current base.
 
->> 1. thread A checks mmap_active, finds it at zero and proceeds into the
->> reallocation ioctl
->> 2. thread A sleeps in get_free_page()
->> 3. thread B runs mmap() and succeeds
->> 4. thread A obtains its pages and proceeds to substitute the buffer
->> 5. thread B (or any other) pagefaults and ends with the new, unexpected  
->> page
+If the percpu leaf is full, set the XA_MARK_1 bit on the entry in
+the XArray.  Then look for any leaves which have both the XA_MARK_0
+and XA_MARK_1 bits set; if there is one, claim it by clearing the
+XA_MARK_1 bit.  If not, kzalloc a new one and find a free spot for it
+in the underlying XArray.
 
->> The code is not pretty, but I don't see an alternative. Heck, I would
->> love you to find more races if you can.
+Freeing an ID is simply ida_free().  That will involve changing the
+users of get_next_ino() to call put_ino(), or something.
 
-> The alternative is to have the routines for mmap() hold fetch_lock
-> instead of b_lock.  mmap() is allowed to sleep, so that would be okay.
-> Then you would also hold fetch_lock while checking mmap_active and
-> doing the memory allocations.  That would prevent any races -- in your
-> example above, thread A would acquire fetch_lock in step 1, so thread B
-> would block in step 3 until step 4 was finished.  Hence B would end up
-> mapping the correct pages.
+This should generally result in similar contention between threads as
+the current scheme -- accessing a shared resource every 1024 allocations.
+Maybe more often as we try to avoid leaving gaps in the data structure,
+or maybe less as we reuse IDs.
 
-> In practice, I don't see this being a routine problem.  How often do
-> multiple threads independently try to mmap the same usbmon buffer?
-
-> Still, let's see syzbot reacts to your current patch.  The line below
-> is how you ask syzbot to test a candidate patch.
-
-> Alan Stern
-
-> #syz test: linux-4.19.y f6e27dbb1afa
-
-"linux-4.19.y" does not look like a valid git repo address.
-
-
-> commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
-> Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
-> Date:   Thu Nov 21 17:24:00 2019 -0600
-
->      usb: Fix a deadlock in usbmon between mmap and read
-
->      Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
->      Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
-
-> diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
-> index ac2b4fcc265f..f48a23adbc35 100644
-> --- a/drivers/usb/mon/mon_bin.c
-> +++ b/drivers/usb/mon/mon_bin.c
-> @@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file,  
-> unsigned int cmd, unsigned long arg
-
->   		mutex_lock(&rp->fetch_lock);
->   		spin_lock_irqsave(&rp->b_lock, flags);
-> -		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
-> -		kfree(rp->b_vec);
-> -		rp->b_vec  = vec;
-> -		rp->b_size = size;
-> -		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
-> -		rp->cnt_lost = 0;
-> +		if (rp->mmap_active) {
-> +			mon_free_buff(vec, size/CHUNK_SIZE);
-> +			kfree(vec);
-> +			ret = -EBUSY;
-> +		} else {
-> +			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
-> +			kfree(rp->b_vec);
-> +			rp->b_vec  = vec;
-> +			rp->b_size = size;
-> +			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
-> +			rp->cnt_lost = 0;
-> +		}
->   		spin_unlock_irqrestore(&rp->b_lock, flags);
->   		mutex_unlock(&rp->fetch_lock);
->   		}
-> @@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct  
-> poll_table_struct *wait)
->   static void mon_bin_vma_open(struct vm_area_struct *vma)
->   {
->   	struct mon_reader_bin *rp = vma->vm_private_data;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&rp->b_lock, flags);
->   	rp->mmap_active++;
-> +	spin_unlock_irqrestore(&rp->b_lock, flags);
->   }
-
->   static void mon_bin_vma_close(struct vm_area_struct *vma)
->   {
-> +	unsigned long flags;
-> +
->   	struct mon_reader_bin *rp = vma->vm_private_data;
-> +	spin_lock_irqsave(&rp->b_lock, flags);
->   	rp->mmap_active--;
-> +	spin_unlock_irqrestore(&rp->b_lock, flags);
->   }
-
->   /*
-> @@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct  
-> vm_fault *vmf)
->   	unsigned long offset, chunk_idx;
->   	struct page *pageptr;
-
-> -	mutex_lock(&rp->fetch_lock);
->   	offset = vmf->pgoff << PAGE_SHIFT;
-> -	if (offset >= rp->b_size) {
-> -		mutex_unlock(&rp->fetch_lock);
-> +	if (offset >= rp->b_size)
->   		return VM_FAULT_SIGBUS;
-> -	}
->   	chunk_idx = offset / CHUNK_SIZE;
->   	pageptr = rp->b_vec[chunk_idx].pg;
->   	get_page(pageptr);
-> -	mutex_unlock(&rp->fetch_lock);
->   	vmf->page = pageptr;
->   	return 0;
->   }
-
-
-
+(I've tried to explain what I want here, but appreciate it may be
+inscrutable.  I can try to explain more, or maybe I should just write
+the code myself)
