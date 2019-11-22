@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CADBC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1FF20726
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9801E2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401865;
-	bh=v/ELUbqxZyXrZuAAY7IR8tKjXYRyU+EDsOX/Vedj/xw=;
+	s=default; t=1574401873;
+	bh=7jsGRtCxAHLdVRqPPVCUZabSwN7tXyWjLgh3iSCiD4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0i7oHL0y6Ep4AX80qQIQbrsFTYyvfD63i3H/JJnNj0Bv3qHQOMnguoO930wOkl+Gb
-	 GydMrq1mEUE11wBMiPy3JGmAIriZTefvXGip9TpXq2jEYrgiZNy62s7VNzIOo8PNwj
-	 3P8yuzNDkXPTYXqTjoXReAKfGZ/jsphlS9eNRSh0=
+	b=YDE97fGEglYUS1dgiCR/CAb1cVvdzJ2MHijj8kp1OKHmGfJg5nTzRCKhoVB6g5bYu
+	 dpFyRGrijDM4oAe9mi65M4fLMDlhC1f/gf3kTeCtco32gsuhpI18654gbL0L3NRmaL
+	 AQi4EFxn3jM66MP5zn8WD5QRuCQM/QBaYOhiIYIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfKVFvD (ORCPT
+        id S1728045AbfKVFvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55890 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbfKVFvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:00 -0500
+        id S1727999AbfKVFvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D12C2072E;
-        Fri, 22 Nov 2019 05:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE252070E;
+        Fri, 22 Nov 2019 05:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401860;
-        bh=v/ELUbqxZyXrZuAAY7IR8tKjXYRyU+EDsOX/Vedj/xw=;
+        s=default; t=1574401867;
+        bh=7jsGRtCxAHLdVRqPPVCUZabSwN7tXyWjLgh3iSCiD4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvqoY9VgLLGjZ5v5JjEyxXNHLhKbA0X9VXyvADTLaz4R1YBGEQAjM44BVIS/zZiyJ
-         r7qNW2bDLIdoqQtmpP+MZ34hwaoRsNj5DUYGONFBTFmorpl9w5X4puC99r7PwnGliy
-         LNp9MlbLW8CCV/rCDFpPUeY+E5CxWKbvfcVw2gYU=
+        b=uoBDT4A/Uj+O74lZxBRjPdIperN79xI9Gg1nbzLpJX4G2QKaiJezmsFY+FxtEtsty
+         3PMS9Y3m5amBUb40NGplRaOC/wvZl6K+EGwB1EvofPa1+WruRijFuNLm4uCDoGdxPW
+         Je8rIET/CEbmZ3fbpibM3YcO2v/VsLd//fQLIwpw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 096/219] pinctrl: sh-pfc: sh7734: Fix shifted values in IPSR10
-Date:   Fri, 22 Nov 2019 00:47:08 -0500
-Message-Id: <20191122054911.1750-89-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 103/219] IB/qib: Fix an error code in qib_sdma_verbs_send()
+Date:   Fri, 22 Nov 2019 00:47:15 -0500
+Message-Id: <20191122054911.1750-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,60 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 054f2400f706327f96770219c3065b5131f8f154 ]
+[ Upstream commit 5050ae5fa3d54c8e83e1e447cc7e3591110a7f57 ]
 
-Some values in the Peripheral Function Select Register 10 descriptor are
-shifted by one position, which may cause a peripheral function to be
-programmed incorrectly.
+We accidentally return success on this error path.
 
-Fixing this makes all HSCIF0 pins use Function 4 (value 3), like was
-already the case for the HSCK0 pin in field IP10[5:3].
-
-Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/qib/qib_sdma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 6502e676d3686..33232041ee86d 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2213,22 +2213,22 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP10_22 [1] */
- 		FN_CAN_CLK_A, FN_RX4_D,
- 	    /* IP10_21_19 [3] */
--		FN_AUDIO_CLKOUT, FN_TX1_E, FN_HRTS0_C, FN_FSE_B,
--		FN_LCD_M_DISP_B, 0, 0, 0,
-+		FN_AUDIO_CLKOUT, FN_TX1_E, 0, FN_HRTS0_C, FN_FSE_B,
-+		FN_LCD_M_DISP_B, 0, 0,
- 	    /* IP10_18_16 [3] */
--		FN_AUDIO_CLKC, FN_SCK1_E, FN_HCTS0_C, FN_FRB_B,
--		FN_LCD_VEPWC_B, 0, 0, 0,
-+		FN_AUDIO_CLKC, FN_SCK1_E, 0, FN_HCTS0_C, FN_FRB_B,
-+		FN_LCD_VEPWC_B, 0, 0,
- 	    /* IP10_15 [1] */
- 		FN_AUDIO_CLKB_A, FN_LCD_CLK_B,
- 	    /* IP10_14_12 [3] */
- 		FN_AUDIO_CLKA_A, FN_VI1_CLK_B, FN_SCK1_D, FN_IECLK_B,
- 		FN_LCD_FLM_B, 0, 0, 0,
- 	    /* IP10_11_9 [3] */
--		FN_SSI_SDATA3, FN_VI1_7_B, FN_HTX0_C, FN_FWE_B,
--		FN_LCD_CL2_B, 0, 0, 0,
-+		FN_SSI_SDATA3, FN_VI1_7_B, 0, FN_HTX0_C, FN_FWE_B,
-+		FN_LCD_CL2_B, 0, 0,
- 	    /* IP10_8_6 [3] */
--		FN_SSI_SDATA2, FN_VI1_6_B, FN_HRX0_C, FN_FRE_B,
--		FN_LCD_CL1_B, 0, 0, 0,
-+		FN_SSI_SDATA2, FN_VI1_6_B, 0, FN_HRX0_C, FN_FRE_B,
-+		FN_LCD_CL1_B, 0, 0,
- 	    /* IP10_5_3 [3] */
- 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
- 		FN_LCD_DON_B, 0, 0, 0,
+diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
+index d0723d4aef5c9..7424e88b0d918 100644
+--- a/drivers/infiniband/hw/qib/qib_sdma.c
++++ b/drivers/infiniband/hw/qib/qib_sdma.c
+@@ -576,8 +576,10 @@ int qib_sdma_verbs_send(struct qib_pportdata *ppd,
+ 		dw = (len + 3) >> 2;
+ 		addr = dma_map_single(&ppd->dd->pcidev->dev, sge->vaddr,
+ 				      dw << 2, DMA_TO_DEVICE);
+-		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr))
++		if (dma_mapping_error(&ppd->dd->pcidev->dev, addr)) {
++			ret = -ENOMEM;
+ 			goto unmap;
++		}
+ 		sdmadesc[0] = 0;
+ 		make_sdma_desc(ppd, sdmadesc, (u64) addr, dw, dwoffset);
+ 		/* SDmaUseLargeBuf has to be set in every descriptor */
 -- 
 2.20.1
 
