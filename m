@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E368C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA216C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B99720707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FA92068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403461;
-	bh=2GEVP+XTklP07ZP2wt7K2gymaaWsRpRrMdsz26QNACk=;
+	s=default; t=1574403466;
+	bh=OFhAvqBTsQOpEXKhS5GL21ntd+n5NcdSkGS1/oIoNes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvyYwHjSMImx3QjiP9E1G93s7xoMrpOPiSBpYHtIFbKSEpzXTfk2HrKO3PAQq4/7U
-	 t4TSVUl0fjOzCfkI/HClBag/oPovMUjVFgqmnWJ5OCl7X3ssEB7/LWQ5oyUQw8IXd0
-	 mzCjl6JUTq79FtjYY70RASrwEOW8SJ8vWCWox2Vo=
+	b=YdJ1syZRkYLfNDHWU8pAogk1J44G52EYy33Zjbup1Wmtocgz1coVTLNUDJfMQ8sJC
+	 bUE9MRXrWl9VGc0DvNg7KhQvRT/JVLxpoAsb3qcKwbRn5DjEOGvvjAPd1ieyFkNWFB
+	 jEKjPK4AadCSH9ZjMgCFFfgCpsNurq8otD+nis1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfKVGRg (ORCPT
+        id S1729742AbfKVGRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:17:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50674 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:17:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729269AbfKVGN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:26 -0500
+        id S1728948AbfKVGNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14B820715;
-        Fri, 22 Nov 2019 06:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED7520708;
+        Fri, 22 Nov 2019 06:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403206;
-        bh=2GEVP+XTklP07ZP2wt7K2gymaaWsRpRrMdsz26QNACk=;
+        s=default; t=1574403204;
+        bh=OFhAvqBTsQOpEXKhS5GL21ntd+n5NcdSkGS1/oIoNes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9yxVGV6etFCcrlE0QxGvJuFO2sExIgiIyPSFvk3K3sxHexPVSimmdcgBt3LK0ucv
-         NReO5d5DylOUU2LJ+bXw0qFC1YiYscIanvS771/6JomSPnpF+6iaCiS901mhQzDnt3
-         r+glLUl53UWw9bXdliw4FXzhdRY8i1gSFDrdzjqM=
+        b=pTPdi7NiiRQ/QuQ0RtYEZXCwmhNIBLboO5kQ2ZFa3dX6tOxz0Fb41Wxbf/NiKRgmL
+         pVpc4y9RjHMV/lpj0p/6yxBxLItEQ0g5UPgM9Opg6OqUcXFZebaRCf304w/YLek81q
+         JV7aVL/o7kSzca3y3IvazmanHyELMptWx9m6pRBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.4 22/68] xen/pciback: Check dev_data before using it
-Date:   Fri, 22 Nov 2019 01:12:15 -0500
-Message-Id: <20191122061301.4947-21-sashal@kernel.org>
+Cc:     Lepton Wu <ytht.net@gmail.com>, Jorgen Hansen <jhansen@vmware.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 20/68] VSOCK: bind to random port for VMADDR_PORT_ANY
+Date:   Fri, 22 Nov 2019 01:12:13 -0500
+Message-Id: <20191122061301.4947-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,36 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Lepton Wu <ytht.net@gmail.com>
 
-[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
+[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
 
-If pcistub_init_device fails, the release function will be called with
-dev_data set to NULL.  Check it before using it to avoid a NULL pointer
-dereference.
+The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
+when VMM crashed, there is still orphaned vsock which is waiting for
+close timer, then it could cause connection time out for new started VM
+if they are trying to connect to same port with same guest cid since the
+new packets could hit that orphaned vsock. We could also fix this by doing
+more in vhost_vsock_reset_orphans, but any way, it should be better to start
+from a random local port instead of a fixed one.
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Lepton Wu <ytht.net@gmail.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/pci_stub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/vmw_vsock/af_vsock.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 258b7c3256499..47c6df53cabfb 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -104,7 +104,8 @@ static void pcistub_device_release(struct kref *kref)
- 	 * is called from "unbind" which takes a device_lock mutex.
- 	 */
- 	__pci_reset_function_locked(dev);
--	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
-+	if (dev_data &&
-+	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
- 		dev_info(&dev->dev, "Could not reload PCI state\n");
- 	else
- 		pci_restore_state(dev);
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 7f1d166ce6128..412d56614fd5e 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -89,6 +89,7 @@
+ #include <linux/mutex.h>
+ #include <linux/net.h>
+ #include <linux/poll.h>
++#include <linux/random.h>
+ #include <linux/skbuff.h>
+ #include <linux/smp.h>
+ #include <linux/socket.h>
+@@ -483,9 +484,13 @@ static void vsock_pending_work(struct work_struct *work)
+ static int __vsock_bind_stream(struct vsock_sock *vsk,
+ 			       struct sockaddr_vm *addr)
+ {
+-	static u32 port = LAST_RESERVED_PORT + 1;
++	static u32 port = 0;
+ 	struct sockaddr_vm new_addr;
+ 
++	if (!port)
++		port = LAST_RESERVED_PORT + 1 +
++			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
++
+ 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
+ 
+ 	if (addr->svm_port == VMADDR_PORT_ANY) {
 -- 
 2.20.1
 
