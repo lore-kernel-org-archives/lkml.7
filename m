@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601E8C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A77420717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B2A20730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419096;
-	bh=W+ZYmJ3tALheWbUv4P01KUCmLl9oUrjKMEXFXL+OArg=;
+	s=default; t=1574419102;
+	bh=laoqNmJBfeOHo+/xTivya8pe9YZR3Jiai/QAOQi7MCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oink/Vo1zY4Vx1ygDUorKr5JVBy9bzsLufytUrb2qfrBbLeirkB3wjh+F4lXsNCmf
-	 rO1AbJRS7jTVopuXqjjMsHsy7VyCL5Oifdz/MvGVgYcHuVX0gLJ9IkJdPhF8oP4o/O
-	 Y9Fu7s1HpIzA1tuajUOVvD5b9AhqBfl0yXzMvgak=
+	b=QEEQRCzpvE8+/wT7luNuvj/u3E+wtCDAjJr4+fTfELbH8ERsVZVveQpk4tTZKC3eM
+	 U1zrnE6zDTmuRnGyYsGbXn5vzrmdziiyGd8FFOn4fbMxA7JJPqjCvADl05kb12RixA
+	 Mo56cU/5vtXIOmkA5EhaExzaoEDrBHie5kjBFTK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfKVKiP (ORCPT
+        id S1728640AbfKVKiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727587AbfKVKiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:12 -0500
+        id S1727987AbfKVKiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF1922072D;
-        Fri, 22 Nov 2019 10:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC99420715;
+        Fri, 22 Nov 2019 10:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419091;
-        bh=W+ZYmJ3tALheWbUv4P01KUCmLl9oUrjKMEXFXL+OArg=;
+        s=default; t=1574419097;
+        bh=laoqNmJBfeOHo+/xTivya8pe9YZR3Jiai/QAOQi7MCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHQRpoCRyF6PUxKoFfemk3TO1QD6GQmstxhpyXtVdtJsydeKmgPrW5gZw8pF66eJe
-         0mor3rg1yTekbRg4ds7ldZyDDMrWfqvyeVrnrYkaO6wgg9PEDgQTwTSgdEiSgQAxMa
-         5Ma7drQhAq5w4hSUODl0xNWpQPzVTawJvW0atKXs=
+        b=tjfNy5CCo6FPhwWERYRmQ+32QSAHuLQcP+PFYrh+bY3TqIh4M/zuCWRpQWW6Rkjc1
+         7RxAyJGF0s9MYecVLUND7+A6uL4Lc+c8niG3J9ypZJx2IYoV37XLss5+9L0ZS9vK4G
+         RrzBA03oE8VyFQDPNX8c66H869V2VGMI/mkQ+dzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trent Piepho <tpiepho@impinj.com>,
-        =?UTF-8?q?Jan=20Kundr=C3=83=C2=A1t?= <jan.kundrat@cesnet.cz>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 153/159] spi: spidev: Fix OF tree warning logic
-Date:   Fri, 22 Nov 2019 11:29:04 +0100
-Message-Id: <20191122100846.710231917@linuxfoundation.org>
+Subject: [PATCH 4.4 155/159] hwmon: (pwm-fan) Silence error on probe deferral
+Date:   Fri, 22 Nov 2019 11:29:06 +0100
+Message-Id: <20191122100848.393906397@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,50 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trent Piepho <tpiepho@impinj.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 605b3bec73cbd74b4ac937b580cd0b47d1300484 ]
+[ Upstream commit 9f67f7583e77fe5dc57aab3a6159c2642544eaad ]
 
-spidev will make a big fuss if a device tree node binds a device by
-using "spidev" as the node's compatible property.
+Probe deferrals aren't actual errors, so silence the error message in
+case the PWM cannot yet be acquired.
 
-However, the logic for this isn't looking for "spidev" in the
-compatible, but rather checking that the device is NOT compatible with
-spidev's list of devices.
-
-This causes a false positive if a device not named "rohm,dh2228fv", etc.
-binds to spidev, even if a means other than putting "spidev" in the
-device tree was used.  E.g., the sysfs driver_override attribute.
-
-Signed-off-by: Trent Piepho <tpiepho@impinj.com>
-Reviewed-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
-Tested-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/hwmon/pwm-fan.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index d0e7dfc647cf2..c5f1045561acc 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -713,11 +713,9 @@ static int spidev_probe(struct spi_device *spi)
- 	 * compatible string, it is a Linux implementation thing
- 	 * rather than a description of the hardware.
- 	 */
--	if (spi->dev.of_node && !of_match_device(spidev_dt_ids, &spi->dev)) {
--		dev_err(&spi->dev, "buggy DT: spidev listed directly in DT\n");
--		WARN_ON(spi->dev.of_node &&
--			!of_match_device(spidev_dt_ids, &spi->dev));
--	}
-+	WARN(spi->dev.of_node &&
-+	     of_device_is_compatible(spi->dev.of_node, "spidev"),
-+	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 3e23003f78b01..993c61e95d30c 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -227,8 +227,12 @@ static int pwm_fan_probe(struct platform_device *pdev)
  
- 	/* Allocate driver data */
- 	spidev = kzalloc(sizeof(*spidev), GFP_KERNEL);
+ 	ctx->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, NULL);
+ 	if (IS_ERR(ctx->pwm)) {
+-		dev_err(&pdev->dev, "Could not get PWM\n");
+-		return PTR_ERR(ctx->pwm);
++		ret = PTR_ERR(ctx->pwm);
++
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Could not get PWM: %d\n", ret);
++
++		return ret;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, ctx);
 -- 
 2.20.1
 
