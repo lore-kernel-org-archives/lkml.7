@@ -2,113 +2,264 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E78AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237F0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78F020708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421800;
-	bh=vh7PF8Txw85I7bDLRWcJf5RC2LEdYpmkGZ235XlfREs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WceMdA4F6oAMNiCfrQ301vhdsdQVZpO2ZeZxA0m0RLTbDX2x6oSYXYdf8i2PsGHPe
-	 P/ZyEn6x7i5qzzxECu5lYwUkyepRmJP6r6Pf0wUTDO0rYQLZvUr4XpagafY/gxoCSu
-	 /KmfbD+njGesKulo6FDd91isZynyLaiV9fUCb2ow=
+	by mail.kernel.org (Postfix) with ESMTP id F0A0720708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfKVLXT (ORCPT
+        id S1729708AbfKVLXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:23:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:23:23 -0500
+Received: from mga09.intel.com ([134.134.136.24]:22241 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727578AbfKVKl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330B120717;
-        Fri, 22 Nov 2019 10:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419288;
-        bh=vh7PF8Txw85I7bDLRWcJf5RC2LEdYpmkGZ235XlfREs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CewPZ0gPKhXgwReVeN20gznpKO36lO2cIBmQVOvD68KoTT/3IUEHWpJAXYqvaCGN3
-         OE5DUzOtE0i+dwGgYGwzD6V6glimb6wQ89HwsBdhG3hjKoSWhE6tISSchAYnpYP5UC
-         q/Mi0ojNAgEgW5hcE+R7NoVFlr5XL5Pt8lXyWdVk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 060/222] kprobes: Dont call BUG_ON() if there is a kprobe in use on free list
-Date:   Fri, 22 Nov 2019 11:26:40 +0100
-Message-Id: <20191122100858.632581833@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728457AbfKVKlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 02:41:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="216341170"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 02:41:17 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 12:41:16 +0200
+Date:   Fri, 22 Nov 2019 12:41:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 1/2] gpio: sch: Add edge event support
+Message-ID: <20191122104116.GB11621@lahna.fi.intel.com>
+References: <cover.1574277614.git.jan.kiszka@siemens.com>
+ <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Wed, Nov 20, 2019 at 08:20:13PM +0100, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> Add the required infrastructure consisting of an irq_chip_generic with
+> its irq_chip_type callbacks to enable and report edge events of the pins
+> to the gpio core. The actual hook-up of the event interrupt will happen
+> separately.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 
-[ Upstream commit cbdd96f5586151e48317d90a403941ec23f12660 ]
+One nit below. Regardless of that
 
-Instead of calling BUG_ON(), if we find a kprobe in use on free kprobe
-list, just remove it from the list and keep it on kprobe hash list
-as same as other in-use kprobes.
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/153666126882.21306.10738207224288507996.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/kprobes.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> ---
+>  drivers/gpio/gpio-sch.c | 114 +++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 107 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
+> index fb143f28c386..6a9c5500800c 100644
+> --- a/drivers/gpio/gpio-sch.c
+> +++ b/drivers/gpio/gpio-sch.c
+> @@ -18,12 +18,17 @@
+>  #define GEN	0x00
+>  #define GIO	0x04
+>  #define GLV	0x08
+> +#define GTPE	0x0c
+> +#define GTNE	0x10
+> +#define GGPE	0x14
+> +#define GTS	0x1c
+>  
+>  struct sch_gpio {
+>  	struct gpio_chip chip;
+>  	spinlock_t lock;
+>  	unsigned short iobase;
+>  	unsigned short resume_base;
+> +	int irq_base;
+>  };
+>  
+>  static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
+> @@ -79,10 +84,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
+>  static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned gpio_num)
+>  {
+>  	struct sch_gpio *sch = gpiochip_get_data(gc);
+> +	unsigned long flags;
+>  
+> -	spin_lock(&sch->lock);
+> +	spin_lock_irqsave(&sch->lock, flags);
+>  	sch_gpio_reg_set(sch, gpio_num, GIO, 1);
+> -	spin_unlock(&sch->lock);
+> +	spin_unlock_irqrestore(&sch->lock, flags);
+>  	return 0;
+>  }
+>  
+> @@ -95,20 +101,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
+>  static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
+>  {
+>  	struct sch_gpio *sch = gpiochip_get_data(gc);
+> +	unsigned long flags;
+>  
+> -	spin_lock(&sch->lock);
+> +	spin_lock_irqsave(&sch->lock, flags);
+>  	sch_gpio_reg_set(sch, gpio_num, GLV, val);
+> -	spin_unlock(&sch->lock);
+> +	spin_unlock_irqrestore(&sch->lock, flags);
+>  }
+>  
+>  static int sch_gpio_direction_out(struct gpio_chip *gc, unsigned gpio_num,
+>  				  int val)
+>  {
+>  	struct sch_gpio *sch = gpiochip_get_data(gc);
+> +	unsigned long flags;
+>  
+> -	spin_lock(&sch->lock);
+> +	spin_lock_irqsave(&sch->lock, flags);
+>  	sch_gpio_reg_set(sch, gpio_num, GIO, 0);
+> -	spin_unlock(&sch->lock);
+> +	spin_unlock_irqrestore(&sch->lock, flags);
+>  
+>  	/*
+>  	 * according to the datasheet, writing to the level register has no
+> @@ -130,6 +138,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
+>  	return sch_gpio_reg_get(sch, gpio_num, GIO);
+>  }
+>  
+> +static int sch_gpio_to_irq(struct gpio_chip *gpio, unsigned int offset)
+> +{
+> +	struct sch_gpio *sch = gpiochip_get_data(gpio);
+> +	return sch->irq_base + offset;
+> +}
+> +
+>  static const struct gpio_chip sch_gpio_chip = {
+>  	.label			= "sch_gpio",
+>  	.owner			= THIS_MODULE,
+> @@ -138,12 +152,70 @@ static const struct gpio_chip sch_gpio_chip = {
+>  	.direction_output	= sch_gpio_direction_out,
+>  	.set			= sch_gpio_set,
+>  	.get_direction		= sch_gpio_get_direction,
+> +	.to_irq			= sch_gpio_to_irq,
+>  };
+>  
+> +static int sch_irq_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct sch_gpio *sch = gc->private;
+> +	unsigned int gpio_num = d->irq - sch->irq_base;
+> +	unsigned long flags;
+> +	int rising = 0;
+> +	int falling = 0;
+> +
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		rising = 1;
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		falling = 1;
+> +		break;
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		rising = 1;
+> +		falling = 1;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	spin_lock_irqsave(&sch->lock, flags);
+> +	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
+> +	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
+> +	spin_unlock_irqrestore(&sch->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static void sch_irq_set_enable(struct irq_data *d, int val)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct sch_gpio *sch = gc->private;
+> +	unsigned int gpio_num = d->irq - sch->irq_base;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&sch->lock, flags);
+> +	sch_gpio_reg_set(sch, gpio_num, GGPE, val);
+> +	spin_unlock_irqrestore(&sch->lock, flags);
+> +}
+> +
+> +static void sch_irq_mask(struct irq_data *d)
+> +{
+> +	sch_irq_set_enable(d, 0);
+> +}
+> +
+> +static void sch_irq_unmask(struct irq_data *d)
+> +{
+> +	sch_irq_set_enable(d, 1);
+> +}
+> +
+>  static int sch_gpio_probe(struct platform_device *pdev)
+>  {
+> +	struct irq_chip_generic *gc;
+> +	struct irq_chip_type *ct;
+>  	struct sch_gpio *sch;
+>  	struct resource *res;
+> +	int irq_base, ret;
+>  
+>  	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
+>  	if (!sch)
+> @@ -203,7 +275,35 @@ static int sch_gpio_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, sch);
+>  
+> -	return devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
+> +	ret = devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
+> +	if (ret)
+> +		return ret;
+> +
+> +	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
+> +					NUMA_NO_NODE);
+> +	if (irq_base < 0)
+> +		return irq_base;
+> +	sch->irq_base = irq_base;
+> +
+> +	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
+> +					 NULL, handle_simple_irq);
+> +	if (!gc)
+> +		return -ENOMEM;
+> +
+> +	gc->private = sch;
+> +	ct = gc->chip_types;
+> +
+> +	ct->chip.irq_mask = sch_irq_mask;
+> +	ct->chip.irq_unmask = sch_irq_unmask;
+> +	ct->chip.irq_set_type = sch_irq_type;
+> +
+> +	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
+> +					  IRQ_MSK(sch->chip.ngpio),
+> +					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 11863e2b01c25..1b75fb8c7735e 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -514,8 +514,14 @@ static void do_free_cleaned_kprobes(void)
- 	struct optimized_kprobe *op, *tmp;
- 
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
--		BUG_ON(!kprobe_unused(&op->kp));
- 		list_del_init(&op->list);
-+		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
-+			/*
-+			 * This must not happen, but if there is a kprobe
-+			 * still in use, keep it on kprobes hash list.
-+			 */
-+			continue;
-+		}
- 		free_aggr_kprobe(&op->kp);
- 	}
- }
--- 
-2.20.1
+Here you can simply do 
 
-
-
+	return devm_irq_setup_generic_chip(...);
+>  }
+>  
+>  static struct platform_driver sch_gpio_driver = {
+> -- 
+> 2.16.4
