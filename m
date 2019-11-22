@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275BCC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E97C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68452070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3A120674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404028;
-	bh=efje1ZhyiC3VPDJkQ01pBKauyaU20c2yrRgBi42Ebhw=;
+	s=default; t=1574404037;
+	bh=ixzM77mmAEzKa7tBc5NRii33XANhKZZ0LS4L+LzBBAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdFUlZlZ+w1cJUCOHLBTGi2JGWRz4Dd3zdlHU1gM4TvSYHx3tt8ZklDQqbPhEmTte
-	 ZJ3rayNwt9EZukKskvIJcIPHoycEYqfa2bpUSweL7/32CM+bxnC1ipYQoihLQPzStl
-	 g7jUJ06w4RRsa9Hswbw4I7ZSP7Rkg8Z3VtG8vFiQ=
+	b=z8QHulJbOw+39jnX2TQPh9weOZfYS4JmBzXt3z+OgiV3OC/wjdGEwtPZr+btTjbmO
+	 TsceIEdcSQSl4DVoaTGETT/ezTtPGqCzMOFxHQLk9W59PslfxteqF5vIEQvJr7O9ag
+	 DXk3e+6ZgymW72PmQu/Fg+IrID6fizZtTZqiFQ+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfKVG1G (ORCPT
+        id S1727173AbfKVG1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:27:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:27:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfKVFuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:35 -0500
+        id S1727754AbfKVFuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F77C20731;
-        Fri, 22 Nov 2019 05:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF2520717;
+        Fri, 22 Nov 2019 05:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401835;
-        bh=efje1ZhyiC3VPDJkQ01pBKauyaU20c2yrRgBi42Ebhw=;
+        s=default; t=1574401831;
+        bh=ixzM77mmAEzKa7tBc5NRii33XANhKZZ0LS4L+LzBBAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOsvhJjT8IB25ffALcA12OHJF7PWJMIoIzaT7jwr+Y/9+OSoTfvbV5KjXYQq2P6l4
-         nUdZxb90Jgf357s+awqDLkzoWWw0zcKVTLZ/CvTcZ2vRo2BgnNP9aFHycsFwLJU1An
-         mxseKc/6dwDmBF1HGBK3pdZ/2khS885r0xlvFaLU=
+        b=SL6V17rwLHmPR2f1WhIsWGInhUj1ukWuEfQ3pVFEX5j8u4YgsX5PJ+7J0eaWsfmcP
+         u20EKvGtl8PdeX/xH1K7nxPYk0yv5w6Kbejc5I5bty5Iet6LalReFqqAqonEax3kOt
+         AYRKgdNLXKp2YiNcDr/Ot06QeuvQ6Nl5uR5zzlhE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 076/219] serial: sh-sci: Fix crash in rx_timer_fn() on PIO fallback
-Date:   Fri, 22 Nov 2019 00:46:48 -0500
-Message-Id: <20191122054911.1750-69-sashal@kernel.org>
+Cc:     Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 073/219] btrfs: dev-replace: set result code of cancel by status of scrub
+Date:   Fri, 22 Nov 2019 00:46:45 -0500
+Message-Id: <20191122054911.1750-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,37 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Anand Jain <anand.jain@oracle.com>
 
-[ Upstream commit 2e948218b7c1262a3830823d6620eb227e3d4e3a ]
+[ Upstream commit b47dda2ef6d793b67fd5979032dcd106e3f0a5c9 ]
 
-When falling back to PIO, active_rx must be set to a different value
-than cookie_rx[i], else sci_dma_rx_find_active() will incorrectly find a
-match, leading to a NULL pointer dereference in rx_timer_fn() later.
+The device-replace needs to check the result code of the scrub workers
+in btrfs_dev_replace_cancel and distinguish if successful cancel
+operation and when the there was no operation running.
 
-Use zero instead, which is the same value as after driver
-initialization.
+If btrfs_scrub_cancel() fails, return
+BTRFS_IOCTL_DEV_REPLACE_RESULT_NOT_STARTED so that user can try
+to cancel the replace again.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ update changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/sh-sci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/dev-replace.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 5550289e6678b..9e1a6af23ca2b 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1359,7 +1359,7 @@ static int sci_submit_rx(struct sci_port *s, bool port_lock_held)
- 		dmaengine_terminate_async(chan);
- 	for (i = 0; i < 2; i++)
- 		s->cookie_rx[i] = -EINVAL;
--	s->active_rx = -EINVAL;
-+	s->active_rx = 0;
- 	s->chan_rx = NULL;
- 	sci_start_rx(port);
- 	if (!port_lock_held)
+diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c
+index 23b13fbecdc22..96763805787ed 100644
+--- a/fs/btrfs/dev-replace.c
++++ b/fs/btrfs/dev-replace.c
+@@ -810,16 +810,23 @@ int btrfs_dev_replace_cancel(struct btrfs_fs_info *fs_info)
+ 		btrfs_dev_replace_write_unlock(dev_replace);
+ 		break;
+ 	case BTRFS_IOCTL_DEV_REPLACE_STATE_STARTED:
+-		result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NO_ERROR;
+ 		tgt_device = dev_replace->tgtdev;
+ 		src_device = dev_replace->srcdev;
+ 		btrfs_dev_replace_write_unlock(dev_replace);
+-		btrfs_scrub_cancel(fs_info);
+-		/* btrfs_dev_replace_finishing() will handle the cleanup part */
+-		btrfs_info_in_rcu(fs_info,
+-			"dev_replace from %s (devid %llu) to %s canceled",
+-			btrfs_dev_name(src_device), src_device->devid,
+-			btrfs_dev_name(tgt_device));
++		ret = btrfs_scrub_cancel(fs_info);
++		if (ret < 0) {
++			result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NOT_STARTED;
++		} else {
++			result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NO_ERROR;
++			/*
++			 * btrfs_dev_replace_finishing() will handle the
++			 * cleanup part
++			 */
++			btrfs_info_in_rcu(fs_info,
++				"dev_replace from %s (devid %llu) to %s canceled",
++				btrfs_dev_name(src_device), src_device->devid,
++				btrfs_dev_name(tgt_device));
++		}
+ 		break;
+ 	case BTRFS_IOCTL_DEV_REPLACE_STATE_SUSPENDED:
+ 		/*
 -- 
 2.20.1
 
