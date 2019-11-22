@@ -2,200 +2,96 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6131C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC63C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0B52070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558242070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nT4RzoWf"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TtdrSbZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKVWwl (ORCPT
+        id S1726722AbfKVW5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:52:41 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35929 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfKVWwl (ORCPT
+        Fri, 22 Nov 2019 17:57:37 -0500
+Received: from mail-io1-f41.google.com ([209.85.166.41]:44654 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKVW5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:52:41 -0500
-Received: by mail-pj1-f66.google.com with SMTP id cq11so3676436pjb.3;
-        Fri, 22 Nov 2019 14:52:39 -0800 (PST)
+        Fri, 22 Nov 2019 17:57:37 -0500
+Received: by mail-io1-f41.google.com with SMTP id j20so9900325ioo.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 14:57:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KqM5iPDN4K5n0vOL0Et0dfmAMXqLC1jgBto0uNn5I+I=;
-        b=nT4RzoWffNirIVHD+k3AoR3jPcigWNI8cs69VTmyyfPAqllko0D0LB1T4WsU2gp7u7
-         yjibnWfSS38p0mXjGy6+3/+Wz2rnl6mSzQJ5l/bNDVYfcSTl1L0c35KUjqUHcSQKK/s4
-         oKyrP7i804n34UCDWcLUY6P0Mr4La2OQ8/Rrh/oBGHJYCkCnQ9pR6KElTuc4R0sTotYN
-         KjSO/TI0S0XXE6P1ePFkbF+f1SHgU03+SZMlIzBTiYCBZCbDb2gDlECBEWne+rikQ+Fw
-         vka0iASMAwwEY2QtqEHgvLiKdN2vtlZsUK3+2hMv737dzQctR6DnAxbl+qWShvI6766p
-         kjCQ==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uj2Ztb9iUAhbf9rH9PWOL69mPO/eEt+nZByhj8SBdF0=;
+        b=TtdrSbZ13QpZA+903XTzpENZhwLPlCl3eTbFupVTijcqqQXV6OKHmcjVrRp3tzA7Kh
+         moALB6g9sRrAlmWGrcMWWJsLVEWzpOBkn1rJN7CxBa5FdW/D1Y27t5zsnt7JWe2DOnLj
+         OOWZzFSHbxZ25VHBCA8lM+IYM03/UDpIXO6fTmOSxP9PWgHutbno13uQEAiIuTeAaEQK
+         FOBtW9im2KVSkmOpaGamtbEOiHXSJQjmQRBaRixtxtjgblZzHQCJ8NfGo3X7bfkdpZg0
+         +jrlfl+a2emN/TBtXwWZndcuOpG6GZLLT++33jgsi3R4vp4pGRmBFvwgZASxW02JBv4Z
+         n52Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KqM5iPDN4K5n0vOL0Et0dfmAMXqLC1jgBto0uNn5I+I=;
-        b=mCgDDCzG0MVM1sMmY4qlmGg7g3vzthQlsN6OTych7vvRJNG/1U0oc6WZaES8QVA6dg
-         Mitaw/QzuktfXusWE68wCm1my/UHfbs1cO6nhvb45ur8/MEVlRx9nBBK0oJadFSpGI6p
-         1uA1wdFPBRVWypHAxqM4vrVlQjSLDzHBNiFALKcOmUb4OpZZpK5yibkPNs67mYBfPHSa
-         nJNYpZjI4NnN3bE4H1OzxxHa5uE7h21cNzU7g5wQOO3bUvrl694Qx+I13RjYrN6Bay5U
-         YoJmasNIVbeGRKESjKhtZJQ604OFGQUaTrSKdwBDtzH8FNs+RG9REtkKO7njmnRPNwpN
-         Akzw==
-X-Gm-Message-State: APjAAAWvX4vHCt9UgdvVTumhupTmx7kCTAhnPpHozu7gbP2JdjFw0+7E
-        7H8Xq3HDo2mA7w8GNGekAAk=
-X-Google-Smtp-Source: APXvYqzHGYsvlvIlKOWXxmXQ/n+f31h6kTXpNYONm7vKFFte1cBdWGHOA7EXIpRz9LHIbJelFVRaWg==
-X-Received: by 2002:a17:902:8bc9:: with SMTP id r9mr15683900plo.319.1574463158932;
-        Fri, 22 Nov 2019 14:52:38 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u18sm8228877pfn.183.2019.11.22.14.52.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uj2Ztb9iUAhbf9rH9PWOL69mPO/eEt+nZByhj8SBdF0=;
+        b=TNt7+b531BSngWxvCU5XslpP5W7mXecZcPLKCBA7bawMdvhvwyMHE83VBKMysDMsPk
+         NKytbEYfapYYyRimBqw1pxWcROUXzwQaR0p+iuLK1rGPzhuWswo4loC4AzG9p6mkg5JR
+         L9k6Gmkqhktd447REf/EBKY6ZaqxMzhWgtGqMKWqkR9KlV8z5E6EdV8iRDptQK22ksB+
+         ++crlAFLNfi4Qdmz+TM7cPidS3hkNI10Iqc7jQVLhnDIQrvVRF/OCwHlCwpCGO7MMrYt
+         Cjp3e4Zn6fwm2jMzOg9luXS+OKTfO2ryn5w429P+rg6YqsABGoLKOYUfZvRjbKXtvVu8
+         bMCA==
+X-Gm-Message-State: APjAAAU90B7WHgPIzMNmZEw2UGA8Is6rMtLGea+ZhA7ILD6w9NhLVLri
+        KpFXq6fc8x/K/eUH1KUJshoaREPnXIY=
+X-Google-Smtp-Source: APXvYqyDDR6XWNHRiIJMoWrs9+l4wDYNEH8Foe6GnyqUiQ3MqB9IEAxn9IL9m83C6JG2XUbIuXEZBQ==
+X-Received: by 2002:a6b:c8cd:: with SMTP id y196mr8658070iof.266.1574463454895;
+        Fri, 22 Nov 2019 14:57:34 -0800 (PST)
+Received: from viisi.Home ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id x9sm3277098ilp.43.2019.11.22.14.57.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 14:52:38 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:52:36 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2] input: Fix Kconfig indentation
-Message-ID: <20191122225236.GF248138@dtor-ws>
-References: <1574306373-29581-1-git-send-email-krzk@kernel.org>
+        Fri, 22 Nov 2019 14:57:06 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+To:     linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] riscv: defconfigs: enable debugging options 
+Date:   Fri, 22 Nov 2019 14:56:57 -0800
+Message-Id: <20191122225659.21876-1-paul.walmsley@sifive.com>
+X-Mailer: git-send-email 2.24.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574306373-29581-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 04:19:33AM +0100, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+Enable more debugging options in the defconfig.  Debugfs is generally
+useful for everyone; the other options are intended to make it easier
+for developers and testers to catch problems earlier.
 
-Applied, thank you.
 
-> ---
-> 
-> Changes since v1:
-> 1. Fix also 7-space and tab+1 space indentation issues.
-> ---
->  drivers/input/keyboard/Kconfig    | 16 ++++++++--------
->  drivers/input/mouse/Kconfig       | 16 ++++++++--------
->  drivers/input/tablet/Kconfig      | 20 ++++++++++----------
->  drivers/input/touchscreen/Kconfig |  2 +-
->  4 files changed, 27 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 1ddfc2413035..36067ed1160d 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -167,14 +167,14 @@ config KEYBOARD_QT1050
->  	  the module will be called qt1050
->  
->  config KEYBOARD_QT1070
-> -       tristate "Atmel AT42QT1070 Touch Sensor Chip"
-> -       depends on I2C
-> -       help
-> -         Say Y here if you want to use Atmel AT42QT1070 QTouch
-> -         Sensor chip as input device.
-> -
-> -         To compile this driver as a module, choose M here:
-> -         the module will be called qt1070
-> +	tristate "Atmel AT42QT1070 Touch Sensor Chip"
-> +	depends on I2C
-> +	help
-> +	 Say Y here if you want to use Atmel AT42QT1070 QTouch
-> +	 Sensor chip as input device.
-> +
-> +	 To compile this driver as a module, choose M here:
-> +	 the module will be called qt1070
->  
->  config KEYBOARD_QT2160
->  	tristate "Atmel AT42QT2160 Touch Sensor Chip"
-> diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
-> index bf738d3b7fe4..6e1ff481c977 100644
-> --- a/drivers/input/mouse/Kconfig
-> +++ b/drivers/input/mouse/Kconfig
-> @@ -92,14 +92,14 @@ config MOUSE_PS2_SYNAPTICS_SMBUS
->  	  If unsure, say Y.
->  
->  config MOUSE_PS2_CYPRESS
-> -       bool "Cypress PS/2 mouse protocol extension" if EXPERT
-> -       default y
-> -       depends on MOUSE_PS2
-> -       help
-> -         Say Y here if you have a Cypress PS/2 Trackpad connected to
-> -         your system.
-> -
-> -         If unsure, say Y.
-> +	bool "Cypress PS/2 mouse protocol extension" if EXPERT
-> +	default y
-> +	depends on MOUSE_PS2
-> +	help
-> +	 Say Y here if you have a Cypress PS/2 Trackpad connected to
-> +	 your system.
-> +
-> +	 If unsure, say Y.
->  
->  config MOUSE_PS2_LIFEBOOK
->  	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
-> diff --git a/drivers/input/tablet/Kconfig b/drivers/input/tablet/Kconfig
-> index e4c0d9a055b9..51c339182017 100644
-> --- a/drivers/input/tablet/Kconfig
-> +++ b/drivers/input/tablet/Kconfig
-> @@ -39,16 +39,16 @@ config TABLET_USB_AIPTEK
->  	  module will be called aiptek.
->  
->  config TABLET_USB_GTCO
-> -        tristate "GTCO CalComp/InterWrite USB Support"
-> -        depends on USB && INPUT
-> -        help
-> -          Say Y here if you want to use the USB version of the GTCO
-> -          CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
-> -          (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
-> -          (CONFIG_INPUT_EVDEV) as well.
-> -
-> -          To compile this driver as a module, choose M here: the
-> -          module will be called gtco.
-> +	tristate "GTCO CalComp/InterWrite USB Support"
-> +	depends on USB && INPUT
-> +	help
-> +	  Say Y here if you want to use the USB version of the GTCO
-> +	  CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
-> +	  (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
-> +	  (CONFIG_INPUT_EVDEV) as well.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called gtco.
->  
->  config TABLET_USB_HANWANG
->  	tristate "Hanwang Art Master III tablet support (USB)"
-> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-> index 40bfc551ce30..c071f7c407b6 100644
-> --- a/drivers/input/touchscreen/Kconfig
-> +++ b/drivers/input/touchscreen/Kconfig
-> @@ -633,7 +633,7 @@ config TOUCHSCREEN_HP600
->  	depends on SH_HP6XX && SH_ADC
->  	help
->  	  Say Y here if you have a HP Jornada 620/660/680/690 and want to
-> -          support the built-in touchscreen.
-> +	  support the built-in touchscreen.
->  
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called hp680_ts_input.
-> -- 
-> 2.7.4
-> 
+- Paul
+
+Paul Walmsley (2):
+  riscv: defconfigs: enable debugfs
+  riscv: defconfigs: enable more debugging options
+
+ arch/riscv/configs/defconfig      | 24 ++++++++++++++++++++++++
+ arch/riscv/configs/rv32_defconfig | 24 ++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+
+Kernel object size difference:
+   text	   data	    bss	    dec	    hex	filename
+6665154	2132584	 312608	9110346	 8b034a	vmlinux.rv64.orig
+6779347	2299448	 313600	9392395	 8f510b	vmlinux.rv64.patched
+6445414	1797616	 255248	8498278	 81ac66	vmlinux.rv32.orig
+6552029	1921996	 257448	8731473	 853b51	vmlinux.rv32.patched
 
 -- 
-Dmitry
+2.24.0.rc0
+
