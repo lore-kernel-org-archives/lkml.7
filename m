@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0FEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FDBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBB020730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CC320658
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452148;
-	bh=7flETJF+B606oiKWbY3Ix0amcBFn2mMkMWOh57m43BQ=;
+	s=default; t=1574452154;
+	bh=TWUIFvYxcxpAcHyaC4L/g1aet1SZVEHMCG8j8roj8dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D3fr7kqa+msHwgPw13h6++89Sa81txuXP3LBokiBuSQqDT86Wwn3IcZNceTYmIHWa
-	 jvKEo6ost7LFTAjM5iE91caBsCZdTfmPA/kUMBb7iUnXG1aU+aR66Hlc14o4iYK6Pa
-	 UWeW7scZVNQknH90flzErmZq5RgZHa+Dn2sCtRw8=
+	b=Ka/0m7K1t2wubk8j2ix/Oq1K44WwliuDGRL2ej/5NmlU1rbxz3ESyaDJYD/qhizyk
+	 StjOOUbb0QXAuD7ZE4g0VL+hP2glsfofHZ1V+MwOrUKYQWByTn8XGn2pGDD57227ox
+	 2soHiTRfJfwcqQgOYYp71xDce0zbGGIVszH4PzPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfKVTtH (ORCPT
+        id S1727230AbfKVTtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfKVTtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:05 -0500
+        id S1727176AbfKVTtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADC5720721;
-        Fri, 22 Nov 2019 19:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015BB2072E;
+        Fri, 22 Nov 2019 19:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452144;
-        bh=7flETJF+B606oiKWbY3Ix0amcBFn2mMkMWOh57m43BQ=;
+        s=default; t=1574452148;
+        bh=TWUIFvYxcxpAcHyaC4L/g1aet1SZVEHMCG8j8roj8dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0uWQ+hgwMx2z8UN4tXL2QUaObAae46r5NGZa3CROzeVJHI9s5bfvD6bb+XDMv93t+
-         ziX+8/C7QOsxV5M+D13+MYHMBrY4k9zztOVSCSvF7NwdiLDJYoLsY2zRW4oqZ1CpoW
-         3I40zoABIVIq+OHq29VqMrWOUqNIE2ftQGYsL40M=
+        b=fF23hjvp1tDxYdvXp9cWBQQsSHn0vb54DZx8JPJ4KaNWCr9UvOfXgNHpCw3yU1CF5
+         w/GLYpBPAQTFzj6H8+SAmQJuq2Ho2n9P2/h+F9XHlF4MUoaSs4rmqiiN7ktyz26fWt
+         CJbs/qICXsUb2hU1Q10Z1mIrdfpg4BMHvfUfDncc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/25] iwlwifi: pcie: don't consider IV len in A-MSDU
-Date:   Fri, 22 Nov 2019 14:48:37 -0500
-Message-Id: <20191122194859.24508-4-sashal@kernel.org>
+Cc:     Xiaodong Xu <stid.smth@gmail.com>, Bo Chen <chenborfc@163.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/25] xfrm: release device reference for invalid state
+Date:   Fri, 22 Nov 2019 14:48:41 -0500
+Message-Id: <20191122194859.24508-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
@@ -61,87 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Xiaodong Xu <stid.smth@gmail.com>
 
-[ Upstream commit cb1a4badf59275eb7221dcec621e8154917eabd1 ]
+[ Upstream commit 4944a4b1077f74d89073624bd286219d2fcbfce3 ]
 
-From gen2 PN is totally offloaded to hardware (also the space for the
-IV isn't part of the skb).  As you can see in mvm/mac80211.c:3545, the
-MAC for cipher types CCMP/GCMP doesn't set
-IEEE80211_KEY_FLAG_PUT_IV_SPACE for gen2 NICs.
+An ESP packet could be decrypted in async mode if the input handler for
+this packet returns -EINPROGRESS in xfrm_input(). At this moment the device
+reference in skb is held. Later xfrm_input() will be invoked again to
+resume the processing.
+If the transform state is still valid it would continue to release the
+device reference and there won't be a problem; however if the transform
+state is not valid when async resumption happens, the packet will be
+dropped while the device reference is still being held.
+When the device is deleted for some reason and the reference to this
+device is not properly released, the kernel will keep logging like:
 
-This causes all the AMSDU data to be corrupted with cipher enabled.
+unregister_netdevice: waiting for ppp2 to become free. Usage count = 1
 
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The issue is observed when running IPsec traffic over a PPPoE device based
+on a bridge interface. By terminating the PPPoE connection on the server
+end for multiple times, the PPPoE device on the client side will eventually
+get stuck on the above warning message.
+
+This patch will check the async mode first and continue to release device
+reference in async resumption, before it is dropped due to invalid state.
+
+v2: Do not assign address family from outer_mode in the transform if the
+state is invalid
+
+v3: Release device reference in the error path instead of jumping to resume
+
+Fixes: 4ce3dbe397d7b ("xfrm: Fix xfrm_input() to verify state is valid when (encap_type < 0)")
+Signed-off-by: Xiaodong Xu <stid.smth@gmail.com>
+Reported-by: Bo Chen <chenborfc@163.com>
+Tested-by: Bo Chen <chenborfc@163.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ net/xfrm/xfrm_input.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-index b99f33ff91230..98f4507799be7 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-@@ -242,27 +242,23 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
- 	struct ieee80211_hdr *hdr = (void *)skb->data;
- 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
- 	unsigned int mss = skb_shinfo(skb)->gso_size;
--	u16 length, iv_len, amsdu_pad;
-+	u16 length, amsdu_pad;
- 	u8 *start_hdr;
- 	struct iwl_tso_hdr_page *hdr_page;
- 	struct page **page_ptr;
- 	struct tso_t tso;
- 
--	/* if the packet is protected, then it must be CCMP or GCMP */
--	iv_len = ieee80211_has_protected(hdr->frame_control) ?
--		IEEE80211_CCMP_HDR_LEN : 0;
--
- 	trace_iwlwifi_dev_tx(trans->dev, skb, tfd, sizeof(*tfd),
- 			     &dev_cmd->hdr, start_len, 0);
- 
- 	ip_hdrlen = skb_transport_header(skb) - skb_network_header(skb);
- 	snap_ip_tcp_hdrlen = 8 + ip_hdrlen + tcp_hdrlen(skb);
--	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len - iv_len;
-+	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len;
- 	amsdu_pad = 0;
- 
- 	/* total amount of header we may need for this A-MSDU */
- 	hdr_room = DIV_ROUND_UP(total_len, mss) *
--		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr)) + iv_len;
-+		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr));
- 
- 	/* Our device supports 9 segments at most, it will fit in 1 page */
- 	hdr_page = get_page_hdr(trans, hdr_room);
-@@ -273,14 +269,12 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
- 	start_hdr = hdr_page->pos;
- 	page_ptr = (void *)((u8 *)skb->cb + trans_pcie->page_offs);
- 	*page_ptr = hdr_page->page;
--	memcpy(hdr_page->pos, skb->data + hdr_len, iv_len);
--	hdr_page->pos += iv_len;
- 
- 	/*
--	 * Pull the ieee80211 header + IV to be able to use TSO core,
-+	 * Pull the ieee80211 header to be able to use TSO core,
- 	 * we will restore it for the tx_status flow.
- 	 */
--	skb_pull(skb, hdr_len + iv_len);
-+	skb_pull(skb, hdr_len);
- 
- 	/*
- 	 * Remove the length of all the headers that we don't actually
-@@ -355,8 +349,8 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
+index 790b514f86b62..b0b1294daef17 100644
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -246,6 +246,9 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 			else
+ 				XFRM_INC_STATS(net,
+ 					       LINUX_MIB_XFRMINSTATEINVALID);
++
++			if (encap_type == -1)
++				dev_put(skb->dev);
+ 			goto drop;
  		}
- 	}
- 
--	/* re -add the WiFi header and IV */
--	skb_push(skb, hdr_len + iv_len);
-+	/* re -add the WiFi header */
-+	skb_push(skb, hdr_len);
- 
- 	return 0;
  
 -- 
 2.20.1
