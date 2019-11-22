@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E18C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABF02068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1876E2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402529;
-	bh=zZruYX87mevRMIX7WAXQ0HW9SLzcEcLIwjQKbU+516E=;
+	s=default; t=1574402533;
+	bh=bd+l4JctyoeYXCZJ2Dfc0BfpyirtBreCT9vLJuWcGOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sx6KarSCcLnE/c3x6hpm1j/jano8xrBXuhazaGSZq+NIPOUqGMMuGyVKC+PZ0y2dJ
-	 sWqdMC+1gY3DehxE4symig4aECnRd+6HZgDDuLNczIs/9vJ+OddoT6mtT8cjbrkUJl
-	 DuM81tSDMq1sZCiG/1uRvMrVZ2KpDu0J4WFMozzA=
+	b=me2cGJIpMEg/J0B2UmkdSJLLH9lrZfxgKRzEljM5f5wUVJN7IFT3XbRbxipiuDyf+
+	 R4SDFE6cgioOsa4pB355vNgIn+WtowiI3jdB2GFqyXT9XVS+JB35CK9Xzu9YHlQiwc
+	 E2sMEHSY/69NsnIE1h9cddB5uKtYLzSMLnOH5G5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfKVGCI (ORCPT
+        id S1729636AbfKVGCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729514AbfKVGCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:05 -0500
+        id S1729263AbfKVGCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EA3A2071F;
-        Fri, 22 Nov 2019 06:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE572068F;
+        Fri, 22 Nov 2019 06:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402524;
-        bh=zZruYX87mevRMIX7WAXQ0HW9SLzcEcLIwjQKbU+516E=;
+        s=default; t=1574402526;
+        bh=bd+l4JctyoeYXCZJ2Dfc0BfpyirtBreCT9vLJuWcGOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5qWF4mwCJV/AXfEeBhRO212TbRysJdNQQ9X1poqrEckTfQ/cskt4VHN+MKY6SVGS
-         WlkBNXD2XuppZGaf5XJjvKLTKeQ41jwKVyZcrdb7eI6jCFBLRe5HOF+SAjZKXIrIat
-         eKO8RAndMJ90707fQUmscA0YiEKYOzVK853/K2XY=
+        b=JVrrcnjMZ49CwyBUeyWZD0CZU1yaN1DIyNxY5GZZHQjXEaADZaNvMQ6HPh/fWAZDe
+         9VUPqAb6h2ike9kGsfE6apVxQIkkMqIPum/7L+Re7iyWyiTCj+mQVEilEzsim24jW4
+         IWlP/Tz5a7LJ+ssO8HslqRNl6IpuHHS2bzJ5XiSU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sweet Tea <sweettea@redhat.com>,
-        John Dorminy <jdorminy@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.9 32/91] dm flakey: Properly corrupt multi-page bios.
-Date:   Fri, 22 Nov 2019 01:00:30 -0500
-Message-Id: <20191122060129.4239-31-sashal@kernel.org>
+Cc:     Nick Bowler <nbowler@draconx.ca>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 34/91] xfs: Align compat attrlist_by_handle with native implementation.
+Date:   Fri, 22 Nov 2019 01:00:32 -0500
+Message-Id: <20191122060129.4239-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -60,73 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sweet Tea <sweettea@redhat.com>
+From: Nick Bowler <nbowler@draconx.ca>
 
-[ Upstream commit a00f5276e26636cbf72f24f79831026d2e2868e7 ]
+[ Upstream commit c456d64449efe37da50832b63d91652a85ea1d20 ]
 
-The flakey target is documented to be able to corrupt the Nth byte in
-a bio, but does not corrupt byte indices after the first biovec in the
-bio. Change the corrupting function to actually corrupt the Nth byte
-no matter in which biovec that index falls.
+While inspecting the ioctl implementations, I noticed that the compat
+implementation of XFS_IOC_ATTRLIST_BY_HANDLE does not do exactly the
+same thing as the native implementation.  Specifically, the "cursor"
+does not appear to be written out to userspace on the compat path,
+like it is on the native path.
 
-A test device generating two-page bios, atop a flakey device configured
-to corrupt a byte index on the second page, verified both the failure
-to corrupt before this patch and the expected corruption after this
-change.
+This adjusts the compat implementation to copy out the cursor just
+like the native implementation does.  The attrlist cursor does not
+require any special compat handling.  This fixes xfstests xfs/269
+on both IA-32 and x32 userspace, when running on an amd64 kernel.
 
-Signed-off-by: John Dorminy <jdorminy@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Nick Bowler <nbowler@draconx.ca>
+Fixes: 0facef7fb053b ("xfs: in _attrlist_by_handle, copy the cursor back to userspace")
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-flakey.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ fs/xfs/xfs_ioctl32.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index 3643cba713518..742c1fa870dae 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -258,20 +258,31 @@ static void flakey_map_bio(struct dm_target *ti, struct bio *bio)
- 
- static void corrupt_bio_data(struct bio *bio, struct flakey_c *fc)
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index 321f57721b922..8f18756ee405e 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -346,6 +346,7 @@ xfs_compat_attrlist_by_handle(
  {
--	unsigned bio_bytes = bio_cur_bytes(bio);
--	char *data = bio_data(bio);
-+	unsigned int corrupt_bio_byte = fc->corrupt_bio_byte - 1;
-+
-+	struct bvec_iter iter;
-+	struct bio_vec bvec;
-+
-+	if (!bio_has_data(bio))
-+		return;
+ 	int			error;
+ 	attrlist_cursor_kern_t	*cursor;
++	compat_xfs_fsop_attrlist_handlereq_t __user *p = arg;
+ 	compat_xfs_fsop_attrlist_handlereq_t al_hreq;
+ 	struct dentry		*dentry;
+ 	char			*kbuf;
+@@ -380,6 +381,11 @@ xfs_compat_attrlist_by_handle(
+ 	if (error)
+ 		goto out_kfree;
  
- 	/*
--	 * Overwrite the Nth byte of the data returned.
-+	 * Overwrite the Nth byte of the bio's data, on whichever page
-+	 * it falls.
- 	 */
--	if (data && bio_bytes >= fc->corrupt_bio_byte) {
--		data[fc->corrupt_bio_byte - 1] = fc->corrupt_bio_value;
--
--		DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
--			"(rw=%c bi_opf=%u bi_sector=%llu cur_bytes=%u)\n",
--			bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
--			(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
--			(unsigned long long)bio->bi_iter.bi_sector, bio_bytes);
-+	bio_for_each_segment(bvec, bio, iter) {
-+		if (bio_iter_len(bio, iter) > corrupt_bio_byte) {
-+			char *segment = (page_address(bio_iter_page(bio, iter))
-+					 + bio_iter_offset(bio, iter));
-+			segment[corrupt_bio_byte] = fc->corrupt_bio_value;
-+			DMDEBUG("Corrupting data bio=%p by writing %u to byte %u "
-+				"(rw=%c bi_opf=%u bi_sector=%llu size=%u)\n",
-+				bio, fc->corrupt_bio_value, fc->corrupt_bio_byte,
-+				(bio_data_dir(bio) == WRITE) ? 'w' : 'r', bio->bi_opf,
-+				(unsigned long long)bio->bi_iter.bi_sector, bio->bi_iter.bi_size);
-+			break;
-+		}
-+		corrupt_bio_byte -= bio_iter_len(bio, iter);
- 	}
- }
++	if (copy_to_user(&p->pos, cursor, sizeof(attrlist_cursor_kern_t))) {
++		error = -EFAULT;
++		goto out_kfree;
++	}
++
+ 	if (copy_to_user(compat_ptr(al_hreq.buffer), kbuf, al_hreq.buflen))
+ 		error = -EFAULT;
  
 -- 
 2.20.1
