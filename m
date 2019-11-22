@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C461C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E6FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F257E2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2C42068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403612;
-	bh=1RMGphbcr6JtM+J9UMC6O9MEbcjofAiElGx6HGAXfr0=;
+	s=default; t=1574403615;
+	bh=zYB41gfG09mqdRPWxWlUgH4vOV0svqU0ru6XZw2f+fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XrVUDcuZ7a+NuXB+kNcOzKT/7V5rKQg/1Kg0kOxh9iLVCFtvIWaivCKw6oY879Cu1
-	 kkX27JfQHz2J9PNR3Ad3qF8Am6XNdTSDi8ejnDdXJ0UDob4xxR+4FCygKoA2/cBrec
-	 rp+/bCLqbnCYItoUj90BIATGb+ECE4kGp14JUQQM=
+	b=g6d2t584bw2U4DCedEhDgdTNWNnodnW+ohhjORrgUnasJYY3Z6EnIWU64iUwWG5Xa
+	 dbhRSortfBxzDSgNEzPoQY+sRdMjf09K0HkXYzMeo3kNT2cxA0pvnK2Wlf05RFEg91
+	 Sw6R4UlqG0nBucQJYP1tREuRf7xan1kkiQ0CCHVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfKVFwp (ORCPT
+        id S1729181AbfKVGUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58360 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:20:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbfKVFwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:36 -0500
+        id S1728659AbfKVFwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 249D32068F;
-        Fri, 22 Nov 2019 05:52:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5BB20721;
+        Fri, 22 Nov 2019 05:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401954;
-        bh=1RMGphbcr6JtM+J9UMC6O9MEbcjofAiElGx6HGAXfr0=;
+        s=default; t=1574401964;
+        bh=zYB41gfG09mqdRPWxWlUgH4vOV0svqU0ru6XZw2f+fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1paX5aYw8d83v/Ie2I9nuJP9YhX42aUwkZPMVBM8AJK6YY8OC/0558kdmLeD8H6OP
-         AgQMU+xYNueETh3BF+0IseKLiHbpkXX8e1wb7S7LBgjpsmA0mA6wPDFmt3EpdZ06tK
-         lxEK5UXbwGAI0QOZhcKyApA89RCCjYLv/z64Rlz4=
+        b=rVGilCmF8MINlzYUHOHTFM8xcg4SCnmbr7l8oY0D2MikRnwsMTZ8k3/nX4nMYT7m5
+         D8JBeKovtVQRK4MhfxM7zz9tesdm7Ohy3cAr361BVNkCJTX8+ny6NzFfu0VmRLr/Ra
+         mMcWxR+GskYdMV/l26tvBmBurjWVjjp5c6cNXkIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Edward Cree <ecree@solarflare.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 177/219] sfc: suppress duplicate nvmem partition types in efx_ef10_mtd_probe
-Date:   Fri, 22 Nov 2019 00:48:29 -0500
-Message-Id: <20191122054911.1750-170-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Johannes Thumshirn <jthumshirn@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 185/219] blktrace: Show requests without sector
+Date:   Fri, 22 Nov 2019 00:48:37 -0500
+Message-Id: <20191122054911.1750-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,98 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 3366463513f544c12c6b88c13da4462ee9e7a1a1 ]
+[ Upstream commit 0803de78049fe1b0baf44bcddc727b036fb9139b ]
 
-Use a bitmap to keep track of which partition types we've already seen;
- for duplicates, return -EEXIST from efx_ef10_mtd_probe_partition() and
- thus skip adding that partition.
-Duplicate partitions occur because of the A/B backup scheme used by newer
- sfc NICs.  Prior to this patch they cause sysfs_warn_dup errors because
- they have the same name, causing us not to expose any MTDs at all.
+Currently, blktrace will not show requests that don't have any data as
+rq->__sector is initialized to -1 which is out of device range and thus
+discarded by act_log_check(). This is most notably the case for cache
+flush requests sent to the device. Fix the problem by making
+blk_rq_trace_sector() return 0 for requests without initialized sector.
 
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sfc/ef10.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ include/linux/blktrace_api.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index 7eeac3d6cfe89..a497aace7e4f4 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -6042,22 +6042,25 @@ static const struct efx_ef10_nvram_type_info efx_ef10_nvram_types[] = {
- 	{ NVRAM_PARTITION_TYPE_LICENSE,		   0,    0, "sfc_license" },
- 	{ NVRAM_PARTITION_TYPE_PHY_MIN,		   0xff, 0, "sfc_phy_fw" },
- };
-+#define EF10_NVRAM_PARTITION_COUNT	ARRAY_SIZE(efx_ef10_nvram_types)
+diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
+index 8804753805ac5..7bb2d8de9f308 100644
+--- a/include/linux/blktrace_api.h
++++ b/include/linux/blktrace_api.h
+@@ -116,7 +116,13 @@ extern void blk_fill_rwbs(char *rwbs, unsigned int op, int bytes);
  
- static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
- 					struct efx_mcdi_mtd_partition *part,
--					unsigned int type)
-+					unsigned int type,
-+					unsigned long *found)
+ static inline sector_t blk_rq_trace_sector(struct request *rq)
  {
- 	MCDI_DECLARE_BUF(inbuf, MC_CMD_NVRAM_METADATA_IN_LEN);
- 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_METADATA_OUT_LENMAX);
- 	const struct efx_ef10_nvram_type_info *info;
- 	size_t size, erase_size, outlen;
-+	int type_idx = 0;
- 	bool protected;
- 	int rc;
- 
--	for (info = efx_ef10_nvram_types; ; info++) {
--		if (info ==
--		    efx_ef10_nvram_types + ARRAY_SIZE(efx_ef10_nvram_types))
-+	for (type_idx = 0; ; type_idx++) {
-+		if (type_idx == EF10_NVRAM_PARTITION_COUNT)
- 			return -ENODEV;
-+		info = efx_ef10_nvram_types + type_idx;
- 		if ((type & ~info->type_mask) == info->type)
- 			break;
- 	}
-@@ -6070,6 +6073,13 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
- 	if (protected)
- 		return -ENODEV; /* hide it */
- 
-+	/* If we've already exposed a partition of this type, hide this
-+	 * duplicate.  All operations on MTDs are keyed by the type anyway,
-+	 * so we can't act on the duplicate.
+-	return blk_rq_is_passthrough(rq) ? 0 : blk_rq_pos(rq);
++	/*
++	 * Tracing should ignore starting sector for passthrough requests and
++	 * requests where starting sector didn't get set.
 +	 */
-+	if (__test_and_set_bit(type_idx, found))
-+		return -EEXIST;
-+
- 	part->nvram_type = type;
++	if (blk_rq_is_passthrough(rq) || blk_rq_pos(rq) == (sector_t)-1)
++		return 0;
++	return blk_rq_pos(rq);
+ }
  
- 	MCDI_SET_DWORD(inbuf, NVRAM_METADATA_IN_TYPE, type);
-@@ -6098,6 +6108,7 @@ static int efx_ef10_mtd_probe_partition(struct efx_nic *efx,
- static int efx_ef10_mtd_probe(struct efx_nic *efx)
- {
- 	MCDI_DECLARE_BUF(outbuf, MC_CMD_NVRAM_PARTITIONS_OUT_LENMAX);
-+	DECLARE_BITMAP(found, EF10_NVRAM_PARTITION_COUNT);
- 	struct efx_mcdi_mtd_partition *parts;
- 	size_t outlen, n_parts_total, i, n_parts;
- 	unsigned int type;
-@@ -6126,11 +6137,13 @@ static int efx_ef10_mtd_probe(struct efx_nic *efx)
- 	for (i = 0; i < n_parts_total; i++) {
- 		type = MCDI_ARRAY_DWORD(outbuf, NVRAM_PARTITIONS_OUT_TYPE_ID,
- 					i);
--		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type);
--		if (rc == 0)
--			n_parts++;
--		else if (rc != -ENODEV)
-+		rc = efx_ef10_mtd_probe_partition(efx, &parts[n_parts], type,
-+						  found);
-+		if (rc == -EEXIST || rc == -ENODEV)
-+			continue;
-+		if (rc)
- 			goto fail;
-+		n_parts++;
- 	}
- 
- 	rc = efx_mtd_add(efx, &parts[0].common, n_parts, sizeof(*parts));
+ static inline unsigned int blk_rq_trace_nr_sectors(struct request *rq)
 -- 
 2.20.1
 
