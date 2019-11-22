@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42354C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA97C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AA82071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90192071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418742;
-	bh=gMqcaMz6j2FWdYm0XIoeIVYKUfS15ZJ0xT91Kpz2NNU=;
+	s=default; t=1574418745;
+	bh=SFfvz0Kc7W4a0FIGmtaHxaA83yiAFH8FLxKr99BQamc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jETQJnrqbkZZfIrzHxWRGALq8OXxtv51zZdIRq6XYIqZGhmFONyLR5YquXk099sTT
-	 +VbIj4lcOvyDEA99OTcTPVwcrzx0SJHiiDPtEdWpNkG0Eys9pEPoNNvjHNQsi7e7Fo
-	 EpimGST0xvlmQm+Ybm72WwjvTDxGCtQ2v/V94BW4=
+	b=o2UZteBm+SfktlZ8DiQW0mICgeqfzmArjj1C6C1R/4gzQtn6g4h3NanoIT+upg4me
+	 jvtyPoleIT+lB2fYa3CT6rxwsCz76j1gn3FJn/tf6C91UUYPSoO+9xLED28h+vEfEU
+	 15SIDnmp7dNGBYQTzTvnfYFdRVesqjbben5K+grk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKVKcU (ORCPT
+        id S1727663AbfKVKcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:32:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfKVKcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:32:17 -0500
+        id S1727640AbfKVKcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:32:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB1220731;
-        Fri, 22 Nov 2019 10:32:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BF102071B;
+        Fri, 22 Nov 2019 10:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418736;
-        bh=gMqcaMz6j2FWdYm0XIoeIVYKUfS15ZJ0xT91Kpz2NNU=;
+        s=default; t=1574418739;
+        bh=SFfvz0Kc7W4a0FIGmtaHxaA83yiAFH8FLxKr99BQamc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AHYHGiorIGQCrqrLOF+hcl589Qa2J0pVlAd9n/VyWXKF4jt0KFcGJvmZSfBOewG6q
-         a4UTAF/dc7pjHL/LHqnDTUUAxHKI5GA/1u1PpBQMS6OPuDkrQEv5/8rO1sq6fc+Ffb
-         BA9FOKyDp2RVHkymHqQBpHo2HEXmyd4ujMmLHXAI=
+        b=i3MEFj2jAVMjEuHVwnelGL3TIjvJEgdEpfbkLYDOERZzzKbX+iQB8hRO6WbY5Y375
+         G4axvCuxg3r+tzHeJ/WDbwRN7RRRXcx3o4K7o/ngiDHBgPCnL3Vc8mXbF7bCjYo33D
+         jhA3JHXRqkWOCDaVSROEZjhE30ILRD50w8AcC8XM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 027/159] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
-Date:   Fri, 22 Nov 2019 11:26:58 +0100
-Message-Id: <20191122100724.918456999@linuxfoundation.org>
+Subject: [PATCH 4.4 036/159] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
+Date:   Fri, 22 Nov 2019 11:27:07 +0100
+Message-Id: <20191122100731.907587368@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,49 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
+[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
 
-S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
-external pull-up resistors, so disable any pull control for it in
-in controller node. This fixes support for S5M8767 interrupts and
-enables operation of wakeup from S5M8767 RTC alarm.
+If the first process started (aka /sbin/init) receives a SIGKILL it
+will panic the system if it is delivered.  Making the system unusable
+and undebugable.  It isn't much better if the first process started
+receives SIGSTOP.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+So always ignore SIGSTOP and SIGKILL sent to init.
+
+This is done in a separate clause in sig_task_ignored as force_sig_info
+can clear SIG_UNKILLABLE and this protection should work even then.
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/signal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index c000532c14446..b425b77f8fb65 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -170,6 +170,8 @@
- 		reg = <0x66>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&s5m8767_irq>;
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 072fd152ab01e..3095b2309876d 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -71,6 +71,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
  
- 		vinb1-supply = <&main_dc_reg>;
- 		vinb2-supply = <&main_dc_reg>;
-@@ -552,6 +554,13 @@
- 	cap-sd-highspeed;
- };
+ 	handler = sig_handler(t, sig);
  
-+&pinctrl_0 {
-+	s5m8767_irq: s5m8767-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+};
++	/* SIGKILL and SIGSTOP may not be sent to the global init */
++	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
++		return true;
 +
- &rtc {
- 	status = "okay";
- };
+ 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
+ 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
+ 		return 1;
 -- 
 2.20.1
 
