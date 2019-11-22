@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C061C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F2D20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C7320704
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452452;
-	bh=giQwVJiizisjofPgJrzCacfa+sBwuiZLwuyVu/PVzGU=;
+	s=default; t=1574452461;
+	bh=sujIkRHrGw4eY/KTasIs6iMCrU8CKRJ35rDad+eWp1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rIW+YC4MXwUYdLGOVS+gVOxKaEE9mS8gVCZD9W0bUGOV4HD6jHO7mbDVD9CMITK+x
-	 mvTALvS7r8FedPzNNPQiMvXrzSWJ6CRVlaPV0CmNLwxZVmpiFbtRL0YRJK2Q3vq0n9
-	 x8upGt1jhrp2FEzmEpKScI5Ukrte+SDeEtfaR4Io=
+	b=YKyl1y1Hn9mJ7Ih1JyGoUeWY1fBqRYwV/DvZVRKE1mCe0bLDFO59f+jJkWODYWmAz
+	 NzFgwx2kyEhijCkeSq+EJrlyCRSN15zb2kMebfsBVAHyEGNEz+JwbjSnIUNksgmigW
+	 R5EKRftIkcglFJyX+XNJiMygoBMcu7P43pnpt1Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfKVTyL (ORCPT
+        id S1727869AbfKVTyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:54:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48758 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:54:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727309AbfKVTtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:19 -0500
+        id S1727275AbfKVTtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B86C2071F;
-        Fri, 22 Nov 2019 19:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C24F20658;
+        Fri, 22 Nov 2019 19:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452159;
-        bh=giQwVJiizisjofPgJrzCacfa+sBwuiZLwuyVu/PVzGU=;
+        s=default; t=1574452157;
+        bh=sujIkRHrGw4eY/KTasIs6iMCrU8CKRJ35rDad+eWp1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lEC2J5QI/uV0NgVfxYq91z0IyHi2SHUlQLEG/3cVlcya7kK1T+uOXuumiJHxoTdyG
-         PKgmgWxIHe96SeEuPhRs1dII9aaLRsIidDBjI1HCVvQmrUhqhJylUNiQ4W0BbMxA6g
-         dUwUfJLaVJl9yyguPIEQ58Te+FvYTOm1p6aSmEUA=
+        b=mZGzY/Y2a6hiZ2nnL8Ydl5/ZtWt7xGN3WyK3TTpB6zZF3/xs359SRS/uClkw7s5aG
+         hMTz+jaD2xUW4aBI/EY2LctiBstb68pzjkT4SFLN8eGvo0rElr2bh5s1OjrMZnIuMD
+         dIGxfpNS4DSTdkNgX5hSryANXAUjMTyXjcdsL8pM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/25] slip: Fix memory leak in slip_open error path
-Date:   Fri, 22 Nov 2019 14:48:49 -0500
-Message-Id: <20191122194859.24508-16-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/25] selftests: kvm: fix build with glibc >= 2.30
+Date:   Fri, 22 Nov 2019 14:48:47 -0500
+Message-Id: <20191122194859.24508-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,58 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+[ Upstream commit e37f9f139f62deddff90c7298ae3a85026a71067 ]
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+Glibc-2.30 gained gettid() wrapper, selftests fail to compile:
 
-Here is the slcan memory leak trace reported by Syzkaller:
+lib/assert.c:58:14: error: static declaration of ‘gettid’ follows non-static declaration
+   58 | static pid_t gettid(void)
+      |              ^~~~~~
+In file included from /usr/include/unistd.h:1170,
+                 from include/test_util.h:18,
+                 from lib/assert.c:10:
+/usr/include/bits/unistd_ext.h:34:16: note: previous declaration of ‘gettid’ was here
+   34 | extern __pid_t gettid (void) __THROW;
+      |                ^~~~~~
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/kvm/lib/assert.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index b008266e91eab..a5874059da9d8 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -855,6 +855,7 @@ static int slip_open(struct tty_struct *tty)
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
+diff --git a/tools/testing/selftests/kvm/lib/assert.c b/tools/testing/selftests/kvm/lib/assert.c
+index cd01144d27c8d..d306677065699 100644
+--- a/tools/testing/selftests/kvm/lib/assert.c
++++ b/tools/testing/selftests/kvm/lib/assert.c
+@@ -56,7 +56,7 @@ static void test_dump_stack(void)
+ #pragma GCC diagnostic pop
+ }
  
- err_exit:
- 	rtnl_unlock();
+-static pid_t gettid(void)
++static pid_t _gettid(void)
+ {
+ 	return syscall(SYS_gettid);
+ }
+@@ -73,7 +73,7 @@ test_assert(bool exp, const char *exp_str,
+ 		fprintf(stderr, "==== Test Assertion Failure ====\n"
+ 			"  %s:%u: %s\n"
+ 			"  pid=%d tid=%d - %s\n",
+-			file, line, exp_str, getpid(), gettid(),
++			file, line, exp_str, getpid(), _gettid(),
+ 			strerror(errno));
+ 		test_dump_stack();
+ 		if (fmt) {
 -- 
 2.20.1
 
