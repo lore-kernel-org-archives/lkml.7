@@ -2,132 +2,67 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED385C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720CBC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1D72070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4944A20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400032;
-	bh=JpUGC9nWCZCTQes37a4qys2DDjrsol2d6dZ4/1Ex844=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgrqEH4Cri63j4AX7vrXURNOOcUfZx7fUIda+CtHeeDMoEaszYYwYJqAWuoye6jcJ
-	 eU/q8eQUJoNmFhPlodJOa+eWyZVQCm4OaYNkYXub9GC7SGVF9I1gGhfNaxl8mcPGc5
-	 4x82/jKxwOMkDmYILvXQVHR6HHITqyem6RtsG/Ek=
+	s=default; t=1574400137;
+	bh=knjKR698WQ5h0B1QBoSsF491OzN3i8ggmCSyPUHo/FA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zLu6TQQJzpKb1BKB7qkayWYhtdmJzy7DogWd+rWKurwGIlPScgHoUkAF++TcucRLV
+	 KzhKDkF1RGsJZ61e4baeh3XdONO0UjDvXGcyPEg30sEsXmxSmSjwirht3K7VNzbeKs
+	 TDZLtK6xFMztXVWJgI9+pGywl3OHZUcLnMFpIG9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfKVFUb (ORCPT
+        id S1726676AbfKVFWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:20:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42530 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:22:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfKVFU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:20:26 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726248AbfKVFWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:22:15 -0500
+Received: from localhost (unknown [171.61.94.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658552070B;
-        Fri, 22 Nov 2019 05:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3743220707;
+        Fri, 22 Nov 2019 05:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400026;
-        bh=JpUGC9nWCZCTQes37a4qys2DDjrsol2d6dZ4/1Ex844=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUOMAxeS8tx10N4MT8XMlqnIAmo78PHTr7KUR2I5QrK5t1967Qe9NUhzzK7tka+Pc
-         jPk8+WEPfEhEP4RnhtNAApszml02SYLtYcabGj/1XCYOHkDtTkNewCIOz8PFen3+0H
-         f0/RKHpNgJ1JQc6GF2r63eQokdEqnt0yeWosdQD4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 003/127] ARM: dts: Fix up SQ201 flash access
-Date:   Fri, 22 Nov 2019 00:18:17 -0500
-Message-Id: <20191122052021.32062-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122052021.32062-1-sashal@kernel.org>
-References: <20191122052021.32062-1-sashal@kernel.org>
+        s=default; t=1574400135;
+        bh=knjKR698WQ5h0B1QBoSsF491OzN3i8ggmCSyPUHo/FA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zMRwb/7fHHnf9jv8hnpDuPQxlcWFdVXve1eyYwPcoscIMoA8lRln50zeGxLr1L+L3
+         uCs3Ql1OEG24FSotSrRDs4Y88u6nLRoORhwluy7nnNpEokCq+6aLV49Hb9EVBjajSd
+         IEMcy+K4BROeVks11iSXGcEcYsAokrZG6Hl+tiRM=
+Date:   Fri, 22 Nov 2019 10:52:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dmaengine: mmp_tdma: add missed
+ of_dma_controller_free
+Message-ID: <20191122052210.GP82508@vkoul-mobl>
+References: <20191115083100.12220-1-hslester96@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115083100.12220-1-hslester96@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+On 15-11-19, 16:31, Chuhong Yuan wrote:
+> The driver calls of_dma_controller_register in probe but does not free
+> it in remove.
+> Add the call to fix it.
 
-[ Upstream commit d88b11ef91b15d0af9c0676cbf4f441a0dff0c56 ]
+Applied both, thanks.
 
-This sets the partition information on the SQ201 to be read
-out from the RedBoot partition table, removes the static
-partition table and sets our boot options to mount root from
-/dev/mtdblock2 where the squashfs+JFFS2 resides.
-
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/gemini-sq201.dts | 37 ++++--------------------------
- 1 file changed, 5 insertions(+), 32 deletions(-)
-
-diff --git a/arch/arm/boot/dts/gemini-sq201.dts b/arch/arm/boot/dts/gemini-sq201.dts
-index 63c02ca9513c4..e9e2f6ff0c583 100644
---- a/arch/arm/boot/dts/gemini-sq201.dts
-+++ b/arch/arm/boot/dts/gemini-sq201.dts
-@@ -20,7 +20,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200n8";
-+		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
- 		stdout-path = &uart0;
- 	};
- 
-@@ -71,37 +71,10 @@
- 			/* 16MB of flash */
- 			reg = <0x30000000 0x01000000>;
- 
--			partition@0 {
--				label = "RedBoot";
--				reg = <0x00000000 0x00120000>;
--				read-only;
--			};
--			partition@120000 {
--				label = "Kernel";
--				reg = <0x00120000 0x00200000>;
--			};
--			partition@320000 {
--				label = "Ramdisk";
--				reg = <0x00320000 0x00600000>;
--			};
--			partition@920000 {
--				label = "Application";
--				reg = <0x00920000 0x00600000>;
--			};
--			partition@f20000 {
--				label = "VCTL";
--				reg = <0x00f20000 0x00020000>;
--				read-only;
--			};
--			partition@f40000 {
--				label = "CurConf";
--				reg = <0x00f40000 0x000a0000>;
--				read-only;
--			};
--			partition@fe0000 {
--				label = "FIS directory";
--				reg = <0x00fe0000 0x00020000>;
--				read-only;
-+			partitions {
-+				compatible = "redboot-fis";
-+				/* Eraseblock at 0xfe0000 */
-+				fis-index-block = <0x1fc>;
- 			};
- 		};
- 
 -- 
-2.20.1
-
+~Vinod
