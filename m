@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D008FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92AF02068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC442068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402913;
-	bh=Blf/Jr/CgoOus8tGQdPdkyE7gdy3r35yHYj1VNTpXjQ=;
+	s=default; t=1574402922;
+	bh=OzYtwF3JQAAv1AmFBZhtaXfAlBLGifIQv0NrdVQPlHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hc8vgkPBJC9qfQBF5UoGzX60gJcG3zRbkuAfDtG6npBLfFb5xFd0xspwQiILm3YmV
-	 c7REx4tLiaudJzw7XuzpnXvGMfbm3ModH7369ucMFG0JrnIrkpTWMcRVBPdPN0arUd
-	 jiy5Nd9LN+8NgDsYt8ht8WuSyQP6F/TjU4ZAsIIY=
+	b=y2bTIscjPnm3OPgAl6aVeuJGJBrRTbVG26hbMQDL/BxG+8pGi8dZ5sANLEiqoXg64
+	 aQuzD9z5Sdh5FUSFccBn69rbMbwLmT9pJdhuNSA8z/F9UXBy2jmDZGdakWaxoUsm0Z
+	 HntHxeLnxhhNcsHpEUHcjt0HOWq4yj/QIWF5DS4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbfKVGIc (ORCPT
+        id S1729551AbfKVGIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:08:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:08:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfKVGBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:01:42 -0500
+        id S1727200AbfKVGBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F1F22070B;
-        Fri, 22 Nov 2019 06:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 369862068E;
+        Fri, 22 Nov 2019 06:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402502;
-        bh=Blf/Jr/CgoOus8tGQdPdkyE7gdy3r35yHYj1VNTpXjQ=;
+        s=default; t=1574402498;
+        bh=OzYtwF3JQAAv1AmFBZhtaXfAlBLGifIQv0NrdVQPlHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmphHVUMTTDWvr4OzDineQYKHhmDe3j3hRfHG13pCb6LYkJfPrXB5Aat85axLsS/Q
-         Dh9sLqAcixkybNfnPwK6gkE+xJPLN3O8MJ7YRQmrdC29VnDw0L79nQJp9jQXKu/mq9
-         Ch1dntUdxoib/CBM+QBGyjdzs88b+uMxNMXhHCGs=
+        b=MvPcagxch5MI23yGETW5qW2vJhFFaiVmKN3YHpvr2EhGpxQOylRwLan1jcfTgYBlg
+         4mS+KH2/hqJPewjivAeEfdV4lxzgVCGD4+pnC68bS02lUqDVz+EfYqmz/6fifzR7zN
+         rxrwR4uX/O5ATWGD2hkC5PybL3/RivwA9d8OM75U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>, Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/91] mwifiex: fix potential NULL dereference and use after free
-Date:   Fri, 22 Nov 2019 01:00:10 -0500
-Message-Id: <20191122060129.4239-11-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 09/91] ARM: ks8695: fix section mismatch warning
+Date:   Fri, 22 Nov 2019 01:00:07 -0500
+Message-Id: <20191122060129.4239-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,53 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 1dcd9429212b98bea87fc6ec92fb50bf5953eb47 ]
+[ Upstream commit 4aa64677330beeeed721b4b122884dabad845d66 ]
 
-There are two defects: (1) passing a NULL bss to
-mwifiex_save_hidden_ssid_channels will result in NULL dereference,
-(2) using bss after dropping the reference to it via cfg80211_put_bss.
-To fix them, the patch moves the buggy code to the branch that bss is
-not NULL and puts it before cfg80211_put_bss.
+WARNING: vmlinux.o(.text+0x13250): Section mismatch in reference from the function acs5k_i2c_init() to the (unknown reference) .init.data:(unknown)
+The function acs5k_i2c_init() references
+the (unknown reference) __initdata (unknown).
+This is often because acs5k_i2c_init lacks a __initdata
+annotation or the annotation of (unknown) is wrong.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/scan.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ arch/arm/mach-ks8695/board-acs5k.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index 7e96b6a37946a..828c6f5eb83c8 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1890,15 +1890,17 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
- 					    ETH_ALEN))
- 					mwifiex_update_curr_bss_params(priv,
- 								       bss);
--				cfg80211_put_bss(priv->wdev.wiphy, bss);
--			}
+diff --git a/arch/arm/mach-ks8695/board-acs5k.c b/arch/arm/mach-ks8695/board-acs5k.c
+index e4d709c8ed32f..76d3083f1f634 100644
+--- a/arch/arm/mach-ks8695/board-acs5k.c
++++ b/arch/arm/mach-ks8695/board-acs5k.c
+@@ -92,7 +92,7 @@ static struct i2c_board_info acs5k_i2c_devs[] __initdata = {
+ 	},
+ };
  
--			if ((chan->flags & IEEE80211_CHAN_RADAR) ||
--			    (chan->flags & IEEE80211_CHAN_NO_IR)) {
--				mwifiex_dbg(adapter, INFO,
--					    "radar or passive channel %d\n",
--					    channel);
--				mwifiex_save_hidden_ssid_channels(priv, bss);
-+				if ((chan->flags & IEEE80211_CHAN_RADAR) ||
-+				    (chan->flags & IEEE80211_CHAN_NO_IR)) {
-+					mwifiex_dbg(adapter, INFO,
-+						    "radar or passive channel %d\n",
-+						    channel);
-+					mwifiex_save_hidden_ssid_channels(priv,
-+									  bss);
-+				}
-+
-+				cfg80211_put_bss(priv->wdev.wiphy, bss);
- 			}
- 		}
- 	} else {
+-static void acs5k_i2c_init(void)
++static void __init acs5k_i2c_init(void)
+ {
+ 	/* The gpio interface */
+ 	platform_device_register(&acs5k_i2c_device);
 -- 
 2.20.1
 
