@@ -2,140 +2,161 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68594C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E353C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EDA20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5E62068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UWkDviAG"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uvxWXcQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbfKVOLv (ORCPT
+        id S1728184AbfKVOOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:11:51 -0500
-Received: from mail-eopbgr40069.outbound.protection.outlook.com ([40.107.4.69]:59456
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbfKVOLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:11:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e4j6wwWyZif+jJwf3LV9WuPo4SdWiU3hO1Px301/jflGmHrZaP+mdDD99JUG7b5vP5rHc8Zgv0ZWiFGKB9vLD+yMgQMDUOfpXeuAi3VOexg8QlbXu29H0sHgzDfpoHerlI03qdFuSiMeMVEkbOSkc0R/02kW2opPRVHttaSXxR+TkEnhsScFMc5LjGR+TJy9g2bi5h/f4e0DEIV7v4e3Hb5fkAaqV1JEfnscCl6NZ1esjtkVMZeu9CfUV39ZvnonXFY7f7cUBSQbHU0UnvLlVctLEno63hEdrevBfDi0yk7slZus/MT+2u+g3enjwIGO5v+96tyAuTw88OvMdVFzDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Y7h6uf2vxdR9HjkrV5la1P1XUsx6+6oF9EtJjEMoA4=;
- b=VF1yWP5Fi8lUBtgFjuy2Xf3dfmQpKTqUoS6hHQ5PRAj9Y0GfloH2DvVnTiPIWMVITzlVF2IP6+QL34OPuoWb5DVVtcBENvb7IvKS3MCdjCjf9IdKDSx8m19YVes9u83G0O6XiKk27clak6sHDRn+A3EOGtkThah8yl7Zs2OUvCit5QrP/CsCW3hm/cBukjwOk7s04U/FFraYLSydZy2UzgzEBnj1NGxq8QaR9V2g4+op5RDjp0IgqT/E5Wzhe2JlNrQ6KO+zo0zEkLjoH6hUke+xGDEilJByQn6dQHQWS5sqf+iF/dWD3Hek1mBvOaBKKnCpkowVtzeTlcqJ8HTw5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Y7h6uf2vxdR9HjkrV5la1P1XUsx6+6oF9EtJjEMoA4=;
- b=UWkDviAGXaj96vuBucETbbogtxCWWcJCNnkaXJs2GSbRQ83OCrfSuhBk5QsOU8qRropoKfkWYyxQesAtDLqUNiy4ZiBQPARqfQDzkkmsMT5G1BU+wsdzS7BK1YO/rcEkt8B5A8ww+SM9jQ6WF53UbfAgA7MAwStGNVsjT0Ut+JE=
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
- VI1PR04MB3997.eurprd04.prod.outlook.com (52.134.123.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Fri, 22 Nov 2019 14:11:46 +0000
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::f:e0f5:1b95:a5d]) by VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::f:e0f5:1b95:a5d%5]) with mapi id 15.20.2451.032; Fri, 22 Nov 2019
- 14:11:46 +0000
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 08/12] crypto: caam - support crypto_engine framework for
- SKCIPHER algorithms
-Thread-Topic: [PATCH 08/12] crypto: caam - support crypto_engine framework for
- SKCIPHER algorithms
-Thread-Index: AQHVnZa0/lOdW2TUXUqvGjTaL30gkA==
-Date:   Fri, 22 Nov 2019 14:11:46 +0000
-Message-ID: <VI1PR04MB444537DA6774BE5E31F2C04F8C490@VI1PR04MB4445.eurprd04.prod.outlook.com>
-References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
- <1574029845-22796-9-git-send-email-iuliana.prodan@nxp.com>
- <20191122103309.wf2hg7km45ugzzhr@gondor.apana.org.au>
- <VI1PR04MB4445DACDF6F1AF1CDABC6E7A8C490@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20191122110915.f7rsqb4hnsg4pfci@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=iuliana.prodan@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 06d9a70f-4ac0-4765-2f80-08d76f55e8c3
-x-ms-traffictypediagnostic: VI1PR04MB3997:|VI1PR04MB3997:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB39972E2AD23E5F9DEB30BD8B8C490@VI1PR04MB3997.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02296943FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(346002)(396003)(136003)(189003)(199004)(74316002)(6916009)(76116006)(6436002)(55016002)(6246003)(2906002)(33656002)(81156014)(8676002)(81166006)(25786009)(102836004)(71200400001)(7696005)(76176011)(8936002)(99286004)(53546011)(6506007)(91956017)(71190400001)(52536014)(54906003)(6116002)(446003)(44832011)(66476007)(64756008)(7736002)(4326008)(66556008)(186003)(316002)(305945005)(5660300002)(229853002)(66446008)(478600001)(86362001)(14454004)(14444005)(256004)(66066001)(66946007)(9686003)(3846002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3997;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SSFwAB4vMqwd13I8JRvqUSpKdO6Rx5VqK2db7x5R0ogtHQqN5T/maz44dIUR8lBuZFZrLjerQga2An0Ma8rlqABClNOsIMyhg5+iFF3UUYPKKQ1VYbW7knaEYyJcwckOxCzDdPes2X4Hd2dLuefr9gU80qFi7QkgckWzo/TfLYSHV5bDEaJ95xl6/36xvo0HrSp57KG/dpmE0sb3ULukYI6Mblt7Llbs1+huud8jZ8e8rKg+HZ0dE+t8ChTz7VOdYYjMaeIuYQYq7zxsqmx74h34wLoJdivTGWo1/ymp3d/qiFg4RlIKND2KUhaol5ZEtCeSfrYDIYjDxTXIr83isIUHOHMSOvawVb7RnmmgDwZacK2maEe7FV/tALXGIy0T5Z98BvcXOG+HU4w8+dPMT054mZ9xCf+CvP0WZ/4HgmO2DXKOi2Blj4LAwQ+dih7F
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Nov 2019 09:14:02 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58461 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVOOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:14:02 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191122141400euoutp02026697b1a44583321aa9b3e16f907460~ZgZlkUJAt3181131811euoutp02e
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 14:14:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191122141400euoutp02026697b1a44583321aa9b3e16f907460~ZgZlkUJAt3181131811euoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574432040;
+        bh=koJT0jT6+xu5Q0BETzPpXfosXeXXwgd8qTs28i1q90Q=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=uvxWXcQXjNvzuvxuf+C1kM4U0yrvYL58DCCex7NV0+bAuTFSHpXFy6qmOjDTbETuq
+         giwdCv3U4lX3SA/l8X/x25r9Hp649DhP3UL5jRj6Uwzf8ozRl9oLV9zE9sO2CGzCce
+         3FBZLARe9J4Be5ASeuI1P+ryjMT4vh1aixq6bfKk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191122141400eucas1p25b152d31c8eec2df76c33062060fa464~ZgZlXRje03060630606eucas1p27;
+        Fri, 22 Nov 2019 14:14:00 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3E.4A.60698.82DE7DD5; Fri, 22
+        Nov 2019 14:14:00 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191122141359eucas1p12add83d2ac9112cf4692bd3688e150cf~ZgZk3pjzs2484524845eucas1p1N;
+        Fri, 22 Nov 2019 14:13:59 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191122141359eusmtrp25bf0f0ba546441cf75ae277d7fb57e6e~ZgZk2_Na90136501365eusmtrp2O;
+        Fri, 22 Nov 2019 14:13:59 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-5a-5dd7ed288230
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8A.09.08375.72DE7DD5; Fri, 22
+        Nov 2019 14:13:59 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191122141359eusmtip2f8f90400ce1abd63f8c8646cdca70f1c~ZgZkf7UBs2323523235eusmtip2b;
+        Fri, 22 Nov 2019 14:13:59 +0000 (GMT)
+Subject: Re: [PATCH v2] tty: serial: samsung: remove variable 'ufstat' set
+ but not used
+To:     Jiri Slaby <jslaby@suse.com>, Chen Wandun <chenwandun@huawei.com>,
+        gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, beomho.seo@samsung.com,
+        sw0312.kim@samsung.com, youngmin.nam@samsung.com
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <4a5c6729-30f3-bcf1-9092-1ea810324f92@samsung.com>
+Date:   Fri, 22 Nov 2019 15:13:59 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06d9a70f-4ac0-4765-2f80-08d76f55e8c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 14:11:46.2955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 680cLoUnK6L6bZu17OGy5+ur1e3F4cYRYPQFwWfRureRZV6uqW9ZzNpD6ULpn0BDsYoh+Hl2PjqSAXmFBDa4Ug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3997
+In-Reply-To: <d7a42300-6c67-70c4-4c90-5f05c65c421c@suse.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djPc7oab6/HGpx8ymtx+tM2dosv71Yx
+        WTQvXs9mMWXDByaLy7vmsFmcWdzLbjFj8ks2i8UHPrE7cHi0HHnL6rF/7hp2j74tqxg91m+5
+        yuLxeZNcAGsUl01Kak5mWWqRvl0CV8bCn+2MBe18FZc+JzUwPuDuYuTkkBAwkfjz4A97FyMX
+        h5DACkaJSzPPQTlfGCX2rDzGAuF8ZpR4dOYoM0zLg30z2SASy4Fa9u1khXDeMkq8bX4KViUs
+        ECnxenEbG4gtApLoXGQOYrMJGEp0ve0Ci/MK2Ek07VwJZrMIqEr83z4XyObgEBWIlehYngFR
+        IihxcuYTFhCbU8BG4un86ewgNrOAvMT2t3OYIWxxiVtP5jOB3CAhsIxdonXjSUaIS10kpr1e
+        zQphC0u8Or6FHcKWkfi/E6ahmVHi4bm17BBOD6PE5aYZUN3WEoePX2QFuYhZQFNi/S59iLCj
+        xKz1u9hBwhICfBI33gpCHMEnMWnbdGaIMK9ER5sQRLWaxKzj6+DWHrxwCRqIHhIPd/xmmsCo
+        OAvJm7OQvDYLyWuzEG5YwMiyilE8tbQ4Nz212DgvtVyvODG3uDQvXS85P3cTIzAZnf53/OsO
+        xn1/kg4xCnAwKvHwnrhyPVaINbGsuDL3EKMEB7OSCO+e61dihXhTEiurUovy44tKc1KLDzFK
+        c7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTCui39m8X2C2hJxvhPpOqvitq4/FhVwT2sN
+        sxj3l7rGoxoLgj++n9H2eM+Lf/sEzktNOCxxc88p7Z29LGoiTF7ud+2Whrx6caqARWtip6rV
+        3e2xh3Orv3IXaFb+/5Ud8uLo+9Ssw1dsyrQ5DrZPmKjauOSibOoZj6ONqV0zn18x5Y68ryB2
+        9pm/EktxRqKhFnNRcSIAjOq33EIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsVy+t/xe7rqb6/HGiydoG9x+tM2dosv71Yx
+        WTQvXs9mMWXDByaLy7vmsFmcWdzLbjFj8ks2i8UHPrE7cHi0HHnL6rF/7hp2j74tqxg91m+5
+        yuLxeZNcAGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqR
+        vl2CXsbCn+2MBe18FZc+JzUwPuDuYuTkkBAwkXiwbyYbiC0ksJRRYsYtIYi4jMTJaQ2sELaw
+        xJ9rXVA1rxklpn0Fs4UFIiX2X93FCGKLCLxllFi7wraLkQuoppNJ4vGUR+wgCTYBQ4mutxDN
+        vAJ2Ek07V4LZLAKqEv+3zwWzRQViJb6v/MQIUSMocXLmExYQm1PARuLp/Olgc5gFzCTmbX7I
+        DGHLS2x/OwfKFpe49WQ+0wRGwVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS
+        9ZLzczcxAmNs27Gfm3cwXtoYfIhRgINRiYf3xJXrsUKsiWXFlbmHGCU4mJVEePdcvxIrxJuS
+        WFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnA+M8riTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliS
+        mp2aWpBaBNPHxMEp1cDId1jbMtZ2tbvWxLPRNmtiL037t3a5bs2qQDuuPTxfD9+Vbtlz9/jE
+        6c3mTTc+Vj9wyHg6c6N7waed6jlvfol0l0gXnGefUWz92TF3p3OlwOWLGmLrbhqn7vLzeqrJ
+        JFhQe+3Hr6bIrbIpmjpZhy+KNm3d9j4377Sz7K2LO8WkjgTWTFww0X+rEktxRqKhFnNRcSIA
+        xeUrkscCAAA=
+X-CMS-MailID: 20191122141359eucas1p12add83d2ac9112cf4692bd3688e150cf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191122120844eucas1p1be315e7baadf270d2c783a6a81b8ea1b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191122120844eucas1p1be315e7baadf270d2c783a6a81b8ea1b
+References: <1574421159-113624-1-git-send-email-chenwandun@huawei.com>
+        <1574424258-138975-1-git-send-email-chenwandun@huawei.com>
+        <CGME20191122120844eucas1p1be315e7baadf270d2c783a6a81b8ea1b@eucas1p1.samsung.com>
+        <d7a42300-6c67-70c4-4c90-5f05c65c421c@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/22/2019 1:09 PM, Herbert Xu wrote:=0A=
-> On Fri, Nov 22, 2019 at 11:05:59AM +0000, Iuliana Prodan wrote:=0A=
->>=0A=
->> Sorry, but I don't understand what is wrong here? I'm using the correct=
-=0A=
->> type, the specific type, for the request when sending it to crypto engin=
-e.=0A=
->> This transfer_request_to_engine function is called from caam_jr_enqueue,=
-=0A=
->> where I have all types of request, so I'm using the async_request, and=
-=0A=
->> when transferring to crypto engine I cast it to the specific type.=0A=
-> =0A=
-> These internal types are only for use by the crypto API and helper=0A=
-> code such as crypto_engine.  They should not be used by drivers in=0A=
-> general.=0A=
-> =0A=
-So, just to be clear, I shouldn't use crypto_async_request in driver code?=
-=0A=
-I see that this generic crypto request is used in multiple drivers.=0A=
-=0A=
->> I believe is an overhead to sent all request to crypto engine since most=
-=0A=
->> of them can be directly executed by hw.=0A=
->> Also, in case there is no need for backlog and the hw is busy we can=0A=
->> drop the request.=0A=
-> =0A=
-> If the crypto_engine has so much overhead then you should work on=0A=
-> fixing crypto_engine and not work around it like this.=0A=
-> =0A=
-I can try sending _all_ requests to crypto engine and make some =0A=
-performance measurements to see which solution is best.=0A=
-=0A=
-Thanks,=0A=
-Iulia=0A=
+Hi Jiri,
+
+On 22.11.2019 13:08, Jiri Slaby wrote:
+> On 22. 11. 19, 13:04, Chen Wandun wrote:
+>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>
+>> drivers/tty/serial/samsung_tty.c: In function s3c24xx_serial_rx_chars_dma:
+>> drivers/tty/serial/samsung_tty.c:549:24: warning: variable ufstat set but not used [-Wunused-but-set-variable]
+>>
+>> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+>> ---
+>>   drivers/tty/serial/samsung_tty.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+>> index 83fd516..ab3c7d1 100644
+>> --- a/drivers/tty/serial/samsung_tty.c
+>> +++ b/drivers/tty/serial/samsung_tty.c
+>> @@ -546,7 +546,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport);
+>>   
+>>   static irqreturn_t s3c24xx_serial_rx_chars_dma(void *dev_id)
+>>   {
+>> -	unsigned int utrstat, ufstat, received;
+>> +	unsigned int utrstat, received;
+>>   	struct s3c24xx_uart_port *ourport = dev_id;
+>>   	struct uart_port *port = &ourport->port;
+>>   	struct s3c24xx_uart_dma *dma = ourport->dma;
+>> @@ -556,7 +556,7 @@ static irqreturn_t s3c24xx_serial_rx_chars_dma(void *dev_id)
+>>   	struct dma_tx_state state;
+>>   
+>>   	utrstat = rd_regl(port, S3C2410_UTRSTAT);
+>> -	ufstat = rd_regl(port, S3C2410_UFSTAT);
+>> +	rd_regl(port, S3C2410_UFSTAT);
+> The question (CCed some samsung people) is whether we have to spend the
+> cycles reading the register at all? Does it have side-effects?
+
+Reading this register doesn't have any side effects, so it is safe to 
+remove rd_regl(port, S3C2410_UFSTAT) at all in this function. Tested on 
+Exynos5422-based OdroidXU3 board.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
