@@ -2,109 +2,97 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80095C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D669CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB722070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B++dLgyu"
+	by mail.kernel.org (Postfix) with ESMTP id A8E712068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574450842;
+	bh=hPtgJJr5SKfPYaA2h2MvVdiZtWPC/Wav5BgK/643v3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IrmXMNbjScpmdmyLCNPShoaen/62O772vPAQh86jwsh3WrMgJsDv17KhxA6vmd9Nf
+	 u9Crth9zuJX1LKN/8eaGWrLI/RtcdQLD6RxJsaYkITTDMGL2Vwxwqf6+Gn1lQWt+DZ
+	 FojMURIHp07OoQN+cPiW0GGVg5fMbPhPYXBa+caE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfKVTUM (ORCPT
+        id S1726961AbfKVT1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:20:12 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43276 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfKVTUL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:20:11 -0500
-Received: by mail-io1-f66.google.com with SMTP id p12so1922933iog.10;
-        Fri, 22 Nov 2019 11:20:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LUPoVXtEJRriu3gt1A6+ir0p1Bek4hzh1TUla5kFEi4=;
-        b=B++dLgyueJDivQQoLxOkqSMkteMasuevFvh0YY22g0HJXUTPoTQEVXVt4DaEOG1sLi
-         wcA6P+fRoUwNqKPpCUkMmyLa+dQEGG1JQWhE70ME0xaVrT+I9XGhv4IJOpn1i0Z2578t
-         h8VEwse+AN+IulTu+IahMHZoDd5wwJIXLo8FWEtF1TgxwqACvuY0MWoNnKygoR0cSwxw
-         y+C1iBIcTzzX24XaQsh4rfvT12Plq2A4YLWj8gj2PAT1o5ZDRJUA9OkFe366PBEnAC8Z
-         6b7E7JzX98pbqykZ/owIr9kC27tRnGT6yk5D2qHMdBEv6LYDo7uSlxCTKiXbiKLtA7iN
-         mmVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LUPoVXtEJRriu3gt1A6+ir0p1Bek4hzh1TUla5kFEi4=;
-        b=Y/3QqUPP0HlaJNXp3o9r8TkbtVYv/bKsg/Xy6bhAkYwqnOHSvkicyUo4QIRha/IW6b
-         YB4kmvmcxGBWRBXeSC5NinnQXgPvo7UacUEpPsof3JXpNHh+ZUkLj4XWAeAJM76DX1aK
-         dXia2hNBMqAfS96R6H6yISOJkZcon3Ew+8zjjicKXx/TCMkay4zSpvnNyGNlAWhm6OAB
-         UJ51DXkzxmRR0FHKm1k17C18HaIeQHelixWfjfOwEne8KjEl1f75RhhsIVO6jPJ33RGf
-         C2gz1o9m/CDH//KgOwFJ3vz2VFJ2nLzhQjVGY0nOsJ+XPNfAByAObbnxPD/j4CPWbcaO
-         HUFQ==
-X-Gm-Message-State: APjAAAVPXYY5iO/jeD/l3B8qvRP/iIiK2v4gy0Dq71KK3Yg7bVsjFNu8
-        vctF99xHXyGPt26GKwiYVqU=
-X-Google-Smtp-Source: APXvYqyUf8IL7jAXQIGJIUESwEj/Iv27BNarP/uWWDgzny2gzQnUZCVpDtO7kbt1exQCfJOlidXNHg==
-X-Received: by 2002:a02:7708:: with SMTP id g8mr5080424jac.9.1574450410698;
-        Fri, 22 Nov 2019 11:20:10 -0800 (PST)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id k20sm2647403iol.3.2019.11.22.11.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 11:20:10 -0800 (PST)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu
-Subject: [PATCH] brcmfmac: Fix memory leak in brcmf_p2p_create_p2pdev()
-Date:   Fri, 22 Nov 2019 13:19:48 -0600
-Message-Id: <20191122191954.17908-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Nov 2019 14:27:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:51640 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726703AbfKVT1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:27:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E9B7328;
+        Fri, 22 Nov 2019 11:27:20 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CB0A3F6C4;
+        Fri, 22 Nov 2019 11:27:19 -0800 (PST)
+Date:   Fri, 22 Nov 2019 19:27:18 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     guillaume.tucker@collabora.com, hulkci@huawei.com,
+        tomeu.vizoso@collabora.com, khilman@baylibre.com,
+        mgalka@collabora.com, enric.balletbo@collabora.com,
+        yuehaibing@huawei.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: net-next/master bisection: boot on beaglebone-black
+Message-ID: <20191122192718.GH6849@sirena.org.uk>
+References: <5dd7d181.1c69fb81.64fbc.cd8a@mx.google.com>
+ <20191122.093657.95680289541075120.davem@davemloft.net>
+ <bfe5e987-e0b5-6c89-f193-6666be203532@collabora.com>
+ <20191122.101147.1112820693050959325.davem@davemloft.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FUaywKC54iCcLzqT"
+Content-Disposition: inline
+In-Reply-To: <20191122.101147.1112820693050959325.davem@davemloft.net>
+X-Cookie: sillema sillema nika su
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of brcmf_p2p_create_p2pdev() the allocated memory
-for p2p_vif is leaked when the mac address is the same as primary
-interface. To fix this, go to error path to release p2p_vif via
-brcmf_free_vif().
 
-Fixes: cb746e47837a ("brcmfmac: check p2pdev mac address uniqueness")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+--FUaywKC54iCcLzqT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-index 7ba9f6a68645..1f5deea5a288 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-@@ -2092,7 +2092,8 @@ static struct wireless_dev *brcmf_p2p_create_p2pdev(struct brcmf_p2p_info *p2p,
- 	/* firmware requires unique mac address for p2pdev interface */
- 	if (addr && ether_addr_equal(addr, pri_ifp->mac_addr)) {
- 		bphy_err(drvr, "discovery vif must be different from primary interface\n");
--		return ERR_PTR(-EINVAL);
-+		err = -EINVAL;
-+		goto fail;
- 	}
- 
- 	brcmf_p2p_generate_bss_mac(p2p, addr);
--- 
-2.17.1
+On Fri, Nov 22, 2019 at 10:11:47AM -0800, David Miller wrote:
 
+> If you're not combining the net and the net-next tree, as Stephen
+> Rothwell's tree is doing, then you're going to run into this problem
+> every single day and spam us with these messages.
+
+> What is being done right now doesn't work.  You can't just wait for
+> net integration into net-next, that doesn't cut it.
+
+Is there a writeup somewhere of how your trees are expected to work?
+That might help testing people figure things out, what you're doing is a
+bit unusual and people working on testing infrastructure are likely not
+going to be as engaged with the process for specific trees as developers
+are.  I didn't spot anything in Docmentation/ and the wiki link in
+MAINTAINERS seems broken but I might've been looking in the wrong places.
+
+--FUaywKC54iCcLzqT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3YNpUACgkQJNaLcl1U
+h9AS9wf/Uq4dnT2s2ZT0skeaaHINCsGT8qOFWNH1BYsDcrhqWXCuKS0G7yR1POi0
+JdMYoOFHKY/mh0uBTCI2erNQem8/jSgs3YA0AB9b50BWe41vGcJOXj9ZFngzRQ17
+PS3PGs0Ri7M0/KubZaDO9G2+am3PEKEiyK8YWezhwVhB3D1WE0Elz0e/hybUCDRo
+YC+YSLt9D5+XPwBCnLcOO9OD/6Psv1ZVbfXwlD8p2wKAwjwzj5ainxAEhCumYin4
+/TmR2lT0/KWZhiMVs2+xSLMdylXFzPlXTmgEphmom5+t3uWNz9rZaA2BbRinNpyw
+xNlKZabMIvJCVjiA4hbN/3TVH8VYFw==
+=g+r3
+-----END PGP SIGNATURE-----
+
+--FUaywKC54iCcLzqT--
