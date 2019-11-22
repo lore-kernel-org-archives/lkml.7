@@ -2,108 +2,139 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FE4C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20D0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB26620717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419397;
-	bh=q0HxcKvb9Z3rOWVbGowKsn/8p/HzGtoz1XeQPsgPasI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eWXCoeqxxeuYi1Gz+W6fd+0hDQbT+Cgu1moOcaLtsR9nFbC/RYjOUDyC3egmJC5gp
-	 xEvX+06SFU31k5qC5Ca9EAr2xflDjp3t48vCFhytErXjVZ2xNj2U0Qg/rf3EdQ3a+6
-	 Km0ZNGLGTbusMgQJj/m1tqfAx/qYrA2IPvLUf/vw=
+	by mail.kernel.org (Postfix) with ESMTP id 9F16C20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfKVKnP (ORCPT
+        id S1729247AbfKVKna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:43:30 -0500
+Received: from mga18.intel.com ([134.134.136.126]:47785 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728784AbfKVKnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C86720717;
-        Fri, 22 Nov 2019 10:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419391;
-        bh=q0HxcKvb9Z3rOWVbGowKsn/8p/HzGtoz1XeQPsgPasI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1lh2QZY1XKPsF+/i98nx4GuhICEENViJGef2TDfFbCmqN4xktTx6obzkbzvBKRH1V
-         Wa3DxDnGDqbbfYbSfmWTDJ33CuloEpds4mQeWtEw22vttnOdFFhWrFaqwz7vtTrKin
-         qofzBLb81dnr/zrJdjT5LIntlNsX5toOF7clS+ZU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 096/222] mlxsw: spectrum: Init shaper for TCs 8..15
-Date:   Fri, 22 Nov 2019 11:27:16 +0100
-Message-Id: <20191122100910.383588139@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729217AbfKVKnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 02:43:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="216341366"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 02:43:20 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 12:43:20 +0200
+Date:   Fri, 22 Nov 2019 12:43:19 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 2/2] gpio: sch: Hook into ACPI SCI handler to catch
+ GPIO edge events
+Message-ID: <20191122104319.GC11621@lahna.fi.intel.com>
+References: <cover.1574277614.git.jan.kiszka@siemens.com>
+ <bf556de14a3d093072e50b6a6cf3c64bd62b1730.1574277614.git.jan.kiszka@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf556de14a3d093072e50b6a6cf3c64bd62b1730.1574277614.git.jan.kiszka@siemens.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+On Wed, Nov 20, 2019 at 08:20:14PM +0100, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> The ACPI description on the Quark platform does not provide the required
+> information to do establish generic handling. Therefore, we need to hook
+> from the driver directly into SCI handler of the ACPI subsystem in order
+> to catch and report GPIO-related events.
+> 
+> Validated on the Quark-based IOT2000 platform.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 
-[ Upstream commit a9f36656b519a9a21309793c306941a3cd0eeb8f ]
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-With introduction of MC-aware mode to mlxsw, it became necessary to
-configure TCs above 7 as well. There is now code in mlxsw to disable ETS
-for these higher classes, but disablement of max shaper was neglected.
+Below one minor stylistic comment.
 
-By default, max shaper is currently disabled to begin with, so the
-problem is just cosmetic. However, for symmetry, do like we do for ETS
-configuration, and call mlxsw_sp_port_ets_maxrate_set() for both TC i
-and i + 8.
+> ---
+>  drivers/gpio/gpio-sch.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
+> index 6a9c5500800c..75c95da145d8 100644
+> --- a/drivers/gpio/gpio-sch.c
+> +++ b/drivers/gpio/gpio-sch.c
+> @@ -155,6 +155,31 @@ static const struct gpio_chip sch_gpio_chip = {
+>  	.to_irq			= sch_gpio_to_irq,
+>  };
+>  
+> +static u32 sch_sci_handler(void *context)
+> +{
+> +	struct sch_gpio *sch = context;
+> +	unsigned long core_status, resume_status;
+> +	unsigned int resume_gpios, offset;
+> +
+> +	core_status = inl(sch->iobase + GTS);
+> +	resume_status = inl(sch->iobase + GTS + 0x20);
+> +
+> +	if (core_status == 0 && resume_status == 0)
 
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+You can also write this like
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 585a40cc6470b..8460c4807567c 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2191,6 +2191,13 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
- 						    MLXSW_REG_QEEC_MAS_DIS);
- 		if (err)
- 			return err;
-+
-+		err = mlxsw_sp_port_ets_maxrate_set(mlxsw_sp_port,
-+						    MLXSW_REG_QEEC_HIERARCY_TC,
-+						    i + 8, i,
-+						    MLXSW_REG_QEEC_MAS_DIS);
-+		if (err)
-+			return err;
- 	}
- 
- 	/* Map all priorities to traffic class 0. */
--- 
-2.20.1
+	if (!core_status &&& !resume_status)
 
-
-
+> +		return ACPI_INTERRUPT_NOT_HANDLED;
+> +
+> +	for_each_set_bit(offset, &core_status, sch->resume_base)
+> +		generic_handle_irq(sch->irq_base + offset);
+> +
+> +	resume_gpios = sch->chip.ngpio - sch->resume_base;
+> +	for_each_set_bit(offset, &resume_status, resume_gpios)
+> +		generic_handle_irq(sch->irq_base + sch->resume_base + offset);
+> +
+> +	outl(core_status, sch->iobase + GTS);
+> +	outl(resume_status, sch->iobase + GTS + 0x20);
+> +
+> +	return ACPI_INTERRUPT_HANDLED;
+> +}
+> +
+>  static int sch_irq_type(struct irq_data *d, unsigned int type)
+>  {
+>  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> @@ -215,6 +240,7 @@ static int sch_gpio_probe(struct platform_device *pdev)
+>  	struct irq_chip_type *ct;
+>  	struct sch_gpio *sch;
+>  	struct resource *res;
+> +	acpi_status status;
+>  	int irq_base, ret;
+>  
+>  	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
+> @@ -303,6 +329,10 @@ static int sch_gpio_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	status = acpi_install_sci_handler(sch_sci_handler, sch);
+> +	if (ACPI_FAILURE(status))
+> +		return -EINVAL;
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.16.4
