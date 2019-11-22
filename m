@@ -3,134 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE5C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B935C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAF92073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ktb+gOuE"
+	by mail.kernel.org (Postfix) with ESMTP id 737002073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574419571;
+	bh=3N5qwJ28NYzzO8le2/ydKVm0EDx1lQt2MdyjGiVw1Lw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C0QE/cOKW39uAwuh7lCdPiEQMgU8BIPef1ujKTkGlYrhG1PH1SIoo/AhwXBBzWDd/
+	 VMsI8Cz+KMzVaHhjAHOQel+ri3KiLQB+GwbubM4hOeKOeg+y7bWDUCM3Bd5esHLx+m
+	 v03j94FfCsgNbRDPaLJj3zkDiYQeNgE3LiFcAWKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfKVKqF (ORCPT
+        id S1729616AbfKVKqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:46:05 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:12091 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729590AbfKVKqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:46:00 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd7bc630000>; Fri, 22 Nov 2019 02:45:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 22 Nov 2019 02:45:59 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 02:45:59 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
- 2019 10:45:59 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
- 2019 10:45:59 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 22 Nov 2019 10:45:58 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dd7bc610002>; Fri, 22 Nov 2019 02:45:57 -0800
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH 6/6] arm64: tegra: Add support for PCIe endpoint mode in P2972-0000 platform
-Date:   Fri, 22 Nov 2019 16:15:05 +0530
-Message-ID: <20191122104505.8986-7-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191122104505.8986-1-vidyas@nvidia.com>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 22 Nov 2019 05:46:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729545AbfKVKqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:46:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEA3620637;
+        Fri, 22 Nov 2019 10:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574419567;
+        bh=3N5qwJ28NYzzO8le2/ydKVm0EDx1lQt2MdyjGiVw1Lw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uryeN2O2fWfbOsvTnGjB9P6oA/5HvXU2FzHS1nQY0lAXf0t1ACECMsjdbhWPpuVpj
+         JDXbuBbV2lXzK+h6Q8r3CPb05v3cWd5iThLd26Yx4v08w4BQF7Eo8rYsg8BANSPchm
+         KBRKb9xntIANJGz1Rg8amgkWwGKmzV4z52archt8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 155/222] net: ovs: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:28:15 +0100
+Message-Id: <20191122100913.899784961@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+References: <20191122100830.874290814@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574419555; bh=PzuZi1jgVofZ8q1sxB8QaUCLTmbzr9ZfQuYuJ3/x5K8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Ktb+gOuEAFazZJ++Zih63UDEUoq0Knd69pW4jpEgWQQY/wL9Cskb2VbxFNT8TEADn
-         Y9EPP73h3nNDlsroK4+P25izEt3p7Er44xIuQ//JykAE5kEHrf9RIgf3WoHL950+V+
-         k6qX3ylaMlyw9ZZmBlxJpfcqsnsVlZvsYoQL17CDGQRQyEEgtcnT/64eIY/Ab/eVG/
-         PBANvUKXqBUL85kYaOFdKm/3OR9sxoWowDpqpZJKs0epAQBKC4RTu6YtukDCn72YZP
-         572sSGOMxonhi0hP2UKLucl5vYIfssW7ToleKPUz/Hv9Xi/c0GCmjpgmbH+GY5kCqI
-         CQRH1Qu0L470g==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add endpoint mode support for PCIe C5 controller in P2972-0000 platform
-with information about supplies, PHY, PERST GPIO and GPIO that controls
-PCIe reference clock coming from the host system.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+[ Upstream commit eddf11e18dff0e8671e06ce54e64cfc843303ab9 ]
+
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
+
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ net/openvswitch/vport-internal_dev.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 7eb64b816e08..58c3a9677bc8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -43,6 +43,19 @@
+diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
+index e7da29021b38b..c233924825801 100644
+--- a/net/openvswitch/vport-internal_dev.c
++++ b/net/openvswitch/vport-internal_dev.c
+@@ -44,7 +44,8 @@ static struct internal_dev *internal_dev_priv(struct net_device *netdev)
+ }
  
- 		gpio@c2f0000 {
- 			status = "okay";
-+			/*
-+			 * Change the below node's status to 'okay' when
-+			 * PCIe C5 controller is enabled to operate in endpoint
-+			 * to allow REFCLK from the host system to flow into
-+			 * the controller.
-+			 */
-+			pex-refclk-sel-high {
-+				gpio-hog;
-+				output-high;
-+				gpios = <TEGRA194_AON_GPIO(AA, 5) 0>;
-+				label = "pex_refclk_sel_high";
-+				status = "disabled";
-+			};
- 		};
+ /* Called with rcu_read_lock_bh. */
+-static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t
++internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	int len, err;
  
- 		pwm@c340000 {
-@@ -144,6 +157,22 @@
- 			    "p2u-5", "p2u-6", "p2u-7";
- 	};
+@@ -63,7 +64,7 @@ static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	} else {
+ 		netdev->stats.tx_errors++;
+ 	}
+-	return 0;
++	return NETDEV_TX_OK;
+ }
  
-+	pcie_ep@141a0000 {
-+		status = "disabled";
-+
-+		vddio-pex-ctl-supply = <&vdd_1v8ao>;
-+
-+		nvidia,pex-rst-gpio = <&gpio TEGRA194_MAIN_GPIO(GG, 1)
-+					GPIO_ACTIVE_LOW>;
-+
-+		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-+		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-+		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-+
-+		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-+			    "p2u-5", "p2u-6", "p2u-7";
-+	};
-+
- 	fan: fan {
- 		compatible = "pwm-fan";
- 		pwms = <&pwm4 0 45334>;
+ static int internal_dev_open(struct net_device *netdev)
 -- 
-2.17.1
+2.20.1
+
+
 
