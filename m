@@ -2,51 +2,53 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC51C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B51C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3A320409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0F320674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403870;
-	bh=El87W87gUKdjkEIOxGKkTeim2N3L71k5D8CTxcsCHFc=;
+	s=default; t=1574403874;
+	bh=0BKgJK0ru3iRADVaPyo5g95TkJZb3iLxgNnyE9BBUxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVJfbsLhRQymJKBVbGS0QldPqQZHxEa812r+Hn8Hiqga6zvEvkiJZMdpqrm8fOP+8
-	 MCfk1Qj9i4oq1ikus6W2QcHoiCFHogvO1nqtNG3RlAeUc5hUmBKfc32l1dQufkRGEO
-	 /ek/r7T8QJTkj/G7thmjz0DBOXrtGK9VIgzNbzPU=
+	b=1N5pJZyBwvqulEQU/l36xUDA2hxy7bH6DDWg5G3eWcA9y4EUN9yDdC40UceaS5Enc
+	 F3Tx4zana1yx6L9Qlh0sBkGYJ9kSTWbnfo3YQdzgz5bp71pesQ1RagJ1/HKAJmULKR
+	 AlrmerBjtvw4o/2MQTeJNY6JY6K719pqGrUR+/9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfKVFv0 (ORCPT
+        id S1728838AbfKVGYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:24:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbfKVFvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:15 -0500
+        id S1728126AbfKVFv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5089520726;
-        Fri, 22 Nov 2019 05:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B546B2070E;
+        Fri, 22 Nov 2019 05:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401875;
-        bh=El87W87gUKdjkEIOxGKkTeim2N3L71k5D8CTxcsCHFc=;
+        s=default; t=1574401885;
+        bh=0BKgJK0ru3iRADVaPyo5g95TkJZb3iLxgNnyE9BBUxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avvIwrxFIydr4B/XC+5jVyws4fvaKrr67//slw3Pd5wSzi/SQZ44xz54JSbabvfn5
-         UgCaF32KupFjR7NvyOgbPr5Jh3LQhXxE0j2VvXDRmnOtR0cRdzsUNpGLI0lnPsMTHY
-         yj0OWJhIkTN6um24B7vWDlwKNAWKShW9lSoystMc=
+        b=AoW2zRTySCjlKux1l/KduFivVCCph+/7xCyk79eWIPcvBjX0uIgqZJDPnHVLOiTpi
+         V6wWoThpderv6ki1R/7a1iIBh65ssmAdxnrH4b2z3d76Yc4KL9uR5OlY3TFMzahvGX
+         E2bB4JKO/7Xgakr9JX88zyP4gD3/559C20Jwv3Zo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Shiyan <shc_work@mail.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 110/219] serial: max310x: Fix tx_empty() callback
-Date:   Fri, 22 Nov 2019 00:47:22 -0500
-Message-Id: <20191122054911.1750-103-sashal@kernel.org>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 119/219] powerpc/32: Avoid unsupported flags with clang
+Date:   Fri, 22 Nov 2019 00:47:31 -0500
+Message-Id: <20191122054911.1750-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,41 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shiyan <shc_work@mail.ru>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit a8da3c7873ea57acb8f9cea58c0af477522965aa ]
+[ Upstream commit 72e7bcc2cdf82bf03caaa5e6c9b0134c2fc2ee7d ]
 
-Function max310x_tx_empty() accesses the IRQSTS register, which is
-cleared by IC when reading, so if there is an interrupt status, we
-will lose it. This patch implement the transmitter check only by
-the current FIFO level.
+When building for ppc32 with clang these flags are unsupported:
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  -ffixed-r2 and -mmultiple
+
+llvm's lib/Target/PowerPC/PPCRegisterInfo.cpp marks r2 as reserved on
+when building for SVR4ABI and !ppc64:
+
+  // The SVR4 ABI reserves r2 and r13
+  if (Subtarget.isSVR4ABI()) {
+    // We only reserve r2 if we need to use the TOC pointer. If we have no
+    // explicit uses of the TOC pointer (meaning we're a leaf function with
+    // no constant-pool loads, etc.) and we have no potential uses inside an
+    // inline asm block, then we can treat r2 has an ordinary callee-saved
+    // register.
+    const PPCFunctionInfo *FuncInfo = MF.getInfo<PPCFunctionInfo>();
+    if (!TM.isPPC64() || FuncInfo->usesTOCBasePtr() || MF.hasInlineAsm())
+      markSuperRegs(Reserved, PPC::R2);  // System-reserved register
+    markSuperRegs(Reserved, PPC::R13); // Small Data Area pointer register
+  }
+
+This means we can safely omit -ffixed-r2 when building for 32-bit
+targets.
+
+The -mmultiple/-mno-multiple flags are not supported by clang, so
+platforms that might support multiple miss out on using multiple word
+instructions.
+
+We wrap these flags in cc-option so that when Clang gains support the
+kernel will be able use these flags.
+
+Clang 8 can then build a ppc44x_defconfig which boots in Qemu:
+
+  make CC=clang-8 ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-  ppc44x_defconfig
+  ./scripts/config -e CONFIG_DEVTMPFS -d DEVTMPFS_MOUNT
+  make CC=clang-8 ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-
+
+  qemu-system-ppc -M bamboo \
+   -kernel arch/powerpc/boot/zImage \
+   -dtb arch/powerpc/boot/dts/bamboo.dtb \
+   -initrd ~/ppc32-440-rootfs.cpio \
+   -nographic -serial stdio -monitor pty -append "console=ttyS0"
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/261
+Link: https://bugs.llvm.org/show_bug.cgi?id=39556
+Link: https://bugs.llvm.org/show_bug.cgi?id=39555
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/powerpc/Makefile | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index bd3e6cf81af5c..0c35c3c5e3734 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -844,12 +844,9 @@ static void max310x_wq_proc(struct work_struct *ws)
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index c4c03992ee828..dfcb698ec8f3b 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -145,7 +145,14 @@ endif
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
  
- static unsigned int max310x_tx_empty(struct uart_port *port)
- {
--	unsigned int lvl, sts;
-+	u8 lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
+-CFLAGS-$(CONFIG_PPC32)	:= -ffixed-r2 $(MULTIPLEWORD)
++# Clang unconditionally reserves r2 on ppc32 and does not support the flag
++# https://bugs.llvm.org/show_bug.cgi?id=39555
++CFLAGS-$(CONFIG_PPC32)	:= $(call cc-option, -ffixed-r2)
++
++# Clang doesn't support -mmultiple / -mno-multiple
++# https://bugs.llvm.org/show_bug.cgi?id=39556
++CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option, $(MULTIPLEWORD))
++
+ CFLAGS-$(CONFIG_PPC32)	+= $(call cc-option,-mno-readonly-in-sdata)
  
--	lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
--	sts = max310x_port_read(port, MAX310X_IRQSTS_REG);
--
--	return ((sts & MAX310X_IRQ_TXEMPTY_BIT) && !lvl) ? TIOCSER_TEMT : 0;
-+	return lvl ? 0 : TIOCSER_TEMT;
- }
- 
- static unsigned int max310x_get_mctrl(struct uart_port *port)
+ ifdef CONFIG_PPC_BOOK3S_64
 -- 
 2.20.1
 
