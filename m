@@ -2,280 +2,194 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E38C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8F0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DCC2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WIgf9LcG"
+	by mail.kernel.org (Postfix) with ESMTP id 7836420715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfKVOhJ (ORCPT
+        id S1726869AbfKVOh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:37:09 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:56954 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVOhJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:37:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574433422; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YpCE21+fHqnut680I3BLvFteO+uKZOg8KIh9pmfWWCs=;
-        b=WIgf9LcGZAwH1nAv5NPuNb/rjgRpVt+3Pv6gg/hScEEBrn1FPFWQNi0DGcwNwQzaottkh3
-        BTRPRMZsU+owErj1h33Wz8DRFgJBSDroi+PesXxC444jKapSkuRtfQR3fae3S0qnUgEsEx
-        ZnlRdAZiysVO49Ygyh3DQqHgqFxdSPg=
-Date:   Fri, 22 Nov 2019 15:36:49 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/4] MIPS: Ingenic: initial X1000 support.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com
-Message-Id: <1574433409.3.0@crapouillou.net>
-In-Reply-To: <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
-References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
-        <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
+        Fri, 22 Nov 2019 09:37:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:48302 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfKVOh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:37:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 510CDFEC;
+        Fri, 22 Nov 2019 06:37:57 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE48D3F703;
+        Fri, 22 Nov 2019 06:37:55 -0800 (PST)
+Subject: Re: [PATCH] sched/fair: fix rework of find_idlest_group()
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
+        riel@surriel.com, rong.a.chen@intel.com
+References: <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
+ <1571762798-25900-1-git-send-email-vincent.guittot@linaro.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <2bb75047-4a93-4f1d-e2ff-99c499b5a070@arm.com>
+Date:   Fri, 22 Nov 2019 14:37:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1571762798-25900-1-git-send-email-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+Hi Vincent,
 
+I took the liberty of adding some commenting nits in my review. I
+know this is already in tip, but as Mel pointed out this should be merged
+with the rework when sent out to mainline (similar to the removal of
+fix_small_imbalance() & the LB rework).
 
-Le ven., nov. 22, 2019 at 21:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
-> This is left unselectable in Kconfig until a X1000 based board is
-> added in a later commit.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+On 22/10/2019 17:46, Vincent Guittot wrote:
+> The task, for which the scheduler looks for the idlest group of CPUs, must
+> be discounted from all statistics in order to get a fair comparison
+> between groups. This includes utilization, load, nr_running and idle_cpus.
+> 
+> Such unfairness can be easily highlighted with the unixbench execl 1 task.
+> This test continuously call execve() and the scheduler looks for the idlest
+> group/CPU on which it should place the task. Because the task runs on the
+> local group/CPU, the latter seems already busy even if there is nothing
+> else running on it. As a result, the scheduler will always select another
+> group/CPU than the local one.
+> 
+> Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > ---
->  arch/mips/boot/dts/ingenic/x1000.dtsi | 161=20
-> ++++++++++++++++++++++++++++++++++
->  arch/mips/jz4740/Kconfig              |   6 ++
->  arch/mips/jz4740/time.c               |   4 +-
->  3 files changed, 170 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
-> b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> new file mode 100644
-> index 0000000..b8658a6
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> @@ -0,0 +1,161 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	compatible =3D "ingenic,x1000", "ingenic,x1000e";
-> +
-> +	cpuintc: interrupt-controller {
-> +		#address-cells =3D <0>;
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-controller;
-> +		compatible =3D "mti,cpu-interrupt-controller";
-> +	};
-> +
-> +	intc: interrupt-controller@10001000 {
-> +		compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
-> +		reg =3D <0x10001000 0x50>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		interrupt-parent =3D <&cpuintc>;
-> +		interrupts =3D <2>;
-> +	};
-> +
-> +	exclk: ext {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	rtclk: rtc {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <32768>;
-> +	};
-> +
-> +	cgu: x1000-cgu@10000000 {
-> +		compatible =3D "ingenic,x1000-cgu";
-> +		reg =3D <0x10000000 0x100>;
-> +
-> +		clocks =3D <&exclk>, <&rtclk>;
-> +		clock-names =3D "ext", "rtc";
-> +
-> +		#clock-cells =3D <1>;
-> +	};
-> +
-> +	apb {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <>;
-> +
-> +		uart0: serial@10030000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10030000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <51>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart1: serial@10031000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10031000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <50>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart2: serial@10032000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10032000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <49>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		pinctrl: pin-controller@10010000 {
-> +			compatible =3D "ingenic,x1000-pinctrl";
-> +			reg =3D <0x10010000 0x800>;
-> +
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			gpa: gpio@0 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <0>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 0 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <17>;
-> +			};
-> +
-> +			gpb: gpio@1 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <1>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 32 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <16>;
-> +			};
-> +
-> +			gpc: gpio@2 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <2>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 64 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <15>;
-> +			};
-> +
-> +			gpd: gpio@3 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <3>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 96 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <14>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 4dd0c44..6b96844 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -33,3 +33,9 @@ config MACH_JZ4780
->  	select MIPS_CPU_SCACHE
->  	select SYS_HAS_CPU_MIPS32_R2
->  	select SYS_SUPPORTS_HIGHMEM
-> +
-> +config MACH_X1000
-> +	bool
-> +	select MIPS_CPU_SCACHE
-> +	select SYS_HAS_CPU_MIPS32_R2
-> +	select SYS_SUPPORTS_HIGHMEM
-> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-> index cb768e5..3af6538 100644
-> --- a/arch/mips/jz4740/time.c
-> +++ b/arch/mips/jz4740/time.c
-> @@ -101,7 +101,9 @@ static struct clock_event_device=20
-> jz4740_clockevent =3D {
->  #ifdef CONFIG_MACH_JZ4740
->  	.irq =3D JZ4740_IRQ_TCU0,
->  #endif
-> -#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
-> +#if defined(CONFIG_MACH_JZ4770) || \
-> +    defined(CONFIG_MACH_JZ4780) || \
-> +    defined(CONFIG_MACH_X1000)
+> 
+> This recover most of the perf regression on my system and I have asked
+> Rong if he can rerun the test with the patch to check that it fixes his
+> system as well.
+> 
+>  kernel/sched/fair.c | 90 ++++++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 83 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a81c364..0ad4b21 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5379,6 +5379,36 @@ static unsigned long cpu_load(struct rq *rq)
+>  {
+>  	return cfs_rq_load_avg(&rq->cfs);
+>  }
+> +/*
+> + * cpu_load_without - compute cpu load without any contributions from *p
+> + * @cpu: the CPU which load is requested
+> + * @p: the task which load should be discounted
 
-That code was removed in the TCU patchset that was merged in time for=20
-5.4-rc1.
-Please rebase your patchset on top mips-next.
+For both @cpu and @p, s/which/whose/ (also applies to cpu_util_without()
+which inspired this).
 
-Cheers,
--Paul
+> + *
+> + * The load of a CPU is defined by the load of tasks currently enqueued on that
+> + * CPU as well as tasks which are currently sleeping after an execution on that
+> + * CPU.
+> + *
+> + * This method returns the load of the specified CPU by discounting the load of
+> + * the specified task, whenever the task is currently contributing to the CPU
+> + * load.
+> + */
+> +static unsigned long cpu_load_without(struct rq *rq, struct task_struct *p)
+> +{
+> +	struct cfs_rq *cfs_rq;
+> +	unsigned int load;
+> +
+> +	/* Task has no contribution or is new */
+> +	if (cpu_of(rq) != task_cpu(p) || !READ_ONCE(p->se.avg.last_update_time))
+> +		return cpu_load(rq);
+> +
+> +	cfs_rq = &rq->cfs;
+> +	load = READ_ONCE(cfs_rq->avg.load_avg);
+> +
+> +	/* Discount task's util from CPU's util */
 
-=
+s/util/load
 
+> +	lsub_positive(&load, task_h_load(p));
+> +
+> +	return load;
+> +}
+>  
+>  static unsigned long capacity_of(int cpu)
+>  {
+> @@ -8117,10 +8147,55 @@ static inline enum fbq_type fbq_classify_rq(struct rq *rq)
+>  struct sg_lb_stats;
+>  
+>  /*
+> + * task_running_on_cpu - return 1 if @p is running on @cpu.
+> + */
+> +
+> +static unsigned int task_running_on_cpu(int cpu, struct task_struct *p)
+          ^^^^^^^^^^^^
+That could very well be bool, right?
+
+
+> +{
+> +	/* Task has no contribution or is new */
+> +	if (cpu != task_cpu(p) || !READ_ONCE(p->se.avg.last_update_time))
+> +		return 0;
+> +
+> +	if (task_on_rq_queued(p))
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * idle_cpu_without - would a given CPU be idle without p ?
+> + * @cpu: the processor on which idleness is tested.
+> + * @p: task which should be ignored.
+> + *
+> + * Return: 1 if the CPU would be idle. 0 otherwise.
+> + */
+> +static int idle_cpu_without(int cpu, struct task_struct *p)
+          ^^^
+Ditto on the boolean return values
+
+> +{
+> +	struct rq *rq = cpu_rq(cpu);
+> +
+> +	if ((rq->curr != rq->idle) && (rq->curr != p))
+> +		return 0;
+> +
+> +	/*
+> +	 * rq->nr_running can't be used but an updated version without the
+> +	 * impact of p on cpu must be used instead. The updated nr_running
+> +	 * be computed and tested before calling idle_cpu_without().
+> +	 */
+> +
+> +#ifdef CONFIG_SMP
+> +	if (!llist_empty(&rq->wake_list))
+> +		return 0;
+> +#endif
+> +
+> +	return 1;
+> +}
+> +
+> +/*
+>   * update_sg_wakeup_stats - Update sched_group's statistics for wakeup.
+> - * @denv: The ched_domain level to look for idlest group.
+> + * @sd: The sched_domain level to look for idlest group.
+>   * @group: sched_group whose statistics are to be updated.
+>   * @sgs: variable to hold the statistics for this group.
+> + * @p: The task for which we look for the idlest group/CPU.
+>   */
+>  static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+>  					  struct sched_group *group,
