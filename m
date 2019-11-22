@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7755DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6748C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4141A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED6020717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401795;
-	bh=TdQPgtFlO5dSn5dVBSQBaPwxIW+NrmCLiLXyK8OT3FI=;
+	s=default; t=1574401797;
+	bh=UTYmn8DqYjSelctZxEjZnjss11HE9pWu+vXQ0xjDNBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdglxDJnP9hO3dB8Dc6/BvShiJVZ+xLlmsIzS7+cofLuwDOYRKgwbMDl9TCbnhbXs
-	 LOJdmNLHEQvXRqw8Jd2fGyPa9Y+PDOM4m0iBz0Uqdaz0ZsvptI9ZOPHHoS52g0FzW2
-	 StRLC/M0TEaF2iVB8KbaeFSl1jlUG/kYkhJCV284=
+	b=x9h9qeWWE1gk19GEyX8czSQPLmULQ2GC7xhNYF94DDKSYkJVSy2C9uRFFTufu+3oE
+	 mOnzVYKXieuBmamKUW1Pi5hByeukWdJ4e11D4poWtvl3aV/lf0ozUc+ktHnfUdHsW+
+	 Cvb88RNeH4LoATsLqWum062UiIOfojINM+ruIq3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfKVFty (ORCPT
+        id S1727388AbfKVFt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:49:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54082 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:49:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbfKVFts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:48 -0500
+        id S1727301AbfKVFtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B1B20708;
-        Fri, 22 Nov 2019 05:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A470E2070A;
+        Fri, 22 Nov 2019 05:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401788;
-        bh=TdQPgtFlO5dSn5dVBSQBaPwxIW+NrmCLiLXyK8OT3FI=;
+        s=default; t=1574401789;
+        bh=UTYmn8DqYjSelctZxEjZnjss11HE9pWu+vXQ0xjDNBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ExA6NxJXr0plclW3L2s8YKChQfkFYPR35do7NNtPl18JcSFHIfVc8p9+HpvRYITVx
-         fB7KTqDjZJiSNszlBaPStF2JhG02FAuoBN5aBTpiSoBFGB2t4nFB08VGwJQLK30ATD
-         bxvZ4f6Gcg2Q8+9DxbDb7fFz4/SQKgQkYM7R3nx4=
+        b=eong+io4zzgAriU0CmDZ37+T3F1MZ6X52F9MPqoUd2TM+OJOg0yHYAGVwbVwMIzif
+         FSbm68jwzMbuXPKMPWf3FjXwLYt2+jHg2zXeSHtG2iErq7tnBMGbljAHBmydLmlsy4
+         gK1LjyHhybmcuU9tIrTDLfnV6a6Cm5QsirDqwNLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 036/219] ACPI / LPSS: Ignore acpi_device_fix_up_power() return value
-Date:   Fri, 22 Nov 2019 00:46:08 -0500
-Message-Id: <20191122054911.1750-29-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Ewan D . Milne" <emilne@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 037/219] scsi: lpfc: Enable Management features for IF_TYPE=6
+Date:   Fri, 22 Nov 2019 00:46:09 -0500
+Message-Id: <20191122054911.1750-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,52 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 1a2fa02f7489dc4d746f2a15fb77b3ce1affade8 ]
+[ Upstream commit 719162bd5bb968203397b9b1d0dd30a9797bbd09 ]
 
-Ignore acpi_device_fix_up_power() return value. If we return an error
-we end up with acpi_default_enumeration() still creating a platform-
-device for the device and we end up with the device still being used
-but without the special LPSS related handling which is not useful.
+Addition of support for if_type=6 missed several checks for interface type,
+resulting in the failure of several key management features such as
+firmware dump and loopback testing.
 
-Specicifically ignoring the error fixes the touchscreen no longer
-working after a suspend/resume on a Prowise PT301 tablet.
+Correct the checks on the if_type so that both SLI4 IF_TYPE's 2 and 6 are
+supported.
 
-This tablet has a broken _PS0 method on the touchscreen's I2C controller,
-causing acpi_device_fix_up_power() to fail, causing fallback to standard
-platform-dev handling and specifically causing acpi_lpss_save/restore_ctx
-to not run.
-
-The I2C controllers _PS0 method does actually turn on the device, but then
-does some more nonsense which fails when run during early boot trying to
-use I2C opregion handling on another not-yet registered I2C controller.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_attr.c    | 4 ++--
+ drivers/scsi/lpfc/lpfc_bsg.c     | 6 +++---
+ drivers/scsi/lpfc/lpfc_els.c     | 2 +-
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index c651e206d7960..d79245e9dff72 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -637,12 +637,7 @@ static int acpi_lpss_create_device(struct acpi_device *adev,
- 	 * have _PS0 and _PS3 without _PSC (and no power resources), so
- 	 * acpi_bus_init_power() will assume that the BIOS has put them into D0.
- 	 */
--	ret = acpi_device_fix_up_power(adev);
--	if (ret) {
--		/* Skip the device, but continue the namespace scan. */
--		ret = 0;
--		goto err_out;
--	}
-+	acpi_device_fix_up_power(adev);
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index 55cd96e2469c6..3f69a5e4e470a 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -1332,7 +1332,7 @@ lpfc_sli4_pdev_reg_request(struct lpfc_hba *phba, uint32_t opcode)
+ 		return -EACCES;
  
- 	adev->driver_data = pdata;
- 	pdev = acpi_create_platform_device(adev, dev_desc->properties);
+ 	if ((phba->sli_rev < LPFC_SLI_REV4) ||
+-	    (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
++	    (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
+ 	     LPFC_SLI_INTF_IF_TYPE_2))
+ 		return -EPERM;
+ 
+@@ -4264,7 +4264,7 @@ lpfc_link_speed_store(struct device *dev, struct device_attribute *attr,
+ 	uint32_t prev_val, if_type;
+ 
+ 	if_type = bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf);
+-	if (if_type == LPFC_SLI_INTF_IF_TYPE_2 &&
++	if (if_type >= LPFC_SLI_INTF_IF_TYPE_2 &&
+ 	    phba->hba_flag & HBA_FORCED_LINK_SPEED)
+ 		return -EPERM;
+ 
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index 90745feca8080..99aea52e584b0 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -2221,7 +2221,7 @@ lpfc_bsg_diag_loopback_mode(struct bsg_job *job)
+ 
+ 	if (phba->sli_rev < LPFC_SLI_REV4)
+ 		rc = lpfc_sli3_bsg_diag_loopback_mode(phba, job);
+-	else if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) ==
++	else if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) >=
+ 		 LPFC_SLI_INTF_IF_TYPE_2)
+ 		rc = lpfc_sli4_bsg_diag_loopback_mode(phba, job);
+ 	else
+@@ -2261,7 +2261,7 @@ lpfc_sli4_bsg_diag_mode_end(struct bsg_job *job)
+ 
+ 	if (phba->sli_rev < LPFC_SLI_REV4)
+ 		return -ENODEV;
+-	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
++	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
+ 	    LPFC_SLI_INTF_IF_TYPE_2)
+ 		return -ENODEV;
+ 
+@@ -2353,7 +2353,7 @@ lpfc_sli4_bsg_link_diag_test(struct bsg_job *job)
+ 		rc = -ENODEV;
+ 		goto job_error;
+ 	}
+-	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
++	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
+ 	    LPFC_SLI_INTF_IF_TYPE_2) {
+ 		rc = -ENODEV;
+ 		goto job_error;
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 3651c0fc88197..d0cd368790a64 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -5536,7 +5536,7 @@ lpfc_els_rcv_rdp(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
+ 	struct ls_rjt stat;
+ 
+ 	if (phba->sli_rev < LPFC_SLI_REV4 ||
+-	    bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
++	    bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
+ 						LPFC_SLI_INTF_IF_TYPE_2) {
+ 		rjt_err = LSRJT_UNABLE_TPC;
+ 		rjt_expl = LSEXP_REQ_UNSUPPORTED;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index ccdd82b1123f7..1a6da347f00ad 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -4751,7 +4751,7 @@ lpfc_unreg_rpi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+ 				if (phba->sli_rev == LPFC_SLI_REV4 &&
+ 				    (!(vport->load_flag & FC_UNLOADING)) &&
+ 				    (bf_get(lpfc_sli_intf_if_type,
+-				     &phba->sli4_hba.sli_intf) ==
++				     &phba->sli4_hba.sli_intf) >=
+ 				      LPFC_SLI_INTF_IF_TYPE_2) &&
+ 				    (kref_read(&ndlp->kref) > 0)) {
+ 					mbox->context1 = lpfc_nlp_get(ndlp);
 -- 
 2.20.1
 
