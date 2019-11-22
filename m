@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66ABC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BB3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A9320730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDF920730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574434645;
-	bh=sBlOPEsaAW6LXEWbMXoWlBOhG1kQDMpQol/B3BjaPS4=;
+	s=default; t=1574434648;
+	bh=s3+2BtByjVlj8VckRBOdRtzGRDSefPDxir/VloryU4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/PHPe1KN0jDi4qaTOWTkN/dYcnq69slXr4z+S79IAd6DBw85ouaz6Ze1+ILEe2Rt
-	 3kP5gFFMkVifMoRYZXItMNNljsIA91mphNUahKP2lgmn8arxHNeMnAQ02u/nlE3kGr
-	 q6bpOYYgSb74v8VzFeAkYM+TU1F2ENaS7qX3AYlM=
+	b=ppi5VL29mplc/0W8zJ+dkkgph2ahpXWkBi/gDuWBEY4KxrLLijA4w31dKtgFRbQDo
+	 SnBEzhdZtMi/1fwDQ9A+omktDR5EvFtvK3kCH4fVVkKPFDvVvUWSyRAmFJIMs7XzEP
+	 VbfGEdEw1//FY5cPJknOfpJGVQp0pNEXaLZuYhSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfKVO5Y (ORCPT
+        id S1726992AbfKVO51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:57:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58092 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 09:57:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbfKVO5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:57:23 -0500
+        id S1726836AbfKVO5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:57:25 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14DE22071C;
-        Fri, 22 Nov 2019 14:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6D562072E;
+        Fri, 22 Nov 2019 14:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574434642;
-        bh=sBlOPEsaAW6LXEWbMXoWlBOhG1kQDMpQol/B3BjaPS4=;
+        s=default; t=1574434644;
+        bh=s3+2BtByjVlj8VckRBOdRtzGRDSefPDxir/VloryU4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQKSFDBuuSMepXfeexZeTy43PC00KmcWbU/rxHpbqqyWEz53bGQd5eLJEE9i8ybAs
-         8Gqc44jh8T3kczWJMVVUGhZ4IQgVvMIVfGWPZfeWwNumnb98GZVpYAMxwaw5mEBwMN
-         +R/PgWlOJIM6fLX+k/Ak5AMifbWnTZ02QckgCa38=
+        b=qG6MyALWmt+IoMTLdoYRThGxxVl1nPcFoO0Y+VjZt84rAz7bxwGE0YrjapqRB4XOU
+         /DX6BD25wiqlbXExRfz98yjxp049eB0Qsy/94C/O8s85KeksjSU/ylDYZ43oKaY/aM
+         3VkHMyruWmEQos3CLKqowzXESxptMNF9qy2jx9Aw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 01/26] perf map: Move maj/min/ino/ino_generation to separate struct
-Date:   Fri, 22 Nov 2019 11:56:46 -0300
-Message-Id: <20191122145711.3171-2-acme@kernel.org>
+Subject: [PATCH 02/26] perf map: Pass a dso_id to map__new()
+Date:   Fri, 22 Nov 2019 11:56:47 -0300
+Message-Id: <20191122145711.3171-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191122145711.3171-1-acme@kernel.org>
 References: <20191122145711.3171-1-acme@kernel.org>
@@ -63,151 +63,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-And this patch highlights where these fields are being used: in the sort
-order where it uses it to compare maps and classify samples taking into
-account not just the DSO, but those DSO id fields.
-
-I think these should be used to differentiate DSOs with the same name
-but different 'struct dso_id' fields, i.e. these fields should move to
-'struct dso' and then be used as part of the key when doing lookups for
-DSOs, in addition to the DSO name.
+Instead of the 4 fields, a step in the direction of moving this to
+struct dso.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-8v5isitqy0dup47nnwkpc80f@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-gp5s1xgxacurmih5d1l94ymy@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c |  2 +-
- tools/perf/util/map.c       |  8 ++++----
- tools/perf/util/map.h       | 14 +++++++++++---
- tools/perf/util/sort.c      | 24 ++++++++++++------------
- 4 files changed, 28 insertions(+), 20 deletions(-)
+ tools/perf/util/machine.c | 15 ++++++++-------
+ tools/perf/util/map.c     | 13 +++++++------
+ tools/perf/util/map.h     |  3 +--
+ 3 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 585805f51f15..04c197d3beea 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -771,7 +771,7 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
- 				   map->prot & PROT_EXEC ? 'x' : '-',
- 				   map->flags & MAP_SHARED ? 's' : 'p',
- 				   map->pgoff,
--				   map->ino, map->dso->name);
-+				   map->dso_id.ino, map->dso->name);
- 	}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 71ee078d30f4..41b4263c073d 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1651,6 +1651,12 @@ int machine__process_mmap2_event(struct machine *machine,
+ {
+ 	struct thread *thread;
+ 	struct map *map;
++	struct dso_id dso_id = {
++		.maj = event->mmap2.maj,
++		.min = event->mmap2.min,
++		.ino = event->mmap2.ino,
++		.ino_generation = event->mmap2.ino_generation,
++	};
+ 	int ret = 0;
  
- 	return printed;
+ 	if (dump_trace)
+@@ -1671,10 +1677,7 @@ int machine__process_mmap2_event(struct machine *machine,
+ 
+ 	map = map__new(machine, event->mmap2.start,
+ 			event->mmap2.len, event->mmap2.pgoff,
+-			event->mmap2.maj,
+-			event->mmap2.min, event->mmap2.ino,
+-			event->mmap2.ino_generation,
+-			event->mmap2.prot,
++			&dso_id, event->mmap2.prot,
+ 			event->mmap2.flags,
+ 			event->mmap2.filename, thread);
+ 
+@@ -1727,9 +1730,7 @@ int machine__process_mmap_event(struct machine *machine, union perf_event *event
+ 
+ 	map = map__new(machine, event->mmap.start,
+ 			event->mmap.len, event->mmap.pgoff,
+-			0, 0, 0, 0, prot, 0,
+-			event->mmap.filename,
+-			thread);
++			NULL, prot, 0, event->mmap.filename, thread);
+ 
+ 	if (map == NULL)
+ 		goto out_problem_map;
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 67e0f81416cb..4f50b1b2961f 100644
+index 4f50b1b2961f..812d663ebb57 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -162,10 +162,10 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+@@ -144,8 +144,8 @@ void map__init(struct map *map, u64 start, u64 end, u64 pgoff, struct dso *dso)
+ }
+ 
+ struct map *map__new(struct machine *machine, u64 start, u64 len,
+-		     u64 pgoff, u32 d_maj, u32 d_min, u64 ino,
+-		     u64 ino_gen, u32 prot, u32 flags, char *filename,
++		     u64 pgoff, struct dso_id *id,
++		     u32 prot, u32 flags, char *filename,
+ 		     struct thread *thread)
+ {
+ 	struct map *map = malloc(sizeof(*map));
+@@ -162,10 +162,11 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
  		vdso = is_vdso_map(filename);
  		no_dso = is_no_dso_memory(filename);
  
--		map->maj = d_maj;
--		map->min = d_min;
--		map->ino = ino;
--		map->ino_generation = ino_gen;
-+		map->dso_id.maj = d_maj;
-+		map->dso_id.min = d_min;
-+		map->dso_id.ino = ino;
-+		map->dso_id.ino_generation = ino_gen;
+-		map->dso_id.maj = d_maj;
+-		map->dso_id.min = d_min;
+-		map->dso_id.ino = ino;
+-		map->dso_id.ino_generation = ino_gen;
++		if (id)
++			map->dso_id = *id;
++		else
++			map->dso_id.min = map->dso_id.ino = map->dso_id.ino_generation = 0;
++
  		map->prot = prot;
  		map->flags = flags;
  		nsi = nsinfo__get(thread->nsinfo);
 diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 0a6c45f85cd9..70d87dcbe35d 100644
+index 70d87dcbe35d..f962eb9035c7 100644
 --- a/tools/perf/util/map.h
 +++ b/tools/perf/util/map.h
-@@ -18,6 +18,16 @@ struct map_groups;
- struct machine;
- struct evsel;
- 
-+/*
-+ * Data about backing storage DSO, comes from PERF_RECORD_MMAP2 meta events
-+ */
-+struct dso_id {
-+	u32	maj;
-+	u32	min;
-+	u64	ino;
-+	u64	ino_generation;
-+};
-+
- struct map {
- 	union {
- 		struct rb_node	rb_node;
-@@ -30,9 +40,6 @@ struct map {
- 	u32			prot;
- 	u64			pgoff;
- 	u64			reloc;
--	u32			maj, min; /* only valid for MMAP2 record */
--	u64			ino;      /* only valid for MMAP2 record */
--	u64			ino_generation;/* only valid for MMAP2 record */
- 
- 	/* ip -> dso rip */
- 	u64			(*map_ip)(struct map *, u64);
-@@ -40,6 +47,7 @@ struct map {
- 	u64			(*unmap_ip)(struct map *, u64);
- 
- 	struct dso		*dso;
-+	struct dso_id		dso_id;
- 	refcount_t		refcnt;
- 	u32			flags;
- };
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 6b626e6b111e..bc589438cd12 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1212,17 +1212,17 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
- 	if (!l_map) return -1;
- 	if (!r_map) return 1;
- 
--	if (l_map->maj > r_map->maj) return -1;
--	if (l_map->maj < r_map->maj) return 1;
-+	if (l_map->dso_id.maj > r_map->dso_id.maj) return -1;
-+	if (l_map->dso_id.maj < r_map->dso_id.maj) return 1;
- 
--	if (l_map->min > r_map->min) return -1;
--	if (l_map->min < r_map->min) return 1;
-+	if (l_map->dso_id.min > r_map->dso_id.min) return -1;
-+	if (l_map->dso_id.min < r_map->dso_id.min) return 1;
- 
--	if (l_map->ino > r_map->ino) return -1;
--	if (l_map->ino < r_map->ino) return 1;
-+	if (l_map->dso_id.ino > r_map->dso_id.ino) return -1;
-+	if (l_map->dso_id.ino < r_map->dso_id.ino) return 1;
- 
--	if (l_map->ino_generation > r_map->ino_generation) return -1;
--	if (l_map->ino_generation < r_map->ino_generation) return 1;
-+	if (l_map->dso_id.ino_generation > r_map->dso_id.ino_generation) return -1;
-+	if (l_map->dso_id.ino_generation < r_map->dso_id.ino_generation) return 1;
- 
- 	/*
- 	 * Addresses with no major/minor numbers are assumed to be
-@@ -1234,8 +1234,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
- 
- 	if ((left->cpumode != PERF_RECORD_MISC_KERNEL) &&
- 	    (!(l_map->flags & MAP_SHARED)) &&
--	    !l_map->maj && !l_map->min && !l_map->ino &&
--	    !l_map->ino_generation) {
-+	    !l_map->dso_id.maj && !l_map->dso_id.min &&
-+	    !l_map->dso_id.ino && !l_map->dso_id.ino_generation) {
- 		/* userspace anonymous */
- 
- 		if (left->thread->pid_ > right->thread->pid_) return -1;
-@@ -1271,8 +1271,8 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
- 		if ((he->cpumode != PERF_RECORD_MISC_KERNEL) &&
- 		     map && !(map->prot & PROT_EXEC) &&
- 		    (map->flags & MAP_SHARED) &&
--		    (map->maj || map->min || map->ino ||
--		     map->ino_generation))
-+		    (map->dso_id.maj || map->dso_id.min ||
-+		     map->dso_id.ino || map->dso_id.ino_generation))
- 			level = 's';
- 		else if (!map)
- 			level = 'X';
+@@ -117,8 +117,7 @@ struct thread;
+ void map__init(struct map *map,
+ 	       u64 start, u64 end, u64 pgoff, struct dso *dso);
+ struct map *map__new(struct machine *machine, u64 start, u64 len,
+-		     u64 pgoff, u32 d_maj, u32 d_min, u64 ino,
+-		     u64 ino_gen, u32 prot, u32 flags,
++		     u64 pgoff, struct dso_id *id, u32 prot, u32 flags,
+ 		     char *filename, struct thread *thread);
+ struct map *map__new2(u64 start, struct dso *dso);
+ void map__delete(struct map *map);
 -- 
 2.21.0
 
