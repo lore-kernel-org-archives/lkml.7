@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9212EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E864CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6347620637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B372C20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403842;
-	bh=/lcAWHBkLChrSM0oXx4xjHts2xF9XpAEnOD+MzhiIF4=;
+	s=default; t=1574403846;
+	bh=gjGA4RaMSHT64+qS1HoDY2NasMLucSNVblWZNdWGt3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yqLIS5q6//xwj59NZF/cS99V+6n7lXd2qRvt3eUtJ+nSpQN1emlb2bM2xxadTHkgw
-	 I9xbuptKxuO9nsGktK+qP66GU5b8x6PLrLtVS5I6Tn0Epp8nuVYCE4jt7cy1ys7DX2
-	 6mScf1KGR8KQoXwC3aFUHiumoNqMo4AngfV3zQ4Y=
+	b=Ak940vQDmivkSvgkT+znagCYISO+sx36RNrze0fquztT6Y4Z7jW+XVmUzGwQMv+n5
+	 +7cjAOBLD6mioB65qxEmRCvhkjSrpIsAX4BZmUyBsGVxyobV+SEySBzOv8aslGcd4s
+	 55RhLtCzFaLw9A3fvBBeolAG2L3yTHofMLEXXuIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfKVGYB (ORCPT
+        id S1728186AbfKVFve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:24:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56746 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbfKVFvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:35 -0500
+        id S1728106AbfKVFvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 098112071C;
-        Fri, 22 Nov 2019 05:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8134E20730;
+        Fri, 22 Nov 2019 05:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401894;
-        bh=/lcAWHBkLChrSM0oXx4xjHts2xF9XpAEnOD+MzhiIF4=;
+        s=default; t=1574401883;
+        bh=gjGA4RaMSHT64+qS1HoDY2NasMLucSNVblWZNdWGt3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRJGC0KenVClaPwYJX6lxBwzkXYrlorIWGUeqTeI+wLJBqAeUBBYZdMz0nZtT1lA3
-         FeU/jXx+NlHs051SDJAOnZ4NpicQpGQg+n4cz0ypoI8dpph4HRU9Jgz+g7aiNejGDo
-         akLr8kf0VV9Vjwuoc5DvTj+ekqOms1HjsAPCL7NU=
+        b=PMoaUNZlFrpuE0iaU3D7r+pSHdJPSLWCSqMmfhrAzzE4K1Kx1AXsTrSFguB0U4KYD
+         cithAVcCPR8F/fXWPPc4ts6GcrZDB+DmzpxwKXGWeGkeyt9wfK0/sFNTXettWWOGFb
+         POXlsFhkChTZtL2SIU3eHS0NFGaZ8X5+mzebTzzs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 127/219] drbd: do not block when adjusting "disk-options" while IO is frozen
-Date:   Fri, 22 Nov 2019 00:47:39 -0500
-Message-Id: <20191122054911.1750-120-sashal@kernel.org>
+Cc:     Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 117/219] ath6kl: Fix off by one error in scan completion
+Date:   Fri, 22 Nov 2019 00:47:29 -0500
+Message-Id: <20191122054911.1750-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,88 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit f708bd08ecbdc23d03aaedf5b3311ebe44cfdb50 ]
+[ Upstream commit 5803c12816c43bd09e5f4247dd9313c2d9a2c41b ]
 
-"suspending" IO is overloaded.
-It can mean "do not allow new requests" (obviously),
-but it also may mean "must not complete pending IO",
-for example while the fencing handlers do their arbitration.
+When ath6kl was reworked to share code between regular and scheduled scans
+in commit 3b8ffc6a22ba ("ath6kl: Configure probed SSID list consistently"),
+probed SSID entry changed from 1-index to 0-indexed. However,
+ath6kl_cfg80211_scan_complete_event() was missed in that change. Fix its
+indexing so that we correctly clear out the probed SSID list.
 
-When adjusting disk options, we suspend io (disallow new requests), then
-wait for the activity-log to become unused (drain all IO completions),
-and possibly replace it with a new activity log of different size.
-
-If the other "suspend IO" aspect is active, pending IO completions won't
-happen, and we would block forever (unkillable drbdsetup process).
-
-Fix this by skipping the activity log adjustment if the "al-extents"
-setting did not change. Also, in case it did change, fail early without
-blocking if it looks like we would block forever.
-
-Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_nl.c | 37 ++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index 3366c1a91ee00..5b15ffd0c7f57 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1515,6 +1515,30 @@ static void sanitize_disk_conf(struct drbd_device *device, struct disk_conf *dis
- 	}
- }
- 
-+static int disk_opts_check_al_size(struct drbd_device *device, struct disk_conf *dc)
-+{
-+	int err = -EBUSY;
-+
-+	if (device->act_log &&
-+	    device->act_log->nr_elements == dc->al_extents)
-+		return 0;
-+
-+	drbd_suspend_io(device);
-+	/* If IO completion is currently blocked, we would likely wait
-+	 * "forever" for the activity log to become unused. So we don't. */
-+	if (atomic_read(&device->ap_bio_cnt))
-+		goto out;
-+
-+	wait_event(device->al_wait, lc_try_lock(device->act_log));
-+	drbd_al_shrink(device);
-+	err = drbd_check_al_size(device, dc);
-+	lc_unlock(device->act_log);
-+	wake_up(&device->al_wait);
-+out:
-+	drbd_resume_io(device);
-+	return err;
-+}
-+
- int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct drbd_config_context adm_ctx;
-@@ -1577,15 +1601,12 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 6c98d7903ffb6..d7c626d9594e1 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -1093,7 +1093,7 @@ void ath6kl_cfg80211_scan_complete_event(struct ath6kl_vif *vif, bool aborted)
+ 	if (vif->scan_req->n_ssids && vif->scan_req->ssids[0].ssid_len) {
+ 		for (i = 0; i < vif->scan_req->n_ssids; i++) {
+ 			ath6kl_wmi_probedssid_cmd(ar->wmi, vif->fw_vif_idx,
+-						  i + 1, DISABLE_SSID_FLAG,
++						  i, DISABLE_SSID_FLAG,
+ 						  0, NULL);
  		}
- 	}
- 
--	drbd_suspend_io(device);
--	wait_event(device->al_wait, lc_try_lock(device->act_log));
--	drbd_al_shrink(device);
--	err = drbd_check_al_size(device, new_disk_conf);
--	lc_unlock(device->act_log);
--	wake_up(&device->al_wait);
--	drbd_resume_io(device);
--
-+	err = disk_opts_check_al_size(device, new_disk_conf);
- 	if (err) {
-+		/* Could be just "busy". Ignore?
-+		 * Introduce dedicated error code? */
-+		drbd_msg_put_info(adm_ctx.reply_skb,
-+			"Try again without changing current al-extents setting");
- 		retcode = ERR_NOMEM;
- 		goto fail_unlock;
  	}
 -- 
 2.20.1
