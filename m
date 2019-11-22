@@ -2,104 +2,97 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3441C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44186C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3F620718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421472;
-	bh=DFdAjxDKTWhb2noNLW6GfraKQGL6VTYbRx3/xkS64kQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M8QXpDUJeau2BgPZPBbNK1iyZtiHT+aZ4daxH8VfdkmcpwDZaqVdAvTVMo9Xot6zi
-	 giQ4ZmEanAg/Gbm03AlgJQpL2yuwysCNUksD+273mZjL2J1PlouMLuNEZQEKHnvNxO
-	 V3NlyFLexSImsFd05Hhd/fhi0qD6Zwxkv7rSXW24=
+	by mail.kernel.org (Postfix) with ESMTP id 2164E2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbfKVLRv (ORCPT
+        id S1730415AbfKVLR7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:17:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729937AbfKVKs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:27 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D5820637;
-        Fri, 22 Nov 2019 10:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419706;
-        bh=DFdAjxDKTWhb2noNLW6GfraKQGL6VTYbRx3/xkS64kQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zAtoV8F4JGztNE3sSuwFuAeY71QSi/oBko3d5Dq26oZScZ/lcb1S1NYGm8E6/nXuH
-         KZXXBdIMaX64KZp7P/knsn+hliLhrGpIwbzbNO+zA223BAUMro70+QcerTsYGkbFBH
-         lDJ6IYr+6vtEqOwZO9f3RwK9GG2xUMTyqyYU94Z0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 167/222] dmaengine: ep93xx: Return proper enum in ep93xx_dma_chan_direction
-Date:   Fri, 22 Nov 2019 11:28:27 +0100
-Message-Id: <20191122100914.621164235@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 06:17:59 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:57895 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728221AbfKVLR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:17:56 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-67-7umQ3wvKPsm7jLHIlIOsjw-1; Fri, 22 Nov 2019 11:17:52 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 22 Nov 2019 11:17:51 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 22 Nov 2019 11:17:51 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     network dev <netdev@vger.kernel.org>
+Subject: epoll_wait() performance
+Thread-Topic: epoll_wait() performance
+Thread-Index: AdWgk3jgEIFNwcnRS6+4A+/jFPxTuQ==
+Date:   Fri, 22 Nov 2019 11:17:51 +0000
+Message-ID: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+X-MC-Unique: 7umQ3wvKPsm7jLHIlIOsjw-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+I'm trying to optimise some code that reads UDP messages (RTP and RTCP) from a lot of sockets.
+The 'normal' data pattern is that there is no data on half the sockets (RTCP) and
+one message every 20ms on the others (RTP).
+However there can be more than one message on each socket, and they all need to be read.
+Since the code processing the data runs every 10ms, the message receiving code
+also runs every 10ms (a massive gain when using poll()).
 
-[ Upstream commit 9524d6b265f9b2b9a61fceb2ee2ce1c2a83e39ca ]
+While using recvmmsg() to read multiple messages might seem a good idea, it is much
+slower than recv() when there is only one message (even recvmsg() is a lot slower).
+(I'm not sure why the code paths are so slow, I suspect it is all the copy_from_user()
+and faffing with the user iov[].)
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+So using poll() we repoll the fd after calling recv() to find is there is a second message.
+However the second poll has a significant performance cost (but less than using recvmmsg()).
 
-In file included from drivers/dma/ep93xx_dma.c:30:
-./include/linux/platform_data/dma-ep93xx.h:88:10: warning: implicit
-conversion from enumeration type 'enum dma_data_direction' to different
-enumeration type 'enum dma_transfer_direction' [-Wenum-conversion]
-                return DMA_NONE;
-                ~~~~~~ ^~~~~~~~
-1 warning generated.
+If we use epoll() in level triggered mode a second epoll_wait() call (after the recv()) will
+indicate that there is more data.
 
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/platform_data/dma-ep93xx.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For poll() it doesn't make much difference how many fd are supplied to each system call.
+The overall performance is much the same for 32, 64 or 500 (all the sockets).
 
-diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
-index e82c642fa53cd..5913be0793a26 100644
---- a/include/linux/platform_data/dma-ep93xx.h
-+++ b/include/linux/platform_data/dma-ep93xx.h
-@@ -84,7 +84,7 @@ static inline enum dma_transfer_direction
- ep93xx_dma_chan_direction(struct dma_chan *chan)
- {
- 	if (!ep93xx_dma_chan_is_m2p(chan))
--		return DMA_NONE;
-+		return DMA_TRANS_NONE;
- 
- 	/* even channels are for TX, odd for RX */
- 	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
--- 
-2.20.1
+For epoll_wait() that isn't true.
+Supplying a buffer that is shorter than the list of 'ready' fds gives a massive penalty.
+With a buffer long enough for all the events epoll() is somewhat faster than poll().
+But with a 64 entry buffer it is much slower.
+I've looked at the code and can't see why splicing the unread events back is expensive.
 
+I'd like to be able to change the code so that multiple threads are reading from the epoll fd.
+This would mean I'd have to run it in edge mode and each thread reading a smallish
+block of events.
+Any suggestions on how to efficiently read the 'unusual' additional messages from
+the sockets?
 
+FWIW the fastest way to read 1 RTP message every 20ms is to do non-blocking recv() every 10ms.
+The failing recv() is actually faster than either epoll() or two poll() actions.
+(Although something is needed to pick up the occasional second message.) 
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
