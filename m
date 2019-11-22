@@ -6,53 +6,54 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9B8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20ECC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC4620721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909D520715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574438766;
-	bh=Tu4H4P1AVeo7ELA2PShYalSySTPBAUZ6/0PJNNMATTs=;
+	s=default; t=1574438797;
+	bh=/ghBJEmOGwrKdimQL2GKpdhioXxZ9JkEhWwgK9T3ZRI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Uqsusolp1S1FW15QcBwPkmmE3l+H8t3TTeh6Cw1HhgllII6jFvA1A0EdYjT3E4p4G
-	 XasdSacgY3UdsUTiD50woWS966nW39pBoTJDg1mk5lDDthZNsbf9nJgYYUvE+cwxre
-	 g3Ml66c0juQj+XM8Vl91T8G6bbZ+OOcXy6gAycnk=
+	b=LRXOnMra2Y7bI2xiBMfhTnfDRZcaCwPuirpA1EQXhUTh+bj3bWVcjJLL2Vk4V+PZg
+	 8QkhmOtsXMKsMd44pX5752konxFvWi+JGgm2P2wspfd3l7GZRSZYm5aq1U0dBbw1a2
+	 0KlIH31suIrsHjHHGTTQ58gYOL1GJBdVMwy69yUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfKVQGG (ORCPT
+        id S1727188AbfKVQGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:06:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47712 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 11:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbfKVQGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:06:05 -0500
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        id S1726634AbfKVQGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 11:06:36 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC0F82072E;
-        Fri, 22 Nov 2019 16:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D4C520715;
+        Fri, 22 Nov 2019 16:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574438765;
-        bh=Tu4H4P1AVeo7ELA2PShYalSySTPBAUZ6/0PJNNMATTs=;
+        s=default; t=1574438795;
+        bh=/ghBJEmOGwrKdimQL2GKpdhioXxZ9JkEhWwgK9T3ZRI=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JA9hNEZ1XEMN5U9lk+h6oJ2IxnkG7elq2UsNlVEQ4SPO/9mYsR1nfTpaybOxEwFPD
-         79Hi2N6pt3ikTmThQbcZ3bs5B5yuzrFFDOG8IoGfQU/mIXA5oBybla3wWxBja5aUru
-         Wdk7RC2o83T0PUuZlI25H//38W1DETC4r7yNkRv4=
-Received: by mail-qk1-f181.google.com with SMTP id m16so6682614qki.11;
-        Fri, 22 Nov 2019 08:06:04 -0800 (PST)
-X-Gm-Message-State: APjAAAW1CvvVjAgGEhcA3CBfan0TmWlIhmgLNVaE+Tm8Ir6xJyZ/Am0O
-        0vfRE+HiJqjp3q6pfT3lKtNbD42T1P+rH3ENow==
-X-Google-Smtp-Source: APXvYqy1Ebob1mRhqaDTvDg4E4x8lKPYBMtMcMhEJLzmxt2VOIm9Fji7i7HAbQxoJ+2pRtKCcD9DPFt4LgwClIPfnk4=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr8639331qkn.254.1574438764015;
- Fri, 22 Nov 2019 08:06:04 -0800 (PST)
+        b=AVYssHaQNllpYW3B93/VCQF3Aok/StMtcJtj96+PUVU4ZCnNPjLPukTZzSE7Wopj3
+         syITIyovh1Rkna+J6RL+yQWlS1s+z61MIhf2QYBg1ZoXmm2L1/L+wD8vD1fL/GJaGt
+         Hf7VPH2CZ39jHM0YAOgsgv86QB0L5hqXI7wzUUvs=
+Received: by mail-qk1-f170.google.com with SMTP id m16so6684160qki.11;
+        Fri, 22 Nov 2019 08:06:35 -0800 (PST)
+X-Gm-Message-State: APjAAAV5X3cCQE+kzRY1ENTR4XoNUp7IfIaZEwv/MtB3uGOqwb4Z0v49
+        q+9gO3aRKv1GEIVAExfHo6PsdElFFd026te0DA==
+X-Google-Smtp-Source: APXvYqxIVtdGvrYS2rG2y2epizrSMeoa9dB4IKXvdiZLaRbjHAOzZwWO6opvjGM5MFmE5unpfeyo9FwfuEbRjZVXUDw=
+X-Received: by 2002:a05:620a:226:: with SMTP id u6mr13851898qkm.393.1574438794826;
+ Fri, 22 Nov 2019 08:06:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
-In-Reply-To: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
+References: <20191116205110.vvqkmujecc6u5fvi@smtp.gmail.com>
+In-Reply-To: <20191116205110.vvqkmujecc6u5fvi@smtp.gmail.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 22 Nov 2019 10:05:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com>
-Message-ID: <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad7292: Update SPDX identifier
+Date:   Fri, 22 Nov 2019 10:06:23 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+uf3Jf87YSCuFzZMJeyqbg1==sFL6ScBVW7i_WSC61kA@mail.gmail.com>
+Message-ID: <CAL_Jsq+uf3Jf87YSCuFzZMJeyqbg1==sFL6ScBVW7i_WSC61kA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: ad7292: fix constraint over
+ channel quantity
 To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Dragos Bogdan <dragos.bogdan@analog.com>,
@@ -66,18 +67,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 2:50 PM Marcelo Schmitt
+On Sat, Nov 16, 2019 at 2:51 PM Marcelo Schmitt
 <marcelo.schmitt1@gmail.com> wrote:
 >
-> Update SPDX identifier to the preferred dual GPL-2.0 OR BSD-2-Clause
-> licensing.
+> Change items property of AD7292 channels to correctly constrain their
+> quantity.
 >
 > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 > ---
-> I split the changes into 2 different patches since they are about
-> different issues.
->
->  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
