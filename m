@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB22AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEF5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35EC2071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1DB2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401876;
-	bh=EHE3Ew+coMhAAVPChOkrPQ2lLCcUeXZQLgaU2uMCdrM=;
+	s=default; t=1574401878;
+	bh=SU3bXKKx/dkgHEj3sTW+zNMTS0vgQmlPDlzLKapDzcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXSjr/yluBCA0W+4AI4LTyqZzdJvSxcN2Lz1Vc0/BxxlEyvTagwzruDDpgmjaGDQ8
-	 KhiuRZofzHN0lVOQMT+VV6H6CBI8huBaENLwfiJmIhS/dJFEQUYJG1Xu+riGh+aVPs
-	 KlE0whK/IfqwC+uEjtoHNWgTrHMV+12KC+XBzXNI=
+	b=fmxzng8d5YoasfX2QFOLblvRJtTkM5OuCDJoNE/gO6ccSN2L4DZuo2ufoIzf8TAMb
+	 dRaOTmnraFwZ+Pn2LfHcNeKCwvaa7PlTHIt4FswjmshO11hgao6fNlex8EaFrQhbsZ
+	 i0RF6ze5y6F8QK3HBPW15lvj0m4ObwkS7JUeBuA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfKVFvP (ORCPT
+        id S1728080AbfKVFvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbfKVFvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:10 -0500
+        id S1728041AbfKVFvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DC120726;
-        Fri, 22 Nov 2019 05:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134F42070E;
+        Fri, 22 Nov 2019 05:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401869;
-        bh=EHE3Ew+coMhAAVPChOkrPQ2lLCcUeXZQLgaU2uMCdrM=;
+        s=default; t=1574401871;
+        bh=SU3bXKKx/dkgHEj3sTW+zNMTS0vgQmlPDlzLKapDzcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uW0OG3R+loxyWXsPaGpgzCYu/ULCZ5fQNpxQZ5w6dH5mmBnUoWj9v2N9lb4/T/vzc
-         J17a/USVxA0pq6WEVorlobi0wHP53EdIzm6N06x1CNhH1+tMuqo5ceHWx564jXIWS3
-         gK1FEI0uq+FnjHVvQSaYROKoCJX8dRQduY5P4jF0=
+        b=diaJxDVtLqpyIucblmwEu0/+vDFy/OM8N8VrgtP05l5z+4f29FSq2XvhJvBcTLRPO
+         UXlpILTr6n+LYKXU5qqPfqqQrj49FePEdAgRpkp/5gbtQ+a92EsslIyVwR0rhDbKgX
+         P254A9C8Vx2lXcVMdqaF2lKmaDs8mMnnDYKvi/dM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 105/219] vxlan: Fix error path in __vxlan_dev_create()
-Date:   Fri, 22 Nov 2019 00:47:17 -0500
-Message-Id: <20191122054911.1750-98-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 107/219] powerpc/xmon: fix dump_segments()
+Date:   Fri, 22 Nov 2019 00:47:19 -0500
+Message-Id: <20191122054911.1750-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,81 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 6db9246871394b3a136cd52001a0763676563840 ]
+[ Upstream commit 32c8c4c621897199e690760c2d57054f8b84b6e6 ]
 
-When a failure occurs in rtnl_configure_link(), the current code
-calls unregister_netdevice() to roll back the earlier call to
-register_netdevice(), and jumps to errout, which calls
-vxlan_fdb_destroy().
+mfsrin() takes segment num from bits 31-28 (IBM bits 0-3).
 
-However unregister_netdevice() calls transitively ndo_uninit, which is
-vxlan_uninit(), and that already takes care of deleting the default FDB
-entry by calling vxlan_fdb_delete_default(). Since the entry added
-earlier in __vxlan_dev_create() is exactly the default entry, the
-cleanup code in the errout block always leads to double free and thus a
-panic.
-
-Besides, since vxlan_fdb_delete_default() always destroys the FDB entry
-with notification enabled, the deletion of the default entry is notified
-even before the addition was notified.
-
-Instead, move the unregister_netdevice() call after the manual destroy,
-which solves both problems.
-
-Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Clarify bit numbering]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/powerpc/xmon/xmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 2a536f84d5f69..d8a56df3933f0 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -3213,6 +3213,7 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 	struct vxlan_net *vn = net_generic(net, vxlan_net_id);
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
- 	struct vxlan_fdb *f = NULL;
-+	bool unregister = false;
- 	int err;
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index bb5db7bfd8539..f0fa22e7d36c7 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -3493,7 +3493,7 @@ void dump_segments(void)
  
- 	err = vxlan_dev_configure(net, dev, conf, false, extack);
-@@ -3238,12 +3239,11 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 	err = register_netdevice(dev);
- 	if (err)
- 		goto errout;
-+	unregister = true;
- 
- 	err = rtnl_configure_link(dev, NULL);
--	if (err) {
--		unregister_netdevice(dev);
-+	if (err)
- 		goto errout;
--	}
- 
- 	/* notify default fdb entry */
- 	if (f)
-@@ -3251,9 +3251,16 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 
- 	list_add(&vxlan->next, &vn->vxlan_list);
- 	return 0;
-+
- errout:
-+	/* unregister_netdevice() destroys the default FDB entry with deletion
-+	 * notification. But the addition notification was not sent yet, so
-+	 * destroy the entry by hand here.
-+	 */
- 	if (f)
- 		vxlan_fdb_destroy(vxlan, f, false);
-+	if (unregister)
-+		unregister_netdevice(dev);
- 	return err;
+ 	printf("sr0-15 =");
+ 	for (i = 0; i < 16; ++i)
+-		printf(" %x", mfsrin(i));
++		printf(" %x", mfsrin(i << 28));
+ 	printf("\n");
  }
- 
+ #endif
 -- 
 2.20.1
 
