@@ -2,121 +2,112 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463D9C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF7B20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6OrX419"
+	by mail.kernel.org (Postfix) with ESMTP id DA54320708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574452540;
+	bh=RMU+j1b3rdYpll2TEz7BS3KRzXTt9ztKT5vT+A53UPA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=C3G478GQ+QmOop+Qqjnhv1gDWKtM1LvEp0ALMnG2DxPlPuNFJh6HM0UXEfSf7s3c/
+	 SkZV0Thep1/46zzkITctX/7Fb5aAY+xaOB5RKkUfwHSRmiyUMC7lWUCha4mwwci+yO
+	 eKNZzsCC10mD8vji1iwtaiK/MPe44IpaTvhoT0H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfKVTzh (ORCPT
+        id S1727733AbfKVTzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:55:37 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36552 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfKVTzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:55:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:52158 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726546AbfKVTzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 14:55:36 -0500
-Received: by mail-pf1-f196.google.com with SMTP id b19so3978898pfd.3;
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 287EB113E;
+        Fri, 22 Nov 2019 11:55:36 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B87E3F6C4;
         Fri, 22 Nov 2019 11:55:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+KAr/Xowf3i8pr8EPJk1gltx6EMW0QxKeOvIBPu6+rc=;
-        b=o6OrX4195DPB62OgCWIxrp/crv6S+mPssF+6KFRAKIK3FzUZ92RaCmwElycCewNvMs
-         SjwQbcGj73Rmxtjrqa/NohiSE+NUTaG+FYg6Xx8TsHjE7PbqBBEnRK+Cv3upbm8lDCo9
-         nI8CM+ALPaFZX5Lj1sr09IbAvl6tPC5faCoakL4MKsNSHFmv1x7j932famFFWMJUdIz5
-         h3Zfoe1sano4+DFroa6CAjG46rZnrNXlOPssmP8zoznYTqIqCP77HhFA+ayTKkRjrrLD
-         RbZZ5JCRxjRWl+WEXXwokcigMyv1UEhyn6DFPBzraHjVST1NXcOo+YFjKy50EWVb71PZ
-         vluA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+KAr/Xowf3i8pr8EPJk1gltx6EMW0QxKeOvIBPu6+rc=;
-        b=Zena3V1EB9OCiYga5zSOFgD41c2TyXAasJMPyscEKxl3H+yN2mDB/7EQ5zrj/9jfji
-         uWhoUBidSWaYIDLWQzPrpuIIvAr8PtOgNnmkchzKzAjO8d+Wf6/tA2stshiEbaO/WZMU
-         CEMXLfe6+mXMfDDKEgw04gkP5BY+fYi/CpzU7m9CKzwIcoNi/kZkT0Ap+HnaiZM9Ht77
-         eqvT1zmogfS0AjmBJsr+83hzfqn5azcd7QNhicxokpAraspVo1I9Uzs4/d1Q+3rtAyDF
-         WR2iY0CUiUtomXJ/KH/q0tJHSGnPPn3pOlJPtq6xFZYYW3zPnVThUQulMvR1DyAfTC7o
-         wW7g==
-X-Gm-Message-State: APjAAAUAuKt6fL6PkANM7h2s84WF/q3JWcH1XIffdb6TPNxA4WxHN9rw
-        6dAXFpHVI5+UJTlu4F8S2jY=
-X-Google-Smtp-Source: APXvYqxxriw7hLwKt6j9owi/q/reR4XwlxChZc3XU54nlr0I96qcCgWK60BwuCtm+tYfUUZtsmnTeA==
-X-Received: by 2002:a63:4f64:: with SMTP id p36mr18426689pgl.271.1574452535020;
-        Fri, 22 Nov 2019 11:55:35 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t1sm8552138pfq.156.2019.11.22.11.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 11:55:34 -0800 (PST)
-Date:   Fri, 22 Nov 2019 11:55:32 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Lyude Paul <lyude@redhat.com>, linux-input@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 24/25] Input: synaptics - enable RMI mode
- for X1 Extreme 2nd Generation
-Message-ID: <20191122195532.GB248138@dtor-ws>
-References: <20191122194859.24508-1-sashal@kernel.org>
- <20191122194859.24508-24-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122194859.24508-24-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Fri, 22 Nov 2019 19:55:34 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Christian Hemp <c.hemp@phytec.de>,
+        Christoph Fritz <chf.fritz@googlemail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Applied "regulator: da9062: Return REGULATOR_MODE_INVALID for invalid mode" to the regulator tree
+In-Reply-To: <20191122045154.802-1-axel.lin@ingics.com>
+Message-Id: <applied-20191122045154.802-1-axel.lin@ingics.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+The patch
 
-On Fri, Nov 22, 2019 at 02:48:57PM -0500, Sasha Levin wrote:
-> From: Lyude Paul <lyude@redhat.com>
-> 
-> [ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
-> 
-> Just got one of these for debugging some unrelated issues, and noticed
-> that Lenovo seems to have gone back to using RMI4 over smbus with
-> Synaptics touchpads on some of their new systems, particularly this one.
-> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+   regulator: da9062: Return REGULATOR_MODE_INVALID for invalid mode
 
-This will be reverted, do not pick up for stable.
+has been applied to the regulator tree at
 
-> ---
->  drivers/input/mouse/synaptics.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> index 06cebde2422ea..afdb9947d8af9 100644
-> --- a/drivers/input/mouse/synaptics.c
-> +++ b/drivers/input/mouse/synaptics.c
-> @@ -180,6 +180,7 @@ static const char * const smbus_pnp_ids[] = {
->  	"LEN0096", /* X280 */
->  	"LEN0097", /* X280 -> ALPS trackpoint */
->  	"LEN009b", /* T580 */
-> +	"LEN0402", /* X1 Extreme 2nd Generation */
->  	"LEN200f", /* T450s */
->  	"LEN2054", /* E480 */
->  	"LEN2055", /* E580 */
-> -- 
-> 2.20.1
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
-Thanks.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From c15d5a645875bc9b89f68f5d3fb608f691ac78d7 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Fri, 22 Nov 2019 12:51:54 +0800
+Subject: [PATCH] regulator: da9062: Return REGULATOR_MODE_INVALID for invalid
+ mode
+
+-EINVAL is not a valid return value for .of_map_mode, return
+REGULATOR_MODE_INVALID instead.
+
+Fixes: 844e7492ee3d ("regulator: da9062: add of_map_mode support for bucks")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20191122045154.802-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/da9062-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index 29f4a60398a3..d3ce0278bfbe 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -108,7 +108,7 @@ static unsigned int da9062_map_buck_mode(unsigned int mode)
+ 	case DA9063_BUCK_MODE_AUTO:
+ 		return REGULATOR_MODE_NORMAL;
+ 	default:
+-		return -EINVAL;
++		return REGULATOR_MODE_INVALID;
+ 	}
+ }
+ 
 -- 
-Dmitry
+2.20.1
+
