@@ -2,213 +2,202 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A07C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A622068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D132071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401726;
-	bh=ko2RFeo5TU+AHVfNjkpG7qenzxQ4NHPt+kUd8Cp4/M4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=irixqO6xfxs5QY1Di1E9KwdPD48+FkZrKEVWEyxLugAnXoTspkpYqgkDp0KDkMyI1
-	 2rjXCWy1QQn2Im3t2/7KbhjE5yjBTIOupD623GgxMpqwBNPqlDoNofKjPiDpm/ap+9
-	 0MpIPPe4CAxjc4UFXgrCBFGGY6Itg5D1AL8fc//8=
+	s=default; t=1574401755;
+	bh=K8/nosl4hE+hkkP23VwLxak+ntPZZn18CaUsFIU+arU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AJg7GHgeWzDjfi7KAB1Es0kMBSDD2Bg3wmal+Wmo2goOSqQFnV5HM7zgJgtUXC2P5
+	 iWy2CM6+sH1H13oBnRX68KdwmJm+/MJ4GXOUv0q/asyLd+WlZiMo7eOYxR81PdSsV+
+	 D/jOAAGMzChBcxmlPcmhef9yN9/x8slkteeLQyVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKVFsp (ORCPT
+        id S1726574AbfKVFtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:48:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52998 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:49:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfKVFsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:48:45 -0500
-Received: from localhost (unknown [171.61.94.63])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726018AbfKVFtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:14 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 179C220708;
-        Fri, 22 Nov 2019 05:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 746032068F;
+        Fri, 22 Nov 2019 05:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401723;
-        bh=ko2RFeo5TU+AHVfNjkpG7qenzxQ4NHPt+kUd8Cp4/M4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VFoW/SfT2BI+UFDhNLVVFeHDmuab6aTcK39v22IXsIxj+rX16HetnjGKvuKaPqM4Z
-         +4mR8lVYJ/lbNk+w0CLN98iq67FXSFgdXauTJTP7TguxemfXqJyWHKhf3bVPXaitxt
-         KBFjQ7Mg5KzFKQpFCCZvoA1W6vIrbgXL158XMzBg=
-Date:   Fri, 22 Nov 2019 11:18:38 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dmaengine: ti: edma: add missed pm_runtime_disable
-Message-ID: <20191122054838.GU82508@vkoul-mobl>
-References: <20191118073728.28366-1-hslester96@gmail.com>
- <20191122052320.GQ82508@vkoul-mobl>
- <CANhBUQ0FdCjRfbQAN6ZpygYmi8T5i24rP4_Rb-LKevcPD6CFkw@mail.gmail.com>
+        s=default; t=1574401753;
+        bh=K8/nosl4hE+hkkP23VwLxak+ntPZZn18CaUsFIU+arU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aSxZEUBVtdlT/M8Vld7sce/JbzKopsyo0W2xvQcRX5IsaTRpt3rw0BHGMkAM0AFYC
+         U01yz7Foq9KEfunTXqkBsIHRxhcKnecHz3wQoVj/DWshkYx5AwV66tL/knFhnGICsV
+         BVLaMNyv3tlk0LWVPJq6cWxMmihh++EJum8HH95o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 008/219] ARM: dts: imx51: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:45:40 -0500
+Message-Id: <20191122054911.1750-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANhBUQ0FdCjRfbQAN6ZpygYmi8T5i24rP4_Rb-LKevcPD6CFkw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-11-19, 13:39, Chuhong Yuan wrote:
-> On Fri, Nov 22, 2019 at 1:23 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 18-11-19, 15:37, Chuhong Yuan wrote:
-> > > The driver forgets to call pm_runtime_disable in probe failure and
-> > > remove.
-> > > Add the calls and modify probe failure handling to fix it.
-> > >
-> > > Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
-> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > ---
-> > >  drivers/dma/ti/edma.c | 43 ++++++++++++++++++++++++++++---------------
-> > >  1 file changed, 28 insertions(+), 15 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> > > index ba7c4f07fcd6..8be32fd9f762 100644
-> > > --- a/drivers/dma/ti/edma.c
-> > > +++ b/drivers/dma/ti/edma.c
-> > > @@ -2282,16 +2282,18 @@ static int edma_probe(struct platform_device *pdev)
-> > >       ret = pm_runtime_get_sync(dev);
-> > >       if (ret < 0) {
-> > >               dev_err(dev, "pm_runtime_get_sync() failed\n");
-> > > -             return ret;
-> > > +             goto err_disable_pm;
-> >
-> > Why would you disable here when sync has returned error?
-> >
-> 
-> Since pm_runtime_enable is called before sync, we cannot directly return
-> without disabling it as the original implementation does.
+From: Fabio Estevam <festevam@gmail.com>
 
-Ok You should have cced Peter and TI folks on this. get_mainatiner.pl is
-your friend, use it!
+[ Upstream commit 6a9681168b83c62abfa457c709f2f4b126bd6b92 ]
 
-Peter care to test/review this. 
-> 
-> > >       }
-> > >
-> > >       ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> > >       if (ret)
-> > > -             return ret;
-> > > +             goto err_disable_pm;
-> > >
-> > >       ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
-> > > -     if (!ecc)
-> > > -             return -ENOMEM;
-> > > +     if (!ecc) {
-> > > +             ret = -ENOMEM;
-> > > +             goto err_disable_pm;
-> > > +     }
-> > >
-> > >       ecc->dev = dev;
-> > >       ecc->id = pdev->id;
-> > > @@ -2306,30 +2308,37 @@ static int edma_probe(struct platform_device *pdev)
-> > >               mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >               if (!mem) {
-> > >                       dev_err(dev, "no mem resource?\n");
-> > > -                     return -ENODEV;
-> > > +                     ret = -ENODEV;
-> > > +                     goto err_disable_pm;
-> > >               }
-> > >       }
-> > >       ecc->base = devm_ioremap_resource(dev, mem);
-> > > -     if (IS_ERR(ecc->base))
-> > > -             return PTR_ERR(ecc->base);
-> > > +     if (IS_ERR(ecc->base)) {
-> > > +             ret = PTR_ERR(ecc->base);
-> > > +             goto err_disable_pm;
-> > > +     }
-> > >
-> > >       platform_set_drvdata(pdev, ecc);
-> > >
-> > >       /* Get eDMA3 configuration from IP */
-> > >       ret = edma_setup_from_hw(dev, info, ecc);
-> > >       if (ret)
-> > > -             return ret;
-> > > +             goto err_disable_pm;
-> > >
-> > >       /* Allocate memory based on the information we got from the IP */
-> > >       ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
-> > >                                       sizeof(*ecc->slave_chans), GFP_KERNEL);
-> > > -     if (!ecc->slave_chans)
-> > > -             return -ENOMEM;
-> > > +     if (!ecc->slave_chans) {
-> > > +             ret = -ENOMEM;
-> > > +             goto err_disable_pm;
-> > > +     }
-> > >
-> > >       ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
-> > >                                      sizeof(unsigned long), GFP_KERNEL);
-> > > -     if (!ecc->slot_inuse)
-> > > -             return -ENOMEM;
-> > > +     if (!ecc->slot_inuse) {
-> > > +             ret = -ENOMEM;
-> > > +             goto err_disable_pm;
-> > > +     }
-> > >
-> > >       ecc->default_queue = info->default_queue;
-> > >
-> > > @@ -2368,7 +2377,7 @@ static int edma_probe(struct platform_device *pdev)
-> > >                                      ecc);
-> > >               if (ret) {
-> > >                       dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
-> > > -                     return ret;
-> > > +                     goto err_disable_pm;
-> > >               }
-> > >               ecc->ccint = irq;
-> > >       }
-> > > @@ -2384,7 +2393,7 @@ static int edma_probe(struct platform_device *pdev)
-> > >                                      ecc);
-> > >               if (ret) {
-> > >                       dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
-> > > -                     return ret;
-> > > +                     goto err_disable_pm;
-> > >               }
-> > >               ecc->ccerrint = irq;
-> > >       }
-> > > @@ -2392,7 +2401,8 @@ static int edma_probe(struct platform_device *pdev)
-> > >       ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
-> > >       if (ecc->dummy_slot < 0) {
-> > >               dev_err(dev, "Can't allocate PaRAM dummy slot\n");
-> > > -             return ecc->dummy_slot;
-> > > +             ret = ecc->dummy_slot;
-> > > +             goto err_disable_pm;
-> > >       }
-> > >
-> > >       queue_priority_mapping = info->queue_priority_mapping;
-> > > @@ -2473,6 +2483,8 @@ static int edma_probe(struct platform_device *pdev)
-> > >
-> > >  err_reg1:
-> > >       edma_free_slot(ecc, ecc->dummy_slot);
-> > > +err_disable_pm:
-> > > +     pm_runtime_disable(dev);
-> > >       return ret;
-> > >  }
-> > >
-> > > @@ -2503,6 +2515,7 @@ static int edma_remove(struct platform_device *pdev)
-> > >       if (ecc->dma_memcpy)
-> > >               dma_async_device_unregister(ecc->dma_memcpy);
-> > >       edma_free_slot(ecc, ecc->dummy_slot);
-> > > +     pm_runtime_disable(dev);
-> > >
-> > >       return 0;
-> > >  }
-> > > --
-> > > 2.24.0
-> >
-> > --
-> > ~Vinod
+Boards based on imx51 have duplicate memory nodes:
 
+- One coming from the board dts file: memory@
+
+- One coming from the imx51.dtsi file.
+
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx51-apf51.dts                 | 1 +
+ arch/arm/boot/dts/imx51-babbage.dts               | 1 +
+ arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi | 1 +
+ arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi      | 1 +
+ arch/arm/boot/dts/imx51-ts4800.dts                | 1 +
+ arch/arm/boot/dts/imx51-zii-rdu1.dts              | 1 +
+ arch/arm/boot/dts/imx51-zii-scu2-mezz.dts         | 1 +
+ arch/arm/boot/dts/imx51-zii-scu3-esb.dts          | 1 +
+ arch/arm/boot/dts/imx51.dtsi                      | 2 --
+ 9 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx51-apf51.dts b/arch/arm/boot/dts/imx51-apf51.dts
+index 79d80036f74de..1eddf2908b3f2 100644
+--- a/arch/arm/boot/dts/imx51-apf51.dts
++++ b/arch/arm/boot/dts/imx51-apf51.dts
+@@ -22,6 +22,7 @@
+ 	compatible = "armadeus,imx51-apf51", "fsl,imx51";
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+index ba60b0cb3cc13..99191466a8085 100644
+--- a/arch/arm/boot/dts/imx51-babbage.dts
++++ b/arch/arm/boot/dts/imx51-babbage.dts
+@@ -15,6 +15,7 @@
+ 	};
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+index 5761a66e8a0d3..82d8df097ef1f 100644
+--- a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
++++ b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "digi,connectcore-ccxmx51-som", "fsl,imx51";
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x08000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+index f8902a338e49a..2e3125391bc49 100644
+--- a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
++++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+@@ -23,6 +23,7 @@
+ 	compatible = "eukrea,cpuimx51", "fsl,imx51";
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x10000000>; /* 256M */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+index 39eb067904c3d..4344632f79400 100644
+--- a/arch/arm/boot/dts/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/imx51-ts4800.dts
+@@ -18,6 +18,7 @@
+ 	};
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x10000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index 6e80254c4562a..d0e0eb9c9adfa 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -53,6 +53,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
+index 26cf08549df40..f5b2d768fe47f 100644
+--- a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
++++ b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
+@@ -18,6 +18,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
+index e6ebac8f43e4f..ad90d66ccca6c 100644
+--- a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
++++ b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
+@@ -18,6 +18,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index ef2abc0978439..81f60c96a2e41 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -16,10 +16,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		ethernet0 = &fec;
 -- 
-~Vinod
+2.20.1
+
