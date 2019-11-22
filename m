@@ -2,161 +2,117 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595D1C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD3620708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMZkNX+P"
+	by mail.kernel.org (Postfix) with ESMTP id C7C0520708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574421625;
+	bh=DuCIBAqhdSOob/5HkZMdAhgQxPJHm9GEVLYGMGLpj1I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ao1OWLn9uco0LfoWbv79+IAUYPyjk3xuOBuHJ8KioG3u3Tkwpuw0ciiSdJ3GLEL1Y
+	 CZ6nImYCjCDVlveCrKOkwnG6kJqBIMjjzaU0gDTlxelUFJmgDy6KlBMlW5C95gRFCH
+	 gRLiCZ/0Q+6Vk8Id1BoBniZwNB7uT/51c8JTG7k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfKVKp5 (ORCPT
+        id S1727998AbfKVLUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:57 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:44312 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729552AbfKVKpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:52 -0500
-Received: by mail-pj1-f66.google.com with SMTP id w8so2881090pjh.11;
-        Fri, 22 Nov 2019 02:45:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2io4k/iq1gwW+3Ml4L4lOh1AzuywwhhqM/bGXIM0Dfg=;
-        b=iMZkNX+PGvb23ecBpYgNQRQUaO8mtr3kGqYmRlTO9CWrFfM75lItHURi2rzgm9oq06
-         r28HwxF0sYxRLtuBx3lJzz/TC+/bz8eCPuZ/ic524dTjXYTJNjf/L+nTapgjLmDUPrOC
-         DZ+zu/haiL/BnkGR6wysoLGx+ryVj+yvLXp9c9D2g0G9Nwb04yo8tz1miD1VSBJumtBT
-         vrDTl+2KIi2z3IMnGVfGcRjyYWPSjzLXOZqJ0+oVcxXjQ3wU7PnczHv5xratdBBiKuEN
-         1hjBUbZXIBl+zHucz+0MXvvyK4a5w5vEJ1zQE48XNOTY84kQb5L8NgiAuCM47y35qCse
-         h/tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2io4k/iq1gwW+3Ml4L4lOh1AzuywwhhqM/bGXIM0Dfg=;
-        b=ePnGGQIjy7mBioz6iOCRG6PjYtqZOMzroipTHdiHr8F7hCPmL/38KfWqSHAYSCXqUv
-         8xn8C7YYDdl5GA2Nmc5q+zxpm7JeqpWGQVWS8WBJbdAuXTU+CCVK+epvt21SB/QLlDTE
-         rXe5HptLJKHQ1wKebS9rMbT2AYTKVlM2hxPg4S85tibtfJNO4CveY/f4aWrJnWGpwgYN
-         Ccss1PbaTEPuMGRktlJO7PZ0aZVFn1JBHS/qVdqJdeDGlTJ1FQztNezT9o13Aty33Nt4
-         2LuTrO8pVYywEmolAqT2M/3JQJr19E0Eb2q8/YNwNqN2lyfhTRyP/8Y5O9kEYXxYc7G9
-         CUzQ==
-X-Gm-Message-State: APjAAAWe4pshzyO0yPNnHb5uR8dfvhUf5niUaLFRl77lsJiSrILscW6H
-        zaOXJtTCkReh7rfU6HiKLn4=
-X-Google-Smtp-Source: APXvYqxNbupSKQWXBXy0M3HLAZgGsZHVaATRyTWbQLfH0dXjq7jJ7Ve2vFUF3xJ5pA3CN94az8rCuw==
-X-Received: by 2002:a17:902:d211:: with SMTP id t17mr7562415ply.141.1574419551426;
-        Fri, 22 Nov 2019 02:45:51 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v16sm2714213pje.1.2019.11.22.02.45.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 02:45:50 -0800 (PST)
-Subject: Re: [PATCH v2 1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING
- at probe
-To:     Christophe Roullier <christophe.roullier@st.com>,
-        wim@linux-watchdog.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191122082442.21695-1-christophe.roullier@st.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ffa20f2f-1ca2-9d8f-6594-33b906cbb74a@roeck-us.net>
-Date:   Fri, 22 Nov 2019 02:45:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 06:20:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729567AbfKVKp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6795D20721;
+        Fri, 22 Nov 2019 10:45:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574419555;
+        bh=DuCIBAqhdSOob/5HkZMdAhgQxPJHm9GEVLYGMGLpj1I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w86FkkepnUtIBAUAgCBRxNY02ieV6Ea3Ps404fGEqBe/QyjZIGvlKSrQ6Z83l4OW6
+         /osV3H1M6069vz8af7jlBkuRh3LhJGAdvq7DMHyRZmdlFIZOIHjU9eH9ldAYVuoGdL
+         pTHmJADWKKXgLDVve7CodShmswvULIqsont5JStw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Francis Deslauriers <francis.deslauriers@efficios.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Yonghong Song <yhs@fb.com>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 151/222] uprobes/x86: Prohibit probing on MOV SS instruction
+Date:   Fri, 22 Nov 2019 11:28:11 +0100
+Message-Id: <20191122100913.646743449@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+References: <20191122100830.874290814@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191122082442.21695-1-christophe.roullier@st.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/22/19 12:24 AM, Christophe Roullier wrote:
-> If the watchdog hardware is already enabled during the boot process,
-> when the Linux watchdog driver loads, it should start/reset the watchdog
-> and tell the watchdog framework. As a result, ping can be generated from
-> the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
-> until the userspace watchdog daemon takes over control
-> 
-> Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
-> Changes since v1:
-> According to Guenter
-> I follow the guidance from intel-mid_wdt.c
-> and I added test to check if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
-> because we need to be flexible (depends on customer config, but watchdog
-> not always start by bootloader (Uboot, ..))
-> I've tested some config and it is working as expected:
-> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set + daemon watchdog in userland ON ==> No reset IWDG2
-> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE is not set ==> Reset IWDG2
-> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
-> Watchdog enable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
-> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE is not set ==> No reset IWDG2
-> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y ==> No reset IWDG2
-> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON ==> No reset IWDG2
-> Watchdog disable in Uboot + HANDLE_BOOT_ENABLE=y + daemon watchdog in userland ON puis OFF ==> Reset IWDG2
-> 
-> Thanks,
-> Christophe
-> 
->   drivers/watchdog/stm32_iwdg.c | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-> index a3a329011a06..7f454a6e17ba 100644
-> --- a/drivers/watchdog/stm32_iwdg.c
-> +++ b/drivers/watchdog/stm32_iwdg.c
-> @@ -50,6 +50,9 @@
->   #define TIMEOUT_US	100000
->   #define SLEEP_US	1000
->   
-> +static bool handle_boot_enabled =
-> +	IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED);
-> +
->   struct stm32_iwdg_data {
->   	bool has_pclk;
->   	u32 max_prescaler;
-> @@ -262,6 +265,24 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
->   	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
->   	watchdog_init_timeout(wdd, 0, dev);
->   
-> +	/*
-> +	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
-> +	 * (Means U-Boot/bootloaders leaves the watchdog running)
-> +	 * When we get here we should make a decision to prevent
-> +	 * any side effects before user space daemon will take care of it.
-> +	 * The best option, taking into consideration that there is no
-> +	 * way to read values back from hardware, is to enforce watchdog
-> +	 * being run with deterministic values.
-> +	 */
-> +	if (handle_boot_enabled) {
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-You don't need that variable. Just use
-	if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED)) {
-directly.
+commit 13ebe18c94f5b0665c01ae7fad2717ae959f4212 upstream.
 
-> +		ret = stm32_iwdg_start(wdd);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Make sure the watchdog is serviced */
-> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> +	}
-> +
->   	ret = devm_watchdog_register_device(dev, wdd);
->   	if (ret)
->   		return ret;
-> 
+Since MOV SS and POP SS instructions will delay the exceptions until the
+next instruction is executed, single-stepping on it by uprobes must be
+prohibited.
+
+uprobe already rejects probing on POP SS (0x1f), but allows probing on MOV
+SS (0x8e and reg == 2).  This checks the target instruction and if it is
+MOV SS or POP SS, returns -ENOTSUPP to reject probing.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Francis Deslauriers <francis.deslauriers@efficios.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "David S . Miller" <davem@davemloft.net>
+Link: https://lkml.kernel.org/r/152587072544.17316.5950935243917346341.stgit@devbox
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kernel/uprobes.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -296,6 +296,10 @@ static int uprobe_init_insn(struct arch_
+ 	if (is_prefix_bad(insn))
+ 		return -ENOTSUPP;
+ 
++	/* We should not singlestep on the exception masking instructions */
++	if (insn_masking_exception(insn))
++		return -ENOTSUPP;
++
+ 	if (x86_64)
+ 		good_insns = good_insns_64;
+ 	else
+
 
