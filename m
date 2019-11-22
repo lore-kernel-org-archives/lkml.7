@@ -2,139 +2,194 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCAFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63982071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9712071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IxKyGc9o"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="2CxFAF9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfKVQQu (ORCPT
+        id S1727445AbfKVQQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:16:50 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54200 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726546AbfKVQQu (ORCPT
+        Fri, 22 Nov 2019 11:16:57 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43991 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKVQQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:16:50 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMGD83m015416;
-        Fri, 22 Nov 2019 17:14:39 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=q+AN9vpLp99KTf4oMHYu++uvf+aTBZJ7fWpmVfAwsSA=;
- b=IxKyGc9ou7D+Y0yLJolE3vkTsh6lhR8z5J9UPgqEeKf64aStCPXkdTCnuU8AteSIMwa0
- ys6FNaDyfM33C7PUQvv4QpfXhEg/YWtOb39Dhdg4ieDZ+YBzU+dGC/5pYri3CfptKsAw
- gj9xHv5Q5OVbK0EVg1O45F5JEXtb596YVGyLvTmmb9eXLIzIw98Jd6BjMk17LQObBRVr
- xL7CiX4AGyYQn2+jE+I1aP5RJ6eVBUsrScoWqxnbof2O2ZsC8ZkLIGklPJYkuLN0nUs9
- GnBQFoQW7IoXvSqF87hVh8RIq3z5H+qxPZ2TLD7XovJhGri/eD0W34UTJz1f8YJOYjy1 7A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9uvt3qk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 17:14:39 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8903B100034;
-        Fri, 22 Nov 2019 17:14:38 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B9F92D378D;
-        Fri, 22 Nov 2019 17:14:38 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 22 Nov 2019 17:14:37
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>
-CC:     <benjamin.gaignard@st.com>, <srinivas.kandagatla@linaro.org>
-Subject: [PATCH][RFC] ASoC: stm32: sai: manage rebind issue
-Date:   Fri, 22 Nov 2019 17:14:23 +0100
-Message-ID: <20191122161423.8641-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Nov 2019 11:16:57 -0500
+Received: by mail-pl1-f194.google.com with SMTP id a18so3275739plm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 08:16:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wfrcrjX2H8D8RSvVc5LOIPsNb3WQnwmD64TJNBPNLUA=;
+        b=2CxFAF9vQ8BbOhqPOkf+HBDvDUxib+UWq9hNW0Tg4l/6YvGcIgULwb7zDfm9mbuP/9
+         3/EKpUXrSdv8B03hy14QpNLhWat83HNQyn1GgIfaBTMQMmmanUe+btbssVaH8haWbOpr
+         QqRPK10O9tUUfndkbGrdfQe1z6ITlCczduG7UJhZ6JNU7ZoQRSrIbazx85Z8h4rz26Xb
+         6EJVTX6A/tEz9L4CMMWPjveLs+QHDUyDxvybrIHm+D9wpJ2bnJSnESNPWmTfEoXJTO6d
+         RHERX6f1D2fDaO/gYzRlAdEHF6PJxDPr/jbgCMQMh3Z2Fj6YG7Q5lbEYKwW7Ol6/bl7e
+         sgEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wfrcrjX2H8D8RSvVc5LOIPsNb3WQnwmD64TJNBPNLUA=;
+        b=ubMS6vFLrsFOnFcV3LGsbqJzA83Ozft+hYimwhYc4iT0/x7BS0MzTuqEUNMuAJ1NtI
+         5ziUN4lbmyG5d8Eoy16XWBi5VC89tYzH/i5PJfuFH8Cd2xnlFW4cbGzFx30r62DCYcNp
+         VJkRggRyipQ9H77qMNJQJmpNCf3W3b3Z79aP6y9t+dWo52VEN5MuVmSKGazLkxuoVVQD
+         mZEyZvQyZK7qm4BFXmbYfWTrC3afUlcF85ryVCJzEceDFZHM/eZ1MmqeU/yihJSMuzdW
+         Crl0Z+ranTVJsgJlKXjkPkAm8OhqAhDL/CdTPynrzL1DcZ2GNfaZyfPDomflWbXiJtBX
+         otTg==
+X-Gm-Message-State: APjAAAVoxQ7Pxmvwp37VLiNXu0uGx1/XV4rHz0H1jpPaLkBkQ97K2sME
+        /I44E9ndmkYQ+EGWB32zyHffqA==
+X-Google-Smtp-Source: APXvYqzTddBvl2Cxl4hWR79OGc6LvFSc0Lpv9HH5Ptn1zud7XEHq5ZxyxP4/MuJ4W/R1kultrt//VA==
+X-Received: by 2002:a17:90a:b28c:: with SMTP id c12mr19445564pjr.22.1574439415868;
+        Fri, 22 Nov 2019 08:16:55 -0800 (PST)
+Received: from localhost ([2620:10d:c090:180::9f2b])
+        by smtp.gmail.com with ESMTPSA id q3sm7349049pgl.15.2019.11.22.08.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 08:16:54 -0800 (PST)
+Date:   Fri, 22 Nov 2019 11:16:52 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20191122161652.GA489821@cmpxchg.org>
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20191119160456.GD382712@cmpxchg.org>
+ <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com>
+ <20191121220613.GB487872@cmpxchg.org>
+ <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-22_03:2019-11-21,2019-11-22 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit e894efef9ac7 ("ASoC: core: add support to card rebind")
-allows to rebind the sound card after a rebind of one of its component.
-With this commit, the sound card is actually rebound,
-but is no more functional.
+On Fri, Nov 22, 2019 at 10:36:32AM +0800, Alex Shi wrote:
+> 在 2019/11/22 上午6:06, Johannes Weiner 写道:
+> > If we could restrict lock_page_lruvec() to working only on PageLRU
+> > pages, we could fix the problem with memory barriers. But this won't
+> > work for split_huge_page(), which is AFAICT the only user that needs
+> > to freeze the lru state of a page that could be isolated elsewhere.
+> > 
+> > So AFAICS the only option is to lock out mem_cgroup_move_account()
+> > entirely when the lru_lock is held. Which I guess should be fine.
+> 
+> I guess we can try from lock_page_memcg, is that a good start?
 
-With the sound card rebind the simplified call sequence is:
-stm32_sai_sub_probe
-	snd_soc_register_component
-		snd_soc_try_rebind_card
-			snd_soc_instantiate_card
-	devm_snd_dmaengine_pcm_register
+Yes.
 
-The problem occurs because the pcm must be registered,
-before snd_soc_instantiate_card() is called.
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 7e6387ad01f0..f4bbbf72c5b8 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1224,7 +1224,7 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+>                 goto out;
+>         }
+> 
+> -       memcg = page->mem_cgroup;
+> +       memcg = lock_page_memcg(page);
+>         /*
+>          * Swapcache readahead pages are added to the LRU - and
+>          * possibly migrated - before they are charged.
 
-Modify SAI driver, to change the call sequence as follows:
-stm32_sai_sub_probe
-	devm_snd_dmaengine_pcm_register
-	snd_soc_register_component
-		snd_soc_try_rebind_card
+test_clear_page_writeback() calls this function with that lock already
+held so that would deadlock. Let's keep locking in lock_page_lruvec().
 
----
-The current patch allows to fix the issue for STM SAI driver.
-However, most of the drivers register the component first.
-So, this solution is perhaps not the right way to manage the problem.
-This may probably be handled in ASoC framework instead.
----
+lock_page_lruvec():
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_sai_sub.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+	memcg = lock_page_memcg(page);
+	lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 48e629ac2d88..eb35306a1232 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -1484,6 +1484,13 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Could not register pcm dma\n");
-+		return ret;
-+	}
-+
-+
- 	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
- 					      &sai->cpu_dai_drv, 1);
- 	if (ret)
-@@ -1492,11 +1499,6 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
- 		conf = &stm32_sai_pcm_config_spdif;
- 
--	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
--	if (ret) {
--		dev_err(&pdev->dev, "Could not register pcm dma\n");
--		return ret;
--	}
- 
- 	return 0;
- }
--- 
-2.17.1
+	spin_lock_irqsave(&lruvec->lru_lock, *flags);
+	return lruvec;
 
+unlock_lruvec();
+
+	spin_unlock_irqrestore(&lruvec->lru_lock);
+	__unlock_page_memcg(lruvec_memcg(lruvec));
+
+The lock ordering should be fine as well. But it might be a good idea
+to stick a might_lock(&memcg->move_lock) in lock_page_memcg() before
+that atomic_read() and test with lockdep enabled.
+
+
+But that leaves me with one more worry: compaction. We locked out
+charge moving now, so between that and knowing that the page is alive,
+we have page->mem_cgroup stable. But compaction doesn't know whether
+the page is alive - it comes from a pfn and finds out using PageLRU.
+
+In the current code, pgdat->lru_lock remains the same before and after
+the page is charged to a cgroup, so once compaction has that locked
+and it observes PageLRU, it can go ahead and isolate the page.
+
+But lruvec->lru_lock changes during charging, and then compaction may
+hold the wrong lock during isolation:
+
+compaction:				generic_file_buffered_read:
+
+					page_cache_alloc()
+
+!PageBuddy()
+
+lock_page_lruvec(page)
+  lruvec = mem_cgroup_page_lruvec()
+  spin_lock(&lruvec->lru_lock)
+  if lruvec != mem_cgroup_page_lruvec()
+    goto again
+
+					add_to_page_cache_lru()
+					  mem_cgroup_commit_charge()
+					    page->mem_cgroup = foo
+					  lru_cache_add()
+					    __pagevec_lru_add()
+					      SetPageLRU()
+
+if PageLRU(page):
+  __isolate_lru_page()
+
+I don't see what prevents the lruvec from changing under compaction,
+neither in your patches nor in Hugh's. Maybe I'm missing something?
