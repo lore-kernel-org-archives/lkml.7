@@ -2,181 +2,120 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DCAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DFBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9331C20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E3520672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 00:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MA0+/kVV";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BeP1W9ZS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="L+ozNyJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKVAeh (ORCPT
+        id S1726716AbfKVAfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 19:34:37 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:61316 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbfKVAeh (ORCPT
+        Thu, 21 Nov 2019 19:35:45 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36360 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfKVAfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 19:34:37 -0500
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAM0TOkX016556;
-        Thu, 21 Nov 2019 16:34:18 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=bRY5V8A+3pwHDmINYlTTY7j8M9vHzzXNl+pk+x21kAs=;
- b=MA0+/kVVJdnxUwpU74lg7RZq+qV9Ogw4/sG67REpniqtLUKys1MekksQwdqwXgs3iqh2
- z/gZJEBF6bEySZRzKZwUAaAoeOkxZFIxmtf6TcTVpzk22uOhjARDTg4Hfxe1SuGBPEK1
- 9sbfYmQ4OHkH9wrHMTGpX2NOSUH/3Buzz6I= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wda3vm7yj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 16:34:18 -0800
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 21 Nov 2019 16:34:17 -0800
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 21 Nov 2019 16:34:17 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CIumxcKYg/NbNWIYbOiWnf+3iPt3KTDLLi2Ddxr2s6ycB0zN4x/YCEeajRXGNJST4/b0oRLSEyEttHq4+lLI14mDL1AxGAKar7CEUJri6vipUcTSsHT3z47k2gtKu9Agp6UfeW/2YfkH8wK8zu1e/OpUq3AHbsLO0NZP0MpzwTx3VrpQxjTViSPdHoLdUodClSZ++kb3fxttGJ9zbxhFBfMrH5j+KF1QOdBIwOWKIO9Qx8ywII++wPD+t8KE7qywc2tn7USRqSCcc6z34DcUGJJXuvBrkB/e6mziJC8gTHw+mm+DcJunV/qZYEaGEao52j9NhLIkB1jFM8YUSPRB4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bRY5V8A+3pwHDmINYlTTY7j8M9vHzzXNl+pk+x21kAs=;
- b=Jf/h7vytKDAPKzYGSlRGrOIzNQRXv61BeesIDAl2Y1sboPL24w4Daz4p+XBrWPLxIaXS4o0jcnSqKzZGbpdPERZzwkh6zTyUrmhHCukJAMKi2c6+2YvB+tjGoH0bQaOtO23IaQgeLL1yLncaaV5wBrrsMbGMJJcHkc4awE/6lK+oeNOEw4YNEgSP7TPJIaW0ahduLM7k66f5vIAYyM2UKhCi4I1DN5dtbeymQvHAM6Jf7YEYxy+hQLJUpxNZvPkV1pATtAfHUAB0y85P+b0AOxXIbB9kbqubi5/pBopMuqkakYwlyqc2okmxWvf9yFoXwoYV+mbfXWW4ibYV92OKzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bRY5V8A+3pwHDmINYlTTY7j8M9vHzzXNl+pk+x21kAs=;
- b=BeP1W9ZSYFFI6JjFjxpvkuPw50ztO8iZ7QglhHoc4dtJK9tJ/ilOrbq4l728cMMManKVrLUrzI4tWZTdJnMj0PtjY1Tp1sUXTcdOQR/FE1eLSwec49mWbw/xnkDu/2gcTSF930EkhJ4Mh58m+hd6RqxGb1PcTf75EPb7M1qVpgQ=
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.60.27) by
- BYAPR15MB3192.namprd15.prod.outlook.com (20.179.59.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.30; Fri, 22 Nov 2019 00:34:15 +0000
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::a9f8:a9c0:854c:d680]) by BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::a9f8:a9c0:854c:d680%4]) with mapi id 15.20.2474.019; Fri, 22 Nov 2019
- 00:34:15 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Brian Vazquez <brianvv@google.com>
-CC:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 bpf-next 2/9] bpf: add generic support for lookup and
- lookup_and_delete batch ops
-Thread-Topic: [PATCH v2 bpf-next 2/9] bpf: add generic support for lookup and
- lookup_and_delete batch ops
-Thread-Index: AQHVnw/qHa5aYibJs0i7hlxvNzQNFKeV5i4AgABDLoCAADGjAA==
-Date:   Fri, 22 Nov 2019 00:34:15 +0000
-Message-ID: <e9cb66e4-16fd-8850-4755-3034f75788c5@fb.com>
-References: <20191119193036.92831-1-brianvv@google.com>
- <20191119193036.92831-3-brianvv@google.com>
- <de05c3f2-5b70-b9af-445c-9cf43b55737c@fb.com>
- <CAMzD94TfpQaFN=7cQR9kmHun0gZNF2oMwEJu7aZMYhsYhvgRDg@mail.gmail.com>
-In-Reply-To: <CAMzD94TfpQaFN=7cQR9kmHun0gZNF2oMwEJu7aZMYhsYhvgRDg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR12CA0032.namprd12.prod.outlook.com
- (2603:10b6:301:2::18) To BYAPR15MB3384.namprd15.prod.outlook.com
- (2603:10b6:a03:112::27)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:ffef]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 91128186-1bd5-42fd-5926-08d76ee3b3fc
-x-ms-traffictypediagnostic: BYAPR15MB3192:
-x-microsoft-antispam-prvs: <BYAPR15MB319294E916F5A8BF48406DCDD3490@BYAPR15MB3192.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1850;
-x-forefront-prvs: 02296943FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(346002)(376002)(39860400002)(199004)(189003)(6512007)(4326008)(14454004)(6486002)(66556008)(66446008)(7736002)(305945005)(31686004)(36756003)(229853002)(66476007)(64756008)(54906003)(316002)(6246003)(478600001)(66946007)(99286004)(6436002)(86362001)(76176011)(52116002)(81166006)(81156014)(102836004)(71190400001)(8676002)(46003)(2906002)(186003)(446003)(31696002)(256004)(14444005)(386003)(6506007)(11346002)(2616005)(71200400001)(6916009)(5660300002)(53546011)(7416002)(25786009)(6116002)(8936002)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3192;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MSj5/jyV45vROmea4XtHiwqnFw1hvI8KP74XEB3S1X8gifEpI2TaoSJVUA4bvv+kW/QFIJ0DMUksfuiesYwm7bPkcAYcaMBfyXvylMk0Zvr3LAJZDp/l5OFV2hR6IMh5L8JC1LCSwE6bWqnV1nIwJOXbjKH/zniDSyhx8dLKc850+/fhFZ37+iUWrMXNH3Yax59yCtohDDIVXfHLiBMJoYDU6DYPgYzix88A73tLGsdAH0o4D6DGFBnulm/B95Wd6bNaVF3lkSAp4DZXjafbEsXbX5wGp9rqms3ziCp1ZsTUwtYR8PLBjX7jNBqRvqyevQoQDqA3RucbRSoEOj0TgSjZurSWZDlY+NGKgWQKIp4UaCqWkAinZk/JQKOT5ToC2ChsTAoM1UNB0nEONkAcsqkMbmp7Pt2i4cuMn5Ueawm812+RGF3RC3jCSAI+kCWV
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <64FAF966C0F0E342BDD6BE12F231A934@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 21 Nov 2019 19:35:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aNyMrZGi1ytX4T6Y1L2udQxbuMw2fttK87FjgMDAYUk=; b=L+ozNyJ+BLJds7rUUZwTGmJ7R
+        5e4PdATY1wuc72kBvYhSNqzWkMLSHsiNJaRKKZ+QW6c/CaPxnlL0mM/RPN1bk4jPOFZREl6QSpL4L
+        U3SAD87N8NAF8bzJqfo9CxhGXIHbgmAZZDd6BRqC9ys8sxVq7Xz172xTF71hYopdiv8Ho/rc7y1Yp
+        9U9/ujkr8zeakeK8TCVh42YDuJelKERsJKDzxphKgN/A7SiBXQtk6Xcx/3Op+FveXgSucAFoCOSum
+        XMJNkFyEpvPjQWNAF0yn6kqWii0P0XsxVVkOtrF7xV1CzBDQeXXUUFjx0ebt5BwyPw9NsN4yUw2ZV
+        6LjfuU4/g==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38750)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXwuz-0001fH-G7; Fri, 22 Nov 2019 00:35:25 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXwuy-0003Cf-Q2; Fri, 22 Nov 2019 00:35:24 +0000
+Date:   Fri, 22 Nov 2019 00:35:24 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, stefan@agner.ch,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Will Deacon <will@kernel.org>, boris.ostrovsky@oracle.com,
+        Sasha Levin <sashal@kernel.org>, sstabellini@kernel.org,
+        James Morris <jmorris@namei.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        xen-devel@lists.xenproject.org,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>, alexios.zavras@intel.com,
+        Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net,
+        jgross@suse.com, steve.capper@arm.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>, info@metux.net
+Subject: Re: [PATCH 1/3] arm/arm64/xen: use C inlines for privcmd_call
+Message-ID: <20191122003524.GH25745@shell.armlinux.org.uk>
+References: <20191121184805.414758-1-pasha.tatashin@soleen.com>
+ <20191121184805.414758-2-pasha.tatashin@soleen.com>
+ <20191122002258.GD25745@shell.armlinux.org.uk>
+ <CA+CK2bDtADA2eVwJAUEPhpic8vXWegh8yLjo6Q6WmXZDxAfJpA@mail.gmail.com>
+ <20191122003403.GG25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91128186-1bd5-42fd-5926-08d76ee3b3fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 00:34:15.4224
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vldueZd8n4hK2fCfb54o49K+nWUh1QmSJunMYOfwWOyU43TVuNBSre+BgB7hKVQN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3192
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_07:2019-11-21,2019-11-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 mlxscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911220001
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122003403.GG25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDExLzIxLzE5IDE6MzYgUE0sIEJyaWFuIFZhenF1ZXogd3JvdGU6DQo+IEhpIFlvbmdo
-b25nLA0KPiB0aGFua3MgZm9yIHJldmlld2luZyB0aGUgcGF0Y2gsIEkgd2lsbCBmaXggYWxsIHRo
-ZSBkaXJlY3QgcmV0dXJucyBhbmQNCj4gc21hbGwgZml4ZXMgaW4gbmV4dCB2ZXJzaW9uLg0KPiAN
-Cj4gT24gVGh1LCBOb3YgMjEsIDIwMTkgYXQgOTozNiBBTSBZb25naG9uZyBTb25nIDx5aHNAZmIu
-Y29tPiB3cm90ZToNCj4+DQo+Pg0KPj4NCj4+IE9uIDExLzE5LzE5IDExOjMwIEFNLCBCcmlhbiBW
-YXpxdWV6IHdyb3RlOg0KPj4+IFRoaXMgY29tbWl0IGludHJvZHVjZXMgZ2VuZXJpYyBzdXBwb3J0
-IGZvciB0aGUgYnBmX21hcF9sb29rdXBfYmF0Y2ggYW5kDQo+Pj4gYnBmX21hcF9sb29rdXBfYW5k
-X2RlbGV0ZV9iYXRjaCBvcHMuIFRoaXMgaW1wbGVtZW50YXRpb24gY2FuIGJlIHVzZWQgYnkNCj4+
-PiBhbG1vc3QgYWxsIHRoZSBicGYgbWFwcyBzaW5jZSBpdHMgY29yZSBpbXBsZW1lbnRhdGlvbiBp
-cyByZWx5aW5nIG9uIHRoZQ0KPj4+IGV4aXN0aW5nIG1hcF9nZXRfbmV4dF9rZXksIG1hcF9sb29r
-dXBfZWxlbSBhbmQgbWFwX2RlbGV0ZV9lbGVtDQo+Pj4gZnVuY3Rpb25zLiBUaGUgYnBmIHN5c2Nh
-bGwgc3ViY29tbWFuZHMgaW50cm9kdWNlZCBhcmU6DQo+Pj4NClsuLi5dDQo+Pj4gKyAgICAgZm9y
-IChjcCA9IDA7IGNwIDwgbWF4X2NvdW50OyBjcCsrKSB7DQo+Pj4gKyAgICAgICAgICAgICBpZiAo
-Y3AgfHwgZmlyc3Rfa2V5KSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHJjdV9yZWFkX2xv
-Y2soKTsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgZXJyID0gbWFwLT5vcHMtPm1hcF9nZXRf
-bmV4dF9rZXkobWFwLCBwcmV2X2tleSwga2V5KTsNCj4+PiArICAgICAgICAgICAgICAgICAgICAg
-cmN1X3JlYWRfdW5sb2NrKCk7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGlmIChlcnIpDQo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+Pj4gKyAgICAgICAgICAg
-ICB9DQo+Pj4gKyAgICAgICAgICAgICBlcnIgPSBicGZfbWFwX2NvcHlfdmFsdWUobWFwLCBrZXks
-IHZhbHVlLA0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHIt
-PmJhdGNoLmVsZW1fZmxhZ3MsIGRvX2RlbGV0ZSk7DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAg
-aWYgKGVyciA9PSAtRU5PRU5UKSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGlmIChyZXRy
-eSkgew0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHJ5LS07DQo+Pg0KPj4g
-V2hhdCBpcyB0aGUgJ3JldHJ5JyBzZW1hbnRpY3MgaGVyZT8gQWZ0ZXIgJ2NvbnRpbnVlJywgY3Ar
-KyBpcyBleGVjdXRlZC4NCj4gDQo+IEdvb2QgY2F0Y2gsIEknbGwgbW92ZSBjcCsrIHRvIGEgcHJv
-cGVyIHBsYWNlLiByZXRyeSBpcyB1c2VkIHRvIHByZXZlbnQNCj4gdGhlIGNhc2VzIHdoZXJlIHRo
-ZSBtYXAgaXMgZG9pbmcgbWFueSBjb25jdXJyZW50IGFkZGl0aW9ucyBhbmQNCj4gZGVsZXRpb25z
-LCB0aGlzIGNvdWxkIHJlc3VsdCBpbiBtYXBfZ2V0X25leHRfa2V5IHN1Y2NlZWRpbmcgYnV0DQo+
-IGJwZl9tYXBfY29weV92YWx1ZSBmYWlsaW5nLCBpbiB3aGljaCBjYXNlIEkgdGhpbmsgaXQnZCBi
-ZSBiZXR0ZXIgdG8NCj4gdHJ5IGFuZCBmaW5kIGEgbmV4dCBlbGVtLCBidXQgd2UgZG9uJ3Qgd2Fu
-dCB0byBkbyB0aGlzIGZvciBtb3JlIHRoYW4gMw0KPiB0aW1lcy4NCj4gDQo+Pg0KPj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICB9DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGVyciA9IC1FSU5UUjsNCj4+DQo+PiBX
-aHkgcmV0dXJuaW5nIC1FSU5UUj8NCj4gDQo+IEkgdGhvdWdodCB0aGF0IHRoaXMgaXMgdGhlIGVy
-ciBtb3JlIGFwcHJvcHJpYXRlIGZvciB0aGUgYmVoYXZpb3VyIEkNCj4gZGVzY3JpYmUgYWJvdmUu
-IFNob3VsZCBJIGhhbmRsZSB0aGF0IGNhc2U/IFdEWVQ/DQoNCkkgc2VlLiBXZSBkbyBub3Qgd2Fu
-dCB0byB1c2UgLUVOT0VOVCBzaW5jZSBnZXRfbmV4dF9rZXkgbWF5IHJldHVybiANCi1FTk9FTlQu
-IEkgdGhpbmsgLUVJTlRSIGlzIG9rYXkgaGVyZSB0byBpbmRpY2F0ZSB3ZSBoYXZlIGtleSwgYnV0
-IA0Ka2V5L3ZhbHVlIGVudHJ5IGlzIGdvbmUgcmlnaHQgYmVmb3JlIHRoZSBhdHRlbXB0ZWQgYWNj
-ZXNzLg0K
+On Fri, Nov 22, 2019 at 12:34:03AM +0000, Russell King - ARM Linux admin wrote:
+> On Thu, Nov 21, 2019 at 07:30:41PM -0500, Pavel Tatashin wrote:
+> > > > +#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+> > > > +static __always_inline void uaccess_enable(void)
+> > > > +{
+> > > > +     unsigned long val = DACR_UACCESS_ENABLE;
+> > > > +
+> > > > +     asm volatile("mcr p15, 0, %0, c3, c0, 0" : : "r" (val));
+> > > > +     isb();
+> > > > +}
+> > > > +
+> > > > +static __always_inline void uaccess_disable(void)
+> > > > +{
+> > > > +     unsigned long val = DACR_UACCESS_ENABLE;
+> > 
+> > Oops, should be DACR_UACCESS_DISABLE.
+> > 
+> > > > +
+> > > > +     asm volatile("mcr p15, 0, %0, c3, c0, 0" : : "r" (val));
+> > > > +     isb();
+> > > > +}
+> > >
+> > > Rather than inventing these, why not use uaccess_save_and_enable()..
+> > > uaccess_restore() around the Xen call?
+> > 
+> > Thank you for suggestion: uaccess_enable() and uaccess_disable() are
+> > common calls with arm64, so I will need them, but I think I can use
+> > set_domain() with DACR_UACCESS_DISABLE /DACR_UACCESS_ENABLE inside
+> > these inlines.
+> 
+> That may be, but be very careful that you only use them in ARMv7-only
+> code.  Using them elsewhere is unsafe as the domain register is used
+> for other purposes, and merely blatting over it (as your
+> uaccess_enable and uaccess_disable functions do) is unsafe.
+
+In fact, I'll turn that into a bit more than a suggestion.  I'll make
+it a NAK on adding them to 32-bit ARM.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
