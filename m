@@ -2,115 +2,184 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52640C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6072AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B2E2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574444514;
-	bh=HbtGDWVqT6RINptsr4QdRRG5JyZvL6Y5ZfA3QFTTrxk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQHJp4Blbx2LRF0B99S4sMrFK3uvx8CNGOczkRwtOQLRfrKcDopx5VmHXhAMDGqck
-	 gRcZ06eX3YFUU6Lz2XabUlSx5HUvFTJiIlGUqVlr7k+ZB+FH7ReAjaTyX+JBKSov1z
-	 U7nk6Y47XJKio1Qph7euEs4WeM+mJY6rTyGomoKY=
+	by mail.kernel.org (Postfix) with ESMTP id 3ACFA20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="DeUEAA99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfKVRlx (ORCPT
+        id S1726784AbfKVRny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:41:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbfKVRlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:41:53 -0500
-Received: from localhost.localdomain (91-167-84-221.subs.proxad.net [91.167.84.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFFD205C9;
-        Fri, 22 Nov 2019 17:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574444512;
-        bh=HbtGDWVqT6RINptsr4QdRRG5JyZvL6Y5ZfA3QFTTrxk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4I7dBaZKmPNfgNkHj3p5SYZ580WTfFb41b4Ml6YiqL30G1arS1GgdKFq8YoW11WK
-         XkbJBolt+sIkz/1aPda8+Rwf10Pnkghqqaj9hQy7S9JFj8oe1yf5zR0G6wocutN0eg
-         EqMcwa0JUpbTsj7wqO+Bg3q9UWxKHvQtrkFCQ2EI=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     will@kernel.org
-Cc:     bhelgaas@google.com, gregkh@linuxfoundation.org,
-        iommu@lists.linuxfoundation.org, isaacm@codeaurora.org,
-        jcrouse@codeaurora.org, jean-philippe@linaro.org,
-        john.garry@huawei.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        robin.murphy@arm.com, saravanak@google.com,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] iommu/arm-smmu: support SMMU module probing from the IORT
-Date:   Fri, 22 Nov 2019 18:41:25 +0100
-Message-Id: <20191122174125.21030-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191121114918.2293-1-will@kernel.org>
-References: <20191121114918.2293-1-will@kernel.org>
+        Fri, 22 Nov 2019 12:43:54 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42640 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVRnx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:43:53 -0500
+Received: by mail-wr1-f66.google.com with SMTP id a15so9590505wrf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 09:43:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Jhs/tdQjYIEWTRcB0MrJAK0ricmoQz3oM5hnSS/G8Wo=;
+        b=DeUEAA999MCNj61UTE0yqunROn+JFWelJgFE8QESgDgghl2Ui7AFdQ4ar1Ai/aBBSH
+         WAQ9JlOFRHpfad/lAlBFS9CTicthJ0a5IAq5jl/iN5lU2THKfiBJKsD25qGoLr8RHS6K
+         2zhADrvh1tzWnzYUM7NU350i+Kxb3iAihmzza7MoGvyJzcWMDh04Qj5GADdjkxX9v8Bz
+         D5zqHU4t0Triv86UlrucEoeXluMnv0ujiTqoKfUzKQHQMZe8YRqbgvvWpPmfWGvv7/f9
+         RhhCwVXotRx9kxmdbVYWe43kk8DcR/bf/HQOjH37c/dr56vgFwBh3oEkTclNzUoxfVXz
+         7BVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Jhs/tdQjYIEWTRcB0MrJAK0ricmoQz3oM5hnSS/G8Wo=;
+        b=UEIj15lEs8Ig6mczz/LuQdzSjS3Y6rQg1MRLBGnGypnvmy5B7a7fUddtUb35wfbdFA
+         ASS7Njd5Fozg0MhwTD0zARVdRJrD7LEIwxzieT842d4vtYw9p51q0DetnG6kRZUe2N3C
+         N7FT6XjhO9wr17eqLR+rNSKQ5gwSFDvAlf8Buj/63cGYvbdqij2opFSnLXRXsyMNdyqA
+         3mV3VFY3DAwospRhWQgLTrJ+bk+2reTeANRwvcI78nxObk1xXjd4PaLZ/yhHeGtoVhPx
+         bMAchY/D9xnp7jyT8YmP2ieweUdaC9Ku00DcJcjJ9x92owKsZIQ/ezyQD+6hQPiSumcZ
+         MCkg==
+X-Gm-Message-State: APjAAAXLXaflOTGedYYSbILUbaC+I/kVUzR6Y/K0dylB5nuoTPd9fBqk
+        jrahC8DgDm1xUAa+hzTeBr09Ow==
+X-Google-Smtp-Source: APXvYqxxk9S8do51zGWUu4tC45fKtPKiwgqbw8KXvXwcwCl5HBK9lKgKuSNJfyc3xQ7DBnfLi+aznQ==
+X-Received: by 2002:adf:e545:: with SMTP id z5mr18581366wrm.321.1574444630111;
+        Fri, 22 Nov 2019 09:43:50 -0800 (PST)
+Received: from [10.32.50.232] ([185.149.63.251])
+        by smtp.gmail.com with ESMTPSA id a6sm9096597wrh.69.2019.11.22.09.43.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 09:43:49 -0800 (PST)
+Subject: Re: [PATCHv1 2/2] Input: EXC3000: Add support to query model and
+ fw_version
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20191107181010.17211-1-sebastian.reichel@collabora.com>
+ <20191107181010.17211-2-sebastian.reichel@collabora.com>
+From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
+Message-ID: <4ee3ce4f-f544-700c-bc8d-817cea35137a@flowbird.group>
+Date:   Fri, 22 Nov 2019 18:43:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20191107181010.17211-2-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for SMMU drivers built as modules to the ACPI/IORT device
-probing path, by deferring the probe of the master if the SMMU driver is
-known to exist but has not been loaded yet. Given that the IORT code
-registers a platform device for each SMMU that it discovers, we can
-easily trigger the udev based autoloading of the SMMU drivers by making
-the platform device identifier part of the module alias.
+Hi Sebastian,
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/acpi/arm64/iort.c   | 4 ++--
- drivers/iommu/arm-smmu-v3.c | 1 +
- drivers/iommu/arm-smmu.c    | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+On 07/11/2019 19:10, Sebastian Reichel wrote:
+> Expose model and fw_version via sysfs. Also query the model
+> in probe to make sure, that the I2C communication with the
+> device works before successfully probing the driver.
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>   drivers/input/touchscreen/exc3000.c | 136 ++++++++++++++++++++++++++++
+>   1 file changed, 136 insertions(+)
+>
+> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+> index 7d695022082c..4c9f132629b9 100644
+> --- a/drivers/input/touchscreen/exc3000.c
+> +++ b/drivers/input/touchscreen/exc3000.c
+> @@ -41,6 +41,11 @@ struct exc3000_data {
+>   	struct touchscreen_properties prop;
+>   	struct timer_list timer;
+>   	u8 buf[2 * EXC3000_LEN_FRAME];
+> +	char model[11];
+> +	char fw_version[6];
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 5a7551d060f2..a696457a9b11 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -850,9 +850,9 @@ static inline bool iort_iommu_driver_enabled(u8 type)
- {
- 	switch (type) {
- 	case ACPI_IORT_NODE_SMMU_V3:
--		return IS_BUILTIN(CONFIG_ARM_SMMU_V3);
-+		return IS_ENABLED(CONFIG_ARM_SMMU_V3);
- 	case ACPI_IORT_NODE_SMMU:
--		return IS_BUILTIN(CONFIG_ARM_SMMU);
-+		return IS_ENABLED(CONFIG_ARM_SMMU);
- 	default:
- 		pr_warn("IORT node type %u does not describe an SMMU\n", type);
- 		return false;
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 7669beafc493..bf6a1e8eb9b0 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -3733,4 +3733,5 @@ module_platform_driver(arm_smmu_driver);
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
- MODULE_AUTHOR("Will Deacon <will@kernel.org>");
-+MODULE_ALIAS("platform:arm-smmu-v3");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index d55acc48aee3..db5106b0955b 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -2292,4 +2292,5 @@ module_platform_driver(arm_smmu_driver);
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
- MODULE_AUTHOR("Will Deacon <will@kernel.org>");
-+MODULE_ALIAS("platform:arm-smmu");
- MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+These buffers are too small.
+
+I know those are the values shown in the EETI "I2C Programming Guide" 
+but, on my exc80H32 I have 16 bytes for the model and 14 for the fw_version.
+
+It may even be possible to have larger, depends on the firmware / config 
+blob that has been loaded.
+
+The guide seems to be mostly an example. As nothing else is sent in the 
+reply message, worst case the full frame would be filled.
+
+
+>   
+> +static void exc3000_query_interrupt(struct exc3000_data *data)
+> +{
+> +	u8 *buf = data->buf;
+> +	int err;
+> +
+> +	data->query_result = 0;
+> +
+> +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
+> +	if (err < 0) {
+> +		data->query_result = err;
+> +		goto out;
+> +	}
+> +
+> +	if (buf[0] == 0x42 && buf[4] == 'E') {
+> +		memcpy(data->model, buf+5, 10);
+> +		data->model[10] = '\0';
+
+Maybe use sizeof() to avoid the hard coded 10?
+
+> +		goto out;
+> +	} else if (buf[0] == 0x42 && buf[4] == 'D') {
+> +		memcpy(data->fw_version, buf+5, 5);
+> +		data->fw_version[5] = '\0';
+> +		goto out;
+> +	}
+> +
+
+
+Ok so at least there won't be a buffer overflow but it will truncate.
+
+
+> +static DEVICE_ATTR(fw_version, S_IRUGO, exc3000_get_fw_version, NULL);
+> +
+
+
+Maybe use DEVICE_ATTR_RO  to reduce the amount of boilerplate?
+
+
+> +	input->dev.groups = exc3000_attribute_groups;
+
+
+Hum, this adds the attributes to the input device (in /sys/class/input) 
+but these attributes are really for the whole I2C device.
+
+Wouldn't it be better to use devm_device_add_group() to add them to the 
+I2C device?
+
+
+> +	for (retry = 0; retry < 3; ++retry) {
+> +		error = exc3000_get_model(data);
+> +		if (!error) {
+> +			break;
+> +		}
+> +		dev_warn(&client->dev, "Retry %d get EETI EXC3000 model: %d\n", retry + 1, error);
+> +	}
+> +
+
+
+Is there a particular reason why retries are needed?
+
+
+Regards,
+
+
+Martin
 
