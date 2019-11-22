@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4724EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41091C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDC820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E69A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419670;
-	bh=NKBfqAv6RndEcqs2ia5kpL1lCcer34AuTvHEDkQdefc=;
+	s=default; t=1574419674;
+	bh=5W2ErCyc47JdlxUbc9VA8AEfZ4i7AtaSVHCx4GuH8Jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qipEbnzClFCk3pZ8HkJeQpzsMfLZoGdvLtj5bRdLygWz7urrFeYdyKYAwldJP2RYm
-	 arekA5DWBxG8tpRTTRVO8SxhP6+Zbcmp8FmbUgdK+n3h3+BJamgHiJ35sLbZwpY+Di
-	 7lbGcrj8QMIAmmOlNsRUghhp9d1UteL3OqW/i0+g=
+	b=FVbB/TbK6iVX+XmsBX3ZxzocAQv9g+UYewjQBKks8Phe9DNL5rpS5zGrFTwHLxx3l
+	 B6qnFITbgBGIg6LneZkB3mvCj9yNnWXxS0sw8K2LCtbzh2hYHaB08mHatk7Ebzcf6/
+	 m+e7Da+4rtOED6/3Z1Hd0L4qij8vEt+I8WcPvx34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfKVKrt (ORCPT
+        id S1729268AbfKVKrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:47:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55892 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:47:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727642AbfKVKrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:46 -0500
+        id S1729810AbfKVKrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08B620637;
-        Fri, 22 Nov 2019 10:47:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E61F20715;
+        Fri, 22 Nov 2019 10:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419665;
-        bh=NKBfqAv6RndEcqs2ia5kpL1lCcer34AuTvHEDkQdefc=;
+        s=default; t=1574419668;
+        bh=5W2ErCyc47JdlxUbc9VA8AEfZ4i7AtaSVHCx4GuH8Jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tU4V1d5gLVBP7EAL/PX5vZ3HONtc01dljn/j6QhyY/dzgyahB5GSa6UL2qzWz3ScU
-         DZPn9gcHDZeGX+g6SW4XGZd2YDDLqms1OjIxhnQ3TovYEqHIJp290Doszl+hS4wRRv
-         f5P6PtCdtZXc0t0hMyU9YGgci+HDW8XQeHQ9czu4=
+        b=PPUVEx07Et3S4fAVT6zFsUieHksH2iheun2zZPOjSkHRzu9FAGyoGdkU8lAKXGXxh
+         g+4dG+42Z7S8Qai4V/D+DdY1fJsIdNyQQZReTMd2Gg0D2oVCV0LoCXqqLWTHLsLin+
+         KH+FUAE3JYxjufIszogch6/V3vQwrmf1Wy7YkNHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 190/222] NFSv4.x: fix lock recovery during delegation recall
-Date:   Fri, 22 Nov 2019 11:28:50 +0100
-Message-Id: <20191122100916.019304202@linuxfoundation.org>
+        stable@vger.kernel.org, Rami Rosen <ramirose@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 191/222] dmaengine: ioat: fix prototype of ioat_enumerate_channels
+Date:   Fri, 22 Nov 2019 11:28:51 +0100
+Message-Id: <20191122100916.080432176@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,55 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Rami Rosen <ramirose@gmail.com>
 
-[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
+[ Upstream commit f4d34aa8c887a8a2d23ef546da0efa10e3f77241 ]
 
-Running "./nfstest_delegation --runtest recall26" uncovers that
-client doesn't recover the lock when we have an appending open,
-where the initial open got a write delegation.
-
-Instead of checking for the passed in open context against
-the file lock's open context. Check that the state is the same.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Rami Rosen <ramirose@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/ioat/init.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 46afd7cdcc378..9a8830a0f31f9 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -101,7 +101,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
- 	return nfs4_do_check_delegation(inode, flags, false);
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index d139706f01fe8..9d936584d3310 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -129,7 +129,7 @@ static void
+ ioat_init_channel(struct ioatdma_device *ioat_dma,
+ 		  struct ioatdma_chan *ioat_chan, int idx);
+ static void ioat_intr_quirk(struct ioatdma_device *ioat_dma);
+-static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
++static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
+ static int ioat3_dma_self_test(struct ioatdma_device *ioat_dma);
+ 
+ static int ioat_dca_enabled = 1;
+@@ -573,7 +573,7 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
+  * ioat_enumerate_channels - find and initialize the device's channels
+  * @ioat_dma: the ioat dma device to be enumerated
+  */
+-static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
++static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+ {
+ 	struct ioatdma_chan *ioat_chan;
+ 	struct device *dev = &ioat_dma->pdev->dev;
+@@ -592,7 +592,7 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+ 	xfercap_log = readb(ioat_dma->reg_base + IOAT_XFERCAP_OFFSET);
+ 	xfercap_log &= 0x1f; /* bits [4:0] valid */
+ 	if (xfercap_log == 0)
+-		return 0;
++		return;
+ 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
+ 
+ 	for (i = 0; i < dma->chancnt; i++) {
+@@ -609,7 +609,6 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+ 		}
+ 	}
+ 	dma->chancnt = i;
+-	return i;
  }
  
--static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
-+static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
- {
- 	struct inode *inode = state->inode;
- 	struct file_lock *fl;
-@@ -116,7 +116,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
- 	spin_lock(&flctx->flc_lock);
- restart:
- 	list_for_each_entry(fl, list, fl_list) {
--		if (nfs_file_open_context(fl->fl_file) != ctx)
-+		if (nfs_file_open_context(fl->fl_file)->state != state)
- 			continue;
- 		spin_unlock(&flctx->flc_lock);
- 		status = nfs4_lock_delegation_recall(fl, state, stateid);
-@@ -163,7 +163,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
- 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
- 		if (!err)
--			err = nfs_delegation_claim_locks(ctx, state, stateid);
-+			err = nfs_delegation_claim_locks(state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
- 			err = -EAGAIN;
- 		mutex_unlock(&sp->so_delegreturn_mutex);
+ /**
 -- 
 2.20.1
 
