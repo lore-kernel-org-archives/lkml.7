@@ -2,101 +2,82 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F5FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97942C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D58D20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2072068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HK7+USps"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSzmnfAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfKVMzG (ORCPT
+        id S1727616AbfKVMzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:55:06 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4666 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726526AbfKVMzG (ORCPT
+        Fri, 22 Nov 2019 07:55:49 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44275 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfKVMzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:55:06 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMCkwcB028665;
-        Fri, 22 Nov 2019 13:54:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=bxiuTK+x3oPhnDKBKfKRJ01+VjbhWxaGagP881Oi19M=;
- b=HK7+USpsxZtqvR/TzymAPqh+iPDWPjX/+6rVTEImlPygNpUxuKwqo78AErKac93eyX1w
- T7zAUyTazpQG53YjdL4mN+aRCLv+tXu9G1vIFOPe18+VHI5CzOB1ssGH7bD2si4W1899
- A5eq/oFIL1QCW0mcouyDbja1yUfzAmj1SOjiHwFp2cbf07kYQO0PanywDdem6NQTh0e+
- CEV0tXdVRhU/dUk5jAyDDJ1naaORANUDwLAKCw/WAPS8Z480WkQV/z0w/N9F3vqp1Kno
- Jep5OJod/jXS5RaHF/QAIJfn61DwF5uCQqXoxKVmYUm9MxzEs8l4kr48kUVGpXoGDdqK ig== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9usrue0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 13:54:35 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C67E110002A;
-        Fri, 22 Nov 2019 13:54:34 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 99C1E2BD314;
-        Fri, 22 Nov 2019 13:54:34 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov 2019 13:54:34
- +0100
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH] dt-bindings: remoteproc: stm32: add wakeup-source property
-Date:   Fri, 22 Nov 2019 13:54:02 +0100
-Message-ID: <20191122125402.14730-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Nov 2019 07:55:48 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v201so4389352lfa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:55:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wk6tt4pvu+ZfbWYu/PVVeu0E+OQ4R1/xSNXMM/bU9Lw=;
+        b=aSzmnfAjW/Sld1A8GmaY9ft05mnl46eBHazEo0IxNFXbfqSoHtzJAqR/KjWfUJTOZT
+         63vNmiQEJCiTbYwkMMnapQZ0CWRn1/ZBioLILPzwXpwo+KJU1BdbU5Guu17ED/RbO91Y
+         ZrIDQ9/tCxEJLPj9pN2EBouj1rjVXn1M3Yx3hJxKCsQrsYZ6syipL3Gt0tOCLjyhEekU
+         VDsvbCQpdzdTiK+XrpO64rZKfv5/Waa9bVEIanN6lpwDIFXdW1hqIU9UShZyjzqJG696
+         GxvlR3Qb6tW0rclsJfPIZk+iVoe850/pWaIvV7pl/JWquPXliXkEdJTCCBI2+vfI6Jik
+         S06w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wk6tt4pvu+ZfbWYu/PVVeu0E+OQ4R1/xSNXMM/bU9Lw=;
+        b=Nz8G8uQzaw8lTNls9PgOL9a+w0/E1ipUeYPCN2UCkJKdI/5owtIfJqWxe/bjixarMa
+         DDck2xptuJQTxcN35BV2Qwz+iJGOI/o2LPtjldHGGskA3Ij2aC1AJpme+la9js2oVGFz
+         jnxWKKa6tIzIMBhfEyTeltN3gg+whiBmRmcVTwioFjHN1/9DPsycM1r1tmIheg9Yrl9q
+         mE0lxPKd0nTLI6ank3t4extSCmMF8Ixr3nNfwMCCs4fnWfjcUp5I6m+ziXSn9rL1wLXm
+         i6grLooyzf755kE6oY+KfhlH1QbrseQjyR+2I/2U5LrGrdzZBZ3UKIPdlIeHgvCjM+cH
+         oG3A==
+X-Gm-Message-State: APjAAAVJBluKRGmE77muVJm/w5mDdl6eNFSaFFJ0NMlKxpX6BXC5vJCj
+        +Qu9270P/oMjcBB9M5b2Vj5ly4fbjee4mLtj4+kqhQ==
+X-Google-Smtp-Source: APXvYqyLBqx9aJEJZHJrOVeWIjfpxknwTpqU3jqLGVpk8q264VK7YTN0bIpi+Gk/YANI17fLVJDi0jHVKVodRmu7na4=
+X-Received: by 2002:ac2:44d2:: with SMTP id d18mr2251137lfm.5.1574427346899;
+ Fri, 22 Nov 2019 04:55:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
+References: <20191120154521.16273-1-geert+renesas@glider.be>
+In-Reply-To: <20191120154521.16273-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 13:55:34 +0100
+Message-ID: <CACRpkdb7Fkrbr=Zu0HPPWmDx4uPPvog7edzddZ2Z7g1E7srYdA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: Fix bogus reference to gpiod_get_count()
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the optional wdg interrupt is defined, then this property
-may be defined.
+On Wed, Nov 20, 2019 at 4:45 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
-This commit is related to the merge conflict issue reported by
-Stephen Rothwell: https://lkml.org/lkml/2019/11/21/1168
----
- .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml          | 2 ++
- 1 file changed, 2 insertions(+)
+> The recommended function is called gpiod_count(), not gpiod_get_count().
+>
+> Fixes: f626d6dfb7098525 ("gpio: of: Break out OF-only code")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-index acf18d170352..c0d83865e933 100644
---- a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-+++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-@@ -50,6 +50,8 @@ properties:
-     description: Should contain the WWDG1 watchdog reset interrupt
-     maxItems: 1
- 
-+  wakeup-source: true
-+
-   mboxes:
-     description:
-       This property is required only if the rpmsg/virtio functionality is used.
--- 
-2.17.1
+Patch applied!
 
+Yours,
+Linus Walleij
