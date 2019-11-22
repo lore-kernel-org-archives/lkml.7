@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BD4C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2568206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635AB206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfKVDAJ convert rfc822-to-8bit (ORCPT
+        id S1726729AbfKVDA0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 22:00:09 -0500
-Received: from mail-oln040092255097.outbound.protection.outlook.com ([40.92.255.97]:5788
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        Thu, 21 Nov 2019 22:00:26 -0500
+Received: from mail-oln040092254037.outbound.protection.outlook.com ([40.92.254.37]:36949
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbfKVDAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 22:00:09 -0500
+        id S1726408AbfKVDA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 22:00:26 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BQqALV8DbgVLQSH/rIIauk8M5PuAbagJXNrfIwDnNzzK5x9oxqkzQ5UBoBWqDKJqmHK4DPzYcXtAE7nfQYKeg0VGvbuWf/W/K2vxWVsW6vNfp/sEivK6mkacJ4Fk9C94N9Bjf5x+t9hdUgP2ovGtaH+BhxSviLGLiQcmb6Wfs2aK3FUPGLjVwBeJVNRZ3U46ZVqFHoymjedocdg9RQDsM71VGupDe6sOold3N0Tak+rQ29of9SmaOKPkHqL9rYG0C9LnRh/+i10WotZaAK6yXl40tQd94hA8M0XMKg/7QVoZtGWDTAVdoKHNgDqNy8OBV4eM8s68xdKfwgO1s7pjXg==
+ b=EgBPgl5LIggF6UxYUf8P0Dh/8Nap4yhMaSL3/xMjO6m6p9DaLZsJ6iF0p5VOXgMVjiMofqdwKPkNPURO4AKiRVH3TG577nFqEIVUgZTFphveD7SBft6ibfwmj8thryJ/w/uMpwUOAViMaPFclGcEm0PYyygiA6B9KOlI1WR7K7lUooNlharOfttjY86/LVR4nb3mMDHHY+4XwLwFpTT17Uvgd46xFtzFOx1O8I4UR+LBzvHJTTYNw9D+becrUP64gItpArMC0GZxmC2jZuuPrSz0T/hgvGPccI1yAnLAWHu70U4Hwh0Kjfc9rBmy4tnSr+C1EOjLLqT6gHMzafrWhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
  bh=o/GcbV9eN0WgES9CQbv7Y6I1dEDn1ZQ6wNvdFCBd6WY=;
- b=U9XAs6azQ8CW4alOidz2QrpZfyjT+nFl8z2xOCtEURWlbF9QTWEpwIQwBlCE+fxfUXT6A6jJ5RjEhMqL7SP6H66B9Gp7r4CO52RFKKtUZHWb6ybqgDIVGmyOqOolx/UUKZhRbh7V32ZBsq7iUOi6CPOWMCHkul8qAVxBJpd2nZkd6MU8JRdj+cdOV3ziuGZidk8Yz+HXIUyoizSOU+EN0OHU5f6hk55V3rnjVBmf5HH1yt3FDu2IdxO3xtB7VJzKh3AuBTE4Ziy11h45hXiINERHCrrgkm6yvFtcC7lckOWZcRIfAN35mFHstLJaWmQlC0nyEInbK3REETYIzagAZQ==
+ b=a3Cn9JZ401wqMhT7MXhHGx2p8GIS8Piv3WFPTqz3J0boGmOk3DfF3INX5NMITfAq7+D4zSUlVzUxoUQNljcBJvbhPIiFjcSQ8cp3VtNcDSNIsThtyJlZPEQTWXrMhgRwsvmV6xcdmOfr5N3aOkJrQI1xQ8AprueDHIyqcttAd+MXc2O+pnG60o31eBRmC8pEfl1rpz1n5jH+flScU9R0UcOgYlPsIs9KQr0IzqVsKm/a5QlmoPFzmQ+ZpfAKms2GnHni5zHQsrH/7M5upsSTiCe5auREC2zkozKnRO7gio/J7DFkzZwRMlSas77hzErq5ElbpSpPeg4FK8CZiIelyA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from SG2APC01FT025.eop-APC01.prod.protection.outlook.com
- (10.152.250.58) by SG2APC01HT080.eop-APC01.prod.protection.outlook.com
- (10.152.251.239) with Microsoft SMTP Server (version=TLS1_2,
+ (10.152.250.58) by SG2APC01HT098.eop-APC01.prod.protection.outlook.com
+ (10.152.251.224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17; Fri, 22 Nov
- 2019 02:59:22 +0000
+ 2019 02:59:41 +0000
 Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.53) by
  SG2APC01FT025.mail.protection.outlook.com (10.152.250.187) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17 via Frontend Transport; Fri, 22 Nov 2019 02:59:22 +0000
+ 15.20.2474.17 via Frontend Transport; Fri, 22 Nov 2019 02:59:41 +0000
 Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  ([fe80::b880:961e:dd88:8b5d]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  ([fe80::b880:961e:dd88:8b5d%12]) with mapi id 15.20.2474.021; Fri, 22 Nov
- 2019 02:59:21 +0000
+ 2019 02:59:40 +0000
 From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>,
@@ -52,42 +52,42 @@ Subject: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
  override host bridge bus window
 Thread-Topic: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
  override host bridge bus window
-Thread-Index: AQHVoODWhXDf7VZ4p029AmCe5Y+Ysg==
-Date:   Fri, 22 Nov 2019 02:59:21 +0000
-Message-ID: <PSXP216MB0438B640B2BC48B5338FDE0280490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Thread-Index: AQHVoODiiG1xuuRCOEaC/dBx8A2UfA==
+Date:   Fri, 22 Nov 2019 02:59:40 +0000
+Message-ID: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0240.ausprd01.prod.outlook.com
- (2603:10c6:220:19::36) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+x-clientproxiedby: ME2PR01CA0227.ausprd01.prod.outlook.com
+ (2603:10c6:220:19::23) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:DE8E3D50627D1C8A59071D7E0002EC3B8162861E6079A3F6CC2750BC570F26EA;UpperCasedChecksum:7E2DAAEE16A46673DA033213D44B6553DC091E9E77C2E0CD2DDFE4F3963DBF4F;SizeAsReceived:7465;Count:47
+x-incomingtopheadermarker: OriginalChecksum:23DB0BD3EA2774EDC44665EF0CEE95B7D31025FFDB2706BC83D57C6FB32628FE;UpperCasedChecksum:CDA46BA634B29DA0469E8484F2AB62081164C64BE01D30E583C3A690CAF41486;SizeAsReceived:7463;Count:47
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [huFbT3C3rH+HQt/TKD7PxVm7mg2jFEsp]
-x-microsoft-original-message-id: <20191122025913.GA4291@nicholas-dell-linux>
+x-tmn:  [ClQTX4QG8QygjZY/wke4n29sjcScnJBf]
+x-microsoft-original-message-id: <20191122025933.GA4294@nicholas-dell-linux>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 47
 x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 9d482bc3-2aa0-4251-c43e-08d76ef7f928
-x-ms-exchange-slblob-mailprops: Z/LFrRplwz5CBrXgV5KURwZ8ebthhMcysJBJNDQBvnHOrXN/rJNobuCwLzru0MU+01aEwIu57G8FJLmQV2NS5wBXOmgeh1dD7i/pIt1w/7L6gbXq/dwfBo/ZDhEcPopWVKoejQE0Kjqfq/UZKeBn9rlFdZDRIf0MX4lyoYITuq0Frd6bWuFl78Jkm0Bml/nbTA/xD+88q7LofvN2QK3O9Wp5P2vwC+iIoB45dLAIarG7u3OJ0pLMIuzBWFK2VzcIxNrqHkqkrwBnJddKsCm5rLS2NmMp0cIck2z9ReQAQOrQRFXvHf+vT6t3GQxdFcf2tsTB4BxA0IdOojh5RSRhoJqAAy4QYzmTuxGEYzGlRjuREoNFfnxl1rCT+f3ohNT9iGjqk1E1xxcZLfRr092OPPlQoLOzS1HB2bubK/hxXqRBY0MG5seAStIt5eRiALeA4n2eZuvOC9p9TqPd3BKkWhpyGPhxK/G4xpHxPCamRkZSzEssX46K41KL3jnZ1p49m91vY3ppYZb7ugtrtV7JQTi9Zw3SyO5gANErMxksGxHePIyL6jKa5TEFHARskYWMy6iarNGlfViWGmM85PeG45hZ1XNav2sOdGVmeV13VO/csEcTi2zYKtTVQyDvydm24kQ66jw3+XfTz4HYTiJoPPrXYVy3PqNotKVG36K1gP+O7hurNCD52uKAoCFFymPMaGYXXbg4uIH0Tc15gaMotFLb4CfKUSitD/G/9BsBHieeYlNhhKN0P/0lvR1crufb
-x-ms-traffictypediagnostic: SG2APC01HT080:
+x-ms-office365-filtering-correlation-id: 372e556b-7e04-4666-4ddf-08d76ef804a2
+x-ms-exchange-slblob-mailprops: zswcL9HXbeWFySZoc/1CdWpwdPrvG2YoABjzVq03XR6s9aAG8OpTmVnUh8KKxRu9+rc5BM/kv+GIg3Jcq4HKa/M6hdQ8viaCUiTq3zDafY1GES5pdtG9nN6G6/NJlTRWljmOVtsOU6RX70qx0o6+/y6pNXcyN1roUbrBg0yDePyAHh0cv1NYmDzHe0MwUsLKWIQAwjFu33uk8WrDUlK9BlAw7+8pypY87U903dQrTfKaTE5xIhdjJcX9pNc7b9EmLpBk3G7TX6UH4wak2BJD3kB6UD+sFnOEj5lR+exy3oSFI1NtljemtRNE2Ehgp/K+XRt47+JdAUXPnmIzd9EMSNkWK8cVu/GxTDRMSTrpofSqFfmYOhHyeYP/xI7uoV39xIhTL4M5MxZTx022eDXLKxtLGriq9FUocRVJruH/bOFMmEMbVbUi+dKJ+PrSnmoEi2RRwRUPoHrOZp0zScU3E++mUUlObevu58dTglvPVz47k17jb2HNk4VapQT6M6fMSYbms9S8NJxZohAgKtzAL6tLtquZdrpkE2u7yMu2LctsBGAQD0hhhV+M5eZQpN0hznf2Rm1XLShFTBMWvIcJRVXRciTdoHxlY6y9swTCUaBliprTMwc8zTmeIValxJ6O76hiMzP4NTKzxjXN2jh19ouADl6ncxGUZT9t64peaP5TztfT/vI6FWrolhD+2CHtTDpbpe6GRaGKKhe66UvN9rSNJ0ITY3W4A/HtIw3o5U7mUauq8w9/5Bv+60OZJePi
+x-ms-traffictypediagnostic: SG2APC01HT098:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Tu+DLVLCgHDZs0ndqen9wzzV5K3RFQ1du1OEl7NOaUOzhFwKajJ50MSbvoyI4FHvgbDli7DsKIEUHhbi2hGtC/CwDnAGmA9dy2LQf7Q7s/F64eu25CJnQtElaj8txHEk4gYMdwBDqDHdWik0jEWkI/r9It3+fQSx3KYK60EOUBO4goKnbSKPRhIFxvu3dzHW
+x-microsoft-antispam-message-info: bs1UXGsSX3gz+b4rbiyodZRLbBBXU0GzQfyO2OCJ3o5ztXaZAHJG+shc3zZtsPhwFK/vuHmo5qeYuLSMIvCy7QMDcbfv0gYG1Zq6pIzC0x7lz8KFfzb52qGr+4UcWm7K06qD0eo6oCnmHKUe9d0EurHNG9ep2TWSrLxf6ZiQHDSipU4dw72vwFV40SVoeFPG
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5C7CA53BFA5424498163D27086D2390B@KORP216.PROD.OUTLOOK.COM>
+Content-ID: <2D23CA545A35124E9D68E96A40847255@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d482bc3-2aa0-4251-c43e-08d76ef7f928
+X-MS-Exchange-CrossTenant-Network-Message-Id: 372e556b-7e04-4666-4ddf-08d76ef804a2
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 02:59:21.6778
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 02:59:40.8163
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT080
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
