@@ -2,122 +2,109 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA87C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF146C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60252070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00022071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574458417;
+	bh=72tyMCAZ0qkQO4t35kUTecfC5+rGEvcEc7cHz5fcAAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z1ocb/GYlPJpDDw++RfYpNZZhba5JAQ17vtJENs70ULRkYFHpkobxz4M5uUYJJ5yi
+	 m66SMpq6VwAmp4c9Kda2OnKzmufcLSZe+7gYuVBdZ6wG3xsSXWA0rSzjKo1DF3fO/L
+	 5RV3j4xtKH3k8vU46I52r5tFnZd9JPOjs8XuiQE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfKVVd1 (ORCPT
+        id S1726875AbfKVVdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:33:27 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60195 "EHLO mga12.intel.com"
+        Fri, 22 Nov 2019 16:33:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfKVVd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:33:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 13:33:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
-   d="scan'208";a="210367928"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by orsmga003.jf.intel.com with ESMTP; 22 Nov 2019 13:33:25 -0800
-Message-ID: <b33151bdfb5611de7db8493cb8fcca4b8f372267.camel@intel.com>
-Subject: Re: [PATCH 1/6] x86/fpu/xstate: Fix small issues before adding
- supervisor xstates
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Fri, 22 Nov 2019 13:22:37 -0800
-In-Reply-To: <20191009155847.GE10395@zn.tnic>
-References: <20190925151022.21688-1-yu-cheng.yu@intel.com>
-         <20190925151022.21688-2-yu-cheng.yu@intel.com>
-         <20191009155847.GE10395@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726089AbfKVVdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 16:33:36 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0797A2070E;
+        Fri, 22 Nov 2019 21:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574458414;
+        bh=72tyMCAZ0qkQO4t35kUTecfC5+rGEvcEc7cHz5fcAAA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oVSvsArPSBwjRysWNnAYSHWNIPdGthplosP+VNlKImbUjlesrgdgfNILVT98rE0oQ
+         QEGdvBBvPMxMcFiv9/++TK+sbT/1vaxYscJxc61Em/M4jU/deNDsy0+AhXvAsqSlvY
+         9rvQUkNUdTySj2RlRraGo1plCLTxy+J9oJ/NoXzI=
+Date:   Fri, 22 Nov 2019 22:33:31 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
+Message-ID: <20191122213331.GA2102330@kroah.com>
+References: <20191122100912.732983531@linuxfoundation.org>
+ <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
+ <20191122151631.GA2083451@kroah.com>
+ <20191122170534.GV20752@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122170534.GV20752@bombadil.infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 08:58 -0700, Borislav Petkov wrote:
-> On Wed, Sep 25, 2019 at 08:10:17AM -0700, Yu-cheng Yu wrote:
-> > In response to earlier comments, fix small issues before introducing XSAVES
-> > supervisor states:
-> > - Add spaces around '*'.
-> > - Fix comments of xfeature_is_supervisor().
-> > - Replace ((u64)1 << 63) with XCOMP_BV_COMPACTED_FORMAT.
-> > 
-> > No functional changes from this patch.
-> > 
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  arch/x86/kernel/fpu/xstate.c | 15 ++++++---------
-> >  1 file changed, 6 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-> > index e5cb67d67c03..b793fc2156b9 100644
-> > --- a/arch/x86/kernel/fpu/xstate.c
-> > +++ b/arch/x86/kernel/fpu/xstate.c
-> > @@ -60,7 +60,7 @@ u64 xfeatures_mask __read_mostly;
-> > 
-> >  static unsigned int xstate_offsets[XFEATURE_MAX] = { [ 0 ... XFEATURE_MAX - 1] = -1};
-> >  static unsigned int xstate_sizes[XFEATURE_MAX]   = { [ 0 ... XFEATURE_MAX - 1] = -1};
-> > -static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask)*8];
-> > +static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask) * 8];
-> > 
-> >  /*
-> >   * The XSAVE area of kernel can be in standard or compacted format;
-> > @@ -110,12 +110,8 @@ EXPORT_SYMBOL_GPL(cpu_has_xfeatures);
-> >  static int xfeature_is_supervisor(int xfeature_nr)
-> >  {
-> >       /*
-> > -      * We currently do not support supervisor states, but if
-> > -      * we did, we could find out like this.
-> > -      *
-> > -      * SDM says: If state component 'i' is a user state component,
-> > -      * ECX[0] return 0; if state component i is a supervisor
-> > -      * state component, ECX[0] returns 1.
-> > +      * Extended State Enumeration Sub-leaves (EAX = 0DH, ECX = n, n > 1)
-> > +      * returns ECX[0] set to (1) for a supervisor state.
+On Fri, Nov 22, 2019 at 09:05:34AM -0800, Matthew Wilcox wrote:
+> On Fri, Nov 22, 2019 at 04:16:31PM +0100, Greg Kroah-Hartman wrote:
+> > On Fri, Nov 22, 2019 at 06:47:05AM -0800, Guenter Roeck wrote:
+> > > On 11/22/19 2:26 AM, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.19.86 release.
+> > > > There are 220 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > 
+> > > I see the following warning (at least for arm64, ppc64, and x86_64).
+> > > This seems to be caused by "idr: Fix idr_get_next race with idr_remove".
+> > > v4.14.y is also affected. Mainline and v5.3.y are not affected.
 > 
-> "... and cleared (0) for a user state."
+> That makes sense; the code in question is different after 4.19.
+> Thanks for the report; it's very clear.
 > 
-> I believe it is is clearer this way.
+> > Willy, this looks like something from your patch, is it to be expected?
 > 
-> >        */
-> >       u32 eax, ebx, ecx, edx;
-> > 
+> It's harmless; the problem is that we can't check whether the dereference
+> is safe.  The caller isn't holding the RCU lock, and the IDR code doesn't
+> know what lock is being held to make this dereference safe.  Do you want
+> a changelog for this oneliner which disables the checking?
 > 
-> Since you're touching this function: make it return bool as it is used
-> in boolean context only and have it return simply:
-> 
->         return ecx & 1;
+> diff --git a/lib/idr.c b/lib/idr.c
+> index 49e7918603c7..6ff3b1c36e0a 100644
+> --- a/lib/idr.c
+> +++ b/lib/idr.c
+> @@ -237,7 +237,7 @@ void *idr_get_next(struct idr *idr, int *nextid)
+>  
+>  	id = (id < base) ? 0 : id - base;
+>  	radix_tree_for_each_slot(slot, &idr->idr_rt, &iter, id) {
+> -		entry = radix_tree_deref_slot(slot);
+> +		entry = rcu_dereference_raw(*slot);
+>  		if (!entry)
+>  			continue;
+>  		if (!radix_tree_deref_retry(entry))
 
-This implicitly converts a u32 to a bool.  By looking at it, I think it should
-be OK, but wonder if anything overlooked?  I would be happy to make this a
-separate patch.
+Thanks for this, I'll merge it with the existing patch tomorrow, it's
+late here...
 
-Yu-cheng
+greg k-h
