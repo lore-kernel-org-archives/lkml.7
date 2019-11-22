@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A08CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9057EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514C320718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C66220718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419183;
-	bh=QIdrYBN1CMXCnK5GnZ7PBljurGUU0QC3Y6NR8gwZJLw=;
+	s=default; t=1574419189;
+	bh=xRQ0dd3wlZXcMmBrtEuNQlSzpqubTbFKog6GR1OKagk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n0lT4noaKA4ASmcKutHcOTAxt9W92/hbvJNuZvh70gCBJUevnKJCMdNiBS8/+cz/G
-	 lSQGc5K9A2/IQQwIRPaoy6jTS5/XIU39PwVgkculFw8SSs17NB3aOqXrNgm4W+unvr
-	 iaigFrSWf1SVQpwmIPrROAWmDQHYqzoHEpbimXiU=
+	b=dSyszT6b1tzhU46K1h2ncR4My3/Zzwr6HeT5Km7SW4v0XnnENurthcBh+/Gn+Hwb6
+	 +KzsS/wz8Vlru5BtXZjKCI0eeUoC2Xek3nl4/N9z535XQcTi5Jdh4LGGFJgVWHBzen
+	 cP/zs/i1jgPXY7sLpv2uQra4y8sJ8bgsQO9FW7BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfKVKjm (ORCPT
+        id S1727724AbfKVKjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:39:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42992 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:39:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbfKVKjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:39:40 -0500
+        id S1728811AbfKVKjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:39:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3232920718;
-        Fri, 22 Nov 2019 10:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B1720721;
+        Fri, 22 Nov 2019 10:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419179;
-        bh=QIdrYBN1CMXCnK5GnZ7PBljurGUU0QC3Y6NR8gwZJLw=;
+        s=default; t=1574419185;
+        bh=xRQ0dd3wlZXcMmBrtEuNQlSzpqubTbFKog6GR1OKagk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LFwswbRk+NL8NJe5QfhF1lLsBABxrSPWqIGEcl37P5q1K86S4yU43h5njY36Mp+H1
-         tbqkVro6qkRS9sGEVsGrt+oWlu8sEznTKgpf/tUrMngeCiWv1bDUbLQ9oBYExNHpj/
-         2E96IMQGy34FkxZFo6sDhZ4QCVHDehRwQSVzrRwA=
+        b=ZfpBEH6CFy/uAgeP24FnA2y4HVKxchXowjBau2ZESajK1MOPz4pM9k+FG3BRw4YpG
+         3CLkVRByfQtUjraMSjERXTBmCiKzAoz+rPU5lzo2c12fFyeGvz3OazP/b4UePEwn2z
+         Mnz1TebRipbPIk0lJh2tVaBmo0mlYpFD9vGIGYTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.9 006/222] Input: synaptics-rmi4 - fix video buffer size
-Date:   Fri, 22 Nov 2019 11:25:46 +0100
-Message-Id: <20191122100831.559220488@linuxfoundation.org>
+Subject: [PATCH 4.9 008/222] Input: synaptics-rmi4 - destroy F54 poller workqueue when removing
+Date:   Fri, 22 Nov 2019 11:25:48 +0100
+Message-Id: <20191122100831.811622597@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -59,36 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 003f01c780020daa9a06dea1db495b553a868c29 upstream.
+commit ba60cf9f78f0d7c8e73c7390608f7f818ee68aa0 upstream.
 
-The video buffer used by the queue is a vb2_v4l2_buffer, not a plain
-vb2_buffer. Using the wrong type causes the allocation of the buffer
-storage to be too small, causing a out of bounds write when
-__init_vb2_v4l2_buffer initializes the buffer.
+The driver forgets to destroy workqueue in remove() similarly to what is
+done when probe() fails. Add a call to destroy_workqueue() to fix it.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Fixes: 3a762dbd5347 ("[media] Input: synaptics-rmi4 - add support for F54 diagnostics")
+Since unregistration will wait for the work to finish, we do not need to
+cancel/flush the work instance in remove().
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191104114454.10500-1-l.stach@pengutronix.de
+Link: https://lore.kernel.org/r/20191114023405.31477-1-hslester96@gmail.com
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_f54.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_f54.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/drivers/input/rmi4/rmi_f54.c
 +++ b/drivers/input/rmi4/rmi_f54.c
-@@ -364,7 +364,7 @@ static const struct vb2_ops rmi_f54_queu
- static const struct vb2_queue rmi_f54_queue = {
- 	.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
- 	.io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF | VB2_READ,
--	.buf_struct_size = sizeof(struct vb2_buffer),
-+	.buf_struct_size = sizeof(struct vb2_v4l2_buffer),
- 	.ops = &rmi_f54_queue_ops,
- 	.mem_ops = &vb2_vmalloc_memops,
- 	.timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,
+@@ -744,6 +744,7 @@ static void rmi_f54_remove(struct rmi_fu
+ 
+ 	video_unregister_device(&f54->vdev);
+ 	v4l2_device_unregister(&f54->v4l2);
++	destroy_workqueue(f54->workqueue);
+ }
+ 
+ struct rmi_function_handler rmi_f54_handler = {
 
 
