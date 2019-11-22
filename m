@@ -2,194 +2,121 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE4EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36378C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F034620706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0772020706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CpopRb6J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQRc7C3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfKVMpq (ORCPT
+        id S1727556AbfKVMqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:45:46 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23663 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726836AbfKVMpp (ORCPT
+        Fri, 22 Nov 2019 07:46:22 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39678 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfKVMqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:45:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574426743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-        in-reply-to:in-reply-to:references:references:openpgp:openpgp:autocrypt:autocrypt;
-        bh=YF9Zvvf7afB5jvqJz9at4BRes/f8Yjb4vqZajQ8UqbM=;
-        b=CpopRb6JLS+2T6iqDNexj0R54hJU+RS3KH+7oIUthSg3ayzpwysf52UQJ4i+c1hPImPRoh
-        PFliLvvrDtPbsXIw4dj/maAMP/0nxUVkdunQmsGD/8yIy0I8trmNroNy5A0znRy1NTme/Z
-        BvdWCXIssDZUk6+wkQUOOqJwB2kWn+E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-z3-40yDKPVmQpWq5EEi0Ow-1; Fri, 22 Nov 2019 07:45:40 -0500
-X-MC-Unique: z3-40yDKPVmQpWq5EEi0Ow-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C55A418B5FA2;
-        Fri, 22 Nov 2019 12:45:37 +0000 (UTC)
-Received: from [10.10.121.119] (ovpn-121-119.rdu2.redhat.com [10.10.121.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8601767E61;
-        Fri, 22 Nov 2019 12:45:28 +0000 (UTC)
-Subject: Re: [PATCH -next] KVM: x86: remove set but not used variable 'called'
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Mao Wenan <maowenan@huawei.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>
-References: <20191119030640.25097-1-maowenan@huawei.com>
- <87o8x8gjr5.fsf@vitty.brq.redhat.com> <20191119121423.GB5604@kadam>
- <87imnggidr.fsf@vitty.brq.redhat.com> <20191119123956.GC5604@kadam>
- <87a78sgfqj.fsf@vitty.brq.redhat.com>
- <b24e2efc-2228-95ea-09b0-806a9b066eee@redhat.com>
- <20191122120413.GI617@kadam>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <ed1d438b-9f0f-0e33-51cc-12ad316aa18c@redhat.com>
-Date:   Fri, 22 Nov 2019 07:45:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 22 Nov 2019 07:46:22 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so5362250wrt.6;
+        Fri, 22 Nov 2019 04:46:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bDXNK5v9qKr7OQwTjxq99LXUWs6eeVepuS3dcsLFtW4=;
+        b=KQRc7C3C3W4oWTdKKQFt1duNp43vDWUBDrRy7K4xUZzxwE5/3K3pQV1f7S5lOS4QN5
+         LVUMD2p4rkzT2VaJ4eD0Whbg54UIeDGEmgrLtzzjuD4uRRh6ohbYwXcQ2fsDQ2jxy068
+         dIzGjNN2eBWyWmc2BRE599Pq8TuJ/wW6lX8IL6tDRFEeGi23bx+QHI+xLQRvNs05rH9n
+         c2Q+TuA5/l3kQHkRRAy9NYfQTzBi7gZtoBJu1LRTqHvLIjLzACB8orjGOmE6XpTEX2mK
+         kxL1Q+XQdHUGQEtZfz4s8mJqcImvL77qqOAGGkFWpf1dndmo5XaQWWLrr8w2pjoEUwJR
+         Qttw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bDXNK5v9qKr7OQwTjxq99LXUWs6eeVepuS3dcsLFtW4=;
+        b=sfZ2G0sDCulXJ13rvDdD9QgrTiTvf6flhjDuTLYUwsSYdv6p/IE164OIGGd01QYXcP
+         Gfq/X+EAaZxjEJxa5V6dEyfcHRrHZi7SP8ybawXZapDkueBCk8YyYA2CWUb1sAxYgnu7
+         pIE/Uew8VeIkMvOKlltRE9tvHrRVMEJuGTcwnmRcX3MtNEC1MEZMun3ECuoiN+eRqbqk
+         gNj48L4XlaFy4hhgUDMGW94i5tyYV3oVTWfHv063mAOnqQJ1p1nyzs9fq1iHYGJSemRi
+         X3jefQtJSOaiu0VT44fw4T8VIo8bUhkCH1Q3VxDzSXfHQ/G8411LYT19cp3cdlTyQq0I
+         EeYQ==
+X-Gm-Message-State: APjAAAVSTU5m3HLvnJKtBZ1BdVKpqoizvd2TVkOy3YKIgd/9Q5qDFXwq
+        Fu05Yeh/J7q6kVnYbtrYiv8=
+X-Google-Smtp-Source: APXvYqyGWX+rpJz20h7BkrtsSPSMbI2yhMEZ//p5Lx12ldQjaqQpRtHl1+9DJBO/Gk3XUoWVhM5xYQ==
+X-Received: by 2002:a5d:518c:: with SMTP id k12mr17605096wrv.104.1574426779895;
+        Fri, 22 Nov 2019 04:46:19 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id t16sm2669042wmt.38.2019.11.22.04.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 04:46:18 -0800 (PST)
+Date:   Fri, 22 Nov 2019 13:46:17 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 7/8] rtc: tegra: remove set but unused variable
+Message-ID: <20191122124617.GA1315704@ulmo>
+References: <20191122102212.400158-1-alexandre.belloni@bootlin.com>
+ <20191122102212.400158-8-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <20191122120413.GI617@kadam>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="7eebgi68NEWUnr0qnwcAQKeBn2ZnM0aEi"
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Content-Disposition: inline
+In-Reply-To: <20191122102212.400158-8-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---7eebgi68NEWUnr0qnwcAQKeBn2ZnM0aEi
-Content-Type: multipart/mixed; boundary="8cMCPFfHHLuxBfx8pFoGN3HdS0JmIADqe";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, Mao Wenan <maowenan@huawei.com>,
- pbonzini@redhat.com, rkrcmar@redhat.com, sean.j.christopherson@intel.com,
- wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Marcelo Tosatti <mtosatti@redhat.com>
-Message-ID: <ed1d438b-9f0f-0e33-51cc-12ad316aa18c@redhat.com>
-Subject: Re: [PATCH -next] KVM: x86: remove set but not used variable 'called'
-References: <20191119030640.25097-1-maowenan@huawei.com>
- <87o8x8gjr5.fsf@vitty.brq.redhat.com> <20191119121423.GB5604@kadam>
- <87imnggidr.fsf@vitty.brq.redhat.com> <20191119123956.GC5604@kadam>
- <87a78sgfqj.fsf@vitty.brq.redhat.com>
- <b24e2efc-2228-95ea-09b0-806a9b066eee@redhat.com>
- <20191122120413.GI617@kadam>
-In-Reply-To: <20191122120413.GI617@kadam>
 
---8cMCPFfHHLuxBfx8pFoGN3HdS0JmIADqe
-Content-Type: text/plain; charset=windows-1252
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
 
+On Fri, Nov 22, 2019 at 11:22:11AM +0100, Alexandre Belloni wrote:
+> Fix the following warning:
+> drivers/rtc/rtc-tegra.c: In function =E2=80=98tegra_rtc_read_time=E2=80=
+=99:
+> drivers/rtc/rtc-tegra.c:106:11: warning: variable =E2=80=98msec=E2=80=99 =
+set but not used [-Wunused-but-set-variable]
+>=20
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-tegra.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 11/22/19 7:25 AM, Dan Carpenter wrote:
-> On Fri, Nov 22, 2019 at 06:58:51AM -0500, Nitesh Narayan Lal wrote:
->> For the build error, I didn't trigger it because I didn't compile with
->> appropriate flags.
-> It's going to be a serveral years before we can enable that flag by
-> default.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-I see I have made a note of it so that I can do it before sending the patch=
-es.
-
-> regards,
-> dan carpenter
->
---=20
-Thanks
-Nitesh
-
-
---8cMCPFfHHLuxBfx8pFoGN3HdS0JmIADqe--
-
---7eebgi68NEWUnr0qnwcAQKeBn2ZnM0aEi
+--ZGiS0Q5IWpPtfppv
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl3X2GUACgkQo4ZA3AYy
-ozncxA/+NydE9O11tyCKGrzbLSzgDycPi8wO51qYta8Uykb6NyYefSAPZluM2WwR
-Png3Oi5vUKibO90UF1F20baW7MWv/RJ4KH6COOKxVJX/CSSjBlm6OtQ+KfKTwkYS
-hzfXtQwXKW5zYO+AEgHyjLM4u2sDJ7W88prpA0CLraVQq3ZjRhCSru0QG3NmB2Oj
-baYlDmeuxe32hLYk7gSkLzZrs9i228bNS1jg61NOLER215HOBI/XMKBZ/0fUm2Nl
-R5BZ3JlbsAgooForjpJDu4L6l7mZ+CiWLTVdDNrNN4X4vsZM/rva6vUDboRNDOjs
-sj4kuV0RVPkNk2HTxSKHMhYa7mCC5MUOv8cEcsP+USRMRZlBMBp8ulPg89dOv9Dr
-NpM+mflmWGIVwPGmLdk3N6Z9O090vkqN1ZUlqCXrXzClYp+vxpzf7O4aRGD/q3GK
-9PSD8yxjQ3MU0eCalnCupMcxku10fi+R6nODaNf8A53fTI/CltENm7svS0X2euJ1
-y0HaadrHqCwANGZtooMM4I40x3FNpRX3dXMFn2nfV5EXZQFJOVQKEXYGNgFGkV4/
-z70xFMni/i+lxlaIvtxWi9qV8KrChJigYwuK/0/jbb7M6VxgvVOe+wAO5+CxZ1xc
-dxXmEs253S8MzOc8Arsq/IQFX2s4DNqatixDJacZY6m27W4K424=
-=MiRZ
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3X2I8ACgkQ3SOs138+
+s6FlCw//ce/vcaSSR1eDEaIkl+t8qLZ/7jPZ2XG4Qurs6y0mO7DOM8rIYY8JYT3p
+r6xx3tL59DWK4q5JM/As+n/aCnltdeP7/N4zYAX4OqBnmCuXFVwMJKVI+6dKYMuS
+CEeb7U/gjWGy+cT8sgRTDYu9JdHaBrLVthJ+egI9HCZwXsssuWbsCPtqgotJwrgY
+a3gnytR4C44HSxpl80j94rH6kMbbOxoJ88Wt3b1BxVbpixMISeXdDWvbPjQOsyWG
+LyYex1CLjoh/xIXKArNQ3kcyGUtMWvVaUzFwZNYS7NSTSKeEtJLjTQz2s+iHueIv
+VR4OPuQ5MM8JHJea1gCCBeuzamu5HjI8lCV4L+rcZre3pGKhYiXy22UwQUCRb54W
+sfi7HSvA32cfeCAOJW3BeuAznILWOnRtypqQqb4pNA1e+I8J3P/WllLNYI4sImXi
+etjgaGB1Qi15GR/Do/CjN03GS0wq/qgXbmyjnln4sOHsVEtRnm7jv9lcedkvlKeq
+Ps26vJC6NV9dw5OVV8Zr6uI3fk7VjThsnvAyqwY+FpurbQrbanQKWrA8mZpzYDV2
+Ytbv5ftlO0dRlGlhOgH2YWUpVYBAOifOHlKvRl5PatA6MaFhTYCithXJd33P++TY
+ev8YnqXS41FTDoDUG0uuk5g2m0+AtiCN8lGKspYOO9YVdhm/4x8=
+=Lkzk
 -----END PGP SIGNATURE-----
 
---7eebgi68NEWUnr0qnwcAQKeBn2ZnM0aEi--
-
+--ZGiS0Q5IWpPtfppv--
