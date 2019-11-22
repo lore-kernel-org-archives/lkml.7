@@ -2,138 +2,97 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0DCC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4D1C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CB420715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:47:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcZSmqAF"
+	by mail.kernel.org (Postfix) with ESMTP id 1CE1C20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574434080;
+	bh=EQc/LaSz4eRaJByoiZb2ipCt0IaDpCp3+GhULDtcYWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EGR+mKmLdudEksztQ55eFRik4FqgoOm09xWmhN1CaDkS46XxbBQ+OMSspEKi0X16M
+	 z8Y4cPyjL77FPsL/5oOtIU5KtohWGeT2NJxq5hrNxinjx6IeolhWFnEoEd8W7jznxc
+	 1YU+Aj2NJpRX5CwDpZH6Bb5oHXg6aoYdkLUPc9YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKVOrK (ORCPT
+        id S1726776AbfKVOr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:47:10 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39620 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVOrJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:47:09 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w24so6373435otk.6;
-        Fri, 22 Nov 2019 06:47:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9f6cq4rm9aA0SuwofQTBDnGD9GrUbHvOntsNdYUyhrU=;
-        b=mcZSmqAFjwjKDSi4mVWBvta/V9bGUM5ValVi2/PmDrb7pL/amm4ZtkZsz04HmV3dmK
-         5/f6CPqXghr0P/KwHB9qROg/0dGHMONisYQLXS6t+6VeKN37LBTbLQJC1nMMBsD43J/C
-         RvRYhxQOplMbXNJktofUO4CtCfh5xld8+GY84MVNFTpCAGWEYlpDUYGx3TTWLk7Bvpoy
-         dZujUlujcXyjCVpUH12mT9N9V/zDX8VVS581qYHh6YNu/1/c5xXdhAynMIPi92S4YVyE
-         PRvSlwolaXJe4fLQ7DsQFVyuaNqFEKQYKZ8L9Tj3uaI+vkNdfJRYQCbQptrPFWnBYdf6
-         A8zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9f6cq4rm9aA0SuwofQTBDnGD9GrUbHvOntsNdYUyhrU=;
-        b=nlNX5uG8PozCWC1uMU1dL5E5ZHGNrBi1RVovVAWrkiTLapGZUcwh//cxIhZkaxOT/a
-         WdYSfYfAv8Qhlq1hxh/fo2Kbi+PRZXxjnpx7m5gPnRiPLqRNqFQ13pf2SzoPu6JwZgae
-         2yyQdc8dl0jevnNlv1qIT/b1orvqXETzOyWcCJoOAcJA711CoI6UQPsD4MCr8A9cBesj
-         FjLSwcDnd29BAV5oflzNfP79dpDMQGN4FDBp4L5vk185QP9vRishRLnmcmyggpxkZbCa
-         LGN2qnzk5x+6J7sBtew85LV2laxZSSeEbC5wkpfVfCcPlK3PQ/kpUhAQ5xrmR5oHYsq6
-         NNWA==
-X-Gm-Message-State: APjAAAXi0A42O05lQubHnONV0A5OwDIEuuAhmWa8KNbUEt5ZX3c8+hYa
-        YWNWo8shwSSNJC1I8/1ahyy+ySeA
-X-Google-Smtp-Source: APXvYqzdeDTNgziw7znKOU6pTk2yQBnmnotl8mQJEap648LFwAVvTYi8Ar0a69GyMQL9MKpwflwufg==
-X-Received: by 2002:a05:6830:15a:: with SMTP id j26mr10751249otp.342.1574434028508;
-        Fri, 22 Nov 2019 06:47:08 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p3sm2225091oti.22.2019.11.22.06.47.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 06:47:07 -0800 (PST)
-Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191122100912.732983531@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
-Date:   Fri, 22 Nov 2019 06:47:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 09:47:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfKVOr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:47:59 -0500
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 155422071B;
+        Fri, 22 Nov 2019 14:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574434078;
+        bh=EQc/LaSz4eRaJByoiZb2ipCt0IaDpCp3+GhULDtcYWI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FY9hIt7gHlIrXLiJjfTrngT1JuA8auWUoxGefy3wnjz1lUJagg58qQeJDqVu35C5T
+         RlXgqOKuIyqzm0XEHPf9wSSS8MfVuP5kY+MEUPElkfNP9bHHk48ESyfcj+mP6Bf/9N
+         IxNivswgdnD6gb8XdyvVnW+izOhnPrAqvI1QqlOE=
+Received: by mail-qv1-f46.google.com with SMTP id s18so2971565qvr.4;
+        Fri, 22 Nov 2019 06:47:58 -0800 (PST)
+X-Gm-Message-State: APjAAAX1kTNLScWxt2EsDLviaKdy+N+j/jeIR4c8KiFyHSIsj1aMaW7S
+        pcVC04mMH7hdDvlVu0EaJNFPE7rIyeM0kZaeZw==
+X-Google-Smtp-Source: APXvYqyhWIT3yYojkaDSRZHcglQ9AlPu/F+glNafGG7BMM/cuqSID3+8L1W2SEkE6TxBfitLGOKJZjTbCwxWZfeti28=
+X-Received: by 2002:ad4:42b4:: with SMTP id e20mr3174130qvr.85.1574434077237;
+ Fri, 22 Nov 2019 06:47:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191120190028.4722-1-will@kernel.org>
+In-Reply-To: <20191120190028.4722-1-will@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 Nov 2019 08:47:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
+Message-ID: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Add device link support for "iommu-map"
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, iommu@lists.linuxfoundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/22/19 2:26 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.86 release.
-> There are 220 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> Anything received after that time might be too late.
-> 
+On Wed, Nov 20, 2019 at 1:00 PM Will Deacon <will@kernel.org> wrote:
+>
+> Commit 8e12257dead7 ("of: property: Add device link support for iommus,
+> mboxes and io-channels") added device link support for IOMMU linkages
+> described using the "iommus" property. For PCI devices, this property
+> is not present and instead the "iommu-map" property is used on the host
+> bridge node to map the endpoint RequesterIDs to their corresponding
+> IOMMU instance.
+>
+> Add support for "iommu-map" to the device link supplier bindings so that
+> probing of PCI devices can be deferred until after the IOMMU is
+> available.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>
+> Applies against driver-core/driver-core-next.
+> Tested on AMD Seattle (arm64).
 
-I see the following warning (at least for arm64, ppc64, and x86_64).
-This seems to be caused by "idr: Fix idr_get_next race with idr_remove".
-v4.14.y is also affected. Mainline and v5.3.y are not affected.
+Guess that answers my question whether anyone uses Seattle with DT.
+Seattle uses the old SMMU binding, and there's not even an IOMMU
+associated with the PCI host. I raise this mainly because the dts
+files for Seattle either need some love or perhaps should be removed.
 
-Guenter
+No issues with the patch itself though. I'll queue it after rc1.
 
----
-[    3.897800] NetLabel: Initializing
-[    3.897944] NetLabel:  domain hash size = 128
-[    3.898044] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
-[    3.898995]
-[    3.899135] =============================
-[    3.899235] WARNING: suspicious RCU usage
-[    3.899479] 4.19.86-rc1+ #1 Not tainted
-[    3.899595] -----------------------------
-[    3.899772] include/linux/radix-tree.h:241 suspicious rcu_dereference_check() usage!
-[    3.899939]
-[    3.899939] other info that might help us debug this:
-[    3.899939]
-[    3.900159]
-[    3.900159] rcu_scheduler_active = 2, debug_locks = 1
-[    3.900347] 2 locks held by swapper/0/1:
-[    3.900479]  #0: (____ptrval____) (cb_lock){+.+.}, at: genl_register_family+0xab/0x717
-[    3.901498]  #1: (____ptrval____) (genl_mutex){+.+.}, at: genl_register_family+0xb9/0x717
-[    3.901860]
-[    3.901860] stack backtrace:
-[    3.902136] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.19.86-rc1+ #1
-[    3.902295] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[    3.902633] Call Trace:
-[    3.902633]  dump_stack+0x71/0xa0
-[    3.902633]  idr_get_next+0x133/0x160
-[    3.902633]  ? genl_register_family+0xab/0x717
-[    3.902633]  ? do_early_param+0x89/0x89
-[    3.902633]  genl_family_find_byname+0x4e/0x80
-[    3.902633]  genl_register_family+0xc1/0x717
-[    3.902633]  ? do_early_param+0x89/0x89
-[    3.902633]  ? netlbl_netlink_init+0x21/0x21
-[    3.902633]  netlbl_netlink_init+0x5/0x21
-[    3.902633]  netlbl_init+0x4a/0x74
-[    3.902633]  do_one_initcall+0x58/0x2ae
-[    3.902633]  ? do_early_param+0x89/0x89
-[    3.902633]  ? rcu_read_lock_sched_held+0x6f/0x80
-[    3.902633]  ? do_early_param+0x89/0x89
-[    3.902633]  kernel_init_freeable+0x1bc/0x24b
-[    3.902633]  ? rest_init+0x176/0x176
-[    3.902633]  kernel_init+0x5/0x101
-[    3.902633]  ret_from_fork+0x3a/0x50
-
+Rob
