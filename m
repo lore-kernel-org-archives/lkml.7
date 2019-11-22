@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6144CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6301CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5742071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F30120717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402204;
-	bh=ghWIX+m6hgr7up8H2IEj/4iJDmGytA1qPuXv0RVTtfE=;
+	s=default; t=1574402206;
+	bh=10mWWT/+sQJ8k9+SlcHH9VNCLlTJmEdm5aHgXpgbuHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zf+zUyB0DXbPTmJEXAUp3mXYpKYsy2D1p1d0ri3L+7Y7Vy1xRsvr26Tr0yrnKkuLI
-	 9XEQhWbsGF/mDsqd2UhnwrGzHum0o0c86UIiGSWSMDsby7G1t24LIf8/4Eoy2XzvCE
-	 sHdUgMqvSqwWTOY6SDWccf/ddOwfx6JN3Ttoy2QM=
+	b=pDMqQiq998WwGb54LqoP7uT8e9eYf43QdH9NcNgL6gzIU/UI4eJFfJCGo4Fx8EzAY
+	 3KtQGaAyCI7iw2u5ZyOFrey0rQ5ijJqbNty1Gi9KAVHaQ/0XpY89L9pC3HV2b2j7a1
+	 sc/a4WJV0HJmAFJQtgZb1FegUkGszgzPS/BPE9UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfKVF4n (ORCPT
+        id S1729244AbfKVF4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34432 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbfKVF4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:36 -0500
+        id S1729201AbfKVF4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4967B20717;
-        Fri, 22 Nov 2019 05:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E6120659;
+        Fri, 22 Nov 2019 05:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402196;
-        bh=ghWIX+m6hgr7up8H2IEj/4iJDmGytA1qPuXv0RVTtfE=;
+        s=default; t=1574402198;
+        bh=10mWWT/+sQJ8k9+SlcHH9VNCLlTJmEdm5aHgXpgbuHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xWnjU3Q1wTlwOFD/uMJsgMFHk5ky9dh88lkqS2ebLvJs3wR4dfLgp/56dq803eaUZ
-         U2RWQDZX0nOtLum1dfmToSrzKTamR93qGeGFKgTw8Gzd/9JAr4KQG7RpWQD3LpWMQw
-         gRu24tD4MYwNL2Xhn2B9ghWxH1WeCjFQ+BlJPx9c=
+        b=Gi8oVBQLVHaSmpUAVhb4VlthVGAzur/KZVawBfR6wlKRJlpudF0l890zSDxFH1zkW
+         weJ5c8paq8y6a09jfQzRvjxcObRrAbLeT9uYcALrzmI5OCRw67JFSQ6cuuWRq+m7gX
+         0WGz9875P4wbB6YBwYKu2dq/anOGlhjpMvVhs25E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Hutterer <peter.hutterer@who-t.net>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 045/127] HID: doc: fix wrong data structure reference for UHID_OUTPUT
-Date:   Fri, 22 Nov 2019 00:54:23 -0500
-Message-Id: <20191122055544.3299-44-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 047/127] gfs2: take jdata unstuff into account in do_grow
+Date:   Fri, 22 Nov 2019 00:54:25 -0500
+Message-Id: <20191122055544.3299-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,30 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Hutterer <peter.hutterer@who-t.net>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 46b14eef59a8157138dc02f916a7f97c73b3ec53 ]
+[ Upstream commit bc0205612bbd4dd4026d4ba6287f5643c37366ec ]
 
-Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Before this patch, function do_grow would not reserve enough journal
+blocks in the transaction to unstuff jdata files while growing them.
+This patch adds the logic to add one more block if the file to grow
+is jdata.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/hid/uhid.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/gfs2/bmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/hid/uhid.txt b/Documentation/hid/uhid.txt
-index c8656dd029a91..958fff9453044 100644
---- a/Documentation/hid/uhid.txt
-+++ b/Documentation/hid/uhid.txt
-@@ -160,7 +160,7 @@ them but you should handle them according to your needs.
-   UHID_OUTPUT:
-   This is sent if the HID device driver wants to send raw data to the I/O
-   device on the interrupt channel. You should read the payload and forward it to
--  the device. The payload is of type "struct uhid_data_req".
-+  the device. The payload is of type "struct uhid_output_req".
-   This may be received even though you haven't received UHID_OPEN, yet.
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index 09432b25fe9b8..b3a1b16d4e3e3 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -1445,6 +1445,8 @@ static int do_grow(struct inode *inode, u64 size)
+ 	}
  
-   UHID_GET_REPORT:
+ 	error = gfs2_trans_begin(sdp, RES_DINODE + RES_STATFS + RES_RG_BIT +
++				 (unstuff &&
++				  gfs2_is_jdata(ip) ? RES_JDATA : 0) +
+ 				 (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF ?
+ 				  0 : RES_QUOTA), 0);
+ 	if (error)
 -- 
 2.20.1
 
