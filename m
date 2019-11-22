@@ -2,75 +2,87 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E34CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC007C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7172071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752692070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpePcEhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKVSCL (ORCPT
+        id S1726861AbfKVSID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:02:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39320 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfKVSCK (ORCPT
+        Fri, 22 Nov 2019 13:08:03 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44316 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfKVSID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:02:10 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id ADF6528AE8C
-Subject: Re: net-next/master bisection: boot on beaglebone-black
-To:     David Miller <davem@davemloft.net>
-Cc:     hulkci@huawei.com, tomeu.vizoso@collabora.com, broonie@kernel.org,
-        khilman@baylibre.com, mgalka@collabora.com,
-        enric.balletbo@collabora.com, yuehaibing@huawei.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
-References: <5dd7d181.1c69fb81.64fbc.cd8a@mx.google.com>
- <20191122.093657.95680289541075120.davem@davemloft.net>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <bfe5e987-e0b5-6c89-f193-6666be203532@collabora.com>
-Date:   Fri, 22 Nov 2019 18:02:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 22 Nov 2019 13:08:03 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so5132049lfa.11;
+        Fri, 22 Nov 2019 10:08:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T7/nfHWQBPlTCdPwZsbfc1JI4CJ6zRhYvBPNH/OaKDE=;
+        b=gpePcEhkMiv/zogb3LXutIPpvN7zhiJB5FK3KMarQP8hVubbFEJVoU5bUQQs1z8syN
+         ufFoOrdK04Ue5PlH4SSSnBwgMHJx9v+WC7pcEI3CmJu+nIj5MVt224kiCBVXLyRM/F24
+         H0J4ma17nKYpLcTMXEH07E4ueB2ANLesvdj7VkgQO3vnDAG5wQabqsYgNsVwHfwrlZ4j
+         fsgnyRQ/SkAeKRFLMDiWopZ2wxl2cEIkG752MMLcI10TgCaDTyHZFI0bgzZW0QQYLMiA
+         3p1V4SWy/I1BqKptS95IX/NlRKT4vR5iUFu4CFqPPkpVkRUQcwYkDorMQYxHDtR3l64V
+         JTYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T7/nfHWQBPlTCdPwZsbfc1JI4CJ6zRhYvBPNH/OaKDE=;
+        b=hoJ7TAzSvdZ81Z04QQtrwZpN490fd58IelId1qs9LunbJRUA72YYolOU+zPHFJdZBZ
+         kgADgbkvbMsc6whiPIFxwcVnF/rJ0FQ1cQ6TYa13Ltg8WYjG9nW6CdDXawCY8TEhsQ4r
+         yaB7lRsIxG/8tMUE1lNE9woAaNEpa86fwFfykaBHC67DdR5QCBX2zJJX1KGLPvengc/j
+         o2NtElxgevWUdbuv4iwCbfVpxlNbk/c6vvu6AAKmenATllgpiUNtsSMSL5te8MTLtJQQ
+         b8TuMt6plaDH0cPl6eu9rptZSHiaZexVIM4PatRsimb/cprnqrOGgfMqNRBnhR6Y7cbj
+         kj4A==
+X-Gm-Message-State: APjAAAXhRY0P+Y1fCd6CDddTzx03BpJeVjquJjwRe34Zlu4JZ1EZFUi6
+        nRY+stKLCUl1CuY697ybGDxXGztJRKuQWHJcF1s=
+X-Google-Smtp-Source: APXvYqz3ud5QamIZF2mlMJ/cfkLH57ksgQNb7htbHLw1W8fxPUPxWJPlANYEGFhW51mcnlE+P51wBk0UfKJfunfzBQs=
+X-Received: by 2002:ac2:424d:: with SMTP id m13mr668264lfl.13.1574446079536;
+ Fri, 22 Nov 2019 10:07:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191122.093657.95680289541075120.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191108152013.13418-1-ramonreisfontes@gmail.com>
+ <fe198371577479c1e00a80e9cae6f577ab39ce8e.camel@sipsolutions.net>
+ <CAK8U23amVqf-6YoiPoyk5_za3dhVb4FJmBDvmA2xv2sD43DhQA@mail.gmail.com>
+ <7d43bbc0dfeb040d3e0468155858c4cbe50c0de2.camel@sipsolutions.net>
+ <CAK8U23aL7UDgko4Z2EkQ9r4muBTjNOCq-Erb9h2TFRnxdOmtWg@mail.gmail.com> <175edd72f0cd3bc4d2c0dbd42a4570c7fb47b8fd.camel@sipsolutions.net>
+In-Reply-To: <175edd72f0cd3bc4d2c0dbd42a4570c7fb47b8fd.camel@sipsolutions.net>
+From:   Ramon Fontes <ramonreisfontes@gmail.com>
+Date:   Fri, 22 Nov 2019 15:07:48 -0300
+Message-ID: <CAK8U23bLht3d9B==aZKOxhgP=nhCZqQ0zwcYRevgwof7+MsTdw@mail.gmail.com>
+Subject: Re: [PATCH] mac80211_hwsim: set the maximum EIRP output power for 5GHz
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        kvalo@codeaurora.org, davem@davemloft.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/11/2019 17:36, David Miller wrote:
-> From: "kernelci.org bot" <bot@kernelci.org>
-> Date: Fri, 22 Nov 2019 04:16:01 -0800 (PST)
-> 
->>     mdio_bus: Fix PTR_ERR applied after initialization to constant
->>     
->>     Fix coccinelle warning:
->>     
->>     ./drivers/net/phy/mdio_bus.c:67:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
->>     ./drivers/net/phy/mdio_bus.c:68:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
-> 
-> The kernelci.org bot has posted at least a half dozen of these bisection
-> results for the same exact bug, which we've fixed two days ago....
-> 
-> This is becomming more like spam and not very useful....
+> If there's some other (physical?) restriction in the driver, sure, maybe
+> it should have one there, but for pure regulatory I'm not sure I see it.
+> That's why the pointer here to ETSI feels so strange to me.
 
-As far as I can tell, it's the first time someone replies to say
-this issue is already fixed.  Sorry if I've missed an email.
+Ok. I see. You can change the commit msg then.
 
-Also, it's apparently not fixed in the net-next tree which
-explains why it was reported again.  I guess we need to disable
-bisections in net-next until it gets rebased and includes the
-fix, and add a way to mark issues fixed somewhere else in
-KernelCI to avoid this situation in the future.
+> Note that I just sent my final pull request for the current kernel, so
+> this'll probably have to wait some time.
 
-Thanks,
-Guillaume
+Ok. No problem.
+
+--
+Ramon
