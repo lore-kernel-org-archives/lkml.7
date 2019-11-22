@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC64C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05114C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BF32070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB232070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfKVWNY (ORCPT
+        id S1726942AbfKVWN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:13:24 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54852 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKVWNW (ORCPT
+        Fri, 22 Nov 2019 17:13:27 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50994 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKVWNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:13:22 -0500
-Received: by mail-io1-f70.google.com with SMTP id f66so5950255ioa.21
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 14:13:21 -0800 (PST)
+        Fri, 22 Nov 2019 17:13:25 -0500
+Received: by mail-il1-f198.google.com with SMTP id l63so7296324ili.17
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 14:13:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to:cc;
         bh=WTLZqtqfoN0AmabcgLeW8pAz7p65L6LdXI/HHqQhgkA=;
-        b=HCdVnvCjnkOzhOGo9ASb5/n7Dex96mIM1Lvey/HmSKDuI5118sjkauIZgHhpaB5Cz6
-         PW5OF3VopyiIjeW+85bJ8yU9vT/dBCnGyGjnvCcwl0lIQT2t8RyzhSqSI658uSMlYf7b
-         HsuanMspwrrEn1wZjRAhsq5WDartyaTHkbchbdj+yXumSKJ0I2yJdwELoukYbWGhfXuq
-         TBqIoRE3AkfJcnyYSj9aIbvTGd8/x74ZsX/RJt4qAtdv0KvzYFIbdrJS0wa/lY4MRF1Z
-         dVSLgT1eoUtbmP3e7L7MeK4+Bnn92OlnAMcFqh94NwEomB6csNEVyX3Wn1y0ZiFpVKIo
-         F4EQ==
-X-Gm-Message-State: APjAAAV922qm8xIuwc5h2SXIZNKIWyXDk5JPvUVoP63SxlFqlEckNIUS
-        /jjsnH+loZ3wGMqYP/+HGm51TYbMSxTjeT6CBfOW4FMzcRWX
-X-Google-Smtp-Source: APXvYqxD+j/UZwfF9FRVSndN1yrwOhhADOicbq1byMPaVgs8DVQkMgFH0iFDIrWg8l+Zb1dMZGXVJbQwABz2/V/zSh12hT2L7iSG
+        b=hYoeNjMg+WMJXcSQxNxK0byV3fNvWpd7fNpqsTeNNDYt1Ot86dqXekae9aA2nTU7LS
+         0tEN2GsXbCkoLizOTS6qqnQfeZPGah+ez/dB9FomyVdlBtDcYaQeOHFNQAuOUKFU98lI
+         rWO/JKUo/TrfyahLtJIAdBpRsmlFE7JxiDTx6zAzF8JWbNz0ciV3KXgNkS0o4Mzfclh2
+         9stsxZv2pQDbSwanA8CZCNri7S/z+4EzvMhvjTz9GyN5FNkSuBAUhuScq3d4yf5aeL1T
+         TuuD2pA3Ijd60LCQ4vjE5GY86ElVvy1806T5hYn+totFll6Z/rnXDVuLn9uTrNv9iuNW
+         ckFA==
+X-Gm-Message-State: APjAAAUFlzZ97j2kfCkyDRGTj+ssvSaNLN2k06NwoJKf2myz9/+o4kkQ
+        eQsa5FjxGeKDs63Nh517r2B5WoT4xRbBzywlKPB8zsIGIB7s
+X-Google-Smtp-Source: APXvYqw3FjkUoue1G/FkUXlf6zNVDpp+pCA+okAW2RjsLWgXj3bTqBh1EyLeiMnNelvMSWTsowFF0AYfCdPDaxl3R0+63Ko15FXG
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3e9:: with SMTP id s9mr17035334jaq.7.1574460801384;
- Fri, 22 Nov 2019 14:13:21 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:13:21 -0800
+X-Received: by 2002:a92:9a17:: with SMTP id t23mr19431650ili.40.1574460802802;
+ Fri, 22 Nov 2019 14:13:22 -0800 (PST)
+Date:   Fri, 22 Nov 2019 14:13:22 -0800
 In-Reply-To: <Pine.LNX.4.44L0.1911221700420.1511-100000@iolanthe.rowland.org>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c789960597f6b88b@google.com>
+Message-ID: <000000000000dd2ff40597f6b812@google.com>
 Subject: Re: Re: possible deadlock in mon_bin_vma_fault
 From:   syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
 To:     Alan Stern <stern@rowland.harvard.edu>
