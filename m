@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B8FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39363C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3CDF2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4512071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401781;
-	bh=S/UYcjtquDy0CcPqAHpXYiJOsV3eqyYvXDEKlXM21iE=;
+	s=default; t=1574401784;
+	bh=w9UMwwV0gSgS/3OjW9RiqA1HnA6vPMzNYVartDRRFf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYMm+d/BFBz50iGX4JROjW4Dq6dxtqSjvS5UY8M0q0ZPmnGT7QWYE0D3sAkqtK9RR
-	 rDVaDha7lgIo0vhAMtLEDZhrlEnj2qgSi2ntvXuyp1sTxkh/TQi/u9cTm6l/Tl4vls
-	 cddmdHmdkt3qjSrG2S3S3quYNjFniRCNyZx8Ku6E=
+	b=O8L12LHp6QuSituw9eHQpGakrH//1h9qwkE3B2M5NxmG3WEqs/nkRmzecXqiLfCzV
+	 T6Prv7McFfsOl8ex66RgrdC7/mVfn7wq9O7LsMYUfaEbfpawLNB00byDWjXfOMm+cD
+	 tCY00vt+B63avYd4urodJvJepEiTnpmf3NOU/UUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKVFtl (ORCPT
+        id S1727208AbfKVFtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:49:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:49:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbfKVFtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:35 -0500
+        id S1727133AbfKVFti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB1CF2070E;
-        Fri, 22 Nov 2019 05:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F9F2068F;
+        Fri, 22 Nov 2019 05:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401774;
-        bh=S/UYcjtquDy0CcPqAHpXYiJOsV3eqyYvXDEKlXM21iE=;
+        s=default; t=1574401778;
+        bh=w9UMwwV0gSgS/3OjW9RiqA1HnA6vPMzNYVartDRRFf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQv7R4a3mZ406EO6pURFQa76WFYgyVbt2fVavv3rgT1EnT417IuWLDLaoKHs0w5GV
-         NfaCm2tNhagPlsPr8XTjsi30XrTZwi86VmxxzNtjfqkatJacDmI8Hp+JtjDJgqugSi
-         0YHK/6IiJ0E8+J78GqA6kHGS0Yj5+WhaOSdMLXmU=
+        b=R7JAGFbQ0hGCCIm5u0Z0mZcXMcLQETmt6m8JuY2PxHVc6394EIcGCopdYBJrdQk/N
+         DX8YdMGRvn2G1+b5iPQ+c+5rMjckjSBcn+EuEIzIccuIJN0C64GsRUrQAbhGanFHAf
+         P81VDuOb9SJyit4P8j2pku4i3eC3VWRK8rl0QzkU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/219] ARM: dts: Fix hsi gdd range for omap4
-Date:   Fri, 22 Nov 2019 00:45:56 -0500
-Message-Id: <20191122054911.1750-17-sashal@kernel.org>
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/219] bus: ti-sysc: Check for no-reset and no-idle flags at the child level
+Date:   Fri, 22 Nov 2019 00:45:59 -0500
+Message-Id: <20191122054911.1750-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -62,42 +61,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit e9e685480b74aef3f3d0967dadb52eea3ff625d2 ]
+[ Upstream commit 4014c08ba39476a18af546186da625a6833a1529 ]
 
-While reviewing the missing mcasp ranges I noticed omap4 hsi range
-for gdd is wrong so let's fix it.
+With ti-sysc, we need to now have the device tree properties for
+ti,no-reset-on-init and ti,no-idle-on-init at the module level instead
+of the child device level.
 
-I'm not aware of any omap4 devices in mainline kernel though that use
-hsi though.
+Let's check for these properties at the child device level to enable
+quirks, and warn about moving the properties to the module level.
 
-Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
-them with ti-sysc")
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Otherwise am335x-evm based boards tagging gpio1 with ti,no-reset-on-init
+will have their DDR power disabled if wired up in such a tricky way.
+
+Note that this should not be an issue for earlier kernels as we don't
+rely on this until the dts files have been updated to probe with ti-sysc
+interconnect target driver.
+
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap4-l4.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/ti-sysc.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
-index 6eb26b837446c..5059ecac44787 100644
---- a/arch/arm/boot/dts/omap4-l4.dtsi
-+++ b/arch/arm/boot/dts/omap4-l4.dtsi
-@@ -196,12 +196,12 @@
- 			clock-names = "fck";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			ranges = <0x0 0x58000 0x4000>;
-+			ranges = <0x0 0x58000 0x5000>;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index e95b26319cd91..5b31131d0cba2 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -91,6 +91,9 @@ struct sysc {
+ 	struct delayed_work idle_work;
+ };
  
- 			hsi: hsi@0 {
- 				compatible = "ti,omap4-hsi";
- 				reg = <0x0 0x4000>,
--				      <0x4a05c000 0x1000>;
-+				      <0x5000 0x1000>;
- 				reg-names = "sys", "gdd";
++static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
++				  bool is_child);
++
+ void sysc_write(struct sysc *ddata, int offset, u32 value)
+ {
+ 	writel_relaxed(value, ddata->module_va + offset);
+@@ -374,6 +377,7 @@ static int sysc_check_one_child(struct sysc *ddata,
+ 		dev_warn(ddata->dev, "really a child ti,hwmods property?");
  
- 				clocks = <&l3_init_clkctrl OMAP4_HSI_CLKCTRL 0>;
+ 	sysc_check_quirk_stdout(ddata, np);
++	sysc_parse_dts_quirks(ddata, np, true);
+ 
+ 	return 0;
+ }
+@@ -1343,23 +1347,37 @@ static const struct sysc_dts_quirk sysc_dts_quirks[] = {
+ 	  .mask = SYSC_QUIRK_NO_RESET_ON_INIT, },
+ };
+ 
+-static int sysc_init_dts_quirks(struct sysc *ddata)
++static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
++				  bool is_child)
+ {
+-	struct device_node *np = ddata->dev->of_node;
+ 	const struct property *prop;
+-	int i, len, error;
+-	u32 val;
+-
+-	ddata->legacy_mode = of_get_property(np, "ti,hwmods", NULL);
++	int i, len;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sysc_dts_quirks); i++) {
+-		prop = of_get_property(np, sysc_dts_quirks[i].name, &len);
++		const char *name = sysc_dts_quirks[i].name;
++
++		prop = of_get_property(np, name, &len);
+ 		if (!prop)
+ 			continue;
+ 
+ 		ddata->cfg.quirks |= sysc_dts_quirks[i].mask;
++		if (is_child) {
++			dev_warn(ddata->dev,
++				 "dts flag should be at module level for %s\n",
++				 name);
++		}
+ 	}
++}
++
++static int sysc_init_dts_quirks(struct sysc *ddata)
++{
++	struct device_node *np = ddata->dev->of_node;
++	int error;
++	u32 val;
++
++	ddata->legacy_mode = of_get_property(np, "ti,hwmods", NULL);
+ 
++	sysc_parse_dts_quirks(ddata, np, false);
+ 	error = of_property_read_u32(np, "ti,sysc-delay-us", &val);
+ 	if (!error) {
+ 		if (val > 255) {
 -- 
 2.20.1
 
