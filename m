@@ -4,51 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC2B20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA8520840
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420674;
-	bh=WNzOcSDtG5/ZzPIRNc452Bw+G3KZ9d2AoXandGQy9MM=;
+	s=default; t=1574420678;
+	bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zH1nLt8TRruoWEpkJKNiFFqlzUbNQpby7bFK8Mnd9At6qBVxBSELdJwOfVWL5LrY7
-	 nVa1L56LovY+WBtdPJ1BJPeYVN9GnGg7lHlT2wqVVfIChZXCR7JW9yw6avYSpB0wOK
-	 Q3kaC9Z/v+S1dDaP8ns3Hqd8ufwtHhpkz5tlqTVU=
+	b=VEKvVxuX5BUTyuUJ81bp/yTymLiG/myyS6p2bf+fwTe04R32HMcljCJP+eV6lizd8
+	 pfUHtak6eufQ2439EqA0KCnsNg1drxKc1Glm03sdQJta5F5bOj4V3BQGKhJeSlFGq9
+	 snUx5NIlYEyTlbxEBf6W55zFZPPSEsSOeRBgzwT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfKVLEd (ORCPT
+        id S1731580AbfKVLEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731563AbfKVLEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:31 -0500
+        id S1730961AbfKVLEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1588207FC;
-        Fri, 22 Nov 2019 11:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C71F5207FC;
+        Fri, 22 Nov 2019 11:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420670;
-        bh=WNzOcSDtG5/ZzPIRNc452Bw+G3KZ9d2AoXandGQy9MM=;
+        s=default; t=1574420674;
+        bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1T/31Wj2VRkukB8wemW1hd8GbXwOlWC5XCrztXKgPlSJ3pVCRMfWaLg3UkA1Q5U/K
-         Dp2c6htyutCYf4eyKgenljcjylw18VEbPBsKZ5H3OVzvHBz1ZZyRIM13tsKizGE2hi
-         WOHYvVWkRipTFxzArK23jJwWo9WMJBJTiSjS9w4g=
+        b=sZcQnhR3YJ50bNLu9cMmmBn2i375DKDRY/cs6PdyWZvX6SY5lVyqPF6Y9oF1MT4BJ
+         VA8muvVuxTLHXRzGaKgc1jyjs0KGol7FP4sv4EzXSGFVS8CypJ82rzvS1e3HTNY2c3
+         osFSzc1bJRox9xXkyPn9Qsao7QjKsu7cOusrzoW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/220] s390/kasan: avoid user access code instrumentation
-Date:   Fri, 22 Nov 2019 11:28:54 +0100
-Message-Id: <20191122100924.963763508@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
+        dan.j.williams@intel.com, dyoung@redhat.com,
+        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 187/220] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+Date:   Fri, 22 Nov 2019 11:29:12 +0100
+Message-Id: <20191122100927.637819547@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,46 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit b6cbe3e8bdff6f21f1b58b08a55f479cdcf98282 ]
+[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
 
-Kasan instrumentation adds "store" check for variables marked as
-modified by inline assembly. With user pointers containing addresses
-from another address space this produces false positives.
+The only use of KEXEC_BACKUP_SRC_END is as an argument to
+walk_system_ram_res():
 
-static inline unsigned long clear_user_xc(void __user *to, ...)
-{
-	asm volatile(
-	...
-	: "+a" (to) ...
+  int crash_load_segments(struct kimage *image)
+  {
+    ...
+    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+                        image, determine_backup_region);
 
-User space access functions are wrapped by manually instrumented
-functions in kasan common code, which should be sufficient to catch
-errors. So, we just disable uaccess.o instrumentation altogether.
+walk_system_ram_res() expects "start, end" arguments that are inclusive,
+i.e., the range to be walked includes both the start and end addresses.
 
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+first address *past* the desired 0-640KB range.
+
+Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+region is [0-0x9ffff], not [0-0xa0000].
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Brijesh Singh <brijesh.singh@amd.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Lianbo Jiang <lijiang@redhat.com>
+CC: Takashi Iwai <tiwai@suse.de>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: baiyaowei@cmss.chinamobile.com
+CC: bhe@redhat.com
+CC: dan.j.williams@intel.com
+CC: dyoung@redhat.com
+CC: kexec@lists.infradead.org
+Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/lib/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/asm/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/lib/Makefile b/arch/s390/lib/Makefile
-index 57ab40188d4bd..5418d10dc2a81 100644
---- a/arch/s390/lib/Makefile
-+++ b/arch/s390/lib/Makefile
-@@ -9,5 +9,9 @@ lib-$(CONFIG_SMP) += spinlock.o
- lib-$(CONFIG_KPROBES) += probes.o
- lib-$(CONFIG_UPROBES) += probes.o
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index f327236f0fa71..5125fca472bb0 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -67,7 +67,7 @@ struct kimage;
  
-+# Instrumenting memory accesses to __user data (in different address space)
-+# produce false positives
-+KASAN_SANITIZE_uaccess.o := n
-+
- chkbss := mem.o
- include $(srctree)/arch/s390/scripts/Makefile.chkbss
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+-#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
 -- 
 2.20.1
 
