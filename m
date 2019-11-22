@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90400C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64450C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659E220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B58520707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419423;
-	bh=DvC0D0QxehONCjbsilXKY7Bm0ptoTdza56kz4LCrfTo=;
+	s=default; t=1574419427;
+	bh=6hPBnO6cyInfrI7QPc5HYLgV1DJSGN4IqdU+EtM4yrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlgxJ/KwpM7bc+OEnVpsoTcw/TKoeja9Mx4mihZJ83YFwzANDR/4rVUBd+yTGgmJ7
-	 wSBTxKnFMobUPAAcA6tRArzguj4+rOgWL6Y5RO8s8sYIff1s0kY1pgMXWAQ2ymYJgc
-	 mlUynQNbpY8+GyIMDnyOLgS8knh74n3AG5QTTHVg=
+	b=KrmpLohDqMi2KZEbTGl/SS1jxAhfdTM2yH/NJ2Ur+CyVxEkA5bR8OQpxiqWD8zEvX
+	 Fqp7TpNYphPJl65ZP29r02rl50Qj67Zzpc5l54dJAWVU6L1l8v/FqCicHGXTLVOMh5
+	 SBvXX/Nk/WJPz5t/eTFNYaKZx2Td8IVFR6PxeqFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfKVKnm (ORCPT
+        id S1729286AbfKVKnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49248 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:43:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfKVKnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:39 -0500
+        id S1728856AbfKVKno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239C920707;
-        Fri, 22 Nov 2019 10:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79C720637;
+        Fri, 22 Nov 2019 10:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419418;
-        bh=DvC0D0QxehONCjbsilXKY7Bm0ptoTdza56kz4LCrfTo=;
+        s=default; t=1574419424;
+        bh=6hPBnO6cyInfrI7QPc5HYLgV1DJSGN4IqdU+EtM4yrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyPlPbJpWjEedygNHQFH2fPrWVosuiQykvpHP3/Jcwx+R92WAnUpiM/FHvRn3+9Us
-         IMb99YH889n2A6q2Fe8U/JG08kE/Dxwcx6N3MMGUvReijJyYpqrtxp7QQjvTbvzC14
-         xY+Ernj4cuonuQ8VWPnxS+iSeu7QxlQ4s/SPTDHM=
+        b=UIK4PSt8645a/tdGCg+uhXims8/zMKZWaVGmYBwtuGRkp7sZV2lcC9oz8jB9WCx51
+         bLxjnk2Y1B2WZdes8TiwxSW5WSxIrvyW7OztLbHuXx8rvDjnXKFQVK/60iQTHVUPB8
+         Q/cbW0gUny3GGA/SFoL7Wm6sQZ1sbePa0zFqNnyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 104/222] ARM: dts: marvell: Fix SPI and I2C bus warnings
-Date:   Fri, 22 Nov 2019 11:27:24 +0100
-Message-Id: <20191122100910.858203813@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 106/222] net: micrel: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:27:26 +0100
+Message-Id: <20191122100910.975533656@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,95 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit cf680cc5251487b9a39919c3cda31a108af19cf8 ]
+[ Upstream commit 2b49117a5abee8478b0470cba46ac74f93b4a479 ]
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-arch/arm/boot/dts/dove-cubox.dtb: Warning (i2c_bus_reg): /i2c-mux/i2c@0/clock-generator: I2C bus unit address format error, expected "60"
-arch/arm/boot/dts/dove-cubox-es.dtb: Warning (i2c_bus_reg): /i2c-mux/i2c@0/clock-generator: I2C bus unit address format error, expected "60"
-arch/arm/boot/dts/dove-cubox.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-cubox-es.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-dove-db.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-sbc-a510.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-sbc-a510.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@14600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/orion5x-kuroboxpro.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/orion5x-linkstation-lschl.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/orion5x-linkstation-lsgl.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/orion5x-linkstation-lswtgl.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
+Found by coccinelle.
 
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dove-cubox.dts           | 2 +-
- arch/arm/boot/dts/dove.dtsi                | 6 +++---
- arch/arm/boot/dts/orion5x-linkstation.dtsi | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/micrel/ks8695net.c  | 2 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
-index af3cb633135fc..ee32315e3d3af 100644
---- a/arch/arm/boot/dts/dove-cubox.dts
-+++ b/arch/arm/boot/dts/dove-cubox.dts
-@@ -86,7 +86,7 @@
- 	status = "okay";
- 	clock-frequency = <100000>;
+diff --git a/drivers/net/ethernet/micrel/ks8695net.c b/drivers/net/ethernet/micrel/ks8695net.c
+index 20cb85bc0c5f8..6135d90f368fa 100644
+--- a/drivers/net/ethernet/micrel/ks8695net.c
++++ b/drivers/net/ethernet/micrel/ks8695net.c
+@@ -1156,7 +1156,7 @@ ks8695_timeout(struct net_device *ndev)
+  *	sk_buff and adds it to the TX ring. It then kicks the TX DMA
+  *	engine to ensure transmission begins.
+  */
+-static int
++static netdev_tx_t
+ ks8695_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct ks8695_priv *ksp = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 2fc5cd56c0a84..8dc1f0277117d 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -1020,9 +1020,9 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+  * spin_lock_irqsave is required because tx and rx should be mutual exclusive.
+  * So while tx is in-progress, prevent IRQ interrupt from happenning.
+  */
+-static int ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+-	int retv = NETDEV_TX_OK;
++	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
  
--	si5351: clock-generator {
-+	si5351: clock-generator@60 {
- 		compatible = "silabs,si5351a-msop";
- 		reg = <0x60>;
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 698d58cea20d2..11342aeccb73a 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -152,7 +152,7 @@
- 				  0xffffe000 MBUS_ID(0x03, 0x01) 0 0x0000800   /* CESA SRAM  2k */
- 				  0xfffff000 MBUS_ID(0x0d, 0x00) 0 0x0000800>; /* PMU  SRAM  2k */
- 
--			spi0: spi-ctrl@10600 {
-+			spi0: spi@10600 {
- 				compatible = "marvell,orion-spi";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -165,7 +165,7 @@
- 				status = "disabled";
- 			};
- 
--			i2c: i2c-ctrl@11000 {
-+			i2c: i2c@11000 {
- 				compatible = "marvell,mv64xxx-i2c";
- 				reg = <0x11000 0x20>;
- 				#address-cells = <1>;
-@@ -215,7 +215,7 @@
- 				status = "disabled";
- 			};
- 
--			spi1: spi-ctrl@14600 {
-+			spi1: spi@14600 {
- 				compatible = "marvell,orion-spi";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/orion5x-linkstation.dtsi b/arch/arm/boot/dts/orion5x-linkstation.dtsi
-index ed456ab35fd84..c1bc8376d4eb0 100644
---- a/arch/arm/boot/dts/orion5x-linkstation.dtsi
-+++ b/arch/arm/boot/dts/orion5x-linkstation.dtsi
-@@ -156,7 +156,7 @@
- &i2c {
- 	status = "okay";
- 
--	rtc {
-+	rtc@32 {
- 		compatible = "ricoh,rs5c372a";
- 		reg = <0x32>;
- 	};
+ 	disable_irq(netdev->irq);
 -- 
 2.20.1
 
