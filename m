@@ -5,300 +5,159 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAF9C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5402C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF0F2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F512071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="llpDGCRO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UKWsDluE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfKVPJw (ORCPT
+        id S1727268AbfKVPJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:09:52 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22764 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726633AbfKVPJw (ORCPT
+        Fri, 22 Nov 2019 10:09:55 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42577 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfKVPJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:09:52 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMF7wYc020482;
-        Fri, 22 Nov 2019 16:09:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=MJxLlMpkLwVBG7NqhYGIo7Hw2zbfifhhyH7WA1YqF4g=;
- b=llpDGCROJQ+hykPjdrR5b6ESI5LHfDcB5g288dqaJtCv1Sf2fsO8yenoXkYT3IM8zP4O
- m60PtaRg/m9hw4s6BNYPPIV/tMt2xpCSxo5wsBWlX1ke+xZpSKfFjJxESeqkUF/b6X7S
- DS+G6LxqCre2TcpkrDjBBAr+SJsLO/tGefQXZeIbxLMW/wnOIGtmeD89eeHwY4F7mEGo
- UO0GKwIx4kjwbyXM7XI0o1ZKq50Br/Te5ALWpBcbqcA4KkM+598/O6osj+DBnMuBllOo
- OH4yhGyxPp8EKetK8GOudVHWYWlyn4QxxgXgAK0LorQ5p0fpV50iSXpmGroc1FfZBPZ9 8g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9uphww3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 16:09:25 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3387710002A;
-        Fri, 22 Nov 2019 16:09:24 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EDB362C38C5;
-        Fri, 22 Nov 2019 16:09:23 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov 2019 16:09:23
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] iio: adc: stm32-adc: Add check on overrun interrupt
-Date:   Fri, 22 Nov 2019 16:08:14 +0100
-Message-ID: <1574435294-19510-1-git-send-email-fabrice.gasnier@st.com>
+        Fri, 22 Nov 2019 10:09:54 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so3607553pfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 07:09:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tJZyhm43uf0Z/sgLghvh3C922Koet0UHje3bklWsAKA=;
+        b=UKWsDluEmzAq6qXa6AyufiTRGS8uyeF/E1ybHYD2BhpdDKFu8ohyyhib+rGRL0RQk7
+         6ETIuUpJ2xaqwB2fiuiVGCZy3dKYtLw4ilm7bKBvFo0k1evx8V5200VPDzwi6SQDvfAS
+         RQE8wpNgi2am9UqvIZn0J2IUFN72HpRBwXKXVOvpOSXrVDP/lSerMxwT48/v2+So/0Qm
+         i+o0x6UUNxTuzeDIxShfoRa5k/n57nBcPh7UUmA0jdjnrZCXQ8ov6R8OWZaNtPMBlbo6
+         dJS23BrpU27x2DVkqaogYcAS1ebYO5COe1i+WXQbMAfhOzpANrVa5CsYlBDq2AUFlcxI
+         mS1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tJZyhm43uf0Z/sgLghvh3C922Koet0UHje3bklWsAKA=;
+        b=L106fJnO9ch71aG8Uj1pDYXVBSeMK4aI7gyxwrjvlzuR8rPb9kAIEb/xlu79M/5PRy
+         1TCKLsO7LZ7/84prgTLWwu6jfD5pIIB4Q7eOzXWwIVcKqkh+UCCyn2DpR1ZgprpYyr9l
+         v4jSqlIY5fg/NGnHYC03uXGO5ZzA9JNuQ34QDv62zdAf2rQ3cM7RN+MEjf/nsZyZueEE
+         hxKC9K4vN8JlunUoeuQ+NntuWWcfrGplRwLtMfsq3bAxe1NiI9Hxq20oB8Ea018q0FL/
+         Pz2L5pomP1LtdKSmUblCbNjf0Z07kgXpYwBovkkJDBJKikVFY4dPr/TZPPT6qDJIpc8H
+         8M0w==
+X-Gm-Message-State: APjAAAVlsnnyVKRM+u5VFRiDjet9FIxuPjljhhPVJnaLeOpQo1LTUpPm
+        DyZeq4NFcUmVUu55SPA6hDUv5w==
+X-Google-Smtp-Source: APXvYqxygXDW7MvUMbHe5yZ/Na9aSpFKod2LWOrlJw4kGXMdRrxeSlZHZL2DWVg1uoFERjnu1XLMaw==
+X-Received: by 2002:a65:66c5:: with SMTP id c5mr16862228pgw.12.1574435393785;
+        Fri, 22 Nov 2019 07:09:53 -0800 (PST)
+Received: from localhost.localdomain ([240e:362:496:8600:f5af:2744:25c3:d01a])
+        by smtp.gmail.com with ESMTPSA id a19sm8066021pfn.144.2019.11.22.07.09.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 22 Nov 2019 07:09:53 -0800 (PST)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v9 3/4] crypto: hisilicon - Remove module_param uacce_mode
+Date:   Fri, 22 Nov 2019 23:07:40 +0800
+Message-Id: <1574435261-6031-4-git-send-email-zhangfei.gao@linaro.org>
 X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
+In-Reply-To: <1574435261-6031-1-git-send-email-zhangfei.gao@linaro.org>
+References: <1574435261-6031-1-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable overrun interrupt on STM32 ADC. In case data register hasn't been
-read (by CPU or DMA), overrun condition is detected when there's new
-conversion data available. Stop grabbing data and log an error message.
-Use a threaded irq to avoid printing the error message from hard irq
-context.
+Remove the module_param uacce_mode, which is not used currently.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 ---
- drivers/iio/adc/stm32-adc-core.c | 14 +++++------
- drivers/iio/adc/stm32-adc-core.h |  9 +++++++
- drivers/iio/adc/stm32-adc.c      | 53 ++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 67 insertions(+), 9 deletions(-)
+ drivers/crypto/hisilicon/zip/zip_main.c | 31 ++++++-------------------------
+ 1 file changed, 6 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 6537f4f..97655d7 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -280,21 +280,21 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
- static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
- 	.csr = STM32F4_ADC_CSR,
- 	.ccr = STM32F4_ADC_CCR,
--	.eoc1_msk = STM32F4_EOC1,
--	.eoc2_msk = STM32F4_EOC2,
--	.eoc3_msk = STM32F4_EOC3,
-+	.eoc1_msk = STM32F4_EOC1 | STM32F4_OVR1,
-+	.eoc2_msk = STM32F4_EOC2 | STM32F4_OVR2,
-+	.eoc3_msk = STM32F4_EOC3 | STM32F4_OVR3,
- 	.ier = STM32F4_ADC_CR1,
--	.eocie_msk = STM32F4_EOCIE,
-+	.eocie_msk = STM32F4_EOCIE | STM32F4_OVRIE,
- };
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index 1b2ee96..3de9412 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -264,9 +264,6 @@ static u32 pf_q_num = HZIP_PF_DEF_Q_NUM;
+ module_param_cb(pf_q_num, &pf_q_num_ops, &pf_q_num, 0444);
+ MODULE_PARM_DESC(pf_q_num, "Number of queues in PF(v1 1-4096, v2 1-1024)");
  
- /* STM32H7 common registers definitions */
- static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
- 	.csr = STM32H7_ADC_CSR,
- 	.ccr = STM32H7_ADC_CCR,
--	.eoc1_msk = STM32H7_EOC_MST,
--	.eoc2_msk = STM32H7_EOC_SLV,
-+	.eoc1_msk = STM32H7_EOC_MST | STM32H7_OVR_MST,
-+	.eoc2_msk = STM32H7_EOC_SLV | STM32H7_OVR_SLV,
- 	.ier = STM32H7_ADC_IER,
--	.eocie_msk = STM32H7_EOCIE,
-+	.eocie_msk = STM32H7_EOCIE | STM32H7_OVRIE,
- };
+-static int uacce_mode;
+-module_param(uacce_mode, int, 0);
+-
+ static const struct pci_device_id hisi_zip_dev_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_ZIP_PF) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_ZIP_VF) },
+@@ -669,6 +666,7 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	pci_set_drvdata(pdev, hisi_zip);
  
- static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
-diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
-index 2579d51..2322809 100644
---- a/drivers/iio/adc/stm32-adc-core.h
-+++ b/drivers/iio/adc/stm32-adc-core.h
-@@ -51,10 +51,12 @@
- #define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
+ 	qm = &hisi_zip->qm;
++	qm->use_dma_api = true;
+ 	qm->pdev = pdev;
+ 	qm->ver = rev_id;
  
- /* STM32F4_ADC_SR - bit fields */
-+#define STM32F4_OVR			BIT(5)
- #define STM32F4_STRT			BIT(4)
- #define STM32F4_EOC			BIT(1)
- 
- /* STM32F4_ADC_CR1 - bit fields */
-+#define STM32F4_OVRIE			BIT(26)
- #define STM32F4_RES_SHIFT		24
- #define STM32F4_RES_MASK		GENMASK(25, 24)
- #define STM32F4_SCAN			BIT(8)
-@@ -72,8 +74,11 @@
- #define STM32F4_ADON			BIT(0)
- 
- /* STM32F4_ADC_CSR - bit fields */
-+#define STM32F4_OVR3			BIT(21)
- #define STM32F4_EOC3			BIT(17)
-+#define STM32F4_OVR2			BIT(13)
- #define STM32F4_EOC2			BIT(9)
-+#define STM32F4_OVR1			BIT(5)
- #define STM32F4_EOC1			BIT(1)
- 
- /* STM32F4_ADC_CCR - bit fields */
-@@ -103,10 +108,12 @@
- 
- /* STM32H7_ADC_ISR - bit fields */
- #define STM32MP1_VREGREADY		BIT(12)
-+#define STM32H7_OVR			BIT(4)
- #define STM32H7_EOC			BIT(2)
- #define STM32H7_ADRDY			BIT(0)
- 
- /* STM32H7_ADC_IER - bit fields */
-+#define STM32H7_OVRIE			STM32H7_OVR
- #define STM32H7_EOCIE			STM32H7_EOC
- 
- /* STM32H7_ADC_CR - bit fields */
-@@ -155,7 +162,9 @@ enum stm32h7_adc_dmngt {
- #define STM32H7_LINCALFACT_MASK		GENMASK(29, 0)
- 
- /* STM32H7_ADC_CSR - bit fields */
-+#define STM32H7_OVR_SLV			BIT(20)
- #define STM32H7_EOC_SLV			BIT(18)
-+#define STM32H7_OVR_MST			BIT(4)
- #define STM32H7_EOC_MST			BIT(2)
- 
- /* STM32H7_ADC_CCR - bit fields */
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 3b291d7..9361f92 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -117,7 +117,9 @@ struct stm32_adc_regs {
-  * struct stm32_adc_regspec - stm32 registers definition
-  * @dr:			data register offset
-  * @ier_eoc:		interrupt enable register & eocie bitfield
-+ * @ier_ovr:		interrupt enable register & overrun bitfield
-  * @isr_eoc:		interrupt status register & eoc bitfield
-+ * @isr_ovr:		interrupt status register & overrun bitfield
-  * @sqr:		reference to sequence registers array
-  * @exten:		trigger control register & bitfield
-  * @extsel:		trigger selection register & bitfield
-@@ -128,7 +130,9 @@ struct stm32_adc_regs {
- struct stm32_adc_regspec {
- 	const u32 dr;
- 	const struct stm32_adc_regs ier_eoc;
-+	const struct stm32_adc_regs ier_ovr;
- 	const struct stm32_adc_regs isr_eoc;
-+	const struct stm32_adc_regs isr_ovr;
- 	const struct stm32_adc_regs *sqr;
- 	const struct stm32_adc_regs exten;
- 	const struct stm32_adc_regs extsel;
-@@ -337,7 +341,9 @@ static const unsigned int stm32f4_adc_smp_cycles[STM32_ADC_MAX_SMP + 1] = {
- static const struct stm32_adc_regspec stm32f4_adc_regspec = {
- 	.dr = STM32F4_ADC_DR,
- 	.ier_eoc = { STM32F4_ADC_CR1, STM32F4_EOCIE },
-+	.ier_ovr = { STM32F4_ADC_CR1, STM32F4_OVRIE },
- 	.isr_eoc = { STM32F4_ADC_SR, STM32F4_EOC },
-+	.isr_ovr = { STM32F4_ADC_SR, STM32F4_OVR },
- 	.sqr = stm32f4_sq,
- 	.exten = { STM32F4_ADC_CR2, STM32F4_EXTEN_MASK, STM32F4_EXTEN_SHIFT },
- 	.extsel = { STM32F4_ADC_CR2, STM32F4_EXTSEL_MASK,
-@@ -429,7 +435,9 @@ static const unsigned int stm32h7_adc_smp_cycles[STM32_ADC_MAX_SMP + 1] = {
- static const struct stm32_adc_regspec stm32h7_adc_regspec = {
- 	.dr = STM32H7_ADC_DR,
- 	.ier_eoc = { STM32H7_ADC_IER, STM32H7_EOCIE },
-+	.ier_ovr = { STM32H7_ADC_IER, STM32H7_OVRIE },
- 	.isr_eoc = { STM32H7_ADC_ISR, STM32H7_EOC },
-+	.isr_ovr = { STM32H7_ADC_ISR, STM32H7_OVR },
- 	.sqr = stm32h7_sq,
- 	.exten = { STM32H7_ADC_CFGR, STM32H7_EXTEN_MASK, STM32H7_EXTEN_SHIFT },
- 	.extsel = { STM32H7_ADC_CFGR, STM32H7_EXTSEL_MASK,
-@@ -506,6 +514,18 @@ static void stm32_adc_conv_irq_disable(struct stm32_adc *adc)
- 			   adc->cfg->regs->ier_eoc.mask);
- }
- 
-+static void stm32_adc_ovr_irq_enable(struct stm32_adc *adc)
-+{
-+	stm32_adc_set_bits(adc, adc->cfg->regs->ier_ovr.reg,
-+			   adc->cfg->regs->ier_ovr.mask);
-+}
-+
-+static void stm32_adc_ovr_irq_disable(struct stm32_adc *adc)
-+{
-+	stm32_adc_clr_bits(adc, adc->cfg->regs->ier_ovr.reg,
-+			   adc->cfg->regs->ier_ovr.mask);
-+}
-+
- static void stm32_adc_set_res(struct stm32_adc *adc)
- {
- 	const struct stm32_adc_regs *res = &adc->cfg->regs->res;
-@@ -1205,6 +1225,19 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
- 	}
- }
- 
-+static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
-+{
-+	struct stm32_adc *adc = data;
-+	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	const struct stm32_adc_regspec *regs = adc->cfg->regs;
-+	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
-+
-+	if (status & regs->isr_ovr.mask)
-+		dev_err(&indio_dev->dev, "Overrun interrupt, stopping.\n");
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t stm32_adc_isr(int irq, void *data)
- {
- 	struct stm32_adc *adc = data;
-@@ -1212,6 +1245,17 @@ static irqreturn_t stm32_adc_isr(int irq, void *data)
- 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
- 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
- 
-+	if (status & regs->isr_ovr.mask) {
-+		/*
-+		 * Overrun occurred on regular conversions: data for wrong
-+		 * channel may be read. Unconditionally disable interrupts
-+		 * to stop processing data and print error message.
-+		 */
-+		stm32_adc_ovr_irq_disable(adc);
-+		stm32_adc_conv_irq_disable(adc);
-+		return IRQ_WAKE_THREAD;
-+	}
-+
- 	if (status & regs->isr_eoc.mask) {
- 		/* Reading DR also clears EOC status flag */
- 		adc->buffer[adc->bufi] = stm32_adc_readw(adc, regs->dr);
-@@ -1441,6 +1485,8 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
- 	/* Reset adc buffer index */
- 	adc->bufi = 0;
- 
-+	stm32_adc_ovr_irq_enable(adc);
-+
- 	if (!adc->dma_chan)
- 		stm32_adc_conv_irq_enable(adc);
- 
-@@ -1481,6 +1527,8 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
- 	if (!adc->dma_chan)
- 		stm32_adc_conv_irq_disable(adc);
- 
-+	stm32_adc_ovr_irq_disable(adc);
-+
- 	if (adc->dma_chan)
- 		dmaengine_terminate_sync(adc->dma_chan);
- 
-@@ -1818,8 +1866,9 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	if (adc->irq < 0)
- 		return adc->irq;
- 
--	ret = devm_request_irq(&pdev->dev, adc->irq, stm32_adc_isr,
--			       0, pdev->name, adc);
-+	ret = devm_request_threaded_irq(&pdev->dev, adc->irq, stm32_adc_isr,
-+					stm32_adc_threaded_isr,
-+					0, pdev->name, adc);
+@@ -676,20 +674,6 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	qm->dev_name = hisi_zip_name;
+ 	qm->fun_type = (pdev->device == PCI_DEVICE_ID_ZIP_PF) ? QM_HW_PF :
+ 								QM_HW_VF;
+-	switch (uacce_mode) {
+-	case 0:
+-		qm->use_dma_api = true;
+-		break;
+-	case 1:
+-		qm->use_dma_api = false;
+-		break;
+-	case 2:
+-		qm->use_dma_api = true;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+ 	ret = hisi_qm_init(qm);
  	if (ret) {
- 		dev_err(&pdev->dev, "failed to request IRQ\n");
- 		return ret;
+ 		dev_err(&pdev->dev, "Failed to init qm!\n");
+@@ -976,12 +960,10 @@ static int __init hisi_zip_init(void)
+ 		goto err_pci;
+ 	}
+ 
+-	if (uacce_mode == 0 || uacce_mode == 2) {
+-		ret = hisi_zip_register_to_crypto();
+-		if (ret < 0) {
+-			pr_err("Failed to register driver to crypto.\n");
+-			goto err_crypto;
+-		}
++	ret = hisi_zip_register_to_crypto();
++	if (ret < 0) {
++		pr_err("Failed to register driver to crypto.\n");
++		goto err_crypto;
+ 	}
+ 
+ 	return 0;
+@@ -996,8 +978,7 @@ static int __init hisi_zip_init(void)
+ 
+ static void __exit hisi_zip_exit(void)
+ {
+-	if (uacce_mode == 0 || uacce_mode == 2)
+-		hisi_zip_unregister_from_crypto();
++	hisi_zip_unregister_from_crypto();
+ 	pci_unregister_driver(&hisi_zip_pci_driver);
+ 	hisi_zip_unregister_debugfs();
+ }
 -- 
 2.7.4
 
