@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD760C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD36AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB5420708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A4720708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400480;
-	bh=qxxjYPnh4PQsTATEX/9F4QwWxNBeIk0vs4XPtZpHA2E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w3Y6KwHGmcK/o3oDlL/kF7TKGIU80PAum4uBKt5HP+lyEw0aMD8WgrnOJEmy59BrV
-	 YsILNECwrWq1J4aT+NXOeCoO9hA9IwlR2bq2t8nzQ+Crb8Jq/Se6BjuZdkbH4iOWmr
-	 fasoYljNZJiwYAdB3bJ++uwRfWN7YsjUe/fOQzvM=
+	s=default; t=1574400521;
+	bh=4UX+CxSvf6A7dtQ3cbPv4or4ULQtD3+cNrsIJxvQDp8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Bc9vK96Qh78TDcTm3wpm+Vd6sPqudhEO0E944Ms0q9ttdBwC3IWyvnJdMXKqlIltS
+	 TlD2GUitwx2o7hnE5zAUx4tNrVyO1N+v9gOpC0QW6XaNeOXbVOApcYrMwDJ+MvWoMj
+	 x0zmU8LQ+baAMv/EX/yN/bXMfj5iFWFqdF56QDTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKVF17 (ORCPT
+        id S1726968AbfKVF2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:27:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46128 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:28:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbfKVF1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:27:49 -0500
+        id S1726417AbfKVF2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:28:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BF3920708;
-        Fri, 22 Nov 2019 05:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B7820707;
+        Fri, 22 Nov 2019 05:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400468;
-        bh=qxxjYPnh4PQsTATEX/9F4QwWxNBeIk0vs4XPtZpHA2E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVKAQQAFBkXOalOJqT53cdb0ZeA/GVnf/RjwvJJv8/4+9Xjkrpu9D/JMgmsNHNrNA
-         xXqGIgZWd3iTxb4xsSYfCtMasN8zkKS10o6afskEHvYu5bY1CPpWXsJyUCKYnmjKCz
-         tGG+5N6k6UW4Mzj2DTznV5kigInMMb3gzU4if0JY=
+        s=default; t=1574400519;
+        bh=4UX+CxSvf6A7dtQ3cbPv4or4ULQtD3+cNrsIJxvQDp8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vr2+MJ2b+zb3jgLdybeaBVVH/ztoImh8lzh6d3FrSqYIg8BiZ9GaW/Hpoi3N+LelI
+         3Uf6dqGb4HMgNFhvJufoVV7oRCvy3E+OWO5405jNRo0OJhqfH+Blu4zJHDu1NNAsN2
+         8hw5+6l/6vwRlusOMB9bCDUyEP2wS1sAZlcF2bqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 005/219] ARM: dts: Fix up SQ201 flash access
-Date:   Fri, 22 Nov 2019 00:24:07 -0500
-Message-Id: <20191122052741.32499-5-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 001/219] scsi: target/tcmu: Fix queue_cmd_ring() declaration
+Date:   Fri, 22 Nov 2019 00:24:59 -0500
+Message-Id: <20191122052837.357-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122052741.32499-1-sashal@kernel.org>
-References: <20191122052741.32499-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,76 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit d88b11ef91b15d0af9c0676cbf4f441a0dff0c56 ]
+[ Upstream commit e7f411049f5164ee6db6c3434c07302846f09990 ]
 
-This sets the partition information on the SQ201 to be read
-out from the RedBoot partition table, removes the static
-partition table and sets our boot options to mount root from
-/dev/mtdblock2 where the squashfs+JFFS2 resides.
+This patch does not change any functionality but avoids that sparse
+complains about the queue_cmd_ring() function and its callers.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 6fd0ce79724d ("tcmu: prep queue_cmd_ring to be used by unmap wq")
+Reviewed-by: David Disseldorp <ddiss@suse.de>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/gemini-sq201.dts | 37 ++++--------------------------
- 1 file changed, 5 insertions(+), 32 deletions(-)
+ drivers/target/target_core_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/gemini-sq201.dts b/arch/arm/boot/dts/gemini-sq201.dts
-index 3787cf3763c41..e9e4a8a02600b 100644
---- a/arch/arm/boot/dts/gemini-sq201.dts
-+++ b/arch/arm/boot/dts/gemini-sq201.dts
-@@ -20,7 +20,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200n8";
-+		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
- 		stdout-path = &uart0;
- 	};
- 
-@@ -138,37 +138,10 @@
- 			/* 16MB of flash */
- 			reg = <0x30000000 0x01000000>;
- 
--			partition@0 {
--				label = "RedBoot";
--				reg = <0x00000000 0x00120000>;
--				read-only;
--			};
--			partition@120000 {
--				label = "Kernel";
--				reg = <0x00120000 0x00200000>;
--			};
--			partition@320000 {
--				label = "Ramdisk";
--				reg = <0x00320000 0x00600000>;
--			};
--			partition@920000 {
--				label = "Application";
--				reg = <0x00920000 0x00600000>;
--			};
--			partition@f20000 {
--				label = "VCTL";
--				reg = <0x00f20000 0x00020000>;
--				read-only;
--			};
--			partition@f40000 {
--				label = "CurConf";
--				reg = <0x00f40000 0x000a0000>;
--				read-only;
--			};
--			partition@fe0000 {
--				label = "FIS directory";
--				reg = <0x00fe0000 0x00020000>;
--				read-only;
-+			partitions {
-+				compatible = "redboot-fis";
-+				/* Eraseblock at 0xfe0000 */
-+				fis-index-block = <0x1fc>;
- 			};
- 		};
- 
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 7159e8363b83b..7ee0a75ce4526 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -962,7 +962,7 @@ static int add_to_qfull_queue(struct tcmu_cmd *tcmu_cmd)
+  *  0 success
+  *  1 internally queued to wait for ring memory to free.
+  */
+-static sense_reason_t queue_cmd_ring(struct tcmu_cmd *tcmu_cmd, int *scsi_err)
++static int queue_cmd_ring(struct tcmu_cmd *tcmu_cmd, sense_reason_t *scsi_err)
+ {
+ 	struct tcmu_dev *udev = tcmu_cmd->tcmu_dev;
+ 	struct se_cmd *se_cmd = tcmu_cmd->se_cmd;
 -- 
 2.20.1
 
