@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A65C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E110A2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68A12070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402350;
-	bh=fIDkp3nQknwUGs/jEnpCYRRi9+4jX4CW2Ox9ygyMYls=;
+	s=default; t=1574402356;
+	bh=QApcd85KJGu+VIAEdaq2EaYQKmtUl3gmpV+llI2BE+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kQ41GZAOs4ZsRNLpwjlCJ1oGksKVzu1+ajTksdOQkzcxIgSk9kfmtsq2aj/CXHpHL
-	 XkkFTE6OJZeqIZ5d9czPcMtATppu/BrvyvcHtOvyiYL6bZ5uUQkXFSE7cCVvrUcBJn
-	 cIndT0aYakrODOg1tzCBY2l04kN0WS6/SlTaGE4M=
+	b=13zyZECCwwTbXEuWYkSC/useSBtWSpld5IJVf3V25AyEPccdFTdJHG7fHj703xFm6
+	 aN7u1DrlKl+tvtdkqFSinCSJGYFZIrEwaF2rVIcvnR7Cm0N62lQJHM/Vlwl+4W7yeC
+	 xo+e/mHHOljmGYEelOpoGo9Ii1aSALIYNiEIN4Cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbfKVF55 (ORCPT
+        id S1728522AbfKVF7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729524AbfKVF5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:47 -0500
+        id S1729552AbfKVF5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A7632072E;
-        Fri, 22 Nov 2019 05:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EA752072D;
+        Fri, 22 Nov 2019 05:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402267;
-        bh=fIDkp3nQknwUGs/jEnpCYRRi9+4jX4CW2Ox9ygyMYls=;
+        s=default; t=1574402275;
+        bh=QApcd85KJGu+VIAEdaq2EaYQKmtUl3gmpV+llI2BE+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3Wa0/wvpsiLSWNor5KI0eKR4ToFTraBRPfcxSom8C3JkthhHTbBZz3kpBIpB2nr2
-         0N9PZUwcAwcJ8PR8KeXP+MX2kqxVEHJ7MBpkEqBVF7lyGlmc3DQP9wENweU2Gm/dz7
-         DaIsDuxHpupRe/vPP0qkrdTJNzWjOKhksvsLecEs=
+        b=nJ2Qr9+bAvxvAO0oFQ1F2MBQtPWRKzFBw249D79C5urEOrsbz8Nggn3BD3houF87A
+         q8qyII7awP7Fitk4IRLKdUUoIWzn+trRc2HUtFizOXoPqg3lOv6BcDQIr7Oy6k6lab
+         KK+skPq6aamV+Yqud3BPuCVtL7wUXKwPyi+5nyCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 107/127] decnet: fix DN_IFREQ_SIZE
-Date:   Fri, 22 Nov 2019 00:55:25 -0500
-Message-Id: <20191122055544.3299-106-sashal@kernel.org>
+Cc:     Peng Sun <sironhide0null@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 114/127] bpf: decrease usercnt if bpf_map_new_fd() fails in bpf_map_get_fd_by_id()
+Date:   Fri, 22 Nov 2019 00:55:32 -0500
+Message-Id: <20191122055544.3299-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -60,65 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Peng Sun <sironhide0null@gmail.com>
 
-[ Upstream commit 50c2936634bcb1db78a8ca63249236810c11a80f ]
+[ Upstream commit 781e62823cb81b972dc8652c1827205cda2ac9ac ]
 
-Digging through the ioctls with Al because of the previous
-patches, we found that on 64-bit decnet's dn_dev_ioctl()
-is wrong, because struct ifreq::ifr_ifru is actually 24
-bytes (not 16 as expected from struct sockaddr) due to the
-ifru_map and ifru_settings members.
+In bpf/syscall.c, bpf_map_get_fd_by_id() use bpf_map_inc_not_zero()
+to increase the refcount, both map->refcnt and map->usercnt. Then, if
+bpf_map_new_fd() fails, should handle map->usercnt too.
 
-Clearly, decnet expects the ioctl to be called with a struct
-like
-  struct ifreq_dn {
-    char ifr_name[IFNAMSIZ];
-    struct sockaddr_dn ifr_addr;
-  };
-
-since it does
-  struct ifreq *ifr = ...;
-  struct sockaddr_dn *sdn = (struct sockaddr_dn *)&ifr->ifr_addr;
-
-This means that DN_IFREQ_SIZE is too big for what it wants on
-64-bit, as it is
-  sizeof(struct ifreq) - sizeof(struct sockaddr) +
-  sizeof(struct sockaddr_dn)
-
-This assumes that sizeof(struct sockaddr) is the size of ifr_ifru
-but that isn't true.
-
-Fix this to use offsetof(struct ifreq, ifr_ifru).
-
-This indeed doesn't really matter much - the result is that we
-copy in/out 8 bytes more than we should on 64-bit platforms. In
-case the "struct ifreq_dn" lands just on the end of a page though
-it might lead to faults.
-
-As far as I can tell, it has been like this forever, so it seems
-very likely that nobody cares.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bd5f5f4ecb78 ("bpf: Add BPF_MAP_GET_FD_BY_ID")
+Signed-off-by: Peng Sun <sironhide0null@gmail.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/decnet/dn_dev.c | 2 +-
+ kernel/bpf/syscall.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
-index df042b6d80b83..22876a197ebec 100644
---- a/net/decnet/dn_dev.c
-+++ b/net/decnet/dn_dev.c
-@@ -56,7 +56,7 @@
- #include <net/dn_neigh.h>
- #include <net/dn_fib.h>
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 59d2e94ecb798..34110450a78f2 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1354,7 +1354,7 @@ static int bpf_map_get_fd_by_id(const union bpf_attr *attr)
  
--#define DN_IFREQ_SIZE (sizeof(struct ifreq) - sizeof(struct sockaddr) + sizeof(struct sockaddr_dn))
-+#define DN_IFREQ_SIZE (offsetof(struct ifreq, ifr_ifru) + sizeof(struct sockaddr_dn))
+ 	fd = bpf_map_new_fd(map);
+ 	if (fd < 0)
+-		bpf_map_put(map);
++		bpf_map_put_with_uref(map);
  
- static char dn_rt_all_end_mcast[ETH_ALEN] = {0xAB,0x00,0x00,0x04,0x00,0x00};
- static char dn_rt_all_rt_mcast[ETH_ALEN]  = {0xAB,0x00,0x00,0x03,0x00,0x00};
+ 	return fd;
+ }
 -- 
 2.20.1
 
