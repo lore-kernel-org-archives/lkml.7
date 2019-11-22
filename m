@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4149EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B802BC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E4D20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AC82070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404079;
-	bh=niKuEWpHYMiGBDyVgEHosl+UrqPkEyiUFP+M5ijO2mg=;
+	s=default; t=1574404086;
+	bh=5S+2wx5oqUm03lHamCIcP+kMhEIrkazAtB5eG8VlA4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qPkFpw6Q+QxrBIb86zukAtmlo4wFMqRE+eUe0owk2UOdE43s7AVLJ1ozslT1p/cHi
-	 ZAOlUNemA0DPhPn7PcI5rNaBO888Lher4SHf2xhEiWj0HoyVEIWuK8lXxtsd3pT+A1
-	 +XYhMGb0ZlSB8LyrIhxHjlwvVncxqArrsoU7IehU=
+	b=UmKjV+B9xaxwLS/Kmkz0H9ypaIDL4yN3p2Hy8BOVQPbvVjwy4FwBdhbIvyKJf85R8
+	 FiJLt4tEG7nZNGMEw/CaDZ6WOCB1OGqGUsgSmbh5TB5clSeuYGqrtI+HBp2eJiQujb
+	 YIAibGx/JXGETAEhkpY+9un1LpMtNOotU/PqqeP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfKVG16 (ORCPT
+        id S1728373AbfKVG2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:27:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:28:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfKVFuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:20 -0500
+        id S1727584AbfKVFuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA90520717;
-        Fri, 22 Nov 2019 05:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7B9520731;
+        Fri, 22 Nov 2019 05:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401819;
-        bh=niKuEWpHYMiGBDyVgEHosl+UrqPkEyiUFP+M5ijO2mg=;
+        s=default; t=1574401817;
+        bh=5S+2wx5oqUm03lHamCIcP+kMhEIrkazAtB5eG8VlA4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZQm0y34LmLtXoAsjl8BJ7RnQjmM0IzdqqJBqz3f/OHtT1pqzdK3886GgPtUiLNhS
-         tTOBOePtR+Lr0pZSpcqQJz8+Jw129rTS+pJmFyw4reYvLKE2GwCeZRZDP5+IEnA5Vy
-         +wbPOFheGhtoX63L0rgugRCgDfGw6yQ2gNtp9nPc=
+        b=oJ+Njb5zHmJKTJkIRt3KvXk6AXvX7LmSUnEu8urFQJ8qMhY6o0KSFfQAGVSJlxJLc
+         9YsJA4USi1IinBOOHQKvaVDbi+48kUCwSvLTdlaoRDYGvvXYJ3L0OF5QBHQ78PlvqU
+         fBfYz60Pac/0KEZ+l5ByXRw5ttnPP6VWiP7goIa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/219] gpio: pca953x: Fix AI overflow on PCAL6524
-Date:   Fri, 22 Nov 2019 00:46:35 -0500
-Message-Id: <20191122054911.1750-56-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 061/219] iwlwifi: pcie: fix erroneous print
+Date:   Fri, 22 Nov 2019 00:46:33 -0500
+Message-Id: <20191122054911.1750-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,39 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marek.vasut@gmail.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 92f45ebe68181c2d7f76633ffae55bc9447d62cd ]
+[ Upstream commit 0916224eaa77bff0fbbc747961d550ff8db45457 ]
 
-The PCAL_PINCTRL_MASK is too large. The extended register block on
-PCAL6524, which is the largest chip with this block, has the block
-limited to address range 0x40..0x7f. This is because the bit 7 in
-the command register is used for the Address Increment functionality.
+When removing the driver, the following flow can happen:
+1. host command is in progress, for example at index 68.
+2. RX interrupt is received with the response.
+3. Before it is processed, the remove flow kicks in, and
+   calls iwl_pcie_txq_unmap. The function cleans all DMA,
+   and promotes the read pointer to 69.
+4. RX thread proceeds with the processing, and is calling
+   iwl_pcie_cmdq_reclaim, which will print this error:
+   iwl_pcie_cmdq_reclaim: Read index for DMA queue txq id (0),
+   index 4 is out of range [0-256] 69 69.
 
-Trim the mask to 0x60 to match the datasheet and to prevent accidental
-overwrite of the AI bit.
+Detect this situation, and avoid the print. Change it to
+warning while at it, to make such issues more noticeable
+in the future.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-pca953x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index e0657fc72d31f..0232c25a15864 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -58,7 +58,7 @@
- #define PCA_GPIO_MASK		0x00FF
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+index 42fdb7970cfdc..7cba4c37c66fd 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+@@ -1247,11 +1247,11 @@ static void iwl_pcie_cmdq_reclaim(struct iwl_trans *trans, int txq_id, int idx)
  
- #define PCAL_GPIO_MASK		0x1f
--#define PCAL_PINCTRL_MASK	0xe0
-+#define PCAL_PINCTRL_MASK	0x60
+ 	if (idx >= trans->cfg->base_params->max_tfd_queue_size ||
+ 	    (!iwl_queue_used(txq, idx))) {
+-		IWL_ERR(trans,
+-			"%s: Read index for DMA queue txq id (%d), index %d is out of range [0-%d] %d %d.\n",
+-			__func__, txq_id, idx,
+-			trans->cfg->base_params->max_tfd_queue_size,
+-			txq->write_ptr, txq->read_ptr);
++		WARN_ONCE(test_bit(txq_id, trans_pcie->queue_used),
++			  "%s: Read index for DMA queue txq id (%d), index %d is out of range [0-%d] %d %d.\n",
++			  __func__, txq_id, idx,
++			  trans->cfg->base_params->max_tfd_queue_size,
++			  txq->write_ptr, txq->read_ptr);
+ 		return;
+ 	}
  
- #define PCA_INT			0x0100
- #define PCA_PCAL		0x0200
 -- 
 2.20.1
 
