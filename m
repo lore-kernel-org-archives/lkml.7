@@ -7,49 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E077FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C0320637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67E92071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419087;
-	bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
+	s=default; t=1574419090;
+	bh=rNvF+D9boZoPCiNVhtlnr9pBgxIcp4oAPRekViOg1Ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZ+QlinahwFcZyykFuAFyM3auqs0PHiF6H43nMLHxtDjqkP6dqH8qi9mJzEVIU/w1
-	 jpDaBpB1Nh7Sj0pjIne00eekPN+JPwK+1HW0YUpc2Y8Ed2lxO/7iVugYy9J9yq3IUn
-	 KNt/JTOAiVWgc/bYdAjEZ+4Q52bYOm5wivwBU7mQ=
+	b=AfCLNQX7rEWa3Iza94fAZ9gyBqEiT9cIkAj/Ujn87mDBG8VCwYd/kb+AADSG3Aijh
+	 oivzyde7hw0h700hnz0hHtGKCZ0zNJxQ6VgyoGPncb6dbLm6Tb6wKhXZttE6FwwGZ7
+	 ZJzkQaV9p/Khqe4scjDqC0+TSvdQVMY/7x3NBIxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfKVKiG (ORCPT
+        id S1728616AbfKVKiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbfKVKiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:00 -0500
+        id S1727827AbfKVKiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B23820717;
-        Fri, 22 Nov 2019 10:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E627C20708;
+        Fri, 22 Nov 2019 10:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419079;
-        bh=TpNyeSDmfELcoGLhQcP1ky6+6+Aylb/u+dAmwQSzoVg=;
+        s=default; t=1574419085;
+        bh=rNvF+D9boZoPCiNVhtlnr9pBgxIcp4oAPRekViOg1Ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lic2qoIUEm2YorS9pG8+hpaAUBFifn2fZnnRYESTUEm+oOWHv2TBhHy+9ZEBYce2N
-         lRy4O+kAGymgjAsD1iwywY1OehF+qirqnZuLN1s7v2awp71fF5FoeRg9Mi2kUQWxnA
-         3QuREaGgvaFEnWHsG8tPQ7N2fUGPYZo8nR0tGGbg=
+        b=VQPztIvia0LjRuNxJ/pozDp9vwV5fC04iJkfBecZ9Moy0jiU53Pl+g4d4oK2gsiE8
+         3zMniqXXbEGB0F/a3aFAs5wJUiJd+omJDnmMvskaZjdq2PyuwCKXdinW5u6ukFLKCS
+         8j9GmcQ+IFIbxhmto+U+OcNova/4LoMmQedO93pE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 123/159] cxgb4: Use proper enum in IEEE_FAUX_SYNC
-Date:   Fri, 22 Nov 2019 11:28:34 +0100
-Message-Id: <20191122100831.537667921@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
+        dan.j.williams@intel.com, dyoung@redhat.com,
+        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 151/159] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
+Date:   Fri, 22 Nov 2019 11:29:02 +0100
+Message-Id: <20191122100844.637485011@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,48 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 258b6d141878530ba1f8fc44db683822389de914 ]
+[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+The only use of KEXEC_BACKUP_SRC_END is as an argument to
+walk_system_ram_res():
 
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:390:4: warning: implicit
-conversion from enumeration type 'enum cxgb4_dcb_state' to different
-enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
-                        IEEE_FAUX_SYNC(dev, dcb);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h:70:10: note: expanded
-from macro 'IEEE_FAUX_SYNC'
-                                            CXGB4_DCB_STATE_FW_ALLSYNCED);
-                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  int crash_load_segments(struct kimage *image)
+  {
+    ...
+    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+                        image, determine_backup_region);
 
-Use the equivalent value of the expected type to silence Clang while
-resulting in no functional change.
+walk_system_ram_res() expects "start, end" arguments that are inclusive,
+i.e., the range to be walked includes both the start and end addresses.
 
-CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
+KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+first address *past* the desired 0-640KB range.
 
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+region is [0-0x9ffff], not [0-0xa0000].
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Brijesh Singh <brijesh.singh@amd.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Lianbo Jiang <lijiang@redhat.com>
+CC: Takashi Iwai <tiwai@suse.de>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: baiyaowei@cmss.chinamobile.com
+CC: bhe@redhat.com
+CC: dan.j.williams@intel.com
+CC: dyoung@redhat.com
+CC: kexec@lists.infradead.org
+Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h | 2 +-
+ arch/x86/include/asm/kexec.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
-index ccf24d3dc9824..2c418c405c508 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.h
-@@ -67,7 +67,7 @@
- 	do { \
- 		if ((__dcb)->dcb_version == FW_PORT_DCB_VER_IEEE) \
- 			cxgb4_dcb_state_fsm((__dev), \
--					    CXGB4_DCB_STATE_FW_ALLSYNCED); \
-+					    CXGB4_DCB_INPUT_FW_ALLSYNCED); \
- 	} while (0)
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index d2434c1cad055..414f9b52e58e6 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -66,7 +66,7 @@ struct kimage;
  
- /* States we can be in for a port's Data Center Bridging.
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+-#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
 -- 
 2.20.1
 
