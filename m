@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C5FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACAFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4B820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F4020674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402655;
-	bh=3pT4tzAQDoCWy1rARRfevvK6RgLlOffebbAAx/Ips6Y=;
+	s=default; t=1574402661;
+	bh=tI+Me4l/Tp44n2yNMTP+jfpnQPT4d2ccg/rfEF2XdTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KFtlk8CMeCDPUmvUyS1xNQPTKqOsJF3WFxGOcJ6kpeDqzkDXu41wsUoBcPAgEf337
-	 Y8RHQWlpNSwpVWuwbCwOGD2wj2C4eWCL0IkBsgk+LJj36DeUYi4M/r8KK7mxaWGIrH
-	 v+7q2ct+yhHrckoPYICPmcQ87v1MDLmqBGbzvrXA=
+	b=KQnjYsmjmK8I+SvRCEt1DjfVZlggIUBygKczzTXLzyLRHtIZCslJp1FHFF/tfRaW9
+	 WFyDLawV1a7tyiCKMZVKerhl4zjQ2EFSsQKNZb5IxJKA0OPXlhHgnoIIhB9fAFXmlO
+	 XubArqX7RgGOgN6isbyLL1Q5F+KYSDqwrrxAsi78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKVGEO (ORCPT
+        id S1728718AbfKVGCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41878 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbfKVGC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:59 -0500
+        id S1729351AbfKVGCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C74312070E;
-        Fri, 22 Nov 2019 06:02:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65A4B20730;
+        Fri, 22 Nov 2019 06:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402578;
-        bh=3pT4tzAQDoCWy1rARRfevvK6RgLlOffebbAAx/Ips6Y=;
+        s=default; t=1574402572;
+        bh=tI+Me4l/Tp44n2yNMTP+jfpnQPT4d2ccg/rfEF2XdTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WnSQUM8YrrpdMuccbEqpXVnukf89I0YC7Rveg/+k2XI7x/YH5updkAJuUy050BLEv
-         M9cV63x4HxlWmw0DClYLzIYjKfM2Ir3FZ+2epG3hO55+lVZb268OYGCd6qaTiI4rNx
-         DbFljBxnKVUmai2wvwn7x895sxez7Khiljtqt/jc=
+        b=xE1hQAt7ZZL8l9h3nrAftA5n+zjgESX1CMKenxq6Soz9pk0+fWUcQgjBiv2sJzo3p
+         kYSq7ERNzCoTGla11BmNvt8gxzZV0US9mWZsIfuwjg9Pj0BG4FtuSfUvQRofWZ3+gV
+         EgmIYdbIyvf3I5mZWpzNYUpoR1newkZAl0icAHHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 80/91] decnet: fix DN_IFREQ_SIZE
-Date:   Fri, 22 Nov 2019 01:01:18 -0500
-Message-Id: <20191122060129.4239-79-sashal@kernel.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 74/91] mtd: Check add_mtd_device() ret code
+Date:   Fri, 22 Nov 2019 01:01:12 -0500
+Message-Id: <20191122060129.4239-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -60,65 +58,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
 
-[ Upstream commit 50c2936634bcb1db78a8ca63249236810c11a80f ]
+[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
 
-Digging through the ioctls with Al because of the previous
-patches, we found that on 64-bit decnet's dn_dev_ioctl()
-is wrong, because struct ifreq::ifr_ifru is actually 24
-bytes (not 16 as expected from struct sockaddr) due to the
-ifru_map and ifru_settings members.
+add_mtd_device() can fail. We should always check its return value
+and gracefully handle the failure case. Fix the call sites where this
+not done (in mtdpart.c) and add a __must_check attribute to the
+prototype to avoid this kind of mistakes.
 
-Clearly, decnet expects the ioctl to be called with a struct
-like
-  struct ifreq_dn {
-    char ifr_name[IFNAMSIZ];
-    struct sockaddr_dn ifr_addr;
-  };
-
-since it does
-  struct ifreq *ifr = ...;
-  struct sockaddr_dn *sdn = (struct sockaddr_dn *)&ifr->ifr_addr;
-
-This means that DN_IFREQ_SIZE is too big for what it wants on
-64-bit, as it is
-  sizeof(struct ifreq) - sizeof(struct sockaddr) +
-  sizeof(struct sockaddr_dn)
-
-This assumes that sizeof(struct sockaddr) is the size of ifr_ifru
-but that isn't true.
-
-Fix this to use offsetof(struct ifreq, ifr_ifru).
-
-This indeed doesn't really matter much - the result is that we
-copy in/out 8 bytes more than we should on 64-bit platforms. In
-case the "struct ifreq_dn" lands just on the end of a page though
-it might lead to faults.
-
-As far as I can tell, it has been like this forever, so it seems
-very likely that nobody cares.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/decnet/dn_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/mtdcore.h |  2 +-
+ drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
-index b2c26b081134a..80554e7e9a0f6 100644
---- a/net/decnet/dn_dev.c
-+++ b/net/decnet/dn_dev.c
-@@ -55,7 +55,7 @@
- #include <net/dn_neigh.h>
- #include <net/dn_fib.h>
+diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
+index 55fdb8e1fd2a8..488b652ba9e63 100644
+--- a/drivers/mtd/mtdcore.h
++++ b/drivers/mtd/mtdcore.h
+@@ -6,7 +6,7 @@
+ extern struct mutex mtd_table_mutex;
  
--#define DN_IFREQ_SIZE (sizeof(struct ifreq) - sizeof(struct sockaddr) + sizeof(struct sockaddr_dn))
-+#define DN_IFREQ_SIZE (offsetof(struct ifreq, ifr_ifru) + sizeof(struct sockaddr_dn))
+ struct mtd_info *__mtd_next_device(int i);
+-int add_mtd_device(struct mtd_info *mtd);
++int __must_check add_mtd_device(struct mtd_info *mtd);
+ int del_mtd_device(struct mtd_info *mtd);
+ int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
+ int del_mtd_partitions(struct mtd_info *);
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index fccdd49bb9640..70e476c1c474d 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -648,10 +648,22 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
+ 	list_add(&new->list, &mtd_partitions);
+ 	mutex_unlock(&mtd_partitions_mutex);
  
- static char dn_rt_all_end_mcast[ETH_ALEN] = {0xAB,0x00,0x00,0x04,0x00,0x00};
- static char dn_rt_all_rt_mcast[ETH_ALEN]  = {0xAB,0x00,0x00,0x03,0x00,0x00};
+-	add_mtd_device(&new->mtd);
++	ret = add_mtd_device(&new->mtd);
++	if (ret)
++		goto err_remove_part;
+ 
+ 	mtd_add_partition_attrs(new);
+ 
++	return 0;
++
++err_remove_part:
++	mutex_lock(&mtd_partitions_mutex);
++	list_del(&new->list);
++	mutex_unlock(&mtd_partitions_mutex);
++
++	free_partition(new);
++	pr_info("%s:%i\n", __func__, __LINE__);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mtd_add_partition);
+@@ -696,28 +708,42 @@ int add_mtd_partitions(struct mtd_info *master,
+ {
+ 	struct mtd_part *slave;
+ 	uint64_t cur_offset = 0;
+-	int i;
++	int i, ret;
+ 
+ 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
+ 
+ 	for (i = 0; i < nbparts; i++) {
+ 		slave = allocate_partition(master, parts + i, i, cur_offset);
+ 		if (IS_ERR(slave)) {
+-			del_mtd_partitions(master);
+-			return PTR_ERR(slave);
++			ret = PTR_ERR(slave);
++			goto err_del_partitions;
+ 		}
+ 
+ 		mutex_lock(&mtd_partitions_mutex);
+ 		list_add(&slave->list, &mtd_partitions);
+ 		mutex_unlock(&mtd_partitions_mutex);
+ 
+-		add_mtd_device(&slave->mtd);
++		ret = add_mtd_device(&slave->mtd);
++		if (ret) {
++			mutex_lock(&mtd_partitions_mutex);
++			list_del(&slave->list);
++			mutex_unlock(&mtd_partitions_mutex);
++
++			free_partition(slave);
++			goto err_del_partitions;
++		}
++
+ 		mtd_add_partition_attrs(slave);
+ 
+ 		cur_offset = slave->offset + slave->mtd.size;
+ 	}
+ 
+ 	return 0;
++
++err_del_partitions:
++	del_mtd_partitions(master);
++
++	return ret;
+ }
+ 
+ static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
