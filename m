@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93579C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93535C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8B520706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A8B2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420946;
-	bh=ki+pDiUQ4TAJihOkdBBUuOsWB5MDl13oiTbkGVRNnaw=;
+	s=default; t=1574420949;
+	bh=N/hyzp1OWfb2l1l5eiOD5E610sSGkUzaZnDfc14bxfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxB/d8LFlA2AWe26j4siViSE5k8WwTY41+6ePXETQdEysCg1SAL3vVFIxzTabbGKa
-	 EodmmqFd/EeKmZaBxQ8PUQbBYoGl2eYubto4ZdirI60zVj35yDq50k6L5fb/2vFZq+
-	 00uOSNknmDbpK7Xmxe0/fl3ouRDemrkfEK1xlIGE=
+	b=R3P53x4p7romn+kO7/oEYL0KE5rSfKfk9Tc2eQWZKqwljDkm28HM1b8/tbP2ur2aU
+	 NGyja03Pc+dgdCo1SXtTFL2EkNxgCAj89mRwNtjb5Jspr8cnN4pq82O3H8BXvR/kVk
+	 Z/M6QgkQLpF1zPmHAmAIeR8FaipOWfxgRQx72WJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfKVLDl (ORCPT
+        id S1730486AbfKVLDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730607AbfKVLDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:37 -0500
+        id S1731412AbfKVLDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DAFC207DD;
-        Fri, 22 Nov 2019 11:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ECEF2073F;
+        Fri, 22 Nov 2019 11:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420616;
-        bh=ki+pDiUQ4TAJihOkdBBUuOsWB5MDl13oiTbkGVRNnaw=;
+        s=default; t=1574420596;
+        bh=N/hyzp1OWfb2l1l5eiOD5E610sSGkUzaZnDfc14bxfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYbsm/YnAoEy6rbWlDEgXjhlC082bmxVzMEozCtSRK+RZrRl7sq8tpdHyrFE+A9HF
-         f08W6Islm7vR7Jc3J6gulNFZp3ltcXUJvVNKLMNCN7aKEX5f+sthxycLw2JIqPad8U
-         wZscsNKb1HMTSyo2hX8MAnfP0eGjBVlHqyQnvETI=
+        b=p9uX2xNLo0vWTvSYPjqCF6ZRDzTnJ9/S1yBVPdz/K6kNYoL/Cj56iukjS3jfnEb7P
+         Kxar59fOaLDC/jc8GYZ7CfiBMfBXS3p+5k6lL9nZM6oHG3eHzA355hMIxQ0CvemJ1w
+         0JD79p8XWtrtgJjOjQRpta1MthnPElWkewd7xcWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 166/220] mmc: mmci: expand startbiterr to irqmask and error check
-Date:   Fri, 22 Nov 2019 11:28:51 +0100
-Message-Id: <20191122100924.727930440@linuxfoundation.org>
+Subject: [PATCH 4.19 124/220] media: ov5640: fix framerate update
+Date:   Fri, 22 Nov 2019 11:28:09 +0100
+Message-Id: <20191122100921.669666315@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,111 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
 
-[ Upstream commit daf9713c5ef8c3ffb0bdf7de11b53b2b2756c4f1 ]
+[ Upstream commit 0929983e49c81c1d413702cd9b83bb06c4a2555c ]
 
-All variants don't pretend to have a startbiterr.
--While data error check, if status register return an error
-(like  MCI_DATACRCFAIL) we must avoid to check MCI_STARTBITERR
-(if not desired).
--expand start_err to MCI_IRQENABLE to avoid to set this bit by default.
+Changing framerate right before streamon had no effect,
+the new framerate value was taken into account only at
+next streamon, fix this.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mmci.c | 27 ++++++++++++++++-----------
- drivers/mmc/host/mmci.h |  6 +++---
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ drivers/media/i2c/ov5640.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index eb1a65cb878f0..fa6268c0f1232 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -895,14 +895,18 @@ static void
- mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
- 	      unsigned int status)
- {
-+	unsigned int status_err;
-+
- 	/* Make sure we have data to handle */
- 	if (!data)
- 		return;
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index a3bbef682fb8e..2023df14f8282 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -2572,8 +2572,6 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+ 	if (frame_rate < 0)
+ 		frame_rate = OV5640_15_FPS;
  
- 	/* First check for errors */
--	if (status & (MCI_DATACRCFAIL | MCI_DATATIMEOUT |
--		      host->variant->start_err |
--		      MCI_TXUNDERRUN | MCI_RXOVERRUN)) {
-+	status_err = status & (host->variant->start_err |
-+			       MCI_DATACRCFAIL | MCI_DATATIMEOUT |
-+			       MCI_TXUNDERRUN | MCI_RXOVERRUN);
-+
-+	if (status_err) {
- 		u32 remain, success;
- 
- 		/* Terminate the DMA transfer */
-@@ -922,18 +926,18 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
- 		success = data->blksz * data->blocks - remain;
- 
- 		dev_dbg(mmc_dev(host->mmc), "MCI ERROR IRQ, status 0x%08x at 0x%08x\n",
--			status, success);
--		if (status & MCI_DATACRCFAIL) {
-+			status_err, success);
-+		if (status_err & MCI_DATACRCFAIL) {
- 			/* Last block was not successful */
- 			success -= 1;
- 			data->error = -EILSEQ;
--		} else if (status & MCI_DATATIMEOUT) {
-+		} else if (status_err & MCI_DATATIMEOUT) {
- 			data->error = -ETIMEDOUT;
--		} else if (status & MCI_STARTBITERR) {
-+		} else if (status_err & MCI_STARTBITERR) {
- 			data->error = -ECOMM;
--		} else if (status & MCI_TXUNDERRUN) {
-+		} else if (status_err & MCI_TXUNDERRUN) {
- 			data->error = -EIO;
--		} else if (status & MCI_RXOVERRUN) {
-+		} else if (status_err & MCI_RXOVERRUN) {
- 			if (success > host->variant->fifosize)
- 				success -= host->variant->fifosize;
- 			else
-@@ -1790,7 +1794,7 @@ static int mmci_probe(struct amba_device *dev,
- 			goto clk_disable;
+-	sensor->current_fr = frame_rate;
+-	sensor->frame_interval = fi->interval;
+ 	mode = ov5640_find_mode(sensor, frame_rate, mode->hact,
+ 				mode->vact, true);
+ 	if (!mode) {
+@@ -2581,7 +2579,10 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+ 		goto out;
  	}
  
--	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
-+	writel(MCI_IRQENABLE | variant->start_err, host->base + MMCIMASK0);
- 
- 	amba_set_drvdata(dev, mmc);
- 
-@@ -1877,7 +1881,8 @@ static void mmci_restore(struct mmci_host *host)
- 		writel(host->datactrl_reg, host->base + MMCIDATACTRL);
- 		writel(host->pwr_reg, host->base + MMCIPOWER);
+-	if (mode != sensor->current_mode) {
++	if (mode != sensor->current_mode ||
++	    frame_rate != sensor->current_fr) {
++		sensor->current_fr = frame_rate;
++		sensor->frame_interval = fi->interval;
+ 		sensor->current_mode = mode;
+ 		sensor->pending_mode_change = true;
  	}
--	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
-+	writel(MCI_IRQENABLE | host->variant->start_err,
-+	       host->base + MMCIMASK0);
- 	mmci_reg_delay(host);
- 
- 	spin_unlock_irqrestore(&host->lock, flags);
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index 517591d219e93..613d37ab08d20 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -181,9 +181,9 @@
- #define MMCIFIFO		0x080 /* to 0x0bc */
- 
- #define MCI_IRQENABLE	\
--	(MCI_CMDCRCFAILMASK|MCI_DATACRCFAILMASK|MCI_CMDTIMEOUTMASK|	\
--	MCI_DATATIMEOUTMASK|MCI_TXUNDERRUNMASK|MCI_RXOVERRUNMASK|	\
--	MCI_CMDRESPENDMASK|MCI_CMDSENTMASK|MCI_STARTBITERRMASK)
-+	(MCI_CMDCRCFAILMASK | MCI_DATACRCFAILMASK | MCI_CMDTIMEOUTMASK | \
-+	MCI_DATATIMEOUTMASK | MCI_TXUNDERRUNMASK | MCI_RXOVERRUNMASK |	\
-+	MCI_CMDRESPENDMASK | MCI_CMDSENTMASK)
- 
- /* These interrupts are directed to IRQ1 when two IRQ lines are available */
- #define MCI_IRQ1MASK \
 -- 
 2.20.1
 
