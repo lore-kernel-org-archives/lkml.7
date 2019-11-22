@@ -2,340 +2,229 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3C3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661F12070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CA32070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="14cAQKK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKVI1T (ORCPT
+        id S1727261AbfKVI1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:27:19 -0500
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:52499 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbfKVIZ1 (ORCPT
+        Fri, 22 Nov 2019 03:27:23 -0500
+Received: from condef-05.nifty.com ([202.248.20.70]:59410 "EHLO
+        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfKVI1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:25:27 -0500
-IronPort-SDR: bh+MaslaAVfRQi0k67EIbqcqu1OxmVgAlhwYusR7Jkwdz4KBqZEpS03P5dVDehpkPa6xodNTEm
- TJ3WJzsEggfmXmsYA6UlVzN8sL2mtnM4VjKnRHYHA9Sb+6aCGJIH2jZbUpTy0cQYp0CU+Ypk4l
- 9yCCdeeDp0YqYLkeu5SvgfGSz3+lkZo+XybHOUctB8ciB/6I1KAiRsWLz/D9ki471ZwXy+MFNL
- Jgs3O1CMUHzrFRIEMpriqTuuhAb3+XUd6zP/hpABhQRyTEVDG+RFKKZsjt/zlLvdv/6HBQk7lU
- Eug=
-X-IronPort-AV: E=Sophos;i="5.69,229,1571731200"; 
-   d="scan'208";a="43358928"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 22 Nov 2019 00:25:26 -0800
-IronPort-SDR: t7eGIw7uBRTj5X2ePYPkNnuYxEWjbImNenuNhWUosVILv1BKZ9qQzID7JTKc6GfMzg9Ic7QTj+
- 9Nuxu/D6+HtMIePcI2a/zE/aHW1yrDuiSh/Nj8GF1MNm/rY5qW4p1fOdRE1twINtdnYy/y+yGN
- lLN6wCeNp/ktps6yT9hQ0Vtnz1lK/BMOwohug8w7imPDXP9b1o8vR7FHLu9fU0/9+NTfGmTPc7
- AVpdYXUE/PxEPtOxwKmcUT320cxCwIgmK63GnT9uYYP+3F0ZVJ3a+clFbXHpZNgljtL4QwaBsd
- vSU=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
-        <nick@shmanahar.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v6 22/48] Input: atmel_mxt_ts - improve bootloader state machine handling
-Date:   Fri, 22 Nov 2019 17:23:36 +0900
-Message-ID: <20191122082402.18173-23-jiada_wang@mentor.com>
+        Fri, 22 Nov 2019 03:27:21 -0500
+X-Greylist: delayed 394 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Nov 2019 03:27:20 EST
+Received: from conuserg-09.nifty.com ([10.126.8.72])by condef-05.nifty.com with ESMTP id xAM8C8D6005198;
+        Fri, 22 Nov 2019 17:12:11 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xAM8B69D003819;
+        Fri, 22 Nov 2019 17:11:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAM8B69D003819
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1574410266;
+        bh=Hwpn9dTrOnKWNzBjRbeo5zgicQbERpM9jetyXIWTTZY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=14cAQKK4DZUsgFFMy3GC5LfItYVOBvPBptV5CweOtOqbEEXyHWzWLypXVFI4WsLo1
+         oJmIb3T9RTNUyrQ85vqDcUIKFMa1oMz4nukFoXDud1Fju086LYtV62pcrHL4CWM3Q0
+         WCFl6RLCZhmJbxBWEx/rP3ZoTyKfDt5+1Lq8E4l90DNUVIkHBsK4jw3waoEIuzO76d
+         k7dB9iONTIu89MdmryqVKGRdHTxv2N0WxkdtP8bddmO5lcSOjrcjsPWkdWBMrWWvcm
+         UtsZjtfLNt7ctdW6NA64x8FM8Dv7u4QgB7QcbpADrewqJSQ4PflJmLjOg5gfnsZBWk
+         LY2Y1pGMKpDSw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: check MODULE_* macros in non-modular code
+Date:   Fri, 22 Nov 2019 17:11:00 +0900
+Message-Id: <20191122081100.27695-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191122082402.18173-1-jiada_wang@mentor.com>
-References: <20191122082402.18173-1-jiada_wang@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+Paul Gortmaker sent a lot of patches to remove orphan modular code.
+You can see his contributions by:
 
-The code is much clearer if we switch on the actual state the bootloader
-is in, rather than the state we want it to be in, and allows the removal
-of a goto retry tangle.
+  $ git log --grep='make.* explicitly non-modular'
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 463e15ee95ee6e6274017ff645839dbe34d75c99)
-[gdavis: Squash fix from George G. Davis:
-	 - input: atmel_mxt_ts - Fix 'mxt_send_bootloader_cmd' was not
-	   declared warning]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
+To help this work, this commit adds simple shell-script to detect
+MODULE_ tags used in non-modular code.
+
+It displays suspicious use of MODULE_LICENSE, MODULE_AUTHOR,
+MODULE_DESCRIPTION, etc.
+
+I was not sure about module_param() or MODULE_PARM_DESC(). A lot of
+non-modular code uses module_param() to prefix the kernel parameter
+with the file name it resides in. If we changed module_param() to
+core_param(), the interface would be broken. MODULE_PARM_DESC() in
+non-modular code could be turned into comments or something, but I
+am not sure. I did not check them.
+
+I built x86_64_defconfig of v5.4-rc8, and this script detected
+the following:
+
+notice: asymmetric_keys: MODULE macros found in non-modular code
+notice: binfmt_elf: MODULE macros found in non-modular code
+notice: bsg: MODULE macros found in non-modular code
+notice: compat_binfmt_elf: MODULE macros found in non-modular code
+notice: component: MODULE macros found in non-modular code
+notice: debugfs: MODULE macros found in non-modular code
+notice: drm_mipi_dsi: MODULE macros found in non-modular code
+notice: freq_table: MODULE macros found in non-modular code
+notice: glob: MODULE macros found in non-modular code
+notice: intel_pstate: MODULE macros found in non-modular code
+notice: n_null: MODULE macros found in non-modular code
+notice: nvmem_core: MODULE macros found in non-modular code
+notice: power_supply: MODULE macros found in non-modular code
+notice: thermal_sys: MODULE macros found in non-modular code
+notice: tracefs: MODULE macros found in non-modular code
+notice: vgacon: MODULE macros found in non-modular code
+ To fix above, check MODULE_LICENSE(), MODULE_AUTHOR(), etc.
+ Please check #include <linux/module.h>, THIS_MODULE, too.
+
+I confirmed they are all valid.
+
+Maybe the 'debugfs' is unclear because there are tons of debugfs
+stuff in the source tree. It is talking about MODULE_ALIAS_FS()
+in fs/debugfs/inode.c because fs/debugfs/debugfs.o never becomes
+a module.
+
+[How to fix the warnings]
+
+Let's take 'asymmetric_keys' as an example.
+
+(1) grep Makefiles to find the relevant code
+
+$ git grep -A2 asymmetric_keys -- '*/Makefile' '*/Kbuild'
+crypto/Makefile:obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += asymmetric_keys/
+crypto/Makefile-obj-$(CONFIG_CRYPTO_HASH_INFO) += hash_info.o
+crypto/Makefile-crypto_simd-y := simd.o
+--
+crypto/asymmetric_keys/Makefile:obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += asymmetric_keys.o
+crypto/asymmetric_keys/Makefile-
+crypto/asymmetric_keys/Makefile:asymmetric_keys-y := \
+crypto/asymmetric_keys/Makefile-        asymmetric_type.o \
+crypto/asymmetric_keys/Makefile-        restrict.o \
+
+Then, you notice it is associated with CONFIG_ASYMMETRIC_KEY_TYPE
+and is a composite object that consists of asymmetric_type.o,
+restrict.o, ...
+
+(2) Confirm the CONFIG is boolean
+
+$ git grep -A2 'config ASYMMETRIC_KEY_TYPE' -- '*/Kconfig*'
+crypto/asymmetric_keys/Kconfig:menuconfig ASYMMETRIC_KEY_TYPE
+crypto/asymmetric_keys/Kconfig- bool "Asymmetric (public-key cryptographic) key type"
+crypto/asymmetric_keys/Kconfig- depends on KEYS
+
+Now you are sure it never get compiled as a module since
+ASYMMETRIC_KEY_TYPE is a bool type option.
+
+(3) Grep the source file(s)
+
+$ grep '^MODULE' crypto/asymmetric_keys/asymmetric_type.c
+MODULE_LICENSE("GPL");
+
+Remove the orphan MODULE tags. You may also need to do some additional
+works such as:
+
+ - replace module_*_driver with builtin_*_driver
+ - replace <linux/module.h> with <linux/init.h>
+ - remove module_exit code
+ - move credit in MODULE_AUTHOR() to the top of the file
+
+Please see Paul's commits.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
-Notes:
-- Squash fix from George G. Davis:
-  + input: atmel_mxt_ts - Fix 'mxt_send_bootloader_cmd' was not declared warning
 
-    The following sparse warning was introduced by ndyer/linux/for-upstream
-    commit 463e15ee95ee ("Input: atmel_mxt_ts - improve bootloader state
-    machine handling"):
+Changes in v2:
+  - Remove redundant back-slashes after the pipe operator '|'
 
-    drivers/input/touchscreen/atmel_mxt_ts.c:888:5: warning: symbol 'mxt_send_bootloader_cmd' was not declared. Should it be static?
+ scripts/modules-check.sh | 54 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-    Fix the above sparse warning by restoring the 'mxt_send_bootloader_cmd'
-    static declaration which was errantly removed by
-    ndyer/linux/for-upstream commit 463e15ee95ee ("Input: atmel_mxt_ts -
-    improve bootloader state machine handling").
-
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 183 ++++++++++++-----------
- 1 file changed, 98 insertions(+), 85 deletions(-)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index d38ae9525e35..1c5230f7a9af 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -305,6 +305,8 @@ struct mxt_flash {
- 	size_t frame_size;
- 	unsigned int count;
- 	unsigned int retry;
-+	u8 previous;
-+	bool complete;
- };
- 
- /* Each client has this additional data */
-@@ -583,64 +585,121 @@ static int mxt_probe_bootloader(struct mxt_data *data, bool alt_address)
- 	return 0;
+diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+index f51f446707b8..7975aa61ddb8 100755
+--- a/scripts/modules-check.sh
++++ b/scripts/modules-check.sh
+@@ -13,4 +13,58 @@ check_same_name_modules()
+ 	done
  }
  
--static int mxt_check_bootloader(struct mxt_data *data, unsigned int state,
--				bool wait)
-+static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock);
-+
-+static int mxt_write_firmware_frame(struct mxt_data *data, struct mxt_flash *f)
++# Check MODULE_ macros in non-modular code
++check_orphan_module_macros()
 +{
-+	f->frame = (struct mxt_fw_frame *)(f->fw->data + f->pos);
++	# modules.builtin.modinfo is created while linking vmlinux.
++	# It may not exist when you do 'make modules'.
++	if [ ! -r modules.builtin.modinfo ]; then
++		return
++	fi
 +
-+	/* Take account of CRC bytes */
-+	f->frame_size = __be16_to_cpu(f->frame->size) + 2U;
++	# modules.builtin lists *real* built-in modules, i.e. controlled by
++	# tristate CONFIG options, but currently built with =y.
++	#
++	# modules.builtin.modinfo is the list of MODULE_ macros compiled
++	# into vmlinux.
++	#
++	# By diff'ing them, users of bogus MODULE_* macros will show up.
 +
-+	/* Write one frame to device */
-+	return mxt_bootloader_write(data, f->fw->data + f->pos,
-+				   f->frame_size);
++	# Kbuild replaces ',' and '-' in file names with '_' for use in C.
++	real_builtin_modules=$(sed -e 's:.*/::' -e 's/\.ko$//' -e 's/,/_/g' \
++			       -e 's/-/_/g' modules.builtin | sort | uniq)
++
++	show_hint=
++
++	# Exclude '.paramtype=' and '.param=' to skip checking module_param()
++	# and MODULE_PARM_DESC().
++	module_macro_users=$(tr '\0' '\n' < modules.builtin.modinfo |
++			     sed -e '/\.parmtype=/d' -e '/\.parm=/d' |
++			     sed -n 's/\..*//p' | sort | uniq)
++
++	for m in $module_macro_users
++	do
++		warn=1
++
++		for n in $real_builtin_modules
++		do
++			if [ "$m" = "$n" ]; then
++				warn=
++				break
++			fi
++		done
++
++		if [ -n "$warn" ]; then
++			echo "notice: $m: MODULE macros found in non-modular code"
++			show_hint=1
++		fi
++	done
++
++	if [ -n "$show_hint" ]; then
++		echo " To fix above, check MODULE_LICENSE(), MODULE_AUTHOR(), etc."
++		echo " Please check #include <linux/module.h>, THIS_MODULE, too."
++	fi
 +}
 +
-+static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
- {
- 	struct device *dev = &data->client->dev;
--	u8 val;
-+	u8 state;
- 	int ret;
- 
--recheck:
--	if (wait) {
-+	/*
-+	 * In application update mode, the interrupt
-+	 * line signals state transitions. We must wait for the
-+	 * CHG assertion before reading the status byte.
-+	 * Once the status byte has been read, the line is deasserted.
-+	 */
-+	ret = mxt_wait_for_completion(data, &data->bl_completion,
-+				      MXT_FW_CHG_TIMEOUT);
-+	if (ret) {
- 		/*
--		 * In application update mode, the interrupt
--		 * line signals state transitions. We must wait for the
--		 * CHG assertion before reading the status byte.
--		 * Once the status byte has been read, the line is deasserted.
-+		 * TODO: handle -ERESTARTSYS better by terminating
-+		 * fw update process before returning to userspace
-+		 * by writing length 0x000 to device (iff we are in
-+		 * WAITING_FRAME_DATA state).
- 		 */
--		ret = mxt_wait_for_completion(data, &data->bl_completion,
--					      MXT_FW_CHG_TIMEOUT);
--		if (ret) {
--			/*
--			 * TODO: handle -ERESTARTSYS better by terminating
--			 * fw update process before returning to userspace
--			 * by writing length 0x000 to device (iff we are in
--			 * WAITING_FRAME_DATA state).
--			 */
--			dev_err(dev, "Update wait error %d\n", ret);
--			return ret;
--		}
-+		dev_warn(dev, "Update wait error %d\n", ret);
- 	}
- 
--	ret = mxt_bootloader_read(data, &val, 1);
-+	ret = mxt_bootloader_read(data, &state, 1);
- 	if (ret)
- 		return ret;
- 
-+	/* Remove don't care bits */
-+	if (state & ~MXT_BOOT_STATUS_MASK)
-+		state &= ~MXT_BOOT_STATUS_MASK;
-+
- 	switch (state) {
- 	case MXT_WAITING_BOOTLOAD_CMD:
-+		dev_info(dev, "Unlocking bootloader\n");
-+		ret = mxt_send_bootloader_cmd(data, true);
-+		if (ret)
-+			return ret;
-+
-+		break;
-+
- 	case MXT_WAITING_FRAME_DATA:
--	case MXT_APP_CRC_FAIL:
--		val &= ~MXT_BOOT_STATUS_MASK;
-+		if ((f->previous != MXT_WAITING_BOOTLOAD_CMD)
-+		    && (f->previous != MXT_FRAME_CRC_PASS)
-+		    && (f->previous != MXT_FRAME_CRC_FAIL))
-+			goto unexpected;
-+
-+		ret = mxt_write_firmware_frame(data, f);
-+		if (ret)
-+			return ret;
-+
-+		break;
-+
-+	case MXT_FRAME_CRC_CHECK:
-+		if (f->previous != MXT_WAITING_FRAME_DATA)
-+			goto unexpected;
- 		break;
-+
- 	case MXT_FRAME_CRC_PASS:
--		if (val == MXT_FRAME_CRC_CHECK) {
--			goto recheck;
--		} else if (val == MXT_FRAME_CRC_FAIL) {
--			dev_err(dev, "Bootloader CRC fail\n");
--			return -EINVAL;
-+		if (f->previous != MXT_FRAME_CRC_CHECK)
-+			goto unexpected;
-+
-+		/* Next frame */
-+		f->retry = 0;
-+		f->pos += f->frame_size;
-+		f->count++;
-+
-+		if (f->pos >= f->fw->size) {
-+			f->complete = true;
-+			dev_info(dev, "Sent %u frames, %zu bytes\n",
-+				f->count, f->fw->size);
-+		} else if (f->count % 50 == 0) {
-+			dev_dbg(dev, "Sent %u frames, %lld/%zu bytes\n",
-+				f->count, f->pos, f->fw->size);
- 		}
-+
-+		break;
-+
-+	case MXT_FRAME_CRC_FAIL:
-+		if (f->retry > 20) {
-+			dev_err(dev, "Retry count exceeded\n");
-+			return -EIO;
-+		}
-+
-+		/* Back off by 20ms per retry */
-+		dev_dbg(dev, "Bootloader frame CRC failure\n");
-+		f->retry++;
-+		msleep(f->retry * 20);
- 		break;
-+
- 	default:
- 		return -EINVAL;
- 	}
- 
--	if (val != state) {
--		dev_err(dev, "Invalid bootloader state %02X != %02X\n",
--			val, state);
--		return -EINVAL;
--	}
-+	f->previous = state;
- 
- 	return 0;
-+
-+unexpected:
-+	dev_err(dev, "Unexpected state transition\n");
-+	return -EINVAL;
- }
- 
- static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock)
-@@ -3301,57 +3360,13 @@ static int mxt_load_fw(struct device *dev)
- 	if (ret)
- 		goto release_firmware;
- 
--	ret = mxt_check_bootloader(data, MXT_WAITING_BOOTLOAD_CMD, false);
--	if (ret) {
--		/* Bootloader may still be unlocked from previous attempt */
--		ret = mxt_check_bootloader(data, MXT_WAITING_FRAME_DATA, false);
--		if (ret)
--			goto disable_irq;
--	} else {
--		dev_info(dev, "Unlocking bootloader\n");
--
--		/* Unlock bootloader */
--		ret = mxt_send_bootloader_cmd(data, true);
-+	while (true) {
-+		ret = mxt_check_bootloader(data, &f);
- 		if (ret)
--			goto disable_irq;
--	}
--
--	while (f.pos < f.fw->size) {
--		f.frame = (struct mxt_fw_frame *)(f.fw->data + f.pos);
--
--		ret = mxt_check_bootloader(data, MXT_WAITING_FRAME_DATA, true);
--		if (ret)
--			goto disable_irq;
--
--		/* Take account of CRC bytes */
--		f.frame_size = __be16_to_cpu(f.frame->size) + 2U;
--
--		/* Write one frame to device */
--		ret = mxt_bootloader_write(data, f.fw->data + f.pos,
--					   f.frame_size);
--		if (ret)
--			goto disable_irq;
--
--		ret = mxt_check_bootloader(data, MXT_FRAME_CRC_PASS, true);
--		if (ret) {
--			f.retry++;
--
--			/* Back off by 20ms per retry */
--			msleep(f.retry * 20);
--
--			if (f.retry > 20) {
--				dev_err(dev, "Retry count exceeded\n");
--				goto disable_irq;
--			}
--		} else {
--			f.retry = 0;
--			f.pos += f.frame_size;
--			f.count++;
--		}
-+			return ret;
- 
--		if (f.count % 50 == 0)
--			dev_dbg(dev, "Sent %u frames, %lld/%zu bytes\n",
--				f.count, f.pos, f.fw->size);
-+		if (f.complete)
-+			break;
- 	}
- 
- 	/* Wait for flash. */
-@@ -3360,7 +3375,6 @@ static int mxt_load_fw(struct device *dev)
- 	if (ret)
- 		goto disable_irq;
- 
--	dev_dbg(dev, "Sent %u frames, %lld bytes\n", f.count, f.pos);
- 
- 	/*
- 	 * Wait for device to reset. Some bootloader versions do not assert
-@@ -3370,7 +3384,6 @@ static int mxt_load_fw(struct device *dev)
- 	mxt_wait_for_completion(data, &data->bl_completion, MXT_FW_RESET_TIME);
- 
- 	data->in_bootloader = false;
--
- disable_irq:
- 	disable_irq(data->irq);
- release_firmware:
+ check_same_name_modules
++check_orphan_module_macros
 -- 
 2.17.1
 
