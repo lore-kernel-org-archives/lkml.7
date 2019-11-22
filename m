@@ -2,131 +2,131 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E64C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F4A2068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE202068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2BETWVp"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="GN0IQztc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKVB1C (ORCPT
+        id S1726881AbfKVB1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:27:02 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:46321 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKVB07 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:26:59 -0500
-Received: by mail-pj1-f65.google.com with SMTP id a16so2307224pjs.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 17:26:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TU/4Ef2jiJlWVCQ4cQLrxn75XZh8TZ+zwtkucEXiu6Y=;
-        b=m2BETWVpqlllD08mHYTdBJVrgblUy6CNB+DVYcBf9k1lTWIC7q1zlf4DUt7C76yvFH
-         G6g+FzKXJOEn6Vlo815oRlNBTnuOYeh6pCdoJ1hx+Svn5rOtOL1wNOb+UEMgHBUphhlH
-         P8cv6J335QcanJ1JahmxBQ5wp52tqT2vEclNYvdd1JfgV6k5eQEDGUUqW3uoh8dfQHoS
-         9xXdeB8VoyFb6OzA2Q8Ztk9qWRPfX+qdV3hUp7yzrKXrqPW/4+evxgguDIUq/jyml/xl
-         uRx2Z/AjTUK5d/DHjDDKOSV8NRou6QR+IdZLRPjDl5zRTY1jkB6dh0gQ9Z1oePhabV1F
-         e0EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TU/4Ef2jiJlWVCQ4cQLrxn75XZh8TZ+zwtkucEXiu6Y=;
-        b=AHTxLafqfpreU2VsAIFgv7TWWNECgxywA02fZa6riGMS5k40L7Mh9e97A9268eKkm/
-         30A3ftCwgU81ISjn3dRrvenF5EPsqSNrFinOuV1KoZEam2gcx+YQe7X2UmxSmHnw/WLn
-         71lvgiOZ8fEy7BqHy/eNH/hsqbiqZQ3CprSu9KMEisapqWXAZCXk07JvIMJVY7EElacK
-         j07bR/Aa3pGB/OXYBDUy0YO41+L8c5dMlkziVmW5MN8+udgJnpyo9IQLFNJpoPxqHSce
-         IYK1vquwxkbwiVAd81qWrzceC5AcjYZ+JTabMWpXxAi7A3c44BDxcvzV+e2dyhvl9fDL
-         d5tw==
-X-Gm-Message-State: APjAAAWZBVcjBWTiieQzbYCab/tNYdlqiR5ApgEHCcBCNwnr9TnDLO+o
-        N0X9405PnpLPyFLKPtpFsG/LAc6mgiRTE5sKrPutvlvB
-X-Google-Smtp-Source: APXvYqyEm29BCL9dYSdTsXPxmgv2TKuC1svdFqNukvJ2stRS4zyFKH8B0gohRL0YLXx0L/gX9Xmw6kRwgk7gtVPhA6k=
-X-Received: by 2002:a17:90a:d818:: with SMTP id a24mr14948297pjv.40.1574386018942;
- Thu, 21 Nov 2019 17:26:58 -0800 (PST)
+        Thu, 21 Nov 2019 20:27:09 -0500
+Received: from onstation.org ([52.200.56.107]:33758 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726685AbfKVB06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 20:26:58 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 520EE44FD1;
+        Fri, 22 Nov 2019 01:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1574386017;
+        bh=CaHmDoZDSt9WG3Xh0TDc9eDdYCzbqbU5vHcj3IO1lu0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GN0IQztcelqBojl8jngElPhqaUgYYVwdNdx6rSaSfGKXvjnQIiLR5EY8GXN+B6p9x
+         QElEUWKiMyJhh94Skdk7WKReEJTsODd6/jdNf3U186jNDhQbtiaRxteSUfdSj9rMLG
+         9ggH34S1rwsjj+Bfx+vh82oy6yXsomeMc0Dwtc/A=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
+        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 2/4] drm/msm/gpu: add support for ocmem interconnect path
+Date:   Thu, 21 Nov 2019 20:26:43 -0500
+Message-Id: <20191122012645.7430-3-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191122012645.7430-1-masneyb@onstation.org>
+References: <20191122012645.7430-1-masneyb@onstation.org>
 MIME-Version: 1.0
-References: <20191121184805.414758-1-pasha.tatashin@soleen.com> <20191121184805.414758-4-pasha.tatashin@soleen.com>
-In-Reply-To: <20191121184805.414758-4-pasha.tatashin@soleen.com>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Thu, 21 Nov 2019 17:26:47 -0800
-Message-ID: <CAMo8BfJYEh_HYGuKwKgfwVdVwg-w-AxN=+6zDuYdwB+E_dTSzA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: remove the rest of asm-uaccess.h
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, steve.capper@arm.com,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        James Morse <james.morse@arm.com>, vladimir.murzin@arm.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Stefan Agner <stefan@agner.ch>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        xen-devel@lists.xenproject.org,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 10:50 AM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> The __uaccess_ttbr0_disable and __uaccess_ttbr0_enable,
-> are the last two macros defined in asm-uaccess.h.
->
-> Replace them with C wrappers and call C functions from
-> kernel_entry and kernel_exit.
->
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->  arch/arm64/include/asm/asm-uaccess.h | 38 ----------------------------
->  arch/arm64/kernel/entry.S            |  6 ++---
->  arch/arm64/lib/clear_user.S          |  2 +-
->  arch/arm64/lib/copy_from_user.S      |  2 +-
->  arch/arm64/lib/copy_in_user.S        |  2 +-
->  arch/arm64/lib/copy_to_user.S        |  2 +-
->  arch/arm64/mm/cache.S                |  1 -
->  arch/arm64/mm/context.c              | 12 +++++++++
->  arch/xtensa/kernel/coprocessor.S     |  1 -
->  9 files changed, 19 insertions(+), 47 deletions(-)
->  delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
+Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
+and must use the On Chip MEMory (OCMEM) in order to be functional.
+There's a separate interconnect path that needs to be setup to OCMEM.
+Add support for this second path to the GPU core.
 
-[...]
+In the downstream MSM 3.4 sources, the two interconnect paths for the
+GPU are between:
 
-> diff --git a/arch/xtensa/kernel/coprocessor.S b/arch/xtensa/kernel/coprocessor.S
-> index 80828b95a51f..6329d17e2aa0 100644
-> --- a/arch/xtensa/kernel/coprocessor.S
-> +++ b/arch/xtensa/kernel/coprocessor.S
-> @@ -18,7 +18,6 @@
->  #include <asm/processor.h>
->  #include <asm/coprocessor.h>
->  #include <asm/thread_info.h>
-> -#include <asm/asm-uaccess.h>
->  #include <asm/unistd.h>
->  #include <asm/ptrace.h>
->  #include <asm/current.h>
+  - MSM_BUS_MASTER_GRAPHICS_3D and MSM_BUS_SLAVE_EBI_CH0
+  - MSM_BUS_MASTER_V_OCMEM_GFX3D and MSM_BUS_SLAVE_OCMEM
 
-This is not related to arm64 or to the changes in the description,
-but the change itself is OK. Whether you keep it in this patch,
-or choose to split it out feel free to add
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 14 +++++++++++++-
+ drivers/gpu/drm/msm/msm_gpu.h           |  7 +++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-Acked-by: Max Filippov <jcmvbkbc@gmail.com> # for xtensa bits
-
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 0783e4b5486a..d27bdc999777 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -887,10 +887,21 @@ static int adreno_get_pwrlevels(struct device *dev,
+ 	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
+ 
+ 	/* Check for an interconnect path for the bus */
+-	gpu->icc_path = of_icc_get(dev, NULL);
++	gpu->icc_path = of_icc_get(dev, "gfx-mem");
++	if (!gpu->icc_path) {
++		/*
++		 * Keep compatbility with device trees that don't have an
++		 * interconnect-names property.
++		 */
++		gpu->icc_path = of_icc_get(dev, NULL);
++	}
+ 	if (IS_ERR(gpu->icc_path))
+ 		gpu->icc_path = NULL;
+ 
++	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
++	if (IS_ERR(gpu->ocmem_icc_path))
++		gpu->ocmem_icc_path = NULL;
++
+ 	return 0;
+ }
+ 
+@@ -977,6 +988,7 @@ void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
+ 		release_firmware(adreno_gpu->fw[i]);
+ 
+ 	icc_put(gpu->icc_path);
++	icc_put(gpu->ocmem_icc_path);
+ 
+ 	msm_gpu_cleanup(&adreno_gpu->base);
+ }
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index ab8f0f9c9dc8..be5bc2e8425c 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -111,8 +111,15 @@ struct msm_gpu {
+ 	struct clk *ebi1_clk, *core_clk, *rbbmtimer_clk;
+ 	uint32_t fast_rate;
+ 
++	/* The gfx-mem interconnect path that's used by all GPU types. */
+ 	struct icc_path *icc_path;
+ 
++	/*
++	 * Second interconnect path for some A3xx and all A4xx GPUs to the
++	 * On Chip MEMory (OCMEM).
++	 */
++	struct icc_path *ocmem_icc_path;
++
+ 	/* Hang and Inactivity Detection:
+ 	 */
+ #define DRM_MSM_INACTIVE_PERIOD   66 /* in ms (roughly four frames) */
 -- 
-Thanks.
--- Max
+2.21.0
+
