@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2739C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02581C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2E220718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CEF20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420366;
-	bh=GwUErkfOcTNNe8fJakwxrN+hDieJPLPdT00X3OCbnKQ=;
+	s=default; t=1574420370;
+	bh=6jYzS/sCvmyJyeuL5eIOqLaGaxoLEzAnVYqKHTABSoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LanV8d3pabhKoJlVvYio4hMtnYnuBo4mf+S+1G/QBfP7J7sJ+ompDrAATnG6bxIk1
-	 4dgzWVKg6YSXPGWx7KgsRoBk+z6OmiqEL4E90ESIt3PTGcnNde5SQA5yT5vTz1dERR
-	 JCEFsUkqqOHMHuM6XaoOFwP7jpexeg7KmEK12SfY=
+	b=ODwrKmewa7/vCFOkPygoDFA/MvNdMRflsZCThlP+w5jhS5wh4j5yOMqRgLvMGxDq5
+	 +SaV+6UfHeA5h/VXRKRt6jRM98eCbLP7Cbk5ZJOGce8GhoChkU2kThDC6BnWHGVbgr
+	 S4E1aSerRZfZAc8aQIJ1N5/oKdbNJJ/zdbaq1Bkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfKVK7Z (ORCPT
+        id S1730920AbfKVK73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:59:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50328 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:59:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730906AbfKVK7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:59:23 -0500
+        id S1727709AbfKVK70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:59:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A2A20706;
-        Fri, 22 Nov 2019 10:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B3120679;
+        Fri, 22 Nov 2019 10:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420362;
-        bh=GwUErkfOcTNNe8fJakwxrN+hDieJPLPdT00X3OCbnKQ=;
+        s=default; t=1574420366;
+        bh=6jYzS/sCvmyJyeuL5eIOqLaGaxoLEzAnVYqKHTABSoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I1ZgLjG1xq5Rx2d6r7x8UvbP7fq8OgjUfhpfcE2qPtYGMRIi0MYAsZ69as7goAu4l
-         qrBwYl8AAzjw31dl0l0+w26LNis+gyr+3xLnSWCqL4aloYYO6xC8t+4xZ0Q4Wippte
-         EXxAVbBcs9bXgLBiETAwZY5KS4UofE3qeX0gkvxc=
+        b=UUozwU1imGc7I1rOHmlaiVWpRQAD9lflIwMWWWCXjcqcc51WlpG2zDfMg6bbO9fze
+         5gC7j/Em4ImVcL/UVgucw6Fyq4HIqY9889w6tS137qxh5bWZwWXsqvIA8wg9iYUZDc
+         oG4TlgQxXPGRFsnd7dh+EvHk/6fHg+hgoZKvS49A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/220] PM / hibernate: Check the success of generating md5 digest before hibernation
-Date:   Fri, 22 Nov 2019 11:27:19 +0100
-Message-Id: <20191122100917.596370205@linuxfoundation.org>
+Subject: [PATCH 4.19 083/220] IB/mthca: Fix error return code in __mthca_init_one()
+Date:   Fri, 22 Nov 2019 11:27:28 +0100
+Message-Id: <20191122100918.460990525@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,63 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 749fa17093ff67b31dea864531a3698b6a95c26c ]
+[ Upstream commit 39f2495618c5e980d2873ea3f2d1877dd253e07a ]
 
-Currently if get_e820_md5() fails, then it will hibernate nevertheless.
-Actually the error code should be propagated to upper caller so that
-the hibernation could be aware of the result and terminates the process
-if md5 digest fails.
+Fix to return a negative error code from the mthca_cmd_init() error
+handling case instead of 0, as done elsewhere in this function.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 80fd8238734c ("[PATCH] IB/mthca: Encapsulate command interface init")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/power/hibernate_64.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/infiniband/hw/mthca/mthca_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
-index c9986041a5e12..6c3ec193a2465 100644
---- a/arch/x86/power/hibernate_64.c
-+++ b/arch/x86/power/hibernate_64.c
-@@ -266,9 +266,9 @@ static int get_e820_md5(struct e820_table *table, void *buf)
- 	return ret;
- }
+diff --git a/drivers/infiniband/hw/mthca/mthca_main.c b/drivers/infiniband/hw/mthca/mthca_main.c
+index f3e80dec13344..af7f2083d4d1a 100644
+--- a/drivers/infiniband/hw/mthca/mthca_main.c
++++ b/drivers/infiniband/hw/mthca/mthca_main.c
+@@ -986,7 +986,8 @@ static int __mthca_init_one(struct pci_dev *pdev, int hca_type)
+ 		goto err_free_dev;
+ 	}
  
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
- {
--	get_e820_md5(e820_table_firmware, buf);
-+	return get_e820_md5(e820_table_firmware, buf);
- }
- 
- static bool hibernation_e820_mismatch(void *buf)
-@@ -288,8 +288,9 @@ static bool hibernation_e820_mismatch(void *buf)
- 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
- }
- #else
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
- {
-+	return 0;
- }
- 
- static bool hibernation_e820_mismatch(void *buf)
-@@ -334,9 +335,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
- 
- 	rdr->magic = RESTORE_MAGIC;
- 
--	hibernation_e820_save(rdr->e820_digest);
--
--	return 0;
-+	return hibernation_e820_save(rdr->e820_digest);
- }
- 
- /**
+-	if (mthca_cmd_init(mdev)) {
++	err = mthca_cmd_init(mdev);
++	if (err) {
+ 		mthca_err(mdev, "Failed to init command interface, aborting.\n");
+ 		goto err_free_dev;
+ 	}
 -- 
 2.20.1
 
