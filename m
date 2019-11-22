@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9814C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E4AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F6220721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D0220659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402578;
-	bh=2I9Q5RZv4vFqcYUDXsOPoH6jOFkXbntQMaM9J+ZkrvI=;
+	s=default; t=1574402587;
+	bh=DgcQXiIgyHSxGbSxUc51xg1P7nmKC/rS5icNxdhZ+EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXukN3RwfOYfVUJsV4spuYYDK+LhDoQz6tT+S03qr+2xlwQ7wsymoIQPwXuyiZbJR
-	 EIdUUV9GaDg0+m0WMb1S3MZPQgAQ6TBJcUdTRhXiBPHW2WWPNpM7pKNPHkOjw3OmJ2
-	 s1m6VEeU6dzv5+DM2o2b5okIPTzpeRjWrlubdIMk=
+	b=A13P4AGtRPo6k1/Fac6sM9SJtNIbpjNPskl97gKhudajYEJdkFT2D9cE0mJq8Mj5C
+	 dmRyFIrseYrwiLSynKgUSjcCx2ry5MrfE+CqKHoDzGhnqyi4nL7rwjFSWG2EyyeZ2b
+	 xDsRPshr8GFd7k85iui4BhK1raeswvGB63fgvfLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfKVGC5 (ORCPT
+        id S1728173AbfKVGDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:03:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfKVGCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:53 -0500
+        id S1726664AbfKVGC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F0420659;
-        Fri, 22 Nov 2019 06:02:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE25C20726;
+        Fri, 22 Nov 2019 06:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402573;
-        bh=2I9Q5RZv4vFqcYUDXsOPoH6jOFkXbntQMaM9J+ZkrvI=;
+        s=default; t=1574402577;
+        bh=DgcQXiIgyHSxGbSxUc51xg1P7nmKC/rS5icNxdhZ+EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pR9YNRaToR9lO8p5a6Ct4rmrD6st6pPieUlL5d1yVU1Kwoi7rGrK85LGkdCPlJbWm
-         P22JwN+9ElOMcA1oZJaD8Xi+tx4delOWsSTgdHP0cc4d6BmUED4mM96BR3i7ncYzX9
-         AIxUvi3dWLyeUDLig8HrQ+Y7RKvwjRrPNl7NcCrc=
+        b=B3YIyOxuTF+QDDprStkjPVmgwMF0aOFWrPzxj/ZC1Uo8ufathvYC0Z1Pi7dm9y2o9
+         oiKm5n71FCUfV9RNmrQSbuiWDxFOVA2HE2qm03DlQTELK3C6FoaqVkTG9g7EkbUuaS
+         FNe61WXUp025laJ1Zs4oFhu9++LyH5qOZSjuvtMY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 75/91] tipc: fix memory leak in tipc_nl_compat_publ_dump
-Date:   Fri, 22 Nov 2019 01:01:13 -0500
-Message-Id: <20191122060129.4239-74-sashal@kernel.org>
+Cc:     wenxu <wenxu@ucloud.cn>, "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 79/91] ip_tunnel: Make none-tunnel-dst tunnel port work with lwtunnel
+Date:   Fri, 22 Nov 2019 01:01:17 -0500
+Message-Id: <20191122060129.4239-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -61,40 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: wenxu <wenxu@ucloud.cn>
 
-[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
+[ Upstream commit d71b57532d70c03f4671dd04e84157ac6bf021b0 ]
 
-There is a memory leak in case genlmsg_put fails.
+ip l add dev tun type gretap key 1000
+ip a a dev tun 10.0.0.1/24
 
-Fix this by freeing *args* before return.
+Packets with tun-id 1000 can be recived by tun dev. But packet can't
+be sent through dev tun for non-tunnel-dst
 
-Addresses-Coverity-ID: 1476406 ("Resource leak")
-Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Acked-by: Ying Xue <ying.xue@windriver.com>
+With this patch: tunnel-dst can be get through lwtunnel like beflow:
+ip r a 10.0.0.7 encap ip dst 172.168.0.11 dev tun
+
+Signed-off-by: wenxu <wenxu@ucloud.cn>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv4/ip_tunnel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index 454ed8ea194c8..e3fc959e496d4 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -974,8 +974,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
+diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
+index e6ee6acac80c4..a4db2d79b9134 100644
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -653,13 +653,19 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
+ 	dst = tnl_params->daddr;
+ 	if (dst == 0) {
+ 		/* NBMA tunnel */
++		struct ip_tunnel_info *tun_info;
  
- 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
- 			  TIPC_NL_PUBL_GET);
--	if (!hdr)
-+	if (!hdr) {
-+		kfree_skb(args);
- 		return -EMSGSIZE;
-+	}
+ 		if (!skb_dst(skb)) {
+ 			dev->stats.tx_fifo_errors++;
+ 			goto tx_error;
+ 		}
  
- 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
- 	if (!nest) {
+-		if (skb->protocol == htons(ETH_P_IP)) {
++		tun_info = skb_tunnel_info(skb);
++		if (tun_info && (tun_info->mode & IP_TUNNEL_INFO_TX) &&
++		    ip_tunnel_info_af(tun_info) == AF_INET &&
++		    tun_info->key.u.ipv4.dst)
++			dst = tun_info->key.u.ipv4.dst;
++		else if (skb->protocol == htons(ETH_P_IP)) {
+ 			rt = skb_rtable(skb);
+ 			dst = rt_nexthop(rt, inner_iph->daddr);
+ 		}
 -- 
 2.20.1
 
