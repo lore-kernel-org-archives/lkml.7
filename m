@@ -2,155 +2,121 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD7CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463D9C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF29020704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452530;
-	bh=2oWcL0J8kqtwJ//O+ZfY6OpSQoHqZzVYa1ZXeSbCij8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DOVW76UfpTwj4RHhevCzIVkSp/lX06BmYaGDBVH9T44wIgoB6Nx0HbeH+YfjcbJdQ
-	 Qr6nDiE+Pz+ciwZEkwSXbe2bHMNUawAXHwqzxIXvCYpWcCBponrU3jYqYWPx3zZYWR
-	 Ouh5wrM+Z8/oUihvrENGF8c4km6eFHUi7b+wGx5w=
+	by mail.kernel.org (Postfix) with ESMTP id 1AF7B20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6OrX419"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfKVTz3 (ORCPT
+        id S1727677AbfKVTzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:55:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:52134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbfKVTz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:55:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF12D1045;
-        Fri, 22 Nov 2019 11:55:28 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B35C3F6C4;
-        Fri, 22 Nov 2019 11:55:28 -0800 (PST)
-Date:   Fri, 22 Nov 2019 19:55:26 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Cc:     alsa-devel@alsa-project.org,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Nilkanth Ahirrao <external.anilkanth@jp.adit-jv.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: rsnd: fix DALIGN register for SSIU" to the asoc tree
-In-Reply-To: <20191121111023.10976-1-erosca@de.adit-jv.com>
-Message-Id: <applied-20191121111023.10976-1-erosca@de.adit-jv.com>
-X-Patchwork-Hint: ignore
+        Fri, 22 Nov 2019 14:55:37 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36552 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfKVTzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:55:36 -0500
+Received: by mail-pf1-f196.google.com with SMTP id b19so3978898pfd.3;
+        Fri, 22 Nov 2019 11:55:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+KAr/Xowf3i8pr8EPJk1gltx6EMW0QxKeOvIBPu6+rc=;
+        b=o6OrX4195DPB62OgCWIxrp/crv6S+mPssF+6KFRAKIK3FzUZ92RaCmwElycCewNvMs
+         SjwQbcGj73Rmxtjrqa/NohiSE+NUTaG+FYg6Xx8TsHjE7PbqBBEnRK+Cv3upbm8lDCo9
+         nI8CM+ALPaFZX5Lj1sr09IbAvl6tPC5faCoakL4MKsNSHFmv1x7j932famFFWMJUdIz5
+         h3Zfoe1sano4+DFroa6CAjG46rZnrNXlOPssmP8zoznYTqIqCP77HhFA+ayTKkRjrrLD
+         RbZZ5JCRxjRWl+WEXXwokcigMyv1UEhyn6DFPBzraHjVST1NXcOo+YFjKy50EWVb71PZ
+         vluA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+KAr/Xowf3i8pr8EPJk1gltx6EMW0QxKeOvIBPu6+rc=;
+        b=Zena3V1EB9OCiYga5zSOFgD41c2TyXAasJMPyscEKxl3H+yN2mDB/7EQ5zrj/9jfji
+         uWhoUBidSWaYIDLWQzPrpuIIvAr8PtOgNnmkchzKzAjO8d+Wf6/tA2stshiEbaO/WZMU
+         CEMXLfe6+mXMfDDKEgw04gkP5BY+fYi/CpzU7m9CKzwIcoNi/kZkT0Ap+HnaiZM9Ht77
+         eqvT1zmogfS0AjmBJsr+83hzfqn5azcd7QNhicxokpAraspVo1I9Uzs4/d1Q+3rtAyDF
+         WR2iY0CUiUtomXJ/KH/q0tJHSGnPPn3pOlJPtq6xFZYYW3zPnVThUQulMvR1DyAfTC7o
+         wW7g==
+X-Gm-Message-State: APjAAAUAuKt6fL6PkANM7h2s84WF/q3JWcH1XIffdb6TPNxA4WxHN9rw
+        6dAXFpHVI5+UJTlu4F8S2jY=
+X-Google-Smtp-Source: APXvYqxxriw7hLwKt6j9owi/q/reR4XwlxChZc3XU54nlr0I96qcCgWK60BwuCtm+tYfUUZtsmnTeA==
+X-Received: by 2002:a63:4f64:: with SMTP id p36mr18426689pgl.271.1574452535020;
+        Fri, 22 Nov 2019 11:55:35 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id t1sm8552138pfq.156.2019.11.22.11.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 11:55:34 -0800 (PST)
+Date:   Fri, 22 Nov 2019 11:55:32 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Lyude Paul <lyude@redhat.com>, linux-input@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 24/25] Input: synaptics - enable RMI mode
+ for X1 Extreme 2nd Generation
+Message-ID: <20191122195532.GB248138@dtor-ws>
+References: <20191122194859.24508-1-sashal@kernel.org>
+ <20191122194859.24508-24-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122194859.24508-24-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Sasha,
 
-   ASoC: rsnd: fix DALIGN register for SSIU
+On Fri, Nov 22, 2019 at 02:48:57PM -0500, Sasha Levin wrote:
+> From: Lyude Paul <lyude@redhat.com>
+> 
+> [ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
+> 
+> Just got one of these for debugging some unrelated issues, and noticed
+> that Lenovo seems to have gone back to using RMI4 over smbus with
+> Synaptics touchpads on some of their new systems, particularly this one.
+> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-has been applied to the asoc tree at
+This will be reverted, do not pick up for stable.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+> ---
+>  drivers/input/mouse/synaptics.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+> index 06cebde2422ea..afdb9947d8af9 100644
+> --- a/drivers/input/mouse/synaptics.c
+> +++ b/drivers/input/mouse/synaptics.c
+> @@ -180,6 +180,7 @@ static const char * const smbus_pnp_ids[] = {
+>  	"LEN0096", /* X280 */
+>  	"LEN0097", /* X280 -> ALPS trackpoint */
+>  	"LEN009b", /* T580 */
+> +	"LEN0402", /* X1 Extreme 2nd Generation */
+>  	"LEN200f", /* T450s */
+>  	"LEN2054", /* E480 */
+>  	"LEN2055", /* E580 */
+> -- 
+> 2.20.1
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Thanks.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From ef8e14794308a428b194f8b06ad9ae06b43466e4 Mon Sep 17 00:00:00 2001
-From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Date: Thu, 21 Nov 2019 12:10:23 +0100
-Subject: [PATCH] ASoC: rsnd: fix DALIGN register for SSIU
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-The current driver only sets 0x76543210 and 0x67452301 for DALIGN.
-This doesn’t work well for TDM split and ex-split mode for all SSIU.
-This patch programs the DALIGN registers based on the SSIU number.
-
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Fixes: a914e44693d41b ("ASoC: rsnd: more clear rsnd_get_dalign() for DALIGN")
-Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20191121111023.10976-1-erosca@de.adit-jv.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sh/rcar/core.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
-index e9596c2096cd..a6c1cf987e6e 100644
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -376,6 +376,17 @@ u32 rsnd_get_adinr_bit(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
-  */
- u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
- {
-+	static const u32 dalign_values[8][2] = {
-+		{0x76543210, 0x67452301},
-+		{0x00000032, 0x00000023},
-+		{0x00007654, 0x00006745},
-+		{0x00000076, 0x00000067},
-+		{0xfedcba98, 0xefcdab89},
-+		{0x000000ba, 0x000000ab},
-+		{0x0000fedc, 0x0000efcd},
-+		{0x000000fe, 0x000000ef},
-+	};
-+	int id = 0, inv;
- 	struct rsnd_mod *ssiu = rsnd_io_to_mod_ssiu(io);
- 	struct rsnd_mod *target;
- 	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
-@@ -411,13 +422,18 @@ u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
- 		target = cmd ? cmd : ssiu;
- 	}
- 
-+	if (mod == ssiu)
-+		id = rsnd_mod_id_sub(mod);
-+
- 	/* Non target mod or non 16bit needs normal DALIGN */
- 	if ((snd_pcm_format_width(runtime->format) != 16) ||
- 	    (mod != target))
--		return 0x76543210;
-+		inv = 0;
- 	/* Target mod needs inverted DALIGN when 16bit */
- 	else
--		return 0x67452301;
-+		inv = 1;
-+
-+	return dalign_values[id][inv];
- }
- 
- u32 rsnd_get_busif_shift(struct rsnd_dai_stream *io, struct rsnd_mod *mod)
 -- 
-2.20.1
-
+Dmitry
