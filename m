@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6922EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC3EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307F02070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A409420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421416;
-	bh=7Eclvyk1oSXbFBFh01VOpWjcHVSzMgEQTosnOwSpzDI=;
+	s=default; t=1574421422;
+	bh=pkcEKusfz9+5qS3xEeIaSulh+3jZtNJAPw1hijWklJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GmqfBsorRXHWNF/Fad+9gQNEacJLJ588Bg0GL9c3LPtKhpxw74OWuqBBARUmvJVO+
-	 RVLH6priHR5G5jX/3dbC7pdUQI7Dd3kmWhlynYZUWecC1IeP1zxbeFk4eoECU0I5hR
-	 JVr1JOYN9CInSvZ4KvM37+WrB1yMjACg9HvDukg0=
+	b=zcDmWLut5SBmMIY46FrYbIKWVN/kYoTK7mZd6N9wlToRdVEBRIvHak/UQ+dN2HIY6
+	 h5IKn+qdq5RjsyAdghULWFpJNBpMjxIR4+JCOiUDIw3oSjypTtwEs/RmH0vvhxEXwq
+	 CoTlUVUF7qD9SwWIjTCh4CrJYXiq9Djxg+Aa1lIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfKVLQy (ORCPT
+        id S1730372AbfKVLRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:16:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:17:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbfKVKtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:49:43 -0500
+        id S1730021AbfKVKtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:49:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C1820718;
-        Fri, 22 Nov 2019 10:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35CC20715;
+        Fri, 22 Nov 2019 10:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419783;
-        bh=7Eclvyk1oSXbFBFh01VOpWjcHVSzMgEQTosnOwSpzDI=;
+        s=default; t=1574419771;
+        bh=pkcEKusfz9+5qS3xEeIaSulh+3jZtNJAPw1hijWklJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HInn5tANxv2PvrMlCiMrpBhZLyBu8UpDCP516QovR+hDlxd3U20WppTElKLdjw0gT
-         SiUVKaLPBOvMiPqzrcPBS9bZraDh+ahiJ1JlfRKgiYqQMfRaRWlBvSwVmCIgEwdW2M
-         VwkjomS3dTX9yQAiyJcmj7k3AuBbXgUy7WGnrbUo=
+        b=pDjhsMlZimocLUqX08gaSC6TZeHYmbgjCow98mfCOEz1teU7lOfkNcL2ZEjxMLn9X
+         LnybtSlI5l9kiMVGvxdtbCJUsdEi+Y+/Ps/o14acyONVQ7WBcFd/KnGkppzzNgqVPr
+         U4X2KWXmRGS2N9obQvfvTaCZcZyXqx2hRe9BJZDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 210/222] media: cx231xx: fix potential sign-extension overflow on large shift
-Date:   Fri, 22 Nov 2019 11:29:10 +0100
-Message-Id: <20191122100917.549324891@linuxfoundation.org>
+Subject: [PATCH 4.9 216/222] hwmon: (pwm-fan) Silence error on probe deferral
+Date:   Fri, 22 Nov 2019 11:29:16 +0100
+Message-Id: <20191122100918.107448103@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,41 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
+[ Upstream commit 9f67f7583e77fe5dc57aab3a6159c2642544eaad ]
 
-Shifting the u8 value[3] by an int can lead to sign-extension
-overflow. For example, if value[3] is 0xff and the shift is 24 then it
-is promoted to int and then the top bit is sign-extended so that all
-upper 32 bits are set.  Fix this by casting value[3] to a u32 before
-the shift.
+Probe deferrals aren't actual errors, so silence the error message in
+case the PWM cannot yet be acquired.
 
-Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
-
-Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pwm-fan.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
-index 6414188ffdfac..cd973e780da93 100644
---- a/drivers/media/usb/cx231xx/cx231xx-video.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-video.c
-@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
- 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
- 				(u16)reg->reg, value, 4);
- 		reg->val = value[0] | value[1] << 8 |
--			value[2] << 16 | value[3] << 24;
-+			value[2] << 16 | (u32)value[3] << 24;
- 		reg->size = 4;
- 		break;
- 	case 1:	/* AFE - read byte */
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index fb03449de2e07..aa6333620c37d 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -231,8 +231,12 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 
+ 	ctx->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, NULL);
+ 	if (IS_ERR(ctx->pwm)) {
+-		dev_err(&pdev->dev, "Could not get PWM\n");
+-		return PTR_ERR(ctx->pwm);
++		ret = PTR_ERR(ctx->pwm);
++
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Could not get PWM: %d\n", ret);
++
++		return ret;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, ctx);
 -- 
 2.20.1
 
