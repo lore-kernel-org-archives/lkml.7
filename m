@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDA6C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1F1C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1CF2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A1B2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403707;
-	bh=MBxeDnP2vJ6YQSAW4kvOLr2ixbZPyUPv7eGEKXCsK1E=;
+	s=default; t=1574403712;
+	bh=pSfYKfebvfswSMG9aERDVNa+OxFdxdH6xAe+7HpCZGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+hbFwyIX6O4nTVeyfhzL5tnoGtp8HCfaqrdIpzPolnZ9GK7LlTRnStk/MFL0Lggz
-	 ByOpSb9gFVXkiFIG0QnSywDIh3PgWWBPWilT9zsvcKi+nD/HD0glvYqFyQ4smYgmdX
-	 D6Lax5oqmaZqt3MRXMo3TSpz7+Ush3b1AnkL+L0w=
+	b=jZtEhjP05aUWI+JSY0g6MTQgec6jPT/wbgka48z5b+0rKCRqK1ZYeeFp1N83iXGAv
+	 7NIN7j+UDDXcGFNvAzhoz3At8YtGHYmWSpeY0lm9BRDdZF+m5bOsS44At6CVJknWXI
+	 UbuInKWkyDVEETbdN28RMBSOWlLhe7NvvZ4k4nMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbfKVGVq (ORCPT
+        id S1727192AbfKVFwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:21:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57766 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:52:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbfKVFwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:13 -0500
+        id S1728378AbfKVFwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E892084B;
-        Fri, 22 Nov 2019 05:52:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3FA62071B;
+        Fri, 22 Nov 2019 05:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401932;
-        bh=MBxeDnP2vJ6YQSAW4kvOLr2ixbZPyUPv7eGEKXCsK1E=;
+        s=default; t=1574401921;
+        bh=pSfYKfebvfswSMG9aERDVNa+OxFdxdH6xAe+7HpCZGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ejXSKt8lgPc8c3+6bJPLR1zllH7ErlFYereR1p0lfrqdRBG43An9XLdKqZ44JD+tl
-         rMoD3uvXsYT95LwPj3RNo40r0WzYFQjqmywq1ZKPb5d1b4Df6deF6H//pTDTiUwS7B
-         b64GM4prghzxpsEcIDMXxm+olrEg97zHMkp37C9A=
+        b=q5z6UGBUfK586y5/CPBQeIGcqnjjNx1txP4ipEA5rkHmZdESi5DIylMWsNhu1Qywc
+         VO0lExIQMvso1W0TqlCT96WhatcrT42ujFW4CSqTCj3CO+X32sVPzKjCt993Ij01OI
+         9st5WhJXVJdwfomlgG4U33u6rxs+oxi2aHnhMUgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 158/219] netfilter: nf_tables: fix a missing check of nla_put_failure
-Date:   Fri, 22 Nov 2019 00:48:10 -0500
-Message-Id: <20191122054911.1750-151-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>, Peng Hao <peng.hao2@zte.com.cn>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 151/219] net/wan/fsl_ucc_hdlc: Avoid double free in ucc_hdlc_probe()
+Date:   Fri, 22 Nov 2019 00:48:03 -0500
+Message-Id: <20191122054911.1750-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit eb8950861c1bfd3eecc8f6faad213e3bca0dc395 ]
+[ Upstream commit 40752b3eae29f8ca2378e978a02bd6dbeeb06d16 ]
 
-If nla_nest_start() may fail. The fix checks its return value and goes
-to nla_put_failure if it fails.
+This patch fixes potential double frees if register_hdlc_device() fails.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
+CC: Zhao Qiang <qiang.zhao@nxp.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+CC: linuxppc-dev@lists.ozlabs.org
+CC: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wan/fsl_ucc_hdlc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 24fddf0322790..4c1a88b7ba285 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -5735,6 +5735,8 @@ static int nf_tables_fill_flowtable_info(struct sk_buff *skb, struct net *net,
- 		goto nla_put_failure;
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index 5f0366a125e26..0212f576a838c 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -1113,7 +1113,6 @@ static int ucc_hdlc_probe(struct platform_device *pdev)
+ 	if (register_hdlc_device(dev)) {
+ 		ret = -ENOBUFS;
+ 		pr_err("ucc_hdlc: unable to register hdlc device\n");
+-		free_netdev(dev);
+ 		goto free_dev;
+ 	}
  
- 	nest = nla_nest_start(skb, NFTA_FLOWTABLE_HOOK);
-+	if (!nest)
-+		goto nla_put_failure;
- 	if (nla_put_be32(skb, NFTA_FLOWTABLE_HOOK_NUM, htonl(flowtable->hooknum)) ||
- 	    nla_put_be32(skb, NFTA_FLOWTABLE_HOOK_PRIORITY, htonl(flowtable->priority)))
- 		goto nla_put_failure;
 -- 
 2.20.1
 
