@@ -2,124 +2,106 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A027C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50130C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3291A2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421679;
-	bh=fDe/LvzwDE9ROI0LUyhW0TYuI0y2n6u5PqL3kgo9f/U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OplDKB6xwLoGQokEkraMybHc6ern5JXewQne/Rv57ufhAba6gBxt4JV2Zj+GnNg7s
-	 QOHeAZARduvO/TVwrHwzLQdK0i3uSq+yoegQPVLunld3uyb58TXApFhF2WpcGz7MuG
-	 dirzja5/vx4C3YUDGOu4wZLmAyKVomZba9fISSJA=
+	by mail.kernel.org (Postfix) with ESMTP id 276562070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KqQDAnml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfKVLVR (ORCPT
+        id S1729441AbfKVKpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbfKVKpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6AC720718;
-        Fri, 22 Nov 2019 10:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419524;
-        bh=fDe/LvzwDE9ROI0LUyhW0TYuI0y2n6u5PqL3kgo9f/U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qsji92ZjUbvPM2EHq46UHqSiM4hATNdQlbfWpRCxp3q8WcI7GGyiGeWqG+OSvexVI
-         9jYQEi/g1bCTweLVvl7kWBQzYFb8UhPpsMuGSgjwwaYX0YIY1dzrUvXx8wbWfXjSdC
-         kvh9D58PgBhRjvJUR85s8eqkmWd186nnxqVyZEec=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 141/222] arm64: dts: lg: Fix SPI controller node names
-Date:   Fri, 22 Nov 2019 11:28:01 +0100
-Message-Id: <20191122100913.030520124@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 05:45:17 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12042 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728963AbfKVKpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:14 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7bc350000>; Fri, 22 Nov 2019 02:45:09 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 02:45:13 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 02:45:13 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:13 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:12 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 Nov 2019 10:45:12 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd7bc340001>; Fri, 22 Nov 2019 02:45:12 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH 0/6] Add support for PCIe endpoint mode in Tegra194
+Date:   Fri, 22 Nov 2019 16:14:59 +0530
+Message-ID: <20191122104505.8986-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574419509; bh=vATyB0+qpRWIt2ybVc4KqLiFa7LEkPRGlbViOEQbviw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=KqQDAnmlYAl+sJswyU11Z4ld8H/PkEOizunUfmeq2krHgNHVIFw2ZffRQkM1Qq3gE
+         rd6ibZCzjQLDwpiYVY8tNdiPvw4Ml5StGxLGXw0oGVScbC7N0IoVbbiEMLdBAiNRH2
+         OZgUnAmh8imkitAomhGQkh7YqQeQlujCHxm6OdYAb7OUppy+k1brkmLJB1NphPBke1
+         g06oQdCEdy/aOrxQTn39Yi/dwBP4uqkOZTmXmGptNI3RTyFqyxLTimSXpLjpq7RPZY
+         7+8dAJ4s5cCun7COd99n0mEphqVZhOqJt45JAsbonDBQKOjCH75aNwC9i0z45Qc/kE
+         OxaGzsow64WBQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
+either in root port mode or in end point mode but only in one mode at a time.
+Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
+patch series adds support for PCIe endpoint mode in both the driver as well as
+in DT.
+This patch series depends on the changes made for Synopsys DesignWare endpoint
+mode subsystem that are currently under review
+@ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
+which in turn depends on the patch made by Kishon
+@ https://patchwork.kernel.org/patch/10975123/
+which is also under review.
 
-[ Upstream commit 09bae3b64cb580c95329bd8d16f08f0a5cb81ec9 ]
+Vidya Sagar (6):
+  soc/tegra: bpmp: Update ABI header
+  dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
+  PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+  arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+  arm64: tegra: Enable GPIO controllers nodes for P2972-0000 platform
+  arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
+    platform
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+ .../bindings/pci/nvidia,tegra194-pcie-ep.txt  | 138 ++++
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  37 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
+ drivers/pci/controller/dwc/Kconfig            |  30 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 751 +++++++++++++++++-
+ include/soc/tegra/bpmp-abi.h                  |  10 +-
+ 6 files changed, 1048 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
 
-Cc: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/lg/lg1312.dtsi | 4 ++--
- arch/arm64/boot/dts/lg/lg1313.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
-index fbafa24cd5335..5e0c5dc973e33 100644
---- a/arch/arm64/boot/dts/lg/lg1312.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
-@@ -167,14 +167,14 @@
- 			clock-names = "apb_pclk";
- 			status="disabled";
- 		};
--		spi0: ssp@fe800000 {
-+		spi0: spi@fe800000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe800000 0x1000>;
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_bus>;
- 			clock-names = "apb_pclk";
- 		};
--		spi1: ssp@fe900000 {
-+		spi1: spi@fe900000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe900000 0x1000>;
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
-index e703e1149c757..f3b1ba6f74220 100644
---- a/arch/arm64/boot/dts/lg/lg1313.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
-@@ -167,14 +167,14 @@
- 			clock-names = "apb_pclk";
- 			status="disabled";
- 		};
--		spi0: ssp@fe800000 {
-+		spi0: spi@fe800000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe800000 0x1000>;
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_bus>;
- 			clock-names = "apb_pclk";
- 		};
--		spi1: ssp@fe900000 {
-+		spi1: spi@fe900000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe900000 0x1000>;
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.20.1
-
-
+2.17.1
 
