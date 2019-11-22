@@ -2,95 +2,96 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80433C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B95C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542B620708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574460382;
-	bh=WXGFO+JxdwnWgYo/NSc7JDY1FCV/r9aBdFmZgsg6Vyk=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=U1zhtSdZY0l/YViPN5WZod+FXmlcf+YrlOmialGltUP0xdL6hjqm2uhQ7gFcdW0Gw
-	 W58qFH+tNGyms8crBRsMag8Dx0iZdtUxpK1zZCLKMjmJ/jr0F2kwzAm94W6+WYy1UF
-	 Q6UDvi2vc29KBOZaZbySPhx7RrlUeoMDnQPQxPIU=
+	by mail.kernel.org (Postfix) with ESMTP id 472BB2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7Owfb0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKVWGV (ORCPT
+        id S1726744AbfKVWKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:06:21 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:45743 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfKVWGU (ORCPT
+        Fri, 22 Nov 2019 17:10:07 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45894 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKVWKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:06:20 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m71so3600426pjb.12;
-        Fri, 22 Nov 2019 14:06:19 -0800 (PST)
+        Fri, 22 Nov 2019 17:10:07 -0500
+Received: by mail-il1-f196.google.com with SMTP id o18so8380864ils.12;
+        Fri, 22 Nov 2019 14:10:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bBifFU+n+ullPalYVdHCIouKPhTwiN8vd2nuMuI0EP4=;
+        b=N7Owfb0ymE4k55Cz4Tylc3lGqajuxdOLCaNNOL3y3YMqPUW3gcx8W6yj+Dpbm0wi1Y
+         9DY8gf1IHSaJjwBIxHM9apHriu6PKCVWVyYNrK++aBHkQFO9JfB+ytCOwfLOYhZUqlKG
+         JRtLyAL0FaN4vVtBMhgeAMmyTPm8AhrVAyIQm0foeg1A/UFKM3MgetBxBsNo2En9mCxM
+         +8va9/9q+3jKh8fifbJLgo/lXfFEdQFEHN7aHwuL30xIygancJoCqz13j6Ij9dHgb2/I
+         W5K4QaLAe34D7CngLE5MALsc0iuXyeqfX8nR0+B7okTbb68K227iK0fzCuiqvX12wmhT
+         66wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=gYwtUyjhfQJO55CeJjiXNQYOVnbnfsUZpOJ1fNxmnfo=;
-        b=WcvlM2QldpR5RCCPd2G24za8Gm0JxZGPm1Xr5jaKajO37rS1X1G1O86wYSYbuPTM+w
-         OUpRW+txv0rnzVOqwEiPiJy6fNKAz8aPZDOZSio0q+qq+MHMs4NAhkKBu9DUVT3QSNn/
-         D5pXSFhFiAhAF86jnPFoTTFZhbaX5v3+ADbYz8zERqh9yemwyPiWOiQdRRaBMo82NpxW
-         zuiuP52JF35w9ISOuJZfYplkTDuW/NliGu0H0ZKQT+0VL1z/XRDZ8CCcxTa5NFUITu/Y
-         qDcA4Jf0CPyxuKcbnTBMms8cZquGBYm03CostfP2SjofyNM99Y1dRBTXnhrr642CKdLy
-         hijA==
-X-Gm-Message-State: APjAAAWdY8UbmOmesyyyrv+IvD+ixHe2404Yw8NT2RcEza8P8HujOzzr
-        m1Puv24byibtP+quU0aJCNc=
-X-Google-Smtp-Source: APXvYqwpDtGaQ9U6/aBWqQU74N8yQmKh5r2GpaXppdqgMnTK2V1ydmdllaKGrVFFsHVt2aFFesh58g==
-X-Received: by 2002:a17:90a:1982:: with SMTP id 2mr22282116pji.30.1574460378513;
-        Fri, 22 Nov 2019 14:06:18 -0800 (PST)
-Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id y6sm8447744pfm.12.2019.11.22.14.06.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bBifFU+n+ullPalYVdHCIouKPhTwiN8vd2nuMuI0EP4=;
+        b=Fs3xb68juJOWaHzzR34ADXE171ooHk9Nca0mZgYkrvTZC++om09JdZuzOPK7SZxAUM
+         eerd5whoGlV44zY3SuMx1xE2Tqmpvt6WST7tNvCxEvUvZIdGPZIZuy1aETlDQRVuBhvR
+         tiz9HWoyCXnXPY5uHsrxfKn56vVNHvtDehDejwKO8t8JXFMgDI2G5kZGMwkHnTlEOKGF
+         LHDJoe9a1ZXMPu3sa/7Lr++crdKSJN6lZL7b74KuBGNY2bT0qFEGw26tnvAyrleh3Xyy
+         VOHuOVbMBW4S0xECu3zBQtc+Vje+HVD09PErcFptGd0EblRU+HeZa9hufFziJ9xjcD4K
+         wjWw==
+X-Gm-Message-State: APjAAAXPshLqIZI1oKhCSSjHVNl/CtOk3VlRg2Y4LWUvjxYj5xJE27ZD
+        i7UFps6yPHaJA8wXxiT6LV8=
+X-Google-Smtp-Source: APXvYqzYxev0mehw5aRdi6YyMlpR/8LUw3GUw9sxPjIdE6W/F2xPhVpIyLMPatJ4Vp8FiB6YoHO2yw==
+X-Received: by 2002:a92:8605:: with SMTP id g5mr19067812ild.172.1574460605747;
+        Fri, 22 Nov 2019 14:10:05 -0800 (PST)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id x62sm398741ill.86.2019.11.22.14.10.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 14:06:17 -0800 (PST)
-Message-ID: <5dd85bd9.1c69fb81.55be.599c@mx.google.com>
-Date:   Fri, 22 Nov 2019 14:06:17 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-CC:     linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        paulburton@kernel.org, jhogan@kernel.org, paul@crapouillou.net,
-        jiaxun.yang@flygoat.com, gregkh@linuxfoundation.org,
-        malat@debian.org, tglx@linutronix.de, chenhc@lemote.com
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH 2/2 v3] MIPS: Ingenic: Disable abandoned HPTLB function.
-References:  <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
-In-Reply-To:  <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
+        Fri, 22 Nov 2019 14:10:05 -0800 (PST)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] dma-buf: Fix memory leak in sync_file_merge()
+Date:   Fri, 22 Nov 2019 16:09:55 -0600
+Message-Id: <20191122220957.30427-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In the implementation of sync_file_merge() the allocated sync_file is
+leaked if number of fences overflows. Release sync_file by goto err.
 
-Zhou Yanjie wrote:
-> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page tlb,
-> this mode is not compatible with the MIPS standard, it will cause
-> tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
-> when starting the init process. write 0xa9000000 to cp0 register 5
-> sel 4 to disable this function to prevent getting stuck. Confirmed
-> by Ingenic, this operation will not adversely affect processors
-> without HPTLB function.
+Fixes: a02b9dc90d84 ("dma-buf/sync_file: refactor fence storage in struct sync_file")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/dma-buf/sync_file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to mips-next.
+diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
+index 25c5c071645b..91185db9a952 100644
+--- a/drivers/dma-buf/sync_file.c
++++ b/drivers/dma-buf/sync_file.c
+@@ -221,7 +221,7 @@ static struct sync_file *sync_file_merge(const char *name, struct sync_file *a,
+ 	a_fences = get_fences(a, &a_num_fences);
+ 	b_fences = get_fences(b, &b_num_fences);
+ 	if (a_num_fences > INT_MAX - b_num_fences)
+-		return NULL;
++		goto err;
+ 
+ 	num_fences = a_num_fences + b_num_fences;
+ 
+-- 
+2.17.1
 
-> commit b02efeb05699
-> https://git.kernel.org/mips/c/b02efeb05699
-> 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> Acked-by: Paul Cercueil <paul@crapouillou.net>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
