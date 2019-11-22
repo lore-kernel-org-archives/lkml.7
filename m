@@ -2,207 +2,190 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB14C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F577C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D13A20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="f75DHlbt";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="iaz5vLw+"
+	by mail.kernel.org (Postfix) with ESMTP id 5413C20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfKVL3M (ORCPT
+        id S1727926AbfKVL32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:29:12 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:22254 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726975AbfKVL3L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:29:11 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMBQ2RQ003272;
-        Fri, 22 Nov 2019 03:28:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=J6jCyHPvaGj+4A5JLeYs4EPwNJjxC2g2agg27mDlKMs=;
- b=f75DHlbtJIEiiMFA6BD0rveuM4XxfD+oNdZsDiyerzHL3Tm/YNnegmwTEtIX+OqdsPrS
- DmAdZ1F7V7Lswd8Z28Jdo7G/ii+bycJ6OR3UdVFcaaeBGpSsFPgsgQCeluxz5loxCmXI
- +GXBabCcs1Fdt4emuDgWDMhqy48Qnnoz8hc8rF0e9OQvRAXl/jOMwTT3ezD3fMvVyw/7
- bwti/LB0Z/tOhitRNiaiAWMfRM+oKhKD2rtAbAC6dyCA1U5EnGIYhPjoucgf0Yc0N2Gx
- exmkCG2cTfzVOS6jOrqttr7KDpwLoBH0FGWMxegbrPGLSXEWfP+Yj641CjY1LWsgx5lB tw== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2weafb94fs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 03:28:54 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 22 Nov
- 2019 03:28:53 -0800
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (104.47.33.54) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 22 Nov 2019 03:28:52 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vcgy0/n5VAmgpa7LuIa69rSWIme830M8s1rimQuV3Co7GoWEVW97xTXYP6I1XjnTQdr+/iBeUfxScG15StN/irVKes1T2TVE/CVuSqGQ5gUQt91NqgUp4/W3GktyAyAHFtpW5DrzbwOaaYDRk4aLh/liaIpyuVD22qnNn/Q12P+G01vjr7TERlAYhUImwPJUANYkslCQy21zQ48T2ncTlhwOKCvSkvxHGWnHhR9s0S8zqVIH+9RFzVhz03wEcr4JNDduB96hnxjVJIXotnsExnVoNwnM/5HajftO/NwTf83PAOzDPnuFphzEg/EC8JR+YBL1xAUpLXPkaXu7y4NIag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J6jCyHPvaGj+4A5JLeYs4EPwNJjxC2g2agg27mDlKMs=;
- b=GuWeWUZw6M00rVhaB8UNfrTf/sFdGFRkX20VGLEeuMto0x8pI5wsoKJq5VjTTcWkTCACkttMwZczuMSNG7oBIcO6L+++OZh1jS5d19Yj8UAKChdnXE8qJmSfM6+/tjjHska14IE95bdJMnvmAdF0tNXT14x4LWSlEYNiGWUBihRNSf5Kfau6APGqiSpAdNZ0Y/ICX9439a5zJPtg2+gPV2uY5k3U9LgaXU1gAPaMtg8symkSj1h1UvyrqVOlU0Yd/No81wjwELIpFmSQ698rsnw/VtaU/KhYiwokrn18QZ4Wgg0iom1KWrnz5ztjWU/fYjJ8uk5NdwPR0F0CGm4Mxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J6jCyHPvaGj+4A5JLeYs4EPwNJjxC2g2agg27mDlKMs=;
- b=iaz5vLw+a8ApXADfPxmZfInQZFl1xXDtN1h20NRAcKK9qcc+goBSOQOcW3ZAwvef5kJOg+WwQoDOHPZXEPkOqLE2mvOSNMuc3lszpLxAdklBOxgEnsX6N/lAoG5xl7ar0NJHYYgDr73JZcr3Qs181QMrc9APXNAvZpXrVaA8CSM=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2575.namprd18.prod.outlook.com (20.179.82.215) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.21; Fri, 22 Nov 2019 11:28:51 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2474.021; Fri, 22 Nov 2019
- 11:28:51 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     John Garry <john.garry@huawei.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        wanghuiqiang <wanghuiqiang@huawei.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Huangming (Mark)" <huangming23@huawei.com>
-Subject: Re: linuxnext-2019119 edac warns (was Re: edac KASAN warning in
- experimental arm64 allmodconfig boot)
-Thread-Topic: linuxnext-2019119 edac warns (was Re: edac KASAN warning in
- experimental arm64 allmodconfig boot)
-Thread-Index: AQHVoSgDZLrxCc1zPkWOGGwtnIkgYA==
-Date:   Fri, 22 Nov 2019 11:28:50 +0000
-Message-ID: <20191122112842.tmf4lkj52hpv6tqd@rric.localdomain>
-References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
- <93bdc04e-9e8f-b766-6e97-9fd9e1460a8c@huawei.com>
- <20191121142302.rhvgkgqpiubidhtu@rric.localdomain>
- <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
-In-Reply-To: <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0304.eurprd05.prod.outlook.com
- (2603:10a6:7:93::35) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dc1e841e-e277-4d65-3281-08d76f3f25e9
-x-ms-traffictypediagnostic: MN2PR18MB2575:
-x-microsoft-antispam-prvs: <MN2PR18MB2575AD6C209BBCD3435F354DD9490@MN2PR18MB2575.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02296943FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(189003)(199004)(102836004)(7416002)(52116002)(8936002)(64756008)(66446008)(66556008)(66476007)(66946007)(316002)(3846002)(6116002)(8676002)(4326008)(229853002)(305945005)(7736002)(71190400001)(6512007)(9686003)(2906002)(81166006)(81156014)(54906003)(386003)(6506007)(53546011)(71200400001)(256004)(76176011)(6436002)(99286004)(6916009)(66066001)(508600001)(6486002)(86362001)(446003)(11346002)(25786009)(1076003)(5660300002)(26005)(6246003)(186003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2575;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: =?us-ascii?Q?QDNnY9Vqsr8sNw9WiTtTxN1ImXvM//odnjkrKL3S1t7Yfgd4KulDZnIIKRSb?=
- =?us-ascii?Q?vnoQmJnirqC9O3Q6L5xUYOyIAPsoNAYcfMuhVQLVZ30RUJiY08mcZnS2SWZL?=
- =?us-ascii?Q?XPzoUhkl+cmvFrPHUBGmEakuNsAAK6N+gv2HCS7GkIL+igvIltFIXfcff1Q0?=
- =?us-ascii?Q?H5HorNDEEcxEPwXqBy0+pXvrcSq/X8sjVqkL+GjtFiOCLwo3fGNwiUHbW1V+?=
- =?us-ascii?Q?+XMEG7cavfA3P+zSQffjDja8WeJ7gdRn9t8CQoDZ0YSfFvqtXlRMV3TdAuzk?=
- =?us-ascii?Q?USc0VtZzi7ZHsNjVzFTlIKU7WiY7YTiUertmf68gi22n4bLUkX6bGcBbsHS1?=
- =?us-ascii?Q?tyLXghrbpdW2krFCmOPT8Nl93dnsYD7fm5glFStkjR/GU+Rgw88/vkrsJ00g?=
- =?us-ascii?Q?3npOrH3RHmms7jkeMpplq/qUWQC9RiTpdUsuo3kHCBVoVFv5mdO7mBUv+kGg?=
- =?us-ascii?Q?KfRO0tRCsdQ4b3k/wB2IyxeJhGkUci5gsBH326twUXi+3IkETddo/z7Z0tr0?=
- =?us-ascii?Q?W+G1n9pfVya4ARas5F/Itv1S0KQh7xql0Yeq/IRJ9DIGlDzsoNWaK2n9pjYS?=
- =?us-ascii?Q?jendncNy08nMsrR3U6wm4lTIcN5sERUHozHGLRxYZrpG3VJajJM45D/qbgnq?=
- =?us-ascii?Q?KazpvD6EHiOojdzlLYuYoldyUzLa8NwTsPvfY19/G2RtUdhOYx2oBwMbpyhJ?=
- =?us-ascii?Q?x5Zl8zSCJKuexDTC0OkTzK11nQpCYHHnDb0AiqOT3vCCwZtd/4qCPfy6Yr5r?=
- =?us-ascii?Q?Ds6BElSf6WEmqN44zkf2GzE71d14qpWRDq/Bd0D/M90jSFA9Bsp0OOoBcb0A?=
- =?us-ascii?Q?ZiI5cvwnYcuQ3HD2DdbpLjnSJEk5jAoL0N5kJ/0PcbStg2VCAIPP6O3qvKKG?=
- =?us-ascii?Q?8iX8N5wf09E6/QGLFQaYOD5clz1rQHGSUSu5B9FyPB9I4NQHRFYH2MZonZ21?=
- =?us-ascii?Q?JbtFLd4FVsgiN3cwmp8bwn9XV7NVBxrEzCoEEoYc8CUOA/Y1D6Bur8h4hHOZ?=
- =?us-ascii?Q?YiXrAhnE9Hrbhhf3Q5x6nppz92CLDLZFr4bdEPTfWJCN1Phrw/SVFgKszntC?=
- =?us-ascii?Q?f6HgmaUhes6v1JZpreXe8f/4YFbvznJh7+nblWLi2YHFHqXTqljHyPJ6SDZ+?=
- =?us-ascii?Q?YPHlEtChLUp8/jKpSYYcUN/hfHIi7xx9gyYQ3l6g/x+C2Ka9g8n1N8j0jUCG?=
- =?us-ascii?Q?HcR4EMCU27s51clE31GaPs5Dlmjzld+Anjw1xKID86tsuNFAzTdv2U21JSrL?=
- =?us-ascii?Q?fF6PbBwQucAEIw3cvQy2nUvwbRfFPpw9CjhODRTsDUMGsWwzlk3RJsrT7vVe?=
- =?us-ascii?Q?lF0C79ie8wyQBtU+PZCdbUHpmI3ActkjmROoXojjnUfR5IeWSh/RGFAowfmc?=
- =?us-ascii?Q?RHsItoMnehlz6krFHww5tR3V+lzr9VCVrl7uUCT8bx0ULKcy1Ly+0/g1MRaY?=
- =?us-ascii?Q?TImK5bMZmxpfmfateFzy72Tn13qKNsLUUnp6SHNh30qyhbRUUcjqpWPmrHMM?=
- =?us-ascii?Q?R2zTgi71fIRpL4CZ0DTw0UdLfJXyLoDCUgoPMVNMzBGiiMD0im543gOkIbmF?=
- =?us-ascii?Q?a6KNnMhpB3qF8OqSOZ/Is7GMp+FevYkSDUvk5j9VMEBNcQ3GPBjsyZHnnJaY?=
- =?us-ascii?Q?v7xNAgyoMemhzCuXSi0BOcksvcYi9YkwGt4wkKn24VwOBWl/Opi00oLmWKvs?=
- =?us-ascii?Q?EQ5ssqHB6XzwfciDdiJMvBXOPPWkr0Zo+FdpWLK3Yi6Lis0V?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0F5FF74244E9F442967D6CA075EBEB59@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Nov 2019 06:29:28 -0500
+Received: from mga11.intel.com ([192.55.52.93]:30924 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726975AbfKVL31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:29:27 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 03:29:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="216346463"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 03:29:22 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 13:29:21 +0200
+Date:   Fri, 22 Nov 2019 13:29:21 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+Message-ID: <20191122112921.GF11621@lahna.fi.intel.com>
+References: <20191104142459.GC2552@lahna.fi.intel.com>
+ <20191104144436.GD2552@lahna.fi.intel.com>
+ <20191104154446.GH2552@lahna.fi.intel.com>
+ <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+ <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
+ <20191104162103.GI2552@lahna.fi.intel.com>
+ <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
+ <20191120105048.GY11621@lahna.fi.intel.com>
+ <20191122105012.GD11621@lahna.fi.intel.com>
+ <edfe1e3c-779b-61e4-8551-f2e13d46d733@molgen.mpg.de>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc1e841e-e277-4d65-3281-08d76f3f25e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2019 11:28:50.8695
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Jyze51Ybnyb9LS2rZhKHYxtHb8o17/8UbBXOX9/DNKqApJyYYwN28+xFOcMxbKAcYQ+VdHGRh+MbCBkkAvpUAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2575
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <edfe1e3c-779b-61e4-8551-f2e13d46d733@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.11.19 15:23:42, John Garry wrote:
-> On 21/11/2019 14:23, Robert Richter wrote:
-> > On 21.11.19 12:34:22, John Garry wrote:
+On Fri, Nov 22, 2019 at 12:05:13PM +0100, Paul Menzel wrote:
+> Dear Mika,
+> 
+> 
+> Thank you so much for looking into this issue.
+> 
+> 
+> On 2019-11-22 11:50, Mika Westerberg wrote:
+> > On Wed, Nov 20, 2019 at 12:50:53PM +0200, Mika Westerberg wrote:
+> >> On Tue, Nov 19, 2019 at 05:55:43PM +0100, Paul Menzel wrote:
+> 
+> >>> On 2019-11-04 17:21, Mika Westerberg wrote:
+> >>>> On Mon, Nov 04, 2019 at 05:11:10PM +0100, Paul Menzel wrote:
+> >>>
+> >>>>> On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
+> >>>>>
+> >>>>>>> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >>>>>>> Sent: Monday, November 4, 2019 9:45 AM
+> >>>>>
+> >>>>>>> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
+> >>>>>>>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
+> >>>>>
+> >>>>>>>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
+> >>>>>
+> >>>>>>>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> >>>>>>>>>> suspending the system, and resuming with Dell’s Thunderbolt TB16
+> >>>>>>>>>> dock connected, the USB input devices, keyboard and mouse,
+> >>>>>>>>>> connected to the TB16 stop working. They work for a few seconds
+> >>>>>>>>>> (mouse cursor can be moved), but then stop working. The laptop
+> >>>>>>>>>> keyboard and touchpad still works fine. All firmware is up-to-date
+> >>>>>>>>>> according to `fwupdmgr`.
+> >>>>>>>>>
+> >>>>>>>>> What are the exact steps to reproduce? Just "echo mem >
+> >>>>>>>>> /sys/power/state" and then resume by pressing power button?
+> >>>>>
+> >>>>> GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
+> >>>>> display. So more than `echo mem > /sys/power/state` is done. What
+> >>>>> distribution do you use?
+> >>>>
+> >>>> I have buildroot based "distro" so there is no UI running.
+> >>>
+> >>> Hmm, this is quite different from the “normal” use-case of the these devices.
+> >>> That way you won’t hit the bugs of the normal users. ;-)
+> >>
+> >> Well, I can install some distro to that thing also :) I suppose Debian
+> >> 10.2 does have this issue, no?
+> >>
+> >>>>>>>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
+> >>>>>>>> suspend/resume cycles (to s2idle) but I don't see any issues.
+> >>>>>>>>
+> >>>>>>>> I may have older/different firmware than you, though.
+> >>>>>>>
+> >>>>>>> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
+> >>>>>>> on my system :/
+> >>>>>
+> >>>>> The user reported the issue with the previous firmwares 1.x and TBT NVM v40.
+> >>>>> Updating to the recent version (I got the logs with) did not fix the issue.
+> >>>>
+> >>>> I also tried v40 (that was originally on that system) but I was not able
+> >>>> to reproduce it.
+> >>>>
+> >>>> Do you know if the user changed any BIOS settings?
+> >>>
+> >>> We had to disable the Thunderbolt security settings as otherwise the USB
+> >>> devices wouldn’t work at cold boot either.
+> >>
+> >> That does not sound right at all. There is the preboot ACL that allows
+> >> you to use TBT dock aready on boot. Bolt takes care of this.
+> >>
+> >> Are you talking about USB devices connected to the TB16 dock?
+> >>
+> >> Also are you connecting the TB16 dock to the Thunderbolt ports (left
+> >> side of the system marked with small lightning logo) or to the normal
+> >> Type-C ports (right side)?
+> >>
+> >>> So, I built Linux 5.4-rc8 (`make bindeb-pkg -j8`), but unfortunately the
+> >>> error is still there. Sometimes, re-plugging the dock helped, and sometimes
+> >>> it did not.
+> >>>
+> >>> Please find the logs attached. The strange thing is, the Linux kernel detects
+> >>> the devices and I do not see any disconnect events. But, `lsusb` does not list
+> >>> the keyboard and the mouse. Is that expected.
+> >>
+> >> I'm bit confused. Can you describe the exact steps what you do (so I can
+> >> replicate them).
+> > 
+> > I managed to reproduce following scenario.
+> > 
+> > 1. Boot the system up to UI
+> > 2. Connect TB16 dock (and see that it gets authorized by bolt)
+> > 3. Connect keyboard and mouse to the TB16 dock
+> > 4. Both mouse and keyboard are functional
+> > 5. Enter s2idle by closing laptop lid
+> > 6. Exit s2idle by opening the laptop lid
+> > 7. After ~10 seconds or so the mouse or keyboard or both do not work
+> >    anymore. They do not respond but they are still "present".
+> > 
+> > The above does not happen always but from time to time.
+> > 
+> > Is this the scenario you see as well?
+> 
+> Yes, it is. Though I’d say it’s only five seconds or so.
+> 
+> > This is on Ubuntu 19.10 with the 5.3 stock kernel.
+> 
+> “stock” in upstream’s or Ubuntu’s?
 
-> > > [   22.046666] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.046666]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.058311] ghes_edac: Can't register at EDAC core
-> > > [   22.065402] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.065402]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.077080] ghes_edac: Can't register at EDAC core
-> > > [   22.084140] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.084140]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.095789] ghes_edac: Can't register at EDAC core
-> > > [   22.102873] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.102873]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.115442] ghes_edac: Can't register at EDAC core
-> > > [   22.122536] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.122536]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.134344] ghes_edac: Can't register at EDAC core
-> > > [   22.141441] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.141441]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.153089] ghes_edac: Can't register at EDAC core
-> > > [   22.160161] EDAC MC: bug in low-level driver: attempt to assign
-> > > [   22.160161]     duplicate mc_idx 0 in add_mc_to_global_list()
-> > > [   22.171810] ghes_edac: Can't register at EDAC core
-> >=20
-> > What I am more concerned is this here. In total this implies 8 ghes
-> > users that all try to register a (single-instance) ghes mc device. For
-> > non-x86 only one instance is allowed (see ghes_edac_register(), idx =3D
-> > 0).
+It is Ubuntu's.
 
-I also looked into this: With refcount_inc_checked() enabled, the
-refcount is *not* increased from 0 to 1. Under the hood only
-refcount_inc_not_zero() is called instead of refcount_inc(). So the
-refcount is still zero after an edac mc device was registered. Instead
-of sharing the edac mc device, the driver tries to allocate another mc
-device for each GHESv2 entry in the HEST table. This causes the
-'duplicate mc_idx' message. Also, it is ok to have multiple GHESv2
-entries (your system seems to have 8 entries), e.g. to serve different
-kind of errors in the system.
+> > I can get them work again by unplugging them and plugging back (leaving
+> > the TBT16 dock connected). Also if you run lspci when the problem
+> > occurs it still shows the dock so PCIe link stays up.
+> 
+> Re-connecting the USB devices does not help here, but I still suspect it’s
+> the same issue.
 
-Thanks,
+Yeah, sounds like so. Did you try to connect the device (mouse,
+keyboard) to anoter USB port?
 
--Robert
+> Yesterday, I had my hand on a Dell XPS 13 7390 (10th Intel generation) and
+> tried it with the shipped Ubuntu 18.04 LTS. There, the problem was not
+> always reproducible, but it still happened. Sometimes, only one of the USB
+> device (either keyboard or mouse) stopped working.
+
+I suppose this is also with the TB16 dock connected, correct?
