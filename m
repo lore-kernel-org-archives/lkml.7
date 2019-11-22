@@ -2,103 +2,145 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D021BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BACC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A383520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CD220715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AWxG9ImQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEr2jjn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfKVM2Q (ORCPT
+        id S1727866AbfKVM20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:28:16 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40352 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKVM2Q (ORCPT
+        Fri, 22 Nov 2019 07:28:26 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38925 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbfKVM20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:28:16 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAMC9Nfu189160;
-        Fri, 22 Nov 2019 12:26:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=xML39FfoeKNBp74I8QZARutVKNtg3tLXEW+pE1lUyJY=;
- b=AWxG9ImQ+2yMuKMQYaPKcOusSRGzXSaZ9ctwT5q7ac1K03k0jN18FuDqrML81ntjwWDV
- UQrnDB7ppiO3Ppj4vjVeE3EjgXpCxLib8oSYmn5IofLfKElClOE3O7R+mbfmVfwjdsd+
- XsIExNvSTexTYpYzGZd+HQuU2cHiRmErSuWa07UlvUx4meHGUMhUy/KVmNxam9xB1VMM
- RNGqejtZfmP6kUH+hV/mQQ/N2opDmNX4DfNDKQjezEVkI2hBlEu4le9O6Q5/8ZfrX80o
- TkZ624Lynykydoo0kaXswBZxO4ihPH4od2+sb/HGWStluw0l222496DPfTelM5uA6sdm Og== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2wa92qa89w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 12:26:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAMC8Y5E078279;
-        Fri, 22 Nov 2019 12:26:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2we6g70v9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 12:26:36 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAMCQWX8022781;
-        Fri, 22 Nov 2019 12:26:32 GMT
-Received: from kadam (/41.210.159.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 22 Nov 2019 04:26:31 -0800
-Date:   Fri, 22 Nov 2019 15:25:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Mao Wenan <maowenan@huawei.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [PATCH -next] KVM: x86: remove set but not used variable 'called'
-Message-ID: <20191122120413.GI617@kadam>
-References: <20191119030640.25097-1-maowenan@huawei.com>
- <87o8x8gjr5.fsf@vitty.brq.redhat.com>
- <20191119121423.GB5604@kadam>
- <87imnggidr.fsf@vitty.brq.redhat.com>
- <20191119123956.GC5604@kadam>
- <87a78sgfqj.fsf@vitty.brq.redhat.com>
- <b24e2efc-2228-95ea-09b0-806a9b066eee@redhat.com>
+        Fri, 22 Nov 2019 07:28:26 -0500
+Received: by mail-lj1-f195.google.com with SMTP id p18so7159794ljc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:28:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
+        b=dEr2jjn9fgOjdiaDJE2cZkZfXprKxiCesiH6JGQ81KlVLsOAGLk2zI3vm3VTxAW/Dt
+         ZAWD9BggBEV7m9WWyDmoJLJQLBLAb655y6NgNk/WDLD6uEI/O8S08ynaATwcY9j91g/X
+         oz6jR2QHAF05zYR4+HVWmCa5e4flLcECiB+55HYKL/QYKAUVUIgkRwnch+WdQq8HQQeX
+         wKKBM4IOSVLQf4ztqRZ0MjhDejiodCApagsb6m9creQc3gJ83j5p+55dvpS01vvlXDsE
+         /HJ54qBLHQD9VnBEpRVhFG/r3OLcZpVj7BTpKPDCMJV9fuFmPgFiiNrbj/+bvDGzfw1v
+         ZjwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
+        b=P+zcTIsWaSI2PktdZC6PdtamTXlCbAzRYIAoBMXN576EnsTCiUd08LIG9HQIpBRMBr
+         oq3q1FgPpxM8z78vgZeElQFQDaa3/aJvBJ9Bd19KZhXH3FOzqE/60Si/MPkGkgJNkJY5
+         IsvbNF+4aime7aDX/6Fcc6CI4VzzAiLAIzjkAZbS4aYGkWjF5WHDl6Oh8jvlkR/9znOx
+         fqwrLdtr8YxJnfoZZjJYB3ZhAVld8f6/yAtsiuQfDZ6UM5v/Byxxae73YdH4AYEimmor
+         fABo7+epTwYQeOdd5u4pSpnkkyvTVVq/ePIO2g7fq7DfqkgZFs3geUML1AWdBZVK8qqE
+         DZ9A==
+X-Gm-Message-State: APjAAAWMKreEKoAk00OK8SweE73TehIxTWqLpgc7NKx60aOdhKUm/s3T
+        oZSneSrUaKBhcWQIvq+C4MPIMkd4mWLzT5FawZh4ng==
+X-Google-Smtp-Source: APXvYqyEr875KK6+Z3AoTFLNHg9GG1Nc70IgJCEP8t2ZeLuj4RGoP4v/mkCP2LZsVpBsQMxyu52/73Y3stYR9or4KTU=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr12078801lji.251.1574425704107;
+ Fri, 22 Nov 2019 04:28:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b24e2efc-2228-95ea-09b0-806a9b066eee@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911220111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911220111
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+ <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+ <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
+ <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com> <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 13:28:12 +0100
+Message-ID: <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 06:58:51AM -0500, Nitesh Narayan Lal wrote:
-> For the build error, I didn't trigger it because I didn't compile with
-> appropriate flags.
+On Tue, Nov 19, 2019 at 5:42 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+> > On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
 
-It's going to be a serveral years before we can enable that flag by
-default.
+> > > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=
+=82(a):
+> > Is it really so? The bgpio_lock does protect the registers used
+> > by regmap-mmio but unless the interrupt code is also using the
+> > same registers it is fine to have a different lock for those.
+> >
+> > Is the interrupt code really poking into the very same registers
+> > as passed to bgpio_init()?
+> >
+> > Of course it could be seen as a bit dirty to poke around in the
+> > same memory space with regmap and the bgpio_* accessors
+> > but in practice it's no problem if they never touch the same
+> > things.
+> >
+> > Yours,
+> > Linus Walleij
+>
+> I'm wondering if it won't cause any inconsistencies when for example
+> interrupts are being triggered on input lines while we're also reading
+> their values? Seems to me it's just more clear to use a single lock
+> for a register range. Most drivers using gpio-mmio do just that in
+> their irq-related routines.
 
-regards,
-dan carpenter
+OK good point. Just one lock for the whole thing is likely
+more maintainable even if it works with two different locks.
+
+> Anyway: even without using bgpio_lock this code is inconsistent: if
+> we're using regmap for interrupt registers, we should either decide to
+> rely on locking provided by regmap or disable it and use a locally
+> defined lock.
+
+OK makes sense, let's say we use the bgpio_lock everywhere
+for this.
+
+Yash: are you OK with this? (Haven't read the new patch set
+yet, maybe it is already fixed...)
+
+> Also: if we're using regmap, then let's use it
+> everywhere, not only when it's convenient for updating registers.
+
+I think what you are saying is that we should extend gpio-mmio.c
+with some optional regmap API (or create a separate MMIO library
+for regmap consumers) which makes sense, but it feels a bit
+heavy task to toss at contributors.
+
+We could add it to the TODO file, where I already have some
+item like this for port-mapped I/O.
+
+Yours,
+Linus Walleij
