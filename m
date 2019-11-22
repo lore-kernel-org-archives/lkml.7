@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEDCC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B56C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3537220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E442B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419872;
-	bh=aO/bn3g/L37I+yaRgds2a8RKO4/vCXQ9XJIrNV99pwM=;
+	s=default; t=1574419879;
+	bh=AxvpmB2Sb0ryC9UrYM1Dehg4vu0x0EADb0FbcdB7REY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1SKUzfbTXX3jV1nH94cJ/ns28zP1A+zibzsXPYWXskcWzZWX3AgvXLQw7B8Zi7giw
-	 WKatP03U0oQ/wF/+rNwmhhfOSNFBoaGark2CiuGC8QrPsCCOcHiqFddipcjtgJe4It
-	 QVDEsofOAY7y7oQHOvRVDI1/K+RHrqwuWeeiF2UU=
+	b=b1/7zls0cqiTimBG1/Waymsh9Enk4pQi00mhueI9AOMquOdmIJCKfDhfB0byuzysP
+	 ZOJ02PZkIegxxbax80swVVQGWbsaKlwDTI9edWA1/gwjeVM9oJP7r01YVFJS75d+92
+	 2hbpmH0KnqBYw9zioEVBFY1+EpwBPHgso8x3FCwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfKVKvL (ORCPT
+        id S1729855AbfKVKvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbfKVKvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:06 -0500
+        id S1729701AbfKVKvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9EAD2075B;
-        Fri, 22 Nov 2019 10:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AB5E2075E;
+        Fri, 22 Nov 2019 10:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419865;
-        bh=aO/bn3g/L37I+yaRgds2a8RKO4/vCXQ9XJIrNV99pwM=;
+        s=default; t=1574419868;
+        bh=AxvpmB2Sb0ryC9UrYM1Dehg4vu0x0EADb0FbcdB7REY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=behkjgG3VRMJ4WXZsBUtIb5DfQCSr0NHrblIhI1ub/WI5lp1pfo3QrMQaaWgFEWpp
-         z7cUpog5ndesky5lNktv2gXgdjpwMOXzaLnmcEh8Fcg58gszebhU+R+mM7f9xz5qdk
-         qEhVM/7+EDBabXr1i6tXN3xhb1o0LnBGKgF61hBc=
+        b=ny2i+Z9tKn5TQU0Z1MLDKlNAkQ646+5ZIqdVnt4NZIAoRC/N1D6KlleCxcM3I+v2f
+         +WkFrhuUDF6ULKkcgGJlW06yE6urc/Eg1UwqGOJTr64JNZWGP0bK7H3pD76G3eT1d7
+         xbE605Qiq+gmoPgDIfDytOgUgzS1Z+vnGPKQwuiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 028/122] irqchip/irq-mvebu-icu: Fix wrong private data retrieval
-Date:   Fri, 22 Nov 2019 11:28:01 +0100
-Message-Id: <20191122100744.712952402@linuxfoundation.org>
+Subject: [PATCH 4.14 037/122] cxgb4: Use proper enum in cxgb4_dcb_handle_fw_update
+Date:   Fri, 22 Nov 2019 11:28:10 +0100
+Message-Id: <20191122100751.987786302@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -62,44 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 2b4dab69dcca13c5be2ddaf1337ae4accd087de6 ]
+[ Upstream commit 3b0b8f0d9a259f6a428af63e7a77547325f8e081 ]
 
-The irq_domain structure has an host_data pointer that just stores
-private data. It is meant to not be touched by the IRQ core. However,
-when it comes to MSI, the MSI layer adds its own private data there
-with a structure that also has a host_data pointer.
+Clang warns when one enumerated type is implicitly converted to another.
 
-Because this IRQ domain is an MSI domain, to access private data we
-should do a d->host_data->host_data, also wrapped as
-'platform_msi_get_host_data()'.
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:303:7: warning: implicit
+conversion from enumeration type 'enum cxgb4_dcb_state' to different
+enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
+                         ? CXGB4_DCB_STATE_FW_ALLSYNCED
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:304:7: warning: implicit
+conversion from enumeration type 'enum cxgb4_dcb_state' to different
+enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
+                         : CXGB4_DCB_STATE_FW_INCOMPLETE);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.
 
-This bug was lying there silently because the 'icu' structure retrieved
-this way was just called by dev_err(), only producing a
-'(NULL device *):' output on the console.
+Use the equivalent value of the expected type to silence Clang while
+resulting in no functional change.
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+CXGB4_DCB_STATE_FW_INCOMPLETE = CXGB4_DCB_INPUT_FW_INCOMPLETE = 2
+CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mvebu-icu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index e18c48d3a92e7..6a77b9ea8e418 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -92,7 +92,7 @@ static int
- mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
- 			       unsigned long *hwirq, unsigned int *type)
- {
--	struct mvebu_icu *icu = d->host_data;
-+	struct mvebu_icu *icu = platform_msi_get_host_data(d);
- 	unsigned int icu_group;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c
+index 6ee2ed30626bf..306b4b3206168 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c
+@@ -266,8 +266,8 @@ void cxgb4_dcb_handle_fw_update(struct adapter *adap,
+ 		enum cxgb4_dcb_state_input input =
+ 			((pcmd->u.dcb.control.all_syncd_pkd &
+ 			  FW_PORT_CMD_ALL_SYNCD_F)
+-			 ? CXGB4_DCB_STATE_FW_ALLSYNCED
+-			 : CXGB4_DCB_STATE_FW_INCOMPLETE);
++			 ? CXGB4_DCB_INPUT_FW_ALLSYNCED
++			 : CXGB4_DCB_INPUT_FW_INCOMPLETE);
  
- 	/* Check the count of the parameters in dt */
+ 		if (dcb->dcb_version != FW_PORT_DCB_VER_UNKNOWN) {
+ 			dcb_running_version = FW_PORT_CMD_DCB_VERSION_G(
 -- 
 2.20.1
 
