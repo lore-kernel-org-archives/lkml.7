@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02694C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ABBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59E620721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC072075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420408;
-	bh=rmpRqWBuUsMLm26OG9t+wtXYQizGsK/WZIguKaUORQM=;
+	s=default; t=1574420410;
+	bh=ZYrFksE4yNjkyeNCuIbjQzFI5EWbnQ4cFzJZE5BH2JE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3mQarUitnSlc4jVJtkjo+/pni5TSwKg5qfD9TbR4iEPgm414nmjU7AK6uDk9fPGA
-	 u3yPPR+ypObBEIC/KTMl3aWtjdGbtE14WcF4vDqdfL27Xs2+452p7E618YK/vwD6bG
-	 ehRa8L95lKDNJNCDfhzeJjCYbmcRT+JppAMqeStY=
+	b=TnRqkZM6uxpjkfe/9PsCvkKmBNmcAdReCJOapnOAb/1VXV4ZNPgpoTzIaiY26WNDv
+	 NzaRxsn95R2UCwaSyLcqqyx1pQK87lCJbEmtgLRlrx+J6ff1Jsc8DYgu7Q7Jy6TJQY
+	 EHaq/795Fvrnx51Wz6KECAKRQNcMdxSekuZPk6d0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbfKVLAH (ORCPT
+        id S1729196AbfKVLAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:00:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51854 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:00:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbfKVLAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:00:04 -0500
+        id S1730990AbfKVLAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:00:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9D220679;
-        Fri, 22 Nov 2019 11:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DFD32075E;
+        Fri, 22 Nov 2019 11:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420403;
-        bh=rmpRqWBuUsMLm26OG9t+wtXYQizGsK/WZIguKaUORQM=;
+        s=default; t=1574420407;
+        bh=ZYrFksE4yNjkyeNCuIbjQzFI5EWbnQ4cFzJZE5BH2JE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nk/3eLiWkP5oOhTGaYvonPH1HNFfqfIzgBvOGNS//h6abUHcn4Qc/sxkMEEgqYpRr
-         QVrmB1f3+0vbPTVBt9n5bha9YoMLTIXRS4+OShrpl1mu8ziuoxvcO/wOryTDGl7Cw4
-         omXemC/Je5vNjXM2BsmbbmPzyMAAJGTU2ivsS/IU=
+        b=uv6fCID55b0KeqD7Zr2UaMR3qjZA/ANPfJmVsKI4ZH8oTYBof5qYOdS9e6juFDxus
+         L+PxwF+wlELIP7Ie+JI2unh0RznkMAFyuJzOAKVoqM+YzIKCurcBJBWCSqM7IPDy1n
+         1w2eKU6lWZTL7h5GT1uZIhwB0FDdH/kPEYIIXugk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Anton Blanchard <anton@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/220] ASoC: qdsp6: q6asm-dai: checking NULL vs IS_ERR()
-Date:   Fri, 22 Nov 2019 11:27:40 +0100
-Message-Id: <20191122100919.549015965@linuxfoundation.org>
+Subject: [PATCH 4.19 096/220] powerpc/time: Use clockevents_register_device(), fixing an issue with large decrementer
+Date:   Fri, 22 Nov 2019 11:27:41 +0100
+Message-Id: <20191122100919.626302041@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,39 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Anton Blanchard <anton@ozlabs.org>
 
-[ Upstream commit 8e9f7265eda9f3a662ca1ca47a69042a7840735b ]
+[ Upstream commit 8b78fdb045de60a4eb35460092bbd3cffa925353 ]
 
-The q6asm_audio_client_alloc() doesn't return NULL, it returns error
-pointers.
+We currently cap the decrementer clockevent at 4 seconds, even on systems
+with large decrementer support. Fix this by converting the code to use
+clockevents_register_device() which calculates the upper bound based on
+the max_delta passed in.
 
-Fixes: 2a9e92d371db ("ASoC: qdsp6: q6asm: Add q6asm dai driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Anton Blanchard <anton@ozlabs.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/time.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 9db9a2944ef26..c1a7d376a3fea 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -319,10 +319,11 @@ static int q6asm_dai_open(struct snd_pcm_substream *substream)
- 	prtd->audio_client = q6asm_audio_client_alloc(dev,
- 				(q6asm_cb)event_handler, prtd, stream_id,
- 				LEGACY_PCM_MODE);
--	if (!prtd->audio_client) {
-+	if (IS_ERR(prtd->audio_client)) {
- 		pr_info("%s: Could not allocate memory\n", __func__);
-+		ret = PTR_ERR(prtd->audio_client);
- 		kfree(prtd);
--		return -ENOMEM;
-+		return ret;
- 	}
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 70f145e024877..6a1f0a084ca35 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -984,10 +984,10 @@ static void register_decrementer_clockevent(int cpu)
+ 	*dec = decrementer_clockevent;
+ 	dec->cpumask = cpumask_of(cpu);
  
- 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++	clockevents_config_and_register(dec, ppc_tb_freq, 2, decrementer_max);
++
+ 	printk_once(KERN_DEBUG "clockevent: %s mult[%x] shift[%d] cpu[%d]\n",
+ 		    dec->name, dec->mult, dec->shift, cpu);
+-
+-	clockevents_register_device(dec);
+ }
+ 
+ static void enable_large_decrementer(void)
+@@ -1035,18 +1035,7 @@ static void __init set_decrementer_max(void)
+ 
+ static void __init init_decrementer_clockevent(void)
+ {
+-	int cpu = smp_processor_id();
+-
+-	clockevents_calc_mult_shift(&decrementer_clockevent, ppc_tb_freq, 4);
+-
+-	decrementer_clockevent.max_delta_ns =
+-		clockevent_delta2ns(decrementer_max, &decrementer_clockevent);
+-	decrementer_clockevent.max_delta_ticks = decrementer_max;
+-	decrementer_clockevent.min_delta_ns =
+-		clockevent_delta2ns(2, &decrementer_clockevent);
+-	decrementer_clockevent.min_delta_ticks = 2;
+-
+-	register_decrementer_clockevent(cpu);
++	register_decrementer_clockevent(smp_processor_id());
+ }
+ 
+ void secondary_cpu_time_init(void)
 -- 
 2.20.1
 
