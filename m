@@ -2,97 +2,180 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4D1C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91956C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE1C20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574434080;
-	bh=EQc/LaSz4eRaJByoiZb2ipCt0IaDpCp3+GhULDtcYWI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EGR+mKmLdudEksztQ55eFRik4FqgoOm09xWmhN1CaDkS46XxbBQ+OMSspEKi0X16M
-	 z8Y4cPyjL77FPsL/5oOtIU5KtohWGeT2NJxq5hrNxinjx6IeolhWFnEoEd8W7jznxc
-	 1YU+Aj2NJpRX5CwDpZH6Bb5oHXg6aoYdkLUPc9YY=
+	by mail.kernel.org (Postfix) with ESMTP id 6996F20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:49:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Avm9ZTQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfKVOr7 (ORCPT
+        id S1726912AbfKVOtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:47:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfKVOr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:47:59 -0500
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 155422071B;
-        Fri, 22 Nov 2019 14:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574434078;
-        bh=EQc/LaSz4eRaJByoiZb2ipCt0IaDpCp3+GhULDtcYWI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FY9hIt7gHlIrXLiJjfTrngT1JuA8auWUoxGefy3wnjz1lUJagg58qQeJDqVu35C5T
-         RlXgqOKuIyqzm0XEHPf9wSSS8MfVuP5kY+MEUPElkfNP9bHHk48ESyfcj+mP6Bf/9N
-         IxNivswgdnD6gb8XdyvVnW+izOhnPrAqvI1QqlOE=
-Received: by mail-qv1-f46.google.com with SMTP id s18so2971565qvr.4;
-        Fri, 22 Nov 2019 06:47:58 -0800 (PST)
-X-Gm-Message-State: APjAAAX1kTNLScWxt2EsDLviaKdy+N+j/jeIR4c8KiFyHSIsj1aMaW7S
-        pcVC04mMH7hdDvlVu0EaJNFPE7rIyeM0kZaeZw==
-X-Google-Smtp-Source: APXvYqyhWIT3yYojkaDSRZHcglQ9AlPu/F+glNafGG7BMM/cuqSID3+8L1W2SEkE6TxBfitLGOKJZjTbCwxWZfeti28=
-X-Received: by 2002:ad4:42b4:: with SMTP id e20mr3174130qvr.85.1574434077237;
- Fri, 22 Nov 2019 06:47:57 -0800 (PST)
+        Fri, 22 Nov 2019 09:49:01 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4432 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVOtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:49:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7f55c0001>; Fri, 22 Nov 2019 06:49:00 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 06:48:59 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 06:48:59 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 14:48:56 +0000
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
+        <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191122100704.194776704@linuxfoundation.org>
+ <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
+ <20191122133931.GA2033651@kroah.com> <20191122134131.GA2050590@kroah.com>
+ <20191122134627.GB2050590@kroah.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9f976044-2dbc-6c19-11e7-210cd7ab35ea@nvidia.com>
+Date:   Fri, 22 Nov 2019 14:48:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191120190028.4722-1-will@kernel.org>
-In-Reply-To: <20191120190028.4722-1-will@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 22 Nov 2019 08:47:46 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
-Message-ID: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Add device link support for "iommu-map"
-To:     Will Deacon <will@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, iommu@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191122134627.GB2050590@kroah.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574434140; bh=5zJwPgzKYpwKJ1aj1MAeZ2Z01KtX4Frh3wO3f5hM4pA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Avm9ZTQOf7Zw8l7u6iU7h5QGTqTPeBQw2xuyvwmxwxdFjmqNtU+ijiZEZDfv3lMVc
+         m0ML1R65r0t8xGHV88XqH+gxYEcBGzTXwxxW9ytpdsXXFy1RoIVdaWCBtf03WCjiUt
+         kE8jhVBzb6akvYu1GpXCvsgvUVG6OBkJ4CqL27lf/0HXglTC35s1nmQzo/ZDapTqjL
+         r/uiwFWbEFgpDYSUVMmdGZK0rMdDOJSFkQUXlnbNohriVSgraAC0r3/1ZjELxMK0iP
+         tAHklBMboUAAmBa4YS6fHBv3C8FIVbLQ+f2WYut+tSI8VpNhTIOGtc301sBFlVGxmp
+         zpfXn7mIq2hLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 1:00 PM Will Deacon <will@kernel.org> wrote:
->
-> Commit 8e12257dead7 ("of: property: Add device link support for iommus,
-> mboxes and io-channels") added device link support for IOMMU linkages
-> described using the "iommus" property. For PCI devices, this property
-> is not present and instead the "iommu-map" property is used on the host
-> bridge node to map the endpoint RequesterIDs to their corresponding
-> IOMMU instance.
->
-> Add support for "iommu-map" to the device link supplier bindings so that
-> probing of PCI devices can be deferred until after the IOMMU is
-> available.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->
-> Applies against driver-core/driver-core-next.
-> Tested on AMD Seattle (arm64).
 
-Guess that answers my question whether anyone uses Seattle with DT.
-Seattle uses the old SMMU binding, and there's not even an IOMMU
-associated with the PCI host. I raise this mainly because the dts
-files for Seattle either need some love or perhaps should be removed.
+On 22/11/2019 13:46, Greg Kroah-Hartman wrote:
+> On Fri, Nov 22, 2019 at 02:41:31PM +0100, Greg Kroah-Hartman wrote:
+>> On Fri, Nov 22, 2019 at 02:39:31PM +0100, Greg Kroah-Hartman wrote:
+>>> On Fri, Nov 22, 2019 at 01:14:28PM +0000, Jon Hunter wrote:
+>>>>
+>>>> On 22/11/2019 10:26, Greg Kroah-Hartman wrote:
+>>>>> This is the start of the stable review cycle for the 4.4.203 release.
+>>>>> There are 159 patches in this series, all will be posted as a response
+>>>>> to this one.  If anyone has any issues with these being applied, please
+>>>>> let me know.
+>>>>>
+>>>>> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+>>>>> Anything received after that time might be too late.
+>>>>>
+>>>>> The whole patch series can be found in one patch at:
+>>>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.203-rc1.gz
+>>>>> or in the git tree and branch at:
+>>>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+>>>>> and the diffstat can be found below.
+>>>>>
+>>>>> thanks,
+>>>>>
+>>>>> greg k-h
+>>>>>
+>>>>> -------------
+>>>>> Pseudo-Shortlog of commits:
+>>>>
+>>>> ...
+>>>>
+>>>>> Marek Szyprowski <m.szyprowski@samsung.com>
+>>>>>     ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+>>>>
+>>>> The above commit is causing the following build error for ARM ...
+>>>>
+>>>> Error: /dvs/git/dirty/git-master_l4t-upstream/kernel/arch/arm/boot/dts/exynos5250-arndale.dts:560.22-23 syntax error
+>>>> FATAL ERROR: Unable to parse input tree
+>>>> scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/exynos5250-arndale.dtb' failed
+>>>> make[2]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
+>>>
+>>> Ugh. I'll go drop this from 4.4.y, is it also an issue in the 4.9.y
+>>> tree?
+>>
+>> Ah, I see your other email now, so I'll leave it in 4.9.y and push out a
+>> new 4.4.y tree now.
+> 
+> -rc2 is out now, with that patch removed, thanks.
 
-No issues with the patch itself though. I'll queue it after rc1.
+Thanks. Well this is odd, now I see ...
 
-Rob
+Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or path dwc3 not found
+FATAL ERROR: Syntax error parsing input tree
+scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/omap5-igep0050.dtb' failed
+make[1]: *** [arch/arm/boot/dts/omap5-igep0050.dtb] Error 1
+arch/arm/Makefile:338: recipe for target 'dtbs' failed
+make: *** [dtbs] Error 2
+
+
+This is caused by the following commit ...
+
+commit d0abc07b3d752cbe2a8d315f662c53c772caed0f
+Author: H. Nikolaus Schaller <hns@goldelico.com>
+Date:   Fri Sep 28 17:54:00 2018 +0200
+
+    ARM: dts: omap5: enable OTG role for DWC3 controller
+
+
+I was wondering why I did not see this before as it was listed
+in the original email but looking back at the git log of what I
+tested before, I don't see it ...
+
+$ git log --oneline bc69c961f595..7bbe76363f8f arch/arm/boot
+b883613d6f68 ARM: tegra: apalis_t30: fix mmc1 cmd pull-up
+a1496418067c ARM: dts: tegra30: fix xcvr-setup-use-fuses
+e3c8a2e4d6b6 ARM: dts: ste: Fix SPI controller node names
+1c9e00b657ad ARM: dts: ux500: Fix LCDA clock line muxing
+ec144e236880 ARM: dts: ux500: Correct SCU unit address
+98c94b7bce20 ARM: dts: am335x-evm: fix number of cpsw
+13b662ab1602 libfdt: Ensure INT_MAX is defined in libfdt_env.h
+2b6e4587d0f5 ARM: dts: socfpga: Fix I2C bus unit-address error
+1c4b78b0c003 ARM: dts: omap3-gta04: keep vpll2 always on
+0c7dc0f3b2c3 ARM: dts: omap3-gta04: make NAND partitions compatible with recent U-Boot
+3ecbffc9b6e4 ARM: dts: omap3-gta04: tvout: enable as display1 alias
+a787cf8ff717 ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
+83264404b9c9 ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+dbe192b499b7 ARM: dts: pxa: fix power i2c base address
+f1a2904901ad ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
+9742b4c1d281 ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
+
+Anyway, not sure what happen there, but looks like the above
+omap5 commit also needs to be dropped. I think you also need
+to drop the following as there is a dependency between the two
+...
+
+commit 56bfbfd3fd46d250749fa4d5974147eb1e456a5b
+Author: Roger Quadros <rogerq@ti.com>
+Date:   Wed Dec 5 19:27:44 2018 +0200
+
+    ARM: dts: omap5: Fix dual-role mode on Super-Speed port
+
+Cheers
+Jon
+
+-- 
+nvpublic
