@@ -2,66 +2,190 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71499C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB923C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DA82070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09372070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574463616;
+	bh=dA6oMX55uJ5N+EQEpGvbMBNQ1lrIeYHErzAjp2pnLKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JYovPaVOy1kBqr3mlRCa3UrJKN+Nnw4LdoZGuf1ibN9YIX9L1y72ZQwxLHbAwSFIf
+	 QXWOxJX9E95BtK3DXI9u9LYMekmI2t50TYDA88KGmeR/OizMPkH4iiDTT1AaGJpU12
+	 g+xu/43pwEudszG3x+X6Jl/IBSqTF6O/+apHd/Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfKVW6p (ORCPT
+        id S1727097AbfKVXAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:58:45 -0500
-Received: from mga06.intel.com ([134.134.136.31]:15520 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfKVW6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:58:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:58:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
-   d="scan'208";a="382218999"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga005.jf.intel.com with ESMTP; 22 Nov 2019 14:58:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] KVM: x86: Minor emulator cleanup
-Date:   Fri, 22 Nov 2019 14:58:29 -0800
-Message-Id: <20191122225832.26684-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 22 Nov 2019 18:00:15 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34094 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKVXAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 18:00:14 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l202so8041790oig.1;
+        Fri, 22 Nov 2019 15:00:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9LwCRvhO7R94JulpPxLdqzrBMeyFJ+AqBIaV+PL8C7U=;
+        b=EszKpTRlT22qGn2Gx0Gm+fQIaim4PbywWaxkDP5734I4JVRtNN93/5ICLrx9hMzU+O
+         zOHjeyrr+69jO6v2qAPr8vw6iDc9t0ucM/mzQzcWxjYj1lhC9E1jKEuvD4DZ61pbG0r4
+         1VvLjNfouGI8mT6ZmaYxl/7D6Jw3WwznNEsrpsMo7oMc++hRsIT/c6HoCzwe57bVa1eZ
+         QK/yTOSV70hq0RCmXGOKv+rbwC1R3Da1NjzQ9GPasXSZuINnh82GAHgQtfCfF536m0pR
+         6+z5OjKJqEBj8TuSHv4j6AmaLje7cHMto7AtyCe0Mu3bfBNsyHNrRrOZ3SdVamoi2KHQ
+         1uMA==
+X-Gm-Message-State: APjAAAV9d8RXPXqm0xcGVOzEcuwEzjXlGiFc9Uaa7lDrQtFbzHHN91Mn
+        OvhO3VNw1Xl8SDGglOhe7g==
+X-Google-Smtp-Source: APXvYqwTL8bjFI5tVNQBBTCNhP02sJX9ZPEHD4VPjeQbl6c0C/OqMqJKLEX0e8Ab52Vqg3PRv0jP0Q==
+X-Received: by 2002:aca:ed0f:: with SMTP id l15mr13707382oih.111.1574463613504;
+        Fri, 22 Nov 2019 15:00:13 -0800 (PST)
+Received: from localhost ([2607:fb90:bde:716a:c9ec:246b:67b7:9768])
+        by smtp.gmail.com with ESMTPSA id p3sm2667296oti.22.2019.11.22.15.00.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 15:00:12 -0800 (PST)
+Date:   Fri, 22 Nov 2019 17:00:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v5 02/16] dt-bindings: leds: ROHM BD71282 PMIC LED driver
+Message-ID: <20191122230011.GA15812@bogus>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <acbac03f409dd531ad58d094b1605e5752e5a17d.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acbac03f409dd531ad58d094b1605e5752e5a17d.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Three small patches to move emulator specific variables from 'struct
-kvm_vcpu_arch' to 'struct x86_emulate_ctxt'.
+On Mon, Nov 18, 2019 at 08:54:25AM +0200, Matti Vaittinen wrote:
+> Document ROHM BD71828 PMIC LED driver device tree bindings.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> No changes from v4
+> 
+>  .../bindings/leds/rohm,bd71828-leds.yaml      | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml b/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+> new file mode 100644
+> index 000000000000..e72c9ae0fc2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Sean Christopherson (3):
-  KVM: x86: Add EMULTYPE_PF when emulation is triggered by a page fault
-  KVM: x86: Move gpa_val and gpa_available into the emulator context
-  KVM: x86: Move #PF retry tracking variables into emulation context
+Dual license please.
 
- arch/x86/include/asm/kvm_emulate.h |  8 ++++++
- arch/x86/include/asm/kvm_host.h    | 19 ++++++-------
- arch/x86/kvm/mmu/mmu.c             | 10 ++-----
- arch/x86/kvm/x86.c                 | 45 +++++++++++++++++++-----------
- 4 files changed, 48 insertions(+), 34 deletions(-)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/rohm,bd71828-leds.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ROHM BD71828 Power Management Integrated Circuit LED driver
+> +
+> +maintainers:
+> +  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> +
+> +description: |
+> +  This module is part of the ROHM BD71828 MFD device. For more details
+> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
+> +
+> +  The LED controller is represented as a sub-node of the PMIC node on the device
+> +  tree.
+> +
+> +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
 
--- 
-2.24.0
+Since you include this from the MFD schema, add a 'select: false' here 
+or this node gets checked twice.
 
+> +
+> +properties:
+> +  compatible:
+> +    const: rohm,bd71828-leds
+> +
+> +patternProperties:
+> +  "^led-[1-2]$":
+> +    type: object
+> +    description:
+> +      Properties for a single LED.
+> +    properties:
+> +      #$ref: "common.yaml#"
+
+Will need to be:
+
+allOf:
+  - $ref: ...
+
+> +      rohm,led-compatible:
+> +        description: LED identification string
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/string"
+> +          - oneOf:
+> +            - const: bd71828-ambled
+> +            - const: bd71828-grnled
+
+Use enum rather than oneOf+const
+
+> +      function:
+> +        description:
+> +          Purpose of LED as defined in dt-bindings/leds/common.h
+> +        $ref: "/schemas/types.yaml#/definitions/string"
+> +      color:
+> +        description:
+> +          LED colour as defined in dt-bindings/leds/common.h
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +
+> +required:
+> +  - compatible
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+> 
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =] 
