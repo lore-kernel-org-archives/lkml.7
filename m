@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B1CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78ADC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44DA2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F212070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421212;
-	bh=vnj8+xsV7FMyBw4aO08RKTdSzAjFVMYxM+AZ9rLmixM=;
+	s=default; t=1574421219;
+	bh=CyxFmt8RNp2/3hmmxtbe3/3gSyvkKx15wfdi3MWjiG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uw7qFBf2eEyeWnElKr1U3DtFZPKJ5tTOQcqomG0hCn+aPNOKaFo1quBtyiqAGUBGp
-	 qtWsFvDaqUkNnhavaz6uSWok67PXSuazunNz6B8le7ztfusui7v36HnDsKnBQ4Ybuf
-	 WBNSLnf18sL4WM65wTtWbpCT+MYNZk1B8Iv1l4ko=
+	b=qpEC7UcQm5llE85SvkILuw+eQjWBcfAO4Apg03QMKR3H5EJ+cUWXaOGICpNUaEkry
+	 ucftCWa39sILeR3Cd97+TvQonmS72S1Dm0+rery7ISjXh13hzuWUtjq8h81lii4WE8
+	 51T+WAJHlHb7DdQ19Bs4f+ykgpFke8XI8iMdVtkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbfKVLNa (ORCPT
+        id S1730998AbfKVLNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:13:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42594 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:13:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730488AbfKVKzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:36 -0500
+        id S1730467AbfKVKz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA25F20637;
-        Fri, 22 Nov 2019 10:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0E8D20718;
+        Fri, 22 Nov 2019 10:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420136;
-        bh=vnj8+xsV7FMyBw4aO08RKTdSzAjFVMYxM+AZ9rLmixM=;
+        s=default; t=1574420127;
+        bh=CyxFmt8RNp2/3hmmxtbe3/3gSyvkKx15wfdi3MWjiG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOXvJEpfjInEMcE6WOI1YQ0/JsxRYfIqDFWZJiuCZwM3z/ZlGvuouOUqyy6zgXtaE
-         iCJ9bu44FmrNROhPOe7Vldsa2lM0pnVukK2yBz0QK78KTyM1CVC1LSJ+fxJ1Wg0fCK
-         Ag4hr2Rf+LvcgTxKom95dybfYn2mMnhMpi2g+Uao=
+        b=CRzwYqfpYuGbib4iUYFgXXydH48t7+C3Te11cEX08p5jmxL50DToqaPjtSysQtcUX
+         P9vQKme5MfoMedGueogsOoDgDLwEFU3OCbZMzT1kgvsRHJOy7Xwz2wJQn0f9IDgXhe
+         4ThOGKcsslmucCNP5N3XzbdYy302//Vx76bHlpSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rami Rosen <ramirose@gmail.com>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/122] dmaengine: ioat: fix prototype of ioat_enumerate_channels
-Date:   Fri, 22 Nov 2019 11:28:47 +0100
-Message-Id: <20191122100815.426956964@linuxfoundation.org>
+Subject: [PATCH 4.14 081/122] dmaengine: rcar-dmac: set scatter/gather max segment size
+Date:   Fri, 22 Nov 2019 11:28:54 +0100
+Message-Id: <20191122100820.928960169@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -59,56 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rami Rosen <ramirose@gmail.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit f4d34aa8c887a8a2d23ef546da0efa10e3f77241 ]
+[ Upstream commit 97d49c59e219acac576e16293a6b8cb99302f62f ]
 
-Signed-off-by: Rami Rosen <ramirose@gmail.com>
+Fix warning when running with CONFIG_DMA_API_DEBUG_SG=y by allocating a
+device_dma_parameters structure and filling in the max segment size.
+
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/init.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/dma/sh/rcar-dmac.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 68680e4151eaa..9103a0425f752 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -129,7 +129,7 @@ static void
- ioat_init_channel(struct ioatdma_device *ioat_dma,
- 		  struct ioatdma_chan *ioat_chan, int idx);
- static void ioat_intr_quirk(struct ioatdma_device *ioat_dma);
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
- static int ioat3_dma_self_test(struct ioatdma_device *ioat_dma);
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 19c7433e83097..f7ca57125ac7c 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -200,6 +200,7 @@ struct rcar_dmac {
+ 	struct dma_device engine;
+ 	struct device *dev;
+ 	void __iomem *iomem;
++	struct device_dma_parameters parms;
  
- static int ioat_dca_enabled = 1;
-@@ -575,7 +575,7 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
-  * ioat_enumerate_channels - find and initialize the device's channels
-  * @ioat_dma: the ioat dma device to be enumerated
-  */
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- {
- 	struct ioatdma_chan *ioat_chan;
- 	struct device *dev = &ioat_dma->pdev->dev;
-@@ -594,7 +594,7 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 	xfercap_log = readb(ioat_dma->reg_base + IOAT_XFERCAP_OFFSET);
- 	xfercap_log &= 0x1f; /* bits [4:0] valid */
- 	if (xfercap_log == 0)
--		return 0;
-+		return;
- 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
+ 	unsigned int n_channels;
+ 	struct rcar_dmac_chan *channels;
+@@ -1764,6 +1765,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
  
- 	for (i = 0; i < dma->chancnt; i++) {
-@@ -611,7 +611,6 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 		}
- 	}
- 	dma->chancnt = i;
--	return i;
- }
+ 	dmac->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, dmac);
++	dmac->dev->dma_parms = &dmac->parms;
++	dma_set_max_seg_size(dmac->dev, RCAR_DMATCR_MASK);
+ 	dma_set_mask_and_coherent(dmac->dev, DMA_BIT_MASK(40));
  
- /**
+ 	ret = rcar_dmac_parse_of(&pdev->dev, dmac);
 -- 
 2.20.1
 
