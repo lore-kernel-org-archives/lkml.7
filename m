@@ -2,59 +2,92 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2347C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C209C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04FB2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6611D2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 18:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akimwxMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKVSJy (ORCPT
+        id S1727116AbfKVSKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:09:54 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38520 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfKVSJx (ORCPT
+        Fri, 22 Nov 2019 13:10:15 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39203 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVSKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 13:09:53 -0500
-Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8ECB715282F7A;
-        Fri, 22 Nov 2019 10:09:52 -0800 (PST)
-Date:   Fri, 22 Nov 2019 10:09:52 -0800 (PST)
-Message-Id: <20191122.100952.137407515946118851.davem@davemloft.net>
-To:     chenwandun@huawei.com
-Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: ocelot: fix "should it be static?" warnings
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1574425965-97890-1-git-send-email-chenwandun@huawei.com>
-References: <1574425965-97890-1-git-send-email-chenwandun@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 22 Nov 2019 10:09:52 -0800 (PST)
+        Fri, 22 Nov 2019 13:10:15 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w24so6965046otk.6;
+        Fri, 22 Nov 2019 10:10:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qNx1WVL4moQBRhfh4yqyaKA4K9+JLS/LnFDl5THS6/k=;
+        b=akimwxMtdFtYq4nOKrjOFbR9r+40GSbqDnVedFY8bg5RcPvLOBhHRgu7GA4/VMUFs8
+         DOOxchlDfa2EY55aEiVBj3gB62pJ1KhhBfk5OXhQBtcCk25ms8kyOs8RTEcNP4Z38Ivk
+         imGMUI3jmD/23IAWQjVBOGsiebT9evoSf9/TckA2yQVo1YWpeKU+BG6U/1OkfNBhI2mx
+         tmEnDJUsRSLSVNOzkVHY0c1TliyEuT52/Pe8va/VGaj+ibz3YVIhDLbF6vbNT3IERS/z
+         lsrGZ5R7donFdlQNnfO14kwaQ1O1K3lEiEAGptwPTubHz2xVOw/oaRS9RKOpba1R50rl
+         zwmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qNx1WVL4moQBRhfh4yqyaKA4K9+JLS/LnFDl5THS6/k=;
+        b=SFyqhBKfrX0ujHiGt6AwpFZOwl1OYj5gT/keLHYcslvzu1sqp/K30IfFmYO+liaVSj
+         SwtBDq+jG17MPE/S+xd/he+SLsPYOnPei6nfHuA851yqHJ375/L4u+8A3jPUrmTgWfwh
+         O6d9ed+wUDMbdu4uBY/Ij0c2ecH3sizJzS5XN675rhyl4ffAL+2ANQcbOdAsvKAHdy/5
+         0Cab2ydo6hlTJujIt8IVqA2+aDh4WYpiIa0GSGH7rLkCy9si0RE/aCB/C2RPRbB/Qyef
+         uLUZfUDLJQDukkbj4RtFvNNES49rVeZ3rTyFF6y5J9VvOASp/D4gbB8HM4lo3+pgEuhC
+         L09g==
+X-Gm-Message-State: APjAAAWqdXUyCBTSnF04F+XUKr9GIaF0Ah0Vyrb7s4CF/YIK5GNmUNzD
+        daRYY5xNoYybLWt3wggjyaY=
+X-Google-Smtp-Source: APXvYqxFiBIXau2zBTUU15KoPVlLOubs7Xbv/TdZq/emjcTZqnV+VFCyKtygK0MHICHip1RqI1U4iw==
+X-Received: by 2002:a05:6830:1d74:: with SMTP id l20mr11856561oti.111.1574446213726;
+        Fri, 22 Nov 2019 10:10:13 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w26sm2412450otm.28.2019.11.22.10.10.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Nov 2019 10:10:13 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:10:12 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 000/222] 4.9.203-stable review
+Message-ID: <20191122181012.GB13514@roeck-us.net>
+References: <20191122100830.874290814@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Wandun <chenwandun@huawei.com>
-Date: Fri, 22 Nov 2019 20:32:45 +0800
-
-> Fix following sparse warnings:
-> drivers/net/dsa/ocelot/felix.c:351:6: warning: symbol 'felix_txtstamp' was not declared. Should it be static?
+On Fri, Nov 22, 2019 at 11:25:40AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.203 release.
+> There are 222 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> Anything received after that time might be too late.
+> 
 
-Next time please indicate _explicitly_ which tree your patch is targetting,
-because especially in this case the change is only relevant for "net-next"
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 356 pass: 356 fail: 0
 
-Also, please provide a proper Fixes: tag.
+Guenter
