@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F987C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062E5C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AA220721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D309720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420476;
-	bh=EnyyH4Gnn0E8+qOWwE4uOz6+S+a2zftDJp8SNn1mVxo=;
+	s=default; t=1574420478;
+	bh=t/kBS8ZyburwAEd/tWcHp44RfmpPV30AzLZAShq5ZZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mx4WPZTFTi1qWf6ekjwUMJX6G1kCOZBOLZ2gWQT6/Sl/15Jm8N/Sn3RnfHmLoLQFf
-	 kOYQAodqS7vHA1ij6RbonTfi56ixOSYi+6lTo0qtbxxSQe4dKMEHSlsMdwrK46aI9b
-	 7QK0qeM9Vr2ZCcG8Zk/9yBnOY0SAAoDJcr453fBI=
+	b=l6I36E+Tw/ndM9iyi5QFSFl3+OnvoZ/ZWqUfYQ7DWPlIETHCC8AkJB9FseDZl5xX8
+	 PI5+rhLEhjEqs1gctAFsXA3MWj/0iN3GJH1tf5IgDxB3oXKQmyc2/5+mDzmounKEAH
+	 p15f0P3tzobaHdGb12SV7l1oCNPJe11R+b6ju4C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfKVLBO (ORCPT
+        id S1731163AbfKVLBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:01:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53982 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:01:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731143AbfKVLBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:01:13 -0500
+        id S1731143AbfKVLBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:01:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08D2E20706;
-        Fri, 22 Nov 2019 11:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E8820706;
+        Fri, 22 Nov 2019 11:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420472;
-        bh=EnyyH4Gnn0E8+qOWwE4uOz6+S+a2zftDJp8SNn1mVxo=;
+        s=default; t=1574420475;
+        bh=t/kBS8ZyburwAEd/tWcHp44RfmpPV30AzLZAShq5ZZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TG1+uI9ObOkAa67j/9auO8BXf3tc447o5HmL/37X951D5f8N3vSu19AFY1c9TrCL4
-         mbtB3GvmhYiVxsFic0YjdV5aSpRFyEspL075y+slLS0wahNtutav+57Mz433rch+jc
-         nNQyrhhxvfDi3iRCPn85koU9qLpz1XdLpNIABDo8=
+        b=lJYQaQZbRKt9Aj1Km/ZlLRQdqoJdBW/dWSwTIaQkBChP/IlUvZMTZkQO2PnE7xZzk
+         h61LrDN4SeAhMIM2v9Qmb9L1UiyVSZbbOc3zFbeFLZfRRT8BGFR1X3Odjz9nrNqgg0
+         ASAwKO688ne0PZMA7oSDQ86nm+cwvnLqCjFEuxuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/220] qtnfmac: drop error reports for out-of-bounds key indexes
-Date:   Fri, 22 Nov 2019 11:28:01 +0100
-Message-Id: <20191122100921.080490325@linuxfoundation.org>
+Subject: [PATCH 4.19 117/220] clk: samsung: Use NOIRQ stage for Exynos5433 clocks suspend/resume
+Date:   Fri, 22 Nov 2019 11:28:02 +0100
+Message-Id: <20191122100921.147300962@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,46 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 35da3fe63b8647ce3cc52fccdf186a60710815fb ]
+[ Upstream commit 70da9ee80228e6d98fd68e3c1db124c4461d283c ]
 
-On disconnect wireless core attempts to remove all the supported keys.
-Following cfg80211_ops conventions, firmware returns -ENOENT code
-for the out-of-bound key indexes. This is a normal behavior,
-so no need to report errors for this case.
+SoC clock drivers should suspend after every other drivers in the system,
+which are using clocks and resume before them. The last stage for calling
+suspend device callbacks is NOIRQ stage and there exists driver, which use
+that state (dwmmc-exynos), so Exynos5433 clocks driver should also use it.
+During the same stage, clocks driver will be always suspended after its
+clients as a direct result of proper device probe order (deferred probe
+reorders the suspend call sequence).
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/quantenna/qtnfmac/cfg80211.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/clk/samsung/clk-exynos5433.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-index 05b93f301ca08..ff8a46c9595e1 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-@@ -521,9 +521,16 @@ static int qtnf_del_key(struct wiphy *wiphy, struct net_device *dev,
- 	int ret;
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 162de44df099b..426980514e679 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -5630,7 +5630,7 @@ static const struct of_device_id exynos5433_cmu_of_match[] = {
+ static const struct dev_pm_ops exynos5433_cmu_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(exynos5433_cmu_suspend, exynos5433_cmu_resume,
+ 			   NULL)
+-	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+ 				     pm_runtime_force_resume)
+ };
  
- 	ret = qtnf_cmd_send_del_key(vif, key_index, pairwise, mac_addr);
--	if (ret)
--		pr_err("VIF%u.%u: failed to delete key: idx=%u pw=%u\n",
--		       vif->mac->macid, vif->vifid, key_index, pairwise);
-+	if (ret) {
-+		if (ret == -ENOENT) {
-+			pr_debug("VIF%u.%u: key index %d out of bounds\n",
-+				 vif->mac->macid, vif->vifid, key_index);
-+		} else {
-+			pr_err("VIF%u.%u: failed to delete key: idx=%u pw=%u\n",
-+			       vif->mac->macid, vif->vifid,
-+			       key_index, pairwise);
-+		}
-+	}
- 
- 	return ret;
- }
 -- 
 2.20.1
 
