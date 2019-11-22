@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AF6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D5BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A3B20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F0620672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402038;
-	bh=WR6T0mnOrqv6UHDVnUtOymOZWoXeUtFqekFtmD/p8Bo=;
+	s=default; t=1574402041;
+	bh=pz78iwdXUENbZcbYUMALJIFQGQOKoTGxA9AdC7L3WZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vPC4WLNHCWTROLaOpY7lwvTDgvpfBzacvaFs2ln/YYAKlMwKkCcZXlhm4LxwcqrR4
-	 dAOQtKSNMBD+6b22/ZfCw4K0MooF8UhpUeuI9Y61Vlh3CQuipGHMjVslpdcWH8IrP/
-	 H8IlW7y7d4sNBweK4EtDjt3In+PMcfEu40MDF5CQ=
+	b=UFqqbBdJ8oga+FBXTaBqZIiTr9TIDPxasH0PBHdkv4osOw5AFrI5QYMpC80SLBA/+
+	 QEU6QtvqE8EY/4vl6Aa3nyTdKtbcjuTTtniAT8cFmQh2Yvka/t2/htDCBml5T70h0W
+	 TMdSypKofTuyH3gkgkx4OYwHm4jUDYo/C5ZRwljw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfKVFxT (ORCPT
+        id S1727962AbfKVFyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59178 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:54:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbfKVFxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:53:11 -0500
+        id S1727669AbfKVFxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:53:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6044D2082F;
-        Fri, 22 Nov 2019 05:53:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03E60207FA;
+        Fri, 22 Nov 2019 05:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401990;
-        bh=WR6T0mnOrqv6UHDVnUtOymOZWoXeUtFqekFtmD/p8Bo=;
+        s=default; t=1574401997;
+        bh=pz78iwdXUENbZcbYUMALJIFQGQOKoTGxA9AdC7L3WZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TPyJM9ebwywPmwmrE+0+ziT+brB0J3z24qI5gKMah9Vs8TuXUC6fdnE9UHgjQCjiI
-         P1hEJjY0L65daJ+KLKT/c/ftz7qiNYFsWBBTKEdLCwtUYRfC2nl2Kx+rrhHF7u9P4W
-         qiirj3zNmA0qFQKYLySJIrI5m0WGUPayNqsz6lew=
+        b=tsry0BzOfr/ITWMcYzCLSjqO3Nel0KOHa6QWVsM+1FW6xC8ebcS6y7Ffd8gNcPAw4
+         yF/G0oN5FehqIjZ5ofeuSKSj2jcbkJuyBykoBK3stQ7vStYfPj5ksYmtXgFMx611JY
+         qQ/XRUZY+az3cRYkVu7Z5ubmbexZq8OB4VCG4wdY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 208/219] ACPI / APEI: Switch estatus pool to use vmalloc memory
-Date:   Fri, 22 Nov 2019 00:48:59 -0500
-Message-Id: <20191122054911.1750-200-sashal@kernel.org>
+Cc:     Hui Wang <hui.wang@canonical.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 215/219] ASoC: rt5645: Headphone Jack sense inverts on the LattePanda board
+Date:   Fri, 22 Nov 2019 00:49:06 -0500
+Message-Id: <20191122054911.1750-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,91 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 0ac234be1a9497498e57d958f4251f5257b116b4 ]
+[ Upstream commit 406dcbc55a0a20fd155be889a4a0c4b812f7c18e ]
 
-The ghes code is careful to parse and round firmware's advertised
-memory requirements for CPER records, up to a maximum of 64K.
-However when ghes_estatus_pool_expand() does its work, it splits
-the requested size into PAGE_SIZE granules.
+The LattePanda board has a sound card chtrt5645, when there is nothing
+plugged in the headphone jack, the system thinks the headphone is
+plugged in, while we plug a headphone in the jack, the system thinks
+the headphone is unplugged.
 
-This means if firmware generates 5K of CPER records, and correctly
-describes this in the table, __process_error() will silently fail as it
-is unable to allocate more than PAGE_SIZE.
+If adding quirk=0x21 in the module parameter, the headphone jack can
+work well. So let us fix it via platform_data.
 
-Switch the estatus pool to vmalloc() memory. On x86 vmalloc() memory
-may fault and be fixed up by vmalloc_fault(). To prevent this call
-vmalloc_sync_all() before an NMI handler could discover the memory.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+https://bugs.launchpad.net/bugs/182459
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ sound/soc/codecs/rt5645.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 0c46b79e31b1e..73177b8a07bd1 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -170,40 +170,40 @@ static int ghes_estatus_pool_init(void)
- 	return 0;
- }
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 1dc70f452c1b9..f842db498c741 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3662,6 +3662,11 @@ static const struct rt5645_platform_data jd_mode3_platform_data = {
+ 	.jd_mode = 3,
+ };
  
--static void ghes_estatus_pool_free_chunk_page(struct gen_pool *pool,
-+static void ghes_estatus_pool_free_chunk(struct gen_pool *pool,
- 					      struct gen_pool_chunk *chunk,
- 					      void *data)
- {
--	free_page(chunk->start_addr);
-+	vfree((void *)chunk->start_addr);
- }
- 
- static void ghes_estatus_pool_exit(void)
- {
- 	gen_pool_for_each_chunk(ghes_estatus_pool,
--				ghes_estatus_pool_free_chunk_page, NULL);
-+				ghes_estatus_pool_free_chunk, NULL);
- 	gen_pool_destroy(ghes_estatus_pool);
- }
- 
- static int ghes_estatus_pool_expand(unsigned long len)
- {
--	unsigned long i, pages, size, addr;
--	int ret;
-+	unsigned long size, addr;
- 
- 	ghes_estatus_pool_size_request += PAGE_ALIGN(len);
- 	size = gen_pool_size(ghes_estatus_pool);
- 	if (size >= ghes_estatus_pool_size_request)
- 		return 0;
--	pages = (ghes_estatus_pool_size_request - size) / PAGE_SIZE;
--	for (i = 0; i < pages; i++) {
--		addr = __get_free_page(GFP_KERNEL);
--		if (!addr)
--			return -ENOMEM;
--		ret = gen_pool_add(ghes_estatus_pool, addr, PAGE_SIZE, -1);
--		if (ret)
--			return ret;
--	}
- 
--	return 0;
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		return -ENOMEM;
++static const struct rt5645_platform_data lattepanda_board_platform_data = {
++	.jd_mode = 2,
++	.inv_jd1_1 = true
++};
 +
-+	/*
-+	 * New allocation must be visible in all pgd before it can be found by
-+	 * an NMI allocating from the pool.
-+	 */
-+	vmalloc_sync_all();
-+
-+	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
- }
+ static const struct dmi_system_id dmi_platform_data[] = {
+ 	{
+ 		.ident = "Chrome Buddy",
+@@ -3759,6 +3764,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		},
+ 		.driver_data = (void *)&intel_braswell_platform_data,
+ 	},
++	{
++		.ident = "LattePanda board",
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
++		},
++		.driver_data = (void *)&lattepanda_board_platform_data,
++	},
+ 	{ }
+ };
  
- static int map_gen_v2(struct ghes *ghes)
 -- 
 2.20.1
 
