@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE29C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E92C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB352072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E93F2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419539;
-	bh=8iD2RbErPWDnc+352S6Dt9T6EhXU+MLXptMB07sJbVA=;
+	s=default; t=1574419542;
+	bh=C/p5ffkx9IEH3kI+wV1/WForkf/HV3MApMb1oJBFRpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XkC++W4aewim91HFn4AL1P7LHxcLyAGihXnfz0moImPOhZzRGnoMXZzsvs7QhcIe3
-	 oeQZ0ymRFjZ40+nnPCNgVfBdmi4BgeoRpcnxBVzZUIYXUWNFrT+SF8nxmzfdL2gzZy
-	 j5aUyzGbohdunW1eMP4dwYAfZ6r8DGIPe6ghVBoQ=
+	b=pNQtDhs703OWAqNaIho17WyhBEyylB/CCQVdhwkeHG1flQKXuDpjSsX0lKQRoptPg
+	 Z6kU8IfSLVYYI5vTYSajUJjqmOaszveCVkGA7c0xPFZthNAXVx0DNfSc1IiZIuhxqQ
+	 plgac97dZnLTnvfNFfG+GKshn/OmESVk0tiwQ52Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbfKVKph (ORCPT
+        id S1729087AbfKVKpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52002 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729486AbfKVKpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:33 -0500
+        id S1727593AbfKVKpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354A820715;
-        Fri, 22 Nov 2019 10:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 185342071C;
+        Fri, 22 Nov 2019 10:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419532;
-        bh=8iD2RbErPWDnc+352S6Dt9T6EhXU+MLXptMB07sJbVA=;
+        s=default; t=1574419538;
+        bh=C/p5ffkx9IEH3kI+wV1/WForkf/HV3MApMb1oJBFRpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOff5lxYhu9lpNhM/KUg+6LN7y/ehJcxyjzIh/WnfZaO1L5bRpokXJDiUHkMAtWQQ
-         NhtxV3HccCzRJrvdJXsKz1KVuJxHwYI+SCDNZy9cXgXuQpOvYGkEmsuLtCgOzoqo6K
-         8O2LWEyrUaWhdX2QxOVqjPkx69Am5SgovXIm6LVQ=
+        b=TddfM8lqTZN0X19SQHQJo9UcFLDMkvCZmOWVHr2nhgiUpqawGkTHioCtmL/SGkVUt
+         PWAdmhsp3fzCxuRzO1gWL3vKCQCiHhNhPOkvuev5lBsKnXeAyhtV+dhN2nImhKHixI
+         P5Sf9Pmsk7huGPmD2ZCCmiP79/okn4QNOk18WWZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 144/222] fuse: use READ_ONCE on congestion_threshold and max_background
-Date:   Fri, 22 Nov 2019 11:28:04 +0100
-Message-Id: <20191122100913.230281494@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 119/222] coresight: tmc: Fix byte-address alignment for RRP
+Date:   Fri, 22 Nov 2019 11:27:39 +0100
+Message-Id: <20191122100911.718972632@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,43 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Tkhai <ktkhai@virtuozzo.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 2a23f2b8adbe4bd584f936f7ac17a99750eed9d7 ]
+[ Upstream commit e7753f3937610633a540f2be81be87531f96ff04 ]
 
-Since they are of unsigned int type, it's allowed to read them
-unlocked during reporting to userspace. Let's underline this fact
-with READ_ONCE() macroses.
+>From the comment in the code, it claims the requirement for byte-address
+alignment for RRP register: 'for 32-bit, 64-bit and 128-bit wide trace
+memory, the four LSBs must be 0s. For 256-bit wide trace memory, the
+five LSBs must be 0s'.  This isn't consistent with the program, the
+program sets five LSBs as zeros for 32/64/128-bit wide trace memory and
+set six LSBs zeros for 256-bit wide trace memory.
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+After checking with the CoreSight Trace Memory Controller technical
+reference manual (ARM DDI 0461B, section 3.3.4 RAM Read Pointer
+Register), it proves the comment is right and the program does wrong
+setting.
+
+This patch fixes byte-address alignment for RRP by following correct
+definition in the technical reference manual.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/control.c | 4 ++--
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-index e25c40c10f4fa..97ac2f5843fcc 100644
---- a/fs/fuse/control.c
-+++ b/fs/fuse/control.c
-@@ -107,7 +107,7 @@ static ssize_t fuse_conn_max_background_read(struct file *file,
- 	if (!fc)
- 		return 0;
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index d6941ea24d8df..14df4e34c21cf 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -425,10 +425,10 @@ static void tmc_update_etf_buffer(struct coresight_device *csdev,
+ 		case TMC_MEM_INTF_WIDTH_32BITS:
+ 		case TMC_MEM_INTF_WIDTH_64BITS:
+ 		case TMC_MEM_INTF_WIDTH_128BITS:
+-			mask = GENMASK(31, 5);
++			mask = GENMASK(31, 4);
+ 			break;
+ 		case TMC_MEM_INTF_WIDTH_256BITS:
+-			mask = GENMASK(31, 6);
++			mask = GENMASK(31, 5);
+ 			break;
+ 		}
  
--	val = fc->max_background;
-+	val = READ_ONCE(fc->max_background);
- 	fuse_conn_put(fc);
- 
- 	return fuse_conn_limit_read(file, buf, len, ppos, val);
-@@ -144,7 +144,7 @@ static ssize_t fuse_conn_congestion_threshold_read(struct file *file,
- 	if (!fc)
- 		return 0;
- 
--	val = fc->congestion_threshold;
-+	val = READ_ONCE(fc->congestion_threshold);
- 	fuse_conn_put(fc);
- 
- 	return fuse_conn_limit_read(file, buf, len, ppos, val);
 -- 
 2.20.1
 
