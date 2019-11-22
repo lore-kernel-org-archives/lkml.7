@@ -2,131 +2,62 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DD5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB559C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0082084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420634;
-	bh=tWMoYBDBxFN95d0VknL5vepaomjR5eoKtzCaE7yb/NY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3bGntqNyaryTKPN1mBNgf0oINBUHTgPLkohXdtw2+K1MsLZbqUJW9TKlxBUK5lIu
-	 8mv/ov6VVnE6+YFiZLrzvNnDMHoXtW1NDuS91NYKKNo9D21Y6GOftoCTbWkVdEuoun
-	 Bm3HkTKjwdXgBoagtfG8xMJBwSm7RXFK3DudTsLM=
+	by mail.kernel.org (Postfix) with ESMTP id A9A6C20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfKVLDx (ORCPT
+        id S1727156AbfKVLD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:03:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58204 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:03:56 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:53416 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731457AbfKVLDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:03:49 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D4F7207FC;
-        Fri, 22 Nov 2019 11:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420628;
-        bh=tWMoYBDBxFN95d0VknL5vepaomjR5eoKtzCaE7yb/NY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6646ryqChr7X07+fyEuQpYq2hbaRe7+9Ev7Ol3HLY/oyQWYPC/Hh2xrjUd3KaIqC
-         ahW5WQH+rJQF4SdsA0qK+sG46QfwMmf0G3Ss4Yx6K8jWlf3TEvgZxVZDYFAdPJqPm3
-         W5kLaG8N/EsEwsiSXChRsbwjT3Hh559OFWSD0Q5Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 128/220] i2c: qup: use core to detect no zero length quirk
-Date:   Fri, 22 Nov 2019 11:28:13 +0100
-Message-Id: <20191122100922.027888422@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731143AbfKVLDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:03:51 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iY6j3-0004YF-JK; Fri, 22 Nov 2019 19:03:45 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iY6j2-0002em-4R; Fri, 22 Nov 2019 19:03:44 +0800
+Date:   Fri, 22 Nov 2019 19:03:44 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/2] crypto: sun4i-ss: Fix 64-bit size_t warnings on
+ sun4i-ss-hash.c
+Message-ID: <20191122110344.u6euqg3vecgqyrs4@gondor.apana.org.au>
+References: <20191114104907.10645-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114104907.10645-1-clabbe.montjoie@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Thu, Nov 14, 2019 at 11:49:06AM +0100, Corentin Labbe wrote:
+> If you try to compile this driver on a 64-bit platform then you
+> will get warnings because it mixes size_t with unsigned int which
+> only works on 32-bit.
+> 
+> This patch fixes all of the warnings on sun4i-ss-hash.c.
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-[ Upstream commit de82bb431855580ad659bfed3e858bd9dd12efd0 ]
-
-And don't reimplement in the driver.
-
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Andy Gross <andy.gross@linaro.org>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/i2c/busses/i2c-qup.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index c86c3ae1318f2..e09cd0775ae91 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -1088,11 +1088,6 @@ static int qup_i2c_xfer(struct i2c_adapter *adap,
- 	writel(I2C_MINI_CORE | I2C_N_VAL, qup->base + QUP_CONFIG);
- 
- 	for (idx = 0; idx < num; idx++) {
--		if (msgs[idx].len == 0) {
--			ret = -EINVAL;
--			goto out;
--		}
--
- 		if (qup_i2c_poll_state_i2c_master(qup)) {
- 			ret = -EIO;
- 			goto out;
-@@ -1520,9 +1515,6 @@ qup_i2c_determine_mode_v2(struct qup_i2c_dev *qup,
- 
- 	/* All i2c_msgs should be transferred using either dma or cpu */
- 	for (idx = 0; idx < num; idx++) {
--		if (msgs[idx].len == 0)
--			return -EINVAL;
--
- 		if (msgs[idx].flags & I2C_M_RD)
- 			max_rx_len = max_t(unsigned int, max_rx_len,
- 					   msgs[idx].len);
-@@ -1636,9 +1628,14 @@ static const struct i2c_algorithm qup_i2c_algo_v2 = {
-  * which limits the possible read to 256 (QUP_READ_LIMIT) bytes.
-  */
- static const struct i2c_adapter_quirks qup_i2c_quirks = {
-+	.flags = I2C_AQ_NO_ZERO_LEN,
- 	.max_read_len = QUP_READ_LIMIT,
- };
- 
-+static const struct i2c_adapter_quirks qup_i2c_quirks_v2 = {
-+	.flags = I2C_AQ_NO_ZERO_LEN,
-+};
-+
- static void qup_i2c_enable_clocks(struct qup_i2c_dev *qup)
- {
- 	clk_prepare_enable(qup->clk);
-@@ -1701,6 +1698,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 		is_qup_v1 = true;
- 	} else {
- 		qup->adap.algo = &qup_i2c_algo_v2;
-+		qup->adap.quirks = &qup_i2c_quirks_v2;
- 		is_qup_v1 = false;
- 		if (acpi_match_device(qup_i2c_acpi_match, qup->dev))
- 			goto nodma;
+All applied.  Thanks.
 -- 
-2.20.1
-
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
