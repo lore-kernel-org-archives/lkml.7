@@ -2,225 +2,136 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99A9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C594FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67990204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED20204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 02:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XZMJrLP5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ea5W7/2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKVCzX (ORCPT
+        id S1726759AbfKVC5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 21:55:23 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43999 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKVCzW (ORCPT
+        Thu, 21 Nov 2019 21:57:00 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4158 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfKVC47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 21:55:22 -0500
-Received: by mail-qk1-f195.google.com with SMTP id p14so5017220qkm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 18:55:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Dtosei2WN9GMgSJa41yHggbCmmspG55kEXkqTZYgrxQ=;
-        b=XZMJrLP5pumaNiOkQSku9hZ/Ex7KQRPGWfh0IHF4XUW182EFj//9CscFh12cCbuxqz
-         cK7h43jax4RKPHaLtfEgBNH3q0V3X/bhlvV5XOzH1I5g2IbHK1S0wnfcrhs3shu44UqW
-         9M5+HjpYVoPU4RqpEvWq8lBEXxFnn7Hw1lL4mABF5+m+QpxHuGCWe+sKF0GqQ+XvNY1w
-         plrpIYgFTcBcXxOCQrXE1PbaHqw//lQEu3F0xlKte0M+dbgttyawCN2uf/+lo2AcNSVq
-         aumNw2ydMsLhv2diO//lcEYCXegLiFZO4rj3vhI+KtFeHCdRxJ/uCEW8lnWKy6Mp1Jux
-         aG+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Dtosei2WN9GMgSJa41yHggbCmmspG55kEXkqTZYgrxQ=;
-        b=WaE8i6xK9edBOkboAUKBz73Co6CFOF8DwFyohT4twc/ze46Ic4sBo7i97pJuwC+hxZ
-         DE5HAHntMroh97oJB8nQaYTB8o3aRjMxdkOotTLbu34eM1+OXiBjcFT0ZPCI+qtKrCqT
-         +R3Ne99zmkSZjohNPoz0tTbOIb3ze3oPNCsFtdnZvUZMtKNxT2BGo9EHQTWOFl66Hu+1
-         yQnqudDufz34j69rdFpEg0FZRiF4agQm0usK96m9+wcnWy1QFj1sU6KfG9qcalDFVMt8
-         SwXOd7yk88X2umZBQtXLsBxMUyQdWoE7wK5qM70UF9LBjAS2K2t6e6HZ98vnhKuZBdy+
-         ifNg==
-X-Gm-Message-State: APjAAAXZjeGg4p1yR7K16BIyRLFFDg5fOAL73P40b6RkideGT4atl+Qq
-        YFznOCMbSxIC6jGma3WwVFQUDQ==
-X-Google-Smtp-Source: APXvYqzHHA+GsVokJj9Z/PfUI+0XpRUH38+kPJ+eB7MwYuzX5dpnbiPDjZalZbEpsSDZAsjSjQA5DA==
-X-Received: by 2002:a37:a18d:: with SMTP id k135mr11093412qke.342.1574391321495;
-        Thu, 21 Nov 2019 18:55:21 -0800 (PST)
-Received: from ovpn-126-0.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id n18sm2582804qtl.40.2019.11.21.18.55.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 18:55:20 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     joe@perches.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] iommu/iova: silence warnings under memory pressure
-Date:   Thu, 21 Nov 2019 21:55:10 -0500
-Message-Id: <20191122025510.4319-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Thu, 21 Nov 2019 21:56:59 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd74e740000>; Thu, 21 Nov 2019 18:56:52 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 21 Nov 2019 18:56:51 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 21 Nov 2019 18:56:51 -0800
+Received: from [10.2.168.213] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 02:56:50 +0000
+Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
+ routines
+To:     Jan Kara <jack@suse.cz>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-3-jhubbard@nvidia.com> <20191121080356.GA24784@lst.de>
+ <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
+ <20191121095411.GC18190@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <9d0846af-2c4f-7cda-dfcb-1f642943afea@nvidia.com>
+Date:   Thu, 21 Nov 2019 18:54:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191121095411.GC18190@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574391412; bh=qs/HIaIDAchvyMkQnxvFfFcxB81lObthoFNUVM9HFsU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ea5W7/2c5vGNy7OLObdGvq5o0IpGBD08qzI9LgcD4V8BzKvR7hLDcVgsFBzIPWltE
+         d8PXmpt/WgSDLuhJB1bSFzEA5jjhwY4dlcU7E+jQRx3TB5rkLOwlZyYegEL3tsBCr8
+         8qN6mxRQSSTP+FNbJyR7Zo1HLIMkYFYKo0hlXeg0mt5hFKo6iVEhrdf4E8SgIeOW2y
+         us/ORlXUDHvqcnaCH9l42SZAxDz+ZaaZrH8tpmFx0pDTmT79WYa//P0TZxa1PMT2Ec
+         60tYwrFVvqZaHos2D7eAOKA1eeY7xDL9USjPj3cYeVVtnic4Fxyow9kLNCXK7YejUg
+         or0Rt6li4HM5w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running heavy memory pressure workloads, this 5+ old system is
-throwing endless warnings below because disk IO is too slow to recover
-from swapping. Since the volume from alloc_iova_fast() could be large,
-once it calls printk(), it will trigger disk IO (writing to the log
-files) and pending softirqs which could cause an infinite loop and make
-no progress for days by the ongoimng memory reclaim. This is the counter
-part for Intel where the AMD part has already been merged. See the
-commit 3d708895325b ("iommu/amd: Silence warnings under memory
-pressure"). Since the allocation failure will be reported in
-intel_alloc_iova(), so just call printk_ratelimted() there and silence
-the one in alloc_iova_mem() to avoid the expensive warn_alloc().
+On 11/21/19 1:54 AM, Jan Kara wrote:
+> On Thu 21-11-19 00:29:59, John Hubbard wrote:
+>>>
+>>> Otherwise this looks fine and might be a worthwhile cleanup to feed
+>>> Andrew for 5.5 independent of the gut of the changes.
+>>>
+>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>
+>>
+>> Thanks for the reviews! Say, it sounds like your view here is that this
+>> series should be targeted at 5.6 (not 5.5), is that what you have in mind?
+>> And get the preparatory patches (1-9, and maybe even 10-16) into 5.5?
+> 
+> One more note :) If you are going to push pin_user_pages() interfaces
+> (which I'm fine with), it would probably make sense to push also the
+> put_user_pages() -> unpin_user_pages() renaming so that that inconsistency
+> in naming does not exist in the released upstream kernel.
+> 
+> 								Honza
 
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- slab_out_of_memory: 66 callbacks suppressed
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-   cache: iommu_iova, object size: 40, buffer size: 448, default order:
-0, min order: 0
-   node 0: slabs: 1822, objs: 16398, free: 0
-   node 1: slabs: 2051, objs: 18459, free: 31
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-   cache: iommu_iova, object size: 40, buffer size: 448, default order:
-0, min order: 0
-   node 0: slabs: 1822, objs: 16398, free: 0
-   node 1: slabs: 2051, objs: 18459, free: 31
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-   cache: iommu_iova, object size: 40, buffer size: 448, default order:
-0, min order: 0
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   node 0: slabs: 697, objs: 4182, free: 0
-   node 0: slabs: 697, objs: 4182, free: 0
-   node 0: slabs: 697, objs: 4182, free: 0
-   node 0: slabs: 697, objs: 4182, free: 0
-   node 1: slabs: 381, objs: 2286, free: 27
-   node 1: slabs: 381, objs: 2286, free: 27
-   node 1: slabs: 381, objs: 2286, free: 27
-   node 1: slabs: 381, objs: 2286, free: 27
-   node 0: slabs: 1822, objs: 16398, free: 0
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   node 1: slabs: 2051, objs: 18459, free: 31
-   node 0: slabs: 697, objs: 4182, free: 0
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-   node 1: slabs: 381, objs: 2286, free: 27
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   node 0: slabs: 697, objs: 4182, free: 0
-   node 1: slabs: 381, objs: 2286, free: 27
- hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
- warn_alloc: 96 callbacks suppressed
- kworker/11:1H: page allocation failure: order:0,
-mode:0xa20(GFP_ATOMIC), nodemask=(null),cpuset=/,mems_allowed=0-1
- CPU: 11 PID: 1642 Comm: kworker/11:1H Tainted: G    B
- Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420 Gen9, BIOS U19
-12/27/2015
- Workqueue: kblockd blk_mq_run_work_fn
- Call Trace:
-  dump_stack+0xa0/0xea
-  warn_alloc.cold.94+0x8a/0x12d
-  __alloc_pages_slowpath+0x1750/0x1870
-  __alloc_pages_nodemask+0x58a/0x710
-  alloc_pages_current+0x9c/0x110
-  alloc_slab_page+0xc9/0x760
-  allocate_slab+0x48f/0x5d0
-  new_slab+0x46/0x70
-  ___slab_alloc+0x4ab/0x7b0
-  __slab_alloc+0x43/0x70
-  kmem_cache_alloc+0x2dd/0x450
- SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-  alloc_iova+0x33/0x210
-   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
-order: 0, min order: 0
-   node 0: slabs: 697, objs: 4182, free: 0
-  alloc_iova_fast+0x62/0x3d1
-   node 1: slabs: 381, objs: 2286, free: 27
-  intel_alloc_iova+0xce/0xe0
-  intel_map_sg+0xed/0x410
-  scsi_dma_map+0xd7/0x160
-  scsi_queue_rq+0xbf7/0x1310
-  blk_mq_dispatch_rq_list+0x4d9/0xbc0
-  blk_mq_sched_dispatch_requests+0x24a/0x300
-  __blk_mq_run_hw_queue+0x156/0x230
-  blk_mq_run_work_fn+0x3b/0x40
-  process_one_work+0x579/0xb90
-  worker_thread+0x63/0x5b0
-  kthread+0x1e6/0x210
-  ret_from_fork+0x3a/0x50
- Mem-Info:
- active_anon:2422723 inactive_anon:361971 isolated_anon:34403
-  active_file:2285 inactive_file:1838 isolated_file:0
-  unevictable:0 dirty:1 writeback:5 unstable:0
-  slab_reclaimable:13972 slab_unreclaimable:453879
-  mapped:2380 shmem:154 pagetables:6948 bounce:0
-  free:19133 free_pcp:7363 free_cma:0
+Yes, that's what this patch series does. But I'm not sure if "push" here
+means, "push out: defer to 5.6", "push (now) into 5.5", or "advocate for"?
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+I will note that it's not going to be easy to rename in one step, now
+that this is being split up. Because various put_user_pages()-based items
+are going into 5.5 via different maintainer trees now. Probably I'd need
+to introduce unpin_user_page() alongside put_user_page()...thoughts?
 
-v2: use dev_err_ratelimited() and improve the commit messages.
-
- drivers/iommu/intel-iommu.c | 3 ++-
- drivers/iommu/iova.c        | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 6db6d969e31c..c01a7bc99385 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3401,7 +3401,8 @@ static unsigned long intel_alloc_iova(struct device *dev,
- 	iova_pfn = alloc_iova_fast(&domain->iovad, nrpages,
- 				   IOVA_PFN(dma_mask), true);
- 	if (unlikely(!iova_pfn)) {
--		dev_err(dev, "Allocating %ld-page iova failed", nrpages);
-+		dev_err_ratelimited(dev, "Allocating %ld-page iova failed",
-+				    nrpages);
- 		return 0;
- 	}
- 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 41c605b0058f..aa1a56aaa5ee 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -233,7 +233,7 @@ static DEFINE_MUTEX(iova_cache_mutex);
- 
- struct iova *alloc_iova_mem(void)
- {
--	return kmem_cache_alloc(iova_cache, GFP_ATOMIC);
-+	return kmem_cache_alloc(iova_cache, GFP_ATOMIC | __GFP_NOWARN);
- }
- EXPORT_SYMBOL(alloc_iova_mem);
- 
+thanks,
 -- 
-2.21.0 (Apple Git-122.2)
-
+John Hubbard
+NVIDIA
+  
