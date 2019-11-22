@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F252020637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E8E20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419951;
-	bh=cps95J12ZBs95Tga0IarAZLjU6eKhhQzMyHwqKsN98Q=;
+	s=default; t=1574419954;
+	bh=MX3Ehabkq3f2CSRb7ik1HoCIDf2ozhTD6e8JcQDK1Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iqjoe63gQy0DTYPh6TbPEimmU1O855STeGPiWSpvaQp2yzGPqpqXvPQ/sI5lgChKq
-	 KXoIvMnNUyO7Q0OsR3sTiBwBG2fUisyNuWdR5/EXjq+kTGHyI1nuqumL46Ke7xob2L
-	 HRNeI/FPTWzQLb2j00d/YvSKfBJf42DI17zyZulA=
+	b=bV076JUbc1GL2V+qr7FzEBNtuSWO1KfsDmhkBLsHWN7mHBiYT7nK2lILNqitxyuRu
+	 tyUYBjtFOuH+JW1nXgOlXByNkyvMLVveF7J4l9Bq4f1PS/ldBcTU3lSwOHxH5EAcMn
+	 Sjn4B3nvagtiAGfTV4PNuPSwmNcQ1GblsW0LTW18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfKVKwa (ORCPT
+        id S1728880AbfKVKwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:52:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:52:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbfKVKw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:52:26 -0500
+        id S1728666AbfKVKwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:52:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B22320656;
-        Fri, 22 Nov 2019 10:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD8B20637;
+        Fri, 22 Nov 2019 10:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419944;
-        bh=cps95J12ZBs95Tga0IarAZLjU6eKhhQzMyHwqKsN98Q=;
+        s=default; t=1574419950;
+        bh=MX3Ehabkq3f2CSRb7ik1HoCIDf2ozhTD6e8JcQDK1Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNptzWsROgyn9mK5m6CM886zsbrE6zad9Ia3d/HKyxEEVBr4xvO47Q7Se4KWwv2w7
-         uhtPJ+1huOSvmoHvH7tkrGOhQLnIvn8qcWkADqxP+jojBPpDvtNOr8c1yI8W3qezxH
-         oYFT4d0s3VkmtP/hKDAKm2Ih79gI4Ji7gtYdiJcQ=
+        b=uKydgzYCyHmV4nZ+meQzAaGb+/7PEhqOBdOGzEq1CDWQltREAS2xKyICuPutTtthl
+         CFDj+L3DtYpQAXScu2LhQAiYLKmxw/hjbE9mOXI4PnljsI7M8xMEABnCT3N/xDjf9S
+         sKaQqkNWubj7e7MozjEA/UGTT5NfIick+55kEHGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Pobega <mpobega@neverware.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/122] ALSA: hda/sigmatel - Disable automute for Elo VuPoint
-Date:   Fri, 22 Nov 2019 11:28:34 +0100
-Message-Id: <20191122100804.824498641@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 063/122] USB: serial: cypress_m8: fix interrupt-out transfer length
+Date:   Fri, 22 Nov 2019 11:28:36 +0100
+Message-Id: <20191122100806.299996276@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -59,83 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Pobega <mpobega@neverware.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit d153135e93a50cdb6f1b52e238909e9965b56056 ]
+[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
 
-The Elo VuPoint 15MX has two headphone jacks of which neither work by
-default. Disabling automute allows ALSA to work normally with the
-speakers & left headphone jack.
+Fix interrupt-out transfer length which was being set to the
+transfer-buffer length rather than the size of the outgoing packet.
 
-Future pin configuration changes may be required in the future to get
-the right headphone jack working in tandem.
+Note that no slab data was leaked as the whole transfer buffer is always
+cleared before each transfer.
 
-Signed-off-by: Michael Pobega <mpobega@neverware.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_sigmatel.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/usb/serial/cypress_m8.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index 63d15b545b333..7cd147411b22d 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -77,6 +77,7 @@ enum {
- 	STAC_DELL_M6_BOTH,
- 	STAC_DELL_EQ,
- 	STAC_ALIENWARE_M17X,
-+	STAC_ELO_VUPOINT_15MX,
- 	STAC_92HD89XX_HP_FRONT_JACK,
- 	STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK,
- 	STAC_92HD73XX_ASUS_MOBO,
-@@ -1897,6 +1898,18 @@ static void stac92hd73xx_fixup_no_jd(struct hda_codec *codec,
- 		codec->no_jack_detect = 1;
- }
+diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
+index 90110de715e01..d0aa4c853f56a 100644
+--- a/drivers/usb/serial/cypress_m8.c
++++ b/drivers/usb/serial/cypress_m8.c
+@@ -773,7 +773,7 @@ static void cypress_send(struct usb_serial_port *port)
  
-+
-+static void stac92hd73xx_disable_automute(struct hda_codec *codec,
-+				     const struct hda_fixup *fix, int action)
-+{
-+	struct sigmatel_spec *spec = codec->spec;
-+
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
-+
-+	spec->gen.suppress_auto_mute = 1;
-+}
-+
- static const struct hda_fixup stac92hd73xx_fixups[] = {
- 	[STAC_92HD73XX_REF] = {
- 		.type = HDA_FIXUP_FUNC,
-@@ -1922,6 +1935,10 @@ static const struct hda_fixup stac92hd73xx_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = stac92hd73xx_fixup_alienware_m17x,
- 	},
-+	[STAC_ELO_VUPOINT_15MX] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = stac92hd73xx_disable_automute,
-+	},
- 	[STAC_92HD73XX_INTEL] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = intel_dg45id_pin_configs,
-@@ -1960,6 +1977,7 @@ static const struct hda_model_fixup stac92hd73xx_models[] = {
- 	{ .id = STAC_DELL_M6_BOTH, .name = "dell-m6" },
- 	{ .id = STAC_DELL_EQ, .name = "dell-eq" },
- 	{ .id = STAC_ALIENWARE_M17X, .name = "alienware" },
-+	{ .id = STAC_ELO_VUPOINT_15MX, .name = "elo-vupoint-15mx" },
- 	{ .id = STAC_92HD73XX_ASUS_MOBO, .name = "asus-mobo" },
- 	{}
- };
-@@ -2009,6 +2027,8 @@ static const struct snd_pci_quirk stac92hd73xx_fixup_tbl[] = {
- 		      "Alienware M17x", STAC_ALIENWARE_M17X),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_DELL, 0x0490,
- 		      "Alienware M17x R3", STAC_DELL_EQ),
-+	SND_PCI_QUIRK(0x1059, 0x1011,
-+		      "ELO VuPoint 15MX", STAC_ELO_VUPOINT_15MX),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x1927,
- 				"HP Z1 G2", STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x2b17,
+ 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
+ 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
+-		port->interrupt_out_buffer, port->interrupt_out_size,
++		port->interrupt_out_buffer, actual_size,
+ 		cypress_write_int_callback, port, priv->write_urb_interval);
+ 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
+ 	if (result) {
 -- 
 2.20.1
 
