@@ -2,105 +2,93 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABEEC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FA520707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80232071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DfMVZ0FA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfKVTJ2 (ORCPT
+        id S1726980AbfKVTNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:09:28 -0500
-Received: from mga05.intel.com ([192.55.52.43]:37384 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfKVTJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:09:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 11:09:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="259799981"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Nov 2019 11:09:27 -0800
-Date:   Fri, 22 Nov 2019 11:09:27 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 12/19] x86/vmx: Introduce VMX_FEATURES_*
-Message-ID: <20191122190927.GB31235@linux.intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-13-sean.j.christopherson@intel.com>
- <20191121165250.GK6540@zn.tnic>
- <20191121215017.GC16617@linux.intel.com>
- <20191122183641.GJ6289@zn.tnic>
+        Fri, 22 Nov 2019 14:13:32 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41314 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfKVTNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:13:31 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAMJDR4C075675;
+        Fri, 22 Nov 2019 13:13:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574450007;
+        bh=/UE78adoj5jfmn5s0/pawIXnBxu/CSqkZM2E28jJp4Q=;
+        h=From:To:CC:Subject:Date;
+        b=DfMVZ0FAdIQLQFoNtEN+jiLma4oIRpzR9utWKYX7T6Ct1HWgeJgOvNuQFPUK1lauu
+         F3l2GbWXmCPPrRfQtH0K105yspfI0N5lMqW9xqemoRC7JSHx7NIz6uphbTjrfhUIK0
+         gGviVnCdqgNDb8ymXzuXge8+Yp/hWpdGYMBguCwU=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAMJDRdu025466
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Nov 2019 13:13:27 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 22
+ Nov 2019 13:13:26 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 22 Nov 2019 13:13:26 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAMJDQTs103737;
+        Fri, 22 Nov 2019 13:13:26 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Benoit Parrot <bparrot@ti.com>
+Subject: [PATCH] dtc: checks: check_graph_port: skip node name check in overlay case
+Date:   Fri, 22 Nov 2019 13:16:31 -0600
+Message-ID: <20191122191631.2382-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122183641.GJ6289@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 07:36:41PM +0100, Borislav Petkov wrote:
-> On Thu, Nov 21, 2019 at 01:50:17PM -0800, Sean Christopherson wrote:
-> > As for why I want to keep these out of cpu_has()... VMX has a concept of
-> > features being fixed "on", e.g. early CPUs don't allow disabling off CR3
-> > interception.  A cpu_has() approach doesn't work well since it loses the
-> > information regarding which bits are fixed-1.  KVM also has several module
-> > params that can be used to disable use of features, i.e. we don't want
-> > cpu_has() for VMX features because the KVM-specific variables need to be
-> > the canonical reference.
-> 
-> Well, you can use the cpu_has() machinery for stuff like that too - we
-> can clear bits there too: clear_cpu_cap() - and since clearing those
-> bits are only for /proc/cpuinfo reporting, it's not like anything would
-> break if that flag is gone. Just saying, in case you want to use the
-> machinery for that.
+In check_graph_port() we need to skip the node name check in the overlay
+case as it causes a false positive warning.
 
-It doesn't fit the KVM use case very well.  There is an obnoxious amount
-of legacy KVM code that exists only to support old processors (10+ years
-old), but that we can't get rid of because people are still actively
-running KVM on old hardware.  KVM provides module params so that we can
-easily test those flows on modern hardware, e.g. for certain changes I'll
-reload and retest KVM 2-3 times with different settings.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ checks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-In theory we could do something like recompute VMX_FEATURE_* when KVM is
-loaded, but that'd be a bit ugly and there are also tenative plans to move
-the relevant module params under an ioctl() so that they can be toggled on
-a per-VM basis to help automate testing, and IIRC for customers running
-certain legacy workloads alongside normal VMs
+diff --git a/checks.c b/checks.c
+index 756f0fa9203f..6b6712da146a 100644
+--- a/checks.c
++++ b/checks.c
+@@ -1707,7 +1707,8 @@ static void check_graph_port(struct check *c, struct dt_info *dti,
+ 	if (node->bus != &graph_port_bus)
+ 		return;
+ 
+-	if (!strprefixeq(node->name, node->basenamelen, "port"))
++	if (!strprefixeq(node->name, node->basenamelen, "port") &&
++	    !(dti->dtsflags & DTSF_PLUGIN))
+ 		FAIL(c, dti, node, "graph port node name should be 'port'");
+ 
+ 	check_graph_reg(c, dti, node);
+-- 
+2.17.1
 
-> And that would avoid some of the duplication of having KVM-specific
-> variables *and* VMX_FEATURE_* flags, where latter are not really
-> toggleable but only for /proc/cpuinfo. Especially if you wanna enforce
-> "developers to define a VMX_FEATURE flag when adding support for a new
-> hardware feature."
