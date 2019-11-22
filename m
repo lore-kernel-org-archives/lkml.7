@@ -2,115 +2,84 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B3FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39314C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6D920715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8B420715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 15:32:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wko8uZW+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKVP3U convert rfc822-to-8bit (ORCPT
+        id S1727164AbfKVPck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:29:20 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:40691 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVP3U (ORCPT
+        Fri, 22 Nov 2019 10:32:40 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46150 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVPcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 10:29:20 -0500
-X-Originating-IP: 153.3.140.100
-Received: from localhost (unknown [153.3.140.100])
-        (Authenticated sender: fly@kernel.page)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 7FDC91C001A;
-        Fri, 22 Nov 2019 15:29:05 +0000 (UTC)
-Date:   Fri, 22 Nov 2019 23:28:47 +0800
-From:   Pengfei Li <fly@kernel.page>
-To:     "lixinhai.lxh@gmail.com" <lixinhai.lxh@gmail.com>
-Cc:     akpm <akpm@linux-foundation.org>,
-        mgorman <mgorman@techsingularity.net>,
-        "Michal Hocko" <mhocko@kernel.org>,
-        "Vlastimil Babka" <vbabka@suse.cz>, cl <cl@linux.com>,
-        "iamjoonsoo.kim" <iamjoonsoo.kim@lge.com>, guro <guro@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>, fly@kernel.page
-Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
-Message-ID: <20191122232847.3ad94414.fly@kernel.page>
-In-Reply-To: <2019112215245905276118@gmail.com>
-References: <20191121151811.49742-1-fly@kernel.page>
-        <2019112215245905276118@gmail.com>
+        Fri, 22 Nov 2019 10:32:39 -0500
+Received: by mail-qt1-f193.google.com with SMTP id r20so8189614qtp.13;
+        Fri, 22 Nov 2019 07:32:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=3dYqDBTtgP5XtAXKi8VqGBK1T+2eM5ua2xkGVDRu3sU=;
+        b=Wko8uZW+HZHX101h/glfPk2TwQpX8eA3RoRJBlvcPjKO1YFB1gAZNm/aJKbEeWM2mC
+         WoLhmD4VPMBtvS724RLDe7TmnR9C2GjaykNl6ZO1A5l3gqQ/aYDLVCAIzyho/j5jW5tM
+         B1rZjzj+OpHMmHNyz8V25I1+PEwBD/01txRDavVizPaFck1cRiLwIxIbMOwbV8FE13oy
+         HPfw2WK0ktZbufdrr35VjTjsi26eWHz+N4cfFynalx0qoX25B8r7BWjCYanXuYI60lY5
+         /ZveS/yy8OKJQKS4CvmE4p6zvLrqrRcRxOuhDnK09lgIRspFCyM6HKpJGJwgeQYtRHOg
+         OQqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=3dYqDBTtgP5XtAXKi8VqGBK1T+2eM5ua2xkGVDRu3sU=;
+        b=CD7rWBQcn67sgAR4FYU0Wr0MSy0tzKxScSCG342hq8JKMgV4/iIVLCWQDLQebMsbpD
+         JRONRqIVJsj2RhRZGmeHGN9Pj762NmOHkIF1dRFNN+3MwfOgsW9FAVX/fmJwWv1WLSLT
+         2Y7MgF2Z7rpOclCgsFEfT4vRsH+ZRbSiZBIt2IY7uEMwgK3hCxUkER6Pgra2Z0jUEjlX
+         iK07j9sXmOCNcMdPHDT4MBBVZ3bDa1qkrHXfU0LbOaGc8g/A45XI7UaAjqlMq1E+Ldm/
+         77uWed8GJPaeZSFOzLOJV7Gow1DkN7qd1mLkhWbsYXuPWJTW3+2FHxX20VjOd7b+HODc
+         4NDg==
+X-Gm-Message-State: APjAAAVXLz/QA5WhVsxxva5Py1riHeYppLjTiR9QqMryGYjIUXy/qtqx
+        IxLGfJ82GribpNsmMKRVw8w=
+X-Google-Smtp-Source: APXvYqxpWhu362qs5B2IRWYx9RpSlMLPqgpS0sjhL2aS+shabDbMr8Vc1kJtregaLu4VwhXrb0Nxtw==
+X-Received: by 2002:ac8:661a:: with SMTP id c26mr14774515qtp.317.1574436758716;
+        Fri, 22 Nov 2019 07:32:38 -0800 (PST)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id v189sm3149907qkc.37.2019.11.22.07.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 07:32:37 -0800 (PST)
+Date:   Fri, 22 Nov 2019 10:32:36 -0500
+Message-ID: <20191122103236.GB1112895@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Chen Wandun <chenwandun@huawei.com>
+Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenwandun@huawei.com
+Subject: Re: [PATCH] net: dsa: ocelot: fix "should it be static?" warnings
+In-Reply-To: <1574425965-97890-1-git-send-email-chenwandun@huawei.com>
+References: <1574425965-97890-1-git-send-email-chenwandun@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 15:25:00 +0800
-"lixinhai.lxh@gmail.com" <lixinhai.lxh@gmail.com> wrote:
-
-> On 2019-11-21 at 23:17 Pengfei Li wrote:
-> >Motivation
-> >----------
-> >Currently if we want to iterate through all the nodes we have to
-> >traverse all the zones from the zonelist.
-> >
-> >So in order to reduce the number of loops required to traverse node,
-> >this series of patches modified the zonelist to nodelist.
-> >
-> >Two new macros have been introduced:
-> >1) for_each_node_nlist
-> >2) for_each_node_nlist_nodemask
-> >
-> >
-> >Benefit
-> >-------
-> >1. For a NUMA system with N nodes, each node has M zones, the number
-> >   of loops is reduced from N*M times to N times when traversing
-> >node.
-> > 
+On Fri, 22 Nov 2019 20:32:45 +0800, Chen Wandun <chenwandun@huawei.com> wrote:
+> Fix following sparse warnings:
+> drivers/net/dsa/ocelot/felix.c:351:6: warning: symbol 'felix_txtstamp' was not declared. Should it be static?
 > 
-> It looks to me that we don't really have system which has N nodes and 
-> each node with M zones in its address range. 
-> We may have systems which has several nodes, but only the first node
-> has all zone types, other nodes only have NORMAL zone. (Evenly
-> distribute the !NORMAL zones on all nodes is not reasonable, as those
-> zones have limited size)
-> So iterate over zones to reach nodes should at N level, not M*N level.
-> 
+> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 
-Thanks for your comments.
-
-In the case you said, the number of loops required to traverse all
-nodes is similar to traversing all zones.
-
-I have two main reasons to explain that this series of patches is
-beneficial.
-
-1. When node has more than one zone, it will take fewer cycles to
-traverse all nodes. (for example, ZONE_MOVABLE?)
-
-2. Using zonelist to traverse all nodes is inefficient, pgdat must be
-obtained indirectly via zone->zone_pgdat, and additional judgment must
-be made.
-
-E.g
-1) Using zonelist to traverse all nodes
-
-	last_pgdat = NULL;	
-	for_each_zone_zonelist(zone, xxx) {
-		pgdat = zone->zone_pgdat;
-		if (pgdat == last_pgdat)
-			continue;
-
-		last_pgdat = pgdat;
-		do_something(pgdat);
-	}
-
-2) Using nodelist to traverse all nodes
-
-	for_each_node_nodelist(node, xxx) {
-		do_something(NODE_INFO(node));
-	}
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
