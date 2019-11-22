@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F83C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBDBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB17220674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AE420409
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403820;
-	bh=/Zi2JJggweyWVP5NRpyxetgFN/YDU6F1gRDEuuhs4u8=;
+	s=default; t=1574403824;
+	bh=cE1PO+QmHaBe5myBtegunEdnraOxCVMCTh1gItlg7xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=idirZYmB0hQjQKG2RhZCTYzz5bIEJlxyBy3R2Z/1TfRWGg48MtRkVZ4LCb/0r0aQ5
-	 Z8dIBhmhOTmA1C/+/AjMv94+S7PwB4JQyefF/KGt+IX/2wYUm/aXj6mi6wZRy8iTBf
-	 Hrqj7rL8QB2GF8qvo/q3g39CDn44Ou8+WwP5K1wQ=
+	b=cJ5LLe5uyqdz7UN4d9/gFggv6w0gcmFGc6fCrhHI4OE//olczXyx8HpLDQd5YacCn
+	 YO/v0NMBlGzfEg4v+BOCKypmmBxaB9FDAQ6TUCUJE08X83hFZmnDYzlLUQKXpRSiSc
+	 pvt9pArR+nkG7jHHQSOCrbKk81qSDGejWJvalm94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfKVGXj (ORCPT
+        id S1728223AbfKVFvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:23:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56884 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbfKVFvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:41 -0500
+        id S1726802AbfKVFvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3DFE2071F;
-        Fri, 22 Nov 2019 05:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE3F72073F;
+        Fri, 22 Nov 2019 05:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401900;
-        bh=/Zi2JJggweyWVP5NRpyxetgFN/YDU6F1gRDEuuhs4u8=;
+        s=default; t=1574401892;
+        bh=cE1PO+QmHaBe5myBtegunEdnraOxCVMCTh1gItlg7xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6VCLKNs0o/KiQxK3R1jRksqGfCJGvTS/khvJtN4YveFw09W8EXXDTlPBpkjkrEON
-         RMcpxqOLuRiUIYHqgvBw9tEfnwgF9bpt9SK+jupRMv/d39B5iBaAUpFKpF9nDwTuZb
-         PP34r20eWszbT7xcdYPAtyAGzP/QZc/ItudNKYfg=
+        b=zrtEukCoZN2xenMkX+M23pqmlskHC53quzMHKoT5agdE5Xrk4XKwElfB7NUZoD+ml
+         YcSU74J/zEEjzjuxTP3DEicp4RAMy8kH+OET7/sDzXSqGED14gXbquEBHr0hOnLVAd
+         uLHkY2UdgFzaqa1AilfvqZoiFJGqZv5hf9Gc5cB8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Scott Wood <oss@buserror.net>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 132/219] powerpc/83xx: handle machine check caused by watchdog timer
-Date:   Fri, 22 Nov 2019 00:47:44 -0500
-Message-Id: <20191122054911.1750-125-sashal@kernel.org>
+Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 125/219] drbd: ignore "all zero" peer volume sizes in handshake
+Date:   Fri, 22 Nov 2019 00:47:37 -0500
+Message-Id: <20191122054911.1750-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,140 +59,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
 
-[ Upstream commit 0deae39cec6dab3a66794f3e9e83ca4dc30080f1 ]
+[ Upstream commit 94c43a13b8d6e3e0dd77b3536b5e04a84936b762 ]
 
-When the watchdog timer is set in interrupt mode, it causes a
-machine check when it times out. The purpose of this mode is to
-ease debugging, not to crash the kernel and reboot the machine.
+During handshake, if we are diskless ourselves, we used to accept any size
+presented by the peer.
 
-This patch implements a special handling for that, in order to not
-crash the kernel if the watchdog times out while in interrupt or
-within the idle task.
+Which could be zero if that peer was just brought up and connected
+to us without having a disk attached first, in which case both
+peers would just "flip" their volume sizes.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[scottwood: added missing #include]
-Signed-off-by: Scott Wood <oss@buserror.net>
+Now, even a diskless node will ignore "zero" sizes
+presented by a diskless peer.
+
+Also a currently Diskless Primary will refuse to shrink during handshake:
+it may be frozen, and waiting for a "suitable" local disk or peer to
+re-appear (on-no-data-accessible suspend-io). If the peer is smaller
+than what we used to be, it is not suitable.
+
+The logic for a diskless node during handshake is now supposed to be:
+believe the peer, if
+ - I don't have a current size myself
+ - we agree on the size anyways
+ - I do have a current size, am Secondary, and he has the only disk
+ - I do have a current size, am Primary, and he has the only disk,
+   which is larger than my current size
+
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/cputable.h |  1 +
- arch/powerpc/include/asm/reg.h      |  2 ++
- arch/powerpc/kernel/cputable.c      | 10 ++++++----
- arch/powerpc/platforms/83xx/misc.c  | 17 +++++++++++++++++
- 4 files changed, 26 insertions(+), 4 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 33 +++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-index 3ce690e5f345c..59b35b93eadec 100644
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -44,6 +44,7 @@ extern int machine_check_e500(struct pt_regs *regs);
- extern int machine_check_e200(struct pt_regs *regs);
- extern int machine_check_47x(struct pt_regs *regs);
- int machine_check_8xx(struct pt_regs *regs);
-+int machine_check_83xx(struct pt_regs *regs);
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 3cdadf75c82da..c9e8d61dea248 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -3980,6 +3980,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	struct o_qlim *o = (connection->agreed_features & DRBD_FF_WSAME) ? p->qlim : NULL;
+ 	enum determine_dev_size dd = DS_UNCHANGED;
+ 	sector_t p_size, p_usize, p_csize, my_usize;
++	sector_t new_size, cur_size;
+ 	int ldsc = 0; /* local disk size changed */
+ 	enum dds_flags ddsf;
  
- extern void cpu_down_flush_e500v2(void);
- extern void cpu_down_flush_e500mc(void);
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index 640a4d818772a..af99716615122 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -768,6 +768,8 @@
- #define   SRR1_PROGTRAP		0x00020000 /* Trap */
- #define   SRR1_PROGADDR		0x00010000 /* SRR0 contains subsequent addr */
+@@ -3987,6 +3988,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	if (!peer_device)
+ 		return config_unknown_volume(connection, pi);
+ 	device = peer_device->device;
++	cur_size = drbd_get_capacity(device->this_bdev);
  
-+#define   SRR1_MCE_MCP		0x00080000 /* Machine check signal caused interrupt */
-+
- #define SPRN_HSRR0	0x13A	/* Save/Restore Register 0 */
- #define SPRN_HSRR1	0x13B	/* Save/Restore Register 1 */
- #define   HSRR1_DENORM		0x00100000 /* Denorm exception */
-diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
-index 2da01340c84c3..1eab54bc6ee93 100644
---- a/arch/powerpc/kernel/cputable.c
-+++ b/arch/powerpc/kernel/cputable.c
-@@ -1141,6 +1141,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.machine_check		= machine_check_generic,
- 		.platform		= "ppc603",
- 	},
-+#ifdef CONFIG_PPC_83xx
- 	{	/* e300c1 (a 603e core, plus some) on 83xx */
- 		.pvr_mask		= 0x7fff0000,
- 		.pvr_value		= 0x00830000,
-@@ -1151,7 +1152,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.platform		= "ppc603",
- 	},
- 	{	/* e300c2 (an e300c1 core, plus some, minus FPU) on 83xx */
-@@ -1165,7 +1166,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.platform		= "ppc603",
- 	},
- 	{	/* e300c3 (e300c1, plus one IU, half cache size) on 83xx */
-@@ -1179,7 +1180,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.num_pmcs		= 4,
- 		.oprofile_cpu_type	= "ppc/e300",
- 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
-@@ -1196,12 +1197,13 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.num_pmcs		= 4,
- 		.oprofile_cpu_type	= "ppc/e300",
- 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
- 		.platform		= "ppc603",
- 	},
-+#endif
- 	{	/* default match, we assume split I/D cache & TB (non-601)... */
- 		.pvr_mask		= 0x00000000,
- 		.pvr_value		= 0x00000000,
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index d75c9816a5c92..2b6589fe812dd 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -14,6 +14,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
+ 	p_size = be64_to_cpu(p->d_size);
+ 	p_usize = be64_to_cpu(p->u_size);
+@@ -3997,7 +3999,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	device->p_size = p_size;
  
-+#include <asm/debug.h>
- #include <asm/io.h>
- #include <asm/hw_irq.h>
- #include <asm/ipic.h>
-@@ -150,3 +151,19 @@ void __init mpc83xx_setup_arch(void)
+ 	if (get_ldev(device)) {
+-		sector_t new_size, cur_size;
+ 		rcu_read_lock();
+ 		my_usize = rcu_dereference(device->ldev->disk_conf)->disk_size;
+ 		rcu_read_unlock();
+@@ -4015,7 +4016,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 		/* Never shrink a device with usable data during connect.
+ 		   But allow online shrinking if we are connected. */
+ 		new_size = drbd_new_dev_size(device, device->ldev, p_usize, 0);
+-		cur_size = drbd_get_capacity(device->this_bdev);
+ 		if (new_size < cur_size &&
+ 		    device->state.disk >= D_OUTDATED &&
+ 		    device->state.conn < C_CONNECTED) {
+@@ -4080,9 +4080,36 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 		 *
+ 		 * However, if he sends a zero current size,
+ 		 * take his (user-capped or) backing disk size anyways.
++		 *
++		 * Unless of course he does not have a disk himself.
++		 * In which case we ignore this completely.
+ 		 */
++		sector_t new_size = p_csize ?: p_usize ?: p_size;
+ 		drbd_reconsider_queue_parameters(device, NULL, o);
+-		drbd_set_my_capacity(device, p_csize ?: p_usize ?: p_size);
++		if (new_size == 0) {
++			/* Ignore, peer does not know nothing. */
++		} else if (new_size == cur_size) {
++			/* nothing to do */
++		} else if (cur_size != 0 && p_size == 0) {
++			drbd_warn(device, "Ignored diskless peer device size (peer:%llu != me:%llu sectors)!\n",
++					(unsigned long long)new_size, (unsigned long long)cur_size);
++		} else if (new_size < cur_size && device->state.role == R_PRIMARY) {
++			drbd_err(device, "The peer's device size is too small! (%llu < %llu sectors); demote me first!\n",
++					(unsigned long long)new_size, (unsigned long long)cur_size);
++			conn_request_state(peer_device->connection, NS(conn, C_DISCONNECTING), CS_HARD);
++			return -EIO;
++		} else {
++			/* I believe the peer, if
++			 *  - I don't have a current size myself
++			 *  - we agree on the size anyways
++			 *  - I do have a current size, am Secondary,
++			 *    and he has the only disk
++			 *  - I do have a current size, am Primary,
++			 *    and he has the only disk,
++			 *    which is larger than my current size
++			 */
++			drbd_set_my_capacity(device, new_size);
++		}
+ 	}
  
- 	mpc83xx_setup_pci();
- }
-+
-+int machine_check_83xx(struct pt_regs *regs)
-+{
-+	u32 mask = 1 << (31 - IPIC_MCP_WDT);
-+
-+	if (!(regs->msr & SRR1_MCE_MCP) || !(ipic_get_mcp_status() & mask))
-+		return machine_check_generic(regs);
-+	ipic_clear_mcp_status(mask);
-+
-+	if (debugger_fault_handler(regs))
-+		return 1;
-+
-+	die("Watchdog NMI Reset", regs, 0);
-+
-+	return 1;
-+}
+ 	if (get_ldev(device)) {
 -- 
 2.20.1
 
