@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB29C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E179C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB552072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D6B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419909;
-	bh=iUAeOmTC6KKyCJsPjqadlOssi2y1HjidqPkef2RGGfQ=;
+	s=default; t=1574419914;
+	bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dz79m6by2LKSGcT5H+6zAY2fu/lN79hKgggNy6/Ypemi9Cs2FW2ChdBeTKZ6k3qD6
-	 Ug6k3NFJ0w9JzESfdbIbBFk6e0UKPFwdmDVR5R5gejoRg76TKo8xRVUsPTY5fg0naY
-	 JakIMKsRd+1HvxGaZU7bSNS4Jm3bL2Gdt9C0Il7w=
+	b=DMPn1diXPbTOTs8MG1QIiBQzAkx5O+dZlCrsulLt38w+S/lXs+rIVCWiS2EFxccjw
+	 msxow+rEtgQtEVMa044DtYl8DOvCd7t+nbFlQWl++BfEJKiwjztrsYQO3a2y2ZOrBB
+	 0RP1j232OXffw3SO9WGcKChB0OHKilwkaqI6rkDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbfKVKvs (ORCPT
+        id S1730112AbfKVKvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730100AbfKVKvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:44 -0500
+        id S1729281AbfKVKvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CAE20718;
-        Fri, 22 Nov 2019 10:51:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 542A32073B;
+        Fri, 22 Nov 2019 10:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419903;
-        bh=iUAeOmTC6KKyCJsPjqadlOssi2y1HjidqPkef2RGGfQ=;
+        s=default; t=1574419906;
+        bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qSv1MehF/7IWNPKX/bDqre7knEjp38HGeiAPDTeYIvqvnEdsiXw4piB7yCNfwZlzz
-         spjYMvntOItknMLcd3RDW3Mjw4h5reKUQGoYm569dFoP/dR1NvS1Z5g1okvsQZmKqp
-         T4GiQ5SExMP+FJ6KDi+Qp2ko54Umnr9OieAtIG6A=
+        b=JLgz0QhqwwKBUew4u+TTYNEKbmzpfN/uGQ6JtA7eR3y9O1906HgYEZU4StCXyr8Od
+         9RydVAzbrPk3HlBwarcuUpw9vaPiT2qew5sLOsf7E21qS2IArIac+KeGJWWIoYOpTH
+         Ik7ouLOLU5Js42VkOfw1ue9+T3vI9pQCQ8lgmKps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
+        NeilBrown <neilb@suse.com>, Shaohua Li <shli@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/122] clocksource/drivers/sh_cmt: Fix clocksource width for 32-bit machines
-Date:   Fri, 22 Nov 2019 11:28:21 +0100
-Message-Id: <20191122100756.726284211@linuxfoundation.org>
+Subject: [PATCH 4.14 049/122] md: allow metadata updates while suspending an array - fix
+Date:   Fri, 22 Nov 2019 11:28:22 +0100
+Message-Id: <20191122100757.092527726@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -63,58 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: NeilBrown <neilb@suse.com>
 
-[ Upstream commit 37e7742c55ba856eaec7e35673ee370f36eb17f3 ]
+[ Upstream commit 059421e041eb461fb2b3e81c9adaec18ef03ca3c ]
 
-The driver seems to abuse *unsigned long* not only for the (32-bit)
-register values but also for the 'sh_cmt_channel::total_cycles' which
-needs to always be 64-bit -- as a result, the clocksource's mask is
-needlessly clamped down to 32-bits on the 32-bit machines...
+Commit 35bfc52187f6 ("md: allow metadata update while suspending.")
+added support for allowing md_check_recovery() to still perform
+metadata updates while the array is entering the 'suspended' state.
+This is needed to allow the processes of entering the state to
+complete.
 
-Fixes: 19bdc9d061bc ("clocksource: sh_cmt clocksource support")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Unfortunately, the patch doesn't really work.  The test for
+"mddev->suspended" at the start of md_check_recovery() means that the
+function doesn't try to do anything at all while entering suspend.
+
+This patch moves the code of updating the metadata while suspending to
+*before* the test on mddev->suspended.
+
+Reported-by: Jeff Mahoney <jeffm@suse.com>
+Fixes: 35bfc52187f6 ("md: allow metadata update while suspending.")
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Shaohua Li <shli@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/sh_cmt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/md/md.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-index 560541f53c8d9..3cd62f7c33e30 100644
---- a/drivers/clocksource/sh_cmt.c
-+++ b/drivers/clocksource/sh_cmt.c
-@@ -105,7 +105,7 @@ struct sh_cmt_channel {
- 	raw_spinlock_t lock;
- 	struct clock_event_device ced;
- 	struct clocksource cs;
--	unsigned long total_cycles;
-+	u64 total_cycles;
- 	bool cs_enabled;
- };
- 
-@@ -607,8 +607,8 @@ static u64 sh_cmt_clocksource_read(struct clocksource *cs)
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index e529cef5483a8..b942c74f1ce83 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8736,6 +8736,18 @@ static void md_start_sync(struct work_struct *ws)
+  */
+ void md_check_recovery(struct mddev *mddev)
  {
- 	struct sh_cmt_channel *ch = cs_to_sh_cmt(cs);
- 	unsigned long flags;
--	unsigned long value;
- 	u32 has_wrapped;
-+	u64 value;
- 	u32 raw;
++	if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
++		/* Write superblock - thread that called mddev_suspend()
++		 * holds reconfig_mutex for us.
++		 */
++		set_bit(MD_UPDATING_SB, &mddev->flags);
++		smp_mb__after_atomic();
++		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
++			md_update_sb(mddev, 0);
++		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
++		wake_up(&mddev->sb_wait);
++	}
++
+ 	if (mddev->suspended)
+ 		return;
  
- 	raw_spin_lock_irqsave(&ch->lock, flags);
-@@ -682,7 +682,7 @@ static int sh_cmt_register_clocksource(struct sh_cmt_channel *ch,
- 	cs->disable = sh_cmt_clocksource_disable;
- 	cs->suspend = sh_cmt_clocksource_suspend;
- 	cs->resume = sh_cmt_clocksource_resume;
--	cs->mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
-+	cs->mask = CLOCKSOURCE_MASK(sizeof(u64) * 8);
- 	cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
- 
- 	dev_info(&ch->cmt->pdev->dev, "ch%u: used as clock source\n",
+@@ -8896,16 +8908,6 @@ void md_check_recovery(struct mddev *mddev)
+ 	unlock:
+ 		wake_up(&mddev->sb_wait);
+ 		mddev_unlock(mddev);
+-	} else if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
+-		/* Write superblock - thread that called mddev_suspend()
+-		 * holds reconfig_mutex for us.
+-		 */
+-		set_bit(MD_UPDATING_SB, &mddev->flags);
+-		smp_mb__after_atomic();
+-		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
+-			md_update_sb(mddev, 0);
+-		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
+-		wake_up(&mddev->sb_wait);
+ 	}
+ }
+ EXPORT_SYMBOL(md_check_recovery);
 -- 
 2.20.1
 
