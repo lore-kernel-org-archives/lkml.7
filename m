@@ -2,151 +2,140 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E42BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD01C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B922064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E2620714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pj4DGDZ1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="egY9Rh7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfKVXxK (ORCPT
+        id S1726912AbfKVXxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:53:10 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33575 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKVXxI (ORCPT
+        Fri, 22 Nov 2019 18:53:42 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34156 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726638AbfKVXxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 18:53:08 -0500
-Received: by mail-pg1-f196.google.com with SMTP id h27so4105315pgn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 15:53:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hGAas7kbfHEyduv+qdDvn9qOuG+QbmzDwbHASjA3jcU=;
-        b=pj4DGDZ1nbrVcXZWpL8KUkxPGpmLOFPsaxSKDWTo+GotooYRqGqGPkpynSYiRdngOh
-         cCSWFvHCasu+bQBjEmLAPbCzqtENh6C/41p+62l4bX73LDW5BeDSGCfvfZfDwNCVcWCE
-         RoEcw+qj0Q6X1HCTdeIS32UGXPfXIhYm2dWIpVSwAZRld7EK7pAJeyKOvAJQGRmwuVXE
-         VZIbtCsRCJv98LJatgyTpvsH06/PsYZB2O+F73gHe3lgy7eneevuukJLftYHJzCDcD2T
-         0t4zwLp8L0q5L6d6XMdz9gLAs67stVDPsT1Q/f82FbrQUEgI/lZGUhS4QMHKZpEjABje
-         HafA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=hGAas7kbfHEyduv+qdDvn9qOuG+QbmzDwbHASjA3jcU=;
-        b=PY7KowX2CLQPRqe7Y4pln39Ys0FhbHtxaTv9KVRUgpTA1XcXEyStK/Jxp7hTyud9zV
-         how3z1iyMNHkZpnyiJfuUV1oohEypdMcu1F6vEQTzsmMPZYzfk1vuKEikvF46NkG2cWI
-         sAil6YwZ8MjS/6fzDZj8tbwC5iRcBhhGTM8dJTfN9JDZIrNlChDsV+A9WPgO22v8XKc0
-         SrXRb6+8m7+FytCpQ0K1U1wTCkzyXUMFeusnyxypG/HvHYep7ZTJkG1CBIq+DBYXCF+F
-         9RAa3/hHdI0gUMEMYxWBPdd22RPD5sdBHikgdIXVx/mjGWoqNiZScrz544n0dGkWftkW
-         9FUQ==
-X-Gm-Message-State: APjAAAUz5ysNI4kljjO01yVMr1muVPMWtzpaamFFZ+p4+O/8jpEGdTJT
-        JbjgkNa4tlf0AcEmRWIXn/JM1A==
-X-Google-Smtp-Source: APXvYqw99JsgPoFTCZ13835v1K37KM8rcO8/jaVQxczy+Przjc8a7wzamUt/r7KH8d14gd9sD7OBhA==
-X-Received: by 2002:a62:4d43:: with SMTP id a64mr20955676pfb.197.1574466787744;
-        Fri, 22 Nov 2019 15:53:07 -0800 (PST)
-Received: from localhost ([2620:15c:211:200:12cb:e51e:cbf0:6e3f])
-        by smtp.gmail.com with ESMTPSA id j20sm8374170pff.182.2019.11.22.15.53.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 15:53:07 -0800 (PST)
-Date:   Fri, 22 Nov 2019 15:53:07 -0800 (PST)
-X-Google-Original-Date: Fri, 22 Nov 2019 15:37:38 PST (-0800)
-Subject:     Re: [PATCH 2/2] riscv: defconfigs: enable more debugging options
-In-Reply-To: <20191122225659.21876-3-paul.walmsley@sifive.com>
-CC:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Message-ID: <mhng-8455ab79-f2b9-437d-81ed-814dd06328a4@palmerdabbelt.mtv.corp.google.com>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 22 Nov 2019 18:53:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574466818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=e8LnAK96cO1Kj05+ukhpTbSenDBS0l/Ge53Izwdy1dc=;
+        b=egY9Rh7vKwRVZES4wbxgy9mEEMmdPJggnSamzXldkT/26iUHRDd96k8Xgtx5lfTKfdszsw
+        zt+dDgSER2FZY00jEoR9q7aMmj8fxBtPnFxU8nv9yp+AwKupd2grgCIL8tRncMzrsRXtq2
+        12pVxn3WFjiAUMlZ9mx6hlC7InQDlyM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-94-oS30aRTpOTqH0Wo7idawag-1; Fri, 22 Nov 2019 18:53:37 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B6DE801E74;
+        Fri, 22 Nov 2019 23:53:34 +0000 (UTC)
+Received: from max.com (ovpn-204-21.brq.redhat.com [10.40.204.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF6275C1B5;
+        Fri, 22 Nov 2019 23:53:26 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>, cluster-devel@redhat.com,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <sfrench@samba.org>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [RFC PATCH 0/3] Rework the gfs2 read and page fault locking
+Date:   Sat, 23 Nov 2019 00:53:21 +0100
+Message-Id: <20191122235324.17245-1-agruenba@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: oS30aRTpOTqH0Wo7idawag-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 14:56:59 PST (-0800), Paul Walmsley wrote:
-> Enable more debugging options in the RISC-V defconfigs to help kernel
-> developers catch problems with patches earlier in the development
-> cycle.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> ---
->  arch/riscv/configs/defconfig      | 23 +++++++++++++++++++++++
->  arch/riscv/configs/rv32_defconfig | 23 +++++++++++++++++++++++
->  2 files changed, 46 insertions(+)
->
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index f0710d8f50cc..e2ff95cb3390 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -101,4 +101,27 @@ CONFIG_CRYPTO_USER_API_HASH=y
->  CONFIG_CRYPTO_DEV_VIRTIO=y
->  CONFIG_PRINTK_TIME=y
->  CONFIG_DEBUG_FS=y
-> +CONFIG_DEBUG_PAGEALLOC=y
-> +CONFIG_DEBUG_VM=y
-> +CONFIG_DEBUG_VM_PGFLAGS=y
-> +CONFIG_DEBUG_MEMORY_INIT=y
-> +CONFIG_DEBUG_PER_CPU_MAPS=y
-> +CONFIG_SOFTLOCKUP_DETECTOR=y
-> +CONFIG_WQ_WATCHDOG=y
-> +CONFIG_SCHED_STACK_END_CHECK=y
-> +CONFIG_DEBUG_TIMEKEEPING=y
-> +CONFIG_DEBUG_RT_MUTEXES=y
-> +CONFIG_DEBUG_SPINLOCK=y
-> +CONFIG_DEBUG_MUTEXES=y
-> +CONFIG_DEBUG_RWSEMS=y
-> +CONFIG_DEBUG_ATOMIC_SLEEP=y
-> +CONFIG_STACKTRACE=y
-> +CONFIG_DEBUG_LIST=y
-> +CONFIG_DEBUG_PLIST=y
-> +CONFIG_DEBUG_SG=y
->  # CONFIG_RCU_TRACE is not set
-> +CONFIG_RCU_EQS_DEBUG=y
-> +CONFIG_DEBUG_BLOCK_EXT_DEVT=y
-> +# CONFIG_FTRACE is not set
-> +# CONFIG_RUNTIME_TESTING_MENU is not set
-> +CONFIG_MEMTEST=y
-> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
-> index bdec58e6c5f7..eb519407c841 100644
-> --- a/arch/riscv/configs/rv32_defconfig
-> +++ b/arch/riscv/configs/rv32_defconfig
-> @@ -98,4 +98,27 @@ CONFIG_CRYPTO_USER_API_HASH=y
->  CONFIG_CRYPTO_DEV_VIRTIO=y
->  CONFIG_PRINTK_TIME=y
->  CONFIG_DEBUG_FS=y
-> +CONFIG_DEBUG_PAGEALLOC=y
-> +CONFIG_DEBUG_VM=y
-> +CONFIG_DEBUG_VM_PGFLAGS=y
-> +CONFIG_DEBUG_MEMORY_INIT=y
-> +CONFIG_DEBUG_PER_CPU_MAPS=y
-> +CONFIG_SOFTLOCKUP_DETECTOR=y
-> +CONFIG_WQ_WATCHDOG=y
-> +CONFIG_SCHED_STACK_END_CHECK=y
-> +CONFIG_DEBUG_TIMEKEEPING=y
-> +CONFIG_DEBUG_RT_MUTEXES=y
-> +CONFIG_DEBUG_SPINLOCK=y
-> +CONFIG_DEBUG_MUTEXES=y
-> +CONFIG_DEBUG_RWSEMS=y
-> +CONFIG_DEBUG_ATOMIC_SLEEP=y
-> +CONFIG_STACKTRACE=y
-> +CONFIG_DEBUG_LIST=y
-> +CONFIG_DEBUG_PLIST=y
-> +CONFIG_DEBUG_SG=y
->  # CONFIG_RCU_TRACE is not set
-> +CONFIG_RCU_EQS_DEBUG=y
-> +CONFIG_DEBUG_BLOCK_EXT_DEVT=y
-> +# CONFIG_FTRACE is not set
-> +# CONFIG_RUNTIME_TESTING_MENU is not set
-> +CONFIG_MEMTEST=y
+Hello,
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+this patch series moves the glock lock taking in gfs2 from the
+->readpage and ->readpages inode operations to the ->read_iter file and
+->fault vm operations.  To achieve that, we add flags to the
+generic_file_read_iter and filemap_fault generic helpers.
+
+This proposal was triggered by the following discussion:
+
+https://lore.kernel.org/linux-fsdevel/157225677483.3442.4227193290486305330=
+.stgit@buzz/
+
+In that thread, Linus argued that filesystems should make sure the inode
+size is sufficiently up-to-date before calling the generic helpers, and
+that filesystems can do it themselves if they want more than that.
+That's surely doable.  However, implementing those operations properly
+at the filesystem level quickly becomes complicated when it gets to
+things like readahead.  In addition, those slightly modified copies of
+those helpers would surely diverge from their originals over time, and
+maintaining them properly would become hard.  So I hope the relatively
+small changes to make the original helpers slightly more flexible will
+be acceptable instead.
+
+With the IOCB_CACHED flag added by one of the patches in this series,
+the code that Konstantin's initial patch adds to
+generic_file_buffered_read could be made conditional on the IOCB_CACHED
+flag being cleared.  That way, it won't misfire on filesystems that
+allow a stale inode size.  (I'm not sure if any filesystems other than
+gfs2 are actually affected.)
+
+Some additional explanation:
+
+The cache consistency model of filesystems like gfs2 is such that if
+pages are found in an inode's address space, those pages as well as the
+inode size are up to date and can be used without taking any filesystem
+locks.  If a page is not cached, filesystem locks must be taken before
+the page can be read; this will also bring the inode size up to date.
+
+Thus far, gfs2 has taken the filesystem locks inside the ->readpage and
+->readpages address space operations.  A better approach seems to be to
+take those locks earlier, in the ->read_iter file and ->fault vm
+operations.  This would also avoid a lock inversion in ->readpages.
+
+We obviously want to avoid taking the filesystem locks unnecessarily
+when the pages we are looking for are already cached; otherwise, we
+would cripple performance.  So we need to check if those pages are
+present first.  That's actually exactly what the generic_file_read_iter
+and filemap_fault helpers do already anyway, except that they will call
+into ->readpage and ->readpages when they find pages missing.  Instead
+of that, we'd like those helpers to return with an error code that
+allows us to retry the operation after taking the filesystem locks.
+
+Thanks,
+Andreas
+
+Andreas Gruenbacher (3):
+  fs: Add IOCB_CACHED flag for generic_file_read_iter
+  fs: Add FAULT_FLAG_CACHED flag for filemap_fault
+  gfs2: Rework read and page fault locking
+
+ fs/gfs2/aops.c     | 36 +++++--------------------
+ fs/gfs2/file.c     | 66 ++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/fs.h |  1 +
+ include/linux/mm.h |  4 ++-
+ mm/filemap.c       | 60 ++++++++++++++++++++++++++++++-----------
+ 5 files changed, 119 insertions(+), 48 deletions(-)
+
+--=20
+2.20.1
+
