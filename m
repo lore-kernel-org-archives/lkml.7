@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F11EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A1C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1918C2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9113920715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420101;
-	bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
+	s=default; t=1574420104;
+	bh=Sy7hbScv19rV8NDL9qHrMbFUObG15Smc8I2tCM0i/MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YnEkgN30xuHGLMCLyWSY3rHnXH9XpeX5dnFlAk/VriO5G/7zOusJP5lSPCwqlEwuo
-	 KjWahVSrn4hFqjpAel9VzOQSWh4XmSujoxG0yjHvDcaNgcxbzN4GRPz0zJQovNFsVa
-	 NKhYvH173R8vddRS2OtBdSopBDXoeSizjXcZ3OV8=
+	b=gdgWFu7z9jbMvVYJ2ItdVZHetEBHsLnKfm7Pu0AGYzCmKLFHLMK590rtqZUJNy+yF
+	 x5lt0GpdZVIbgmCqvVT2JmjpN1g4vRnJ2DtMmrJJelEc3bmCv3yZ2aH/3x8XiPyqmZ
+	 YYzsjgGboJI+6al+YjcuNCbzlxKU91w16t0lSqaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfKVKzA (ORCPT
+        id S1730413AbfKVKzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbfKVKy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:58 -0500
+        id S1730394AbfKVKzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CE42071C;
-        Fri, 22 Nov 2019 10:54:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7290E207FA;
+        Fri, 22 Nov 2019 10:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420097;
-        bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
+        s=default; t=1574420101;
+        bh=Sy7hbScv19rV8NDL9qHrMbFUObG15Smc8I2tCM0i/MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rANbdL93v19VceodQY3smlEwk7Yak1rfD4iJTo7+WYAgWTIc/uMv6r5kDnEThrZbO
-         Ch9tKxgxbL3UOHJ6wjqDniwLQvxc40KOzIyrCuX5daq7UdLNEStWtog6t6ElBYyIkS
-         F5pfKSmtiIegLCI5faTQTfhiFbI6s+afrqezmOz0=
+        b=LGMSVDZ+6lnqspqAX4YpR6XG62lQRZ9nV1EPpTBNHiOjlWXDCrSHeKY+WuCXoOTWA
+         243o0FRbJ/pdbwPAVhT+X+z/hOjYw0YvOFvjQ9i2COTyPL8nrKagf3aNh7Je81HXI+
+         aYCOmw7rdRtwfE8hs5l55f5kw2Nbz2w0lb7EALq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 078/122] remoteproc: Check for NULL firmwares in sysfs interface
-Date:   Fri, 22 Nov 2019 11:28:51 +0100
-Message-Id: <20191122100818.237329904@linuxfoundation.org>
+Subject: [PATCH 4.14 114/122] mac80211: minstrel: fix using short preamble CCK rates on HT clients
+Date:   Fri, 22 Nov 2019 11:29:27 +0100
+Message-Id: <20191122100835.630191478@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,41 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit faeadbb64094757150a8c2a3175ca418dbdd472c ]
+[ Upstream commit 37439f2d6e43ae79e22be9be159f0af157468f82 ]
 
-The remoteproc framework provides a sysfs file 'firmware'
-for modifying the firmware image name from userspace. Add
-an additional check to ensure NULL firmwares are errored
-out right away, rather than getting a delayed error while
-requesting a firmware during the start of a remoteproc
-later on.
+mi->supported[MINSTREL_CCK_GROUP] needs to be updated
+short preamble rates need to be marked as supported regardless of
+whether it's currently enabled. Its state can change at any time without
+a rate_update call.
 
-Tested-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 782dda00ab8e ("mac80211: minstrel_ht: move short preamble check out of get_rate")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_sysfs.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mac80211/rc80211_minstrel_ht.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-index 47be411400e56..3a4c3d7cafca3 100644
---- a/drivers/remoteproc/remoteproc_sysfs.c
-+++ b/drivers/remoteproc/remoteproc_sysfs.c
-@@ -48,6 +48,11 @@ static ssize_t firmware_store(struct device *dev,
- 	}
+diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
+index 4a5bdad9f3030..25cb3e5f8b482 100644
+--- a/net/mac80211/rc80211_minstrel_ht.c
++++ b/net/mac80211/rc80211_minstrel_ht.c
+@@ -1132,7 +1132,6 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
+ 	struct ieee80211_mcs_info *mcs = &sta->ht_cap.mcs;
+ 	u16 sta_cap = sta->ht_cap.cap;
+ 	struct ieee80211_sta_vht_cap *vht_cap = &sta->vht_cap;
+-	struct sta_info *sinfo = container_of(sta, struct sta_info, sta);
+ 	int use_vht;
+ 	int n_supported = 0;
+ 	int ack_dur;
+@@ -1258,8 +1257,7 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
+ 	if (!n_supported)
+ 		goto use_legacy;
  
- 	len = strcspn(buf, "\n");
-+	if (!len) {
-+		dev_err(dev, "can't provide a NULL firmware\n");
-+		err = -EINVAL;
-+		goto out;
-+	}
+-	if (test_sta_flag(sinfo, WLAN_STA_SHORT_PREAMBLE))
+-		mi->cck_supported_short |= mi->cck_supported_short << 4;
++	mi->supported[MINSTREL_CCK_GROUP] |= mi->cck_supported_short << 4;
  
- 	p = kstrndup(buf, len, GFP_KERNEL);
- 	if (!p) {
+ 	/* create an initial rate table with the lowest supported rates */
+ 	minstrel_ht_update_stats(mp, mi);
 -- 
 2.20.1
 
