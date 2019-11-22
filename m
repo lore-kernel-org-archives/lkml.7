@@ -2,88 +2,116 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0B7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C11206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9654A206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 03:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574391984;
+	bh=WHOYATGBc/KhbUsY17Xhsk4+WhbvgQ0BBAtu736vu44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KQJU9nzX/0Sllc/oMjzauIzCrHWBLMsyXh68F0BoQM3aPhu28hknbPrrNf5ct0dCu
+	 yjXQnAkYQa5TEmpaSfBfmI0H3vwjua8EiNS8an+DzkTCSphfGIs9K+aFgIO2l46Vjn
+	 TJR/GSPotRUp7JaxK7kPv/6CfZG0Oz3UHk5gfr70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfKVDDE (ORCPT
+        id S1726613AbfKVDGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 22:03:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34986 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbfKVDDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 22:03:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 48413AE2C;
-        Fri, 22 Nov 2019 03:03:02 +0000 (UTC)
-Subject: Re: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
-To:     James Tai <james.tai@realtek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
- <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
- <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
- <6182b89f-cd7e-ce7c-56f7-e2f500321cde@suse.de>
- <993d5da60a87443995347ee2a4c74959@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <6d44e7f8-1ae5-ed3d-ac3c-0ee7903d660b@suse.de>
-Date:   Fri, 22 Nov 2019 04:03:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 21 Nov 2019 22:06:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfKVDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 22:06:23 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC833206B6;
+        Fri, 22 Nov 2019 03:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574391982;
+        bh=WHOYATGBc/KhbUsY17Xhsk4+WhbvgQ0BBAtu736vu44=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wsysb1M4c5Of6auNnd9WrnuX1d02JpYy2mPEoQ+5gjPFolt9aOvDJ6cbTtK9uowg+
+         F3B/IcMPpFYJm+VI2Tz9NzrY3GG//ps0Q2UFi7UhjzC2A/93e1c3Oiee0q/7qX97qx
+         1QSYrvkYUwciXyAbQHhi2Wmon4dgqLNThqpvPjsc=
+Date:   Thu, 21 Nov 2019 19:06:20 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v6 8/8] crypto, x86/sha: Eliminate casts on asm
+ implementations
+Message-ID: <20191122030620.GD32523@sol.localdomain>
+References: <20191122010334.12081-1-keescook@chromium.org>
+ <20191122010334.12081-9-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <993d5da60a87443995347ee2a4c74959@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122010334.12081-9-keescook@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Thu, Nov 21, 2019 at 05:03:34PM -0800, Kees Cook wrote:
+> -asmlinkage void sha1_transform_ssse3(u32 *digest, const char *data,
+> -				     unsigned int rounds);
+> +asmlinkage void sha1_transform_ssse3(struct sha1_state *digest,
+> +				     const u8 *data, int rounds);
 
-Am 20.11.19 um 08:58 schrieb James Tai:
->> This conflicts with what I see in BSP irq mux code here:
->> https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/drivers/ir
->> qchip/irq-rtd16xx.h
->>
->> That does show UR0 as bit 2 for the iso irq mux, as for previous SoCs.
->> Is that code wrong, or does the same UART0 IP block have two alternative
->> interrupts for backwards compatibility? I therefore held back RTD1619 irq mux
->> patches from my irqchip v4 series [1].
->>
-> It is code wrong. The UR0 should remove from "irq-rtd16xx.h".
+Can you please use:
 
-Actually, I just tested that UR0 works! (rev A01) So we shouldn't remove
-it from the irqchip driver, given the mapping changes requested for v5.
+asmlinkage void sha1_transform_ssse3(struct sha1_state *state,
+				     const u8 *data, int blocks);
 
-RTD1619 driver support and DT nodes pushed to my rtd1295-next branch.
+I.e., rename 'digest' => 'state' and 'rounds' => 'blocks'.
 
->> The BSP DT does assign non-mux interrupts to the UART node like you did:
->> https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/arch/arm
->> 64/boot/dts/realtek/rtd16xx/rtd-16xx.dtsi
->> And I obviously trust that you tested your DT to produce serial output.
+(Or alternatively 'sst' instead of 'state' would be okay since that's what
+sha{1,256,512}_block_fn uses, but 'state' seems much clearer to me.)
 
-We should obviously leave the new GIC interrupts in the DT.
+Similarly for the other sha{1,256,512}_transform_*() functions.
 
-Regards,
-Andreas
+'digest' is confusing because it would typically be understood to mean the final
+digest, or maybe also the hash chaining state (e.g. u32[5] for SHA-1) if it's
+interpreted loosely.  I don't think it would typically be understand to also
+include buffered data like struct sha1_state does.
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+'rounds' is confusing because the parameter is actually the number of blocks,
+not the number of rounds -- the latter being fixed for each SHA-* algorithm.
+Since sha{1,256,512}_block_fn already call it 'blocks' and this patch has to
+update the type of this parameter anyway, let's use that.
+
+>  #ifdef CONFIG_AS_AVX
+> -asmlinkage void sha1_transform_avx(u32 *digest, const char *data,
+> -				   unsigned int rounds);
+> +asmlinkage void sha1_transform_avx(struct sha1_state *digest,
+> +				   const u8 *data, int rounds);
+>  
+
+This patch is also still missing updates to the corresponding comments in the
+assembly files:
+
+	sha1_transform_avx()
+	sha1_transform_avx2()
+	sha256_transform_avx()
+	sha256_transform_rorx()
+	sha512_transform_ssse3() [references to D, M, and L remain]
+	sha512_transform_avx()
+	sha512_transform_rorx()
+
+FWIW, this patch is also independent from 1-7, so it could be sent out
+separately if it makes things any easier for you.
+
+Thanks,
+
+- Eric
