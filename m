@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D282FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC1FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975AA20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B390120656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419645;
-	bh=Ezy/2toqxH4vDYuGNzQ7l2KT4KeAUcuyJ9W611bMqB8=;
+	s=default; t=1574419647;
+	bh=XzZBn4TQb5p09UhPbtTd7mbOVh4J/ulq/n1RLpPhf3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVljeGJS7ngMeYNJ16oxy58HZF+06M+Ydj8gSvr8m5ny7+8MTTQ7SfgaAvpLKE7XF
-	 jRJu2NZrD9SdNHd5FoLh5e0Qhq6mcNgmT6m/gpOht3uvfOUqmzDvQbtbBeapZZfcOC
-	 uZB8l7pIJFu6sKgs9DhQSXhgyGpTaTdnjug0+yMM=
+	b=iW66OXFFXJQUErZh4OhDOxQxOGKpZkJXxCZdwGscGFT+YFCbrVP73haozmc3mSsY7
+	 p4LPN4U2zmB6iPZ2ZmgSIoKDDPvtVvTxS8KkWCjHGIs92K7pVKyaFhJk1rWK0RslXl
+	 w164+jcjOkXgSKSK0uK1LsAILXqkha3CylO9ZElA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbfKVKrY (ORCPT
+        id S1729770AbfKVKr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:47:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:47:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbfKVKrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:47:22 -0500
+        id S1727395AbfKVKrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:47:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D74120718;
-        Fri, 22 Nov 2019 10:47:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C9420637;
+        Fri, 22 Nov 2019 10:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419641;
-        bh=Ezy/2toqxH4vDYuGNzQ7l2KT4KeAUcuyJ9W611bMqB8=;
+        s=default; t=1574419644;
+        bh=XzZBn4TQb5p09UhPbtTd7mbOVh4J/ulq/n1RLpPhf3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4jDpmLl5B5hpKbnHBXQ5VwI3IFUTKAxvw5xyirCzpmSlwqCTNh2w8B1fUKng6W4i
-         41UMSXGL7hslaluxgN0qO7e0XTV4oXuzFbT/xDAzX6e00/e/Ka0QGtA1g0QYUEbTeI
-         icY7zE4XkgbB7/6nE1w3J/hPmq7q+r9OEuOoOOQg=
+        b=yy9jsG1GlwcJjY+WQ+ABAjMV75+AkBFld2mWxqJK1YfDBk4bT//k2+3AfqE3OEKJZ
+         uGHN7IaUXyoQnyOg5itiTXNWUSNPUgjWI7gKHLCf+4t0JlOiDWLg5oyfsj0NZTLUuK
+         YHoBZMZ/WbkIkuHx0DpiWon4VTgleoODlRH9v7tc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 165/222] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
-Date:   Fri, 22 Nov 2019 11:28:25 +0100
-Message-Id: <20191122100914.505807337@linuxfoundation.org>
+Subject: [PATCH 4.9 183/222] USB: serial: cypress_m8: fix interrupt-out transfer length
+Date:   Fri, 22 Nov 2019 11:28:43 +0100
+Message-Id: <20191122100915.572628659@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,47 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
+[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
 
-The driver may sleep in an interrupt handler.
-The function call path (from bottom to top) in Linux-4.17 is:
+Fix interrupt-out transfer length which was being set to the
+transfer-buffer length rather than the size of the outgoing packet.
 
-[FUNC] fotg210_ep_queue(GFP_KERNEL)
-drivers/usb/gadget/udc/fotg210-udc.c, 744:
-	fotg210_ep_queue in fotg210_get_status
-drivers/usb/gadget/udc/fotg210-udc.c, 768:
-	fotg210_get_status in fotg210_setup_packet
-drivers/usb/gadget/udc/fotg210-udc.c, 949:
-	fotg210_setup_packet in fotg210_irq (interrupt handler)
+Note that no slab data was leaked as the whole transfer buffer is always
+cleared before each transfer.
 
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
-If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
-can be also removed.
-
-This bug is found by my static analysis tool DSAC.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
+ drivers/usb/serial/cypress_m8.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
-index 95df2b3bb6a1a..76e991557116a 100644
---- a/drivers/usb/gadget/udc/fotg210-udc.c
-+++ b/drivers/usb/gadget/udc/fotg210-udc.c
-@@ -744,7 +744,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
- 	fotg210->ep0_req->length = 2;
+diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
+index bbeeb2bd55a83..2c915be1db4ce 100644
+--- a/drivers/usb/serial/cypress_m8.c
++++ b/drivers/usb/serial/cypress_m8.c
+@@ -773,7 +773,7 @@ static void cypress_send(struct usb_serial_port *port)
  
- 	spin_unlock(&fotg210->lock);
--	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
-+	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
- 	spin_lock(&fotg210->lock);
- }
- 
+ 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
+ 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
+-		port->interrupt_out_buffer, port->interrupt_out_size,
++		port->interrupt_out_buffer, actual_size,
+ 		cypress_write_int_callback, port, priv->write_urb_interval);
+ 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
+ 	if (result) {
 -- 
 2.20.1
 
