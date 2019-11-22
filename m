@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC619C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C182070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADBE2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402253;
-	bh=uAYZUiGgVZVA8TdMU5/qfdvQ0kgDh1SXmr8vRZKpNZc=;
+	s=default; t=1574402256;
+	bh=I+9HfdYWanbujl1taV32XPKQTdpZAE/Rjg/alK72ODc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/gVSfuKZ63QQ2BeV/lVDy5DQa4FhEI/wFk2s5TtHAI4DagCocRkyIfBoRkFO6oqb
-	 zhXsXV/jI/yUxi3rPkFPD0hx1qjq8thbyTY4VE4yLvH7s75+FD98TebwifN59+M+S4
-	 kNrkxAv/hs4epKCIkv4TOTjArGAaWb4w9oXxnEw0=
+	b=LP6YvSogEDtSugX4jmvcBbNQ9K7poKEmK6jiQpzeXCkRiBllNhIbe3PcRCvNZ08X9
+	 SbuOxV2QW9lKd3o1PMXBp4ZU2t2K5Wl4u/0x08l5uh0sJPQ7eXGeh/B9FZdPTSfc3h
+	 yXSA+mwLY9q7+WD5KS3tlmL9+s6D1ZZpexl8z/M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKVF5b (ORCPT
+        id S1729471AbfKVF5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35612 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfKVF5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:19 -0500
+        id S1729419AbfKVF5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD9BE207FC;
-        Fri, 22 Nov 2019 05:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42CAF2070A;
+        Fri, 22 Nov 2019 05:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402238;
-        bh=uAYZUiGgVZVA8TdMU5/qfdvQ0kgDh1SXmr8vRZKpNZc=;
+        s=default; t=1574402243;
+        bh=I+9HfdYWanbujl1taV32XPKQTdpZAE/Rjg/alK72ODc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzKK302VcYvJFFo7kva7NWMVthVCuFws18/JDtkX9oRDhmMQaJGYHWl2ZmSdOhN6p
-         MuBcyLQIpRhxSuWvFeMZ1D4bn5VX2F7u08AjJx9VHDnLfd9+nLsCXCSPWzTb6JB8kb
-         maqT2lGY/eO+TNQZ8MDpTNn7RcOyBmWIZpTmihv0=
+        b=Y4wAq67/rxl1EMyMut9u+Ljf+JZnkEOv1Xsw7xF6Z/+6UNWlRb74F9gDQEw/ocUa0
+         uBtqPSDsEDyxIKruIAs9lGmj8honqKc+J5o3y+9mAjkX/FXkFnadJohBTQvo1SO+2W
+         LkFQ0R5I2XsdkWBYgpjyotT0wI3LOFOIjmM5FMF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 083/127] f2fs: fix to dirty inode synchronously
-Date:   Fri, 22 Nov 2019 00:55:01 -0500
-Message-Id: <20191122055544.3299-82-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/127] atl1e: checking the status of atl1e_write_phy_reg
+Date:   Fri, 22 Nov 2019 00:55:06 -0500
+Message-Id: <20191122055544.3299-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit b32e019049e959ee10ec359893c9dd5d057dad55 ]
+[ Upstream commit ff07d48d7bc0974d4f96a85a4df14564fb09f1ef ]
 
-If user change inode's i_flags via ioctl, let's add it into global
-dirty list, so that checkpoint can guarantee its persistence before
-fsync, it can make checkpoint keeping strong consistency.
+atl1e_write_phy_reg() could fail. The fix issues an error message when
+it fails.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/atheros/atl1e/atl1e_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 1b17921994459..d68b0132718a6 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1593,7 +1593,7 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+diff --git a/drivers/net/ethernet/atheros/atl1e/atl1e_main.c b/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+index 4f7e195af0bc6..0d08039981b54 100644
+--- a/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
++++ b/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+@@ -472,7 +472,9 @@ static void atl1e_mdio_write(struct net_device *netdev, int phy_id,
+ {
+ 	struct atl1e_adapter *adapter = netdev_priv(netdev);
  
- 	inode->i_ctime = current_time(inode);
- 	f2fs_set_inode_flags(inode);
--	f2fs_mark_inode_dirty_sync(inode, false);
-+	f2fs_mark_inode_dirty_sync(inode, true);
- 	return 0;
+-	atl1e_write_phy_reg(&adapter->hw, reg_num & MDIO_REG_ADDR_MASK, val);
++	if (atl1e_write_phy_reg(&adapter->hw,
++				reg_num & MDIO_REG_ADDR_MASK, val))
++		netdev_err(netdev, "write phy register failed\n");
  }
  
+ static int atl1e_mii_ioctl(struct net_device *netdev,
 -- 
 2.20.1
 
