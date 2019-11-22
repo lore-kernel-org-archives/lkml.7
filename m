@@ -2,89 +2,93 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA665C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD58BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AD02071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8A42072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="klUjxbev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfKVQBq (ORCPT
+        id S1727258AbfKVQCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:01:46 -0500
-Received: from mga17.intel.com ([192.55.52.151]:7773 "EHLO mga17.intel.com"
+        Fri, 22 Nov 2019 11:02:39 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48650 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbfKVQBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:01:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 08:01:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="408930168"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Nov 2019 08:01:45 -0800
-Received: from [10.251.82.176] (abudanko-mobl.ccr.corp.intel.com [10.251.82.176])
-        by linux.intel.com (Postfix) with ESMTP id 0C86C58049B;
-        Fri, 22 Nov 2019 08:01:42 -0800 (PST)
-Subject: Re: [PATCH v1 2/3] perf mmap: declare type for cpu mask of arbitrary
- length
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        id S1726633AbfKVQCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 11:02:38 -0500
+Received: from zn.tnic (p200300EC2F0E9700617A286416B6740E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:9700:617a:2864:16b6:740e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B35C1EC0D02;
+        Fri, 22 Nov 2019 17:02:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574438557;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=h4hPZVDGhlJ/nVahWCNAYi0rixY8BxMyl5rH5OiLiT8=;
+        b=klUjxbevxiSgkfiTyTD/bZ/K+Cywo2jaMwkNJWrueBGvXxKeqgxub19AJk5N/Ihhiw0Ooi
+        hqGIquKBvf7lD2VmnVaMjbQ5HZc9itIwfYBeiHxEdNdXIX1sH9CtPA6GfNP0Rt2EF81P7w
+        X6BxRgSCuiHiOIuL63ufRfGaMzgzlxU=
+Date:   Fri, 22 Nov 2019 17:02:30 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
- <0c716b33-a91e-2972-637f-e7c3a187fa77@linux.intel.com>
- <20191122131513.GE17308@krava>
- <53af9c5c-a33d-4fc4-88e9-851b1caad3f1@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <61ce5a52-9c34-f936-b09b-f8f59cedcb66@linux.intel.com>
-Date:   Fri, 22 Nov 2019 19:01:41 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        "linux-kselftest@vger.kernel.org, Jarkko Sakkinen" 
+        <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 09/19] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191122160229.GI6289@zn.tnic>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-10-sean.j.christopherson@intel.com>
+ <20191121162452.GJ6540@zn.tnic>
+ <20191121210714.GB16617@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <53af9c5c-a33d-4fc4-88e9-851b1caad3f1@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191121210714.GB16617@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.11.2019 16:58, Alexey Budankov wrote:
-> On 22.11.2019 16:20, Jiri Olsa wrote:
->> On Wed, Nov 20, 2019 at 12:37:48PM +0300, Alexey Budankov wrote:
->>>
+On Thu, Nov 21, 2019 at 01:07:14PM -0800, Sean Christopherson wrote:
+> I'm also ok dropping it altogether, though from a KVM developer
+> perspective I wouldn't mind the extra sanity check :-)
 
-<SNIP>
+Right, I think we should keep it in the bag and only take it out when it
+really happens. Because if we really wanna be overly cautious in every
+possible case where stuff may fail, we won't see the actual code from
+all the error handling. :-)
 
->>> +#define mmap_cpu_mask_bytes(m) \
->>
->> we try to have all macros upper case
-> 
-> In v2.
-> 
->>
->>> +	(BITS_TO_LONGS(((struct mmap_cpu_mask *)m)->nbits) * sizeof(unsigned long))
->>
->> we have BITS_TO_BYTES
-> 
-> In v2.
+Thx.
 
-Avoided BITS_TO_BYTES() in this particular case because 
-the storage is allocated in unsigned long chunks, thus
-the possibly unused tail bytes at the last chunk would 
-be accounted in the returned size, and for compatibility 
-with cpu_set_t which is also allocated in unsigned longs.
+-- 
+Regards/Gruss,
+    Boris.
 
-~Alexey
+https://people.kernel.org/tglx/notes-about-netiquette
