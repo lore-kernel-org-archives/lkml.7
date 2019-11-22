@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64450C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CF2C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B58520707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3213620715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419427;
-	bh=6hPBnO6cyInfrI7QPc5HYLgV1DJSGN4IqdU+EtM4yrE=;
+	s=default; t=1574419430;
+	bh=5UItLLFjlDhOXz3KBCG5KhmUDXK4+F73pnrDOEoTvcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrmpLohDqMi2KZEbTGl/SS1jxAhfdTM2yH/NJ2Ur+CyVxEkA5bR8OQpxiqWD8zEvX
-	 Fqp7TpNYphPJl65ZP29r02rl50Qj67Zzpc5l54dJAWVU6L1l8v/FqCicHGXTLVOMh5
-	 SBvXX/Nk/WJPz5t/eTFNYaKZx2Td8IVFR6PxeqFI=
+	b=N28wpvgjD23Ogb3PZXuINBFdm+4MwMnp8fFLgXbgPrKUgEaxASkjLz2uDJ6ncwbU1
+	 GXywWM4+MRSiqbZ9Niv4EfImxs3diwGb5GxWzRBTPexRIHOG3OOWWCsqMCZqPIrGEn
+	 XEnHp33+EGOU187je3N2cTD+q8R9HK5ZhVrfqDdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfKVKnq (ORCPT
+        id S1729276AbfKVKnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49394 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:43:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfKVKno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:44 -0500
+        id S1729272AbfKVKnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E79C720637;
-        Fri, 22 Nov 2019 10:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C025520637;
+        Fri, 22 Nov 2019 10:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419424;
-        bh=6hPBnO6cyInfrI7QPc5HYLgV1DJSGN4IqdU+EtM4yrE=;
+        s=default; t=1574419421;
+        bh=5UItLLFjlDhOXz3KBCG5KhmUDXK4+F73pnrDOEoTvcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UIK4PSt8645a/tdGCg+uhXims8/zMKZWaVGmYBwtuGRkp7sZV2lcC9oz8jB9WCx51
-         bLxjnk2Y1B2WZdes8TiwxSW5WSxIrvyW7OztLbHuXx8rvDjnXKFQVK/60iQTHVUPB8
-         Q/cbW0gUny3GGA/SFoL7Wm6sQZ1sbePa0zFqNnyM=
+        b=vvuBw88VL2szRDmg548yLETw2eks98+ALKQ7qsZ/fhKUdXtSy/3sQ3GKBAsIGfAvG
+         9DSE3tGc7WBYoEaHxZo5lG7SR3gJYeCmUn6lgwvG6mIj6gC8M9jG4oZxhobJy/i30J
+         fSfFWi756Cr8NAn3zBjMkPhA9fZCfp3Z9owhwfcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Shahed Shaikh <Shahed.Shaikh@cavium.com>,
+        Ariel Elior <ariel.elior@cavium.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 106/222] net: micrel: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:27:26 +0100
-Message-Id: <20191122100910.975533656@linuxfoundation.org>
+Subject: [PATCH 4.9 105/222] bnx2x: Ignore bandwidth attention in single function mode
+Date:   Fri, 22 Nov 2019 11:27:25 +0100
+Message-Id: <20191122100910.916537002@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,54 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Shahed Shaikh <Shahed.Shaikh@cavium.com>
 
-[ Upstream commit 2b49117a5abee8478b0470cba46ac74f93b4a479 ]
+[ Upstream commit 75a110a1783ef8324ffd763b24f4ac268253cbca ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+This is a workaround for FW bug -
+MFW generates bandwidth attention in single function mode, which
+is only expected to be generated in multi function mode.
+This undesired attention in SF mode results in incorrect HW
+configuration and resulting into Tx timeout.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Shahed Shaikh <Shahed.Shaikh@cavium.com>
+Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8695net.c  | 2 +-
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8695net.c b/drivers/net/ethernet/micrel/ks8695net.c
-index 20cb85bc0c5f8..6135d90f368fa 100644
---- a/drivers/net/ethernet/micrel/ks8695net.c
-+++ b/drivers/net/ethernet/micrel/ks8695net.c
-@@ -1156,7 +1156,7 @@ ks8695_timeout(struct net_device *ndev)
-  *	sk_buff and adds it to the TX ring. It then kicks the TX DMA
-  *	engine to ensure transmission begins.
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index a9681b191304a..ce8a777b1e975 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -3540,6 +3540,16 @@ static void bnx2x_drv_info_iscsi_stat(struct bnx2x *bp)
   */
--static int
-+static netdev_tx_t
- ks8695_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ static void bnx2x_config_mf_bw(struct bnx2x *bp)
  {
- 	struct ks8695_priv *ksp = netdev_priv(ndev);
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 2fc5cd56c0a84..8dc1f0277117d 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -1020,9 +1020,9 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
-  * spin_lock_irqsave is required because tx and rx should be mutual exclusive.
-  * So while tx is in-progress, prevent IRQ interrupt from happenning.
-  */
--static int ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
--	int retv = NETDEV_TX_OK;
-+	netdev_tx_t retv = NETDEV_TX_OK;
- 	struct ks_net *ks = netdev_priv(netdev);
- 
- 	disable_irq(netdev->irq);
++	/* Workaround for MFW bug.
++	 * MFW is not supposed to generate BW attention in
++	 * single function mode.
++	 */
++	if (!IS_MF(bp)) {
++		DP(BNX2X_MSG_MCP,
++		   "Ignoring MF BW config in single function mode\n");
++		return;
++	}
++
+ 	if (bp->link_vars.link_up) {
+ 		bnx2x_cmng_fns_init(bp, true, CMNG_FNS_MINMAX);
+ 		bnx2x_link_sync_notify(bp);
 -- 
 2.20.1
 
