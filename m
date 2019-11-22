@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19895C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F68C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25DB2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81032071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420293;
-	bh=Er1C0v6WOPG9MdMVv1ytWpIZtgZTMmVtrfz1ICT1oRc=;
+	s=default; t=1574420296;
+	bh=MMgzRe5yVk3nwNXkDvps5UuvfqiDrf2kC1LxpPtNu0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nKwEZzOVtjep0JrEjVKVYfWG25Gx1GQWUlrVPV8+ohk4oLsh2lCaC+GcqgNXPEid
-	 ykGlW9GcvnqT3JJD5XWH1E9x+VUKg5Qd11WVyowuN8uVGkeP+738w9MfTf0/c7lTbI
-	 7LAw2kvqEbj/OboEve2uFAnkUbJ9tecdj4BW9wcQ=
+	b=fEEfMKMKMS9jccRslG9ZyyKQvRPV9oohhvPjyotL4Jw3shaROU8fRQg8+grKMG1dS
+	 GYW1CcKRRnfK7IANc0NCvBAnA3B1loTQMKTN+UtFDzcdtHyRetRKsC8T46Zua5Sdr6
+	 5yquAFduCzt4OVz0KmSNtWPTZa7TOqc28XVM76RA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbfKVK6L (ORCPT
+        id S1730540AbfKVK6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:58:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:58:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730079AbfKVK6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:58:06 -0500
+        id S1730773AbfKVK6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:58:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC972075B;
-        Fri, 22 Nov 2019 10:58:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8F882071C;
+        Fri, 22 Nov 2019 10:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420285;
-        bh=Er1C0v6WOPG9MdMVv1ytWpIZtgZTMmVtrfz1ICT1oRc=;
+        s=default; t=1574420289;
+        bh=MMgzRe5yVk3nwNXkDvps5UuvfqiDrf2kC1LxpPtNu0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhBvFC3EqXdQVHKUdbuNZz4S6vYQupVumcwBIFMPV8lY22jp4e4N/bOrLSyy/t1me
-         fUiRMaXw8S9ElPcfF/V9xN7dc3W/2eUfv1+Nz5ZvNTEobNktRj3GyyiXydjLe2TW0O
-         Rarsb8Clo0tsQF2OxRQeC2Of0D1Omaf9j4mqSG/c=
+        b=lU/8QRCLiWXUC7g7juz6SCd64BVh6m9EfQSWHp8e2TOIRY43QadEtNzh5lq7D6uBJ
+         x1+MkE9mymEVIuXyL1Xak1Q22j3g9h/ACldkfEp6tr+FosXDm+Zgwoe2kDWBEgioDm
+         QtO6UyMbvcYUQRWifxTzGXA7Pjnrdm682rCCg2tE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/220] printk: Do not miss new messages when replaying the log
-Date:   Fri, 22 Nov 2019 11:27:00 +0100
-Message-Id: <20191122100916.121259277@linuxfoundation.org>
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 029/220] IB/hfi1: Error path MAD response size is incorrect
+Date:   Fri, 22 Nov 2019 11:26:34 +0100
+Message-Id: <20191122100914.513996783@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,84 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-[ Upstream commit f92b070f2dc89a8ff1a0cc8b608e20abef894c7d ]
+[ Upstream commit 935c84ac649a147e1aad2c48ee5c5a1a9176b2d0 ]
 
-The variable "exclusive_console" is used to reply all existing messages
-on a newly registered console. It is cleared when all messages are out.
+If a MAD packet has incorrect header information, the logic uses the reply
+path to report the error.  The reply path expects *resp_len to be set
+prior to return.  Unfortunately, *resp_len is set to 0 for this path.
+This causes an incorrect response packet.
 
-The problem is that new messages might appear in the meantime. These
-are then visible only on the exclusive console.
+Fix by ensuring that the *resp_len is defaulted to the incoming packet
+size (wc->bytes_len - sizeof(GRH)).
 
-The obvious solution is to clear "exclusive_console" after we replay
-all messages that were already proceed before we started the reply.
-
-Reported-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Link: http://lkml.kernel.org/r/20180913123406.14378-1-pmladek@suse.com
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hfi1/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index d0d03223b45b1..b627954061bb6 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -423,6 +423,7 @@ static u32 log_next_idx;
- /* the next printk record to write to the console */
- static u64 console_seq;
- static u32 console_idx;
-+static u64 exclusive_console_stop_seq;
+diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+index f208a25d0e4f5..1669548e91dcf 100644
+--- a/drivers/infiniband/hw/hfi1/mad.c
++++ b/drivers/infiniband/hw/hfi1/mad.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright(c) 2015-2017 Intel Corporation.
++ * Copyright(c) 2015-2018 Intel Corporation.
+  *
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+@@ -4829,7 +4829,7 @@ static int hfi1_process_opa_mad(struct ib_device *ibdev, int mad_flags,
+ 	int ret;
+ 	int pkey_idx;
+ 	int local_mad = 0;
+-	u32 resp_len = 0;
++	u32 resp_len = in_wc->byte_len - sizeof(*in_grh);
+ 	struct hfi1_ibport *ibp = to_iport(ibdev, port);
  
- /* the next printk record to read after the last 'clear' command */
- static u64 clear_seq;
-@@ -2014,6 +2015,7 @@ static u64 syslog_seq;
- static u32 syslog_idx;
- static u64 console_seq;
- static u32 console_idx;
-+static u64 exclusive_console_stop_seq;
- static u64 log_first_seq;
- static u32 log_first_idx;
- static u64 log_next_seq;
-@@ -2381,6 +2383,12 @@ void console_unlock(void)
- 			goto skip;
- 		}
- 
-+		/* Output to all consoles once old messages replayed. */
-+		if (unlikely(exclusive_console &&
-+			     console_seq >= exclusive_console_stop_seq)) {
-+			exclusive_console = NULL;
-+		}
-+
- 		len += msg_print_text(msg,
- 				console_msg_format & MSG_FORMAT_SYSLOG,
- 				text + len,
-@@ -2423,10 +2431,6 @@ void console_unlock(void)
- 
- 	console_locked = 0;
- 
--	/* Release the exclusive_console once it is used */
--	if (unlikely(exclusive_console))
--		exclusive_console = NULL;
--
- 	raw_spin_unlock(&logbuf_lock);
- 
- 	up_console_sem();
-@@ -2711,6 +2715,7 @@ void register_console(struct console *newcon)
- 		 * the already-registered consoles.
- 		 */
- 		exclusive_console = newcon;
-+		exclusive_console_stop_seq = console_seq;
- 	}
- 	console_unlock();
- 	console_sysfs_notify();
+ 	pkey_idx = hfi1_lookup_pkey_idx(ibp, LIM_MGMT_P_KEY);
 -- 
 2.20.1
 
