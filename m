@@ -2,101 +2,84 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE98AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D4AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CD120659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gHxeAf5s"
+	by mail.kernel.org (Postfix) with ESMTP id CE54F20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKVHSq (ORCPT
+        id S1726931AbfKVHTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:18:46 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:48330 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726018AbfKVHSn (ORCPT
+        Fri, 22 Nov 2019 02:19:02 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:48013 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKVHTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 02:18:43 -0500
-X-UUID: a81b81e6f8804a6bb5c3d97cbf665b8d-20191122
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Rn/XoDq5loIZaVO1pS6BYoAXB6sUp5RYn3/dfFUf7zc=;
-        b=gHxeAf5sG9N4OAiGULAd/71WH48OQvo7+wOUdGKXM2iC2ywkuZliaijlJNPHaxe4vfanFehwD/cR/NrEdfz/w7LXThLmOjYgKO/D56KKcmAazYezqNX2IUYqe6ITylL2dbXPxpsJ3lvfVT+YOIg1oRMY6ejkzBXvBS/U+j+RC5M=;
-X-UUID: a81b81e6f8804a6bb5c3d97cbf665b8d-20191122
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 295321122; Fri, 22 Nov 2019 15:18:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 22 Nov 2019 15:18:30 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 22 Nov 2019 15:18:28 +0800
-Message-ID: <1574407116.8338.10.camel@mtksdccf07>
-Subject: Re: [PATCH v4 1/2] kasan: detect negative size in memory operation
- function
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Fri, 22 Nov 2019 15:18:36 +0800
-In-Reply-To: <b2ba5228-dec0-9acf-49e9-d57f156814ef@virtuozzo.com>
-References: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
-         <b2ba5228-dec0-9acf-49e9-d57f156814ef@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 22 Nov 2019 02:19:01 -0500
+Received: by mail-io1-f70.google.com with SMTP id y16so4246382ior.14
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 23:19:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1cUcF3hJKE1N4P4WyddDQmYqcNZvFWfBMCxod9a8Ztg=;
+        b=RWEN50nnea9lbTe32Jn9NZzib7+J4APczWrvqh5bpxwN2tviIRr1ju99sLIO1gxmxx
+         PzuRlSmpOPvYQAUQxfcrtMN/ptYKHts93NRCMHSR4+v0Wze3vsZSCdnrjQcSL30zdcMg
+         6p6QQEADhYWVjR9t2IZBgMm8PxpJvHHTVQfObWMT11PfF4HyXwDWTjmYyDUJd8EO7Z6d
+         XeOtamvIqHgQTwk9GUd7JY5/4bQhechMOtxbDtcBCKAfgHR5UOIO1DRP7sfdrxOfCMPw
+         tNfgS8w1RE+2W2e46EJB4HuzCmf9yJIDHE7oolnt/Fm9Qw/p6GQ4n7pzBX7IVEbi/N1F
+         fZOw==
+X-Gm-Message-State: APjAAAVs6EixKSTHbxSRXARPE/xM8wFsZPkEgpTgh4H7wjLElZng+/I5
+        QTsGy7AyNc1xWeSfA9GauIRxB5Rt96JxIMBuWR8kYAQvWBuX
+X-Google-Smtp-Source: APXvYqz7YQR3Ph2vR2o/JQ6Y+lyCMjwoGf4NoUXt8LcJXs8VhmLZT2rHE8UUekeFjpMnBlonHBj9FzFznQfgOmicwRtoMmh+YsCi
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Received: by 2002:a92:3602:: with SMTP id d2mr14510424ila.7.1574407140976;
+ Thu, 21 Nov 2019 23:19:00 -0800 (PST)
+Date:   Thu, 21 Nov 2019 23:19:00 -0800
+In-Reply-To: <000000000000e67a05057314ddf6@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005eb1070597ea3a1f@google.com>
+Subject: Re: general protection fault in __schedule (2)
+From:   syzbot <syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com>
+To:     casey@schaufler-ca.com, frederic@kernel.org,
+        gregkh@linuxfoundation.org, hpa@zytor.com, jmattson@google.com,
+        jmorris@namei.org, karahmed@amazon.de,
+        kstewart@linuxfoundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, mingo@kernel.org,
+        mingo@redhat.com, pasha.tatashin@oracle.com, pbonzini@redhat.com,
+        pombredanne@nexb.com, rkrcmar@redhat.com, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTExLTIyIGF0IDAxOjIwICswMzAwLCBBbmRyZXkgUnlhYmluaW4gd3JvdGU6
-DQo+IA0KPiBPbiAxMS8xMi8xOSA5OjUzIEFNLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+ID4gS0FTQU4g
-bWlzc2VkIGRldGVjdGluZyBzaXplIGlzIGEgbmVnYXRpdmUgbnVtYmVyIGluIG1lbXNldCgpLCBt
-ZW1jcHkoKSwNCj4gPiBhbmQgbWVtbW92ZSgpLCBpdCB3aWxsIGNhdXNlIG91dC1vZi1ib3VuZHMg
-YnVnLiBTbyBuZWVkcyB0byBiZSBkZXRlY3RlZA0KPiA+IGJ5IEtBU0FOLg0KPiA+IA0KPiA+IElm
-IHNpemUgaXMgYSBuZWdhdGl2ZSBudW1iZXIsIHRoZW4gaXQgaGFzIGEgcmVhc29uIHRvIGJlIGRl
-ZmluZWQgYXMNCj4gPiBvdXQtb2YtYm91bmRzIGJ1ZyB0eXBlLg0KPiA+IENhc3RpbmcgbmVnYXRp
-dmUgbnVtYmVycyB0byBzaXplX3Qgd291bGQgaW5kZWVkIHR1cm4gdXAgYXMNCj4gPiBhIGxhcmdl
-IHNpemVfdCBhbmQgaXRzIHZhbHVlIHdpbGwgYmUgbGFyZ2VyIHRoYW4gVUxPTkdfTUFYLzIsDQo+
-ID4gc28gdGhhdCB0aGlzIGNhbiBxdWFsaWZ5IGFzIG91dC1vZi1ib3VuZHMuDQo+ID4gDQo+ID4g
-S0FTQU4gcmVwb3J0IGlzIHNob3duIGJlbG93Og0KPiA+IA0KPiA+ICBCVUc6IEtBU0FOOiBvdXQt
-b2YtYm91bmRzIGluIGttYWxsb2NfbWVtbW92ZV9pbnZhbGlkX3NpemUrMHg3MC8weGEwDQo+ID4g
-IFJlYWQgb2Ygc2l6ZSAxODQ0Njc0NDA3MzcwOTU1MTYwOCBhdCBhZGRyIGZmZmZmZjgwNjk2NjA5
-MDQgYnkgdGFzayBjYXQvNzINCj4gPiANCj4gPiAgQ1BVOiAyIFBJRDogNzIgQ29tbTogY2F0IE5v
-dCB0YWludGVkIDUuNC4wLXJjMS1uZXh0LTIwMTkxMDA0YWpiLTAwMDAxLWdkYjhhZjJmMzcyYjIt
-ZGlydHkgIzENCj4gPiAgSGFyZHdhcmUgbmFtZTogbGludXgsZHVtbXktdmlydCAoRFQpDQo+ID4g
-IENhbGwgdHJhY2U6DQo+ID4gICBkdW1wX2JhY2t0cmFjZSsweDAvMHgyODgNCj4gPiAgIHNob3df
-c3RhY2srMHgxNC8weDIwDQo+ID4gICBkdW1wX3N0YWNrKzB4MTBjLzB4MTY0DQo+ID4gICBwcmlu
-dF9hZGRyZXNzX2Rlc2NyaXB0aW9uLmlzcmEuOSsweDY4LzB4Mzc4DQo+ID4gICBfX2thc2FuX3Jl
-cG9ydCsweDE2NC8weDFhMA0KPiA+ICAga2FzYW5fcmVwb3J0KzB4Yy8weDE4DQo+ID4gICBjaGVj
-a19tZW1vcnlfcmVnaW9uKzB4MTc0LzB4MWQwDQo+ID4gICBtZW1tb3ZlKzB4MzQvMHg4OA0KPiA+
-ICAga21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6ZSsweDcwLzB4YTANCj4gPiANCj4gPiBbMV0g
-aHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0xOTkzNDENCj4gPiAN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+
-DQo+ID4gUmVwb3J0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCj4g
-PiBTdWdnZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCj4gPiBS
-ZXZpZXdlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KPiA+IENjOiBB
-bmRyZXkgUnlhYmluaW4gPGFyeWFiaW5pbkB2aXJ0dW96em8uY29tPg0KPiA+IENjOiBBbGV4YW5k
-ZXIgUG90YXBlbmtvIDxnbGlkZXJAZ29vZ2xlLmNvbT4NCj4gPiBSZXBvcnRlZC1ieToga2VybmVs
-IHRlc3Qgcm9ib3QgPGxrcEBpbnRlbC5jb20+DQo+ID4gLS0tDQo+IA0KPiBSZXZpZXdlZC1ieTog
-QW5kcmV5IFJ5YWJpbmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCg0KSGkgQW5kcmV5LCBE
-bWl0cnksDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcgYW5kIHN1Z2dlc3Rpb24uDQoNCldhbHRl
-cg0K
+syzbot has bisected this bug to:
 
+commit 8fcc4b5923af5de58b80b53a069453b135693304
+Author: Jim Mattson <jmattson@google.com>
+Date:   Tue Jul 10 09:27:20 2018 +0000
+
+     kvm: nVMX: Introduce KVM_CAP_NESTED_STATE
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=124cdbace00000
+start commit:   234b69e3 ocfs2: fix ocfs2 read block panic
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=114cdbace00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=164cdbace00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
+dashboard link: https://syzkaller.appspot.com/bug?extid=7e2ab84953e4084a638d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150f0a4e400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f67111400000
+
+Reported-by: syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com
+Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
