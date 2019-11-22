@@ -2,53 +2,53 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68368C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC6420714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5B92071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418669;
-	bh=Ihs03V0acXFwzpCbFFOo0fWqOQ4u9LrOg/yDjzFWxTo=;
+	s=default; t=1574418671;
+	bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmU0CaTpQvLdz6+Z9RiSBLjUEgBBUQEWBQMGFKKxMLScPskA+deepPFw2+kYcAH4O
-	 tz1DxRU5GnfmIjw8B70IwJW0LN97EhrHt2X+IQXTn9TOWxU6GChhU2u5B8XAD0KhhD
-	 +xBbKbws3okhft5yW4mit7Kfl3ApECK4iFmhyXL0=
+	b=qQI9IWi/f3A0MFlysAb2NUTu2COQHldxE+2CLsL2RtSSoy447AvYIQisgrIYkUz8s
+	 K1So6zJf/K9aE7NNOvAlaCklKCmlh4Ckua644uhmR09V0GUY6a+cCK5SQJvJeek8oK
+	 VXzhAz2YJDQ03nquW/8QWP5crGsPRxb/MR8QM6/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfKVKbI (ORCPT
+        id S1727171AbfKVKbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50896 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfKVKbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:06 -0500
+        id S1727113AbfKVKbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 160A520708;
-        Fri, 22 Nov 2019 10:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B106020708;
+        Fri, 22 Nov 2019 10:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418665;
-        bh=Ihs03V0acXFwzpCbFFOo0fWqOQ4u9LrOg/yDjzFWxTo=;
+        s=default; t=1574418668;
+        bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHRD7uUX0YVBFfEzPf4VbjHPuyTL1bicQPVa3i11oTnXtonGnDvNlBCfx7+Brlbg/
-         NUu0VjpDQnoAAW/UnkZ9CvaVH0qEgYE49lm97ZnrcNcnd4cMtqWZG1zykCBAjvELGX
-         Kzsoty/iwWuQXC08WHTFIIcoCI9upO5LfNv5LLzc=
+        b=StY2qZclZgjg8KoYf/QV2jZDqxS6YGOtJa8Mlo4Vzzyd+EFQemZt+0WQcaZJXUEpY
+         evDfxinV/T6Xm3zH9cMs0+68LcShqBDlSb2619yROYJZ90YeNut+wtrGJsI/qvIY0l
+         5Eb3Kv4WEiO6BmikZHLg1C54IViXfzD4FowMkdIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.4 011/159] mmc: sdhci-of-at91: fix quirk2 overwrite
-Date:   Fri, 22 Nov 2019 11:26:42 +0100
-Message-Id: <20191122100717.490100948@linuxfoundation.org>
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 012/159] iio: dac: mcp4922: fix error handling in mcp4922_write_raw
+Date:   Fri, 22 Nov 2019 11:26:43 +0100
+Message-Id: <20191122100718.354014416@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,35 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
 
-commit fed23c5829ecab4ddc712d7b0046e59610ca3ba4 upstream.
+[ Upstream commit 0833627fc3f757a0dca11e2a9c46c96335a900ee ]
 
-The quirks2 are parsed and set (e.g. from DT) before the quirk for broken
-HS200 is set in the driver.
-The driver needs to enable just this flag, not rewrite the whole quirk set.
+Do not try to write negative values and make sure that the write goes well.
 
-Fixes: 7871aa60ae00 ("mmc: sdhci-of-at91: add quirk for broken HS200")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-at91.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/dac/mcp4922.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -145,7 +145,7 @@ static int sdhci_at91_probe(struct platf
- 	sdhci_get_of_property(pdev);
+diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
+index 3854d201a5d6c..68dd0be1ac076 100644
+--- a/drivers/iio/dac/mcp4922.c
++++ b/drivers/iio/dac/mcp4922.c
+@@ -94,17 +94,22 @@ static int mcp4922_write_raw(struct iio_dev *indio_dev,
+ 		long mask)
+ {
+ 	struct mcp4922_state *state = iio_priv(indio_dev);
++	int ret;
  
- 	/* HS200 is broken at this moment */
--	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
-+	host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
+ 	if (val2 != 0)
+ 		return -EINVAL;
  
- 	ret = sdhci_add_host(host);
- 	if (ret)
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+-		if (val > GENMASK(chan->scan_type.realbits-1, 0))
++		if (val < 0 || val > GENMASK(chan->scan_type.realbits - 1, 0))
+ 			return -EINVAL;
+ 		val <<= chan->scan_type.shift;
+-		state->value[chan->channel] = val;
+-		return mcp4922_spi_write(state, chan->channel, val);
++
++		ret = mcp4922_spi_write(state, chan->channel, val);
++		if (!ret)
++			state->value[chan->channel] = val;
++		return ret;
++
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.20.1
+
 
 
