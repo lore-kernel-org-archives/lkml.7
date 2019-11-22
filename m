@@ -2,200 +2,138 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1438C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97FDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CE420674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:04:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c62IQrA7"
+	by mail.kernel.org (Postfix) with ESMTP id AA6902068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKVBEU (ORCPT
+        id S1726568AbfKVBQj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:04:20 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40791 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKVBDo (ORCPT
+        Thu, 21 Nov 2019 20:16:39 -0500
+Received: from cnshjsmin05.app.nokia-sbell.com ([116.246.26.45]:60792 "EHLO
+        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726329AbfKVBQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:03:44 -0500
-Received: by mail-pf1-f193.google.com with SMTP id r4so2623142pfl.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 17:03:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ogInRXGt+sPw2HEZ3/J86GV8yEDJ13ZF9JZ3hZT/kGM=;
-        b=c62IQrA7WMubIKMG7YRJfYNOmH5PP3OT90j5iiPtbjViBXxNeoyI+rV6BqUpCESkc3
-         0Z6S2kc1Ccjd6okULsJZlYzzpEAwEx8F/2cRVCPCVqWdvIarQggraQ6MQJ93WsAdkTYK
-         QnmRcZuTUPTjhbIA8tmlOW7wJi47t97BFMcK8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ogInRXGt+sPw2HEZ3/J86GV8yEDJ13ZF9JZ3hZT/kGM=;
-        b=GBA5UJA9rgwurSlmvkfr5kRAq8J/3LhAuMU7qy+xERjqJKQWTxIkAzWwW8MnoECZ2h
-         qG7KufiETTNrIxw2Ay8FCcrg8eE9sbhYTxYPoBd142s4feUPkZVVaIx44RN5qXyOfKKY
-         tH3asWf525l+3R12tPTFggXGkCs0bjQ/kn5IARtp+AFBNYf0l62N4DvKnHVQKxovfft3
-         pk/VGpBpWlEzfYZFwazBEZkdxi8wwcJLIDGyN3p7aIjIIq/NEZGL3k2MgssW0A68sJHl
-         40frxq9vHwTYFoeoo+CgQt4KGouRVUIpYqkSo3xLTti9q2iaxFmG2XGN4KWWTKbkSSM1
-         3Rag==
-X-Gm-Message-State: APjAAAUc5ZCOXb94DpwRayjIdvamUMM6c+W0dRQ451CkjEBWK2Hr8HI0
-        k+iBUtXS1s4ELvnDiIIwYo/g6g==
-X-Google-Smtp-Source: APXvYqwkm/Hnnfz9l9HjiwV4ZZkTNJsjp7ESPfZDQZlb++3cENihjkIQMXfvttuJWXLyWpE9Hd+A3A==
-X-Received: by 2002:a63:5f04:: with SMTP id t4mr12527616pgb.73.1574384621641;
-        Thu, 21 Nov 2019 17:03:41 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a12sm4355040pga.11.2019.11.21.17.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 17:03:38 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Jo=C3=A3o=20Moreira?= <joao.moreira@intel.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH v6 1/8] crypto: x86/glue_helper: Regularize function prototypes
-Date:   Thu, 21 Nov 2019 17:03:27 -0800
-Message-Id: <20191122010334.12081-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191122010334.12081-1-keescook@chromium.org>
-References: <20191122010334.12081-1-keescook@chromium.org>
+        Thu, 21 Nov 2019 20:16:39 -0500
+X-AuditID: ac18929d-49dff700000014de-85-5dd736f3c3c1
+Received: from CNSHPPEXCH1603.nsn-intra.net (Unknown_Domain [135.251.51.103])
+        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id 90.DC.05342.3F637DD5; Fri, 22 Nov 2019 09:16:35 +0800 (HKT)
+Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
+ CNSHPPEXCH1603.nsn-intra.net (135.251.51.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 22 Nov 2019 09:16:35 +0800
+Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
+ CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
+ Fri, 22 Nov 2019 09:16:35 +0800
+From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Guenter Roeck <groeck7@gmail.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+Thread-Topic: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+Thread-Index: AdWgVy1kREB4bw5dQ4u+4ZEezt20u///t7KA//7BtxA=
+Date:   Fri, 22 Nov 2019 01:16:34 +0000
+Message-ID: <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
+References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
+ <20191121141508.GA13249@roeck-us.net>
+In-Reply-To: <20191121141508.GA13249@roeck-us.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [135.251.51.115]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsXS/ts4Xfez2fVYg5VLzS32dV5nsri8aw6b
+        xY11+9gtniw8w2Tx+OU/ZgdWj52z7rJ7rFyzBsj63sDu8XmTXABLFJdNSmpOZllqkb5dAlfG
+        /6W3WQomC1ccPveGvYHxLH8XIyeHhICJRNv7CYxdjFwcQgKHmCQ2XjvADOH8ZZS4vuY7lLOJ
+        UWLSt6tsIC1sAu4STZvWgdkiAmoSzada2ECKmAUeMEq8P7IXyOHgEBZIkfjSwQNRkyrxbcIB
+        JgjbSuLlqy1gNouAqsTX3n5GEJtXwE5i0f8pjCCtQgJpEl//pIOEOQWMJE6vuMsKYjMKyEpM
+        e3QfrJVZQFzi1pP5TBAfCEgs2XOeGcIWlXj5+B8ryBgJASWJvg1Q5ToSC3Z/YoOwtSWWLXzN
+        DLFVUOLkzCcsExjFZiGZOgtJyywkLbOQtCxgZFnFKJ2cV5yRVZybmWdgqpeXn52ZqFuclJqT
+        o5ecn7uJERh7ayQmzd3B2NkZf4hRgINRiYf3ReW1WCHWxLLiytxDjBIczEoivHuuX4kV4k1J
+        rKxKLcqPLyrNSS0+xCjNwaIkztsyeWGskEB6YklqdmpqQWoRTJaJg1OqgVF0wzel59+iXU64
+        bv0qpzA1Y+HJRdqh/6dmMhaEGioeOuhxMbLHqrXkdvU0feWvU0W4lRlXMkrtOdWYzaR6ou1t
+        /pEfn/9K3ONaVbGzzIfV6tnHMN34FdKrb+96ovtHKcrhQVtizeT7xz84Fe3bXDnHqSHzx2r+
+        7XZLJNTX1Ns+nagjUZWRuEmJpTgj0VCLuag4EQCPDo//uQIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The crypto glue performed function prototype casting to make indirect
-calls to assembly routines. Instead of performing casts at the call
-sites (which trips Control Flow Integrity prototype checking), switch
-each prototype to a common standard set of arguments which allows the
-incremental removal of the existing macros. In order to keep pointer
-math unchanged, internal casting between u128 pointers and u8 pointers
-is added.
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Co-developed-by: João Moreira <joao.moreira@intel.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/crypto/glue_helper.c             | 23 ++++++++++++++---------
- arch/x86/include/asm/crypto/glue_helper.h | 13 +++++++------
- 2 files changed, 21 insertions(+), 15 deletions(-)
+Roeck, thanks for your time to guide me to finish the review. Do I need to re-send a mail with your sign?
 
-diff --git a/arch/x86/crypto/glue_helper.c b/arch/x86/crypto/glue_helper.c
-index d15b99397480..d3d91a0abf88 100644
---- a/arch/x86/crypto/glue_helper.c
-+++ b/arch/x86/crypto/glue_helper.c
-@@ -134,7 +134,8 @@ int glue_cbc_decrypt_req_128bit(const struct common_glue_ctx *gctx,
- 				src -= num_blocks - 1;
- 				dst -= num_blocks - 1;
- 
--				gctx->funcs[i].fn_u.cbc(ctx, dst, src);
-+				gctx->funcs[i].fn_u.cbc(ctx, (u8 *)dst,
-+							(const u8 *)src);
- 
- 				nbytes -= func_bytes;
- 				if (nbytes < bsize)
-@@ -188,7 +189,9 @@ int glue_ctr_req_128bit(const struct common_glue_ctx *gctx,
- 
- 			/* Process multi-block batch */
- 			do {
--				gctx->funcs[i].fn_u.ctr(ctx, dst, src, &ctrblk);
-+				gctx->funcs[i].fn_u.ctr(ctx, (u8 *)dst,
-+							(const u8 *)src,
-+							&ctrblk);
- 				src += num_blocks;
- 				dst += num_blocks;
- 				nbytes -= func_bytes;
-@@ -210,7 +213,8 @@ int glue_ctr_req_128bit(const struct common_glue_ctx *gctx,
- 
- 		be128_to_le128(&ctrblk, (be128 *)walk.iv);
- 		memcpy(&tmp, walk.src.virt.addr, nbytes);
--		gctx->funcs[gctx->num_funcs - 1].fn_u.ctr(ctx, &tmp, &tmp,
-+		gctx->funcs[gctx->num_funcs - 1].fn_u.ctr(ctx, (u8 *)&tmp,
-+							  (const u8 *)&tmp,
- 							  &ctrblk);
- 		memcpy(walk.dst.virt.addr, &tmp, nbytes);
- 		le128_to_be128((be128 *)walk.iv, &ctrblk);
-@@ -240,7 +244,8 @@ static unsigned int __glue_xts_req_128bit(const struct common_glue_ctx *gctx,
- 
- 		if (nbytes >= func_bytes) {
- 			do {
--				gctx->funcs[i].fn_u.xts(ctx, dst, src,
-+				gctx->funcs[i].fn_u.xts(ctx, (u8 *)dst,
-+							(const u8 *)src,
- 							walk->iv);
- 
- 				src += num_blocks;
-@@ -354,8 +359,8 @@ int glue_xts_req_128bit(const struct common_glue_ctx *gctx,
- }
- EXPORT_SYMBOL_GPL(glue_xts_req_128bit);
- 
--void glue_xts_crypt_128bit_one(void *ctx, u128 *dst, const u128 *src, le128 *iv,
--			       common_glue_func_t fn)
-+void glue_xts_crypt_128bit_one(const void *ctx, u8 *dst, const u8 *src,
-+			       le128 *iv, common_glue_func_t fn)
- {
- 	le128 ivblk = *iv;
- 
-@@ -363,13 +368,13 @@ void glue_xts_crypt_128bit_one(void *ctx, u128 *dst, const u128 *src, le128 *iv,
- 	gf128mul_x_ble(iv, &ivblk);
- 
- 	/* CC <- T xor C */
--	u128_xor(dst, src, (u128 *)&ivblk);
-+	u128_xor((u128 *)dst, (const u128 *)src, (u128 *)&ivblk);
- 
- 	/* PP <- D(Key2,CC) */
--	fn(ctx, (u8 *)dst, (u8 *)dst);
-+	fn(ctx, dst, dst);
- 
- 	/* P <- T xor PP */
--	u128_xor(dst, dst, (u128 *)&ivblk);
-+	u128_xor((u128 *)dst, (u128 *)dst, (u128 *)&ivblk);
- }
- EXPORT_SYMBOL_GPL(glue_xts_crypt_128bit_one);
- 
-diff --git a/arch/x86/include/asm/crypto/glue_helper.h b/arch/x86/include/asm/crypto/glue_helper.h
-index 8d4a8e1226ee..ba48d5af4f16 100644
---- a/arch/x86/include/asm/crypto/glue_helper.h
-+++ b/arch/x86/include/asm/crypto/glue_helper.h
-@@ -11,11 +11,11 @@
- #include <asm/fpu/api.h>
- #include <crypto/b128ops.h>
- 
--typedef void (*common_glue_func_t)(void *ctx, u8 *dst, const u8 *src);
--typedef void (*common_glue_cbc_func_t)(void *ctx, u128 *dst, const u128 *src);
--typedef void (*common_glue_ctr_func_t)(void *ctx, u128 *dst, const u128 *src,
-+typedef void (*common_glue_func_t)(const void *ctx, u8 *dst, const u8 *src);
-+typedef void (*common_glue_cbc_func_t)(const void *ctx, u8 *dst, const u8 *src);
-+typedef void (*common_glue_ctr_func_t)(const void *ctx, u8 *dst, const u8 *src,
- 				       le128 *iv);
--typedef void (*common_glue_xts_func_t)(void *ctx, u128 *dst, const u128 *src,
-+typedef void (*common_glue_xts_func_t)(const void *ctx, u8 *dst, const u8 *src,
- 				       le128 *iv);
- 
- #define GLUE_FUNC_CAST(fn) ((common_glue_func_t)(fn))
-@@ -116,7 +116,8 @@ extern int glue_xts_req_128bit(const struct common_glue_ctx *gctx,
- 			       common_glue_func_t tweak_fn, void *tweak_ctx,
- 			       void *crypt_ctx, bool decrypt);
- 
--extern void glue_xts_crypt_128bit_one(void *ctx, u128 *dst, const u128 *src,
--				      le128 *iv, common_glue_func_t fn);
-+extern void glue_xts_crypt_128bit_one(const void *ctx, u8 *dst,
-+				      const u8 *src, le128 *iv,
-+				      common_glue_func_t fn);
- 
- #endif /* _CRYPTO_GLUE_HELPER_H */
--- 
-2.17.1
+Peng Wang
 
+-----Original Message-----
+From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
+Sent: Thursday, November 21, 2019 10:15 PM
+To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
+Cc: Guenter Roeck <groeck7@gmail.com>; wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set bigger timeout value
+
+On Thu, Nov 21, 2019 at 10:35:12AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+> From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
+> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+> Date: Wed, 20 Nov 2019 15:12:59 +0800
+> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set 
+> bigger  timeout value
+> 
+> watchdog_dev.c provides means to allow users to set bigger timeout 
+> value than HW can support, make DesignWare watchdog align with this.
+> 
+> ---
+> 
+> v2 -> v1:
+>        - use top_s to compare with wdd->max_hw_heartbeat_ms
+>        - update wdd->timeout in case it's greater than HW supports
+>        - fix comments error
+> 
+> v1: initial version
+> 
+> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/dw_wdt.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c 
+> index fef7c61..12c116e 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+>  
+> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	/*
+> +	 * In case users set bigger timeout value than HW can support,
+> +	 * kernel(watchdog_dev.c) helps to feed watchdog before 
+> +	 * wdd->max_hw_heartbeat_ms
+> +	 */
+> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
+> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	else
+> +		wdd->timeout = top_s;
+>  
+>  	return 0;
+>  }
+> --
+> 1.8.3.1
+> 
