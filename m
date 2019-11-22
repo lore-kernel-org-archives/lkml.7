@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0641CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B305DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA78820721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812A32072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419246;
-	bh=5ASHEqf75+P521LBguttK0v1MZgEuN4XJ6jUdODwdSM=;
+	s=default; t=1574419250;
+	bh=v6JF9lRbVOJnYh2zFvmFN0x4ASCwRevslzOjf42Hi90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m0sJUsA5M8BhSbAv1s698nXtFreB2bZF5JSRFyFkUH0qtlZvAkbwGA8Vu7QNOkLGc
-	 4kPoXyAmR+9DZCA5LVApRZ6NQFK0XFG5qxrXjvpQswPy06dxdhig/zOTx2ITazJ5Y7
-	 L1kJyIPxcnffhQY/mnUFdOo8p1hbrdmzsZopoRG4=
+	b=sWshStiVV5Bh/cH2x3qys9D0yQy51swI64Lz+H18Eov1REHjoJXDQ5VjQTtmf4iXJ
+	 a3jQlP3tbt2AzKheEHRHTrTrDIDBfzbCNtnroN/hD+Mtu7cLIhGMnPZt3MxAzZWHxS
+	 2n/jJT8MDFephgUnC1JLX3rurARk6KMNBR33NTtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKVKkp (ORCPT
+        id S1728941AbfKVKkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:40:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44788 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:40:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbfKVKkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:40:42 -0500
+        id S1728026AbfKVKko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:40:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB5D20707;
-        Fri, 22 Nov 2019 10:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB3ED2072E;
+        Fri, 22 Nov 2019 10:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419241;
-        bh=5ASHEqf75+P521LBguttK0v1MZgEuN4XJ6jUdODwdSM=;
+        s=default; t=1574419244;
+        bh=v6JF9lRbVOJnYh2zFvmFN0x4ASCwRevslzOjf42Hi90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qlWrqvqRNJNEk3xnCruLVcNXZDyTQ+PVsPCA+V5c9W86AJQ/5efantIRSvDnbRyeX
-         /yOhUY0po7wUJ84UcvD8amYxUrnPzaNKKGAmG7oRWbI6QJ8+SuCsNhnhaGcXH8cBCl
-         CYDzrFh5z9N1H6l8TavbnQlYuwcQGzVyV1wHUaC4=
+        b=DbZvRkDo63RpjpRTkbWYmaJ6fb0SNI5suysDe/skwib537bym3uo7YAc+zkwpAPvP
+         mqo4f+Wb3pdjEIJy5YQnyhSoJ+E73eIez1o03H7/+r6YSnyUotz/NyK46lCCX4+o5g
+         DKEdlSz3TtizSVeNge3wGdcuF4W1xkR0ih1icJo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 045/222] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Fri, 22 Nov 2019 11:26:25 +0100
-Message-Id: <20191122100852.495051975@linuxfoundation.org>
+Subject: [PATCH 4.9 046/222] ARM: dts: omap3-gta04: fix touchscreen tsc2007
+Date:   Fri, 22 Nov 2019 11:26:26 +0100
+Message-Id: <20191122100852.799929599@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,31 +62,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit 7384a24248eda140a234d356b6c840701ee9f055 ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+we fix penirq polarity, add penirq pinmux and touchscreen
+properties.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 67b50dbe28189..e86f42086a29b 100644
+index e86f42086a29b..6e809b0ff5c9f 100644
 --- a/arch/arm/boot/dts/omap3-gta04.dtsi
 +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
+@@ -274,6 +274,13 @@
+ 			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
+ 		>;
+ 	};
++
++	penirq_pins: pinmux_penirq_pins {
++		pinctrl-single,pins = <
++			/* here we could enable to wakeup the cpu from suspend by a pen touch */
++			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
++		>;
++	};
+ };
  
- 	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
+ &omap3_pmx_core2 {
+@@ -411,10 +418,19 @@
+ 	tsc2007@48 {
+ 		compatible = "ti,tsc2007";
+ 		reg = <0x48>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&penirq_pins>;
+ 		interrupt-parent = <&gpio6>;
+ 		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
+-		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
+ 		ti,x-plate-ohms = <600>;
++		touchscreen-size-x = <480>;
++		touchscreen-size-y = <640>;
++		touchscreen-max-pressure = <1000>;
++		touchscreen-fuzz-x = <3>;
++		touchscreen-fuzz-y = <8>;
++		touchscreen-fuzz-pressure = <10>;
++		touchscreen-inverted-y;
  	};
  
- 	gpio-keys {
+ 	/* RFID EEPROM */
 -- 
 2.20.1
 
