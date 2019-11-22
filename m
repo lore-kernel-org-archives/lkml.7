@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6452C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE6AC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0F220714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C02120714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418661;
-	bh=LFSN8ShC4Q5FMVFLBCNYvsqI/QYLN2eTHUz5rIJax6w=;
+	s=default; t=1574418666;
+	bh=sn+m3BOLErBC6AKGL1xcvAxm0UFVxlNoCMzo8vEdi8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C6zQFPa4aeegc6MgV6ZM7KZDsVdD0wronn0O3Dwc2Z6vc0AlFQK1OluKf6MKCv8qB
-	 A/6Hllb+cOZFGcPqDO/ahwJzCHsb4hsRN213MAmd/u7gvLAFqIp4xsUC4iWjNYatlw
-	 A8zVayOtlOLKToU0+FeEa7TlYicIHmSQ7qfCRI98=
+	b=TnKTFHnaeXg1HU/C1YjG+iA153lSGx0hR3zbUPlTY98Gqao7imymWy/6WNtkRGnnb
+	 Mg6IlXSVCCTCOBbEjc8l9L1y47hGAQfOZpX3TCoJI+YjWhIZUPCY8vNkHhpiY1UrJ1
+	 zRGMiiBhWTKfHOi1aOpP+HWTOYVWyvz5WhyATaLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKVKbA (ORCPT
+        id S1727085AbfKVKbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:31:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfKVKbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:31:00 -0500
+        id S1726417AbfKVKbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C25620708;
-        Fri, 22 Nov 2019 10:30:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC392071F;
+        Fri, 22 Nov 2019 10:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418659;
-        bh=LFSN8ShC4Q5FMVFLBCNYvsqI/QYLN2eTHUz5rIJax6w=;
+        s=default; t=1574418662;
+        bh=sn+m3BOLErBC6AKGL1xcvAxm0UFVxlNoCMzo8vEdi8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O18K2igJXruzykUFsRp5rhEOzgf/RGmmI+LwZmqHOhekhpCxg//S1PC8Z58LmKT6z
-         u6WcCIpG/yvC0EbeFsJ2zYSjQxxuUAMDcvVCVpllCOGJT/bjvwH3zY78JxhRfqnfRu
-         SoHF/8hGcr6nQ/NeYZB/APiKmaGp2tNtapPvErhE=
+        b=hLJyEpnLh2C987tYfy29zVAVfz4Rw7ayjjlloLtAH5eHhjtnqLLepGs/UK+TllC7+
+         F41X2XBaOfvV71IRY6g7GZkwNzWo5dvgNm/ew9tNCQDOgR2lPV1tlprUO2YaSh6cDx
+         jqwtuXmrGkLvwFeOixyKew5M/+9APGtoejDkHuNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.4 001/159] slip: Fix memory leak in slip_open error path
-Date:   Fri, 22 Nov 2019 11:26:32 +0100
-Message-Id: <20191122100705.527131557@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 010/159] mm: hugetlb: switch to css_tryget() in hugetlb_cgroup_charge_cgroup()
+Date:   Fri, 22 Nov 2019 11:26:41 +0100
+Message-Id: <20191122100716.019364466@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,55 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Roman Gushchin <guro@fb.com>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+commit 0362f326d86c645b5e96b7dbc3ee515986ed019d upstream.
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+An exiting task might belong to an offline cgroup.  In this case an
+attempt to grab a cgroup reference from the task can end up with an
+infinite loop in hugetlb_cgroup_charge_cgroup(), because neither the
+cgroup will become online, neither the task will be migrated to a live
+cgroup.
 
-Here is the slcan memory leak trace reported by Syzkaller:
+Fix this by switching over to css_tryget().  As css_tryget_online()
+can't guarantee that the cgroup won't go offline, in most cases the
+check doesn't make sense.  In this particular case users of
+hugetlb_cgroup_charge_cgroup() are not affected by this change.
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
+A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
+css_tryget() instead of css_tryget_online() in task_get_css()").
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20191106225131.3543616-2-guro@fb.com
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/slip/slip.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -860,6 +860,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
- 
- err_exit:
- 	rtnl_unlock();
+---
+ mm/hugetlb_cgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -180,7 +180,7 @@ int hugetlb_cgroup_charge_cgroup(int idx
+ again:
+ 	rcu_read_lock();
+ 	h_cg = hugetlb_cgroup_from_task(current);
+-	if (!css_tryget_online(&h_cg->css)) {
++	if (!css_tryget(&h_cg->css)) {
+ 		rcu_read_unlock();
+ 		goto again;
+ 	}
 
 
