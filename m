@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB070C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778F4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EAD2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4752E2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420722;
-	bh=42AfC1JAgQnwGHw73JvEkXmD6v+DlYzI2SFaT4NhMX8=;
+	s=default; t=1574420725;
+	bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JZoOZ4pI2hU8DOwYpY5r0EOkvB1QQfF3slOAq/NslUh7K195x+QEgcJ9+CdhmqiAb
-	 uo2IiCm241gfImL6zJ9YLz+JcDBygZTipxuJS89o1U1s6we2rkwB8BQt9uVvAt9x6y
-	 dyYhiYNT6oDtGEgzaFn4zA73y46KvQo2J77BsoMY=
+	b=TEBMv4my7IPiVPB0jAaADw+4yc1YWKWckif7BEUh0lsvsyDbaWWp1qaK6EZU117j2
+	 RRykxwnG+AdvfQngbbz0AwkHu9I2vxUBmhRMUvBd6VIWxHIHmLhM5IBDmLbmfGPn6b
+	 UBomvemLIzX7Qvrt110YuP65R5lIOofe2DxYE55U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfKVLFV (ORCPT
+        id S1731710AbfKVLFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:05:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60928 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:05:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731687AbfKVLFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:05:18 -0500
+        id S1731331AbfKVLFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECBD22084D;
-        Fri, 22 Nov 2019 11:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F6720872;
+        Fri, 22 Nov 2019 11:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420717;
-        bh=42AfC1JAgQnwGHw73JvEkXmD6v+DlYzI2SFaT4NhMX8=;
+        s=default; t=1574420720;
+        bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owb26dLtY2R7UVLlk3XYcW1qjxma+vv+lg2xohds9ymVZa7lLPJynYtbVgXrFvdkX
-         M9eKAOoqNYqIkfe+0k/GIAnoqyESjpOASesJH7VC3ySYUTljzIXI5e+vNpbm2NmqLC
-         Bnttk3AzDaNoXk+svM0GMco9RhEPcUo5nEmevHVc=
+        b=ngbh18ZJ0aDKdWoHNZvCp2NrQtRzfZDGXV6JUb1WJcfQizedh0xv9POf6AhxBwUNq
+         aWYf/osnqb7yociXscuF4kgjo0yrFWkjbPF3DiVVb024jLtZ3WZ6C6zlj+htWGQqkJ
+         o2Iuifqd80mlbK3DY4rQCS0vIK4i3zf+LJR4SVAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 201/220] hwmon: (pwm-fan) Silence error on probe deferral
-Date:   Fri, 22 Nov 2019 11:29:26 +0100
-Message-Id: <20191122100928.357504267@linuxfoundation.org>
+Subject: [PATCH 4.19 202/220] hwmon: (ina3221) Fix INA3221_CONFIG_MODE macros
+Date:   Fri, 22 Nov 2019 11:29:27 +0100
+Message-Id: <20191122100928.409190290@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -60,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
 
-[ Upstream commit 9f67f7583e77fe5dc57aab3a6159c2642544eaad ]
+[ Upstream commit 791ebc9d34e9d212fc03742c31654b017d385926 ]
 
-Probe deferrals aren't actual errors, so silence the error message in
-case the PWM cannot yet be acquired.
+The three INA3221_CONFIG_MODE macros are not correctly defined here.
+The MODE3-1 bits are located at BIT 2-0 according to the datasheet.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+So this patch just fixes them by shifting all of them with a correct
+offset. However, this isn't a crital bug fix as the driver does not
+use any of them at this point.
+
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pwm-fan.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/hwmon/ina3221.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 7f01fad0d3e34..65de80bd63d8c 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -221,8 +221,12 @@ static int pwm_fan_probe(struct platform_device *pdev)
+diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
+index e6b49500c52ae..8c9555313fc3d 100644
+--- a/drivers/hwmon/ina3221.c
++++ b/drivers/hwmon/ina3221.c
+@@ -38,9 +38,9 @@
+ #define INA3221_WARN3			0x0c
+ #define INA3221_MASK_ENABLE		0x0f
  
- 	ctx->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, NULL);
- 	if (IS_ERR(ctx->pwm)) {
--		dev_err(&pdev->dev, "Could not get PWM\n");
--		return PTR_ERR(ctx->pwm);
-+		ret = PTR_ERR(ctx->pwm);
-+
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Could not get PWM: %d\n", ret);
-+
-+		return ret;
- 	}
+-#define INA3221_CONFIG_MODE_SHUNT	BIT(1)
+-#define INA3221_CONFIG_MODE_BUS		BIT(2)
+-#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
++#define INA3221_CONFIG_MODE_SHUNT	BIT(0)
++#define INA3221_CONFIG_MODE_BUS		BIT(1)
++#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(2)
  
- 	platform_set_drvdata(pdev, ctx);
+ #define INA3221_RSHUNT_DEFAULT		10000
+ 
 -- 
 2.20.1
 
