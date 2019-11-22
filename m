@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C877EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E90C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8D320715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30372072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419749;
-	bh=Hrd8Tdvryc7oSkiufmHyOEffL6pZMUZ+GAVv0e3zuzQ=;
+	s=default; t=1574419753;
+	bh=JZdrSf66McTwmVPyGVXRXf/zpqf72r7V9/3MkaYOAbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DC1D2XtcfIYdcfF85XXtNNHWfngen9QClj1dsP1g81i7fL+GPLNoAGgFmgKZeyfdQ
-	 sBW3rOf7vfQWdhW92StF68jeeWAtyb9hcKgY3vTFXreJ3qWrnT0PS8v0J2pI5lLzK7
-	 F8PpwQMq04nQO4D+iLdkGGoTGYzObsP6BI71+m7Q=
+	b=EszxF2gJpWkQ1RATYZLKte+RWjGG3jnkDcgEfLR5EIy5iM7r+22xhXhaeS36svROJ
+	 E4/W1IfaAJHq0EuhA5V6mGPrrFn/EgKtWVn0TVNqoz9DFENd36HnwEUtW46ryMXPvC
+	 KPf9zkUN/RJlnkg9F15OdaeuKFHY6zzdqrZjqmcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfKVKtH (ORCPT
+        id S1729640AbfKVKtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:49:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58186 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:49:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfKVKtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:49:02 -0500
+        id S1729995AbfKVKtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:49:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B2920637;
-        Fri, 22 Nov 2019 10:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A51520715;
+        Fri, 22 Nov 2019 10:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419742;
-        bh=Hrd8Tdvryc7oSkiufmHyOEffL6pZMUZ+GAVv0e3zuzQ=;
+        s=default; t=1574419744;
+        bh=JZdrSf66McTwmVPyGVXRXf/zpqf72r7V9/3MkaYOAbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcXXgbGX9pbZEnyMuwz6farqWDdquOm5rnhWlhin7ptBz1W/ZFoiavlvEopSGxAdF
-         U2XxcfMINdTTlmzuMH+NSs+bJgyalcrN/1/1mcdW5QcdqbNcvrYcKeTdyV+el9xP1+
-         LdVNRW9m+yaXf/uV5HqIa4LIal0gX6k4/ntKfE3Q=
+        b=hszOb+BKfTOLAcdM9CKoSpzqOVQmVCC2XgZOfnT0w/ktvV4YZEJaY59SXQN11OZ2M
+         wazEiElggdPRhkhi8i648RUBeG6kW0pDxNdBvPlNbx+6FCeBXgn2m09IzbfaZngaru
+         7kUVDHF50cY1VwgFhk8n3Ys0woJ+Apl+Iqfw4Usk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 172/222] powerpc/pseries: Fix DTL buffer registration
-Date:   Fri, 22 Nov 2019 11:28:32 +0100
-Message-Id: <20191122100914.905923398@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 163/222] ata: ahci_brcm: Allow using driver or DSL SoCs
+Date:   Fri, 22 Nov 2019 11:28:23 +0100
+Message-Id: <20191122100914.392555480@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,42 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit db787af1b8a6b4be428ee2ea7d409dafcaa4a43c ]
+[ Upstream commit 7fb44929cb0e5cdcde143e1ca3ca57b5b8247db0 ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we register the DTL
-buffer for a cpu when the associated file under powerpc/dtl in debugfs
-is opened. When doing so, we need to set the size of the buffer being
-registered in the second u32 word of the buffer. This needs to be in big
-endian, but we are not doing the conversion resulting in the below error
-showing up in dmesg:
+The Broadcom STB AHCI controller is the same as the one found on DSL
+SoCs, so we will utilize the same driver on these systems as well.
 
-	dtl_start: DTL registration for cpu 0 (hw 0) failed with -4
-
-Fix this in the obvious manner.
-
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index 39049e4884fbd..37de83c5ef172 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -150,7 +150,7 @@ static int dtl_start(struct dtl *dtl)
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index 5d16fc4fa46c7..a8d4f4b5a77eb 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -100,7 +100,8 @@ config SATA_AHCI_PLATFORM
  
- 	/* Register our dtl buffer with the hypervisor. The HV expects the
- 	 * buffer size to be passed in the second word of the buffer */
--	((u32 *)dtl->buf)[1] = DISPATCH_LOG_BYTES;
-+	((u32 *)dtl->buf)[1] = cpu_to_be32(DISPATCH_LOG_BYTES);
- 
- 	hwcpu = get_hard_smp_processor_id(dtl->cpu);
- 	addr = __pa(dtl->buf);
+ config AHCI_BRCM
+ 	tristate "Broadcom AHCI SATA support"
+-	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP
++	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
++		   ARCH_BCM_63XX
+ 	help
+ 	  This option enables support for the AHCI SATA3 controller found on
+ 	  Broadcom SoC's.
 -- 
 2.20.1
 
