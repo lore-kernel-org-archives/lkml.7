@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF3AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F86C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488E62068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5577B2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421251;
-	bh=BS6rKx4QK1VTGB6Ow00xYvFJ4tektkmDu92Gqm0uiNk=;
+	s=default; t=1574421260;
+	bh=fPTTL918haYPzKywCNCsAU+vg6L7/gNh4/5v3ts11vI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ansdUar2IG6z8y+fnAUwZG0/kBKALX1q7u+k5vmGBlrkysXuMB/Q2xinEg5mJrzNF
-	 X3Z6Gaf4k3+umz26xyhwgxY9xznDKDjZpbvXJnJydbI4023fWkgO25SsoCXU5QJJuv
-	 IlmRml3x17iEp/gdMFw7+qOMfbFgYsoPyxR2EBZE=
+	b=d+KtslkyJNubKqbXxCJvkzADn1+bKxqgmyXAK+77rhaPgNIIzm69aaagWWV1L54mi
+	 52fsB5IB56nyePAe4Pet53zDymV5i9+YCbarPbB6VtmWnoAYGDmvHiN2KPg0itJTSi
+	 f6TrBhPE7iqZYOhEpOzahQyDYiLFpez0T+AWfaME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbfKVKyF (ORCPT
+        id S1729654AbfKVLOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:14:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbfKVKyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:00 -0500
+        id S1729177AbfKVKxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD62920637;
-        Fri, 22 Nov 2019 10:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF57D20637;
+        Fri, 22 Nov 2019 10:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420039;
-        bh=BS6rKx4QK1VTGB6Ow00xYvFJ4tektkmDu92Gqm0uiNk=;
+        s=default; t=1574420031;
+        bh=fPTTL918haYPzKywCNCsAU+vg6L7/gNh4/5v3ts11vI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKXl7DUrhVVqUmJWTY/QKcmNKQJjkuaVRM89A3VuxR+J3+i/NteG7G8TzEUAsVlvo
-         BjzEM2y03jQDq/9VDQzs6QKCoCknrcqtS7zY26wfPozCG7lxYd+ZutA8DfGgKXC+Xi
-         KdqPPKIjiME1/MPbL1OZgH8sjRAnb1iQ9WixgvqE=
+        b=H3EZFMMqPyMWV0hdlYSqNjuDjUi8VyyXGS1LywfND/bgZYZRk++GPMCOADqK61Y+c
+         R/8rpUHoOuiIN0kjjqTXQJ+9dtqb7OY+xju1eQk2Dw6RfWo/4sJkpgpK+UP6ERHMh+
+         jrd6H5Lh3yW7fkboLHK5Z3JsNMv1vuApR32mIdSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lianbo Jiang <lijiang@redhat.com>,
-        Borislav Petkov <bp@suse.de>, x86@kernel.org,
+        stable@vger.kernel.org, Rajmohan Mani <rajmohan.mani@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 095/122] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
-Date:   Fri, 22 Nov 2019 11:29:08 +0100
-Message-Id: <20191122100830.005748725@linuxfoundation.org>
+Subject: [PATCH 4.14 093/122] media: dw9714: Fix error handling in probe function
+Date:   Fri, 22 Nov 2019 11:29:06 +0100
+Message-Id: <20191122100829.189606172@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,47 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Rajmohan Mani <rajmohan.mani@intel.com>
 
-[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
+[ Upstream commit f9a0b14240a2d0bd196d35e8aac73df6eabd6382 ]
 
-Lianbo reported a build error with a particular 32-bit config, see Link
-below for details.
+Fixed the case where v4l2_async_unregister_subdev()
+is called unnecessarily in the error handling path
+in probe function.
 
-Provide a weak copy_oldmem_page_encrypted() function which architectures
-can override, in the same manner other functionality in that file is
-supplied.
-
-Reported-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: x86@kernel.org
-Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/vmcore.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/i2c/dw9714.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 885d445afa0d9..ce400f97370d3 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -164,6 +164,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 	return remap_pfn_range(vma, from, pfn, size, prot);
- }
+diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
+index 95af4fc99cd04..c1273bcd59011 100644
+--- a/drivers/media/i2c/dw9714.c
++++ b/drivers/media/i2c/dw9714.c
+@@ -182,7 +182,8 @@ static int dw9714_probe(struct i2c_client *client)
+ 	return 0;
  
-+/*
-+ * Architectures which support memory encryption override this.
-+ */
-+ssize_t __weak
-+copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+			   unsigned long offset, int userbuf)
-+{
-+	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
-+}
-+
- /*
-  * Copy to either kernel or user space
-  */
+ err_cleanup:
+-	dw9714_subdev_cleanup(dw9714_dev);
++	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
++	media_entity_cleanup(&dw9714_dev->sd.entity);
+ 	dev_err(&client->dev, "Probe failed: %d\n", rval);
+ 	return rval;
+ }
 -- 
 2.20.1
 
