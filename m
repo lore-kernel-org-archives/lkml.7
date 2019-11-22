@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB94C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD3420717
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182C920715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403212;
-	bh=qiar1VaVBvPmu92UC81QiJx1uqOjg2HjOpaJCa2CW2c=;
+	s=default; t=1574403216;
+	bh=u/ht6PC8dTaXSeedqZtbu1SzlGDMXer7QYkbRsHtsc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALp/Ej/SWdC6nrMkJW6o76cFvT14NTK/MDh35cK2ioxiWCE3MNGppFHnE4I7Cc5N/
-	 r2Lql0WKGGZbvZ0u5U3DP6o7qMdx09a//r+mHhywb5PakQLikfrqfq2CihFOqFx9wt
-	 nTNVpQsbVRSgfBEm1H2pieearFjudt4mX7KQ8+M4=
+	b=Q4t8tTsmaU3AE8i8CWf7n/cZ9my4XNJTAw1YuBGjcrKdIQjXxi17rHTUjr6Mq1sDR
+	 GqeLcxYeYLrc65oEMA7OAenkbLpwbUoPkuk9j3OSLnoPImD1m92pXCFLfSNySlI2id
+	 Bmk/B9Xqr6jsxK9nmCrK8ctXxPlVYNnK6CciW7EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfKVGNa (ORCPT
+        id S1727541AbfKVGNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50588 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729282AbfKVGNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:23 -0500
+        id S1729316AbfKVGN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A2E2070E;
-        Fri, 22 Nov 2019 06:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D01B620708;
+        Fri, 22 Nov 2019 06:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403203;
-        bh=qiar1VaVBvPmu92UC81QiJx1uqOjg2HjOpaJCa2CW2c=;
+        s=default; t=1574403207;
+        bh=u/ht6PC8dTaXSeedqZtbu1SzlGDMXer7QYkbRsHtsc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbvKiV+S3Jc0hkCsifGqLj7xqNmWWuRIjwY0iScH0xvHxLKKzZfoalrxgJSCuIcpm
-         O9Y23X13L03PmNQT6KiiBx7EG9dwrkczoHB8AGsM6iH3LrFPhSlOJrZIo0JrCezlJ8
-         DiLx5eLGTPKXy/7a8mN3QsyGYTrHKESPtN3uJ9FM=
+        b=eMxybB1Eq+E9auJUqUF8i/9SEBn61IF6rqiKGG71rpwlBbMfCXPsfrxUOEAibhGFN
+         hqYokCuYVbHra9FHkUN/B3jnCanQE9Jv+nPBZVR3v8ldPfK3a5m3fffZxmyxL88n8/
+         UeougtOFK3piCzphZS8GOE36dtz3jzbI11EFXwJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 19/68] gpiolib: Fix return value of gpio_to_desc() stub if !GPIOLIB
-Date:   Fri, 22 Nov 2019 01:12:12 -0500
-Message-Id: <20191122061301.4947-18-sashal@kernel.org>
+Cc:     Michael Mueller <mimu@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 23/68] KVM: s390: unregister debug feature on failing arch init
+Date:   Fri, 22 Nov 2019 01:12:16 -0500
+Message-Id: <20191122061301.4947-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,37 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Michael Mueller <mimu@linux.ibm.com>
 
-[ Upstream commit c5510b8dafce5f3f5a039c9b262ebcae0092c462 ]
+[ Upstream commit 308c3e6673b012beecb96ef04cc65f4a0e7cdd99 ]
 
-If CONFIG_GPOILIB is not set, the stub of gpio_to_desc() should return
-the same type of error as regular version: NULL.  All the callers
-compare the return value of gpio_to_desc() against NULL, so returned
-ERR_PTR would be treated as non-error case leading to dereferencing of
-error value.
+Make sure the debug feature and its allocated resources get
+released upon unsuccessful architecture initialization.
 
-Fixes: 79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+A related indication of the issue will be reported as kernel
+message.
+
+Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Message-Id: <20181130143215.69496-2-mimu@linux.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio/consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kvm/kvm-s390.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index fb0fde686cb1f..4a9838feb0866 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -398,7 +398,7 @@ static inline int gpiod_to_irq(const struct gpio_desc *desc)
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 3e46f62d32adf..b4032d625d225 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -185,17 +185,28 @@ void kvm_arch_hardware_unsetup(void)
  
- static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
+ int kvm_arch_init(void *opaque)
  {
--	return ERR_PTR(-EINVAL);
-+	return NULL;
++	int rc;
++
+ 	kvm_s390_dbf = debug_register("kvm-trace", 32, 1, 7 * sizeof(long));
+ 	if (!kvm_s390_dbf)
+ 		return -ENOMEM;
+ 
+ 	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view)) {
+-		debug_unregister(kvm_s390_dbf);
+-		return -ENOMEM;
++		rc = -ENOMEM;
++		goto out_debug_unreg;
+ 	}
+ 
+ 	/* Register floating interrupt controller interface. */
+-	return kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
++	rc = kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
++	if (rc) {
++		pr_err("Failed to register FLIC rc=%d\n", rc);
++		goto out_debug_unreg;
++	}
++	return 0;
++
++out_debug_unreg:
++	debug_unregister(kvm_s390_dbf);
++	return rc;
  }
  
- static inline int desc_to_gpio(const struct gpio_desc *desc)
+ void kvm_arch_exit(void)
 -- 
 2.20.1
 
