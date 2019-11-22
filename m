@@ -2,143 +2,238 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784792070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A562070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q8dtbXc+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0qdrttB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfKVXrn (ORCPT
+        id S1726861AbfKVXtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:47:43 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35502 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfKVXrk (ORCPT
+        Fri, 22 Nov 2019 18:49:42 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34377 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKVXtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 18:47:40 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j6so220797lja.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 15:47:37 -0800 (PST)
+        Fri, 22 Nov 2019 18:49:42 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so8127923oig.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 15:49:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BUKr4yoGpKaxYmTEmTDH/7ICwo7GEhPoNnnopGTuMFc=;
-        b=Q8dtbXc+uzPlnQ7A3hyBJf9uHmj4UbqP18hCKWDZhmVvKvjKGssVYIijTzf0ayTkVO
-         LAEg4y9VzSoF/UnQ2ptgX5kr3ovEqBBhLP10m920O87sMgbXTALiqLwGLiYm+BsjHzNr
-         09usHFb7cS5XOfK9/diQukOnyjNUlcwP5GZdpBPAwx+wj33CfNIM1bNH8kaX6DcGAD+u
-         qgIv5rdhBD4DEwr/Nwnvi1OIOJrxJ0E2E04ivUsCckocWk+PvRXZ7JpQCHoQVn/cGwDe
-         eTKQwJvbO6GE63u/3wsmEDuSX6u+vuIPuLf/X1GL65Qkvko/beBq4O2+gMkISVjy+2rM
-         cRgA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6dDtx8TFTILA/cId63d3nJB9eUdnG02yExBByH1DaL0=;
+        b=K0qdrttB5dB1Kpr11S/Ogh1KrNnoIjTOWQ1vRHLJR6l4t6Sozbi3k6xnKksQvrm/wY
+         grg+aL3jYFsXGGS5LNtORQE16ySQmA8+OnYf/4xA+m0xXIohY+CmwefFW1QNkZXlalsT
+         0djFA5OrB5Qv+f5h3ScH69Xhw9v/unvIJC+y/XE1CsebRH72eXTs+AhwfKNxUO36pMDg
+         7zOxOKXIIBtAXTxz5Br1O3715OI02BZy8rSKk0BDymmSm4yxpmMVqDzj5vsNBfUNuKYQ
+         4NdxXF5LfWQRfZf5efEIKnTJ+kCw11q8RWgkXmfJO+6P0XM+AlugnW1C4Ocs2tCughQw
+         7gyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=BUKr4yoGpKaxYmTEmTDH/7ICwo7GEhPoNnnopGTuMFc=;
-        b=se9V2pYLMS2kWXlaeD0CWXXUsOEve8u7+ac2n4OIRw70hdMDT7YXCEFot4SmdltTqd
-         82qLKwWAX7g4k6yPy+iXrGTYwGyg0IJMHYzSxk0Y56j/MDIx8hrmz+ef/J8rvCwRElOf
-         q5qCsyRNP7m9UhcFf3TfMQwWKUE8TMkioZkbDgbjAVGzW2sN6N9blQ7lLw5hh4UEgSSU
-         7o/9003C26g67P5+AJa3Vjvq86B+K4Vhq7fC9N7kyCz6ePL9VowEV9+SryguRth1XPQs
-         GVDSCbWbf3oyqyrCP7hWEH8+pg+NculaOvQSyjyh+c/ZoaFBr9N95VFHdvpQyrmUHevO
-         lDwA==
-X-Gm-Message-State: APjAAAUGPoz9n+8ahqfbTeXgx/77/TRDfJ4fdpNVFya9SWeHlJZU2x2J
-        u/icOOGHAGubsBaxCPMVxzyLoQ==
-X-Google-Smtp-Source: APXvYqz0tvkYX9lNjGIZfLY/VjLXdb9DDKAILAvxppaODGA/mHO1za/hr61E9lBoBkP1KloPumXSOg==
-X-Received: by 2002:a2e:9a95:: with SMTP id p21mr13622079lji.175.1574466456985;
-        Fri, 22 Nov 2019 15:47:36 -0800 (PST)
-Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id t12sm3744290lfc.73.2019.11.22.15.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 15:47:36 -0800 (PST)
-Date:   Sat, 23 Nov 2019 01:47:34 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
-        sergei.shtylyov@cogentembedded.com,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH v5 bpf-next 11/15] libbpf: don't use cxx to test_libpf
- target
-Message-ID: <20191122234733.GA2474@khorivan>
-Mail-Followup-To: Stanislav Fomichev <sdf@fomichev.me>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
-        sergei.shtylyov@cogentembedded.com,
-        Andrii Nakryiko <andriin@fb.com>
-References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
- <20191011002808.28206-12-ivan.khoronzhuk@linaro.org>
- <20191121214225.GA3145429@mini-arch.hsd1.ca.comcast.net>
- <CAEf4BzZWPwzC8ZBWcBOfQQmxBkDRjogxw2xHZ+dMWOrrMmU0sg@mail.gmail.com>
- <20191122163211.GB3145429@mini-arch.hsd1.ca.comcast.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6dDtx8TFTILA/cId63d3nJB9eUdnG02yExBByH1DaL0=;
+        b=JQ6GrBklv3GKRT/lNuCAVYEU2BAxXBye6ZXAEJgs/xNeJn/2eEXor0PGp0noAiFGgW
+         7ARGzEXgF1VnLHnkIyKowiM3EGz/XQIhlhg19psYGQCH+oZj+MB8/yNMfslFtXZQ1Zfx
+         TOi73E39AlitepOio2SLZMxkjxsX8eJ6G10hMUz3EEX31CfBrRusEikwVoApNwcXWJt3
+         8/pwWG1ImLO2yYXgX4SrQZwkY4MSF16B3Z09wTTLp7uG9JjGSTuqfX4urSTbPWh8nXQh
+         8D8x+4x4ttfcLDPq+/VZt4kZiwHtaxJzKq1i97Q7SV7PXEoUDL2zIe5cxYd6xK9fYesO
+         WyAA==
+X-Gm-Message-State: APjAAAVXMGOONy4qYhPmrQVB6yqTT2PfxSCIJsv9dE0cOmj7XdJBQ9zG
+        FLPWn8gqo2L93cDNbtPJRbJ01cToONeQ8w==
+X-Google-Smtp-Source: APXvYqyIvSOGxzbbb7majIiLV3sKznMXLvhpPhO+iDFtIzBhitxL5y2otdPOg9rAQ//JxPaROKKLPA==
+X-Received: by 2002:a05:6808:88:: with SMTP id s8mr13754545oic.109.1574466580943;
+        Fri, 22 Nov 2019 15:49:40 -0800 (PST)
+Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
+        by smtp.gmail.com with ESMTPSA id t2sm2695637otm.75.2019.11.22.15.49.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 15:49:40 -0800 (PST)
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191122100704.194776704@linuxfoundation.org>
+From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
+Message-ID: <145b78b9-5518-8fab-7861-4f40e5edcabc@linaro.org>
+Date:   Fri, 22 Nov 2019 17:49:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191122163211.GB3145429@mini-arch.hsd1.ca.comcast.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 08:32:11AM -0800, Stanislav Fomichev wrote:
->On 11/21, Andrii Nakryiko wrote:
->> On Thu, Nov 21, 2019 at 1:42 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
->> >
->> > On 10/11, Ivan Khoronzhuk wrote:
->> > > No need to use C++ for test_libbpf target when libbpf is on C and it
->> > > can be tested with C, after this change the CXXFLAGS in makefiles can
->> > > be avoided, at least in bpf samples, when sysroot is used, passing
->> > > same C/LDFLAGS as for lib.
->> > > Add "return 0" in test_libbpf to avoid warn, but also remove spaces at
->> > > start of the lines to keep same style and avoid warns while apply.
->> > Hey, just spotted this patch, not sure how it slipped through.
->> > The c++ test was there to make sure libbpf can be included and
->> > linked against c++ code (i.e. libbpf headers don't have some c++
->> > keywords/etc).
->> >
->> > Any particular reason you were not happy with it? Can we revert it
->> > back to c++ and fix your use-case instead? Alternatively, we can just
->> > remove this test if we don't really care about c++.
->> >
->>
->> No one seemed to know why we have C++ pieces in pure C library and its
->> Makefile, so we decide to "fix" this. :)
->It's surprising, the commit 8c4905b995c6 clearly states the reason
->for adding it. Looks like it deserved a real comment in the Makefile :-)
+Hello!
 
-I dislike changing things like this, but I was asked while review and
-it seemed logical enough. The comment could prevent us from doing this.
+On 11/22/19 4:26 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.203 release.
+> There are 159 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.203-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
->
->> But I do understand your concern. Would it be possible to instead do
->> this as a proper selftests test? Do you mind taking a look at that?
->Ack, will move this test_libbpf.c into selftests and convert back to
->c++.
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.203-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.4.y
+git commit: dbaac4c54573d428113956f3e4c56f9d94920c28
+git describe: v4.4.202-159-gdbaac4c54573
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/build/v4.4.202-159-gdbaac4c54573
+
+
+No regressions (compared to build v4.4.202)
+
+No fixes (compared to build v4.4.202)
+
+Ran 20213 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* prep-tmp-disk
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* v4l2-compliance
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.203-rc2
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.203-rc2-hikey-20191122-613
+git commit: fd5ba88e671977887fb59d54fa2697987c38931d
+git describe: 4.4.203-rc2-hikey-20191122-613
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4-oe/build/4.4.203-rc2-hikey-20191122-613
+
+
+No regressions (compared to build 4.4.202-rc1-hikey-20191115-607)
+
+No fixes (compared to build 4.4.202-rc1-hikey-20191115-607)
+
+Ran 1605 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
+
 
 -- 
-Regards,
-Ivan Khoronzhuk
+Linaro LKFT
+https://lkft.linaro.org
