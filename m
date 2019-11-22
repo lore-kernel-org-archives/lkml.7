@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F1EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7440C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D5D2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBE12053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403588;
-	bh=a84wFZWHFaoV0m4VFKLRCiScqrK5dvzdvTvmGaCGcfM=;
+	s=default; t=1574403597;
+	bh=geeeVQ63UDrNG1JfFxbc//qDRyzxsQyqhEbu7hEACLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJmJ+T2S/1DFt5XEvH/lFSnHALHewTjtOSWM/oAOUCkRBti59BZTcXayrp7JyiwMU
-	 WC4j/suanxL+bWJUeFq7Dq0o7uyctXDxBNoocASgv93AZLCwElMT3gWzZ5ypx3R4YY
-	 R6WrmYEyBNYvl9aZMdgFcnbqDNweZBV/hxrB1nU0=
+	b=bCcEmtDByebyetpzidYAGisWuo76eSS2zQSF3666o/rfdBwFftU9RLhE5SpHhvSVi
+	 9sGSkKe/dAJnbZopdebDw/KFvktL2+qM5dFcQpcLmEJc2etQfqVIVVXaFpBCQ7wMpi
+	 ZTgr/auxK5DkjThVZ9MWKO9LdOK8BH/W/LM19pK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfKVGTr (ORCPT
+        id S1728864AbfKVGT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:19:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:19:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbfKVFzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:55:48 -0500
+        id S1728691AbfKVFws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B40F42070A;
-        Fri, 22 Nov 2019 05:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CE472071F;
+        Fri, 22 Nov 2019 05:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402147;
-        bh=a84wFZWHFaoV0m4VFKLRCiScqrK5dvzdvTvmGaCGcfM=;
+        s=default; t=1574401967;
+        bh=geeeVQ63UDrNG1JfFxbc//qDRyzxsQyqhEbu7hEACLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nitvsJAVPnKDDZPYqs3b0tI1ZQako8VmStEYFkMT/Gs35V6YrFrGNcOWGfWnDXDRE
-         djBMC/8MfsAjdt/WHcyW3r9BHNV/NoRR+cdEonTDITWzlVPb4mkXUSAWUJ6HGu+tX6
-         odbVm9hLvppJSTEbzrMds/rrcZm1ji3qBNbscjck=
+        b=PQKXNHRMhIHkF1a9Ioi7N1d1dFy1wHjAJUCvUFKj3HYCsUJgqJWOe+jSRGPZ7X6HT
+         AsLUAmRy0GRzEQokhnN9klEkxAHfedpbMV5BrEHTFjZ39BKUgQS3hMjcwYoUP1mTAA
+         wL1oY8qH/p/ZcQz4gPNKhkFngZs1ZxrJYqLWWzKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 002/127] scsi: lpfc: Fix dif and first burst use in write commands
-Date:   Fri, 22 Nov 2019 00:53:41 -0500
-Message-Id: <20191122055544.3299-2-sashal@kernel.org>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 188/219] ASoC: samsung: i2s: Fix prescaler setting for the secondary DAI
+Date:   Fri, 22 Nov 2019 00:48:40 -0500
+Message-Id: <20191122054911.1750-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
+In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
+References: <20191122054911.1750-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,75 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-[ Upstream commit 7c4042a4d0b7532cfbc90478fd3084b2dab5849e ]
+[ Upstream commit 323fb7b947b265753de34703dbbf8acc8ea3a4de ]
 
-When dif and first burst is used in a write command wqe, the driver was not
-properly setting fields in the io command request. This resulted in no dif
-bytes being sent and invalid xfer_rdy's, resulting in the io being aborted
-by the hardware.
+Make sure i2s->rclk_srcrate is properly initialized also during
+playback through the secondary DAI.
 
-Correct the wqe initializaton when both dif and first burst are used.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ sound/soc/samsung/i2s.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index 07cb671bb8550..2eba0c39ac1c4 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -2714,6 +2714,7 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
+diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+index ce00fe2f6aae3..d4bde4834ce5f 100644
+--- a/sound/soc/samsung/i2s.c
++++ b/sound/soc/samsung/i2s.c
+@@ -604,6 +604,7 @@ static int i2s_set_fmt(struct snd_soc_dai *dai,
+ 	unsigned int fmt)
+ {
+ 	struct i2s_dai *i2s = to_info(dai);
++	struct i2s_dai *other = get_other_dai(i2s);
+ 	int lrp_shift, sdf_shift, sdf_mask, lrp_rlow, mod_slave;
+ 	u32 mod, tmp = 0;
+ 	unsigned long flags;
+@@ -661,7 +662,8 @@ static int i2s_set_fmt(struct snd_soc_dai *dai,
+ 		 * CLK_I2S_RCLK_SRC clock is not exposed so we ensure any
+ 		 * clock configuration assigned in DT is not overwritten.
+ 		 */
+-		if (i2s->rclk_srcrate == 0 && i2s->clk_data.clks == NULL)
++		if (i2s->rclk_srcrate == 0 && i2s->clk_data.clks == NULL &&
++		    other->clk_data.clks == NULL)
+ 			i2s_set_sysclk(dai, SAMSUNG_I2S_RCLKSRC_0,
+ 							0, SND_SOC_CLOCK_IN);
+ 		break;
+@@ -699,6 +701,7 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
+ {
+ 	struct i2s_dai *i2s = to_info(dai);
++	struct i2s_dai *other = get_other_dai(i2s);
+ 	u32 mod, mask = 0, val = 0;
+ 	struct clk *rclksrc;
+ 	unsigned long flags;
+@@ -784,6 +787,9 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
+ 	i2s->frmclk = params_rate(params);
  
- 	/*
- 	 * Start the lpfc command prep by bumping the bpl beyond fcp_cmnd
-@@ -2819,6 +2820,14 @@ lpfc_bg_scsi_prep_dma_buf_s3(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
- 
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
+ 	rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
++	if (!rclksrc || IS_ERR(rclksrc))
++		rclksrc = other->clk_table[CLK_I2S_RCLK_SRC];
 +
- 	return 0;
- err:
- 	if (lpfc_cmd->seg_cnt)
-@@ -3371,6 +3380,7 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	int datasegcnt, protsegcnt, datadir = scsi_cmnd->sc_data_direction;
- 	int prot_group_type = 0;
- 	int fcpdl;
-+	struct lpfc_vport *vport = phba->pport;
+ 	if (rclksrc && !IS_ERR(rclksrc))
+ 		i2s->rclk_srcrate = clk_get_rate(rclksrc);
  
- 	/*
- 	 * Start the lpfc command prep by bumping the sgl beyond fcp_cmnd
-@@ -3486,6 +3496,14 @@ lpfc_bg_scsi_prep_dma_buf_s4(struct lpfc_hba *phba,
- 	 */
- 	iocb_cmd->un.fcpi.fcpi_parm = fcpdl;
- 
-+	/*
-+	 * For First burst, we may need to adjust the initial transfer
-+	 * length for DIF
-+	 */
-+	if (iocb_cmd->un.fcpi.fcpi_XRdy &&
-+	    (fcpdl < vport->cfg_first_burst_size))
-+		iocb_cmd->un.fcpi.fcpi_XRdy = fcpdl;
-+
- 	/*
- 	 * If the OAS driver feature is enabled and the lun is enabled for
- 	 * OAS, set the oas iocb related flags.
 -- 
 2.20.1
 
