@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DABFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D1C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4825F2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D6F2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403773;
-	bh=jQ1iFzeS+vCtqt56Z82AOL2Hls9N2/gLhDuxtgK3EXo=;
+	s=default; t=1574403778;
+	bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KuM5EPwk3LWYhR0NbVapy+OK/39EJ8Sm/RDQuZ7t07gxMN4DsB7K1Y3opt59PBtMp
-	 Dc2X1MqTrFSWdz4GNDYSrmI4y0Jz5C5h6hrgs0s4shriZTLbepuAuexE3wUahMVWLK
-	 wM+nmWnZrXm6Ta3hWk7frWFbSvGOsjYGeObg5i44=
+	b=MWcmtFjHnBAnnEGVEZqIYlJomqlbY1c0nFnOTjzddJMPSqN950FtgozyXfmtT893N
+	 aWzF9sYrE/5CZd6pz+waV4xLx8WAhgmacd/EgdRoYUP2NqfxHJ7MeR6zDvpBxvuDKz
+	 ytuT/e1JCqW2v3pmJj8BgM475ljEJRSVf9b1RakI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfKVGWv (ORCPT
+        id S1728319AbfKVFvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:22:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:51:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbfKVFvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:55 -0500
+        id S1728253AbfKVFvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2330020726;
-        Fri, 22 Nov 2019 05:51:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05CD12075B;
+        Fri, 22 Nov 2019 05:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401914;
-        bh=jQ1iFzeS+vCtqt56Z82AOL2Hls9N2/gLhDuxtgK3EXo=;
+        s=default; t=1574401903;
+        bh=pd3AeSBtOZjnIaMKLxGwzgSveNiz/pmLImr/pfQFtRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zZrKmttk3iE92veqOw7VTislUPHAzwHN1eYolHCvyeP/zcuxkjf+31X0L2pF1KBYw
-         AxceKufmmvpjpMxvMkNLQ42Xe7N/pv6GP5mKyeRY9jVrFEu5ydNLRuGCHk4ZzD+xZU
-         ze0QVfwWfg+iG7sfF4KIBQavoETJRtw2DYofAMFQ=
+        b=MZ9gYk8YGV5WixeJnkX2EDAoeDzz0ldcPVHodHtRco0nIiKo/77VgOBhl+OXLLT2i
+         XZFnrvLJG7OiN9TgdiodSAJ5gHSne0zWUyH30trAiZz8ncKWfLvrEKAR1K+wRalYfK
+         MkM1IXEBuxHH5tHDge545hhHTxelA+cL7oUBDYEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 145/219] net: (cpts) fix a missing check of clk_prepare
-Date:   Fri, 22 Nov 2019 00:47:57 -0500
-Message-Id: <20191122054911.1750-138-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 135/219] crypto: mxc-scc - fix build warnings on ARM64
+Date:   Fri, 22 Nov 2019 00:47:47 -0500
+Message-Id: <20191122054911.1750-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,35 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 2d822f2dbab7f4c820f72eb8570aacf3f35855bd ]
+[ Upstream commit 2326828ee40357b3d2b1359b8ca7526af201495b ]
 
-clk_prepare() could fail, so let's check its status, and if it fails,
-return its error code upstream.
+The following build warnings are seen when building for ARM64 allmodconfig:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+drivers/crypto/mxc-scc.c:181:20: warning: format '%d' expects argument of type 'int', but argument 5 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:186:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:277:21: warning: format '%d' expects argument of type 'int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+drivers/crypto/mxc-scc.c:339:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+drivers/crypto/mxc-scc.c:340:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+
+Fix them by using the %zu specifier to print a size_t variable and using
+a plain %x to print the result of a readl().
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpts.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/mxc-scc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index b96b93c686bf1..4f644ac314fe8 100644
---- a/drivers/net/ethernet/ti/cpts.c
-+++ b/drivers/net/ethernet/ti/cpts.c
-@@ -572,7 +572,9 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
- 		return ERR_CAST(cpts->refclk);
+diff --git a/drivers/crypto/mxc-scc.c b/drivers/crypto/mxc-scc.c
+index e01c46387df8d..519086730791b 100644
+--- a/drivers/crypto/mxc-scc.c
++++ b/drivers/crypto/mxc-scc.c
+@@ -178,12 +178,12 @@ static int mxc_scc_get_data(struct mxc_scc_ctx *ctx,
+ 	else
+ 		from = scc->black_memory;
+ 
+-	dev_dbg(scc->dev, "pcopy: from 0x%p %d bytes\n", from,
++	dev_dbg(scc->dev, "pcopy: from 0x%p %zu bytes\n", from,
+ 		ctx->dst_nents * 8);
+ 	len = sg_pcopy_from_buffer(ablkreq->dst, ctx->dst_nents,
+ 				   from, ctx->size, ctx->offset);
+ 	if (!len) {
+-		dev_err(scc->dev, "pcopy err from 0x%p (len=%d)\n", from, len);
++		dev_err(scc->dev, "pcopy err from 0x%p (len=%zu)\n", from, len);
+ 		return -EINVAL;
  	}
  
--	clk_prepare(cpts->refclk);
-+	ret = clk_prepare(cpts->refclk);
-+	if (ret)
-+		return ERR_PTR(ret);
+@@ -274,7 +274,7 @@ static int mxc_scc_put_data(struct mxc_scc_ctx *ctx,
+ 	len = sg_pcopy_to_buffer(req->src, ctx->src_nents,
+ 				 to, len, ctx->offset);
+ 	if (!len) {
+-		dev_err(scc->dev, "pcopy err to 0x%p (len=%d)\n", to, len);
++		dev_err(scc->dev, "pcopy err to 0x%p (len=%zu)\n", to, len);
+ 		return -EINVAL;
+ 	}
  
- 	cpts->cc.read = cpts_systim_read;
- 	cpts->cc.mask = CLOCKSOURCE_MASK(32);
+@@ -335,9 +335,9 @@ static void mxc_scc_ablkcipher_next(struct mxc_scc_ctx *ctx,
+ 		return;
+ 	}
+ 
+-	dev_dbg(scc->dev, "Start encryption (0x%p/0x%p)\n",
+-		(void *)readl(scc->base + SCC_SCM_RED_START),
+-		(void *)readl(scc->base + SCC_SCM_BLACK_START));
++	dev_dbg(scc->dev, "Start encryption (0x%x/0x%x)\n",
++		readl(scc->base + SCC_SCM_RED_START),
++		readl(scc->base + SCC_SCM_BLACK_START));
+ 
+ 	/* clear interrupt control registers */
+ 	writel(SCC_SCM_INTR_CTRL_CLR_INTR,
 -- 
 2.20.1
 
