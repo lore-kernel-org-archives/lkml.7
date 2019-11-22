@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C31C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A51120658
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9CF2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452388;
-	bh=J73yVMa3U3RbgGSvk1fo0AqpixtC7XhHJWH/shj0GHU=;
+	s=default; t=1574452393;
+	bh=Zh4EvORjiwjuFRIq0OtCGcFRgBY4PLXKZSO978KgCqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGtVsGGQupPY7RZQVFXqSR13+kWI7wwU/8Hvib8MaHZ2ZYNs8hBkUnMV0VnLbeiMY
-	 EIXjv0uWYm0CCmdj2Z/SkJhknGFpIitcEAWuGlQgo0EpzvSd4Y736xkej0trIZDHEe
-	 /GlX4V8M9CN+98BLz5nWzu2JYzySVpQBdzh/oG8M=
+	b=ZyNrVii3EzJ1sEmvoT/GAd54B/yRcHgtWvffXGl2dJ2sI816t7Gi3aO2sbbx5AobJ
+	 eTJz/DXEM1v+dRKw2J64YIOPkHHQpZVEe1kMF3x2H9oDJlr0MRwQfS4TYXoI8JIHvV
+	 x7VP2igT3xrmf7ItpvsVqSDePT3lKYnvH4wOc1vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfKVTtj (ORCPT
+        id S1728085AbfKVTxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49466 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:53:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbfKVTtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:36 -0500
+        id S1727495AbfKVTti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1002E20748;
-        Fri, 22 Nov 2019 19:49:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B1A2075B;
+        Fri, 22 Nov 2019 19:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452175;
-        bh=J73yVMa3U3RbgGSvk1fo0AqpixtC7XhHJWH/shj0GHU=;
+        s=default; t=1574452177;
+        bh=Zh4EvORjiwjuFRIq0OtCGcFRgBY4PLXKZSO978KgCqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u5HcJDgYt543SfYUexTW5TNvLMWMHFdwrl5QaKi0gVNs2yUsfd6x5GYWmbVKLEYyO
-         j74dWpeNLFiXtIqTpudOMTit4NwdU4fYno5vtrA97cnaqbOXEUKzP1b7Bv60VlkWe1
-         gzGpaeymbzfxcSks/gnvcWFVnp4FKo4TdVWx/5QE=
+        b=IU+lvwt0AB7ihtYf1pG2EG8L7hf2rsIXhEbFsG7OMHzxzoqlkL0R2JZqIc5BvrbuM
+         bMnMrJtaH86vjxIHnJn1NSjria7PZlevaDwy1X9IYSAyK5/FKyUxCRJaAQzF/TU28K
+         ttlKVwG3DGGX5PCfpEgCCcKsFopbINoT4fGbde0M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        JD <jdtxs00@gmail.com>, Paul Wouters <paul@nohats.ca>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/21] xfrm: Fix memleak on xfrm state destroy
-Date:   Fri, 22 Nov 2019 14:49:13 -0500
-Message-Id: <20191122194931.24732-3-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 05/21] exportfs_decode_fh(): negative pinned may become positive without the parent locked
+Date:   Fri, 22 Nov 2019 14:49:15 -0500
+Message-Id: <20191122194931.24732-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194931.24732-1-sashal@kernel.org>
 References: <20191122194931.24732-1-sashal@kernel.org>
@@ -59,36 +57,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Klassert <steffen.klassert@secunet.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 86c6739eda7d2a03f2db30cbee67a5fb81afa8ba ]
+[ Upstream commit a2ece088882666e1dc7113744ac912eb161e3f87 ]
 
-We leak the page that we use to create skb page fragments
-when destroying the xfrm_state. Fix this by dropping a
-page reference if a page was assigned to the xfrm_state.
-
-Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
-Reported-by: JD <jdtxs00@gmail.com>
-Reported-by: Paul Wouters <paul@nohats.ca>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_state.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/exportfs/expfs.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
-index bd16e6882017e..190ca59d5ba31 100644
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -449,6 +449,8 @@ static void xfrm_state_gc_destroy(struct xfrm_state *x)
- 		x->type->destructor(x);
- 		xfrm_put_type(x->type);
- 	}
-+	if (x->xfrag.page)
-+		put_page(x->xfrag.page);
- 	xfrm_dev_state_free(x);
- 	security_xfrm_state_free(x);
- 	kfree(x);
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index c22cc9d2a5c9a..a561ae17cf435 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -508,26 +508,33 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
+ 		 * inode is actually connected to the parent.
+ 		 */
+ 		err = exportfs_get_name(mnt, target_dir, nbuf, result);
+-		if (!err) {
+-			inode_lock(target_dir->d_inode);
+-			nresult = lookup_one_len(nbuf, target_dir,
+-						 strlen(nbuf));
+-			inode_unlock(target_dir->d_inode);
+-			if (!IS_ERR(nresult)) {
+-				if (nresult->d_inode) {
+-					dput(result);
+-					result = nresult;
+-				} else
+-					dput(nresult);
+-			}
++		if (err) {
++			dput(target_dir);
++			goto err_result;
+ 		}
+ 
++		inode_lock(target_dir->d_inode);
++		nresult = lookup_one_len(nbuf, target_dir, strlen(nbuf));
++		if (!IS_ERR(nresult)) {
++			if (unlikely(nresult->d_inode != result->d_inode)) {
++				dput(nresult);
++				nresult = ERR_PTR(-ESTALE);
++			}
++		}
++		inode_unlock(target_dir->d_inode);
+ 		/*
+ 		 * At this point we are done with the parent, but it's pinned
+ 		 * by the child dentry anyway.
+ 		 */
+ 		dput(target_dir);
+ 
++		if (IS_ERR(nresult)) {
++			err = PTR_ERR(nresult);
++			goto err_result;
++		}
++		dput(result);
++		result = nresult;
++
+ 		/*
+ 		 * And finally make sure the dentry is actually acceptable
+ 		 * to NFSD.
 -- 
 2.20.1
 
