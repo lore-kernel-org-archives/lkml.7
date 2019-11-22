@@ -2,127 +2,101 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29ABC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9146DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FCD2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOCQ8dKn"
+	by mail.kernel.org (Postfix) with ESMTP id 5E4B42068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574403655;
+	bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tJiuWygqd3+ylCpVMVikOV7MHM0VvneFC23YcVrMWQFy4So9pA7kaJJFWDEylRdGS
+	 N90yJKkrLSdzeZ2L7NtjrFiOxWDtl5DAdxpOM4vWrI9XJ227knuoH0kfBw0ApKiI7h
+	 2Sqh2j/21WkiJW6bCFlmAJEmRguVLxBrEtCT16ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfKVFwc (ORCPT
+        id S1727304AbfKVFwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:52:32 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39889 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfKVFw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:27 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o9so2651834plk.6;
-        Thu, 21 Nov 2019 21:52:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ckLwa/VOAk8CvjaGKDK4OpF4xZPUB1jalCdAAe4Ph14=;
-        b=XOCQ8dKn0cFcZmYo9Y3f8p/f32J34C5arVvVNW7bAuVSIdRxkQ3NhYTA19JBKxfy85
-         6SvTKCyrlVzzm5SPQ45PZULT/RF7QXuhEgm8AjHlv0Z/WPyKfNPpqT0gbst4OdTsa/NZ
-         SgxgSbVnXQExo+FipLVfxiq6dVO+twjqoNHlhz7JJUYfBBGihpUYoE6jQ0jrLh5ITYTe
-         4bREYgEMESCdCWOlu1iS6LYi72iqzzSF5VOqCMCxsMLWkJeD9aFgF9ez1oVJ/R4907Sc
-         bXHalbX3kqjMLCP3OzPLeuo220JYYvyTvkW+fAkqcqeX76dRcPGxdETzqVcoYwC9wz65
-         g7cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ckLwa/VOAk8CvjaGKDK4OpF4xZPUB1jalCdAAe4Ph14=;
-        b=c6fZF67K0szbVY4xyyKNaKqtMBC1J3gBba4yMTBDBFXzcXhppdeAPlLtMtEOzOptxN
-         Jk73V9SBcp5nqiIgTNY4k5i7Xcb3yNplYsURx4qYjpQOSfY57INMGmjEzWzymM8sJyq7
-         R/Dofst0QIK3EyyappC7VourqcdHNCzSXc+T6+jicx6V88ID0fPKl0vqbCBwVvEXaVnm
-         Gx5gOrWinYCe2fMfyTsBucjnpgtCe+wue1rjZd5gQJszBXlFPieYAH9FWj7LY8LPY62Z
-         /HkjruJtgwIQirqTg/Pi8riVIjoXaH4bi+WNH/qS1zo9CJZdsG/F8SJsgL9UhnvDU9FE
-         suHA==
-X-Gm-Message-State: APjAAAWwOYFwbsN7bSl3+kFcmZEJm13YG1BiYeiG3xIriEwW6mg6z2/l
-        4ueCXiyiGGH6Qv8FjhUzjkmza94W
-X-Google-Smtp-Source: APXvYqywnXZbUloOg9v2/MEC9tVggw4Z6GO5iNfkOqFY20G+9JvjSna7ZWiyzs6FbZAHlBnTxD7Spw==
-X-Received: by 2002:a17:902:6bc3:: with SMTP id m3mr12367822plt.329.1574401945999;
-        Thu, 21 Nov 2019 21:52:25 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i2sm5073190pgt.34.2019.11.21.21.52.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 21:52:25 -0800 (PST)
-Subject: Re: [PATCH] hwmon: Fix Kconfig indentation
-To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-References: <20191120134153.15418-1-krzk@kernel.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e93c7c7e-dac7-8c8d-c68a-edaa9106d6ac@roeck-us.net>
-Date:   Thu, 21 Nov 2019 21:52:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 00:52:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728528AbfKVFwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:52:25 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF5822072E;
+        Fri, 22 Nov 2019 05:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574401944;
+        bh=cvFZvCXWVi56kGin9wBixbYsa4vDrv6sQdpsJCuvV0I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BqP55pOxKGBqkE6Jqvt3ZpTCQKw3F/ihewSBM81RjUaR2Hxg1e08/8GP/6Ffi3rjO
+         o324ZaPViEVspK2OehwReFxpDVGX96RWGJhXYQ6O4ZSkZKA/jEeuv6lY4bJMye5xGE
+         lk9Fb4WC5fl+q43OpgIJ/hBpNMaGGSyVz1rTgUck=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Olof Johansson <olof@lixom.net>,
+        Huang Shijie <sjhuang@iluvatar.ai>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Skidanov <alexey.skidanov@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 168/219] lib/genalloc.c: include vmalloc.h
+Date:   Fri, 22 Nov 2019 00:48:20 -0500
+Message-Id: <20191122054911.1750-161-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
+References: <20191122054911.1750-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191120134153.15418-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 5:41 AM, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Olof Johansson <olof@lixom.net>
 
-Quite frankly I'd rather not have to deal with such cosmetic changes.
+[ Upstream commit 35004f2e55807a1a1491db24ab512dd2f770a130 ]
 
-Guenter
+Fixes build break on most ARM/ARM64 defconfigs:
 
-> ---
->   drivers/hwmon/Kconfig | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 2b73d5fc7966..1dc4f1226496 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -495,10 +495,10 @@ config SENSORS_F75375S
->   	  will be called f75375s.
->   
->   config SENSORS_MC13783_ADC
-> -        tristate "Freescale MC13783/MC13892 ADC"
-> -        depends on MFD_MC13XXX
-> -        help
-> -          Support for the A/D converter on MC13783 and MC13892 PMIC.
-> +	tristate "Freescale MC13783/MC13892 ADC"
-> +	depends on MFD_MC13XXX
-> +	help
-> +	  Support for the A/D converter on MC13783 and MC13892 PMIC.
->   
->   config SENSORS_FSCHMD
->   	tristate "Fujitsu Siemens Computers sensor chips"
-> @@ -1314,10 +1314,10 @@ config SENSORS_NPCM7XX
->   	imply THERMAL
->   	help
->   	  This driver provides support for Nuvoton NPCM750/730/715/705 PWM
-> -          and Fan controllers.
-> +	  and Fan controllers.
->   
-> -          This driver can also be built as a module. If so, the module
-> -          will be called npcm750-pwm-fan.
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called npcm750-pwm-fan.
->   
->   config SENSORS_NSA320
->   	tristate "ZyXEL NSA320 and compatible fan speed and temperature sensors"
-> 
+  lib/genalloc.c: In function 'gen_pool_add_virt':
+  lib/genalloc.c:190:10: error: implicit declaration of function 'vzalloc_node'; did you mean 'kzalloc_node'?
+  lib/genalloc.c:190:8: warning: assignment to 'struct gen_pool_chunk *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  lib/genalloc.c: In function 'gen_pool_destroy':
+  lib/genalloc.c:254:3: error: implicit declaration of function 'vfree'; did you mean 'kfree'?
+
+Fixes: 6862d2fc8185 ('lib/genalloc.c: use vzalloc_node() to allocate the bitmap')
+Cc: Huang Shijie <sjhuang@iluvatar.ai>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Skidanov <alexey.skidanov@intel.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ lib/genalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index f365d71cdc774..7e85d1e37a6ea 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -35,6 +35,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+ #include <linux/of_device.h>
++#include <linux/vmalloc.h>
+ 
+ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+ {
+-- 
+2.20.1
 
