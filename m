@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26F7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D2FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7152D20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8983F2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421243;
-	bh=Tc0bizS36rmC3FiUcdlL/HBwy58q2eHM3k8vAr3PYBE=;
+	s=default; t=1574421246;
+	bh=6qF5h0X0Lr3M78iBsnk05aG0tSXi+4t7+B/OiP2Z31E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxG3wPk63FyDGq05ErhNJtFAAFvin3xphXHy1uQ6CkBbboTFxRbqMlb5BulnRWLcL
-	 E9quA2PuvNQDRpYoQBUlWHgNJ+JFlxyUN0GfRjeVsJTj7zdlF3zHKVFOqpBCF5hqwj
-	 CXQFjoghFjVaWQvqq/P3v4+/zbz+Ux+5JpDsC/rQ=
+	b=ua3d5Kvw6sSbmpUp6Bcx/XxmWAQPnRNtNf34p6tUD9lX4UbfYEozN6VEpy1VppoNK
+	 cBeDLcNFKihbP1OYTjBOJU1zSiYWshkLCHbLlXfYplCEBjPlIDEkBm8F66B5OEIkNi
+	 ZdzJiP9tZoTeP/YQm1iR6dxOeBAsENHveG6xl/i8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfKVKyZ (ORCPT
+        id S1730303AbfKVKyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:54:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39916 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:54:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbfKVKyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:54:22 -0500
+        id S1730290AbfKVKyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:54:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085CD2071F;
-        Fri, 22 Nov 2019 10:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A520420637;
+        Fri, 22 Nov 2019 10:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420062;
-        bh=Tc0bizS36rmC3FiUcdlL/HBwy58q2eHM3k8vAr3PYBE=;
+        s=default; t=1574420048;
+        bh=6qF5h0X0Lr3M78iBsnk05aG0tSXi+4t7+B/OiP2Z31E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmBQ0SuMAa1tFgBwMVVXrIDys3mp0EqVihPNkLTAKzR631i9auaPiRfJ5cghylhCQ
-         u1f2XU3xsgmaPeRPH2siOKqOgZLbK/wkgoeANF3Wa/8olShDtqpM+J+uoimLloB7+Z
-         7p/EvmBKDLzALwPnVHL6OKjTAEK8SmFrvg87hO+g=
+        b=IvPGirm9VQEsqij3m3ZE1b6FFVfFfKvVq5Vgeg8rmSVIkQCTZl4VcL4dg+rY3g2ya
+         Tt+ThPE7jbIkD8vzHIVKfoxaR8EUwxF+2/lSj8SjdqNSnljZFva6HGR0W7F3RAWpMu
+         aaYbz4eHD6TeS6UqhjigTuorQGRd5kk8gsSR5QlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, rostedt@goodmis.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        He Zhe <zhe.he@windriver.com>, Petr Mladek <pmladek@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/122] gpio: syscon: Fix possible NULL ptr usage
-Date:   Fri, 22 Nov 2019 11:29:16 +0100
-Message-Id: <20191122100831.888882589@linuxfoundation.org>
+Subject: [PATCH 4.14 098/122] printk: Give error on attempt to set log buffer length to over 2G
+Date:   Fri, 22 Nov 2019 11:29:11 +0100
+Message-Id: <20191122100831.068780490@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,35 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
+[ Upstream commit e6fe3e5b7d16e8f146a4ae7fe481bc6e97acde1e ]
 
-The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
-and chip->set is valid pointer. This happens in case the controller uses
-the default GPIO setter. Always use chip->set to access the setter to avoid
-possible NULL pointer dereferencing.
+The current printk() is ready to handle log buffer size up to 2G.
+Give an explicit error for users who want to use larger log buffer.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Also fix printk formatting to show the 2G as a positive number.
+
+Link: http://lkml.kernel.org/r/20181008135916.gg4kkmoki5bgtco5@pathway.suse.cz
+Cc: rostedt@goodmis.org
+Cc: linux-kernel@vger.kernel.org
+Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+[pmladek: Fixed to the really safe limit 2GB.]
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-syscon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/printk/printk.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 537cec7583fca..cf88a0bfe99ea 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -122,7 +122,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
- 				   BIT(offs % SYSCON_REG_BITS));
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5aa96098c64d3..5b33c14ab8b25 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -432,6 +432,7 @@ static u32 clear_idx;
+ /* record buffer */
+ #define LOG_ALIGN __alignof__(struct printk_log)
+ #define __LOG_BUF_LEN (1 << CONFIG_LOG_BUF_SHIFT)
++#define LOG_BUF_LEN_MAX (u32)(1 << 31)
+ static char __log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
+ static char *log_buf = __log_buf;
+ static u32 log_buf_len = __LOG_BUF_LEN;
+@@ -1032,18 +1033,23 @@ void log_buf_vmcoreinfo_setup(void)
+ static unsigned long __initdata new_log_buf_len;
+ 
+ /* we practice scaling the ring buffer by powers of 2 */
+-static void __init log_buf_len_update(unsigned size)
++static void __init log_buf_len_update(u64 size)
+ {
++	if (size > (u64)LOG_BUF_LEN_MAX) {
++		size = (u64)LOG_BUF_LEN_MAX;
++		pr_err("log_buf over 2G is not supported.\n");
++	}
++
+ 	if (size)
+ 		size = roundup_pow_of_two(size);
+ 	if (size > log_buf_len)
+-		new_log_buf_len = size;
++		new_log_buf_len = (unsigned long)size;
+ }
+ 
+ /* save requested log_buf_len since it's too early to process it */
+ static int __init log_buf_len_setup(char *str)
+ {
+-	unsigned int size;
++	u64 size;
+ 
+ 	if (!str)
+ 		return -EINVAL;
+@@ -1113,7 +1119,7 @@ void __init setup_log_buf(int early)
  	}
  
--	priv->data->set(chip, offset, val);
-+	chip->set(chip, offset, val);
+ 	if (unlikely(!new_log_buf)) {
+-		pr_err("log_buf_len: %ld bytes not available\n",
++		pr_err("log_buf_len: %lu bytes not available\n",
+ 			new_log_buf_len);
+ 		return;
+ 	}
+@@ -1126,8 +1132,8 @@ void __init setup_log_buf(int early)
+ 	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
+ 	logbuf_unlock_irqrestore(flags);
  
- 	return 0;
+-	pr_info("log_buf_len: %d bytes\n", log_buf_len);
+-	pr_info("early log buf free: %d(%d%%)\n",
++	pr_info("log_buf_len: %u bytes\n", log_buf_len);
++	pr_info("early log buf free: %u(%u%%)\n",
+ 		free, (free * 100) / __LOG_BUF_LEN);
  }
+ 
 -- 
 2.20.1
 
