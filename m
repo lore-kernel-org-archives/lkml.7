@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E233C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F76CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D7C2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C65020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403360;
-	bh=KZb8ob2IGRQ5it7YQX1abQxF3UyJRObWUe+TBwZzo14=;
+	s=default; t=1574403363;
+	bh=Yj7DTE05YmiiUVnQBhSV+4QMhfmiyyEt8PJod1Z5pI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/kAaCX2Ok/7fO5ovRQY/6w8hynPstqULJVyb5TGxrA1L8nTMa+lWnOpErlZfRq8v
-	 nmqcg8Dngb1v6Lbvm8dulKdGinZfxLfkRqwb/5lWewSsLbtLioa+K6Qi/pohmR0HKN
-	 zfXFABW1wmCAoxKWjEeY2KN52444pbLa0x0XpXHU=
+	b=tbfecdGUXQu7zUWXBqgBNlSefQKSjsllC2G62sVZgdTPz1pRnTw6ysPPAlJ1qFwfx
+	 /VHJDS9RMt8DJapj1fhlP6VNN79SvG7e2gcRzOqLrmIgOBIm+GUTKBDigIzNiUxwL4
+	 IVSXrfPAdLN3841Hj8exNeqiRlaQuF1NAgAsqm60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbfKVGPz (ORCPT
+        id S1729594AbfKVGOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:15:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51590 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:14:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728704AbfKVGOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:14:04 -0500
+        id S1728432AbfKVGNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0E52070E;
-        Fri, 22 Nov 2019 06:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D758A2071C;
+        Fri, 22 Nov 2019 06:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403243;
-        bh=KZb8ob2IGRQ5it7YQX1abQxF3UyJRObWUe+TBwZzo14=;
+        s=default; t=1574403225;
+        bh=Yj7DTE05YmiiUVnQBhSV+4QMhfmiyyEt8PJod1Z5pI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TpSeSd0N1i12u6oN6OU5j45agEhMCtukzzVWL6ERqIWn3+GgGA98G8YToHji5UnwL
-         sTOCI32Wp79KwXkqg2d/doomVKVYDhxjKyrrMwhII3Ubf1QxY+588/CZdav1TJ8IK2
-         e9E8v5jwVE7lbti23XgD90kwtyFTuinlLURukhUs=
+        b=JEivzXbvPdMQ+LqD7C2EsHSYgs80Encbbngk4pWgRbZFkwESj+rYuevzMOBA8ExN3
+         IPWepenbvTvKqq/9LYqUncM5NNwZLsoMX9XwyBT1vzAYPi4Z9AfweSfD7Uy82CLR3f
+         3cN/y97n+GK6TxTeA4xlxcfqyd0hcpsnjXH0D7xI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 54/68] mtd: Check add_mtd_device() ret code
-Date:   Fri, 22 Nov 2019 01:12:47 -0500
-Message-Id: <20191122061301.4947-53-sashal@kernel.org>
+Cc:     Kyle Roeschley <kyle.roeschley@ni.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 39/68] ath6kl: Fix off by one error in scan completion
+Date:   Fri, 22 Nov 2019 01:12:32 -0500
+Message-Id: <20191122061301.4947-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -58,110 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: Kyle Roeschley <kyle.roeschley@ni.com>
 
-[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
+[ Upstream commit 5803c12816c43bd09e5f4247dd9313c2d9a2c41b ]
 
-add_mtd_device() can fail. We should always check its return value
-and gracefully handle the failure case. Fix the call sites where this
-not done (in mtdpart.c) and add a __must_check attribute to the
-prototype to avoid this kind of mistakes.
+When ath6kl was reworked to share code between regular and scheduled scans
+in commit 3b8ffc6a22ba ("ath6kl: Configure probed SSID list consistently"),
+probed SSID entry changed from 1-index to 0-indexed. However,
+ath6kl_cfg80211_scan_complete_event() was missed in that change. Fix its
+indexing so that we correctly clear out the probed SSID list.
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.h |  2 +-
- drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
-index 7b0353399a106..b837f44716820 100644
---- a/drivers/mtd/mtdcore.h
-+++ b/drivers/mtd/mtdcore.h
-@@ -6,7 +6,7 @@
- extern struct mutex mtd_table_mutex;
- 
- struct mtd_info *__mtd_next_device(int i);
--int add_mtd_device(struct mtd_info *mtd);
-+int __must_check add_mtd_device(struct mtd_info *mtd);
- int del_mtd_device(struct mtd_info *mtd);
- int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
- int del_mtd_partitions(struct mtd_info *);
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index f8ba153f63bfe..9b48be05cd1af 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -610,10 +610,22 @@ int mtd_add_partition(struct mtd_info *master, const char *name,
- 	list_add(&new->list, &mtd_partitions);
- 	mutex_unlock(&mtd_partitions_mutex);
- 
--	add_mtd_device(&new->mtd);
-+	ret = add_mtd_device(&new->mtd);
-+	if (ret)
-+		goto err_remove_part;
- 
- 	mtd_add_partition_attrs(new);
- 
-+	return 0;
-+
-+err_remove_part:
-+	mutex_lock(&mtd_partitions_mutex);
-+	list_del(&new->list);
-+	mutex_unlock(&mtd_partitions_mutex);
-+
-+	free_partition(new);
-+	pr_info("%s:%i\n", __func__, __LINE__);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mtd_add_partition);
-@@ -658,28 +670,42 @@ int add_mtd_partitions(struct mtd_info *master,
- {
- 	struct mtd_part *slave;
- 	uint64_t cur_offset = 0;
--	int i;
-+	int i, ret;
- 
- 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
- 
- 	for (i = 0; i < nbparts; i++) {
- 		slave = allocate_partition(master, parts + i, i, cur_offset);
- 		if (IS_ERR(slave)) {
--			del_mtd_partitions(master);
--			return PTR_ERR(slave);
-+			ret = PTR_ERR(slave);
-+			goto err_del_partitions;
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 2b79815f59093..7653fa47508bb 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -1083,7 +1083,7 @@ void ath6kl_cfg80211_scan_complete_event(struct ath6kl_vif *vif, bool aborted)
+ 	if (vif->scan_req->n_ssids && vif->scan_req->ssids[0].ssid_len) {
+ 		for (i = 0; i < vif->scan_req->n_ssids; i++) {
+ 			ath6kl_wmi_probedssid_cmd(ar->wmi, vif->fw_vif_idx,
+-						  i + 1, DISABLE_SSID_FLAG,
++						  i, DISABLE_SSID_FLAG,
+ 						  0, NULL);
  		}
- 
- 		mutex_lock(&mtd_partitions_mutex);
- 		list_add(&slave->list, &mtd_partitions);
- 		mutex_unlock(&mtd_partitions_mutex);
- 
--		add_mtd_device(&slave->mtd);
-+		ret = add_mtd_device(&slave->mtd);
-+		if (ret) {
-+			mutex_lock(&mtd_partitions_mutex);
-+			list_del(&slave->list);
-+			mutex_unlock(&mtd_partitions_mutex);
-+
-+			free_partition(slave);
-+			goto err_del_partitions;
-+		}
-+
- 		mtd_add_partition_attrs(slave);
- 
- 		cur_offset = slave->offset + slave->mtd.size;
  	}
- 
- 	return 0;
-+
-+err_del_partitions:
-+	del_mtd_partitions(master);
-+
-+	return ret;
- }
- 
- static DEFINE_SPINLOCK(part_parser_lock);
 -- 
 2.20.1
 
