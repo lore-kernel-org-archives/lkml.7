@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F91C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1304CC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230F120885
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C412070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420835;
-	bh=3V4B+5FPwQ+goJN1+z1cIB2n93aSNpU3SDah4sLezHk=;
+	s=default; t=1574420847;
+	bh=PP0VoN0gfOnQZCCZJ3I7rIYd7iS6ObVjGVuvpnxLw1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PU9NXfr2apiouJ3qyVLFtcLhaIZn3yWObL7pK96gifkbI81iDnjDO9Y5jsOrb+Iff
-	 JQHrdAyu984UfKaXL/fRrOEMDtFQjzhEt5PCIoQwRTSWmtK6yc5J+HwYHXjbn0+ZAJ
-	 sAnUblbJBOI7sPbndh4lgbDRhuq1t/vR1YWPrmrY=
+	b=eLZCzW1fqF37qduZ9b36WrOpQBbqIKO3tf3FRZHcyKdUaFEORI7Vt6tq5ty0RsaMj
+	 rEBkDrEv75cf9P8Zjg/frJQjSxiOdilDlNcQjhfPAzrF63ax+apxdRp3+JhyjFkXgf
+	 dWCtozKKjtSO94atxAJsJZXjVrpfJ5Hq4XNSaxes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbfKVLGS (ORCPT
+        id S1731765AbfKVLFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:05:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731819AbfKVLGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:14 -0500
+        id S1731085AbfKVLFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5585D2088F;
-        Fri, 22 Nov 2019 11:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB27C2070E;
+        Fri, 22 Nov 2019 11:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420773;
-        bh=3V4B+5FPwQ+goJN1+z1cIB2n93aSNpU3SDah4sLezHk=;
+        s=default; t=1574420742;
+        bh=PP0VoN0gfOnQZCCZJ3I7rIYd7iS6ObVjGVuvpnxLw1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0F1WRVWDIbO+mXTO6bLqZ7hx3XsnDibAo6dNHnjPeUeAMsMwNv+MhL3amngWWMiYs
-         +z9fHnf8zjRAKaMiRou/nwizk2Qhlni6s6zrDW4ixeXjYbcceMm3tWQFOlt/D0aF+x
-         swUt+Dyv7ktsarBmXyjyr7CdUR1pUVSW3tfXY+fQ=
+        b=jcRHX3GYLT4tLDjenrnDcswV02qWA0Lb4UkSEZkTU05Lw912R3XmQlvRsyHNTi0wz
+         vDVtqDY4JUgzVi1AVX7wb8pklF2a+RGg6bGmoQixH1N/ohr9OPv8d7/uIj9GIlFYu4
+         31Vp+B6NaRHgnXhAXwgwARAZm8huUVViC+KuA8vU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/220] s390/kasan: avoid vdso instrumentation
-Date:   Fri, 22 Nov 2019 11:28:52 +0100
-Message-Id: <20191122100924.813862210@linuxfoundation.org>
+Subject: [PATCH 4.19 208/220] mac80211: minstrel: fix using short preamble CCK rates on HT clients
+Date:   Fri, 22 Nov 2019 11:29:33 +0100
+Message-Id: <20191122100928.718088746@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,54 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 348498458505e202df41b6b9a78da448d39298b7 ]
+[ Upstream commit 37439f2d6e43ae79e22be9be159f0af157468f82 ]
 
-vdso is mapped into user space processes, which won't have kasan
-shodow mapped.
+mi->supported[MINSTREL_CCK_GROUP] needs to be updated
+short preamble rates need to be marked as supported regardless of
+whether it's currently enabled. Its state can change at any time without
+a rate_update call.
 
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Fixes: 782dda00ab8e ("mac80211: minstrel_ht: move short preamble check out of get_rate")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vdso32/Makefile | 3 ++-
- arch/s390/kernel/vdso64/Makefile | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ net/mac80211/rc80211_minstrel_ht.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
-index 04dd3e2c3bd9b..e76309fbbcb3b 100644
---- a/arch/s390/kernel/vdso32/Makefile
-+++ b/arch/s390/kernel/vdso32/Makefile
-@@ -28,9 +28,10 @@ obj-y += vdso32_wrapper.o
- extra-y += vdso32.lds
- CPPFLAGS_vdso32.lds += -P -C -U$(ARCH)
+diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
+index 67ebdeaffbbc8..ae1a180d2eee3 100644
+--- a/net/mac80211/rc80211_minstrel_ht.c
++++ b/net/mac80211/rc80211_minstrel_ht.c
+@@ -1132,7 +1132,6 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
+ 	struct ieee80211_mcs_info *mcs = &sta->ht_cap.mcs;
+ 	u16 sta_cap = sta->ht_cap.cap;
+ 	struct ieee80211_sta_vht_cap *vht_cap = &sta->vht_cap;
+-	struct sta_info *sinfo = container_of(sta, struct sta_info, sta);
+ 	int use_vht;
+ 	int n_supported = 0;
+ 	int ack_dur;
+@@ -1258,8 +1257,7 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
+ 	if (!n_supported)
+ 		goto use_legacy;
  
--# Disable gcov profiling and ubsan for VDSO code
-+# Disable gcov profiling, ubsan and kasan for VDSO code
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
+-	if (test_sta_flag(sinfo, WLAN_STA_SHORT_PREAMBLE))
+-		mi->cck_supported_short |= mi->cck_supported_short << 4;
++	mi->supported[MINSTREL_CCK_GROUP] |= mi->cck_supported_short << 4;
  
- # Force dependency (incbin is bad)
- $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index ddebc26cd9494..f849ac61c5da0 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -28,9 +28,10 @@ obj-y += vdso64_wrapper.o
- extra-y += vdso64.lds
- CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
- 
--# Disable gcov profiling and ubsan for VDSO code
-+# Disable gcov profiling, ubsan and kasan for VDSO code
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
- 
- # Force dependency (incbin is bad)
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ 	/* create an initial rate table with the lowest supported rates */
+ 	minstrel_ht_update_stats(mp, mi);
 -- 
 2.20.1
 
