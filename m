@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF3EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCABC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDE52070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FFC20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420873;
-	bh=Nbm+0sMkxlk6HRLaRQOFwTLW1an+JMQpxxCNSerK81o=;
+	s=default; t=1574420879;
+	bh=0heLWYa1fdiA1uuMdun/a5Epn3QCmKknV7kBb7keeDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQbKPSqeKQKewgQmxoVVlbZTDvbj0K6qJmqOzrIX3SE9/aYk8ehE1Jdcef+Y09pGS
-	 AYhxuCc0r1Klpi+I2KYZGuKFKWH81qdLT+eNwdlywI8vJxzLHpMtVauFAYX60rUYcY
-	 ekrozKrMuQM1RNS8/cgAbPyC9g9IRBeh6p0XhJSA=
+	b=pDihzIs0lsqQ+D7Jfa7KsnndoQ1h49ItPNVgVU4rNFy4YXBI6bfCbSVKi0pLUgVH8
+	 sDYVvrtVklNHlxsLUF5R9Mu9s+n+rQOJpPyxWm5RWfH1djRfLRt5qFjYBC7pHgumHo
+	 gWAnEP79iHCspPDQd7lWPhHXvPNhybkovyMWMEBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731499AbfKVLHv (ORCPT
+        id S1731664AbfKVLFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32992 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731043AbfKVLF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:05:27 -0500
+        id S1731182AbfKVLFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 203582075E;
-        Fri, 22 Nov 2019 11:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB4E2070E;
+        Fri, 22 Nov 2019 11:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420726;
-        bh=Nbm+0sMkxlk6HRLaRQOFwTLW1an+JMQpxxCNSerK81o=;
+        s=default; t=1574420705;
+        bh=0heLWYa1fdiA1uuMdun/a5Epn3QCmKknV7kBb7keeDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbDfBdziNQxr1UDGKg43lIPoFey3MOj8yZDcn0VHN/n5G8BKGgMJxxxJaXDD8jXsx
-         eJmER9oRMaCtoBK0SHQX+imHa0Sudw5SJALf7d0dSKposYQz7y3/DWCGQQQO8xPnph
-         hH8Kck7DlV4BjqE7ejpUJlZo3taIaNdHzXpW0JoI=
+        b=QUo1x5A+zpBUzBP/B5Hbk2SxdAnR2noKgmxVnYzbMib8Oif7M3UzE2UaHXCVB1Qgw
+         V8BX5QsVw9TdArQ9GsTMZUe/6AMoMsGrJrmFSqhLUq5yLkP3ue0Yykm6Iy8IB9jA0S
+         VO4/YQsIdPoZPgH5JkroP4/bWK25eTZHeKGu9go8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 204/220] selftests: forwarding: Have lldpad_app_wait_set() wait for unknown, too
-Date:   Fri, 22 Nov 2019 11:29:29 +0100
-Message-Id: <20191122100928.511539235@linuxfoundation.org>
+Subject: [PATCH 4.19 197/220] pinctrl: gemini: Fix up TVC clock group
+Date:   Fri, 22 Nov 2019 11:29:22 +0100
+Message-Id: <20191122100928.153411963@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,42 +59,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 372809055f6c830ff978564e09f58bcb9e9b937c ]
+[ Upstream commit a85c928f6a7856a09e47d9b37faa3407c7ac6a8e ]
 
-Immediately after mlxsw module is probed and lldpad started, added APP
-entries are briefly in "unknown" state before becoming "pending". That's
-the state that lldpad_app_wait_set() typically sees, and since there are
-no pending entries at that time, it bails out. However the entries have
-not been pushed to the kernel yet at that point, and thus the test case
-fails.
+The previous fix made the TVC clock get muxed in on the
+D-Link DIR-685 instead of giving nagging warnings of this
+not working. Not good. We didn't want that, as it breaks
+video.
 
-Fix by waiting for both unknown and pending entries to disappear before
-proceeding.
+Create a specific group for the TVC CLK, and break out
+a specific GPIO group for it on the SL3516 so we can use
+that line as GPIO if we don't need the TVC CLK.
 
-Fixes: d159261f3662 ("selftests: mlxsw: Add test for trust-DSCP")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d17f477c5bc6 ("pinctrl: gemini: Mask and set properly")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/lib.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-gemini.c | 44 ++++++++++++++++++++++++++------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/lib.sh b/tools/testing/selftests/net/forwarding/lib.sh
-index ca53b539aa2d1..08bac6cf1bb3a 100644
---- a/tools/testing/selftests/net/forwarding/lib.sh
-+++ b/tools/testing/selftests/net/forwarding/lib.sh
-@@ -251,7 +251,7 @@ lldpad_app_wait_set()
- {
- 	local dev=$1; shift
+diff --git a/drivers/pinctrl/pinctrl-gemini.c b/drivers/pinctrl/pinctrl-gemini.c
+index 1e484a36ff07e..3535f98418615 100644
+--- a/drivers/pinctrl/pinctrl-gemini.c
++++ b/drivers/pinctrl/pinctrl-gemini.c
+@@ -591,13 +591,16 @@ static const unsigned int tvc_3512_pins[] = {
+ 	319, /* TVC_DATA[1] */
+ 	301, /* TVC_DATA[2] */
+ 	283, /* TVC_DATA[3] */
+-	265, /* TVC_CLK */
+ 	320, /* TVC_DATA[4] */
+ 	302, /* TVC_DATA[5] */
+ 	284, /* TVC_DATA[6] */
+ 	266, /* TVC_DATA[7] */
+ };
  
--	while lldptool -t -i $dev -V APP -c app | grep -q pending; do
-+	while lldptool -t -i $dev -V APP -c app | grep -Eq "pending|unknown"; do
- 		echo "$dev: waiting for lldpad to push pending APP updates"
- 		sleep 5
- 	done
++static const unsigned int tvc_clk_3512_pins[] = {
++	265, /* TVC_CLK */
++};
++
+ /* NAND flash pins */
+ static const unsigned int nflash_3512_pins[] = {
+ 	199, 200, 201, 202, 216, 217, 218, 219, 220, 234, 235, 236, 237, 252,
+@@ -629,7 +632,7 @@ static const unsigned int pflash_3512_pins_extended[] = {
+ /* Serial flash pins CE0, CE1, DI, DO, CK */
+ static const unsigned int sflash_3512_pins[] = { 230, 231, 232, 233, 211 };
+ 
+-/* The GPIO0A (0) pin overlap with TVC and extended parallel flash */
++/* The GPIO0A (0) pin overlap with TVC CLK and extended parallel flash */
+ static const unsigned int gpio0a_3512_pins[] = { 265 };
+ 
+ /* The GPIO0B (1-4) pins overlap with TVC and ICE */
+@@ -823,7 +826,13 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
+ 		.num_pins = ARRAY_SIZE(tvc_3512_pins),
+ 		/* Conflict with character LCD and ICE */
+ 		.mask = LCD_PADS_ENABLE,
+-		.value = TVC_PADS_ENABLE | TVC_CLK_PAD_ENABLE,
++		.value = TVC_PADS_ENABLE,
++	},
++	{
++		.name = "tvcclkgrp",
++		.pins = tvc_clk_3512_pins,
++		.num_pins = ARRAY_SIZE(tvc_clk_3512_pins),
++		.value = TVC_CLK_PAD_ENABLE,
+ 	},
+ 	/*
+ 	 * The construction is done such that it is possible to use a serial
+@@ -860,8 +869,8 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
+ 		.name = "gpio0agrp",
+ 		.pins = gpio0a_3512_pins,
+ 		.num_pins = ARRAY_SIZE(gpio0a_3512_pins),
+-		/* Conflict with TVC */
+-		.mask = TVC_PADS_ENABLE,
++		/* Conflict with TVC CLK */
++		.mask = TVC_CLK_PAD_ENABLE,
+ 	},
+ 	{
+ 		.name = "gpio0bgrp",
+@@ -1531,13 +1540,16 @@ static const unsigned int tvc_3516_pins[] = {
+ 	311, /* TVC_DATA[1] */
+ 	394, /* TVC_DATA[2] */
+ 	374, /* TVC_DATA[3] */
+-	333, /* TVC_CLK */
+ 	354, /* TVC_DATA[4] */
+ 	395, /* TVC_DATA[5] */
+ 	312, /* TVC_DATA[6] */
+ 	334, /* TVC_DATA[7] */
+ };
+ 
++static const unsigned int tvc_clk_3516_pins[] = {
++	333, /* TVC_CLK */
++};
++
+ /* NAND flash pins */
+ static const unsigned int nflash_3516_pins[] = {
+ 	243, 260, 261, 224, 280, 262, 281, 264, 300, 263, 282, 301, 320, 283,
+@@ -1570,7 +1582,7 @@ static const unsigned int pflash_3516_pins_extended[] = {
+ static const unsigned int sflash_3516_pins[] = { 296, 338, 295, 359, 339 };
+ 
+ /* The GPIO0A (0-4) pins overlap with TVC and extended parallel flash */
+-static const unsigned int gpio0a_3516_pins[] = { 333, 354, 395, 312, 334 };
++static const unsigned int gpio0a_3516_pins[] = { 354, 395, 312, 334 };
+ 
+ /* The GPIO0B (5-7) pins overlap with ICE */
+ static const unsigned int gpio0b_3516_pins[] = { 375, 396, 376 };
+@@ -1602,6 +1614,9 @@ static const unsigned int gpio0j_3516_pins[] = { 359, 339 };
+ /* The GPIO0K (30,31) pins overlap with NAND flash */
+ static const unsigned int gpio0k_3516_pins[] = { 275, 298 };
+ 
++/* The GPIO0L (0) pins overlap with TVC_CLK */
++static const unsigned int gpio0l_3516_pins[] = { 333 };
++
+ /* The GPIO1A (0-4) pins that overlap with IDE and parallel flash */
+ static const unsigned int gpio1a_3516_pins[] = { 221, 200, 222, 201, 220 };
+ 
+@@ -1761,7 +1776,13 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
+ 		.num_pins = ARRAY_SIZE(tvc_3516_pins),
+ 		/* Conflict with character LCD */
+ 		.mask = LCD_PADS_ENABLE,
+-		.value = TVC_PADS_ENABLE | TVC_CLK_PAD_ENABLE,
++		.value = TVC_PADS_ENABLE,
++	},
++	{
++		.name = "tvcclkgrp",
++		.pins = tvc_clk_3516_pins,
++		.num_pins = ARRAY_SIZE(tvc_clk_3516_pins),
++		.value = TVC_CLK_PAD_ENABLE,
+ 	},
+ 	/*
+ 	 * The construction is done such that it is possible to use a serial
+@@ -1872,6 +1893,13 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
+ 		/* Conflict with parallel and NAND flash */
+ 		.value = PFLASH_PADS_DISABLE | NAND_PADS_DISABLE,
+ 	},
++	{
++		.name = "gpio0lgrp",
++		.pins = gpio0l_3516_pins,
++		.num_pins = ARRAY_SIZE(gpio0l_3516_pins),
++		/* Conflict with TVE CLK */
++		.mask = TVC_CLK_PAD_ENABLE,
++	},
+ 	{
+ 		.name = "gpio1agrp",
+ 		.pins = gpio1a_3516_pins,
 -- 
 2.20.1
 
