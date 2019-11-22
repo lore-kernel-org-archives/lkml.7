@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A73AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5477205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14B3205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbfKVKsP (ORCPT
+        id S1729891AbfKVKsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:48:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34661 "EHLO
+        Fri, 22 Nov 2019 05:48:16 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34667 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729847AbfKVKsL (ORCPT
+        with ESMTP id S1728909AbfKVKsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:11 -0500
+        Fri, 22 Nov 2019 05:48:12 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iY6Tu-000346-Im; Fri, 22 Nov 2019 11:48:06 +0100
+        id 1iY6Tv-00034P-4G; Fri, 22 Nov 2019 11:48:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 38BC71C1A30;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D46661C0081;
         Fri, 22 Nov 2019 11:48:06 +0100 (CET)
 Date:   Fri, 22 Nov 2019 10:48:06 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] x86, kcsan: Enable KCSAN for x86
+Subject: [tip: locking/kcsan] build, kcsan: Add KCSAN build exceptions
 Cc:     Marco Elver <elver@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157441968613.21853.9444739742560938696.tip-bot2@tip-bot2>
+Message-ID: <157441968680.21853.6993504124584856250.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,214 +54,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     40d04110f87940b6a03bf0aa19cd29e84f465f20
-Gitweb:        https://git.kernel.org/tip/40d04110f87940b6a03bf0aa19cd29e84f465f20
+Commit-ID:     0ebba7141eadc4804ec5b4bb5106331b0c3abf4c
+Gitweb:        https://git.kernel.org/tip/0ebba7141eadc4804ec5b4bb5106331b0c3abf4c
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Thu, 14 Nov 2019 19:03:03 +01:00
+AuthorDate:    Thu, 14 Nov 2019 19:02:58 +01:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Sat, 16 Nov 2019 07:23:16 -08:00
+CommitterDate: Sat, 16 Nov 2019 07:23:14 -08:00
 
-x86, kcsan: Enable KCSAN for x86
+build, kcsan: Add KCSAN build exceptions
 
-This patch enables KCSAN for x86, with updates to build rules to not use
-KCSAN for several incompatible compilation units.
+This blacklists several compilation units from KCSAN. See the respective
+inline comments for the reasoning.
 
 Signed-off-by: Marco Elver <elver@google.com>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- arch/x86/Kconfig                  | 1 +
- arch/x86/boot/Makefile            | 2 ++
- arch/x86/boot/compressed/Makefile | 2 ++
- arch/x86/entry/vdso/Makefile      | 3 +++
- arch/x86/include/asm/bitops.h     | 6 +++++-
- arch/x86/kernel/Makefile          | 4 ++++
- arch/x86/kernel/cpu/Makefile      | 3 +++
- arch/x86/lib/Makefile             | 4 ++++
- arch/x86/mm/Makefile              | 4 ++++
- arch/x86/purgatory/Makefile       | 2 ++
- arch/x86/realmode/Makefile        | 3 +++
- arch/x86/realmode/rm/Makefile     | 3 +++
- 12 files changed, 36 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/Makefile | 2 ++
+ kernel/Makefile                       | 5 +++++
+ kernel/sched/Makefile                 | 6 ++++++
+ mm/Makefile                           | 8 ++++++++
+ 4 files changed, 21 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa..81859be 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -226,6 +226,7 @@ config X86
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
-+	select HAVE_ARCH_KCSAN if X86_64
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index ee0661d..5d0a645 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -31,7 +31,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+ 				   -D__DISABLE_EXPORTS
  
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index e2839b5..9c79427 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -9,7 +9,9 @@
- # Changed by many, many contributors over the years.
- #
- 
-+# Sanitizer runtimes are unavailable and cannot be linked for early boot code.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Kernel does not boot with kcov instrumentation here.
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 6b84afd..a1c248b 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -17,7 +17,9 @@
- #	(see scripts/Makefile.lib size_append)
- #	compressed vmlinux.bin.all + u32 size of vmlinux.bin.all
- 
-+# Sanitizer runtimes are unavailable and cannot be linked for early boot code.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 0f21541..a23deba 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -10,8 +10,11 @@ ARCH_REL_TYPE_ABS += R_386_GLOB_DAT|R_386_JMP_SLOT|R_386_RELATIVE
- include $(srctree)/lib/vdso/Makefile
- 
- KBUILD_CFLAGS += $(DISABLE_LTO)
-+
+ GCOV_PROFILE			:= n
 +# Sanitizer runtimes are unavailable and cannot be linked here.
  KASAN_SANITIZE			:= n
++KCSAN_SANITIZE			:= n
  UBSAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
  OBJECT_FILES_NON_STANDARD	:= y
  
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 7d1f6a4..542b63d 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -201,8 +201,12 @@ arch_test_and_change_bit(long nr, volatile unsigned long *addr)
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 74ab46e..cc53f7c 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -23,6 +23,9 @@ endif
+ # Prevents flicker of uninteresting __do_softirq()/__local_bh_disable_ip()
+ # in coverage traces.
+ KCOV_INSTRUMENT_softirq.o := n
++# Avoid KCSAN instrumentation in softirq ("No shared variables, all the data
++# are CPU local" => assume no data races), to reduce overhead in interrupts.
++KCSAN_SANITIZE_softirq.o = n
+ # These are called from save_stack_trace() on slub debug path,
+ # and produce insane amounts of uninteresting coverage.
+ KCOV_INSTRUMENT_module.o := n
+@@ -30,6 +33,7 @@ KCOV_INSTRUMENT_extable.o := n
+ # Don't self-instrument.
+ KCOV_INSTRUMENT_kcov.o := n
+ KASAN_SANITIZE_kcov.o := n
++KCSAN_SANITIZE_kcov.o := n
+ CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
  
--static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-+static __no_kcsan_or_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
- {
-+	/*
-+	 * Because this is a plain access, we need to disable KCSAN here to
-+	 * avoid double instrumentation via instrumented bitops.
-+	 */
- 	return ((1UL << (nr & (BITS_PER_LONG-1))) &
- 		(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
- }
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3578ad2..a9a1cab 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -28,6 +28,10 @@ KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
- KASAN_SANITIZE_stacktrace.o				:= n
- KASAN_SANITIZE_paravirt.o				:= n
+ # cond_syscall is currently not LTO compatible
+@@ -118,6 +122,7 @@ obj-$(CONFIG_RSEQ) += rseq.o
  
-+# With some compiler versions the generated code results in boot hangs, caused
-+# by several compilation units. To be safe, disable all instrumentation.
-+KCSAN_SANITIZE := n
-+
- OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
- OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
- OBJECT_FILES_NON_STANDARD_paravirt_patch.o		:= y
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index d7a1e5a..1f1b0ed 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -13,6 +13,9 @@ endif
- KCOV_INSTRUMENT_common.o := n
- KCOV_INSTRUMENT_perf_event.o := n
+ obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
+ KASAN_SANITIZE_stackleak.o := n
++KCSAN_SANITIZE_stackleak.o := n
+ KCOV_INSTRUMENT_stackleak.o := n
  
-+# As above, instrumenting secondary CPU boot code causes boot hangs.
-+KCSAN_SANITIZE_common.o := n
-+
- # Make sure load_percpu_segment has no stackprotector
- nostackp := $(call cc-option, -fno-stack-protector)
- CFLAGS_common.o		:= $(nostackp)
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 5246db4..432a077 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -6,10 +6,14 @@
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
- 
-+# KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
-+KCSAN_SANITIZE_delay.o := n
-+
- # Early boot use of cmdline; don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KCOV_INSTRUMENT_cmdline.o := n
- KASAN_SANITIZE_cmdline.o  := n
-+KCSAN_SANITIZE_cmdline.o  := n
- 
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 84373dc..3559f42 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -7,6 +7,10 @@ KCOV_INSTRUMENT_mem_encrypt_identity.o	:= n
- KASAN_SANITIZE_mem_encrypt.o		:= n
- KASAN_SANITIZE_mem_encrypt_identity.o	:= n
- 
-+# Disable KCSAN entirely, because otherwise we get warnings that some functions
-+# reference __initdata sections.
-+KCSAN_SANITIZE := n
-+
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_mem_encrypt.o		= -pg
- CFLAGS_REMOVE_mem_encrypt_identity.o	= -pg
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee54..69379bc 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -17,7 +17,9 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
- targets += purgatory.ro
- 
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE	:= n
-+KCSAN_SANITIZE	:= n
+ $(obj)/configs.o: $(obj)/config_data.gz
+diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
+index 21fb5a5..e9307a9 100644
+--- a/kernel/sched/Makefile
++++ b/kernel/sched/Makefile
+@@ -7,6 +7,12 @@ endif
+ # that is not a function of syscall inputs. E.g. involuntary context switches.
  KCOV_INSTRUMENT := n
  
- # These are adjustments to the compiler flags used for objects that
-diff --git a/arch/x86/realmode/Makefile b/arch/x86/realmode/Makefile
-index 682c895..6b1f3a4 100644
---- a/arch/x86/realmode/Makefile
-+++ b/arch/x86/realmode/Makefile
-@@ -6,7 +6,10 @@
- # for more details.
- #
- #
++# There are numerous races here, however, most of them due to plain accesses.
++# This would make it even harder for syzbot to find reproducers, because these
++# bugs trigger without specific input. Disable by default, but should re-enable
++# eventually.
++KCSAN_SANITIZE := n
 +
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+ ifneq ($(CONFIG_SCHED_OMIT_FRAME_POINTER),y)
+ # According to Alan Modra <alan@linuxcare.com.au>, the -fno-omit-frame-pointer is
+ # needed for x86 only.  Why this used to be enabled for all architectures is beyond
+diff --git a/mm/Makefile b/mm/Makefile
+index d996846..56c1964 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -7,6 +7,14 @@ KASAN_SANITIZE_slab_common.o := n
+ KASAN_SANITIZE_slab.o := n
+ KASAN_SANITIZE_slub.o := n
  
- subdir- := rm
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index f60501a..fdbbb94 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -6,7 +6,10 @@
- # for more details.
- #
- #
++# These produce frequent data race reports: most of them are due to races on
++# the same word but accesses to different bits of that word. Re-enable KCSAN
++# for these when we have more consensus on what to do about them.
++KCSAN_SANITIZE_slab_common.o := n
++KCSAN_SANITIZE_slab.o := n
++KCSAN_SANITIZE_slub.o := n
++KCSAN_SANITIZE_page_alloc.o := n
 +
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
+ # These files are disabled because they produce non-interesting and/or
+ # flaky coverage that is not a function of syscall inputs. E.g. slab is out of
+ # free pages, or a task is migrated between nodes.
