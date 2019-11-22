@@ -3,112 +3,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E92C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DA2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E93F2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419542;
-	bh=C/p5ffkx9IEH3kI+wV1/WForkf/HV3MApMb1oJBFRpg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNQtDhs703OWAqNaIho17WyhBEyylB/CCQVdhwkeHG1flQKXuDpjSsX0lKQRoptPg
-	 Z6kU8IfSLVYYI5vTYSajUJjqmOaszveCVkGA7c0xPFZthNAXVx0DNfSc1IiZIuhxqQ
-	 plgac97dZnLTnvfNFfG+GKshn/OmESVk0tiwQ52Y=
+	by mail.kernel.org (Postfix) with ESMTP id 415452071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S6KxUIm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfKVKpl (ORCPT
+        id S1728866AbfKVKps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727593AbfKVKpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:39 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 185342071C;
-        Fri, 22 Nov 2019 10:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419538;
-        bh=C/p5ffkx9IEH3kI+wV1/WForkf/HV3MApMb1oJBFRpg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TddfM8lqTZN0X19SQHQJo9UcFLDMkvCZmOWVHr2nhgiUpqawGkTHioCtmL/SGkVUt
-         PWAdmhsp3fzCxuRzO1gWL3vKCQCiHhNhPOkvuev5lBsKnXeAyhtV+dhN2nImhKHixI
-         P5Sf9Pmsk7huGPmD2ZCCmiP79/okn4QNOk18WWZQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 119/222] coresight: tmc: Fix byte-address alignment for RRP
-Date:   Fri, 22 Nov 2019 11:27:39 +0100
-Message-Id: <20191122100911.718972632@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 22 Nov 2019 05:45:48 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12079 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbfKVKpq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:46 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7bc550000>; Fri, 22 Nov 2019 02:45:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 02:45:45 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 22 Nov 2019 02:45:45 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:45 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 Nov 2019 10:45:45 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd7bc540000>; Fri, 22 Nov 2019 02:45:44 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH 4/6] arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+Date:   Fri, 22 Nov 2019 16:15:03 +0530
+Message-ID: <20191122104505.8986-5-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122104505.8986-1-vidyas@nvidia.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574419541; bh=5VF/mylt9BCtTjOJA7naf2OoyO1y34WYMwM19taHYwk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=S6KxUIm5LRZBcQR8NiHOAbXTX9wmrisbKIiigSd07fjvzdvbjBhNGRmSKLB07raPl
+         GFL709GgD3UtFCfXDfeux0BnEmaLc6lc6sxdWsN+ynp44p+M9dIVlhPxxSkJqioCHf
+         v+p7RSzsw6qzl8/qlH3WGsttmaRGaFrWKxBdCaAeI95pysC4VqGxKdqkth4w/9fw0s
+         f5FxJYTJIAH28melNO9GEGTwrirxBDGUYu04iT0t0gXoC5i4qK4UYA2vsSIfXnkdcx
+         kqtPc7pLLKxA9NUO4EtEGT2QjykkkVD+rnY8IISK5bW8yhIDy18E1HpuhcIzQBNnMz
+         dAgY0peO1KwCA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+Add endpoint mode controllers nodes for the dual mode PCIe controllers
+present in Tegra194 SoC.
 
-[ Upstream commit e7753f3937610633a540f2be81be87531f96ff04 ]
-
->From the comment in the code, it claims the requirement for byte-address
-alignment for RRP register: 'for 32-bit, 64-bit and 128-bit wide trace
-memory, the four LSBs must be 0s. For 256-bit wide trace memory, the
-five LSBs must be 0s'.  This isn't consistent with the program, the
-program sets five LSBs as zeros for 32/64/128-bit wide trace memory and
-set six LSBs zeros for 256-bit wide trace memory.
-
-After checking with the CoreSight Trace Memory Controller technical
-reference manual (ARM DDI 0461B, section 3.3.4 RAM Read Pointer
-Register), it proves the comment is right and the program does wrong
-setting.
-
-This patch fixes byte-address alignment for RRP by following correct
-definition in the technical reference manual.
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 99 ++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d6941ea24d8df..14df4e34c21cf 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -425,10 +425,10 @@ static void tmc_update_etf_buffer(struct coresight_device *csdev,
- 		case TMC_MEM_INTF_WIDTH_32BITS:
- 		case TMC_MEM_INTF_WIDTH_64BITS:
- 		case TMC_MEM_INTF_WIDTH_128BITS:
--			mask = GENMASK(31, 5);
-+			mask = GENMASK(31, 4);
- 			break;
- 		case TMC_MEM_INTF_WIDTH_256BITS:
--			mask = GENMASK(31, 6);
-+			mask = GENMASK(31, 5);
- 			break;
- 		}
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 11220d97adb8..2c8fae854a23 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1425,6 +1425,105 @@
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
  
++	pcie_ep@14160000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
++		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x36080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x14 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <4>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 4>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@14180000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x38080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x18 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 0>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@141a0000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
++		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
++			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 5>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
+ 	sysram@40000000 {
+ 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
+ 		reg = <0x0 0x40000000 0x0 0x50000>;
 -- 
-2.20.1
-
-
+2.17.1
 
