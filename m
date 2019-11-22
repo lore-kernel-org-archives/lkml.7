@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28509C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8402C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12552068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4062068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402691;
-	bh=ZK8IW9ixll6gcK15zLwQ+Fsl2kqOkRxWzoox6wnNZ+g=;
+	s=default; t=1574402697;
+	bh=bX5shF6z+hdjvDopTiIOMnMFS00lNoa2FlAure1pDjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsrlP/YeR/YiDt5tNgH2Xr3sspYTK0IiHTlVQ/DkGXiglPmEaQGaxnjw+MLAvZuqa
-	 C0DDyooZd1JY2niQ9lbtKXi6v2HuK1Clhtv65revOHS2mBpDOOMssaTGKaT2hdg2NW
-	 9lmrHje9dabJK0WFlVStGQI3M5ryvy+QXfzwBv4c=
+	b=LKssXlUY77CYsHKewksIYwsHfQXQnPKPQrFE6KgIdCs1yjC29Q8pbDS7LqeflOnfa
+	 h/P/fp/WOGYLzUJD15xnRthOTtIZs+zs6q2jIBCoqebhLi5N1iejnWvFqDZM3O1BrE
+	 Je8zzmzRmAjCX3QUm4mAaNXCpEGAQxyg3ZeOXpsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfKVGEq (ORCPT
+        id S1728803AbfKVGE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:04:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:04:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbfKVGCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:50 -0500
+        id S1729805AbfKVGCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B3720659;
-        Fri, 22 Nov 2019 06:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B1DA2071F;
+        Fri, 22 Nov 2019 06:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402569;
-        bh=ZK8IW9ixll6gcK15zLwQ+Fsl2kqOkRxWzoox6wnNZ+g=;
+        s=default; t=1574402564;
+        bh=bX5shF6z+hdjvDopTiIOMnMFS00lNoa2FlAure1pDjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RM2gqio05wqwM61kqCc7KQ+Ei6g5+zGNdsHr49Yfvennvsa/zWlMk4aW3fpMe7k28
-         +oNgwPVNDem+qWMA+w/QbYxL8sgMIaJtJzSOk8gnfpefLRaWVW+g5ufY9z/wovQxst
-         cB9AjdMPzYrFB7JLC8l/K81FDe6NpJDqmhEXyvzg=
+        b=j4spl8yquHv4YUE0Dg6hvpEfbv1NKTVUC32p7vpQrSCIvm+aftBfuCOvDm3RXa6xr
+         xUmLQhxjF/53cShzj+qFINC01ZMGEdrSTuXgYgHmp+FlnWvr4Tz8MzDxUMETRF34LE
+         0FMUugADhjqdODdCBDT9OFAZIeasE2tykIrXXrkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@gmx.us>, Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Yiwen Jiang <jiangyiwen@huawei.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Mark Fasheh <mfasheh@versity.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 72/91] drivers/base/platform.c: kmemleak ignore a known leak
-Date:   Fri, 22 Nov 2019 01:01:10 -0500
-Message-Id: <20191122060129.4239-71-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.9 68/91] ocfs2: clear journal dirty flag after shutdown journal
+Date:   Fri, 22 Nov 2019 01:01:06 -0500
+Message-Id: <20191122060129.4239-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -62,81 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@gmx.us>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit 967d3010df8b6f6f9aa95c198edc5fe3646ebf36 ]
+[ Upstream commit d85400af790dba2aa294f0a77e712f166681f977 ]
 
-unreferenced object 0xffff808ec6dc5a80 (size 128):
-  comm "swapper/0", pid 1, jiffies 4294938063 (age 2560.530s)
-  hex dump (first 32 bytes):
-    ff ff ff ff 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b  ........kkkkkkkk
-    6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  backtrace:
-    [<00000000476dcf8c>] kmem_cache_alloc_trace+0x430/0x500
-    [<000000004f708d37>] platform_device_register_full+0xbc/0x1e8
-    [<000000006c2a7ec7>] acpi_create_platform_device+0x370/0x450
-    [<00000000ef135642>] acpi_default_enumeration+0x34/0x78
-    [<000000003bd9a052>] acpi_bus_attach+0x2dc/0x3e0
-    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
-    [<000000003cf4f7f2>] acpi_bus_attach+0x108/0x3e0
-    [<000000002968643e>] acpi_bus_scan+0xb0/0x110
-    [<0000000010dd0bd7>] acpi_scan_init+0x1a8/0x410
-    [<00000000965b3c5a>] acpi_init+0x408/0x49c
-    [<00000000ed4b9fe2>] do_one_initcall+0x178/0x7f4
-    [<00000000a5ac5a74>] kernel_init_freeable+0x9d4/0xa9c
-    [<0000000070ea6c15>] kernel_init+0x18/0x138
-    [<00000000fb8fff06>] ret_from_fork+0x10/0x1c
-    [<0000000041273a0d>] 0xffffffffffffffff
+Dirty flag of the journal should be cleared at the last stage of umount,
+if do it before jbd2_journal_destroy(), then some metadata in uncommitted
+transaction could be lost due to io error, but as dirty flag of journal
+was already cleared, we can't find that until run a full fsck.  This may
+cause system panic or other corruption.
 
-Then, faddr2line pointed out this line,
-
-/*
- * This memory isn't freed when the device is put,
- * I don't have a nice idea for that though.  Conceptually
- * dma_mask in struct device should not be a pointer.
- * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
- */
-pdev->dev.dma_mask =
-	kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
-
-Since this leak has existed for more than 8 years and it does not
-reference other parts of the memory, let kmemleak ignore it, so users
-don't need to waste time reporting this in the future.
-
-Link: http://lkml.kernel.org/r/20181206160751.36211-1-cai@gmx.us
-Signed-off-by: Qian Cai <cai@gmx.us>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
+Link: http://lkml.kernel.org/r/20181121020023.3034-3-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Mark Fasheh <mfasheh@versity.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ocfs2/journal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 14ff40371f013..f90b1b9bbad0d 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -27,6 +27,7 @@
- #include <linux/clk/clk-conf.h>
- #include <linux/limits.h>
- #include <linux/property.h>
-+#include <linux/kmemleak.h>
- 
- #include "base.h"
- #include "power/power.h"
-@@ -516,6 +517,8 @@ struct platform_device *platform_device_register_full(
- 		if (!pdev->dev.dma_mask)
- 			goto err;
- 
-+		kmemleak_ignore(pdev->dev.dma_mask);
-+
- 		*pdev->dev.dma_mask = pdevinfo->dma_mask;
- 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index a30f63623db70..13cf69aa4cae8 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1018,7 +1018,8 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
+ 			mlog_errno(status);
  	}
+ 
+-	if (status == 0) {
++	/* Shutdown the kernel journal system */
++	if (!jbd2_journal_destroy(journal->j_journal) && !status) {
+ 		/*
+ 		 * Do not toggle if flush was unsuccessful otherwise
+ 		 * will leave dirty metadata in a "clean" journal
+@@ -1027,9 +1028,6 @@ void ocfs2_journal_shutdown(struct ocfs2_super *osb)
+ 		if (status < 0)
+ 			mlog_errno(status);
+ 	}
+-
+-	/* Shutdown the kernel journal system */
+-	jbd2_journal_destroy(journal->j_journal);
+ 	journal->j_journal = NULL;
+ 
+ 	OCFS2_I(inode)->ip_open_count--;
 -- 
 2.20.1
 
