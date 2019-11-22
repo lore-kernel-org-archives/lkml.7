@@ -2,85 +2,101 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE984C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B41EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5722068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621C220715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4moCnbf"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GY3TSJ3c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N2614tNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfKVMxD (ORCPT
+        id S1727584AbfKVMxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:53:03 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40744 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKVMxD (ORCPT
+        Fri, 22 Nov 2019 07:53:20 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:43929 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726548AbfKVMxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:53:03 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v24so5425404lfi.7;
-        Fri, 22 Nov 2019 04:53:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fY9hY9/A77YRE8iRO3MEb0mODAHbWB5BA4+3OzYa+58=;
-        b=I4moCnbfLIK/FGGBTv1ITFNmnxyumB6muFPhLbyZeSPGEez0/xQ3wWjVPVe0+0L1OD
-         TnwJ6itLYO3MaIFmUfvY47ax74TbrfgcRFm+w54ncP8Dnc5NDjd52k6y0kdj25PmVkmo
-         PRmqVCkQiFo7+EFMbdzsem4zRg9l4xtJKGn4vHpz+HHuf3Abz0JNM5mseHHaFVZsr9gw
-         HixY/+i421fOhnDjEvRGmplvIJ6uUBg1cchYw7qfnj7QyY4WXNKx6qWdZzNdIhBTyDnM
-         yYfZo5G5yrcJh+CCQTIsbvNkc8A4NLCXLme9l94syxOy84rTy4pcKc5wpjtcSA7zwW62
-         xcHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fY9hY9/A77YRE8iRO3MEb0mODAHbWB5BA4+3OzYa+58=;
-        b=F8I8bkPU0PjYRXgZ+kq3XC/jVfuBXbuqPJ95BZQYmnKE5PpK0leT2ZdfCx5VO1G1Yt
-         VNaaG94z0iP0c0YwBTGJFV+f/J1eWKUv7KlVCrxcMvc27dH0PDHJgoOPqADzBDFWNY0o
-         1ijCgRnierWTCOHf6LAySzxruPTe5ZbTqyEIUGnpt+Lag3G7pS4y/2jdThX0IW+W9C/2
-         s2cBP6Uhs6jeFRcjuF0jq27NCz454xlVbAeUSVAqVd6jjStEQfVocayw5cXKFBt0r4XS
-         yQ4/xejH5a6c1ed/QJsHm49Z0++AHF8VB39igP3sO9Rdha0NMYmcGZqFZEYLtqzonHCV
-         jRdw==
-X-Gm-Message-State: APjAAAV1ub+JgywEAff7ZAsU9jAa6Cszf8Scx7CM9IWeOgqCTN81Zud8
-        +NpYtIuJe8mDPcHG1mZVT2AC/wPSmqrHPRPPsf/MtMkQLX0=
-X-Google-Smtp-Source: APXvYqxWD8dAPCY1GHpRE/7ed3l5OZ2IWo5VV9F02EO0Xqit0HgHe5Ermxto6xeWBId1m3JqVGIHRIcZ0qpFdHAOJ6g=
-X-Received: by 2002:a19:ed19:: with SMTP id y25mr2307040lfy.13.1574427180402;
- Fri, 22 Nov 2019 04:53:00 -0800 (PST)
+        Fri, 22 Nov 2019 07:53:20 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 778A150EA;
+        Fri, 22 Nov 2019 07:53:16 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 22 Nov 2019 07:53:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=6sTaGdNaAmXwRq4Z1SN9IJKH5kM
+        GbGtleKNhLuS6KCc=; b=GY3TSJ3cyNB/ELYaZuV8A4JzI1BnSHgTsWtwatzFMQ1
+        +qyz/x4YpfIKfKwrxY14//8TUBs/sNm4IX89awRfB91iRdT3Qs8IBFEiiAGVp94D
+        yVy1wB4cCHPAIkdS1nLHsgt9AzSlP+KhU04bxg46IMRT+9isBpe1QEJX+pdrKU5g
+        QF8mHkIKr2rTNDjOwzoWKCK5wXsJfWuzcBJjc+gI7NTe3+x3r4CuIGQeu+DyGRzo
+        C0JXS7dhk0R/Rqujk3ZlYG1NdlLADsSmxry7weB69Af84sgI2RYiCOpoDMIaLCws
+        1Ec0vbvhbrKSLjjeqtX5A2TU6Gmecc5nEKzbHx0Micw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=6sTaGd
+        NaAmXwRq4Z1SN9IJKH5kMGbGtleKNhLuS6KCc=; b=N2614tNYPyX/Ppe8PZ7zoG
+        OKJIyoH0vBdx58kOTNIEA4g4i5JAJiEX8fOdTX03t3E0hwHAy87hTvsZu8GL4vCv
+        nMGos43iq3x3eUvMiPuWxVtfNGQPD0J3hAHQmNDucZsoQOT6upX4P9dn1x+IBAJR
+        GVweTZka4jKc6D1T797Qt5/CqQIrOmg6PdodkG345U+XimATQoCYFrwDVc3Vm0n7
+        wY9Bt4elDZ3XLU1KlBPplcPukeVY+guEhcHnIySzQKolG4dOPmkLPlUrbBOfUFY+
+        DonKbF8GZvVl4bszSxshEaJzkAo6BQg97WQEB39j8BoKIeed2UgpwB422gz6sprw
+        ==
+X-ME-Sender: <xms:ONrXXfspYttb_FGwg4feQCUKW3Cuze2CKmn7gG8ultW6G6OyTKNPFg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehgedggeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujggfsehttd
+    ertddtredvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegt
+    vghrnhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuvehluhhsthgvrhfu
+    ihiivgeptd
+X-ME-Proxy: <xmx:ONrXXR0A77t3Rrze9Stj3tjITlYJ9AbhRQbTDiroGSsfKYolhTB-ww>
+    <xmx:ONrXXfxwTluPtoy8Vk-wAC-heffLw0dWicrlsRGrVmjqzNo16feFnw>
+    <xmx:ONrXXVVqCv5JZ1My3N64FvfyexWvqlrx_t4BLF6v6biF18p6bBlSQA>
+    <xmx:PNrXXTeRfTFSjCBjey-yFNLl_uofxUM5PdxlXGUT5Z_Aa1XYjxXA3g>
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DD2DC8005B;
+        Fri, 22 Nov 2019 07:53:11 -0500 (EST)
+Date:   Fri, 22 Nov 2019 13:53:09 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 3/3] crypto: sun4i-ss: add the A33 variant of SS
+Message-ID: <20191122125309.GL4345@gilmour.lan>
+References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+ <20191120152833.20443-4-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-References: <20191108152013.13418-1-ramonreisfontes@gmail.com> <fe198371577479c1e00a80e9cae6f577ab39ce8e.camel@sipsolutions.net>
-In-Reply-To: <fe198371577479c1e00a80e9cae6f577ab39ce8e.camel@sipsolutions.net>
-From:   Ramon Fontes <ramonreisfontes@gmail.com>
-Date:   Fri, 22 Nov 2019 09:52:49 -0300
-Message-ID: <CAK8U23amVqf-6YoiPoyk5_za3dhVb4FJmBDvmA2xv2sD43DhQA@mail.gmail.com>
-Subject: Re: [PATCH] mac80211_hwsim: set the maximum EIRP output power for 5GHz
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        kvalo@codeaurora.org, davem@davemloft.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120152833.20443-4-clabbe.montjoie@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> How is hwsim related to ETSI? What does it matter?
+On Wed, Nov 20, 2019 at 04:28:33PM +0100, Corentin Labbe wrote:
+> The A33 SS has a difference with all other SS, it give SHA1 digest
+> directly in BE.
+> So this patch adds variant support in sun4i-ss.
+>
+> Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-It's well known that the frequency bands 2,4 GHz and 5 GHz are mainly
-used by Radio LANs and in many cases, the deployed technology is based
-on the IEEE 802.11 standards family. However, other technologies such
-as LTE-LAA are deployed in those frequency bands as well. That said,
-considering that hwsim is an excellent module that can be used in
-different network simulation scenarios; that it is not only used in
-North America; and also considering that some regulatory power limits
-are taken from the ETSI standards, why not set a maximum value
-supported by a renowned Institute? Without this new value, regdomain
-will not work as expected for some countries.
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
---
-Ramon Fontes
+I'll apply the DT patches once Herbert will have merged this patch.
+
+Thanks!
+Maxime
