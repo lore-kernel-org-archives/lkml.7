@@ -2,130 +2,124 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB92AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A33DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC1B20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DA220706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:59:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XbGG7IUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfKVO7L (ORCPT
+        id S1727835AbfKVO7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:59:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:48596 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfKVO7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:59:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07C22DA7;
-        Fri, 22 Nov 2019 06:59:10 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C59D03F703;
-        Fri, 22 Nov 2019 06:59:07 -0800 (PST)
-Subject: Re: [PATCH v2 4/6] PCI: brcmstb: add Broadcom STB PCIe host
- controller driver
-To:     Jim Quinlan <jim2101024@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, maz@kernel.org,
-        Phil Elwell <phil@raspberrypi.org>,
-        linux-kernel@vger.kernel.org,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Eric Anholt <eric@anholt.net>, mbrugger@suse.com,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-rpi-kernel@lists.infradead.org
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
- <20191112155926.16476-5-nsaenzjulienne@suse.de>
- <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
- <7e1be0bdcf303224a3fe225654a3c2391207f9eb.camel@suse.de>
- <20191121120319.GW43905@e119886-lin.cambridge.arm.com>
- <276d4160bbe6a4e8225bbd836f43d40da41d25f1.camel@suse.de>
- <CANCKTBuoSkmAiY4yUuNpT-GwhS7LJv79L910UvcrPgPpMz=YGg@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <24e5302a-51c6-df39-5381-a790752f261d@arm.com>
-Date:   Fri, 22 Nov 2019 14:59:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CANCKTBuoSkmAiY4yUuNpT-GwhS7LJv79L910UvcrPgPpMz=YGg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Fri, 22 Nov 2019 09:59:25 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:32856 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbfKVO7Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:59:24 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c124so2092256qkg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 06:59:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=czmRFawPbRA4wPPyXKr/45ohSDBaFeSUF30l90PueKM=;
+        b=XbGG7IUMCmvWd+2Zfh4Z0zzCFA2YV9Yk+qwUrcoqfwiSOEtswc8NG0bzARjBR78kiH
+         hLb8AV81UBoA8FtccPYG4v/yLV//ZNkm1u3EEzcciUrmcKt6ohVHbE/f/ctoKSBy/ASi
+         Z9XsVYrMHoPtFkr3OVpIlc7TvtjnA8BtHxI72MjvHJnn03urkucOhHS3B87CpoTzlP+O
+         cdRJcMcmTCp7vvt5aQhm21ls6lvUhdZmRKnraFhGm3/NnVk9FbP1v0Shmy7/aByw8ohz
+         JK4k7eow7o64LXPM5WE2cQN0KV8APCyDDkZYfDiRkOCosZWeF1FAFLaJ/20UPDf7t0Ag
+         T0+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=czmRFawPbRA4wPPyXKr/45ohSDBaFeSUF30l90PueKM=;
+        b=cGyemhRN/budIXCOfhAcqu2jzvsConlrXcFw5BrSH/gKRq8ZLQGOD/SyUU92QsR2cc
+         8CYA6WHGiyD9hf3r2xrgAyAW/ZsaxW7y0X35MGdQfSYopVHnpZdNV7wraKUY+Uz93CMk
+         JWcXQDKlx/cZsKDQo2PFKrlmEIUNVG3rUo/ne4RkYCC1S+JouiEWRZ4w56fKg9WZV+I7
+         4WTOC/0IM7+7bkPUMT2QS9xZjyLkhN7iZPXys5KemIv0fGAjBytkP9D5YUbIzGVEvs7Q
+         LaCOXM2JbIyTV8mWdqph1eA3o1WKSL5oHwPKhrTE2yRpTTd/fLVE4iMiY5fa78Q3LsKP
+         adLQ==
+X-Gm-Message-State: APjAAAWkOB8vko2hV7Y4e43GF2GWx2pXu+OijkeITe6+KiJGt5PyYyCr
+        kU0E0Ops27+dXkqV1eKvb8nQlSoIz+8=
+X-Google-Smtp-Source: APXvYqxM/Mq/oZx9N3SQRd4yH7GRI8jHA57x9C0cgRY6OyHUe5QZyZcJZVN9LAmaC1fIu8T/1NRQWA==
+X-Received: by 2002:a37:a642:: with SMTP id p63mr5872287qke.85.1574434763130;
+        Fri, 22 Nov 2019 06:59:23 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id j89sm3496929qte.72.2019.11.22.06.59.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 06:59:22 -0800 (PST)
+Message-ID: <1574434760.9585.18.camel@lca.pw>
+Subject: Re: [PATCH v2] iommu/iova: silence warnings under memory pressure
+From:   Qian Cai <cai@lca.pw>
+To:     Joe Perches <joe@perches.com>, jroedel@suse.de
+Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Date:   Fri, 22 Nov 2019 09:59:20 -0500
+In-Reply-To: <7fd08d481a372ea0b600f95c12166ab54ed5e267.camel@perches.com>
+References: <20191122025510.4319-1-cai@lca.pw>
+         <7fd08d481a372ea0b600f95c12166ab54ed5e267.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/11/2019 9:07 pm, Jim Quinlan wrote:
-[...]
->> As for [...]_NUM_MASK_BITS I'm looking for a smart/generic way to calculate it
->> from the actual mask. No luck so far. If not, I think I'll simply leave it as
->> is for now.
-
-HWEIGHT()?
-
->>>> FYI, What's happening here is that we have to save the CPU address range
->>>> (which
->>>> is already shifted right 20 positions) in two parts, the lower 12 bits go
->>>> into
->>>> PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT while the higher 8 bits go into
->>>> PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI or
->>>> PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI.
->>>
->>> The hardware spec require bits 31:20 of the address, and the high registers
->>> require 39:32 right?
->>
->> Yes, that's it.
->>
->>> (Apologies, the indirection by the WR_FLD_** macros easily confuses me. These
->>> type of macros are helpful, or rather would be if the whole kernel used them.
->>> I think they can add confusion when each driver has its own set of similar
->>> macros. This is why its *really* helpful to use any existing macros in the
->>> kernel - and only invent new ones if needed).
->>
->> I agree it's pretty confusing, I think v3, using bitfield.h as much as
->> possible, looks substantially more welcoming.
+On Thu, 2019-11-21 at 20:37 -0800, Joe Perches wrote:
+> On Thu, 2019-11-21 at 21:55 -0500, Qian Cai wrote:
+> > When running heavy memory pressure workloads, this 5+ old system is
+> > throwing endless warnings below because disk IO is too slow to recover
+> > from swapping. Since the volume from alloc_iova_fast() could be large,
+> > once it calls printk(), it will trigger disk IO (writing to the log
+> > files) and pending softirqs which could cause an infinite loop and make
+> > no progress for days by the ongoimng memory reclaim. This is the counter
+> > part for Intel where the AMD part has already been merged. See the
+> > commit 3d708895325b ("iommu/amd: Silence warnings under memory
+> > pressure"). Since the allocation failure will be reported in
+> > intel_alloc_iova(), so just call printk_ratelimted() there and silence
+> > the one in alloc_iova_mem() to avoid the expensive warn_alloc().
 > 
-> The reason we use custom macros is because we'd like to keep the
-> register names the same as the HW declares and our internal tools
-> support.  As you may have noticed, our register names are unusually
-> long and it is hard to fit a simple read or write field assignment
-> within 80 columns w/o using custom macros tailored to our register
-> names' format.
+> []
+> > v2: use dev_err_ratelimited() and improve the commit messages.
 > 
-> Perhaps Nicolas can pull a rabbit out of a hat and use Linux macros
-> while keeping our long register names, but if he has to use his own
-> shorter register names it will become harder for Broadcom developers
-> to debug this driver.
+> []
+> > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> 
+> []
+> > @@ -3401,7 +3401,8 @@ static unsigned long intel_alloc_iova(struct device *dev,
+> >  	iova_pfn = alloc_iova_fast(&domain->iovad, nrpages,
+> >  				   IOVA_PFN(dma_mask), true);
+> >  	if (unlikely(!iova_pfn)) {
+> > -		dev_err(dev, "Allocating %ld-page iova failed", nrpages);
+> > +		dev_err_ratelimited(dev, "Allocating %ld-page iova failed",
+> > +				    nrpages);
+> 
+> Trivia:
+> 
+> This should really have a \n termination on the format string
+> 
+> 		dev_err_ratelimited(dev, "Allocating %ld-page iova failed\n",
+> 
+> 
 
-Regardless of the length of the names, the standard bitfield helpers can 
-still make things easier to reason about - in this particular case I 
-think you could lose some boilerplate and indirection with essentially 
-no change to the readability you're concerned for - compare:
+Why do you say so? It is right now printing with a newline added anyway.
 
-#define REG_NAME ...
-#define REG_NAME_FIELD_NAME_MASK ...
-#define REG_NAME_FIELD_NAME_SHIFT ...
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
 
-	val = RD_FIELD(base, REG_NAME,
-		       FIELD_NAME);
-
-vs.
-
-#define REG_NAME ...
-#define   FIELD_NAME ...
-
-	reg = bcm_readl(base + REG_NAME);
-	val = FIELD_GET(FIELD_NAME, reg);
-
-Robin.
