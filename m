@@ -2,76 +2,98 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F83C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582902088F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37C820855
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574420704;
+	bh=+E19Huy+AE+P6Kn7PRtmtBXtIXdaMq31874qfiMh7I0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QFs/bmRL0RLwxFZTPJit9TjF0A/wcBByGr+hWP3IMo7Ko4e2rdi84mvmAlO2TBKuq
+	 whiz1IJrH0kbBOcq0Mz7b1QvFcyJIqkPozrLq2Ujj9ds2370ANL7qcByYCS4RDWynO
+	 o6XqxwbJtUf5SlgdJ13ld5YHRjwq1eeuzmGCiElI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbfKVLE7 (ORCPT
+        id S1731649AbfKVLFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:59 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:53552 "EHLO deadmen.hmeau.com"
+        Fri, 22 Nov 2019 06:05:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbfKVLE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:57 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iY6k3-0004dS-9n; Fri, 22 Nov 2019 19:04:47 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iY6k2-0002gT-BV; Fri, 22 Nov 2019 19:04:46 +0800
-Date:   Fri, 22 Nov 2019 19:04:46 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v3] crypto: arm64/sha: fix function types
-Message-ID: <20191122110446.wjuyo5b5i3ebqbsd@gondor.apana.org.au>
-References: <20191112223046.176097-1-samitolvanen@google.com>
- <20191119201353.2589-1-samitolvanen@google.com>
+        id S1731108AbfKVLFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B04020872;
+        Fri, 22 Nov 2019 11:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574420699;
+        bh=+E19Huy+AE+P6Kn7PRtmtBXtIXdaMq31874qfiMh7I0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z//osKfau5zUaHXRnO7oplzokJpFDlxI4RQqyAHZEz99JsXRg2IZLOu9DCEcb02pU
+         UDdjZjPqyk+Kn0he8qk3teTIbCTG3gDNds92snd3+9QQxB+UiAkPOOGVW9mSpVtvhe
+         WM/S2TcGmyHygFmiJ6Qq+T7dM+rvp+mnc3DzoSVk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 196/220] orangefs: rate limit the client not running info message
+Date:   Fri, 22 Nov 2019 11:29:21 +0100
+Message-Id: <20191122100928.101895038@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
+References: <20191122100912.732983531@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119201353.2589-1-samitolvanen@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:13:53PM -0800, Sami Tolvanen wrote:
-> Instead of casting pointers to callback functions, add C wrappers
-> to avoid type mismatch failures with Control-Flow Integrity (CFI)
-> checking.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
-> Changes in v3:
->   - Removed unnecessary inline attributes.
-> 
-> Changes in v2:
->   - Added wrapper functions instead of changing parameter types
->     for the assembly functions.
-> 
-> ---
->  arch/arm64/crypto/sha1-ce-glue.c   | 17 +++++++++------
->  arch/arm64/crypto/sha2-ce-glue.c   | 34 ++++++++++++++++++------------
->  arch/arm64/crypto/sha256-glue.c    | 32 +++++++++++++++++-----------
->  arch/arm64/crypto/sha512-ce-glue.c | 26 ++++++++++++-----------
->  arch/arm64/crypto/sha512-glue.c    | 15 ++++++++-----
->  5 files changed, 76 insertions(+), 48 deletions(-)
+From: Colin Ian King <colin.king@canonical.com>
 
-Patch applied.  Thanks.
+[ Upstream commit 2978d873471005577e7b68a528b4f256a529b030 ]
+
+Currently accessing various /sys/fs/orangefs files will spam the
+kernel log with the following info message when the client is not
+running:
+
+[  491.489284] sysfs_service_op_show: Client not running :-5:
+
+Rate limit this info message to make it less spammy.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/orangefs/orangefs-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
+index dd28079f518c0..19739aaee6755 100644
+--- a/fs/orangefs/orangefs-sysfs.c
++++ b/fs/orangefs/orangefs-sysfs.c
+@@ -323,7 +323,7 @@ static ssize_t sysfs_service_op_show(struct kobject *kobj,
+ 	/* Can't do a service_operation if the client is not running... */
+ 	rc = is_daemon_in_service();
+ 	if (rc) {
+-		pr_info("%s: Client not running :%d:\n",
++		pr_info_ratelimited("%s: Client not running :%d:\n",
+ 			__func__,
+ 			is_daemon_in_service());
+ 		goto out;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.20.1
+
+
+
