@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6BAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E6BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A973820707
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B412071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419351;
-	bh=kL6FU9R5156ffI4nRNa+Oy0TifVNeORlwgtnvFjve3M=;
+	s=default; t=1574419356;
+	bh=iwRWbDProyYvqoWQb+Dd2CWpBQbyunJ8/Hs4YVIOTCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eJPrIptMqSJ/8J88pL9AUJ0q3JFjC5F/w2FzZ7PVLSZCqF8C5wWx4zZvuyNXip8j4
-	 zl7uUqT+WbFL/92EznK4qdZaxa8faMEuZ5ADVHkBDCWhXJpzi8m9vc/Ev+O1L4sK2m
-	 xWt/HW/FqcAFvD2n+AKL1C0df4nt246d++mHxx48=
+	b=E2we3e8D+2BTAWxPBFSao/RCCGtgwHqWjjAKssoHJWqnAlbzLBhXw5qcSThbA2CFP
+	 XCuVBqwU2NmFA3I8/rMcZQRkCJ8vN//jRBqWxWMnVLM3b7nDoHp8RP339h4bbequ9m
+	 S8XdDxfVvK7bF7w9YN8t1MuYYCRgs0aTcKIeYvWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfKVKma (ORCPT
+        id S1729137AbfKVKmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:42:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727761AbfKVKm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:42:28 -0500
+        id S1729125AbfKVKme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:42:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D3B20707;
-        Fri, 22 Nov 2019 10:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546FA20707;
+        Fri, 22 Nov 2019 10:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419348;
-        bh=kL6FU9R5156ffI4nRNa+Oy0TifVNeORlwgtnvFjve3M=;
+        s=default; t=1574419353;
+        bh=iwRWbDProyYvqoWQb+Dd2CWpBQbyunJ8/Hs4YVIOTCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sR5BkyLjA/Qzaq0SIwAMuphNje8TSUxXNXDzH9u1/FqaYv4ovm0I8Mx8nmlro6sQc
-         VvUEKa9IpkM+V5ucJy/USUEW7imW58PqYWBX/9KDcW16Eo//PmWRMSbpTz52stPb0r
-         XdL8R0BrCC7AqjRHGfKcaMlV/ucPXLDGklTb6zkw=
+        b=IbGtaP7e4lDvHqpdQhsjPf7b4HyrQpwhMQsaz91KwncDzx+kJz8+guOelIiwgKDWK
+         cn8/+daFYD10F6dZLD4TpoF8UDAHa8t/+4izN+9ZJYQ2MEz+ss7mAJYT1NIR5kt9Qn
+         BnUOaGwvSek88NhIXQbNUTCD32O4bHEJb3GM7tHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Vasilyev <vasilyev@ispras.ru>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 082/222] serial: mxs-auart: Fix potential infinite loop
-Date:   Fri, 22 Nov 2019 11:27:02 +0100
-Message-Id: <20191122100909.371468340@linuxfoundation.org>
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 084/222] powerpc/64s/hash: Fix stab_rr off by one initialization
+Date:   Fri, 22 Nov 2019 11:27:04 +0100
+Message-Id: <20191122100909.586252449@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,43 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Vasilyev <vasilyev@ispras.ru>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
+[ Upstream commit 09b4438db13fa83b6219aee5993711a2aa2a0c64 ]
 
-On the error path of mxs_auart_request_gpio_irq() is performed
-backward iterating with index i of enum type. Underline enum type
-may be unsigned char. In this case check (--i >= 0) will be always
-true and error handling goes into infinite loop.
+This causes SLB alloation to start 1 beyond the start of the SLB.
+There is no real problem because after it wraps it stats behaving
+properly, it's just surprisig to see when looking at SLB traces.
 
-The patch changes the check so that it is valid for signed and unsigned
-types.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/mxs-auart.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/slb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index 1d9d778828bae..515bf18c82943 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -1635,8 +1635,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
+diff --git a/arch/powerpc/mm/slb.c b/arch/powerpc/mm/slb.c
+index 64c9a91773af4..96c41b55b106b 100644
+--- a/arch/powerpc/mm/slb.c
++++ b/arch/powerpc/mm/slb.c
+@@ -321,7 +321,7 @@ void slb_initialize(void)
+ #endif
+ 	}
  
- 	/*
- 	 * If something went wrong, rollback.
-+	 * Be careful: i may be unsigned.
- 	 */
--	while (err && (--i >= 0))
-+	while (err && (i-- > 0))
- 		if (irq[i] >= 0)
- 			free_irq(irq[i], s);
+-	get_paca()->stab_rr = SLB_NUM_BOLTED;
++	get_paca()->stab_rr = SLB_NUM_BOLTED - 1;
  
+ 	lflags = SLB_VSID_KERNEL | linear_llp;
+ 	vflags = SLB_VSID_KERNEL | vmalloc_llp;
 -- 
 2.20.1
 
