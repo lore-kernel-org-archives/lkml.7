@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C07C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E561C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040C620409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5FC20409
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404013;
-	bh=Ql9x8nBLRruSTrj/axpdo25m6wC+H80WPeR0h+hYPu4=;
+	s=default; t=1574404024;
+	bh=Ig6GLgtVxG8RAfqsFCQe+ELgsgqLjsT/38hfFIajrIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjqILBoSNZ3Qi2FEISDXvE6bw+CatcxEqi8s5iMUXgx2Rrt8kCN9HLEqdRSbE21GY
-	 N3Nh8fT62WHbEGIh8hNENxHsA/6JNt9RBK4VK3DC5Ar4Yp/v0X/8PBqxU7fLG6i/+y
-	 6YLFU04KBswzl+//at0RyA+bRKjUpwzaLAwyBYQA=
+	b=npgCRBGzL7vATnN/gjoNzcruZ/YXGxWEJDr9YCgLsNl3NH6BiNFj+prdKeD0BIbFk
+	 +BHgGA2YjYzst2gZnaJwwvujP7pH5CNNiX5LtP8bi2QcHq/8DL77EDL7mHh3qPCd+L
+	 6ZtW+1dc+nSNFB/EDrEShRqPwZ5Tmkeu9TCNANW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfKVG0v (ORCPT
+        id S1727780AbfKVFuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:26:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:50:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbfKVFuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:40 -0500
+        id S1727740AbfKVFua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0950C2071C;
-        Fri, 22 Nov 2019 05:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D39282070A;
+        Fri, 22 Nov 2019 05:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401839;
-        bh=Ql9x8nBLRruSTrj/axpdo25m6wC+H80WPeR0h+hYPu4=;
+        s=default; t=1574401829;
+        bh=Ig6GLgtVxG8RAfqsFCQe+ELgsgqLjsT/38hfFIajrIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fa8IE+auH7bNqpDrTWeyFOq3CyzulDLsTcGjS/A5nsP8Wkg1yzHNeMEljkb/Zfwu3
-         FY7J0KsmR5RsiqNhE9kGjK+spJFxUJw7fK/pNbDjWJU/xijMji3wQv98IyaE08io5M
-         fiS2sL3klxqWZ1U82IMX8nPhnN6hdQll835Kg84I=
+        b=w2u/orVw4eWwRUsL15jfmo11VQwPJtk181UfXq939KtYBpC28Y8ru84TUIBIwb720
+         N2MUSOcnQRz831BItJIrg67Ccjtjel9/nq9TTNIoOEofWjfeQ1i5bvOLqPMJSpVNUJ
+         VW6ZwKbA8twmq8L2uw1hIgEwjXLj/N+eejxHX0YQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <righi.andrea@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.19 080/219] kprobes/x86/xen: blacklist non-attachable xen interrupt functions
-Date:   Fri, 22 Nov 2019 00:46:52 -0500
-Message-Id: <20191122054911.1750-73-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 071/219] btrfs: Check for missing device before bio submission in btrfs_map_bio
+Date:   Fri, 22 Nov 2019 00:46:43 -0500
+Message-Id: <20191122054911.1750-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,43 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <righi.andrea@gmail.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit bf9445a33ae6ac2f0822d2f1ce1365408387d568 ]
+[ Upstream commit fc8a168aa9ab1680c2bd52bf9db7c994e0f2524f ]
 
-Blacklist symbols in Xen probe-prohibited areas, so that user can see
-these prohibited symbols in debugfs.
+Before btrfs_map_bio submits all stripe bios it does a number of checks
+to ensure the device for every stripe is present. However, it doesn't do
+a DEV_STATE_MISSING check, instead this is relegated to the lower level
+btrfs_schedule_bio (in the async submission case, sync submission
+doesn't check DEV_STATE_MISSING at all). Additionally
+btrfs_schedule_bios does the duplicate device->bdev check which has
+already been performed in btrfs_map_bio.
 
-See also: a50480cb6d61.
+This patch moves the DEV_STATE_MISSING check in btrfs_map_bio and
+removes the duplicate device->bdev check. Doing so ensures that no bio
+cloning/submission happens for both async/sync requests in the face of
+missing device. This makes the async io submission path slightly shorter
+in terms of instruction count. No functional changes.
 
-Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/xen-asm_64.S | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/volumes.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 3a6feed76dfc1..a93d8a7cef26c 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -12,6 +12,7 @@
- #include <asm/segment.h>
- #include <asm/asm-offsets.h>
- #include <asm/thread_info.h>
-+#include <asm/asm.h>
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index a8297e7489d98..f84c18e86c816 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6106,12 +6106,6 @@ static noinline void btrfs_schedule_bio(struct btrfs_device *device,
+ 	int should_queue = 1;
+ 	struct btrfs_pending_bios *pending_bios;
  
- #include <xen/interface/xen.h>
+-	if (test_bit(BTRFS_DEV_STATE_MISSING, &device->dev_state) ||
+-	    !device->bdev) {
+-		bio_io_error(bio);
+-		return;
+-	}
+-
+ 	/* don't bother with additional async steps for reads, right now */
+ 	if (bio_op(bio) == REQ_OP_READ) {
+ 		btrfsic_submit_bio(bio);
+@@ -6240,7 +6234,8 @@ blk_status_t btrfs_map_bio(struct btrfs_fs_info *fs_info, struct bio *bio,
  
-@@ -24,6 +25,7 @@ ENTRY(xen_\name)
- 	pop %r11
- 	jmp  \name
- END(xen_\name)
-+_ASM_NOKPROBE(xen_\name)
- .endm
- 
- xen_pv_trap divide_error
+ 	for (dev_nr = 0; dev_nr < total_devs; dev_nr++) {
+ 		dev = bbio->stripes[dev_nr].dev;
+-		if (!dev || !dev->bdev ||
++		if (!dev || !dev->bdev || test_bit(BTRFS_DEV_STATE_MISSING,
++						   &dev->dev_state) ||
+ 		    (bio_op(first_bio) == REQ_OP_WRITE &&
+ 		    !test_bit(BTRFS_DEV_STATE_WRITEABLE, &dev->dev_state))) {
+ 			bbio_error(bbio, first_bio, logical);
 -- 
 2.20.1
 
