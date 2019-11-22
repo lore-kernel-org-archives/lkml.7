@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF30C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5545AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0641B2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C2E2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452232;
-	bh=otUWK49KyyBOMV/bSn9NkqTZ1N4WCHx+CSRaC3fXr8A=;
+	s=default; t=1574452228;
+	bh=r3zYxuZAQt63bXoQ4SqdojPfOoJcM0AVmsPwzVSmKnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K5FQImNlkaMNYsA9QsX/B7gmxdAr8B4opIMl84FoTuFhca4htvDyTudf8EfoSLO1o
-	 eNcIxEPpK1ZXTuqyZhLvCZtbD3V5Ws6L5ovjLtU4TLNTrgXOg9Z2FYAuC1ErjWvks9
-	 w9CmQhxNTtFVymo2Ybxcvu4EvT2Aq9l4qe+hbq0Q=
+	b=EWkM0xRi0aYxVom96MgFymcZD/YyRDK2OD4z6ferqcQjAYaE/1HoaZsw5tn7VROwG
+	 0In77IsSl9DKaaxgSdEzRSe10XAIGIwvNGTHoqbihEu6lZRTSIIkwQgXW4bDOv5oiG
+	 QpWD2qbbWp5UFLJS9mHhShoZfbjQRYxFspEhxsow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfKVTua (ORCPT
+        id S1727873AbfKVTu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:50:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51366 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:50:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbfKVTuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:50:25 -0500
+        id S1727824AbfKVTuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:50:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95FF620731;
-        Fri, 22 Nov 2019 19:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D10A42072E;
+        Fri, 22 Nov 2019 19:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452225;
-        bh=otUWK49KyyBOMV/bSn9NkqTZ1N4WCHx+CSRaC3fXr8A=;
+        s=default; t=1574452220;
+        bh=r3zYxuZAQt63bXoQ4SqdojPfOoJcM0AVmsPwzVSmKnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jFbr9mshZRKeiBvxtfB9LXo28LKjMHwNBI/6ttIMJp7xQ7PMm18sDH8riOBsm775+
-         gq6FJi1/fY2xZMdnmZEEq7BY8eYq6jtL89jKdYCCkwffhrapoQJPYTPrVEauVn59fh
-         QUonhwZx+SEuvUcVykoZGbzgWXbufz6aj6iv7ILE=
+        b=loCB6KiG+z08OqU8vh2pEbqMOBxSqUd7Mo+FiczaY87jDf+1/cz0JpdyIWedqTL+U
+         9CJ7hIk1TeY734Nn5vXhaYTY2v9/FKqMId8B1PACZ4EvfahQXb8TloaUt8bVPqFMk5
+         Km7nfYqCHHyWldqLHvKnKzkrg+7GVDY7MN9KgtL4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 9/9] net: ep93xx_eth: fix mismatch of request_mem_region in remove
-Date:   Fri, 22 Nov 2019 14:50:14 -0500
-Message-Id: <20191122195014.25065-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 5/9] slip: Fix memory leak in slip_open error path
+Date:   Fri, 22 Nov 2019 14:50:10 -0500
+Message-Id: <20191122195014.25065-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122195014.25065-1-sashal@kernel.org>
 References: <20191122195014.25065-1-sashal@kernel.org>
@@ -59,44 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit 3df70afe8d33f4977d0e0891bdcfb639320b5257 ]
+[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
 
-The driver calls release_resource in remove to match request_mem_region
-in probe, which is incorrect.
-Fix it by using the right one, release_mem_region.
+Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
+by Syzkaller in slcan. Same issue exists in slip.c and this patch is
+addressing the leak in slip.c.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Here is the slcan memory leak trace reported by Syzkaller:
+
+BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
+  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
+  hex dump (first 32 bytes):
+    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
+    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
+    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
+    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
+    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
+    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
+    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
+    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
+    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
+    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
+    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<000000008ea75434>] 0xfffffffffffffff
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cirrus/ep93xx_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/slip/slip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-index de9f7c97d916d..796ee362ad70c 100644
---- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
-+++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-@@ -776,6 +776,7 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
- {
- 	struct net_device *dev;
- 	struct ep93xx_priv *ep;
-+	struct resource *mem;
+diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+index a17d86a577347..d34bdd2f7ac78 100644
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -860,6 +860,7 @@ static int slip_open(struct tty_struct *tty)
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	free_netdev(sl->dev);
  
- 	dev = platform_get_drvdata(pdev);
- 	if (dev == NULL)
-@@ -791,8 +792,8 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
- 		iounmap(ep->base_addr);
- 
- 	if (ep->res != NULL) {
--		release_resource(ep->res);
--		kfree(ep->res);
-+		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		release_mem_region(mem->start, resource_size(mem));
- 	}
- 
- 	free_netdev(dev);
+ err_exit:
+ 	rtnl_unlock();
 -- 
 2.20.1
 
