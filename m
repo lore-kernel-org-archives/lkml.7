@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1397C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7736C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFB320674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AE020674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403850;
-	bh=lNfL3J5Jv4t6e3+pymIv4mFUXzovMgP8gXFma0Mw6yI=;
+	s=default; t=1574403854;
+	bh=1lcF54AcbRONjDESSOA+6p0jhMgKCR+p52kcc7fQZc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOcrmt1zIf3JbVrAYfp9VV1WKeAIg/CqSflVAWHULlOUeBWL+FhizI2dSObkV7fXT
-	 gj/166aAbHla6BxFWoS1Mj9U81xPWSOdkM2UTbXv6Rf+V9McX997wMUYXwh98AiPAI
-	 G4xk724iDO8kNKQuqykIvXqgVakHWo2unnwG9WY0=
+	b=EhchqSPbApNU1fun12TAwijUDA4b2o6UZEpsOt2Z+bUPqiBoBrfbQXB5841A1HK+n
+	 bqfVFfj7DpSUxUxNBGVdWqxh0hCHIJj1xFvBA0VEFPap3m7Lfp7BgdRu4RrHc6Wa/h
+	 JO2/Tci0QKvVux/EdqIi5qTwZOZZFhruzdyUY6vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfKVFvc (ORCPT
+        id S1727996AbfKVGYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:24:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbfKVFvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:20 -0500
+        id S1728157AbfKVFvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F4A20855;
-        Fri, 22 Nov 2019 05:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BF420731;
+        Fri, 22 Nov 2019 05:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401879;
-        bh=lNfL3J5Jv4t6e3+pymIv4mFUXzovMgP8gXFma0Mw6yI=;
+        s=default; t=1574401890;
+        bh=1lcF54AcbRONjDESSOA+6p0jhMgKCR+p52kcc7fQZc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqHlGVeTNZmGcMHPn5lbl52LyfIDvc0OHTmP6SCKKMiZCRmFEluBeDLxDHrJGh3Lw
-         6+zLh6j6SlcYu4cGBF9vlUZ/IBQoH2NYqGU6OuIJOnU8vI2YOQy3z4un9qN4h3gYv5
-         ERoLvdMMm6qNYCc2tRYogdg1jCggZgEyovD2pKVg=
+        b=XKYhhS34Iyh7W7x47gFw4rfU1nPJXR2RZxIHk48GxGL7R9TSGxdQx0qIz7GbJdxEZ
+         UCWVlcQAU1pAM/MFQysC0F8uxaJEVyNNtkSoBo9k/NYOiaBTUT4uzaHKceuwBaCDLj
+         GPJVz9XkcV7Frdr/dxcwjFfkkVDMZrS7S7l5x5U0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Varun Prakash <varun@chelsio.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 114/219] scsi: csiostor: fix incorrect dma device in case of vport
-Date:   Fri, 22 Nov 2019 00:47:26 -0500
-Message-Id: <20191122054911.1750-107-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 123/219] vfio/spapr_tce: Get rid of possible infinite loop
+Date:   Fri, 22 Nov 2019 00:47:35 -0500
+Message-Id: <20191122054911.1750-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,33 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Varun Prakash <varun@chelsio.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 9934613edcb40b92a216122876cd3b7e76d08390 ]
+[ Upstream commit 517ad4ae8aa93dccdb9a88c27257ecb421c9e848 ]
 
-In case of ->vport_create() call scsi_add_host_with_dma() instead of
-scsi_add_host() to pass correct dma device.
+As a part of cleanup, the SPAPR TCE IOMMU subdriver releases preregistered
+memory. If there is a bug in memory release, the loop in
+tce_iommu_release() becomes infinite; this actually happened to me.
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This makes the loop finite and prints a warning on every failure to make
+the code more bug prone.
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_spapr_tce.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-index ed2dae657964b..1793981337dd9 100644
---- a/drivers/scsi/csiostor/csio_init.c
-+++ b/drivers/scsi/csiostor/csio_init.c
-@@ -649,7 +649,7 @@ csio_shost_init(struct csio_hw *hw, struct device *dev,
- 	if (csio_lnode_init(ln, hw, pln))
- 		goto err_shost_put;
+diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
+index 96721b154454f..ec53310f16136 100644
+--- a/drivers/vfio/vfio_iommu_spapr_tce.c
++++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+@@ -371,6 +371,7 @@ static void tce_iommu_release(void *iommu_data)
+ {
+ 	struct tce_container *container = iommu_data;
+ 	struct tce_iommu_group *tcegrp;
++	struct tce_iommu_prereg *tcemem, *tmtmp;
+ 	long i;
  
--	if (scsi_add_host(shost, dev))
-+	if (scsi_add_host_with_dma(shost, dev, &hw->pdev->dev))
- 		goto err_lnode_exit;
+ 	while (tce_groups_attached(container)) {
+@@ -393,13 +394,8 @@ static void tce_iommu_release(void *iommu_data)
+ 		tce_iommu_free_table(container, tbl);
+ 	}
  
- 	return ln;
+-	while (!list_empty(&container->prereg_list)) {
+-		struct tce_iommu_prereg *tcemem;
+-
+-		tcemem = list_first_entry(&container->prereg_list,
+-				struct tce_iommu_prereg, next);
+-		WARN_ON_ONCE(tce_iommu_prereg_free(container, tcemem));
+-	}
++	list_for_each_entry_safe(tcemem, tmtmp, &container->prereg_list, next)
++		WARN_ON(tce_iommu_prereg_free(container, tcemem));
+ 
+ 	tce_iommu_disable(container);
+ 	if (container->mm)
 -- 
 2.20.1
 
