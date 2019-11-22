@@ -2,264 +2,176 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FE2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A0720708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD9C20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574421814;
+	bh=Kahgey2BXK9558I9dynuhjHSzq1L5lj1vi1iv57xIpk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eIRYBySUbzZg21CpR/V++oDYeNy8edJgmkJWxmZBS5xJwd0DR/ay/mKA450Elt+sN
+	 QSI8ay73KAHhDzvCLVe1jzF2zNq24xJb8YCJT7wssd9qs9/zTnIwXs9SSCQGh4m1yJ
+	 A0/Ugw5t3JLWPxeJVzNs0SSAoIiRCaoDnFCjtsXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfKVLXX (ORCPT
+        id S1729729AbfKVLXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:23:23 -0500
-Received: from mga09.intel.com ([134.134.136.24]:22241 "EHLO mga09.intel.com"
+        Fri, 22 Nov 2019 06:23:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbfKVKlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:41:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 02:41:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
-   d="scan'208";a="216341170"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 02:41:17 -0800
-Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 12:41:16 +0200
-Date:   Fri, 22 Nov 2019 12:41:16 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v3 1/2] gpio: sch: Add edge event support
-Message-ID: <20191122104116.GB11621@lahna.fi.intel.com>
-References: <cover.1574277614.git.jan.kiszka@siemens.com>
- <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
+        id S1728970AbfKVKlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:41:03 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A294420715;
+        Fri, 22 Nov 2019 10:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574419262;
+        bh=Kahgey2BXK9558I9dynuhjHSzq1L5lj1vi1iv57xIpk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O5LYI1WzFQRgqR+hXSwg/rDegpt84Dm6FBtffc8yB0dkuNtZzMvlKAfvO+UpEdRNf
+         UCaDfFq2NUc5rb6bEvvLMfMnPMm8Cta0bdXXVi3IVv8uMr+0Z5hHJi38XZzbUolXyn
+         Hxf61bl/7F186VU7nf5AbqG78VnDCfaCBAEN2RuU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 051/222] ath9k: add back support for using active monitor interfaces for tx99
+Date:   Fri, 22 Nov 2019 11:26:31 +0100
+Message-Id: <20191122100854.810911364@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+References: <20191122100830.874290814@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 08:20:13PM +0100, Jan Kiszka wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> Add the required infrastructure consisting of an irq_chip_generic with
-> its irq_chip_type callbacks to enable and report edge events of the pins
-> to the gpio core. The actual hook-up of the event interrupt will happen
-> separately.
-> 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-One nit below. Regardless of that
+[ Upstream commit 6df0580be8bc30803c4d8b2ed9c2230a2740c795 ]
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Various documented examples on how to set up tx99 with ath9k rely
+on setting up a regular monitor interface for setting the channel.
+My previous patch "ath9k: fix tx99 with monitor mode interface" made
+it possible to set it up this way again. However, it was removing support
+for using an active monitor interface, which is required for controlling
+the bitrate as well, since the bitrate is not passed down with a regular
+monitor interface.
 
-> ---
->  drivers/gpio/gpio-sch.c | 114 +++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 107 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-> index fb143f28c386..6a9c5500800c 100644
-> --- a/drivers/gpio/gpio-sch.c
-> +++ b/drivers/gpio/gpio-sch.c
-> @@ -18,12 +18,17 @@
->  #define GEN	0x00
->  #define GIO	0x04
->  #define GLV	0x08
-> +#define GTPE	0x0c
-> +#define GTNE	0x10
-> +#define GGPE	0x14
-> +#define GTS	0x1c
->  
->  struct sch_gpio {
->  	struct gpio_chip chip;
->  	spinlock_t lock;
->  	unsigned short iobase;
->  	unsigned short resume_base;
-> +	int irq_base;
->  };
->  
->  static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
-> @@ -79,10 +84,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
->  static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned gpio_num)
->  {
->  	struct sch_gpio *sch = gpiochip_get_data(gc);
-> +	unsigned long flags;
->  
-> -	spin_lock(&sch->lock);
-> +	spin_lock_irqsave(&sch->lock, flags);
->  	sch_gpio_reg_set(sch, gpio_num, GIO, 1);
-> -	spin_unlock(&sch->lock);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
->  	return 0;
->  }
->  
-> @@ -95,20 +101,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
->  static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
->  {
->  	struct sch_gpio *sch = gpiochip_get_data(gc);
-> +	unsigned long flags;
->  
-> -	spin_lock(&sch->lock);
-> +	spin_lock_irqsave(&sch->lock, flags);
->  	sch_gpio_reg_set(sch, gpio_num, GLV, val);
-> -	spin_unlock(&sch->lock);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
->  }
->  
->  static int sch_gpio_direction_out(struct gpio_chip *gc, unsigned gpio_num,
->  				  int val)
->  {
->  	struct sch_gpio *sch = gpiochip_get_data(gc);
-> +	unsigned long flags;
->  
-> -	spin_lock(&sch->lock);
-> +	spin_lock_irqsave(&sch->lock, flags);
->  	sch_gpio_reg_set(sch, gpio_num, GIO, 0);
-> -	spin_unlock(&sch->lock);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
->  
->  	/*
->  	 * according to the datasheet, writing to the level register has no
-> @@ -130,6 +138,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
->  	return sch_gpio_reg_get(sch, gpio_num, GIO);
->  }
->  
-> +static int sch_gpio_to_irq(struct gpio_chip *gpio, unsigned int offset)
-> +{
-> +	struct sch_gpio *sch = gpiochip_get_data(gpio);
-> +	return sch->irq_base + offset;
-> +}
-> +
->  static const struct gpio_chip sch_gpio_chip = {
->  	.label			= "sch_gpio",
->  	.owner			= THIS_MODULE,
-> @@ -138,12 +152,70 @@ static const struct gpio_chip sch_gpio_chip = {
->  	.direction_output	= sch_gpio_direction_out,
->  	.set			= sch_gpio_set,
->  	.get_direction		= sch_gpio_get_direction,
-> +	.to_irq			= sch_gpio_to_irq,
->  };
->  
-> +static int sch_irq_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> +	struct sch_gpio *sch = gc->private;
-> +	unsigned int gpio_num = d->irq - sch->irq_base;
-> +	unsigned long flags;
-> +	int rising = 0;
-> +	int falling = 0;
-> +
-> +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		rising = 1;
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		falling = 1;
-> +		break;
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		rising = 1;
-> +		falling = 1;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock_irqsave(&sch->lock, flags);
-> +	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
-> +	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sch_irq_set_enable(struct irq_data *d, int val)
-> +{
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> +	struct sch_gpio *sch = gc->private;
-> +	unsigned int gpio_num = d->irq - sch->irq_base;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&sch->lock, flags);
-> +	sch_gpio_reg_set(sch, gpio_num, GGPE, val);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
-> +}
-> +
-> +static void sch_irq_mask(struct irq_data *d)
-> +{
-> +	sch_irq_set_enable(d, 0);
-> +}
-> +
-> +static void sch_irq_unmask(struct irq_data *d)
-> +{
-> +	sch_irq_set_enable(d, 1);
-> +}
-> +
->  static int sch_gpio_probe(struct platform_device *pdev)
->  {
-> +	struct irq_chip_generic *gc;
-> +	struct irq_chip_type *ct;
->  	struct sch_gpio *sch;
->  	struct resource *res;
-> +	int irq_base, ret;
->  
->  	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
->  	if (!sch)
-> @@ -203,7 +275,35 @@ static int sch_gpio_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, sch);
->  
-> -	return devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-> +	ret = devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
-> +					NUMA_NO_NODE);
-> +	if (irq_base < 0)
-> +		return irq_base;
-> +	sch->irq_base = irq_base;
-> +
-> +	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
-> +					 NULL, handle_simple_irq);
-> +	if (!gc)
-> +		return -ENOMEM;
-> +
-> +	gc->private = sch;
-> +	ct = gc->chip_types;
-> +
-> +	ct->chip.irq_mask = sch_irq_mask;
-> +	ct->chip.irq_unmask = sch_irq_unmask;
-> +	ct->chip.irq_set_type = sch_irq_type;
-> +
-> +	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
-> +					  IRQ_MSK(sch->chip.ngpio),
-> +					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
+This patch partially reverts the previous one, but keeps support for using
+a regular monitor interface to keep documented steps working in cases
+where the bitrate does not matter
 
-Here you can simply do 
+Fixes: d9c52fd17cb48 ("ath9k: fix tx99 with monitor mode interface")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath9k/ath9k.h |  1 +
+ drivers/net/wireless/ath/ath9k/main.c  | 10 ++++++++--
+ drivers/net/wireless/ath/ath9k/tx99.c  |  7 +++++++
+ drivers/net/wireless/ath/ath9k/xmit.c  |  2 +-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
 
-	return devm_irq_setup_generic_chip(...);
->  }
->  
->  static struct platform_driver sch_gpio_driver = {
-> -- 
-> 2.16.4
+diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
+index 51e878a9d5211..7bda18c61eb6e 100644
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h
+@@ -1033,6 +1033,7 @@ struct ath_softc {
+ 
+ 	struct ath_spec_scan_priv spec_priv;
+ 
++	struct ieee80211_vif *tx99_vif;
+ 	struct sk_buff *tx99_skb;
+ 	bool tx99_state;
+ 	s16 tx99_power;
+diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
+index fbc34beee1580..f6151a00041d6 100644
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1249,8 +1249,13 @@ static int ath9k_add_interface(struct ieee80211_hw *hw,
+ 	struct ath_vif *avp = (void *)vif->drv_priv;
+ 	struct ath_node *an = &avp->mcast_node;
+ 
+-	if (IS_ENABLED(CONFIG_ATH9K_TX99))
+-		return -EOPNOTSUPP;
++	if (IS_ENABLED(CONFIG_ATH9K_TX99)) {
++		if (sc->cur_chan->nvifs >= 1) {
++			mutex_unlock(&sc->mutex);
++			return -EOPNOTSUPP;
++		}
++		sc->tx99_vif = vif;
++	}
+ 
+ 	mutex_lock(&sc->mutex);
+ 
+@@ -1335,6 +1340,7 @@ static void ath9k_remove_interface(struct ieee80211_hw *hw,
+ 	ath9k_p2p_remove_vif(sc, vif);
+ 
+ 	sc->cur_chan->nvifs--;
++	sc->tx99_vif = NULL;
+ 	if (!ath9k_is_chanctx_enabled())
+ 		list_del(&avp->list);
+ 
+diff --git a/drivers/net/wireless/ath/ath9k/tx99.c b/drivers/net/wireless/ath/ath9k/tx99.c
+index 0cb5b2a873be8..096902e0fdf5c 100644
+--- a/drivers/net/wireless/ath/ath9k/tx99.c
++++ b/drivers/net/wireless/ath/ath9k/tx99.c
+@@ -54,6 +54,7 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
+ 	struct ieee80211_hdr *hdr;
+ 	struct ieee80211_tx_info *tx_info;
+ 	struct sk_buff *skb;
++	struct ath_vif *avp;
+ 
+ 	skb = alloc_skb(len, GFP_KERNEL);
+ 	if (!skb)
+@@ -71,11 +72,17 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
+ 	memcpy(hdr->addr2, hw->wiphy->perm_addr, ETH_ALEN);
+ 	memcpy(hdr->addr3, hw->wiphy->perm_addr, ETH_ALEN);
+ 
++	if (sc->tx99_vif) {
++		avp = (struct ath_vif *) sc->tx99_vif->drv_priv;
++		hdr->seq_ctrl |= cpu_to_le16(avp->seq_no);
++	}
++
+ 	tx_info = IEEE80211_SKB_CB(skb);
+ 	memset(tx_info, 0, sizeof(*tx_info));
+ 	rate = &tx_info->control.rates[0];
+ 	tx_info->band = sc->cur_chan->chandef.chan->band;
+ 	tx_info->flags = IEEE80211_TX_CTL_NO_ACK;
++	tx_info->control.vif = sc->tx99_vif;
+ 	rate->count = 1;
+ 	if (ah->curchan && IS_CHAN_HT(ah->curchan)) {
+ 		rate->flags |= IEEE80211_TX_RC_MCS;
+diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
+index 2c35819f65426..0ef27d99bef33 100644
+--- a/drivers/net/wireless/ath/ath9k/xmit.c
++++ b/drivers/net/wireless/ath/ath9k/xmit.c
+@@ -2970,7 +2970,7 @@ int ath9k_tx99_send(struct ath_softc *sc, struct sk_buff *skb,
+ 		return -EINVAL;
+ 	}
+ 
+-	ath_set_rates(NULL, NULL, bf);
++	ath_set_rates(sc->tx99_vif, NULL, bf);
+ 
+ 	ath9k_hw_set_desc_link(sc->sc_ah, bf->bf_desc, bf->bf_daddr);
+ 	ath9k_hw_tx99_start(sc->sc_ah, txctl->txq->axq_qnum);
+-- 
+2.20.1
+
+
+
