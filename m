@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B042CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E0EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846C320409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC3420409
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403916;
-	bh=QFLf3HJ6du181U9CDpuGFKVocaY+72lw3PwSNKydJss=;
+	s=default; t=1574403922;
+	bh=s9S5zjaVgM8T1TXPF/g8wAYlINzdVvQJClULL1jlvAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKJk1FYYMOA7aK3eHrqHL0YR8wowyBSvbBBFx4lwoorwBiPbu0ziyKn4OoOxPPe58
-	 tDfWXdLZVyFSf2kyVeBDiVzHOEQUo47mmREH50jOTcW9p3LZqyUouWccoduAuBjr9y
-	 P0olTVXhDP0e9QaoZS6beZCLX/rGB6Np7MaTngas=
+	b=SnPksXN9z9f5kutDrERWdbP3NQwDo+hUQ7op5TaS6Zeb+z9qeczVz5AkNCpLxQgu0
+	 LcTMCK6WwToZ6c9WX8GRzy73dx/z3MD1nC/lDdUDBsTucWcYPe1OPpMqwSTthARoFn
+	 ySjw7FMs3txLXwi4akTwLxsTa6fZUKG4U6sS8vwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfKVGZP (ORCPT
+        id S1728924AbfKVGZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:25:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbfKVFvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:11 -0500
+        id S1728011AbfKVFvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 043EA2068F;
-        Fri, 22 Nov 2019 05:51:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC40A2068F;
+        Fri, 22 Nov 2019 05:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401870;
-        bh=QFLf3HJ6du181U9CDpuGFKVocaY+72lw3PwSNKydJss=;
+        s=default; t=1574401868;
+        bh=s9S5zjaVgM8T1TXPF/g8wAYlINzdVvQJClULL1jlvAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIw6FRMDGRXtkvBAlYz3cSEHM5r45Ph00IKgZHt6/MqSCF1GLkX/p/EUYCymaQIRS
-         tG8FzIuvof3WD0q4Up7yYih7WtGR9a8XDaB3g6yHQi8yCqb/pX3TEIWwgov34daXIg
-         j3wNo2L0XpQJZovI8G5Z5R/LbjV716KOqTRaY6/A=
+        b=ppDnrzkpgOttX8p8Juk25Ac46+SdoTuWwr/h+Ut3B2VkUqYh2O2x8wRS+q36cmYuM
+         DMOACmtf25nLfYMeZA5uxZwg84T6LrrecPLtYkMYoXIBGutw0PQwvhUuwr4L9Y+XeO
+         2/q80afs0ogxK+jSuOusG+cpcg3BKj1oC3+tXkRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 106/219] powerpc/book3s/32: fix number of bats in p/v_block_mapped()
-Date:   Fri, 22 Nov 2019 00:47:18 -0500
-Message-Id: <20191122054911.1750-99-sashal@kernel.org>
+Cc:     Tao Ren <taoren@fb.com>, Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 104/219] clocksource/drivers/fttmr010: Fix invalid interrupt register access
+Date:   Fri, 22 Nov 2019 00:47:16 -0500
+Message-Id: <20191122054911.1750-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,42 +59,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Tao Ren <taoren@fb.com>
 
-[ Upstream commit e93ba1b7eb5b188c749052df7af1c90821c5f320 ]
+[ Upstream commit 86fe57fc47b17b3528fa5497fc57e158d846c4ea ]
 
-This patch fixes the loop in p_block_mapped() and v_block_mapped()
-to scan the entire bat_addrs[] array.
+TIMER_INTR_MASK register (Base Address of Timer + 0x38) is not designed
+for masking interrupts on ast2500 chips, and it's not even listed in
+ast2400 datasheet, so it's not safe to access TIMER_INTR_MASK on aspeed
+chips.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Similarly, TIMER_INTR_STATE register (Base Address of Timer + 0x34) is
+not interrupt status register on ast2400 and ast2500 chips. Although
+there is no side effect to reset the register in fttmr010_common_init(),
+it's just misleading to do so.
+
+Besides, "count_down" is renamed to "is_aspeed" in "fttmr010" structure,
+and more comments are added so the code is more readble.
+
+Signed-off-by: Tao Ren <taoren@fb.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/ppc_mmu_32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-fttmr010.c | 73 ++++++++++++++++------------
+ 1 file changed, 42 insertions(+), 31 deletions(-)
 
-diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index bea6c544e38f9..06783270a1242 100644
---- a/arch/powerpc/mm/ppc_mmu_32.c
-+++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -52,7 +52,7 @@ struct batrange {		/* stores address ranges mapped by BATs */
- phys_addr_t v_block_mapped(unsigned long va)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (va >= bat_addrs[b].start && va < bat_addrs[b].limit)
- 			return bat_addrs[b].phys + (va - bat_addrs[b].start);
+diff --git a/drivers/clocksource/timer-fttmr010.c b/drivers/clocksource/timer-fttmr010.c
+index cf93f6419b514..fadff7915dd9c 100644
+--- a/drivers/clocksource/timer-fttmr010.c
++++ b/drivers/clocksource/timer-fttmr010.c
+@@ -21,7 +21,7 @@
+ #include <linux/delay.h>
+ 
+ /*
+- * Register definitions for the timers
++ * Register definitions common for all the timer variants.
+  */
+ #define TIMER1_COUNT		(0x00)
+ #define TIMER1_LOAD		(0x04)
+@@ -36,9 +36,10 @@
+ #define TIMER3_MATCH1		(0x28)
+ #define TIMER3_MATCH2		(0x2c)
+ #define TIMER_CR		(0x30)
+-#define TIMER_INTR_STATE	(0x34)
+-#define TIMER_INTR_MASK		(0x38)
+ 
++/*
++ * Control register (TMC30) bit fields for fttmr010/gemini/moxart timers.
++ */
+ #define TIMER_1_CR_ENABLE	BIT(0)
+ #define TIMER_1_CR_CLOCK	BIT(1)
+ #define TIMER_1_CR_INT		BIT(2)
+@@ -53,8 +54,9 @@
+ #define TIMER_3_CR_UPDOWN	BIT(11)
+ 
+ /*
+- * The Aspeed AST2400 moves bits around in the control register
+- * and lacks bits for setting the timer to count upwards.
++ * Control register (TMC30) bit fields for aspeed ast2400/ast2500 timers.
++ * The aspeed timers move bits around in the control register and lacks
++ * bits for setting the timer to count upwards.
+  */
+ #define TIMER_1_CR_ASPEED_ENABLE	BIT(0)
+ #define TIMER_1_CR_ASPEED_CLOCK		BIT(1)
+@@ -66,6 +68,18 @@
+ #define TIMER_3_CR_ASPEED_CLOCK		BIT(9)
+ #define TIMER_3_CR_ASPEED_INT		BIT(10)
+ 
++/*
++ * Interrupt status/mask register definitions for fttmr010/gemini/moxart
++ * timers.
++ * The registers don't exist and they are not needed on aspeed timers
++ * because:
++ *   - aspeed timer overflow interrupt is controlled by bits in Control
++ *     Register (TMC30).
++ *   - aspeed timers always generate interrupt when either one of the
++ *     Match registers equals to Status register.
++ */
++#define TIMER_INTR_STATE	(0x34)
++#define TIMER_INTR_MASK		(0x38)
+ #define TIMER_1_INT_MATCH1	BIT(0)
+ #define TIMER_1_INT_MATCH2	BIT(1)
+ #define TIMER_1_INT_OVERFLOW	BIT(2)
+@@ -80,7 +94,7 @@
+ struct fttmr010 {
+ 	void __iomem *base;
+ 	unsigned int tick_rate;
+-	bool count_down;
++	bool is_aspeed;
+ 	u32 t1_enable_val;
+ 	struct clock_event_device clkevt;
+ #ifdef CONFIG_ARM
+@@ -130,7 +144,7 @@ static int fttmr010_timer_set_next_event(unsigned long cycles,
+ 	cr &= ~fttmr010->t1_enable_val;
+ 	writel(cr, fttmr010->base + TIMER_CR);
+ 
+-	if (fttmr010->count_down) {
++	if (fttmr010->is_aspeed) {
+ 		/*
+ 		 * ASPEED Timer Controller will load TIMER1_LOAD register
+ 		 * into TIMER1_COUNT register when the timer is re-enabled.
+@@ -175,16 +189,17 @@ static int fttmr010_timer_set_oneshot(struct clock_event_device *evt)
+ 
+ 	/* Setup counter start from 0 or ~0 */
+ 	writel(0, fttmr010->base + TIMER1_COUNT);
+-	if (fttmr010->count_down)
++	if (fttmr010->is_aspeed) {
+ 		writel(~0, fttmr010->base + TIMER1_LOAD);
+-	else
++	} else {
+ 		writel(0, fttmr010->base + TIMER1_LOAD);
+ 
+-	/* Enable interrupt */
+-	cr = readl(fttmr010->base + TIMER_INTR_MASK);
+-	cr &= ~(TIMER_1_INT_OVERFLOW | TIMER_1_INT_MATCH2);
+-	cr |= TIMER_1_INT_MATCH1;
+-	writel(cr, fttmr010->base + TIMER_INTR_MASK);
++		/* Enable interrupt */
++		cr = readl(fttmr010->base + TIMER_INTR_MASK);
++		cr &= ~(TIMER_1_INT_OVERFLOW | TIMER_1_INT_MATCH2);
++		cr |= TIMER_1_INT_MATCH1;
++		writel(cr, fttmr010->base + TIMER_INTR_MASK);
++	}
+ 
  	return 0;
-@@ -64,7 +64,7 @@ phys_addr_t v_block_mapped(unsigned long va)
- unsigned long p_block_mapped(phys_addr_t pa)
- {
- 	int b;
--	for (b = 0; b < 4; ++b)
-+	for (b = 0; b < ARRAY_SIZE(bat_addrs); ++b)
- 		if (pa >= bat_addrs[b].phys
- 	    	    && pa < (bat_addrs[b].limit-bat_addrs[b].start)
- 		              +bat_addrs[b].phys)
+ }
+@@ -201,9 +216,8 @@ static int fttmr010_timer_set_periodic(struct clock_event_device *evt)
+ 	writel(cr, fttmr010->base + TIMER_CR);
+ 
+ 	/* Setup timer to fire at 1/HZ intervals. */
+-	if (fttmr010->count_down) {
++	if (fttmr010->is_aspeed) {
+ 		writel(period, fttmr010->base + TIMER1_LOAD);
+-		writel(0, fttmr010->base + TIMER1_MATCH1);
+ 	} else {
+ 		cr = 0xffffffff - (period - 1);
+ 		writel(cr, fttmr010->base + TIMER1_COUNT);
+@@ -281,23 +295,21 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
+ 	}
+ 
+ 	/*
+-	 * The Aspeed AST2400 moves bits around in the control register,
+-	 * otherwise it works the same.
++	 * The Aspeed timers move bits around in the control register.
+ 	 */
+ 	if (is_aspeed) {
+ 		fttmr010->t1_enable_val = TIMER_1_CR_ASPEED_ENABLE |
+ 			TIMER_1_CR_ASPEED_INT;
+-		/* Downward not available */
+-		fttmr010->count_down = true;
++		fttmr010->is_aspeed = true;
+ 	} else {
+ 		fttmr010->t1_enable_val = TIMER_1_CR_ENABLE | TIMER_1_CR_INT;
+-	}
+ 
+-	/*
+-	 * Reset the interrupt mask and status
+-	 */
+-	writel(TIMER_INT_ALL_MASK, fttmr010->base + TIMER_INTR_MASK);
+-	writel(0, fttmr010->base + TIMER_INTR_STATE);
++		/*
++		 * Reset the interrupt mask and status
++		 */
++		writel(TIMER_INT_ALL_MASK, fttmr010->base + TIMER_INTR_MASK);
++		writel(0, fttmr010->base + TIMER_INTR_STATE);
++	}
+ 
+ 	/*
+ 	 * Enable timer 1 count up, timer 2 count up, except on Aspeed,
+@@ -306,9 +318,8 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
+ 	if (is_aspeed)
+ 		val = TIMER_2_CR_ASPEED_ENABLE;
+ 	else {
+-		val = TIMER_2_CR_ENABLE;
+-		if (!fttmr010->count_down)
+-			val |= TIMER_1_CR_UPDOWN | TIMER_2_CR_UPDOWN;
++		val = TIMER_2_CR_ENABLE | TIMER_1_CR_UPDOWN |
++			TIMER_2_CR_UPDOWN;
+ 	}
+ 	writel(val, fttmr010->base + TIMER_CR);
+ 
+@@ -321,7 +332,7 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
+ 	writel(0, fttmr010->base + TIMER2_MATCH1);
+ 	writel(0, fttmr010->base + TIMER2_MATCH2);
+ 
+-	if (fttmr010->count_down) {
++	if (fttmr010->is_aspeed) {
+ 		writel(~0, fttmr010->base + TIMER2_LOAD);
+ 		clocksource_mmio_init(fttmr010->base + TIMER2_COUNT,
+ 				      "FTTMR010-TIMER2",
+@@ -371,7 +382,7 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
+ 
+ #ifdef CONFIG_ARM
+ 	/* Also use this timer for delays */
+-	if (fttmr010->count_down)
++	if (fttmr010->is_aspeed)
+ 		fttmr010->delay_timer.read_current_timer =
+ 			fttmr010_read_current_timer_down;
+ 	else
 -- 
 2.20.1
 
