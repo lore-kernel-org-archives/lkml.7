@@ -2,60 +2,58 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53381C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06103C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA272084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62DD2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420803;
-	bh=Pa9IDB6Fd3A8IIm+kJX6e40chC4y0g1zGgVAP5mCn/o=;
+	s=default; t=1574420806;
+	bh=1tGftarjUnn0WkDsVLhvxVIToADcwZUnJ117RERnNJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=out0iOwKq+SF2ti/lnz8eha6cQtChJ5iD9lEv3rfzUwoW9r57+tgXFbJbCu16fXvy
-	 mf0BBNyl4mK0OhwE8WWz3O2mOQ+z7zLZyoEsa033wI6hk9un8NS2dDfJH5TmB6Gvgs
-	 nKYuHkGIDuvzJ+o23dDfp9fwOJJIX0yjiyjrstww=
+	b=RcuTd+UkIbQhtzgy7kcyDelvyWShnlxtGHfby1qNfPjLPbDcVCvgSO9wjpYjdX46G
+	 mQ3kG3KQxLK7domBMBL1frM7nWTaW0qW38N071kVbkd7hEXiC9hwZd5mvpvwW1tNQc
+	 C0+/LqCvTl/cehcV2U3DrnwMLbWEg+6eo3FWJd8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfKVLGl (ORCPT
+        id S1730700AbfKVLGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34920 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730849AbfKVLGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:34 -0500
+        id S1731865AbfKVLGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA022084D;
-        Fri, 22 Nov 2019 11:06:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD4720872;
+        Fri, 22 Nov 2019 11:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420793;
-        bh=Pa9IDB6Fd3A8IIm+kJX6e40chC4y0g1zGgVAP5mCn/o=;
+        s=default; t=1574420797;
+        bh=1tGftarjUnn0WkDsVLhvxVIToADcwZUnJ117RERnNJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ze4zpUtLQh2JhXVaGTkLe6LO7ibn7hRu30PpP+MwzYTha/k9G+zBy5GArSw7gYZbU
-         v8xyr2o8BceFQB7dMdrDqPr/UXBxZQO3ITvRfYc7RiUGka4GryCPwZovNQ4eq6WlyC
-         NSn+n9Aw5C0W+ReR8NK5NBbJnz9Wz0A31zlUMwxo=
+        b=TwUu8Ag/0bnypf63Al8OYiLzU3aGGN1ANNXQLeHN4LnDmWD16n9EMipOaijziExrv
+         K5KT/TVabjHlYnYdGnBBnZ1ZaG5wv1plgpMsqMi2w7mPuLb65ZFPrLgNyyzAWn2DN9
+         pLAofcKoPHA7J2a/7avxeOedjNyabeD0vvacww0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
-        Wei Wang <weiwan@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 214/220] tcp: start receiver buffer autotuning sooner
-Date:   Fri, 22 Nov 2019 11:29:39 +0100
-Message-Id: <20191122100929.050374562@linuxfoundation.org>
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 5.3 1/6] net: cdc_ncm: Signedness bug in cdc_ncm_set_dgram_size()
+Date:   Fri, 22 Nov 2019 11:30:03 +0100
+Message-Id: <20191122100322.128248608@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
+In-Reply-To: <20191122100320.878809004@linuxfoundation.org>
+References: <20191122100320.878809004@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,45 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuchung Cheng <ycheng@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 041a14d2671573611ffd6412bc16e2f64469f7fb ]
+commit a56dcc6b455830776899ce3686735f1172e12243 upstream.
 
-Previously receiver buffer auto-tuning starts after receiving
-one advertised window amount of data. After the initial receiver
-buffer was raised by patch a337531b942b ("tcp: up initial rmem to
-128KB and SYN rwin to around 64KB"), the reciver buffer may take
-too long to start raising. To address this issue, this patch lowers
-the initial bytes expected to receive roughly the expected sender's
-initial window.
+This code is supposed to test for negative error codes and partial
+reads, but because sizeof() is size_t (unsigned) type then negative
+error codes are type promoted to high positive values and the condition
+doesn't work as expected.
 
-Fixes: a337531b942b ("tcp: up initial rmem to 128KB and SYN rwin to around 64KB")
-Signed-off-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: Wei Wang <weiwan@google.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Soheil Hassas Yeganeh <soheil@google.com>
+Fixes: 332f989a3b00 ("CDC-NCM: handle incomplete transfer of MTU")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv4/tcp_input.c | 2 +-
+ drivers/net/usb/cdc_ncm.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 0e2b07be08585..57e8dad956ec4 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -438,7 +438,7 @@ void tcp_init_buffer_space(struct sock *sk)
- 	if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK))
- 		tcp_sndbuf_expand(sk);
- 
--	tp->rcvq_space.space = tp->rcv_wnd;
-+	tp->rcvq_space.space = min_t(u32, tp->rcv_wnd, TCP_INIT_CWND * tp->advmss);
- 	tcp_mstamp_refresh(tp);
- 	tp->rcvq_space.time = tp->tcp_mstamp;
- 	tp->rcvq_space.seq = tp->copied_seq;
--- 
-2.20.1
-
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -579,7 +579,7 @@ static void cdc_ncm_set_dgram_size(struc
+ 	err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+ 			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+ 			      0, iface_no, &max_datagram_size, sizeof(max_datagram_size));
+-	if (err < sizeof(max_datagram_size)) {
++	if (err != sizeof(max_datagram_size)) {
+ 		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+ 		goto out;
+ 	}
 
 
