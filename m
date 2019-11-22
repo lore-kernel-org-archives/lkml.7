@@ -2,82 +2,87 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97942C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EAAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2072068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193ED2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSzmnfAj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DaPJMLk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfKVMzt (ORCPT
+        id S1727205AbfKVM7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:55:49 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44275 "EHLO
+        Fri, 22 Nov 2019 07:59:49 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46319 "EHLO
         mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfKVMzs (ORCPT
+        with ESMTP id S1726813AbfKVM7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:55:48 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so4389352lfa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:55:47 -0800 (PST)
+        Fri, 22 Nov 2019 07:59:48 -0500
+Received: by mail-lf1-f65.google.com with SMTP id a17so5407836lfi.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:59:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wk6tt4pvu+ZfbWYu/PVVeu0E+OQ4R1/xSNXMM/bU9Lw=;
-        b=aSzmnfAjW/Sld1A8GmaY9ft05mnl46eBHazEo0IxNFXbfqSoHtzJAqR/KjWfUJTOZT
-         63vNmiQEJCiTbYwkMMnapQZ0CWRn1/ZBioLILPzwXpwo+KJU1BdbU5Guu17ED/RbO91Y
-         ZrIDQ9/tCxEJLPj9pN2EBouj1rjVXn1M3Yx3hJxKCsQrsYZ6syipL3Gt0tOCLjyhEekU
-         VDsvbCQpdzdTiK+XrpO64rZKfv5/Waa9bVEIanN6lpwDIFXdW1hqIU9UShZyjzqJG696
-         GxvlR3Qb6tW0rclsJfPIZk+iVoe850/pWaIvV7pl/JWquPXliXkEdJTCCBI2+vfI6Jik
-         S06w==
+        bh=q8dmnxZ8Ub8Bxc2H8I3mPfzbqfpB7OPPdHaZygHcHFE=;
+        b=DaPJMLk8AL1aq2ByFGb2IWSuYlXpiez43Oi25BeBN7wROv9RgVJ815FEIM9S8LtBJZ
+         UtonKNOJCNB+rDeRCfVWO5NE1S5bLZRNGDZx5UjRfDgZm2YJuJxWT3yNlrS0LoHq2F9k
+         VmT47cxRT8H/xf7AvyCN4gT1bdBoBYAV65OH4MLbzwZBnPytv2hJUwu3qpR9fvPqCcFS
+         42q0IyZgsuI1qoYCQAr18hOe6tsMEwOYuN6ucIdogf/4horoUpS9E6Gyl91z//4QGT81
+         7TaGOV1qU8P3so2gBU0fMgkq3aA5Sjpa17HQ6ejQ77o4kRSxZAXUcPe5NBsEVnvbzrEy
+         lyuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wk6tt4pvu+ZfbWYu/PVVeu0E+OQ4R1/xSNXMM/bU9Lw=;
-        b=Nz8G8uQzaw8lTNls9PgOL9a+w0/E1ipUeYPCN2UCkJKdI/5owtIfJqWxe/bjixarMa
-         DDck2xptuJQTxcN35BV2Qwz+iJGOI/o2LPtjldHGGskA3Ij2aC1AJpme+la9js2oVGFz
-         jnxWKKa6tIzIMBhfEyTeltN3gg+whiBmRmcVTwioFjHN1/9DPsycM1r1tmIheg9Yrl9q
-         mE0lxPKd0nTLI6ank3t4extSCmMF8Ixr3nNfwMCCs4fnWfjcUp5I6m+ziXSn9rL1wLXm
-         i6grLooyzf755kE6oY+KfhlH1QbrseQjyR+2I/2U5LrGrdzZBZ3UKIPdlIeHgvCjM+cH
-         oG3A==
-X-Gm-Message-State: APjAAAVJBluKRGmE77muVJm/w5mDdl6eNFSaFFJ0NMlKxpX6BXC5vJCj
-        +Qu9270P/oMjcBB9M5b2Vj5ly4fbjee4mLtj4+kqhQ==
-X-Google-Smtp-Source: APXvYqyLBqx9aJEJZHJrOVeWIjfpxknwTpqU3jqLGVpk8q264VK7YTN0bIpi+Gk/YANI17fLVJDi0jHVKVodRmu7na4=
-X-Received: by 2002:ac2:44d2:: with SMTP id d18mr2251137lfm.5.1574427346899;
- Fri, 22 Nov 2019 04:55:46 -0800 (PST)
+        bh=q8dmnxZ8Ub8Bxc2H8I3mPfzbqfpB7OPPdHaZygHcHFE=;
+        b=kJfyBqu8CbIhukUr6ji+slETTxjFudM7kgohQ+B7xAVjmQgyzWFtqfuEcEvn8lZHos
+         I3yHXacuuoH1QZRDqgwHMCE5nZuMRx/WlnVq5ek/P4G+P8YF+Fru7oVEHbm8yJ33OvL2
+         Wn7oA2dPUGGQXT1TNh3rS2hyFgG0kekhT29U9tX7pu6q9/URnf4SrA6Ry8aBGrEPDC/d
+         FnS5JAQiRnQk+TqWSo/UheYBZ2KZbbsHSYTD2MmYV+hJaDImVAvVeUS/P2q+IyF609Aa
+         YfRasis/CqG0ynzkNnZGuM8ijqyxT4VL4UFf2QiaKOQZY883PxxNhyq3y2KsrwcVD1Ui
+         6pwA==
+X-Gm-Message-State: APjAAAUCN8lrNRYgnx62mBR9BAPQEVoSyk1rVT5yusvBf9tbMmFMP1z0
+        Pit9rErnRqZ8DRKRPtLKNfwmWdgd/HWsXM2EOd0aoQ==
+X-Google-Smtp-Source: APXvYqwYz+6QGdIRe/6VX6sUO09vd4ONwLVaGPGso7wwY07jjid5xDn5gxKiF4dN+YxhEi01937w3jc/iLYs/k5FSsM=
+X-Received: by 2002:ac2:5b86:: with SMTP id o6mr11970188lfn.44.1574427586437;
+ Fri, 22 Nov 2019 04:59:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120154521.16273-1-geert+renesas@glider.be>
-In-Reply-To: <20191120154521.16273-1-geert+renesas@glider.be>
+References: <20191122034702.58563-1-dwlsalmeida@gmail.com>
+In-Reply-To: <20191122034702.58563-1-dwlsalmeida@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:55:34 +0100
-Message-ID: <CACRpkdb7Fkrbr=Zu0HPPWmDx4uPPvog7edzddZ2Z7g1E7srYdA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: of: Fix bogus reference to gpiod_get_count()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Fri, 22 Nov 2019 13:59:33 +0100
+Message-ID: <CACRpkdbaDEmZ4JCnWGinVVjzbVB=efTjMSTa+mrzuuaK_sCqmw@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: driver.rst: Fix warnings
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 4:45 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Fri, Nov 22, 2019 at 4:55 AM Daniel W. S. Almeida
+<dwlsalmeida@gmail.com> wrote:
 
-> The recommended function is called gpiod_count(), not gpiod_get_count().
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 >
-> Fixes: f626d6dfb7098525 ("gpio: of: Break out OF-only code")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fix warnings due to incorrect rst markup. Also improved the presentation
+> a little without changing the underlying content.
+>
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
-Patch applied!
+Thanks a lot, patch applied!
 
 Yours,
 Linus Walleij
