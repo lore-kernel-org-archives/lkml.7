@@ -2,270 +2,112 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8017C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E3BC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28FD20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7B020714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="TnT+QqN+"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="m5jDo7Po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfKVNOb (ORCPT
+        id S1727884AbfKVNOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:14:31 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25865 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKVNOb (ORCPT
+        Fri, 22 Nov 2019 08:14:34 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6419 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfKVNOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:14:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574428367; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=QEgiVToMKeDlNxblIhlE8BSN/IuRi5vHmsR6XvOB+QFMKFt70MCsQn1htezc7omYF8dP/LdIwqyTlUBqmkkn0q9nrd4+xHHJkHzXwl5UZ8WKFayccVublcuuuVSrZ91DYS+N8VFc9GoKYVqjNvdbX3IQ4/IMaGMzwnt9Kg0V2bU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574428367; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=5qcDvE2gvFkTOCpdFj7HNrfsOFN5WRdYmIU+qHw2GJw=; 
-        b=Ihg5tuFKsJRVMcw/crf1eukqu/9+0HTXmsl3CheCM4nYq7Za3UaCJPc+ZcBHYmt4r1dzFYW36vmqUTlk79L3jBvvYA8F5y/G5+9g1a5kc3Ek3WkR/CzrDs1qlr3ROm6nHPhihQEh5m3C+BIvGFBGG+wYMPm4084QKdJ5OwClTDY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=Ans656JXU2iXs3DmB973tCXd9IxRG0UknYRziH9Pu636QlK4BbWdPRarAyF0hLcH5wVTYBIs4HnW
-    1aYRwdSfyeeh3v0y8Ew3yeJszjXMJg8QlR75zcAu8OaW2MnJoLCB  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574428367;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=5qcDvE2gvFkTOCpdFj7HNrfsOFN5WRdYmIU+qHw2GJw=;
-        b=TnT+QqN+3mymaW53tAQIoiqL2FbCkC4tz4W4Ox6BKvGHxWpgG2q8h83kg4qfdfVF
-        rtJGm1RvroaEL1nwYBHgf3u9rW9bNhRTYfn+pwieZ2HVddgYXbU7kWfPvVyk/y2YTzL
-        tLxziOz3HjOjp9VpCd8Ev3GSIowGEGB70nDUvBEw=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.83.158 [171.221.83.158]) by mx.zohomail.com
-        with SMTPS id 1574428366270360.0986961018165; Fri, 22 Nov 2019 05:12:46 -0800 (PST)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        heiko@sntech.de, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
-        geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com
-Subject: [PATCH 4/4] MIPS: Ingenic: Initial YSH & ATIL CU Neo board support.
-Date:   Fri, 22 Nov 2019 21:11:29 +0800
-Message-Id: <1574428289-21764-5-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
-References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Fri, 22 Nov 2019 08:14:33 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7df3b0000>; Fri, 22 Nov 2019 05:14:36 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 05:14:33 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 05:14:33 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 13:14:30 +0000
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191122100704.194776704@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
+Date:   Fri, 22 Nov 2019 13:14:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574428476; bh=K5WU2Jt7q2CDfjyB/BPLlKPJZ2xvbiCPlPuYvbeKy40=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=m5jDo7Pov1oZ+eS9YQGJsMNDelOQYltpuGv1pv9jY8k+tsQx+cDBJq2+hyQtBOZT0
+         6iaDswK7Ym7Hp3yC77ZfJhRnrMpIW+V2TXyW05QSgpxvo3RlFzBFbM/OPy1RWmmMp5
+         zKdzVmNic2z2bQDQ+mQRg4VkHdOkIoAd23v1FjmnWPs0JBWOKrCLXIF39p6qxbO2XV
+         9E57H1eMZDGXE2h/7Uoy/Onj7PV1o1t3QYJk7qCtsm3OqI4cv/5bYwG6dX3Ob2YcQG
+         +SqLgP1iQiE7YwqDkam93yyCQ1QPUri8/GqrBHpnGozxN0TyDWBQFE79jNNLEBhYiy
+         3dj4xgUbNF+3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo board.
-Note that this is unselectable via Kconfig until the X1000 SoC is made
-selectable in a later commit.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- arch/mips/boot/dts/ingenic/Makefile   |   1 +
- arch/mips/boot/dts/ingenic/cu1000.dts |  42 ++++++++++++++
- arch/mips/configs/cu1000_defconfig    | 100 ++++++++++++++++++++++++++++++++++
- arch/mips/jz4740/Kconfig              |   4 ++
- 4 files changed, 147 insertions(+)
- create mode 100644 arch/mips/boot/dts/ingenic/cu1000.dts
- create mode 100644 arch/mips/configs/cu1000_defconfig
+On 22/11/2019 10:26, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.203 release.
+> There are 159 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.203-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
 
-diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
-index 9cc4844..f6db7bb 100644
---- a/arch/mips/boot/dts/ingenic/Makefile
-+++ b/arch/mips/boot/dts/ingenic/Makefile
-@@ -2,5 +2,6 @@
- dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
- dtb-$(CONFIG_JZ4770_GCW0)	+= gcw0.dtb
- dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
-+dtb-$(CONFIG_X1000_CU1000)	+= cu1000.dtb
- 
- obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/ingenic/cu1000.dts b/arch/mips/boot/dts/ingenic/cu1000.dts
-new file mode 100644
-index 0000000..c29a318
---- /dev/null
-+++ b/arch/mips/boot/dts/ingenic/cu1000.dts
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+
-+#include "x1000.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	compatible = "yna,cu1000", "ingenic,x1000";
-+	model = "YSH & ATIL General Module CU Neo";
-+
-+	aliases {
-+		serial2 = &uart2;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart2;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x04000000>;
-+	};
-+};
-+
-+&exclk {
-+	clock-frequency = <24000000>;
-+};
-+
-+&uart2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart2>;
-+};
-+
-+&pinctrl {
-+	pins_uart2: uart2 {
-+		function = "uart2";
-+		groups = "uart2-data-d";
-+		bias-disable;
-+	};
-+};
-diff --git a/arch/mips/configs/cu1000_defconfig b/arch/mips/configs/cu1000_defconfig
-new file mode 100644
-index 0000000..88729ee
---- /dev/null
-+++ b/arch/mips/configs/cu1000_defconfig
-@@ -0,0 +1,100 @@
-+CONFIG_LOCALVERSION_AUTO=y
-+CONFIG_KERNEL_GZIP=y
-+CONFIG_SYSVIPC=y
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_PREEMPT=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_LOG_BUF_SHIFT=14
-+CONFIG_CGROUPS=y
-+CONFIG_MEMCG=y
-+CONFIG_MEMCG_KMEM=y
-+CONFIG_CGROUP_SCHED=y
-+CONFIG_CGROUP_FREEZER=y
-+CONFIG_CGROUP_DEVICE=y
-+CONFIG_CGROUP_CPUACCT=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="arch/mips/boot/ramdisk.cpio.gz"
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+CONFIG_SYSCTL_SYSCALL=y
-+CONFIG_KALLSYMS_ALL=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_SLAB=y
-+CONFIG_MACH_INGENIC=y
-+CONFIG_X1000_CU1000=y
-+CONFIG_HIGHMEM=y
-+CONFIG_HZ_100=y
-+CONFIG_HZ=100
-+# CONFIG_SECCOMP is not set
-+# CONFIG_SUSPEND is not set
-+# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-+# CONFIG_COMPACTION is not set
-+CONFIG_CMA=y
-+CONFIG_CMA_AREAS=7
-+CONFIG_UEVENT_HELPER=y
-+CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
-+CONFIG_DEVTMPFS=y
-+# CONFIG_FW_LOADER is not set
-+# CONFIG_ALLOW_DEV_COREDUMP is not set
-+# CONFIG_INPUT_MOUSEDEV is not set
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+CONFIG_VT_HW_CONSOLE_BINDING=y
-+CONFIG_LEGACY_PTY_COUNT=2
-+CONFIG_SERIAL_EARLYCON=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_NR_UARTS=3
-+CONFIG_SERIAL_8250_RUNTIME_UARTS=3
-+CONFIG_SERIAL_8250_INGENIC=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+# CONFIG_HW_RANDOM is not set
-+CONFIG_GPIO_SYSFS=y
-+# CONFIG_HWMON is not set
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
-+# CONFIG_VGA_CONSOLE is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_NVMEM=y
-+CONFIG_NVMEM_SYSFS=y
-+CONFIG_EXT4_FS=y
-+# CONFIG_DNOTIFY is not set
-+CONFIG_PROC_KCORE=y
-+# CONFIG_PROC_PAGE_MONITOR is not set
-+CONFIG_TMPFS=y
-+CONFIG_CONFIGFS_FS=y
-+CONFIG_NLS=y
-+CONFIG_NLS_CODEPAGE_936=y
-+CONFIG_NLS_CODEPAGE_950=y
-+CONFIG_NLS_ASCII=y
-+CONFIG_NLS_ISO8859_1=y
-+CONFIG_NLS_UTF8=y
-+CONFIG_CRYPTO_ECHAINIV=y
-+CONFIG_CRYPTO_AES=y
-+CONFIG_CRYPTO_DEFLATE=y
-+CONFIG_CRYPTO_LZO=y
-+CONFIG_PRINTK_TIME=y
-+CONFIG_CONSOLE_LOGLEVEL_DEFAULT=15
-+CONFIG_CONSOLE_LOGLEVEL_QUIET=15
-+CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7
-+CONFIG_DEBUG_INFO=y
-+CONFIG_STRIP_ASM_SYMS=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_MAGIC_SYSRQ=y
-+CONFIG_PANIC_ON_OOPS=y
-+CONFIG_PANIC_TIMEOUT=10
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_DEBUG_PREEMPT is not set
-+CONFIG_STACKTRACE=y
-+# CONFIG_FTRACE is not set
-+CONFIG_CMDLINE_BOOL=y
-+CONFIG_CMDLINE="console=ttyS2,115200n8 mem=32M@0x0 earlycon clk_ignore_unused"
-+CONFIG_CMDLINE_OVERRIDE=y
-diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-index 6b96844..b4cee0a 100644
---- a/arch/mips/jz4740/Kconfig
-+++ b/arch/mips/jz4740/Kconfig
-@@ -16,6 +16,10 @@ config JZ4780_CI20
- 	bool "MIPS Creator CI20"
- 	select MACH_JZ4780
- 
-+config X1000_CU1000
-+	bool "YSH & ATIL General Module CU Neo"
-+	select MACH_X1000
-+
- endchoice
- 
- config MACH_JZ4740
+...
+
+> Marek Szyprowski <m.szyprowski@samsung.com>
+>     ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+
+The above commit is causing the following build error for ARM ...
+
+Error: /dvs/git/dirty/git-master_l4t-upstream/kernel/arch/arm/boot/dts/exynos5250-arndale.dts:560.22-23 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/exynos5250-arndale.dtb' failed
+make[2]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
+
+Cheers
+Jon
+
 -- 
-2.7.4
-
-
+nvpublic
