@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83368C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880ECC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5633D20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5447220637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419734;
-	bh=73kGtPxbG7AHS1m7uIan7hnFziG77Y1VjpxICPqueis=;
+	s=default; t=1574419739;
+	bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0p/XC5Bj2xfQG8xSiGxn8nZbB9c/YAku+QLd4UICj231OOJvo1SGFID8PtXGSohqm
-	 JQGzgmSqa+w1uRG1WSbNhwHxOw4oUi30iNvqKkk02OAESn8mi5QkeGCxr6V71GF5O5
-	 avJ2nXbZ8UEDnmI13ZbkmZVstgpMuFFkMhmpaegc=
+	b=L5wpN7dWnwp5OAWLgPw3XSnezrhEK5CKO2ha9f+hq8kGEAKmcBlb+U5MBOhOCUjEi
+	 zc+PI2dRW+fWPtuCi/OBYbEbhmIzmeE/g52c8hmjTGRB+14RuRA0h9sFEjL1bkaJ25
+	 Z173vM89EjZJXCBO52XZHxgKCtLdODwt2OTrGivY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbfKVKsx (ORCPT
+        id S1729988AbfKVKs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:48:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfKVKsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:48:47 -0500
+        id S1728097AbfKVKsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:48:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8566920748;
-        Fri, 22 Nov 2019 10:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AE4B20637;
+        Fri, 22 Nov 2019 10:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419727;
-        bh=73kGtPxbG7AHS1m7uIan7hnFziG77Y1VjpxICPqueis=;
+        s=default; t=1574419732;
+        bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6DrYKXI2wBKq/btln8G8lIw2YYayxwgZy+CcF9+yLHHMtqR/3dGDVDH5M8+UzEif
-         bObJ2DKedJ2vcZCPBrIBXHZOFF2FfGM2KjlZbuT+77EwLVXRGsl/eU7wVB8yZZD76e
-         0OuoOQe6vkdUb48bsbALdqvXWhBbUgnY+wOZJAZ0=
+        b=vmb9mRhh6Y/jFInVkeKF0q8Qbe0ZXhjynuG34YaGCkHZBDVD5M/8GkU6aNt5LTETh
+         9BUrgHi+fp+RgxRgTmfNU6kuZkKRuWoLy7pQOWXZiQxwuv8marZDdAS3FtPafe457x
+         g4eE7fNyYV1GL0toi0X354TuVHbB96h4zCK7I5KU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Smith <tim.smith@citrix.com>,
-        Mark Syms <mark.syms@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 209/222] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
-Date:   Fri, 22 Nov 2019 11:29:09 +0100
-Message-Id: <20191122100917.437609501@linuxfoundation.org>
+Subject: [PATCH 4.9 169/222] mei: samples: fix a signedness bug in amt_host_if_call()
+Date:   Fri, 22 Nov 2019 11:28:29 +0100
+Message-Id: <20191122100914.735276358@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,62 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Smith <tim.smith@citrix.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
+[ Upstream commit 185647813cac080453cb73a2e034a8821049f2a7 ]
 
-Flushing the workqueue can cause operations to happen which might
-call gfs2_log_reserve(), or get stuck waiting for locks taken by such
-operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
-will never wake because the only thing which can wake it is gfs2_logd()
-which was already stopped.
+"out_buf_sz" needs to be signed for the error handling to work.
 
-This causes umount of a gfs2 filesystem to wedge permanently if, for
-example, the umount immediately follows a large delete operation.
-
-When this occured, the following stack trace was obtained from the
-umount command
-
-[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
-[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
-[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
-[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
-[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
-[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
-[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
-[<ffffffff811b79b9>] deactivate_super+0x59/0x60
-[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
-[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
-[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
-[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
-[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
-[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
-[<ffffffffffffffff>] 0xffffffffffffffff
-
-Signed-off-by: Tim Smith <tim.smith@citrix.com>
-Signed-off-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/super.c | 2 +-
+ samples/mei/mei-amt-version.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index e3ee387a6dfeb..37496d83661a7 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -844,10 +844,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
- 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
- 		return error;
- 
-+	flush_workqueue(gfs2_delete_workqueue);
- 	kthread_stop(sdp->sd_quotad_process);
- 	kthread_stop(sdp->sd_logd_process);
- 
--	flush_workqueue(gfs2_delete_workqueue);
- 	gfs2_quota_sync(sdp->sd_vfs, 0);
- 	gfs2_statfs_sync(sdp->sd_vfs, 0);
- 
+diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
+index bb9988914a563..32234481ad7db 100644
+--- a/samples/mei/mei-amt-version.c
++++ b/samples/mei/mei-amt-version.c
+@@ -370,7 +370,7 @@ static uint32_t amt_host_if_call(struct amt_host_if *acmd,
+ 			unsigned int expected_sz)
+ {
+ 	uint32_t in_buf_sz;
+-	uint32_t out_buf_sz;
++	ssize_t out_buf_sz;
+ 	ssize_t written;
+ 	uint32_t status;
+ 	struct amt_host_if_resp_header *msg_hdr;
 -- 
 2.20.1
 
