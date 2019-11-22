@@ -2,188 +2,199 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F830C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97A3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084652070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421387;
-	bh=cXAOcHjLd1/RQ7fJxPeGZ3pBpX0jJa7FqH4WtnMadCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfQBEqaWuj2CNxTm0wxqfnlON0cZn+IqDcMJ1G2/f/KDsA2aHT28k5qiG7mfektjj
-	 +OlICoal4kgYBLwYW/8fwd6YzpWvhqTSN2SVP/++EdKiTW20mx0hj1FkPGQU4d3LsE
-	 SXYN/alLYvFQBnD0uNEwzzET4+e+JL/7Zwfl8yWA=
+	by mail.kernel.org (Postfix) with ESMTP id B0A642071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfKVLQZ (ORCPT
+        id S1728390AbfKVKuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:16:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:50:21 -0500
+Received: from mga01.intel.com ([192.55.52.88]:12230 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfKVKun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:50:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887D22072D;
-        Fri, 22 Nov 2019 10:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419842;
-        bh=cXAOcHjLd1/RQ7fJxPeGZ3pBpX0jJa7FqH4WtnMadCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AP0X2FvkovPI2Vsimb7xBv9AN/7FG1T7XyFsAB9o6LkEE4QLlI3Dk4VvX0eVKnogB
-         zU6+cnI0vKZ7u8nbCLGHhNvLQgUqZ+bZyePTS5zK3Fs1NpNRikb23slK1kiNzJoBkF
-         XJ2hxqdOq/DfbAieAdgRMc7TpYwZsG+4wQohiMqY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 003/122] Revert "OPP: Protect dev_list with opp_table lock"
-Date:   Fri, 22 Nov 2019 11:27:36 +0100
-Message-Id: <20191122100723.867534497@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
-References: <20191122100722.177052205@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729775AbfKVKuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:50:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 02:50:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="216342128"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 22 Nov 2019 02:50:12 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 22 Nov 2019 12:50:12 +0200
+Date:   Fri, 22 Nov 2019 12:50:12 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+Message-ID: <20191122105012.GD11621@lahna.fi.intel.com>
+References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
+ <20191104142459.GC2552@lahna.fi.intel.com>
+ <20191104144436.GD2552@lahna.fi.intel.com>
+ <20191104154446.GH2552@lahna.fi.intel.com>
+ <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+ <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
+ <20191104162103.GI2552@lahna.fi.intel.com>
+ <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
+ <20191120105048.GY11621@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191120105048.GY11621@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, Nov 20, 2019 at 12:50:53PM +0200, Mika Westerberg wrote:
+> On Tue, Nov 19, 2019 at 05:55:43PM +0100, Paul Menzel wrote:
+> > Dear Mika,
+> > 
+> > 
+> > On 2019-11-04 17:21, Mika Westerberg wrote:
+> > > On Mon, Nov 04, 2019 at 05:11:10PM +0100, Paul Menzel wrote:
+> > 
+> > >> On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
+> > >>
+> > >>>> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > >>>> Sent: Monday, November 4, 2019 9:45 AM
+> > >>
+> > >>>> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
+> > >>>>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
+> > >>
+> > >>>>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
+> > >>
+> > >>>>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> > >>>>>>> suspending the system, and resuming with Dell’s Thunderbolt TB16
+> > >>>>>>> dock connected, the USB input devices, keyboard and mouse,
+> > >>>>>>> connected to the TB16 stop working. They work for a few seconds
+> > >>>>>>> (mouse cursor can be moved), but then stop working. The laptop
+> > >>>>>>> keyboard and touchpad still works fine. All firmware is up-to-date
+> > >>>>>>> according to `fwupdmgr`.
+> > >>>>>>
+> > >>>>>> What are the exact steps to reproduce? Just "echo mem >
+> > >>>>>> /sys/power/state" and then resume by pressing power button?
+> > >>
+> > >> GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
+> > >> display. So more than `echo mem > /sys/power/state` is done. What
+> > >> distribution do you use?
+> > > 
+> > > I have buildroot based "distro" so there is no UI running.
+> > 
+> > Hmm, this is quite different from the “normal” use-case of the these devices.
+> > That way you won’t hit the bugs of the normal users. ;-)
+> 
+> Well, I can install some distro to that thing also :) I suppose Debian
+> 10.2 does have this issue, no?
+> 
+> > >>>>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
+> > >>>>> suspend/resume cycles (to s2idle) but I don't see any issues.
+> > >>>>>
+> > >>>>> I may have older/different firmware than you, though.
+> > >>>>
+> > >>>> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
+> > >>>> on my system :/
+> > >>
+> > >> The user reported the issue with the previous firmwares 1.x and TBT NVM v40.
+> > >> Updating to the recent version (I got the logs with) did not fix the issue.
+> > > 
+> > > I also tried v40 (that was originally on that system) but I was not able
+> > > to reproduce it.
+> > > 
+> > > Do you know if the user changed any BIOS settings?
+> > 
+> > We had to disable the Thunderbolt security settings as otherwise the USB
+> > devices wouldn’t work at cold boot either.
+> 
+> That does not sound right at all. There is the preboot ACL that allows
+> you to use TBT dock aready on boot. Bolt takes care of this.
+> 
+> Are you talking about USB devices connected to the TB16 dock?
+> 
+> Also are you connecting the TB16 dock to the Thunderbolt ports (left
+> side of the system marked with small lightning logo) or to the normal
+> Type-C ports (right side)?
+> 
+> > So, I built Linux 5.4-rc8 (`make bindeb-pkg -j8`), but unfortunately the
+> > error is still there. Sometimes, re-plugging the dock helped, and sometimes
+> > it did not.
+> > 
+> > Please find the logs attached. The strange thing is, the Linux kernel detects
+> > the devices and I do not see any disconnect events. But, `lsusb` does not list
+> > the keyboard and the mouse. Is that expected.
+> 
+> I'm bit confused. Can you describe the exact steps what you do (so I can
+> replicate them).
 
-This reverts commit 714ab224a8db6e8255c61a42613de9349ceb0bba which is
-commit 3d2556992a878a2210d3be498416aee39e0c32aa upstream.
+I managed to reproduce following scenario.
 
-Turns out to break the build on the odroid machines, so it needs to be
-reverted.
+1. Boot the system up to UI
+2. Connect TB16 dock (and see that it gets authorized by bolt)
+3. Connect keyboard and mouse to the TB16 dock
+4. Both mouse and keyboard are functional
+5. Enter s2idle by closing laptop lid
+6. Exit s2idle by opening the laptop lid
+7. After ~10 seconds or so the mouse or keyboard or both do not work
+   anymore. They do not respond but they are still "present".
 
-Reported-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/base/power/opp/core.c |   21 ++-------------------
- drivers/base/power/opp/cpu.c  |    2 --
- drivers/base/power/opp/opp.h  |    2 +-
- 3 files changed, 3 insertions(+), 22 deletions(-)
+The above does not happen always but from time to time.
 
---- a/drivers/base/power/opp/core.c
-+++ b/drivers/base/power/opp/core.c
-@@ -49,14 +49,9 @@ static struct opp_device *_find_opp_dev(
- static struct opp_table *_find_opp_table_unlocked(struct device *dev)
- {
- 	struct opp_table *opp_table;
--	bool found;
- 
- 	list_for_each_entry(opp_table, &opp_tables, node) {
--		mutex_lock(&opp_table->lock);
--		found = !!_find_opp_dev(dev, opp_table);
--		mutex_unlock(&opp_table->lock);
--
--		if (found) {
-+		if (_find_opp_dev(dev, opp_table)) {
- 			_get_opp_table_kref(opp_table);
- 
- 			return opp_table;
-@@ -716,8 +711,6 @@ struct opp_device *_add_opp_dev(const st
- 
- 	/* Initialize opp-dev */
- 	opp_dev->dev = dev;
--
--	mutex_lock(&opp_table->lock);
- 	list_add(&opp_dev->node, &opp_table->dev_list);
- 
- 	/* Create debugfs entries for the opp_table */
-@@ -725,7 +718,6 @@ struct opp_device *_add_opp_dev(const st
- 	if (ret)
- 		dev_err(dev, "%s: Failed to register opp debugfs (%d)\n",
- 			__func__, ret);
--	mutex_unlock(&opp_table->lock);
- 
- 	return opp_dev;
- }
-@@ -744,7 +736,6 @@ static struct opp_table *_allocate_opp_t
- 	if (!opp_table)
- 		return NULL;
- 
--	mutex_init(&opp_table->lock);
- 	INIT_LIST_HEAD(&opp_table->dev_list);
- 
- 	opp_dev = _add_opp_dev(dev, opp_table);
-@@ -766,6 +757,7 @@ static struct opp_table *_allocate_opp_t
- 
- 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
- 	INIT_LIST_HEAD(&opp_table->opp_list);
-+	mutex_init(&opp_table->lock);
- 	kref_init(&opp_table->kref);
- 
- 	/* Secure the device table modification */
-@@ -807,10 +799,6 @@ static void _opp_table_kref_release(stru
- 	if (!IS_ERR(opp_table->clk))
- 		clk_put(opp_table->clk);
- 
--	/*
--	 * No need to take opp_table->lock here as we are guaranteed that no
--	 * references to the OPP table are taken at this point.
--	 */
- 	opp_dev = list_first_entry(&opp_table->dev_list, struct opp_device,
- 				   node);
- 
-@@ -1714,9 +1702,6 @@ void _dev_pm_opp_remove_table(struct opp
- {
- 	struct dev_pm_opp *opp, *tmp;
- 
--	/* Protect dev_list */
--	mutex_lock(&opp_table->lock);
--
- 	/* Find if opp_table manages a single device */
- 	if (list_is_singular(&opp_table->dev_list)) {
- 		/* Free static OPPs */
-@@ -1727,8 +1712,6 @@ void _dev_pm_opp_remove_table(struct opp
- 	} else {
- 		_remove_opp_dev(_find_opp_dev(dev, opp_table), opp_table);
- 	}
--
--	mutex_unlock(&opp_table->lock);
- }
- 
- void _dev_pm_opp_find_and_remove_table(struct device *dev, bool remove_all)
---- a/drivers/base/power/opp/cpu.c
-+++ b/drivers/base/power/opp/cpu.c
-@@ -222,10 +222,8 @@ int dev_pm_opp_get_sharing_cpus(struct d
- 	cpumask_clear(cpumask);
- 
- 	if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED) {
--		mutex_lock(&opp_table->lock);
- 		list_for_each_entry(opp_dev, &opp_table->dev_list, node)
- 			cpumask_set_cpu(opp_dev->dev->id, cpumask);
--		mutex_unlock(&opp_table->lock);
- 	} else {
- 		cpumask_set_cpu(cpu_dev->id, cpumask);
- 	}
---- a/drivers/base/power/opp/opp.h
-+++ b/drivers/base/power/opp/opp.h
-@@ -124,7 +124,7 @@ enum opp_table_access {
-  * @dev_list:	list of devices that share these OPPs
-  * @opp_list:	table of opps
-  * @kref:	for reference count of the table.
-- * @lock:	mutex protecting the opp_list and dev_list.
-+ * @lock:	mutex protecting the opp_list.
-  * @np:		struct device_node pointer for opp's DT node.
-  * @clock_latency_ns_max: Max clock latency in nanoseconds.
-  * @shared_opp: OPP is shared between multiple devices.
+Is this the scenario you see as well?
 
+This is on Ubuntu 19.10 with the 5.3 stock kernel.
 
+I can get them work again by unplugging them and plugging back (leaving
+the TBT16 dock connected). Also if you run lspci when the problem
+occurs it still shows the dock so PCIe link stays up.
+
+I suspect this has something to do with the ASMEDIA xHCI controller but
+I'm not an expert so Mathias CC'd.
+
+> > Additionally, despite `CONFIG_PCI_DEBUG` I do not see more elaborate messages.
+> 
+> I see one strange thing in that log. The Thunderbolt driver does not
+> show the device at boot. You should see something like this when you
+> boot with the dock connected:
+> 
+>   thunderbolt 0-3: new device found, vendor=0xd4 device=0xb051
+>   thunderbolt 0-3: Dell Dell Thunderbolt Cable
+>   thunderbolt 0-303: new device found, vendor=0xd4 device=0xb054
+>   thunderbolt 0-303: Dell Dell Thunderbolt Dock
+> 
+> I only see those after you did suspend/resume cycle.
+> 
+> > Lastly, could the daemon boltd have anything to do with this?
+> 
+> It is the one that authorizes the PCIe tunneling so definitely has
+> something to do but below:
+> 
+> > 
+> > ```
+> > $ boltctl --version
+> > bolt 0.8
+> > $ boltctl list
+> >  ● Dell Thunderbolt Cable
+> >    ├─ type:          peripheral
+> >    ├─ name:          Dell Thunderbolt Cable
+> >    ├─ vendor:        Dell
+> >    ├─ uuid:          0082b09d-2f5f-d400-ffff-ffffffffffff
+> >    ├─ status:        authorized
+> 
+> looks what is expected.
