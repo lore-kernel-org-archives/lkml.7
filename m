@@ -2,84 +2,645 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02879C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF9FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9DA20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC622071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfKVRWr (ORCPT
+        id S1727446AbfKVRWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:22:47 -0500
-Received: from mga18.intel.com ([134.134.136.126]:7187 "EHLO mga18.intel.com"
+        Fri, 22 Nov 2019 12:22:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:50202 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfKVRWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:22:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 09:22:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="197686701"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga007.jf.intel.com with ESMTP; 22 Nov 2019 09:22:44 -0800
-Date:   Fri, 22 Nov 2019 09:22:46 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191122172246.GA15557@agluck-desk2.amr.corp.intel.com>
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
- <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121171214.GD12042@gmail.com>
- <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
- <20191122105141.GY4114@hirez.programming.kicks-ass.net>
- <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+        id S1726046AbfKVRWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:22:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 901CFDA7;
+        Fri, 22 Nov 2019 09:22:46 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C19063F6C4;
+        Fri, 22 Nov 2019 09:22:44 -0800 (PST)
+Subject: Re: [PATCH 3/3] ARM: dts: at91: Remove the USB EP child node
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191107153128.11038-1-gregory.clement@bootlin.com>
+ <20191107153128.11038-4-gregory.clement@bootlin.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b13e902f-b375-02d3-e03d-80b5ae29f64c@arm.com>
+Date:   Fri, 22 Nov 2019 17:22:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122152715.GA1909@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191107153128.11038-4-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 04:27:15PM +0100, Peter Zijlstra wrote:
-> +void handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +{
-> +	if (sld_state == sld_fatal)
-> +		return false;
-> +
-> +	pr_alert("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> +		 current->comm, current->pid, regs->ip);
-> +
-> +	__sld_set_msr(false);
-> +	set_tsk_thread_flag(current, TIF_CLD);
-> +	return true;
-> +}
+On 07/11/2019 3:31 pm, Gregory CLEMENT wrote:
+> The endpoint configuration used to be stored in the device tree,
+> however the configuration depend on the "version" of the controller
+> itself.
+> 
+> Then the EP child node are useless and describe as deprecated in the
+> documentation binding: remove all the nodes from the SoC device tree
+> file.
 
-I think you need an extra check in here. While a #AC in the kernel
-is an indication of a split lock. A user might have enabled alignment
-checking and so this #AC might not be from a split lock.
+Just as a drive-by comment, it's presumably worth getting rid of the 
+#address-cells and #size-cells properties too (here and in the binding 
+example).
 
-I think the extra code if just to change that first test to:
+Robin.
 
-	if ((regs->eflags & X86_EFLAGS_AC) || sld_fatal)
-
--Tony
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>   arch/arm/boot/dts/at91sam9g45.dtsi |  52 -------------
+>   arch/arm/boot/dts/at91sam9rl.dtsi  |  52 -------------
+>   arch/arm/boot/dts/at91sam9x5.dtsi  |  52 -------------
+>   arch/arm/boot/dts/sama5d2.dtsi     | 118 -----------------------------
+>   arch/arm/boot/dts/sama5d3.dtsi     | 105 -------------------------
+>   arch/arm/boot/dts/sama5d4.dtsi     | 118 -----------------------------
+>   6 files changed, 497 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> index 691c95ea6175..63bfe546cd8d 100644
+> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -1204,58 +1204,6 @@
+>   				clocks = <&udphs_clk>, <&utmi>;
+>   				clock-names = "pclk", "hclk";
+>   				status = "disabled";
+> -
+> -				ep@0 {
+> -					reg = <0>;
+> -					atmel,fifo-size = <64>;
+> -					atmel,nb-banks = <1>;
+> -				};
+> -
+> -				ep@1 {
+> -					reg = <1>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <2>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@2 {
+> -					reg = <2>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <2>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@3 {
+> -					reg = <3>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -				};
+> -
+> -				ep@4 {
+> -					reg = <4>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -				};
+> -
+> -				ep@5 {
+> -					reg = <5>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@6 {
+> -					reg = <6>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+>   			};
+>   
+>   			clk32k: sckc@fffffd50 {
+> diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
+> index 8643b7151565..e118bacb7d7c 100644
+> --- a/arch/arm/boot/dts/at91sam9rl.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9rl.dtsi
+> @@ -308,58 +308,6 @@
+>   				clocks = <&pmc PMC_TYPE_PERIPHERAL 22>, <&pmc PMC_TYPE_CORE PMC_UTMI>;
+>   				clock-names = "pclk", "hclk";
+>   				status = "disabled";
+> -
+> -				ep@0 {
+> -					reg = <0>;
+> -					atmel,fifo-size = <64>;
+> -					atmel,nb-banks = <1>;
+> -				};
+> -
+> -				ep@1 {
+> -					reg = <1>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <2>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@2 {
+> -					reg = <2>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <2>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@3 {
+> -					reg = <3>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -				};
+> -
+> -				ep@4 {
+> -					reg = <4>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -				};
+> -
+> -				ep@5 {
+> -					reg = <5>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@6 {
+> -					reg = <6>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+>   			};
+>   
+>   			dma0: dma-controller@ffffe600 {
+> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+> index 7c2eb93f8cac..685a1b9f3ae5 100644
+> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+> @@ -876,58 +876,6 @@
+>   				clocks = <&pmc PMC_TYPE_CORE PMC_UTMI>, <&pmc PMC_TYPE_PERIPHERAL 23>;
+>   				clock-names = "hclk", "pclk";
+>   				status = "disabled";
+> -
+> -				ep@0 {
+> -					reg = <0>;
+> -					atmel,fifo-size = <64>;
+> -					atmel,nb-banks = <1>;
+> -				};
+> -
+> -				ep@1 {
+> -					reg = <1>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <2>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@2 {
+> -					reg = <2>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <2>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@3 {
+> -					reg = <3>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -				};
+> -
+> -				ep@4 {
+> -					reg = <4>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -				};
+> -
+> -				ep@5 {
+> -					reg = <5>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+> -
+> -				ep@6 {
+> -					reg = <6>;
+> -					atmel,fifo-size = <1024>;
+> -					atmel,nb-banks = <3>;
+> -					atmel,can-dma;
+> -					atmel,can-isoc;
+> -				};
+>   			};
+>   
+>   			watchdog: watchdog@fffffe40 {
+> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+> index 2e2c1a7b1d1d..daafcffbe033 100644
+> --- a/arch/arm/boot/dts/sama5d2.dtsi
+> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> @@ -122,124 +122,6 @@
+>   			clocks = <&pmc PMC_TYPE_PERIPHERAL 42>, <&pmc PMC_TYPE_CORE PMC_UTMI>;
+>   			clock-names = "pclk", "hclk";
+>   			status = "disabled";
+> -
+> -			ep@0 {
+> -				reg = <0>;
+> -				atmel,fifo-size = <64>;
+> -				atmel,nb-banks = <1>;
+> -			};
+> -
+> -			ep@1 {
+> -				reg = <1>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <3>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@2 {
+> -				reg = <2>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <3>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@3 {
+> -				reg = <3>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@4 {
+> -				reg = <4>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@5 {
+> -				reg = <5>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@6 {
+> -				reg = <6>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@7 {
+> -				reg = <7>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@8 {
+> -				reg = <8>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@9 {
+> -				reg = <9>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@10 {
+> -				reg = <10>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@11 {
+> -				reg = <11>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@12 {
+> -				reg = <12>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@13 {
+> -				reg = <13>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@14 {
+> -				reg = <14>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@15 {
+> -				reg = <15>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+>   		};
+>   
+>   		usb1: ohci@400000 {
+> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+> index f770aace0efd..dfd095f33f95 100644
+> --- a/arch/arm/boot/dts/sama5d3.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+> @@ -1402,111 +1402,6 @@
+>   			clocks = <&udphs_clk>, <&utmi>;
+>   			clock-names = "pclk", "hclk";
+>   			status = "disabled";
+> -
+> -			ep@0 {
+> -				reg = <0>;
+> -				atmel,fifo-size = <64>;
+> -				atmel,nb-banks = <1>;
+> -			};
+> -
+> -			ep@1 {
+> -				reg = <1>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <3>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@2 {
+> -				reg = <2>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <3>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@3 {
+> -				reg = <3>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -			};
+> -
+> -			ep@4 {
+> -				reg = <4>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -			};
+> -
+> -			ep@5 {
+> -				reg = <5>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -			};
+> -
+> -			ep@6 {
+> -				reg = <6>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -			};
+> -
+> -			ep@7 {
+> -				reg = <7>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -			};
+> -
+> -			ep@8 {
+> -				reg = <8>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@9 {
+> -				reg = <9>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@10 {
+> -				reg = <10>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@11 {
+> -				reg = <11>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@12 {
+> -				reg = <12>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@13 {
+> -				reg = <13>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@14 {
+> -				reg = <14>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+> -
+> -			ep@15 {
+> -				reg = <15>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -			};
+>   		};
+>   
+>   		usb1: ohci@600000 {
+> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+> index 6ab27a7b388d..0ece6b22d287 100644
+> --- a/arch/arm/boot/dts/sama5d4.dtsi
+> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+> @@ -105,124 +105,6 @@
+>   			clocks = <&pmc PMC_TYPE_PERIPHERAL 47>, <&pmc PMC_TYPE_CORE PMC_UTMI>;
+>   			clock-names = "pclk", "hclk";
+>   			status = "disabled";
+> -
+> -			ep@0 {
+> -				reg = <0>;
+> -				atmel,fifo-size = <64>;
+> -				atmel,nb-banks = <1>;
+> -			};
+> -
+> -			ep@1 {
+> -				reg = <1>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <3>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@2 {
+> -				reg = <2>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <3>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@3 {
+> -				reg = <3>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@4 {
+> -				reg = <4>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@5 {
+> -				reg = <5>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@6 {
+> -				reg = <6>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@7 {
+> -				reg = <7>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-dma;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@8 {
+> -				reg = <8>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@9 {
+> -				reg = <9>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@10 {
+> -				reg = <10>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@11 {
+> -				reg = <11>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@12 {
+> -				reg = <12>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@13 {
+> -				reg = <13>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@14 {
+> -				reg = <14>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+> -
+> -			ep@15 {
+> -				reg = <15>;
+> -				atmel,fifo-size = <1024>;
+> -				atmel,nb-banks = <2>;
+> -				atmel,can-isoc;
+> -			};
+>   		};
+>   
+>   		usb1: ohci@500000 {
+> 
