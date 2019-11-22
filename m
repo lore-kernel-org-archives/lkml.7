@@ -2,147 +2,195 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D16C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6EF2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574455363;
-	bh=9jUl9hYzeTjE4cdYpV/s+MeWKqCO1YmPWEPxwsM65fc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gOQz8OQbeoIJNHGs0qGsS6RlN+mgrfrID34GQZ2EeCyEfAN7gcLKT5qrH0ZmdD/JE
-	 gcAoFXGRSjX8xUdI6cvhr3sm5tvmM2PI+RH8qXl9Pl3p5QtPAWzPM3YQ4a7ls3zpFn
-	 ge1c2d2OINF6ChHXDLvL8c7TrehaDbWvUi0ai1GQ=
+	by mail.kernel.org (Postfix) with ESMTP id 744BD20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 20:43:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oM6RXqw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfKVUmm (ORCPT
+        id S1727267AbfKVUnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 15:42:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfKVUml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 15:42:41 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E902071F;
-        Fri, 22 Nov 2019 20:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574455360;
-        bh=9jUl9hYzeTjE4cdYpV/s+MeWKqCO1YmPWEPxwsM65fc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=grvZmVnp3E4aSgHsuDL8R9hsxFoXmcVDe1FFYydprJZffl+G69JkxdyzngFxrcn9n
-         tuZX8+loec9bMb6bUrnjv1LH6VWVodFipQ0gxLXNErnz2fqYd+g0jj/6o8URXNUw8q
-         k8uOCOCL8DsGMYDbLbqgu/tEJWOgtmcrAsomh3Mg=
-Received: by mail-qk1-f169.google.com with SMTP id i19so7505520qki.2;
-        Fri, 22 Nov 2019 12:42:40 -0800 (PST)
-X-Gm-Message-State: APjAAAVU5I8WO4l4eDS1ACPNiSfVcMHnw2TeOBPOsmoOJigbxRqiNSTv
-        EqTbhw4x0Tb4b0JI3aQBtlr/mqrfVkGjDmqjxw==
-X-Google-Smtp-Source: APXvYqzExydS4DW+2bikInq6s91Icq739PAoRhN/xA1oiv1V1aVfW6Akcvty1vRELGSZbb4NmevP6V97kU8lXmtYCVI=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr15274456qka.152.1574455359578;
- Fri, 22 Nov 2019 12:42:39 -0800 (PST)
+        Fri, 22 Nov 2019 15:43:13 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43916 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfKVUnN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 15:43:13 -0500
+Received: by mail-qk1-f194.google.com with SMTP id p14so7453515qkm.10;
+        Fri, 22 Nov 2019 12:43:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nEv2txPCVLSV4T8XOiHXL1dnMJXAnHX5LR4vdUFzACU=;
+        b=oM6RXqw8iLUj+Ehpij017e9+fohwwSATEdVEux0stfyhSaBNuVE4s2ePhoaz9gQ+eq
+         w5NqPEJNCP7qvXVDFjISFHQDQospQu4Bae0VYYelBzc45G5XLegFqss/jpkSiqRpbKG2
+         4EmXGtuDST1iGrfeU3YcNafHvAElHMXBucuCN0MjmcZZsLmbMaU2ZKKDKoOoeVpywgfw
+         0MeQLkcrnL8oaHJPmVE8quA35e0RX9znxT+PGYCp5yHhVYty961LC5uI5eTbWDIlE2Tp
+         ghAM2dC9GJwvm3tZbMNVNN+WkBcvf6LP4++VoHMpT1kJfOsJi7PDSot0TGC8zA86X8L5
+         FBng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nEv2txPCVLSV4T8XOiHXL1dnMJXAnHX5LR4vdUFzACU=;
+        b=QipIfKs2yjEIfOFmOpPujXzRQvuVgZ0Ee3AGuUHE/EEz8rFAb/PeOYnVUImkYNtZ1U
+         QjrzRkZ0EptODQEkJ7XJkg5nKCc1J4VlwX44hpLJ7T9N41IEZS78iv2v7xyy9+2HkIq5
+         T0slJ9CD/O5LLpdyw1+FtpJBMtjarZGWBsfrMjZtDDB1YlJVq5J1WihixfUhBeHiEETf
+         w/ilN7QZZQlzVGZn6r50gw2H3cQ1sxuCJaGBJNStHEJefqX49IMNmYLswRbaYhtzAUSY
+         O6iiX5LKkUJ23UPVM6iH9ZiSJjVucs5pzK9YP08KlVfMIKn372NGMxhWxIAav4IX+4qX
+         f9yA==
+X-Gm-Message-State: APjAAAUZOZdJ5k6CDxzM5UcwIbDJS/MMo7TlLbh4pChTFUKK6CZf31F8
+        xQJWEPyvDUGxetSEM1QyxGPJZI8Cd177Rw==
+X-Google-Smtp-Source: APXvYqzZ+Vrc859YA7hWLp2f/AWDMMqsUIwomolrDMwRF6M3dwopg7/M920/sk0ddph/3rw7YjcR5g==
+X-Received: by 2002:a37:9146:: with SMTP id t67mr9276700qkd.98.1574455391169;
+        Fri, 22 Nov 2019 12:43:11 -0800 (PST)
+Received: from localhost.localdomain ([177.220.176.157])
+        by smtp.gmail.com with ESMTPSA id d18sm3461078qko.112.2019.11.22.12.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 12:43:10 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 61954C3AB5; Fri, 22 Nov 2019 17:43:07 -0300 (-03)
+Date:   Fri, 22 Nov 2019 17:43:07 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Aaron Conole <aconole@redhat.com>
+Cc:     netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, paulb@mellanox.com,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
+Message-ID: <20191122204307.GG388551@localhost.localdomain>
+References: <20191108210714.12426-1-aconole@redhat.com>
+ <20191108210714.12426-2-aconole@redhat.com>
+ <20191114162949.GB3419@localhost.localdomain>
+ <f7to8x8yj6k.fsf@dhcp-25.97.bos.redhat.com>
+ <20191118224054.GB388551@localhost.localdomain>
+ <f7tv9rbmyrv.fsf@dhcp-25.97.bos.redhat.com>
 MIME-Version: 1.0
-References: <20191120071302.227777-1-saravanak@google.com> <CAL_Jsq+f1+xRv36z0o--u4SskTG-WxUdssJ-CP32RUZbtVuQ3w@mail.gmail.com>
- <CAGETcx-GV1kTAVbqcCLGVPoN16RpSrDw4gcxSgAVqWCb1NOzXA@mail.gmail.com>
-In-Reply-To: <CAGETcx-GV1kTAVbqcCLGVPoN16RpSrDw4gcxSgAVqWCb1NOzXA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 22 Nov 2019 14:42:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLHGvSWsUrDJObLqCnnwe=pwWJpeXtToMj_sHgLQGev7A@mail.gmail.com>
-Message-ID: <CAL_JsqLHGvSWsUrDJObLqCnnwe=pwWJpeXtToMj_sHgLQGev7A@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Add device link support for
- interrupt-parent, dmas and -gpio(s)
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7tv9rbmyrv.fsf@dhcp-25.97.bos.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 1:34 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Fri, Nov 22, 2019 at 5:35 AM Rob Herring <robh+dt@kernel.org> wrote:
+On Fri, Nov 22, 2019 at 03:39:16PM -0500, Aaron Conole wrote:
+> Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
+> 
+> > On Mon, Nov 18, 2019 at 04:21:39PM -0500, Aaron Conole wrote:
+> >> Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
+> >> 
+> >> > On Fri, Nov 08, 2019 at 04:07:14PM -0500, Aaron Conole wrote:
+> >> >> The act_ct TC module shares a common conntrack and NAT infrastructure
+> >> >> exposed via netfilter.  It's possible that a packet needs both SNAT and
+> >> >> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+> >> >> this because it runs through the NAT table twice - once on ingress and
+> >> >> again after egress.  The act_ct action doesn't have such capability.
+> >> >> 
+> >> >> Like netfilter hook infrastructure, we should run through NAT twice to
+> >> >> keep the symmetry.
+> >> >> 
+> >> >> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+> >> >> 
+> >> >> Signed-off-by: Aaron Conole <aconole@redhat.com>
+> >> >> ---
+> >> >>  net/sched/act_ct.c | 13 ++++++++++++-
+> >> >>  1 file changed, 12 insertions(+), 1 deletion(-)
+> >> >> 
+> >> >> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+> >> >> index fcc46025e790..f3232a00970f 100644
+> >> >> --- a/net/sched/act_ct.c
+> >> >> +++ b/net/sched/act_ct.c
+> >> >> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+> >> >>  			  bool commit)
+> >> >>  {
+> >> >>  #if IS_ENABLED(CONFIG_NF_NAT)
+> >> >> +	int err;
+> >> >>  	enum nf_nat_manip_type maniptype;
+> >> >>  
+> >> >>  	if (!(ct_action & TCA_CT_ACT_NAT))
+> >> >> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+> >> >>  		return NF_ACCEPT;
+> >> >>  	}
+> >> >>  
+> >> >> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> >> >> +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> >> >> +	if (err == NF_ACCEPT &&
+> >> >> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+> >> >> +		if (maniptype == NF_NAT_MANIP_SRC)
+> >> >> +			maniptype = NF_NAT_MANIP_DST;
+> >> >> +		else
+> >> >> +			maniptype = NF_NAT_MANIP_SRC;
+> >> >> +
+> >> >> +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> >> >> +	}
+> >> >
+> >> > I keep thinking about this and I'm not entirely convinced that this
+> >> > shouldn't be simpler. More like:
+> >> >
+> >> > if (DNAT)
+> >> > 	DNAT
+> >> > if (SNAT)
+> >> > 	SNAT
+> >> >
+> >> > So it always does DNAT before SNAT, similarly to what iptables would
+> >> > do on PRE/POSTROUTING chains.
+> >> 
+> >> I can rewrite the whole function, but I wanted to start with the smaller
+> >> fix that worked.  I also think it needs more testing then (since it's
+> >> something of a rewrite of the function).
+> >> 
+> >> I guess it's not too important - do you think it gives any readability
+> >> to do it this way?  If so, I can respin the patch changing it like you
+> >> describe.
 > >
-> > On Wed, Nov 20, 2019 at 1:13 AM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Add support for creating device links out of more DT properties.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/of/property.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > > index 0fa04692e3cc..dedbf82da838 100644
-> > > --- a/drivers/of/property.c
-> > > +++ b/drivers/of/property.c
-> > > @@ -1188,7 +1188,11 @@ DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
-> > >  DEFINE_SIMPLE_PROP(iommus, "iommus", "#iommu-cells")
-> > >  DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
-> > >  DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
-> > > +DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
+> > I didn't mean a rewrite, but just to never handle SNAT before DNAT. So
+> > the fix here would be like:
 > >
-> > This one is not going to work most of the time (ignoring the fact that
-> > the primary controller doesn't have a struct device) because the
-> > interrupt-parent is typically in a parent node.
->
-> Just to make sure, I'm not parsing this property incorrectly, right?
->
-> Are you saying it's listed at the parent of a bunch of devices and the
-> interrupt-parent is inherited and won't really create device links for
-> those child devices?
-> I mainly added this to make sure IRQ controllers are probed in the
-> right order. Also, if this delays the parent device probe, by the time
-> the child devices are added, the interrupt parent most likely would
-> already be probed.
->
-> > You could make it work
-> > by specifying 'interrupt-parent' in every node, but that's not a
-> > pattern I want to encourage.
->
-> I'm trying to take care of the basic per-device properties first.
-> Adding support for inherited properties isn't too difficult, I just
-> need to get to those at some point. Also, for inherited properties, we
-> can't really block probing because the child device might not depend
-> on that resource. Inherited properties are mainly relevant only for
-> sync_state() callbacks.
+> > -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> > +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> > +	if (err == NF_ACCEPT && maniptype == NF_NAT_MANIP_DST &&
+> > +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+> > +		maniptype = NF_NAT_MANIP_SRC;
+> > +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> > +	}
+> > +	return err;
+> 
+> But the maniptype of the first call could be NAT_MANIP_SRC.  In fact,
+> that's what I see if the packet is reply direction && !related.
 
-You're looking at the wrong property. You need to look for
-'interrupts' and 'interrupts-extended'. Pretty good chance if the
-device has interrupts, then it needs them. The latter is easy. It's
-just like the others you have (phandle + cells). If you have
-'interrupts' then you need to walk the interrupt tree the same way the
-OF IRQ code already does.
+Interesting, ok.
 
-> > There's also all the other ways the
-> > parent can be determined. Any parent node with 'interrupt-controller'
-> > or 'interrupt-map' property is the parent. And there's
-> > 'interrupts-extended' too.
->
-> Now I'm confused. Not sure if you are referring to actual device
-> parent now or if you are talking about an "interrupt supplier".
+> 
+> So, we need the block to invert the manipulation type.  Otherwise, we
+> miss the DNAT manipulation.
+> 
+> So I don't think I can use that block.
 
-Yes. both. The interrupt tree may or may not mirror the device node
-tree. Or you could have a mixture. You've got to handle both cases.
-But really, you just need to use the code that's already there to do
-all that and deal with all these conditions. Essentially, you need to
-copy of_irq_get(), but get the struct device from the irq_domain.
+Thanks for digging on it.
 
-Rob
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+
+> 
+> >> >> +	return err;
+> >> >>  #else
+> >> >>  	return NF_ACCEPT;
+> >> >>  #endif
+> >> >> -- 
+> >> >> 2.21.0
+> >> >> 
+> >> 
+> 
