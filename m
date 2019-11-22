@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C853C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0BDC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417C320708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA3F20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400628;
-	bh=7xewnJeJ8wvHZnKDS85LFPSw2Dl2V6Zdfz+YH65mXK4=;
+	s=default; t=1574400630;
+	bh=S/UYcjtquDy0CcPqAHpXYiJOsV3eqyYvXDEKlXM21iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9KmxzGGP7akXkgaaT7lnSu0tGYozsraRzA+P3hnwRVXz+lAIeYVggYE8ijtpuGFS
-	 evnVWSOYVPyGo9wrOBqzGhWvrTC/3y4mAX1eIPt87K/I7x+P87nP9F6ggeVK6v2mrD
-	 6xp4v80ZAZ0cGPQIZ5ZzeG2LgNP3GgyALd3RVqlk=
+	b=hdhuUsFGaHD80D9yJAebMOSJzhF+REOS7cF4eFg0ZnLi05gYrvPrzPfUxl+cXHECA
+	 o5fv/r/DHhr1sthRxyL5RuRVvo3Kd505DahR/8Rg6jNteCg60xJMquETy2ElMPOydD
+	 vYZWimzR/QbVaoLMfzmzQ2yUrtG0y4zkBVYWI9ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfKVFa1 (ORCPT
+        id S1727329AbfKVFa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:30:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48114 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfKVFaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:24 -0500
+        id S1727270AbfKVFa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B825E20708;
-        Fri, 22 Nov 2019 05:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E1E20707;
+        Fri, 22 Nov 2019 05:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400624;
-        bh=7xewnJeJ8wvHZnKDS85LFPSw2Dl2V6Zdfz+YH65mXK4=;
+        s=default; t=1574400625;
+        bh=S/UYcjtquDy0CcPqAHpXYiJOsV3eqyYvXDEKlXM21iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1+3nkQ7GXbWgAuKSLvQG9nmq/gnfWuyKaHTDHYB/iGltLaCWe56l8+xQywVZDwy0
-         sEw9nSaYXEBawnuDVXkaqEX8Clwuzy5FHUbVSYhrNdUHv9zc4wpFH3vBtWxMaRSQbi
-         rvy2ZzNjpRRwKFYMKJMf3wpy/ZReGk3WA2z+pH18=
+        b=wetmbc8s8B0XKboCas9JwX6zcWMaX8nrpesCJfXWDWg5ZwbKrhuul9S5Y2L+uaegy
+         ZMDed3zV1y3C3WrmoNZMqNG7+0ox2ieu6zyvzk1lagCUioVNfkBr8c+ytHo7Zqfx/D
+         LwJKCs/KNe8YeGiyICnaK8hHr8F1JvLS0ydP6b4k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
-        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 023/219] parisc: Fix HP SDC hpa address output
-Date:   Fri, 22 Nov 2019 00:26:45 -0500
-Message-Id: <20191122053001.752-16-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/219] ARM: dts: Fix hsi gdd range for omap4
+Date:   Fri, 22 Nov 2019 00:26:46 -0500
+Message-Id: <20191122053001.752-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
 References: <20191122053001.752-1-sashal@kernel.org>
@@ -58,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit c4bff35ca1bfba886da6223c9fed76a2b1382b8e ]
+[ Upstream commit e9e685480b74aef3f3d0967dadb52eea3ff625d2 ]
 
-Show the hpa address of the HP SDC instead of a hashed value, e.g.:
-HP SDC: HP SDC at 0xf0201000, IRQ 23 (NMI IRQ 24)
+While reviewing the missing mcasp ranges I noticed omap4 hsi range
+for gdd is wrong so let's fix it.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+I'm not aware of any omap4 devices in mainline kernel though that use
+hsi though.
+
+Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
+them with ti-sysc")
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/hp_sdc.c | 4 ++--
+ arch/arm/boot/dts/omap4-l4.dtsi | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
-index 0b8a25c58d02e..654252361653d 100644
---- a/drivers/input/serio/hp_sdc.c
-+++ b/drivers/input/serio/hp_sdc.c
-@@ -884,8 +884,8 @@ static int __init hp_sdc_init(void)
- 			"HP SDC NMI", &hp_sdc))
- 		goto err2;
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+index 6eb26b837446c..5059ecac44787 100644
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -196,12 +196,12 @@
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0x0 0x58000 0x4000>;
++			ranges = <0x0 0x58000 0x5000>;
  
--	printk(KERN_INFO PREFIX "HP SDC at 0x%p, IRQ %d (NMI IRQ %d)\n",
--	       (void *)hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
-+	pr_info(PREFIX "HP SDC at 0x%08lx, IRQ %d (NMI IRQ %d)\n",
-+	       hp_sdc.base_io, hp_sdc.irq, hp_sdc.nmi);
+ 			hsi: hsi@0 {
+ 				compatible = "ti,omap4-hsi";
+ 				reg = <0x0 0x4000>,
+-				      <0x4a05c000 0x1000>;
++				      <0x5000 0x1000>;
+ 				reg-names = "sys", "gdd";
  
- 	hp_sdc_status_in8();
- 	hp_sdc_data_in8();
+ 				clocks = <&l3_init_clkctrl OMAP4_HSI_CLKCTRL 0>;
 -- 
 2.20.1
 
