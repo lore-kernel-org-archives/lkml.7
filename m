@@ -2,59 +2,129 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D09EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DD72084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8576D20885
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574420655;
+	bh=7gw2hzPD+NzEGUoM3K2TyQAxcHH4cIB6feJwbfAhmAQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HOX+Hu5uq99XPosWmsl4mrfwUJD809cbmSPvBfb4/rauPUoU5iliGNVyrCjk0Ibhn
+	 JYFUpqKMDd0cnH3mMq2aECyjcogqkpzRLK//uIJ9nGnxLGAIXdBJzM4TU8+WeeuN/v
+	 2IhaGnWPP5WSfkqHVYvk2kp0bYi/gOCBr2ZCgo7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730605AbfKVLEL (ORCPT
+        id S1731168AbfKVLEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:11 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:53476 "EHLO deadmen.hmeau.com"
+        Fri, 22 Nov 2019 06:04:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730928AbfKVLEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:06 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iY6jJ-0004aK-Ii; Fri, 22 Nov 2019 19:04:01 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iY6jJ-0002fQ-Ef; Fri, 22 Nov 2019 19:04:01 +0800
-Date:   Fri, 22 Nov 2019 19:04:01 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] crypto: sun4i-ss: hide the Invalid keylen message
-Message-ID: <20191122110401.2kgx7fenlny5gbgj@gondor.apana.org.au>
-References: <20191114105852.21672-1-clabbe.montjoie@gmail.com>
+        id S1728091AbfKVLEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C11B20659;
+        Fri, 22 Nov 2019 11:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574420646;
+        bh=7gw2hzPD+NzEGUoM3K2TyQAxcHH4cIB6feJwbfAhmAQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ooKUYFlt2+NJ/kHoP9YolDACVHdKCR4XbWXFxV/3miRkhLA+qbjPgIEx38qYM/UeC
+         5wUfJ62nLAHHJwsyzIyOv9g/UWr43jv35mDiSQBHenB3Svko+fuIjCrO7xUUPSeyzd
+         d5ZT3HrsLtp5qxpx1uJcIq9MVojyK223HzAL8Imk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 179/220] lightnvm: pblk: fix rqd.error return value in pblk_blk_erase_sync
+Date:   Fri, 22 Nov 2019 11:29:04 +0100
+Message-Id: <20191122100926.291925470@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
+References: <20191122100912.732983531@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114105852.21672-1-clabbe.montjoie@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:58:52AM +0100, Corentin Labbe wrote:
-> Drop the "Invalid keylen" message to debug level, it adds no value, and
-> when CRYPTO_EXTRA_TEST is enabled, it floods the console.
-> 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  drivers/crypto/allwinner/sun4i-ss/sun4i-ss-cipher.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Matias Bjørling <mb@lightnvm.io>
 
-Patch applied.  Thanks.
+[ Upstream commit 4b5d56edb8fc565c5db029aecaea598eadfba7f6 ]
+
+rqd.error is masked by the return value of pblk_submit_io_sync.
+The rqd structure is then passed on to the end_io function, which
+assumes that any error should lead to a chunk being marked
+offline/bad. Since the pblk_submit_io_sync can fail before the
+command is issued to the device, the error value maybe not correspond
+to a media failure, leading to chunks being immaturely retired.
+
+Also, the pblk_blk_erase_sync function prints an error message in case
+the erase fails. Since the caller prints an error message by itself,
+remove the error message in this function.
+
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Reviewed-by: Javier González <javier@cnexlabs.com>
+Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/lightnvm/pblk-core.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index 80710c62ac293..fd322565fb0f9 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -893,10 +893,8 @@ static void pblk_setup_e_rq(struct pblk *pblk, struct nvm_rq *rqd,
+ 
+ static int pblk_blk_erase_sync(struct pblk *pblk, struct ppa_addr ppa)
+ {
+-	struct nvm_rq rqd;
+-	int ret = 0;
+-
+-	memset(&rqd, 0, sizeof(struct nvm_rq));
++	struct nvm_rq rqd = {NULL};
++	int ret;
+ 
+ 	pblk_setup_e_rq(pblk, &rqd, ppa);
+ 
+@@ -904,19 +902,6 @@ static int pblk_blk_erase_sync(struct pblk *pblk, struct ppa_addr ppa)
+ 	 * with writes. Thus, there is no need to take the LUN semaphore.
+ 	 */
+ 	ret = pblk_submit_io_sync(pblk, &rqd);
+-	if (ret) {
+-		struct nvm_tgt_dev *dev = pblk->dev;
+-		struct nvm_geo *geo = &dev->geo;
+-
+-		pblk_err(pblk, "could not sync erase line:%d,blk:%d\n",
+-					pblk_ppa_to_line(ppa),
+-					pblk_ppa_to_pos(geo, ppa));
+-
+-		rqd.error = ret;
+-		goto out;
+-	}
+-
+-out:
+ 	rqd.private = pblk;
+ 	__pblk_end_io_erase(pblk, &rqd);
+ 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.20.1
+
+
+
