@@ -2,145 +2,71 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58988C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5B820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE6E2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 09:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PuTHrRo6"
+	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="pf9FVhFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKVJRj (ORCPT
+        id S1726716AbfKVJXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 04:17:39 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36641 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfKVJRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 04:17:38 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so5605979oto.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 01:17:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pzjjzH4UgTeG40VA2UV6AHDBfr0Ocw4jXqlZWXYFvJ8=;
-        b=PuTHrRo6gLJNu4P4PUUZivkRf9R8+X7UdnrZdLbDNmrrt/TpJ5FOmxGiHBbktnLk7p
-         0L/NwFPVLdJbjnvUE+rXbTFVQk2JD4/qkscDImWPNAQqc2A2LZeJ94l8S2wH6NIG/TjM
-         Lguv1/sk/Rm80MHeMl/ogckNAQlZmDWVrIRac=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pzjjzH4UgTeG40VA2UV6AHDBfr0Ocw4jXqlZWXYFvJ8=;
-        b=TB/VgF7nKWN6SippWRWQJA5SaNJTaDGjVily4aHOprsyJAZPTHEcnif/rxICE8jQYP
-         +t6+PVWnzlBdBjNz5AR1goXNQoMoCKST+gsxJZ50M/CmHgXgRbpsiBR04AupbdIYTArq
-         1041VrEg3nQvuWWEOuPbEu3N0vgJ7fu9A0jetx404KJDHeBz22gawn7lkk0u4z85gsnd
-         bOuBoNa4rgZUOlihSvL0zAyGTYPT7/2SWa3GOB2As8Vw/VG67o9/Efztzv4u9JzjuG3o
-         ZuSATKYMDS1s3aajnL6dBxrRwHiIle7FBKXpZsX9dmwF8umDwmhR8008Ce6D2fF5App/
-         DkFg==
-X-Gm-Message-State: APjAAAXwaVztIGs+8Aw+PxAiktqDS4cXq/HTXZX6N7sWnusBd8zLOC3q
-        0qAfUqnZYKJWpBHqs3kjrBNeQdp8wgaej/d+bKBMPA==
-X-Google-Smtp-Source: APXvYqyhv427Hxx7/MmUbtqChclXEe6nJWw6xg1yaWUV406sDc3FO9lJ2GvjbigdCij390dY9m18ZCX2Ku6kj6cEKso=
-X-Received: by 2002:a05:6830:1649:: with SMTP id h9mr10352872otr.281.1574414257767;
- Fri, 22 Nov 2019 01:17:37 -0800 (PST)
+        Fri, 22 Nov 2019 04:23:02 -0500
+Received: from mail.intenta.de ([178.249.25.132]:44047 "EHLO mail.intenta.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfKVJXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 04:23:01 -0500
+X-Greylist: delayed 339 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Nov 2019 04:23:01 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=Content-Type:MIME-Version:Message-ID:Subject:CC:To:From:Date; bh=QoGoLrw+yd0OesTC5GBNZu06g/ri4zVDSm36TdL3rLw=;
+        b=pf9FVhFny2MItH0BpjPM3KHNDrj3+KoU8YnLyDf/BZbFHVL44u8PH71CyGKmF62VDWnMW4/gf94nqkcz55EGUR6/35F61VxsDi3p1BRjvX5k+geqswdyyF+Be00azFCuN1bIf4eFRlLUnaQ7bLMVqBxRI2/5DbTGsqJ+1kdlqFBAshqSMho7SA9x002Gek4PsLmLORCf20gIzAMRyUoPfWhljhlzDIHXC1lQng8f8+k8G4HjrWRCH1Qw3z07Osr6zHuVFYKLlyzMrsotNQRkjI7P731fuiDg7yGEC8qfmuNIi/ruvqc4YIdMwpyWAasObQJ47qF9FJ6uG+uwga04jQ==;
+Date:   Fri, 22 Nov 2019 10:17:13 +0100
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     YueHaibing <yuehaibing@huawei.com>, <davem@davemloft.net>,
+        <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH] mdio_bus: revert inadvertent error code change
+Message-ID: <20191122091711.GA31495@laureti-dev>
 MIME-Version: 1.0
-References: <20191122063749.27113-1-kraxel@redhat.com> <20191122063749.27113-3-kraxel@redhat.com>
-In-Reply-To: <20191122063749.27113-3-kraxel@redhat.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 22 Nov 2019 10:17:27 +0100
-Message-ID: <CAKMK7uFz3hmPT3OE8UtUQwmv+tXsjazUWT2RVHLxAq47X+EaXA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm: share address space for dma bufs
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh@kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 7:37 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> Use the shared address space of the drm device (see drm_open() in
-> drm_file.c) for dma-bufs too.  That removes a difference betweem drm
-> device mmap vmas and dma-buf mmap vmas and fixes corner cases like
-> dropping ptes (using madvise(DONTNEED) for example) not working
-> properly.
->
-> Also remove amdgpu driver's private dmabuf update.  It is not needed
-> any more now that we are doing this for everybody.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+The fixed commit inadvertently changes the error code from ENOTSUPP to
+ENOSYS. Doing so breaks (among other things) probing of macb, which
+returns -ENOTSUPP as it is now returned from mdiobus_register_reset.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Fixes: 1d4639567d97 ("mdio_bus: Fix PTR_ERR applied after initialization to constant")
+Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
+---
+ drivers/net/phy/mdio_bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But I think you want at least an ack from amd guys for double checking here.
--Daniel
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 4 +---
->  drivers/gpu/drm/drm_prime.c                 | 4 +++-
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> index d5bcdfefbad6..586db4fb46bd 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> @@ -361,10 +361,8 @@ struct dma_buf *amdgpu_gem_prime_export(struct drm_gem_object *gobj,
->                 return ERR_PTR(-EPERM);
->
->         buf = drm_gem_prime_export(gobj, flags);
-> -       if (!IS_ERR(buf)) {
-> -               buf->file->f_mapping = gobj->dev->anon_inode->i_mapping;
-> +       if (!IS_ERR(buf))
->                 buf->ops = &amdgpu_dmabuf_ops;
-> -       }
->
->         return buf;
->  }
-> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-> index a9633bd241bb..c3fc341453c0 100644
-> --- a/drivers/gpu/drm/drm_prime.c
-> +++ b/drivers/gpu/drm/drm_prime.c
-> @@ -240,6 +240,7 @@ void drm_prime_destroy_file_private(struct drm_prime_file_private *prime_fpriv)
->  struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
->                                       struct dma_buf_export_info *exp_info)
->  {
-> +       struct drm_gem_object *obj = exp_info->priv;
->         struct dma_buf *dma_buf;
->
->         dma_buf = dma_buf_export(exp_info);
-> @@ -247,7 +248,8 @@ struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
->                 return dma_buf;
->
->         drm_dev_get(dev);
-> -       drm_gem_object_get(exp_info->priv);
-> +       drm_gem_object_get(obj);
-> +       dma_buf->file->f_mapping = obj->dev->anon_inode->i_mapping;
->
->         return dma_buf;
->  }
-> --
-> 2.18.1
->
-
-
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 35876562e32a..dbacb0031877 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -65,7 +65,7 @@ static int mdiobus_register_reset(struct mdio_device *mdiodev)
+ 		reset = devm_reset_control_get_exclusive(&mdiodev->dev,
+ 							 "phy");
+ 	if (IS_ERR(reset)) {
+-		if (PTR_ERR(reset) == -ENOENT || PTR_ERR(reset) == -ENOSYS)
++		if (PTR_ERR(reset) == -ENOENT || PTR_ERR(reset) == -ENOTSUPP)
+ 			reset = NULL;
+ 		else
+ 			return PTR_ERR(reset);
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.20.1
+
