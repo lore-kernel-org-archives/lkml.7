@@ -2,93 +2,136 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C87C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFCCC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F061F2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 04:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ALGnErN5"
+	by mail.kernel.org (Postfix) with ESMTP id 378102068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574399211;
+	bh=o9P+CVnroeoeDkGZ+LQ16OPYhmH/QzjmVRjx/5JnAL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NOJvIUZC4LyPfSa4W5G+moB0z0L2NVOEl8AEkbXanxJQBox1/mC898orufki68hki
+	 gdzopkmEMab5rV+lreh+A0EVhjsjP5AuXBwQTUFqAg5RNQx46pgCsuJDcpIpWdJILU
+	 YBkie1B/2NWsLyTx1OXo8VQ9KgjyKY1+0TgMbjXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfKVE7p (ORCPT
+        id S1726563AbfKVFGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 23:59:45 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58531 "EHLO ozlabs.org"
+        Fri, 22 Nov 2019 00:06:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfKVE7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 23:59:44 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726248AbfKVFGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:06:50 -0500
+Received: from localhost (unknown [171.61.94.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47K43f0jp7z9s7T;
-        Fri, 22 Nov 2019 15:59:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574398782;
-        bh=/9aWctGEpOTxg/csjPWRD2wl/ozxrX0MWY+BOFCiLX0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ALGnErN5RbxFnlzV9PA1o8rbJZXdShL6agk3ICuOYlYejq/Gyr04/zw5IRlnlmJZJ
-         JaqMnzLy0jQxLE440+/dEpp/1M3Kss+AnAJVv42bqQRQ7CBJVemToHFysxCQR5UcIo
-         Z6OGGSb3Ns0XeHdqZTvGT2pz1IkM/boGw1bzb3j3k+lv8Aod0xgIYUE8gg8k+iws4C
-         3IszkUQscTmTHpAl9gHaI47vCGDMgmamoarzgP+RKXV6GGdSnAby4OVKNVlM733iS3
-         orA3HE8SIqbexbcdWV8SjJc3Kfqx/G8Q34JtqORGr6YcPC45RLqhMh202jVpVWCk3h
-         UOcZCEnTINPkQ==
-Date:   Fri, 22 Nov 2019 15:59:41 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: linux-next: build failure after merge of the devfreq tree
-Message-ID: <20191122155941.4c8e3bd1@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6B82068E;
+        Fri, 22 Nov 2019 05:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574399209;
+        bh=o9P+CVnroeoeDkGZ+LQ16OPYhmH/QzjmVRjx/5JnAL8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YN+4aXsR/BUW7qoSgA3XoVlN2adRpnGpvvqamoVtbMt5egAYIfqbBn1kVrG8VbhgG
+         ei56tZpdkKvB3SpLzzGmSyVSN2OzoVkeisNubyhnQwa0sF1qjSfQdhmQ+dzrvK/dNa
+         3PmARuGyKD7z/K1Abqmy3SixFKUfDIp9O+O0ZjF8=
+Date:   Fri, 22 Nov 2019 10:36:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH RFC v5 2/2] dmaengine: avalon-test: Intel Avalon-MM DMA
+ Interface for PCIe test
+Message-ID: <20191122050643.GM82508@vkoul-mobl>
+References: <cover.1573052725.git.a.gordeev.box@gmail.com>
+ <948f34471b74a8a20747311cc1d7733d00d77645.1573052725.git.a.gordeev.box@gmail.com>
+ <20191114050331.GL952516@vkoul-mobl>
+ <20191114155331.GA19187@AlexGordeev-DPL-IR1335>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jMq8buoSd3=6uu9kib9Xt7d";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114155331.GA19187@AlexGordeev-DPL-IR1335>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jMq8buoSd3=6uu9kib9Xt7d
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 14-11-19, 16:53, Alexander Gordeev wrote:
+> On Thu, Nov 14, 2019 at 10:33:31AM +0530, Vinod Koul wrote:
+> > On 06-11-19, 20:22, Alexander Gordeev wrote:
+> > > This is a sample implementation of a driver using "avalon-dma" to
+> > > perform data transfers between target device memory and system memory:
+> > > 
+> > >     +----------+    +----------+            +----------+
+> > >     |   RAM    |<-->|  Avalon  |<---PCIe--->|   Host   |
+> > >     +----------+    +----------+            +----------+
+> > >
+> > > The target device is expected to use only Avalon-MM DMA Interface for
+> > > PCIe to initiate DMA transactions - without custom hardware specifics
+> > > to make such transfers possible.
+> > > 
+> > > Unlike "dmatest" driver, the contents of DMAed data is not manipulated by
+> > > "avalon-test" in any way. It is basically pass-through and the the data
+> > > are fully dependent on the target device implementation. Thus, it is up
+> > > to the users to analyze received or provide meaningful transmitted data.
+> > 
+> > Is this the only reason why you have not used dmatest. If so, why not
+> > add the feature to dmatest to optionally not check the DMAed data
+> > contents?
+> 
+> The main reason is that "dmatest" does not support DMA_SLAVE type of
+> transactions.
 
-Hi all,
+That is correct, but it can be added!
 
-After merging the devfreq tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+> I considered adding DMA_SLAVE to "dmatest". But it would break the 
+> current neat design and does not appear solving the issue of data
+> verification. Simply besause in general DMA_SLAVE case there is no
 
-ERROR: "__arm_smccc_smc" [drivers/devfreq/imx8m-ddrc.ko] undefined!
+Am not sure why it break the current design. We have to skip the
+verification part. It would not only help you but also other to have
+this support in dmatest
 
-Caused by commit
+> data integrity criteria easily available to the driver. I.e if the
+> data is a sensor image then verifying it in the driver would be
+> pointless.
 
-  1fcfb874236e ("PM / devfreq: Add dynamic scaling for imx8m ddr controller=
-")
+The biggest issue with slave and dmatest is how to setup slave
 
-I have reverted that commit for today.
+> So in case of "avalon-test" I offloaded the task of data verification
+> to the user. The driver itself just streams user data to/from device.
+> 
+> In fact, this approach is not "avalon-dma" specific and could be used
+> with any "dmaengine" compatible driver. Moreover, it would be quite
+> useful for bringing up devices in embedded systems. I.e one could
+> master a raw display frame in user space and DMA it via the driver -
+> without graphic stack involved.
 
---=20
-Cheers,
-Stephen Rothwell
+Right and having it in dmatest makes more sense for everyone :)
 
---Sig_/jMq8buoSd3=6uu9kib9Xt7d
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> The only missing functionality I could think of is using DMABUFs, but that
+> is very easy to add.
+> 
+> Actually, "avalon-test" is rather a presentation of how I tested
+> "avalon-dma". I understand "dmatest" is more easy to trust and I could
+> probably make it working with DMA_SLAVE type. But that would entail
+> hardware design requirements:
+> 
+>   - DMA slave should both respond to read and write transactions;
+>   - data read should always be the same as data written;
+> 
+> I have such version of hardware design, but I doubt majorify of devices
+> out there can honor the above requirements. 
+> 
+> Summarizing - I would suggest not to change "dmatest" and bring in a
+> generalized version of "avalon-test" if you find it useful for a wider
+> audience.
 
------BEGIN PGP SIGNATURE-----
+I would still think adding to dmatest makes more sense!
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3Xaz0ACgkQAVBC80lX
-0GwYZAf/cR6U04dLE6DHQ2RCDuy8CyOhnmOqmzbvdHBO+jFaaDBBDsyfj9gXweTP
-fMwJyAFMCKUSIYbdRTjWYvErWdvaCDZIipmQaWh6C8SudijbfHdS0vM0lOji2huj
-23qgkJmjB004JiQWfvf72Xe/+Dq8od+WQaItcoykoFXUNEDOKJ9fip6EgMhUdSQk
-UofRhIT19HBEy/A8dX9012FL+MP5plYM5qdW0jbISAUnQ1yFlhh2jW/Fdz7rs4jw
-kbQsXZl/FKHfsj/ZiP0ElzpKgWxq7BLy0LSEDl5rrsLxdLBt5a0tsmPfY/VDiZIb
-M95enANBoLm5/ruT6yUuc3+Bnhk2WA==
-=3raV
------END PGP SIGNATURE-----
-
---Sig_/jMq8buoSd3=6uu9kib9Xt7d--
+-- 
+~Vinod
