@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F4DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9FBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BF12082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98BF2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402273;
-	bh=TYfsVzZ4zwiOufA5oBSyagynvgD3Ixw6QqNPhHSGTfE=;
+	s=default; t=1574402275;
+	bh=M3ojh6xd7Sh422K7jc7cJuoAtbq2AUgs1fVwY82uxaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ga0LSn9yoaWhYQ/ScfYFD2927h0YZQwR8qWQo//bb3jmH1mpCol0f/G60vBl42N9s
-	 Jbq1Hih6g4CQrU1dH0LfghGDPi6n8Mn/kCjv1mXHfyVoMLxdJHp0mvWC3eAgS3ELJe
-	 iVk2gey0Bw5KRDRvcYdEyv5fVdjeJSXQD/hJw2/0=
+	b=Od06ik5Pf451Ttl+Vw/xUy3xgotbfIp3Q5MrzNSDS+neiK3g9XnYIB9qm6QbGUzvv
+	 Cf/Zd/pqE0eNS2yJFo+eVk3jlDJ8NVC1qS5gyLQTwMcM+1TbVWeN6R/wXfKxLbs72a
+	 FskNEp0yxk+LuBIQ20jFpVCpfuYH2blwtqoKJX6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfKVF5u (ORCPT
+        id S1729548AbfKVF5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:57:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbfKVF5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:38 -0500
+        id S1728497AbfKVF5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B92072E;
-        Fri, 22 Nov 2019 05:57:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC6742072E;
+        Fri, 22 Nov 2019 05:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402256;
-        bh=TYfsVzZ4zwiOufA5oBSyagynvgD3Ixw6QqNPhHSGTfE=;
+        s=default; t=1574402262;
+        bh=M3ojh6xd7Sh422K7jc7cJuoAtbq2AUgs1fVwY82uxaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ybgw8ZIqgQAdBE74FgRRy4uZZY20iRAJfXTgkSxAaIk2LxyoHCwHZCuU2Nwhw5qti
-         Hd0kOBQTvR7nBBxTRa3Dmtlg5h+aVVyiMkAr8LjSgZgfGkZdxSzKF2dYPPkc+/VLPd
-         6X4BhngDbrPJsH5FZO8xsTMBKHb0LnJ7VmIN/Ht4=
+        b=C2QE73mXs52s2cO8AP91bh1tt970N23g5r2+nJUbG6swyB7qOeWQp17CEHC7hAqIP
+         QHPfdtwHV/GuMt2Mnxjov2Gq1zyCK5VJqu9wY1ocuS2lNDv5rAP4MyZDgIfELHRl26
+         UVqRrLMFvwYCYjCYDeF6iqLpMq+oyCn1OmdzeA6w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 098/127] mtd: Check add_mtd_device() ret code
-Date:   Fri, 22 Nov 2019 00:55:16 -0500
-Message-Id: <20191122055544.3299-97-sashal@kernel.org>
+Cc:     He Zhe <zhe.he@windriver.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 103/127] serial: 8250: Fix serial8250 initialization crash
+Date:   Fri, 22 Nov 2019 00:55:21 -0500
+Message-Id: <20191122055544.3299-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -58,111 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit 2b6f0090a3335b7bdd03ca520c35591159463041 ]
+[ Upstream commit 352c4cf40c4a7d439fa5d30aa2160f54b394da82 ]
 
-add_mtd_device() can fail. We should always check its return value
-and gracefully handle the failure case. Fix the call sites where this
-not done (in mtdpart.c) and add a __must_check attribute to the
-prototype to avoid this kind of mistakes.
+The initialization code of interrupt backoff work might reference NULL
+pointer and cause the following crash, if no port was found.
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+[   10.017727] CPU 0 Unable to handle kernel paging request at virtual address 000001b0, epc == 807088e0, ra == 8070863c
+---- snip ----
+[   11.704470] [<807088e0>] serial8250_register_8250_port+0x318/0x4ac
+[   11.747251] [<80708d74>] serial8250_probe+0x148/0x1c0
+[   11.789301] [<80728450>] platform_drv_probe+0x40/0x94
+[   11.830515] [<807264f8>] really_probe+0xf8/0x318
+[   11.870876] [<80726b7c>] __driver_attach+0x110/0x12c
+[   11.910960] [<80724374>] bus_for_each_dev+0x78/0xcc
+[   11.951134] [<80725958>] bus_add_driver+0x200/0x234
+[   11.989756] [<807273d8>] driver_register+0x84/0x148
+[   12.029832] [<80d72f84>] serial8250_init+0x138/0x198
+[   12.070447] [<80100e6c>] do_one_initcall+0x5c/0x2a0
+[   12.110104] [<80d3a208>] kernel_init_freeable+0x370/0x484
+[   12.150722] [<80a49420>] kernel_init+0x10/0xf8
+[   12.191517] [<8010756c>] ret_from_kernel_thread+0x14/0x1c
+
+This patch makes sure the initialization code can be reached only if a port
+is found.
+
+Fixes: 6d7f677a2afa ("serial: 8250: Rate limit serial port rx interrupts during input overruns")
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.h |  2 +-
- drivers/mtd/mtdpart.c | 36 +++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 6 deletions(-)
+ drivers/tty/serial/8250/8250_core.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mtd/mtdcore.h b/drivers/mtd/mtdcore.h
-index 37accfd0400e5..24480b75a88dd 100644
---- a/drivers/mtd/mtdcore.h
-+++ b/drivers/mtd/mtdcore.h
-@@ -7,7 +7,7 @@
- extern struct mutex mtd_table_mutex;
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index ceeea4b159c4b..c698ebab6d3bd 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -1077,15 +1077,16 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
  
- struct mtd_info *__mtd_next_device(int i);
--int add_mtd_device(struct mtd_info *mtd);
-+int __must_check add_mtd_device(struct mtd_info *mtd);
- int del_mtd_device(struct mtd_info *mtd);
- int add_mtd_partitions(struct mtd_info *, const struct mtd_partition *, int);
- int del_mtd_partitions(struct mtd_info *);
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index a308e707392d5..27d9785487d69 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -684,10 +684,22 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
- 	list_add(&new->list, &mtd_partitions);
- 	mutex_unlock(&mtd_partitions_mutex);
- 
--	add_mtd_device(&new->mtd);
-+	ret = add_mtd_device(&new->mtd);
-+	if (ret)
-+		goto err_remove_part;
- 
- 	mtd_add_partition_attrs(new);
- 
-+	return 0;
-+
-+err_remove_part:
-+	mutex_lock(&mtd_partitions_mutex);
-+	list_del(&new->list);
-+	mutex_unlock(&mtd_partitions_mutex);
-+
-+	free_partition(new);
-+	pr_info("%s:%i\n", __func__, __LINE__);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mtd_add_partition);
-@@ -778,22 +790,31 @@ int add_mtd_partitions(struct mtd_info *master,
- {
- 	struct mtd_part *slave;
- 	uint64_t cur_offset = 0;
--	int i;
-+	int i, ret;
- 
- 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
- 
- 	for (i = 0; i < nbparts; i++) {
- 		slave = allocate_partition(master, parts + i, i, cur_offset);
- 		if (IS_ERR(slave)) {
--			del_mtd_partitions(master);
--			return PTR_ERR(slave);
-+			ret = PTR_ERR(slave);
-+			goto err_del_partitions;
+ 			ret = 0;
  		}
+-	}
  
- 		mutex_lock(&mtd_partitions_mutex);
- 		list_add(&slave->list, &mtd_partitions);
- 		mutex_unlock(&mtd_partitions_mutex);
- 
--		add_mtd_device(&slave->mtd);
-+		ret = add_mtd_device(&slave->mtd);
-+		if (ret) {
-+			mutex_lock(&mtd_partitions_mutex);
-+			list_del(&slave->list);
-+			mutex_unlock(&mtd_partitions_mutex);
-+
-+			free_partition(slave);
-+			goto err_del_partitions;
+-	/* Initialise interrupt backoff work if required */
+-	if (up->overrun_backoff_time_ms > 0) {
+-		uart->overrun_backoff_time_ms = up->overrun_backoff_time_ms;
+-		INIT_DELAYED_WORK(&uart->overrun_backoff,
+-				  serial_8250_overrun_backoff_work);
+-	} else {
+-		uart->overrun_backoff_time_ms = 0;
++		/* Initialise interrupt backoff work if required */
++		if (up->overrun_backoff_time_ms > 0) {
++			uart->overrun_backoff_time_ms =
++				up->overrun_backoff_time_ms;
++			INIT_DELAYED_WORK(&uart->overrun_backoff,
++					serial_8250_overrun_backoff_work);
++		} else {
++			uart->overrun_backoff_time_ms = 0;
 +		}
-+
- 		mtd_add_partition_attrs(slave);
- 		if (parts[i].types)
- 			mtd_parse_part(slave, parts[i].types);
-@@ -802,6 +823,11 @@ int add_mtd_partitions(struct mtd_info *master,
  	}
  
- 	return 0;
-+
-+err_del_partitions:
-+	del_mtd_partitions(master);
-+
-+	return ret;
- }
- 
- static DEFINE_SPINLOCK(part_parser_lock);
+ 	mutex_unlock(&serial_mutex);
 -- 
 2.20.1
 
