@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B1FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756B92070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864A320721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421023;
-	bh=7kkQdKM17MDDKEtGn+Zxkx5RKER3gUy2kCYhpw782+w=;
+	s=default; t=1574421026;
+	bh=/m2tMlF68FQUk5TXO90MJJASaUNp9Hetv7PQDKvV1RA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5CkNMidLVX5M1bKeCW8iiea0vJPqkiRmDuaRjtQrZmZiD6l1Wu0d6FeZUvgUDhQl
-	 JQY6HPIOaXC+/y+I6i6JBih7gOyNS6Tf7hUbqfvUvAMOkFmJv3jAhHlkOb60BDEbem
-	 xLgmVMXC6FePqAgBdexl0yCDC+QWeRDAHm/f4jjE=
+	b=dxArMuFfrkm9QdBp0xz+Jx5xQQ1XCOWbjeo1+zbeKvu0qfDaXku13Lc45uFPMRSv9
+	 ls7UP4m1K9bfw3+w7xUSogMnV05EFblf5hDC84bDqNJNrTUJah8S1YYqQ1Pa8dY+T8
+	 xM5hmrapUDMwas0JmlxigrVIROiNXmMKRDgDmWMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfKVLCL (ORCPT
+        id S1728520AbfKVLKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55294 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:10:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbfKVLCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:00 -0500
+        id S1731272AbfKVLCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765782075B;
-        Fri, 22 Nov 2019 11:01:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19C1B2073F;
+        Fri, 22 Nov 2019 11:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420520;
-        bh=7kkQdKM17MDDKEtGn+Zxkx5RKER3gUy2kCYhpw782+w=;
+        s=default; t=1574420531;
+        bh=/m2tMlF68FQUk5TXO90MJJASaUNp9Hetv7PQDKvV1RA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nUBKjVJDGI9eYSB8p9sAkHL/RQDA+RR1FvXPJe09uHcHfPIG/GBqIHqteqGJnRDii
-         BERShfQ785cF+FGdqzxrqwxDLdFozM0UDsnl7qDHnfscUbUOd8gNYvS5k9+wGoYqhb
-         /SgI3v/opLEBR4mhvVB9IekpwBBqRHE3OPg+pMeU=
+        b=bH9SnZUuI0QE1QikDBFB3tntkNTEv32pUaUH0TXHxjDiUfhKDzY0Ct3iyqzYJMswn
+         KPOsbI33V/VzksoQG2jGKTfc6EJ2tFeKiLKyfWu1jkIAJ+knJu2EAVT6OHen8ewTYC
+         2sRnNyym7G3wglFjhqhEbuTM/CLhRuUQDdy941gU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Bates <lucasb@mojatatu.com>,
-        Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Lubomir Rintel <lkundrak@v3.sk>, x86@kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/220] tc-testing: fix build of eBPF programs
-Date:   Fri, 22 Nov 2019 11:28:20 +0100
-Message-Id: <20191122100922.526045628@linuxfoundation.org>
+Subject: [PATCH 4.19 139/220] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
+Date:   Fri, 22 Nov 2019 11:28:24 +0100
+Message-Id: <20191122100922.794101374@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,167 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit cf5eafbfa586d030f9321cee516b91d089e38280 ]
+[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
 
-rely on uAPI headers in the current kernel tree, rather than requiring the
-correct version installed on the test system. While at it, group all
-sections in a single binary and test the 'section' parameter.
+When building a 32-bit config which has the above MFD item as module
+but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
+building with:
 
-Reported-by: Lucas Bates <lucasb@mojatatu.com>
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
+  make: *** [Makefile:1030: vmlinux] Error 1
+
+Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/tc-testing/bpf/Makefile | 29 +++++++++++++++++++
- .../testing/selftests/tc-testing/bpf/action.c | 23 +++++++++++++++
- .../tc-testing/tc-tests/actions/bpf.json      | 16 +++++-----
- .../selftests/tc-testing/tdc_config.py        |  4 ++-
- 4 files changed, 63 insertions(+), 9 deletions(-)
- create mode 100644 tools/testing/selftests/tc-testing/bpf/Makefile
- create mode 100644 tools/testing/selftests/tc-testing/bpf/action.c
+ arch/x86/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/tc-testing/bpf/Makefile b/tools/testing/selftests/tc-testing/bpf/Makefile
-new file mode 100644
-index 0000000000000..dc92eb271d9a1
---- /dev/null
-+++ b/tools/testing/selftests/tc-testing/bpf/Makefile
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+APIDIR := ../../../../include/uapi
-+TEST_GEN_FILES = action.o
-+
-+top_srcdir = ../../../../..
-+include ../../lib.mk
-+
-+CLANG ?= clang
-+LLC   ?= llc
-+PROBE := $(shell $(LLC) -march=bpf -mcpu=probe -filetype=null /dev/null 2>&1)
-+
-+ifeq ($(PROBE),)
-+  CPU ?= probe
-+else
-+  CPU ?= generic
-+endif
-+
-+CLANG_SYS_INCLUDES := $(shell $(CLANG) -v -E - </dev/null 2>&1 \
-+	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }')
-+
-+CLANG_FLAGS = -I. -I$(APIDIR) \
-+	      $(CLANG_SYS_INCLUDES) \
-+	      -Wno-compare-distinct-pointer-types
-+
-+$(OUTPUT)/%.o: %.c
-+	$(CLANG) $(CLANG_FLAGS) \
-+		 -O2 -target bpf -emit-llvm -c $< -o - |      \
-+	$(LLC) -march=bpf -mcpu=$(CPU) $(LLC_FLAGS) -filetype=obj -o $@
-diff --git a/tools/testing/selftests/tc-testing/bpf/action.c b/tools/testing/selftests/tc-testing/bpf/action.c
-new file mode 100644
-index 0000000000000..c32b99b80e19e
---- /dev/null
-+++ b/tools/testing/selftests/tc-testing/bpf/action.c
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ * Copyright (c) 2018 Davide Caratti, Red Hat inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of version 2 of the GNU General Public
-+ * License as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/bpf.h>
-+#include <linux/pkt_cls.h>
-+
-+__attribute__((section("action-ok"),used)) int action_ok(struct __sk_buff *s)
-+{
-+	return TC_ACT_OK;
-+}
-+
-+__attribute__((section("action-ko"),used)) int action_ko(struct __sk_buff *s)
-+{
-+	s->data = 0x0;
-+	return TC_ACT_OK;
-+}
-+
-+char _license[] __attribute__((section("license"),used)) = "GPL";
-diff --git a/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json b/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
-index 6f289a49e5ecf..1a9b282dd0be2 100644
---- a/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
-+++ b/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
-@@ -55,7 +55,7 @@
-             "bpf"
-         ],
-         "setup": [
--            "printf '#include <linux/bpf.h>\nchar l[] __attribute__((section(\"license\"),used))=\"GPL\"; __attribute__((section(\"action\"),used)) int m(struct __sk_buff *s) { return 2; }' | clang -O2 -x c -c - -target bpf -o _b.o",
-+            "make -C bpf",
-             [
-                 "$TC action flush action bpf",
-                 0,
-@@ -63,14 +63,14 @@
-                 255
-             ]
-         ],
--        "cmdUnderTest": "$TC action add action bpf object-file _b.o index 667",
-+        "cmdUnderTest": "$TC action add action bpf object-file $EBPFDIR/action.o section action-ok index 667",
-         "expExitCode": "0",
-         "verifyCmd": "$TC action get action bpf index 667",
--        "matchPattern": "action order [0-9]*: bpf _b.o:\\[action\\] id [0-9]* tag 3b185187f1855c4c( jited)? default-action pipe.*index 667 ref",
-+        "matchPattern": "action order [0-9]*: bpf action.o:\\[action-ok\\] id [0-9]* tag [0-9a-f]{16}( jited)? default-action pipe.*index 667 ref",
-         "matchCount": "1",
-         "teardown": [
-             "$TC action flush action bpf",
--            "rm -f _b.o"
-+            "make -C bpf clean"
-         ]
-     },
-     {
-@@ -81,7 +81,7 @@
-             "bpf"
-         ],
-         "setup": [
--            "printf '#include <linux/bpf.h>\nchar l[] __attribute__((section(\"license\"),used))=\"GPL\"; __attribute__((section(\"action\"),used)) int m(struct __sk_buff *s) { s->data = 0x0; return 2; }' | clang -O2 -x c -c - -target bpf -o _c.o",
-+            "make -C bpf",
-             [
-                 "$TC action flush action bpf",
-                 0,
-@@ -89,10 +89,10 @@
-                 255
-             ]
-         ],
--        "cmdUnderTest": "$TC action add action bpf object-file _c.o index 667",
-+        "cmdUnderTest": "$TC action add action bpf object-file $EBPFDIR/action.o section action-ko index 667",
-         "expExitCode": "255",
-         "verifyCmd": "$TC action get action bpf index 667",
--        "matchPattern": "action order [0-9]*: bpf _c.o:\\[action\\] id [0-9].*index 667 ref",
-+        "matchPattern": "action order [0-9]*: bpf action.o:\\[action-ko\\] id [0-9].*index 667 ref",
-         "matchCount": "0",
-         "teardown": [
-             [
-@@ -101,7 +101,7 @@
-                 1,
-                 255
-             ],
--            "rm -f _c.o"
-+            "make -C bpf clean"
-         ]
-     },
-     {
-diff --git a/tools/testing/selftests/tc-testing/tdc_config.py b/tools/testing/selftests/tc-testing/tdc_config.py
-index a023d0d62b25c..d651bc1501bdb 100644
---- a/tools/testing/selftests/tc-testing/tdc_config.py
-+++ b/tools/testing/selftests/tc-testing/tdc_config.py
-@@ -16,7 +16,9 @@ NAMES = {
-           'DEV2': '',
-           'BATCH_FILE': './batch.txt',
-           # Name of the namespace to use
--          'NS': 'tcut'
-+          'NS': 'tcut',
-+          # Directory containing eBPF test programs
-+          'EBPFDIR': './bpf'
-         }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5726b264036ff..af35f5caadbe5 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2771,8 +2771,7 @@ config OLPC
  
+ config OLPC_XO1_PM
+ 	bool "OLPC XO-1 Power Management"
+-	depends on OLPC && MFD_CS5535 && PM_SLEEP
+-	select MFD_CORE
++	depends on OLPC && MFD_CS5535=y && PM_SLEEP
+ 	---help---
+ 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
  
 -- 
 2.20.1
