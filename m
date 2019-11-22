@@ -2,138 +2,111 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA081C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38073C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCF820748
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLkwXSNn"
+	by mail.kernel.org (Postfix) with ESMTP id 0DD922071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574430392;
+	bh=fkdRETN3AJcpu5k1ioWe29++qCP59kjN06kR6M3ytyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TBX6/eI0uu9YTItst3hybtaPaitlw7ir+kXBmYF3W4hHxgw6/eOOINP/2Vi5+yMzy
+	 8JrvA34q3vfGFY6YFA6YgmauxTCX9AnFbhysRyd46li7RbwgyrdRGY4smhbovI4j6Z
+	 XrrlrlDmLpp4UpFBp38ivQrIoesCsfQx16/dOFts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfKVNnC (ORCPT
+        id S1727935AbfKVNqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:43:02 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37914 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVNnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:43:01 -0500
-Received: by mail-qk1-f194.google.com with SMTP id e2so6282390qkn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 05:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Vu9sPmSwjlIIyxeVV+nIDoN2mrKh5oZBm3cUmXN2F0=;
-        b=fLkwXSNnK6IqFCIvhPpSG8hJV9VK1nn31ZmxhWakpzkYlaXp/vvBL/UHC1MXmS5MnR
-         OQrg2Tc+gcJKbevpsNYJap2BghrI7RYcPKwNBVVUez5rAKfgOB5U+DsgUPR3QCuMp83P
-         rVlXjZF2gQmLUkEmkTyQfusq9vt9CNJ28WbtFb6i0Asmjt6lbgtf5RGs5W078sWnfOpW
-         ed8jOEWWHMjIlJb1V9ui/YHX854SeNfrtYQbgkkGvWQkMAAXelHtv9blG5V8eZOfTEOr
-         oZMXyDQz+GjzprGNrN02psX5/EV9as4xy3XI1ZVHbGlHxstGcnTbVT78a5QPc4c3kl4H
-         fA/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Vu9sPmSwjlIIyxeVV+nIDoN2mrKh5oZBm3cUmXN2F0=;
-        b=r60am+6GxoMO7YI0n49AcsjDQy2LAbuxIQs4SAjlQXYS7pZHeS2zhfkWd3C8kVCN/r
-         PwWUJ9ID3R8RDQN2Xg16s/zAufjfoquiKCO2jMYdnobxZCTB4w3I7SjjlDecTEGioA2X
-         atkpqSRGSHQQijx/NfCiqeSd+/dG40UpEMp+fNloIKchUvHHnY+PcLnbth4DoZpJan3j
-         3c9ZBdMmOTRfrSojX897G36uif8xf8RznXaPdZvU7XwXFIRq0GYLoq0JTNRBiVt6hgfV
-         tn8oLiQJpZ7FV714E0bsU2M9lY7Wtv26GVMKJjVMzOb0d0uUTRzpydHV37XnBrIQoKEn
-         zSfQ==
-X-Gm-Message-State: APjAAAXUSETveKGK0xVBBwJy+laOdgnlw1fbMU8HVlrDVmmXW48jbfcj
-        CJO2BpwFCNyITIq2If8reA8=
-X-Google-Smtp-Source: APXvYqyh6li4nW4Avsh1BcO2Ek4I2DGHryoCsxGRZhSz2AuPYGxEXaVx/8MhNMTfL4nvtk69iItKvw==
-X-Received: by 2002:a37:4841:: with SMTP id v62mr4116922qka.444.1574430180833;
-        Fri, 22 Nov 2019 05:43:00 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id p10sm1086046qte.63.2019.11.22.05.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 05:42:59 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8626940D3E; Fri, 22 Nov 2019 10:42:57 -0300 (-03)
-Date:   Fri, 22 Nov 2019 10:42:57 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf record: Fix perf_can_aux_sample_size()
-Message-ID: <20191122134257.GA9996@kernel.org>
-References: <20191122094856.10923-1-adrian.hunter@intel.com>
+        Fri, 22 Nov 2019 08:46:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbfKVNqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 08:46:30 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FE3420707;
+        Fri, 22 Nov 2019 13:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574430390;
+        bh=fkdRETN3AJcpu5k1ioWe29++qCP59kjN06kR6M3ytyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d3ai4feW6ozB6/XbNTZCj+FBjljZfgcKsnt6Mw4ZNUijK+Xxqul4VuDtRs+/RDYNV
+         lTv35ZpN5z1mE0kCaW0t5VAMAiWFuRQSAkEZc5dbCXZ+wc6yZas+zFgqDP2KeRYxOZ
+         Z13MW9VCQQ7xv8droBiXhd6vh2b64CNtBR2rmA2s=
+Date:   Fri, 22 Nov 2019 14:46:27 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+Message-ID: <20191122134627.GB2050590@kroah.com>
+References: <20191122100704.194776704@linuxfoundation.org>
+ <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
+ <20191122133931.GA2033651@kroah.com>
+ <20191122134131.GA2050590@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122094856.10923-1-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191122134131.GA2050590@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Nov 22, 2019 at 11:48:56AM +0200, Adrian Hunter escreveu:
-> perf_can_aux_sample_size() always returned true because it did not pass
-> the attribute size to sys_perf_event_open, nor correctly check the
-> return value and errno.
+On Fri, Nov 22, 2019 at 02:41:31PM +0100, Greg Kroah-Hartman wrote:
+> On Fri, Nov 22, 2019 at 02:39:31PM +0100, Greg Kroah-Hartman wrote:
+> > On Fri, Nov 22, 2019 at 01:14:28PM +0000, Jon Hunter wrote:
+> > > 
+> > > On 22/11/2019 10:26, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.4.203 release.
+> > > > There are 159 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > > The whole patch series can be found in one patch at:
+> > > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.203-rc1.gz
+> > > > or in the git tree and branch at:
+> > > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > > > and the diffstat can be found below.
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > > 
+> > > > -------------
+> > > > Pseudo-Shortlog of commits:
+> > > 
+> > > ...
+> > > 
+> > > > Marek Szyprowski <m.szyprowski@samsung.com>
+> > > >     ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+> > > 
+> > > The above commit is causing the following build error for ARM ...
+> > > 
+> > > Error: /dvs/git/dirty/git-master_l4t-upstream/kernel/arch/arm/boot/dts/exynos5250-arndale.dts:560.22-23 syntax error
+> > > FATAL ERROR: Unable to parse input tree
+> > > scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/exynos5250-arndale.dtb' failed
+> > > make[2]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
+> > 
+> > Ugh. I'll go drop this from 4.4.y, is it also an issue in the 4.9.y
+> > tree?
 > 
-> Before:
-> 
->   # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
->   Error:
->   The sys_perf_event_open() syscall returned with 7 (Argument list too long) for event (branch-misses:u).
->   /bin/dmesg | grep -i perf may provide additional information.
-> 
-> After:
-> 
->   # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
->   AUX area sampling is not supported by kernel
+> Ah, I see your other email now, so I'll leave it in 4.9.y and push out a
+> new 4.4.y tree now.
 
-Since this hasn't been sent to Ingo, I combined it with the patch that
-introduced the problem, this one:
+-rc2 is out now, with that patch removed, thanks.
 
-c31d79e7a052 perf record: Add a function to test for kernel support for AUX area sampling
-
-Thanks for the quick fix,
-
-- Arnaldo
-
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/util/record.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-> index e2321edcdd8f..7def66168503 100644
-> --- a/tools/perf/util/record.c
-> +++ b/tools/perf/util/record.c
-> @@ -143,6 +143,7 @@ bool perf_can_record_cpu_wide(void)
->  bool perf_can_aux_sample(void)
->  {
->  	struct perf_event_attr attr = {
-> +		.size = sizeof(struct perf_event_attr),
->  		.exclude_kernel = 1,
->  		/*
->  		 * Non-zero value causes the kernel to calculate the effective
-> @@ -158,7 +159,7 @@ bool perf_can_aux_sample(void)
->  	 * then we assume that it is supported. We are relying on the kernel to
->  	 * validate the attribute size before anything else that could be wrong.
->  	 */
-> -	if (fd == -E2BIG)
-> +	if (fd < 0 && errno == E2BIG)
->  		return false;
->  	if (fd >= 0)
->  		close(fd);
-> -- 
-> 2.17.1
-
--- 
-
-- Arnaldo
+greg k-h
