@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3140C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78286C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36A520718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422FA2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419777;
-	bh=5sAEPQ6C3izdvVEkVcjaWep+k5AXbl+VHCVHCcYnFlU=;
+	s=default; t=1574419781;
+	bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dt3ovlrnfR2g7oGCNOe9MSPDCzu4V7DKMsLg0XRKFBI6a0bhla+yb2pzgd31tz2qX
-	 sgOy45jx07j0Utu7uzjHI7T7dRN0Ll+qgzHeOxnsIAO9YcjJDbXnIj9m6oAnbulVYW
-	 kdiBvoMs3A+s2ClmDsahIyWDzjYYHTVEGKIobq2g=
+	b=K2xbS507q3mbSCLJfp7HMpQpVOhTc16JE7au3KcAtir/VQ2gbv3JRpHQhS8JN7PEs
+	 Fzk2YZaAVdsEU235FHfrKtFACC9QXv2/d3aLuBfHU5SDm66H2oW89UQKk1ykxcfMrw
+	 Xjm2k9Z+2buibzXXpVdv7UGGZz2Hhpnv35ZyWbJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbfKVKtg (ORCPT
+        id S1730046AbfKVKtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:49:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:49:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729465AbfKVKt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:49:28 -0500
+        id S1730031AbfKVKte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:49:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A64DD20715;
-        Fri, 22 Nov 2019 10:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C7592071F;
+        Fri, 22 Nov 2019 10:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419768;
-        bh=5sAEPQ6C3izdvVEkVcjaWep+k5AXbl+VHCVHCcYnFlU=;
+        s=default; t=1574419774;
+        bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2ySOzWCDGdn48wLbs5gUr/LFv+kzVSS/B98rgkYpz7JOij5EM+/BbkQzZh2OGQi+
-         uba64VZvwqIyZCwMzjrHK8nhL9kAmBU6mbAGd2NvLF/ADrXKmjksDZTWw1JRKAl35i
-         XQQ4CnraA+exje9eDPkg+qH6gnoQov/GE/etTsUY=
+        b=p3ddhxlwpb5r1bBnWow9Wp+OVZRuFaWJi608c09qRzKjJFsIUUW2+WmSfqeQ5PAMT
+         HR+W1JeD7XMT0xDKHYMSyKMvmN8G1u43k+BGAJ+301qltLVyANHUSo/QACPE4xFAVC
+         gOmW58vCohekyzrGfDQEm0UvDAY3KLLcfwOu9gEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Mike Marshall <hubcap@omnibond.com>,
+        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 215/222] orangefs: rate limit the client not running info message
-Date:   Fri, 22 Nov 2019 11:29:15 +0100
-Message-Id: <20191122100918.003934371@linuxfoundation.org>
+Subject: [PATCH 4.9 217/222] hwmon: (ina3221) Fix INA3221_CONFIG_MODE macros
+Date:   Fri, 22 Nov 2019 11:29:17 +0100
+Message-Id: <20191122100918.207823796@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
 
-[ Upstream commit 2978d873471005577e7b68a528b4f256a529b030 ]
+[ Upstream commit 791ebc9d34e9d212fc03742c31654b017d385926 ]
 
-Currently accessing various /sys/fs/orangefs files will spam the
-kernel log with the following info message when the client is not
-running:
+The three INA3221_CONFIG_MODE macros are not correctly defined here.
+The MODE3-1 bits are located at BIT 2-0 according to the datasheet.
 
-[  491.489284] sysfs_service_op_show: Client not running :-5:
+So this patch just fixes them by shifting all of them with a correct
+offset. However, this isn't a crital bug fix as the driver does not
+use any of them at this point.
 
-Rate limit this info message to make it less spammy.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/orangefs-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/ina3221.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
-index a799546a67f77..f6172c3f83ba0 100644
---- a/fs/orangefs/orangefs-sysfs.c
-+++ b/fs/orangefs/orangefs-sysfs.c
-@@ -315,7 +315,7 @@ static ssize_t sysfs_service_op_show(struct kobject *kobj,
- 	/* Can't do a service_operation if the client is not running... */
- 	rc = is_daemon_in_service();
- 	if (rc) {
--		pr_info("%s: Client not running :%d:\n",
-+		pr_info_ratelimited("%s: Client not running :%d:\n",
- 			__func__,
- 			is_daemon_in_service());
- 		goto out;
+diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
+index e6b49500c52ae..8c9555313fc3d 100644
+--- a/drivers/hwmon/ina3221.c
++++ b/drivers/hwmon/ina3221.c
+@@ -38,9 +38,9 @@
+ #define INA3221_WARN3			0x0c
+ #define INA3221_MASK_ENABLE		0x0f
+ 
+-#define INA3221_CONFIG_MODE_SHUNT	BIT(1)
+-#define INA3221_CONFIG_MODE_BUS		BIT(2)
+-#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
++#define INA3221_CONFIG_MODE_SHUNT	BIT(0)
++#define INA3221_CONFIG_MODE_BUS		BIT(1)
++#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(2)
+ 
+ #define INA3221_RSHUNT_DEFAULT		10000
+ 
 -- 
 2.20.1
 
