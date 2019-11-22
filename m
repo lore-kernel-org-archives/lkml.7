@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFD2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6144CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0954820659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5742071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402197;
-	bh=jQHII3kekIjKGDfMOcLc7BNncRQEMcbsFHnnxjyp1vE=;
+	s=default; t=1574402204;
+	bh=ghWIX+m6hgr7up8H2IEj/4iJDmGytA1qPuXv0RVTtfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NX87C8BbNSXflOEdT3B/5BONCbja/ZQ/9wLdJLfor21PVLbKGqH3aFEKBG67gy5rc
-	 f8umm7Or3zEL1WTz6BSYCx/ddjRWX/9eYW59cdoLGXJ0dZPec4buUzLWt8c5fm3617
-	 aMf6XrDb5wTqkvl6vLoXdtdoznXsg62kCzUaUPqQ=
+	b=zf+zUyB0DXbPTmJEXAUp3mXYpKYsy2D1p1d0ri3L+7Y7Vy1xRsvr26Tr0yrnKkuLI
+	 9XEQhWbsGF/mDsqd2UhnwrGzHum0o0c86UIiGSWSMDsby7G1t24LIf8/4Eoy2XzvCE
+	 sHdUgMqvSqwWTOY6SDWccf/ddOwfx6JN3Ttoy2QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfKVF4f (ORCPT
+        id S1728189AbfKVF4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbfKVF4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:25 -0500
+        id S1729188AbfKVF4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD3EB2071B;
-        Fri, 22 Nov 2019 05:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4967B20717;
+        Fri, 22 Nov 2019 05:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402184;
-        bh=jQHII3kekIjKGDfMOcLc7BNncRQEMcbsFHnnxjyp1vE=;
+        s=default; t=1574402196;
+        bh=ghWIX+m6hgr7up8H2IEj/4iJDmGytA1qPuXv0RVTtfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxbzHQvpX+zpqfqS2r+p68LeFowzlVIbLf31yoMlbjoSmLLJfzCWxEYWmb0bkgy1Q
-         lLaMffvEinTfky3gNKWxFjzmmicaFoY/n+WqxJkfG4PzNBGcAjFCArxdWYokjjD14/
-         q0P1NLlBIyG0JgrBVw8TUocovrDfRKKUxTQ79BoM=
+        b=xWnjU3Q1wTlwOFD/uMJsgMFHk5ky9dh88lkqS2ebLvJs3wR4dfLgp/56dq803eaUZ
+         U2RWQDZX0nOtLum1dfmToSrzKTamR93qGeGFKgTw8Gzd/9JAr4KQG7RpWQD3LpWMQw
+         gRu24tD4MYwNL2Xhn2B9ghWxH1WeCjFQ+BlJPx9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.14 035/127] xen/pciback: Check dev_data before using it
-Date:   Fri, 22 Nov 2019 00:54:13 -0500
-Message-Id: <20191122055544.3299-34-sashal@kernel.org>
+Cc:     Peter Hutterer <peter.hutterer@who-t.net>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 045/127] HID: doc: fix wrong data structure reference for UHID_OUTPUT
+Date:   Fri, 22 Nov 2019 00:54:23 -0500
+Message-Id: <20191122055544.3299-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,36 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Peter Hutterer <peter.hutterer@who-t.net>
 
-[ Upstream commit 1669907e3d1abfa3f7586e2d55dbbc117b5adba2 ]
+[ Upstream commit 46b14eef59a8157138dc02f916a7f97c73b3ec53 ]
 
-If pcistub_init_device fails, the release function will be called with
-dev_data set to NULL.  Check it before using it to avoid a NULL pointer
-dereference.
-
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/pci_stub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/hid/uhid.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 9e480fdebe1f0..8c250f4a3a97a 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -106,7 +106,8 @@ static void pcistub_device_release(struct kref *kref)
- 	 * is called from "unbind" which takes a device_lock mutex.
- 	 */
- 	__pci_reset_function_locked(dev);
--	if (pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
-+	if (dev_data &&
-+	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
- 		dev_info(&dev->dev, "Could not reload PCI state\n");
- 	else
- 		pci_restore_state(dev);
+diff --git a/Documentation/hid/uhid.txt b/Documentation/hid/uhid.txt
+index c8656dd029a91..958fff9453044 100644
+--- a/Documentation/hid/uhid.txt
++++ b/Documentation/hid/uhid.txt
+@@ -160,7 +160,7 @@ them but you should handle them according to your needs.
+   UHID_OUTPUT:
+   This is sent if the HID device driver wants to send raw data to the I/O
+   device on the interrupt channel. You should read the payload and forward it to
+-  the device. The payload is of type "struct uhid_data_req".
++  the device. The payload is of type "struct uhid_output_req".
+   This may be received even though you haven't received UHID_OPEN, yet.
+ 
+   UHID_GET_REPORT:
 -- 
 2.20.1
 
