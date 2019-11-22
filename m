@@ -2,246 +2,143 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D97C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2E8C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862CA20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1195520708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWeJYkyw"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="gL9uuZzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfKVXxx (ORCPT
+        id S1726784AbfKVX4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:53:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47208 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726948AbfKVXxv (ORCPT
+        Fri, 22 Nov 2019 18:56:41 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:39321 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKVX4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 18:53:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574466830;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NOGkY4foGqbdnpZbcMiOQpwjMwXw9GwTN5p3QDTd77E=;
-        b=FWeJYkywRLw89xbD1pdwqkyHuBW6Yskgb5LGaWgmydLkzced8TWtIg4LHx/AxcUl6Qz0Af
-        4g1eBfSKhvgvtgGsHAk5xaQGUSdERD1MgIkw0rPECIY4LH/EkxdOyAcUeCmyqFVkJPWF7E
-        jGf+cWKXGYRgZY0cf9pjqYFIPwXmaTs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-ccp0u32WPuykWAMXE7w2NQ-1; Fri, 22 Nov 2019 18:53:47 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 22 Nov 2019 18:56:41 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3EB3B107ACE3;
-        Fri, 22 Nov 2019 23:53:46 +0000 (UTC)
-Received: from max.com (ovpn-204-21.brq.redhat.com [10.40.204.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA83B5C1BB;
-        Fri, 22 Nov 2019 23:53:42 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>, cluster-devel@redhat.com,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <sfrench@samba.org>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [RFC PATCH 3/3] gfs2: Rework read and page fault locking
-Date:   Sat, 23 Nov 2019 00:53:24 +0100
-Message-Id: <20191122235324.17245-4-agruenba@redhat.com>
-In-Reply-To: <20191122235324.17245-1-agruenba@redhat.com>
-References: <20191122235324.17245-1-agruenba@redhat.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 5BB3523CF6;
+        Sat, 23 Nov 2019 00:56:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1574466998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2wYKqowHZF70WSP1d52Q0JHjl6M9p6nOKp+WhorwInE=;
+        b=gL9uuZzWxZDc/xSHj57mNJO4Z767FlRG9LKgWosSBtm23/8jPY57vcQo1tFsztVwmJL/3G
+        +khMMww0K+XSKy643tnqhqCE5h8hetkv6TYEbJ9wSU9UFWOKacz6Wo9qfocr9qZ2xTskJQ
+        udUjonqhridtPnM4RbKVQVmdZmVDa6o=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] dt-bindings: clock: document the fsl-sai driver
+Date:   Sat, 23 Nov 2019 00:56:21 +0100
+Message-Id: <20191122235622.8818-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: ccp0u32WPuykWAMXE7w2NQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 5BB3523CF6
+X-Spamd-Result: default: False [6.40 / 15.00];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.661];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the glock lock taking code from the ->readpage and ->readpages
-address space operations to the ->read_iter file and ->fault vm
-operations.
-
-To avoid taking the lock even when an operation can be satisfied out of
-the page cache, try the operation without taking the lock first.  When
-that fails, take the lock and repeat the opeation.
-
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- fs/gfs2/aops.c | 36 ++++++---------------------
- fs/gfs2/file.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 71 insertions(+), 31 deletions(-)
+ .../bindings/clock/fsl,sai-clock.yaml         | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
 
-diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-index b9fe975d7625..4aa6c952eb90 100644
---- a/fs/gfs2/aops.c
-+++ b/fs/gfs2/aops.c
-@@ -515,26 +515,10 @@ static int __gfs2_readpage(void *file, struct page *p=
-age)
-=20
- static int gfs2_readpage(struct file *file, struct page *page)
- {
--=09struct address_space *mapping =3D page->mapping;
--=09struct gfs2_inode *ip =3D GFS2_I(mapping->host);
--=09struct gfs2_holder gh;
- =09int error;
-=20
--=09unlock_page(page);
--=09gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
--=09error =3D gfs2_glock_nq(&gh);
--=09if (unlikely(error))
--=09=09goto out;
--=09error =3D AOP_TRUNCATED_PAGE;
--=09lock_page(page);
--=09if (page->mapping =3D=3D mapping && !PageUptodate(page))
--=09=09error =3D __gfs2_readpage(file, page);
--=09else
--=09=09unlock_page(page);
--=09gfs2_glock_dq(&gh);
--out:
--=09gfs2_holder_uninit(&gh);
--=09if (error && error !=3D AOP_TRUNCATED_PAGE)
-+=09error =3D __gfs2_readpage(file, page);
-+=09if (error)
- =09=09lock_page(page);
- =09return error;
- }
-@@ -602,18 +586,12 @@ static int gfs2_readpages(struct file *file, struct a=
-ddress_space *mapping,
- =09struct inode *inode =3D mapping->host;
- =09struct gfs2_inode *ip =3D GFS2_I(inode);
- =09struct gfs2_sbd *sdp =3D GFS2_SB(inode);
--=09struct gfs2_holder gh;
--=09int ret;
-+=09int ret =3D 0;
-=20
--=09gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
--=09ret =3D gfs2_glock_nq(&gh);
--=09if (unlikely(ret))
--=09=09goto out_uninit;
--=09if (!gfs2_is_stuffed(ip))
--=09=09ret =3D mpage_readpages(mapping, pages, nr_pages, gfs2_block_map);
--=09gfs2_glock_dq(&gh);
--out_uninit:
--=09gfs2_holder_uninit(&gh);
-+=09if (gfs2_is_stuffed(ip))
-+=09=09goto out;
-+=09ret =3D mpage_readpages(mapping, pages, nr_pages, gfs2_block_map);
-+out:
- =09if (unlikely(test_bit(SDF_WITHDRAWN, &sdp->sd_flags)))
- =09=09ret =3D -EIO;
- =09return ret;
-diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
-index 997b326247e2..207d39996353 100644
---- a/fs/gfs2/file.c
-+++ b/fs/gfs2/file.c
-@@ -524,8 +524,34 @@ static vm_fault_t gfs2_page_mkwrite(struct vm_fault *v=
-mf)
- =09return block_page_mkwrite_return(ret);
- }
-=20
-+static vm_fault_t gfs2_fault(struct vm_fault *vmf)
-+{
-+=09struct inode *inode =3D file_inode(vmf->vma->vm_file);
-+=09struct gfs2_inode *ip =3D GFS2_I(inode);
-+=09struct gfs2_holder gh;
-+=09vm_fault_t ret;
-+=09int err;
+diff --git a/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
+new file mode 100644
+index 000000000000..7116c8bc24d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/fsl,sai-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+=09vmf->flags |=3D FAULT_FLAG_CACHED;
-+=09ret =3D filemap_fault(vmf);
-+=09vmf->flags &=3D ~FAULT_FLAG_CACHED;
-+=09if (!(ret & VM_FAULT_RETRY))
-+=09=09return ret;
-+=09gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-+=09err =3D gfs2_glock_nq(&gh);
-+=09if (err) {
-+=09=09ret =3D block_page_mkwrite_return(err);
-+=09=09goto out_uninit;
-+=09}
-+=09ret =3D filemap_fault(vmf);
-+=09gfs2_glock_dq(&gh);
-+out_uninit:
-+=09gfs2_holder_uninit(&gh);
-+=09return ret;
-+}
++title: Freescale SAI bitclock-as-a-clock binding
 +
- static const struct vm_operations_struct gfs2_vm_ops =3D {
--=09.fault =3D filemap_fault,
-+=09.fault =3D gfs2_fault,
- =09.map_pages =3D filemap_map_pages,
- =09.page_mkwrite =3D gfs2_page_mkwrite,
- };
-@@ -778,15 +804,51 @@ static ssize_t gfs2_file_direct_write(struct kiocb *i=
-ocb, struct iov_iter *from)
-=20
- static ssize_t gfs2_file_read_iter(struct kiocb *iocb, struct iov_iter *to=
-)
- {
-+=09struct gfs2_inode *ip;
-+=09struct gfs2_holder gh;
-+=09size_t written =3D 0;
- =09ssize_t ret;
-=20
-+=09gfs2_holder_mark_uninitialized(&gh);
- =09if (iocb->ki_flags & IOCB_DIRECT) {
- =09=09ret =3D gfs2_file_direct_read(iocb, to);
- =09=09if (likely(ret !=3D -ENOTBLK))
- =09=09=09return ret;
- =09=09iocb->ki_flags &=3D ~IOCB_DIRECT;
- =09}
--=09return generic_file_read_iter(iocb, to);
-+=09iocb->ki_flags |=3D IOCB_CACHED;
-+=09ret =3D generic_file_read_iter(iocb, to);
-+=09iocb->ki_flags &=3D ~IOCB_CACHED;
-+=09if (ret >=3D 0) {
-+=09=09if (!iov_iter_count(to))
-+=09=09=09return ret;
-+=09=09written =3D ret;
-+=09} else {
-+=09=09switch(ret) {
-+=09=09case -EAGAIN:
-+=09=09=09if (iocb->ki_flags & IOCB_NOWAIT)
-+=09=09=09=09return ret;
-+=09=09=09break;
-+=09=09case -ECANCELED:
-+=09=09=09break;
-+=09=09default:
-+=09=09=09return ret;
-+=09=09}
-+=09}
-+=09ip =3D GFS2_I(iocb->ki_filp->f_mapping->host);
-+=09gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-+=09ret =3D gfs2_glock_nq(&gh);
-+=09if (ret)
-+=09=09goto out_uninit;
-+=09ret =3D generic_file_read_iter(iocb, to);
-+=09if (ret > 0)
-+=09=09written +=3D ret;
-+=09if (gfs2_holder_initialized(&gh))
-+=09=09gfs2_glock_dq(&gh);
-+out_uninit:
-+=09if (gfs2_holder_initialized(&gh))
-+=09=09gfs2_holder_uninit(&gh);
-+=09return written ? written : ret;
- }
-=20
- /**
---=20
++maintainers:
++  - Michael Walle <michael@walle.cc>
++
++description: |
++  It is possible to use the BCLK pin of a SAI module as a generic clock
++  output. Some SoC are very constrained in their pin multiplexer
++  configuration. Eg. pins can only be changed groups. For example, on the
++  LS1028A SoC you can only enable SAIs in pairs. If you use only one SAI,
++  the second pins are wasted. Using this binding it is possible to use the
++  clock of the second SAI as a MCLK clock for an audio codec, for example.
++
++  This is a composite of a gated clock and a divider clock.
++
++properties:
++  compatible:
++    const: fsl,vf610-sai-clock
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++examples:
++  - |
++    mclk: clock-mclk@f130080 {
++        compatible = "fsl,vf610-sai-clock";
++        reg = <0x0 0xf130080 0x0 0x80>;
++        #clock-cells = <0>;
++        clocks = <&parentclk>;
++    };
+-- 
 2.20.1
 
