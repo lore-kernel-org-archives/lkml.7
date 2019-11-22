@@ -2,119 +2,136 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE88DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E37C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994BA20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED4820714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:22:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYyWEbnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfKVQVZ (ORCPT
+        id S1727483AbfKVQWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:21:25 -0500
-Received: from nl101-2.vfemail.net ([149.210.219.31]:60817 "EHLO
-        freequeue.vfemail.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726638AbfKVQVZ (ORCPT
+        Fri, 22 Nov 2019 11:22:10 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41856 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVQWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:21:25 -0500
-Received: (qmail 26028 invoked from network); 22 Nov 2019 16:19:55 -0000
-Received: from nl101-2.vfemail.net (bmE=@149.210.219.31)
-  by freequeue.vfemail.net with (DHE-RSA-AES256-SHA encrypted) SMTP; 22 Nov 2019 16:19:55 -0000
-Received: (qmail 48931 invoked from network); 21 Nov 2019 01:50:23 -0000
-Received: by simscan 1.4.0 ppid: 48800, pid: 48884, t: 0.3604s
-         scanners:none
-Received: from unknown (HELO Phenom-II-x6.niklas.com) (SGdudGt3aXNAdmZlbWFpbC5uZXQ=@192.168.1.192)
-  by nl101.vfemail.net with ESMTPA; 21 Nov 2019 01:50:22 -0000
-X-Assp-Version: 2.6.3(19169) on ASSP.nospam
-X-Assp-ID: ASSP.nospam m1-01105-10555
-X-Assp-Session: 7F93C5ACC9E8 (mail 1)
-X-Assp-Envelope-From: Hgntkwis@vfemail.net
-X-Assp-Intended-For: pozega.tomislav@gmail.com
-X-Assp-Intended-For: linux-kernel@vger.kernel.org
-X-Assp-Client-TLS: yes
-Received: from 71-208-83-203.ftmy.qwest.net ([71.208.83.203]
-         helo=Phenom-II-x6.niklas.com) by ASSP.nospam with SMTPSA(TLSv1_2
-         ECDHE-RSA-AES256-GCM-SHA384) (2.6.3); 21 Nov 2019 01:51:42 +0000
-Date:   Wed, 20 Nov 2019 20:51:19 -0500
-From:   David Niklas <Hgntkwis@vfemail.net>
-To:     Tom Psyborg <pozega.tomislav@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] why do sensors break CPU scaling
-Message-ID: <20191120205119.41cd5989@Phenom-II-x6.niklas.com>
-In-Reply-To: <CAKR_QVLJZPDfjbQ4CBDv62ok0qG4jq_M_Baq6eaot6GzrKMMwA@mail.gmail.com>
-References: <CAKR_QVLJZPDfjbQ4CBDv62ok0qG4jq_M_Baq6eaot6GzrKMMwA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Fri, 22 Nov 2019 11:22:10 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m4so8019301ljj.8;
+        Fri, 22 Nov 2019 08:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ykwPMbHIRKgLrVpSpWF8yIw4jd/QEDDbiLYlnpgiqSI=;
+        b=aYyWEbnDZW6Y3pbQjaivmMd8tp9cF7ULcfzumRtyQReRZXek4w0sbzD4eUBdg0JE3b
+         sUVwwSqB/FOV7j7TQ7Tkww7sjnIRZTTUh6vVPHkg3cKfTA3o9EhkxYJQub+Tla0Tx/6G
+         UI2nzfTzxrKMd+8KSEyORBtenIqbFwcSU0pDEhNjB8UwxuKBnyvLkQd2/OLnGk7o4Vgp
+         5GRNg7DttdKOkEBDVhLDKN6SJ6Ap3Pd6M2hBo7WnaSPy6L1Dhwk84+1/LJcvHx96+KA9
+         ze+6MMe4hgXwpKpGv7Z+4GBNvST7X36o7+HtxNaC3fuA3oo9aC0rY4/KwmAtmRmtvegK
+         Yx6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ykwPMbHIRKgLrVpSpWF8yIw4jd/QEDDbiLYlnpgiqSI=;
+        b=bWqfdtpuXtXU8MJxj8TUhkzQeBQZC9OOiOJCPeZwvZd5JGDAC+wY2f42WrTcJfQ9T2
+         bxou6DpD2CRTLrynuV3gJvQCqMRbicQCTDwj7sfSQkGaDntNYzznfYuujfeMFP/NPehT
+         i6T+okhO4pq8cs9k7OkOdXIo4if6hZrpPfy1slM0AxTBkx9KjpYRLGwZIDTWYRrlZtjS
+         uFS9E6204J71AwkwsHiSzjnEuFOYCQUjefgUxZCc3LXrVyj2qndCmSf1EshQ+O8Ze3VF
+         rWwz+y+TEvf8Ne3iTwBs1EPAxJtGNwV0EU11Xk11TCk01Pfw2Jsu9J4z3RNGfUJgBhVp
+         fRSw==
+X-Gm-Message-State: APjAAAXIFrFFsRIe+KKw8EBhwniDAGIdGrh8z0Crqlc08xyZRXcdC7i2
+        lIQyYTSq33xyI8bYKjmGzYWwqwJOAHIfwH1VPBA=
+X-Google-Smtp-Source: APXvYqxx1GyP5F+ZOvgpKTjMKTAnsDhbPnJsEFf7YDLg/RvrkoqvPDe/pDx2fHxwvW0O1wDgiuNIFRu+JFSthZOpKiQ=
+X-Received: by 2002:a2e:9016:: with SMTP id h22mr12761538ljg.137.1574439727760;
+ Fri, 22 Nov 2019 08:22:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191120154148.22067-1-orson.zhai@unisoc.com> <20191120154148.22067-3-orson.zhai@unisoc.com>
+ <CAK8P3a0x83ueAiCjLg30csc9t7VtZLEbvTp1SsbNDnwCXmWRGA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0x83ueAiCjLg30csc9t7VtZLEbvTp1SsbNDnwCXmWRGA@mail.gmail.com>
+From:   Orson Zhai <orsonzhai@gmail.com>
+Date:   Sat, 23 Nov 2019 00:21:55 +0800
+Message-ID: <CA+H2tpHtb8HHkBoaN0jsifq0oP2H=Mi8JcFwE0g6CaOLnD9aqQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] mfd: syscon: Find syscon by names with arguments support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kevin Tang <kevin.tang@unisoc.com>, baolin.wang@unisoc.com,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 21:42:12 +0100
-Tom Psyborg <pozega.tomislav@gmail.com> wrote:
-> Hi
-> 
-> Recently I've needed to set lowest CPU scaling profile, running ubuntu
-> 16.04.06 I used standard approach - echoing powersave to
-> /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor.
-> This did not work as the
-> /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq kept returning
-> max scaling freq.
-> 
-> During testing of ubuntu 19.10 I've found that the above approach
-> actually does work, but as long as there are no xsensors (or just
-> sensors from cli) being run.
-> cpuinfo_cur_freq in this case was returning variable values +- 1% of
-> around 1.4GHz.
-> As soon as I issue sensors command cpuinfo_cur_freq jumps to 3.5GHz
-> for a fraction of second and returns back to 1.4GHz afterwards. If
-> running xsensors it keeps bouncing between 1.4 and 3.5GHz all the
-> time.
-> 
-> Rebooted back to 16.04.6 and was able to set lowest CPU scaling freq
-> as well, but issuing sensors command here once just breaks CPU scaling
-> that now remains at about 3.5GHz.
-> It can be set to lowest scaling freq again without rebooting but it
-> needs to change scaling_governor for all cores to something else and
-> then back to powersave.
-> 
-> Why is this happening, shouldn't sensors command just read temp/fan
-> values without writing to any of the CPU control registers?
+On Thu, Nov 21, 2019 at 11:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Nov 20, 2019 at 4:44 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
+> >
+> > There are a lot of global registers used across multiple similar SoCs
+> > from Unisoc. It is not easy to manage all of them very well by current
+> > syscon helper functions.
+> >
+> > Add helper functions to get regmap and arguments by syscon-names all
+> > together.
+> >
+> > This patch does not affect original syscon code and usage. It may help
+> > other SoC vendors if they have the same trouble as well.
+> >
+> > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> > ---
+> >  drivers/mfd/syscon.c       | 75 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/syscon.h | 26 +++++++++++++
+> >  2 files changed, 101 insertions(+)
+> >
+> > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> > index 660723276481..e818decc7bf2 100644
+> > --- a/drivers/mfd/syscon.c
+> > +++ b/drivers/mfd/syscon.c
+> > @@ -225,6 +225,81 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+> >  }
+> >  EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+> >
+> > +struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
+> > +                                       const char *list_name,
+> > +                                       const char *cell_name)
+> > +{
+>
+> According to the binding change I suggested, this would not take a 'cell_name'
+> argument, but instead a an arg_count.
 
-I don't know if the maintainers will notice your email, but I did. I
-don't guarantee that they'll notice or help you, but this should assist
-you in writing a proper question.
-You need to include the output of uname -a on both ubuntu boxes. The
-output of:
-dpkg -l xsensors
-dpkg -l lm-sensors
+Got it. This is much convenient for caller.
 
-The information on which processor you own and the motherboard and
-it's BIOS version just in case.
+>
+> > +
+> > +int syscon_get_args_by_name(struct device_node *np,
+> > +                       const char *list_name,
+> > +                       const char *cell_name,
+> > +                       int arg_count,
+> > +                       unsigned int *out_args)
+> > +{
+>
+> and I think this could be combined with it, like
+>
+> struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
+>                                        const char *name, int
+> arg_count, __u32 *out_args)
 
-This is just my understanding and it might be wrong, but the CPU is
-probably accessed to do the request to the fan values and so it ramps up
-expecting to have to deal with a more intense workload (which is exactly
-what Ryzen and several newer Intel processors are supposed to do), and so
-you're seeing expected behavior.
-I've no idea how you'd change this.
-Alternatively, and this is just a theory, you could have some program on
-the system changing the behavior of the CPU just after you change it to
-what you want it to be. As in, inotify is involved.
+Ok, I'll send V3 next week.
 
-You're welcome,
-David
-
--------------------------------------------------
-This free account was provided by VFEmail.net - report spam to abuse@vfemail.net
- 
-ONLY AT VFEmail! - Use our Metadata Mitigator to keep your email out of the NSA's hands!
-$24.95 ONETIME Lifetime accounts with Privacy Features!  
-15GB disk! No bandwidth quotas!
-Commercial and Bulk Mail Options!  
+Best,
+-Orson
+>
+>     Arnd
