@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BA6C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806C2C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631B720721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D61220721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420448;
-	bh=3/Uq4ZXq7sa6LCZZyXYuOU63UAjEPvJQybSyyern0yY=;
+	s=default; t=1574420450;
+	bh=m9VhWDbXbHgBh8aFo56pVeSLUAJfO+QY+O/6sQJbDBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sADerS4F+qpP9ake4tzQrVz5RDa7wVTx6YMDTehvLFcawqGOQUk8dqQDLFtOr/frW
-	 qkKzSJr0iAoIfS9WiPunTcBMrj4PnRoWaOfYGEl5hAyx/oe+WnxVWwAJa7Wa584PuG
-	 XJ5lRoC4IT8oLfPvce0hwRB1IXlfvLXNNGw3AwWc=
+	b=X7UbBwReq0O+Ovgwpq7n3mAdsyzwo7BEyp24tbeas6fD9OJ9rvhsdxJ82IKwJydVC
+	 ZCb61Zz78khZ1pMEiwG/MeOZ+YFKzQ3eiLX46TIAswQGuWT+bqVfKjG7KUrpWEOWZ3
+	 OtTSVxl8tjImFYaOaGkN418cyXCKgohtWNo+JyBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbfKVLAr (ORCPT
+        id S1731082AbfKVLAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:00:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:00:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbfKVLAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:00:43 -0500
+        id S1730440AbfKVLAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:00:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3969B20721;
-        Fri, 22 Nov 2019 11:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0CE92073B;
+        Fri, 22 Nov 2019 11:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420442;
-        bh=3/Uq4ZXq7sa6LCZZyXYuOU63UAjEPvJQybSyyern0yY=;
+        s=default; t=1574420445;
+        bh=m9VhWDbXbHgBh8aFo56pVeSLUAJfO+QY+O/6sQJbDBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KM0WrTuhIST3q5olYZBc0wyK3oeOZuEk5rTcLx0J6/Lyq0DyWz2cfrAFZdOMyaYkT
-         peH9shnVrsuQFqST18EcMgZVKmr12+HRacrnu+JDXQWkq62CXYj4YSQC548A3RV0lW
-         EnlWgiq1F+VkIJ9VNOR2IaMGp5bvMH3WlpUBhVik=
+        b=VErxQdVBMubsjiIEmWqcnAVuPORKjr4GlqhgCCl2jWdZSSkIPh3W27Dv7uO5RoCH7
+         o4TbVYzIrrsbIichdo1sqLKcxRT+iGwE0FLFX4lCDOn7ZrEh8xnNX10fP2Bb5h/667
+         dZXMQbCdtnABpZUz/WevfQ9lN9S9zPdTI769Lqxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, SolidHal <hal@halemmerich.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 107/220] USB: serial: cypress_m8: fix interrupt-out transfer length
-Date:   Fri, 22 Nov 2019 11:27:52 +0100
-Message-Id: <20191122100920.470437477@linuxfoundation.org>
+Subject: [PATCH 4.19 108/220] usb: dwc2: disable power_down on rockchip devices
+Date:   Fri, 22 Nov 2019 11:27:53 +0100
+Message-Id: <20191122100920.538922656@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -59,36 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: SolidHal <hal@halemmerich.com>
 
-[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
+[ Upstream commit c216765d3a1defda5e7e2dabd878f99f0cd2ebf2 ]
 
-Fix interrupt-out transfer length which was being set to the
-transfer-buffer length rather than the size of the outgoing packet.
+ The bug would let the usb controller enter partial power down,
+ which was formally known as hibernate, upon boot if nothing was plugged
+ in to the port. Partial power down couldn't be exited properly, so any
+ usb devices plugged in after boot would not be usable.
 
-Note that no slab data was leaked as the whole transfer buffer is always
-cleared before each transfer.
+ Before the name change, params.hibernation was false by default, so
+ _dwc2_hcd_suspend() would skip entering hibernation. With the
+ rename, _dwc2_hcd_suspend() was changed to use  params.power_down
+ to decide whether or not to enter partial power down.
 
-Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+ Since params.power_down is non-zero by default, it needs to be set
+ to 0 for rockchip devices to restore functionality.
+
+ This bug was reported in the linux-usb thread:
+ REGRESSION: usb: dwc2: USB device not seen after boot
+
+ The commit that caused this regression is:
+6d23ee9caa6790aea047f9aca7f3c03cb8d96eb6
+
+Signed-off-by: SolidHal <hal@halemmerich.com>
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/cypress_m8.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc2/params.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
-index e0035c0231202..2c58649fd47a4 100644
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -769,7 +769,7 @@ static void cypress_send(struct usb_serial_port *port)
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index dff2c6e8d797c..a93415f33bf36 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -88,6 +88,7 @@ static void dwc2_set_rk_params(struct dwc2_hsotg *hsotg)
+ 	p->host_perio_tx_fifo_size = 256;
+ 	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
+ 		GAHBCFG_HBSTLEN_SHIFT;
++	p->power_down = 0;
+ }
  
- 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
- 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
--		port->interrupt_out_buffer, port->interrupt_out_size,
-+		port->interrupt_out_buffer, actual_size,
- 		cypress_write_int_callback, port, priv->write_urb_interval);
- 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
- 	if (result) {
+ static void dwc2_set_ltq_params(struct dwc2_hsotg *hsotg)
 -- 
 2.20.1
 
