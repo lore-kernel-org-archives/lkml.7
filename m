@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8518CC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB07DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9332070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72AD72071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452358;
-	bh=UvXNQJIdPf8WAaILk8OqsujAnyi0cKyXbCQAAaoulws=;
+	s=default; t=1574452368;
+	bh=C+M+dkqlPuWxaT4c3/MwIJpUvrvzuALHtnCxEPl+/7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOBYKsPJoOb15hO60M03S8jbUblgw1OncEegjR3frB3IORP58A9mYVnOTvKaJaD+S
-	 RjppbODDfp/EX8g58MWOrquH4cfQh+Nx8+udyXlJw4rrgqLKHzGfftVM494lShoLug
-	 TrZLFx9XQQfBlXINA2q5YUggRcWCB3I0XOHLsUq8=
+	b=0EGK4nCcxZhnHT4d8o4//ZvFG384yQuSw3ZdHsZwfKBGHaWMgOHPyRmoPBWFV5sDk
+	 7TljJVuHQn2cVYteg20Ketni7LYGpdaEAyKcxniDpNFPaumaT4q+SLwBSa5YEKvq9I
+	 31sp91mIA42CyBf4NQ2N0VdBpiTpNlT6sUab7s4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKVTwh (ORCPT
+        id S1728053AbfKVTwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:52:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49950 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:52:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfKVTts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:48 -0500
+        id S1727561AbfKVTtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E28802072D;
-        Fri, 22 Nov 2019 19:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DFB620658;
+        Fri, 22 Nov 2019 19:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452187;
-        bh=UvXNQJIdPf8WAaILk8OqsujAnyi0cKyXbCQAAaoulws=;
+        s=default; t=1574452185;
+        bh=C+M+dkqlPuWxaT4c3/MwIJpUvrvzuALHtnCxEPl+/7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lSVG0ZDoCCWdiMjiVgjxHcIadyptifA1GNCFKsw8rUXjzztav1JGLXGsfomAAqLen
-         XLU0ofXvZrihj+zbAIKJdXYTTkNh/Q0D6rtyWbp0BrqfXl28LC+5EqkYjC+PK23BCa
-         +POI288DGXlSoe9F5ohK3Pk/l/a7I9gUb0YNssOA=
+        b=e6fByvoxX1J3nSN+yW8EdvrxFu/sBLJCBifq1lk7fIvBRI9dOyROz7eJN1G96i/QZ
+         5kJRZqoQ06W2F9e6om/LyAjPFA9oK08a7K9UvBP1+HuLp/Mbg18p+2QBl6CZgpcxNr
+         p6xZtVu0HsXHeTVN7PRWqEN6QAYgbkhbOSV+tqWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/21] slip: Fix memory leak in slip_open error path
-Date:   Fri, 22 Nov 2019 14:49:23 -0500
-Message-Id: <20191122194931.24732-13-sashal@kernel.org>
+Cc:     paulhsia <paulhsia@chromium.org>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 11/21] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
+Date:   Fri, 22 Nov 2019 14:49:21 -0500
+Message-Id: <20191122194931.24732-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194931.24732-1-sashal@kernel.org>
 References: <20191122194931.24732-1-sashal@kernel.org>
@@ -61,58 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: paulhsia <paulhsia@chromium.org>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+If the nullity check for `substream->runtime` is outside of the lock
+region, it is possible to have a null runtime in the critical section
+if snd_pcm_detach_substream is called right before the lock.
 
-Here is the slcan memory leak trace reported by Syzkaller:
-
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: paulhsia <paulhsia@chromium.org>
+Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/core/pcm_lib.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index 436dd78c396a7..2901b7db9d2e1 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -859,6 +859,7 @@ static int slip_open(struct tty_struct *tty)
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 729a85a6211d6..80453266a2def 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -1803,11 +1803,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ 	struct snd_pcm_runtime *runtime;
+ 	unsigned long flags;
  
- err_exit:
- 	rtnl_unlock();
+-	if (PCM_RUNTIME_CHECK(substream))
++	if (snd_BUG_ON(!substream))
+ 		return;
+-	runtime = substream->runtime;
+ 
+ 	snd_pcm_stream_lock_irqsave(substream, flags);
++	if (PCM_RUNTIME_CHECK(substream))
++		goto _unlock;
++	runtime = substream->runtime;
++
+ 	if (!snd_pcm_running(substream) ||
+ 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
+ 		goto _end;
+@@ -1818,6 +1821,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ #endif
+  _end:
+ 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
++ _unlock:
+ 	snd_pcm_stream_unlock_irqrestore(substream, flags);
+ }
+ EXPORT_SYMBOL(snd_pcm_period_elapsed);
 -- 
 2.20.1
 
