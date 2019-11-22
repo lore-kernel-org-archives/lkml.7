@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186C0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CE9C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA54320708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB6020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452540;
-	bh=RMU+j1b3rdYpll2TEz7BS3KRzXTt9ztKT5vT+A53UPA=;
+	s=default; t=1574452547;
+	bh=Nv/n3brY2CWRc86fq5lS7SV4fTgPvSZAfDCEWuQaBdw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=C3G478GQ+QmOop+Qqjnhv1gDWKtM1LvEp0ALMnG2DxPlPuNFJh6HM0UXEfSf7s3c/
-	 SkZV0Thep1/46zzkITctX/7Fb5aAY+xaOB5RKkUfwHSRmiyUMC7lWUCha4mwwci+yO
-	 eKNZzsCC10mD8vji1iwtaiK/MPe44IpaTvhoT0H0=
+	b=N45A7Bvl3PD+cbj8jsZBUEtVnJGES+LXkBwCunRmDKjSFQ08aB3jM5gVtIWuKs5be
+	 Ly54ff4VRkKK6Kh5NeUTVM7xteYcThzzOIBSNaTF7cEidiWAMUmFv5/jlWXkQH0th2
+	 ZMf+kiKJPOd/s7RcRnpfquta+8YN3enSEDKPS/QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfKVTzi (ORCPT
+        id S1727804AbfKVTzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:55:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:52158 "EHLO foss.arm.com"
+        Fri, 22 Nov 2019 14:55:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:52174 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfKVTzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:55:36 -0500
+        id S1726546AbfKVTzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:55:44 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 287EB113E;
-        Fri, 22 Nov 2019 11:55:36 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE56113E;
+        Fri, 22 Nov 2019 11:55:43 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B87E3F6C4;
-        Fri, 22 Nov 2019 11:55:35 -0800 (PST)
-Date:   Fri, 22 Nov 2019 19:55:34 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A5BF3F6C4;
+        Fri, 22 Nov 2019 11:55:42 -0800 (PST)
+Date:   Fri, 22 Nov 2019 19:55:41 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Christian Hemp <c.hemp@phytec.de>,
-        Christoph Fritz <chf.fritz@googlemail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "regulator: da9062: Return REGULATOR_MODE_INVALID for invalid mode" to the regulator tree
-In-Reply-To: <20191122045154.802-1-axel.lin@ingics.com>
-Message-Id: <applied-20191122045154.802-1-axel.lin@ingics.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     alexandre.torgue@st.com, broonie@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Applied "dt-bindings: spi: Convert stm32 QSPI bindings to json-schema" to the spi tree
+In-Reply-To: <20191120194444.10540-1-benjamin.gaignard@st.com>
+Message-Id: <applied-20191120194444.10540-1-benjamin.gaignard@st.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,11 +53,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: da9062: Return REGULATOR_MODE_INVALID for invalid mode
+   dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -78,36 +78,166 @@ to this mail.
 Thanks,
 Mark
 
-From c15d5a645875bc9b89f68f5d3fb608f691ac78d7 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 22 Nov 2019 12:51:54 +0800
-Subject: [PATCH] regulator: da9062: Return REGULATOR_MODE_INVALID for invalid
- mode
+From ffa119f7c42d29be2dd759bb18cc4d1f45804c6b Mon Sep 17 00:00:00 2001
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Date: Wed, 20 Nov 2019 20:44:44 +0100
+Subject: [PATCH] dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
 
--EINVAL is not a valid return value for .of_map_mode, return
-REGULATOR_MODE_INVALID instead.
+Convert the STM32 QSPI binding to DT schema format using json-schema
 
-Fixes: 844e7492ee3d ("regulator: da9062: add of_map_mode support for bucks")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20191122045154.802-1-axel.lin@ingics.com
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191120194444.10540-1-benjamin.gaignard@st.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/da9062-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/spi/spi-stm32-qspi.txt           | 47 -----------
+ .../bindings/spi/st,stm32-qspi.yaml           | 83 +++++++++++++++++++
+ 2 files changed, 83 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 29f4a60398a3..d3ce0278bfbe 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -108,7 +108,7 @@ static unsigned int da9062_map_buck_mode(unsigned int mode)
- 	case DA9063_BUCK_MODE_AUTO:
- 		return REGULATOR_MODE_NORMAL;
- 	default:
--		return -EINVAL;
-+		return REGULATOR_MODE_INVALID;
- 	}
- }
- 
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+deleted file mode 100644
+index bfc038b9478d..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
+-
+-Required properties:
+-- compatible: should be "st,stm32f469-qspi"
+-- reg: the first contains the register location and length.
+-       the second contains the memory mapping address and length
+-- reg-names: should contain the reg names "qspi" "qspi_mm"
+-- interrupts: should contain the interrupt for the device
+-- clocks: the phandle of the clock needed by the QSPI controller
+-- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
+-
+-Optional properties:
+-- resets: must contain the phandle to the reset controller.
+-
+-A spi flash (NOR/NAND) must be a child of spi node and could have some
+-properties. Also see jedec,spi-nor.txt.
+-
+-Required properties:
+-- reg: chip-Select number (QSPI controller may connect 2 flashes)
+-- spi-max-frequency: max frequency of spi bus
+-
+-Optional properties:
+-- spi-rx-bus-width: see ./spi-bus.txt for the description
+-- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+-Documentation/devicetree/bindings/dma/dma.txt.
+-- dma-names: DMA request names should include "tx" and "rx" if present.
+-
+-Example:
+-
+-qspi: spi@a0001000 {
+-	compatible = "st,stm32f469-qspi";
+-	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
+-	reg-names = "qspi", "qspi_mm";
+-	interrupts = <91>;
+-	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
+-	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi0>;
+-
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-		spi-rx-bus-width = <4>;
+-		spi-max-frequency = <108000000>;
+-		...
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+new file mode 100644
+index 000000000000..3665a5fe6b7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/st,stm32-qspi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Quad Serial Peripheral Interface (QSPI) bindings
++
++maintainers:
++  - Christophe Kerello <christophe.kerello@st.com>
++  - Patrice Chotard <patrice.chotard@st.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++properties:
++  compatible:
++    const: st,stm32f469-qspi
++
++  reg:
++    items:
++      - description: registers
++      - description: memory mapping
++
++  reg-names:
++    items:
++     - const: qspi
++     - const: qspi_mm
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: tx DMA channel
++      - description: rx DMA channel
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    spi@58003000 {
++      compatible = "st,stm32f469-qspi";
++      reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
++      reg-names = "qspi", "qspi_mm";
++      interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
++      dmas = <&mdma1 22 0x10 0x100002 0x0 0x0>,
++             <&mdma1 22 0x10 0x100008 0x0 0x0>;
++      dma-names = "tx", "rx";
++      clocks = <&rcc QSPI_K>;
++      resets = <&rcc QSPI_R>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      flash@0 {
++        compatible = "jedec,spi-nor";
++        reg = <0>;
++        spi-rx-bus-width = <4>;
++        spi-max-frequency = <108000000>;
++      };
++    };
++
++...
 -- 
 2.20.1
 
