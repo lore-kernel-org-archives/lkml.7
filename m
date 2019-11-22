@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FB4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100BBC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4961F207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39AD2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452157;
-	bh=kBjnG/eZkeii9sVMHiGtkUajug7tvFEukRI603lJuxo=;
+	s=default; t=1574452160;
+	bh=Mpu/ReJMOFNKMRYs/AEeNTxpA1xP5T5VDaCkFifPux0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=poJnCDE3JEiad/WRp3ouB25POjig/aIxWMmBlWzRjBLyhszAatcITFYr35ApJyctY
-	 D2R1mqHlzgtiAz930IpaS5Bve4p/6+N5Tkb+H3wtl02r2j5qy/52hDO45bTl3PVnwi
-	 DdQSWv8wlEm8p1Oy9pzAKz7yZNoItLYdy+E96z7Y=
+	b=JcbH+zl7V+Dax9pmMCtImMlLw0yb8JJ0zH1d+wFEcmzTVxIU/CRcIlVpEG1XC25RO
+	 jHCS/NgvUT27MTzp9PXu0mVVXOjuPW/xNPCjlL/+nYjjMvO2U+iDTmn60RPfXh5V5j
+	 lgXCoamgUCBAFY8/TjNKkDZ8QDdKQaZOJ6biTpKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfKVTtP (ORCPT
+        id S1727318AbfKVTtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:49:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 14:49:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbfKVTtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:49:12 -0500
+        id S1727212AbfKVTtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:49:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C7892075E;
-        Fri, 22 Nov 2019 19:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 218CC2071F;
+        Fri, 22 Nov 2019 19:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574452151;
-        bh=kBjnG/eZkeii9sVMHiGtkUajug7tvFEukRI603lJuxo=;
+        s=default; t=1574452155;
+        bh=Mpu/ReJMOFNKMRYs/AEeNTxpA1xP5T5VDaCkFifPux0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1xOk05AuU2xuggQHD5DVlKwBlHc+NTFbDMTnzfnO96HUS7hbtJVSss+TPuoxYEoy
-         3vwlpc+vB/qcdcUIDzxihPBUDxe3d2ff+rwHyJ0pLfvA4Wyc5E6vfRq/wkZoAIPM2Y
-         5XF5MrUEE+NoYHZXeEgv+DJjLaD8YSZLrljQNDtw=
+        b=d7SYN9Es6UgV4b4imWHsVlUHVg0gLAZXtyX3FCAV9pVQRrtkkXLMlIymcERFG3qTa
+         SidkQ78wmYDsEc4OdRYJxEOKg250wv/rqT2UgWrMvnqkZWx91lNqhUnvw9p7LyAdqg
+         93zFFzqRhBIGE3B8UanobHWAcLTfIqAJbUnr/fbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        akpm@linux-foundation.org, bigeasy@linutronix.de, cl@linux.com,
-        keescook@chromium.org, penberg@kernel.org, rientjes@google.com,
-        thgarnie@google.com, tytso@mit.edu, will@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 10/25] sched/core: Avoid spurious lock dependencies
-Date:   Fri, 22 Nov 2019 14:48:43 -0500
-Message-Id: <20191122194859.24508-10-sashal@kernel.org>
+Cc:     Yunhao Tian <t123yh@outlook.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 13/25] drm/sun4i: tcon: Set min division of TCON0_DCLK to 1.
+Date:   Fri, 22 Nov 2019 14:48:46 -0500
+Message-Id: <20191122194859.24508-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122194859.24508-1-sashal@kernel.org>
 References: <20191122194859.24508-1-sashal@kernel.org>
@@ -63,65 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Yunhao Tian <t123yh@outlook.com>
 
-[ Upstream commit ff51ff84d82aea5a889b85f2b9fb3aa2b8691668 ]
+[ Upstream commit 0b8e7bbde5e7e2c419567e1ee29587dae3b78ee3 ]
 
-While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-when DEBUG_OBJETS, can end up doing allocations.
+The datasheet of V3s (and various other chips) wrote
+that TCON0_DCLK_DIV can be >= 1 if only dclk is used,
+and must >= 6 if dclk1 or dclk2 is used. As currently
+neither dclk1 nor dclk2 is used (no writes to these
+bits), let's set minimal division to 1.
 
-This then results in the following lock order:
+If this minimal division is 6, some common dot clock
+frequencies can't be produced (e.g. 30MHz will not be
+possible and will fallback to 25MHz), which is
+obviously not an expected behaviour.
 
-  rq->lock
-    zone->lock.rlock
-      batched_entropy_u64.lock
-
-Which in turn causes deadlocks when we do wakeups while holding that
-batched_entropy lock -- as the random code does.
-
-Solve this by moving __sched_fork() out from under rq->lock. This is
-safe because nothing there relies on rq->lock, as also evident from the
-other __sched_fork() callsite.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: bigeasy@linutronix.de
-Cc: cl@linux.com
-Cc: keescook@chromium.org
-Cc: penberg@kernel.org
-Cc: rientjes@google.com
-Cc: thgarnie@google.com
-Cc: tytso@mit.edu
-Cc: will@kernel.org
-Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
-Link: https://lkml.kernel.org/r/20191001091837.GK4536@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Yunhao Tian <t123yh@outlook.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/linux-arm-kernel/MN2PR08MB57905AD8A00C08DA219377C989760@MN2PR08MB5790.namprd08.prod.outlook.com/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 78ecdfae25b69..2befd2c4ce9e6 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5413,10 +5413,11 @@ void init_idle(struct task_struct *idle, int cpu)
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long flags;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 8c31c9ab06f8b..fda1ae12069a7 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -423,7 +423,7 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
  
-+	__sched_fork(0, idle);
-+
- 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
- 	raw_spin_lock(&rq->lock);
+ 	WARN_ON(!tcon->quirks->has_channel_0);
  
--	__sched_fork(0, idle);
- 	idle->state = TASK_RUNNING;
- 	idle->se.exec_start = sched_clock();
- 	idle->flags |= PF_IDLE;
+-	tcon->dclk_min_div = 6;
++	tcon->dclk_min_div = 1;
+ 	tcon->dclk_max_div = 127;
+ 	sun4i_tcon0_mode_set_common(tcon, mode);
+ 
 -- 
 2.20.1
 
