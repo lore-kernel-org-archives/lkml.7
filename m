@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FE4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BC320718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB26620717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419392;
-	bh=hdjgwnbCXaX75t0UDxSR3kAVZIU9Y421d0mh+DbJK0U=;
+	s=default; t=1574419397;
+	bh=q0HxcKvb9Z3rOWVbGowKsn/8p/HzGtoz1XeQPsgPasI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dp22wSiYW8kHr66e8I41NwuMDPURJmWC2+PPyDDAPjVZ8i/T9szeTcC15i8nfILqQ
-	 yYuxqn/h3fWtRi/tfsSbguAPung1kqohh97rTc69shi/a1NiotS9lFy3bqK5G7bLcq
-	 GwLgolAltwaPcGfFJeA+LTdtx3Gg79nt2ZklQD+Q=
+	b=eWXCoeqxxeuYi1Gz+W6fd+0hDQbT+Cgu1moOcaLtsR9nFbC/RYjOUDyC3egmJC5gp
+	 xEvX+06SFU31k5qC5Ca9EAr2xflDjp3t48vCFhytErXjVZ2xNj2U0Qg/rf3EdQ3a+6
+	 Km0ZNGLGTbusMgQJj/m1tqfAx/qYrA2IPvLUf/vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfKVKnL (ORCPT
+        id S1727899AbfKVKnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:43:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:43:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbfKVKnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:43:06 -0500
+        id S1728784AbfKVKnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:43:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43FE420717;
-        Fri, 22 Nov 2019 10:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C86720717;
+        Fri, 22 Nov 2019 10:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419385;
-        bh=hdjgwnbCXaX75t0UDxSR3kAVZIU9Y421d0mh+DbJK0U=;
+        s=default; t=1574419391;
+        bh=q0HxcKvb9Z3rOWVbGowKsn/8p/HzGtoz1XeQPsgPasI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1Vq1QBBNVULXvKom7IV/REVe4GhNnH5FlsVktT0hPnrY4vV85U7CrONr+/SzhybK
-         UDAD4ckQSwbnzAQrnhSoYCbUbglBN3rZdXM64LwPT//pyTk/NLB/EvTtUFdT0AFWnu
-         QWD0SzqkZ9iTCBaQpfwcyqoxnxPh/0WVR6YDyGYk=
+        b=1lh2QZY1XKPsF+/i98nx4GuhICEENViJGef2TDfFbCmqN4xktTx6obzkbzvBKRH1V
+         Wa3DxDnGDqbbfYbSfmWTDJ33CuloEpds4mQeWtEw22vttnOdFFhWrFaqwz7vtTrKin
+         qofzBLb81dnr/zrJdjT5LIntlNsX5toOF7clS+ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Adell <nicolas.adell@actia.fr>,
-        Peter Chen <peter.chen@nxp.com>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 094/222] usb: chipidea: imx: enable OTG overcurrent in case USB subsystem is already started
-Date:   Fri, 22 Nov 2019 11:27:14 +0100
-Message-Id: <20191122100910.260315838@linuxfoundation.org>
+Subject: [PATCH 4.9 096/222] mlxsw: spectrum: Init shaper for TCs 8..15
+Date:   Fri, 22 Nov 2019 11:27:16 +0100
+Message-Id: <20191122100910.383588139@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,37 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Adell <nicolas.adell@actia.fr>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 1dedbdf2bbb1ede8d96f35f9845ecae179dc1988 ]
+[ Upstream commit a9f36656b519a9a21309793c306941a3cd0eeb8f ]
 
-When initializing the USB subsystem before starting the kernel,
-OTG overcurrent detection is disabled. In case the OTG polarity of
-overcurrent is low active, the overcurrent detection is never enabled
-again and events cannot be reported as expected. Because imx usb
-overcurrent polarity is low active by default, only detection needs
-to be enable in usbmisc init function.
+With introduction of MC-aware mode to mlxsw, it became necessary to
+configure TCs above 7 as well. There is now code in mlxsw to disable ETS
+for these higher classes, but disablement of max shaper was neglected.
 
-Signed-off-by: Nicolas Adell <nicolas.adell@actia.fr>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+By default, max shaper is currently disabled to begin with, so the
+problem is just cosmetic. However, for symmetry, do like we do for ETS
+configuration, and call mlxsw_sp_port_ets_maxrate_set() for both TC i
+and i + 8.
+
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/usbmisc_imx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index 20d02a5e418d9..c6577f489d0f6 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -273,6 +273,8 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
- 	} else if (data->oc_polarity == 1) {
- 		/* High active */
- 		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
-+	} else {
-+		reg &= ~(MX6_BM_OVER_CUR_DIS);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 585a40cc6470b..8460c4807567c 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2191,6 +2191,13 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
+ 						    MLXSW_REG_QEEC_MAS_DIS);
+ 		if (err)
+ 			return err;
++
++		err = mlxsw_sp_port_ets_maxrate_set(mlxsw_sp_port,
++						    MLXSW_REG_QEEC_HIERARCY_TC,
++						    i + 8, i,
++						    MLXSW_REG_QEEC_MAS_DIS);
++		if (err)
++			return err;
  	}
- 	writel(reg, usbmisc->base + data->index * 4);
  
+ 	/* Map all priorities to traffic class 0. */
 -- 
 2.20.1
 
