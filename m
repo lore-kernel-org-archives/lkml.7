@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57494C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BD5C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B4A2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF9820721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420468;
-	bh=2KUh2tDx0koScgjBuyBrWUfhSOsfanBbT7qewGFoA70=;
+	s=default; t=1574420470;
+	bh=cIE1zYKfcZTQBUxrXx9F25efKOGTmGUOS7M5KGSXFuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vg4ZIIRZM4oprmqdhB7iSmfMv7Lx8TA0bTZid8UmjEsaPbb67SmOS1Zk1lWO5ftL4
-	 zu845dk4xnqEiPS0jNKV+wMXU+OZoRkEqjIVf+iRkgI7GCv/S62qd54HihtkmrAnse
-	 U45o3y/iM4+1tsVg/mRVF8hEHFnE+yCu3sqhlA1M=
+	b=m4m29S1OS3DVajzIc5+yQQbjLDy9c5lZdnAMjpvt00lguzgNBXIYwqv5BJsFsx8LT
+	 UqO9/cC0jAcaQHiUm1oIaQmWDlkzruYC+aPkyde8Ws7g6Hntnhx7YbTjSnUFgvB0R+
+	 Eh1hkkqykzycGr5tGPD7aYBtlb0zSeIdxpHi6TKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbfKVLBG (ORCPT
+        id S1729436AbfKVLBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:01:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53716 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:01:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730365AbfKVLBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:01:03 -0500
+        id S1730365AbfKVLBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:01:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1C1D20706;
-        Fri, 22 Nov 2019 11:01:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0675A2075E;
+        Fri, 22 Nov 2019 11:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420463;
-        bh=2KUh2tDx0koScgjBuyBrWUfhSOsfanBbT7qewGFoA70=;
+        s=default; t=1574420466;
+        bh=cIE1zYKfcZTQBUxrXx9F25efKOGTmGUOS7M5KGSXFuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yG/nVej9fuNzyhI/66KZ/mPYPLnax7TDhDGeqPYzfY8gmSstwMCudfoBTQAIXbeas
-         F8RhmxGzb2fJ5AqdRuLfFVjTaLUWmsEGCJc70fozgRgWPkOtje1Pv1uDL+bj1L8Anf
-         EI4vLYY21onNS6ZaArr6Dx//WE1v6vIM43upKzIg=
+        b=as3SWSRiUmKfpD96wD+NgEhnzYr2M/2wCUf0kLNIxqJ9YR5hFbeT20g25uFUosJdI
+         fxIb7uwVRmjSn6Hk3lwsE+ondoY6gtsOR4ieuCYVwoBIFQFTbzeK0/c+PERYfRMxYJ
+         pyat0Bw6YydUXa8tjr3B63mn4wByeptwR/clpyZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Igor mitsyanko <igor.mitsyanko.os@quantenna.com>,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/220] qtnfmac: request userspace to do OBSS scanning if FW can not
-Date:   Fri, 22 Nov 2019 11:27:58 +0100
-Message-Id: <20191122100920.879502762@linuxfoundation.org>
+Subject: [PATCH 4.19 114/220] qtnfmac: pass sgi rate info flag to wireless core
+Date:   Fri, 22 Nov 2019 11:27:59 +0100
+Message-Id: <20191122100920.946470538@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,56 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Mitsyanko <igor.mitsyanko.os@quantenna.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 92246b126ebf66ab1fec9d631df78d7c675b66db ]
+[ Upstream commit d5657b709e2a92a0e581109010765d1d485580df ]
 
-In case firmware reports that it can not do OBSS scanning for 40MHz
-2.4GHz channels itself, tell userpsace to do that instead by setting
-NL80211_FEATURE_NEED_OBSS_SCAN flag.
+SGI should be passed to wireless core as a part of rate structure.
+Otherwise wireless core performs incorrect rate calculation when
+SGI is enabled in hardware but not reported to host.
 
-Signed-off-by: Igor mitsyanko <igor.mitsyanko.os@quantenna.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/quantenna/qtnfmac/cfg80211.c | 3 +++
- drivers/net/wireless/quantenna/qtnfmac/qlink.h    | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/net/wireless/quantenna/qtnfmac/commands.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-index 4aa332f4646b1..1519d986b74a4 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-@@ -1109,6 +1109,9 @@ int qtnf_wiphy_register(struct qtnf_hw_info *hw_info, struct qtnf_wmac *mac)
- 	if (hw_info->hw_capab & QLINK_HW_CAPAB_SCAN_RANDOM_MAC_ADDR)
- 		wiphy->features |= NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR;
- 
-+	if (!(hw_info->hw_capab & QLINK_HW_CAPAB_OBSS_SCAN))
-+		wiphy->features |= NL80211_FEATURE_NEED_OBSS_SCAN;
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+index ae9e773005339..7fe22bb53bfc4 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+@@ -544,6 +544,9 @@ qtnf_sta_info_parse_rate(struct rate_info *rate_dst,
+ 		rate_dst->flags |= RATE_INFO_FLAGS_MCS;
+ 	else if (rate_src->flags & QLINK_STA_INFO_RATE_FLAG_VHT_MCS)
+ 		rate_dst->flags |= RATE_INFO_FLAGS_VHT_MCS;
 +
- #ifdef CONFIG_PM
- 	if (macinfo->wowlan)
- 		wiphy->wowlan = macinfo->wowlan;
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/qlink.h b/drivers/net/wireless/quantenna/qtnfmac/qlink.h
-index 99d37e3efba63..c5ae4ea9a47a9 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/qlink.h
-+++ b/drivers/net/wireless/quantenna/qtnfmac/qlink.h
-@@ -71,6 +71,7 @@ struct qlink_msg_header {
-  * @QLINK_HW_CAPAB_DFS_OFFLOAD: device implements DFS offload functionality
-  * @QLINK_HW_CAPAB_SCAN_RANDOM_MAC_ADDR: device supports MAC Address
-  *	Randomization in probe requests.
-+ * @QLINK_HW_CAPAB_OBSS_SCAN: device can perform OBSS scanning.
-  */
- enum qlink_hw_capab {
- 	QLINK_HW_CAPAB_REG_UPDATE		= BIT(0),
-@@ -78,6 +79,7 @@ enum qlink_hw_capab {
- 	QLINK_HW_CAPAB_DFS_OFFLOAD		= BIT(2),
- 	QLINK_HW_CAPAB_SCAN_RANDOM_MAC_ADDR	= BIT(3),
- 	QLINK_HW_CAPAB_PWR_MGMT			= BIT(4),
-+	QLINK_HW_CAPAB_OBSS_SCAN		= BIT(5),
- };
++	if (rate_src->flags & QLINK_STA_INFO_RATE_FLAG_SHORT_GI)
++		rate_dst->flags |= RATE_INFO_FLAGS_SHORT_GI;
+ }
  
- enum qlink_iface_type {
+ static void
 -- 
 2.20.1
 
