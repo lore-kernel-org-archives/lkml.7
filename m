@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3748C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED22C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB84120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1278020707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419055;
-	bh=VG3DgUL0//crMwuAkysXJ4eawFrx3m9fdLNPZBJZAF0=;
+	s=default; t=1574419058;
+	bh=oFxvNZ1hbHppCSTLDNl26gqmoZhX77aU+CZX6kpqLm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NGJstZr9ZXfCt4tj7PUusalAv9v8Avt7tZRqzCiV42OYW/+NaeRJpgeiM9IH6HLAt
-	 nBCehDSUNAkrSZOEf9RiFbJHK/6wzTR4X/Yg/LXLa9RAVpRF/8bZprXwYtQ5A8Fxz4
-	 F7jxyWz2zRKsx/VItUvWBMhZu/3vI9Pg5VFXWdpo=
+	b=j30x073BuLpi5kFW76vOUJG5mMQ8NaaKXQse/xyhH2QuBE2XGjvg/Sw4u/+R/cZrZ
+	 U5sDGA4z955qmDC4FEE3IeboMKqCfMSOZ73sUfOa4mDPuit0KvnPdV9cVwCu4sKLuo
+	 HgZAitDREquHGzg4NZsm9C5zv3i4/UW3cax5CgX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfKVKhe (ORCPT
+        id S1728556AbfKVKhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:37:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:37:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfKVKhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:37:31 -0500
+        id S1728051AbfKVKhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:37:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B106520656;
-        Fri, 22 Nov 2019 10:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C0B20656;
+        Fri, 22 Nov 2019 10:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419050;
-        bh=VG3DgUL0//crMwuAkysXJ4eawFrx3m9fdLNPZBJZAF0=;
+        s=default; t=1574419053;
+        bh=oFxvNZ1hbHppCSTLDNl26gqmoZhX77aU+CZX6kpqLm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndeuLV+Jl+awiJP68rFlRnwNRVF+FQM7ySSkCjzL7pchLhVVB34Bm980QR+7YAjAj
-         EODNIZwkAiTO1VLMyNccK5whB9roOFR6EdfpPfZMuqwjhlKUvqCvNFT95ET7G8E8+o
-         EPHMeVNiZoqOxKQjpUl0eW78YLAbeOpbSkHjr+Wg=
+        b=bqwrzfoeywLDr6vGU4HGMVXYFn1lVgxJEoy1gEoh1HgKcvOJb6Ncb/9SYVUdEbb19
+         aaZO178d7XT56QZ4DxaRXkm47jpB0xgS6H3H9E1lYaMu/66vyw3QeQIsEvhWsVCcqo
+         9uIXPr8YyoGmmX5FMlZJQmI5R7aW5bjfcbV2HD4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radu Solea <radu.solea@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 140/159] crypto: mxs-dcp - Fix AES issues
-Date:   Fri, 22 Nov 2019 11:28:51 +0100
-Message-Id: <20191122100837.189651715@linuxfoundation.org>
+Subject: [PATCH 4.4 141/159] ACPI / SBS: Fix rare oops when removing modules
+Date:   Fri, 22 Nov 2019 11:28:52 +0100
+Message-Id: <20191122100837.536104092@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,119 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Solea <radu.solea@nxp.com>
+From: Ronald Tschalär <ronald@innovation.ch>
 
-[ Upstream commit fadd7a6e616b89c7f4f7bfa7b824f290bab32c3c ]
+[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
 
-The DCP driver does not obey cryptlen, when doing android CTS this
-results in passing to hardware input stream lengths which are not
-multiple of block size.
+There was a small race when removing the sbshc module where
+smbus_alarm() had queued acpi_smbus_callback() for deferred execution
+but it hadn't been run yet, so that when it did run hc had been freed
+and the module unloaded, resulting in an invalid paging request.
 
-Add a check to prevent future erroneous stream lengths from reaching the
-hardware and adjust the scatterlist walking code to obey cryptlen.
+A similar race existed when removing the sbs module with regards to
+acpi_sbs_callback() (which is called from acpi_smbus_callback()).
 
-Also properly copy-out the IV for chaining.
+We therefore need to ensure no callbacks are pending or executing before
+the cleanups are done and the modules are removed.
 
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxs-dcp.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ drivers/acpi/osl.c   | 1 +
+ drivers/acpi/sbshc.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index 38c5dd8891138..4b82cf9da0ba7 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -225,6 +225,12 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
- 	dma_addr_t dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
- 					     DCP_BUF_SZ, DMA_FROM_DEVICE);
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index a000ecb995e66..e59f50576f2ae 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -1186,6 +1186,7 @@ void acpi_os_wait_events_complete(void)
+ 	flush_workqueue(kacpid_wq);
+ 	flush_workqueue(kacpi_notify_wq);
+ }
++EXPORT_SYMBOL(acpi_os_wait_events_complete);
  
-+	if (actx->fill % AES_BLOCK_SIZE) {
-+		dev_err(sdcp->dev, "Invalid block size!\n");
-+		ret = -EINVAL;
-+		goto aes_done_run;
-+	}
-+
- 	/* Fill in the DMA descriptor. */
- 	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
- 		    MXS_DCP_CONTROL0_INTERRUPT |
-@@ -254,6 +260,7 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
+ struct acpi_hp_work {
+ 	struct work_struct work;
+diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
+index 7a3431018e0ab..5008ead4609a4 100644
+--- a/drivers/acpi/sbshc.c
++++ b/drivers/acpi/sbshc.c
+@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
+ 	hc->callback = NULL;
+ 	hc->context = NULL;
+ 	mutex_unlock(&hc->lock);
++	acpi_os_wait_events_complete();
+ 	return 0;
+ }
  
- 	ret = mxs_dcp_start_dma(actx);
+@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
  
-+aes_done_run:
- 	dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
- 			 DMA_TO_DEVICE);
- 	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
-@@ -280,13 +287,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 
- 	uint8_t *out_tmp, *src_buf, *dst_buf = NULL;
- 	uint32_t dst_off = 0;
-+	uint32_t last_out_len = 0;
- 
- 	uint8_t *key = sdcp->coh->aes_key;
- 
- 	int ret = 0;
- 	int split = 0;
--	unsigned int i, len, clen, rem = 0;
-+	unsigned int i, len, clen, rem = 0, tlen = 0;
- 	int init = 0;
-+	bool limit_hit = false;
- 
- 	actx->fill = 0;
- 
-@@ -305,6 +314,11 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 	for_each_sg(req->src, src, nents, i) {
- 		src_buf = sg_virt(src);
- 		len = sg_dma_len(src);
-+		tlen += len;
-+		limit_hit = tlen > req->nbytes;
-+
-+		if (limit_hit)
-+			len = req->nbytes - (tlen - len);
- 
- 		do {
- 			if (actx->fill + len > out_off)
-@@ -321,13 +335,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 			 * If we filled the buffer or this is the last SG,
- 			 * submit the buffer.
- 			 */
--			if (actx->fill == out_off || sg_is_last(src)) {
-+			if (actx->fill == out_off || sg_is_last(src) ||
-+				limit_hit) {
- 				ret = mxs_dcp_run_aes(actx, req, init);
- 				if (ret)
- 					return ret;
- 				init = 0;
- 
- 				out_tmp = out_buf;
-+				last_out_len = actx->fill;
- 				while (dst && actx->fill) {
- 					if (!split) {
- 						dst_buf = sg_virt(dst);
-@@ -350,6 +366,19 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 				}
- 			}
- 		} while (len);
-+
-+		if (limit_hit)
-+			break;
-+	}
-+
-+	/* Copy the IV for CBC for chaining */
-+	if (!rctx->ecb) {
-+		if (rctx->enc)
-+			memcpy(req->info, out_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
-+		else
-+			memcpy(req->info, in_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
- 	}
- 
- 	return ret;
+ 	hc = acpi_driver_data(device);
+ 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
++	acpi_os_wait_events_complete();
+ 	kfree(hc);
+ 	device->driver_data = NULL;
+ 	return 0;
 -- 
 2.20.1
 
