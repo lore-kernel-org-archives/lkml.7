@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8211C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756DB2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DE320714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403193;
-	bh=2NavNmSSRIUFC61aNh873EINxN+3wfIG+QCBYvnDcQ0=;
+	s=default; t=1574403199;
+	bh=oCg3KbC/hWeuL7u+qR4VTCyyDgqjLKgx8hXknulRLnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DcHrScGVj0T37UYRt8/C9B1iARZzHpB1S2wJm+uBpfTSJW33vkQz2zmgIXeHJEwVr
-	 PJWqb/HnEDznB5qBrWkk1ryoQ6oSV3uvvSuR3OxMsDWQ+cnO0DzLLn+lZ7trZiOBG4
-	 U1jwjJAuGFG5e8VoZCkV4CUptKUUSg/UpRO2XUr4=
+	b=NdG1+PA2+WfX8ia03SNBkvMTSWOoxLl/0UfKXu+yEIFBu7MVp67xtnnm7LxACUV8u
+	 c1PxUfOeYlNualCdouTxGMURYjn2RrG2rqGR+qUHal3COlW0iqnAlDEswcXj7e9stz
+	 Q0YjVVRtnuxS0INS5QL9u1wqy6sa8s8+AtKs+mFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfKVGNM (ORCPT
+        id S1729230AbfKVGNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50306 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:13:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbfKVGNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:10 -0500
+        id S1729028AbfKVGNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D935820717;
-        Fri, 22 Nov 2019 06:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A50D20714;
+        Fri, 22 Nov 2019 06:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403189;
-        bh=2NavNmSSRIUFC61aNh873EINxN+3wfIG+QCBYvnDcQ0=;
+        s=default; t=1574403195;
+        bh=oCg3KbC/hWeuL7u+qR4VTCyyDgqjLKgx8hXknulRLnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7YmesbZd3v+t2ed/lPjgaVlaD5/O4RFwNdXExqYaa3E1k7uyBPzjFfLSgDwz41/c
-         7jTTWMayFnWBjYnwVkEN1eRwaKalkGk5sdX0zm8comTlHLJFRrJtKhYLeQQ4BMQw3M
-         qpZMQBXbMOf2HoHAE88MjkM2mpWEjqO0HOj+A7F4=
+        b=A9qyfOfXuPSw9TmSXAjuit3DK5H+y8wADZ3qxuFWXrFJXEOfcFOspO6rtEFWCuzx1
+         9aBsdiiwxlDejzV9Fcm8LfNadaobE2V2zUFK5RAvQaBMQYicxUKx5g/RI8Mj1r/Qye
+         3Zixci2Oa7aX0/ExA8Di8UDAFre5BbaiDAFTZAVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Meyer <thomas@m3y3r.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/68] PM / AVS: SmartReflex: NULL check before some freeing functions is not needed
-Date:   Fri, 22 Nov 2019 01:12:00 -0500
-Message-Id: <20191122061301.4947-6-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 12/68] mwifiex: debugfs: correct histogram spacing, formatting
+Date:   Fri, 22 Nov 2019 01:12:05 -0500
+Message-Id: <20191122061301.4947-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -60,34 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 14d338a857f05f894ba3badd9e6d3039c68b8180 ]
+[ Upstream commit 4cb777c64e030778c569f605398d7604d8aabc0f ]
 
-NULL check before some freeing functions is not needed.
+Currently, snippets of this file look like:
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+rx rates (in Mbps): 0=1M   1=2M2=5.5M  3=11M   4=6M   5=9M  6=12M
+7=18M  8=24M  9=36M  10=48M  11=54M12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)
+44-53=MCS0-9(VHT:BW20)54-63=MCS0-9(VHT:BW40)64-73=MCS0-9(VHT:BW80)
+...
+noise_flr[--96dBm] = 22
+noise_flr[--95dBm] = 149
+noise_flr[--94dBm] = 9
+noise_flr[--93dBm] = 2
+
+We're missing some spaces, and we're adding a minus sign ('-') on values
+that are already negative signed integers.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/avs/smartreflex.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/mwifiex/debugfs.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/power/avs/smartreflex.c b/drivers/power/avs/smartreflex.c
-index db9973bb53f19..ecc59798fd0aa 100644
---- a/drivers/power/avs/smartreflex.c
-+++ b/drivers/power/avs/smartreflex.c
-@@ -1001,8 +1001,7 @@ static int omap_sr_remove(struct platform_device *pdev)
+diff --git a/drivers/net/wireless/mwifiex/debugfs.c b/drivers/net/wireless/mwifiex/debugfs.c
+index 45d97b64ef84b..f72c4f8853111 100644
+--- a/drivers/net/wireless/mwifiex/debugfs.c
++++ b/drivers/net/wireless/mwifiex/debugfs.c
+@@ -295,15 +295,13 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
+ 		     "total samples = %d\n",
+ 		     atomic_read(&phist_data->num_samples));
  
- 	if (sr_info->autocomp_active)
- 		sr_stop_vddautocomp(sr_info);
--	if (sr_info->dbg_dir)
--		debugfs_remove_recursive(sr_info->dbg_dir);
-+	debugfs_remove_recursive(sr_info->dbg_dir);
+-	p += sprintf(p, "rx rates (in Mbps): 0=1M   1=2M");
+-	p += sprintf(p, "2=5.5M  3=11M   4=6M   5=9M  6=12M\n");
+-	p += sprintf(p, "7=18M  8=24M  9=36M  10=48M  11=54M");
+-	p += sprintf(p, "12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
++	p += sprintf(p,
++		     "rx rates (in Mbps): 0=1M   1=2M 2=5.5M  3=11M   4=6M   5=9M  6=12M\n"
++		     "7=18M  8=24M  9=36M  10=48M  11=54M 12-27=MCS0-15(BW20) 28-43=MCS0-15(BW40)\n");
  
- 	pm_runtime_disable(&pdev->dev);
- 	list_del(&sr_info->node);
+ 	if (ISSUPP_11ACENABLED(priv->adapter->fw_cap_info)) {
+-		p += sprintf(p, "44-53=MCS0-9(VHT:BW20)");
+-		p += sprintf(p, "54-63=MCS0-9(VHT:BW40)");
+-		p += sprintf(p, "64-73=MCS0-9(VHT:BW80)\n\n");
++		p += sprintf(p,
++			     "44-53=MCS0-9(VHT:BW20) 54-63=MCS0-9(VHT:BW40) 64-73=MCS0-9(VHT:BW80)\n\n");
+ 	} else {
+ 		p += sprintf(p, "\n");
+ 	}
+@@ -332,7 +330,7 @@ mwifiex_histogram_read(struct file *file, char __user *ubuf,
+ 	for (i = 0; i < MWIFIEX_MAX_NOISE_FLR; i++) {
+ 		value = atomic_read(&phist_data->noise_flr[i]);
+ 		if (value)
+-			p += sprintf(p, "noise_flr[-%02ddBm] = %d\n",
++			p += sprintf(p, "noise_flr[%02ddBm] = %d\n",
+ 				(int)(i-128), value);
+ 	}
+ 	for (i = 0; i < MWIFIEX_MAX_SIG_STRENGTH; i++) {
 -- 
 2.20.1
 
