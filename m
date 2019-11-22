@@ -2,52 +2,51 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0565C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B3FC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E3720672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF8020672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421913;
-	bh=MtK3rPQd3SaaIQnnxCs2zvWntZfSe1hn9rDCp09C3wc=;
+	s=default; t=1574421934;
+	bh=+kJ46tdBc7iKTbz5siqHX//KIp/joBunnPlMC3HRQM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeVhJLgI//mIg7WU87tyPF27Lo3UsSrr1Iey20rtcHm6tWURi2KbAo2tDIfGTRz0w
-	 ROLCnHzjwH+xtxvs3/HQ0DsUAhCawkhQHXu1WF1GqmIChz+qjadcmD/XISV6K6yhus
-	 VqExx5KCdokTZ8lABIuoFoQPvTBASmMpierARHiw=
+	b=LutMNciSX6lDiaUVGYBt53FEvDdOGSSp9sxPa/krIM2c1PmPkxf+0dQq+gpOcf0Wc
+	 S2wC9kULCUbgZBuUl3ZPiIIbUF6UczJa+91KcIJCrdUwJ0MydER22okrMmR8BXpiFg
+	 dyD0S+Dks11f+K7QnG/oGOct+mkQkvSPdn2xYkF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfKVKg4 (ORCPT
+        id S1728342AbfKVKgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37386 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:36:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727187AbfKVKgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:36:52 -0500
+        id S1728320AbfKVKgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:36:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1F4520707;
-        Fri, 22 Nov 2019 10:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A48ED20708;
+        Fri, 22 Nov 2019 10:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419012;
-        bh=MtK3rPQd3SaaIQnnxCs2zvWntZfSe1hn9rDCp09C3wc=;
+        s=default; t=1574418962;
+        bh=+kJ46tdBc7iKTbz5siqHX//KIp/joBunnPlMC3HRQM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNYMCAgaPZ1JecJpKE8ajWXv64/niL4HhXStMaBWM0OgJK/g/Jl/ujYJB71EoZPj0
-         Nitc09nNcvWCnOcTaLLOKf0wLzj1Ntl+8vlifZ0CfsOhqDk2HschIze+V+TbVXd3mo
-         oMK+mrcUXNEqusc8vsCv82XKryK60vtobTSzfrHM=
+        b=AnlPx13WujUCpUksGdRrP+RZKtTekwfGBF0a9h+DTuC3C7hAp0Z7MBcJ3cLwsS7n3
+         1qtql3EN15GSAa0mBvYf9EApfdyRkMEiNnNtL7EVX9lwBfigfwWJL425D5ygyrwM28
+         sOoK8x7AnxdPhB6tMskrLMCe2tvSb0rE+tx//hb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 073/159] ARM: dts: ste: Fix SPI controller node names
-Date:   Fri, 22 Nov 2019 11:27:44 +0100
-Message-Id: <20191122100757.722169339@linuxfoundation.org>
+        stable@vger.kernel.org, Krishna Ram Prakash R <krp@gtux.in>,
+        Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.4 110/159] libata: have ata_scsi_rw_xlat() fail invalid passthrough requests
+Date:   Fri, 22 Nov 2019 11:28:21 +0100
+Message-Id: <20191122100827.633136905@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,86 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 2f967f9e9fa076affb711da1a8389b5d33814fc6 ]
+commit 2d7271501720038381d45fb3dcbe4831228fc8cc upstream.
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+For passthrough requests, libata-scsi takes what the user passes in
+as gospel. This can be problematic if the user fills in the CDB
+incorrectly. One example of that is in request sizes. For read/write
+commands, the CDB contains fields describing the transfer length of
+the request. These should match with the SG_IO header fields, but
+libata-scsi currently does no validation of that.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Check that the number of blocks in the CDB for passthrough requests
+matches what was mapped into the request. If the CDB asks for more
+data then the validated SG_IO header fields, error it.
+
+Reported-by: Krishna Ram Prakash R <krp@gtux.in>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/boot/dts/ste-dbx5x0.dtsi     | 4 ++--
- arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
- arch/arm/boot/dts/ste-snowball.dts    | 2 +-
- arch/arm/boot/dts/ste-u300.dts        | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/ata/libata-scsi.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 86bd320057a38..b2b23ceb6d557 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -894,7 +894,7 @@
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
- 		};
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -1654,6 +1654,21 @@ nothing_to_do:
+ 	return 1;
+ }
  
--		ssp@80002000 {
-+		spi@80002000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80002000 0x1000>;
- 			interrupts = <0 14 IRQ_TYPE_LEVEL_HIGH>;
-@@ -908,7 +908,7 @@
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
- 		};
- 
--		ssp@80003000 {
-+		spi@80003000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80003000 0x1000>;
- 			interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index b0278f4c486ce..55a6a1ac03370 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -57,7 +57,7 @@
- 			};
- 		};
- 
--		ssp@80002000 {
-+		spi@80002000 {
- 			/*
- 			 * On the first generation boards, this SSP/SPI port was connected
- 			 * to the AB8500.
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index e80e421638836..bb1b64d6ab5e8 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -311,7 +311,7 @@
- 			pinctrl-1 = <&i2c3_sleep_mode>;
- 		};
- 
--		ssp@80002000 {
-+		spi@80002000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ssp0_snowball_mode>;
- 		};
-diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
-index 82a661677e97e..fb6ca7f864176 100644
---- a/arch/arm/boot/dts/ste-u300.dts
-+++ b/arch/arm/boot/dts/ste-u300.dts
-@@ -451,7 +451,7 @@
- 			dma-names = "rx";
- 		};
- 
--		spi: ssp@c0006000 {
-+		spi: spi@c0006000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0xc0006000 0x1000>;
- 			interrupt-parent = <&vica>;
--- 
-2.20.1
-
++static bool ata_check_nblocks(struct scsi_cmnd *scmd, u32 n_blocks)
++{
++	struct request *rq = scmd->request;
++	u32 req_blocks;
++
++	if (!blk_rq_is_passthrough(rq))
++		return true;
++
++	req_blocks = blk_rq_bytes(rq) / scmd->device->sector_size;
++	if (n_blocks > req_blocks)
++		return false;
++
++	return true;
++}
++
+ /**
+  *	ata_scsi_rw_xlat - Translate SCSI r/w command into an ATA one
+  *	@qc: Storage for translated ATA taskfile
+@@ -1693,6 +1708,8 @@ static unsigned int ata_scsi_rw_xlat(str
+ 		scsi_10_lba_len(cdb, &block, &n_block);
+ 		if (cdb[1] & (1 << 3))
+ 			tf_flags |= ATA_TFLAG_FUA;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	case READ_6:
+ 	case WRITE_6:
+@@ -1705,6 +1722,8 @@ static unsigned int ata_scsi_rw_xlat(str
+ 		 */
+ 		if (!n_block)
+ 			n_block = 256;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	case READ_16:
+ 	case WRITE_16:
+@@ -1713,6 +1732,8 @@ static unsigned int ata_scsi_rw_xlat(str
+ 		scsi_16_lba_len(cdb, &block, &n_block);
+ 		if (cdb[1] & (1 << 3))
+ 			tf_flags |= ATA_TFLAG_FUA;
++		if (!ata_check_nblocks(scmd, n_block))
++			goto invalid_fld;
+ 		break;
+ 	default:
+ 		DPRINTK("no-byte command\n");
 
 
