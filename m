@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9328EC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933E0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6287D20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273E20731
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419110;
-	bh=9bhG71SHdIPOPx2brFLAamLBJekEwZtJUF+//yLby2A=;
+	s=default; t=1574419115;
+	bh=Hrd8Tdvryc7oSkiufmHyOEffL6pZMUZ+GAVv0e3zuzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XnXbYhIUfDmjE1GYVFIJBmgVDVWw6xcMLnwe6cKLTX9KzvUDOo65typ/wntOS7bnC
-	 ywbc6fGVse7eavRYofolWEYa8Pnt6eCDBkxG4dP8k55V3qWex7VbAvrUh+GWIk9Eh+
-	 cPDDYn97Kxqke7ognva+AfDTRxZ6QkPR1IIdatko=
+	b=iRR2UvQr6CizZIwTf9pJNnPwxgERrx5JidwCkuOAnjaiLMPiYN497AXR9v+dv8Hcw
+	 /bsUXCx6YW2n3YIZZrSRdrXF5NOR8Aa00lREAqpFIs5kW7i37gEeqKY91GVr4e6lMm
+	 vyB0mqKsTCLiGw21ckQ/4NYbeoyl9llj4x3OA6NI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfKVKi3 (ORCPT
+        id S1727158AbfKVKie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40794 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:38:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728302AbfKVKi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:26 -0500
+        id S1727888AbfKVKic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F35E52073F;
-        Fri, 22 Nov 2019 10:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D92CD20717;
+        Fri, 22 Nov 2019 10:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419106;
-        bh=9bhG71SHdIPOPx2brFLAamLBJekEwZtJUF+//yLby2A=;
+        s=default; t=1574419112;
+        bh=Hrd8Tdvryc7oSkiufmHyOEffL6pZMUZ+GAVv0e3zuzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfTrI+S885/rk9ASUIcUctWRXDxPckR+RFIs7LPgQ3p1WNtmJdO1McDrnAwYvSddN
-         ObHUrLRamLp7OMmxKgDB7ILuyxsHrD9YNXsSftZFJr56PuVWX2R3aVd8AMKqD7KVdX
-         jiDb/QBK3GM0+qxOfxCEI5e1vAe57wp2R61PnzdA=
+        b=xxUeR0BExnBD7UdmeqVohSNQvPj5/eiEyDMOU+dB8zOm3LPWfCfsJe8YPqgMQuKVp
+         gShzQowWFzdR6SvG1RHp0amN+dV8P1K/EfVwZiLNQVHEeSzGhC5+iw0yZclo7RVMR/
+         oQcCezVTdceXv4nLdsiwr+sokSYI1LcPldO5AKKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 158/159] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
-Date:   Fri, 22 Nov 2019 11:29:09 +0100
-Message-Id: <20191122100849.607189127@linuxfoundation.org>
+Subject: [PATCH 4.4 124/159] powerpc/pseries: Fix DTL buffer registration
+Date:   Fri, 22 Nov 2019 11:28:35 +0100
+Message-Id: <20191122100831.665820415@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -61,37 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
+[ Upstream commit db787af1b8a6b4be428ee2ea7d409dafcaa4a43c ]
 
-OMAP5's Super-Speed USB port has a software mailbox register
-that needs to be fed with VBUS and ID events from an external
-VBUS/ID comparator.
+When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we register the DTL
+buffer for a cpu when the associated file under powerpc/dtl in debugfs
+is opened. When doing so, we need to set the size of the buffer being
+registered in the second u32 word of the buffer. This needs to be in big
+endian, but we are not doing the conversion resulting in the below error
+showing up in dmesg:
 
-Without this, Host role will not work correctly.
+	dtl_start: DTL registration for cpu 0 (hw 0) failed with -4
 
-Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fix this in the obvious manner.
+
+Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/platforms/pseries/dtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index d2398d2a0c08c..4ea4cf6c5b471 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -634,6 +634,7 @@
- };
+diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
+index 39049e4884fbd..37de83c5ef172 100644
+--- a/arch/powerpc/platforms/pseries/dtl.c
++++ b/arch/powerpc/platforms/pseries/dtl.c
+@@ -150,7 +150,7 @@ static int dtl_start(struct dtl *dtl)
  
- &dwc3 {
-+	extcon = <&extcon_usb3>;
- 	dr_mode = "otg";
- };
+ 	/* Register our dtl buffer with the hypervisor. The HV expects the
+ 	 * buffer size to be passed in the second word of the buffer */
+-	((u32 *)dtl->buf)[1] = DISPATCH_LOG_BYTES;
++	((u32 *)dtl->buf)[1] = cpu_to_be32(DISPATCH_LOG_BYTES);
  
+ 	hwcpu = get_hard_smp_processor_id(dtl->cpu);
+ 	addr = __pa(dtl->buf);
 -- 
 2.20.1
 
