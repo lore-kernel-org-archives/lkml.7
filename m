@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7736C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DD2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AE020674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C622720674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403854;
-	bh=1lcF54AcbRONjDESSOA+6p0jhMgKCR+p52kcc7fQZc0=;
+	s=default; t=1574403860;
+	bh=qoWiZmhKyc5U9nJDESFCNNEjuf4zfvI/EeR6LBTUUF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EhchqSPbApNU1fun12TAwijUDA4b2o6UZEpsOt2Z+bUPqiBoBrfbQXB5841A1HK+n
-	 bqfVFfj7DpSUxUxNBGVdWqxh0hCHIJj1xFvBA0VEFPap3m7Lfp7BgdRu4RrHc6Wa/h
-	 JO2/Tci0QKvVux/EdqIi5qTwZOZZFhruzdyUY6vs=
+	b=x4BKGc2yDRM3CvcMoSAuvCSq5si2SzPNtzntmz2sIbL7lhF/hdc1Bifz8/huqcy8T
+	 TR/WehvgPYFbChl76xZBTurCgHo+PwwMLBXqim+aMM1J6AblciemlBkFoQkeCCOq7C
+	 ZhUSg1DhbxwayGPaGllDauoAKq4H5BStYrWx1XWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfKVGYN (ORCPT
+        id S1729228AbfKVGYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:24:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:24:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbfKVFvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:31 -0500
+        id S1728146AbfKVFv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46BF420731;
-        Fri, 22 Nov 2019 05:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ABB22071C;
+        Fri, 22 Nov 2019 05:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401890;
-        bh=1lcF54AcbRONjDESSOA+6p0jhMgKCR+p52kcc7fQZc0=;
+        s=default; t=1574401887;
+        bh=qoWiZmhKyc5U9nJDESFCNNEjuf4zfvI/EeR6LBTUUF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XKYhhS34Iyh7W7x47gFw4rfU1nPJXR2RZxIHk48GxGL7R9TSGxdQx0qIz7GbJdxEZ
-         UCWVlcQAU1pAM/MFQysC0F8uxaJEVyNNtkSoBo9k/NYOiaBTUT4uzaHKceuwBaCDLj
-         GPJVz9XkcV7Frdr/dxcwjFfkkVDMZrS7S7l5x5U0=
+        b=U4wky5QXL5bT5ul1T6O3mF6ciRLOCPjdammwpf3o+2yUXIg2xIUZmLkSrfTzsY8KM
+         t9OSWSYJMJ0vYhkzPY42pCOARuBrQ9a7DkKljVix97b3bb1gmyaRPAE6EWbvEAfbTi
+         5YaiZMhG896abNYmjskBok64gXPlaL76ORJE7fL8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alex Williamson <alex.williamson@redhat.com>,
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 123/219] vfio/spapr_tce: Get rid of possible infinite loop
-Date:   Fri, 22 Nov 2019 00:47:35 -0500
-Message-Id: <20191122054911.1750-116-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 121/219] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
+Date:   Fri, 22 Nov 2019 00:47:33 -0500
+Message-Id: <20191122054911.1750-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,54 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 517ad4ae8aa93dccdb9a88c27257ecb421c9e848 ]
+[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
 
-As a part of cleanup, the SPAPR TCE IOMMU subdriver releases preregistered
-memory. If there is a bug in memory release, the loop in
-tce_iommu_release() becomes infinite; this actually happened to me.
+As several other arches including x86, this patch makes it explicit
+that a bad page fault is a NULL pointer dereference when the fault
+address is lower than PAGE_SIZE
 
-This makes the loop finite and prints a warning on every failure to make
-the code more bug prone.
+In the mean time, this page makes all bad_page_fault() messages
+shorter so that they remain on one single line. And it prefixes them
+by "BUG: " so that they get easily grepped.
 
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Avoid pr_cont()]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_spapr_tce.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/powerpc/mm/fault.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
-index 96721b154454f..ec53310f16136 100644
---- a/drivers/vfio/vfio_iommu_spapr_tce.c
-+++ b/drivers/vfio/vfio_iommu_spapr_tce.c
-@@ -371,6 +371,7 @@ static void tce_iommu_release(void *iommu_data)
- {
- 	struct tce_container *container = iommu_data;
- 	struct tce_iommu_group *tcegrp;
-+	struct tce_iommu_prereg *tcemem, *tmtmp;
- 	long i;
- 
- 	while (tce_groups_attached(container)) {
-@@ -393,13 +394,8 @@ static void tce_iommu_release(void *iommu_data)
- 		tce_iommu_free_table(container, tbl);
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 365526ee29b88..6e0ff8b600ced 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -633,21 +633,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+ 	switch (TRAP(regs)) {
+ 	case 0x300:
+ 	case 0x380:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"data at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: %s at 0x%08lx\n",
++			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
++			 "Unable to handle kernel data access", regs->dar);
+ 		break;
+ 	case 0x400:
+ 	case 0x480:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"instruction fetch\n");
++		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
++			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
+ 		break;
+ 	case 0x600:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unaligned access at address 0x%08lx\n", regs->dar);
++		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
++			 regs->dar);
+ 		break;
+ 	default:
+-		printk(KERN_ALERT "Unable to handle kernel paging request for "
+-			"unknown fault\n");
++		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
++			 regs->dar);
+ 		break;
  	}
- 
--	while (!list_empty(&container->prereg_list)) {
--		struct tce_iommu_prereg *tcemem;
--
--		tcemem = list_first_entry(&container->prereg_list,
--				struct tce_iommu_prereg, next);
--		WARN_ON_ONCE(tce_iommu_prereg_free(container, tcemem));
--	}
-+	list_for_each_entry_safe(tcemem, tmtmp, &container->prereg_list, next)
-+		WARN_ON(tce_iommu_prereg_free(container, tcemem));
- 
- 	tce_iommu_disable(container);
- 	if (container->mm)
+ 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
 -- 
 2.20.1
 
