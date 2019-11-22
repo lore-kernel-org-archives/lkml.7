@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDC9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB5520708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC0D20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418811;
-	bh=K08qYBsV8gIGodec1gOeRpkimbF/syiDZ9dHNTWL40Q=;
+	s=default; t=1574418816;
+	bh=J1TfCkGGjmKJvfH1ogXdHfv9dUz/lNqn2N2wwhcvuC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UH3WwZw7pX2zWBIM0HGw3xISD3lmwr9MmOJnvywg4k7j+4xVY7fevYlx/2bBHFiLc
-	 poKOmXFUDHhkFmqwv/ZRRno5EFY9SXScNwp0HrDLawz4I2WynW36SJPuzBftfJ3Y9r
-	 s5vl/pcKdSLGxMX8RbEQUpOo5FN/ClNk92J9orGU=
+	b=kq3Jrxr7+PoySS0YKk3n21KM5PYJ6rwjjCky50h2YjOoML9rFrf5u5d4nMXBSHYHW
+	 3lqTbF2gg7HUdyk0H/85gn6uNgbOzc06F5cLYHApQDo1XIDY7Q7GAhGYQTlDWfl/37
+	 w0TBKFAtsiXZoBj6EM7Rg7OsNlQWUAZR2XCP+PtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfKVKda (ORCPT
+        id S1727956AbfKVKdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55996 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:33:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbfKVKdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:22 -0500
+        id S1727952AbfKVKda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 361EE20715;
-        Fri, 22 Nov 2019 10:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A0120714;
+        Fri, 22 Nov 2019 10:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418801;
-        bh=K08qYBsV8gIGodec1gOeRpkimbF/syiDZ9dHNTWL40Q=;
+        s=default; t=1574418809;
+        bh=J1TfCkGGjmKJvfH1ogXdHfv9dUz/lNqn2N2wwhcvuC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTVp5530mJTT3sejqc1iqNmr8i9LK59iYdSGpCEtEjlbODTJzbp2YLlOv9g5E8cgQ
-         qBN8XsLRAEqhoNNJ7b4Q0MP1D4wc8Obt5+5FaqqxnOG8d06MtLQ2rB2PWj+7tXJyST
-         CpvlUjMfPNBK4RzDRDPpRU4QZHy0563QKCx0rWxY=
+        b=XfHrH0A9QO6l7NyOgLM4TIztEvmJsp/MDgOVTFrfyK1QfMvpabQJjmSJly36jPQOW
+         umdTC46rytKCVohpA/ujZyp0XgXpqriHoPlw+IQ5bTaJ0f59jnd+pLIq9JdzmQMF1d
+         i6kYuNYjRWsMZCB571k49HOwN3z+2SNlemnHjkDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, linux-mips@linux-mips.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 029/159] mips: txx9: fix iounmap related issue
-Date:   Fri, 22 Nov 2019 11:27:00 +0100
-Message-Id: <20191122100726.203902702@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Vasilyev <vasilyev@ispras.ru>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 058/159] serial: mxs-auart: Fix potential infinite loop
+Date:   Fri, 22 Nov 2019 11:27:29 +0100
+Message-Id: <20191122100749.514848381@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -63,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Anton Vasilyev <vasilyev@ispras.ru>
 
-[ Upstream commit c6e1241a82e6e74d1ae5cc34581dab2ffd6022d0 ]
+[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
 
-if device_register return error, iounmap should be called, also iounmap
-need to call before put_device.
+On the error path of mxs_auart_request_gpio_irq() is performed
+backward iterating with index i of enum type. Underline enum type
+may be unsigned char. In this case check (--i >= 0) will be always
+true and error handling goes into infinite loop.
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20476/
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
+The patch changes the check so that it is valid for signed and unsigned
+types.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/txx9/generic/setup.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/tty/serial/mxs-auart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
-index 9d9962ab7d25c..7dc97e944d5aa 100644
---- a/arch/mips/txx9/generic/setup.c
-+++ b/arch/mips/txx9/generic/setup.c
-@@ -961,12 +961,11 @@ void __init txx9_sramc_init(struct resource *r)
- 		goto exit_put;
- 	err = sysfs_create_bin_file(&dev->dev.kobj, &dev->bindata_attr);
- 	if (err) {
--		device_unregister(&dev->dev);
- 		iounmap(dev->base);
--		kfree(dev);
-+		device_unregister(&dev->dev);
- 	}
- 	return;
- exit_put:
-+	iounmap(dev->base);
- 	put_device(&dev->dev);
--	return;
- }
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index daa4a65ef6ffc..fe870170db74a 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1248,8 +1248,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
+ 
+ 	/*
+ 	 * If something went wrong, rollback.
++	 * Be careful: i may be unsigned.
+ 	 */
+-	while (err && (--i >= 0))
++	while (err && (i-- > 0))
+ 		if (irq[i] >= 0)
+ 			free_irq(irq[i], s);
+ 
 -- 
 2.20.1
 
