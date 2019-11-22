@@ -2,145 +2,195 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E5DC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D0C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1D620706
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE5220706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="kh80/zLj"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AcdvKXHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKVVBW (ORCPT
+        id S1727116AbfKVVD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:01:22 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41252 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKVVBV (ORCPT
+        Fri, 22 Nov 2019 16:03:29 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34264 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKVVD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:01:21 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e9so7729481oif.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 13:01:21 -0800 (PST)
+        Fri, 22 Nov 2019 16:03:29 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i17so9420920qtq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 13:03:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ILSZGGm7QSx3PdU1qLsdt69tl8AFDunS479DgX6F4Bo=;
-        b=kh80/zLjvg/MndD6Asgkf+9hVicNjw851+U/2dwR7L1ah4TyiU5XqUgbWHuv53l4ID
-         0xEcah08GvOf3iVDWzlMHd704BRqZh8WMGG8ywjM3ldpt+XF6AvLKjIxoRp6ydktNRaq
-         6q/jc5Zp0gAHGoR8TPJxoDM/ds4k5S7PZBpWxAqki9ryxU5kEG1i4olKYYk9bOkSQXBw
-         gbeu6O3bMW7Z1IPNmtHGBMneAq+Pcw2D4dA1osFcjt4X6YKmIsvMyYRDs1ew5Fwpl65R
-         +vS43E4dmdb97gHjr3UACfB6cOmOiU4BGPpMZgXZc1njFAppePN7l6PTqY/pH9NcKGEK
-         l76A==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JklxB5p9HEc9L1MiCrh3Zy+CQC2KvglM1Tp/GhFHwhc=;
+        b=AcdvKXHg380Tjx2Fu2fN3Y2zrL1iyiYtInzi/r5a6kbUe+zX8D6nD462rgd0lJI4dJ
+         2HizHflABj6D3tvPnFUkoZ2DyCJ0D9R4S9BD87oWJUexET+RwRRuW34QP2wR2BNEfEXh
+         OF/d0Pt4TQQ908y0k02txbFqEszsjNYad7YDc1tURrdF+gorRRdthLg+b43lKtKJIhLZ
+         8VFbYx+XhzcPJeVYQnkye1af9g4w5B5YJDiSzaPaANP+4zi8o1dQuR8VFHZAJ22k/w2M
+         KibCwRU9x97EjhhRr3FVpO98LTF3o+pAEGc2nUC2HuqvkJ4r8as5zd6u3clgBDVs5Wfl
+         vGCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ILSZGGm7QSx3PdU1qLsdt69tl8AFDunS479DgX6F4Bo=;
-        b=LmkMAxwGckU/pINvHHK3RM1zosc4sgOwc9zhv9VeRP+hgfCeOfOMqQAiB3u/rjrd7d
-         fW4++feZXW4y3Z8QDPiX79yI9fls5nMazFc0clmwi3pAEDZNO8SlBqTC5FYPxcrUqZV+
-         tFC3lohf/heyGlgp9BpSyax6IneE+fgjyDBZ9G79rOChU4RbyksFbxsBHWSCfo3D+rFq
-         FtII4by9UEtEoApbDcn20Ap49Oc/5/qeOdqEYrr3tVl5iyqjhNSxCIENTc9SOwiwtMPv
-         NCm6b/wZlv+H4kkl34i83ny8sijuKd4++Gp+ZtFxnPjL9gaqGd75tSRrx4entrnOuHe4
-         iCPw==
-X-Gm-Message-State: APjAAAXR81hoWZjYhM2Ctfc5qyGVtA/6IeRJxdJggTAohL3JfPax9iAh
-        ODEDJr/874i8bl7aoLIH2fM3GIxD0E3jR44L2s6u2w==
-X-Google-Smtp-Source: APXvYqzR69xVj1nvhC0VTf+5jd9GcXVruWxEn9VCUxgYKMoZpJBhz3dqFvxV6O+5ri0JXI2yXf4j/jJ8rsBfLgURJ7c=
-X-Received: by 2002:aca:ea57:: with SMTP id i84mr13409682oih.73.1574456479982;
- Fri, 22 Nov 2019 13:01:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20191022214616.7943-1-logang@deltatee.com> <20191022214616.7943-2-logang@deltatee.com>
- <20191109171853.GF952516@vkoul-mobl> <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
- <20191112055540.GY952516@vkoul-mobl> <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
- <20191114045555.GJ952516@vkoul-mobl> <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
- <20191122052010.GO82508@vkoul-mobl> <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
- <CAPcyv4iOjSX=Diw3Gs0Xnpe4HmVZ0xxD_13aQcCMomqUJWr58A@mail.gmail.com> <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
-In-Reply-To: <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 22 Nov 2019 13:01:09 -0800
-Message-ID: <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JklxB5p9HEc9L1MiCrh3Zy+CQC2KvglM1Tp/GhFHwhc=;
+        b=J8r/2kUWALG7Q8ZWCULvFdLnlObSaj1QjvpZhzdnvrZ+RQlPpnbIW9EVVzKnmcKKLw
+         kgGuJ5ttpe4GsNFLqYZG5ugVYHpPlBHuf5ugo8V5ATchkphGcO0fZSG+iUJlEIaGHMG0
+         nEUS/tdaFZG3j0zRoIum2C82G0RCvlSfehqjoOfuwR8FUWHjNP2kg8YfMZYZkQRXasTC
+         xOm+YUEs9FQBWwvn3SRchjYSHIeAjhrz5452yKicFLy9uOlX8885VTBZ7PjsqX/5c1N3
+         w6tsY2R90/UGoszC3+BkvApPadEZiYB16s24v9b6GAgzY5/G9irTD4EATJaYHk9ZrZ1h
+         ANJQ==
+X-Gm-Message-State: APjAAAUvj+fG5yWH8UdryZ6jUwOBjTQpwQf747zSe3itnv7Pc0MwpgRQ
+        NU6B1IA45u9hesNwoAGbHuDE8w==
+X-Google-Smtp-Source: APXvYqzC+V1gBOQ3MLncjF4qDQTnXiTkWeKPquIRggtfIwvLrEKNbxkexfHDiW8c9tvDdAbvPBCNwA==
+X-Received: by 2002:aed:204d:: with SMTP id 71mr7550631qta.116.1574456606488;
+        Fri, 22 Nov 2019 13:03:26 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id c6sm3428151qka.111.2019.11.22.13.03.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 13:03:25 -0800 (PST)
+Message-ID: <1574456603.9585.28.camel@lca.pw>
+Subject: Re: [tip: sched/urgent] sched/core: Avoid spurious lock dependencies
+From:   Qian Cai <cai@lca.pw>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        akpm@linux-foundation.org, cl@linux.com, keescook@chromium.org,
+        penberg@kernel.org, rientjes@google.com, thgarnie@google.com,
+        tytso@mit.edu, will@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Date:   Fri, 22 Nov 2019 16:03:23 -0500
+In-Reply-To: <20191122202059.GA2844@hirez.programming.kicks-ass.net>
+References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
+         <157363958888.29376.9190587096871610849.tip-bot2@tip-bot2>
+         <20191122200122.wx7ltij2w7w37cbe@linutronix.de>
+         <20191122202059.GA2844@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 12:56 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->
->
->
-> On 2019-11-22 1:50 p.m., Dan Williams wrote:
-> > On Fri, Nov 22, 2019 at 8:53 AM Dave Jiang <dave.jiang@intel.com> wrote:
-> >>
-> >>
-> >>
-> >> On 11/21/19 10:20 PM, Vinod Koul wrote:
-> >>> On 14-11-19, 10:03, Logan Gunthorpe wrote:
-> >>>>
-> >>>>
-> >>>> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
-> >>>>>> But that's the problem. We can't expect our users to be "nice" and not
-> >>>>>> unbind when the driver is in use. Killing the kernel if the user
-> >>>>>> unexpectedly unbinds is not acceptable.
-> >>>>>
-> >>>>> And that is why we review the code and ensure this does not happen and
-> >>>>> behaviour is as expected
-> >>>>
-> >>>> Yes, but the current code can kill the kernel when the driver is unbound.
-> >>>>
-> >>>>>>>> I suspect this is less of an issue for most devices as they wouldn't
-> >>>>>>>> normally be unbound while in use (for example there's really no reason
-> >>>>>>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
-> >>>>>>>> is, the user could unbind these devices at anytime and we don't want to
-> >>>>>>>> panic if they do.
-> >>>>>>>
-> >>>>>>> There are many drivers which do modules so yes I am expecting unbind and
-> >>>>>>> even a bind following that to work
-> >>>>>>
-> >>>>>> Except they will panic if they unbind while in use, so that's a
-> >>>>>> questionable definition of "work".
-> >>>>>
-> >>>>> dmaengine core has module reference so while they are being used they
-> >>>>> won't be removed (unless I complete misread the driver core behaviour)
-> >>>>
-> >>>> Yes, as I mentioned in my other email, holding a module reference does
-> >>>> not prevent the driver from being unbound. Any driver can be unbound by
-> >>>> the user at any time without the module being removed.
-> >>>
-> >>> That sounds okay then.
-> >>
-> >> I'm actually glad Logan is putting some work in addressing this. I also
-> >> ran into the same issue as well dealing with unbinds on my new driver.
-> >
-> > This was an original mistake of the dmaengine implementation that
-> > Vinod inherited. Module pinning is distinct from preventing device
-> > unbind which ultimately can't be prevented. Longer term I think we
-> > need to audit dmaengine consumers to make sure they are prepared for
-> > the driver to be removed similar to how other request based drivers
-> > can gracefully return an error status when the device goes away rather
-> > than crashing.
->
-> Yes, but that will be a big project because there are a lot of drivers.
+On Fri, 2019-11-22 at 21:20 +0100, Peter Zijlstra wrote:
+> On Fri, Nov 22, 2019 at 09:01:22PM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2019-11-13 10:06:28 [-0000], tip-bot2 for Peter Zijlstra wrote:
+> > > sched/core: Avoid spurious lock dependencies
+> > > 
+> > > While seemingly harmless, __sched_fork() does hrtimer_init(), which,
+> > > when DEBUG_OBJETS, can end up doing allocations.
+> > > 
+> > > This then results in the following lock order:
+> > > 
+> > >   rq->lock
+> > >     zone->lock.rlock
+> > >       batched_entropy_u64.lock
+> > > 
+> > > Which in turn causes deadlocks when we do wakeups while holding that
+> > > batched_entropy lock -- as the random code does.
+> > 
+> > Peter, can it _really_ cause deadlocks? My understanding was that the
+> > batched_entropy_u64.lock is a per-CPU lock and can _not_ cause a
+> > deadlock because it can be always acquired on multiple CPUs
+> > simultaneously (and it is never acquired cross-CPU).
+> > Lockdep is simply not smart enough to see that and complains about it
+> > like it would complain about a regular lock in this case.
+> 
+> That part yes. That is, even holding a per-cpu lock you can do a wakeup
+> to the local cpu and recurse back onto rq->lock.
+> 
+> However I don't think it can actually happen bceause this
+> is init_idle, and we only ever do that on hotplug, so actually creating
+> the concurrency required for the deadlock might be tricky.
+> 
+> Still, moving that thing out from under the lock was simple and correct.
 
-Oh yes, in fact I think it's something that can only reasonably be
-considered for new consumers.
+Well, the patch alone fixed a real deadlock during boot.
 
-> But I think the dmaengine common code needs to support removal properly,
-> which essentially means changing how all the drivers allocate and free
-> their structures, among other things.
->
-> The one saving grace is that most of the drivers are for SOCs which
-> can't be physically removed and there's really no use-case for the user
-> to call unbind.
+https://lore.kernel.org/lkml/1566509603.5576.10.camel@lca.pw/
 
-Yes, the SOC case is not so much my concern as the generic offload use
-cases, especially if those offloads are in a similar hotplug domain as
-a cpu.
+It needs DEBUG_OBJECTS=y to trigger though.
+
+Suppose it does,
+
+CPU0: zone_lock -> prink() [1]
+CPUs: printk() -> zone_lock [2]
+
+[1]
+[ 1078.599835][T43784] -> #1 (console_owner){-...}:
+[ 1078.606618][T43784]        __lock_acquire+0x5c8/0xbb0
+[ 1078.611661][T43784]        lock_acquire+0x154/0x428
+[ 1078.616530][T43784]        console_unlock+0x298/0x898
+[ 1078.621573][T43784]        vprintk_emit+0x2d4/0x460
+[ 1078.626442][T43784]        vprintk_default+0x48/0x58
+[ 1078.631398][T43784]        vprintk_func+0x194/0x250
+[ 1078.636267][T43784]        printk+0xbc/0xec
+[ 1078.640443][T43784]        _warn_unseeded_randomness+0xb4/0xd0
+[ 1078.646267][T43784]        get_random_u64+0x4c/0x100
+[ 1078.651224][T43784]        add_to_free_area_random+0x168/0x1a0
+[ 1078.657047][T43784]        free_one_page+0x3dc/0xd08
+
+
+[2]
+[  317.337609] -> #3 (&(&zone->lock)->rlock){-.-.}:
+[  317.337612]        __lock_acquire+0x5b3/0xb40
+[  317.337613]        lock_acquire+0x126/0x280
+[  317.337613]        _raw_spin_lock+0x2f/0x40
+[  317.337614]        rmqueue_bulk.constprop.21+0xb6/0x1160
+[  317.337615]        get_page_from_freelist+0x898/0x22c0
+[  317.337616]        __alloc_pages_nodemask+0x2f3/0x1cd0
+[  317.337617]        alloc_page_interleave+0x18/0x130
+[  317.337618]        alloc_pages_current+0xf6/0x110
+[  317.337619]        allocate_slab+0x4c6/0x19c0
+[  317.337620]        new_slab+0x46/0x70
+[  317.337621]        ___slab_alloc+0x58b/0x960
+[  317.337621]        __slab_alloc+0x43/0x70
+[  317.337622]        kmem_cache_alloc+0x354/0x460
+[  317.337623]        fill_pool+0x272/0x4b0
+[  317.337624]        __debug_object_init+0x86/0x790
+[  317.337624]        debug_object_init+0x16/0x20
+[  317.337625]        hrtimer_init+0x27/0x1e0
+[  317.337626]        init_dl_task_timer+0x20/0x40
+[  317.337627]        __sched_fork+0x10b/0x1f0
+[  317.337627]        init_idle+0xac/0x520
+[  317.337628]        idle_thread_get+0x7c/0xc0
+[  317.337629]        bringup_cpu+0x1a/0x1e0
+[  317.337630]        cpuhp_invoke_callback+0x197/0x1120
+[  317.337630]        _cpu_up+0x171/0x280
+[  317.337631]        do_cpu_up+0xb1/0x120
+[  317.337632]        cpu_up+0x13/0x20
+
+[  317.337635] -> #2 (&rq->lock){-.-.}:
+[  317.337638]        __lock_acquire+0x5b3/0xb40
+[  317.337639]        lock_acquire+0x126/0x280
+[  317.337639]        _raw_spin_lock+0x2f/0x40
+[  317.337640]        task_fork_fair+0x43/0x200
+[  317.337641]        sched_fork+0x29b/0x420
+[  317.337642]        copy_process+0xf3c/0x2fd0
+[  317.337642]        _do_fork+0xef/0x950
+[  317.337643]        kernel_thread+0xa8/0xe0
+
+[  317.337649] -> #1 (&p->pi_lock){-.-.}:
+[  317.337651]        __lock_acquire+0x5b3/0xb40
+[  317.337652]        lock_acquire+0x126/0x280
+[  317.337653]        _raw_spin_lock_irqsave+0x3a/0x50
+[  317.337653]        try_to_wake_up+0xb4/0x1030
+[  317.337654]        wake_up_process+0x15/0x20
+[  317.337655]        __up+0xaa/0xc0
+[  317.337655]        up+0x55/0x60
+[  317.337656]        __up_console_sem+0x37/0x60
+[  317.337657]        console_unlock+0x3a0/0x750
+[  317.337658]        vprintk_emit+0x10d/0x340
+[  317.337658]        vprintk_default+0x1f/0x30
+[  317.337659]        vprintk_func+0x44/0xd4
+[  317.337660]        printk+0x9f/0xc5
