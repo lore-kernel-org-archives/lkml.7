@@ -2,104 +2,88 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A83C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD67C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AEC2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574429976;
-	bh=OaTkTRciIPDqoACUtaLVXQi7qarg4p4CSsxYidcVIPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QWqvKOQ5/8F8NKSZPTlWZ2VFoiwOuhNb6d5KpYi3V3Q/zAYQ3I5ExpT3H02Wtv4zt
-	 vNIXGbjPK/KGW6nLbgdi9namGFLB87k7T1sRfZD9Df+npPCTixQyU8R8KApKzi+1r7
-	 BhhjalZGviaIYBBWZLQ8yJQqac0mLQIXMgXAs/Ic=
+	by mail.kernel.org (Postfix) with ESMTP id A35BC2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 13:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PS5FZoQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfKVNjf (ORCPT
+        id S1728121AbfKVNkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:39:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbfKVNjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:39:35 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0F5020707;
-        Fri, 22 Nov 2019 13:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574429974;
-        bh=OaTkTRciIPDqoACUtaLVXQi7qarg4p4CSsxYidcVIPA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x/Ds7kYOKh106g74lnHPE6OuxTJYaWK8rHydi2xbE5m/hA3iE8tOTqxWcOahH9+wZ
-         kuMRsQKalNlmoBERfr/kC0NLexbxsTuswY4FvU+R7Yjzs8nV1JDNx3Bf9pNVqDhMC7
-         En3x4RfYbe4p36H+Sw7JB2uqCmOeJxKVMmlEoZi4=
-Date:   Fri, 22 Nov 2019 14:39:31 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
-Message-ID: <20191122133931.GA2033651@kroah.com>
-References: <20191122100704.194776704@linuxfoundation.org>
- <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
+        Fri, 22 Nov 2019 08:40:08 -0500
+Received: from mail-pg1-f178.google.com ([209.85.215.178]:46860 "EHLO
+        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfKVNkI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 08:40:08 -0500
+Received: by mail-pg1-f178.google.com with SMTP id r18so3346392pgu.13;
+        Fri, 22 Nov 2019 05:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=544kcmMiCqtSjCBQu6R15oO53g7kg6Y6+1cat5y7nTQ=;
+        b=PS5FZoQcmIwO9sPfyjUUlO5iDUYj99d46+dLMSXaHEeBNAyfiE1AVY29iK0W89+1Dx
+         3o/rQIWDEIIPFLFv0yQsIIXCO6XQW3WT+AK/oC1hMgCLCHtynD6zMrvbD8PmqHxtPkhT
+         zEcKRxCUlmPnvit9HmZ/ap8LrzT4BQRZe7xzoquSHiTutVQJ8hAGRnYNpHkW8FQEBxbD
+         k4csC81Us6mov58Jwkh9aw0ZwXfoqPISqv6c7AQ4QL144ws6IGNmc7lexJxeY9nur20n
+         GsDNeDwoGMNDLDMVS1zoO/mWSa4WG3TPbe9N2fQUBe5jI3a+gE8imLhUJvySaTuGSg7/
+         4adA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=544kcmMiCqtSjCBQu6R15oO53g7kg6Y6+1cat5y7nTQ=;
+        b=jCf1lMQJ6V4YsRVnEpEU7L4Q7J5fNrgma7UD9MAHnS92EWYx9+2YgXmn9G3jcBBUd/
+         l90r+HdFOqS6ycNbYmh4CYwWKRWZqgQZeqxvM5RC9OYWdNVbr561Yv9jVMkFmCNL7xf2
+         HnIveQqr3E+sr1O2M6pgqZQWnJpYON35uUXHw3bRynR7Qk2HeZMarL6ajzy+a2ygE7q3
+         9aRnRpm1Tum5vCqv2r7aw7tGXVHgfNXvpR7imx3xnThS9MH4l7f6y8R3jRdIcgsHDfTV
+         007L/6lxkJb76ROhWaO8GeT84AUQlmmBVsQWuoNoTX8z90ciLIoRO3/GhPjg5hfp9wMd
+         XGyQ==
+X-Gm-Message-State: APjAAAUETvg4VYz0cOBW94VO+JR2itGLDlipdZFNnKVaz+7RICcENONm
+        GuLpjEzSycrbMTs/tSQNd5UylqXmFB60D82PmEg=
+X-Google-Smtp-Source: APXvYqw9ERYQwgfZpqcCRHZw+wkqE/xLzsHv80DAmZSb1Xyt1FBW6S2llKP15ZqNu0UwTfOTI38IAs1GwpxJbtyjIzM=
+X-Received: by 2002:a62:75d7:: with SMTP id q206mr17094429pfc.232.1574430007362;
+ Fri, 22 Nov 2019 05:40:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191119154611.29625-2-TheSven73@gmail.com> <applied-20191119154611.29625-2-TheSven73@gmail.com>
+ <20191122073124.GA3296@dell> <20191122133230.GD6849@sirena.org.uk>
+In-Reply-To: <20191122133230.GD6849@sirena.org.uk>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Fri, 22 Nov 2019 08:39:56 -0500
+Message-ID: <CAGngYiWzQS84MqW29xJXkYpC7QwudKGZAVGTSd1QtX3dJMmD1g@mail.gmail.com>
+Subject: Re: Applied "tps6105x: add optional devicetree support" to the
+ regulator tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Axel Lin <axel.lin@ingics.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 01:14:28PM +0000, Jon Hunter wrote:
-> 
-> On 22/11/2019 10:26, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.4.203 release.
-> > There are 159 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.203-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> > Pseudo-Shortlog of commits:
-> 
-> ...
-> 
-> > Marek Szyprowski <m.szyprowski@samsung.com>
-> >     ARM: dts: exynos: Disable pull control for S5M8767 PMIC
-> 
-> The above commit is causing the following build error for ARM ...
-> 
-> Error: /dvs/git/dirty/git-master_l4t-upstream/kernel/arch/arm/boot/dts/exynos5250-arndale.dts:560.22-23 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/exynos5250-arndale.dtb' failed
-> make[2]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
+On Fri, Nov 22, 2019 at 8:32 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> Sorry, I completely missed that this was adding a MFD file - the binding
+> only mentioned regulator stuff and I clearly didn't look at the
+> filename.  Do you want me to drop it?
 
-Ugh. I'll go drop this from 4.4.y, is it also an issue in the 4.9.y
-tree?
-
-thanks,
-
-greg k-h
+I didn't put "mfd:" on the patch title line, adding to the confusion, sorry.
+I'll roll that into the next patch version. Except if the patch is acceptable
+to Lee as-is.
