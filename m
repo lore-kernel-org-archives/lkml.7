@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F71C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9460C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981F02068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FF62070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402884;
-	bh=H1WBjtuVHU+q1pByMDCrOf3M0NmQW+pm/fk8+btGKfY=;
+	s=default; t=1574402887;
+	bh=IqduOh9xVVfu65f4fsXLeH1S9VudomnpeTxQk5ILfJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtotD6UqHQasnA3hwFv+r28qd+ndZLBZ3uuycUPiAGBxt3WyMKtF8naQPMLVI8I6+
-	 bPtIyhjcOJRYyA/AUYZu2oY3W5QRkR5vPp09AWqxGzwyYBSNoV6stGkan80lAyNJGq
-	 hYgJCT6MIIJqhJWR3qfsbisibTc+gObe+kR179K0=
+	b=0W8MMuiY8Zv8IvaycdRvOUyULpVNgWUNXHnNU5lmi2le68gZ03Mw21lSlX1EF1ajG
+	 8QyI19grTuqBHY+HO/iCdHz0CPAiv1WOF8Nupdp2SVSxUL03PWTFAW7pMYndNFSnbh
+	 X8ABiAlr5fwiYA5UuZhIBFPLdVoH29XT6ud5u+rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbfKVGID (ORCPT
+        id S1729513AbfKVGIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:08:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40122 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:08:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbfKVGBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:01:50 -0500
+        id S1729232AbfKVGBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:01:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218D42070A;
-        Fri, 22 Nov 2019 06:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D2D20718;
+        Fri, 22 Nov 2019 06:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402509;
-        bh=H1WBjtuVHU+q1pByMDCrOf3M0NmQW+pm/fk8+btGKfY=;
+        s=default; t=1574402507;
+        bh=IqduOh9xVVfu65f4fsXLeH1S9VudomnpeTxQk5ILfJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IeyFldKgq8KszDQ/JQmljUcIdN0bL7zqnI7pjy2HquHP+0rEpZ9WQJJQMG5JEcdBr
-         jVe+2TFA+cOQY8lkflRpchIcQAN0TB7oQH0C0qEEaWBsbUz/8HvP70iWu+9CbgWM9f
-         fELWh9Qw+oH8C18pbUwCgb2WVjCeQkBoDNE2Fu18=
+        b=jYbyjQ8hpSXZy/iaXXtmgCttnyrGGvHMtq1yTXQ5j0T2CIur0ZdEuepACq5ivyUHG
+         uqbmYCcMrC84qNO8x94KNB1m3CYHPCW2d4Sda8zrHQYQDm6MRVgjS+cXHy1av8pmI9
+         f9x4dx5Dw9oYYOOe4E50RdymM9P+A/C53M0MbHgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 19/91] microblaze: move "... is ready" messages to arch/microblaze/Makefile
-Date:   Fri, 22 Nov 2019 01:00:17 -0500
-Message-Id: <20191122060129.4239-18-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 17/91] ubi: Do not drop UBI device reference before using
+Date:   Fri, 22 Nov 2019 01:00:15 -0500
+Message-Id: <20191122060129.4239-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,64 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 2e14f94cf4bc2f15ca5362e81ca3a987c79e3062 ]
+[ Upstream commit e542087701f09418702673631a908429feb3eae0 ]
 
-To prepare for more fixes, move this to arch/microblaze/Makefile.
-Otherwise, the same "... is ready" would be printed multiple times.
+The UBI device reference is dropped but then the device is used as a
+parameter of ubi_err. The bug is introduced in changing ubi_err's
+behavior. The old ubi_err does not require a UBI device as its first
+parameter, but the new one does.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Fixes: 32608703310 ("UBI: Extend UBI layer debug/messaging capabilities")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/Makefile      | 2 ++
- arch/microblaze/boot/Makefile | 4 ----
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/mtd/ubi/kapi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
-index 5e1e18540a571..491676a6cde57 100644
---- a/arch/microblaze/Makefile
-+++ b/arch/microblaze/Makefile
-@@ -75,9 +75,11 @@ archclean:
- 
- linux.bin linux.bin.gz linux.bin.ub: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
-+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
- 
- simpleImage.%: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
-+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
- 
- define archhelp
-   echo '* linux.bin    - Create raw binary'
-diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
-index 0f3fe6a151dce..22bed08ec7f28 100644
---- a/arch/microblaze/boot/Makefile
-+++ b/arch/microblaze/boot/Makefile
-@@ -8,15 +8,12 @@ OBJCOPYFLAGS := -R .note -R .comment -R .note.gnu.build-id -O binary
- 
- $(obj)/linux.bin: vmlinux FORCE
- 	$(call if_changed,objcopy)
--	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
- 
- $(obj)/linux.bin.ub: $(obj)/linux.bin FORCE
- 	$(call if_changed,uimage)
--	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
- 
- $(obj)/linux.bin.gz: $(obj)/linux.bin FORCE
- 	$(call if_changed,gzip)
--	@echo 'Kernel: $@ is ready' ' (#'`cat .version`')'
- 
- quiet_cmd_cp = CP      $< $@$2
- 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
-@@ -34,6 +31,5 @@ $(obj)/simpleImage.%: vmlinux FORCE
- 	$(call if_changed,objcopy)
- 	$(call if_changed,uimage)
- 	$(call if_changed,strip,.strip)
--	@echo 'Kernel: $(UIMAGE_OUT) is ready' ' (#'`cat .version`')'
- 
- clean-files += simpleImage.*.unstrip linux.bin.ub dts/*.dtb
+diff --git a/drivers/mtd/ubi/kapi.c b/drivers/mtd/ubi/kapi.c
+index 88b1897aeb40f..7826f7c4ec2fb 100644
+--- a/drivers/mtd/ubi/kapi.c
++++ b/drivers/mtd/ubi/kapi.c
+@@ -227,9 +227,9 @@ struct ubi_volume_desc *ubi_open_volume(int ubi_num, int vol_id, int mode)
+ out_free:
+ 	kfree(desc);
+ out_put_ubi:
+-	ubi_put_device(ubi);
+ 	ubi_err(ubi, "cannot open device %d, volume %d, error %d",
+ 		ubi_num, vol_id, err);
++	ubi_put_device(ubi);
+ 	return ERR_PTR(err);
+ }
+ EXPORT_SYMBOL_GPL(ubi_open_volume);
 -- 
 2.20.1
 
