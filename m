@@ -2,142 +2,119 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D31C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B3EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8022071F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:10:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRhLjYM0"
+	by mail.kernel.org (Postfix) with ESMTP id 7DF302068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 12:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfKVMKo (ORCPT
+        id S1727479AbfKVMOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:10:44 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46018 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbfKVMKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:10:43 -0500
-Received: by mail-lj1-f193.google.com with SMTP id n21so7050870ljg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 04:10:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wlDWTRSDtzcsrS/LzPR3YwO7p6W49eS5hMAX/W8yQE0=;
-        b=pRhLjYM0wx/YizczTitjIGOaQJ3d7C3HKug/L0+xWBQiV0c0Nk9AKah2Tcvn321RB3
-         64UTqFpyIj5U2Ub+uUJK230TnnmsIC0mrbFcrSmcxEIUxGLmWyVS7j5EsqUE8B+GChJo
-         lgeNS4EfhmVVmA559xgRF4VUIAPfwtS7U2APxgfRXw89iaTSfvKyb9t5ejHGo6AaRITK
-         fCbEqJTC/0ae3U9y3iHN54/jQrdvW0XfE8xUf22m+gmlCdaMwCJ6ROoOu4ROGxijXKuZ
-         vtmU2XXCvOaF4G3M1IsTO7THcDosvQdEjs+XpakwnqGfgryu+C3GHNuU6zcYnFW8J813
-         B9gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wlDWTRSDtzcsrS/LzPR3YwO7p6W49eS5hMAX/W8yQE0=;
-        b=ZxpBA7an5Fp4gFkxL8ruEVop9It2UwvkyQzkNwdNeCgy9yXJt26+ws6FFSOaubB/eD
-         /6eJP60b2rIei2T+eQjacPl4+hkPOuEUFDMrXv1hwa5qenfvvNDeS+pvJjVGgVBMZvRW
-         p5AFVVrytEO2B0JpM9+TWsM8vWQbJS6NcogD66APCnWeIe2kM4y26jwUTTKcf9R41f0h
-         sh8bRh6c+xGEMa+pUEkOj1kOwBz8N5w0HatuE4w8vKzLK/gyE4yQ8FK77VoNEV+4mC4t
-         ZVhjXKjO2e1lLu9annpTjXMSMiza/2up402hVQORNHwAn5S35JCSo7jwWi7QGudktPV9
-         A19g==
-X-Gm-Message-State: APjAAAXqAyIPDVcfstGSgcvAWSxA08HN6FaV3cv9LCJMsw9SMPCVvh8F
-        EeCkdty1ilmo6zt+Sh0NrjHRSCFZUVqwcvSXNgwKEQ==
-X-Google-Smtp-Source: APXvYqyqKXD0yVNT+urjoUi2GUYSWy9M9yz+lnGATBdyiLh4EoHM658sZ5KV3XTNbO32a5Dg4fjfdP6zwcFqrraCeP4=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr12053927ljd.183.1574424641250;
- Fri, 22 Nov 2019 04:10:41 -0800 (PST)
+        Fri, 22 Nov 2019 07:14:23 -0500
+Received: from mga14.intel.com ([192.55.52.115]:50521 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfKVMOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 07:14:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 04:14:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="216354395"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.70]) ([10.237.72.70])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Nov 2019 04:14:18 -0800
+Subject: Re: [PATCH v7 2/4] mmc: host: sdhci: Add request_done ops for struct
+ sdhci_ops
+To:     Baolin Wang <baolin.wang7@gmail.com>, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
+        linus.walleij@linaro.org, vincent.guittot@linaro.org,
+        baolin.wang@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1574073572.git.baolin.wang7@gmail.com>
+ <2f16c4f2b98474b79584e0bf338ebb6fb4f6617d.1574073572.git.baolin.wang7@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <8f5adf0c-bd92-db11-bea0-8856d49395f8@intel.com>
+Date:   Fri, 22 Nov 2019 14:13:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
-In-Reply-To: <20191120133409.9217-2-peter.ujfalusi@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:10:29 +0100
-Message-ID: <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2f16c4f2b98474b79584e0bf338ebb6fb4f6617d.1574073572.git.baolin.wang7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+On 18/11/19 12:43 PM, Baolin Wang wrote:
+> From: Baolin Wang <baolin.wang@linaro.org>
+> 
+> Add request_done ops for struct sdhci_ops as a preparation in case some
+> host controllers have different method to complete one request, such as
+> supporting request completion of MMC software queue.
+> 
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 
-> Boards might use the same GPIO line to control several external devices.
-> Add section to document on how a shared GPIO pin can be described.
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-As I've stated earlier I think this information is surplus.
-If two devices have a phandle to the same GPIO line
-then it is by definition shared.
+> ---
+>  drivers/mmc/host/sdhci.c |   12 ++++++++++--
+>  drivers/mmc/host/sdhci.h |    2 ++
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index b056400..850241f 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2729,7 +2729,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>  
+>  	spin_unlock_irqrestore(&host->lock, flags);
+>  
+> -	mmc_request_done(host->mmc, mrq);
+> +	if (host->ops->request_done)
+> +		host->ops->request_done(host, mrq);
+> +	else
+> +		mmc_request_done(host->mmc, mrq);
+>  
+>  	return false;
+>  }
+> @@ -3157,7 +3160,12 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>  
+>  	/* Process mrqs ready for immediate completion */
+>  	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+> -		if (mrqs_done[i])
+> +		if (!mrqs_done[i])
+> +			continue;
+> +
+> +		if (host->ops->request_done)
+> +			host->ops->request_done(host, mrqs_done[i]);
+> +		else
+>  			mmc_request_done(host->mmc, mrqs_done[i]);
+>  	}
+>  
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0ed3e0e..d89cdb9 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -644,6 +644,8 @@ struct sdhci_ops {
+>  	void	(*voltage_switch)(struct sdhci_host *host);
+>  	void	(*adma_write_desc)(struct sdhci_host *host, void **desc,
+>  				   dma_addr_t addr, int len, unsigned int cmd);
+> +	void	(*request_done)(struct sdhci_host *host,
+> +				struct mmc_request *mrq);
+>  };
+>  
+>  #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
+> 
 
-> +               line_a {
-> +                       gpio-shared;
-
-So this is unnecessary: if the same line is referenced
-by phandle from two places it is shared, simple as that.
-It is up to code in the operating system (like Linux) to
-detect if they are shared in practice (both consumer
-nodes are enabled) and then deal with the outcome.
-
-> +                       gpios = <5 0>;
-> +                       output-low;
-
-This is overlapping with the use case to define initial
-state values for GPIOs, something that has been
-brought up repeatedly and I've collected links for
-previous discussions several times.
-
-I guess if need be I have to look them up again.
-
-The DT maintainers don't like the hog syntax so
-something else is desired for this.
-
-> +                       refcounted-high;
-(snip)
-> +The shared GPIO line management strategy can be selected with either of the
-> +following properties:
-> +- refcounted-low: The line must be kept low as long as there is at least one
-> +               request asking it to be low.
-> +- refcounted-high: The line must be kept high as long as there is at least one
-> +               request asking it to be high.
-
-Is this really needed? Isn't it more appropriate to just define the
-semantics such that as soon as some consumer requests the line
-high it will be refcounted high, and as soon as it is requested
-low by any consumer it will be refcounted low.
-
-> +If neither of the refcounting strategy was selected then the shared GPIO is
-> +handled as pass through. In this mode all user requests will be forwarded to the
-> +shared GPIO pin without refcounting.
-
-Why should this even be allowed? If we are defining a special semantic
-for refcounted GPIOs (even defining a separate API in the Linux
-OS, though it is beside the point) why do we have to have a fallback
-to the old behaviour at all?
-
-I think you can do this by just detecting multiple phandles to the
-same GPIO and implicit refcounting for > 1 consumers.
-
-I.e. no new bindings at all, maybe some patches explaining the
-semantic effect of using the same GPIO from two consumer
-nodes.
-
-Yours,
-Linus Walleij
