@@ -2,135 +2,125 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACA7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29325C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848A420718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:00:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6fh5q+F"
+	by mail.kernel.org (Postfix) with ESMTP id 0798820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 14:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfKVOAL (ORCPT
+        id S1728191AbfKVOA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:00:11 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32999 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfKVOAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:00:11 -0500
-Received: by mail-io1-f65.google.com with SMTP id j13so8144274ioe.0;
-        Fri, 22 Nov 2019 06:00:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A3eKvaFo1JGhu6lnAN1aDIgq1Pf6mOkZOyokY6qopcs=;
-        b=A6fh5q+F4GC/hZejOwyrpnYhDN+x0FLlt7gyPcxFTCEIGdyK0qgh0s4KHaIE/kpvwL
-         GZe6kl/qQy1CA3jABX7M2XrVjU1Zhzlm2ku1Wc+JlO/h6PK3VeKoeiVmrbpPEJ3XVSgY
-         XxlsRPUSOrqz7G3hEWAINFGlOxlfyHaaz4pq9rKXsEZveAco7HAulJixh39Q+ehsQlwU
-         PA/+5WJ90zhFL/Hzyd8M3W28ZizEqlJxkdelyVrbTjtiZbV5U2CF6K1Pk5z/ZhFFQ7uI
-         cl9zcUjEI/iHMgBVeWDClGJoRidtWH9veioqpcuYZG045mi8fazgsc2AZ3DSYRA/exEc
-         MAGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A3eKvaFo1JGhu6lnAN1aDIgq1Pf6mOkZOyokY6qopcs=;
-        b=TaYqy+Finv9xdIkX72mYpA34hGiDQsia0KW0CgQDBnxL8LNLgLzKRJ6aA+5wGpYEeN
-         Icj4c15z3+2kS+evnCbBLY8aOvhGfgHyJb+WJwkU6L97n4eR7q3OZpmPfkzGLfC4nW7b
-         FmHSbMzbGfN5moUr/7Ve/Ai2m0B2lLDoJ81baJ4P+XLeSJ82oBDolc77K8mZepn5zavF
-         JctzLIqb5f7l+DiBZwtmmFqqb5uoLRUUOZyKN8HsnYdJJaUeZkyIpIDGbFaOfZZQ595u
-         8B8pkidr9o7VzJBszSnyh60sixIpq4BStWNCmeCgoYo9JcRAwYAmieiQBOcUjbcuIbTQ
-         x19A==
-X-Gm-Message-State: APjAAAWbIAdoWSOXuS2x+clbb5xvRaKkL7bD7GT9IOh/xW9qt5JnqtFO
-        49xVm6GKuvKz89t3bVeN//eunt257rmlu/4UDJ0ZQp3DUKs=
-X-Google-Smtp-Source: APXvYqwaUR+5DSTETTRFfyfpI1V27XTxBW6BS9bvv8ctDtLaBovtbrmFzfqebLHu+KU4PgEKnwitUz7Ur31g4V49TEM=
-X-Received: by 2002:a02:9f95:: with SMTP id a21mr14065328jam.16.1574431209771;
- Fri, 22 Nov 2019 06:00:09 -0800 (PST)
+        Fri, 22 Nov 2019 09:00:58 -0500
+Received: from mga04.intel.com ([192.55.52.120]:61887 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbfKVOA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:00:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 06:00:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="197633023"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 22 Nov 2019 06:00:55 -0800
+Received: from [10.251.82.176] (abudanko-mobl.ccr.corp.intel.com [10.251.82.176])
+        by linux.intel.com (Postfix) with ESMTP id 46A5D58051A;
+        Fri, 22 Nov 2019 06:00:51 -0800 (PST)
+Subject: Re: [PATCH v1 0/3] perf record: adapt NUMA awareness to machines with
+ #CPUs > 1K
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
+ <20191122132659.GG17308@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <a19762fb-a732-0e27-c649-aecc90732a5d@linux.intel.com>
+Date:   Fri, 22 Nov 2019 17:00:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191122054911.1750-1-sashal@kernel.org> <20191122054911.1750-133-sashal@kernel.org>
-In-Reply-To: <20191122054911.1750-133-sashal@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 22 Nov 2019 15:00:43 +0100
-Message-ID: <CAOi1vP9MCrPf44V2GMyODH185A0HJcuPsYfVkOAVGkcMRb+=iw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 140/219] libceph: drop last_piece logic from write_partial_message_data()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191122132659.GG17308@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 6:51 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Ilya Dryomov <idryomov@gmail.com>
->
-> [ Upstream commit 1f6b821aef78e3d79e8d598ae59fc7e23fb6c563 ]
->
-> last_piece is for the last piece in the current data item, not in the
-> entire data payload of the message.  This is harmful for messages with
-> multiple data items.  On top of that, we don't need to signal the end
-> of a data payload either because it is always followed by a footer.
->
-> We used to signal "more" unconditionally, until commit fe38a2b67bc6
-> ("libceph: start defining message data cursor").  Part of a large
-> series, it introduced cursor->last_piece and also mistakenly inverted
-> the hint by passing last_piece for "more".  This was corrected with
-> commit c2cfa1940097 ("libceph: Fix ceph_tcp_sendpage()'s more boolean
-> usage").
->
-> As it is, last_piece is not helping at all: because Nagle algorithm is
-> disabled, for a simple message with two 512-byte data items we end up
-> emitting three packets: front + first data item, second data item and
-> footer.  Go back to the original pre-fe38a2b67bc6 behavior -- a single
-> packet in most cases.
->
-> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  net/ceph/messenger.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
-> index f7d7f32ac673c..6514816947fbe 100644
-> --- a/net/ceph/messenger.c
-> +++ b/net/ceph/messenger.c
-> @@ -1612,7 +1612,6 @@ static int write_partial_message_data(struct ceph_connection *con)
->                 struct page *page;
->                 size_t page_offset;
->                 size_t length;
-> -               bool last_piece;
->                 int ret;
->
->                 if (!cursor->resid) {
-> @@ -1620,10 +1619,9 @@ static int write_partial_message_data(struct ceph_connection *con)
->                         continue;
->                 }
->
-> -               page = ceph_msg_data_next(cursor, &page_offset, &length,
-> -                                         &last_piece);
-> -               ret = ceph_tcp_sendpage(con->sock, page, page_offset,
-> -                                       length, !last_piece);
-> +               page = ceph_msg_data_next(cursor, &page_offset, &length, NULL);
-> +               ret = ceph_tcp_sendpage(con->sock, page, page_offset, length,
-> +                                       true);
->                 if (ret <= 0) {
->                         if (do_datacrc)
->                                 msg->footer.data_crc = cpu_to_le32(crc);
+On 22.11.2019 16:26, Jiri Olsa wrote:
+> On Wed, Nov 20, 2019 at 12:33:10PM +0300, Alexey Budankov wrote:
+>>
+>> Current implementation of cpu_set_t type by glibc has internal cpu
+>> mask size limitation of no more than 1024 CPUs. This limitation confines
+>> NUMA awareness of Perf tool in record mode, thru --affinity option,
+>> to the first 1024 CPUs on machines with larger amount of CPUs.
+>>
+>> This patch set enables Perf tool to overcome 1024 CPUs limitation by
+>> using a dedicated struct mmap_cpu_mask type and applying tool's bitmap
+>> API operations to manipulate affinity masks of the tool's thread and
+>> the mmaped data buffers.
+>>
+>> tools bitmap API has been extended with bitmap_equal() operation
+>> and its implementation is derived from the kernel one.
+>>
+>> ---
+>> Alexey Budankov (3):
+>>   tools bitmap: extend bitmap API with bitmap_equal()
+>>   perf mmap: declare type for cpu mask of arbitrary length
+>>   perf record: adapt affinity to machines with #CPUs > 1K
+> 
+> looks good to me, I sent some minor comments
+> 
+>>
+>>  tools/include/linux/bitmap.h | 21 +++++++++++++++++++++
+>>  tools/lib/bitmap.c           | 15 +++++++++++++++
+>>  tools/perf/builtin-record.c  | 28 ++++++++++++++++++++++------
+>>  tools/perf/util/mmap.c       | 28 ++++++++++++++++++++++------
+>>  tools/perf/util/mmap.h       | 11 ++++++++++-
+>>  5 files changed, 90 insertions(+), 13 deletions(-)
+>>
+>> ---
+>> Testing:
+>>
+>>   $ tools/perf/perf record -v --affinity=cpu -- ls
+>>   thread mask[8]: empty
+>>   Using CPUID GenuineIntel-6-5E-3
+>>   ...
+>>   mmap size 528384B
+>>   0x7f95f8f85010: mmap mask[8]: 0
+>>   0x7f95f8f950d8: mmap mask[8]: 1
+>>   0x7f95f8fa51a0: mmap mask[8]: 2
+>>   0x7f95f8fb5268: mmap mask[8]: 3
+>>   0x7f95f8fc5330: mmap mask[8]: 4
+>>   0x7f95f8fd53f8: mmap mask[8]: 5
+>>   0x7f95f8fe54c0: mmap mask[8]: 6
+>>   0x7f95f8ff5588: mmap mask[8]: 7
+> 
+> could we add this to -vv? -v is poluted already
 
-Hi Sasha,
-
-This commit was part of a larger series and shouldn't be backported on
-its own.  Please drop it.
+In v2.
 
 Thanks,
+Alexey
 
-                Ilya
+> 
+> perhaps we should make some effort and try to consolidate -v output
+> for some really basic verbose, the rest would be under -vv or specialized
+> --debug variable .. not in scope of this patchset of course ;-)
+> 
+> thanks,
+> jirka
+> 
+> 
