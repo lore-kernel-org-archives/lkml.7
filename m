@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0B1C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DAEC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28AF2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3705B2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402705;
-	bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
+	s=default; t=1574402709;
+	bh=oqoXrjybaQcbpavSA2Ct70GdEPmxLqSSsipp5kfREaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IWdiu/iZfyrBriHLdQequA4kir4JpEwEavW4o1FpgSBy95ZFJX/+rVIt5YLnLYRIJ
-	 ot/LmiK1zPAAkXq24lE6R874hDFR6R+R8ZBfYeEh8oOsRXzCiWRkR4k5WBhye3syuz
-	 h7Ac23G488Jiwdd62ukWKbOpbuqqsPvV7k/8VAx0=
+	b=PgS8dj8KAqmrydwUCdHf7IpRzUu3G3hA4BTGI0KfeR3QlSnnGAyjawY5t92mi59EZ
+	 J1HK2gT4mrGTAbcCpMPBFGJ+/XbmZIWkmu9B86YU5RoGJ78+k8ljW6SMe8Ym1BKWGa
+	 AxRkKwnYyF4f1iCc+/znUpaakxQ45mZP81ANg/mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfKVGCo (ORCPT
+        id S1729291AbfKVGFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41342 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:05:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729445AbfKVGCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:36 -0500
+        id S1728903AbfKVGCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5439020718;
-        Fri, 22 Nov 2019 06:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C73A420659;
+        Fri, 22 Nov 2019 06:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402555;
-        bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
+        s=default; t=1574402561;
+        bh=oqoXrjybaQcbpavSA2Ct70GdEPmxLqSSsipp5kfREaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfhlrSAyA+UXH6Uk0DN1dLHFLfAyrOgWBlrUMdxFptFJVPVXWRCKLfqVXZQWsNkmG
-         0TESOZw2TE+PL7LSl7hJ3V72jPPd5JStTr/jgNeg9nXuRolTlDFlUyz+JJ3Z3syGva
-         p+8Qo/obOB6Hurq2/uKicYuvnv/ehijmSjWkWbeU=
+        b=0Sn/gB1PtsODzNjFHv/aR0brefRinnpV9WDI1iZ4L2/O2iN55dFFQi0UnORvcBk4F
+         JfJIj0kE3ElvCnDre5vKJdd+NEPjuZ0zhcpYzGsEPg9V1I55azflOuP3dvwBDWy1GM
+         L2Lbr/WXiYASMcVcj6dlLvnodPLuLov9lSb2eqpE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Shiyan <shc_work@mail.ru>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 60/91] pwm: clps711x: Fix period calculation
-Date:   Fri, 22 Nov 2019 01:00:58 -0500
-Message-Id: <20191122060129.4239-59-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 66/91] tipc: fix a missing check of genlmsg_put
+Date:   Fri, 22 Nov 2019 01:01:04 -0500
+Message-Id: <20191122060129.4239-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -60,45 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shiyan <shc_work@mail.ru>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit b0f17570b8203c22f139459c86cfbaa0311313ed ]
+[ Upstream commit 46273cf7e009231d2b6bc10a926e82b8928a9fb2 ]
 
-Commit e39c0df1be5a ("pwm: Introduce the pwm_args concept") has
-changed the variable for the period for clps711x-pwm driver, so now
-pwm_get/set_period() works with pwm->state.period variable instead
-of pwm->args.period.
-This patch changes the period variable in other places where it is used.
+genlmsg_put could fail. The fix inserts a check of its return value, and
+if it fails, returns -EMSGSIZE.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-clps711x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/tipc/netlink_compat.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 26ec24e457b12..7e16b7def0dcb 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -48,7 +48,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm_get_period(pwm));
-+	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
- }
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 63a913b238735..454ed8ea194c8 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -974,6 +974,8 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -71,7 +71,7 @@ static int clps711x_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct clps711x_chip *priv = to_clps711x_chip(chip);
- 	unsigned int duty;
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
++	if (!hdr)
++		return -EMSGSIZE;
  
--	if (period_ns != pwm_get_period(pwm))
-+	if (period_ns != pwm->args.period)
- 		return -EINVAL;
- 
- 	duty = clps711x_get_duty(pwm, duty_ns);
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
