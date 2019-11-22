@@ -2,130 +2,222 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FD2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E244C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C9B20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD72E2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CbMuYu9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfKVQ6U (ORCPT
+        id S1727282AbfKVRBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:58:20 -0500
-Received: from mga07.intel.com ([134.134.136.100]:51805 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfKVQ6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:58:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 08:58:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="201580258"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 22 Nov 2019 08:58:19 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: Grab KVM's srcu lock when setting nested state
-Date:   Fri, 22 Nov 2019 08:58:18 -0800
-Message-Id: <20191122165818.32558-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 22 Nov 2019 12:01:06 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33978 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVRBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 12:01:06 -0500
+Received: by mail-qt1-f194.google.com with SMTP id i17so8598600qtq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 09:01:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pWsBqIbKYWYWQhST9oJt9JgHbawkwTncjF3B7rnat0w=;
+        b=CbMuYu9hYHEWliCO6W1ulBmLeJrmf0Xlhc7Bphy1lYpCeTgBVL22O/X2RK0pgMK+EE
+         ZrWi5mXtdHqw5ec/shCd7FwhYRr1A9dZiUfp/wfu5tNgJe0czTTbT1JYcWeij67g/esT
+         7CUOcrX6TriEv+QrftR2fWaFVihjkgetIyUHsvlYZInYBCuZVEKokWhvWTvdvYGL1tmn
+         9/ElsgEm+PhJcfl0TD2UbHjk/bMeyC3Aexc48jR6+mvFjk/jlgXtlUAFLX8uiQAKfLab
+         rzBVlprhMyZH/3UCsPvhX3i1/CV+yf3OeRf6FdaSiiuOX6XusjlbVhxeRehyHCP+BzZS
+         VBJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pWsBqIbKYWYWQhST9oJt9JgHbawkwTncjF3B7rnat0w=;
+        b=rWoaSwLSMbXd5+kz4p1R7VNwD93JCdIJCppu0AyitEOjqoQDSu/r/2gmh8r3LC752V
+         Sa1PaqJ7mIihVddWpaNuP3U83iqylqjSmLp9Mxfz/54k3qsMcymKcfBqpmi2Rl5HHE24
+         h/q1a3mzm8mfpwNToTJzzziE3QHZyCFpMiYdvGj1kdlODQnD2dQ2NTGa/g5rGIyxdfvP
+         xAqoqqHXa+LS+C0uTyVLgGkaEObWOsbMQ1WIyMhqYDaYADZFqPWG//ppzeL8l/2CDCA2
+         /tlImSeKq/6EkzRV3XIS2Rg6p7h6R77C0zIefhDxs/oC2fTTlBUeLZDxfZyXQB9KfLvN
+         NhLA==
+X-Gm-Message-State: APjAAAUpKmnff11Rk+5dRdpXGsMmU7JmmG1vcDqZITQjoqSXtmrwQ672
+        evrO6p4Av+8MZpywMOm6H+57gA==
+X-Google-Smtp-Source: APXvYqzhCO0YqZ3MbISkcxOuab42Hq7epijhhLR0FagPFiSheL2qamzu2VSRis3ydcI5BIKnVqrfLw==
+X-Received: by 2002:aed:3762:: with SMTP id i89mr15676564qtb.69.1574442064122;
+        Fri, 22 Nov 2019 09:01:04 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id c21sm3688975qtg.61.2019.11.22.09.01.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 09:01:03 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     joe@perches.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v3] iommu/iova: silence warnings under memory pressure
+Date:   Fri, 22 Nov 2019 12:00:45 -0500
+Message-Id: <1574442045-9210-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acquire kvm->srcu for the duration of ->set_nested_state() to fix a bug
-where nVMX derefences ->memslots without holding ->srcu or ->slots_lock.
+When running heavy memory pressure workloads, this 5+ old system is
+throwing endless warnings below because disk IO is too slow to recover
+from swapping. Since the volume from alloc_iova_fast() could be large,
+once it calls printk(), it will trigger disk IO (writing to the log
+files) and pending softirqs which could cause an infinite loop and make
+no progress for days by the ongoimng memory reclaim. This is the counter
+part for Intel where the AMD part has already been merged. See the
+commit 3d708895325b ("iommu/amd: Silence warnings under memory
+pressure"). Since the allocation failure will be reported in
+intel_alloc_iova(), so just call printk_ratelimted() there and silence
+the one in alloc_iova_mem() to avoid the expensive warn_alloc().
 
-The other half of nested migration, ->get_nested_state(), does not need
-to acquire ->srcu as it is a purely a dump of internal KVM (and CPU)
-state to userspace.
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ slab_out_of_memory: 66 callbacks suppressed
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+   cache: iommu_iova, object size: 40, buffer size: 448, default order:
+0, min order: 0
+   node 0: slabs: 1822, objs: 16398, free: 0
+   node 1: slabs: 2051, objs: 18459, free: 31
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+   cache: iommu_iova, object size: 40, buffer size: 448, default order:
+0, min order: 0
+   node 0: slabs: 1822, objs: 16398, free: 0
+   node 1: slabs: 2051, objs: 18459, free: 31
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+   cache: iommu_iova, object size: 40, buffer size: 448, default order:
+0, min order: 0
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   node 0: slabs: 697, objs: 4182, free: 0
+   node 0: slabs: 697, objs: 4182, free: 0
+   node 0: slabs: 697, objs: 4182, free: 0
+   node 0: slabs: 697, objs: 4182, free: 0
+   node 1: slabs: 381, objs: 2286, free: 27
+   node 1: slabs: 381, objs: 2286, free: 27
+   node 1: slabs: 381, objs: 2286, free: 27
+   node 1: slabs: 381, objs: 2286, free: 27
+   node 0: slabs: 1822, objs: 16398, free: 0
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   node 1: slabs: 2051, objs: 18459, free: 31
+   node 0: slabs: 697, objs: 4182, free: 0
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+   node 1: slabs: 381, objs: 2286, free: 27
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   node 0: slabs: 697, objs: 4182, free: 0
+   node 1: slabs: 381, objs: 2286, free: 27
+ hpsa 0000:03:00.0: DMAR: Allocating 1-page iova failed
+ warn_alloc: 96 callbacks suppressed
+ kworker/11:1H: page allocation failure: order:0,
+mode:0xa20(GFP_ATOMIC), nodemask=(null),cpuset=/,mems_allowed=0-1
+ CPU: 11 PID: 1642 Comm: kworker/11:1H Tainted: G    B
+ Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420 Gen9, BIOS U19
+12/27/2015
+ Workqueue: kblockd blk_mq_run_work_fn
+ Call Trace:
+  dump_stack+0xa0/0xea
+  warn_alloc.cold.94+0x8a/0x12d
+  __alloc_pages_slowpath+0x1750/0x1870
+  __alloc_pages_nodemask+0x58a/0x710
+  alloc_pages_current+0x9c/0x110
+  alloc_slab_page+0xc9/0x760
+  allocate_slab+0x48f/0x5d0
+  new_slab+0x46/0x70
+  ___slab_alloc+0x4ab/0x7b0
+  __slab_alloc+0x43/0x70
+  kmem_cache_alloc+0x2dd/0x450
+ SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+  alloc_iova+0x33/0x210
+   cache: skbuff_head_cache, object size: 208, buffer size: 640, default
+order: 0, min order: 0
+   node 0: slabs: 697, objs: 4182, free: 0
+  alloc_iova_fast+0x62/0x3d1
+   node 1: slabs: 381, objs: 2286, free: 27
+  intel_alloc_iova+0xce/0xe0
+  intel_map_sg+0xed/0x410
+  scsi_dma_map+0xd7/0x160
+  scsi_queue_rq+0xbf7/0x1310
+  blk_mq_dispatch_rq_list+0x4d9/0xbc0
+  blk_mq_sched_dispatch_requests+0x24a/0x300
+  __blk_mq_run_hw_queue+0x156/0x230
+  blk_mq_run_work_fn+0x3b/0x40
+  process_one_work+0x579/0xb90
+  worker_thread+0x63/0x5b0
+  kthread+0x1e6/0x210
+  ret_from_fork+0x3a/0x50
+ Mem-Info:
+ active_anon:2422723 inactive_anon:361971 isolated_anon:34403
+  active_file:2285 inactive_file:1838 isolated_file:0
+  unevictable:0 dirty:1 writeback:5 unstable:0
+  slab_reclaimable:13972 slab_unreclaimable:453879
+  mapped:2380 shmem:154 pagetables:6948 bounce:0
+  free:19133 free_pcp:7363 free_cma:0
 
-Detected as an RCU lockdep splat that is 100% reproducible by running
-KVM's state_test selftest with CONFIG_PROVE_LOCKING=y.  Note that the
-failing function, kvm_is_visible_gfn(), is only checking the validity of
-a gfn, it's not actually accessing guest memory (which is more or less
-unsupported during vmx_set_nested_state() due to incorrect MMU state),
-i.e. vmx_set_nested_state() itself isn't fundamentally broken.  In any
-case, setting nested state isn't a fast path so there's no reason to go
-out of our way to avoid taking ->srcu.
-
-  =============================
-  WARNING: suspicious RCU usage
-  5.4.0-rc7+ #94 Not tainted
-  -----------------------------
-  include/linux/kvm_host.h:626 suspicious rcu_dereference_check() usage!
-
-               other info that might help us debug this:
-
-  rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by evmcs_test/10939:
-   #0: ffff88826ffcb800 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0x85/0x630 [kvm]
-
-  stack backtrace:
-  CPU: 1 PID: 10939 Comm: evmcs_test Not tainted 5.4.0-rc7+ #94
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  Call Trace:
-   dump_stack+0x68/0x9b
-   kvm_is_visible_gfn+0x179/0x180 [kvm]
-   mmu_check_root+0x11/0x30 [kvm]
-   fast_cr3_switch+0x40/0x120 [kvm]
-   kvm_mmu_new_cr3+0x34/0x60 [kvm]
-   nested_vmx_load_cr3+0xbd/0x1f0 [kvm_intel]
-   nested_vmx_enter_non_root_mode+0xab8/0x1d60 [kvm_intel]
-   vmx_set_nested_state+0x256/0x340 [kvm_intel]
-   kvm_arch_vcpu_ioctl+0x491/0x11a0 [kvm]
-   kvm_vcpu_ioctl+0xde/0x630 [kvm]
-   do_vfs_ioctl+0xa2/0x6c0
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x54/0x200
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f59a2b95f47
-
-Fixes: 8fcc4b5923af5 ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- arch/x86/kvm/x86.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5d530521f11d..656878a9802e 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4421,6 +4421,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 	case KVM_SET_NESTED_STATE: {
- 		struct kvm_nested_state __user *user_kvm_nested_state = argp;
- 		struct kvm_nested_state kvm_state;
-+		int idx;
- 
- 		r = -EINVAL;
- 		if (!kvm_x86_ops->set_nested_state)
-@@ -4444,7 +4445,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 		    && !(kvm_state.flags & KVM_STATE_NESTED_GUEST_MODE))
- 			break;
- 
-+		idx = srcu_read_lock(&vcpu->kvm->srcu);
- 		r = kvm_x86_ops->set_nested_state(vcpu, user_kvm_nested_state, &kvm_state);
-+		srcu_read_unlock(&vcpu->kvm->srcu, idx);
- 		break;
+v3: insert a "\n" in dev_err_ratelimited() per Joe.
+v2: use dev_err_ratelimited() and improve the commit messages.
+
+ drivers/iommu/intel-iommu.c | 3 ++-
+ drivers/iommu/iova.c        | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 0c8d81f56a30..855a7bb272d8 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3406,7 +3406,8 @@ static unsigned long intel_alloc_iova(struct device *dev,
+ 	iova_pfn = alloc_iova_fast(&domain->iovad, nrpages,
+ 				   IOVA_PFN(dma_mask), true);
+ 	if (unlikely(!iova_pfn)) {
+-		dev_err(dev, "Allocating %ld-page iova failed", nrpages);
++		dev_err_ratelimited(dev, "Allocating %ld-page iova failed\n",
++				    nrpages);
+ 		return 0;
  	}
- 	case KVM_GET_SUPPORTED_HV_CPUID: {
+ 
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 41c605b0058f..aa1a56aaa5ee 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -233,7 +233,7 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
+ 
+ struct iova *alloc_iova_mem(void)
+ {
+-	return kmem_cache_alloc(iova_cache, GFP_ATOMIC);
++	return kmem_cache_alloc(iova_cache, GFP_ATOMIC | __GFP_NOWARN);
+ }
+ EXPORT_SYMBOL(alloc_iova_mem);
+ 
 -- 
-2.24.0
+1.8.3.1
 
