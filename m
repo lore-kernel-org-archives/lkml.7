@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2BFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7E22068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FA220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402745;
-	bh=IRIFf4jSVFyly0lxBpHg7bfrDIjAbhsrihdGmuphs/k=;
+	s=default; t=1574402747;
+	bh=VJHTaa8af8C2n6uEHdlFvjPNZc6bJr90kjfPgFbMiAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajcjuPDAczeiTDOPTzJJM0ZSZ8PQzaLb3aPmigBbm6S/vvRL0EQLMDPGRk24x/Ren
-	 pt8/j5DIYwRA9E/+AmuLBpDnkoCGWoshFHaxXGr7cwynf+YLbh/oP9mulgFYOTc026
-	 E1oiCy+ST8TLVeKRo7pJ7ovAcZj5V8cZKtgGgEhA=
+	b=yMhJmB+VvmCNUL73xc1mBlyYi1pDinHSYwClbT+EzENsHfw5bsbVFP4qaomt3vnT+
+	 l9Bl6CeoHVLgKCfaRQTw1U1JX3TBnAx4/g9c3IizBzzEcPhTgtSPrErxBYSl/cRC1w
+	 LZ2BMssSBAfohk6aFQPUZD0zCEXqPwtdR6YZGpbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbfKVGFo (ORCPT
+        id S1728941AbfKVGCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbfKVGCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 01:02:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729720AbfKVGC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7672071B;
-        Fri, 22 Nov 2019 06:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 700312068E;
+        Fri, 22 Nov 2019 06:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402552;
-        bh=IRIFf4jSVFyly0lxBpHg7bfrDIjAbhsrihdGmuphs/k=;
+        s=default; t=1574402546;
+        bh=VJHTaa8af8C2n6uEHdlFvjPNZc6bJr90kjfPgFbMiAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBLrEUyHydnB2kD6kJ3cwZSIQR3Fp+4YhwN0eLps7c6VMqR72//2Gu78HYtf6S0Pu
-         y9iAUWkHIKLobDgp42vxbRCY23AC8NEfjU/aswiF0hJYWCPDpPV8stLxxXhreynm0v
-         PVLlP+K5qf0KNQGQ6dsxZp48e3LrKv7EQGV8xic0=
+        b=gVnmD9pt7Jm2CsKMSVkBAxqFd73KWFC0YPuT1+Ko2AEVck2pz+T4O4n3+AiRLElQa
+         vUXAmBVwN+7snwGDWgr+t2OXpu8Wb8ZHbyJttArQixLqVW9KdJAqmhxy0K5bxNi08t
+         Iw5wpUV4u11IJM6jsTz+NaDrQxEYVjRBobuB28pY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Scott Wood <oss@buserror.net>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 57/91] powerpc/83xx: handle machine check caused by watchdog timer
-Date:   Fri, 22 Nov 2019 01:00:55 -0500
-Message-Id: <20191122060129.4239-56-sashal@kernel.org>
+Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 52/91] drbd: ignore "all zero" peer volume sizes in handshake
+Date:   Fri, 22 Nov 2019 01:00:50 -0500
+Message-Id: <20191122060129.4239-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -59,140 +59,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
 
-[ Upstream commit 0deae39cec6dab3a66794f3e9e83ca4dc30080f1 ]
+[ Upstream commit 94c43a13b8d6e3e0dd77b3536b5e04a84936b762 ]
 
-When the watchdog timer is set in interrupt mode, it causes a
-machine check when it times out. The purpose of this mode is to
-ease debugging, not to crash the kernel and reboot the machine.
+During handshake, if we are diskless ourselves, we used to accept any size
+presented by the peer.
 
-This patch implements a special handling for that, in order to not
-crash the kernel if the watchdog times out while in interrupt or
-within the idle task.
+Which could be zero if that peer was just brought up and connected
+to us without having a disk attached first, in which case both
+peers would just "flip" their volume sizes.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[scottwood: added missing #include]
-Signed-off-by: Scott Wood <oss@buserror.net>
+Now, even a diskless node will ignore "zero" sizes
+presented by a diskless peer.
+
+Also a currently Diskless Primary will refuse to shrink during handshake:
+it may be frozen, and waiting for a "suitable" local disk or peer to
+re-appear (on-no-data-accessible suspend-io). If the peer is smaller
+than what we used to be, it is not suitable.
+
+The logic for a diskless node during handshake is now supposed to be:
+believe the peer, if
+ - I don't have a current size myself
+ - we agree on the size anyways
+ - I do have a current size, am Secondary, and he has the only disk
+ - I do have a current size, am Primary, and he has the only disk,
+   which is larger than my current size
+
+Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/cputable.h |  1 +
- arch/powerpc/include/asm/reg.h      |  2 ++
- arch/powerpc/kernel/cputable.c      | 10 ++++++----
- arch/powerpc/platforms/83xx/misc.c  | 17 +++++++++++++++++
- 4 files changed, 26 insertions(+), 4 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 33 +++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-index 4e54282c29b44..cf51aea47510c 100644
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -44,6 +44,7 @@ extern int machine_check_e500(struct pt_regs *regs);
- extern int machine_check_e200(struct pt_regs *regs);
- extern int machine_check_47x(struct pt_regs *regs);
- int machine_check_8xx(struct pt_regs *regs);
-+int machine_check_83xx(struct pt_regs *regs);
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 8e8e4ccb128f3..bbd50d7dce43d 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -4037,6 +4037,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	struct o_qlim *o = (connection->agreed_features & DRBD_FF_WSAME) ? p->qlim : NULL;
+ 	enum determine_dev_size dd = DS_UNCHANGED;
+ 	sector_t p_size, p_usize, p_csize, my_usize;
++	sector_t new_size, cur_size;
+ 	int ldsc = 0; /* local disk size changed */
+ 	enum dds_flags ddsf;
  
- extern void cpu_down_flush_e500v2(void);
- extern void cpu_down_flush_e500mc(void);
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index ceb168cd3b814..26aeeaad32678 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -663,6 +663,8 @@
- #define   SRR1_PROGTRAP		0x00020000 /* Trap */
- #define   SRR1_PROGADDR		0x00010000 /* SRR0 contains subsequent addr */
+@@ -4044,6 +4045,7 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	if (!peer_device)
+ 		return config_unknown_volume(connection, pi);
+ 	device = peer_device->device;
++	cur_size = drbd_get_capacity(device->this_bdev);
  
-+#define   SRR1_MCE_MCP		0x00080000 /* Machine check signal caused interrupt */
-+
- #define SPRN_HSRR0	0x13A	/* Save/Restore Register 0 */
- #define SPRN_HSRR1	0x13B	/* Save/Restore Register 1 */
- #define   HSRR1_DENORM		0x00100000 /* Denorm exception */
-diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
-index 6a82ef039c509..7471ed48f41fa 100644
---- a/arch/powerpc/kernel/cputable.c
-+++ b/arch/powerpc/kernel/cputable.c
-@@ -1162,6 +1162,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.machine_check		= machine_check_generic,
- 		.platform		= "ppc603",
- 	},
-+#ifdef CONFIG_PPC_83xx
- 	{	/* e300c1 (a 603e core, plus some) on 83xx */
- 		.pvr_mask		= 0x7fff0000,
- 		.pvr_value		= 0x00830000,
-@@ -1172,7 +1173,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.platform		= "ppc603",
- 	},
- 	{	/* e300c2 (an e300c1 core, plus some, minus FPU) on 83xx */
-@@ -1186,7 +1187,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.platform		= "ppc603",
- 	},
- 	{	/* e300c3 (e300c1, plus one IU, half cache size) on 83xx */
-@@ -1200,7 +1201,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.num_pmcs		= 4,
- 		.oprofile_cpu_type	= "ppc/e300",
- 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
-@@ -1217,12 +1218,13 @@ static struct cpu_spec __initdata cpu_specs[] = {
- 		.icache_bsize		= 32,
- 		.dcache_bsize		= 32,
- 		.cpu_setup		= __setup_cpu_603,
--		.machine_check		= machine_check_generic,
-+		.machine_check		= machine_check_83xx,
- 		.num_pmcs		= 4,
- 		.oprofile_cpu_type	= "ppc/e300",
- 		.oprofile_type		= PPC_OPROFILE_FSL_EMB,
- 		.platform		= "ppc603",
- 	},
-+#endif
- 	{	/* default match, we assume split I/D cache & TB (non-601)... */
- 		.pvr_mask		= 0x00000000,
- 		.pvr_value		= 0x00000000,
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index d75c9816a5c92..2b6589fe812dd 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -14,6 +14,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
+ 	p_size = be64_to_cpu(p->d_size);
+ 	p_usize = be64_to_cpu(p->u_size);
+@@ -4054,7 +4056,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 	device->p_size = p_size;
  
-+#include <asm/debug.h>
- #include <asm/io.h>
- #include <asm/hw_irq.h>
- #include <asm/ipic.h>
-@@ -150,3 +151,19 @@ void __init mpc83xx_setup_arch(void)
+ 	if (get_ldev(device)) {
+-		sector_t new_size, cur_size;
+ 		rcu_read_lock();
+ 		my_usize = rcu_dereference(device->ldev->disk_conf)->disk_size;
+ 		rcu_read_unlock();
+@@ -4072,7 +4073,6 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 		/* Never shrink a device with usable data during connect.
+ 		   But allow online shrinking if we are connected. */
+ 		new_size = drbd_new_dev_size(device, device->ldev, p_usize, 0);
+-		cur_size = drbd_get_capacity(device->this_bdev);
+ 		if (new_size < cur_size &&
+ 		    device->state.disk >= D_OUTDATED &&
+ 		    device->state.conn < C_CONNECTED) {
+@@ -4137,9 +4137,36 @@ static int receive_sizes(struct drbd_connection *connection, struct packet_info
+ 		 *
+ 		 * However, if he sends a zero current size,
+ 		 * take his (user-capped or) backing disk size anyways.
++		 *
++		 * Unless of course he does not have a disk himself.
++		 * In which case we ignore this completely.
+ 		 */
++		sector_t new_size = p_csize ?: p_usize ?: p_size;
+ 		drbd_reconsider_queue_parameters(device, NULL, o);
+-		drbd_set_my_capacity(device, p_csize ?: p_usize ?: p_size);
++		if (new_size == 0) {
++			/* Ignore, peer does not know nothing. */
++		} else if (new_size == cur_size) {
++			/* nothing to do */
++		} else if (cur_size != 0 && p_size == 0) {
++			drbd_warn(device, "Ignored diskless peer device size (peer:%llu != me:%llu sectors)!\n",
++					(unsigned long long)new_size, (unsigned long long)cur_size);
++		} else if (new_size < cur_size && device->state.role == R_PRIMARY) {
++			drbd_err(device, "The peer's device size is too small! (%llu < %llu sectors); demote me first!\n",
++					(unsigned long long)new_size, (unsigned long long)cur_size);
++			conn_request_state(peer_device->connection, NS(conn, C_DISCONNECTING), CS_HARD);
++			return -EIO;
++		} else {
++			/* I believe the peer, if
++			 *  - I don't have a current size myself
++			 *  - we agree on the size anyways
++			 *  - I do have a current size, am Secondary,
++			 *    and he has the only disk
++			 *  - I do have a current size, am Primary,
++			 *    and he has the only disk,
++			 *    which is larger than my current size
++			 */
++			drbd_set_my_capacity(device, new_size);
++		}
+ 	}
  
- 	mpc83xx_setup_pci();
- }
-+
-+int machine_check_83xx(struct pt_regs *regs)
-+{
-+	u32 mask = 1 << (31 - IPIC_MCP_WDT);
-+
-+	if (!(regs->msr & SRR1_MCE_MCP) || !(ipic_get_mcp_status() & mask))
-+		return machine_check_generic(regs);
-+	ipic_clear_mcp_status(mask);
-+
-+	if (debugger_fault_handler(regs))
-+		return 1;
-+
-+	die("Watchdog NMI Reset", regs, 0);
-+
-+	return 1;
-+}
+ 	if (get_ldev(device)) {
 -- 
 2.20.1
 
