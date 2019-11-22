@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC076C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82458C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD59D2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C16820674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402779;
-	bh=giUmpor69kBQGPlEKJQXTVOif8JHpyxMXUDBvI7re4Q=;
+	s=default; t=1574402787;
+	bh=ET+DFIQMOkHhXcT1P7hHhRmwzDhIgs682udKVkzTbRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GgWYYoRv+9NqL0+9XwXufItoSsg+K7XX9EJskOIOi/et469h7n89p7HMSw7PAkrgl
-	 DQgLdHP9+J3PBoUHkMcgYNKBUKDHFESQskx2ZmhlmYYtAbxDJvY5AOMn9rvXXo5t1e
-	 YywJxx1fEq3GX4Kr1jYtQ5UEogpEvYz9EHzGbIfw=
+	b=AcW3trC/j6KOchw/o0rD8PUS4XSpZhGV6nBXZkp9MGkQiBxI+CN8RZtWlTjFyBxkd
+	 uw8t4dsYmjxTixFow69hZ3pKgGq1xnA/M115nahNEKt0c3ug7hNn1qBCYIlp1v+Wj+
+	 rpb9pQJfXIuH6CgXe8MjDu+yG5cNu9oWXNqIAQTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfKVGGS (ORCPT
+        id S1729670AbfKVGCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfKVGCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:22 -0500
+        id S1726695AbfKVGCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA5782068E;
-        Fri, 22 Nov 2019 06:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAC7C2068F;
+        Fri, 22 Nov 2019 06:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402541;
-        bh=giUmpor69kBQGPlEKJQXTVOif8JHpyxMXUDBvI7re4Q=;
+        s=default; t=1574402530;
+        bh=ET+DFIQMOkHhXcT1P7hHhRmwzDhIgs682udKVkzTbRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v8FFS9aGcw6Qd7BV8bmtXWBaytbAUZ5MFbyLC7ao/bHZfsVAXecrKrOsxCUMTBg39
-         NI9XZGDaV0KbAGvpMroLZtXTGhe3gPUKJUD+4NqSYcAWzP7WN5xDod1GeuHLczjrBt
-         uVNxHAI1/TK3UKoDYRoisWzXvRl+FTCryrNQu/3U=
+        b=bjcDTCLMG3sI1fIWov1IdJEku6bUuRnyy0UI7oDVzrslCEfh+WCsZUcohrSwR6XDU
+         W+5264EZQKxl9z2fC+Iw+30sgqzlktkAGE5iQLe9I2gtiL9tQhsoc45hw/jDcj0Axx
+         d6fBHkfzyZvG55S5EjKyCAGfd62soqZwpFQMSbjI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 48/91] powerpc/mm: Make NULL pointer deferences explicit on bad page faults.
-Date:   Fri, 22 Nov 2019 01:00:46 -0500
-Message-Id: <20191122060129.4239-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 38/91] powerpc/xmon: fix dump_segments()
+Date:   Fri, 22 Nov 2019 01:00:36 -0500
+Message-Id: <20191122060129.4239-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -61,59 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 49a502ea23bf9dec47f8f3c3960909ff409cd1bb ]
+[ Upstream commit 32c8c4c621897199e690760c2d57054f8b84b6e6 ]
 
-As several other arches including x86, this patch makes it explicit
-that a bad page fault is a NULL pointer dereference when the fault
-address is lower than PAGE_SIZE
-
-In the mean time, this page makes all bad_page_fault() messages
-shorter so that they remain on one single line. And it prefixes them
-by "BUG: " so that they get easily grepped.
+mfsrin() takes segment num from bits 31-28 (IBM bits 0-3).
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: Avoid pr_cont()]
+[mpe: Clarify bit numbering]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/fault.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ arch/powerpc/xmon/xmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 9376e8e53bfae..2791f568bdb25 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -521,21 +521,22 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
- 	switch (regs->trap) {
- 	case 0x300:
- 	case 0x380:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"data at address 0x%08lx\n", regs->dar);
-+		pr_alert("BUG: %s at 0x%08lx\n",
-+			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
-+			 "Unable to handle kernel data access", regs->dar);
- 		break;
- 	case 0x400:
- 	case 0x480:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"instruction fetch\n");
-+		pr_alert("BUG: Unable to handle kernel instruction fetch%s",
-+			 regs->nip < PAGE_SIZE ? " (NULL pointer?)\n" : "\n");
- 		break;
- 	case 0x600:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"unaligned access at address 0x%08lx\n", regs->dar);
-+		pr_alert("BUG: Unable to handle kernel unaligned access at 0x%08lx\n",
-+			 regs->dar);
- 		break;
- 	default:
--		printk(KERN_ALERT "Unable to handle kernel paging request for "
--			"unknown fault\n");
-+		pr_alert("BUG: Unable to handle unknown paging fault at 0x%08lx\n",
-+			 regs->dar);
- 		break;
- 	}
- 	printk(KERN_ALERT "Faulting instruction address: 0x%08lx\n",
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index 687e8b8bf5c67..899288b71145e 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -3043,7 +3043,7 @@ void dump_segments(void)
+ 
+ 	printf("sr0-15 =");
+ 	for (i = 0; i < 16; ++i)
+-		printf(" %x", mfsrin(i));
++		printf(" %x", mfsrin(i << 28));
+ 	printf("\n");
+ }
+ #endif
 -- 
 2.20.1
 
