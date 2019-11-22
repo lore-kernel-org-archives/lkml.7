@@ -2,69 +2,127 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3005BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09215C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134A820714
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB14720714
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 16:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfKVQWN (ORCPT
+        id S1727454AbfKVQXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:22:13 -0500
-Received: from mga06.intel.com ([134.134.136.31]:55331 "EHLO mga06.intel.com"
+        Fri, 22 Nov 2019 11:23:53 -0500
+Received: from smtp.uniroma2.it ([160.80.6.23]:32849 "EHLO smtp.uniroma2.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfKVQWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:22:11 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 08:22:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="232707976"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Nov 2019 08:22:07 -0800
-Date:   Sat, 23 Nov 2019 00:24:02 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        sean.j.christopherson@intel.com, yu.c.zhang@linux.intel.com,
-        alazar@bitdefender.com, edwin.zhai@intel.com
-Subject: Re: [PATCH v7 2/9] vmx: spp: Add control flags for Sub-Page
- Protection(SPP)
-Message-ID: <20191122162402.GA10491@local-michael-cet-test>
-References: <20191119084949.15471-1-weijiang.yang@intel.com>
- <20191119084949.15471-3-weijiang.yang@intel.com>
- <d6e71e7b-b708-211c-24b7-8ffe03a52842@redhat.com>
- <20191121153442.GH17169@local-michael-cet-test>
- <58b4b445-bd47-d357-9fdd-118043624215@redhat.com>
- <20191122152331.GA9822@local-michael-cet-test>
- <8e43dab5-e07e-03a3-fa0d-dd9457fb17b9@redhat.com>
+        id S1726825AbfKVQXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 11:23:52 -0500
+Received: from localhost.localdomain ([160.80.103.126])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAMGN8QH031618
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 22 Nov 2019 17:23:12 +0100
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: [net-next, v3 1/1] seg6: allow local packet processing for SRv6 End.DT6 behavior
+Date:   Fri, 22 Nov 2019 17:22:42 +0100
+Message-Id: <20191122162242.2574-2-andrea.mayer@uniroma2.it>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122162242.2574-1-andrea.mayer@uniroma2.it>
+References: <20191122162242.2574-1-andrea.mayer@uniroma2.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e43dab5-e07e-03a3-fa0d-dd9457fb17b9@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 04:55:42PM +0100, Paolo Bonzini wrote:
-> On 22/11/19 16:23, Yang Weijiang wrote:
-> >> QEMU for example ships with a program called vmxcap (though it requires
-> >> root).  We also could write a program to analyze the KVM capabilities
-> >> and print them, and put it in tools/kvm.
-> >>
-> > OK, will update vmxcap to add SPP feature bit, thanks!
-> 
-> It's already there. :)
->
-Yeah, I saw it, thanks a lot for the kind review! :-))
-> Paolo
+End.DT6 behavior makes use of seg6_lookup_nexthop() function which drops
+all packets that are destined to be locally processed. However, DT* should
+be able to deliver decapsulated packets that are destined to local
+addresses. Function seg6_lookup_nexthop() is also used by DX6, so in order
+to maintain compatibility I created another routing helper function which
+is called seg6_lookup_any_nexthop(). This function is able to take into
+account both packets that have to be processed locally and the ones that
+are destined to be forwarded directly to another machine. Hence,
+seg6_lookup_any_nexthop() is used in DT6 rather than seg6_lookup_nexthop()
+to allow local delivery.
+
+Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+---
+ net/ipv6/seg6_local.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index e70567446f28..85a5447a3e8d 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -149,8 +149,9 @@ static void advance_nextseg(struct ipv6_sr_hdr *srh, struct in6_addr *daddr)
+ 	*daddr = *addr;
+ }
+ 
+-int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+-			u32 tbl_id)
++static int
++seg6_lookup_any_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
++			u32 tbl_id, bool local_delivery)
+ {
+ 	struct net *net = dev_net(skb->dev);
+ 	struct ipv6hdr *hdr = ipv6_hdr(skb);
+@@ -158,6 +159,7 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 	struct dst_entry *dst = NULL;
+ 	struct rt6_info *rt;
+ 	struct flowi6 fl6;
++	int dev_flags = 0;
+ 
+ 	fl6.flowi6_iif = skb->dev->ifindex;
+ 	fl6.daddr = nhaddr ? *nhaddr : hdr->daddr;
+@@ -182,7 +184,13 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 		dst = &rt->dst;
+ 	}
+ 
+-	if (dst && dst->dev->flags & IFF_LOOPBACK && !dst->error) {
++	/* we want to discard traffic destined for local packet processing,
++	 * if @local_delivery is set to false.
++	 */
++	if (!local_delivery)
++		dev_flags |= IFF_LOOPBACK;
++
++	if (dst && (dst->dev->flags & dev_flags) && !dst->error) {
+ 		dst_release(dst);
+ 		dst = NULL;
+ 	}
+@@ -199,6 +207,12 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 	return dst->error;
+ }
+ 
++int seg6_lookup_nexthop(struct sk_buff *skb,
++			struct in6_addr *nhaddr, u32 tbl_id)
++{
++	return seg6_lookup_any_nexthop(skb, nhaddr, tbl_id, false);
++}
++
+ /* regular endpoint function */
+ static int input_action_end(struct sk_buff *skb, struct seg6_local_lwt *slwt)
+ {
+@@ -396,7 +410,7 @@ static int input_action_end_dt6(struct sk_buff *skb,
+ 
+ 	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
+ 
+-	seg6_lookup_nexthop(skb, NULL, slwt->table);
++	seg6_lookup_any_nexthop(skb, NULL, slwt->table, true);
+ 
+ 	return dst_input(skb);
+ 
+-- 
+2.20.1
+
