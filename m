@@ -2,101 +2,134 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56969C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C594C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F48620718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421148;
-	bh=KB354o3/r9P+JtBFvnw5fnhLSpxOdIW6UqA4GyhnQBY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBiTa5z0WFQ5ab8o4znvZM7kfBW42GOOnHR5eYNX3kryI62xHxF1iQ7TkiBAMLcRF
-	 Kjcy5ntG0ebdNgWaQco1BjzDVAtW2x+U80TVFi4mkVkuaaLivmnEQHzKu6g4uVRop8
-	 FK+kZWX+6TBss81uROm+6kzCreZMIhihKvpGfIMM=
+	by mail.kernel.org (Postfix) with ESMTP id 182442070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbfKVLM0 (ORCPT
+        id S1730672AbfKVLMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:12:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47226 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:12:32 -0500
+Received: from mga09.intel.com ([134.134.136.24]:24547 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730485AbfKVK5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:54 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F96B2071F;
-        Fri, 22 Nov 2019 10:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420274;
-        bh=KB354o3/r9P+JtBFvnw5fnhLSpxOdIW6UqA4GyhnQBY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z4+daHzcgtnSuY+zY3dvLsWwEezPEcjJqgCqlijtsMO3astqfNbFDoogeoJaxDcIM
-         1gb8q6ltmAyRmoBtlfG6gF+3xZTZK5q9iMuQoEpgJIntM6+ZOs6Z3nzQWIOdIBLQHg
-         F66390mT42pio8V1M9kgXEpQA+hoCtVgMXvxj3eo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/220] watchdog: renesas_wdt: stop when unregistering
-Date:   Fri, 22 Nov 2019 11:26:56 +0100
-Message-Id: <20191122100915.866371312@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728618AbfKVLMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:12:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 03:12:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,229,1571727600"; 
+   d="scan'208";a="210220363"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 22 Nov 2019 03:12:20 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iY6rL-0000bl-Jr; Fri, 22 Nov 2019 13:12:19 +0200
+Date:   Fri, 22 Nov 2019 13:12:19 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 1/2] gpio: sch: Add edge event support
+Message-ID: <20191122111219.GW32742@smile.fi.intel.com>
+References: <cover.1574277614.git.jan.kiszka@siemens.com>
+ <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Wed, Nov 20, 2019 at 08:20:13PM +0100, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> Add the required infrastructure consisting of an irq_chip_generic with
+> its irq_chip_type callbacks to enable and report edge events of the pins
+> to the gpio core. The actual hook-up of the event interrupt will happen
+> separately.
 
-[ Upstream commit 14de99b44b34dbb9d0f64845b1cbb675e047767e ]
+> +static int sch_irq_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct sch_gpio *sch = gc->private;
+> +	unsigned int gpio_num = d->irq - sch->irq_base;
+> +	unsigned long flags;
+> +	int rising = 0;
+> +	int falling = 0;
+> +
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		rising = 1;
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		falling = 1;
+> +		break;
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		rising = 1;
+> +		falling = 1;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	spin_lock_irqsave(&sch->lock, flags);
+> +	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
+> +	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
+> +	spin_unlock_irqrestore(&sch->lock, flags);
 
-We want to go into a sane state when unregistering. Currently, it
-happens that the watchdog stops when unbinding because of RuntimePM
-stopping the core clock. When rebinding, the core clock gets reactivated
-and the watchdog fires even though it hasn't been opened by userspace
-yet. Strange scenario, yes, but sane state is much preferred anyhow.
+Won't we need to set up IRQ handler here and use handle_bad_irq() during
+initialization phase?
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/watchdog/renesas_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+> +
+> +	return 0;
+> +}
 
-diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
-index d01efd342dc0c..62d9d3edcdf25 100644
---- a/drivers/watchdog/renesas_wdt.c
-+++ b/drivers/watchdog/renesas_wdt.c
-@@ -239,6 +239,7 @@ static int rwdt_probe(struct platform_device *pdev)
- 	watchdog_set_drvdata(&priv->wdev, priv);
- 	watchdog_set_nowayout(&priv->wdev, nowayout);
- 	watchdog_set_restart_priority(&priv->wdev, 0);
-+	watchdog_stop_on_unregister(&priv->wdev);
- 
- 	/* This overrides the default timeout only if DT configuration was found */
- 	ret = watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
+> +	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
+> +					NUMA_NO_NODE);
+> +	if (irq_base < 0)
+> +		return irq_base;
+> +	sch->irq_base = irq_base;
+> +
+> +	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
+> +					 NULL, handle_simple_irq);
+> +	if (!gc)
+> +		return -ENOMEM;
+> +
+> +	gc->private = sch;
+> +	ct = gc->chip_types;
+> +
+> +	ct->chip.irq_mask = sch_irq_mask;
+> +	ct->chip.irq_unmask = sch_irq_unmask;
+> +	ct->chip.irq_set_type = sch_irq_type;
+> +
+> +	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
+> +					  IRQ_MSK(sch->chip.ngpio),
+> +					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
+> +	if (ret)
+> +		return ret;
+
+Shan't we do this in the (similar) way how it's done in pinctrl-cherryview.c
+driver? (Keep in mind later patches which are going to be v5.5)
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
 
 
