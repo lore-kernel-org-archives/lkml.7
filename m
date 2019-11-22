@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB69CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B184E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C3C20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419343;
-	bh=8jmJ15RKMd00vSediAxz+/eJNibhGO3eYbxiobdn/8o=;
+	s=default; t=1574419345;
+	bh=XO4jExzsjGqVGycvgNA7RUSP7N/Lq6fZtpDKT8aTcWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=auZ9cTutGX2JzLx293Kmczi9luU5wbsTX5I9DnH67ooxiz2upTOgVv9nXZ2GFblfs
-	 PROy294kNwy7H0saIfQxz2EE/MYj/lUvVgm1B4YKEj2G8uCwUUXKTTMRpPIr2Nj3gH
-	 thsaWZYAzMS+IGxqhADmmrslpJB6nCtYLjb6AWhM=
+	b=tkyGXg+UtkyU1Q22We4G4Y/QShAjU8izWrYW37Cnny7cVRRgfYtwK8G09OWmsDkMn
+	 PQnLYDHC6mpCFLlzzoiy+NAajiN0wyEDLQvK04Y/DNHJN8cfszll79TJGe0kxZooYW
+	 ctU1nfL9K/x2J8aTK8mD6yPqjR1S6fmiuCtbVlBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfKVKmW (ORCPT
+        id S1729118AbfKVKmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:42:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbfKVKmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:42:17 -0500
+        id S1729098AbfKVKmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:42:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9804920637;
-        Fri, 22 Nov 2019 10:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 826EA20637;
+        Fri, 22 Nov 2019 10:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419336;
-        bh=8jmJ15RKMd00vSediAxz+/eJNibhGO3eYbxiobdn/8o=;
+        s=default; t=1574419341;
+        bh=XO4jExzsjGqVGycvgNA7RUSP7N/Lq6fZtpDKT8aTcWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrP8JGjj8mNrNYRjUo8+kI2SDemyktHCkvlX44e1e9dI7nObgteLgQGjYR+Hd4PY2
-         syxiDfQkoiPVhm72BRDAkN5Tb5B95M8YzNvOQMnGZL31CsfIofOsuqDoqBr1ctfAwe
-         f++WE63CsKZZj1ZSMy3gMkURFUWkKand/uIX/xsA=
+        b=KWfGdcwJ51kZqX156Wsj7Cl2qiLRDxcKu91+bM0cyhpvXb2AV/j5RkNawDvk7saQL
+         saukZm+PxAoxo++HOXLs43spIWe2IeRu4Qr2HpsR3vypnl+qwdbLX+AvvQmjkbU5ox
+         ADqhImxtbk2zluqMZn931O/M2XIxWaMST/6Pu1EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/222] pinctrl: at91: dont use the same irqchip with multiple gpiochips
-Date:   Fri, 22 Nov 2019 11:26:50 +0100
-Message-Id: <20191122100905.868383436@linuxfoundation.org>
+Subject: [PATCH 4.9 080/222] s390/qeth: invoke softirqs after napi_schedule()
+Date:   Fri, 22 Nov 2019 11:27:00 +0100
+Message-Id: <20191122100909.177901944@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,86 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
+[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
 
-Sharing the same irqchip with multiple gpiochips is not a good
-practice. For instance, when installing hooks, we change the state
-of the irqchip. The initial state of the irqchip for the second
-gpiochip to register is then disrupted.
+Calling napi_schedule() from process context does not ensure that the
+NET_RX softirq is run in a timely fashion. So trigger it manually.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This is no big issue with current code. A call to ndo_open() is usually
+followed by a ndo_set_rx_mode() call, and for qeth this contains a
+spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
+early.
+Nevertheless it's best to not depend on this behaviour, and just fix
+the issue at its source like all other drivers do. For instance see
+commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+
+Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 3 +++
+ drivers/s390/net/qeth_l3_main.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 9f09041859099..9401a0630e80b 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1545,16 +1545,6 @@ void at91_pinctrl_gpio_resume(void)
- #define gpio_irq_set_wake	NULL
- #endif /* CONFIG_PM */
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 6ba4e921d2fd3..51152681aba6e 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -991,7 +991,10 @@ static int __qeth_l2_open(struct net_device *dev)
  
--static struct irq_chip gpio_irqchip = {
--	.name		= "GPIO",
--	.irq_ack	= gpio_irq_ack,
--	.irq_disable	= gpio_irq_mask,
--	.irq_mask	= gpio_irq_mask,
--	.irq_unmask	= gpio_irq_unmask,
--	/* .irq_set_type is set dynamically */
--	.irq_set_wake	= gpio_irq_set_wake,
--};
--
- static void gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-@@ -1595,12 +1585,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
-+	struct irq_chip		*gpio_irqchip;
- 	int ret, i;
+ 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
+ 		napi_enable(&card->napi);
++		local_bh_disable();
+ 		napi_schedule(&card->napi);
++		/* kick-start the NAPI softirq: */
++		local_bh_enable();
+ 	} else
+ 		rc = -EIO;
+ 	return rc;
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index 6e6ba1baf9c48..b40a61d9ad9ec 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -3005,7 +3005,10 @@ static int __qeth_l3_open(struct net_device *dev)
  
-+	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
-+	if (!gpio_irqchip)
-+		return -ENOMEM;
-+
- 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
- 
--	/* Setup proper .irq_set_type function */
--	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
-+	gpio_irqchip->name = "GPIO";
-+	gpio_irqchip->irq_ack = gpio_irq_ack;
-+	gpio_irqchip->irq_disable = gpio_irq_mask;
-+	gpio_irqchip->irq_mask = gpio_irq_mask;
-+	gpio_irqchip->irq_unmask = gpio_irq_unmask;
-+	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
-+	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
- 
- 	/* Disable irqs of this PIO controller */
- 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
-@@ -1611,7 +1611,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	 * interrupt.
- 	 */
- 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
--				   &gpio_irqchip,
-+				   gpio_irqchip,
- 				   0,
- 				   handle_edge_irq,
- 				   IRQ_TYPE_NONE);
-@@ -1629,7 +1629,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	if (!gpiochip_prev) {
- 		/* Then register the chain on the parent IRQ */
- 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
--					     &gpio_irqchip,
-+					     gpio_irqchip,
- 					     at91_gpio->pioc_virq,
- 					     gpio_irq_handler);
- 		return 0;
+ 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
+ 		napi_enable(&card->napi);
++		local_bh_disable();
+ 		napi_schedule(&card->napi);
++		/* kick-start the NAPI softirq: */
++		local_bh_enable();
+ 	} else
+ 		rc = -EIO;
+ 	return rc;
 -- 
 2.20.1
 
