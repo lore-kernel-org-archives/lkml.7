@@ -2,108 +2,109 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D0DC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80095C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B422070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB722070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aVndCNiu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B++dLgyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKVTT0 (ORCPT
+        id S1727051AbfKVTUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:19:26 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42575 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfKVTT0 (ORCPT
+        Fri, 22 Nov 2019 14:20:12 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43276 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfKVTUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:19:26 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so1002846otd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 11:19:24 -0800 (PST)
+        Fri, 22 Nov 2019 14:20:11 -0500
+Received: by mail-io1-f66.google.com with SMTP id p12so1922933iog.10;
+        Fri, 22 Nov 2019 11:20:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I7v+HUZympM2vga3lQVRE83tED8z+t+bdnGbnVspedM=;
-        b=aVndCNiuB3JxApU8V3OHo2816NScq4NHcNmGp4w5ouU1rjHLtPs7nLK0CfU5oYyALX
-         cffLrctH4d+l+wAsCHupkmN3XOBvTGqrKj1qPjI63o8a3Jy8ZqutpWA2l8b7RQtdHnXR
-         V9uUKitZbRWHX81JRD4qN5jRoU+S/zc11ih3izKHiW20+ZqslV/7SMkHa0nkm3msKQlN
-         +VKGWV9cJaXJ6jYSNghjG34WUdKxG4twT7eNMp1QrRw6QGPQxPf5sj5pViCCIbav8cDw
-         LuEHnkqXXIa53B1ukbWmfjNmYqiTdl/2YDM9P16FXM87ID3n5lRFr1RGzJMmSEyqSzh8
-         RVaw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LUPoVXtEJRriu3gt1A6+ir0p1Bek4hzh1TUla5kFEi4=;
+        b=B++dLgyueJDivQQoLxOkqSMkteMasuevFvh0YY22g0HJXUTPoTQEVXVt4DaEOG1sLi
+         wcA6P+fRoUwNqKPpCUkMmyLa+dQEGG1JQWhE70ME0xaVrT+I9XGhv4IJOpn1i0Z2578t
+         h8VEwse+AN+IulTu+IahMHZoDd5wwJIXLo8FWEtF1TgxwqACvuY0MWoNnKygoR0cSwxw
+         y+C1iBIcTzzX24XaQsh4rfvT12Plq2A4YLWj8gj2PAT1o5ZDRJUA9OkFe366PBEnAC8Z
+         6b7E7JzX98pbqykZ/owIr9kC27tRnGT6yk5D2qHMdBEv6LYDo7uSlxCTKiXbiKLtA7iN
+         mmVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I7v+HUZympM2vga3lQVRE83tED8z+t+bdnGbnVspedM=;
-        b=PFhQ1V8CSQ3qaX8OymoK+bLm50Wx1DnsfVCjfGgwxhT8DZwOi3eUpOt/eHXvvbMWv/
-         89rGrrAI6qQBtYXQKxkCdAWImuLVa0VYJxu5LMxEaWrOarFUMnREo9Ia3idQIAw+rEKC
-         AhJheDfDJOSphP+/tBmIGSyuSrFURSU+RwPNfWPgXq68Pf3SQBZ9qY2jOBEpa2HL8sGg
-         1XvlBtkZ6FJUiNd8/LUmQCxZiWd0BsjxVLzbbllz0kDWNEiTEA7BaToUb8+4hYoXK42P
-         d5jhYrcpH6yzbpOEdiW3M6/4Fw54fQwwGJkKM2z6EkwSeqolcFfySQyFSDp3IOShjuzu
-         ktLA==
-X-Gm-Message-State: APjAAAWvPq5zr9u7wzM/9yTbBDYqIwKTANZzNB3QmsZaCSmEcrM0syxT
-        az5NvaqoRMlCS/swTBSAjlM4UU3WlGae0H0lfLTouw==
-X-Google-Smtp-Source: APXvYqwuZAa1fYP1qcPyObo9jAeE6aS2UTX20J798Pg09f4kfZzRwHjbqMuT1e/Y9wt5ONlbArjTrnZ74T08qv84QTs=
-X-Received: by 2002:a05:6830:1d71:: with SMTP id l17mr11619625oti.236.1574450363407;
- Fri, 22 Nov 2019 11:19:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20191120071302.227777-1-saravanak@google.com> <CACRpkdY-cQGK-Q+LLboa3E+0G=251PhMR5xDX2ZUY5-hPVL-9g@mail.gmail.com>
-In-Reply-To: <CACRpkdY-cQGK-Q+LLboa3E+0G=251PhMR5xDX2ZUY5-hPVL-9g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 22 Nov 2019 11:18:47 -0800
-Message-ID: <CAGETcx8WWhyVkFOTWBu4K-LY7dBC1FQ-U47N-V7BeEZixP4yGg@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Add device link support for
- interrupt-parent, dmas and -gpio(s)
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LUPoVXtEJRriu3gt1A6+ir0p1Bek4hzh1TUla5kFEi4=;
+        b=Y/3QqUPP0HlaJNXp3o9r8TkbtVYv/bKsg/Xy6bhAkYwqnOHSvkicyUo4QIRha/IW6b
+         YB4kmvmcxGBWRBXeSC5NinnQXgPvo7UacUEpPsof3JXpNHh+ZUkLj4XWAeAJM76DX1aK
+         dXia2hNBMqAfS96R6H6yISOJkZcon3Ew+8zjjicKXx/TCMkay4zSpvnNyGNlAWhm6OAB
+         UJ51DXkzxmRR0FHKm1k17C18HaIeQHelixWfjfOwEne8KjEl1f75RhhsIVO6jPJ33RGf
+         C2gz1o9m/CDH//KgOwFJ3vz2VFJ2nLzhQjVGY0nOsJ+XPNfAByAObbnxPD/j4CPWbcaO
+         HUFQ==
+X-Gm-Message-State: APjAAAVPXYY5iO/jeD/l3B8qvRP/iIiK2v4gy0Dq71KK3Yg7bVsjFNu8
+        vctF99xHXyGPt26GKwiYVqU=
+X-Google-Smtp-Source: APXvYqyUf8IL7jAXQIGJIUESwEj/Iv27BNarP/uWWDgzny2gzQnUZCVpDtO7kbt1exQCfJOlidXNHg==
+X-Received: by 2002:a02:7708:: with SMTP id g8mr5080424jac.9.1574450410698;
+        Fri, 22 Nov 2019 11:20:10 -0800 (PST)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id k20sm2647403iol.3.2019.11.22.11.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 11:20:10 -0800 (PST)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu
+Subject: [PATCH] brcmfmac: Fix memory leak in brcmf_p2p_create_p2pdev()
+Date:   Fri, 22 Nov 2019 13:19:48 -0600
+Message-Id: <20191122191954.17908-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, Nov 20, 2019 at 8:13 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> > Add support for creating device links out of more DT properties.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
->
-> This looks to me like doing the right thing and making sure that
-> the GPIO drivers get probed before their consumers and thus
-> speed up boot.
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+In the implementation of brcmf_p2p_create_p2pdev() the allocated memory
+for p2p_vif is leaked when the mac address is the same as primary
+interface. To fix this, go to error path to release p2p_vif via
+brcmf_free_vif().
 
-Thanks!
+Fixes: cb746e47837a ("brcmfmac: check p2pdev mac address uniqueness")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->
-> I guess I should get on with adding device links at runtime
-> as well, both for GPIO and pin control so that things work
-> with runtime-added devices and boardfiles and ACPI, if I
-> understand correctly it's fine to add the same link twice, it
-> will just be ignored?
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index 7ba9f6a68645..1f5deea5a288 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -2092,7 +2092,8 @@ static struct wireless_dev *brcmf_p2p_create_p2pdev(struct brcmf_p2p_info *p2p,
+ 	/* firmware requires unique mac address for p2pdev interface */
+ 	if (addr && ether_addr_equal(addr, pri_ifp->mac_addr)) {
+ 		bphy_err(drvr, "discovery vif must be different from primary interface\n");
+-		return ERR_PTR(-EINVAL);
++		err = -EINVAL;
++		goto fail;
+ 	}
+ 
+ 	brcmf_p2p_generate_bss_mac(p2p, addr);
+-- 
+2.17.1
 
-It's actually ref counted. So do check that the device_link_add()
-succeeds before trying to release it later on [1].
-
--Saravana
-[1] - https://lore.kernel.org/lkml/20191115000438.45970-1-saravanak@google.com/
