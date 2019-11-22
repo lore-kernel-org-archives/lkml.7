@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AA0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135A4C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F28120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D252220707
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400469;
-	bh=Snhzch8azwuOYXbCQtEWlQY+Q47JjDAygTaC4J/qZj8=;
+	s=default; t=1574400472;
+	bh=EfdXdmgPbL7KrEcnb9ASYZq3zIOjABUQfQHZzLN0W94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hMwJO3J0Y77n035Xy4mXE7cL/qviCwIqmyccOGFLHYPxfaJFPmmyeoopyzGW4CW5B
-	 tb8MqMBRKftQ8EDyKeFOrfwkoRKVUehYDjnxSI1/hMWQEmVWWSgua4n/aHbOvHyiFB
-	 CQ87kgkwrOHGwkXsVtOPPqIrat6PYiRWnwWp+Nn4=
+	b=G+Au8FOziyw0Pb4PKrKk0C1Px2f7rqH08Snm56L7FwTBIK8J9pb1hdguLs4BIYb8j
+	 xETPDKuKdNGig5317G2tsJ2BMtENAxfV9YyH3NOxIqR+nv41YtD/Lc+/ihju882QrC
+	 qNqW6R++aNDQJmr4lADHfZMbqIQlmlVVwGRkScGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfKVF1s (ORCPT
+        id S1726912AbfKVF1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:27:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:27:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbfKVF1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:27:45 -0500
+        id S1726825AbfKVF1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:27:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 266722070A;
-        Fri, 22 Nov 2019 05:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAC8C2070A;
+        Fri, 22 Nov 2019 05:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400464;
-        bh=Snhzch8azwuOYXbCQtEWlQY+Q47JjDAygTaC4J/qZj8=;
+        s=default; t=1574400469;
+        bh=EfdXdmgPbL7KrEcnb9ASYZq3zIOjABUQfQHZzLN0W94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbhrC1GwcNZ6NnLJJLA469LHDcsCXtPsItNlwGcgTqCcUq1Ck6gUZtV+1XfDVXKUz
-         q5klbtoyflO0oJR2qOCI7V24zbVFqT+ETqd5LW1tXT+n+AYPdAOC6r/zweDFWQ8eRb
-         OEovTWATUT5t6tcWAP8HKenc5TKkEDDin3ftBhag=
+        b=DW0ohp+KrlD0KJVyHWpZjhHcbd6xoihe1YoG5X18dbYvLJ5alSYfpQiJOMyxt9Twp
+         pNUDvH1u4TPCAP3hw1phb/TAScEWDPVUSquQj/b5mG8SKDGFw1u6nMBkUq3R8/L/FB
+         1VK5mvGcfN0AsTJpkPW015vU6QsXu/r6uqw8wDLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/219] scsi: lpfc: Fix kernel Oops due to null pring pointers
-Date:   Fri, 22 Nov 2019 00:24:04 -0500
-Message-Id: <20191122052741.32499-2-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 006/219] tracing: Lock event_mutex before synth_event_mutex
+Date:   Fri, 22 Nov 2019 00:24:08 -0500
+Message-Id: <20191122052741.32499-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122052741.32499-1-sashal@kernel.org>
 References: <20191122052741.32499-1-sashal@kernel.org>
@@ -60,91 +60,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 5a9eeff57f340238c39c95d8e7e54c96fc722de7 ]
+[ Upstream commit fc800a10be26017f8f338bc8e500d48e3e6429d9 ]
 
-Driver is hitting null pring pointers in lpfc_do_work().
+synthetic event is using synth_event_mutex for protecting
+synth_event_list, and event_trigger_write() path acquires
+locks as below order.
 
-Pointer assignment occurs based on SLI-revision. If recovering after an
-error, its possible the sli revision for the port was cleared, making the
-lpfc_phba_elsring() not return a ring pointer, thus the null pointer.
+event_trigger_write(event_mutex)
+  ->trigger_process_regex(trigger_cmd_mutex)
+    ->event_hist_trigger_func(synth_event_mutex)
 
-Add SLI revision checking to lpfc_phba_elsring() and status checking to all
-callers.
+On the other hand, synthetic event creation and deletion paths
+call trace_add_event_call() and trace_remove_event_call()
+which acquires event_mutex. In that case, if we keep the
+synth_event_mutex locked while registering/unregistering synthetic
+events, its dependency will be inversed.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+To avoid this issue, current synthetic event is using a 2 phase
+process to create/delete events. For example, it searches existing
+events under synth_event_mutex to check for event-name conflicts, and
+unlocks synth_event_mutex, then registers a new event under event_mutex
+locked. Finally, it locks synth_event_mutex and tries to add the
+new event to the list. But it can introduce complexity and a chance
+for name conflicts.
+
+To solve this simpler, this introduces trace_add_event_call_nolock()
+and trace_remove_event_call_nolock() which don't acquire
+event_mutex inside. synthetic event can lock event_mutex before
+synth_event_mutex to solve the lock dependency issue simpler.
+
+Link: http://lkml.kernel.org/r/154140844377.17322.13781091165954002713.stgit@devbox
+
+Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Tested-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h      | 6 ++++++
- drivers/scsi/lpfc/lpfc_els.c  | 2 ++
- drivers/scsi/lpfc/lpfc_init.c | 7 ++++++-
- drivers/scsi/lpfc/lpfc_sli.c  | 2 ++
- 4 files changed, 16 insertions(+), 1 deletion(-)
+ include/linux/trace_events.h     |  2 ++
+ kernel/trace/trace_events.c      | 34 ++++++++++++++++++++++++++------
+ kernel/trace/trace_events_hist.c | 24 ++++++++++------------
+ 3 files changed, 40 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 43732e8d13473..79c3b2f53828e 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -1235,6 +1235,12 @@ lpfc_sli_read_hs(struct lpfc_hba *phba)
- static inline struct lpfc_sli_ring *
- lpfc_phba_elsring(struct lpfc_hba *phba)
- {
-+	/* Return NULL if sli_rev has become invalid due to bad fw */
-+	if (phba->sli_rev != LPFC_SLI_REV4  &&
-+	    phba->sli_rev != LPFC_SLI_REV3  &&
-+	    phba->sli_rev != LPFC_SLI_REV2)
-+		return NULL;
-+
- 	if (phba->sli_rev == LPFC_SLI_REV4) {
- 		if (phba->sli4_hba.els_wq)
- 			return phba->sli4_hba.els_wq->pring;
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index f3c6801c0b312..3651c0fc88197 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -1340,6 +1340,8 @@ lpfc_els_abort_flogi(struct lpfc_hba *phba)
- 			Fabric_DID);
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 78a010e19ed41..0643c083ed862 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -529,6 +529,8 @@ extern int trace_event_raw_init(struct trace_event_call *call);
+ extern int trace_define_field(struct trace_event_call *call, const char *type,
+ 			      const char *name, int offset, int size,
+ 			      int is_signed, int filter_type);
++extern int trace_add_event_call_nolock(struct trace_event_call *call);
++extern int trace_remove_event_call_nolock(struct trace_event_call *call);
+ extern int trace_add_event_call(struct trace_event_call *call);
+ extern int trace_remove_event_call(struct trace_event_call *call);
+ extern int trace_event_get_offsets(struct trace_event_call *call);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7345f5f8f3fe6..017f737237e60 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2302,11 +2302,11 @@ __trace_early_add_new_event(struct trace_event_call *call,
+ struct ftrace_module_file_ops;
+ static void __add_event_to_tracers(struct trace_event_call *call);
  
- 	pring = lpfc_phba_elsring(phba);
-+	if (unlikely(!pring))
-+		return -EIO;
+-/* Add an additional event_call dynamically */
+-int trace_add_event_call(struct trace_event_call *call)
++int trace_add_event_call_nolock(struct trace_event_call *call)
+ {
+ 	int ret;
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	ret = __register_event(call, NULL);
+@@ -2314,6 +2314,16 @@ int trace_add_event_call(struct trace_event_call *call)
+ 		__add_event_to_tracers(call);
+ 
+ 	mutex_unlock(&trace_types_lock);
++	return ret;
++}
++
++/* Add an additional event_call dynamically */
++int trace_add_event_call(struct trace_event_call *call)
++{
++	int ret;
++
++	mutex_lock(&event_mutex);
++	ret = trace_add_event_call_nolock(call);
+ 	mutex_unlock(&event_mutex);
+ 	return ret;
+ }
+@@ -2363,17 +2373,29 @@ static int probe_remove_event_call(struct trace_event_call *call)
+ 	return 0;
+ }
+ 
+-/* Remove an event_call */
+-int trace_remove_event_call(struct trace_event_call *call)
++/* no event_mutex version */
++int trace_remove_event_call_nolock(struct trace_event_call *call)
+ {
+ 	int ret;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	mutex_lock(&trace_types_lock);
+ 	down_write(&trace_event_sem);
+ 	ret = probe_remove_event_call(call);
+ 	up_write(&trace_event_sem);
+ 	mutex_unlock(&trace_types_lock);
++
++	return ret;
++}
++
++/* Remove an event_call */
++int trace_remove_event_call(struct trace_event_call *call)
++{
++	int ret;
++
++	mutex_lock(&event_mutex);
++	ret = trace_remove_event_call_nolock(call);
+ 	mutex_unlock(&event_mutex);
+ 
+ 	return ret;
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index dac518977e7d0..11d952650fa72 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -914,7 +914,7 @@ static int register_synth_event(struct synth_event *event)
+ 	call->data = event;
+ 	call->tp = event->tp;
+ 
+-	ret = trace_add_event_call(call);
++	ret = trace_add_event_call_nolock(call);
+ 	if (ret) {
+ 		pr_warn("Failed to register synthetic event: %s\n",
+ 			trace_event_name(call));
+@@ -938,7 +938,7 @@ static int unregister_synth_event(struct synth_event *event)
+ 	struct trace_event_call *call = &event->call;
+ 	int ret;
+ 
+-	ret = trace_remove_event_call(call);
++	ret = trace_remove_event_call_nolock(call);
+ 
+ 	return ret;
+ }
+@@ -1015,12 +1015,10 @@ static void add_or_delete_synth_event(struct synth_event *event, int delete)
+ 	if (delete)
+ 		free_synth_event(event);
+ 	else {
+-		mutex_lock(&synth_event_mutex);
+ 		if (!find_synth_event(event->name))
+ 			list_add(&event->list, &synth_event_list);
+ 		else
+ 			free_synth_event(event);
+-		mutex_unlock(&synth_event_mutex);
+ 	}
+ }
+ 
+@@ -1032,6 +1030,7 @@ static int create_synth_event(int argc, char **argv)
+ 	int i, consumed = 0, n_fields = 0, ret = 0;
+ 	char *name;
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&synth_event_mutex);
  
  	/*
- 	 * Check the txcmplq for an iocb that matches the nport the driver is
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 9acb5b44ce4c1..dae0dd8066f04 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -1801,7 +1801,12 @@ lpfc_sli4_port_sta_fn_reset(struct lpfc_hba *phba, int mbx_action,
- 	lpfc_offline(phba);
- 	/* release interrupt for possible resource change */
- 	lpfc_sli4_disable_intr(phba);
--	lpfc_sli_brdrestart(phba);
-+	rc = lpfc_sli_brdrestart(phba);
-+	if (rc) {
-+		lpfc_printf_log(phba, KERN_ERR, LOG_INIT,
-+				"6309 Failed to restart board\n");
-+		return rc;
-+	}
- 	/* request and enable interrupt */
- 	intr_mode = lpfc_sli4_enable_intr(phba, phba->intr_mode);
- 	if (intr_mode == LPFC_INTR_ERROR) {
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index a490e63c94b67..266e7101902ef 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -4644,6 +4644,8 @@ lpfc_sli_brdrestart_s4(struct lpfc_hba *phba)
- 	hba_aer_enabled = phba->hba_flag & HBA_AER_ENABLED;
+@@ -1104,8 +1103,6 @@ static int create_synth_event(int argc, char **argv)
+ 		goto err;
+ 	}
+  out:
+-	mutex_unlock(&synth_event_mutex);
+-
+ 	if (event) {
+ 		if (delete_event) {
+ 			ret = unregister_synth_event(event);
+@@ -1115,10 +1112,13 @@ static int create_synth_event(int argc, char **argv)
+ 			add_or_delete_synth_event(event, ret);
+ 		}
+ 	}
++	mutex_unlock(&synth_event_mutex);
++	mutex_unlock(&event_mutex);
  
- 	rc = lpfc_sli4_brdreset(phba);
-+	if (rc)
-+		return rc;
+ 	return ret;
+  err:
+ 	mutex_unlock(&synth_event_mutex);
++	mutex_unlock(&event_mutex);
  
- 	spin_lock_irq(&phba->hbalock);
- 	phba->pport->stopped = 0;
+ 	for (i = 0; i < n_fields; i++)
+ 		free_synth_field(fields[i]);
+@@ -1129,12 +1129,10 @@ static int create_synth_event(int argc, char **argv)
+ 
+ static int release_all_synth_events(void)
+ {
+-	struct list_head release_events;
+ 	struct synth_event *event, *e;
+ 	int ret = 0;
+ 
+-	INIT_LIST_HEAD(&release_events);
+-
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&synth_event_mutex);
+ 
+ 	list_for_each_entry(event, &synth_event_list, list) {
+@@ -1144,16 +1142,14 @@ static int release_all_synth_events(void)
+ 		}
+ 	}
+ 
+-	list_splice_init(&event->list, &release_events);
+-
+-	mutex_unlock(&synth_event_mutex);
+-
+-	list_for_each_entry_safe(event, e, &release_events, list) {
++	list_for_each_entry_safe(event, e, &synth_event_list, list) {
+ 		list_del(&event->list);
+ 
+ 		ret = unregister_synth_event(event);
+ 		add_or_delete_synth_event(event, !ret);
+ 	}
++	mutex_unlock(&synth_event_mutex);
++	mutex_unlock(&event_mutex);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
