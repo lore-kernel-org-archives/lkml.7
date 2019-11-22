@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B1AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A43C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC782084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE2C20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420648;
-	bh=omDMWs7oiMbcZbsR6yFJC92lzmGq0/GwmcRPEeaGxKc=;
+	s=default; t=1574420650;
+	bh=UrD8YiwKxXaJ/kMLAEuxrBkiQf0urUIp4Z3Wm6yFIqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYuu8z/aDVylFoa3ZKzh8LdwG+3RfhPUOYy+ey38rqq4krCExWY+6KbLUvONcua/p
-	 H8fixLXZ+/BOFOKcTDVwt3HkAE3CRhlsQ8pZ/8k8kvVXd12oMBXN912lHcwTcSPsVK
-	 oRZWfyHOG+zLcSv1rQD1tJv8BvCUwEjnszVMa0wg=
+	b=BTvV3MQzCqwmYxfdDu/GNOeBxztQk9Ppg4yqnfOOHxoVrfcIa9lOBwZaOabrZr247
+	 9ZwuZgsyEMKFPYiNmojLXS639YlI+LiSQuYcoamwysxDVyUWPvmS0bfjVkuU746jT5
+	 G9hnVfBMGiDul757cztyOy8hywkJ65MlJklbfe+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfKVLEG (ORCPT
+        id S1731513AbfKVLEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:04:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58634 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731490AbfKVLEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:04:01 -0500
+        id S1730859AbfKVLEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:04:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0CB020659;
-        Fri, 22 Nov 2019 11:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D692084D;
+        Fri, 22 Nov 2019 11:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420641;
-        bh=omDMWs7oiMbcZbsR6yFJC92lzmGq0/GwmcRPEeaGxKc=;
+        s=default; t=1574420644;
+        bh=UrD8YiwKxXaJ/kMLAEuxrBkiQf0urUIp4Z3Wm6yFIqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOSOKxdAnSjPzjnIogXYwPgHC0y+m74DO2byflhGvPWlXg8xlQr6CxS4m36NyiYlf
-         godrbU2KRqSjmhhOYnGWinUBJIRulS7/KCcbY+wzhARCwsN6BSSbbR6fe+IbRqChN0
-         2U8fLZrvEFNofnGgZfkQdevqs4becMkyZMC3wTks=
+        b=mC/pRhoRje24QTG1xbrP/Jr3aOg/rnuHAbrwQDbzMbZ9iJ2y9wGM9HPtfG8ztE3JU
+         6HCjpSERA6D6/dJWXwQBy2D4cR8Co9vDJMcRm7SRsFtbwvlzX3zkbvWIRKbx3c9S3P
+         rBhUWEOr7oQMShRTO0Ifmyg2L+teEn1yMdqkE/Co=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 177/220] media: venus: vdec: fix decoded data size
-Date:   Fri, 22 Nov 2019 11:29:02 +0100
-Message-Id: <20191122100925.580614080@linuxfoundation.org>
+        stable@vger.kernel.org, Connor McAdams <conmanx360@gmail.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 178/220] ALSA: hda/ca0132 - Fix input effect controls for desktop cards
+Date:   Fri, 22 Nov 2019 11:29:03 +0100
+Message-Id: <20191122100925.648885708@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -62,39 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vikash Garodia <vgarodia@codeaurora.org>
+From: Connor McAdams <conmanx360@gmail.com>
 
-[ Upstream commit ce32c0a530bd955206fe45c2eff77e581202d699 ]
+[ Upstream commit 7a2dc84fc480aec4f8f96e152327423014edf668 ]
 
-Existing code returns the max of the decoded size and buffer size.
-It turns out that buffer size is always greater due to hardware
-alignment requirement. As a result, payload size given to client
-is incorrect. This change ensures that the bytesused is assigned
-to actual payload size, when available.
+This patch removes the echo cancellation control for desktop cards, and
+makes use of the special 0x47 SCP command for noise reduction.
 
-Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
-Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Connor McAdams <conmanx360@gmail.com>
+Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/vdec.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/pci/hda/patch_ca0132.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index dfbbbf0f746f9..e40fdf97b0f03 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -888,8 +888,7 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
- 		unsigned int opb_sz = venus_helper_get_opb_size(inst);
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index f2cabfdced05c..6a9b89e05daea 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -4521,7 +4521,7 @@ static int ca0132_effects_set(struct hda_codec *codec, hda_nid_t nid, long val)
+ 			val = 0;
  
- 		vb = &vbuf->vb2_buf;
--		vb->planes[0].bytesused =
--			max_t(unsigned int, opb_sz, bytesused);
-+		vb2_set_plane_payload(vb, 0, bytesused ? : opb_sz);
- 		vb->planes[0].data_offset = data_offset;
- 		vb->timestamp = timestamp_us * NSEC_PER_USEC;
- 		vbuf->sequence = inst->sequence_cap++;
+ 		/* If Voice Focus on SBZ, set to two channel. */
+-		if ((nid == VOICE_FOCUS) && (spec->quirk == QUIRK_SBZ)
++		if ((nid == VOICE_FOCUS) && (spec->use_pci_mmio)
+ 				&& (spec->cur_mic_type != REAR_LINE_IN)) {
+ 			if (spec->effects_switch[CRYSTAL_VOICE -
+ 						 EFFECT_START_NID]) {
+@@ -4540,7 +4540,7 @@ static int ca0132_effects_set(struct hda_codec *codec, hda_nid_t nid, long val)
+ 		 * For SBZ noise reduction, there's an extra command
+ 		 * to module ID 0x47. No clue why.
+ 		 */
+-		if ((nid == NOISE_REDUCTION) && (spec->quirk == QUIRK_SBZ)
++		if ((nid == NOISE_REDUCTION) && (spec->use_pci_mmio)
+ 				&& (spec->cur_mic_type != REAR_LINE_IN)) {
+ 			if (spec->effects_switch[CRYSTAL_VOICE -
+ 						 EFFECT_START_NID]) {
+@@ -5856,8 +5856,8 @@ static int ca0132_build_controls(struct hda_codec *codec)
+ 	 */
+ 	num_fx = OUT_EFFECTS_COUNT + IN_EFFECTS_COUNT;
+ 	for (i = 0; i < num_fx; i++) {
+-		/* SBZ and R3D break if Echo Cancellation is used. */
+-		if (spec->quirk == QUIRK_SBZ || spec->quirk == QUIRK_R3D) {
++		/* Desktop cards break if Echo Cancellation is used. */
++		if (spec->use_pci_mmio) {
+ 			if (i == (ECHO_CANCELLATION - IN_EFFECT_START_NID +
+ 						OUT_EFFECTS_COUNT))
+ 				continue;
 -- 
 2.20.1
 
