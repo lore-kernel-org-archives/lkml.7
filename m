@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF23C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE29C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 748E22071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB352072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419535;
-	bh=ZLr0cVcvibSBi1yenOkAeu/U1OwPHIF//FCDqSsn3ng=;
+	s=default; t=1574419539;
+	bh=8iD2RbErPWDnc+352S6Dt9T6EhXU+MLXptMB07sJbVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFejZJQ3QLvPKe7Xk7fDg2bs8kZGaI59GrNJHF6WGcQcupjcW9z8XZiIUwahAro8j
-	 Cn1Zf+0B5Ns4u9llLjCldHjYFXLpnw9+w3htm2xz12EokmOgtADSDqmDi0C6kTfhcz
-	 udA+RNorTlsuBQzspYLnYZx7AHOdNtczHWFOf0fw=
+	b=XkC++W4aewim91HFn4AL1P7LHxcLyAGihXnfz0moImPOhZzRGnoMXZzsvs7QhcIe3
+	 oeQZ0ymRFjZ40+nnPCNgVfBdmi4BgeoRpcnxBVzZUIYXUWNFrT+SF8nxmzfdL2gzZy
+	 j5aUyzGbohdunW1eMP4dwYAfZ6r8DGIPe6ghVBoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfKVKpe (ORCPT
+        id S1729511AbfKVKph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51912 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729477AbfKVKpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:30 -0500
+        id S1729486AbfKVKpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B6E120637;
-        Fri, 22 Nov 2019 10:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354A820715;
+        Fri, 22 Nov 2019 10:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419530;
-        bh=ZLr0cVcvibSBi1yenOkAeu/U1OwPHIF//FCDqSsn3ng=;
+        s=default; t=1574419532;
+        bh=8iD2RbErPWDnc+352S6Dt9T6EhXU+MLXptMB07sJbVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUz+XMjxW/ZouSzohc9+34TPM10l3sPtcnhQmapR1ZIaBl4NDcV5bdNnEv/MqofOY
-         WKzvOiZblUHpLmyfwRpE8qbe7WwVHORh6WRn6vcV7XoyJrSYHbOWtY/qHGQtZctpc/
-         iBK2Utu799wI2gdRhy5VJqxdU14SleCtJ9bsi0vw=
+        b=bOff5lxYhu9lpNhM/KUg+6LN7y/ehJcxyjzIh/WnfZaO1L5bRpokXJDiUHkMAtWQQ
+         NhtxV3HccCzRJrvdJXsKz1KVuJxHwYI+SCDNZy9cXgXuQpOvYGkEmsuLtCgOzoqo6K
+         8O2LWEyrUaWhdX2QxOVqjPkx69Am5SgovXIm6LVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 143/222] usb: xhci-mtk: fix ISOC error when interval is zero
-Date:   Fri, 22 Nov 2019 11:28:03 +0100
-Message-Id: <20191122100913.155133973@linuxfoundation.org>
+Subject: [PATCH 4.9 144/222] fuse: use READ_ONCE on congestion_threshold and max_background
+Date:   Fri, 22 Nov 2019 11:28:04 +0100
+Message-Id: <20191122100913.230281494@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -60,36 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-[ Upstream commit 87173acc0d8f0987bda8827da35fff67f52ad15d ]
+[ Upstream commit 2a23f2b8adbe4bd584f936f7ac17a99750eed9d7 ]
 
-If the interval equal zero, needn't round up to power of two
-for the number of packets in each ESIT, so fix it.
+Since they are of unsigned int type, it's allowed to read them
+unlocked during reporting to userspace. Let's underline this fact
+with READ_ONCE() macroses.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-mtk-sch.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/fuse/control.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
-index 73f763c4f5f59..144674913c788 100644
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -122,7 +122,9 @@ static void setup_sch_info(struct usb_device *udev,
- 		}
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index e25c40c10f4fa..97ac2f5843fcc 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -107,7 +107,7 @@ static ssize_t fuse_conn_max_background_read(struct file *file,
+ 	if (!fc)
+ 		return 0;
  
- 		if (ep_type == ISOC_IN_EP || ep_type == ISOC_OUT_EP) {
--			if (esit_pkts <= sch_ep->esit)
-+			if (sch_ep->esit == 1)
-+				sch_ep->pkts = esit_pkts;
-+			else if (esit_pkts <= sch_ep->esit)
- 				sch_ep->pkts = 1;
- 			else
- 				sch_ep->pkts = roundup_pow_of_two(esit_pkts)
+-	val = fc->max_background;
++	val = READ_ONCE(fc->max_background);
+ 	fuse_conn_put(fc);
+ 
+ 	return fuse_conn_limit_read(file, buf, len, ppos, val);
+@@ -144,7 +144,7 @@ static ssize_t fuse_conn_congestion_threshold_read(struct file *file,
+ 	if (!fc)
+ 		return 0;
+ 
+-	val = fc->congestion_threshold;
++	val = READ_ONCE(fc->congestion_threshold);
+ 	fuse_conn_put(fc);
+ 
+ 	return fuse_conn_limit_read(file, buf, len, ppos, val);
 -- 
 2.20.1
 
