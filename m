@@ -2,111 +2,104 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35473C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5657DC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D0D20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574466753;
-	bh=aTvmzeoDpBxYogmzi7ZPOzcUjrCa76xNLs8IvlLBSQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z00BBDTv3FCJ4aN4AWoejh84ukN8H7E/o/QSCwcTerQc3BurT0K8x/7BfdN2ofCNe
-	 oktG5HGvFbtInuwJCJXrZifvoh222Hre2NowfqRX/ZAsm+y++wK6XPFI50xYTmM7c/
-	 WErB1JEnkOmzqaLOJEHqlW+GoA7uChsv0CyBXKNs=
+	by mail.kernel.org (Postfix) with ESMTP id 215CF2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="slpnirid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfKVXwc (ORCPT
+        id S1727020AbfKVXxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:52:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37652 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfKVXwc (ORCPT
+        Fri, 22 Nov 2019 18:53:07 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38496 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKVXxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 18:52:32 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 128so25431oih.4;
-        Fri, 22 Nov 2019 15:52:31 -0800 (PST)
+        Fri, 22 Nov 2019 18:53:07 -0500
+Received: by mail-pj1-f67.google.com with SMTP id f7so3731554pjw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 15:53:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/fgSJfDwWUJZk4qQCUjEfQX+RZkuy9vdX6awUKhe3pA=;
+        b=slpniridXSVEw4nY4I5KMNh4NRv6/oWl+rZ0AG6M37LNSbSAPYsyHwFHowNhxVvbb7
+         2IZcNdL2Jzv5Ecx2YnSIpEbvIiO8qOY+WnTZSq0IGMW0AmhuHjtW1Q6nkCxk/VLtjW9e
+         iJHM71CPZQjaJd+YZcHy1GpU0DJyTGrYCA+PtaFk7ZFWfEkLapW2LTcBPAUENB0QApry
+         UqCaqviFYqEwW5xvK07dMAdW+YHF1v021ATW//30WK++GzFN1njBfBeihAqZd8ywlIpp
+         WJoi/6tucp6GN2V+Td1/SPOIM4fxBJPxuRfUvs8YrBCoPGSFmPms293tJoQ1pvbfpEf1
+         B53w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NIv0AP1JTSUxfnvgBVyjKeTWUuL1peOwjaFWykNE7iA=;
-        b=mxalFyAy83L1LsEBBA3JOYlOqmmCEGUR7/4bJZHQy9MSkwUnJpjcFEqn1/WBJOSs+e
-         CCHkw+OWl4WL1DNw9Zt9XzppgcGkx7jOIje0KzCnW+hX3U3M5beqj8SdaEoLTAL8AyuY
-         gB3PA5GSon9FjcfVitJ42m6qSkgYmbd2xsfUpMVFf5csOFYkLtqRyD67DxJ4R8otBoRg
-         ZIsd5L77t/Us9DccYQB+Z52XwgoPa7awr9pv8RonwG28xecsjhsXl8WtKMxnAbxMvssn
-         60cUvC7AUm/YS2/j91Lcau+KwchIM6n6Lvwe51gFIjwgPTad+clh0cxT7prFvLPC5/vG
-         YVVQ==
-X-Gm-Message-State: APjAAAVFcN0yMDFgo0YYEOHIsblfNl/KKsmKgYRuZ/0ldEcz+bEQW1zS
-        l0U0Je4v9ctzttVB+R9j0g==
-X-Google-Smtp-Source: APXvYqyLwRnx+Xo7nbUb1L8qZT5IZ45QUOP+KUGZYQXdJQZMSvZtE8QAvSSeSdJm6fP20R3Oyo69Dw==
-X-Received: by 2002:a05:6808:6c3:: with SMTP id m3mr15234183oih.56.1574466750932;
-        Fri, 22 Nov 2019 15:52:30 -0800 (PST)
-Received: from localhost ([2607:fb90:bd7:3743:c9ec:246b:67b7:9768])
-        by smtp.gmail.com with ESMTPSA id l32sm2757861otl.74.2019.11.22.15.52.29
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=/fgSJfDwWUJZk4qQCUjEfQX+RZkuy9vdX6awUKhe3pA=;
+        b=RzcRe7FC67U77J+P/HGB1XZVVveZJJFu9ANO11uJkW+lpA8J3fgJ06U+O7nTYS9RTf
+         LTFBzvUv6OmFR57Hq6pB8Xdu/2evdH0V4YGDH7616bLlCSK9YTQBphzn3iRvfYwt2jra
+         viP9WwqgKxAyDgRFoCABqB6CqjINqszb0qyaK3Q3KJu4tULXsMPr3l4UC5BHMbrlpQGY
+         iRKLgRZEHHijMWPEoLMTXTIUHqwdGgFegQrbdGENuTQkpDlTdDhZZfBtmldR3iMmENK5
+         BLLURGwH1GsUfbwAZT5OkBWqil6nZsYD+RydjEuhAXedu7IxXt//HX2DaZX0zZ2maVl1
+         d/1g==
+X-Gm-Message-State: APjAAAWsgMDxK5/dVWc8lOvC12eAnYDp+TKkxOqNuX6RPJYU/ZAZXRhC
+        WId/ihOjhQun+MQxKAdbICmpHw8+v9Q=
+X-Google-Smtp-Source: APXvYqyxKrpojY6n5qCm+4SIu4O0m88qkgp27+Y5i0/YgxpxjPstGnHC+gJZLE/Jn7clsUb9Abfs2w==
+X-Received: by 2002:a17:902:8bc9:: with SMTP id r9mr15869159plo.319.1574466786535;
+        Fri, 22 Nov 2019 15:53:06 -0800 (PST)
+Received: from localhost ([2620:15c:211:200:12cb:e51e:cbf0:6e3f])
+        by smtp.gmail.com with ESMTPSA id l21sm13025pjt.28.2019.11.22.15.53.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 15:52:30 -0800 (PST)
-Date:   Fri, 22 Nov 2019 17:52:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: Add vendor prefix for ITE Tech. Inc.
-Message-ID: <20191122235226.GA7738@bogus>
-References: <1573811564-320-1-git-send-email-allen.chen@ite.com.tw>
- <1573811564-320-2-git-send-email-allen.chen@ite.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573811564-320-2-git-send-email-allen.chen@ite.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 22 Nov 2019 15:53:06 -0800 (PST)
+Date:   Fri, 22 Nov 2019 15:53:06 -0800 (PST)
+X-Google-Original-Date: Fri, 22 Nov 2019 15:36:55 PST (-0800)
+Subject:     Re: [PATCH 1/2] riscv: defconfigs: enable debugfs
+In-Reply-To: <20191122225659.21876-2-paul.walmsley@sifive.com>
+CC:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Message-ID: <mhng-0f9ac780-ed6e-417b-8330-68bd11d76362@palmerdabbelt.mtv.corp.google.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:52:17PM +0800, allen wrote:
-> ITE Tech. Inc. (abbreviated as ITE ) is a professional fabless IC
-> design house. ITE's core technology includes PC and NB Controller chips,
-> Super I/O, High Speed Serial Interface, Video Codec, Touch Sensing,
-> Surveillance, OFDM, Sensor Fusion, and so on.
-> 
-> more information on: http://www.ite.com.tw/
-> 
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-
-Please fix up your author name to match here.
-
+On Fri, 22 Nov 2019 14:56:58 PST (-0800), Paul Walmsley wrote:
+> debugfs is broadly useful, so enable it in the RISC-V defconfigs.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 6046f45..552f5ef 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -463,6 +463,8 @@ patternProperties:
->      description: Intersil
->    "^issi,.*":
->      description: Integrated Silicon Solutions Inc.
-> +  "^ite,.*":
-> +    description: ITE Tech. Inc.
->    "^itead,.*":
->      description: ITEAD Intelligent Systems Co.Ltd
->    "^iwave,.*":
-> -- 
-> 1.9.1
-> 
+>  arch/riscv/configs/defconfig      | 1 +
+>  arch/riscv/configs/rv32_defconfig | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 420a0dbef386..f0710d8f50cc 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -100,4 +100,5 @@ CONFIG_9P_FS=y
+>  CONFIG_CRYPTO_USER_API_HASH=y
+>  CONFIG_CRYPTO_DEV_VIRTIO=y
+>  CONFIG_PRINTK_TIME=y
+> +CONFIG_DEBUG_FS=y
+>  # CONFIG_RCU_TRACE is not set
+> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+> index 87ee6e62b64b..bdec58e6c5f7 100644
+> --- a/arch/riscv/configs/rv32_defconfig
+> +++ b/arch/riscv/configs/rv32_defconfig
+> @@ -97,4 +97,5 @@ CONFIG_9P_FS=y
+>  CONFIG_CRYPTO_USER_API_HASH=y
+>  CONFIG_CRYPTO_DEV_VIRTIO=y
+>  CONFIG_PRINTK_TIME=y
+> +CONFIG_DEBUG_FS=y
+>  # CONFIG_RCU_TRACE is not set
+
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
