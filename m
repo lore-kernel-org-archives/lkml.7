@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3F7C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA19C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64C620715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F3A20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418788;
-	bh=ON1L6FHRZCSgyfc+YX7cNsYgDakQmYbouwjMn0KnQBE=;
+	s=default; t=1574418789;
+	bh=S7EWjR9HW0fbWkKc6WCQ4yOt2o9hv2Qy4JrXK7ZlVgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CU5ixFfDCPAth2fZ7m2xwkgBLD/hugd/PcGoWuuhc+fo64mHi5bgJlCpIAoeyhR1u
-	 WW6mpsG74mguZMQYguZ54HMhEXOXVuV3wU2gdJdbcX7akekPB+sX6hrQHWpGd6eree
-	 yMfAfF68HgsvTipy2IeuPb9CRkTV6+V3FEfly87o=
+	b=fgLRNOElGdN85X7zW0rJwdiIeqAwJAYluwZqLSMzh/yd/eC3Lk+5XvygUkGGiEeVM
+	 9nde9nqS1SopEXVl/ycphOHbz/ONVwv7Ts3bs3SISN8XIYBn0mANY1Xg+6AwQmdlC3
+	 KDoMnHSEeqtuOrk9CWxAYZK6OPdfChc6YGlpM6gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfKVKdD (ORCPT
+        id S1727896AbfKVKdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54972 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:33:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbfKVKc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:32:57 -0500
+        id S1727866AbfKVKdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8605520708;
-        Fri, 22 Nov 2019 10:32:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38BD620715;
+        Fri, 22 Nov 2019 10:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418777;
-        bh=ON1L6FHRZCSgyfc+YX7cNsYgDakQmYbouwjMn0KnQBE=;
+        s=default; t=1574418785;
+        bh=S7EWjR9HW0fbWkKc6WCQ4yOt2o9hv2Qy4JrXK7ZlVgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/I7/hHmjJsxkt2YOfX6lOV3sCmVw/jQBWht/McL6ZRZ/cxZX+ZHvRc2icjaV42iT
-         GTz7azdJG1I/dqSTHdAjfc6yIuoOvuerVXIlfoohDcwd5abxQhxxChuVK0WxFW8etp
-         8LLXvSyVXdTja1bC7B4BkS1gD9cvYxZ3YhfH9qvQ=
+        b=UQ2BhEMMUCtSb+gzzky44xyK1k4OVuZyVobG4VIGY5x82duK3P/PD/E0TTA+gvAHg
+         s1b2bfKr58/kIrtR9nRNzA1xnUTx4MOEf8LtE9h580NBn76QiOeSMu1umQUgPJOvQR
+         VNFsaqpaDsVPyKosKDRaqR7NFLsdYCebu+64ZDCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/159] llc: avoid blocking in llc_sap_close()
-Date:   Fri, 22 Nov 2019 11:27:19 +0100
-Message-Id: <20191122100740.546114454@linuxfoundation.org>
+Subject: [PATCH 4.4 051/159] pinctrl: at91: dont use the same irqchip with multiple gpiochips
+Date:   Fri, 22 Nov 2019 11:27:22 +0100
+Message-Id: <20191122100744.565304534@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -60,52 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-[ Upstream commit 9708d2b5b7c648e8e0a40d11e8cea12f6277f33c ]
+[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
 
-llc_sap_close() is called by llc_sap_put() which
-could be called in BH context in llc_rcv(). We can't
-block in BH.
+Sharing the same irqchip with multiple gpiochips is not a good
+practice. For instance, when installing hooks, we change the state
+of the irqchip. The initial state of the irqchip for the second
+gpiochip to register is then disrupted.
 
-There is no reason to block it here, kfree_rcu() should
-be sufficient.
-
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/llc.h  | 1 +
- net/llc/llc_core.c | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/include/net/llc.h b/include/net/llc.h
-index 82d989995d18a..95e5ced4c1339 100644
---- a/include/net/llc.h
-+++ b/include/net/llc.h
-@@ -66,6 +66,7 @@ struct llc_sap {
- 	int sk_count;
- 	struct hlist_nulls_head sk_laddr_hash[LLC_SK_LADDR_HASH_ENTRIES];
- 	struct hlist_head sk_dev_hash[LLC_SK_DEV_HASH_ENTRIES];
-+	struct rcu_head rcu;
- };
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 0d2fc0cff35ee..52bbd34f7d0d9 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1556,16 +1556,6 @@ void at91_pinctrl_gpio_resume(void)
+ #define gpio_irq_set_wake	NULL
+ #endif /* CONFIG_PM */
  
- static inline
-diff --git a/net/llc/llc_core.c b/net/llc/llc_core.c
-index e896a2c53b120..f1e442a39db8d 100644
---- a/net/llc/llc_core.c
-+++ b/net/llc/llc_core.c
-@@ -127,9 +127,7 @@ void llc_sap_close(struct llc_sap *sap)
- 	list_del_rcu(&sap->node);
- 	spin_unlock_bh(&llc_sap_list_lock);
- 
--	synchronize_rcu();
+-static struct irq_chip gpio_irqchip = {
+-	.name		= "GPIO",
+-	.irq_ack	= gpio_irq_ack,
+-	.irq_disable	= gpio_irq_mask,
+-	.irq_mask	= gpio_irq_mask,
+-	.irq_unmask	= gpio_irq_unmask,
+-	/* .irq_set_type is set dynamically */
+-	.irq_set_wake	= gpio_irq_set_wake,
+-};
 -
--	kfree(sap);
-+	kfree_rcu(sap, rcu);
- }
+ static void gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+@@ -1608,12 +1598,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	struct gpio_chip	*gpiochip_prev = NULL;
+ 	struct at91_gpio_chip   *prev = NULL;
+ 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
++	struct irq_chip		*gpio_irqchip;
+ 	int ret, i;
  
- static struct packet_type llc_packet_type __read_mostly = {
++	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
++	if (!gpio_irqchip)
++		return -ENOMEM;
++
+ 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
+ 
+-	/* Setup proper .irq_set_type function */
+-	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
++	gpio_irqchip->name = "GPIO";
++	gpio_irqchip->irq_ack = gpio_irq_ack;
++	gpio_irqchip->irq_disable = gpio_irq_mask;
++	gpio_irqchip->irq_mask = gpio_irq_mask;
++	gpio_irqchip->irq_unmask = gpio_irq_unmask;
++	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
++	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
+ 
+ 	/* Disable irqs of this PIO controller */
+ 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
+@@ -1624,7 +1624,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	 * interrupt.
+ 	 */
+ 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
+-				   &gpio_irqchip,
++				   gpio_irqchip,
+ 				   0,
+ 				   handle_edge_irq,
+ 				   IRQ_TYPE_EDGE_BOTH);
+@@ -1642,7 +1642,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	if (!gpiochip_prev) {
+ 		/* Then register the chain on the parent IRQ */
+ 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
+-					     &gpio_irqchip,
++					     gpio_irqchip,
+ 					     at91_gpio->pioc_virq,
+ 					     gpio_irq_handler);
+ 		return 0;
 -- 
 2.20.1
 
