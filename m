@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15473C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFE1C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82DC207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE68D20840
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420569;
-	bh=CRRHNqPWZVBDH3wUrp+1VH0/eHLL/17msIBzpwJ4APY=;
+	s=default; t=1574420571;
+	bh=4AqIKX5t8RvYRZ+5XLEmOm7MDx4bs/HyQdJ9zb2hRN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qq3KLScc9bsGWk+aU3P8wSy+gkZt37Tdo/KhoSik1MOk0OfbjVxZqlPBgNUh78eY5
-	 KTqtcedyvz2H34x4gmLbnljMPYHj/UK1j3/5i/QoH2aM/Bj+lRHLZXznVn2n6C1tNP
-	 isjSGypFUh4bxgTMipAgqyj76KprnPVm1YSXSrTg=
+	b=PM4Zc3b8viqzqlOGPDrOYQma4ShTQjQ7XfLzTV2pI99MDUYwRNmUR0B1/2Aa0TvDq
+	 sekxYpctYJegIOdGB+TerBSXMPcKW6txhyytGoQnY4d7u3fwNfUmd53mKivCemMxju
+	 1k2N1ft3Cs+Dmm9wETK36WsgXjkiuomQz+Gj0A4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731347AbfKVLCs (ORCPT
+        id S1730514AbfKVLCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:02:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731335AbfKVLCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:44 -0500
+        id S1730991AbfKVLCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10EF92075E;
-        Fri, 22 Nov 2019 11:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 676AE207DD;
+        Fri, 22 Nov 2019 11:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420563;
-        bh=CRRHNqPWZVBDH3wUrp+1VH0/eHLL/17msIBzpwJ4APY=;
+        s=default; t=1574420560;
+        bh=4AqIKX5t8RvYRZ+5XLEmOm7MDx4bs/HyQdJ9zb2hRN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9syo7BJpeHeBtB0cQ4W7WId3WzBj0UajPdJwtlWVeWTHMzFIH9y/bMifDs3d/bSA
-         x1vPz8dQBbq9QIN/0rMZln19MoEuzVfh/bk1ia8Lewg3aQZ3ZQ+MW5gv/Xe1PJEPm9
-         9I+J1aDNDFIz9xVmdEB9BbwO4RDqNd/CJVVIhcdg=
+        b=T1cpHFdS5uY9kPQLWa/Ya8M3lxcLz3SOYbQMtT9+dTiu4FTo88JXkAPSdrwGTG0d0
+         ZjwiLX10341ZyGnS+o4Bed/aVaRB8MXdDZGAjUkE4GY4Jmfw0Q2B3fOQdOZT4y9hbF
+         fiRPWwNcvu3p2jG7HbDLvdMU1BcZq+dqFn51sd+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 149/220] mmc: tmio: Fix SCC error detection
-Date:   Fri, 22 Nov 2019 11:28:34 +0100
-Message-Id: <20191122100923.460544655@linuxfoundation.org>
+Subject: [PATCH 4.19 148/220] mmc: renesas_sdhi_internal_dmac: Whitelist r8a774a1
+Date:   Fri, 22 Nov 2019 11:28:33 +0100
+Message-Id: <20191122100923.394392320@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -64,39 +64,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-[ Upstream commit b85fb0a1c8aeaaa40d08945d51a6656b512173f0 ]
+[ Upstream commit 2e1501a8bdd49eaa0e967c0ad00e9dcd68d0b30f ]
 
-SDR104, HS200 and HS400 need to check for SCC error. If SCC error is
-detected, retuning is necessary.
+We need r8a774a1 to be whitelisted for SDHI to work on the RZ/G2M,
+but we don't care about the revision of the SoC, so just whitelist
+the generic part number.
 
-Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
-[Niklas: update commit message]
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/tmio_mmc_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-index 7d13ca9ea5347..94c43c3d3ae58 100644
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -926,8 +926,8 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
- 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
- 		tmio_mmc_abort_dma(host);
- 
--	if (host->check_scc_error)
--		host->check_scc_error(host);
-+	if (host->check_scc_error && host->check_scc_error(host))
-+		mrq->cmd->error = -EILSEQ;
- 
- 	/* If SET_BLOCK_COUNT, continue with main command */
- 	if (host->mrq && !mrq->cmd->error) {
+diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+index ca0b43973769c..f4aefa8954bfc 100644
+--- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
++++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+@@ -298,6 +298,7 @@ static const struct soc_device_attribute gen3_soc_whitelist[] = {
+ 	{ .soc_id = "r8a7796", .revision = "ES1.0",
+ 	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
+ 	/* generic ones */
++	{ .soc_id = "r8a774a1" },
+ 	{ .soc_id = "r8a7795" },
+ 	{ .soc_id = "r8a7796" },
+ 	{ .soc_id = "r8a77965" },
 -- 
 2.20.1
 
