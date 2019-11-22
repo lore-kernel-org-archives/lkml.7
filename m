@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD0DC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3EFC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0632D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D322070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402487;
-	bh=yX1fRkoZa9hfgOfU+yD5L5Gfs4/CUrl+xZh79cZVmSo=;
+	s=default; t=1574402491;
+	bh=1P+JhWcNEDUHQp8AcPsVmL+tkyIZYHZtGb1E3NhEtE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W1fzqIPJqy+Qqdi2BgmmwOA/YY/MXoYmwRraOzr98Ua4hEJPbdkjqY+g+gkIt/Npv
-	 lctQ7UJJT3Xx3g7+3gbAxkWTOkBGqYFcdEd70a9jzz+/ukP/BGGZOK+16vHd8iNy2Z
-	 ZW22fFH8ZOK/guXM5gujNDGbgTEcOURmpiSIuLIY=
+	b=Gr4RzsVQqEKTit8I7b0/hqulaA/JVTHKbZ/QpsOe/3QraRUfx/aBlkaV42bEj6Fnx
+	 QjqMcQLLFl5XhlTzyrRZHjSA0xsn/odxYcqGFhe6Alots32yvwG+WLDQ1w8FNMBbXU
+	 flNZG91zQ9jI/aZF0hFG+gR6tycik69vKN5uFoYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfKVF5S (ORCPT
+        id S1728729AbfKVGB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:57:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35234 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:01:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbfKVF5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:06 -0500
+        id S1727602AbfKVF5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3441E2071B;
-        Fri, 22 Nov 2019 05:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99F9C2072E;
+        Fri, 22 Nov 2019 05:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402226;
-        bh=yX1fRkoZa9hfgOfU+yD5L5Gfs4/CUrl+xZh79cZVmSo=;
+        s=default; t=1574402236;
+        bh=1P+JhWcNEDUHQp8AcPsVmL+tkyIZYHZtGb1E3NhEtE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhwaLKk1fIS2NY+BQSYlxv7DceDxHWudYlaL4j7+posV6i9CL2iaUPsbh6LG+83Kj
-         stEHVzIOvTuhxvfyQaX5YUhBj9M1eVVGwqpNxMGg8Ig8wo6/hsmO2YEUMrmA+rvEIA
-         GiSRCO9QwNeMFWmyFbbTSE+iS68WYrnZa+yDumtY=
+        b=1tp8NOVGNwezmRdzYQFJ6+xBYrpkyzgzbS4Mt4qzdfAnDmSpK4KedwkwYg4FNcUkw
+         enVhPmg5lXPnEq6Aw3hu33gGFDB9ciGHYCSfs4So/DUDovuxGYBar2fA5S2HGgkDrK
+         twYTQ8CCCvB3QldiF05NoatNEyUSpkCgMYGhaFug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 072/127] drbd: do not block when adjusting "disk-options" while IO is frozen
-Date:   Fri, 22 Nov 2019 00:54:50 -0500
-Message-Id: <20191122055544.3299-71-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 081/127] net/netlink_compat: Fix a missing check of nla_parse_nested
+Date:   Fri, 22 Nov 2019 00:54:59 -0500
+Message-Id: <20191122055544.3299-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,89 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit f708bd08ecbdc23d03aaedf5b3311ebe44cfdb50 ]
+[ Upstream commit 89dfd0083751d00d5d7ead36f6d8b045bf89c5e1 ]
 
-"suspending" IO is overloaded.
-It can mean "do not allow new requests" (obviously),
-but it also may mean "must not complete pending IO",
-for example while the fencing handlers do their arbitration.
+In tipc_nl_compat_sk_dump(), if nla_parse_nested() fails, it could return
+an error. To be consistent with other invocations of the function call,
+on error, the fix passes the return value upstream.
 
-When adjusting disk options, we suspend io (disallow new requests), then
-wait for the activity-log to become unused (drain all IO completions),
-and possibly replace it with a new activity log of different size.
-
-If the other "suspend IO" aspect is active, pending IO completions won't
-happen, and we would block forever (unkillable drbdsetup process).
-
-Fix this by skipping the activity log adjustment if the "al-extents"
-setting did not change. Also, in case it did change, fail early without
-blocking if it looks like we would block forever.
-
-Signed-off-by: Lars Ellenberg <lars.ellenberg@linbit.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_nl.c | 37 ++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+ net/tipc/netlink_compat.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index a675a0f61f9c0..31d7fe4480afd 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1515,6 +1515,30 @@ static void sanitize_disk_conf(struct drbd_device *device, struct disk_conf *dis
- 	}
- }
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index ad4dcc663c6de..1c8ac0c11008c 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -1021,8 +1021,11 @@ static int tipc_nl_compat_sk_dump(struct tipc_nl_compat_msg *msg,
+ 		u32 node;
+ 		struct nlattr *con[TIPC_NLA_CON_MAX + 1];
  
-+static int disk_opts_check_al_size(struct drbd_device *device, struct disk_conf *dc)
-+{
-+	int err = -EBUSY;
+-		nla_parse_nested(con, TIPC_NLA_CON_MAX,
+-				 sock[TIPC_NLA_SOCK_CON], NULL, NULL);
++		err = nla_parse_nested(con, TIPC_NLA_CON_MAX,
++				       sock[TIPC_NLA_SOCK_CON], NULL, NULL);
 +
-+	if (device->act_log &&
-+	    device->act_log->nr_elements == dc->al_extents)
-+		return 0;
-+
-+	drbd_suspend_io(device);
-+	/* If IO completion is currently blocked, we would likely wait
-+	 * "forever" for the activity log to become unused. So we don't. */
-+	if (atomic_read(&device->ap_bio_cnt))
-+		goto out;
-+
-+	wait_event(device->al_wait, lc_try_lock(device->act_log));
-+	drbd_al_shrink(device);
-+	err = drbd_check_al_size(device, dc);
-+	lc_unlock(device->act_log);
-+	wake_up(&device->al_wait);
-+out:
-+	drbd_resume_io(device);
-+	return err;
-+}
-+
- int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct drbd_config_context adm_ctx;
-@@ -1577,15 +1601,12 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
- 		}
- 	}
++		if (err)
++			return err;
  
--	drbd_suspend_io(device);
--	wait_event(device->al_wait, lc_try_lock(device->act_log));
--	drbd_al_shrink(device);
--	err = drbd_check_al_size(device, new_disk_conf);
--	lc_unlock(device->act_log);
--	wake_up(&device->al_wait);
--	drbd_resume_io(device);
--
-+	err = disk_opts_check_al_size(device, new_disk_conf);
- 	if (err) {
-+		/* Could be just "busy". Ignore?
-+		 * Introduce dedicated error code? */
-+		drbd_msg_put_info(adm_ctx.reply_skb,
-+			"Try again without changing current al-extents setting");
- 		retcode = ERR_NOMEM;
- 		goto fail_unlock;
- 	}
+ 		node = nla_get_u32(con[TIPC_NLA_CON_NODE]);
+ 		tipc_tlv_sprintf(msg->rep, "  connected to <%u.%u.%u:%u>",
 -- 
 2.20.1
 
