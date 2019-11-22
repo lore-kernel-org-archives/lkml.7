@@ -2,79 +2,74 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AE0C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C183420672
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B0E2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 22:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfKVWvR (ORCPT
+        id S1726939AbfKVWwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:51:17 -0500
-Received: from mga09.intel.com ([134.134.136.24]:18066 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfKVWvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 17:51:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 14:51:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
-   d="scan'208";a="290778476"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 22 Nov 2019 14:51:13 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iYHlg-0009mT-GL; Sat, 23 Nov 2019 06:51:12 +0800
-Date:   Sat, 23 Nov 2019 06:50:29 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Yangbo Lu <yangbo.lu@nxp.com>
-Cc:     kbuild-all@lists.01.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH linux-next] net: dsa: ocelot: felix_txtstamp() can be
- static
-Message-ID: <20191122225029.ckppkwdle3yzaoq7@4978f4969bb8>
-References: <201911230623.rJBgtgcn%lkp@intel.com>
+        Fri, 22 Nov 2019 17:52:15 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43516 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVWwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 17:52:14 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iYHmd-0007Lc-5R; Fri, 22 Nov 2019 22:52:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Kevin Hilman <khilman@baylibre.com>, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rtc: meson: remove redundant assignment to variable retries
+Date:   Fri, 22 Nov 2019 22:52:10 +0000
+Message-Id: <20191122225210.109172-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201911230623.rJBgtgcn%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
-Fixes: c0bcf537667c ("net: dsa: ocelot: add hardware timestamping support for Felix")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+The variable retries is being initialized with a value that is never
+read and it is being updated later with a new value in a for-loop.
+The initialization is redundant and can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- felix.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-meson.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index 167e41549cdd1..b7f92464815d7 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -348,8 +348,8 @@ static bool felix_rxtstamp(struct dsa_switch *ds, int port,
- 	return false;
- }
+diff --git a/drivers/rtc/rtc-meson.c b/drivers/rtc/rtc-meson.c
+index 9bd8478db34b..47ebcf834cc2 100644
+--- a/drivers/rtc/rtc-meson.c
++++ b/drivers/rtc/rtc-meson.c
+@@ -131,7 +131,7 @@ static u32 meson_rtc_get_data(struct meson_rtc *rtc)
  
--bool felix_txtstamp(struct dsa_switch *ds, int port,
--		    struct sk_buff *clone, unsigned int type)
-+static bool felix_txtstamp(struct dsa_switch *ds, int port,
-+			   struct sk_buff *clone, unsigned int type)
+ static int meson_rtc_get_bus(struct meson_rtc *rtc)
  {
- 	struct ocelot *ocelot = ds->priv;
- 	struct ocelot_port *ocelot_port = ocelot->ports[port];
+-	int ret, retries = 3;
++	int ret, retries;
+ 	u32 val;
+ 
+ 	/* prepare bus for transfers, set all lines low */
+-- 
+2.24.0
+
