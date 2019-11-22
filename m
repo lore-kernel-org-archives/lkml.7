@@ -2,150 +2,104 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8ABC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6838120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421632;
-	bh=cr3IUombf9EhZ71/I7ho4fT1dibD1bo/zsPTJKKMmA8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnTep0rS50qTixnVRz/MpPws25V8WGFSG1SD6UxfOEKqm6E0YiJ275OmBkb7Mi8wG
-	 omebaGV/RaXzMzZ2f/LQ0vjfDFAzSTRajHFEMP6BKI8XF/mTU3GwIecW/dupLVswPl
-	 3URJEvv5fQxTMTgUN9ucYg3W0hXYJakzTOOZJzTY=
+	by mail.kernel.org (Postfix) with ESMTP id 23B5420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RRTdKrP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfKVLUb (ORCPT
+        id S1729469AbfKVLUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:20:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfKVKpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:20:30 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17016 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729560AbfKVKpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 05:45:54 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4EA320715;
-        Fri, 22 Nov 2019 10:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419553;
-        bh=cr3IUombf9EhZ71/I7ho4fT1dibD1bo/zsPTJKKMmA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yeyHu9jYJwigy7B3F99Wz2oytgOFIUcON5aQJDObFdyvScsqWe0usVWk/jfaZQrSG
-         efuTaRqMKxLU/bd0qAkPa/h4H+b338Jtz0m5Hd2TMOsZCBTtLtVNcYIlPMalFMYAQi
-         xKIefxytrPafGOEvxCMdaZLEXH4y3JPAUwbp0l7U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Francis Deslauriers <francis.deslauriers@efficios.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Yonghong Song <yhs@fb.com>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 150/222] kprobes/x86: Prohibit probing on exception masking instructions
-Date:   Fri, 22 Nov 2019 11:28:10 +0100
-Message-Id: <20191122100913.582883301@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
-References: <20191122100830.874290814@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7bc630001>; Fri, 22 Nov 2019 02:45:55 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 02:45:52 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 02:45:52 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:52 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 Nov 2019 10:45:52 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd7bc5b0001>; Fri, 22 Nov 2019 02:45:51 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH 5/6] arm64: tegra: Enable GPIO controllers nodes for P2972-0000 platform
+Date:   Fri, 22 Nov 2019 16:15:04 +0530
+Message-ID: <20191122104505.8986-6-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122104505.8986-1-vidyas@nvidia.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574419555; bh=F6/Ov3FRHWjTCpHNYAElFVGDpjp7zAUe/K07HA+D/Lo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=RRTdKrP/hxJqKkvG/cuJyacZRDOqI7uPuqzizjVNNiqEsoFMusGXZE5R1G2IgDAUq
+         ClJG0K8nW6Rvwhqs88MB9UZxgH3qQz9p8urjvKNyQjEt9eZNVSUVaaG7cHXURgeJhZ
+         NcYsG3lrMc6ukL3NJUYLXW2v8f1CxvT5jS64ny+0V5YFauKIN7hjMSdHhlj6Oso90B
+         CDRQ+wYcU/PV4D+AdZDNPzpyxZObKoCzPeyY5j0YgjnZqK1A2N4HQ83UdZRIeEJYKC
+         hKslp3sSJ3pO2NCbJP1KNZhR9YIuljsi0MPC9FqaQkNO4n1/FThVggly0V7K61ZObP
+         SHajOjncPpD6A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Enable GPIO controllers nodes for P2972-0000 platform which are required
+by other controllers in the SoC for example when PCIe C5 controller
+operates in endpoint mode.
 
-commit ee6a7354a3629f9b65bc18dbe393503e9440d6f5 upstream.
-
-Since MOV SS and POP SS instructions will delay the exceptions until the
-next instruction is executed, single-stepping on it by kprobes must be
-prohibited.
-
-However, kprobes usually executes those instructions directly on trampoline
-buffer (a.k.a. kprobe-booster), except for the kprobes which has
-post_handler. Thus if kprobe user probes MOV SS with post_handler, it will
-do single-stepping on the MOV SS.
-
-This means it is safe that if it is used via ftrace or perf/bpf since those
-don't use the post_handler.
-
-Anyway, since the stack switching is a rare case, it is safer just
-rejecting kprobes on such instructions.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Francis Deslauriers <francis.deslauriers@efficios.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "David S . Miller" <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/152587069574.17316.3311695234863248641.stgit@devbox
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- arch/x86/include/asm/insn.h    |   18 ++++++++++++++++++
- arch/x86/kernel/kprobes/core.c |    4 ++++
- 2 files changed, 22 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/x86/include/asm/insn.h
-+++ b/arch/x86/include/asm/insn.h
-@@ -208,4 +208,22 @@ static inline int insn_offset_immediate(
- 	return insn_offset_displacement(insn) + insn->displacement.nbytes;
- }
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+index 353a6a22196d..7eb64b816e08 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+@@ -37,6 +37,14 @@
+ 			status = "okay";
+ 		};
  
-+#define POP_SS_OPCODE 0x1f
-+#define MOV_SREG_OPCODE 0x8e
++		gpio@2200000 {
++			status = "okay";
++		};
 +
-+/*
-+ * Intel SDM Vol.3A 6.8.3 states;
-+ * "Any single-step trap that would be delivered following the MOV to SS
-+ * instruction or POP to SS instruction (because EFLAGS.TF is 1) is
-+ * suppressed."
-+ * This function returns true if @insn is MOV SS or POP SS. On these
-+ * instructions, single stepping is suppressed.
-+ */
-+static inline int insn_masking_exception(struct insn *insn)
-+{
-+	return insn->opcode.bytes[0] == POP_SS_OPCODE ||
-+		(insn->opcode.bytes[0] == MOV_SREG_OPCODE &&
-+		 X86_MODRM_REG(insn->modrm.bytes[0]) == 2);
-+}
++		gpio@c2f0000 {
++			status = "okay";
++		};
 +
- #endif /* _ASM_X86_INSN_H */
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -376,6 +376,10 @@ int __copy_instruction(u8 *dest, u8 *src
- 		return 0;
- 	memcpy(dest, insn.kaddr, length);
- 
-+	/* We should not singlestep on the exception masking instructions */
-+	if (insn_masking_exception(&insn))
-+		return 0;
-+
- #ifdef CONFIG_X86_64
- 	if (insn_rip_relative(&insn)) {
- 		s64 newdisp;
-
+ 		pwm@c340000 {
+ 			status = "okay";
+ 		};
+-- 
+2.17.1
 
