@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E67BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C6FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C802075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0CA20870
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420760;
-	bh=Yk0BthtfhCwG5HdWsol18bF1E9VmSioqlac3A/a++5w=;
+	s=default; t=1574420762;
+	bh=oucbaIwMQWF2MuPnamtCAdOmq+gx0EtrQoYGxAWcjzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ac567hdPFwLd5E5d3pJ8DdvIIYmwrs610yAwk12qJRLWNMPLA1UNeacS6ave6HpKs
-	 pJPb0wr5ClZdRB9PJz1jht20nu/XqpZ1xoISVzuXlWSWuFB7BRvsj54IiAh6PLg+jT
-	 sktuSbrVkxu2j2/dKBGYs4s8Y71KEhQGzGvogbG8=
+	b=W/3plfg/xlBOIIKjZsZM7GCYjZuXb7TpdH6YCpNyo+bTrmSriqIqQhbRzftEFLYt6
+	 K0R6NZcvxtgr5+lMvKDLZMqtRiKrH06I/9pchyQh9nZN01QlyELHxaSRY6g7sKAhhx
+	 oT/qRCrCDwT3K4Agg6HW9o48NXUaHULmkUv+msXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbfKVLF7 (ORCPT
+        id S1731795AbfKVLGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:05:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33802 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730559AbfKVLF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:05:56 -0500
+        id S1730559AbfKVLF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:05:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A254E2075E;
-        Fri, 22 Nov 2019 11:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5469D2084D;
+        Fri, 22 Nov 2019 11:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420756;
-        bh=Yk0BthtfhCwG5HdWsol18bF1E9VmSioqlac3A/a++5w=;
+        s=default; t=1574420758;
+        bh=oucbaIwMQWF2MuPnamtCAdOmq+gx0EtrQoYGxAWcjzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Py1K5Pvo0lzKf2Xb+REbt0aQd/glp2O0hk/TfKKsmgLdA3NozDfh9bmJi8pKwvq2y
-         i15YzNoUD6ggGsSseM6mfQL0Iqlxh7p9cz9MRF3dGu9HuULUTrgLfx3coBnF3G+6qw
-         r8AHKkfENjHyqMU/teTMKr7zxWiOdiLzZ4mZCCuc=
+        b=yOZbt6fPgtjbtwisLY9klmL8wAyQv4Kk46OejhkSvXASDnsxcMH2zm0u0IMD+JVGd
+         BZrhka+aAI/ZYHLBTWXj8rlQWmOTgDY/Myhhq2cEG4LsKRCVHoqIJeq4VNnaqtuzHV
+         VdTsVzrDGN8qQfzB7smM64GYXYRzVo5CGBC95lho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 213/220] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
-Date:   Fri, 22 Nov 2019 11:29:38 +0100
-Message-Id: <20191122100928.991365476@linuxfoundation.org>
+Subject: [PATCH 4.19 172/220] mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
+Date:   Fri, 22 Nov 2019 11:28:57 +0100
+Message-Id: <20191122100925.213032982@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,37 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
+[ Upstream commit c974ac771479327b5424f60d58845e31daddadea ]
 
-OMAP5's Super-Speed USB port has a software mailbox register
-that needs to be fed with VBUS and ID events from an external
-VBUS/ID comparator.
+If a child device like touchscreen is wakeup capable, then keep ADC
+interface on, so that a touching resistive screen will generate wakeup
+event to the system.
 
-Without this, Host role will not work correctly.
-
-Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/ti_am335x_tscadc.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index c2dc4199b4ec2..61a06f6add3ca 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -704,6 +704,7 @@
- };
+diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+index fe8d335a4d74d..4660ad90ef556 100644
+--- a/drivers/mfd/ti_am335x_tscadc.c
++++ b/drivers/mfd/ti_am335x_tscadc.c
+@@ -295,11 +295,24 @@ static int ti_tscadc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- &dwc3 {
-+	extcon = <&extcon_usb3>;
- 	dr_mode = "otg";
- };
++static int __maybe_unused ti_tscadc_can_wakeup(struct device *dev, void *data)
++{
++	return device_may_wakeup(dev);
++}
++
+ static int __maybe_unused tscadc_suspend(struct device *dev)
+ {
+ 	struct ti_tscadc_dev	*tscadc = dev_get_drvdata(dev);
  
+ 	regmap_write(tscadc->regmap, REG_SE, 0x00);
++	if (device_for_each_child(dev, NULL, ti_tscadc_can_wakeup)) {
++		u32 ctrl;
++
++		regmap_read(tscadc->regmap, REG_CTRL, &ctrl);
++		ctrl &= ~(CNTRLREG_POWERDOWN);
++		ctrl |= CNTRLREG_TSCSSENB;
++		regmap_write(tscadc->regmap, REG_CTRL, ctrl);
++	}
+ 	pm_runtime_put_sync(dev);
+ 
+ 	return 0;
 -- 
 2.20.1
 
