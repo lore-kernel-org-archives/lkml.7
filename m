@@ -2,109 +2,141 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF146C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048D2C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00022071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574458417;
-	bh=72tyMCAZ0qkQO4t35kUTecfC5+rGEvcEc7cHz5fcAAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z1ocb/GYlPJpDDw++RfYpNZZhba5JAQ17vtJENs70ULRkYFHpkobxz4M5uUYJJ5yi
-	 m66SMpq6VwAmp4c9Kda2OnKzmufcLSZe+7gYuVBdZ6wG3xsSXWA0rSzjKo1DF3fO/L
-	 5RV3j4xtKH3k8vU46I52r5tFnZd9JPOjs8XuiQE8=
+	by mail.kernel.org (Postfix) with ESMTP id D6CAB2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 21:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKVVdh (ORCPT
+        id S1726721AbfKVVml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 16:33:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 16:42:41 -0500
+Received: from mga07.intel.com ([134.134.136.100]:5406 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfKVVdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 16:33:36 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0797A2070E;
-        Fri, 22 Nov 2019 21:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574458414;
-        bh=72tyMCAZ0qkQO4t35kUTecfC5+rGEvcEc7cHz5fcAAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oVSvsArPSBwjRysWNnAYSHWNIPdGthplosP+VNlKImbUjlesrgdgfNILVT98rE0oQ
-         QEGdvBBvPMxMcFiv9/++TK+sbT/1vaxYscJxc61Em/M4jU/deNDsy0+AhXvAsqSlvY
-         9rvQUkNUdTySj2RlRraGo1plCLTxy+J9oJ/NoXzI=
-Date:   Fri, 22 Nov 2019 22:33:31 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/220] 4.19.86-stable review
-Message-ID: <20191122213331.GA2102330@kroah.com>
-References: <20191122100912.732983531@linuxfoundation.org>
- <ae3d804f-594b-80f9-048b-7da45806278c@roeck-us.net>
- <20191122151631.GA2083451@kroah.com>
- <20191122170534.GV20752@bombadil.infradead.org>
+        id S1726526AbfKVVml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 16:42:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 13:42:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,231,1571727600"; 
+   d="scan'208";a="205585246"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Nov 2019 13:42:39 -0800
+Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-2-logang@deltatee.com>
+ <20191109171853.GF952516@vkoul-mobl>
+ <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
+ <20191112055540.GY952516@vkoul-mobl>
+ <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
+ <20191114045555.GJ952516@vkoul-mobl>
+ <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
+ <20191122052010.GO82508@vkoul-mobl>
+ <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
+ <CAPcyv4iOjSX=Diw3Gs0Xnpe4HmVZ0xxD_13aQcCMomqUJWr58A@mail.gmail.com>
+ <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
+ <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <3ae58ea7-5cab-23f9-512f-bec30410ff6f@intel.com>
+Date:   Fri, 22 Nov 2019 14:42:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122170534.GV20752@bombadil.infradead.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 09:05:34AM -0800, Matthew Wilcox wrote:
-> On Fri, Nov 22, 2019 at 04:16:31PM +0100, Greg Kroah-Hartman wrote:
-> > On Fri, Nov 22, 2019 at 06:47:05AM -0800, Guenter Roeck wrote:
-> > > On 11/22/19 2:26 AM, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.19.86 release.
-> > > > There are 220 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > > 
-> > > > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> > > > Anything received after that time might be too late.
-> > > > 
-> > > 
-> > > I see the following warning (at least for arm64, ppc64, and x86_64).
-> > > This seems to be caused by "idr: Fix idr_get_next race with idr_remove".
-> > > v4.14.y is also affected. Mainline and v5.3.y are not affected.
-> 
-> That makes sense; the code in question is different after 4.19.
-> Thanks for the report; it's very clear.
-> 
-> > Willy, this looks like something from your patch, is it to be expected?
-> 
-> It's harmless; the problem is that we can't check whether the dereference
-> is safe.  The caller isn't holding the RCU lock, and the IDR code doesn't
-> know what lock is being held to make this dereference safe.  Do you want
-> a changelog for this oneliner which disables the checking?
-> 
-> diff --git a/lib/idr.c b/lib/idr.c
-> index 49e7918603c7..6ff3b1c36e0a 100644
-> --- a/lib/idr.c
-> +++ b/lib/idr.c
-> @@ -237,7 +237,7 @@ void *idr_get_next(struct idr *idr, int *nextid)
->  
->  	id = (id < base) ? 0 : id - base;
->  	radix_tree_for_each_slot(slot, &idr->idr_rt, &iter, id) {
-> -		entry = radix_tree_deref_slot(slot);
-> +		entry = rcu_dereference_raw(*slot);
->  		if (!entry)
->  			continue;
->  		if (!radix_tree_deref_retry(entry))
 
-Thanks for this, I'll merge it with the existing patch tomorrow, it's
-late here...
 
-greg k-h
+On 11/22/19 2:01 PM, Dan Williams wrote:
+> On Fri, Nov 22, 2019 at 12:56 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>
+>>
+>>
+>> On 2019-11-22 1:50 p.m., Dan Williams wrote:
+>>> On Fri, Nov 22, 2019 at 8:53 AM Dave Jiang <dave.jiang@intel.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 11/21/19 10:20 PM, Vinod Koul wrote:
+>>>>> On 14-11-19, 10:03, Logan Gunthorpe wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
+>>>>>>>> But that's the problem. We can't expect our users to be "nice" and not
+>>>>>>>> unbind when the driver is in use. Killing the kernel if the user
+>>>>>>>> unexpectedly unbinds is not acceptable.
+>>>>>>>
+>>>>>>> And that is why we review the code and ensure this does not happen and
+>>>>>>> behaviour is as expected
+>>>>>>
+>>>>>> Yes, but the current code can kill the kernel when the driver is unbound.
+>>>>>>
+>>>>>>>>>> I suspect this is less of an issue for most devices as they wouldn't
+>>>>>>>>>> normally be unbound while in use (for example there's really no reason
+>>>>>>>>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
+>>>>>>>>>> is, the user could unbind these devices at anytime and we don't want to
+>>>>>>>>>> panic if they do.
+>>>>>>>>>
+>>>>>>>>> There are many drivers which do modules so yes I am expecting unbind and
+>>>>>>>>> even a bind following that to work
+>>>>>>>>
+>>>>>>>> Except they will panic if they unbind while in use, so that's a
+>>>>>>>> questionable definition of "work".
+>>>>>>>
+>>>>>>> dmaengine core has module reference so while they are being used they
+>>>>>>> won't be removed (unless I complete misread the driver core behaviour)
+>>>>>>
+>>>>>> Yes, as I mentioned in my other email, holding a module reference does
+>>>>>> not prevent the driver from being unbound. Any driver can be unbound by
+>>>>>> the user at any time without the module being removed.
+>>>>>
+>>>>> That sounds okay then.
+>>>>
+>>>> I'm actually glad Logan is putting some work in addressing this. I also
+>>>> ran into the same issue as well dealing with unbinds on my new driver.
+>>>
+>>> This was an original mistake of the dmaengine implementation that
+>>> Vinod inherited. Module pinning is distinct from preventing device
+>>> unbind which ultimately can't be prevented. Longer term I think we
+>>> need to audit dmaengine consumers to make sure they are prepared for
+>>> the driver to be removed similar to how other request based drivers
+>>> can gracefully return an error status when the device goes away rather
+>>> than crashing.
+>>
+>> Yes, but that will be a big project because there are a lot of drivers.
+> 
+> Oh yes, in fact I think it's something that can only reasonably be
+> considered for new consumers.
+> 
+>> But I think the dmaengine common code needs to support removal properly,
+>> which essentially means changing how all the drivers allocate and free
+>> their structures, among other things.
+>>
+>> The one saving grace is that most of the drivers are for SOCs which
+>> can't be physically removed and there's really no use-case for the user
+>> to call unbind.
+> 
+> Yes, the SOC case is not so much my concern as the generic offload use
+> cases, especially if those offloads are in a similar hotplug domain as
+> a cpu.
+> 
+
+It becomes a bigger issue when "channels" can be reconfigured and can 
+come and go in a hot plug fashion.
