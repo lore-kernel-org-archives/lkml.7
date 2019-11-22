@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91724C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16BC20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C6320730
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419508;
-	bh=pdvAvsejs+m9ghYz4ndlfv1HwItb8YLYK5+SNO/7GAg=;
+	s=default; t=1574419512;
+	bh=LKMhtjxEW4lnTFxYqZTK/rlDQFdEDmQqHjo7U3iI96Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qua0Lue7JX5E0bwK8EwlNjF4sq0CGKftC144EzbMdOVfUw28cK6KVZUGDn15t0QAq
-	 zrt/tI6N1PrjGElKvCjhL7zw4zaTDDTxOURjM+JLXBI5fFaS6GLqINnRejOVrmD+H5
-	 Jw0clrBTBJy2DecA+M9p/LTM1UHN69w6+rAJmeFw=
+	b=VkduAVR03pnMzR83mlgdc72DXrQtL9k2Y+yXYlPD+Fxip2m76GSGFol3T7v/v6ygS
+	 QJXHeHZVMPAr59h9i3CwcYjJBT2D+hzcHEuIBntjTSEFZFweCW9H4h0BB2Lu+89Ocz
+	 YwtUDQtBG/GJlFwmS6HAEDRP9FFTKnL80XTx0LKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbfKVKpG (ORCPT
+        id S1729425AbfKVKpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbfKVKpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:03 -0500
+        id S1728761AbfKVKpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D40205C9;
-        Fri, 22 Nov 2019 10:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FDA20717;
+        Fri, 22 Nov 2019 10:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419502;
-        bh=pdvAvsejs+m9ghYz4ndlfv1HwItb8YLYK5+SNO/7GAg=;
+        s=default; t=1574419508;
+        bh=LKMhtjxEW4lnTFxYqZTK/rlDQFdEDmQqHjo7U3iI96Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zIyCncF7ajdCwHzKGMCwQonsVpIQUaa5HV9AdNP47YAmEueAvzX4MQY+VaF+GNX37
-         zKfEERBUapG90lrIWhQCVaufHKEfd+Nh3cYCD3l/xHcL/fCREK1zOaIbBtM3E4zAwu
-         XPCIizj9rRSb9nhtqzgFjZeF89n+z5YFLPD5MaAU=
+        b=udicQBa4zdlF0qgtAncchN6YonRAvjevxkiuEWzJnnvfqEphfLMHav0fBP5W9A0tj
+         dDFhlYdWudd3Hk42vXmK3OfwyNI1UCPRanP3mz21D5rnx37fB5OwajozgVHU2dlIuz
+         /mnlehyb2A3vYaKjPpu0IZyOsoWD/6rS93fkWxlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ondrey Zary <linux@rainbow-software.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Tomasz Nowicki <tnowicki@caviumnetworks.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 134/222] scsi: NCR5380: Clear all unissued commands on host reset
-Date:   Fri, 22 Nov 2019 11:27:54 +0100
-Message-Id: <20191122100912.598230520@linuxfoundation.org>
+Subject: [PATCH 4.9 118/222] coresight: etm4x: Configure EL2 exception level when kernel is running in HYP
+Date:   Fri, 22 Nov 2019 11:27:38 +0100
+Message-Id: <20191122100911.664304131@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -63,53 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+From: Tomasz Nowicki <tnowicki@caviumnetworks.com>
 
-[ Upstream commit 1aeeeed7f03c576f096eede7b0384f99a98f588c ]
+[ Upstream commit b860801e3237ec4c74cf8de0be4816996757ae5c ]
 
-When doing a host reset we should be clearing all outstanding commands, not
-just the command triggering the reset.
+For non-VHE systems host kernel runs at EL1 and jumps to EL2 whenever
+hypervisor code should be executed. In this case ETM4x driver must
+restrict configuration to EL1 when it setups kernel tracing.
+However, there is no separate hypervisor privilege level when VHE
+is enabled, the host kernel runs at EL2.
 
-[mkp: adjusted Hannes' SoB address]
+This patch fixes configuration of TRCACATRn register for VHE systems
+so that ETM_EXLEVEL_NS_HYP bit is used instead of ETM_EXLEVEL_NS_OS
+to on/off kernel tracing. At the same time, it moves common code
+to new helper.
 
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Ondrey Zary <linux@rainbow-software.org>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Tomasz Nowicki <tnowicki@caviumnetworks.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 40 +++++++++----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 3cfab8868c989..ba7b3aef3ef0b 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2392,7 +2392,7 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
- 	spin_lock_irqsave(&hostdata->lock, flags);
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 44d6c29e26448..22079f886f452 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -35,6 +35,7 @@
+ #include <linux/pm_runtime.h>
+ #include <asm/sections.h>
+ #include <asm/local.h>
++#include <asm/virt.h>
  
- #if (NDEBUG & NDEBUG_ANY)
--	scmd_printk(KERN_INFO, cmd, __func__);
-+	shost_printk(KERN_INFO, instance, __func__);
- #endif
- 	NCR5380_dprint(NDEBUG_ANY, instance);
- 	NCR5380_dprint_phase(NDEBUG_ANY, instance);
-@@ -2410,10 +2410,13 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
- 	 * commands!
+ #include "coresight-etm4x.h"
+ #include "coresight-etm-perf.h"
+@@ -615,7 +616,7 @@ static void etm4_set_default_config(struct etmv4_config *config)
+ 	config->vinst_ctrl |= BIT(0);
+ }
+ 
+-static u64 etm4_get_access_type(struct etmv4_config *config)
++static u64 etm4_get_ns_access_type(struct etmv4_config *config)
+ {
+ 	u64 access_type = 0;
+ 
+@@ -626,17 +627,26 @@ static u64 etm4_get_access_type(struct etmv4_config *config)
+ 	 *   Bit[13] Exception level 1 - OS
+ 	 *   Bit[14] Exception level 2 - Hypervisor
+ 	 *   Bit[15] Never implemented
+-	 *
+-	 * Always stay away from hypervisor mode.
  	 */
+-	access_type = ETM_EXLEVEL_NS_HYP;
+-
+-	if (config->mode & ETM_MODE_EXCL_KERN)
+-		access_type |= ETM_EXLEVEL_NS_OS;
++	if (!is_kernel_in_hyp_mode()) {
++		/* Stay away from hypervisor mode for non-VHE */
++		access_type =  ETM_EXLEVEL_NS_HYP;
++		if (config->mode & ETM_MODE_EXCL_KERN)
++			access_type |= ETM_EXLEVEL_NS_OS;
++	} else if (config->mode & ETM_MODE_EXCL_KERN) {
++		access_type = ETM_EXLEVEL_NS_HYP;
++	}
  
--	if (list_del_cmd(&hostdata->unissued, cmd)) {
-+	list_for_each_entry(ncmd, &hostdata->unissued, list) {
-+		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
+ 	if (config->mode & ETM_MODE_EXCL_USER)
+ 		access_type |= ETM_EXLEVEL_NS_APP;
+ 
++	return access_type;
++}
 +
- 		cmd->result = DID_RESET << 16;
- 		cmd->scsi_done(cmd);
- 	}
-+	INIT_LIST_HEAD(&hostdata->unissued);
++static u64 etm4_get_access_type(struct etmv4_config *config)
++{
++	u64 access_type = etm4_get_ns_access_type(config);
++
+ 	/*
+ 	 * EXLEVEL_S, bits[11:8], don't trace anything happening
+ 	 * in secure state.
+@@ -890,20 +900,10 @@ void etm4_config_trace_mode(struct etmv4_config *config)
  
- 	if (hostdata->selecting) {
- 		hostdata->selecting->result = DID_RESET << 16;
+ 	addr_acc = config->addr_acc[ETM_DEFAULT_ADDR_COMP];
+ 	/* clear default config */
+-	addr_acc &= ~(ETM_EXLEVEL_NS_APP | ETM_EXLEVEL_NS_OS);
++	addr_acc &= ~(ETM_EXLEVEL_NS_APP | ETM_EXLEVEL_NS_OS |
++		      ETM_EXLEVEL_NS_HYP);
+ 
+-	/*
+-	 * EXLEVEL_NS, bits[15:12]
+-	 * The Exception levels are:
+-	 *   Bit[12] Exception level 0 - Application
+-	 *   Bit[13] Exception level 1 - OS
+-	 *   Bit[14] Exception level 2 - Hypervisor
+-	 *   Bit[15] Never implemented
+-	 */
+-	if (mode & ETM_MODE_EXCL_KERN)
+-		addr_acc |= ETM_EXLEVEL_NS_OS;
+-	else
+-		addr_acc |= ETM_EXLEVEL_NS_APP;
++	addr_acc |= etm4_get_ns_access_type(config);
+ 
+ 	config->addr_acc[ETM_DEFAULT_ADDR_COMP] = addr_acc;
+ 	config->addr_acc[ETM_DEFAULT_ADDR_COMP + 1] = addr_acc;
 -- 
 2.20.1
 
