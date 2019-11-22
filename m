@@ -2,105 +2,62 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62B2C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D40C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864A320721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421026;
-	bh=/m2tMlF68FQUk5TXO90MJJASaUNp9Hetv7PQDKvV1RA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxArMuFfrkm9QdBp0xz+Jx5xQQ1XCOWbjeo1+zbeKvu0qfDaXku13Lc45uFPMRSv9
-	 ls7UP4m1K9bfw3+w7xUSogMnV05EFblf5hDC84bDqNJNrTUJah8S1YYqQ1Pa8dY+T8
-	 xM5hmrapUDMwas0JmlxigrVIROiNXmMKRDgDmWMg=
+	by mail.kernel.org (Postfix) with ESMTP id D34BE20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfKVLKZ (ORCPT
+        id S1731331AbfKVLKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:10:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:10:31 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:53988 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731272AbfKVLCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19C1B2073F;
-        Fri, 22 Nov 2019 11:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420531;
-        bh=/m2tMlF68FQUk5TXO90MJJASaUNp9Hetv7PQDKvV1RA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bH9SnZUuI0QE1QikDBFB3tntkNTEv32pUaUH0TXHxjDiUfhKDzY0Ct3iyqzYJMswn
-         KPOsbI33V/VzksoQG2jGKTfc6EJ2tFeKiLKyfWu1jkIAJ+knJu2EAVT6OHen8ewTYC
-         2sRnNyym7G3wglFjhqhEbuTM/CLhRuUQDdy941gU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Lubomir Rintel <lkundrak@v3.sk>, x86@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 139/220] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
-Date:   Fri, 22 Nov 2019 11:28:24 +0100
-Message-Id: <20191122100922.794101374@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
-References: <20191122100912.732983531@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729083AbfKVLKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:10:25 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iY6pP-0005Jx-Kx; Fri, 22 Nov 2019 19:10:19 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iY6pO-0002kH-Fr; Fri, 22 Nov 2019 19:10:18 +0800
+Date:   Fri, 22 Nov 2019 19:10:18 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] crypto: allwinner: sun8i-ce: enable working on big endian
+Message-ID: <20191122111018.uss7n573hdtmx6ed@gondor.apana.org.au>
+References: <20191117160745.32197-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191117160745.32197-1-clabbe.montjoie@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On Sun, Nov 17, 2019 at 05:07:45PM +0100, Corentin Labbe wrote:
+> On big endian kernel, the sun8i-ce crypto driver does not works.
+> This patch do the necessary modification to permit it to work on BE
+> kernel (setting descriptor entries as __le32 and adding some cpu_to_le32)
+> 
+> Fixes: 06f751b61329 ("crypto: allwinner - Add sun8i-ce Crypto Engine")
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 50 +++++++++++--------
+>  drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 24 ++++-----
+>  2 files changed, 40 insertions(+), 34 deletions(-)
 
-[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
-
-When building a 32-bit config which has the above MFD item as module
-but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
-building with:
-
-  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
-  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
-  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
-  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
-  make: *** [Makefile:1030: vmlinux] Error 1
-
-Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Lubomir Rintel <lkundrak@v3.sk>
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5726b264036ff..af35f5caadbe5 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2771,8 +2771,7 @@ config OLPC
- 
- config OLPC_XO1_PM
- 	bool "OLPC XO-1 Power Management"
--	depends on OLPC && MFD_CS5535 && PM_SLEEP
--	select MFD_CORE
-+	depends on OLPC && MFD_CS5535=y && PM_SLEEP
- 	---help---
- 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
- 
+Patch applied.  Thanks.
 -- 
-2.20.1
-
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
