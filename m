@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4688C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA7C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5612073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421694;
-	bh=ht9seQUWdx8eONxgqfbYtB6UPmAj53mK765ewWByYfQ=;
+	s=default; t=1574421700;
+	bh=H0/qcPuyNj8VHYkAGniOjGUPht77ncyCRxdKZH54tbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTaH3JzXKWbqECizROOgqwQtQEXcC95fY18vCG48LbjZFXkxPy+hihFb/7Evvcee0
-	 sjcDIWy+2+PQl+63s9KNkaLt6S8CMFQnJSsJb953oCqVLaCKtZ5Iv3FUW8ffEy/WHn
-	 8c9YJhFa4vDtzSjSVOOXHLv4/J+XqGQoqhVkey3I=
+	b=c8giyglSAt0XBze2sdpo7FYoFiVPira7rQt4w99rDcfrxHPcvo10qfOa4RNapOn3T
+	 6ZPhHcnmX7YGU1kkAAB3N4S1pMsaj6c+qhdSs8Ryid6S9qJiydo+VALxXqskGFnr2r
+	 F6weDHNKfZMYOpU5YT6SfUxI9RuaYiN/lG/dFVqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfKVKpJ (ORCPT
+        id S1729400AbfKVKpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbfKVKpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:06 -0500
+        id S1727605AbfKVKo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:44:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAE1720656;
-        Fri, 22 Nov 2019 10:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D72820717;
+        Fri, 22 Nov 2019 10:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419505;
-        bh=ht9seQUWdx8eONxgqfbYtB6UPmAj53mK765ewWByYfQ=;
+        s=default; t=1574419496;
+        bh=H0/qcPuyNj8VHYkAGniOjGUPht77ncyCRxdKZH54tbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u6gkhruoVYXvYNz5YaDm1vJlxedtd2ea8fhmoVRx4foutvl5C6KHbHQAhCZP/0KpI
-         uDQ7lA/4Ggpwd8DmJnevsW4QsddjJUZpezBjBbHtIAmHO+9z6GN0ofDbIcVFbUkODi
-         GPmVfuBYh9+Vtm0B+brw73tfXP9LvzNj02TbkQSk=
+        b=ErUdIiNzRoLHYsfFb9uyHKtZLDC1L1yvjZ9EBQF6q//W96ylpilhFE28VU3vo3v/9
+         TTCBPY7MyBjDb3GSKam6Qb1BKd7iXvCSs1cdvMV/9BDl5eEbqzuYA0t21GMEZQuw+0
+         Q0r/hU49bhPzFhJqWiAxppaVkQSGvo42imHPl5AM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Christoph Manszewski <c.manszewski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kamil Konieczny <k.konieczny@partner.samsung.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 135/222] scsi: NCR5380: Use DRIVER_SENSE to indicate valid sense data
-Date:   Fri, 22 Nov 2019 11:27:55 +0100
-Message-Id: <20191122100912.665562759@linuxfoundation.org>
+Subject: [PATCH 4.9 132/222] crypto: s5p-sss: Fix Fix argument list alignment
+Date:   Fri, 22 Nov 2019 11:27:52 +0100
+Message-Id: <20191122100912.483336062@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,58 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Christoph Manszewski <c.manszewski@samsung.com>
 
-[ Upstream commit 070356513963be6196142acff56acc8359069fa1 ]
+[ Upstream commit 6c12b6ba45490eeb820fdceccf5a53f42a26799c ]
 
-When sense data is valid, call set_driver_byte(cmd, DRIVER_SENSE).  Otherwise
-some callers of scsi_execute() will ignore sense data.  Don't set DID_ERROR or
-DID_RESET just because sense data is missing.
+Fix misalignment of continued argument list.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Christoph Manszewski <c.manszewski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/crypto/s5p-sss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index ba7b3aef3ef0b..35419ba32c467 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -617,11 +617,12 @@ static void complete_cmd(struct Scsi_Host *instance,
+diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+index 500e4090e2fd4..5a37c075ee553 100644
+--- a/drivers/crypto/s5p-sss.c
++++ b/drivers/crypto/s5p-sss.c
+@@ -298,7 +298,7 @@ static void s5p_unset_indata(struct s5p_aes_dev *dev)
+ }
  
- 	if (hostdata->sensing == cmd) {
- 		/* Autosense processing ends here */
--		if ((cmd->result & 0xff) != SAM_STAT_GOOD) {
-+		if (status_byte(cmd->result) != GOOD) {
- 			scsi_eh_restore_cmnd(cmd, &hostdata->ses);
--			set_host_byte(cmd, DID_ERROR);
--		} else
-+		} else {
- 			scsi_eh_restore_cmnd(cmd, &hostdata->ses);
-+			set_driver_byte(cmd, DRIVER_SENSE);
-+		}
- 		hostdata->sensing = NULL;
- 	}
+ static int s5p_make_sg_cpy(struct s5p_aes_dev *dev, struct scatterlist *src,
+-			    struct scatterlist **dst)
++			   struct scatterlist **dst)
+ {
+ 	void *pages;
+ 	int len;
+@@ -510,7 +510,7 @@ static int s5p_set_indata_start(struct s5p_aes_dev *dev,
+ }
  
-@@ -2356,7 +2357,6 @@ static int NCR5380_abort(struct scsi_cmnd *cmd)
- 	if (list_del_cmd(&hostdata->autosense, cmd)) {
- 		dsprintk(NDEBUG_ABORT, instance,
- 		         "abort: removed %p from sense queue\n", cmd);
--		set_host_byte(cmd, DID_ERROR);
- 		complete_cmd(instance, cmd);
- 	}
- 
-@@ -2435,7 +2435,6 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
- 	list_for_each_entry(ncmd, &hostdata->autosense, list) {
- 		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
- 
--		set_host_byte(cmd, DID_RESET);
- 		cmd->scsi_done(cmd);
- 	}
- 	INIT_LIST_HEAD(&hostdata->autosense);
+ static int s5p_set_outdata_start(struct s5p_aes_dev *dev,
+-				struct ablkcipher_request *req)
++				 struct ablkcipher_request *req)
+ {
+ 	struct scatterlist *sg;
+ 	int err;
 -- 
 2.20.1
 
