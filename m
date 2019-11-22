@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB4AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F2420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DDF20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574418841;
-	bh=PZRlICB5aO4OWvYpbx6HZcXJmevUP+PXMNBT0wS6Slc=;
+	s=default; t=1574418844;
+	bh=ni71MLyzBp4qGD+CQpM45gvt8cp3Xgd0N9OQp3oizTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k4e5xqQNfZx7m8IYAkuXixq0x/EsDN71+Gsyhce7NrQV0R9Nb5LIowRg7RL7+yJtR
-	 hB7AnkHQIG3YBRVavZpmWp7O/7BXZTUJxdUwzYpS3gxLGMSo4QDZnLocBmB84jVRfK
-	 0CTXm71SxT+qB4zQNOGJxwQkpMU9myFomICmiLfU=
+	b=fjvSsz0+kSl02+ggECdGB1EH+TBTRPN5Ii6s1dE+Mo10Wf13oWCquX+rFGuDBwIJX
+	 meLqmN/hGnQqzuC+JITvqb9LdS+NpSala6kci/qDWjwkkg1wajSQPyiKlxRPVULxeg
+	 /cVSk6sUvbsYUoTmxEVO+6kSZHrdkajZYJpaWt2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfKVKd7 (ORCPT
+        id S1726792AbfKVKeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:33:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbfKVKd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:33:57 -0500
+        id S1728025AbfKVKd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:33:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3885C20714;
-        Fri, 22 Nov 2019 10:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 058AC20708;
+        Fri, 22 Nov 2019 10:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418835;
-        bh=PZRlICB5aO4OWvYpbx6HZcXJmevUP+PXMNBT0wS6Slc=;
+        s=default; t=1574418838;
+        bh=ni71MLyzBp4qGD+CQpM45gvt8cp3Xgd0N9OQp3oizTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=np1GtKB4Ts+2Xcmiv5WikOjfmNG0U10aRezgOuAahZ5HLXl4rPOCFl3Y6I/wWmVMZ
-         VYwurTZLQWjZ2ANFb8w2uDkOd3s7ieIhTK7G4Xi+aZTR7dbv2kThCBMapZGdzo1Tq6
-         ON2dk5oLTLKolUi7LKtRpQ5QoH1gQfVulE6cU1vk=
+        b=WQzVPwughiDOgR0Pw9BYT4+n83jVCobpEIq7gdMK6BscIKyyvzNRtyMeP91cBMwSK
+         faV5VDR4tiAhwa4eVnY8ZBJIIrphCFOCONn9zFjpqubh5nJvjStAJSQWlH1UNfDcpV
+         L61jF1Kve+2dcIJ3E9Xeh2jsAgiDPAS9gt4Rp1T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 066/159] net: xilinx: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:27:37 +0100
-Message-Id: <20191122100755.166954662@linuxfoundation.org>
+Subject: [PATCH 4.4 067/159] net: broadcom: fix return type of ndo_start_xmit function
+Date:   Fri, 22 Nov 2019 11:27:38 +0100
+Message-Id: <20191122100755.326456105@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 81255af8d9d5565004792c295dde49344df450ca ]
+[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
 
 The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
 which is a typedef for an enum type, so make sure the implementation in
@@ -75,74 +75,52 @@ Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c       | 3 ++-
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 ++-
- drivers/net/ethernet/xilinx/xilinx_emaclite.c     | 9 +++++----
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
+ drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 5a1068df7038c..ed6a88cf3281c 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -673,7 +673,8 @@ static inline int temac_check_tx_bd_space(struct temac_local *lp, int num_frag)
- 	return 0;
- }
- 
--static int temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t
-+temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	struct temac_local *lp = netdev_priv(ndev);
- 	struct cdmac_bd *cur_p;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index f1e969128a4ee..7f1a57bb2ab10 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -656,7 +656,8 @@ static inline int axienet_check_tx_bd_space(struct axienet_local *lp,
-  * start the transmission. Additionally if checksum offloading is supported,
-  * it populates AXI Stream Control fields with appropriate values.
+diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+index ec5834087e4b4..c01ab06863b3d 100644
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+@@ -571,12 +571,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
+ /*
+  * tx request callback
   */
--static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+-static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
 +static netdev_tx_t
-+axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
  {
- 	u32 ii;
- 	u32 num_frag;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-index 4cb8b85cbf2c2..909a008f99276 100644
---- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-@@ -1008,9 +1008,10 @@ static int xemaclite_close(struct net_device *dev)
-  * deferred and the Tx queue is stopped so that the deferred socket buffer can
-  * be transmitted when the Emaclite device is free to transmit data.
-  *
-- * Return:	0, always.
-+ * Return:	NETDEV_TX_OK, always.
-  */
--static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
-+static netdev_tx_t
-+xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
+ 	struct bcm_enet_priv *priv;
+ 	struct bcm_enet_desc *desc;
+ 	u32 len_stat;
+-	int ret;
++	netdev_tx_t ret;
+ 
+ 	priv = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
+index f557a2aaec231..73a7c8a504702 100644
+--- a/drivers/net/ethernet/broadcom/sb1250-mac.c
++++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
+@@ -300,7 +300,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
+ static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
+ static uint64_t sbmac_addr2reg(unsigned char *ptr);
+ static irqreturn_t sbmac_intr(int irq, void *dev_instance);
+-static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
++static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
+ static void sbmac_setmulti(struct sbmac_softc *sc);
+ static int sbmac_init(struct platform_device *pldev, long long base);
+ static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
+@@ -2033,7 +2033,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
+  *  Return value:
+  *  	   nothing
+  ********************************************************************* */
+-static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
  {
- 	struct net_local *lp = netdev_priv(dev);
- 	struct sk_buff *new_skb;
-@@ -1031,7 +1032,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- 		/* Take the time stamp now, since we can't do this in an ISR. */
- 		skb_tx_timestamp(new_skb);
- 		spin_unlock_irqrestore(&lp->reset_lock, flags);
--		return 0;
-+		return NETDEV_TX_OK;
- 	}
- 	spin_unlock_irqrestore(&lp->reset_lock, flags);
- 
-@@ -1040,7 +1041,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- 	dev->stats.tx_bytes += len;
- 	dev_consume_skb_any(new_skb);
- 
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- /**
+ 	struct sbmac_softc *sc = netdev_priv(dev);
+ 	unsigned long flags;
 -- 
 2.20.1
 
