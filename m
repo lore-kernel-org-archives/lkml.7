@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771472053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802922053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403577;
-	bh=cLe4GfX3E+Qhpoe7pEAgaJTKy8YO6Tx/QDZhLXEeOIw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOQLiswB7ftbFs7R89gMD60gbYIYQAmpJStrb9RjT+ETDX0Lt6S0SoK+r3EMlZVCU
-	 +U7s2y7GnCQoYMV4ShBhb7/cszLny2PfHtu03QWgl79sCKhQMsSMSuqoxQBvpG7v2+
-	 jXQUd16V4DFf2o6wjCUsa4C74x5U+M/h4IKRGWxo=
+	s=default; t=1574403583;
+	bh=r3ucmFbcWpJNyhV1/cUTXuEJMILhTtPI5BcKyByQya8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sBc2aXhMtmJC4iZxzPJug7ynFAPoRCnAm+b7CIlF1HO6GIr5MvEv8f9BplvNrUp2e
+	 NzZUw3gRkkq0RuSNcorlKYkweF6r+qy3sUNZ4boA8ZoNdASW6Nl4RGnsHzWeegnTRR
+	 TakeIHPu+1MfCtuJkfnkhqwa+qNhawHkYG8/n83A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbfKVGTf (ORCPT
+        id S1728930AbfKVFzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:19:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:55:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbfKVFzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:55:51 -0500
+        id S1727506AbfKVFzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:55:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2050C20659;
-        Fri, 22 Nov 2019 05:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9252B20717;
+        Fri, 22 Nov 2019 05:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402150;
-        bh=cLe4GfX3E+Qhpoe7pEAgaJTKy8YO6Tx/QDZhLXEeOIw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lm9DeAeaUamfBfNkWq039ajw2s2V4gJCMD4ZO/kFawqEF0ErulMM3oVqXpi/V6cFm
-         Hwf6XD35W2bhlH/xFwtMoR5GiF+9Td8gE5tqHtCkM5iMl5+aHLdwFEcjAhCJPSmW5r
-         GhrUyNrnCiE/2yIcBoUExl1gCIeDhHjLjHyVTVak=
+        s=default; t=1574402146;
+        bh=r3ucmFbcWpJNyhV1/cUTXuEJMILhTtPI5BcKyByQya8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lpokl0pX6fbLvM7NVnp+MdBmbiDUl6xq7i0CrsCOL3+7AaVtMA9TynU8912OATANc
+         6R7HcD9VVY5IR17P1rEf9uSOTGYlZXmwgmuz6t9I6zdZsRl4EQPMzIht1VQ6eU8zPh
+         /m6gw/2osCFMQk1zAwScPJdCAWMECZPk82KqwNK0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
-        linux-parisc@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 006/127] parisc: Fix serio address output
-Date:   Fri, 22 Nov 2019 00:53:44 -0500
-Message-Id: <20191122055544.3299-5-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 001/127] scsi: lpfc: Fix kernel Oops due to null pring pointers
+Date:   Fri, 22 Nov 2019 00:53:40 -0500
+Message-Id: <20191122055544.3299-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,38 +58,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 785145171d17af2554128becd6a7c8f89e101141 ]
+[ Upstream commit 5a9eeff57f340238c39c95d8e7e54c96fc722de7 ]
 
-We want the hpa addresses printed in the serio modules, not some
-virtual ioremap()ed address, e.g.:
+Driver is hitting null pring pointers in lpfc_do_work().
 
- serio: gsc-ps2-keyboard port at 0xf0108000 irq 22 @ 2:0:11
- serio: gsc-ps2-mouse port at 0xf0108100 irq 22 @ 2:0:12
+Pointer assignment occurs based on SLI-revision. If recovering after an
+error, its possible the sli revision for the port was cleared, making the
+lpfc_phba_elsring() not return a ring pointer, thus the null pointer.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Add SLI revision checking to lpfc_phba_elsring() and status checking to all
+callers.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/gscps2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc.h      | 6 ++++++
+ drivers/scsi/lpfc/lpfc_els.c  | 2 ++
+ drivers/scsi/lpfc/lpfc_init.c | 7 ++++++-
+ drivers/scsi/lpfc/lpfc_sli.c  | 2 ++
+ 4 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index aa9f29b875dea..d84e3b70215ad 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -382,9 +382,9 @@ static int __init gscps2_probe(struct parisc_device *dev)
- 		goto fail;
- #endif
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index bc61cc8bc6f02..03e95a3216c8c 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -1239,6 +1239,12 @@ lpfc_sli_read_hs(struct lpfc_hba *phba)
+ static inline struct lpfc_sli_ring *
+ lpfc_phba_elsring(struct lpfc_hba *phba)
+ {
++	/* Return NULL if sli_rev has become invalid due to bad fw */
++	if (phba->sli_rev != LPFC_SLI_REV4  &&
++	    phba->sli_rev != LPFC_SLI_REV3  &&
++	    phba->sli_rev != LPFC_SLI_REV2)
++		return NULL;
++
+ 	if (phba->sli_rev == LPFC_SLI_REV4) {
+ 		if (phba->sli4_hba.els_wq)
+ 			return phba->sli4_hba.els_wq->pring;
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index ddd29752d96dc..0032465d1b630 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -1335,6 +1335,8 @@ lpfc_els_abort_flogi(struct lpfc_hba *phba)
+ 			Fabric_DID);
  
--	printk(KERN_INFO "serio: %s port at 0x%p irq %d @ %s\n",
-+	pr_info("serio: %s port at 0x%08lx irq %d @ %s\n",
- 		ps2port->port->name,
--		ps2port->addr,
-+		hpa,
- 		ps2port->padev->irq,
- 		ps2port->port->phys);
+ 	pring = lpfc_phba_elsring(phba);
++	if (unlikely(!pring))
++		return -EIO;
  
+ 	/*
+ 	 * Check the txcmplq for an iocb that matches the nport the driver is
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 25612ccf6ff28..1da125afebddb 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -1773,7 +1773,12 @@ lpfc_sli4_port_sta_fn_reset(struct lpfc_hba *phba, int mbx_action,
+ 	lpfc_offline(phba);
+ 	/* release interrupt for possible resource change */
+ 	lpfc_sli4_disable_intr(phba);
+-	lpfc_sli_brdrestart(phba);
++	rc = lpfc_sli_brdrestart(phba);
++	if (rc) {
++		lpfc_printf_log(phba, KERN_ERR, LOG_INIT,
++				"6309 Failed to restart board\n");
++		return rc;
++	}
+ 	/* request and enable interrupt */
+ 	intr_mode = lpfc_sli4_enable_intr(phba, phba->intr_mode);
+ 	if (intr_mode == LPFC_INTR_ERROR) {
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 6c2b098b76095..0128ea32b208f 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -4421,6 +4421,8 @@ lpfc_sli_brdrestart_s4(struct lpfc_hba *phba)
+ 	hba_aer_enabled = phba->hba_flag & HBA_AER_ENABLED;
+ 
+ 	rc = lpfc_sli4_brdreset(phba);
++	if (rc)
++		return rc;
+ 
+ 	spin_lock_irq(&phba->hbalock);
+ 	phba->pport->stopped = 0;
 -- 
 2.20.1
 
