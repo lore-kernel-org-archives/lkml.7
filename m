@@ -2,107 +2,222 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8844CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B4A20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 07:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5480220659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 08:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UBj+tYl7"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RRHl36rt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfKVH6s (ORCPT
+        id S1726836AbfKVIAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:58:48 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31415 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726248AbfKVH6r (ORCPT
+        Fri, 22 Nov 2019 03:00:49 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:17390 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKVIAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 02:58:47 -0500
-X-UUID: 995ad331f2ab4f46a3820f39bf312b57-20191122
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=biiWaCmeF2zekF9ph9b3ZsgnAyXW/XZddTvqnNdWtZI=;
-        b=UBj+tYl7o9PnBzb8JAMkkcAghNv1ZKFDCo9BnYhfPiCD+tgcKL5SWitrbPEE07xrbjCFBmvsH/G+upGp27sMPLuxWXBotj+fV6v4HMdYPyl9nkdv9QeTBV5eIvEwp+FdjeN7tZTgqjoPB+f2ewwuSZU/YumK1cR4RBquWG74viE=;
-X-UUID: 995ad331f2ab4f46a3820f39bf312b57-20191122
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 62595625; Fri, 22 Nov 2019 15:58:42 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkexhb02.mediatek.inc (172.21.101.103) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 22 Nov 2019 15:59:03 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 22 Nov 2019 15:59:04 +0800
-Message-ID: <1574409521.12825.0.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: Check return value of
- mtk_drm_ddp_comp_for_plane.
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "open list:DRM DRIVERS FOR MEDIATEK" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 22 Nov 2019 15:58:41 +0800
-In-Reply-To: <20191118061806.52781-1-pihsun@chromium.org>
-References: <20191118061806.52781-1-pihsun@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 22 Nov 2019 03:00:48 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xAM7xjvb022344;
+        Fri, 22 Nov 2019 16:59:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAM7xjvb022344
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1574409586;
+        bh=fPMOgceq6VcAzfubQqqmhDdamDoMjnT4yAQ7KXJflwg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RRHl36rtyPe/KbIFZZnO6a4IophfcABjLMSTeZa05LkhEDnoDZD4e67Z5EpfEHIq+
+         qVbvjJ0j+Cyo7rrzuCVi9VYWKhHZBikU+OHiWCCJFaL4XF4oYBaZU8YSr8XDIqCkRx
+         h5Jo+8QaJDrU2eYFHMLvm/+wStJmvvP3Bhlm7FQYaiFeuzQXBRpv/ig6ZjWp/4cJDH
+         WxRkWgjXiJ1lkNL/4u7Rv6MIQEJeaUaxFwvTrrNjC6vrGnLltbsDBglLZmbYcztd+w
+         05cyDFDw7g8C32JWkkJHibGbi9gyb4vjS/YUW9dGiajKiDwEXktLl4sdLoHwI/0SOQ
+         JwNS+f0lMHWaQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: check MODULE_* macros in non-modular code
+Date:   Fri, 22 Nov 2019 16:59:39 +0900
+Message-Id: <20191122075939.14481-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFBpLUhzdW46DQoNCk9uIE1vbiwgMjAxOS0xMS0xOCBhdCAxNDoxOCArMDgwMCwgUGktSHN1
-biBTaGloIHdyb3RlOg0KPiBUaGUgbXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUgY2FuIHJldHVy
-biBOVUxMLCBidXQgdGhlIHVzYWdlIGRvZXNuJ3QNCj4gY2hlY2sgZm9yIGl0LiBBZGQgY2hlY2sg
-Zm9yIGl0Lg0KDQpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiAN
-Cj4gRml4ZXM6IGQ2YjUzZjY4MzU2ZiAoImRybS9tZWRpYXRlazogQWRkIGhlbHBlciB0byBnZXQg
-Y29tcG9uZW50IGZvciBhIHBsYW5lIikNCj4gU2lnbmVkLW9mZi1ieTogUGktSHN1biBTaGloIDxw
-aWhzdW5AY2hyb21pdW0ub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHJtX2NydGMuYyB8IDEzICsrKysrKysrKy0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fY3J0Yy5jDQo+IGluZGV4IGY4MGE4YmE3NTk3Ny4uNGM0Zjk3NmM5OTRlIDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC0zMTAsNyAr
-MzEwLDkgQEAgc3RhdGljIGludCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9j
-cnRjICptdGtfY3J0YykNCj4gIA0KPiAgCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0
-ZShwbGFuZS0+c3RhdGUpOw0KPiAgCQljb21wID0gbXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUo
-Y3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+IC0JCW10a19kZHBfY29tcF9sYXllcl9jb25m
-aWcoY29tcCwgbG9jYWxfbGF5ZXIsIHBsYW5lX3N0YXRlKTsNCj4gKwkJaWYgKGNvbXApDQo+ICsJ
-CQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmlnKGNvbXAsIGxvY2FsX2xheWVyLA0KPiArCQkJCQkJ
-ICBwbGFuZV9zdGF0ZSk7DQo+ICAJfQ0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+IEBAIC0zODYsOCAr
-Mzg4LDkgQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2NvbmZpZyhzdHJ1Y3QgZHJtX2NydGMg
-KmNydGMpDQo+ICAJCQljb21wID0gbXRrX2RybV9kZHBfY29tcF9mb3JfcGxhbmUoY3J0YywgcGxh
-bmUsDQo+ICAJCQkJCQkJICAmbG9jYWxfbGF5ZXIpOw0KPiAgDQo+IC0JCQltdGtfZGRwX2NvbXBf
-bGF5ZXJfY29uZmlnKGNvbXAsIGxvY2FsX2xheWVyLA0KPiAtCQkJCQkJICBwbGFuZV9zdGF0ZSk7
-DQo+ICsJCQlpZiAoY29tcCkNCj4gKwkJCQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmlnKGNvbXAs
-IGxvY2FsX2xheWVyLA0KPiArCQkJCQkJCSAgcGxhbmVfc3RhdGUpOw0KPiAgCQkJcGxhbmVfc3Rh
-dGUtPnBlbmRpbmcuY29uZmlnID0gZmFsc2U7DQo+ICAJCX0NCj4gIAkJbXRrX2NydGMtPnBlbmRp
-bmdfcGxhbmVzID0gZmFsc2U7DQo+IEBAIC00MDEsNyArNDA0LDkgQEAgaW50IG10a19kcm1fY3J0
-Y19wbGFuZV9jaGVjayhzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBkcm1fcGxhbmUgKnBs
-YW5lLA0KPiAgCXN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXA7DQo+ICANCj4gIAljb21wID0gbXRr
-X2RybV9kZHBfY29tcF9mb3JfcGxhbmUoY3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+IC0J
-cmV0dXJuIG10a19kZHBfY29tcF9sYXllcl9jaGVjayhjb21wLCBsb2NhbF9sYXllciwgc3RhdGUp
-Ow0KPiArCWlmIChjb21wKQ0KPiArCQlyZXR1cm4gbXRrX2RkcF9jb21wX2xheWVyX2NoZWNrKGNv
-bXAsIGxvY2FsX2xheWVyLCBzdGF0ZSk7DQo+ICsJcmV0dXJuIDA7DQo+ICB9DQo+ICANCj4gIHN0
-YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9taWNfZW5hYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0
-YywNCj4gDQo+IGJhc2UtY29tbWl0OiA1YTZmY2JlYWJlM2UyMDQ1OWVkODUwNDY5MGIyNTE1ZGFj
-YzUyNDZmDQoNCg==
+Paul Gortmaker sent a lot of patches to remove orphan modular code.
+You can see his contributions by:
+
+  $ git log --grep='make.* explicitly non-modular'
+
+To help this work, this commit adds simple shell-script to detect
+MODULE_ tags used in non-modular code.
+
+It displays suspicious use of MODULE_LICENSE, MODULE_AUTHOR,
+MODULE_DESCRIPTION, etc.
+
+I was not sure about module_param() or MODULE_PARM_DESC(). A lot of
+non-modular code uses module_param() to prefix the kernel parameter
+with the file name it resides in. If we changed module_param() to
+core_param(), the interface would be broken. MODULE_PARM_DESC() in
+non-modular code could be turned into comments or something, but I
+am not sure. I did not check them.
+
+I built x86_64_defconfig of v5.4-rc8, and this script detected
+the following:
+
+notice: asymmetric_keys: MODULE macros found in non-modular code
+notice: binfmt_elf: MODULE macros found in non-modular code
+notice: bsg: MODULE macros found in non-modular code
+notice: compat_binfmt_elf: MODULE macros found in non-modular code
+notice: component: MODULE macros found in non-modular code
+notice: debugfs: MODULE macros found in non-modular code
+notice: drm_mipi_dsi: MODULE macros found in non-modular code
+notice: freq_table: MODULE macros found in non-modular code
+notice: glob: MODULE macros found in non-modular code
+notice: intel_pstate: MODULE macros found in non-modular code
+notice: n_null: MODULE macros found in non-modular code
+notice: nvmem_core: MODULE macros found in non-modular code
+notice: power_supply: MODULE macros found in non-modular code
+notice: thermal_sys: MODULE macros found in non-modular code
+notice: tracefs: MODULE macros found in non-modular code
+notice: vgacon: MODULE macros found in non-modular code
+ To fix above, check MODULE_LICENSE(), MODULE_AUTHOR(), etc.
+ Please check #include <linux/module.h>, THIS_MODULE, too.
+
+I confirmed they are all valid.
+
+Maybe the 'debugfs' is unclear because there are tons of debugfs
+stuff in the source tree. It is talking about MODULE_ALIAS_FS()
+in fs/debugfs/inode.c because fs/debugfs/debugfs.o never becomes
+a module.
+
+[How to fix the warnings]
+
+Let's take 'asymmetric_keys' as an example.
+
+(1) grep Makefiles to find the relevant code
+
+$ git grep -A2 asymmetric_keys -- '*/Makefile' '*/Kbuild'
+crypto/Makefile:obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += asymmetric_keys/
+crypto/Makefile-obj-$(CONFIG_CRYPTO_HASH_INFO) += hash_info.o
+crypto/Makefile-crypto_simd-y := simd.o
+--
+crypto/asymmetric_keys/Makefile:obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += asymmetric_keys.o
+crypto/asymmetric_keys/Makefile-
+crypto/asymmetric_keys/Makefile:asymmetric_keys-y := \
+crypto/asymmetric_keys/Makefile-        asymmetric_type.o \
+crypto/asymmetric_keys/Makefile-        restrict.o \
+
+Then, you notice it is associated with CONFIG_ASYMMETRIC_KEY_TYPE
+and is a composite object that consists of asymmetric_type.o,
+restrict.o, ...
+
+(2) Confirm the CONFIG is boolean
+
+$ git grep -A2 'config ASYMMETRIC_KEY_TYPE' -- '*/Kconfig*'
+crypto/asymmetric_keys/Kconfig:menuconfig ASYMMETRIC_KEY_TYPE
+crypto/asymmetric_keys/Kconfig- bool "Asymmetric (public-key cryptographic) key type"
+crypto/asymmetric_keys/Kconfig- depends on KEYS
+
+Now you are sure it never get compiled as a module since
+ASYMMETRIC_KEY_TYPE is a bool type option.
+
+(3) Grep the source file(s)
+
+$ grep '^MODULE' crypto/asymmetric_keys/asymmetric_type.c
+MODULE_LICENSE("GPL");
+
+Remove the orphan MODULE tags. You may also need to do some additional
+works such as:
+
+ - replace module_*_driver with builtin_*_driver
+ - replace <linux/module.h> with <linux/init.h>
+ - remove module_exit code
+ - move credit in MODULE_AUTHOR() to the top of the file
+
+Please see Paul's commits.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/modules-check.sh | 54 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+index f51f446707b8..5f1d98d4ee30 100755
+--- a/scripts/modules-check.sh
++++ b/scripts/modules-check.sh
+@@ -13,4 +13,58 @@ check_same_name_modules()
+ 	done
+ }
+ 
++# Check MODULE_ macros in non-modular code
++check_orphan_module_macros()
++{
++	# modules.builtin.modinfo is created while linking vmlinux.
++	# It may not exist when you do 'make modules'.
++	if [ ! -r modules.builtin.modinfo ]; then
++		return
++	fi
++
++	# modules.builtin lists *real* built-in modules, i.e. controlled by
++	# tristate CONFIG options, but currently built with =y.
++	#
++	# modules.builtin.modinfo is the list of MODULE_ macros compiled
++	# into vmlinux.
++	#
++	# By diff'ing them, users of bogus MODULE_* macros will show up.
++
++	# Kbuild replaces ',' and '-' in file names with '_' for use in C.
++	real_builtin_modules=$(sed -e 's:.*/::' -e 's/\.ko$//' -e 's/,/_/g' \
++			       -e 's/-/_/g' modules.builtin | sort | uniq)
++
++	show_hint=
++
++	# Exclude '.paramtype=' and '.param=' to skip checking module_param()
++	# and MODULE_PARM_DESC().
++	module_macro_users=$(tr '\0' '\n' < modules.builtin.modinfo | \
++		sed -e '/\.parmtype=/d' -e '/\.parm=/d' | \
++		sed -n 's/\..*//p' | sort | uniq)
++
++	for m in $module_macro_users
++	do
++		warn=1
++
++		for n in $real_builtin_modules
++		do
++			if [ "$m" = "$n" ]; then
++				warn=
++				break
++			fi
++		done
++
++		if [ -n "$warn" ]; then
++			echo "notice: $m: MODULE macros found in non-modular code"
++			show_hint=1
++		fi
++	done
++
++	if [ -n "$show_hint" ]; then
++		echo " To fix above, check MODULE_LICENSE(), MODULE_AUTHOR(), etc."
++		echo " Please check #include <linux/module.h>, THIS_MODULE, too."
++	fi
++}
++
+ check_same_name_modules
++check_orphan_module_macros
+-- 
+2.17.1
 
