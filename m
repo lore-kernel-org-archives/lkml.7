@@ -2,60 +2,56 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1A2C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F91C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1B22084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230F120885
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420829;
-	bh=mRKZx/dtkkwJ3Waki57KbIjqXykXG+/ubnEk0vOs8iM=;
+	s=default; t=1574420835;
+	bh=3V4B+5FPwQ+goJN1+z1cIB2n93aSNpU3SDah4sLezHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xa8ZkfGZVDypPT5uSoJ+RFKRK7FHXDqpfM5jptG9qQk6GQERJh9YDfu1sxK8hQ18/
-	 6R4VXLq6A87ywfgChIfYBaWtMIzHL07rZQBJ+nobxtTHOWby930BapL+Z04fNZtR0C
-	 3Wk9Zyy/5WiP0nRCdlv8mLcRe0YgM8484c6KCgnM=
+	b=PU9NXfr2apiouJ3qyVLFtcLhaIZn3yWObL7pK96gifkbI81iDnjDO9Y5jsOrb+Iff
+	 JQHrdAyu984UfKaXL/fRrOEMDtFQjzhEt5PCIoQwRTSWmtK6yc5J+HwYHXjbn0+ZAJ
+	 sAnUblbJBOI7sPbndh4lgbDRhuq1t/vR1YWPrmrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfKVLGz (ORCPT
+        id S1731838AbfKVLGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:06:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731154AbfKVLGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:06:46 -0500
+        id S1731819AbfKVLGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:06:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA1F22084F;
-        Fri, 22 Nov 2019 11:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5585D2088F;
+        Fri, 22 Nov 2019 11:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420806;
-        bh=mRKZx/dtkkwJ3Waki57KbIjqXykXG+/ubnEk0vOs8iM=;
+        s=default; t=1574420773;
+        bh=3V4B+5FPwQ+goJN1+z1cIB2n93aSNpU3SDah4sLezHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+ANl7ZSMLjHk4vh7zrgLMV7Fmw7QJ3oVtLSu1FXBd2K/S5pNsHiHAbAjQCHd46KF
-         XxW+WPnDc6fYxcFHgw2hwTURGUxoDljqQiJKC8c+20a/29GFPBVy/NHo98n+o+ju4/
-         KVAyrBWOJtIPJvgfbGsh/QqHV9vz+DtQwTz8GIDY=
+        b=0F1WRVWDIbO+mXTO6bLqZ7hx3XsnDibAo6dNHnjPeUeAMsMwNv+MhL3amngWWMiYs
+         +z9fHnf8zjRAKaMiRou/nwizk2Qhlni6s6zrDW4ixeXjYbcceMm3tWQFOlt/D0aF+x
+         swUt+Dyv7ktsarBmXyjyr7CdUR1pUVSW3tfXY+fQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 4/6] mm/memory_hotplug: fix updating the node span
-Date:   Fri, 22 Nov 2019 11:30:06 +0100
-Message-Id: <20191122100326.607203017@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 167/220] s390/kasan: avoid vdso instrumentation
+Date:   Fri, 22 Nov 2019 11:28:52 +0100
+Message-Id: <20191122100924.813862210@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191122100320.878809004@linuxfoundation.org>
-References: <20191122100320.878809004@linuxfoundation.org>
+In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
+References: <20191122100912.732983531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,63 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 656d571193262a11c2daa4012e53e4d645bbce56 upstream.
+[ Upstream commit 348498458505e202df41b6b9a78da448d39298b7 ]
 
-We recently started updating the node span based on the zone span to
-avoid touching uninitialized memmaps.
+vdso is mapped into user space processes, which won't have kasan
+shodow mapped.
 
-Currently, we will always detect the node span to start at 0, meaning a
-node can easily span too many pages.  pgdat_is_empty() will still work
-correctly if all zones span no pages.  We should skip over all zones
-without spanned pages and properly handle the first detected zone that
-spans pages.
-
-Unfortunately, in contrast to the zone span (/proc/zoneinfo), the node
-span cannot easily be inspected and tested.  The node span gives no real
-guarantees when an architecture supports memory hotplug, meaning it can
-easily contain holes or span pages of different nodes.
-
-The node span is not really used after init on architectures that
-support memory hotplug.
-
-E.g., we use it in mm/memory_hotplug.c:try_offline_node() and in
-mm/kmemleak.c:kmemleak_scan().  These users seem to be fine.
-
-Link: http://lkml.kernel.org/r/20191027222714.5313-1-david@redhat.com
-Fixes: 00d6c019b5bc ("mm/memory_hotplug: don't access uninitialized memmaps in shrink_pgdat_span()")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/s390/kernel/vdso32/Makefile | 3 ++-
+ arch/s390/kernel/vdso64/Makefile | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -447,6 +447,14 @@ static void update_pgdat_span(struct pgl
- 					     zone->spanned_pages;
+diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
+index 04dd3e2c3bd9b..e76309fbbcb3b 100644
+--- a/arch/s390/kernel/vdso32/Makefile
++++ b/arch/s390/kernel/vdso32/Makefile
+@@ -28,9 +28,10 @@ obj-y += vdso32_wrapper.o
+ extra-y += vdso32.lds
+ CPPFLAGS_vdso32.lds += -P -C -U$(ARCH)
  
- 		/* No need to lock the zones, they can't change. */
-+		if (!zone->spanned_pages)
-+			continue;
-+		if (!node_end_pfn) {
-+			node_start_pfn = zone->zone_start_pfn;
-+			node_end_pfn = zone_end_pfn;
-+			continue;
-+		}
-+
- 		if (zone_end_pfn > node_end_pfn)
- 			node_end_pfn = zone_end_pfn;
- 		if (zone->zone_start_pfn < node_start_pfn)
+-# Disable gcov profiling and ubsan for VDSO code
++# Disable gcov profiling, ubsan and kasan for VDSO code
+ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
++KASAN_SANITIZE := n
+ 
+ # Force dependency (incbin is bad)
+ $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index ddebc26cd9494..f849ac61c5da0 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -28,9 +28,10 @@ obj-y += vdso64_wrapper.o
+ extra-y += vdso64.lds
+ CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
+ 
+-# Disable gcov profiling and ubsan for VDSO code
++# Disable gcov profiling, ubsan and kasan for VDSO code
+ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
++KASAN_SANITIZE := n
+ 
+ # Force dependency (incbin is bad)
+ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+-- 
+2.20.1
+
 
 
