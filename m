@@ -2,138 +2,110 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97FDC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B785EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6902068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9264A20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 01:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfKVBQj convert rfc822-to-8bit (ORCPT
+        id S1726540AbfKVBXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 20:16:39 -0500
-Received: from cnshjsmin05.app.nokia-sbell.com ([116.246.26.45]:60792 "EHLO
-        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbfKVBQj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 20:16:39 -0500
-X-AuditID: ac18929d-49dff700000014de-85-5dd736f3c3c1
-Received: from CNSHPPEXCH1603.nsn-intra.net (Unknown_Domain [135.251.51.103])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id 90.DC.05342.3F637DD5; Fri, 22 Nov 2019 09:16:35 +0800 (HKT)
-Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
- CNSHPPEXCH1603.nsn-intra.net (135.251.51.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 22 Nov 2019 09:16:35 +0800
-Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
- CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
- Fri, 22 Nov 2019 09:16:35 +0800
-From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Guenter Roeck <groeck7@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Topic: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Index: AdWgVy1kREB4bw5dQ4u+4ZEezt20u///t7KA//7BtxA=
-Date:   Fri, 22 Nov 2019 01:16:34 +0000
-Message-ID: <a66f73ba253b41f8956eb85e3cc67a4a@nokia-sbell.com>
-References: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
- <20191121141508.GA13249@roeck-us.net>
-In-Reply-To: <20191121141508.GA13249@roeck-us.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [135.251.51.115]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 21 Nov 2019 20:23:40 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7162 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726265AbfKVBXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 20:23:40 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D9A5B40ED3F3102114FE;
+        Fri, 22 Nov 2019 09:23:38 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 22 Nov 2019
+ 09:23:32 +0800
+Subject: Re: [PATCH] tmpfs: use ida to get inode number
+To:     Hugh Dickins <hughd@google.com>
+CC:     Matthew Wilcox <willy@infradead.org>, <viro@zeniv.linux.org.uk>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+        "J. R. Okajima" <hooanon05g@gmail.com>
+References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
+ <20191120154552.GS20752@bombadil.infradead.org>
+ <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
+ <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
+ <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
+ <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
+Date:   Fri, 22 Nov 2019 09:23:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsXS/ts4Xfez2fVYg5VLzS32dV5nsri8aw6b
-        xY11+9gtniw8w2Tx+OU/ZgdWj52z7rJ7rFyzBsj63sDu8XmTXABLFJdNSmpOZllqkb5dAlfG
-        /6W3WQomC1ccPveGvYHxLH8XIyeHhICJRNv7CYxdjFwcQgKHmCQ2XjvADOH8ZZS4vuY7lLOJ
-        UWLSt6tsIC1sAu4STZvWgdkiAmoSzada2ECKmAUeMEq8P7IXyOHgEBZIkfjSwQNRkyrxbcIB
-        JgjbSuLlqy1gNouAqsTX3n5GEJtXwE5i0f8pjCCtQgJpEl//pIOEOQWMJE6vuMsKYjMKyEpM
-        e3QfrJVZQFzi1pP5TBAfCEgs2XOeGcIWlXj5+B8ryBgJASWJvg1Q5ToSC3Z/YoOwtSWWLXzN
-        DLFVUOLkzCcsExjFZiGZOgtJyywkLbOQtCxgZFnFKJ2cV5yRVZybmWdgqpeXn52ZqFuclJqT
-        o5ecn7uJERh7ayQmzd3B2NkZf4hRgINRiYf3ReW1WCHWxLLiytxDjBIczEoivHuuX4kV4k1J
-        rKxKLcqPLyrNSS0+xCjNwaIkztsyeWGskEB6YklqdmpqQWoRTJaJg1OqgVF0wzel59+iXU64
-        bv0qpzA1Y+HJRdqh/6dmMhaEGioeOuhxMbLHqrXkdvU0feWvU0W4lRlXMkrtOdWYzaR6ou1t
-        /pEfn/9K3ONaVbGzzIfV6tnHMN34FdKrb+96ovtHKcrhQVtizeT7xz84Fe3bXDnHqSHzx2r+
-        7XZLJNTX1Ns+nagjUZWRuEmJpTgj0VCLuag4EQCPDo//uQIAAA==
+In-Reply-To: <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Roeck, thanks for your time to guide me to finish the review. Do I need to re-send a mail with your sign?
+On 2019/11/22 3:53, Hugh Dickins wrote:
+> On Thu, 21 Nov 2019, zhengbin (A) wrote:
+>> On 2019/11/21 12:52, Hugh Dickins wrote:
+>>> Just a rushed FYI without looking at your patch or comments.
+>>>
+>>> Internally (in Google) we do rely on good tmpfs inode numbers more
+>>> than on those of other get_next_ino() filesystems, and carry a patch
+>>> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
+>>> number space for each superblock) - essentially,
+>>>
+>>> 	ino = sbinfo->next_ino++;
+>>> 	/* Avoid 0 in the low 32 bits: might appear deleted */
+>>> 	if (unlikely((unsigned int)ino == 0))
+>>> 		ino = sbinfo->next_ino++;
+>>>
+>>> Which I think would be faster, and need less memory, than IDA.
+>>> But whether that is of general interest, or of interest to you,
+>>> depends upon how prevalent 32-bit executables built without
+>>> __FILE_OFFSET_BITS=64 still are these days.
+>> So how google think about this? inode number > 32-bit, but 32-bit executables
+>> cat not handle this?
+> Google is free to limit what executables are run on its machines,
+> and how they are built, so little problem here.
+>
+> A general-purpose 32-bit Linux distribution does not have that freedom,
+> does not want to limit what the user runs.  But I thought that by now
+> they (and all serious users of 32-bit systems) were building their own
+> executables with _FILE_OFFSET_BITS=64 (I was too generous with the
+> underscores yesterday); and I thought that defined __USE_FILE_OFFSET64,
+> and that typedef'd ino_t to be __ino64_t.  And the 32-bit kernel would
+> have __ARCH_WANT_STAT64, which delivers st_ino as unsigned long long.
+>
+> So I thought that a modern, professional 32-bit executable would be
+> dealing in 64-bit inode numbers anyway.  But I am not a system builder,
+> so perhaps I'm being naive.  And of course some users may have to support
+> some old userspace, or apps that assign inode numbers to "int" or "long"
+> or whatever.  I have no insight into the extent of that problem.
 
-Peng Wang
+So how to solve this problem?
 
------Original Message-----
-From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
-Sent: Thursday, November 21, 2019 10:15 PM
-To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
-Cc: Guenter Roeck <groeck7@gmail.com>; wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] watchdog: make DesignWare watchdog allow users to set bigger timeout value
+1. tmpfs use ida or other data structure
 
-On Thu, Nov 21, 2019 at 10:35:12AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
-> From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
-> From: Peng Wang <peng.1.wang@nokia-sbell.com>
-> Date: Wed, 20 Nov 2019 15:12:59 +0800
-> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set 
-> bigger  timeout value
-> 
-> watchdog_dev.c provides means to allow users to set bigger timeout 
-> value than HW can support, make DesignWare watchdog align with this.
-> 
-> ---
-> 
-> v2 -> v1:
->        - use top_s to compare with wdd->max_hw_heartbeat_ms
->        - update wdd->timeout in case it's greater than HW supports
->        - fix comments error
-> 
-> v1: initial version
-> 
-> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+2. tmpfs use 64-bit, each superblock a inode number space
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+3. do not do anything, If somebody hits this bug, let them solve for themselves
 
-> ---
->  drivers/watchdog/dw_wdt.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c 
-> index fef7c61..12c116e 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
->  
-> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +	/*
-> +	 * In case users set bigger timeout value than HW can support,
-> +	 * kernel(watchdog_dev.c) helps to feed watchdog before 
-> +	 * wdd->max_hw_heartbeat_ms
-> +	 */
-> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
-> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +	else
-> +		wdd->timeout = top_s;
->  
->  	return 0;
->  }
-> --
-> 1.8.3.1
-> 
+4. (last_ino change to 64-bit)get_next_ino -->other filesystems will be ok, but it was rejected before
+
+>
+> Hugh
+>
+> .
+>
+
