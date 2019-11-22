@@ -2,97 +2,204 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D669CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D427C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E712068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574450842;
-	bh=hPtgJJr5SKfPYaA2h2MvVdiZtWPC/Wav5BgK/643v3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IrmXMNbjScpmdmyLCNPShoaen/62O772vPAQh86jwsh3WrMgJsDv17KhxA6vmd9Nf
-	 u9Crth9zuJX1LKN/8eaGWrLI/RtcdQLD6RxJsaYkITTDMGL2Vwxwqf6+Gn1lQWt+DZ
-	 FojMURIHp07OoQN+cPiW0GGVg5fMbPhPYXBa+caE=
+	by mail.kernel.org (Postfix) with ESMTP id 1346D2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 19:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AttQLjXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfKVT1V (ORCPT
+        id S1727111AbfKVT3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:27:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:51640 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbfKVT1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:27:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E9B7328;
-        Fri, 22 Nov 2019 11:27:20 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CB0A3F6C4;
-        Fri, 22 Nov 2019 11:27:19 -0800 (PST)
-Date:   Fri, 22 Nov 2019 19:27:18 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     guillaume.tucker@collabora.com, hulkci@huawei.com,
-        tomeu.vizoso@collabora.com, khilman@baylibre.com,
-        mgalka@collabora.com, enric.balletbo@collabora.com,
-        yuehaibing@huawei.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: net-next/master bisection: boot on beaglebone-black
-Message-ID: <20191122192718.GH6849@sirena.org.uk>
-References: <5dd7d181.1c69fb81.64fbc.cd8a@mx.google.com>
- <20191122.093657.95680289541075120.davem@davemloft.net>
- <bfe5e987-e0b5-6c89-f193-6666be203532@collabora.com>
- <20191122.101147.1112820693050959325.davem@davemloft.net>
+        Fri, 22 Nov 2019 14:29:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40847 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726695AbfKVT3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:29:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574450982;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1SjXyrtPi15bheVyzT1vhDWulX5AkEnn6yZ6MR0YELk=;
+        b=AttQLjXV1gS7L/P9IGYHSO0vR2TKLo84btEnwg6Zzd0SUaOAZBjyWGf3CwBd28//4oSZj3
+        yvM42XSru7qd3TF4nk0GbNV9IjclNLYYrxwSW3cCz3ykgkzNEOfP/4qye74Zcc+lTki9Q0
+        nWBeewztl34GgeZkys7UWOtpljiZZUc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-bT4dcWC7OSWEH6ne-8BOzA-1; Fri, 22 Nov 2019 14:29:38 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E168E107ACC7;
+        Fri, 22 Nov 2019 19:29:35 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-121-153.rdu2.redhat.com [10.10.121.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB7EF5C21B;
+        Fri, 22 Nov 2019 19:29:32 +0000 (UTC)
+Subject: Re: [PATCH v6 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+References: <20191107174622.61718-4-alex.kogan@oracle.com>
+ <201911202212.CdyX1gua%lkp@intel.com>
+ <B1A1B09F-C44E-45F7-80EB-09E30AEFD358@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <dc31b3ea-1b03-16d3-1a03-a0a7ad1729d2@redhat.com>
+Date:   Fri, 22 Nov 2019 14:29:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FUaywKC54iCcLzqT"
-Content-Disposition: inline
-In-Reply-To: <20191122.101147.1112820693050959325.davem@davemloft.net>
-X-Cookie: sillema sillema nika su
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <B1A1B09F-C44E-45F7-80EB-09E30AEFD358@oracle.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: bT4dcWC7OSWEH6ne-8BOzA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/22/19 1:28 PM, Alex Kogan wrote:
+>
+>> On Nov 20, 2019, at 10:16 AM, kbuild test robot <lkp@intel.com> wrote:
+>>
+>> Hi Alex,
+>>
+>> Thank you for the patch! Yet something to improve:
+>>
+>> [auto build test ERROR on linus/master]
+>> [also build test ERROR on v5.4-rc8 next-20191120]
+>> [if your patch is applied to the wrong git tree, please drop us a note t=
+o help
+>> improve the system. BTW, we also suggest to use '--base' option to speci=
+fy the
+>> base tree in git format-patch, please see https://urldefense.proofpoint.=
+com/v2/url?u=3Dhttps-3A__stackoverflow.com_a_37406982&d=3DDwIBAg&c=3DRoP1Yu=
+mCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2a=
+ZLTuVxFK4k&m=3DBxEt1232ccGlMGDinAB0QAUaTFyl-m5sp4C-crHjpoU&s=3DOzzQqg4fTDV5=
+5X-y4vbnGeXoJaPHSvO_EfrUQnMVRHc&e=3D ]
+>>
+>> url:    https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.co=
+m_0day-2Dci_linux_commits_Alex-2DKogan_locking-2Dqspinlock-2DRename-2Dmcs-2=
+Dlock-2Dunlock-2Dmacros-2Dand-2Dmake-2Dthem-2Dmore-2Dgeneric_20191109-2D180=
+535&d=3DDwIBAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4o=
+mdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=3DBxEt1232ccGlMGDinAB0QAUaTFyl-m5sp4C=
+-crHjpoU&s=3DuE7ZeYXOFiu09PUVjnCntEe2rR5x_QxS6dEW9twpfok&e=3D=20
+>> base:   https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kerne=
+l.org_pub_scm_linux_kernel_git_torvalds_linux.git&d=3DDwIBAg&c=3DRoP1YumCXC=
+gaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTu=
+VxFK4k&m=3DBxEt1232ccGlMGDinAB0QAUaTFyl-m5sp4C-crHjpoU&s=3DaAKxuXc_c7OF0ffi=
+oQfVsIB6H-4Sd9PYxSM7kurm2ig&e=3D  0058b0a506e40d9a2c62015fe92eb64a44d78cd9
+>> config: i386-randconfig-f003-20191120 (attached as .config)
+>> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
+>> reproduce:
+>>        # save the attached .config to linux build tree
+>>        make ARCH=3Di386=20
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All error/warnings (new ones prefixed by >>):
+>>
+>>   In file included from include/linux/export.h:42:0,
+>>                    from include/linux/linkage.h:7,
+>>                    from include/linux/kernel.h:8,
+>>                    from include/linux/list.h:9,
+>>                    from include/linux/smp.h:12,
+>>                    from kernel/locking/qspinlock.c:16:
+>>   kernel/locking/qspinlock_cna.h: In function 'cna_init_nodes':
+>>>> include/linux/compiler.h:350:38: error: call to '__compiletime_assert_=
+80' declared with attribute error: BUILD_BUG_ON failed: sizeof(struct cna_n=
+ode) > sizeof(struct qnode)
+>>     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>                                         ^
+>>   include/linux/compiler.h:331:4: note: in definition of macro '__compil=
+etime_assert'
+>>       prefix ## suffix();    \
+>>       ^~~~~~
+>>   include/linux/compiler.h:350:2: note: in expansion of macro '_compilet=
+ime_assert'
+>>     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>     ^~~~~~~~~~~~~~~~~~~
+>>   include/linux/build_bug.h:39:37: note: in expansion of macro 'compilet=
+ime_assert'
+>>    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>>                                        ^~~~~~~~~~~~~~~~~~
+>>   include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG=
+_ON_MSG'
+>>     BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>>     ^~~~~~~~~~~~~~~~
+>>>> kernel/locking/qspinlock_cna.h:80:2: note: in expansion of macro 'BUIL=
+D_BUG_ON'
+>>     BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
+>>     ^~~~~~~~~~~~
+> Consider the following definition of qnode:
+>
+> struct qnode {
+> =09struct mcs_spinlock mcs;
+> #if defined(CONFIG_PARAVIRT_SPINLOCKS) || defined(CONFIG_NUMA_AWARE_SPINL=
+OCKS)
+> =09long reserved[2];
+> #endif
+> };
+>
+> and this is how cna_node is defined:
+>
+> struct cna_node {
+> =09struct mcs_spinlock=09mcs;
+> =09int=09=09=09numa_node;
+> =09u32=09=09=09encoded_tail;
+> =09u32=09=09=09pre_scan_result; /* 0, 1, 2 or encoded tail */
+> =09u32=09=09=09intra_count;
+> };
+>
+> Since long is 32 bit on i386, we get the compilation error above.
+>
+> We can try and squeeze CNA-specific fields into 64 bit on i386 (or any 32=
+bit=20
+> architecture for that matter). Note that an encoded tail pointer requires=
+ up=20
+> to 24 bits, and we have two of those. We would want different field encod=
+ings=20
+> for 32 vs 64bit architectures, and this all will be quite ugly.
+>
+> So instead we should probably either change the definition of @reserved i=
+n qnode=20
+> to long long, or perhaps disable CNA on 32bit architectures altogether?
+> I would certainly prefer the former, especially as it requires the least =
+amount=20
+> of code/config changes.
+>
+> Any objections / thoughts?
+>
+> Thanks,
+> =E2=80=94 Alex
+>
+The easy way out is to restrict NUMA qspinlock to 64-bit only. There
+aren't that many 32-bit NUMA systems out there that we have to worry about.
 
---FUaywKC54iCcLzqT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Just add "depends on 64BIT" to the config entry.
 
-On Fri, Nov 22, 2019 at 10:11:47AM -0800, David Miller wrote:
+Cheers,
+Longman
 
-> If you're not combining the net and the net-next tree, as Stephen
-> Rothwell's tree is doing, then you're going to run into this problem
-> every single day and spam us with these messages.
 
-> What is being done right now doesn't work.  You can't just wait for
-> net integration into net-next, that doesn't cut it.
-
-Is there a writeup somewhere of how your trees are expected to work?
-That might help testing people figure things out, what you're doing is a
-bit unusual and people working on testing infrastructure are likely not
-going to be as engaged with the process for specific trees as developers
-are.  I didn't spot anything in Docmentation/ and the wiki link in
-MAINTAINERS seems broken but I might've been looking in the wrong places.
-
---FUaywKC54iCcLzqT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3YNpUACgkQJNaLcl1U
-h9AS9wf/Uq4dnT2s2ZT0skeaaHINCsGT8qOFWNH1BYsDcrhqWXCuKS0G7yR1POi0
-JdMYoOFHKY/mh0uBTCI2erNQem8/jSgs3YA0AB9b50BWe41vGcJOXj9ZFngzRQ17
-PS3PGs0Ri7M0/KubZaDO9G2+am3PEKEiyK8YWezhwVhB3D1WE0Elz0e/hybUCDRo
-YC+YSLt9D5+XPwBCnLcOO9OD/6Psv1ZVbfXwlD8p2wKAwjwzj5ainxAEhCumYin4
-/TmR2lT0/KWZhiMVs2+xSLMdylXFzPlXTmgEphmom5+t3uWNz9rZaA2BbRinNpyw
-xNlKZabMIvJCVjiA4hbN/3TVH8VYFw==
-=g+r3
------END PGP SIGNATURE-----
-
---FUaywKC54iCcLzqT--
