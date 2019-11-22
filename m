@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F200C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E802E20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99A620718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420034;
-	bh=VgPPyE22Zgxe2jV9lOAP3R21u862evy97/e4M8bGaoo=;
+	s=default; t=1574420038;
+	bh=EBG3y3SqZq3fh1WMg/aeuj0NpEfig5g8qkXoy86oPUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uNgeVez9rt5Xi0YIExUf3oxfsKbHeIFxpqzzQNkBGNRB8r1D1VfdPDtQfMXg7f8cq
-	 m75zipQvt6M12l7Tnu3VBJjDOhg7yLIqCun/Qnx/GhTkYmu54jD3wIYyU/+ixcg2Q+
-	 yNUji/GjhZRQtQhOc4BHjSlPvxnM+uq9hKypnju4=
+	b=Ni7vNMimGeTdqXEZgmhMIgWeO5D9sXGY/drNml84zFzyjBCZEMhJqKY88tcO6Zxsw
+	 icyuQV5ItDWYqVKQuhMImvIVI6Lg6jNIwgxsQJ1mAmTJxhlz2fPS3Vfxti276tz2dP
+	 f22tgB76lRBK2Ng70sdfkJe2BJc5EpJgpc0bPf7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfKVKxw (ORCPT
+        id S1730268AbfKVKx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:53:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38710 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:53:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbfKVKxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:46 -0500
+        id S1729732AbfKVKxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7286120715;
-        Fri, 22 Nov 2019 10:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B2B20718;
+        Fri, 22 Nov 2019 10:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420025;
-        bh=VgPPyE22Zgxe2jV9lOAP3R21u862evy97/e4M8bGaoo=;
+        s=default; t=1574420028;
+        bh=EBG3y3SqZq3fh1WMg/aeuj0NpEfig5g8qkXoy86oPUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YO5UZEaydh7/+gcEwQZIsvQNhVrnFs4AlM7T2ffuVwhA2URPTwgdYnCfVIZYoZCTF
-         AkG80dnYtFi1b9uZhNwB3NvxakRnq/5Oy0AktxaV1jdZ73wnpnVkVUE7bdu+TH2hOd
-         rc0c6SgX98FpeAlHnSd1nY9d8R7p4apnjrRaFvOM=
+        b=e5bFMgt+BapwXcoV/CuwNy1FjfIU92vJHG0T5Q6GyB5TDqJE0oAdoWaXArDNcvrbD
+         TMpC3/iMC8QWpTm8yeNaXpmFT/jLiSv9e2FCyoxmO0fiLazBS0jPnzsOJr+kokZN+V
+         IF4FtYZBF0Dsea+mkpiu1OJJC8UhtGN3vEwYcUB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/122] reset: Fix potential use-after-free in __of_reset_control_get()
-Date:   Fri, 22 Nov 2019 11:29:04 +0100
-Message-Id: <20191122100828.274593621@linuxfoundation.org>
+Subject: [PATCH 4.14 092/122] bcache: recal cached_dev_sectors on detach
+Date:   Fri, 22 Nov 2019 11:29:05 +0100
+Message-Id: <20191122100828.823444028@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,67 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit b790c8ea5593d6dc3580adfad8e117eeb56af874 ]
+[ Upstream commit 46010141da6677b81cc77f9b47f8ac62bd1cbfd3 ]
 
-Calling of_node_put() decreases the reference count of a device tree
-object, and may free some data.
+Recal cached_dev_sectors on cached_dev detached, as recal done on
+cached_dev attached.
 
-However, the of_phandle_args structure embedding it is passed to
-reset_controller_dev.of_xlate() after that, so it may still be accessed.
+Update the cached_dev_sectors before bcache_device_detach called
+as bcache_device_detach will set bcache_device->c to NULL.
 
-Move the call to of_node_put() down to fix this.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-[p.zabel@pengutronix.de: moved of_node_put after mutex_unlock]
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/core.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/md/bcache/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index da4292e9de978..72b96b5c75a8f 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -466,28 +466,29 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
- 			break;
- 		}
- 	}
--	of_node_put(args.np);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 1a270e2262f52..690aeb09bbf55 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -905,6 +905,7 @@ static void cached_dev_detach_finish(struct work_struct *w)
+ 	bch_write_bdev_super(dc, &cl);
+ 	closure_sync(&cl);
  
- 	if (!rcdev) {
--		mutex_unlock(&reset_list_mutex);
--		return ERR_PTR(-EPROBE_DEFER);
-+		rstc = ERR_PTR(-EPROBE_DEFER);
-+		goto out;
- 	}
++	calc_cached_dev_sectors(dc->disk.c);
+ 	bcache_device_detach(&dc->disk);
+ 	list_move(&dc->list, &uncached_devices);
  
- 	if (WARN_ON(args.args_count != rcdev->of_reset_n_cells)) {
--		mutex_unlock(&reset_list_mutex);
--		return ERR_PTR(-EINVAL);
-+		rstc = ERR_PTR(-EINVAL);
-+		goto out;
- 	}
- 
- 	rstc_id = rcdev->of_xlate(rcdev, &args);
- 	if (rstc_id < 0) {
--		mutex_unlock(&reset_list_mutex);
--		return ERR_PTR(rstc_id);
-+		rstc = ERR_PTR(rstc_id);
-+		goto out;
- 	}
- 
- 	/* reset_list_mutex also protects the rcdev's reset_control list */
- 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
- 
-+out:
- 	mutex_unlock(&reset_list_mutex);
-+	of_node_put(args.np);
- 
- 	return rstc;
- }
 -- 
 2.20.1
 
