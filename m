@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A109C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F67C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBBE2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4EB620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420169;
-	bh=fCpRbnO/C4K2SYmAOtHa5kjvmeYmsk7heKkZ5Wjfqeo=;
+	s=default; t=1574420173;
+	bh=+VJErx/wWi7Jg4RzKAxxwKufOvaUnQ/mB6KGXubhYd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBEg5KUIPioxfuzWdwbyHp9GFBLRF0jhDOa+HRSh9ggFGCayeLkLQc95BASrEmchm
-	 HY1qQXC1Sp2NTrP5iMEdkUz7az5Lz9ljHg+HrOETHKiR68UUagdf/UCN66qXDlWmCC
-	 GzIwCU6mXCalep9JLI9QTntQDYNITsR4I7AOHufU=
+	b=y0O//GJkc00Hi2qZmuWsn7VZKh++TCX2gLFj8pPjEJhxOzNaI12X127zcFlTJ9f5m
+	 TQISgtIR4hEVeyupbGKUyM7KEMBGDIJWxwHHcuKwTjnBH8U51otAJHwOolNsbRQ3Lr
+	 7xJ+RdWVtxgL8DV0iUEqA+RHGvb5Ym894ySkzFTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbfKVK4H (ORCPT
+        id S1730557AbfKVK4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:56:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43674 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfKVK4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:56:06 -0500
+        id S1727584AbfKVK4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:56:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3490720748;
-        Fri, 22 Nov 2019 10:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E124A20706;
+        Fri, 22 Nov 2019 10:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420165;
-        bh=fCpRbnO/C4K2SYmAOtHa5kjvmeYmsk7heKkZ5Wjfqeo=;
+        s=default; t=1574420168;
+        bh=+VJErx/wWi7Jg4RzKAxxwKufOvaUnQ/mB6KGXubhYd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJkr7d9c7qWYgWPkbiemEUz+dfTIoCuIRxtLY9u7P5+vnARPCTE7DT/q9nrxEb7ib
-         Q93qTWI8KskzR7tUBcmubKHyAZeT45noDrAVWLi4ci0y/x5qkadWU/9Mcx38fYqaFY
-         vKSrwdW+2ZhvePFFyFQFjQ+N5Kp7Cao0EijhAP+s=
+        b=yw24mVp1qVrS2fW5J4FD/17kn4pVva33KAzoh8C15td+y+wwOldNQYlGDY/Yn8TeN
+         XY8Tr7C6CrIrlyIaScmBDNkupNGgtlAzjWt7sSz5WPEYngak30q8AsswPBqjWttpMM
+         bdiZFxQzAl0m8HsF8Fgk/2IRCw9DOGiDSVvhI7N0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Wei Liu <wei.liu2@citrix.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 016/220] net: xen-netback: fix return type of ndo_start_xmit function
-Date:   Fri, 22 Nov 2019 11:26:21 +0100
-Message-Id: <20191122100913.735000966@linuxfoundation.org>
+Subject: [PATCH 4.19 017/220] ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
+Date:   Fri, 22 Nov 2019 11:26:22 +0100
+Message-Id: <20191122100913.788921749@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit a9ca7f17c6d240e269a24cbcd76abf9a940309dd ]
+[ Upstream commit b830526f304764753fcb8b4a563a94080e982a6c ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+Add ti,syscon-unaligned-access property to PCIe RC nodes to set
+appropriate bits in CTRL_CORE_SMA_SW_7 register to enable workaround for
+errata i870.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Wei Liu <wei.liu2@citrix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/xen-netback/interface.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-index 27b6b141cb71f..4cafc31b98b7c 100644
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -173,7 +173,8 @@ static u16 xenvif_select_queue(struct net_device *dev, struct sk_buff *skb,
- 				[skb_get_hash_raw(skb) % size];
- }
- 
--static int xenvif_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+xenvif_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct xenvif *vif = netdev_priv(dev);
- 	struct xenvif_queue *queue = NULL;
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 9136b3cf9a2ce..7ce24b282d421 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -336,6 +336,7 @@
+ 						<0 0 0 2 &pcie1_intc 2>,
+ 						<0 0 0 3 &pcie1_intc 3>,
+ 						<0 0 0 4 &pcie1_intc 4>;
++				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
+ 				status = "disabled";
+ 				pcie1_intc: interrupt-controller {
+ 					interrupt-controller;
+@@ -387,6 +388,7 @@
+ 						<0 0 0 2 &pcie2_intc 2>,
+ 						<0 0 0 3 &pcie2_intc 3>,
+ 						<0 0 0 4 &pcie2_intc 4>;
++				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
+ 				pcie2_intc: interrupt-controller {
+ 					interrupt-controller;
+ 					#address-cells = <0>;
 -- 
 2.20.1
 
