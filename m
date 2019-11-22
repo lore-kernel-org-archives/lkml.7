@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1554BC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE2AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D818E20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B686320656
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420002;
-	bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
+	s=default; t=1574420006;
+	bh=N/YrXusPb2G9RCgcBFHvHfCVYPhvcbkrrCUUliW9ALo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VdsH60ko4flLw2k8A6pwVNjS41ww8Yl4zdxa9i2KjwCLQic/qhzLLB8q7nVE+jsrf
-	 OBaEjRuuvXrFmUtIxDrsRG5owy3/bfvNxt5PP+DeCZDJWJpLtk+EIRSpTuMW2fSnRt
-	 19nYLs4qYFWDkCcdfG5/mqEQRcNSa5DJX+7jHT/A=
+	b=iHGgTBeI1rlPjgRffdoBqyJ/R5xYwFioivisFz9fpDiDlM0ZWUKWU317HUFuJkZun
+	 0H4efPTctQuI9A0NQuab1X26Zq26cXEJJ4f85UKImPgvJF3ntFxAXVPj+VbJ4Elo8x
+	 cE5XYsagJ/75l463gVCiF3s30sNm/lT1tN8z8+68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfKVKxV (ORCPT
+        id S1730203AbfKVKxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:53:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37654 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:53:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729794AbfKVKxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:53:19 -0500
+        id S1729794AbfKVKxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:53:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215AD20656;
-        Fri, 22 Nov 2019 10:53:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BF320715;
+        Fri, 22 Nov 2019 10:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419997;
-        bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
+        s=default; t=1574420000;
+        bh=N/YrXusPb2G9RCgcBFHvHfCVYPhvcbkrrCUUliW9ALo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9T8XcSTEEi3hnzBcMNVOsnx2D0bpokzGbC8quPikNRjXxP/nqKefGv/wg84x9U3d
-         cxLktvQ9vqCVlVz62smJLFP3wCy1rFzxoiY1hC9Z2lIrCUtHLRGSrUfud37vRgYld8
-         w741kqmnq18etXJLZ9Gh91p/3PeV/PNVdr+t2Kr0=
+        b=Dh98OHZF3W0rGlnhGj5mzZeZIJ+hbFG0XYGlfM26ZKUfMxQxWwN32DYsDKVDVobFi
+         5XrJMZLknRLBteahjgggNw/whyLq1RRa+vgRFZBuyu8PFX/vl1vdS6PZIqS6K6psXS
+         pmSig8CLObH5JESljYJWQtDpx0vO1dyGspy3RL1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        Andrew Zaborowski <andrew.zaborowski@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 036/122] mei: samples: fix a signedness bug in amt_host_if_call()
-Date:   Fri, 22 Nov 2019 11:28:09 +0100
-Message-Id: <20191122100751.460721675@linuxfoundation.org>
+Subject: [PATCH 4.14 027/122] nl80211: Fix a GET_KEY reply attribute
+Date:   Fri, 22 Nov 2019 11:28:00 +0100
+Message-Id: <20191122100743.004853269@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -59,32 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Andrew Zaborowski <andrew.zaborowski@intel.com>
 
-[ Upstream commit 185647813cac080453cb73a2e034a8821049f2a7 ]
+[ Upstream commit efdfce7270de85a8706d1ea051bef3a7486809ff ]
 
-"out_buf_sz" needs to be signed for the error handling to work.
+Use the NL80211_KEY_IDX attribute inside the NL80211_ATTR_KEY in
+NL80211_CMD_GET_KEY responses to comply with nl80211_key_policy.
+This is unlikely to affect existing userspace.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andrew Zaborowski <andrew.zaborowski@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/mei/mei-amt-version.c | 2 +-
+ net/wireless/nl80211.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
-index bb9988914a563..32234481ad7db 100644
---- a/samples/mei/mei-amt-version.c
-+++ b/samples/mei/mei-amt-version.c
-@@ -370,7 +370,7 @@ static uint32_t amt_host_if_call(struct amt_host_if *acmd,
- 			unsigned int expected_sz)
- {
- 	uint32_t in_buf_sz;
--	uint32_t out_buf_sz;
-+	ssize_t out_buf_sz;
- 	ssize_t written;
- 	uint32_t status;
- 	struct amt_host_if_resp_header *msg_hdr;
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 9627c52c3f937..df8c5312f26ad 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -3118,7 +3118,7 @@ static void get_key_callback(void *c, struct key_params *params)
+ 			 params->cipher)))
+ 		goto nla_put_failure;
+ 
+-	if (nla_put_u8(cookie->msg, NL80211_ATTR_KEY_IDX, cookie->idx))
++	if (nla_put_u8(cookie->msg, NL80211_KEY_IDX, cookie->idx))
+ 		goto nla_put_failure;
+ 
+ 	nla_nest_end(cookie->msg, key);
 -- 
 2.20.1
 
