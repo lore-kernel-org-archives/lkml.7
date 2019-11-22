@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B99FC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66511C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668C62053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B653204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404198;
-	bh=NISoBMVF0NpWM66kbTqoeWdT27uAFHKgPtyG9pJJ1sg=;
+	s=default; t=1574404203;
+	bh=MqOdMBcFN7cKpxoPq7s5s29VjuTXuCthvZFz0pCPqiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CBEp4d8BrVGSc3r0KfV8VuSojnnZKBLGpKW0WIOyt/j4fRkGb0Pyc/Crhy3ssmOp8
-	 lrqUwHH13MsZB+WazsCFooyPd3e7weB2NIiKevW+x0J6uoM6EUDgqC+xGBf5NUvkfV
-	 PaNxXU5dyXggaesKMmXWU23XLJOAKtq/P7KNkafw=
+	b=sqMYOJfC+ayNU9s30TfOEG1h4x9gYtSp1qDrUpwD3+AG1QFHqaymBEiVRNnksD2Nr
+	 /+gGKOPtW+FZ7TIm5QUIjKfGXPZ2ZNiT1aKf0//Uctpx3IqIQixU18f+tDmmWDCy3d
+	 LKdnkjbGR10EWMoGPROH4/nPNEg6buYb7K5WrAhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfKVG35 (ORCPT
+        id S1728487AbfKVGaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:29:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54068 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:30:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbfKVFtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:47 -0500
+        id S1727198AbfKVFtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 587522071B;
-        Fri, 22 Nov 2019 05:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8AD02070B;
+        Fri, 22 Nov 2019 05:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401787;
-        bh=NISoBMVF0NpWM66kbTqoeWdT27uAFHKgPtyG9pJJ1sg=;
+        s=default; t=1574401782;
+        bh=MqOdMBcFN7cKpxoPq7s5s29VjuTXuCthvZFz0pCPqiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1WcSMNhdrkmmlMzqWsIBypWtgSga71pVnAGOWmpTuvX5QnMDxPb6vofLEvn11RsOj
-         OgEwMTUL0cxuI1sjphXan67/GvW69YFHltK97uWgGh4Fpg8JZpAjgEuWWWKOflE6XE
-         K1Oq/bOhOfTSnk698/DgOtNVk8yYObY3b1ILTx+o=
+        b=Yb7yVyexYs61jZHaLuaoNUyj6cksjR08vb6qJgFkhWeJUzz4k/Ic4B39I7DdwiKPP
+         Nu642lajGlQM8/v544cPsPwRbLa+Z4HHUAdnDGJd6/1za0m6VubkvasRrGxOxPr8x0
+         lhmsbdQ84Cj78LgIsBB67SFQjELqQSQdrTPy4yk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 035/219] ARM: ks8695: fix section mismatch warning
-Date:   Fri, 22 Nov 2019 00:46:07 -0500
-Message-Id: <20191122054911.1750-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 031/219] arm64: preempt: Fix big-endian when checking preempt count in assembly
+Date:   Fri, 22 Nov 2019 00:46:03 -0500
+Message-Id: <20191122054911.1750-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -59,36 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit 4aa64677330beeeed721b4b122884dabad845d66 ]
+[ Upstream commit 7faa313f05cad184e8b17750f0cbe5216ac6debb ]
 
-WARNING: vmlinux.o(.text+0x13250): Section mismatch in reference from the function acs5k_i2c_init() to the (unknown reference) .init.data:(unknown)
-The function acs5k_i2c_init() references
-the (unknown reference) __initdata (unknown).
-This is often because acs5k_i2c_init lacks a __initdata
-annotation or the annotation of (unknown) is wrong.
+Commit 396244692232 ("arm64: preempt: Provide our own implementation of
+asm/preempt.h") extended the preempt count field in struct thread_info
+to 64 bits, so that it consists of a 32-bit count plus a 32-bit flag
+indicating whether or not the current task needs rescheduling.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Whilst the asm-offsets definition of TSK_TI_PREEMPT was updated to point
+to this new field, the assembly usage was left untouched meaning that a
+32-bit load from TSK_TI_PREEMPT on a big-endian machine actually returns
+the reschedule flag instead of the count.
+
+Whilst we could fix this by pointing TSK_TI_PREEMPT at the count field,
+we're actually better off reworking the two assembly users so that they
+operate on the whole 64-bit value in favour of inspecting the thread
+flags separately in order to determine whether a reschedule is needed.
+
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-ks8695/board-acs5k.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/assembler.h | 8 +++-----
+ arch/arm64/kernel/entry.S          | 6 ++----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-ks8695/board-acs5k.c b/arch/arm/mach-ks8695/board-acs5k.c
-index ef835d82cdb95..5783062224c39 100644
---- a/arch/arm/mach-ks8695/board-acs5k.c
-+++ b/arch/arm/mach-ks8695/board-acs5k.c
-@@ -100,7 +100,7 @@ static struct i2c_board_info acs5k_i2c_devs[] __initdata = {
- 	},
- };
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index 5a97ac8531682..0c100506a29aa 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -683,11 +683,9 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+ 	.macro		if_will_cond_yield_neon
+ #ifdef CONFIG_PREEMPT
+ 	get_thread_info	x0
+-	ldr		w1, [x0, #TSK_TI_PREEMPT]
+-	ldr		x0, [x0, #TSK_TI_FLAGS]
+-	cmp		w1, #PREEMPT_DISABLE_OFFSET
+-	csel		x0, x0, xzr, eq
+-	tbnz		x0, #TIF_NEED_RESCHED, .Lyield_\@	// needs rescheduling?
++	ldr		x0, [x0, #TSK_TI_PREEMPT]
++	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
++	cbz		x0, .Lyield_\@
+ 	/* fall through to endif_yield_neon */
+ 	.subsection	1
+ .Lyield_\@ :
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index 5f800384cb9a8..bb68323530458 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -622,10 +622,8 @@ el1_irq:
+ 	irq_handler
  
--static void acs5k_i2c_init(void)
-+static void __init acs5k_i2c_init(void)
- {
- 	/* The gpio interface */
- 	gpiod_add_lookup_table(&acs5k_i2c_gpiod_table);
+ #ifdef CONFIG_PREEMPT
+-	ldr	w24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+-	cbnz	w24, 1f				// preempt count != 0
+-	ldr	x0, [tsk, #TSK_TI_FLAGS]	// get flags
+-	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
++	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
++	cbnz	x24, 1f				// preempt count != 0
+ 	bl	el1_preempt
+ 1:
+ #endif
 -- 
 2.20.1
 
