@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0739CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D14220715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B0920731
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419896;
-	bh=lFxxBxjXHU5mvLq0/vlgvYPguApXQkNTD64lNsNZdvk=;
+	s=default; t=1574419900;
+	bh=M1E2zeGQOllJsdnBB7tV0tpZO9EA7JfKu/yCiqqWZV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YcT1rmGWM6c9Jk84PWxrqcho6EIEFKsbxINHQX1R65EQEDvylqVb/nMNLT4y5PpeQ
-	 IEocu3Pv0NB+tKir/NaB0lECU0cwMtlkie3bWQXM/j0LWG2zfo1eYFg4UFm1L+E0Wk
-	 skeTUGcMFoX1vhtk3EGFKHv5SdjKqh4n6pym4kgo=
+	b=ouXoI0HRDmjTx58Kz2QEE57HpSHWz89wQJzo3Clt2DjQUYeDgCzMmOUz5bN6RdMJT
+	 6/5Q77Dx/2PVubqhmdOwWeDVBHZYVcZTpd6ZcyWW1GUNt0wE1DKZqha5mZat2HZrkU
+	 fprVzo+14DLOVU7sk6Z3mKCI13Apjeo/uD5PXOqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfKVKvf (ORCPT
+        id S1729643AbfKVKvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729978AbfKVKvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:32 -0500
+        id S1730083AbfKVKvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 237D52070E;
-        Fri, 22 Nov 2019 10:51:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8BA2071F;
+        Fri, 22 Nov 2019 10:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419891;
-        bh=lFxxBxjXHU5mvLq0/vlgvYPguApXQkNTD64lNsNZdvk=;
+        s=default; t=1574419894;
+        bh=M1E2zeGQOllJsdnBB7tV0tpZO9EA7JfKu/yCiqqWZV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnuizhxxlxzS8fQfSk8ciiZefuBtWVG1Zqou18DB2riGy9yiIBq5kSlr2Ast3GKyx
-         G5WjWwLPFt/YRYnpJTQgrtWLeebJyMGh51bbiaw4/ZmWJPXN0/SuTjcWg/4EI5IqSq
-         o6urh0V3JVqAi0JR/JsDPC3ytGvFX3LqgqiLxgBg=
+        b=upQo39tLY9dlqJ3eyQqZUM4t7hSjqo4vREMtpsLDJmSC+peyYme8zCKsgA0rGuXoN
+         7AygGMooOOWELH5CguGz0jRbuxXq7amJJsbKLjwsz4fLKxBrJCMxe1dypOtv5oHk3k
+         Lfqg20Jq0R96us0jam3NRrck2k36ITUVDAarCJ74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>, Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 045/122] PM / hibernate: Check the success of generating md5 digest before hibernation
-Date:   Fri, 22 Nov 2019 11:28:18 +0100
-Message-Id: <20191122100755.423093841@linuxfoundation.org>
+Subject: [PATCH 4.14 046/122] tools: PCI: Fix compilation warnings
+Date:   Fri, 22 Nov 2019 11:28:19 +0100
+Message-Id: <20191122100755.710725575@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -61,63 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-[ Upstream commit 749fa17093ff67b31dea864531a3698b6a95c26c ]
+[ Upstream commit fef31ecaaf2c5c54db85b35e893bf8abec96b93f ]
 
-Currently if get_e820_md5() fails, then it will hibernate nevertheless.
-Actually the error code should be propagated to upper caller so that
-the hibernation could be aware of the result and terminates the process
-if md5 digest fails.
+Current compilation produces the following warnings:
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+tools/pci/pcitest.c: In function 'run_test':
+tools/pci/pcitest.c:56:9: warning: unused variable 'time'
+[-Wunused-variable]
+  double time;
+         ^~~~
+tools/pci/pcitest.c:55:25: warning: unused variable 'end'
+[-Wunused-variable]
+  struct timespec start, end;
+                         ^~~
+tools/pci/pcitest.c:55:18: warning: unused variable 'start'
+[-Wunused-variable]
+  struct timespec start, end;
+                  ^~~~~
+tools/pci/pcitest.c:146:1: warning: control reaches end of non-void
+function [-Wreturn-type]
+ }
+ ^
+
+Fix them:
+ - remove unused variables
+ - change function return from int to void, since it's not used
+
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+[lorenzo.pieralisi@arm.com: rewrote the commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/power/hibernate_64.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ tools/pci/pcitest.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
-index 9c80966c80bae..692a179b1ba32 100644
---- a/arch/x86/power/hibernate_64.c
-+++ b/arch/x86/power/hibernate_64.c
-@@ -250,9 +250,9 @@ static int get_e820_md5(struct e820_table *table, void *buf)
- 	return ret;
- }
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 9074b477bff0f..8ca1c62bc06db 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -23,7 +23,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/ioctl.h>
+-#include <time.h>
+ #include <unistd.h>
  
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
+ #include <linux/pcitest.h>
+@@ -43,17 +42,15 @@ struct pci_test {
+ 	unsigned long	size;
+ };
+ 
+-static int run_test(struct pci_test *test)
++static void run_test(struct pci_test *test)
  {
--	get_e820_md5(e820_table_firmware, buf);
-+	return get_e820_md5(e820_table_firmware, buf);
- }
+ 	long ret;
+ 	int fd;
+-	struct timespec start, end;
+-	double time;
  
- static bool hibernation_e820_mismatch(void *buf)
-@@ -272,8 +272,9 @@ static bool hibernation_e820_mismatch(void *buf)
- 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
- }
- #else
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
- {
-+	return 0;
- }
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
+-		return fd;
++		return;
+ 	}
  
- static bool hibernation_e820_mismatch(void *buf)
-@@ -318,9 +319,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
- 
- 	rdr->magic = RESTORE_MAGIC;
- 
--	hibernation_e820_save(rdr->e820_digest);
--
--	return 0;
-+	return hibernation_e820_save(rdr->e820_digest);
- }
- 
- /**
+ 	if (test->barnum >= 0 && test->barnum <= 5) {
 -- 
 2.20.1
 
