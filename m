@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C9BC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCB7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFF22068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140602068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403314;
-	bh=884x5ShrfFbzeDpMRlDucGW/FgT0RTwPFiSeSuVL/Xw=;
+	s=default; t=1574403320;
+	bh=5UKKWctJDQZ8xRe1z8NZtBEcyGxr87Z4366ykrJckvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=puXuHTuRbmynjZ5hlknBgWQM3k44xj28BxNUGD7AXgbfTBfnw8snLr8AA8iNoLGNl
-	 7pl/SPcFiNqwKqCt3FRZxGfC1SJBjYFakauD4xPTeRjCqtezMg0aYE3g64fWg/Zn7d
-	 3qrtb3FgcBBgXkyDKuBfJYxMVkFxArPTNyCE/7n0=
+	b=y9AiCwgM5TLCQGcUrfi8fbrYW82NbmhfUzoxUmCY1CL7N60bNpzI8XJtC5Ypwhwtz
+	 yG9HULJ98IBn1njHk8UtXNOYZbdswVykjHnnJamrT14WDmfnulSGiUqHru/dcy9pKa
+	 eH7EKpGPzVNrzHrCl3VImpExD3tuLxxyiB7JPycc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfKVGPN (ORCPT
+        id S1729665AbfKVGOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:15:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbfKVGOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Nov 2019 01:14:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729518AbfKVGNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704B620726;
-        Fri, 22 Nov 2019 06:14:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CE392068F;
+        Fri, 22 Nov 2019 06:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403254;
-        bh=884x5ShrfFbzeDpMRlDucGW/FgT0RTwPFiSeSuVL/Xw=;
+        s=default; t=1574403234;
+        bh=5UKKWctJDQZ8xRe1z8NZtBEcyGxr87Z4366ykrJckvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msY36olfH4tHsMTGp99z+K8z8Vhqm/Nf6OVhhdZhz9jEQRlci8gmVEd4zQf20+Y7A
-         qspx3GUbiOT+G/0xM95alumlJHCpBDGAgegzN4LrNCKVFSZZXyE4ozaw32o6MVWgxh
-         vfF0YhWz0llTomAl4mv2/0dZvzgaYa+FlowwV5LE=
+        b=IPkffZivTxxUTZsM+Txy3F67yLPkJaK9hsb4j/WOdxtDgWF3xgnUkAFx7eO7FHFMR
+         Cyxt9DUnwqxa4l/UikX3/ZiZBmqxhYdxNqHUmSZimurj3EhckEBtFBOCWeNIUwpfGZ
+         3IHdT3JjdPbn0kaVhi5pVTI6J5uM7Jo0mQiJTdvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 63/68] net: dev: Use unsigned integer as an argument to left-shift
-Date:   Fri, 22 Nov 2019 01:12:56 -0500
-Message-Id: <20191122061301.4947-62-sashal@kernel.org>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 47/68] um: Make GCOV depend on !KCOV
+Date:   Fri, 22 Nov 2019 01:12:40 -0500
+Message-Id: <20191122061301.4947-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -59,33 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Richard Weinberger <richard@nod.at>
 
-[ Upstream commit f4d7b3e23d259c44f1f1c39645450680fcd935d6 ]
+[ Upstream commit 550ed0e2036663b35cec12374b835444f9c60454 ]
 
-1 << 31 is Undefined Behaviour according to the C standard.
-Use U type modifier to avoid theoretical overflow.
+Both do more or less the same thing and are mutually exclusive.
+If both are enabled the build will fail.
+Sooner or later we can kill UML's GCOV.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netdevice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/um/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 0b211d482c961..861b71377e5e1 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3298,7 +3298,7 @@ static inline u32 netif_msg_init(int debug_value, int default_msg_enable_bits)
- 	if (debug_value == 0)	/* no output */
- 		return 0;
- 	/* set low N bits */
--	return (1 << debug_value) - 1;
-+	return (1U << debug_value) - 1;
- }
- 
- static inline void __netif_tx_lock(struct netdev_queue *txq, int cpu)
+diff --git a/arch/um/Kconfig.debug b/arch/um/Kconfig.debug
+index 68205fd3b08c8..6ae7f0f434a9c 100644
+--- a/arch/um/Kconfig.debug
++++ b/arch/um/Kconfig.debug
+@@ -18,6 +18,7 @@ config GPROF
+ config GCOV
+ 	bool "Enable gcov support"
+ 	depends on DEBUG_INFO
++	depends on !KCOV
+ 	help
+ 	  This option allows developers to retrieve coverage data from a UML
+ 	  session.
 -- 
 2.20.1
 
