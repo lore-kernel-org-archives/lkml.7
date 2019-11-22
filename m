@@ -2,167 +2,73 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD9EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9093AC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBD520637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403541;
-	bh=dBCcP/53ztF0HqHH8Txv7gIliGk08AtsfO2k9ZmOry8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DRChNGEejs6RATdBZZ5eKzphXZ4U7Sb4PuzrikFLwhLge+9VSezV4+YpQ+7l05aCc
-	 7sPk/D/km3oLExhd3rEQk/XkdxBLnJBwfjm1iQoaSfBvyshFXr2J83kK8mMihiePRV
-	 W/GN5wK6vAElXBarWbY/1peGOjK9DRsthil8MkxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5F85B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfKVGS7 (ORCPT
+        id S1729749AbfKVGTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:18:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33750 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:19:02 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:57604 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbfKVF4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B84A92071F;
-        Fri, 22 Nov 2019 05:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402161;
-        bh=dBCcP/53ztF0HqHH8Txv7gIliGk08AtsfO2k9ZmOry8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhrZhRb5MLNCRo2N7IVgDAMm+8kbaQ4ItpZO6iUEMYEknE922vy9yiqBHcUF2hs41
-         c4i+rxg5veiuSEpRsr5niZVhA4iAjb7oLD2IQOeFDi5fSZqIbYC+f82bsUp4OiaFtP
-         N3eDBk/Dh1CU539XkAkSFYuMF/r3YlSrJdRDvb6E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Ewan D . Milne" <emilne@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 015/127] scsi: lpfc: Enable Management features for IF_TYPE=6
-Date:   Fri, 22 Nov 2019 00:53:53 -0500
-Message-Id: <20191122055544.3299-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1729691AbfKVGTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:19:00 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6BD8D2006C5;
+        Fri, 22 Nov 2019 07:18:58 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B0FF200AEA;
+        Fri, 22 Nov 2019 07:18:53 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ECA14402B3;
+        Fri, 22 Nov 2019 14:18:46 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v1] gpio : mpc8xxx :  ls1088a/ls1028a edge detection mode bug fixs.
+Date:   Fri, 22 Nov 2019 14:18:39 +0800
+Message-Id: <20191122061839.24904-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Song Hui <hui.song_1@nxp.com>
 
-[ Upstream commit 719162bd5bb968203397b9b1d0dd30a9797bbd09 ]
+On these boards, the irq_set_type must point one valid function pointer
+that can correctly set both edge and falling edge.
 
-Addition of support for if_type=6 missed several checks for interface type,
-resulting in the failure of several key management features such as
-firmware dump and loopback testing.
-
-Correct the checks on the if_type so that both SLI4 IF_TYPE's 2 and 6 are
-supported.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/scsi/lpfc/lpfc_attr.c    | 4 ++--
- drivers/scsi/lpfc/lpfc_bsg.c     | 6 +++---
- drivers/scsi/lpfc/lpfc_els.c     | 2 +-
- drivers/scsi/lpfc/lpfc_hbadisc.c | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index 3da242201cb45..82ce5d1930189 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -1178,7 +1178,7 @@ lpfc_sli4_pdev_reg_request(struct lpfc_hba *phba, uint32_t opcode)
- 		return -EACCES;
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 81f0f31..8ddb23b 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -296,6 +296,7 @@ static const struct mpc8xxx_gpio_devtype mpc512x_gpio_devtype = {
  
- 	if ((phba->sli_rev < LPFC_SLI_REV4) ||
--	    (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
-+	    (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
- 	     LPFC_SLI_INTF_IF_TYPE_2))
- 		return -EPERM;
+ static const struct mpc8xxx_gpio_devtype ls1028a_gpio_devtype = {
+ 	.gpio_dir_in_init = ls1028a_gpio_dir_in_init,
++	.irq_set_type = mpc8xxx_irq_set_type,
+ };
  
-@@ -4056,7 +4056,7 @@ lpfc_link_speed_store(struct device *dev, struct device_attribute *attr,
- 	uint32_t prev_val, if_type;
- 
- 	if_type = bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf);
--	if (if_type == LPFC_SLI_INTF_IF_TYPE_2 &&
-+	if (if_type >= LPFC_SLI_INTF_IF_TYPE_2 &&
- 	    phba->hba_flag & HBA_FORCED_LINK_SPEED)
- 		return -EPERM;
- 
-diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
-index d89816222b230..6dde21dc82a3c 100644
---- a/drivers/scsi/lpfc/lpfc_bsg.c
-+++ b/drivers/scsi/lpfc/lpfc_bsg.c
-@@ -2221,7 +2221,7 @@ lpfc_bsg_diag_loopback_mode(struct bsg_job *job)
- 
- 	if (phba->sli_rev < LPFC_SLI_REV4)
- 		rc = lpfc_sli3_bsg_diag_loopback_mode(phba, job);
--	else if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) ==
-+	else if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) >=
- 		 LPFC_SLI_INTF_IF_TYPE_2)
- 		rc = lpfc_sli4_bsg_diag_loopback_mode(phba, job);
- 	else
-@@ -2261,7 +2261,7 @@ lpfc_sli4_bsg_diag_mode_end(struct bsg_job *job)
- 
- 	if (phba->sli_rev < LPFC_SLI_REV4)
- 		return -ENODEV;
--	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
-+	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
- 	    LPFC_SLI_INTF_IF_TYPE_2)
- 		return -ENODEV;
- 
-@@ -2353,7 +2353,7 @@ lpfc_sli4_bsg_link_diag_test(struct bsg_job *job)
- 		rc = -ENODEV;
- 		goto job_error;
- 	}
--	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
-+	if (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
- 	    LPFC_SLI_INTF_IF_TYPE_2) {
- 		rc = -ENODEV;
- 		goto job_error;
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 0032465d1b630..63c1a81005e52 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -5528,7 +5528,7 @@ lpfc_els_rcv_rdp(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
- 	struct ls_rjt stat;
- 
- 	if (phba->sli_rev < LPFC_SLI_REV4 ||
--	    bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) !=
-+	    bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) <
- 						LPFC_SLI_INTF_IF_TYPE_2) {
- 		rjt_err = LSRJT_UNABLE_TPC;
- 		rjt_expl = LSEXP_REQ_UNSUPPORTED;
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index b970933a218d5..424e870676046 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -4749,7 +4749,7 @@ lpfc_unreg_rpi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
- 				if (phba->sli_rev == LPFC_SLI_REV4 &&
- 				    (!(vport->load_flag & FC_UNLOADING)) &&
- 				    (bf_get(lpfc_sli_intf_if_type,
--				     &phba->sli4_hba.sli_intf) ==
-+				     &phba->sli4_hba.sli_intf) >=
- 				      LPFC_SLI_INTF_IF_TYPE_2) &&
- 				    (kref_read(&ndlp->kref) > 0)) {
- 					mbox->context1 = lpfc_nlp_get(ndlp);
+ static const struct mpc8xxx_gpio_devtype mpc5125_gpio_devtype = {
 -- 
-2.20.1
+2.9.5
 
