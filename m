@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C0FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C5EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB7E2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B4820706
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420111;
-	bh=Fq/yIuL9dKOTU0E1sOLDaD+7dLeb3Xgyd2LlguKHxZI=;
+	s=default; t=1574420114;
+	bh=mHyJix8TS0iTdx7zM4Zt5aMG7j8CE7oo13sYuj57jpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4p6hLOuwmYdJrt6Gppua6KgGaNPxGJuRn5zyMzDkFpzKqNKzxpOWr799SDWCgO7d
-	 kgyPThH9gcCThgYDJzTSqizRhF9DhENpo/+6AXiiIOYFU+bpW1PhJsP7tMM83SSFjg
-	 JlDDwlQXe8XTKGxrTjGlJePs7Q2xPd2+iuzVOA+0=
+	b=rY+F4eLNbPD//kA09g0+i7vXpA2+GW+ZEmU0M5ptWdrbC3FzKgDTiliapNHzT1rRR
+	 8bB2HYZ8AnxwlU5nVJBXRlnW0LTMPhNoA3eZaVSRsJHovK/kBK/IRWWVJPDg23i4I3
+	 +iTrF2LgNvGZvRG4YZzwCYYcrHtqbArUrXM1F98w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbfKVKzK (ORCPT
+        id S1730435AbfKVKzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:55:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41508 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:55:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbfKVKzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:55:07 -0500
+        id S1730425AbfKVKzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:55:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 585122071C;
-        Fri, 22 Nov 2019 10:55:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E6E20706;
+        Fri, 22 Nov 2019 10:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420106;
-        bh=Fq/yIuL9dKOTU0E1sOLDaD+7dLeb3Xgyd2LlguKHxZI=;
+        s=default; t=1574420109;
+        bh=mHyJix8TS0iTdx7zM4Zt5aMG7j8CE7oo13sYuj57jpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmO0yVdfIyDS2Q31VxhtOaf7NanjGWRbeTj+0Un/YEeU6u7z+3OXlLIxjCbJIDVN9
-         +wMyx1nC2gzT/wwWHio4dalL6avBpUh28b7qYiTguATQwWZqtiTajHbBuwqhLhCrO0
-         WvEPc5jhiC8Z8gDn2IIrVwR3/mhq1/o2nuflbhL0=
+        b=ezcx/ydfBddLRno5RFgXDnPFxswOnnmyddm/zk//k1tc55mrCvWnLOqw4cf329/lv
+         IDpVGFbFA3C2bsBmt4XabFh9lllrgvOpc+IqZxHlTW7+J5HzytYoaT/sANHLZZrGvK
+         HogBxKCOGMr7NNyoxLWi6RqkvtPDjb+tXv5UB8v4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Huibin Hong <huibin.hong@rock-chips.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 116/122] mac80211: minstrel: fix sampling/reporting of CCK rates in HT mode
-Date:   Fri, 22 Nov 2019 11:29:29 +0100
-Message-Id: <20191122100836.397252290@linuxfoundation.org>
+Subject: [PATCH 4.14 117/122] spi: rockchip: initialize dma_slave_config properly
+Date:   Fri, 22 Nov 2019 11:29:30 +0100
+Message-Id: <20191122100836.880999789@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,69 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Huibin Hong <huibin.hong@rock-chips.com>
 
-[ Upstream commit 972b66b86f85f4e8201db454f4c3e9d990cf9836 ]
+[ Upstream commit dd8fd2cbc73f8650f651da71fc61a6e4f30c1566 ]
 
-Long/short preamble selection cannot be sampled separately, since it
-depends on the BSS state. Because of that, sampling attempts to
-currently not used preamble modes are not counted in the statistics,
-which leads to CCK rates being sampled too often.
+The rxconf and txconf structs are allocated on the
+stack, so make sure we zero them before filling out
+the relevant fields.
 
-Fix statistics accounting for long/short preamble by increasing the
-index where necessary.
-Fix excessive CCK rate sampling by dropping unsupported sample attempts.
-
-This improves throughput on 2.4 GHz channels
-
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/spi/spi-rockchip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index bc97d31907f60..e57811e4b91f6 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -282,7 +282,8 @@ minstrel_ht_get_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi,
- 				break;
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index fdcf3076681b5..185bbdce62b14 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -445,6 +445,9 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs)
+ 	struct dma_slave_config rxconf, txconf;
+ 	struct dma_async_tx_descriptor *rxdesc, *txdesc;
  
- 		/* short preamble */
--		if (!(mi->supported[group] & BIT(idx)))
-+		if ((mi->supported[group] & BIT(idx + 4)) &&
-+		    (rate->flags & IEEE80211_TX_RC_USE_SHORT_PREAMBLE))
- 			idx += 4;
- 	}
- 	return &mi->groups[group].rates[idx];
-@@ -1077,18 +1078,23 @@ minstrel_ht_get_rate(void *priv, struct ieee80211_sta *sta, void *priv_sta,
- 		return;
- 
- 	sample_group = &minstrel_mcs_groups[sample_idx / MCS_GROUP_RATES];
-+	sample_idx %= MCS_GROUP_RATES;
++	memset(&rxconf, 0, sizeof(rxconf));
++	memset(&txconf, 0, sizeof(txconf));
 +
-+	if (sample_group == &minstrel_mcs_groups[MINSTREL_CCK_GROUP] &&
-+	    (sample_idx >= 4) != txrc->short_preamble)
-+		return;
-+
- 	info->flags |= IEEE80211_TX_CTL_RATE_CTRL_PROBE;
- 	rate->count = 1;
- 
--	if (sample_idx / MCS_GROUP_RATES == MINSTREL_CCK_GROUP) {
-+	if (sample_group == &minstrel_mcs_groups[MINSTREL_CCK_GROUP]) {
- 		int idx = sample_idx % ARRAY_SIZE(mp->cck_rates);
- 		rate->idx = mp->cck_rates[idx];
- 	} else if (sample_group->flags & IEEE80211_TX_RC_VHT_MCS) {
- 		ieee80211_rate_set_vht(rate, sample_idx % MCS_GROUP_RATES,
- 				       sample_group->streams);
- 	} else {
--		rate->idx = sample_idx % MCS_GROUP_RATES +
--			    (sample_group->streams - 1) * 8;
-+		rate->idx = sample_idx + (sample_group->streams - 1) * 8;
- 	}
- 
- 	rate->flags = sample_group->flags;
+ 	spin_lock_irqsave(&rs->lock, flags);
+ 	rs->state &= ~RXBUSY;
+ 	rs->state &= ~TXBUSY;
 -- 
 2.20.1
 
