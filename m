@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6D5C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D3EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6579020409
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F1D204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404119;
-	bh=ABAw+0UN3/JtufQLU7PxhHLTB+FOGf2VHn3pTd88+wM=;
+	s=default; t=1574404127;
+	bh=Iv17XI1kZ8i57PKzy5lnBJCIm6Eq4Cz/eJFS8PDWT7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qhNerTqXxI075tLYKfZXn16b/aJud7YbjFZDNCsaaM1pQf80QZbXpckaezHUuBjwA
-	 6J4dreUU+JJgBGoWx7O7WdngiBi7hoYo4nWiIAtPMMYA1o2GZw0BrBTLnaj7ez1dIF
-	 UD7l91QPbWN2aufuMy2IYq8VUtW4bqm5udPUJaxg=
+	b=NcD2vs3y+ALn8uPyW4GLyZiSXNYatb+f4yNPsURJaqCB6cP2LyTICcfW/Gx5jHwUf
+	 7zKKxAQTyyenSHqpHarVAyxIu5epvJnZjnggLoctE7aIwO8gJO6HuUVaxBYvzmYrUd
+	 YYMrHVn5dkGNOlJKo4fgYI/NF8wYN2kr+IkEDcHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfKVG2i (ORCPT
+        id S1728442AbfKVG2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:28:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54536 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:28:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbfKVFuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:50:09 -0500
+        id S1727511AbfKVFuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:50:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E9020708;
-        Fri, 22 Nov 2019 05:50:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA2920718;
+        Fri, 22 Nov 2019 05:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401808;
-        bh=ABAw+0UN3/JtufQLU7PxhHLTB+FOGf2VHn3pTd88+wM=;
+        s=default; t=1574401807;
+        bh=Iv17XI1kZ8i57PKzy5lnBJCIm6Eq4Cz/eJFS8PDWT7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ODxV6DLoaswtK3qc1dOmYn2xrUE4GumOaqzrzH52rouyEBKFu0C2vV6TXxwka2tGa
-         pdm8gf1ZrzsHS5T0zvL/wKws5mxswjf9UFM2zfvUXuwbKAMmonPfFo47EcQthBzZ4Y
-         GVNBR5l1iR7wS/hJXEuPkDbmgH70cWFEmdNNGAlU=
+        b=GxmPgbxBRBWp5A0/CqqS69CwtMDiYZmKYT3RCL9H7VHEIMam+mHqrzGVDxgxYqGi5
+         ffsYt+AAFV37B5VbdIPi2ZpwKvs9lskmD+v6LL1x3P5AtGkuqiCQT2AJXyn0ZiYDvr
+         SjHaBAaHXvLxD39EnnfXcFS57XhIHZWwh8FRu0CM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabor Juhos <juhosg@openwrt.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 053/219] ubifs: Fix default compression selection in ubifs
-Date:   Fri, 22 Nov 2019 00:46:25 -0500
-Message-Id: <20191122054911.1750-46-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 052/219] nvme: fix kernel paging oops
+Date:   Fri, 22 Nov 2019 00:46:24 -0500
+Message-Id: <20191122054911.1750-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,54 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabor Juhos <juhosg@openwrt.org>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit d62e98ed1efcaa94caa004f622944afdce5f1c3c ]
+[ Upstream commit 092ff0520070fad8407b196f3bb6156ce77a6f98 ]
 
-When ubifs is build without the LZO compressor and no compressor is
-given the creation of the default file system will fail. before
-selection the LZO compressor check if it is present and if not fall back
-to the zlib or none.
+free the controller discard_page correctly.
 
-Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: cb5b7262b011 ("nvme: provide fallback for discard alloc failure")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/sb.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
-index bf17f58908ff9..11dc3977fb64f 100644
---- a/fs/ubifs/sb.c
-+++ b/fs/ubifs/sb.c
-@@ -63,6 +63,17 @@
- /* Default time granularity in nanoseconds */
- #define DEFAULT_TIME_GRAN 1000000000
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ced70d37e0f9b..e9060317c1a7b 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3569,7 +3569,7 @@ static void nvme_free_ctrl(struct device *dev)
+ 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
+ 	kfree(ctrl->effects);
+ 	nvme_mpath_uninit(ctrl);
+-	kfree(ctrl->discard_page);
++	__free_page(ctrl->discard_page);
  
-+static int get_default_compressor(struct ubifs_info *c)
-+{
-+	if (ubifs_compr_present(c, UBIFS_COMPR_LZO))
-+		return UBIFS_COMPR_LZO;
-+
-+	if (ubifs_compr_present(c, UBIFS_COMPR_ZLIB))
-+		return UBIFS_COMPR_ZLIB;
-+
-+	return UBIFS_COMPR_NONE;
-+}
-+
- /**
-  * create_default_filesystem - format empty UBI volume.
-  * @c: UBIFS file-system description object
-@@ -186,7 +197,7 @@ static int create_default_filesystem(struct ubifs_info *c)
- 	if (c->mount_opts.override_compr)
- 		sup->default_compr = cpu_to_le16(c->mount_opts.compr_type);
- 	else
--		sup->default_compr = cpu_to_le16(UBIFS_COMPR_LZO);
-+		sup->default_compr = cpu_to_le16(get_default_compressor(c));
- 
- 	generate_random_uuid(sup->uuid);
- 
+ 	if (subsys) {
+ 		mutex_lock(&subsys->lock);
 -- 
 2.20.1
 
