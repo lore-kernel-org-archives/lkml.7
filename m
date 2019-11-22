@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC55AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EBAC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDAEF2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836982071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402015;
-	bh=ppy15U+nQ8RPSyPX+4WknncCJKj6FCQWxkBQTbeujCU=;
+	s=default; t=1574402020;
+	bh=XixCqk5Dctp3gu17mdUdZfPgqxJFaELcs0HpON1q1h8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOemGC8+SS1V+OcVjvHbzV0yiM5rAfQFWOzu9MLaHI2UcAQjZp349dtqaH3pYPe/s
-	 RscxPK4FskYAJe/stRR5weLg/ulpdQFdH1kqo7YNhaL+BaufXijvxHvJBqwlvnagVI
-	 CNSx/a6tW5e2ddorgSYBJ91p00mo7LmQro31MdzA=
+	b=Fm8cdXvNgrejXbG7cCGNqcASsbaHqgeHt2bQvqihAvrM6vEUZ7cB5gWPHc+069Sbe
+	 hGkchEyiKGKAgLb5UT6GvKdxkMzCD/Nirc6T+z3f2bQenNlUgsW7FW9h5UDsBnJS/d
+	 JNNpLQRLxsMGhhxVqdM11W6KJF1v48uhAxORg9Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfKVFx3 (ORCPT
+        id S1728848AbfKVFxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:53:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59366 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:53:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbfKVFxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:53:19 -0500
+        id S1728814AbfKVFxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:53:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 155102085B;
-        Fri, 22 Nov 2019 05:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D38C12082F;
+        Fri, 22 Nov 2019 05:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401998;
-        bh=ppy15U+nQ8RPSyPX+4WknncCJKj6FCQWxkBQTbeujCU=;
+        s=default; t=1574401994;
+        bh=XixCqk5Dctp3gu17mdUdZfPgqxJFaELcs0HpON1q1h8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0q4jZF9aBQc9E4Sfd1aePg5e2IxFWLMvLgBf1pv6zO/RUS0fyIeaiSmpHQk1wYlu
-         JhB9qq4FXWplDGJUl9lwh1PpKoy/RKuEY7nd/dPL9573xMIUWmZ2mp+931IVBl6a7i
-         lhYStzzWZTv16kk0INtHZRk/7SMbajcRP6ovH8w8=
+        b=Urk9/6Bmg5HSJVE4IpPkL5G4YH+O0r4rqtb2EpDVh9LibeBk0x2Rt4WXtmn48qPLe
+         qdaJRH0MyHf+EH/7p5gLC0+AQ7Yj1acBWLSnR6gUsBrmXWFSoLtbzQRwzQJnnr1LWZ
+         C545Ph9qNi/x+Vlwz6kEN+ZchaPtll8ypq+mrFSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengliang <zhengliang6@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 216/219] f2fs: fix to data block override node segment by mistake
-Date:   Fri, 22 Nov 2019 00:49:07 -0500
-Message-Id: <20191122054911.1750-208-sashal@kernel.org>
+Cc:     Lijun Ou <oulijun@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 212/219] RDMA/hns: Bugfix for the scene without receiver queue
+Date:   Fri, 22 Nov 2019 00:49:03 -0500
+Message-Id: <20191122054911.1750-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,67 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengliang <zhengliang6@huawei.com>
+From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit a0770e13c8da83bdb64738c0209ab02dd3cfff8b ]
+[ Upstream commit 4d103905eb1e4f14cb62fcf962c9d35da7005dea ]
 
-v4: Rearrange the previous three versions.
+In some application scenario, the user could not have receive queue when
+run rdma write or read operation.
 
-The following scenario could lead to data block override by mistake.
-
-TASK A            |  TASK kworker                                            |     TASK B                                            |       TASK C
-                  |                                                          |                                                       |
-open              |                                                          |                                                       |
-write             |                                                          |                                                       |
-close             |                                                          |                                                       |
-                  |  f2fs_write_data_pages                                   |                                                       |
-                  |    f2fs_write_cache_pages                                |                                                       |
-                  |      f2fs_outplace_write_data                            |                                                       |
-                  |        f2fs_allocate_data_block (get block in seg S,     |                                                       |
-                  |                                  S is full, and only     |                                                       |
-                  |                                  have this valid data    |                                                       |
-                  |                                  block)                  |                                                       |
-                  |          allocate_segment                                |                                                       |
-                  |          locate_dirty_segment (mark S as PRE)            |                                                       |
-                  |        f2fs_submit_page_write (submit but is not         |                                                       |
-                  |                                written on dev)           |                                                       |
-unlink            |                                                          |                                                       |
- iput_final       |                                                          |                                                       |
-  f2fs_drop_inode |                                                          |                                                       |
-    f2fs_truncate |                                                          |                                                       |
- (not evict)      |                                                          |                                                       |
-                  |                                                          | write_checkpoint                                      |
-                  |                                                          |  flush merged bio but not wait file data writeback    |
-                  |                                                          |  set_prefree_as_free (mark S as FREE)                 |
-                  |                                                          |                                                       | update NODE/DATA
-                  |                                                          |                                                       | allocate_segment (select S)
-                  |     writeback done                                       |                                                       |
-
-So we need to guarantee io complete before truncate inode in f2fs_drop_inode.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Zheng Liang <zhengliang6@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index d9106bbe7df63..d01998ed32343 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -890,6 +890,10 @@ static int f2fs_drop_inode(struct inode *inode)
- 			sb_start_intwrite(inode->i_sb);
- 			f2fs_i_size_write(inode, 0);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index 2fa4fb17f6d3c..44729ae5f11cd 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -503,7 +503,8 @@ static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
+ static int hns_roce_qp_has_rq(struct ib_qp_init_attr *attr)
+ {
+ 	if (attr->qp_type == IB_QPT_XRC_INI ||
+-	    attr->qp_type == IB_QPT_XRC_TGT || attr->srq)
++	    attr->qp_type == IB_QPT_XRC_TGT || attr->srq ||
++	    !attr->cap.max_recv_wr)
+ 		return 0;
  
-+			f2fs_submit_merged_write_cond(F2FS_I_SB(inode),
-+					inode, NULL, 0, DATA);
-+			truncate_inode_pages_final(inode->i_mapping);
-+
- 			if (F2FS_HAS_BLOCKS(inode))
- 				f2fs_truncate(inode);
- 
+ 	return 1;
 -- 
 2.20.1
 
