@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3688C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF158C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED1C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA19D2071F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420993;
-	bh=nFIHgYARN6QoZyAs6j4pPa0Obg16o0fLwzGO5HLl37g=;
+	s=default; t=1574420998;
+	bh=6yz8go43iHC+AAKEOPUoDNtqcwOpSfLcYushubWE3K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P42yjgIPrnN4MnFKBRdeYprocDY81KaIcDd1hFaV3vuQCi16hWqcK7229QJFn+Kys
-	 gDcdvzFAea4pMWcdJpZwIICwRYOOGVWcb/Zdyyx3dFWz4fibF47/lsW89ILZ/1aHMh
-	 E2WWPeQ0pADtL7UkfYnJ+xQ0HL70RPHrAIfZPqOI=
+	b=OTZpHW3aTzdQcPqTsPkHdTEynmY7inW2ATYggBYpVnWUcCvwZqdw0BN1mgAsce52w
+	 d8me2fVa6hGi7TYhGTK52QcSc+kzZcXZ1Yg3HjjsvocbGGEsF2rCw08cf9TcuU/u/T
+	 MBkS/GQr7Iy7mPMndeFunE8qqFCvsQQnK3JQheKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbfKVLJw (ORCPT
+        id S1731318AbfKVLCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:02:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbfKVLCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 06:02:47 -0500
+        id S1730772AbfKVLCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 06:02:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 336672075E;
-        Fri, 22 Nov 2019 11:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E24A207DD;
+        Fri, 22 Nov 2019 11:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420566;
-        bh=nFIHgYARN6QoZyAs6j4pPa0Obg16o0fLwzGO5HLl37g=;
+        s=default; t=1574420551;
+        bh=6yz8go43iHC+AAKEOPUoDNtqcwOpSfLcYushubWE3K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwSP38dYMgWhRPBoqKnNKIGuqJ/hr7+M5OLMjb850nM6kqVzXNQ5AwQf7528Llf3k
-         3uA3xNoY30+jh4hSRG3KgtHtk81m4EulyuYD8UOIQHDMXnDbiUOzJQrd78Z08tdzIu
-         vCq21u9O4v5AlzSCQqJi0E6AYLsjd9LH409jjZmo=
+        b=rrC1g+0KnbLUKvS7MwcMaN66PK0E+JC4iMx4Ykj4xJwwMvHM3ghknriiwuR3ueGph
+         T7SbZOsRUsS9TbnFfGTB/J+9FrK3MN/8DnnWrdzJ5I7IcHZA22XeMsPCbQ04mLt0Fc
+         nS02bkqKIi/nzSY1urMWll3xCRgg5Sk/Wu6kAkgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rami Rosen <ramirose@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/220] dmaengine: ioat: fix prototype of ioat_enumerate_channels
-Date:   Fri, 22 Nov 2019 11:28:08 +0100
-Message-Id: <20191122100921.592923006@linuxfoundation.org>
+        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 145/220] iwlwifi: mvm: dont send keys when entering D3
+Date:   Fri, 22 Nov 2019 11:28:30 +0100
+Message-Id: <20191122100923.193606212@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -59,56 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rami Rosen <ramirose@gmail.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit f4d34aa8c887a8a2d23ef546da0efa10e3f77241 ]
+[ Upstream commit 8c7fd6a365eb5b2647b2c01918730d0a485b9f85 ]
 
-Signed-off-by: Rami Rosen <ramirose@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+In the past, we needed to program the keys when entering D3. This was
+since we replaced the image. However, now that there is a single
+image, this is no longer needed.  Note that RSC is sent separately in
+a new command.  This solves issues with newer devices that support PN
+offload. Since driver re-sent the keys, the PN got zeroed and the
+receiver dropped the next packets, until PN caught up again.
+
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/init.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 21a5708985bc2..0fec3c554fe35 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -129,7 +129,7 @@ static void
- ioat_init_channel(struct ioatdma_device *ioat_dma,
- 		  struct ioatdma_chan *ioat_chan, int idx);
- static void ioat_intr_quirk(struct ioatdma_device *ioat_dma);
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
- static int ioat3_dma_self_test(struct ioatdma_device *ioat_dma);
- 
- static int ioat_dca_enabled = 1;
-@@ -575,7 +575,7 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
-  * ioat_enumerate_channels - find and initialize the device's channels
-  * @ioat_dma: the ioat dma device to be enumerated
-  */
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 79bdae9948228..868cb1195a74b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -731,8 +731,10 @@ int iwl_mvm_wowlan_config_key_params(struct iwl_mvm *mvm,
  {
- 	struct ioatdma_chan *ioat_chan;
- 	struct device *dev = &ioat_dma->pdev->dev;
-@@ -594,7 +594,7 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 	xfercap_log = readb(ioat_dma->reg_base + IOAT_XFERCAP_OFFSET);
- 	xfercap_log &= 0x1f; /* bits [4:0] valid */
- 	if (xfercap_log == 0)
--		return 0;
-+		return;
- 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
- 
- 	for (i = 0; i < dma->chancnt; i++) {
-@@ -611,7 +611,6 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 		}
- 	}
- 	dma->chancnt = i;
--	return i;
- }
- 
- /**
+ 	struct iwl_wowlan_kek_kck_material_cmd kek_kck_cmd = {};
+ 	struct iwl_wowlan_tkip_params_cmd tkip_cmd = {};
++	bool unified = fw_has_capa(&mvm->fw->ucode_capa,
++				   IWL_UCODE_TLV_CAPA_CNSLDTD_D3_D0_IMG);
+ 	struct wowlan_key_data key_data = {
+-		.configure_keys = !d0i3,
++		.configure_keys = !d0i3 && !unified,
+ 		.use_rsc_tsc = false,
+ 		.tkip = &tkip_cmd,
+ 		.use_tkip = false,
 -- 
 2.20.1
 
