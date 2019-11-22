@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F418C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547F3C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065DF20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0132070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419883;
-	bh=HSeu81ZhvvwV6IqE4gBPPXBakWr3J/9nmvn+yNdGt48=;
+	s=default; t=1574419888;
+	bh=Ws/++C/6yz3D2eqU9vCnRueTeOtZH2HVRq3VtWoVuao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=py9yavHp8O/Yr/5d8YX5Jz0KE5hNQn+lSnz7wpKf9Z60zJHWPfFQAPLm69hVSJ/Lk
-	 3vJ6Vxs/Zb9vrZOBzmdH39uS2krPzc3qWBlkvgiUYfNCnaF2CTFoQ6c9zT9P0K2YOd
-	 dMmnRO0pxNT2AZeWXvZrNa9EMvSZTSSsLrvaRGbU=
+	b=QWxKXMVxb84CNDOvxksQUl06O4ONlkUoptZvQEwXGt9B8mBtVmI7X8LeVSOPJfz2P
+	 1m5En73fPcKNoRqKs4jtLFXGdNMNH4q2nd8d5Ui5D3QepzEQ5Nf85ztQ/RRX8TRVHS
+	 1oqO4btITT6LJvp6dJB9KP0SO8JP0Z2hYUx3p3j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfKVKvV (ORCPT
+        id S1729965AbfKVKv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34064 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbfKVKvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:20 -0500
+        id S1729197AbfKVKvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699592072E;
-        Fri, 22 Nov 2019 10:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C57C20715;
+        Fri, 22 Nov 2019 10:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419879;
-        bh=HSeu81ZhvvwV6IqE4gBPPXBakWr3J/9nmvn+yNdGt48=;
+        s=default; t=1574419883;
+        bh=Ws/++C/6yz3D2eqU9vCnRueTeOtZH2HVRq3VtWoVuao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wc1PFpCGAWrRK/gGtSEyd8y7kcVPN8ebGAgUmbws/8b7k+NDsQTl64J/dlUdMqveS
-         V+JvyueMHH8fb+lOBBDC3LSCrOPuutvLHLmYBq/un4/fLRNDp0xMjAml1izx9EPzHH
-         d9ISpVzN/dPXOk7iKRPkm1sutMak1vS82cpM1Ykw=
+        b=YoUc3bN0hlJIAKwHENOaVeW80Ninv6GCZV6tlBiA2vfjShsUqoipN8qxyG+2tkRbF
+         URVH33FrBwa5PMg3fJhtb1qB6YJatAKUP3DUAvJgS+kHpgo57P2IaikUHq3yroVVj2
+         NxEfhhMKCWLfPqyr/4fSGaPcNRDbOoSZYDvgR2gM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 041/122] powerpc/xive: Move a dereference below a NULL test
-Date:   Fri, 22 Nov 2019 11:28:14 +0100
-Message-Id: <20191122100754.420452462@linuxfoundation.org>
+Subject: [PATCH 4.14 042/122] ARM: dts: at91: sama5d4_xplained: fix addressable nand flash size
+Date:   Fri, 22 Nov 2019 11:28:15 +0100
+Message-Id: <20191122100754.977428648@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,40 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-[ Upstream commit cd5ff94577e004e0a4457e70d0ef3a030f4010b8 ]
+[ Upstream commit df90fc64367ffdb6f1b5c0f0c4940d44832b0174 ]
 
-Move the dereference of xc below the NULL test.
+sama5d4_xplained comes with a 4Gb NAND flash. Increase the rootfs
+size to match this limit.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/xive/common.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
-index 818fc5351591c..110d8bb16ebbb 100644
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -1008,12 +1008,13 @@ static void xive_ipi_eoi(struct irq_data *d)
- {
- 	struct xive_cpu *xc = __this_cpu_read(xive_cpu);
+diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+index cf712444b2c2c..10f2fb9e0ea61 100644
+--- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+@@ -240,7 +240,7 @@
  
--	DBG_VERBOSE("IPI eoi: irq=%d [0x%lx] (HW IRQ 0x%x) pending=%02x\n",
--		    d->irq, irqd_to_hwirq(d), xc->hw_ipi, xc->pending_prio);
--
- 	/* Handle possible race with unplug and drop stale IPIs */
- 	if (!xc)
- 		return;
-+
-+	DBG_VERBOSE("IPI eoi: irq=%d [0x%lx] (HW IRQ 0x%x) pending=%02x\n",
-+		    d->irq, irqd_to_hwirq(d), xc->hw_ipi, xc->pending_prio);
-+
- 	xive_do_source_eoi(xc->hw_ipi, &xc->ipi_data);
- 	xive_do_queue_eoi(xc);
- }
+ 						rootfs@800000 {
+ 							label = "rootfs";
+-							reg = <0x800000 0x0f800000>;
++							reg = <0x800000 0x1f800000>;
+ 						};
+ 					};
+ 				};
 -- 
 2.20.1
 
