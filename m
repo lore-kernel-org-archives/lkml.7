@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F73C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DC2C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C085720731
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB4F20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419519;
-	bh=G6zvpt+DJmKU1FZM1LJkiwHRd+NsLNlOnyjrZk1GsLM=;
+	s=default; t=1574419523;
+	bh=wg46qknz9Hf2607OK9IVon7QRzTj/a1p1YRAecuuMHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zSuxmm+fJ7uO5Emx3IYZHj2B3nY/BZ88u2NM6D+TB0NbbqUtCSgPcxmdlZprIJYuY
-	 8cSaxThnPLZcAadJYd8Dnv8lDXrLWb7JB+F5X02r9otuARoCsJZJCo4b5QC1l2ns2f
-	 5BrQ/ykdWPeVDYvvCkuaLbxDt9csmW4tcf7/YEzA=
+	b=HZ0xkHmasmm1xEw48sFqBnOAD9WFsa/fdil0P65JSNsJCPLV4nwnKPrIxXjfC041D
+	 BdSsN+nEBtRHjcBPx3MZNsA3mU3z0+9yGFIIEFF9/ikUukxBds4XC/gfG8eKFM3cx7
+	 I519Q+83bEAJOmdhLq4/r1jhHvGVOZxL6mPgE3nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfKVKpS (ORCPT
+        id S1728802AbfKVKpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbfKVKpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:14 -0500
+        id S1727978AbfKVKpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE2620718;
-        Fri, 22 Nov 2019 10:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5812620718;
+        Fri, 22 Nov 2019 10:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419513;
-        bh=G6zvpt+DJmKU1FZM1LJkiwHRd+NsLNlOnyjrZk1GsLM=;
+        s=default; t=1574419518;
+        bh=wg46qknz9Hf2607OK9IVon7QRzTj/a1p1YRAecuuMHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNNk8ef1HusK69C/qEOnYD3RWahv0fILsDLpdc/oicu26xze9ySYTeOaI+tM2u/BG
-         SIYHOaz7FHuQRka9KDN+4/vi14Dn48ELmBO7CfzsmZ8qm8ROlcqKvAJWr6UlpUKqhP
-         iupjxyNU8Rw4LKCMPv+cgcyOqOirtBYtLt2asC6E=
+        b=lHvr2G/Y1GRHuRdnWWfQVOFizn8FPgMsPkpnTi0h9dqTl+/0DtLGN7LQgfIbw5iHc
+         xk3fi0YhFcvdSvJQB2KDu5ossWFeHppYTIFQ9dCu3I1CEPIctO91Z/j5CFGKIJ1QiY
+         F2tlp/drvrj5IHHMwLZ2icD9Cpi7/2/Iiqf/MyTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Finn Thain <fthain@telegraphics.com.au>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 137/222] scsi: NCR5380: Dont clear busy flag when abort fails
-Date:   Fri, 22 Nov 2019 11:27:57 +0100
-Message-Id: <20191122100912.781673396@linuxfoundation.org>
+Subject: [PATCH 4.9 139/222] scsi: NCR5380: Handle BUS FREE during reselection
+Date:   Fri, 22 Nov 2019 11:27:59 +0100
+Message-Id: <20191122100912.901414049@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -63,89 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 45ddc1b24806cc8f1a09f23dd4e7b6e4a8ae36e1 ]
+[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
 
-When NCR5380_abort() returns FAILED, the driver forgets that the target is
-still busy. Hence, further commands may be sent to the target, which may fail
-during selection and produce the error message, "reselection after won
-arbitration?". Prevent this by leaving the busy flag set when NCR5380_abort()
-fails.
+The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
+procedure", that a target may assert RST or go to BUS FREE phase if the
+initiator does not respond within 200 us. Something like this has been
+observed with AztecMonster II target. When it happens, all we can do is wait
+for the target to try again.
 
 Tested-by: Michael Schmitz <schmitzmic@gmail.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/scsi/NCR5380.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 15c0fff7519be..a4856eeac26f6 100644
+index 03f9ddbc37fbb..27270631c70c2 100644
 --- a/drivers/scsi/NCR5380.c
 +++ b/drivers/scsi/NCR5380.c
-@@ -626,8 +626,6 @@ static void complete_cmd(struct Scsi_Host *instance,
- 		hostdata->sensing = NULL;
- 	}
+@@ -2133,6 +2133,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
  
--	hostdata->busy[scmd_id(cmd)] &= ~(1 << cmd->device->lun);
--
- 	cmd->scsi_done(cmd);
- }
- 
-@@ -1799,6 +1797,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 				cmd->result = DID_ERROR << 16;
- 				complete_cmd(instance, cmd);
- 				hostdata->connected = NULL;
-+				hostdata->busy[scmd_id(cmd)] &= ~(1 << cmd->device->lun);
- 				return;
- #endif
- 			case PHASE_DATAIN:
-@@ -1881,6 +1880,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 					         cmd, scmd_id(cmd), cmd->device->lun);
- 
- 					hostdata->connected = NULL;
-+					hostdata->busy[scmd_id(cmd)] &= ~(1 << cmd->device->lun);
- 
- 					cmd->result &= ~0xffff;
- 					cmd->result |= cmd->SCp.Status;
-@@ -2040,6 +2040,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 				NCR5380_transfer_pio(instance, &phase, &len, &data);
- 				if (msgout == ABORT) {
- 					hostdata->connected = NULL;
-+					hostdata->busy[scmd_id(cmd)] &= ~(1 << cmd->device->lun);
- 					cmd->result = DID_ERROR << 16;
- 					complete_cmd(instance, cmd);
- 					maybe_release_dma_irq(instance);
-@@ -2194,13 +2195,16 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
- 		dsprintk(NDEBUG_RESELECTION | NDEBUG_QUEUES, instance,
- 		         "reselect: removed %p from disconnected queue\n", tmp);
- 	} else {
-+		int target = ffs(target_mask) - 1;
-+
- 		shost_printk(KERN_ERR, instance, "target bitmask 0x%02x lun %d not in disconnected queue.\n",
- 		             target_mask, lun);
- 		/*
- 		 * Since we have an established nexus that we can't do anything
- 		 * with, we must abort it.
- 		 */
--		do_abort(instance);
-+		if (do_abort(instance) == 0)
-+			hostdata->busy[target] &= ~(1 << lun);
+ 	if (NCR5380_poll_politely(instance,
+ 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
++		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
++			/* BUS FREE phase */
++			return;
+ 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
+ 		do_abort(instance);
  		return;
- 	}
- 
-@@ -2368,8 +2372,10 @@ static int NCR5380_abort(struct scsi_cmnd *cmd)
- out:
- 	if (result == FAILED)
- 		dsprintk(NDEBUG_ABORT, instance, "abort: failed to abort %p\n", cmd);
--	else
-+	else {
-+		hostdata->busy[scmd_id(cmd)] &= ~(1 << cmd->device->lun);
- 		dsprintk(NDEBUG_ABORT, instance, "abort: successfully aborted %p\n", cmd);
-+	}
- 
- 	queue_work(hostdata->work_q, &hostdata->main_task);
- 	maybe_release_dma_irq(instance);
 -- 
 2.20.1
 
