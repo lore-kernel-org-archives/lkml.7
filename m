@@ -2,217 +2,110 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BB3C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF9CC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDC2204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404266;
-	bh=x4QYvNgnGAT1UIUmEnssqiLP8KCWRUy/qX7wjuA54Zw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zapRH7zkJLl8IiBb0TB4jE0dw2YHNohXHJKgcAnZItScWqwdXpNwrpMCXBF3RUV5P
-	 E3rwlZt3N/OMpWbd0E7FrGZwNzts36PpLbbhq2o3gYSgZQHsreB1m09UmPUso0Ya4/
-	 jlsQf+0zkIUHWS+6ARtNKOBmDPnai+Um30AsBg1s=
+	by mail.kernel.org (Postfix) with ESMTP id 50A07204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:32:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSyZiWWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfKVGbE (ORCPT
+        id S1727215AbfKVGcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:31:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfKVFtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:21 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 22 Nov 2019 01:32:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39637 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726529AbfKVGcq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:32:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574404365;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ihHqeHetXpxDUSWXALWO2fESEh+WPpRGUu/UkNC3/0k=;
+        b=iSyZiWWcaaWHYk4/K9z+CR/QYvErqm4OsWYuKY6m16p6H3yI7W7IDN/i13J+OdReYjCmzP
+        Q3L67rVF0NXGuNVDQkM8eg6MGl3BE+U2oJfdMMaeODNgJiNthgKkmzCfhXH+hn5zGcerg4
+        8TR2ETya36lKpb22tBuYg/DoArnANsI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-3jIkdFjwOJmqko0S6EzAiQ-1; Fri, 22 Nov 2019 01:32:41 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFE92070A;
-        Fri, 22 Nov 2019 05:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401760;
-        bh=x4QYvNgnGAT1UIUmEnssqiLP8KCWRUy/qX7wjuA54Zw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DK//fqz00RVTPaqMaV3Cv+GUhlXTebB13ZKPTu1kOJBzwQNNpfNiuhqjVOe/F1yr+
-         XiX4l7oTnxw9cr9H+Dcuxn+a2sJ6Oz7rQgFgT4yM7lOL0TSWY6OEH9jW+QKnix7+eO
-         Np8by5P4E0v4F9Tr6I632TKbi9N29O32zZghxlwA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 013/219] ARM: dts: imx6ul: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:45:45 -0500
-Message-Id: <20191122054911.1750-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
-References: <20191122054911.1750-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B032801E74;
+        Fri, 22 Nov 2019 06:32:38 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F2815F700;
+        Fri, 22 Nov 2019 06:32:37 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id D0D161747D; Fri, 22 Nov 2019 07:32:36 +0100 (CET)
+Date:   Fri, 22 Nov 2019 07:32:36 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: Re: [Intel-gfx] [PATCH 2/2] drm: share address space for dma bufs
+Message-ID: <20191122063236.vs3bh6xvmswlszte@sirius.home.kraxel.org>
+References: <20191121103807.18424-1-kraxel@redhat.com>
+ <20191121103807.18424-3-kraxel@redhat.com>
+ <14063C7AD467DE4B82DEDB5C278E8663D9C8F533@FMSMSX108.amr.corp.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663D9C8F533@FMSMSX108.amr.corp.intel.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 3jIkdFjwOJmqko0S6EzAiQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+On Thu, Nov 21, 2019 at 04:42:10PM +0000, Ruhl, Michael J wrote:
+> >-----Original Message-----
+> >From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of G=
+erd
+> >Hoffmann
+> >Sent: Thursday, November 21, 2019 5:38 AM
+> >To: dri-devel@lists.freedesktop.org
+> >Cc: David Airlie <airlied@linux.ie>; intel-gfx@lists.freedesktop.org; op=
+en list
+> ><linux-kernel@vger.kernel.org>; Maxime Ripard <mripard@kernel.org>; Gerd
+> >Hoffmann <kraxel@redhat.com>
+> >Subject: [Intel-gfx] [PATCH 2/2] drm: share address space for dma bufs
+> >
+> >Use the shared address space of the drm device (see drm_open() in
+> >drm_file.c) for dma-bufs too.  That removes a difference betweem drm
+> >device mmap vmas and dma-buf mmap vmas and fixes corner cases like
+> >unmaps not working properly.
+>=20
+> Hi Gerd,
+>=20
+> Just want to make sure I understand this...
+>=20
+> So unmaps will not work correctly for mappings when a driver does a
+> drm_vma_node_unamp()?
 
-[ Upstream commit 750d8df6e7b269b828f66631a1d39ea027afc92a ]
+Completely removing the mapping (aka munmap syscall) works fine.
+Zapping the pte's (using madvise(dontneed) for example) doesn't.
 
-Boards based on imx6ul have duplicate memory nodes:
+> This is a day one bug?
 
-- One coming from the board dts file: memory@
+I guess so, but I'll leave that to others being active longer than me in
+drm hacking to answer ...
 
-- One coming from the imx6ul.dtsi file.
-
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi        | 1 +
- arch/arm/boot/dts/imx6ul-geam.dts              | 1 +
- arch/arm/boot/dts/imx6ul-isiot.dtsi            | 1 +
- arch/arm/boot/dts/imx6ul-litesom.dtsi          | 1 +
- arch/arm/boot/dts/imx6ul-opos6ul.dtsi          | 1 +
- arch/arm/boot/dts/imx6ul-pico-hobbit.dts       | 1 +
- arch/arm/boot/dts/imx6ul-tx6ul.dtsi            | 1 +
- arch/arm/boot/dts/imx6ul.dtsi                  | 2 --
- arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi | 1 +
- arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi    | 1 +
- 10 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 32a07232c0345..8180211265592 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -12,6 +12,7 @@
- 	};
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index d81d20f8fc8dd..85cfad080f15c 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -51,6 +51,7 @@
- 	compatible = "engicam,imx6ul-geam", "fsl,imx6ul";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index cd99285511544..1cb52744f58ad 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -46,6 +46,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6ul-litesom.dtsi b/arch/arm/boot/dts/imx6ul-litesom.dtsi
-index 8f775f6974d1c..8d6893210842b 100644
---- a/arch/arm/boot/dts/imx6ul-litesom.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-litesom.dtsi
-@@ -48,6 +48,7 @@
- 	compatible = "grinn,imx6ul-litesom", "fsl,imx6ul";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6ul-opos6ul.dtsi b/arch/arm/boot/dts/imx6ul-opos6ul.dtsi
-index a031bee311df4..cf7faf4b9c47e 100644
---- a/arch/arm/boot/dts/imx6ul-opos6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-opos6ul.dtsi
-@@ -49,6 +49,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0>; /* will be filled by U-Boot */
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-index 0c09420f99512..797262d2f27fd 100644
---- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-@@ -53,6 +53,7 @@
- 
- 	/* Will be filled by the bootloader */
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-index 02b5ba42cd591..bb6dbfd5546b4 100644
---- a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-@@ -71,6 +71,7 @@
- 	};
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0>; /* will be filled by U-Boot */
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 336cdead3da54..50834a43e5fb2 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -15,10 +15,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &fec1;
-diff --git a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
-index 10ab4697950f5..fb213bec46543 100644
---- a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
-@@ -7,6 +7,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-index 183193e8580dd..038d8c90f6dfe 100644
---- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-@@ -7,6 +7,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
--- 
-2.20.1
+cheers,
+  Gerd
 
