@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8B5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8D3C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC0F20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B8F2071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574420237;
-	bh=X2bHHl2RcPZJlk2yD2hIgmtodJF2T9sbh3u768snjnI=;
+	s=default; t=1574420241;
+	bh=5MH6Ax/vtJQFiVkOpwSaJoxC1Gi53ZAWxPTk71j1TkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktzZTLLh7BrAd1vlqKhkGcBfqRIviHOskFC1cqHSk4xZVY/T8Xky4uGkH9xjtJ8NK
-	 yGnImj253q1AGlLsHHgQUjhLkYgHDXi6m8H5rSmNmOQ+E6GxKrgMSZKOku9MAp87Me
-	 +yx3Tx7YLFBMiM+LJGIVgAnuePKZnT6w/69r9Z+4=
+	b=fUNIp7Dq7YsCMMiN5nFDlQC0g72pkl4RIpiyBioCE3GBURs2EarnasvCubwrO2EC3
+	 tmFP/7BEB+CrMSPgJyH1B48K/M5qGK2CPEG3hXyDnwfm6tlAwnePyHFGVYkTEDbWxZ
+	 WFLaPtFWH3/1GZJtnoFPwDHmtOPrKQR1aM2j6UdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbfKVK5Q (ORCPT
+        id S1730657AbfKVK5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:57:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbfKVK5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:57:12 -0500
+        id S1730405AbfKVK5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:57:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232F820721;
-        Fri, 22 Nov 2019 10:57:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E0BB2072E;
+        Fri, 22 Nov 2019 10:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574420231;
-        bh=X2bHHl2RcPZJlk2yD2hIgmtodJF2T9sbh3u768snjnI=;
+        s=default; t=1574420228;
+        bh=5MH6Ax/vtJQFiVkOpwSaJoxC1Gi53ZAWxPTk71j1TkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=puT73QDVgvVkEJ7iysVzURkB8aAUsneTRbtMUe5Ml9U60cppA54E5dWbEeZC7S5IU
-         fS+6qc5GgO+RPS1ZMpu+CuRTdVg0NLJyDbvRdj1QuJaxaCVHsoW9mJ8O4Jdr2EK2Px
-         N+AfW5MzeNQJHqNfk4YX1X61XKnGg+vBeGmgxJK8=
+        b=qvnTW3rVsN8K3gTCFIV4Ou7Vfpdb0/aeE/5HYqfyuIN359esmjaTYm6FoDyduMQWv
+         XLrESa3F4NYHQRmYlyWBubUtvGKjcSsDDPMn1nltOOUra2KiQsoTtK4auqoJK/Hk3u
+         4FwYdEpbTmeRNVMyhYj8UL8MsLIDP4HIYhoWoRVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Christoffer Dall <cdall@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/220] arm64/numa: Report correct memblock range for the dummy node
-Date:   Fri, 22 Nov 2019 11:26:42 +0100
-Message-Id: <20191122100915.006738285@linuxfoundation.org>
+Subject: [PATCH 4.19 036/220] kvm: arm/arm64: Fix stage2_flush_memslot for 4 level page table
+Date:   Fri, 22 Nov 2019 11:26:41 +0100
+Message-Id: <20191122100914.936074739@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
 References: <20191122100912.732983531@linuxfoundation.org>
@@ -61,37 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 77cfe950901e5c13aca2df6437a05f39dd9a929b ]
+[ Upstream commit d2db7773ba864df6b4e19643dfc54838550d8049 ]
 
-The dummy node ID is marked into all memory ranges on the system. So the
-dummy node really extends the entire memblock.memory. Hence report correct
-extent information for the dummy node using memblock range helper functions
-instead of the range [0LLU, PFN_PHYS(max_pfn) - 1)].
+So far we have only supported 3 level page table with fixed IPA of
+40bits, where PUD is folded. With 4 level page tables, we need
+to check if the PUD entry is valid or not. Fix stage2_flush_memslot()
+to do this check, before walking down the table.
 
-Fixes: 1a2db30034 ("arm64, numa: Add NUMA support for arm64 platforms")
-Acked-by: Punit Agrawal <punit.agrawal@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Christoffer Dall <cdall@kernel.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/numa.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ virt/kvm/arm/mmu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 146c04ceaa514..54529b4ed5130 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -432,7 +432,7 @@ static int __init dummy_numa_init(void)
- 	if (numa_off)
- 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
- 	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
--		0LLU, PFN_PHYS(max_pfn) - 1);
-+		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 1344557a70852..bf330b493c1e7 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -412,7 +412,8 @@ static void stage2_flush_memslot(struct kvm *kvm,
+ 	pgd = kvm->arch.pgd + stage2_pgd_index(addr);
+ 	do {
+ 		next = stage2_pgd_addr_end(addr, end);
+-		stage2_flush_puds(kvm, pgd, addr, next);
++		if (!stage2_pgd_none(*pgd))
++			stage2_flush_puds(kvm, pgd, addr, next);
+ 	} while (pgd++, addr = next, addr != end);
+ }
  
- 	for_each_memblock(memory, mblk) {
- 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
 -- 
 2.20.1
 
