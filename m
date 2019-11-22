@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F9C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E57EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3420679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4795420672
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574421882;
-	bh=kZ3eFbfzpF8RN+2f4cfw+2bjwJ52lRnc7ozYNT8kUPE=;
+	s=default; t=1574421891;
+	bh=pzCrFdyTu6amgVjmgFdPH1l5OGz2X7021cO4ee28UHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sdm4Fglyt91kkXtV3p3Pe0gtqz8ABHp0dPcJHLJX9nu9WMqvNkn7qNn4ZwBuwO0Ed
-	 0hu3U7qIF5Jd+wZyr7+yjWirq9SgCvfhuaz5a0c1Qk6w8mwTpwxNPfjtCrUus7NEw3
-	 +hgt5CuCxk+2rORFuGn/AhfXTHePGLJ8uP1U3Zmg=
+	b=vIdy8KvrldWcPD36J635Eoep833AEahCG+kjG4Jc6E5ax3avKlhRgcBJ08CMlFJn/
+	 MnDI+YDIW358OtSv+Zyq2O/vtOEU156ZmeAv3zZx/W76sg+etzS74xS7l4H5uPNj2E
+	 6EKj3KC2v4yZZ4Lqc1RMuznmy0ffCGC9K7Und3WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfKVKiT (ORCPT
+        id S1728958AbfKVLYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:38:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 06:24:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbfKVKiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:38:15 -0500
+        id S1727856AbfKVKiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:38:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B5592073F;
-        Fri, 22 Nov 2019 10:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B8620637;
+        Fri, 22 Nov 2019 10:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419094;
-        bh=kZ3eFbfzpF8RN+2f4cfw+2bjwJ52lRnc7ozYNT8kUPE=;
+        s=default; t=1574419082;
+        bh=pzCrFdyTu6amgVjmgFdPH1l5OGz2X7021cO4ee28UHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uujFmvcpMYhMmjXh7AcDESITdTdypnuBI0Ae4GJMXmFKYCj+O1XqcPH5OOkOZjrQ3
-         KFY1IbY8kg8/k19qQ9IHtxTj7+KR+VTMH+Zkwo08yF2RT8kBLRXGQeCXmKbwnVwKaz
-         K10uwklL7i0dGwcBuBziSKgzPwwjcHKg8zOAQCAo=
+        b=neXynS8JRnIWGhYjrYvPq9YrjTnj63MYUo9sC8ofmHITS1MWPZoVLBO2weBZXgd2s
+         oXcDfbutX0ZZeWSDRO/pIpAASmTr1UhjgUozlRmBq1ZY1k/HX/3apYuMPsf6K0TAhE
+         GU3fDgWdfh7GzG81wnImJTLOmpi+N418tX76OVLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>,
-        Eugene Syromyatnikov <evgsyr@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 154/159] ARM: 8802/1: Call syscall_trace_exit even when system call skipped
-Date:   Fri, 22 Nov 2019 11:29:05 +0100
-Message-Id: <20191122100847.872357164@linuxfoundation.org>
+Subject: [PATCH 4.4 150/159] media: cx231xx: fix potential sign-extension overflow on large shift
+Date:   Fri, 22 Nov 2019 11:29:01 +0100
+Message-Id: <20191122100843.765167158@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -63,55 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit f18aef742c8fbd68e280dff0a63ba0ca6ee8ad85 ]
+[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
 
-On at least x86 and ARM64, and as documented in the ptrace man page
-a skipped system call will still cause a syscall exit ptrace stop.
+Shifting the u8 value[3] by an int can lead to sign-extension
+overflow. For example, if value[3] is 0xff and the shift is 24 then it
+is promoted to int and then the top bit is sign-extended so that all
+upper 32 bits are set.  Fix this by casting value[3] to a u32 before
+the shift.
 
-Previous to this commit 32-bit ARM did not, resulting in strace
-being confused when seccomp skips system calls.
+Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
 
-This change also impacts programs that use ptrace to skip system calls.
+Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
 
-Fixes: ad75b51459ae ("ARM: 7579/1: arch/allow a scno of -1 to not cause a SIGILL")
-Signed-off-by: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
-Signed-off-by: Eugene Syromyatnikov <evgsyr@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Kees Cook <keescook@chromium.org>
-Tested-by: Eugene Syromyatnikov <evgsyr@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/entry-common.S | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index e969b18d9ff93..d31f0300d2c98 100644
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -261,16 +261,15 @@ __sys_trace:
- 	cmp	scno, #-1			@ skip the syscall?
- 	bne	2b
- 	add	sp, sp, #S_OFF			@ restore stack
--	b	ret_slow_syscall
- 
--__sys_trace_return:
--	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
-+__sys_trace_return_nosave:
-+	enable_irq_notrace
- 	mov	r0, sp
- 	bl	syscall_trace_exit
- 	b	ret_slow_syscall
- 
--__sys_trace_return_nosave:
--	enable_irq_notrace
-+__sys_trace_return:
-+	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
- 	mov	r0, sp
- 	bl	syscall_trace_exit
- 	b	ret_slow_syscall
+diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
+index d0d8f08e37c87..de80925ee4cbd 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-video.c
++++ b/drivers/media/usb/cx231xx/cx231xx-video.c
+@@ -1346,7 +1346,7 @@ int cx231xx_g_register(struct file *file, void *priv,
+ 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
+ 				(u16)reg->reg, value, 4);
+ 		reg->val = value[0] | value[1] << 8 |
+-			value[2] << 16 | value[3] << 24;
++			value[2] << 16 | (u32)value[3] << 24;
+ 		reg->size = 4;
+ 		break;
+ 	case 1:	/* AFE - read byte */
 -- 
 2.20.1
 
