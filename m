@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BEFC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6181EC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8D820708
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2875B2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574401803;
-	bh=Smc+SDEVTfEWL5NOxF34mfrKvlk+wJEXkakcFVrRcyg=;
+	s=default; t=1574401809;
+	bh=ag2mKLmjAtSuEZfhNw8ozyv0sgkKC0hv88NtfoEpkIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZSpfrSWhFmPVTgZeWcgrRyissNHFe6c+P3Zby9T5XZ+kVQ+VV9M/3dAm600awmRz
-	 uS3RP2vOGLFdvesh6Wkp2Zlpqlg8pyQER1lQkve0fiAyPL8IcSrdfH3ECqOqBppMvY
-	 gsdW0Fm8PKKoM/Udni7Kf+Yb/Joi9vNsqSvMj94E=
+	b=K/etEX/Ypo4nbCHzPzc9jZmXfuKy4BGFYyqKXvo1Bp7bMBeHaeA544xMKbTf3msmR
+	 kXxSW3jF3qIa8SCgfb6trwlTuP684/f0NkMufmn9XG29c+OlwxkDOB9+qdG3x0BlZu
+	 PXPC2OTcrPL8dWwW+obbO+kEFjgFdHvYD6f0bpe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfKVFuB (ORCPT
+        id S1727513AbfKVFuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:50:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54224 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfKVFty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:54 -0500
+        id S1727400AbfKVFt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D5ED20715;
-        Fri, 22 Nov 2019 05:49:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5AA62068F;
+        Fri, 22 Nov 2019 05:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401793;
-        bh=Smc+SDEVTfEWL5NOxF34mfrKvlk+wJEXkakcFVrRcyg=;
+        s=default; t=1574401797;
+        bh=ag2mKLmjAtSuEZfhNw8ozyv0sgkKC0hv88NtfoEpkIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDkCmR+vbCm7UZzSxZrLHsrHznIZcahCLzKo3PdwG4IDJOaEbYNy5hanbG2VEQsxP
-         QZltmQUmfRGZ7knwLHZF8CDI5Q8lwIwLYqTm1qGBwWwpgfY2FMiOeZbOdo6GXC8rJI
-         sXQ8RJybBZfzMQjRqpPiYSB1gONL3hRoGXPnwINU=
+        b=l9Ww3JStq6aaZzXsD5jxN4WpzgXyfq9zC+1aMxGnCWJXymy+X4iZUO8Wv8CpQYFTH
+         NqCEjmlOy7Gx17jhxNRrlLOHUExHhlzBBz05EQXsNi4OMcgnO/tsuubk+Ar/oLo8XL
+         ylKufy6Nx98kD/HnUilHprmcOFfW4tEtyzFz+6go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 040/219] nvme: provide fallback for discard alloc failure
-Date:   Fri, 22 Nov 2019 00:46:12 -0500
-Message-Id: <20191122054911.1750-33-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 044/219] mwifiex: fix potential NULL dereference and use after free
+Date:   Fri, 22 Nov 2019 00:46:16 -0500
+Message-Id: <20191122054911.1750-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -60,131 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit cb5b7262b011cfb793519bf97e54dff5282da23c ]
+[ Upstream commit 1dcd9429212b98bea87fc6ec92fb50bf5953eb47 ]
 
-When boxes are run near (or to) OOM, we have a problem with the discard
-page allocation in nvme. If we fail allocating the special page, we
-return busy, and it'll get retried. But since ordering is honored for
-dispatch requests, we can keep retrying this same IO and failing. Behind
-that IO could be requests that want to free memory, but they never get
-the chance.
+There are two defects: (1) passing a NULL bss to
+mwifiex_save_hidden_ssid_channels will result in NULL dereference,
+(2) using bss after dropping the reference to it via cfg80211_put_bss.
+To fix them, the patch moves the buggy code to the branch that bss is
+not NULL and puts it before cfg80211_put_bss.
 
-Allocate a fixed discard page per controller for a safe fallback, and use
-that if the initial allocation fails.
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 41 ++++++++++++++++++++++++++++++++++------
- drivers/nvme/host/nvme.h |  3 +++
- 2 files changed, 38 insertions(+), 6 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 5d0f99bcc987f..ced70d37e0f9b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -551,9 +551,19 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
- 	struct nvme_dsm_range *range;
- 	struct bio *bio;
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index ed27147efcb37..dd02bbd9544e7 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1906,15 +1906,17 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
+ 					    ETH_ALEN))
+ 					mwifiex_update_curr_bss_params(priv,
+ 								       bss);
+-				cfg80211_put_bss(priv->wdev.wiphy, bss);
+-			}
  
--	range = kmalloc_array(segments, sizeof(*range), GFP_ATOMIC);
--	if (!range)
--		return BLK_STS_RESOURCE;
-+	range = kmalloc_array(segments, sizeof(*range),
-+				GFP_ATOMIC | __GFP_NOWARN);
-+	if (!range) {
-+		/*
-+		 * If we fail allocation our range, fallback to the controller
-+		 * discard page. If that's also busy, it's safe to return
-+		 * busy, as we know we can make progress once that's freed.
-+		 */
-+		if (test_and_set_bit_lock(0, &ns->ctrl->discard_page_busy))
-+			return BLK_STS_RESOURCE;
+-			if ((chan->flags & IEEE80211_CHAN_RADAR) ||
+-			    (chan->flags & IEEE80211_CHAN_NO_IR)) {
+-				mwifiex_dbg(adapter, INFO,
+-					    "radar or passive channel %d\n",
+-					    channel);
+-				mwifiex_save_hidden_ssid_channels(priv, bss);
++				if ((chan->flags & IEEE80211_CHAN_RADAR) ||
++				    (chan->flags & IEEE80211_CHAN_NO_IR)) {
++					mwifiex_dbg(adapter, INFO,
++						    "radar or passive channel %d\n",
++						    channel);
++					mwifiex_save_hidden_ssid_channels(priv,
++									  bss);
++				}
 +
-+		range = page_address(ns->ctrl->discard_page);
-+	}
- 
- 	__rq_for_each_bio(bio, req) {
- 		u64 slba = nvme_block_nr(ns, bio->bi_iter.bi_sector);
-@@ -568,7 +578,10 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
- 	}
- 
- 	if (WARN_ON_ONCE(n != segments)) {
--		kfree(range);
-+		if (virt_to_page(range) == ns->ctrl->discard_page)
-+			clear_bit_unlock(0, &ns->ctrl->discard_page_busy);
-+		else
-+			kfree(range);
- 		return BLK_STS_IOERR;
- 	}
- 
-@@ -653,8 +666,13 @@ void nvme_cleanup_cmd(struct request *req)
- 				blk_rq_bytes(req) >> ns->lba_shift);
- 	}
- 	if (req->rq_flags & RQF_SPECIAL_PAYLOAD) {
--		kfree(page_address(req->special_vec.bv_page) +
--		      req->special_vec.bv_offset);
-+		struct nvme_ns *ns = req->rq_disk->private_data;
-+		struct page *page = req->special_vec.bv_page;
-+
-+		if (page == ns->ctrl->discard_page)
-+			clear_bit_unlock(0, &ns->ctrl->discard_page_busy);
-+		else
-+			kfree(page_address(page) + req->special_vec.bv_offset);
- 	}
- }
- EXPORT_SYMBOL_GPL(nvme_cleanup_cmd);
-@@ -3551,6 +3569,7 @@ static void nvme_free_ctrl(struct device *dev)
- 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
- 	kfree(ctrl->effects);
- 	nvme_mpath_uninit(ctrl);
-+	kfree(ctrl->discard_page);
- 
- 	if (subsys) {
- 		mutex_lock(&subsys->lock);
-@@ -3592,6 +3611,14 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- 	memset(&ctrl->ka_cmd, 0, sizeof(ctrl->ka_cmd));
- 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
- 
-+	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
-+			PAGE_SIZE);
-+	ctrl->discard_page = alloc_page(GFP_KERNEL);
-+	if (!ctrl->discard_page) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	ret = ida_simple_get(&nvme_instance_ida, 0, 0, GFP_KERNEL);
- 	if (ret < 0)
- 		goto out;
-@@ -3629,6 +3656,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- out_release_instance:
- 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
- out:
-+	if (ctrl->discard_page)
-+		__free_page(ctrl->discard_page);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(nvme_init_ctrl);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 2653e1f4196d5..cc4273f119894 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -238,6 +238,9 @@ struct nvme_ctrl {
- 	u16 maxcmd;
- 	int nr_reconnects;
- 	struct nvmf_ctrl_options *opts;
-+
-+	struct page *discard_page;
-+	unsigned long discard_page_busy;
- };
- 
- struct nvme_subsystem {
++				cfg80211_put_bss(priv->wdev.wiphy, bss);
+ 			}
+ 		}
+ 	} else {
 -- 
 2.20.1
 
