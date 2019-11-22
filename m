@@ -2,54 +2,51 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B96C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639A920674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3451520708
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 11:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574422056;
-	bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
+	s=default; t=1574422069;
+	bh=9eGy7rDJK9QWTl0r5O5OE6yxX5YP5muOp9WUESCQ99w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0d+7iI3pDKDVvDQiKJ0B9IiriX7ly1RSJGuBdek1KyYY2iRcIYJQ6h41o9638X+VF
-	 b7hy5O/vwGwmc5o1KNfBKH/opzM3YUvVo3+QLvjEP0bujMZF8NUhiVo4PJFmmaBudF
-	 J6gQtoTp48IzE4G61cY7VFDse2vkyjlhUEIu6fwI=
+	b=KGCbo6iqvbYtURW7IscTRA9MkKmBq0Wj3d3hEeW6fdRKT2iudfst4X0kNW/NDO/11
+	 ZjdtJAxe56D5HiVmNcYFMbZ+cO1G6iF8fjYbgfFQ+WNDQWOK7pM2B7msiH7sTJQcgK
+	 vfbyhZG7+/nS+w7ihkZN7aLyQNPru9mGujemRWes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfKVKce (ORCPT
+        id S1727517AbfKVKb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:32:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54000 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:31:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbfKVKc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:32:28 -0500
+        id S1727453AbfKVKby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:31:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E6320726;
-        Fri, 22 Nov 2019 10:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84E320715;
+        Fri, 22 Nov 2019 10:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574418747;
-        bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
+        s=default; t=1574418713;
+        bh=9eGy7rDJK9QWTl0r5O5OE6yxX5YP5muOp9WUESCQ99w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxsLNeWswcQcrIoqIpEFtC5BaSNzX8NndUUSNw9mxWAw9D7R6iKfRW2esRPOZnT3B
-         qSDVPYUiA499bgqqKrsRWjoPCCoUn2BiQQu6mMXEC0HtE5sWznvfQ22l2Sk/bSvZ7k
-         gSxUnn23j7nMN4Qsdt2DrKLIdjFTDBEInMsTW0S0=
+        b=STMAWPDJD1yMN+e2Pl5SwNDGLJhZZ7uVdoEzHLKY6AIdHvMoa1JfR9fzDA1U+4foW
+         xYY3XUfjr7+uY3KA43uCreV2fG/NRJW+F70wvHFZ0gAZRCFMiajnZnsY6vk4F4c/fW
+         3MxFRqOO7roG90+HiAF1TNnLI6FwoNXRVRZzrsyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Wilcox <matthew.wilcox@oracle.com>,
-        George Kennedy <george.kennedy@oracle.com>,
-        Mark Kanda <mark.kanda@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 039/159] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
-Date:   Fri, 22 Nov 2019 11:27:10 +0100
-Message-Id: <20191122100734.323426078@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 003/159] ALSA: usb-audio: Fix missing error check at mixer resolution test
+Date:   Fri, 22 Nov 2019 11:26:34 +0100
+Message-Id: <20191122100707.180070936@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
 References: <20191122100704.194776704@linuxfoundation.org>
@@ -62,79 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Kennedy <george.kennedy@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
+commit 167beb1756791e0806365a3f86a0da10d7a327ee upstream.
 
-sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
-using it in debug message prints.
+A check of the return value from get_cur_mix_raw() is missing at the
+resolution test code in get_min_max_with_quirks(), which may leave the
+variable untouched, leading to a random uninitialized value, as
+detected by syzkaller fuzzer.
 
-Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
-Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add the missing return error check for fixing that.
+
+Reported-and-tested-by: syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191109181658.30368-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ sound/usb/mixer.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
-index c6425e3df5a04..f1c7714377524 100644
---- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
-+++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
-@@ -4371,6 +4371,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
- 	OUTB(np, HS_PRT, HS_BUSY);
- }
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1045,7 +1045,8 @@ static int get_min_max_with_quirks(struc
+ 		if (cval->min + cval->res < cval->max) {
+ 			int last_valid_res = cval->res;
+ 			int saved, test, check;
+-			get_cur_mix_raw(cval, minchn, &saved);
++			if (get_cur_mix_raw(cval, minchn, &saved) < 0)
++				goto no_res_check;
+ 			for (;;) {
+ 				test = saved;
+ 				if (test < cval->max)
+@@ -1065,6 +1066,7 @@ static int get_min_max_with_quirks(struc
+ 			snd_usb_set_cur_mix_value(cval, minchn, 0, saved);
+ 		}
  
-+#define sym_printk(lvl, tp, cp, fmt, v...) do { \
-+	if (cp)							\
-+		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
-+	else							\
-+		starget_printk(lvl, tp->starget, fmt, ##v);	\
-+} while (0)
-+
- /*
-  *  chip exception handler for programmed interrupts.
-  */
-@@ -4416,7 +4423,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  been selected with ATN.  We do not want to handle that.
- 	 */
- 	case SIR_SEL_ATN_NO_MSG_OUT:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No MSG OUT phase after selection with ATN\n");
- 		goto out_stuck;
- 	/*
-@@ -4424,7 +4431,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  having reselected the initiator.
- 	 */
- 	case SIR_RESEL_NO_MSG_IN:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No MSG IN phase after reselection\n");
- 		goto out_stuck;
- 	/*
-@@ -4432,7 +4439,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  an IDENTIFY.
- 	 */
- 	case SIR_RESEL_NO_IDENTIFY:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No IDENTIFY after reselection\n");
- 		goto out_stuck;
- 	/*
-@@ -4461,7 +4468,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	case SIR_RESEL_ABORTED:
- 		np->lastmsg = np->msgout[0];
- 		np->msgout[0] = M_NOOP;
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 			"message %x sent on bad reselection\n", np->lastmsg);
- 		goto out;
- 	/*
--- 
-2.20.1
-
++no_res_check:
+ 		cval->initialized = 1;
+ 	}
+ 
 
 
