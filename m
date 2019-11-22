@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82812C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DEDC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51EB420674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2FD20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403796;
-	bh=CrI0/ZIICBLBt4Quh91vZZVcOFT//RP6JUGfUOsnkPM=;
+	s=default; t=1574403799;
+	bh=L7kOZ2DuuxrBOah1HpwY0bLme+c1Dzk3lN0xbxhInE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZDCGYtLeSKq0En2C0wKY26uKGB6Ka9VX4LQhJ1fb+pZoipc5+KLPtdXFhVUHV993
-	 7KkM5keaur5j3aCImTt4lCP3PRKIoHQxEq1O/YSxMu6yfchkKIte7qSO/pB6Jov1KK
-	 2d50ISsAPrvaXu/ZF32w6zxf82M38nCqghdMpUEg=
+	b=JTgVsZcSdfWCBCU5AypgAcPGijD1OGalWI5kWZ2d0WSeC8kfvhRA+i66u8lmaiGub
+	 0ZvPVdAuuZH2fQkU+9yqLoPP8QKxd2qDZWawCXkBXI/MasVSjTKRs8xQHPrDjB3Ic8
+	 FMUY4XUAeMyzrrh6tKhXgBWS+VWXGHuee0csnSaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKVFvs (ORCPT
+        id S1729132AbfKVGXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:23:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbfKVFvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:51:42 -0500
+        id S1726921AbfKVFvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:51:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F003820731;
-        Fri, 22 Nov 2019 05:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A0020840;
+        Fri, 22 Nov 2019 05:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401901;
-        bh=CrI0/ZIICBLBt4Quh91vZZVcOFT//RP6JUGfUOsnkPM=;
+        s=default; t=1574401907;
+        bh=L7kOZ2DuuxrBOah1HpwY0bLme+c1Dzk3lN0xbxhInE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWzc91neL8NozOhwlDILI92fsFlDkNxKRbxlS17XWcGhFXdX0y4q486ee2tv/T+bj
-         zjlUaWJuzZCv32svg9JwX8SC0Pabt2blY8mJ0qTTJIdgIgGiGKtd01VuzmacWPj94S
-         oC2svGPAerbd2LTqR1+mBkG+jU766Do/pSoDBRsg=
+        b=DvgdHLDlEM56ZKNnAZ29/MmnsMW9I1Vxukv4gan0Y3gqQ6lRyGsVFX79FqnTWyLul
+         yllQGyv39KqpO9zACx257UUrX/T7G+D1yQnafokLg/vuCiP8emScmrYNwufTWiIGrm
+         55PQgtEBtnBk475fMK/rX9ol3jnSFzHswI/HKjqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 133/219] powerpc/pseries: Fix node leak in update_lmb_associativity_index()
-Date:   Fri, 22 Nov 2019 00:47:45 -0500
-Message-Id: <20191122054911.1750-126-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 138/219] net/netlink_compat: Fix a missing check of nla_parse_nested
+Date:   Fri, 22 Nov 2019 00:47:50 -0500
+Message-Id: <20191122054911.1750-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -58,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 47918bc68b7427e961035949cc1501a864578a69 ]
+[ Upstream commit 89dfd0083751d00d5d7ead36f6d8b045bf89c5e1 ]
 
-In update_lmb_associativity_index() we lookup dr_node using
-of_find_node_by_path() which takes a reference for us. In the
-non-error case we forget to drop the reference. Note that
-find_aa_index() does modify properties of the node, but doesn't need
-an extra reference held once it's returned.
+In tipc_nl_compat_sk_dump(), if nla_parse_nested() fails, it could return
+an error. To be consistent with other invocations of the function call,
+on error, the fix passes the return value upstream.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/tipc/netlink_compat.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index f99cd31b6fd1a..8a1c2c8963214 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -202,6 +202,7 @@ static u32 lookup_lmb_associativity_index(struct drmem_lmb *lmb)
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 318c541970ecd..6494d6b5e1b24 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -1030,8 +1030,11 @@ static int tipc_nl_compat_sk_dump(struct tipc_nl_compat_msg *msg,
+ 		u32 node;
+ 		struct nlattr *con[TIPC_NLA_CON_MAX + 1];
  
- 	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
+-		nla_parse_nested(con, TIPC_NLA_CON_MAX,
+-				 sock[TIPC_NLA_SOCK_CON], NULL, NULL);
++		err = nla_parse_nested(con, TIPC_NLA_CON_MAX,
++				       sock[TIPC_NLA_SOCK_CON], NULL, NULL);
++
++		if (err)
++			return err;
  
-+	of_node_put(dr_node);
- 	dlpar_free_cc_nodes(lmb_node);
- 	return aa_index;
- }
+ 		node = nla_get_u32(con[TIPC_NLA_CON_NODE]);
+ 		tipc_tlv_sprintf(msg->rep, "  connected to <%u.%u.%u:%u>",
 -- 
 2.20.1
 
