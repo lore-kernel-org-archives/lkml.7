@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB7AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBD6C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B764120659
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2481220659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402471;
-	bh=hqr4E4ViTXYeT5QuBaAlMeWxmg3bVp5A2n4sCikFyp0=;
+	s=default; t=1574402483;
+	bh=GQas2avcl0NjPgNPlaAfiSvtV+EZURLJOYzb58XTsXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GjHEfeTS4rE96bq7DRr2Fsf1zV19FM2WRvKqN+fPdpoGjn5ghFrcI45hJOnwtz31q
-	 8ULWsWtPFy5j2eaWUtr37C29hzZbwr/+oeZNZIci4nYCH6GFTyfCq+fgeaSEW+PXla
-	 jjrkAvtJM7L97XWOtDyKIb6iMeDpcFYH3JzOErvs=
+	b=BnPcj3polfwEkCVU3XtuWdlaLQt3kuONzWt5zqH1/li1sNtRqlVKj1+xtGZvVC9L8
+	 Av0+R04T4w7vk8RuPKrrP2HMJYroHLfl0PJO9QaIjMzDfmni7hgRGeYLi37KUmbsI7
+	 V64+9oAXXfWTA3T8L5iT2xT7g0wYCwohhKRtYHJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfKVGBG (ORCPT
+        id S1728048AbfKVGBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:01:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:01:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727480AbfKVF5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:23 -0500
+        id S1727227AbfKVF5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:57:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 334EA20731;
-        Fri, 22 Nov 2019 05:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9AF92084B;
+        Fri, 22 Nov 2019 05:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402242;
-        bh=hqr4E4ViTXYeT5QuBaAlMeWxmg3bVp5A2n4sCikFyp0=;
+        s=default; t=1574402239;
+        bh=GQas2avcl0NjPgNPlaAfiSvtV+EZURLJOYzb58XTsXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHIVh7fVjSUGdnHX4lWRGjhtIermirc2D1IS90nzza5IcIabPBDOqAkCV2KIIBmgA
-         OS+WbBBnU5AEKb/TfSSPWfErN73e4+fVeVF76/3o7R5HRV7lRc9yBSS9il+JoGlxkm
-         x4UqyM/MvEj9cHeyNty8U0nKB7VGxKVUZEd4qgGQ=
+        b=hgLAOvSDmTOjGhN+FdzDQ4udPT8ypYSPgx4rOE0mmBoV9q6y30Kcya9qV3NWoygxZ
+         J1srnaXX/+n0d2gfQZ3n71D+hwPrw1dYG14gdZwF5udFSwPVRvazdM98nMRb9is9dM
+         eM7UZt+TvvM9WBOfE7T7cbTw7oeXhlXMeCIpjFPI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 087/127] net: dsa: bcm_sf2: Propagate error value from mdio_write
-Date:   Fri, 22 Nov 2019 00:55:05 -0500
-Message-Id: <20191122055544.3299-86-sashal@kernel.org>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 084/127] um: Make GCOV depend on !KCOV
+Date:   Fri, 22 Nov 2019 00:55:02 -0500
+Message-Id: <20191122055544.3299-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,39 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Richard Weinberger <richard@nod.at>
 
-[ Upstream commit e49505f7255be8ced695919c08a29bf2c3d79616 ]
+[ Upstream commit 550ed0e2036663b35cec12374b835444f9c60454 ]
 
-Both bcm_sf2_sw_indir_rw and mdiobus_write_nested could fail, so let's
-return their error codes upstream.
+Both do more or less the same thing and are mutually exclusive.
+If both are enabled the build will fail.
+Sooner or later we can kill UML's GCOV.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/um/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 604c5abc08eb8..c6e154698c741 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -432,11 +432,10 @@ static int bcm_sf2_sw_mdio_write(struct mii_bus *bus, int addr, int regnum,
- 	 * send them to our master MDIO bus controller
- 	 */
- 	if (addr == BRCM_PSEUDO_PHY_ADDR && priv->indir_phy_mask & BIT(addr))
--		bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
-+		return bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
- 	else
--		mdiobus_write_nested(priv->master_mii_bus, addr, regnum, val);
--
--	return 0;
-+		return mdiobus_write_nested(priv->master_mii_bus, addr,
-+				regnum, val);
- }
- 
- static irqreturn_t bcm_sf2_switch_0_isr(int irq, void *dev_id)
+diff --git a/arch/um/Kconfig.debug b/arch/um/Kconfig.debug
+index 967d3109689ff..39d44bfb241d5 100644
+--- a/arch/um/Kconfig.debug
++++ b/arch/um/Kconfig.debug
+@@ -19,6 +19,7 @@ config GPROF
+ config GCOV
+ 	bool "Enable gcov support"
+ 	depends on DEBUG_INFO
++	depends on !KCOV
+ 	help
+ 	  This option allows developers to retrieve coverage data from a UML
+ 	  session.
 -- 
 2.20.1
 
