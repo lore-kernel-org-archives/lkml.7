@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539C1C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9814C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229A820730
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F6220721
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 06:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402570;
-	bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
+	s=default; t=1574402578;
+	bh=2I9Q5RZv4vFqcYUDXsOPoH6jOFkXbntQMaM9J+ZkrvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eW87DZtjOlz2tzftLU5BP1wYXNEpOM9BV56dyC93IRhhrYlwjig/nQVk4IT+NkOLn
-	 MMfuDav17lxk6TDxiV0fMAmUFh0OPGawkGNLx5ehBBBSpBwq5hMePN2ItH62+EYmgP
-	 oFtvKAu0RMU7GIFQT4mSPfYOOphQ90M9qhMEdRe8=
+	b=PXukN3RwfOYfVUJsV4spuYYDK+LhDoQz6tT+S03qr+2xlwQ7wsymoIQPwXuyiZbJR
+	 EIdUUV9GaDg0+m0WMb1S3MZPQgAQ6TBJcUdTRhXiBPHW2WWPNpM7pKNPHkOjw3OmJ2
+	 s1m6VEeU6dzv5+DM2o2b5okIPTzpeRjWrlubdIMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbfKVGCs (ORCPT
+        id S1727994AbfKVGC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:02:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41402 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:02:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfKVGCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:39 -0500
+        id S1729809AbfKVGCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87CB920717;
-        Fri, 22 Nov 2019 06:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F0420659;
+        Fri, 22 Nov 2019 06:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402558;
-        bh=zCX38j0ApMKwif385tSeV5oiDGYMeI09N9Vdg67Tctw=;
+        s=default; t=1574402573;
+        bh=2I9Q5RZv4vFqcYUDXsOPoH6jOFkXbntQMaM9J+ZkrvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1IRM8yjEMN2gg1iLwDfQ32syHI8+hKX4K+KMQuzxhK9KlwDcLAmWIfoKniKW+N1R
-         rAe5P+5QOQBcO2SG+Q/UOCILiu1JENzzJrKSJaSzp7F6xW+nbEcPnwoKxYXGlqahd0
-         QHfNM3C0IsI+xHP4A7kksHG0G3LGiRCC5Au+Py/8=
+        b=pR9YNRaToR9lO8p5a6Ct4rmrD6st6pPieUlL5d1yVU1Kwoi7rGrK85LGkdCPlJbWm
+         P22JwN+9ElOMcA1oZJaD8Xi+tx4delOWsSTgdHP0cc4d6BmUED4mM96BR3i7ncYzX9
+         AIxUvi3dWLyeUDLig8HrQ+Y7RKvwjRrPNl7NcCrc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ying Xue <ying.xue@windriver.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH AUTOSEL 4.9 63/91] net: stmicro: fix a missing check of clk_prepare
-Date:   Fri, 22 Nov 2019 01:01:01 -0500
-Message-Id: <20191122060129.4239-62-sashal@kernel.org>
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 75/91] tipc: fix memory leak in tipc_nl_compat_publ_dump
+Date:   Fri, 22 Nov 2019 01:01:13 -0500
+Message-Id: <20191122060129.4239-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
 References: <20191122060129.4239-1-sashal@kernel.org>
@@ -61,35 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit f86a3b83833e7cfe558ca4d70b64ebc48903efec ]
+[ Upstream commit f87d8ad9233f115db92c6c087d58403b0009ed36 ]
 
-clk_prepare() could fail, so let's check its status, and if it fails,
-return its error code upstream.
+There is a memory leak in case genlmsg_put fails.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Fix this by freeing *args* before return.
+
+Addresses-Coverity-ID: 1476406 ("Resource leak")
+Fixes: 46273cf7e009 ("tipc: fix a missing check of genlmsg_put")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 4 +++-
+ net/tipc/netlink_compat.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-index d07520fb969e6..62ccbd47c1db2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -59,7 +59,9 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- 		gmac->clk_enabled = 1;
- 	} else {
- 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_MII_RATE);
--		clk_prepare(gmac->tx_clk);
-+		ret = clk_prepare(gmac->tx_clk);
-+		if (ret)
-+			return ret;
- 	}
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 454ed8ea194c8..e3fc959e496d4 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -974,8 +974,10 @@ static int tipc_nl_compat_publ_dump(struct tipc_nl_compat_msg *msg, u32 sock)
  
- 	return 0;
+ 	hdr = genlmsg_put(args, 0, 0, &tipc_genl_family, NLM_F_MULTI,
+ 			  TIPC_NL_PUBL_GET);
+-	if (!hdr)
++	if (!hdr) {
++		kfree_skb(args);
+ 		return -EMSGSIZE;
++	}
+ 
+ 	nest = nla_nest_start(args, TIPC_NLA_SOCK);
+ 	if (!nest) {
 -- 
 2.20.1
 
