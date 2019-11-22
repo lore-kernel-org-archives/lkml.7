@@ -2,52 +2,54 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E179C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0683CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D6B20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5EC20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419914;
-	bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
+	s=default; t=1574419916;
+	bh=QbbtsIMsmbgo6DJirgaZDG4Blb0iyjQzm6ypstXt7Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMPn1diXPbTOTs8MG1QIiBQzAkx5O+dZlCrsulLt38w+S/lXs+rIVCWiS2EFxccjw
-	 msxow+rEtgQtEVMa044DtYl8DOvCd7t+nbFlQWl++BfEJKiwjztrsYQO3a2y2ZOrBB
-	 0RP1j232OXffw3SO9WGcKChB0OHKilwkaqI6rkDE=
+	b=Xwg7FpZtLfD1ZZRUL/dHxccwc81fwVWAAI0UZZKqVMmwATj0eaBzIaTGnUbcsvZgu
+	 W57+Lejjn5aJ7VmRDpX/WGi24liSreNtxTLEINYtaic87PGTnuTn7Vi1RN2iTpNkVT
+	 EIuEwdy5BHnZetrLqVD2e1/MXjXKOwwePQVILwU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfKVKvw (ORCPT
+        id S1729160AbfKVKvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbfKVKvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:47 -0500
+        id S1730113AbfKVKvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 542A32073B;
-        Fri, 22 Nov 2019 10:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25AF120637;
+        Fri, 22 Nov 2019 10:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419906;
-        bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
+        s=default; t=1574419912;
+        bh=QbbtsIMsmbgo6DJirgaZDG4Blb0iyjQzm6ypstXt7Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLgz0QhqwwKBUew4u+TTYNEKbmzpfN/uGQ6JtA7eR3y9O1906HgYEZU4StCXyr8Od
-         9RydVAzbrPk3HlBwarcuUpw9vaPiT2qew5sLOsf7E21qS2IArIac+KeGJWWIoYOpTH
-         Ik7ouLOLU5Js42VkOfw1ue9+T3vI9pQCQ8lgmKps=
+        b=DFbI7tgA47/zt/1AXq+SS9ouCKmj5W6keaHokZw6vfSIlgz+vv4wABFSdriPDdsPV
+         W4rS81E2ax4uDo7Gjde87n4cfl+yzt/fcSOXQ9xKUAQb/8L0n0U7nYlmDGbRaXVg8e
+         Oeu4O6BfTE7c5d+G8Yoia2RPLtzEQsC2tBZwev/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
-        NeilBrown <neilb@suse.com>, Shaohua Li <shli@fb.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 049/122] md: allow metadata updates while suspending an array - fix
-Date:   Fri, 22 Nov 2019 11:28:22 +0100
-Message-Id: <20191122100757.092527726@linuxfoundation.org>
+Subject: [PATCH 4.14 051/122] i40e: Use proper enum in i40e_ndo_set_vf_link_state
+Date:   Fri, 22 Nov 2019 11:28:24 +0100
+Message-Id: <20191122100757.762591494@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -60,72 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 059421e041eb461fb2b3e81c9adaec18ef03ca3c ]
+[ Upstream commit 43ade6ad18416b8fd5bb3c9e9789faa666527eec ]
 
-Commit 35bfc52187f6 ("md: allow metadata update while suspending.")
-added support for allowing md_check_recovery() to still perform
-metadata updates while the array is entering the 'suspended' state.
-This is needed to allow the processes of entering the state to
-complete.
+Clang warns when one enumerated type is converted implicitly to another.
 
-Unfortunately, the patch doesn't really work.  The test for
-"mddev->suspended" at the start of md_check_recovery() means that the
-function doesn't try to do anything at all while entering suspend.
+drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4214:42: warning:
+implicit conversion from enumeration type 'enum i40e_aq_link_speed' to
+different enumeration type 'enum virtchnl_link_speed'
+      [-Wenum-conversion]
+                pfe.event_data.link_event.link_speed = I40E_LINK_SPEED_40GB;
+                                                     ~ ^~~~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-This patch moves the code of updating the metadata while suspending to
-*before* the test on mddev->suspended.
+Use the proper enum from virtchnl_link_speed, which has the same value
+as I40E_LINK_SPEED_40GB, VIRTCHNL_LINK_SPEED_40GB. This appears to be
+missed by commit ff3f4cc267f6 ("virtchnl: finish conversion to virtchnl
+interface").
 
-Reported-by: Jeff Mahoney <jeffm@suse.com>
-Fixes: 35bfc52187f6 ("md: allow metadata update while suspending.")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Shaohua Li <shli@fb.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/81
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e529cef5483a8..b942c74f1ce83 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8736,6 +8736,18 @@ static void md_start_sync(struct work_struct *ws)
-  */
- void md_check_recovery(struct mddev *mddev)
- {
-+	if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
-+		/* Write superblock - thread that called mddev_suspend()
-+		 * holds reconfig_mutex for us.
-+		 */
-+		set_bit(MD_UPDATING_SB, &mddev->flags);
-+		smp_mb__after_atomic();
-+		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
-+			md_update_sb(mddev, 0);
-+		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
-+		wake_up(&mddev->sb_wait);
-+	}
-+
- 	if (mddev->suspended)
- 		return;
- 
-@@ -8896,16 +8908,6 @@ void md_check_recovery(struct mddev *mddev)
- 	unlock:
- 		wake_up(&mddev->sb_wait);
- 		mddev_unlock(mddev);
--	} else if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
--		/* Write superblock - thread that called mddev_suspend()
--		 * holds reconfig_mutex for us.
--		 */
--		set_bit(MD_UPDATING_SB, &mddev->flags);
--		smp_mb__after_atomic();
--		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
--			md_update_sb(mddev, 0);
--		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
--		wake_up(&mddev->sb_wait);
- 	}
- }
- EXPORT_SYMBOL(md_check_recovery);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index b3307b1b3aac1..fae3625ec0b67 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -3201,7 +3201,7 @@ int i40e_ndo_set_vf_link_state(struct net_device *netdev, int vf_id, int link)
+ 		vf->link_forced = true;
+ 		vf->link_up = true;
+ 		pfe.event_data.link_event.link_status = true;
+-		pfe.event_data.link_event.link_speed = I40E_LINK_SPEED_40GB;
++		pfe.event_data.link_event.link_speed = VIRTCHNL_LINK_SPEED_40GB;
+ 		break;
+ 	case IFLA_VF_LINK_STATE_DISABLE:
+ 		vf->link_forced = true;
 -- 
 2.20.1
 
