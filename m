@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAD0C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22494C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7352920715
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF852070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400621;
-	bh=32RnjBQhpMMpcnJsfK6ZgNHLIRuZH059M6OSVlzGlZk=;
+	s=default; t=1574400626;
+	bh=//48Y0e+TnSjcWbypK13uBxiX7dydB+93cLmWpdG+a8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PRpVcXE19JP9Pjyd5q1/yBNwbAs7OEH90b/fPW0TRCm9rct48mLtvf8Pl8vofl/TP
-	 BeNCJOQ9pnXZann8YmmoxUhLyr+xwTeBtZhVS9lcGszMrOKt+j9ZED8FDpzSlubEbC
-	 inj0OqEGA+l29jrF5z3owzyBEvYSdWVyoMirv+B8=
+	b=Xicl7eRIDkMhYg2ijkIjA0bFlci5evq9SypuGBHGDLLNz6A9Pp09AfbPSaxu+ucLj
+	 MjpJLNC9V88ld46StRDI6W52zj/rdfykCQWGrxX3jfDwlUc420DJFWc+IR1lCWwAL2
+	 oAOqx9nPKVFKHStuXMXefejI1YiXGjj+X+ljCq1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfKVFaU (ORCPT
+        id S1727282AbfKVFaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:30:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47872 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfKVFaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:16 -0500
+        id S1727239AbfKVFaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AAFF2070B;
-        Fri, 22 Nov 2019 05:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D33CA2070B;
+        Fri, 22 Nov 2019 05:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400615;
-        bh=32RnjBQhpMMpcnJsfK6ZgNHLIRuZH059M6OSVlzGlZk=;
+        s=default; t=1574400619;
+        bh=//48Y0e+TnSjcWbypK13uBxiX7dydB+93cLmWpdG+a8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0vfR2+jZgMP0JgSMthjns2AMcou/KvrSPupyqxoxUfH2UfbbqTCHCFz7+f7Ii6s1q
-         2fEd/qqdiw9UIgLUSC1E+fFZIHvLsMlEnxPiL17Rs2wgTEgjJ7IBXtK8AK0GVxwaEP
-         TFJzcF3iA7TimhzKGIVacwmzBtrrIfFaBJ7IzC5U=
+        b=IkJskqzNH4LWKISp06n70WO5DgV9ykaOis3Hbxc4NG/EcNXRBNTj+1LWXPcc/NYRa
+         19LQ0gHu9RAyFzAnx6Wp66AYMpazpOv0BUjf6eouP2ZPIFgBbpdZ+V8wGayuw/4Wk9
+         0PkczSuLS9YXbygF0+vkX+5MwJ9Wzu303ljW41RM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 016/219] ARM: dts: imx50: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:26:38 -0500
-Message-Id: <20191122053001.752-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 019/219] ARM: dts: imx27: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:26:41 -0500
+Message-Id: <20191122053001.752-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
 References: <20191122053001.752-1-sashal@kernel.org>
@@ -62,13 +62,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit aab5e3ea95b958cf22a24e756a84e635bdb081c1 ]
+[ Upstream commit 38715dcd49b4430ac5b6bc1293278d91a4d32bd5 ]
 
-imx50-evk has duplicate memory nodes:
+Boards based on imx27 have duplicate memory nodes:
 
 - One coming from the board dts file: memory@
 
-- One coming from the imx50.dtsi file.
+- One coming from the imx27.dtsi file.
 
 Fix the duplication by removing the memory node from the dtsi file
 and by adding 'device_type = "memory";' in the board dts.
@@ -78,27 +78,79 @@ Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx50-evk.dts | 1 +
- arch/arm/boot/dts/imx50.dtsi    | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/imx27-apf27.dts                 | 1 +
+ arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi      | 1 +
+ arch/arm/boot/dts/imx27-pdk.dts                   | 1 +
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi | 1 +
+ arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi   | 1 +
+ arch/arm/boot/dts/imx27.dtsi                      | 2 --
+ 6 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx50-evk.dts b/arch/arm/boot/dts/imx50-evk.dts
-index 682a99783ee69..a25da415cb02e 100644
---- a/arch/arm/boot/dts/imx50-evk.dts
-+++ b/arch/arm/boot/dts/imx50-evk.dts
-@@ -12,6 +12,7 @@
- 	compatible = "fsl,imx50-evk", "fsl,imx50";
+diff --git a/arch/arm/boot/dts/imx27-apf27.dts b/arch/arm/boot/dts/imx27-apf27.dts
+index 3eddd805a793a..f635d5c5029c4 100644
+--- a/arch/arm/boot/dts/imx27-apf27.dts
++++ b/arch/arm/boot/dts/imx27-apf27.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "armadeus,imx27-apf27", "fsl,imx27";
  
- 	memory@70000000 {
+ 	memory@a0000000 {
 +		device_type = "memory";
- 		reg = <0x70000000 0x80000000>;
+ 		reg = <0xa0000000 0x04000000>;
  	};
  };
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index ab522c2da6df6..9e9e92acceb27 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -22,10 +22,8 @@
+diff --git a/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi b/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
+index 9c455dcbe6ebf..c85f9d01768a1 100644
+--- a/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
++++ b/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "eukrea,cpuimx27", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx27-pdk.dts b/arch/arm/boot/dts/imx27-pdk.dts
+index f9a882d991329..35123b7cb6b3e 100644
+--- a/arch/arm/boot/dts/imx27-pdk.dts
++++ b/arch/arm/boot/dts/imx27-pdk.dts
+@@ -10,6 +10,7 @@
+ 	compatible = "fsl,imx27-pdk", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+index cbad7c88c58cc..b0b4f7c00246d 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+@@ -18,6 +18,7 @@
+ 	compatible = "phytec,imx27-pca100", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x08000000>; /* 128MB */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+index ec466b4bfd410..0935e1400e5d2 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "phytec,imx27-pcm038", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 753d88df16274..39e75b997bdc8 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -16,10 +16,8 @@
  	 * The decompressor and also some bootloaders rely on a
  	 * pre-existing /chosen node to be available to insert the
  	 * command line and merge other ATAGS info.
