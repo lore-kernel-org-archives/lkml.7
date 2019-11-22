@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6402C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C11D20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B184E20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419336;
-	bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
+	s=default; t=1574419343;
+	bh=8jmJ15RKMd00vSediAxz+/eJNibhGO3eYbxiobdn/8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eygEfEzzCFsbg4GAwwEydA61ZWLbZrmtZpVDxCTMtgvhvwkIO+qOxZCgLw3ZzKpXl
-	 SpZc4TanwdewVPVcfuJXcnI1W1ZydA2budWwEHtZw4Bb9XqDXvNTEh+wOVYWogO3vY
-	 xQZin+M5c0fsaktKFb+m3nTDuhbUNSMNZk+Zp/iw=
+	b=auZ9cTutGX2JzLx293Kmczi9luU5wbsTX5I9DnH67ooxiz2upTOgVv9nXZ2GFblfs
+	 PROy294kNwy7H0saIfQxz2EE/MYj/lUvVgm1B4YKEj2G8uCwUUXKTTMRpPIr2Nj3gH
+	 thsaWZYAzMS+IGxqhADmmrslpJB6nCtYLjb6AWhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfKVKmP (ORCPT
+        id S1729103AbfKVKmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:42:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:42:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727216AbfKVKmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:42:10 -0500
+        id S1728657AbfKVKmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:42:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9C1020707;
-        Fri, 22 Nov 2019 10:42:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9804920637;
+        Fri, 22 Nov 2019 10:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419330;
-        bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
+        s=default; t=1574419336;
+        bh=8jmJ15RKMd00vSediAxz+/eJNibhGO3eYbxiobdn/8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHnYFip0vJduSLl8zegAVU60BJY2chyH5vdWZxFrSTm21pUsbAHwpKkAtQuaQwtQi
-         kbz+nVBnN8AywF9Gq5uBSM8MphhllcwdtmyGz2qFfVMwKXXxeLfuCiqa+bnQ34MfO3
-         0SXaQrE+OSZ6DoUz3MWsdQVGRLmbVASCPyrKLquw=
+        b=GrP8JGjj8mNrNYRjUo8+kI2SDemyktHCkvlX44e1e9dI7nObgteLgQGjYR+Hd4PY2
+         syxiDfQkoiPVhm72BRDAkN5Tb5B95M8YzNvOQMnGZL31CsfIofOsuqDoqBr1ctfAwe
+         f++WE63CsKZZj1ZSMy3gMkURFUWkKand/uIX/xsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/222] i40e: hold the rtnl lock on clearing interrupt scheme
-Date:   Fri, 22 Nov 2019 11:26:10 +0100
-Message-Id: <20191122100842.072314712@linuxfoundation.org>
+Subject: [PATCH 4.9 070/222] pinctrl: at91: dont use the same irqchip with multiple gpiochips
+Date:   Fri, 22 Nov 2019 11:26:50 +0100
+Message-Id: <20191122100905.868383436@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -62,55 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patryk Małek <patryk.malek@intel.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
+[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
 
-Hold the rtnl lock when we're clearing interrupt scheme
-in i40e_shutdown and in i40e_remove.
+Sharing the same irqchip with multiple gpiochips is not a good
+practice. For instance, when installing hooks, we change the state
+of the irqchip. The initial state of the irqchip for the second
+gpiochip to register is then disrupted.
 
-Signed-off-by: Patryk Małek <patryk.malek@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 886378c5334fa..043b69b5843b0 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -11360,6 +11360,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 	mutex_destroy(&hw->aq.asq_mutex);
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 9f09041859099..9401a0630e80b 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1545,16 +1545,6 @@ void at91_pinctrl_gpio_resume(void)
+ #define gpio_irq_set_wake	NULL
+ #endif /* CONFIG_PM */
  
- 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
- 	for (i = 0; i < pf->num_alloc_vsi; i++) {
- 		if (pf->vsi[i]) {
-@@ -11368,6 +11369,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 			pf->vsi[i] = NULL;
- 		}
- 	}
-+	rtnl_unlock();
+-static struct irq_chip gpio_irqchip = {
+-	.name		= "GPIO",
+-	.irq_ack	= gpio_irq_ack,
+-	.irq_disable	= gpio_irq_mask,
+-	.irq_mask	= gpio_irq_mask,
+-	.irq_unmask	= gpio_irq_unmask,
+-	/* .irq_set_type is set dynamically */
+-	.irq_set_wake	= gpio_irq_set_wake,
+-};
+-
+ static void gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+@@ -1595,12 +1585,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	struct gpio_chip	*gpiochip_prev = NULL;
+ 	struct at91_gpio_chip   *prev = NULL;
+ 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
++	struct irq_chip		*gpio_irqchip;
+ 	int ret, i;
  
- 	for (i = 0; i < I40E_MAX_VEB; i++) {
- 		kfree(pf->veb[i]);
-@@ -11513,7 +11515,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
- 	wr32(hw, I40E_PFPM_WUFC,
- 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
++	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
++	if (!gpio_irqchip)
++		return -ENOMEM;
++
+ 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
  
-+	/* Since we're going to destroy queues during the
-+	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
-+	 * whole section
-+	 */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
-+	rtnl_unlock();
+-	/* Setup proper .irq_set_type function */
+-	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
++	gpio_irqchip->name = "GPIO";
++	gpio_irqchip->irq_ack = gpio_irq_ack;
++	gpio_irqchip->irq_disable = gpio_irq_mask;
++	gpio_irqchip->irq_mask = gpio_irq_mask;
++	gpio_irqchip->irq_unmask = gpio_irq_unmask;
++	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
++	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
  
- 	if (system_state == SYSTEM_POWER_OFF) {
- 		pci_wake_from_d3(pdev, pf->wol_en);
+ 	/* Disable irqs of this PIO controller */
+ 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
+@@ -1611,7 +1611,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	 * interrupt.
+ 	 */
+ 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
+-				   &gpio_irqchip,
++				   gpio_irqchip,
+ 				   0,
+ 				   handle_edge_irq,
+ 				   IRQ_TYPE_NONE);
+@@ -1629,7 +1629,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	if (!gpiochip_prev) {
+ 		/* Then register the chain on the parent IRQ */
+ 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
+-					     &gpio_irqchip,
++					     gpio_irqchip,
+ 					     at91_gpio->pioc_virq,
+ 					     gpio_irq_handler);
+ 		return 0;
 -- 
 2.20.1
 
