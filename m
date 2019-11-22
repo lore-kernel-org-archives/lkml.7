@@ -2,184 +2,162 @@ Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6072AC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B619C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACFA20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339B72071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 17:44:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="DeUEAA99"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAjnLsTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKVRny (ORCPT
+        id S1726976AbfKVRoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 12:43:54 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42640 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfKVRnx (ORCPT
+        Fri, 22 Nov 2019 12:44:01 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40743 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVRoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 12:43:53 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a15so9590505wrf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 09:43:50 -0800 (PST)
+        Fri, 22 Nov 2019 12:44:00 -0500
+Received: by mail-il1-f194.google.com with SMTP id v17so3839663ilg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 09:44:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Jhs/tdQjYIEWTRcB0MrJAK0ricmoQz3oM5hnSS/G8Wo=;
-        b=DeUEAA999MCNj61UTE0yqunROn+JFWelJgFE8QESgDgghl2Ui7AFdQ4ar1Ai/aBBSH
-         WAQ9JlOFRHpfad/lAlBFS9CTicthJ0a5IAq5jl/iN5lU2THKfiBJKsD25qGoLr8RHS6K
-         2zhADrvh1tzWnzYUM7NU350i+Kxb3iAihmzza7MoGvyJzcWMDh04Qj5GADdjkxX9v8Bz
-         D5zqHU4t0Triv86UlrucEoeXluMnv0ujiTqoKfUzKQHQMZe8YRqbgvvWpPmfWGvv7/f9
-         RhhCwVXotRx9kxmdbVYWe43kk8DcR/bf/HQOjH37c/dr56vgFwBh3oEkTclNzUoxfVXz
-         7BVQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h56fbOK3LHFOKb7PeCUiHytHW+/rGe2pqRatOmUTizE=;
+        b=BAjnLsTnSFBrVpp7SbyUz3Wk9Is7kL28zcQMGo2DO7JYFVPuoJBIHxIG1/OubuirXN
+         Mu71/CxnBI1G0V+RFU9nkxqlM2Tai34cHtWlnP/GgBN8qmEOTPbOfAqz586TaKblpcsN
+         XqBFi33fpuTJB+gHo82418deD2vILz1OKzqMRIBcjdKtt8T55P8Hc8T5F5OTkAivenPq
+         5852UBtaEqRqJXOhqu4eTtlPMzFEK08llX6LHvDiUCF2dsMATTIOMPuCxqRUupwRb/5+
+         dyzqwFOzXIVUJBbH1sJFcD4/RYl/zp72F0dGnF+XxsjpjIt5uTI4QyGUj9iMUGvZuB2V
+         /Hqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Jhs/tdQjYIEWTRcB0MrJAK0ricmoQz3oM5hnSS/G8Wo=;
-        b=UEIj15lEs8Ig6mczz/LuQdzSjS3Y6rQg1MRLBGnGypnvmy5B7a7fUddtUb35wfbdFA
-         ASS7Njd5Fozg0MhwTD0zARVdRJrD7LEIwxzieT842d4vtYw9p51q0DetnG6kRZUe2N3C
-         N7FT6XjhO9wr17eqLR+rNSKQ5gwSFDvAlf8Buj/63cGYvbdqij2opFSnLXRXsyMNdyqA
-         3mV3VFY3DAwospRhWQgLTrJ+bk+2reTeANRwvcI78nxObk1xXjd4PaLZ/yhHeGtoVhPx
-         bMAchY/D9xnp7jyT8YmP2ieweUdaC9Ku00DcJcjJ9x92owKsZIQ/ezyQD+6hQPiSumcZ
-         MCkg==
-X-Gm-Message-State: APjAAAXLXaflOTGedYYSbILUbaC+I/kVUzR6Y/K0dylB5nuoTPd9fBqk
-        jrahC8DgDm1xUAa+hzTeBr09Ow==
-X-Google-Smtp-Source: APXvYqxxk9S8do51zGWUu4tC45fKtPKiwgqbw8KXvXwcwCl5HBK9lKgKuSNJfyc3xQ7DBnfLi+aznQ==
-X-Received: by 2002:adf:e545:: with SMTP id z5mr18581366wrm.321.1574444630111;
-        Fri, 22 Nov 2019 09:43:50 -0800 (PST)
-Received: from [10.32.50.232] ([185.149.63.251])
-        by smtp.gmail.com with ESMTPSA id a6sm9096597wrh.69.2019.11.22.09.43.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 09:43:49 -0800 (PST)
-Subject: Re: [PATCHv1 2/2] Input: EXC3000: Add support to query model and
- fw_version
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <20191107181010.17211-1-sebastian.reichel@collabora.com>
- <20191107181010.17211-2-sebastian.reichel@collabora.com>
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-Message-ID: <4ee3ce4f-f544-700c-bc8d-817cea35137a@flowbird.group>
-Date:   Fri, 22 Nov 2019 18:43:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h56fbOK3LHFOKb7PeCUiHytHW+/rGe2pqRatOmUTizE=;
+        b=nieDOMHsznqFVrNx4AmC53sAOBN6foiMDM9DEk/ea1BHbeS4THKcnekz+dfbeImi3h
+         tf/ktIGqTsEQO0GOzUurHAzrLx2fUIh2ezaR0WwWwnXKsTE+pvQesUda+vTFdsrBTZGz
+         MaOmK+Y6il13v43tFQWVEYXqskJ68qmh33PgiOihDpW+FZvHjAnMQkVLkIotbo4KIo07
+         DAVTkHQKKe4ETfJw/iENRkVr1OaYda95wSSidNcLhMtuFErztvUHvqfW3S0JUILxJsiM
+         bH5iihVJGaU5e7H0Vn6Lfn3x6gk5pB/x5WP05V8/AqcbdvDue9ha3Cx7jWMGNx65ZpS1
+         VVKw==
+X-Gm-Message-State: APjAAAU99TXtRql/mWt+Nt0tdAHTjxNQm99g9NYarUByBiCnyeBgqI5v
+        TW8AcxkBLRpaFuvh5pS3706XlUylgdT5y+EZ00A=
+X-Google-Smtp-Source: APXvYqxzFpQ6pRsKd5kK7vHYgkg7tAi4FAri6/7IjJHemZSmhcn2nnbMvZcqGvxWpgXjKAsyLm4J4dz/lukT/Cw6jng=
+X-Received: by 2002:a92:3b0c:: with SMTP id i12mr16763619ila.190.1574444639533;
+ Fri, 22 Nov 2019 09:43:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191107181010.17211-2-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: fr
+References: <20191004190938.15353-1-navid.emamdoost@gmail.com>
+ <CAEkB2EQGCcwBO4iZBiHthUAJUeprw2Q09932GATd6XVyXqukzw@mail.gmail.com> <20191122072239.dhbhi2uawoqsclwy@pengutronix.de>
+In-Reply-To: <20191122072239.dhbhi2uawoqsclwy@pengutronix.de>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Fri, 22 Nov 2019 11:43:48 -0600
+Message-ID: <CAEkB2EQAgmZwGSRyo2XC-1+Ls2MDdm-fxLY5P1SRAjyhNeUiXQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/imx: fix memory leak in imx_pd_bind
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Navid Emamdoost <emamd001@umn.edu>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+Thanks for the update.
 
-On 07/11/2019 19:10, Sebastian Reichel wrote:
-> Expose model and fw_version via sysfs. Also query the model
-> in probe to make sure, that the I2C communication with the
-> device works before successfully probing the driver.
+On Fri, Nov 22, 2019 at 1:22 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
 >
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->   drivers/input/touchscreen/exc3000.c | 136 ++++++++++++++++++++++++++++
->   1 file changed, 136 insertions(+)
+> Hi Navid,
 >
-> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
-> index 7d695022082c..4c9f132629b9 100644
-> --- a/drivers/input/touchscreen/exc3000.c
-> +++ b/drivers/input/touchscreen/exc3000.c
-> @@ -41,6 +41,11 @@ struct exc3000_data {
->   	struct touchscreen_properties prop;
->   	struct timer_list timer;
->   	u8 buf[2 * EXC3000_LEN_FRAME];
-> +	char model[11];
-> +	char fw_version[6];
-
-These buffers are too small.
-
-I know those are the values shown in the EETI "I2C Programming Guide" 
-but, on my exc80H32 I have 16 bytes for the model and 14 for the fw_version.
-
-It may even be possible to have larger, depends on the firmware / config 
-blob that has been loaded.
-
-The guide seems to be mostly an example. As nothing else is sent in the 
-reply message, worst case the full frame would be filled.
-
-
->   
-> +static void exc3000_query_interrupt(struct exc3000_data *data)
-> +{
-> +	u8 *buf = data->buf;
-> +	int err;
-> +
-> +	data->query_result = 0;
-> +
-> +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
-> +	if (err < 0) {
-> +		data->query_result = err;
-> +		goto out;
-> +	}
-> +
-> +	if (buf[0] == 0x42 && buf[4] == 'E') {
-> +		memcpy(data->model, buf+5, 10);
-> +		data->model[10] = '\0';
-
-Maybe use sizeof() to avoid the hard coded 10?
-
-> +		goto out;
-> +	} else if (buf[0] == 0x42 && buf[4] == 'D') {
-> +		memcpy(data->fw_version, buf+5, 5);
-> +		data->fw_version[5] = '\0';
-> +		goto out;
-> +	}
-> +
-
-
-Ok so at least there won't be a buffer overflow but it will truncate.
-
-
-> +static DEVICE_ATTR(fw_version, S_IRUGO, exc3000_get_fw_version, NULL);
-> +
-
-
-Maybe use DEVICE_ATTR_RO  to reduce the amount of boilerplate?
-
-
-> +	input->dev.groups = exc3000_attribute_groups;
-
-
-Hum, this adds the attributes to the input device (in /sys/class/input) 
-but these attributes are really for the whole I2C device.
-
-Wouldn't it be better to use devm_device_add_group() to add them to the 
-I2C device?
-
-
-> +	for (retry = 0; retry < 3; ++retry) {
-> +		error = exc3000_get_model(data);
-> +		if (!error) {
-> +			break;
-> +		}
-> +		dev_warn(&client->dev, "Retry %d get EETI EXC3000 model: %d\n", retry + 1, error);
-> +	}
-> +
+> On 19-11-21 12:31, Navid Emamdoost wrote:
+> > On Fri, Oct 4, 2019 at 2:09 PM Navid Emamdoost
+> > <navid.emamdoost@gmail.com> wrote:
+> > >
+> > > In imx_pd_bind, the duplicated memory for imxpd->edid via kmemdup should
+> > > be released in drm_of_find_panel_or_bridge or imx_pd_register fail.
+> > >
+> > > Fixes: ebc944613567 ("drm: convert drivers to use drm_of_find_panel_or_bridge")
+> > > Fixes: 19022aaae677 ("staging: drm/imx: Add parallel display support")
+> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > > ---
+> >
+> > Would you please review this patch?
+> >
+> > Thanks,
+>
+> I currently work on the drm/imx driver(s) to avoid errors like [1].
+> Hopefully I have a working version till next week. There I fixed this
+> issue by using the devm_kmemdup() and dropped the explicit kfree()
+> within unbind().
+>
+> [1] https://www.spinics.net/lists/dri-devel/msg189388.html
+>
+> Regards,
+>   Marco
+>
+> >
+> > >  drivers/gpu/drm/imx/parallel-display.c | 8 ++++++--
+> > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
+> > > index e7ce17503ae1..9522d2cb0ad5 100644
+> > > --- a/drivers/gpu/drm/imx/parallel-display.c
+> > > +++ b/drivers/gpu/drm/imx/parallel-display.c
+> > > @@ -227,14 +227,18 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
+> > >
+> > >         /* port@1 is the output port */
+> > >         ret = drm_of_find_panel_or_bridge(np, 1, 0, &imxpd->panel, &imxpd->bridge);
+> > > -       if (ret && ret != -ENODEV)
+> > > +       if (ret && ret != -ENODEV) {
+> > > +               kfree(imxpd->edid);
+> > >                 return ret;
+> > > +       }
+> > >
+> > >         imxpd->dev = dev;
+> > >
+> > >         ret = imx_pd_register(drm, imxpd);
+> > > -       if (ret)
+> > > +       if (ret) {
+> > > +               kfree(imxpd->edid);
+> > >                 return ret;
+> > > +       }
+> > >
+> > >         dev_set_drvdata(dev, imxpd);
+> > >
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+> > --
+> > Navid.
+> >
+> >
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
 
-Is there a particular reason why retries are needed?
 
-
-Regards,
-
-
-Martin
-
+-- 
+Navid.
