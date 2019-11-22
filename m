@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B56C432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE83C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E442B20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7492E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419879;
-	bh=AxvpmB2Sb0ryC9UrYM1Dehg4vu0x0EADb0FbcdB7REY=;
+	s=default; t=1574419881;
+	bh=6r+JJYD0lQTpwxkp1+u+3SUOZCOH5567WtYs3wa8vqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b1/7zls0cqiTimBG1/Waymsh9Enk4pQi00mhueI9AOMquOdmIJCKfDhfB0byuzysP
-	 ZOJ02PZkIegxxbax80swVVQGWbsaKlwDTI9edWA1/gwjeVM9oJP7r01YVFJS75d+92
-	 2hbpmH0KnqBYw9zioEVBFY1+EpwBPHgso8x3FCwo=
+	b=r1CZwAx2o9ND2uefG7rQSFo8eGdruVjOxtBQDK3F9ufvg9qc7a9BkStk2cqm73IA/
+	 BHK7fpS73dFzuWk1sNXJPRFpfyAgC9XTCo9/vgm4LyRe2atxTUL9dvVwA8NYOKtFyi
+	 Q0j7W6Vy/jaNx67Xgc7yaMJb9R7+oBfwWUpuczio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfKVKvR (ORCPT
+        id S1729123AbfKVKvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:51:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbfKVKvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:51:08 -0500
+        id S1729812AbfKVKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:51:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AB5E2075E;
-        Fri, 22 Nov 2019 10:51:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9229C20637;
+        Fri, 22 Nov 2019 10:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419868;
-        bh=AxvpmB2Sb0ryC9UrYM1Dehg4vu0x0EADb0FbcdB7REY=;
+        s=default; t=1574419874;
+        bh=6r+JJYD0lQTpwxkp1+u+3SUOZCOH5567WtYs3wa8vqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ny2i+Z9tKn5TQU0Z1MLDKlNAkQ646+5ZIqdVnt4NZIAoRC/N1D6KlleCxcM3I+v2f
-         +WkFrhuUDF6ULKkcgGJlW06yE6urc/Eg1UwqGOJTr64JNZWGP0bK7H3pD76G3eT1d7
-         xbE605Qiq+gmoPgDIfDytOgUgzS1Z+vnGPKQwuiA=
+        b=hADUbZKRrft3H3ca9qmmgG/sgDGGSQVN+HlZfPRWNkXM+fpha+3N2Bi21ThCLv4Z4
+         TxetfjeJM8FtysUUcuicPeusydPvRH2rEA5I2yS2887qrip2Q0lIkL9EiMPpFh3XiJ
+         8SdKtB+n1UJpwA3OdH+u/Uorp4/gJ+rm/wrM11z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 037/122] cxgb4: Use proper enum in cxgb4_dcb_handle_fw_update
-Date:   Fri, 22 Nov 2019 11:28:10 +0100
-Message-Id: <20191122100751.987786302@linuxfoundation.org>
+Subject: [PATCH 4.14 039/122] powerpc/pseries: Fix DTL buffer registration
+Date:   Fri, 22 Nov 2019 11:28:12 +0100
+Message-Id: <20191122100753.187660927@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
 References: <20191122100722.177052205@linuxfoundation.org>
@@ -62,53 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit 3b0b8f0d9a259f6a428af63e7a77547325f8e081 ]
+[ Upstream commit db787af1b8a6b4be428ee2ea7d409dafcaa4a43c ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we register the DTL
+buffer for a cpu when the associated file under powerpc/dtl in debugfs
+is opened. When doing so, we need to set the size of the buffer being
+registered in the second u32 word of the buffer. This needs to be in big
+endian, but we are not doing the conversion resulting in the below error
+showing up in dmesg:
 
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:303:7: warning: implicit
-conversion from enumeration type 'enum cxgb4_dcb_state' to different
-enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
-                         ? CXGB4_DCB_STATE_FW_ALLSYNCED
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c:304:7: warning: implicit
-conversion from enumeration type 'enum cxgb4_dcb_state' to different
-enumeration type 'enum cxgb4_dcb_state_input' [-Wenum-conversion]
-                         : CXGB4_DCB_STATE_FW_INCOMPLETE);
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-2 warnings generated.
+	dtl_start: DTL registration for cpu 0 (hw 0) failed with -4
 
-Use the equivalent value of the expected type to silence Clang while
-resulting in no functional change.
+Fix this in the obvious manner.
 
-CXGB4_DCB_STATE_FW_INCOMPLETE = CXGB4_DCB_INPUT_FW_INCOMPLETE = 2
-CXGB4_DCB_STATE_FW_ALLSYNCED = CXGB4_DCB_INPUT_FW_ALLSYNCED = 3
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/dtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c
-index 6ee2ed30626bf..306b4b3206168 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_dcb.c
-@@ -266,8 +266,8 @@ void cxgb4_dcb_handle_fw_update(struct adapter *adap,
- 		enum cxgb4_dcb_state_input input =
- 			((pcmd->u.dcb.control.all_syncd_pkd &
- 			  FW_PORT_CMD_ALL_SYNCD_F)
--			 ? CXGB4_DCB_STATE_FW_ALLSYNCED
--			 : CXGB4_DCB_STATE_FW_INCOMPLETE);
-+			 ? CXGB4_DCB_INPUT_FW_ALLSYNCED
-+			 : CXGB4_DCB_INPUT_FW_INCOMPLETE);
+diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
+index 18014cdeb590a..c762689e0eb33 100644
+--- a/arch/powerpc/platforms/pseries/dtl.c
++++ b/arch/powerpc/platforms/pseries/dtl.c
+@@ -149,7 +149,7 @@ static int dtl_start(struct dtl *dtl)
  
- 		if (dcb->dcb_version != FW_PORT_DCB_VER_UNKNOWN) {
- 			dcb_running_version = FW_PORT_CMD_DCB_VERSION_G(
+ 	/* Register our dtl buffer with the hypervisor. The HV expects the
+ 	 * buffer size to be passed in the second word of the buffer */
+-	((u32 *)dtl->buf)[1] = DISPATCH_LOG_BYTES;
++	((u32 *)dtl->buf)[1] = cpu_to_be32(DISPATCH_LOG_BYTES);
+ 
+ 	hwcpu = get_hard_smp_processor_id(dtl->cpu);
+ 	addr = __pa(dtl->buf);
 -- 
 2.20.1
 
