@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387EAC432C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADEEC432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127C8205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E94420717
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 10:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574419499;
-	bh=K4yGkZRbv35RcfeluxzhT6L6sAAB+YWzrmzYRIBSGGs=;
+	s=default; t=1574419504;
+	bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zHBVfFpY7l4B99e+EUTePev5QR/hpsfuNJzdf64bm6D203SPnIbV+Dr3b93ZO9zCa
-	 kPFJhZ/Dw01zoI4CR7qlFqLv8Bf7JqosuSA96Ya35fmWHc7dyTpo9C/IHQRLlVsZ/I
-	 u0Gei8MC9YbkLLd+fCdreMt+oAY1mORmpmAr+piM=
+	b=vAAJEDIwgmxxHNaNCHxnQwEGZzsLUdXM8itikayuFqtXguaJnV3Kezu5pKptHQMdF
+	 mxWDziNsHv4t7vb/o+Zhw0X35L8uIIH30QARlok8WiB9cg6nyKTw8sN69R2ul7QTN7
+	 qn6PB9rSBs2k4WhfK0rMTz3V18jdJJ9PK5uFgKoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbfKVKo5 (ORCPT
+        id S1729409AbfKVKpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:44:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 05:45:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfKVKox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:44:53 -0500
+        id S1728502AbfKVKpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 05:45:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56928205C9;
-        Fri, 22 Nov 2019 10:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 976EE20717;
+        Fri, 22 Nov 2019 10:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574419492;
-        bh=K4yGkZRbv35RcfeluxzhT6L6sAAB+YWzrmzYRIBSGGs=;
+        s=default; t=1574419500;
+        bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfNczhMHdUhKQDV0ZO4xIsqvVjBQPS223PJ6/kTswcHCO0QaPgDiQJH3mlkv/VDTX
-         a/IfMHL5Fu9QxBQthKTp7gqX9V66ViOJfz8uqKUjZC1zsPd5xDjrmOe2JeI0hRQgvf
-         LChvrk7ClFvJhnW5ZZv0pT/w2JByWprujeHMm/mU=
+        b=WKjJSAd48nX/bgfbgk+cWIq0unBGnlOy6djpGYpMEE9m7ozRo/fiFz407F93hixoz
+         GZQWLm6SlagSdbHD9b9j7Z3Ll4OzeNd3aaz5pN7gr4wkwcfMoED1Ssve8dJ0Tzyit5
+         056QQAAhkuQNQ3cVhhta0iOjBA05KtaGuBhz7JHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 131/222] Bluetooth: L2CAP: Detect if remote is not able to use the whole MPS
-Date:   Fri, 22 Nov 2019 11:27:51 +0100
-Message-Id: <20191122100912.426046447@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Dan Aloni <dan@kernelim.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 133/222] crypto: fix a memory leak in rsa-kcs1pads encryption mode
+Date:   Fri, 22 Nov 2019 11:27:53 +0100
+Message-Id: <20191122100912.541742992@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
 References: <20191122100830.874290814@linuxfoundation.org>
@@ -61,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Dan Aloni <dan@kernelim.com>
 
-[ Upstream commit a5c3021bb62b970713550db3f7fd08aa70665d7e ]
+[ Upstream commit 3944f139d5592790b70bc64f197162e643a8512b ]
 
-If the remote is not able to fully utilize the MPS choosen recalculate
-the credits based on the actual amount it is sending that way it can
-still send packets of MTU size without credits dropping to 0.
+The encryption mode of pkcs1pad never uses out_sg and out_buf, so
+there's no need to allocate the buffer, which presently is not even
+being freed.
 
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+CC: Herbert Xu <herbert@gondor.apana.org.au>
+CC: linux-crypto@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Dan Aloni <dan@kernelim.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ crypto/rsa-pkcs1pad.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 48d23abfe7992..1306962a792af 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -6811,6 +6811,16 @@ static int l2cap_le_data_rcv(struct l2cap_chan *chan, struct sk_buff *skb)
- 		chan->sdu_len = sdu_len;
- 		chan->sdu_last_frag = skb;
+diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
+index 7830d304dff6f..d58224d808675 100644
+--- a/crypto/rsa-pkcs1pad.c
++++ b/crypto/rsa-pkcs1pad.c
+@@ -267,15 +267,6 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
+ 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
+ 			ctx->key_size - 1 - req->src_len, req->src);
  
-+		/* Detect if remote is not able to use the selected MPS */
-+		if (skb->len + L2CAP_SDULEN_SIZE < chan->mps) {
-+			u16 mps_len = skb->len + L2CAP_SDULEN_SIZE;
-+
-+			/* Adjust the number of credits */
-+			BT_DBG("chan->mps %u -> %u", chan->mps, mps_len);
-+			chan->mps = mps_len;
-+			l2cap_chan_le_send_credits(chan);
-+		}
-+
- 		return 0;
- 	}
- 
+-	req_ctx->out_buf = kmalloc(ctx->key_size, GFP_KERNEL);
+-	if (!req_ctx->out_buf) {
+-		kfree(req_ctx->in_buf);
+-		return -ENOMEM;
+-	}
+-
+-	pkcs1pad_sg_set_buf(req_ctx->out_sg, req_ctx->out_buf,
+-			ctx->key_size, NULL);
+-
+ 	akcipher_request_set_tfm(&req_ctx->child_req, ctx->child);
+ 	akcipher_request_set_callback(&req_ctx->child_req, req->base.flags,
+ 			pkcs1pad_encrypt_sign_complete_cb, req);
 -- 
 2.20.1
 
