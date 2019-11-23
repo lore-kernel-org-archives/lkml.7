@@ -2,67 +2,85 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE40FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4440C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935102071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574471706;
-	bh=3cCDZ7Aab+avY448nOgtXlRbJlhODSWrSt52FXxMvvM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=iOwaWIhbkhqnAAurA2xK+Tc/HbaA65DBt85UVPEw1AW/WyhOsPz1plHv6uQifIIN3
-	 icvDe0Hj7N0XQvz1/rmEeKv1RoyJudeszna44nhIIErx2kUSKVUoHe7rLsNblckLFf
-	 opLWtllgciVgBuQb95Afto8O4UdHs2VgPLhPHKgI=
+	by mail.kernel.org (Postfix) with ESMTP id AD27720707
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpS9wGU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfKWBPF (ORCPT
+        id S1726721AbfKWB4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 20:15:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfKWBPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 20:15:05 -0500
-Subject: Re: [git pull] Input updates for v5.4-rc8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574471705;
-        bh=3cCDZ7Aab+avY448nOgtXlRbJlhODSWrSt52FXxMvvM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DerLHexYVW5JVKd5NmrjLy1EKx/+xpVZ8jxpJVYszr9vj4lnhdys0rZjlASf+Q7h3
-         xVCxqBML97DlZ39w39QOjCY60q/qiQS7J9ZOmANmmftlRInaZeRPsVYfdK+Qlpim28
-         HoMVFRuFUNaXnonjM6X1jxtpcG5yGmBAaAWz2duM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191122232320.GA37127@dtor-ws>
-References: <20191122232320.GA37127@dtor-ws>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191122232320.GA37127@dtor-ws>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
-X-PR-Tracked-Commit-Id: 8791663435e7fea896d8ca0f56fd64976d2089ff
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2027cabe6afea5d471401ec704b65ce18f958fdc
-Message-Id: <157447170497.10539.17089975416012265968.pr-tracker-bot@kernel.org>
-Date:   Sat, 23 Nov 2019 01:15:04 +0000
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+        Fri, 22 Nov 2019 20:56:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41279 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfKWB4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 20:56:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 94so7876646oty.8;
+        Fri, 22 Nov 2019 17:56:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=fY97mssNbAeaJnSeJ7M7A2khmxP4s+EvF0WZGzWhLEg=;
+        b=HpS9wGU0jSPTrbPJM8uiVLTycsT5dAMsJVw5oViQrC7O+wTxxLq6a9cBg7HyTCwITf
+         2MPSHRoa9M4VfdZaQfiq3vUSjvqwSVu8SRaym9QdYlkzBv04y2stu80uyRZwCN6kGQNH
+         OcLljOxoAkJ07ygSHPAnt7OT+EMh9SaUZoS/K4w/UkhzQ3YzdHGxWuAlSIScLQ/RXmBI
+         rF9svIaX2/9sZkmASBDYGgXr0tUGTh+2w2/GCjuBzqBSW/HfYg3bMo6gJXGlL7sYCxiG
+         gJwH9plzNFXjGlyzQ+wAKJkkVu7Pt/72Falw1bebhmiGLNiEhbKSC+TK4iGw5ow/8B6R
+         IJYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=fY97mssNbAeaJnSeJ7M7A2khmxP4s+EvF0WZGzWhLEg=;
+        b=WMsVBVmc7wCCN+H+9GUz2f/g0Y3/wBO3M/3j3ezkLMIIBDb0AHRRUO1UzCeJwgEeI6
+         5HG1IOlDJolXmyRAFfXsTdXy9P7PFjMI+pWdfszq0oRCjzoOoGreEEjXq0trb0KVut1o
+         7HE2nj/CdjD5sDiilN56AGHx5OXuP8NwuQbmslq9JXU/9PkdOuX0LBm4CxYsdb+AH9LU
+         oorCSPESOy0OZuDDX0RVZrZbjTAsHutIi/Ic1xdLjBYS4cnMvY/N84AHkJS1egGuZ2FB
+         a5qMHKY8dRY5OEHNSTdad0zBrj61IMYOSoj/Q5qnid32u5RqWOEDn8l85+f/JLghV6F1
+         VlqQ==
+X-Gm-Message-State: APjAAAWkKsgWunYSJhZXI0tKRvp32PvuDxCq4v6h7o7mKbXyxEuP9Nb6
+        CNS1mWmAMfiDjSvkoBGB5yPEhNPsded//2dO7fU=
+X-Google-Smtp-Source: APXvYqweuiDUAqKWWbHjUkQuHpDpE/vKYacYjR0QWYtVdKG+sYvDCaZENumf/zswBUvwMqXy8bBmlP7Oh1bdxLjuIbY=
+X-Received: by 2002:a9d:66a:: with SMTP id 97mr13128755otn.114.1574474177107;
+ Fri, 22 Nov 2019 17:56:17 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:ac9:3c4a:0:0:0:0:0 with HTTP; Fri, 22 Nov 2019 17:56:16
+ -0800 (PST)
+In-Reply-To: <20191122170202.GE26530@ZenIV.linux.org.uk>
+References: <20191119093718.3501-1-namjae.jeon@samsung.com>
+ <CGME20191119094021epcas1p16e9ebb9fd8a1b25c64b09899a31988b9@epcas1p1.samsung.com>
+ <20191119093718.3501-4-namjae.jeon@samsung.com> <20191122170202.GE26530@ZenIV.linux.org.uk>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Sat, 23 Nov 2019 10:56:16 +0900
+Message-ID: <CAKYAXd_FqMxUE2VtsASMcwNdMF+4wGkzkF0gRPSpKOkZYGYomg@mail.gmail.com>
+Subject: Re: [PATCH v3 03/13] exfat: add inode operations
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        Markus.Elfring@web.de, sj1557.seo@samsung.com, dwagner@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 22 Nov 2019 15:23:20 -0800:
+2019-11-23 2:02 GMT+09:00, Al Viro <viro@zeniv.linux.org.uk>:
+> On Tue, Nov 19, 2019 at 04:37:08AM -0500, Namjae Jeon wrote:
+>> This adds the implementation of inode operations for exfat.
+>
+> Could you explain where is ->d_time ever read?
+Oops, That's leftover from the clean-up that use d_fsdata instead of ->d_time.
+Will remove it on next version.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2027cabe6afea5d471401ec704b65ce18f958fdc
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks for review!
+>
