@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB3C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E211C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACD52070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA5420719
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKWSFL (ORCPT
+        id S1726524AbfKWSFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 23 Nov 2019 13:05:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:36845 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfKWSFL (ORCPT
+Received: from mail-il1-f200.google.com ([209.85.166.200]:37756 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfKWSFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 13:05:11 -0500
-Received: by mail-il1-f198.google.com with SMTP id m16so9610285ilh.3
+        Sat, 23 Nov 2019 13:05:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id q1so9637216ile.4
         for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 10:05:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=m57d6pzMbnRE+E77SNnUVK48CZSyCuqXvxNHBd1sUpg=;
-        b=CJOrl34TldTn0Dl8F6tYeq4B3yG+ZFQivkjvWnnVMc1GTuYq7NIOPiHluM+cRTSHNi
-         rCvM4qezJfLx11H1zgC6qBDAwlq2T441giV+l78hnHVTz5aP//j/1rM1O5y36no2cfd+
-         5sdZ78+uCDESBcwfhMXuaDZSacIH3ct1E7H5Dfb8IG4HtjHJali12T4VwSYY/XMxijsk
-         6FoKPq/d0YqHk4WKNP/olu5PxGYNRqC/rsyzS5WPftrSH5/FRZI3lCwjp0d3FFVPnBwO
-         6jwBaZ5pseuF6KsQmv6XiHhhD/w8KrQ+CedrL57wzUFlZeWSFI6LTn+gGzgLeW0RrK7e
-         VgDg==
-X-Gm-Message-State: APjAAAV3ap4YQ4bKXTXd7VD4j89435J7kuj2fw+GNhzJkYiJKiJ4z0ed
-        aaEGUVxyQ2QzvGUIYn+16gpmO6DyWG1Q3zjkJdASCorr/zeV
-X-Google-Smtp-Source: APXvYqxw5FikGezlDJ6iFZJN/0R9hWPQ1CdQy5EbMecOvSWZ2tWu+7jJQttnrNArYfRZjONWb1MUuwLB2urjqtQkb/TTFKEAufph
+        bh=QvSzsqObNPAS3mGXKMyAnTJ/JpV6fD/P+fTjkQ9rKxk=;
+        b=pgOc27ozyFHauXzIH/N8nridmjpLAkzLtZffx2EJDmqZp5oFyE+ZGDlSd7yEqzhOaY
+         65csIRfyB3X+Whc9G34z+Q9TmpTFm+1/i+Tjdh6j8fcz3f/Ixf1RPzHaS1u2DHAas933
+         qKsdgbCra+61ffTjYVJJil+ymE4aFOhk1XBL00xy73vjCWV5PBwWUX9UGbrxU+3lIF+a
+         m31fNCQ8uWCD49wR+qRfnUCRlprkoUcSSlrShazk1iFw8wEH1x5BU4UVhF0lU91pNbso
+         fRzglG7K9hmCiuMgfmWnfQCCWH+oi5eYfnMajw2wexnZqRTpR92w/kkCUGCCtSLWjsm0
+         dZWw==
+X-Gm-Message-State: APjAAAVZCf8JaXJPn647Px7Yz+5g1IbRnn5mj17nqZ7p0hblnCFt/nVl
+        wQk/ufbeqHDuTYKaSni6KKMfXtKETtUJ1H2dgTz2ssPgUHjr
+X-Google-Smtp-Source: APXvYqyKCGiExuzWwaH+szYcHiyGdsuXsv5/hNwq5SHdddFKPRCNAz7O8tpBNuif4TqJS4aAE68TCITaqF7F/Mh5Du+gxs8CGBiZ
 MIME-Version: 1.0
-X-Received: by 2002:a92:5c5d:: with SMTP id q90mr24932010ilb.22.1574532310177;
- Sat, 23 Nov 2019 10:05:10 -0800 (PST)
-Date:   Sat, 23 Nov 2019 10:05:10 -0800
+X-Received: by 2002:a6b:e61a:: with SMTP id g26mr19044419ioh.141.1574532309886;
+ Sat, 23 Nov 2019 10:05:09 -0800 (PST)
+Date:   Sat, 23 Nov 2019 10:05:09 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000924780598075f4b@google.com>
-Subject: KMSAN: uninit-value in __skb_checksum_complete (4)
-From:   syzbot <syzbot+721b564cd88ebb710182@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        glider@google.com, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000004b2df0598075fc8@google.com>
+Subject: KMSAN: uninit-value in __crc32c_le_base
+From:   syzbot <syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,140 +58,68 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    287021d5 Revert "lib/scatterlist: kmsan: don't squash cont..
+HEAD commit:    3db92f3b kmsan: process DMA pages separately in kmsan_hand..
 git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=152c638ce00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17bad222e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
-dashboard link: https://syzkaller.appspot.com/bug?extid=721b564cd88ebb710182
+dashboard link: https://syzkaller.appspot.com/bug?extid=6dcbfea81cd3d4dd0b02
 compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1423f122e00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128145cee00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+721b564cd88ebb710182@syzkaller.appspotmail.com
+Reported-by: syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com
 
 =====================================================
-BUG: KMSAN: uninit-value in __skb_checksum_complete+0x37b/0x530  
-net/core/skbuff.c:2851
-CPU: 0 PID: 12256 Comm: udevd Not tainted 5.4.0-rc5-syzkaller #0
+BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:112 [inline]
+BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
+BUG: KMSAN: uninit-value in __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+CPU: 1 PID: 12411 Comm: syz-executor.1 Not tainted 5.4.0-rc5-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
-  <IRQ>
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
   kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
-  __skb_checksum_complete+0x37b/0x530 net/core/skbuff.c:2851
-  nf_ip_checksum+0x567/0x770 net/netfilter/utils.c:36
-  nf_nat_icmp_reply_translation+0x2ba/0x970 net/netfilter/nf_nat_proto.c:567
-  nf_nat_ipv4_fn net/netfilter/nf_nat_proto.c:626 [inline]
-  nf_nat_ipv4_local_fn+0x215/0x840 net/netfilter/nf_nat_proto.c:697
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0x18b/0x3f0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:260 [inline]
-  __ip_local_out+0x69b/0x800 net/ipv4/ip_output.c:114
-  ip_local_out net/ipv4/ip_output.c:123 [inline]
-  ip_send_skb net/ipv4/ip_output.c:1558 [inline]
-  ip_push_pending_frames+0x16f/0x460 net/ipv4/ip_output.c:1578
-  icmp_push_reply+0x692/0x750 net/ipv4/icmp.c:389
-  __icmp_send+0x2313/0x3080 net/ipv4/icmp.c:738
-  ipv4_send_dest_unreach net/ipv4/route.c:1220 [inline]
-  ipv4_link_failure+0x73c/0xaf0 net/ipv4/route.c:1227
-  dst_link_failure include/net/dst.h:419 [inline]
-  arp_error_report+0x106/0x1a0 net/ipv4/arp.c:293
-  neigh_invalidate+0x359/0x8e0 net/core/neighbour.c:996
-  neigh_timer_handler+0xda4/0x1450 net/core/neighbour.c:1082
-  call_timer_fn+0x232/0x530 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers+0xd60/0x1270 kernel/time/timer.c:1773
-  run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:375 [inline]
-  irq_exit+0x230/0x280 kernel/softirq.c:416
-  exiting_irq+0xe/0x10 arch/x86/include/asm/apic.h:536
-  smp_apic_timer_interrupt+0x48/0x70 arch/x86/kernel/apic/apic.c:1139
-  apic_timer_interrupt+0x2e/0x40 arch/x86/entry/entry_64.S:837
-  </IRQ>
-RIP: 0010:kmsan_slab_alloc+0xd5/0x120 mm/kmsan/kmsan_hooks.c:92
-Code: 0a ba 01 00 00 00 e8 6a e7 ff ff 65 ff 0d 17 05 fd 7d 65 8b 05 10 05  
-fd 7d 85 c0 75 30 e8 73 6e 37 ff 4c 89 65 c8 ff 75 c8 9d <65> 48 8b 04 25  
-28 00 00 00 48 3b 45 d8 75 0d 48 83 c4 18 5b 41 5c
-RSP: 0018:ffff888104a5fb48 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: ffff888069bbb000 RCX: 0000000000000401
-RDX: 0000000000000400 RSI: 0000000000000000 RDI: ffff888069bbb000
-RBP: ffff888104a5fb80 R08: 0000000000000002 R09: ffff888077c93000
-R10: 0000000000000004 R11: ffffffff82579470 R12: 0000000000000246
-R13: ffff88812f8068c0 R14: 0000000000000dc0 R15: ffff88812f8068c0
-  slab_alloc_node mm/slub.c:2799 [inline]
-  slab_alloc mm/slub.c:2808 [inline]
-  kmem_cache_alloc_trace+0x8b6/0xd10 mm/slub.c:2825
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  kernfs_iop_get_link+0xcb/0xc40 fs/kernfs/symlink.c:135
-  vfs_readlink+0x20d/0x6e0 fs/namei.c:4728
-  do_readlinkat+0x406/0x520 fs/stat.c:411
-  __do_sys_readlink fs/stat.c:432 [inline]
-  __se_sys_readlink+0x99/0xc0 fs/stat.c:429
-  __x64_sys_readlink+0x4a/0x70 fs/stat.c:429
+  crc32_body lib/crc32.c:112 [inline]
+  crc32_le_generic lib/crc32.c:179 [inline]
+  __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+  chksum_update+0xb2/0x110 crypto/crc32c_generic.c:90
+  crypto_shash_update+0x4c5/0x530 crypto/shash.c:107
+  crc32c+0x150/0x220 lib/libcrc32c.c:47
+  sctp_csum_update+0x89/0xa0 include/net/sctp/checksum.h:36
+  __skb_checksum+0x1297/0x12a0 net/core/skbuff.c:2640
+  sctp_compute_cksum include/net/sctp/checksum.h:59 [inline]
+  sctp_packet_pack net/sctp/output.c:528 [inline]
+  sctp_packet_transmit+0x40fb/0x4250 net/sctp/output.c:597
+  sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
+  sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
+  sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
+  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
+  sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
+  sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
+  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
+  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
+  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
+  __do_sys_setsockopt net/socket.c:2100 [inline]
+  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
+  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
   do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
   entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x7faf01efa577
-Code: f0 ff ff 77 02 f3 c3 48 8b 15 bd 38 2b 00 f7 d8 64 89 02 83 c8 ff c3  
-90 90 90 90 90 90 90 90 90 90 90 90 b8 59 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 01 c3 48 8b 0d 91 38 2b 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffee58d72b8 EFLAGS: 00000206 ORIG_RAX: 0000000000000059
-RAX: ffffffffffffffda RBX: 00007ffee58d7af0 RCX: 00007faf01efa577
-RDX: 0000000000000400 RSI: 00007ffee58d76c0 RDI: 00007ffee58d72c0
-RBP: 0000000000000200 R08: 000000000042033b R09: 00007faf01f4ec20
-R10: 7269762f73656369 R11: 0000000000000206 R12: 00000000017c4e10
-R13: 0000000000625500 R14: 00000000017bf250 R15: 000000000000000b
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
-  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
-  kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:254
-  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:274
-  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
-  csum_partial_copy+0xae/0x100 lib/checksum.c:174
-  skb_copy_and_csum_bits+0x214/0x10b0 net/core/skbuff.c:2738
-  icmp_glue_bits+0x16b/0x380 net/ipv4/icmp.c:352
-  __ip_append_data+0x41c3/0x52c0 net/ipv4/ip_output.c:1132
-  ip_append_data+0x324/0x480 net/ipv4/ip_output.c:1313
-  icmp_push_reply+0x210/0x750 net/ipv4/icmp.c:370
-  __icmp_send+0x2313/0x3080 net/ipv4/icmp.c:738
-  ipv4_send_dest_unreach net/ipv4/route.c:1220 [inline]
-  ipv4_link_failure+0x73c/0xaf0 net/ipv4/route.c:1227
-  dst_link_failure include/net/dst.h:419 [inline]
-  arp_error_report+0x106/0x1a0 net/ipv4/arp.c:293
-  neigh_invalidate+0x359/0x8e0 net/core/neighbour.c:996
-  neigh_timer_handler+0xda4/0x1450 net/core/neighbour.c:1082
-  call_timer_fn+0x232/0x530 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers+0xd60/0x1270 kernel/time/timer.c:1773
-  run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:375 [inline]
-  irq_exit+0x230/0x280 kernel/softirq.c:416
-  exiting_irq+0xe/0x10 arch/x86/include/asm/apic.h:536
-  smp_apic_timer_interrupt+0x48/0x70 arch/x86/kernel/apic/apic.c:1139
-  apic_timer_interrupt+0x2e/0x40 arch/x86/entry/entry_64.S:837
-  native_restore_fl arch/x86/include/asm/irqflags.h:41 [inline]
-  arch_local_irq_restore arch/x86/include/asm/irqflags.h:84 [inline]
-  kmsan_slab_alloc+0xd5/0x120 mm/kmsan/kmsan_hooks.c:92
-  slab_alloc_node mm/slub.c:2799 [inline]
-  slab_alloc mm/slub.c:2808 [inline]
-  kmem_cache_alloc_trace+0x8b6/0xd10 mm/slub.c:2825
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  kernfs_iop_get_link+0xcb/0xc40 fs/kernfs/symlink.c:135
-  vfs_readlink+0x20d/0x6e0 fs/namei.c:4728
-  do_readlinkat+0x406/0x520 fs/stat.c:411
-  __do_sys_readlink fs/stat.c:432 [inline]
-  __se_sys_readlink+0x99/0xc0 fs/stat.c:429
-  __x64_sys_readlink+0x4a/0x70 fs/stat.c:429
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x45a639
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2a8cb65c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 000000000045a639
+RDX: 0000000000000009 RSI: 0000000000000084 RDI: 0000000000000004
+RBP: 000000000075bfc8 R08: 0000000000000098 R09: 0000000000000000
+R10: 0000000020000440 R11: 0000000000000246 R12: 00007f2a8cb666d4
+R13: 00000000004d1a88 R14: 00000000004e08f0 R15: 00000000ffffffff
 
 Uninit was stored to memory at:
   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
@@ -210,25 +136,15 @@ Uninit was stored to memory at:
   sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
   sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
   sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
-  sctp_generate_heartbeat_event+0x3c6/0x5a0 net/sctp/sm_sideeffect.c:391
-  call_timer_fn+0x232/0x530 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers+0xd60/0x1270 kernel/time/timer.c:1773
-  run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:375 [inline]
-  irq_exit+0x230/0x280 kernel/softirq.c:416
-  exiting_irq+0xe/0x10 arch/x86/include/asm/apic.h:536
-  smp_apic_timer_interrupt+0x48/0x70 arch/x86/kernel/apic/apic.c:1139
-  apic_timer_interrupt+0x2e/0x40 arch/x86/entry/entry_64.S:837
-  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
-  spin_unlock_irq include/linux/spinlock.h:388 [inline]
-  alloc_pid+0xd06/0xd50 kernel/pid.c:229
-  copy_process+0x446d/0x89f0 kernel/fork.c:2031
-  _do_fork+0x25c/0xeb0 kernel/fork.c:2368
-  __do_sys_clone kernel/fork.c:2523 [inline]
-  __se_sys_clone+0x32a/0x370 kernel/fork.c:2504
-  __x64_sys_clone+0x62/0x80 kernel/fork.c:2504
+  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
+  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
+  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
+  __do_sys_setsockopt net/socket.c:2100 [inline]
+  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
+  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
   do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
   entry_SYSCALL_64_after_hwframe+0x63/0xe7
 
@@ -242,27 +158,17 @@ Uninit was stored to memory at:
   sctp_addto_chunk net/sctp/sm_make_chunk.c:1494 [inline]
   sctp_make_heartbeat+0x612/0x9e0 net/sctp/sm_make_chunk.c:1164
   sctp_sf_heartbeat net/sctp/sm_statefuns.c:990 [inline]
-  sctp_sf_sendbeat_8_3+0x18d/0xb10 net/sctp/sm_statefuns.c:1034
+  sctp_sf_do_prm_requestheartbeat+0x8f/0x4b0 net/sctp/sm_statefuns.c:5329
   sctp_do_sm+0x2b2/0x9720 net/sctp/sm_sideeffect.c:1152
-  sctp_generate_heartbeat_event+0x3c6/0x5a0 net/sctp/sm_sideeffect.c:391
-  call_timer_fn+0x232/0x530 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers+0xd60/0x1270 kernel/time/timer.c:1773
-  run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:375 [inline]
-  irq_exit+0x230/0x280 kernel/softirq.c:416
-  exiting_irq+0xe/0x10 arch/x86/include/asm/apic.h:536
-  smp_apic_timer_interrupt+0x48/0x70 arch/x86/kernel/apic/apic.c:1139
-  apic_timer_interrupt+0x2e/0x40 arch/x86/entry/entry_64.S:837
-  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
-  spin_unlock_irq include/linux/spinlock.h:388 [inline]
-  alloc_pid+0xd06/0xd50 kernel/pid.c:229
-  copy_process+0x446d/0x89f0 kernel/fork.c:2031
-  _do_fork+0x25c/0xeb0 kernel/fork.c:2368
-  __do_sys_clone kernel/fork.c:2523 [inline]
-  __se_sys_clone+0x32a/0x370 kernel/fork.c:2504
-  __x64_sys_clone+0x62/0x80 kernel/fork.c:2504
+  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
+  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
+  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
+  __do_sys_setsockopt net/socket.c:2100 [inline]
+  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
+  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
   do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
   entry_SYSCALL_64_after_hwframe+0x63/0xe7
 
@@ -274,27 +180,17 @@ Uninit was stored to memory at:
   __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
   sctp_make_heartbeat+0x3e9/0x9e0 net/sctp/sm_make_chunk.c:1156
   sctp_sf_heartbeat net/sctp/sm_statefuns.c:990 [inline]
-  sctp_sf_sendbeat_8_3+0x18d/0xb10 net/sctp/sm_statefuns.c:1034
+  sctp_sf_do_prm_requestheartbeat+0x8f/0x4b0 net/sctp/sm_statefuns.c:5329
   sctp_do_sm+0x2b2/0x9720 net/sctp/sm_sideeffect.c:1152
-  sctp_generate_heartbeat_event+0x3c6/0x5a0 net/sctp/sm_sideeffect.c:391
-  call_timer_fn+0x232/0x530 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers+0xd60/0x1270 kernel/time/timer.c:1773
-  run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:375 [inline]
-  irq_exit+0x230/0x280 kernel/softirq.c:416
-  exiting_irq+0xe/0x10 arch/x86/include/asm/apic.h:536
-  smp_apic_timer_interrupt+0x48/0x70 arch/x86/kernel/apic/apic.c:1139
-  apic_timer_interrupt+0x2e/0x40 arch/x86/entry/entry_64.S:837
-  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
-  spin_unlock_irq include/linux/spinlock.h:388 [inline]
-  alloc_pid+0xd06/0xd50 kernel/pid.c:229
-  copy_process+0x446d/0x89f0 kernel/fork.c:2031
-  _do_fork+0x25c/0xeb0 kernel/fork.c:2368
-  __do_sys_clone kernel/fork.c:2523 [inline]
-  __se_sys_clone+0x32a/0x370 kernel/fork.c:2504
-  __x64_sys_clone+0x62/0x80 kernel/fork.c:2504
+  sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+  sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+  sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+  sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
+  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
+  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
+  __do_sys_setsockopt net/socket.c:2100 [inline]
+  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
+  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
   do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
   entry_SYSCALL_64_after_hwframe+0x63/0xe7
 
@@ -309,29 +205,28 @@ Uninit was stored to memory at:
   sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
   sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
   sctp_process_init+0x162b/0x3e30 net/sctp/sm_make_chunk.c:2345
-  sctp_sf_do_5_1D_ce+0xe0f/0x30d0 net/sctp/sm_statefuns.c:767
-  sctp_do_sm+0x2b2/0x9720 net/sctp/sm_sideeffect.c:1152
-  sctp_endpoint_bh_rcv+0xda2/0x1050 net/sctp/endpointola.c:394
+  sctp_cmd_process_init net/sctp/sm_sideeffect.c:667 [inline]
+  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1374 [inline]
+  sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
+  sctp_do_sm+0x1b8b/0x9720 net/sctp/sm_sideeffect.c:1155
+  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1048
   sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:80
-  sctp_rcv+0x3a6d/0x54e0 net/sctp/input.c:256
-  ip_protocol_deliver_rcu+0x70f/0xbd0 net/ipv4/ip_input.c:204
-  ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
-  dst_input include/net/dst.h:442 [inline]
-  ip_rcv_finish net/ipv4/ip_input.c:413 [inline]
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  ip_rcv+0x6c5/0x740 net/ipv4/ip_input.c:523
-  __netif_receive_skb_one_core net/core/dev.c:5010 [inline]
-  __netif_receive_skb net/core/dev.c:5124 [inline]
-  process_backlog+0xef5/0x1410 net/core/dev.c:5955
-  napi_poll net/core/dev.c:6392 [inline]
-  net_rx_action+0x7a6/0x1aa0 net/core/dev.c:6460
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  run_ksoftirqd+0x25/0x40 kernel/softirq.c:607
-  smpboot_thread_fn+0x4a3/0x990 kernel/smpboot.c:165
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+  sctp_backlog_rcv+0x2d7/0x11a0 net/sctp/input.c:344
+  sk_backlog_rcv include/net/sock.h:950 [inline]
+  __release_sock+0x448/0x640 net/core/sock.c:2439
+  release_sock+0x99/0x2a0 net/core/sock.c:2955
+  sctp_wait_for_connect+0x3d7/0x840 net/sctp/socket.c:9167
+  __sctp_connect+0x1e9d/0x1f20 net/sctp/socket.c:1226
+  __sctp_setsockopt_connectx net/sctp/socket.c:1322 [inline]
+  sctp_setsockopt_connectx_old net/sctp/socket.c:1338 [inline]
+  sctp_setsockopt+0x960d/0x19090 net/sctp/socket.c:4647
+  sock_common_setsockopt+0x13b/0x170 net/core/sock.c:3151
+  __sys_setsockopt+0x7c3/0xa30 net/socket.c:2084
+  __do_sys_setsockopt net/socket.c:2100 [inline]
+  __se_sys_setsockopt+0xdd/0x100 net/socket.c:2097
+  __x64_sys_setsockopt+0x62/0x80 net/socket.c:2097
+  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
 
 Local variable description: ----addr.i@sctp_process_init
 Variable was created at:
