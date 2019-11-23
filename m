@@ -5,67 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF8EC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF12D20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C69420679
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh0Pta1c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4LyYeKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfKWOS6 (ORCPT
+        id S1726813AbfKWOTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 09:18:58 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45627 "EHLO
+        Sat, 23 Nov 2019 09:19:43 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38374 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfKWOS5 (ORCPT
+        with ESMTP id S1726524AbfKWOTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 09:18:57 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k1so4860133pgg.12;
-        Sat, 23 Nov 2019 06:18:57 -0800 (PST)
+        Sat, 23 Nov 2019 09:19:43 -0500
+Received: by mail-pg1-f194.google.com with SMTP id t3so4434360pgl.5;
+        Sat, 23 Nov 2019 06:19:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5+HKRBPgrlkT72FJQm83/RuV1HTnht2e+fyIAxU9IDU=;
-        b=Zh0Pta1c9piN/Ve/Tm/yyJw3tYQCNPqVHwiKmyDBAdixxgE9caRst3dWuOOiP3Pfpz
-         LlXICjJbocBjxSosmyf6f5bE2yNK4gVjxly26pBZgkemWAQW8quPexC2kaOLvQfO0DYN
-         bnAutBZM3Fv1TiBCQD8Dlrk+PiZ4jSj69hF+Bx2B4ZcLAVO93bI2yiAZF94uHcLCVBoq
-         XP8ZC3674XIh7wt8h3PtN0xdl1cMbnMNxEiuFgun/UCRYEVDVXYWFH7+lMeF21dF4x3F
-         VhmxYWkmCNtwB8/hQhmBmtWjuezn4M8ZWkCbKXHBG1puIR1Bcb3kVRudO1xMB+IIfQQ0
-         GkNw==
+        bh=l9I4KqFGS6ff8/IYdfHFE2ABoOk3S9eLWIs9fo62ASc=;
+        b=W4LyYeKtMUMQo5EEoQI6QKHteSm2OGuC2/43baA3jUpoANrMzlBhI6HbFOGl2zR9Xs
+         INH2OSkN7XARs04dGPMpRUs9im8Zh0X7AVbnd/r7kEX26BFFo9z6lVswFybzXqYRJRFg
+         FudSy19r0zx0MBvALSJanDGtD5Q94vYOlPByOOkdyRL30lpYieFlMlbXANiSXnx6hRe7
+         gjCUXF1kyvh7EfEYKQnoJD99NLRpUOA79yVuqlZbdO4Q13rmgIuhCOT88Goxv+BgUfGn
+         YDOdgWElhG/vNXt0e0dmCm8s1yzfyJcLmYQj8mAaiJFWv8QxHT/Mq4GSgZB5Zq/Uf/om
+         bujQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5+HKRBPgrlkT72FJQm83/RuV1HTnht2e+fyIAxU9IDU=;
-        b=ZknJetqrRoJWG/snQijJZjTigENB8SSgb1pbbSbGGy1AhJMka1jKRJSNvCg/q3L+mT
-         45j4qAsOCbZ6ci8X2M3TOJUnJlQdviijGAEUSz7obCe/hS1+P3sjC7knEoLOiOpqQM/v
-         ya4Po1XLqMOaddU7INql8DNavV3Z4d9Ev3ufp+Lu4GjJt8tauLlJDsdYRVu/ew51jpsx
-         X9E+F+LkbbVMYcOxCqoO+HbwwftQ+x6mLjTpUkX4G9H4fqcz4wYqjuZhvidlGJTu/hTk
-         1zpWPulR4XbpUO0AhOhvh8xKwwXu+9pCQJEqVZAdikKOtV4BY6dcropaepq75FE6B9Ai
-         GAkg==
-X-Gm-Message-State: APjAAAX9l+qLiuhHA6jYmUuBuyECqIGPXsVz945jW+MeJPDYwLDlsyPY
-        19/PQB0ZttJcNwfTeyk8THU=
-X-Google-Smtp-Source: APXvYqwmM2CGZ9NV2t7afNAi5NSJrnoU73ZseZAi/yjFX7c23seSOvOH06ah+PrGHGVjwGHml2iDSA==
-X-Received: by 2002:a63:710:: with SMTP id 16mr2106649pgh.58.1574518736821;
-        Sat, 23 Nov 2019 06:18:56 -0800 (PST)
+        bh=l9I4KqFGS6ff8/IYdfHFE2ABoOk3S9eLWIs9fo62ASc=;
+        b=EN1UEFJ7NUVx0gvnAhjACymjj+6mhCo6lS+io/biqkdIfasdNe7d8VTPuw7L02wTem
+         Mw2ia9p9r5hlpiA8yhCX0oN8Hyal7UQgOKx5BMu3v4Rwt7W/8XZC/3LV2ahn3iWvylEM
+         vvKvRuoVKA8W/4Z0fy7/eTm3JE0hxPk4dzlIoKg5cu24b6QePfkw0S8IgK1OXeWSgiGm
+         72VMjPxiPD3780yvtRJawDaVwZzRm3rRnqXMhkNDRmwaKpKxXGFKNQACeDIj5o4pk0H/
+         9a42i8wdr8OgNGESnxwnJUIpI5PjD1oM9xNu4Wo+JYcfgNKfUbXKMZeMnOnT7q99vy9B
+         VmYg==
+X-Gm-Message-State: APjAAAU7bINwwWlwWtiA9oydpfzRfOyo13ihlqrZ2SgWlhlOirHjc7o0
+        T7/xLfcb96p4UqUe0gxJysE=
+X-Google-Smtp-Source: APXvYqzQqAJJxpRwZ2VWlAvLN7OUti2D6yEkc7VDBUERoJW1Tq9GFB1SpZMSgzTi1s8A+JhPrBlx+w==
+X-Received: by 2002:a63:6b87:: with SMTP id g129mr13033657pgc.438.1574518782307;
+        Sat, 23 Nov 2019 06:19:42 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id b5sm2484267pjp.13.2019.11.23.06.18.52
+        by smtp.gmail.com with ESMTPSA id y17sm1836441pfl.92.2019.11.23.06.19.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 06:18:56 -0800 (PST)
+        Sat, 23 Nov 2019 06:19:41 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jamie Iles <jamie@jamieiles.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v4] crypto: picoxcell: adjust the position of tasklet_init and fix missed tasklet_kill
-Date:   Sat, 23 Nov 2019 22:18:45 +0800
-Message-Id: <20191123141845.16183-1-hslester96@gmail.com>
+Subject: [PATCH net v3] net: macb: add missed tasklet_kill
+Date:   Sat, 23 Nov 2019 22:19:18 +0800
+Message-Id: <20191123141918.16239-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,61 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since tasklet is needed to be initialized before registering IRQ
-handler, adjust the position of tasklet_init to fix the wrong order.
+This driver forgets to kill tasklet in remove.
+Add the call to fix it.
 
-Besides, to fix the missed tasklet_kill, this patch adds a helper
-function and uses devm_add_action to kill the tasklet automatically.
-
-Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-Changes in v4:
-  - Use devm_add_action instead of devm_add_action_or_reset.
+Changes in v3:
+  - Add fixes tag and target 'net'.
 
- drivers/crypto/picoxcell_crypto.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
-index 3cbefb41b099..2680e1525db5 100644
---- a/drivers/crypto/picoxcell_crypto.c
-+++ b/drivers/crypto/picoxcell_crypto.c
-@@ -1613,6 +1613,11 @@ static const struct of_device_id spacc_of_id_table[] = {
- MODULE_DEVICE_TABLE(of, spacc_of_id_table);
- #endif /* CONFIG_OF */
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 1e1b774e1953..2ec416098fa3 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4383,6 +4383,7 @@ static int macb_remove(struct platform_device *pdev)
  
-+static void spacc_tasklet_kill(void *data)
-+{
-+	tasklet_kill(data);
-+}
-+
- static int spacc_probe(struct platform_device *pdev)
- {
- 	int i, err, ret;
-@@ -1655,6 +1660,14 @@ static int spacc_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
- 
-+	tasklet_init(&engine->complete, spacc_spacc_complete,
-+		     (unsigned long)engine);
-+
-+	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
-+			      &engine->complete);
-+	if (ret)
-+		return ret;
-+
- 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
- 			     engine->name, engine)) {
- 		dev_err(engine->dev, "failed to request IRQ\n");
-@@ -1712,8 +1725,6 @@ static int spacc_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&engine->completed);
- 	INIT_LIST_HEAD(&engine->in_progress);
- 	engine->in_flight = 0;
--	tasklet_init(&engine->complete, spacc_spacc_complete,
--		     (unsigned long)engine);
- 
- 	platform_set_drvdata(pdev, engine);
- 
+ 	if (dev) {
+ 		bp = netdev_priv(dev);
++		tasklet_kill(&bp->hresp_err_tasklet);
+ 		if (dev->phydev)
+ 			phy_disconnect(dev->phydev);
+ 		mdiobus_unregister(bp->mii_bus);
 -- 
 2.24.0
 
