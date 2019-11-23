@@ -2,303 +2,107 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E330C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 04:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11819C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 04:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DB920700
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 04:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D592071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 04:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csyKcR0G"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="j36DMn6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfKWEJi (ORCPT
+        id S1726721AbfKWERi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 23:09:38 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46612 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfKWEJh (ORCPT
+        Fri, 22 Nov 2019 23:17:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33775 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfKWERi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 23:09:37 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n14so8384840oie.13;
-        Fri, 22 Nov 2019 20:09:36 -0800 (PST)
+        Fri, 22 Nov 2019 23:17:38 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w9so11088799wrr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 20:17:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=/StAbOzu7TbVfpwEDDPv1iyC2lDLFD40/T8YtuapqgM=;
-        b=csyKcR0G6duYbAFeSfsl0TObsmUCbg7yjnrstyyH4dQlTmJ35FInruSwHWJOBcab3T
-         sZu0EMdMqS+h4N3EEoqb2lpglYcllBFIu192QF/Ec3hV2ArLj/nFWFSgItM/7eC2NU1u
-         NfE2FQDgCbzo9dM4dg9CeQiHBliIPCQJnwMvLtkL1tB2vP1W4DMGxK1ims31tcOgAfIS
-         5xGf/hfl99aue72wpqGIuUu0RK/AM53bWHr5gT6SthTLTAZ4KFuuLL29xNZpMzspM6hV
-         5xI2741CrL0spL146gleHSvMejh7Bi41vSLwDLobP9osr0s3csri/zvKCCh6ZiW85LZH
-         4otg==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gDRBUuKpP+wNpMW5KqaT4gpqA2dKp4hcDwnNDbud2dM=;
+        b=j36DMn6kPFHZgWoHUJ2Rtfbs80kPgyE4ukl7Z/tbaY0QZ9OtKNFycqz0fMZu55AkcF
+         /D39gAcldhgjmxqVTgHqlSCNKR/xNQVlXcllgqGCLopuykgzrP5j6Dzhszz3WB6nQV5q
+         cPMJG4T/ogSHoFj/Ug5dN3sFRqVQ90+niNkW5ewg9du9jKqHJ+tfodeylsuVeOPmtlrf
+         8c6JqBSLh+wkywN6TxmX2L3KeapdAALQyrMkHXFQEE4EfcPGlgZN8DMFH3UT+ezdgywN
+         Vr7rx8bMYQm9VEnFP22kc2BPOMA3bdcs9EclDuZ2UI9UW2hfuNrtlmWYeAVk5ATiA0aU
+         xC7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=/StAbOzu7TbVfpwEDDPv1iyC2lDLFD40/T8YtuapqgM=;
-        b=d3mAghPy7TOM5tGxTSUrrEz63MJNakRdcyyeXcrtOrUR9aXtFeXvfGbLxeumBb/+O5
-         YTieQU4WgtOSLrgHTkVo/ZZKmd2X3nHllKY38TS6oXdyKOhagJiMcUHifzgz7BSAaLhc
-         mI+kqRxpz/ms15Mauat/JWhtBTuOEmYI9zdrB3QArQ657G3/1g3itC9XLcQDqPNs+sMH
-         obzxpkGa7o0XcDkjrUw3dv1wUJYP8yjCampZ2RWcTmxPYIa66PwUx+TR1Ol0jnYDC2ZP
-         9h3GsY5JtC4d+bVIgP1R9liQS0XFV7hWu+Qwh4tDEEufNUoCfdgLb2Fr43T4irjrMnO9
-         jrpg==
-X-Gm-Message-State: APjAAAXYSUUzAj+yKxyLKkjI3dyrxpCLud5umJ30/tfrp71/OSJ18sEY
-        yXqcTfdzDsR2tDBQkie2D8w=
-X-Google-Smtp-Source: APXvYqztg7h+ZdNBjZ+JwfJq+MHBkRf07w6eOrZ7gcY8qzAAQtM+4cY4xM2ObWJx3rVUhJo87tpGWg==
-X-Received: by 2002:aca:ec45:: with SMTP id k66mr232432oih.179.1574482176302;
-        Fri, 22 Nov 2019 20:09:36 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e93sm2957367otb.60.2019.11.22.20.09.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Nov 2019 20:09:35 -0800 (PST)
-Date:   Fri, 22 Nov 2019 20:09:33 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Giovanni Mascellani <gio@debian.org>
-Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dell-smm-hwmon: Add support for disabling
- automatic BIOS fan control
-Message-ID: <20191123040933.GA13255@roeck-us.net>
-References: <20191122101519.1246458-1-gio@debian.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gDRBUuKpP+wNpMW5KqaT4gpqA2dKp4hcDwnNDbud2dM=;
+        b=IKCaPRz8/fhBeKp2txlVTZ66bLfjoq+ZiWEEcuMlQjNfZz76g85E/D7lz9grvokFWa
+         Fz0Qu8gs4sh2C6x33fvm/4DJM7eexkiFbkZSgpXCVD5Mzw1atyyjicjZV1osUJycz8DS
+         09JvDv5bzwrFzw5gne/7+myF6nS9EfN0owU5yiETf3f5dsvZBiqKMZceLLELDulaATfQ
+         9Q33VuyBaPugpwmgb7r7HNPEeGKrR4lQewZ3hVwehmxadXnfgb6CgwiMNahznCxaSBrI
+         KsvVaWmd0WpnDa9uT+HjA+NA+U4ZyxpTYsnjuUVauA8LzJTZTCcMOdR8EHNAPjdkrZC3
+         P85A==
+X-Gm-Message-State: APjAAAVSK1g/fx1DEUuPgw9yI9PEt1/42NSiA6A1Sp9RgcO9xtrtBmRT
+        fIuBnrHuhoWV/V/e2hNoSx3sftJ53/plLn6RDwvdXfdJ
+X-Google-Smtp-Source: APXvYqyn42ZgGo1p04GcxW1ERelAYu47RWFLPCm36JIsphxBjAF4K6sOatZ6aHZVBoF74GoN9tXlaCnqSBdzZ1hZZwQ=
+X-Received: by 2002:a5d:6181:: with SMTP id j1mr20153851wru.251.1574482656172;
+ Fri, 22 Nov 2019 20:17:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191122101519.1246458-1-gio@debian.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191122225659.21876-1-paul.walmsley@sifive.com> <20191122225659.21876-2-paul.walmsley@sifive.com>
+In-Reply-To: <20191122225659.21876-2-paul.walmsley@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sat, 23 Nov 2019 09:47:26 +0530
+Message-ID: <CAAhSdy3voiLFRVmn-=h9Ltn7=10_FJUGxub063oMuS4znuK+3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] riscv: defconfigs: enable debugfs
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:15:18AM +0100, Giovanni Mascellani wrote:
-> This patch exports standard hwmon pwmX_enable sysfs attribute for
-> enabling or disabling automatic fan control by BIOS. Standard value
-> "1" is for disabling automatic BIOS fan control and value "2" for
-> enabling.
-> 
-> By default BIOS auto mode is enabled by laptop firmware.
-> 
-> When BIOS auto mode is enabled, custom fan speed value (set via hwmon
-> pwmX sysfs attribute) is overwritten by SMM in few seconds and
-> therefore any custom settings are without effect. So this is reason
-> why implementing option for disabling BIOS auto mode is needed.
-> 
-> So finally this patch allows kernel to set and control fan speed on
-> laptops, but it can be dangerous (like setting speed of other fans).
-> 
-> The SMM commands to enable or disable automatic fan control are not
-> documented and are not the same on all Dell laptops. Therefore a
-> whitelist is used to send the correct codes only on laptopts for which
-> they are known.
-> 
-> This patch was originally developed by Pali Rohár; later Giovanni
-> Mascellani implemented the whitelist.
-> 
-> Signed-off-by: Giovanni Mascellani <gio@debian.org>
-> Co-Developed-by: Pali Rohár <pali.rohar@gmail.com>
-> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
-
-Applied, after fixing checkpatch warnings.
-
-Guenter
-
+On Sat, Nov 23, 2019 at 4:27 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> debugfs is broadly useful, so enable it in the RISC-V defconfigs.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 > ---
->  drivers/hwmon/dell-smm-hwmon.c | 114 ++++++++++++++++++++++++++++++---
->  1 file changed, 104 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
-> index 4212d022d253..25d160b36a57 100644
-> --- a/drivers/hwmon/dell-smm-hwmon.c
-> +++ b/drivers/hwmon/dell-smm-hwmon.c
-> @@ -68,6 +68,8 @@ static uint i8k_pwm_mult;
->  static uint i8k_fan_max = I8K_FAN_HIGH;
->  static bool disallow_fan_type_call;
->  static bool disallow_fan_support;
-> +static unsigned int manual_fan;
-> +static unsigned int auto_fan;
->  
->  #define I8K_HWMON_HAVE_TEMP1	(1 << 0)
->  #define I8K_HWMON_HAVE_TEMP2	(1 << 1)
-> @@ -300,6 +302,20 @@ static int i8k_get_fan_nominal_speed(int fan, int speed)
->  	return i8k_smm(&regs) ? : (regs.eax & 0xffff) * i8k_fan_mult;
->  }
->  
-> +/*
-> + * Enable or disable automatic BIOS fan control support
-> + */
-> +static int i8k_enable_fan_auto_mode(bool enable)
-> +{
-> +	struct smm_regs regs = { };
-> +
-> +	if (disallow_fan_support)
-> +		return -EINVAL;
-> +
-> +	regs.eax = enable ? auto_fan : manual_fan;
-> +	return i8k_smm(&regs);
-> +}
-> +
->  /*
->   * Set the fan speed (off, low, high). Returns the new fan status.
->   */
-> @@ -726,6 +742,35 @@ static ssize_t i8k_hwmon_pwm_store(struct device *dev,
->  	return err < 0 ? -EIO : count;
->  }
->  
-> +static ssize_t i8k_hwmon_pwm_enable_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	int err;
-> +	bool enable;
-> +	unsigned long val;
-> +
-> +	if (!auto_fan)
-> +		return -ENODEV;
-> +
-> +	err = kstrtoul(buf, 10, &val);
-> +	if (err)
-> +		return err;
-> +
-> +	if (val == 1)
-> +		enable = false;
-> +	else if (val == 2)
-> +		enable = true;
-> +	else
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&i8k_mutex);
-> +	err = i8k_enable_fan_auto_mode(enable);
-> +	mutex_unlock(&i8k_mutex);
-> +
-> +	return err ? err : count;
-> +}
-> +
->  static SENSOR_DEVICE_ATTR_RO(temp1_input, i8k_hwmon_temp, 0);
->  static SENSOR_DEVICE_ATTR_RO(temp1_label, i8k_hwmon_temp_label, 0);
->  static SENSOR_DEVICE_ATTR_RO(temp2_input, i8k_hwmon_temp, 1);
-> @@ -749,6 +794,7 @@ static SENSOR_DEVICE_ATTR_RO(temp10_label, i8k_hwmon_temp_label, 9);
->  static SENSOR_DEVICE_ATTR_RO(fan1_input, i8k_hwmon_fan, 0);
->  static SENSOR_DEVICE_ATTR_RO(fan1_label, i8k_hwmon_fan_label, 0);
->  static SENSOR_DEVICE_ATTR_RW(pwm1, i8k_hwmon_pwm, 0);
-> +static SENSOR_DEVICE_ATTR_WO(pwm1_enable, i8k_hwmon_pwm_enable, 0);
->  static SENSOR_DEVICE_ATTR_RO(fan2_input, i8k_hwmon_fan, 1);
->  static SENSOR_DEVICE_ATTR_RO(fan2_label, i8k_hwmon_fan_label, 1);
->  static SENSOR_DEVICE_ATTR_RW(pwm2, i8k_hwmon_pwm, 1);
-> @@ -780,12 +826,13 @@ static struct attribute *i8k_attrs[] = {
->  	&sensor_dev_attr_fan1_input.dev_attr.attr,	/* 20 */
->  	&sensor_dev_attr_fan1_label.dev_attr.attr,	/* 21 */
->  	&sensor_dev_attr_pwm1.dev_attr.attr,		/* 22 */
-> -	&sensor_dev_attr_fan2_input.dev_attr.attr,	/* 23 */
-> -	&sensor_dev_attr_fan2_label.dev_attr.attr,	/* 24 */
-> -	&sensor_dev_attr_pwm2.dev_attr.attr,		/* 25 */
-> -	&sensor_dev_attr_fan3_input.dev_attr.attr,	/* 26 */
-> -	&sensor_dev_attr_fan3_label.dev_attr.attr,	/* 27 */
-> -	&sensor_dev_attr_pwm3.dev_attr.attr,		/* 28 */
-> +	&sensor_dev_attr_pwm1_enable.dev_attr.attr,	/* 23 */
-> +	&sensor_dev_attr_fan2_input.dev_attr.attr,	/* 24 */
-> +	&sensor_dev_attr_fan2_label.dev_attr.attr,	/* 25 */
-> +	&sensor_dev_attr_pwm2.dev_attr.attr,		/* 26 */
-> +	&sensor_dev_attr_fan3_input.dev_attr.attr,	/* 27 */
-> +	&sensor_dev_attr_fan3_label.dev_attr.attr,	/* 28 */
-> +	&sensor_dev_attr_pwm3.dev_attr.attr,		/* 29 */
->  	NULL
->  };
->  
-> @@ -828,16 +875,19 @@ static umode_t i8k_is_visible(struct kobject *kobj, struct attribute *attr,
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_TEMP10))
->  		return 0;
->  
-> -	if (index >= 20 && index <= 22 &&
-> +	if (index >= 20 && index <= 23 &&
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN1))
->  		return 0;
-> -	if (index >= 23 && index <= 25 &&
-> +	if (index >= 24 && index <= 26 &&
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN2))
->  		return 0;
-> -	if (index >= 26 && index <= 28 &&
-> +	if (index >= 27 && index <= 29 &&
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN3))
->  		return 0;
->  
-> +	if (index == 23 && !auto_fan)
-> +		return 0;
-> +
->  	return attr->mode;
->  }
->  
-> @@ -1135,12 +1185,48 @@ static struct dmi_system_id i8k_blacklist_fan_support_dmi_table[] __initdata = {
->  	{ }
->  };
->  
-> +struct i8k_fan_control_data {
-> +	unsigned int manual_fan;
-> +	unsigned int auto_fan;
-> +};
-> +
-> +enum i8k_fan_controls {
-> +	I8K_FAN_34A3_35A3,
-> +};
-> +
-> +static const struct i8k_fan_control_data i8k_fan_control_data[] = {
-> +	[I8K_FAN_34A3_35A3] = {
-> +		.manual_fan = 0x34a3,
-> +		.auto_fan = 0x35a3,
-> +	},
-> +};
-> +
-> +static struct dmi_system_id i8k_whitelist_fan_control[] __initdata = {
-> +	{
-> +		.ident = "Dell Precision 5530",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Precision 5530"),
-> +		},
-> +		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-> +	},
-> +	{
-> +		.ident = "Dell Latitude E6440",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude E6440"),
-> +		},
-> +		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-> +	},
-> +	{ }
-> +};
-> +
->  /*
->   * Probe for the presence of a supported laptop.
->   */
->  static int __init i8k_probe(void)
->  {
-> -	const struct dmi_system_id *id;
-> +	const struct dmi_system_id *id, *fan_control;
->  	int fan, ret;
->  
->  	/*
-> @@ -1200,6 +1286,14 @@ static int __init i8k_probe(void)
->  	i8k_fan_max = fan_max ? : I8K_FAN_HIGH;	/* Must not be 0 */
->  	i8k_pwm_mult = DIV_ROUND_UP(255, i8k_fan_max);
->  
-> +	fan_control = dmi_first_match(i8k_whitelist_fan_control);
-> +	if (fan_control && fan_control->driver_data) {
-> +		const struct i8k_fan_control_data *fan_control_data = fan_control->driver_data;
-> +		manual_fan = fan_control_data->manual_fan;
-> +		auto_fan = fan_control_data->auto_fan;
-> +		pr_info("enabling support for setting automatic/manual fan control\n");
-> +	}
-> +
->  	if (!fan_mult) {
->  		/*
->  		 * Autodetect fan multiplier based on nominal rpm
+>  arch/riscv/configs/defconfig      | 1 +
+>  arch/riscv/configs/rv32_defconfig | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 420a0dbef386..f0710d8f50cc 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -100,4 +100,5 @@ CONFIG_9P_FS=y
+>  CONFIG_CRYPTO_USER_API_HASH=y
+>  CONFIG_CRYPTO_DEV_VIRTIO=y
+>  CONFIG_PRINTK_TIME=y
+> +CONFIG_DEBUG_FS=y
+>  # CONFIG_RCU_TRACE is not set
+> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+> index 87ee6e62b64b..bdec58e6c5f7 100644
+> --- a/arch/riscv/configs/rv32_defconfig
+> +++ b/arch/riscv/configs/rv32_defconfig
+> @@ -97,4 +97,5 @@ CONFIG_9P_FS=y
+>  CONFIG_CRYPTO_USER_API_HASH=y
+>  CONFIG_CRYPTO_DEV_VIRTIO=y
+>  CONFIG_PRINTK_TIME=y
+> +CONFIG_DEBUG_FS=y
+>  # CONFIG_RCU_TRACE is not set
+> --
+> 2.24.0.rc0
+>
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
