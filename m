@@ -2,89 +2,116 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C03C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BABC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505392071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574467462;
-	bh=ZO7QhYT8tyJEhx9gEbCpfGNhbL5HOrW5AWzIOrPre3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wQXwpEt+3yUN0MbPvgUBdgYHB1g+YNV8X6JcNKzzUfHVtH+J9HeB0RaNNoPKI1T+u
-	 sHa79CzfBlpoBztecdlcCWsZutddjhLajXlZmDxcK0Onu4HPYTzx86NmB20w1Yp8YR
-	 7UcxasX9c4nfuXs7E7hMZodC6KjAGcR4s/AhF+N4=
+	by mail.kernel.org (Postfix) with ESMTP id 8779D2071F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:07:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="B9t5JP5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfKWAEV (ORCPT
+        id S1726910AbfKWAHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 19:04:21 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33078 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKWAEU (ORCPT
+        Fri, 22 Nov 2019 19:07:25 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:59923 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKWAHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 19:04:20 -0500
-Received: by mail-ot1-f68.google.com with SMTP id q23so1894703otn.0;
-        Fri, 22 Nov 2019 16:04:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mh7ibfrhNKP+OX0OZlKsFx13aIqVgLPbq5iGSYIdzxA=;
-        b=jhdIWcJbl60zCS03hk+gChnMlH5SUVmn9yYCBKFcrGQzPKjsCcaqrG56u1cMLMIGw0
-         91lKFHZ88A+7UnsBMMxnoCUG9g8UcHv9RasXFHpcI/fPjU4x2C/I3WP6JkzIZhnZxGlz
-         1WXVt6nqva4gS/1KXyZggWYjyAmNRNf+l2QQgvMh8XyyjkR7RfbU81HTDVmcDuu97u2r
-         UORTVWqfSrELkR+TaL6pjh75wrhiuHEIJB84k1wj4airLzLSlNgtnfWIPwFnD8ee9aXb
-         ZTzmUFXm/eJafswEOa4DwHKascXwrJSHGs/KAae+RTobY9VKJIeja0W7ig0pM2ayA87R
-         HnNA==
-X-Gm-Message-State: APjAAAVgdl2EAjyMnjNCo+VmnaeG/Ykk0dWj0eDzg2X4vnxnmuYzz/4R
-        d1vkeiPV0ihA41zrUpGaBA==
-X-Google-Smtp-Source: APXvYqwdcuZg6Ci0LUijlWn0ZMT85d8WWT5QI9fVNF6xt5nP6k61iZb1lUjrwcAuJgzF2ivfZniaaQ==
-X-Received: by 2002:a05:6830:50:: with SMTP id d16mr12263248otp.132.1574467459915;
-        Fri, 22 Nov 2019 16:04:19 -0800 (PST)
-Received: from localhost ([2607:fb90:bd7:3743:c9ec:246b:67b7:9768])
-        by smtp.gmail.com with ESMTPSA id x11sm2563645oie.25.2019.11.22.16.04.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 16:04:19 -0800 (PST)
-Date:   Fri, 22 Nov 2019 18:04:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
-        linus.walleij@linaro.org, vinod.koul@linaro.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
-        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 01/12] dt-bindings: SLIMBus: add slim devices optional
- properties
-Message-ID: <20191123000417.GA30207@bogus>
-References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
- <20191121170509.10579-2-srinivas.kandagatla@linaro.org>
+        Fri, 22 Nov 2019 19:07:25 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 809ED23CF6;
+        Sat, 23 Nov 2019 01:07:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1574467641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Sgd6s1lFo4AdrnGcZEI5y3qvCZRfOyTVHDI2QhU1qMQ=;
+        b=B9t5JP5LI/jGhyJQ5pbVWs/8eQg8E1c6C/Uo5DKT9sy25g7Dof7WygGo1PEZF8BLvMa8Q/
+        z6NFofQ7VIR6uvoShgYUQ8SiakxMLHxD3sADgJC6mVv2doO6cKQzGR4uKstm/bnAWw9asW
+        FluNIILlecrdru21TLdKC5FLkfL44cQ=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] arm64: dts: ls1028a: fix reboot node
+Date:   Sat, 23 Nov 2019 01:07:09 +0100
+Message-Id: <20191123000709.13162-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121170509.10579-2-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 809ED23CF6
+X-Spamd-Result: default: False [6.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.636];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019 17:04:58 +0000, Srinivas Kandagatla wrote:
-> This patch adds an optional SLIMBus Interface device phandle property
-> that could be used by some of the SLIMBus devices.
-> 
-> Interface device is mostly used with devices that are dealing
-> with streaming.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  Documentation/devicetree/bindings/slimbus/bus.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
+The reboot register isn't located inside the DCFG controller, but in its
+own RST controller. Fix it.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 72b9a75976a1..dc75534a4754 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -102,7 +102,7 @@
+ 
+ 	reboot {
+ 		compatible ="syscon-reboot";
+-		regmap = <&dcfg>;
++		regmap = <&rst>;
+ 		offset = <0xb0>;
+ 		mask = <0x02>;
+ 	};
+@@ -161,6 +161,12 @@
+ 			big-endian;
+ 		};
+ 
++		rst: syscon@1e60000 {
++			compatible = "fsl,ls1028a-rst", "syscon";
++			reg = <0x0 0x1e60000 0x0 0x10000>;
++			little-endian;
++		};
++
+ 		scfg: syscon@1fc0000 {
+ 			compatible = "fsl,ls1028a-scfg", "syscon";
+ 			reg = <0x0 0x1fc0000 0x0 0x10000>;
+-- 
+2.20.1
+
