@@ -7,159 +7,130 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495ADC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EA5C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FDB2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE5D20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574469746;
-	bh=9KW8a9M9T30sOIjoriIqt5WzCVaK8BDOnx8bIp0IRpQ=;
+	s=default; t=1574469881;
+	bh=HrtQmNMlQPGY0CJyMR7Hh1FN3LuR9LXHZDAk9TecGlY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hodAf0KHUXJIveNYh9Y8Lb3NPgdcsgYSBhNf294X/g/xz5G2vMJ3O9KTCtNNLXNCT
-	 ZFtVvrgIOBvN/+2X8r7HR70S4zANRdTYwRLRHVdaew3WW5Q/vF8qtypntcnGSueGkO
-	 lu3BwFYQeve/Q/XCj3+/CrpaVEq/4MV9uLAEOWd0=
+	b=eAMJdtaYDaUtBmSb93H64fSfqr6FEbb/KtgZAEnmIJNgfXvr9tVkmq/CkUY+jKIyS
+	 QrBOBZ5tZ06xIu7dguca8RqG8a4KAk0+OwQVhOnd6iKg8imxVcr3c2jCU/A6Q5AsQm
+	 wk3gBWzcLU5d0X6nksW9OlJlx3L7+DbTDXJ4aYUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfKWAmZ (ORCPT
+        id S1726784AbfKWAok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 19:42:25 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46462 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKWAmY (ORCPT
+        Fri, 22 Nov 2019 19:44:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37496 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKWAok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 19:42:24 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n14so8114672oie.13;
-        Fri, 22 Nov 2019 16:42:22 -0800 (PST)
+        Fri, 22 Nov 2019 19:44:40 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d5so7804570otp.4;
+        Fri, 22 Nov 2019 16:44:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oGJX/reKzsvlPl7LrdXxSVKM8Xki6sNrSQDjk1YDSBs=;
-        b=GIW8BobwHWOhxHKQsPEQjyvePXeSZFihli0kC0qMGsSpl1aRuv16zq16Pslw5G4nuV
-         TjglMlKOUWKHjzXxuiNOFYvScaqk4+zYgRkBzrUuGsuv2fiyqrmtibAsy//RoriE4/xO
-         pOCyr3lefupvmZxMrXArGo8gVqJTbrcI5SsvSqXTnYjzTGFx7t7I2enS1akQCVB6NG8M
-         +uiPYUmq3C32t0FT0h21XFI5IiB1lNsgyWndDn7Ebkw6z+QkyoOKPVlzTRSPv3qNSy1Y
-         o0k0PaNYqCo1uXGSKBtcR0E3zvMNe9zDGD0eS2zFUCX6k/fTsW0F7Ubd2fiivK0WSP+t
-         iyYw==
-X-Gm-Message-State: APjAAAVMXo977D1sAFziD/A8Rkr6zXZ0B6LRzAd+EvTe6QVFNFU1syPz
-        TLlVYy0wJ+aJCw6+Pq2RyA==
-X-Google-Smtp-Source: APXvYqwsDotINaxgsn12/e8mFrQqRvrmOeyi4LbNLqU4REDWhKaPg5JyF5PmaeAU9FvzfzRLop8wig==
-X-Received: by 2002:aca:5413:: with SMTP id i19mr14976577oib.121.1574469742474;
-        Fri, 22 Nov 2019 16:42:22 -0800 (PST)
+        bh=ocM/TfQWn8TE8osmtfQ8wIGRKP2lr8zZ4qHKR/RTxk8=;
+        b=MZL2RnXfBr0oQNz/jN6eDvGrlqEggl25jLFB/2JDoMW2z/vxnPgZseFxd/UDPyTgrq
+         o6it096EqUSaPVpcZrH26XKBI6SJvRhCHkB4zwC8qRC9ruQPKyW+mLjo5+QdJE+s/0JY
+         +ul1vY+5ogztPsdSVnnB/I5LdQjUzj/C/Yuf2EalJQEXMEAUO+kRCBbJKscpp+336ROG
+         ZHJTbDzhOj0VOa3kmVvdo7mAJOtnr5I0voq3pjEnsCnwX0VuiSxZ9+a0VJKKxHejaCMQ
+         pNKn044fU4IzXJIu8aHTvn5fpBo7T17RfXZMYjq5bO11U1E3LqZmy8wLk46JxwjciW2w
+         uIgw==
+X-Gm-Message-State: APjAAAXzmUbYU07RpcEKG8YTlZ2NaubUEguLrGzwk5sHQs+i1r8I/zFK
+        rbb2HYfPY7tFxZcXVX90wA==
+X-Google-Smtp-Source: APXvYqwTtwrVHOXVe5oR9OATyOVwIbX//sNr5xMzcE6pqC7NMGobhGuQsuCW78elG91OHMWuUlwY+Q==
+X-Received: by 2002:a9d:604d:: with SMTP id v13mr12838416otj.222.1574469879638;
+        Fri, 22 Nov 2019 16:44:39 -0800 (PST)
 Received: from localhost (ip-70-5-93-147.ftwttx.spcsdns.net. [70.5.93.147])
-        by smtp.gmail.com with ESMTPSA id 94sm2792513otx.3.2019.11.22.16.42.21
+        by smtp.gmail.com with ESMTPSA id m205sm2685802oib.27.2019.11.22.16.44.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 16:42:21 -0800 (PST)
-Date:   Fri, 22 Nov 2019 18:42:19 -0600
+        Fri, 22 Nov 2019 16:44:38 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:44:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     p.zabel@pengutronix.de, martin.blumenstingl@googlemail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: reset: Add YAML schemas for the
- Intel Reset controller
-Message-ID: <20191123004219.GA14198@bogus>
-References: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
+        jsanka@codeaurora.org, chandanu@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [PATCH v3] msm:disp:dpu1: add support for display for SC7180
+ target
+Message-ID: <20191123004436.GA18110@bogus>
+References: <1574252368-4645-1-git-send-email-kalyan_t@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
+In-Reply-To: <1574252368-4645-1-git-send-email-kalyan_t@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 02:10:23PM +0800, Dilip Kota wrote:
-> Add YAML schemas for the reset controller on Intel
-> Gateway SoC.
+On Wed, Nov 20, 2019 at 05:49:28PM +0530, Kalyan Thota wrote:
+> Add display hw catalog changes for SC7180 target.
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Changes in v1:
+>  - Configure register offsets and capabilities for the
+>    display hw blocks.
+> 
+> Changes in v2:
+>  - mdss_irq data type has changed in the dependent
+>    patch, accommodate the necessary changes.
+>  - Add co-developed-by tags in the commit msg (Stephen Boyd).
+> 
+> Changes in v3:
+>  - fix kernel checkpatch errors in v2
+
+But not the one telling you to split bindings to separate patch?
+
+> 
+> This patch has dependency on the below series
+> 
+> https://patchwork.kernel.org/patch/11253647/
+> 
+> Co-developed-by: Shubhashree Dhar <dhar@codeaurora.org>
+> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+> Co-developed-by: Raviteja Tamatam <travitej@codeaurora.org>
+> Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 > ---
-> Changes on v3:
-> 	Fix DTC warnings
-> 	Add support to legacy xrx200 SoC
-> 	Change file name to intel,rcu-gw.yaml
+>  .../devicetree/bindings/display/msm/dpu.txt        |   4 +-
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     | 189 +++++++++++++++++++--
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   4 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          |   3 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
+>  drivers/gpu/drm/msm/msm_drv.c                      |   4 +-
+>  6 files changed, 190 insertions(+), 15 deletions(-)
 > 
->  .../devicetree/bindings/reset/intel,rcu-gw.yaml    | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> new file mode 100644
-> index 000000000000..743be2c49fb8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/reset/intel,rcu-gw.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: System Reset Controller on Intel Gateway SoCs
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-
-You can drop oneOf and items here.
-
-> +          - enum:
-> +              - intel,rcu-lgm
-> +              - intel,rcu-xrx200
-> +
-> +  reg:
-> +    description: Reset controller registers.
-
-maxItems: 1
-
-> +
-> +  intel,global-reset:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: Global reset register offset and bit offset.
-
-maxItems: 2
-
-> +
-> +  "#reset-cells":
-> +    minimum: 2
-> +    maximum: 3
-> +    description: |
-> +      First cell is reset request register offset.
-> +      Second cell is bit offset in reset request register.
-> +      Third cell is bit offset in reset status register.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - intel,global-reset
-> +  - "#reset-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    rcu0: reset-controller@e0000000 {
-> +        compatible = "intel,rcu-lgm";
-> +        reg = <0xe0000000 0x20000>;
-> +        intel,global-reset = <0x10 30>;
-> +        #reset-cells = <2>;
-> +    };
-> +
-> +    pwm: pwm@e0d00000 {
-> +        status = "disabled";
-> +        compatible = "intel,lgm-pwm";
-> +        reg = <0xe0d00000 0x30>;
-> +        clocks = <&cgu0 1>;
-> +        #pwm-cells = <2>;
-> +        resets = <&rcu0 0x30 21>;
-> +    };
-> -- 
-> 2.11.0
-> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> index a61dd40..512f022 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> @@ -8,7 +8,7 @@ The DPU display controller is found in SDM845 SoC.
+>  
+>  MDSS:
+>  Required properties:
+> -- compatible: "qcom,sdm845-mdss"
+> +- compatible: "qcom,sdm845-mdss", "qcom,sc7180-mdss"
+>  - reg: physical base address and length of contoller's registers.
+>  - reg-names: register region names. The following region is required:
+>    * "mdss"
+> @@ -41,7 +41,7 @@ Optional properties:
+>  
+>  MDP:
+>  Required properties:
+> -- compatible: "qcom,sdm845-dpu"
+> +- compatible: "qcom,sdm845-dpu", "qcom,sc7180-dpu"
+>  - reg: physical base address and length of controller's registers.
+>  - reg-names : register region names. The following region is required:
+>    * "mdp"
