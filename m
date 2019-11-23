@@ -2,167 +2,121 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3FBC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEC4C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8632071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F25A2071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4EoZznN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bwEVP9LA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKWQvM (ORCPT
+        id S1726875AbfKWQ4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:51:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35710 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfKWQvM (ORCPT
+        Sat, 23 Nov 2019 11:56:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48033 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726705AbfKWQ4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 11:51:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 23so7188109otf.2;
-        Sat, 23 Nov 2019 08:51:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Upjd5FUUY2gldqhTrP6G3VfXwkiVp2ftazHWWknqWA4=;
-        b=f4EoZznNRknE5+5KvGz4gn6nVLdgpGkAnfbkGyUIqGaP+UAxcV/BrOLd2UxApPRrEY
-         GK5bvfrDftwMSeSG2J5qWQsQbZKNzEWE1UscURDcyZ/Mf2IozhUK2hD7H7Wk6P+fr+Lj
-         vYt3DfrNbNBDK2yymxFGV/wFQn08Y+ugjt/BabLIUwHrZDgdzC99OIHCsK3JPAOKI3Fl
-         E0wzoBe1QNhnGqHxm235gEr3NX3lPvqWuX5gUSiK5gp+50CKyLWdeQC3cHqdNJ1vHc0O
-         Pu1CfHPZkXkBFCovetMk4xuIxH7tOZ0Zyl87WOiEm3Q62Gxg8qmKNTjf1qf5qKp1IeyI
-         ugIQ==
+        Sat, 23 Nov 2019 11:56:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574528160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2zzmCXVL6/qiRxw5VRJxtFFVEelD3xq1/ujpmzsTxFU=;
+        b=bwEVP9LAvhMO7ZNnBjKdLXMLDPmTZXLZNMFAJl4IKgFZt13tdMXGm0ZTIE8UJkwrVu/6tC
+        P26EejJ29Eo5UWJeIG9uXc70Zfa6547dWlvXRdJ9unOkcJiXOf+qyVRCogcNgqHfCvIy1r
+        HZ4nOC06NNEYvnV4GhYfpjNhfvvkj3M=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-YU6BSaBGPYCJ-HrxdtYD_A-1; Sat, 23 Nov 2019 11:55:59 -0500
+Received: by mail-qt1-f199.google.com with SMTP id k27so1723457qtu.12
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 08:55:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Upjd5FUUY2gldqhTrP6G3VfXwkiVp2ftazHWWknqWA4=;
-        b=lV1OOhOx6mTrp0h6VAeyGX94uoAVikfnib2J1JOyJGUA6THZasdy4t//ZqCb58crYA
-         cayougm6bGPybiKAYBA52JO+u4KqrfUcZzNUPHcOn1bE2tsj3bREcBvdkOVa2CqSzU3t
-         yZYq8fcFqoNuUb0E9AllUSbIMmqEhzCYmNTV5ZDvpE0MdP2mqWRLdn2lDDqs6Y7sg5Wv
-         O03azfqZc9I4uii6E1dDoPrZYef/ofqp1LSpdNTfn3y2V+GCvUcEzdLJD08D0gRmOhRp
-         WoTeFB40abF4q4lpPucsx7y9RlhLJSiuKZyjQifd+zB1/dqWH+7fg4/aqq1zO5GyVuVr
-         pk3Q==
-X-Gm-Message-State: APjAAAUN/jTY37W352O1BRnlfa6xQbUHW7+unwXnprld0dGbaCBm4rU2
-        e7XtEuXKFCicTacJ+CL6wfI=
-X-Google-Smtp-Source: APXvYqy/FuuHH8tC1YjzsbuxoICI/PjIU8E8OEmgejzSAAA40pPWUGyBa/f/fjeP66p0eSxGD/kxCw==
-X-Received: by 2002:a9d:7399:: with SMTP id j25mr5600107otk.155.1574527870570;
-        Sat, 23 Nov 2019 08:51:10 -0800 (PST)
-Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::7])
-        by smtp.gmail.com with ESMTPSA id n5sm609133oie.16.2019.11.23.08.51.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 23 Nov 2019 08:51:09 -0800 (PST)
-Date:   Sat, 23 Nov 2019 09:51:08 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-Message-ID: <20191123165108.GA15306@ubuntu-x2-xlarge-x86>
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=oUPi4IjzCEcsGqjHvxV40TwATuFQ6qhdtMszb+yQ4YA=;
+        b=jFBs0j0gRypwLAbcP27oUJn2jdPl4SsbYdsjHYGyj3unH6GETzxU9N7ySphFLnfbI1
+         nCcKMqhcDNKYhC99Wk44TftLnMl01+UKCgpxr2U8VVtIYwq3vHtcXn7fx+54Y1SL4gH4
+         ac3ozwDc4bgfxGmKOcHMXBXh6WhcinbHtjVv3A6mNmXC/m9cuQka//Htv74671rAVVej
+         FscitYXpKfK0Hooe43rsmfQX2XRoYW5Kh2cOAL3UXjj70O3Ii/Qv76POQb6HKSHnIErH
+         m1ORCeY8bxnWnJ0H+sYivIKVNtBiZy3x7ILkQDPFd7PJ4Zws2uJBZdrqjcncwf43S/VE
+         WsqQ==
+X-Gm-Message-State: APjAAAXkmYLR1f05gb6JYEThZ2knsY5N51PMD0ZwcTLhdU9/mAH+aTA4
+        OlejVHdNEiJv6HVdatNm7S2tcyaUWW2twkS98nkUGr+BM0viRMEZMF/MMQVyXHdk5yEokgOZpeO
+        /k6QnrVLH86TiR6umIQ9ipBkX
+X-Received: by 2002:ac8:109:: with SMTP id e9mr10744670qtg.233.1574528158668;
+        Sat, 23 Nov 2019 08:55:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx5oU6z7kIgkAY+TdwrAkagYjcdcvZ06XXDl+M6D2/wPofNwFAEDJeY+TKLUO56xn44s6qvMg==
+X-Received: by 2002:ac8:109:: with SMTP id e9mr10744651qtg.233.1574528158492;
+        Sat, 23 Nov 2019 08:55:58 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id a3sm618985qkd.67.2019.11.23.08.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Nov 2019 08:55:57 -0800 (PST)
+Date:   Sat, 23 Nov 2019 11:55:52 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mst@redhat.com, khazhy@google.com, lvivier@redhat.com,
+        mimu@linux.ibm.com, pasic@linux.ibm.com, wei.w.wang@intel.com
+Subject: [PULL] virtio: last minute bugfixes
+Message-ID: <20191123115552-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+X-Mutt-Fcc: =sent
+X-MC-Unique: YU6BSaBGPYCJ-HrxdtYD_A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191121092646.8449-1-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 10:26:44AM +0100, Nicolas Saenz Julienne wrote:
-> Using a mask to represent bus DMA constraints has a set of limitations.
-> The biggest one being it can only hold a power of two (minus one). The
-> DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> as a limit. This quirk is already used by some architectures although
-> still rare.
-> 
-> With the introduction of the Raspberry Pi 4 we've found a new contender
-> for the use of bus DMA limits, as its PCIe bus can only address the
-> lower 3GB of memory (of a total of 4GB). This is impossible to represent
-> with a mask. To make things worse the device-tree code rounds non power
-> of two bus DMA limits to the next power of two, which is unacceptable in
-> this case.
-> 
-> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
-> over the tree and treat it as such. Note that dev->bus_dma_limit should
-> contain the higher accesible DMA address.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-<snip>
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 041066f3ec99..0cc702a70a96 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -421,8 +421,7 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
->  	if (iova_len < (1 << (IOVA_RANGE_CACHE_MAX_SIZE - 1)))
->  		iova_len = roundup_pow_of_two(iova_len);
->  
-> -	if (dev->bus_dma_mask)
-> -		dma_limit &= dev->bus_dma_mask;
-> +	dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
->  
->  	if (domain->geometry.force_aperture)
->  		dma_limit = min(dma_limit, domain->geometry.aperture_end);
+The following changes since commit af42d3466bdc8f39806b26f593604fdc54140bcb=
+:
 
-Just as an FYI, this introduces a warning on arm32 allyesconfig for me:
+  Linux 5.4-rc8 (2019-11-17 14:47:30 -0800)
 
-In file included from ../include/linux/list.h:9,
-                 from ../include/linux/kobject.h:19,
-                 from ../include/linux/of.h:17,
-                 from ../include/linux/irqdomain.h:35,
-                 from ../include/linux/acpi.h:13,
-                 from ../include/linux/acpi_iort.h:10,
-                 from ../drivers/iommu/dma-iommu.c:11:
-../drivers/iommu/dma-iommu.c: In function 'iommu_dma_alloc_iova':
-../include/linux/kernel.h:851:29: warning: comparison of distinct pointer types lacks a cast
-  851 |   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-      |                             ^~
-../include/linux/kernel.h:865:4: note: in expansion of macro '__typecheck'
-  865 |   (__typecheck(x, y) && __no_side_effects(x, y))
-      |    ^~~~~~~~~~~
-../include/linux/kernel.h:875:24: note: in expansion of macro '__safe_cmp'
-  875 |  __builtin_choose_expr(__safe_cmp(x, y), \
-      |                        ^~~~~~~~~~
-../include/linux/kernel.h:884:19: note: in expansion of macro '__careful_cmp'
-  884 | #define min(x, y) __careful_cmp(x, y, <)
-      |                   ^~~~~~~~~~~~~
-../include/linux/kernel.h:917:39: note: in expansion of macro 'min'
-  917 |  __x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
-      |                                       ^~~
-../drivers/iommu/dma-iommu.c:424:14: note: in expansion of macro 'min_not_zero'
-  424 |  dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
-      |              ^~~~~~~~~~~~
+are available in the Git repository at:
 
-Cheers,
-Nathan
+  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_li=
+nus
+
+for you to fetch changes up to c9a6820fc0da2603be3054ee7590eb9f350508a7:
+
+  virtio_balloon: fix shrinker count (2019-11-20 02:15:57 -0500)
+
+----------------------------------------------------------------
+virtio: last minute bugfixes
+
+Minor bugfixes all over the place.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+----------------------------------------------------------------
+Halil Pasic (1):
+      virtio_ring: fix return code on DMA mapping fails
+
+Laurent Vivier (1):
+      virtio_console: allocate inbufs in add_port() only if it is needed
+
+Michael S. Tsirkin (1):
+      virtio_balloon: fix shrinker scan number of pages
+
+Wei Wang (1):
+      virtio_balloon: fix shrinker count
+
+ drivers/char/virtio_console.c   | 28 +++++++++++++---------------
+ drivers/virtio/virtio_balloon.c | 20 +++++++++++++-------
+ drivers/virtio/virtio_ring.c    |  4 ++--
+ 3 files changed, 28 insertions(+), 24 deletions(-)
+
