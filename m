@@ -7,47 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FB4C43215
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB29C432C0
 	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D917420870
+	by mail.kernel.org (Postfix) with ESMTP id 04F712084D
 	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKWIPP (ORCPT
+        id S1726992AbfKWIPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 23 Nov 2019 03:15:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36274 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:36255 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfKWIPM (ORCPT
+        with ESMTP id S1726705AbfKWIPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 03:15:12 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYQZI-0002W8-Ce; Sat, 23 Nov 2019 09:15:00 +0100
+        id 1iYQZK-0002WR-Ge; Sat, 23 Nov 2019 09:15:02 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E75891C1ACC;
-        Sat, 23 Nov 2019 09:14:59 +0100 (CET)
-Date:   Sat, 23 Nov 2019 08:14:59 -0000
-From:   "tip-bot2 for Colin Ian King" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D30691C1ACC;
+        Sat, 23 Nov 2019 09:15:00 +0100 (CET)
+Date:   Sat, 23 Nov 2019 08:15:00 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf probe: Fix spelling mistake "addrees" -> "address"
-Cc:     Colin King <colin.king@canonical.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Subject: [tip: perf/core] perf auxtrace: Add support for queuing AUX area samples
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel-janitors@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121092623.374896-1-colin.king@canonical.com>
-References: <20191121092623.374896-1-colin.king@canonical.com>
+In-Reply-To: <20191115124225.5247-12-adrian.hunter@intel.com>
+References: <20191115124225.5247-12-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157449689986.21853.15487968552772349737.tip-bot2@tip-bot2>
+Message-ID: <157449690079.21853.17585003631960442237.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,41 +57,191 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     358f98ee8a3578bbf464ac767b726c5de1ce0647
-Gitweb:        https://git.kernel.org/tip/358f98ee8a3578bbf464ac767b726c5de1ce0647
-Author:        Colin Ian King <colin.king@canonical.com>
-AuthorDate:    Thu, 21 Nov 2019 09:26:23 
+Commit-ID:     ac2f445fc8989e152dc35eb7af368fd34b92e48a
+Gitweb:        https://git.kernel.org/tip/ac2f445fc8989e152dc35eb7af368fd34b92e48a
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Fri, 15 Nov 2019 14:42:21 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 22 Nov 2019 10:48:14 -03:00
+CommitterDate: Fri, 22 Nov 2019 10:48:13 -03:00
 
-perf probe: Fix spelling mistake "addrees" -> "address"
+perf auxtrace: Add support for queuing AUX area samples
 
-There is a spelling mistake in a pr_warning message. Fix it.
+Add functions to queue AUX area samples in advance
+(auxtrace_queue_data()) or individually (auxtrace_queues__add_sample())
+or find out what queue a sample belongs on
+(auxtrace_queues__sample_queue()).
 
-Signed-off-by: Colin King <colin.king@canonical.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+auxtrace_queue_data() can also queue snapshot data which keeps snapshots
+and samples ordered with respect to each other in case support for that
+is desired.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-janitors@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191121092623.374896-1-colin.king@canonical.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-12-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/auxtrace.c | 107 ++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/auxtrace.h |  15 +++++-
+ 2 files changed, 122 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 38d6cd2..c470c49 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -812,7 +812,7 @@ static int verify_representive_line(struct probe_finder *pf, const char *fname,
- 	if (strcmp(fname, __fname) || lineno == __lineno)
- 		return 0;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 4f5c5fe..eb087e7 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1004,6 +1004,113 @@ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
+ 	}
+ }
  
--	pr_warning("This line is sharing the addrees with other lines.\n");
-+	pr_warning("This line is sharing the address with other lines.\n");
- 
- 	if (pf->pev->point.function) {
- 		/* Find best match function name and lines */
++struct auxtrace_queue *auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
++						     struct perf_sample *sample,
++						     struct perf_session *session)
++{
++	struct perf_sample_id *sid;
++	unsigned int idx;
++	u64 id;
++
++	id = sample->id;
++	if (!id)
++		return NULL;
++
++	sid = perf_evlist__id2sid(session->evlist, id);
++	if (!sid)
++		return NULL;
++
++	idx = sid->idx;
++
++	if (idx >= queues->nr_queues)
++		return NULL;
++
++	return &queues->queue_array[idx];
++}
++
++int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
++				struct perf_session *session,
++				struct perf_sample *sample, u64 data_offset,
++				u64 reference)
++{
++	struct auxtrace_buffer buffer = {
++		.pid = -1,
++		.data_offset = data_offset,
++		.reference = reference,
++		.size = sample->aux_sample.size,
++	};
++	struct perf_sample_id *sid;
++	u64 id = sample->id;
++	unsigned int idx;
++
++	if (!id)
++		return -EINVAL;
++
++	sid = perf_evlist__id2sid(session->evlist, id);
++	if (!sid)
++		return -ENOENT;
++
++	idx = sid->idx;
++	buffer.tid = sid->tid;
++	buffer.cpu = sid->cpu;
++
++	return auxtrace_queues__add_buffer(queues, session, idx, &buffer, NULL);
++}
++
++struct queue_data {
++	bool samples;
++	bool events;
++};
++
++static int auxtrace_queue_data_cb(struct perf_session *session,
++				  union perf_event *event, u64 offset,
++				  void *data)
++{
++	struct queue_data *qd = data;
++	struct perf_sample sample;
++	int err;
++
++	if (qd->events && event->header.type == PERF_RECORD_AUXTRACE) {
++		if (event->header.size < sizeof(struct perf_record_auxtrace))
++			return -EINVAL;
++		offset += event->header.size;
++		return session->auxtrace->queue_data(session, NULL, event,
++						     offset);
++	}
++
++	if (!qd->samples || event->header.type != PERF_RECORD_SAMPLE)
++		return 0;
++
++	err = perf_evlist__parse_sample(session->evlist, event, &sample);
++	if (err)
++		return err;
++
++	if (!sample.aux_sample.size)
++		return 0;
++
++	offset += sample.aux_sample.data - (void *)event;
++
++	return session->auxtrace->queue_data(session, &sample, NULL, offset);
++}
++
++int auxtrace_queue_data(struct perf_session *session, bool samples, bool events)
++{
++	struct queue_data qd = {
++		.samples = samples,
++		.events = events,
++	};
++
++	if (auxtrace__dont_decode(session))
++		return 0;
++
++	if (!session->auxtrace || !session->auxtrace->queue_data)
++		return -EINVAL;
++
++	return perf_session__peek_events(session, session->header.data_offset,
++					 session->header.data_size,
++					 auxtrace_queue_data_cb, &qd);
++}
++
+ void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd)
+ {
+ 	size_t adj = buffer->data_offset & (page_size - 1);
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 4a8ac7d..749d72c 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -141,6 +141,8 @@ struct auxtrace_index {
+  * struct auxtrace - session callbacks to allow AUX area data decoding.
+  * @process_event: lets the decoder see all session events
+  * @process_auxtrace_event: process a PERF_RECORD_AUXTRACE event
++ * @queue_data: queue an AUX sample or PERF_RECORD_AUXTRACE event for later
++ *              processing
+  * @dump_auxtrace_sample: dump AUX area sample data
+  * @flush_events: process any remaining data
+  * @free_events: free resources associated with event processing
+@@ -154,6 +156,9 @@ struct auxtrace {
+ 	int (*process_auxtrace_event)(struct perf_session *session,
+ 				      union perf_event *event,
+ 				      struct perf_tool *tool);
++	int (*queue_data)(struct perf_session *session,
++			  struct perf_sample *sample, union perf_event *event,
++			  u64 data_offset);
+ 	void (*dump_auxtrace_sample)(struct perf_session *session,
+ 				     struct perf_sample *sample);
+ 	int (*flush_events)(struct perf_session *session,
+@@ -467,9 +472,19 @@ int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+ 			       struct perf_session *session,
+ 			       union perf_event *event, off_t data_offset,
+ 			       struct auxtrace_buffer **buffer_ptr);
++struct auxtrace_queue *
++auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
++			      struct perf_sample *sample,
++			      struct perf_session *session);
++int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
++				struct perf_session *session,
++				struct perf_sample *sample, u64 data_offset,
++				u64 reference);
+ void auxtrace_queues__free(struct auxtrace_queues *queues);
+ int auxtrace_queues__process_index(struct auxtrace_queues *queues,
+ 				   struct perf_session *session);
++int auxtrace_queue_data(struct perf_session *session, bool samples,
++			bool events);
+ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
+ 					      struct auxtrace_buffer *buffer);
+ void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd);
