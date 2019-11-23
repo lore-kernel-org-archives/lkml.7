@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5D2C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C533C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C6B20719
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AEE20719
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="x4VIQ1/V"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NQSJuzMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfKWQFm (ORCPT
+        id S1727233AbfKWQFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:05:42 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49457 "EHLO
+        Sat, 23 Nov 2019 11:05:46 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49446 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfKWQFC (ORCPT
+        with ESMTP id S1726784AbfKWQFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 11:05:02 -0500
+        Sat, 23 Nov 2019 11:05:01 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xANG4l5V019106;
-        Sun, 24 Nov 2019 01:04:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5V019106
+        by conuserg-12.nifty.com with ESMTP id xANG4l5Q019106;
+        Sun, 24 Nov 2019 01:04:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5Q019106
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574525094;
-        bh=9MAnCdg3hR5ROOX8y8hcsA9VaCetvt+YAuylmAsTUL4=;
+        s=dec2015msa; t=1574525092;
+        bh=ST5LRkJJeHH7On7Bbq1YlVG0Rs9L/Y4/DythexYfliU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x4VIQ1/VqdKlMPmJB8JIlJnPeiDjw2UMJPvdhqrzJQXJM40hLJ87fsHejr4cCTmTg
-         50BMgOnpUNp8aKEup82RBfUju4WPG3xqBJD50ihPyUtSaFXaxi12GsAZB3Fux3yFL0
-         AJEodQDkTKfQrHaX7BYQzOh7VpGlVWQf3aWhhL2qjg8P1ekPdRA1tip2D0oGBzuici
-         ImZ5hWIP0XV7a2PWUkW9kIZ8V7GhPnNdW8ZQvvZ3FH5YqZqrTCpGjJwWL7jf6Pa03r
-         ThOFqS+ftEUK5BW3/2lI/qZ9ZjU+1jllYHrf0JhWO56ilJw9MZs3BdiMZ3Kee0OMYK
-         bjohBVT5LLiTg==
+        b=NQSJuzMyjfcrZ60At93JKcETtagGnDncoY8ShgTiWSEH3PwcQnMWfM9HSyaIwVt/+
+         ooeDAihoomWwymaLfST4PPkx7zou4KtnMlCsbXXM2zjW7IqiPaOG/vKq6mss9QUx8N
+         XKaAVfU1tYwz/tEeoR3GCGo5e+L9XS58/uZHwpMtQgQkZ56oWYZkoKZkh2hp6O8m1S
+         xkJco+A9rwomJJH0w/zYJ9fCHkk5F0JIIKEvkUs5SKs+ncqYcmtI81PNKWNRHBya65
+         j+Xqc0JhhFGsH5m5ozQpRjFDNWHcqgcnSPmhlybii0wLlP9IjGpktiMmORvhk1zex1
+         Pnu0KkPAkgcjA==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 14/16] scripts/kallsyms: make check_symbol_range() void function
-Date:   Sun, 24 Nov 2019 01:04:42 +0900
-Message-Id: <20191123160444.11251-15-yamada.masahiro@socionext.com>
+Subject: [PATCH v2 09/16] scripts/kallsyms: make find_token() return (unsigned char *)
+Date:   Sun, 24 Nov 2019 01:04:37 +0900
+Message-Id: <20191123160444.11251-10-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191123160444.11251-1-yamada.masahiro@socionext.com>
 References: <20191123160444.11251-1-yamada.masahiro@socionext.com>
@@ -53,61 +53,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no more reason to check the return value of
-check_symbol_range().
+The callers of this function expect (unsigned char *). I do not see
+a good reason to make this function return (void *).
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
 Changes in v2: None
 
- scripts/kallsyms.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ scripts/kallsyms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index d90a6133d7b8..f4d5f131556d 100644
+index 89cc7c098c51..274a77bfbd63 100644
 --- a/scripts/kallsyms.c
 +++ b/scripts/kallsyms.c
-@@ -155,8 +155,8 @@ static bool is_ignored_symbol(const char *name, char type)
- 	return false;
+@@ -503,7 +503,8 @@ static void build_initial_tok_table(void)
+ 		learn_symbol(table[i].sym, table[i].len);
  }
  
--static int check_symbol_range(const char *sym, unsigned long long addr,
--			      struct addr_range *ranges, int entries)
-+static void check_symbol_range(const char *sym, unsigned long long addr,
-+			       struct addr_range *ranges, int entries)
+-static void *find_token(unsigned char *str, int len, unsigned char *token)
++static unsigned char *find_token(unsigned char *str, int len,
++				 unsigned char *token)
  {
- 	size_t i;
- 	struct addr_range *ar;
-@@ -166,14 +166,12 @@ static int check_symbol_range(const char *sym, unsigned long long addr,
+ 	int i;
  
- 		if (strcmp(sym, ar->start_sym) == 0) {
- 			ar->start = addr;
--			return 0;
-+			return;
- 		} else if (strcmp(sym, ar->end_sym) == 0) {
- 			ar->end = addr;
--			return 0;
-+			return;
- 		}
- 	}
--
--	return 1;
- }
- 
- static int read_symbol(FILE *in, struct sym_entry *s)
-@@ -200,9 +198,8 @@ static int read_symbol(FILE *in, struct sym_entry *s)
- 	/* Ignore most absolute/undefined (?) symbols. */
- 	if (strcmp(sym, "_text") == 0)
- 		_text = s->addr;
--	else if (check_symbol_range(sym, s->addr, text_ranges,
--				    ARRAY_SIZE(text_ranges)) == 0)
--		/* nothing to do */;
-+
-+	check_symbol_range(sym, s->addr, text_ranges, ARRAY_SIZE(text_ranges));
- 
- 	/* include the type field in the symbol name, so that it gets
- 	 * compressed together */
 -- 
 2.17.1
 
