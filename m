@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA5C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558222071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B999320720
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfKWIQe (ORCPT
+        id S1727420AbfKWIQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 03:16:34 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36262 "EHLO
+        Sat, 23 Nov 2019 03:16:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36254 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfKWIPM (ORCPT
+        with ESMTP id S1726704AbfKWIPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 03:15:12 -0500
+        Sat, 23 Nov 2019 03:15:11 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYQZP-0002ac-6K; Sat, 23 Nov 2019 09:15:07 +0100
+        id 1iYQZN-0002ZZ-3g; Sat, 23 Nov 2019 09:15:05 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 16A101C1AD6;
-        Sat, 23 Nov 2019 09:15:02 +0100 (CET)
-Date:   Sat, 23 Nov 2019 08:15:02 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A72281C1AD2;
+        Sat, 23 Nov 2019 09:15:01 +0100 (CET)
+Date:   Sat, 23 Nov 2019 08:15:01 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf record: Add a function to test for kernel
- support for AUX area sampling
+Subject: [tip: perf/core] perf record: Add support for AUX area sampling
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191115124225.5247-4-adrian.hunter@intel.com>
-References: <20191115124225.5247-4-adrian.hunter@intel.com>
+In-Reply-To: <20191115124225.5247-7-adrian.hunter@intel.com>
+References: <20191115124225.5247-7-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157449690202.21853.14789264761246818665.tip-bot2@tip-bot2>
+Message-ID: <157449690160.21853.4410247253219938717.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,103 +57,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     9bca1a4ef5034f0a82861ac0375eb0272c5ce04e
-Gitweb:        https://git.kernel.org/tip/9bca1a4ef5034f0a82861ac0375eb0272c5ce04e
+Commit-ID:     c0a6de06c446f8d173ef53fba361acedd5880b20
+Gitweb:        https://git.kernel.org/tip/c0a6de06c446f8d173ef53fba361acedd5880b20
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Fri, 15 Nov 2019 14:42:13 +02:00
+AuthorDate:    Fri, 15 Nov 2019 14:42:16 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 22 Nov 2019 10:43:24 -03:00
+CommitterDate: Fri, 22 Nov 2019 10:48:13 -03:00
 
-perf record: Add a function to test for kernel support for AUX area sampling
+perf record: Add support for AUX area sampling
 
-Architectures are expected to know if AUX area sampling is supported by
-the hardware. Add a function perf_can_aux_sample() which will determine
-whether the kernel supports it.
-
-Committer notes:
-
-I reported that this message was taking place on a kernel without the
-required bits:
-
-  # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
-  Error:
-  The sys_perf_event_open() syscall returned with 7 (Argument list too long) for event (branch-misses:u).
-  /bin/dmesg | grep -i perf may provide additional information.
-
-Adrian sent a patch addressing it, with this explanation:
-
- ----
-  perf_can_aux_sample_size() always returned true because it did not pass
-  the attribute size to sys_perf_event_open, nor correctly check the
-  return value and errno.
- ----
-
-After applying it I get, later in the series, when --aux-sample is
-added:
-
-  # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
-  AUX area sampling is not supported by kernel
+Add a 'perf record' option '--aux-sample' to request AUX area sampling.
+AUX area sampling uses an overwriting buffer much like snapshot mode, so
+adjust the AUX buffer mmapping accordingly. To make it easy to queue
+samples for decoding, synthesize an ID index.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-4-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-7-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.h |  1 +
- tools/perf/util/record.c | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ tools/perf/Documentation/perf-record.txt |  6 ++++++
+ tools/perf/builtin-record.c              | 21 ++++++++++++++++++++-
+ 2 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 1305140..3655b9e 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -176,6 +176,7 @@ void perf_evlist__set_id_pos(struct evlist *evlist);
- bool perf_can_sample_identifier(void);
- bool perf_can_record_switch_events(void);
- bool perf_can_record_cpu_wide(void);
-+bool perf_can_aux_sample(void);
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain);
- int record_opts__config(struct record_opts *opts);
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 8579505..7def661 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -136,6 +136,37 @@ bool perf_can_record_cpu_wide(void)
- 	return true;
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index ebcba1f..e216d7b 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -433,6 +433,12 @@ can be specified in a string that follows this option:
+ In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
+ and on exit if the above 'e' option is given.
+ 
++--aux-sample[=OPTIONS]::
++Select AUX area sampling. At least one of the events selected by the -e option
++must be an AUX area event. Samples on other events will be created containing
++data from the AUX area. Optionally sample size may be specified, otherwise it
++defaults to 4KiB.
++
+ --proc-map-timeout::
+ When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
+ because the file may be huge. A time out is needed in such cases.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 7ab3110..b5063d3 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -680,6 +680,11 @@ static int record__auxtrace_init(struct record *rec)
+ 	if (err)
+ 		return err;
+ 
++	err = auxtrace_parse_sample_options(rec->itr, rec->evlist, &rec->opts,
++					    rec->opts.auxtrace_sample_opts);
++	if (err)
++		return err;
++
+ 	return auxtrace_parse_filters(rec->evlist);
  }
  
-+/*
-+ * Architectures are expected to know if AUX area sampling is supported by the
-+ * hardware. Here we check for kernel support.
-+ */
-+bool perf_can_aux_sample(void)
-+{
-+	struct perf_event_attr attr = {
-+		.size = sizeof(struct perf_event_attr),
-+		.exclude_kernel = 1,
-+		/*
-+		 * Non-zero value causes the kernel to calculate the effective
-+		 * attribute size up to that byte.
-+		 */
-+		.aux_sample_size = 1,
-+	};
-+	int fd;
-+
-+	fd = sys_perf_event_open(&attr, -1, 0, -1, 0);
-+	/*
-+	 * If the kernel attribute is big enough to contain aux_sample_size
-+	 * then we assume that it is supported. We are relying on the kernel to
-+	 * validate the attribute size before anything else that could be wrong.
-+	 */
-+	if (fd < 0 && errno == E2BIG)
-+		return false;
-+	if (fd >= 0)
-+		close(fd);
-+
-+	return true;
-+}
-+
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain)
+@@ -752,6 +757,8 @@ static int record__mmap_evlist(struct record *rec,
+ 			       struct evlist *evlist)
  {
+ 	struct record_opts *opts = &rec->opts;
++	bool auxtrace_overwrite = opts->auxtrace_snapshot_mode ||
++				  opts->auxtrace_sample_mode;
+ 	char msg[512];
+ 
+ 	if (opts->affinity != PERF_AFFINITY_SYS)
+@@ -759,7 +766,7 @@ static int record__mmap_evlist(struct record *rec,
+ 
+ 	if (evlist__mmap_ex(evlist, opts->mmap_pages,
+ 				 opts->auxtrace_mmap_pages,
+-				 opts->auxtrace_snapshot_mode,
++				 auxtrace_overwrite,
+ 				 opts->nr_cblocks, opts->affinity,
+ 				 opts->mmap_flush, opts->comp_level) < 0) {
+ 		if (errno == EPERM) {
+@@ -1046,6 +1053,7 @@ static int record__mmap_read_evlist(struct record *rec, struct evlist *evlist,
+ 		}
+ 
+ 		if (map->auxtrace_mmap.base && !rec->opts.auxtrace_snapshot_mode &&
++		    !rec->opts.auxtrace_sample_mode &&
+ 		    record__auxtrace_mmap_read(rec, map) != 0) {
+ 			rc = -1;
+ 			goto out;
+@@ -1321,6 +1329,15 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err)
+ 		goto out;
+ 
++	/* Synthesize id_index before auxtrace_info */
++	if (rec->opts.auxtrace_sample_mode) {
++		err = perf_event__synthesize_id_index(tool,
++						      process_synthesized_event,
++						      session->evlist, machine);
++		if (err)
++			goto out;
++	}
++
+ 	if (rec->opts.full_auxtrace) {
+ 		err = perf_event__synthesize_auxtrace_info(rec->itr, tool,
+ 					session, process_synthesized_event);
+@@ -2329,6 +2346,8 @@ static struct option __record_options[] = {
+ 	parse_clockid),
+ 	OPT_STRING_OPTARG('S', "snapshot", &record.opts.auxtrace_snapshot_opts,
+ 			  "opts", "AUX area tracing Snapshot Mode", ""),
++	OPT_STRING_OPTARG(0, "aux-sample", &record.opts.auxtrace_sample_opts,
++			  "opts", "sample AUX area", ""),
+ 	OPT_UINTEGER(0, "proc-map-timeout", &proc_map_timeout,
+ 			"per thread proc mmap processing timeout in ms"),
+ 	OPT_BOOLEAN(0, "namespaces", &record.opts.record_namespaces,
