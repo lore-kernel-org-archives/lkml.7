@@ -2,129 +2,112 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9052DC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 07:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 07:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5642068F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 07:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F1B2068F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 07:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="umt6GBmC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hw7ATIl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfKWHXC (ORCPT
+        id S1726686AbfKWH2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 02:23:02 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:31571 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfKWHXC (ORCPT
+        Sat, 23 Nov 2019 02:28:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39036 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725800AbfKWH2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 02:23:02 -0500
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id xAN7MvX8001395;
-        Sat, 23 Nov 2019 16:22:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xAN7MvX8001395
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574493777;
-        bh=aM/gT4Oo9cCOwyO64fFZR4tsOde+IsTLsovdWiIejes=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=umt6GBmC22i+BZ03uEvybsl8X4EF0dekZ7/JBsNKiPp20sDX+wf6tMa2HCM1OARNR
-         H4aq+t+A/dvEvKN7D1TsBZZUJA72v4v2l1CIsT/F2Z8Xs4RUZ7RVpucnX7F0cAS9i7
-         nh5tR8ryQ9X7xMY1klgCJ4g2Kgqfp54uAKMXjaK6CJzYtOKdoTc+GBevRqwsxm6sMZ
-         xLV6pzkrSw9rrojS4d6Uerwje7fP+rV473NegGjkyJNLScuqe78zHfZjNLfZZnla+a
-         a6Q0L3O/Dy9zHlS2Mw6FC0H5bZXbbwUaw/WMkkwykPxcO+tsCi38DUN2h+XKpnHoHd
-         j6q3WG8fXjnmw==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id x21so6474465vsp.6;
-        Fri, 22 Nov 2019 23:22:57 -0800 (PST)
-X-Gm-Message-State: APjAAAV+zguUwzppt7gOCjQ4RENU1SOvbYV/7divOhPftuU+sHhm2zG0
-        9drH82KNYjEFeGWknpIodGcy4/TRAdbhLVXqERE=
-X-Google-Smtp-Source: APXvYqyRCIiXOEAQxBgxAIj6rT5ZG0zj/+XGfeuOkhMhpz/RkkNCGna6kguEX6CAQwXhWEtnjRvPXQluti9Dl8jmL3E=
-X-Received: by 2002:a05:6102:726:: with SMTP id u6mr12605479vsg.179.1574493776235;
- Fri, 22 Nov 2019 23:22:56 -0800 (PST)
+        Sat, 23 Nov 2019 02:28:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574494124;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0VpnZxogNfmq2zNOxOpvLIFykqFG115bnmJucwdOn3c=;
+        b=Hw7ATIl79D+5HDUKbY622mwKXiC7i4wkPxvkLAo8D120Xjde+Dduohk4zpFhq7UzGldH6b
+        wE8Fq8XEvKQBAAD4Cl7Wt+hyVfR1IQ70ZsKCfw802FvCERe1gG+oI2l6Yeu0C9XYTUeMGu
+        QN0+AHjkyds2HmoV/OTym+qp5l+As6g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-sWOOPYRKPNKL7Lq1o5RkHg-1; Sat, 23 Nov 2019 02:28:40 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E2DA1800D40;
+        Sat, 23 Nov 2019 07:28:37 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38DDE10013A1;
+        Sat, 23 Nov 2019 07:28:24 +0000 (UTC)
+Date:   Sat, 23 Nov 2019 15:28:20 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191123072726.GC25356@ming.t460p>
+References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
+ <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
+ <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
+ <20191109222828.GA30568@ming.t460p>
+ <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
 MIME-Version: 1.0
-References: <20191114174226.7201-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20191114174226.7201-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 23 Nov 2019 16:22:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATk-D2g0FJ_TVVxXQZ-m2uzdHYVaDxzuZKVX9WA+VWOKA@mail.gmail.com>
-Message-ID: <CAK7LNATk-D2g0FJ_TVVxXQZ-m2uzdHYVaDxzuZKVX9WA+VWOKA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] modpost: add a helper to get data pointed by a symbol
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: sWOOPYRKPNKL7Lq1o5RkHg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 2:42 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> When CONFIG_MODULE_REL_CRCS is enabled, the value of __crc_* is not
-> an absolute value, but the address to the CRC data embedded in the
-> .rodata section.
->
-> Getting the data pointed by the symbol value is somewhat complex.
-> Split it out into a new helper, sym_get_data().
->
-> I will reuse it to refactor namespace_from_kstrtabns() in the next
-> commit.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+On Fri, Nov 22, 2019 at 08:16:30PM +0100, Andrea Vai wrote:
+> Il giorno dom, 10/11/2019 alle 06.28 +0800, Ming Lei ha scritto:
+> > Another thing we could try is to use 'none' via the following
+> > command:
+> >=20
+> >  echo none > /sys/block/sdh/queue/scheduler  #suppose 'sdh' points
+> > to the usb storage disk
+> >=20
+> > Because USB storage HBA is single hw queue, which depth is 1. This
+> > way
+> > should change to dispatch IO in the order of bio submission.
+> >=20
+> > Andrea, could you switch io scheduler to none and update us if
+> > difference
+> > can be made?
+>=20
+> Using the new kernel, there is indeed a difference because the time to
+> copy a file is 1800 seconds with [mq-deadline], and 340 seconds with
+> [none]. But that is still far away from the old kernel, which performs
+> the copy of the same file in 76 seconds.
 
-Series, applied to linux-kbuild.
-
-
->
->  scripts/mod/modpost.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 46d7f695fe7f..cd885573daaf 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -308,6 +308,18 @@ static const char *sec_name(struct elf_info *elf, int secindex)
->         return sech_name(elf, &elf->sechdrs[secindex]);
->  }
->
-> +static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
-> +{
-> +       Elf_Shdr *sechdr = &info->sechdrs[sym->st_shndx];
-> +       unsigned long offset;
-> +
-> +       offset = sym->st_value;
-> +       if (info->hdr->e_type != ET_REL)
-> +               offset -= sechdr->sh_addr;
-> +
-> +       return (void *)info->hdr + sechdr->sh_offset + offset;
-> +}
-> +
->  #define strstarts(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
->
->  static enum export export_from_secname(struct elf_info *elf, unsigned int sec)
-> @@ -697,10 +709,7 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
->                         unsigned int *crcp;
->
->                         /* symbol points to the CRC in the ELF object */
-> -                       crcp = (void *)info->hdr + sym->st_value +
-> -                              info->sechdrs[sym->st_shndx].sh_offset -
-> -                              (info->hdr->e_type != ET_REL ?
-> -                               info->sechdrs[sym->st_shndx].sh_addr : 0);
-> +                       crcp = sym_get_data(info, sym);
->                         crc = TO_NATIVE(*crcp);
->                 }
->                 sym_update_crc(symname + strlen("__crc_"), mod, crc,
-> --
-> 2.17.1
->
+Please post the log of 'lsusb -v', and I will try to make a patch for
+addressing the issue.
 
 
--- 
-Best Regards
-Masahiro Yamada
+thanks,=20
+Ming
+
