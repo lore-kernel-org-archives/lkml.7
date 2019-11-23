@@ -2,103 +2,87 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D46C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805402071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574526569;
-	bh=ttQo5qpoKSKz2fy8gE/OGVK7L+NBmtPsjYZhifg7Ldw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MaO6c0vcS/3n5eMtI7X+/UGS0iqF+vJzqN/+yb3Oj1bjTsi4nRZv4BwP0oHqvglMw
-	 nV3nfdPLO6rc+DlxHNQUfGfmAIYEG5ht+49isIEcTuy1dMC5yBDrw+jUnb8WsdzDVN
-	 G5fvI/jw34KW8aJwPVIEDS7EeOzBtWgreU7mrcFI=
+	by mail.kernel.org (Postfix) with ESMTP id E359D2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JxW6GxU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfKWQ31 (ORCPT
+        id S1726907AbfKWQhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:29:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbfKWQ31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 11:29:27 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E25720719;
-        Sat, 23 Nov 2019 16:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574526566;
-        bh=ttQo5qpoKSKz2fy8gE/OGVK7L+NBmtPsjYZhifg7Ldw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aZjTAsJ50gfRBobQiO3HkwE0RabAa9hw6FZU6y6ws7MAk4gB68NackN+H1au7l50/
-         rk70OtrJOGnF3gHrxnMBZS7Lg477DAN7UyAQQAON6WvV/iQxELRdHMnmwFlRyIE/W1
-         NegMsBoIwPFWKA7tIepaPD+4O+vJrP/6Fm3rzGqc=
-Date:   Sat, 23 Nov 2019 16:29:21 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: max1027: fix not unregistered iio trigger
-Message-ID: <20191123162921.71499b80@archlinux>
-In-Reply-To: <20191118114018.25431-1-hslester96@gmail.com>
-References: <20191118114018.25431-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 23 Nov 2019 11:37:08 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:64651 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbfKWQhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 11:37:07 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id xANGaggc001459;
+        Sun, 24 Nov 2019 01:36:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xANGaggc001459
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1574527003;
+        bh=b2XnY177SuO8gk06SbcWRoYrsHQQpflhu5zyta4ZfZY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JxW6GxU8YEMUD+vsN/b/GH4gC1gIX6GzqB/QXDCzJfamqA7fRWHPiPBEd80DJ3CW5
+         tt5onb3HX9yT0+gfM/E7xDyf8Gh4WDDgsp5sP5maiziCuwJ2hS+40uy2MtvYdwGOz1
+         kKfu9weh2DpAuef6J0P/N5WkmZQsJwvJA/sEgsa9ZDKkZreHVgvT5GTFeKVcD3B7qi
+         VxIKdgHdVXJmi7ofTsZRYm34XDa2HcpHya8L1rhVUiLdhBxLmPMVCdf0DDIudet4Op
+         4PmBqndX20kKhQynYWYhm+2Q4J4JotK0IcfZ3lLAan80+sDq6fS628fAuTjgVvG15O
+         WRfrBuIawSJug==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drivers/component: remove modular code
+Date:   Sun, 24 Nov 2019 01:36:32 +0900
+Message-Id: <20191123163633.27227-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019 19:40:18 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
+component.o is added to obj-y. Hence this is never compiled as
+a module.
 
-> The driver forgets to unregister the iio trigger in probe failure and
-> remove.
-> Use devm API to fix it.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Hi.
+Remove meaningless modular code.
 
-This has crossed with some other patches to the driver, but the fix
-is still applicable.  If we want to push this back to older stable
-branches we will need to do manual backports.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Adjusted version applied to the fixes-togreg branch of iio.git.
+ drivers/base/component.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/max1027.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index 214883458582..8caead7dffa5 100644
-> --- a/drivers/iio/adc/max1027.c
-> +++ b/drivers/iio/adc/max1027.c
-> @@ -446,7 +446,12 @@ static int max1027_probe(struct spi_device *spi)
->  	st->trig->ops = &max1027_trigger_ops;
->  	st->trig->dev.parent = &spi->dev;
->  	iio_trigger_set_drvdata(st->trig, indio_dev);
-> -	iio_trigger_register(st->trig);
-> +
-> +	ret = devm_iio_trigger_register(&spi->dev, st->trig);
-> +	if (ret < 0) {
-> +		dev_err(&indio_dev->dev, "Failed to register iio trigger\n");
-> +		return ret;
-> +	}
->  
->  	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
->  					iio_trigger_generic_data_rdy_poll,
+diff --git a/drivers/base/component.c b/drivers/base/component.c
+index 532a3a5d8f63..3a09036e772a 100644
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -11,7 +11,6 @@
+ #include <linux/device.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+-#include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/debugfs.h>
+@@ -775,5 +774,3 @@ void component_del(struct device *dev, const struct component_ops *ops)
+ 	kfree(component);
+ }
+ EXPORT_SYMBOL_GPL(component_del);
+-
+-MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
