@@ -2,165 +2,100 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA5C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CE3C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B999320720
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431B520719
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfKWIQi (ORCPT
+        id S1726638AbfKWIkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 03:16:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36254 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfKWIPL (ORCPT
+        Sat, 23 Nov 2019 03:40:47 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:59492 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfKWIkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 03:15:11 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYQZN-0002ZZ-3g; Sat, 23 Nov 2019 09:15:05 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A72281C1AD2;
-        Sat, 23 Nov 2019 09:15:01 +0100 (CET)
-Date:   Sat, 23 Nov 2019 08:15:01 -0000
-From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf record: Add support for AUX area sampling
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191115124225.5247-7-adrian.hunter@intel.com>
-References: <20191115124225.5247-7-adrian.hunter@intel.com>
-MIME-Version: 1.0
-Message-ID: <157449690160.21853.4410247253219938717.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+        Sat, 23 Nov 2019 03:40:46 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAN8e5Jq003004, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAN8e5Jq003004
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 23 Nov 2019 16:40:05 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Sat, 23 Nov 2019 16:40:05 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 23 Nov 2019 16:40:05 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::54f9:1e1e:4618:f740]) by
+ RTEXMB03.realtek.com.tw ([fe80::54f9:1e1e:4618:f740%8]) with mapi id
+ 15.01.1779.005; Sat, 23 Nov 2019 16:40:05 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        Marc Zyngier <maz@misterjones.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+Subject: RE: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Topic: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Index: AdWTrwRiu8TDC5guRneVMItRk6mPLwAihi8AAIJriSD//6UUgP/7v8ZQgA4x2AD//PfkIIAOmDuAgAAzz4D//i+x8A==
+Date:   Sat, 23 Nov 2019 08:40:04 +0000
+Message-ID: <4235c5641f0f4946beeeea8adfd74970@realtek.com>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+ <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+ <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
+ <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
+ <309cd67da48e4702ae3dcc4ca8ab4309@realtek.com>
+ <279fd3a3-17dc-5796-f0b0-e39eb919081f@suse.de>
+ <7c94c59649c04442886a98c057c07654@realtek.com>
+ <23f44f6f4aec90b412d5d7ff6f4d95f1@www.loen.fr>
+ <80d0aed8-3b85-1312-1091-0ced3ab1f5d2@suse.de>
+In-Reply-To: <80d0aed8-3b85-1312-1091-0ced3ab1f5d2@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.143.78]
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
-
-Commit-ID:     c0a6de06c446f8d173ef53fba361acedd5880b20
-Gitweb:        https://git.kernel.org/tip/c0a6de06c446f8d173ef53fba361acedd5880b20
-Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Fri, 15 Nov 2019 14:42:16 +02:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 22 Nov 2019 10:48:13 -03:00
-
-perf record: Add support for AUX area sampling
-
-Add a 'perf record' option '--aux-sample' to request AUX area sampling.
-AUX area sampling uses an overwriting buffer much like snapshot mode, so
-adjust the AUX buffer mmapping accordingly. To make it easy to queue
-samples for decoding, synthesize an ID index.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-7-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Documentation/perf-record.txt |  6 ++++++
- tools/perf/builtin-record.c              | 21 ++++++++++++++++++++-
- 2 files changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index ebcba1f..e216d7b 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -433,6 +433,12 @@ can be specified in a string that follows this option:
- In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
- and on exit if the above 'e' option is given.
- 
-+--aux-sample[=OPTIONS]::
-+Select AUX area sampling. At least one of the events selected by the -e option
-+must be an AUX area event. Samples on other events will be created containing
-+data from the AUX area. Optionally sample size may be specified, otherwise it
-+defaults to 4KiB.
-+
- --proc-map-timeout::
- When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
- because the file may be huge. A time out is needed in such cases.
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 7ab3110..b5063d3 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -680,6 +680,11 @@ static int record__auxtrace_init(struct record *rec)
- 	if (err)
- 		return err;
- 
-+	err = auxtrace_parse_sample_options(rec->itr, rec->evlist, &rec->opts,
-+					    rec->opts.auxtrace_sample_opts);
-+	if (err)
-+		return err;
-+
- 	return auxtrace_parse_filters(rec->evlist);
- }
- 
-@@ -752,6 +757,8 @@ static int record__mmap_evlist(struct record *rec,
- 			       struct evlist *evlist)
- {
- 	struct record_opts *opts = &rec->opts;
-+	bool auxtrace_overwrite = opts->auxtrace_snapshot_mode ||
-+				  opts->auxtrace_sample_mode;
- 	char msg[512];
- 
- 	if (opts->affinity != PERF_AFFINITY_SYS)
-@@ -759,7 +766,7 @@ static int record__mmap_evlist(struct record *rec,
- 
- 	if (evlist__mmap_ex(evlist, opts->mmap_pages,
- 				 opts->auxtrace_mmap_pages,
--				 opts->auxtrace_snapshot_mode,
-+				 auxtrace_overwrite,
- 				 opts->nr_cblocks, opts->affinity,
- 				 opts->mmap_flush, opts->comp_level) < 0) {
- 		if (errno == EPERM) {
-@@ -1046,6 +1053,7 @@ static int record__mmap_read_evlist(struct record *rec, struct evlist *evlist,
- 		}
- 
- 		if (map->auxtrace_mmap.base && !rec->opts.auxtrace_snapshot_mode &&
-+		    !rec->opts.auxtrace_sample_mode &&
- 		    record__auxtrace_mmap_read(rec, map) != 0) {
- 			rc = -1;
- 			goto out;
-@@ -1321,6 +1329,15 @@ static int record__synthesize(struct record *rec, bool tail)
- 	if (err)
- 		goto out;
- 
-+	/* Synthesize id_index before auxtrace_info */
-+	if (rec->opts.auxtrace_sample_mode) {
-+		err = perf_event__synthesize_id_index(tool,
-+						      process_synthesized_event,
-+						      session->evlist, machine);
-+		if (err)
-+			goto out;
-+	}
-+
- 	if (rec->opts.full_auxtrace) {
- 		err = perf_event__synthesize_auxtrace_info(rec->itr, tool,
- 					session, process_synthesized_event);
-@@ -2329,6 +2346,8 @@ static struct option __record_options[] = {
- 	parse_clockid),
- 	OPT_STRING_OPTARG('S', "snapshot", &record.opts.auxtrace_snapshot_opts,
- 			  "opts", "AUX area tracing Snapshot Mode", ""),
-+	OPT_STRING_OPTARG(0, "aux-sample", &record.opts.auxtrace_sample_opts,
-+			  "opts", "sample AUX area", ""),
- 	OPT_UINTEGER(0, "proc-map-timeout", &proc_map_timeout,
- 			"per thread proc mmap processing timeout in ms"),
- 	OPT_BOOLEAN(0, "namespaces", &record.opts.record_namespaces,
+SGkgQW5kcmVhcywNCg0KPiANCj4gTU1JTywgZm9yIEdJQ0QgYW5kIEdJQ1IuIEl0J3MgYWJvdXQg
+Zml4aW5nIHRoZSByYW5nZXMgb2YgdGhlIC9zb2Mgbm9kZToNCj4gDQo+IE15IHByb3Bvc2VkDQo+
+IHJhbmdlcyA9IDwweDk4MDAwMDAwIDB4OTgwMDAwMDAgMHg2ODAwMDAwMD47IG5lZWRzIHRvIGJl
+IHNwbGl0LCB3aXRoIGEgZ2FwDQo+IGJldHdlZW4gci1idXMgYW5kIEdJQyBmb3IgY29udGludWVk
+IFJBTS4NCj4gDQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9hZmFlcmJlci9saW51eC9jb21taXQvMTg4
+NGVjNmE1MzNjOWQ1YzJiNmNhNDBlZTEzOGZmDQo+IDdlODMxMmI2YzgNCj4gDQo+IFRoaXMgZ29l
+cyBiYWNrIHRvIFJvYidzIHJldmlldyBvZiBSVEQxMjk1IFsxXSwgd2hlcmUgd2UgdGhlbiBmb3Ig
+bGFjayBvZg0KPiBtZW1vcnkgc3BhY2UgZG9jdW1lbnRhdGlvbiBhc3N1bWVkIHRoYXQgZXZlcnl0
+aGluZyBiZXlvbmQgMiBHaUIgd291bGQNCj4gYmUgcG90ZW50aWFsIHJlZ2lzdGVyIHNwYWNlLiBI
+ZXJlIHdlJ3JlIGRlYWxpbmcgd2l0aCB1cCB0byA0IEdpQiB0aG91Z2guDQo+IA0KPiANCj4gSmFt
+ZXMsIGFyZSB5b3UgcGxhbm5pbmcgdG8gc2VuZCBhIGZpeC11cCBwYXRjaCBoZXJlPyBJZiBub3Qs
+IHlvdSdsbCBuZWVkIHRvIHRlbGwNCj4gbWUgd2hhdCB2YWx1ZXMgdG8gdXNlLCBlLmcuLCBpcyB0
+aGVyZSBhIE5PUiBmbGFzaCByZWdpb24gb24gUlREMTYxOSwgYW5kIGRvZXMNCj4gUkFNIGNvbnRp
+bnVlIGFsc28gaW4gYmV0d2VlbiBhbmQgYWZ0ZXIgR0lDLCBvciBpcyB0aGVyZSBzb21lIHRpbWVy
+IHJlZ2lzdGVyDQo+IGJlaGluZCBpdCwgbGlrZSBvbiBSVEQxMTk1Pw0KPiANCj4gcmFuZ2VzID0g
+PDB4MDAwMDAwMDAgMHgwMDAwMDAwMCAweDAwMDMwMDAwPiwgLy8gPz8/IGJvb3QgUk9NIHNpemUN
+Cj4gICAgICAgICAgPDB4OTgwMDAwMDAgMHg5ODAwMDAwMCAweDAwMjAwMDAwPiwgLy8gci1idXMN
+Cj4gICAgICAgICAgLy8gYW55dGhpbmcgaGVyZT8gZS5nLiwgTk9SIGZsYXNoPw0KPiAgICAgICAg
+ICA8MHhmZjEwMDAwMCAweGZmMTAwMDAwIDB4MDAwMTAwMDA+LCAvLyBHSUNEDQo+ICAgICAgICAg
+IDwweGZmMTQwMDAwIDB4ZmYxNDAwMDAgMHgwMDBjMDAwMD47IC8vIEdJQ1INCj4gICAgICAgICAg
+Ly8gYW55dGhpbmcgaGVyZT8gZS5nLiwgdGltZXIgZW5hYmxlPw0KPiANCj4gcmFuZ2VzID0gPDB4
+MDAwMDAwMDAgMHgwMDAwMDAwMCAweDAwMDMwMDAwPiwNCj4gICAgICAgICAgPDB4OTgwMDAwMDAg
+MHg5ODAwMDAwMCAweDAwMjAwMDAwPiwNCj4gICAgICAgICAgPDB4ZmYxMDAwMDAgMHhmZjEwMDAw
+MCAweDAwMTAwMDAwPjsgLy8gd2hvbGUgR0lDPw0KPiANCg0KWWVzLCBJJ2xsIHNlbmQgYSBmaXgt
+dXAgcGF0Y2guDQoNCg0KUmVnYXJkcywNCkphbWVzDQoNCg0K
