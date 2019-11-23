@@ -6,70 +6,70 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F08C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DA3C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE5120674
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2284320674
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 18:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KH95SWZL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDgGLjDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfKWSAc (ORCPT
+        id S1726867AbfKWSBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 13:00:32 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42220 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbfKWSAc (ORCPT
+        Sat, 23 Nov 2019 13:01:34 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45222 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbfKWSBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 13:00:32 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so2922097otd.9
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 10:00:30 -0800 (PST)
+        Sat, 23 Nov 2019 13:01:33 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 14so9437092oir.12
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 10:01:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G/yt7BM7SPeRzWvT43FwJp3d79dRs3zulFAVmB+daeM=;
-        b=KH95SWZLrbowHQJFobDZXNAKSaEX5/CU2T4mM9LPMFrZXsZRgcVijf7Pc6fyxZDqOu
-         6+qrgORQ1GIIKGa809LlTbhKOpq90ZrVwICUl2iit/CkIzEq7j0cAwOH24rJKTiDXws0
-         SjWN1peXA9x/38RXYZD6+SlLB0LkLQnRSiBXA6Ksml8evlytzdNxg8yu7lSqqakuEHqQ
-         49VyE6YFBv+PHUIwseK/g2ZSFyGIDqJ1ssYFOeoiOBymyYDstfhWWiL9lmaavlw1VLWB
-         sdxDVtq01tfyzXekFVOMtWgBer5HGu5OwGFmNf+d5XYYUM9iCTbHZ8QUBFZF7ARVGd/K
-         uohg==
+        bh=pY1pNPrl1tG+NPM43+xxPuU3zVU/KXwcJU4pMYDbF1s=;
+        b=GDgGLjDx/B4eFVfhHnqDUh7639DBqdOxdS+t432Ke+hW48ABfvfqqk5zQDoWq7+96h
+         vZSpq6UwRxbbMf8Zww0kSm29XMikUijeUIF1S/aigDcjCuKRdfug1XTLOlv6R8GWDWSv
+         zETKqF+n3z/2ybx8lN7vadFKOP/8nh13yroAM325dqC99UklUTQMtXLtg8oDDLWu0ucS
+         BhX3++26ieAJGr/pa7E+QwLarGrP9WEKpsFozSU/PQPPygqEoFJnHM3SzAQ9hVobDRlo
+         J0PZJ0eOmYMj1PvWZIx82Hdob3qNqMCleqVqgE0/KTQdH2Bz6v+QcTw/1Hxl8U5fGYrI
+         dUYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=G/yt7BM7SPeRzWvT43FwJp3d79dRs3zulFAVmB+daeM=;
-        b=RSHFmY4WqMm/dNRfszzTOTIkAnflrvQdJKMogzOeJ2hr7H5VtJUXbUSYJG/OYjb/eI
-         iztV4onQKskeJN/DDoTulN9vjEafFxqow1mzOXc3mWMVYbImoUX1ybJjjGfeeuMX+Nas
-         bQn/3a4Pw8a2W7UgMwYN63Ud4R7QVq465DUWgcZWH4rq11CBOFwRRgEbPpsojNHxxTsZ
-         RRDv3MFOPCyUzvvkt5VB4L50RM7fj2evqkUGjwJXS5KExEuWNBvMdsF+/hnbXeSOk0tT
-         hz+QLfxw4COnKevTXxV4AywYQ6BxntyuDJwLCmvec2N2wyP80L9oFFwhx8guxQIyZaKo
-         FdfQ==
-X-Gm-Message-State: APjAAAXPvu+KFcXA2xz3yG/BlPowKpv83KSlz82l8UdLcM2ANOJHqa2a
-        WJ+pwlQlzAIt0TS2veMhRrm20OtF
-X-Google-Smtp-Source: APXvYqzXQz1WuQ8o84lBXSlNBZV5pikgdP4pn6zYQi+7SMBgwRfUQo0Ew8aLdCLxY8ZIPRMxv+slWg==
-X-Received: by 2002:a9d:5c84:: with SMTP id a4mr773862oti.319.1574532030042;
-        Sat, 23 Nov 2019 10:00:30 -0800 (PST)
+        bh=pY1pNPrl1tG+NPM43+xxPuU3zVU/KXwcJU4pMYDbF1s=;
+        b=foZ1tIoPBkYD+70ko2ZrNR6DpGFDX/dVuGKfJ9qx3u7o5ZadytLyzcAXupI4Zbv2kt
+         8yexGwZtiFceoo62UMhc0r37yMafZApcT3ssFy9in4Yt0n1m7tTpMVXJBsFLm61MMIv2
+         fbKpO06oaAHrbEWi9OLN9ifYuzQ1uwx1b28jaj2h+dPPWVksUggliG7uSBV8FGj+1kJ3
+         I67j+ksUzhUsqVjD0fyz/OyqCZb206/SLEMcHshIzKd00g7tgwbY9b/HmhJbUHVKT+7N
+         RW3mFpeG38dHlrREq9aFEV2eExP50/l+MfAhuQXQ4X/bc4qZ4CfEjylp+6oEFGwxd77W
+         Ci+w==
+X-Gm-Message-State: APjAAAUenZdc2nEw0BNLHTddu0S6QjBgyCs54qSxrykiU4jXHNyGxiJO
+        XWRtXRXaF9VvVq/zZYHpe9smhzqC
+X-Google-Smtp-Source: APXvYqwE5t/YbYPtPqDl9R/KNDkv6EO1KpDV7j2x803g3C/CZ9d2tQm2QO1UKu30ptZKrdTKY9XCBw==
+X-Received: by 2002:aca:ed85:: with SMTP id l127mr17566781oih.75.1574532092813;
+        Sat, 23 Nov 2019 10:01:32 -0800 (PST)
 Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id g18sm475965otg.50.2019.11.23.10.00.29
+        by smtp.gmail.com with ESMTPSA id 18sm654600oip.57.2019.11.23.10.01.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Nov 2019 10:00:29 -0800 (PST)
-Subject: Re: [PATCH 2/3] staging: rtl8188eu: cleanup declarations in
- rtw_pwrctrl.c
+        Sat, 23 Nov 2019 10:01:32 -0800 (PST)
+Subject: Re: [PATCH 3/3] staging: rtl8188eu: remove return variable from
+ rtw_pwr_unassociated_idle
 To:     Michael Straube <straube.linux@gmail.com>,
         gregkh@linuxfoundation.org
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 References: <20191123151635.155138-1-straube.linux@gmail.com>
- <20191123151635.155138-2-straube.linux@gmail.com>
+ <20191123151635.155138-3-straube.linux@gmail.com>
 From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <13416470-46b0-5b53-5a23-f8177b611126@lwfinger.net>
-Date:   Sat, 23 Nov 2019 12:00:28 -0600
+Message-ID: <bd1b91e8-1f55-fe3b-a2f0-8ea62de919aa@lwfinger.net>
+Date:   Sat, 23 Nov 2019 12:01:31 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191123151635.155138-2-straube.linux@gmail.com>
+In-Reply-To: <20191123151635.155138-3-straube.linux@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,17 +79,18 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 11/23/19 9:16 AM, Michael Straube wrote:
-> Replace tabs with spaces in declarations to cleanup whitespace.
+> Function rtw_pwr_unassociated_idle returns boolean values.
+> Remove the return variable ret and the exit label to simplify the
+> function a little bit. Return true or false directly instead.
 > 
 > Signed-off-by: Michael Straube <straube.linux@gmail.com>
 > ---
->   drivers/staging/rtl8188eu/core/rtw_pwrctrl.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
+>   drivers/staging/rtl8188eu/core/rtw_pwrctrl.c | 10 +++-------
+>   1 file changed, 3 insertions(+), 7 deletions(-)
 
 Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
 
 Thanks,
 
 Larry
-
 
