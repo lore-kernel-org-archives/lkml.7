@@ -2,234 +2,70 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D27C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B848C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C15C204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64691204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKWUBP (ORCPT
+        id S1726762AbfKWUFS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 15:01:15 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57331 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKWUBP (ORCPT
+        Sat, 23 Nov 2019 15:05:18 -0500
+Received: from mail.fireflyinternet.com ([109.228.58.192]:56563 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726620AbfKWUFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 15:01:15 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iYbad-0002X6-7w; Sat, 23 Nov 2019 21:01:07 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iYbaU-0004d5-BV; Sat, 23 Nov 2019 21:00:58 +0100
-Date:   Sat, 23 Nov 2019 21:00:58 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v8 5/6] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191123200058.kz2farbyvruybtjj@pengutronix.de>
-References: <20191121195902.6906-1-peron.clem@gmail.com>
- <20191121195902.6906-6-peron.clem@gmail.com>
- <20191121211630.slgayfbuykwvlvdt@pengutronix.de>
- <CAJiuCcdhH9zbRMMYsZbBYL-H8YWn2kimvJEjZ8Z8kF7Uh9MCpg@mail.gmail.com>
- <CAJiuCcd8VK2xHqRuWTVpNvw4e+rCR9-KjOSF5KsTcN9qQhaNVw@mail.gmail.com>
+        Sat, 23 Nov 2019 15:05:18 -0500
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 19314250-1500050 
+        for multiple; Sat, 23 Nov 2019 20:05:12 +0000
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcd8VK2xHqRuWTVpNvw4e+rCR9-KjOSF5KsTcN9qQhaNVw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20191123195321.41305-1-natechancellor@gmail.com>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+References: <20191123195321.41305-1-natechancellor@gmail.com>
+Message-ID: <157453950786.2524.16955749910067219709@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH] drm/i915: Remove tautological compare in eb_relocate_vma
+Date:   Sat, 23 Nov 2019 20:05:07 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 03:05:48PM +0100, Clément Péron wrote:
-> Hi Uwe,
+Quoting Nathan Chancellor (2019-11-23 19:53:22)
+> -Wtautological-compare was recently added to -Wall in LLVM, which
+> exposed an if statement in i915 that is always false:
 > 
-> On Thu, 21 Nov 2019 at 22:21, Clément Péron <peron.clem@gmail.com> wrote:
-> >
-> > Hi Uwe,
-> >
-> > On Thu, 21 Nov 2019 at 22:16, Uwe Kleine-König
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > >
-> > > On Thu, Nov 21, 2019 at 08:59:01PM +0100, Clément Péron wrote:
-> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > >
-> > > > PWM core has an option to bypass whole logic and output unchanged source
-> > > > clock as PWM output. This is achieved by enabling bypass bit.
-> > > >
-> > > > Note that when bypass is enabled, no other setting has any meaning, not
-> > > > even enable bit.
-> > > >
-> > > > This mode of operation is needed to achieve high enough frequency to
-> > > > serve as clock source for AC200 chip which is integrated into same
-> > > > package as H6 SoC.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
-> > > >  1 file changed, 46 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > index 1fa2057419fb..0fe9c680d6d0 100644
-> > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > @@ -3,6 +3,10 @@
-> > > >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
-> > > >   *
-> > > >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > > > + *
-> > > > + * Limitations:
-> > > > + * - When outputing the source clock directly, the PWM logic will be bypassed
-> > > > + *   and the currently running period is not guaranteed to be completed
-> > > >   */
-> > > >
-> > > >  #include <linux/bitops.h>
-> > > > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
-> > > >
-> > > >  struct sun4i_pwm_data {
-> > > >       bool has_prescaler_bypass;
-> > > > +     bool has_direct_mod_clk_output;
-> > > >       unsigned int npwm;
-> > > >  };
-> > > >
-> > > > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
-> > > >
-> > > >       val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > >
-> > > > +     /*
-> > > > +      * PWM chapter in H6 manual has a diagram which explains that if bypass
-> > > > +      * bit is set, no other setting has any meaning. Even more, experiment
-> > > > +      * proved that also enable bit is ignored in this case.
-> > > > +      */
-> > > > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> > > > +         sun4i_pwm->data->has_direct_mod_clk_output) {
-> > > > +             state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
-> > > > +             state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
-> > > > +             state->polarity = PWM_POLARITY_NORMAL;
-> > > > +             state->enabled = true;
-> > > > +             return;
-> > > > +     }
-> > > > +
-> > > >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
-> > > >           sun4i_pwm->data->has_prescaler_bypass)
-> > > >               prescaler = 1;
-> > > > @@ -149,13 +168,24 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
-> > > >
-> > > >  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
-> > > >                              const struct pwm_state *state,
-> > > > -                            u32 *dty, u32 *prd, unsigned int *prsclr)
-> > > > +                            u32 *dty, u32 *prd, unsigned int *prsclr,
-> > > > +                            bool *bypass)
-> > > >  {
-> > > >       u64 clk_rate, div = 0;
-> > > >       unsigned int pval, prescaler = 0;
-> > > >
-> > > >       clk_rate = clk_get_rate(sun4i_pwm->clk);
-> > > >
-> > > > +     *bypass = sun4i_pwm->data->has_direct_mod_clk_output &&
-> > > > +               state->enabled &&
-> > > > +               (state->period * clk_rate >= NSEC_PER_SEC) &&
-> > > > +               (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> > > > +               (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
-> > > > +
-> > > > +     /* Skip calculation of other parameters if we bypass them */
-> > > > +     if (*bypass)
-> > > > +             return 0;
-> > > > +
-> > > >       if (sun4i_pwm->data->has_prescaler_bypass) {
-> > > >               /* First, test without any prescaler when available */
-> > > >               prescaler = PWM_PRESCAL_MASK;
-> > > > @@ -206,6 +236,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >       int ret;
-> > > >       unsigned int delay_us, prescaler;
-> > > >       unsigned long now;
-> > > > +     bool bypass;
-> > > >
-> > > >       pwm_get_state(pwm, &cstate);
-> > > >
-> > > > @@ -220,7 +251,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >       spin_lock(&sun4i_pwm->ctrl_lock);
-> > > >       ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > >
-> > > > -     ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler);
-> > > > +     ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler,
-> > > > +                               &bypass);
-> > > >       if (ret) {
-> > > >               dev_err(chip->dev, "period exceeds the maximum value\n");
-> > > >               spin_unlock(&sun4i_pwm->ctrl_lock);
-> > > > @@ -229,6 +261,18 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >               return ret;
-> > > >       }
-> > > >
-> > > > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
-> > > > +             if (bypass) {
-> > > > +                     ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > > +                     /* We can skip other parameter */
-> > > > +                     sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-> > > > +                     spin_unlock(&sun4i_pwm->ctrl_lock);
-> > > > +                     return 0;
-> > > > +             } else {
-> > > > +                     ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > > +             }
-> > > > +     }
-> > >
-> > > This could be simplified to:
-> > >
-> > >         if (bypass) {
-> > >                 ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > >                 /*
-> > >                  * Other parameters are not relevant in this mode and so
-> > >                  * writing them can be skipped
-> > >                  */
-> > >                 sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-> > >                 spin_unlock(&sun4i_pwm->ctrl_lock);
-> > >                 return 0;
-> > >         } else {
-> > >                 ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > >         }
-> > >
-> > > which has the advantage(?) that the bypass bit is also (more obviously)
-> > > cleared for SoCs that don't support it and it reduces the indention
-> > > level.
-> >
-> > This bit is not guaranteed to be reserved for all the SoC variants.
-> >
-> > I don't think it's a good idea to set to 0 a bit which is undefined.
+> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+> result of comparison of constant 576460752303423487 with expression of
+> type 'unsigned int' is always false
+> [-Wtautological-constant-out-of-range-compare]
+>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
 > 
-> Let me know if you agree or not with this and I send the v9 according
-> to your answer.
+> Since remain is an unsigned int, it can never be larger than UINT_MAX,
+> which is less than ULONG_MAX / sizeof(struct drm_i915_gem_relocation_entry).
+> Remove this statement to fix the warning.
 
-If my suggestion is not safe according to the documentation, it is
-obviously wrong. So only take it into account if a zero can be safely
-written.
+The check should remain as we do want to document the overflow
+calculation, and it should represent the types used -- it's much easier
+to review a stub than trying to find a missing overflow check. If the
+overflow cannot happen as the types are wide enough, no problem, the
+compiler can remove the known false branch.
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Tautology here has a purpose for conveying information to the reader.
+-Chris
