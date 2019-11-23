@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FD4C432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A92C43141
 	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 15:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E761E2071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 15:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C45D20720
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 15:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAp3Pi7Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5jME4Kl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKWPQu (ORCPT
+        id S1726880AbfKWPQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 10:16:50 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44996 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKWPQu (ORCPT
+        Sat, 23 Nov 2019 10:16:51 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35568 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfKWPQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 10:16:50 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so12103324wrn.11
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 07:16:48 -0800 (PST)
+        Sat, 23 Nov 2019 10:16:51 -0500
+Received: by mail-wm1-f65.google.com with SMTP id n5so853806wmc.0
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 07:16:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vXrw9xXYn/OrnTMQI0ZQZW1/tehCBcD8aPYFJY2zdsc=;
-        b=BAp3Pi7ZbAErJYMdHKzkv248C07xpb9NP8LhvRrXE9WQyBp6pfdnrM/kEPPGz+hQLa
-         DWlgovKy8A1lisOW9+GenWY3WJFN6AOoPTr9ZONWGhdRQQgrm508nxwvqXxZXRQwcf1v
-         N3kkXiR96ZDbvUc2xtijjdr37ex/ScCcati3uBbcNfIpzTfhIlgsU7aziDEiJB6bHUU1
-         IkBFdKPQRGjF7mkA71fqovH4nUIddVgvcQyYvU6Wgp0LiW6XX8kuBBYGecJ9Ok2APRLF
-         mp8GJ/LDOVKn5Ew1yn9kp4KjR7PnJsm/e5SqtGCGFPZTBcLCrgu6a4FC88tMgTtf1WJo
-         etQQ==
+        bh=dFed9VqpsJKafs4auYjqVCiB2JZMUoL2P/uWCdp5l5Q=;
+        b=s5jME4KlROGZt+v99F8rHGB4q5F574j8yIuMkOLNP3orVMGMgvDhzbh43mm6EWJsrP
+         gLnQM/bQ2lxwUP6RhPwXRaIK5x/V+73jG8qTjOOSQmua5yY8ImMouZhjYK4v1hiHGIBy
+         i8+4ZmlLayz0DP50sOFtd+GCdFVJh3eoWerV0D77GNUTwxS4hjVHrXM+fSXt/82piM3x
+         BH3edRluBQo4LxXahRLiShZz+EItaSeBkbewUDLisRKhjcRVJvVBGy6rOdG/4CGEJxHJ
+         PFQyykDM4RliuUz8JePMCw0uYlCGHC+SMxKiJQbY+RoDoBXef4QjkKBQ7VaIv2zFuXRa
+         m9iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vXrw9xXYn/OrnTMQI0ZQZW1/tehCBcD8aPYFJY2zdsc=;
-        b=UGLZiFVNaAK2yoghX247FpmdpAVGGTk3qp+KljWbmJ2tnd+QDa1IkrV8368asKAkTb
-         ViWFvTMcQM47BBcNsN2udwoedwAsl8VeIex4C887J4CWea+ZEAQRgUBIYbgsxUmgtgvN
-         ufrxi0L03C9BcImSF/Oie5AaTRfmkxzxZWFO84y0aVUfWhTOnz1m/Hh8ReUhZBHZsT37
-         LMKDUVbxrfI6dcWhOAxpbhcdAK9v73QziCsrvgGhYvLz5WBYyBoIcolqmAZPm5JctM03
-         DLGqBOiEGv5R6esDXk6MEdzHmBsKgakELyiNSOftXazCgNeDRXMY6hnaoB8t7uG75MzQ
-         wTSQ==
-X-Gm-Message-State: APjAAAWqzIz2yGQQ7JpDDpx37EgpfGWtuRFe679QUCKNvw1nMCfqStqw
-        32rPqp4pB5XfThTUGA/ulj0=
-X-Google-Smtp-Source: APXvYqwR6NdHeDdjqDCeHHsiCZkALxbVSxcPUcWl6l3Inm0oheacR0ozm2tMlOtrrnn9ZZ9KFFj1Fw==
-X-Received: by 2002:adf:fa87:: with SMTP id h7mr13430458wrr.172.1574522207969;
-        Sat, 23 Nov 2019 07:16:47 -0800 (PST)
+        bh=dFed9VqpsJKafs4auYjqVCiB2JZMUoL2P/uWCdp5l5Q=;
+        b=rf+bsP51sXUsKYPP7r28I0wUv8gDRdW7iTsFPkqRsJ1jIz6o4Iv09Lh9xjv2qWZg7n
+         QqHKKs0AIQIyuDsQx0d7/mYfR8jkjfE+9yCa5vTP+ZQnlPcFYrYoh0XAwX3/j0hwvgzl
+         K3aGVVaP1ADeU8fuAqGh5NEB7R4mntX+GZm5DL+C7I7K9FGxZQUAKmv0UTcX3+w6kt5D
+         1DI1m9sxfWJ5fF2FLlQC4D1sOyS+2MJiTKEIP7qCl7I9Z9Zu6gMPcn95r1KDuRNx8T8v
+         2jOqQAExaaNPnXS3U3Kt2FqC6Y9WTja12DMK5JMX0ti7AhrV7T8LOxH9bQ5+ZbJqcugW
+         bbVA==
+X-Gm-Message-State: APjAAAUDjgzVPhi5GxSBSQvYy5FdVF54VPt2PUIH2OYi2lp/xS/mUHuz
+        U+2iK5Yg9Z6FhB5RUsa6LVA=
+X-Google-Smtp-Source: APXvYqxej3lQo35o2AcErOq4wsO6GVqMxTmW4YKoxjFD/Rzg4BwQccSqZZSdF/3jycOVQ3dSQGpocg==
+X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr20859986wma.177.1574522208846;
+        Sat, 23 Nov 2019 07:16:48 -0800 (PST)
 Received: from localhost.localdomain (dslb-092-073-054-228.092.073.pools.vodafone-ip.de. [92.73.54.228])
         by smtp.gmail.com with ESMTPSA id p25sm2126311wma.20.2019.11.23.07.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 07:16:47 -0800 (PST)
+        Sat, 23 Nov 2019 07:16:48 -0800 (PST)
 From:   Michael Straube <straube.linux@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 2/3] staging: rtl8188eu: cleanup declarations in rtw_pwrctrl.c
-Date:   Sat, 23 Nov 2019 16:16:34 +0100
-Message-Id: <20191123151635.155138-2-straube.linux@gmail.com>
+Subject: [PATCH 3/3] staging: rtl8188eu: remove return variable from rtw_pwr_unassociated_idle
+Date:   Sat, 23 Nov 2019 16:16:35 +0100
+Message-Id: <20191123151635.155138-3-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191123151635.155138-1-straube.linux@gmail.com>
 References: <20191123151635.155138-1-straube.linux@gmail.com>
@@ -75,75 +75,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace tabs with spaces in declarations to cleanup whitespace.
+Function rtw_pwr_unassociated_idle returns boolean values.
+Remove the return variable ret and the exit label to simplify the
+function a little bit. Return true or false directly instead.
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_pwrctrl.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/staging/rtl8188eu/core/rtw_pwrctrl.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/rtl8188eu/core/rtw_pwrctrl.c b/drivers/staging/rtl8188eu/core/rtw_pwrctrl.c
-index 010a0cdf7940..8e99e10c1fd4 100644
+index 8e99e10c1fd4..c4f58507dbfd 100644
 --- a/drivers/staging/rtl8188eu/core/rtw_pwrctrl.c
 +++ b/drivers/staging/rtl8188eu/core/rtw_pwrctrl.c
-@@ -282,7 +282,7 @@ static void pwr_state_check_handler(struct timer_list *t)
-  */
- void rtw_set_rpwm(struct adapter *padapter, u8 pslv)
+@@ -201,21 +201,17 @@ int ips_leave(struct adapter *padapter)
+ static bool rtw_pwr_unassociated_idle(struct adapter *adapter)
  {
--	u8	rpwm;
-+	u8 rpwm;
- 	struct pwrctrl_priv *pwrpriv = &padapter->pwrctrlpriv;
+ 	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
+-	bool ret = false;
  
- 	pslv = PS_STATE(pslv);
-@@ -335,8 +335,8 @@ void rtw_set_rpwm(struct adapter *padapter, u8 pslv)
- static u8 PS_RDY_CHECK(struct adapter *padapter)
- {
- 	unsigned long curr_time, delta_time;
--	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
--	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
-+	struct pwrctrl_priv *pwrpriv = &padapter->pwrctrlpriv;
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	if (time_after_eq(adapter->pwrctrlpriv.ips_deny_time, jiffies))
+-		goto exit;
++		return false;
  
- 	curr_time = jiffies;
- 	delta_time = curr_time - pwrpriv->DelayLPSLastTimeStamp;
-@@ -437,7 +437,7 @@ s32 LPS_RF_ON_check(struct adapter *padapter, u32 delay_ms)
- /*  */
- void LPS_Enter(struct adapter *padapter)
- {
--	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
-+	struct pwrctrl_priv *pwrpriv = &padapter->pwrctrlpriv;
+ 	if (check_fwstate(pmlmepriv, WIFI_ASOC_STATE|WIFI_SITE_MONITOR) ||
+ 	    check_fwstate(pmlmepriv, WIFI_UNDER_LINKING|WIFI_UNDER_WPS) ||
+ 	    check_fwstate(pmlmepriv, WIFI_AP_STATE) ||
+ 	    check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE|WIFI_ADHOC_STATE))
+-		goto exit;
+-
+-	ret = true;
++		return false;
  
- 	if (!PS_RDY_CHECK(padapter))
- 		return;
-@@ -463,7 +463,7 @@ void LPS_Enter(struct adapter *padapter)
- /*		Leave the leisure power save mode. */
- void LPS_Leave(struct adapter *padapter)
- {
--	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
-+	struct pwrctrl_priv *pwrpriv = &padapter->pwrctrlpriv;
+-exit:
+-	return ret;
++	return true;
+ }
  
- 	if (pwrpriv->bLeisurePs) {
- 		if (pwrpriv->pwr_mode != PS_MODE_ACTIVE) {
-@@ -483,8 +483,8 @@ void LPS_Leave(struct adapter *padapter)
- /*  */
- void LeaveAllPowerSaveMode(struct adapter *Adapter)
- {
--	struct mlme_priv	*pmlmepriv = &Adapter->mlmepriv;
--	u8	enqueue = 0;
-+	struct mlme_priv *pmlmepriv = &Adapter->mlmepriv;
-+	u8 enqueue = 0;
- 
- 	if (check_fwstate(pmlmepriv, _FW_LINKED))
- 		rtw_lps_ctrl_wk_cmd(Adapter, LPS_CTRL_LEAVE, enqueue);
-@@ -611,7 +611,7 @@ int _rtw_pwr_wakeup(struct adapter *padapter, u32 ips_deffer_ms, const char *cal
- 
- int rtw_pm_set_lps(struct adapter *padapter, u8 mode)
- {
--	int	ret = 0;
-+	int ret = 0;
- 	struct pwrctrl_priv *pwrctrlpriv = &padapter->pwrctrlpriv;
- 
- 	if (mode < PS_MODE_NUM) {
+ void rtw_ps_processor(struct adapter *padapter)
 -- 
 2.24.0
 
