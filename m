@@ -2,240 +2,142 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9289C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05603C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 06:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65792071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 06:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F642070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 06:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eGm+fXE7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ef4pBY7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfKWGnm (ORCPT
+        id S1726494AbfKWGwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 01:43:42 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:49507 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfKWGnm (ORCPT
+        Sat, 23 Nov 2019 01:52:38 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42163 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfKWGwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 01:43:42 -0500
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xAN6hMwl007754;
-        Sat, 23 Nov 2019 15:43:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xAN6hMwl007754
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574491403;
-        bh=RDtgbp8VFqT52OmhsLs0ZXgZWSBftRKnww81jQk0lF4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eGm+fXE7I4a/4aKTK4xr2rA2rPBbyssR2lpgQkPYs9qT6QeCLeaqRyZNZxCHuG+tr
-         4I/KyiCTvi7C/M48z3xgyzBnajod2xIuFnK4zfbsFCRzaorIit1AKA1AEO7h/h9vVH
-         gKJQC2Te2TKTYOHZ245q4J01FA6PQMM5ZB6uqg+uCKZ+V21oUGjWHoCbb2PfKwsT4g
-         Ax5JUmX3FYuGAnysPkuVAesePpuB/15Ix0ZPThtcnNSaOeaEHt5WSbop7B7VWe5y/1
-         GD48VG4UgPFwZbtqbAnRvBzdiixjgXG+C8GmSdmrUXXGYlvGlEi5g6sc0Fro0Pwv5A
-         JhYh0cgVc+Wxw==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id m5so1767939vsj.3;
-        Fri, 22 Nov 2019 22:43:22 -0800 (PST)
-X-Gm-Message-State: APjAAAWqpiHdr85yg+GxfcVKwTTgUMawjFAc7ulH8QpjxwCSjz1VbvX9
-        jk8DzX/6FIW+4G5g6iOfUQMPUO24yyq26PVkv58=
-X-Google-Smtp-Source: APXvYqw1UVxrcDDQjRJbxcV21a8tzYgd2Dm3qpNHRvtStQIJgMVVoNAkZAwG6voQHSmuaHFNHppL55rED2zQkFb2a9U=
-X-Received: by 2002:a67:d31b:: with SMTP id a27mr13438060vsj.215.1574491401691;
- Fri, 22 Nov 2019 22:43:21 -0800 (PST)
+        Sat, 23 Nov 2019 01:52:38 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t20so10606414qtn.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 22:52:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P+MUZ1y2xb9PhY7+WKJzGw1iInQZnQRbBnrxCn4UQzw=;
+        b=ef4pBY7xeFKFfeQ/8fzoBtrVicRJxFcNv7xwZsVE9YZFB7OBVPVFbdxHC66O3jBsXS
+         kSO2Qg57e2UCBOtT7P3IdscYIZRF1sAbTXGNsuv78EbZ2oNQK48+yBd0fsSK4Vw/87Jp
+         ZQxW2xuyAvXmL/koRI3Bqlxh8WPdUDRqr7BR33qnH8Ri5603dDwQxHzy3UBys5pKdShU
+         EfuBt6tK9bBhsB6Ryl/YyG2R3mCFm7E/BKb56qV+35we7vLeMTDcWz+OxS2WOQqjCAXG
+         ny+h43woX108oFb4ptQp5vPXaCcQBbAUiACKS08iXmBdo05M6nBaczjFDA+62NNx6wFp
+         KHHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P+MUZ1y2xb9PhY7+WKJzGw1iInQZnQRbBnrxCn4UQzw=;
+        b=hd4sa7nErDj7pfAIQtUEMf7Hxv/7N5uLHndiqAhF8CIYmdbUDJDi9DSmV8B/Wd+Fk0
+         Bxud2wPLr+y30e9gYalk84wCodj8HhfYcauu4aemLlYiyxqIay2UpE6LkORhuOyJwqHw
+         hB5JdFXpwieT4JUKPTemLeTspVkxFy7GGO7WxY0n4b+7KfJj/7WRt6bxEfRCrft+mxje
+         Qtzb4Li6W8GIDLX7Mt/AH6sfHULkrzN6v4mZqSS/05RjnsrOl+avhUK7niMeQ1T+Rdkq
+         EUnRD9l1CUL1vw8/XW02XoyXCWTtm4us2EUHlnmwx2Q4LK4nPm9f7J3uuNaE89B+o2EU
+         PLVg==
+X-Gm-Message-State: APjAAAV9lER0K7ezwaMsjnsn2sWO9mmHCWR5knMhxF8Md9GJLIKqi0Xw
+        GoXhbMl8qW2T6lJfBrCfb1GmFqH6cHKDPuRrr8FiaA==
+X-Google-Smtp-Source: APXvYqxRxRqDo8SO2OOlMLZfct/me9RRZCPwi7R45+Yk8t+IxHBz+O3PzExEgN5YTAvYjB2pKNIM8zj3NhGe7QGyzkI=
+X-Received: by 2002:aed:24af:: with SMTP id t44mr4069018qtc.57.1574491957069;
+ Fri, 22 Nov 2019 22:52:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191114174226.7201-1-yamada.masahiro@socionext.com> <20191114174226.7201-4-yamada.masahiro@socionext.com>
-In-Reply-To: <20191114174226.7201-4-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 23 Nov 2019 15:42:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQtttcb78nog1SMg9Ng37OT7EyX1vs612oCro7R=c1O5g@mail.gmail.com>
-Message-ID: <CAK7LNAQtttcb78nog1SMg9Ng37OT7EyX1vs612oCro7R=c1O5g@mail.gmail.com>
-Subject: Re: [PATCH 4/6] modpost: stop symbol preloading for modversion CRC
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <0000000000003313f0058fea8435@google.com> <8736ek9qir.fsf@miraculix.mork.no>
+ <1574159504.28617.5.camel@suse.de> <87pnho85h7.fsf@miraculix.mork.no>
+In-Reply-To: <87pnho85h7.fsf@miraculix.mork.no>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 23 Nov 2019 07:52:25 +0100
+Message-ID: <CACT4Y+YgLm2m0JG6qKKn9OpyXT9kKEPeyLSVGSfLbUukoCnB+g@mail.gmail.com>
+Subject: Re: INFO: task hung in wdm_flush
+To:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Cc:     Oliver Neukum <oneukum@suse.de>,
+        syzbot <syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuehaibing@huawei.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 2:42 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Tue, Nov 19, 2019 at 12:34 PM Bj=C3=B8rn Mork <bjorn@mork.no> wrote:
 >
-> It is complicated to add mocked-up symbols to pre-handle CRC.
-> Handle CRC after all the export symbols in the relevant module
-> are registered.
+> Oliver Neukum <oneukum@suse.de> writes:
+> > Am Dienstag, den 19.11.2019, 10:14 +0100 schrieb Bj=C3=B8rn Mork:
+> >
+> >> Anyway, I believe this is not a bug.
+> >>
+> >> wdm_flush will wait forever for the IN_USE flag to be cleared or the
+> >
+> > Damn. Too obvious. So you think we simply have pending output that does
+> > just not complete?
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> I do miss a lot of stuff so I might be wrong, but I can't see any other
+> way this can happen.  The out_callback will unconditionally clear the
+> IN_USE flag and wake up the wait_queue.
 >
->  scripts/mod/modpost.c | 64 +++++++++++++++++++++++--------------------
->  1 file changed, 35 insertions(+), 29 deletions(-)
+> >> DISCONNECTING flag to be set. The only way you can avoid this is by
+> >> creating a device that works normally up to a point and then completel=
+y
+> >> ignores all messages,
+> >
+> > Devices may crash. I don't think we can ignore that case.
 >
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 6735ae3da4c2..73bdf27c41fe 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -169,7 +169,7 @@ struct symbol {
->         unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
->         unsigned int kernel:1;     /* 1 if symbol is from kernel
->                                     *  (only for external modules) **/
-> -       unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
-> +       unsigned int preloaded:1;  /* 1 if symbol from Module.symvers */
->         unsigned int is_static:1;  /* 1 if symbol is not global */
->         enum export  export;       /* Type of export */
->         char name[0];
-> @@ -410,15 +410,15 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
->         return s;
->  }
+> Sure, but I've never seen that happen without the device falling off the
+> bus.  Which is a disconnect.
 >
-> -static void sym_update_crc(const char *name, struct module *mod,
-> -                          unsigned int crc, enum export export)
-> +static void sym_set_crc(const char *name, const struct module *mod,
-> +                       unsigned int crc)
->  {
->         struct symbol *s = find_symbol(name);
+> But I am all for handling this *if* someone reproduces it with a real
+> device.  I just don't think it's worth the effort if it's only a
+> theoretical problem.
 >
->         if (!s) {
-> -               s = new_symbol(name, mod, export);
-> -               /* Don't complain when we find it later. */
-> -               s->preloaded = 1;
-> +               warn("%s: '__crc_%s' is invalid use. __crc_* is reserved for modversion\n",
-> +                    mod->name, name);
-
-I notice this can produce false positive warnings.
-
-ARCH=arm allyesconfig produces the following:
-
-WARNING: vmlinux: '__crc_ccitt_veneer' is invalid use. __crc_* is
-reserved for modversion
-WARNING: vmlinux: '__crc_ccitt_veneer' is invalid use. __crc_* is
-reserved for modversion
-WARNING: vmlinux: '__crc_ccitt_veneer' is invalid use. __crc_* is
-reserved for modversion
-WARNING: vmlinux: '__crc_itu_t_veneer' is invalid use. __crc_* is
-reserved for modversion
-WARNING: vmlinux: '__crc_itu_t_veneer' is invalid use. __crc_* is
-reserved for modversion
-WARNING: vmlinux: '__crc_itu_t_veneer' is invalid use. __crc_* is
-reserved for modversion
-
-
-The ARM compiler inserts veneers automatically.
-
-I will remove this warn(), and add commit messages as follows:
-
-    In some cases, I see atand-alone __crc_* without __ksymtab_*.
-    For example, ARCH=arm allyesconfig produces __crc_ccitt_veneer and
-    __crc_itu_t_veneer. I guess they come from crc_ccitt, crc_itu_t,
-    respectively. Since __*_veneer are auto-generated symbols, just
-    ignore them.
-
-
-
-> +               return;
->         }
->         s->crc = crc;
->         s->crc_valid = 1;
-> @@ -683,12 +683,34 @@ static int ignore_undef_symbol(struct elf_info *info, const char *symname)
->         return 0;
->  }
+> >>  but without resetting or disconnecting. It is
+> >> obviously possible to create such a device. But I think the current
+> >> error handling is more than sufficient, unless you show me some way to
+> >> abuse this or reproduce the issue with a real device.
+> >
+> > Malicious devices are real. Potentially at least.
+> > But you are right, we need not bend over to handle them well, but we
+> > ought to be able to handle them.
 >
-> +static void handle_modversion(const struct module *mod,
-> +                             const struct elf_info *info,
-> +                             const Elf_Sym *sym, const char *symname)
-> +{
-> +       unsigned int crc;
-> +
-> +       if (sym->st_shndx == SHN_UNDEF) {
-> +               warn("EXPORT symbol \"%s\" [%s%s] version generation failed, symbol will not be versioned.\n",
-> +                    symname, mod->name, is_vmlinux(mod->name) ? "":".ko");
-> +               return;
-> +       }
-> +
-> +       if (sym->st_shndx == SHN_ABS) {
-> +               crc = sym->st_value;
-> +       } else {
-> +               unsigned int *crcp;
-> +
-> +               /* symbol points to the CRC in the ELF object */
-> +               crcp = sym_get_data(info, sym);
-> +               crc = TO_NATIVE(*crcp);
-> +       }
-> +       sym_set_crc(symname, mod, crc);
-> +}
-> +
->  static void handle_symbol(struct module *mod, struct elf_info *info,
->                           const Elf_Sym *sym, const char *symname)
->  {
-> -       unsigned int crc;
->         enum export export;
-> -       bool is_crc = false;
->         const char *name;
+> Sure, we need to handle malicious devices.  But only if they can be used
+> for real harm.
 >
->         if ((!is_vmlinux(mod->name) || mod->is_dot_o) &&
-> @@ -697,21 +719,6 @@ static void handle_symbol(struct module *mod, struct elf_info *info,
->         else
->                 export = export_from_sec(info, get_secindex(info, sym));
->
-> -       /* CRC'd symbol */
-> -       if (strstarts(symname, "__crc_")) {
-> -               is_crc = true;
-> -               crc = (unsigned int) sym->st_value;
-> -               if (sym->st_shndx != SHN_UNDEF && sym->st_shndx != SHN_ABS) {
-> -                       unsigned int *crcp;
-> -
-> -                       /* symbol points to the CRC in the ELF object */
-> -                       crcp = sym_get_data(info, sym);
-> -                       crc = TO_NATIVE(*crcp);
-> -               }
-> -               sym_update_crc(symname + strlen("__crc_"), mod, crc,
-> -                               export);
-> -       }
-> -
->         switch (sym->st_shndx) {
->         case SHN_COMMON:
->                 if (strstarts(symname, "__gnu_lto_")) {
-> @@ -746,11 +753,6 @@ static void handle_symbol(struct module *mod, struct elf_info *info,
->                 }
->  #endif
->
-> -               if (is_crc) {
-> -                       const char *e = is_vmlinux(mod->name) ?"":".ko";
-> -                       warn("EXPORT symbol \"%s\" [%s%s] version generation failed, symbol will not be versioned.\n",
-> -                            symname + strlen("__crc_"), mod->name, e);
-> -               }
->                 mod->unres = alloc_symbol(symname,
->                                           ELF_ST_BIND(sym->st_info) == STB_WEAK,
->                                           mod->unres);
-> @@ -2063,6 +2065,10 @@ static void read_symbols(const char *modname)
->                         sym_update_namespace(symname + strlen("__kstrtabns_"),
->                                              namespace_from_kstrtabns(&info,
->                                                                       sym));
-> +
-> +               if (strstarts(symname, "__crc_"))
-> +                       handle_modversion(mod, &info, sym,
-> +                                         symname + strlen("__crc_"));
->         }
->
->         // check for static EXPORT_SYMBOL_* functions && global vars
-> @@ -2476,7 +2482,7 @@ static void read_dump(const char *fname, unsigned int kernel)
->                 s->kernel    = kernel;
->                 s->preloaded = 1;
->                 s->is_static = 0;
-> -               sym_update_crc(symname, mod, crc, export_no(export));
-> +               sym_set_crc(symname, mod, crc);
->                 sym_update_namespace(symname, namespace);
->         }
->         release_file(file, size);
-> --
-> 2.17.1
->
+> This warning requires physical acceess and is only slightly annoying.
+> Like a USB device making loud farting sounds.  You'd just disconnect the
+> device.  No need for Linux to detect the sound and handle it
+> automatically, I think.
 
+Hi Bj=C3=B8rn,
 
--- 
-Best Regards
-Masahiro Yamada
+Besides the production use you are referring to, there are 2 cases we
+should take into account as well:
+1. Testing.
+Any kernel testing system needs a binary criteria for detecting kernel
+bugs. It seems right to detect unkillable hung tasks as kernel bugs.
+Which means that we need to resolve this in some way regardless of the
+production scenario.
+2. Reliable killing of processes.
+It's a very important property that an admin or script can reliably
+kill whatever process/container they need to kill for whatever reason.
+This case results in an unkillable process, which means scripts will
+fail, automated systems will misbehave, admins will waste time (if
+they are qualified to resolve this at all).
