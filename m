@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76162C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DACC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F562070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B31F2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="v/+rqumx"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="koLs9OL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKWQF2 (ORCPT
+        id S1727128AbfKWQF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:05:28 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49454 "EHLO
+        Sat, 23 Nov 2019 11:05:26 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49447 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfKWQFC (ORCPT
+        with ESMTP id S1726767AbfKWQFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 11:05:02 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xANG4l5K019106;
-        Sun, 24 Nov 2019 01:04:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5K019106
+        by conuserg-12.nifty.com with ESMTP id xANG4l5S019106;
+        Sun, 24 Nov 2019 01:04:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5S019106
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574525089;
-        bh=NiWcGoRSkJ1ToZ+rAR8uqUuIB/kFxxkQ/T4OsoV5GoA=;
+        s=dec2015msa; t=1574525093;
+        bh=L3zUH6rFXSpzUIwhA4bPRr4LzEsUQo/+LU2wclGFUeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/+rqumxnqCo8borqbNoOmcZ+UTQtLFg9D1qGgnjRgnSouqHHc8n+EmdrhMdd/HG1
-         LTZG0bOtEcXsaKegzYSDoSJ9D6cBGbuDElcmL24fG9g8ERHI6eVZchYbdbMnEkOjr4
-         Mz8qVFnTNoOExJsgK+Nw7rpQyTkVCH8TczsWzVdKRgYXpo6cZPAXkWByCJWKKfCDKF
-         q1KwHmqmf8oBI8eC8AYyteryM5oIzT8fiyF5VdSd9CLAvMohFnyE1cQndL0HCn7m36
-         AILp2k/NrjHd2qkW3lwRoRMFZ08O/XD9r673m7i8elxA+cizFjNIP0xR2ASKgmM1wJ
-         tyj9amgzO1hQA==
+        b=koLs9OL+iw4m7NwJ6DHSqxM62gT4jNuvHmeGX23Vg7wCLnclSKzxlEAWgjIYuujuy
+         BWhtpWvMNEKpaEKJrUITq4FMLLGjwMmNW2In+pUb2qqlDrn3kssQp5qRwpkXxgIUZZ
+         1lZCFo2T51boOVR5lDFjTczRLrMTpYJbsSyLysKKN51m8AgndwEPgJJzSvR7hwfUuH
+         6MZuCAxBRQGT2IyyCrtVfjlUKvxTJcFouhhzyrpQ4kUWx8q+pf7rE5WaCYrsX+ZWA0
+         r+A6/G0fmPxkmD5HJGC+ndc+FLTubwnuuUONKND/gyjoOhOkOKmRuzBWMH9oHUkyyE
+         JH+umBKBAvA+A==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/16] scripts/kallsyms: shrink table before sorting it
-Date:   Sun, 24 Nov 2019 01:04:31 +0900
-Message-Id: <20191123160444.11251-4-yamada.masahiro@socionext.com>
+Subject: [PATCH v2 11/16] scripts/kallsyms: skip ignored symbols very early
+Date:   Sun, 24 Nov 2019 01:04:39 +0900
+Message-Id: <20191123160444.11251-12-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191123160444.11251-1-yamada.masahiro@socionext.com>
 References: <20191123160444.11251-1-yamada.masahiro@socionext.com>
@@ -53,105 +53,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, build_initial_tok_table() trims unused symbols, which is
-called after sort_symbol().
-
-It is not efficient to sort the huge table that contains unused entries.
-Shrink the table before sorting it.
+Unless the address range matters, symbols can be ignored earlier,
+which avoids unneeded memory allocation.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-Changes in v2:
- - New patch
+Changes in v2: None
 
- scripts/kallsyms.c | 49 +++++++++++++++++++++++++++-------------------
- 1 file changed, 29 insertions(+), 20 deletions(-)
+ scripts/kallsyms.c | 113 +++++++++++++++++++++++++--------------------
+ 1 file changed, 62 insertions(+), 51 deletions(-)
 
 diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 79641874d860..de986eda41a6 100644
+index 056bde436540..843615c1d384 100644
 --- a/scripts/kallsyms.c
 +++ b/scripts/kallsyms.c
-@@ -268,6 +268,30 @@ static int symbol_valid(struct sym_entry *s)
+@@ -18,6 +18,7 @@
+  *
+  */
+ 
++#include <stdbool.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -79,6 +80,64 @@ static char *sym_name(const struct sym_entry *s)
+ 	return (char *)s->sym + 1;
+ }
+ 
++static bool is_ignored_symbol(const char *name, char type)
++{
++	static const char * const ignored_symbols[] = {
++		/*
++		 * Symbols which vary between passes. Passes 1 and 2 must have
++		 * identical symbol lists. The kallsyms_* symbols below are
++		 * only added after pass 1, they would be included in pass 2
++		 * when --all-symbols is specified so exclude them to get a
++		 * stable symbol list.
++		 */
++		"kallsyms_addresses",
++		"kallsyms_offsets",
++		"kallsyms_relative_base",
++		"kallsyms_num_syms",
++		"kallsyms_names",
++		"kallsyms_markers",
++		"kallsyms_token_table",
++		"kallsyms_token_index",
++		/* Exclude linker generated symbols which vary between passes */
++		"_SDA_BASE_",		/* ppc */
++		"_SDA2_BASE_",		/* ppc */
++		NULL
++	};
++
++	static const char * const ignored_prefixes[] = {
++		"__crc_",		/* modversions */
++		"__efistub_",		/* arm64 EFI stub namespace */
++		NULL
++	};
++
++	static const char * const ignored_suffixes[] = {
++		"_from_arm",		/* arm */
++		"_from_thumb",		/* arm */
++		"_veneer",		/* arm */
++		NULL
++	};
++
++	const char * const *p;
++
++	/* Exclude symbols which vary between passes. */
++	for (p = ignored_symbols; *p; p++)
++		if (!strcmp(name, *p))
++			return true;
++
++	for (p = ignored_prefixes; *p; p++)
++		if (!strncmp(name, *p, strlen(*p)))
++			return true;
++
++	for (p = ignored_suffixes; *p; p++) {
++		int l = strlen(name) - strlen(*p);
++
++		if (l >= 0 && !strcmp(name + l, *p))
++			return true;
++	}
++
++	return false;
++}
++
+ static int check_symbol_range(const char *sym, unsigned long long addr,
+ 			      struct addr_range *ranges, int entries)
+ {
+@@ -118,6 +177,9 @@ static int read_symbol(FILE *in, struct sym_entry *s)
+ 		return -1;
+ 	}
+ 
++	if (is_ignored_symbol(sym, stype))
++		return -1;
++
+ 	/* Ignore most absolute/undefined (?) symbols. */
+ 	if (strcmp(sym, "_text") == 0)
+ 		_text = s->addr;
+@@ -188,38 +250,6 @@ static int symbol_in_range(const struct sym_entry *s,
+ 
+ static int symbol_valid(const struct sym_entry *s)
+ {
+-	/* Symbols which vary between passes.  Passes 1 and 2 must have
+-	 * identical symbol lists.  The kallsyms_* symbols below are only added
+-	 * after pass 1, they would be included in pass 2 when --all-symbols is
+-	 * specified so exclude them to get a stable symbol list.
+-	 */
+-	static const char * const special_symbols[] = {
+-		"kallsyms_addresses",
+-		"kallsyms_offsets",
+-		"kallsyms_relative_base",
+-		"kallsyms_num_syms",
+-		"kallsyms_names",
+-		"kallsyms_markers",
+-		"kallsyms_token_table",
+-		"kallsyms_token_index",
+-
+-	/* Exclude linker generated symbols which vary between passes */
+-		"_SDA_BASE_",		/* ppc */
+-		"_SDA2_BASE_",		/* ppc */
+-		NULL };
+-
+-	static const char * const special_prefixes[] = {
+-		"__crc_",		/* modversions */
+-		"__efistub_",		/* arm64 EFI stub namespace */
+-		NULL };
+-
+-	static const char * const special_suffixes[] = {
+-		"_veneer",		/* arm */
+-		"_from_arm",		/* arm */
+-		"_from_thumb",		/* arm */
+-		NULL };
+-
+-	int i;
+ 	const char *name = sym_name(s);
+ 
+ 	/* if --all-symbols is not specified, then symbols outside the text
+@@ -241,25 +271,6 @@ static int symbol_valid(const struct sym_entry *s)
+ 			return 0;
+ 	}
+ 
+-	/* Exclude symbols which vary between passes. */
+-	for (i = 0; special_symbols[i]; i++)
+-		if (strcmp(name, special_symbols[i]) == 0)
+-			return 0;
+-
+-	for (i = 0; special_prefixes[i]; i++) {
+-		int l = strlen(special_prefixes[i]);
+-
+-		if (strncmp(name, special_prefixes[i], l) == 0)
+-			return 0;
+-	}
+-
+-	for (i = 0; special_suffixes[i]; i++) {
+-		int l = strlen(name) - strlen(special_suffixes[i]);
+-
+-		if (l >= 0 && strcmp(name + l, special_suffixes[i]) == 0)
+-			return 0;
+-	}
+-
  	return 1;
  }
  
-+/* remove all the invalid symbols from the table */
-+static void shrink_table(void)
-+{
-+	unsigned int i, pos;
-+
-+	pos = 0;
-+	for (i = 0; i < table_cnt; i++) {
-+		if (symbol_valid(&table[i])) {
-+			if (pos != i)
-+				table[pos] = table[i];
-+			pos++;
-+		} else {
-+			free(table[i].sym);
-+		}
-+	}
-+	table_cnt = pos;
-+
-+	/* When valid symbol is not registered, exit to error */
-+	if (!table_cnt) {
-+		fprintf(stderr, "No valid symbol.\n");
-+		exit(1);
-+	}
-+}
-+
- static void read_map(FILE *in)
- {
- 	while (!feof(in)) {
-@@ -475,23 +499,13 @@ static void forget_symbol(unsigned char *symbol, int len)
- 		token_profit[ symbol[i] + (symbol[i + 1] << 8) ]--;
- }
- 
--/* remove all the invalid symbols from the table and do the initial token count */
-+/* do the initial token count */
- static void build_initial_tok_table(void)
- {
--	unsigned int i, pos;
-+	unsigned int i;
- 
--	pos = 0;
--	for (i = 0; i < table_cnt; i++) {
--		if ( symbol_valid(&table[i]) ) {
--			if (pos != i)
--				table[pos] = table[i];
--			learn_symbol(table[pos].sym, table[pos].len);
--			pos++;
--		} else {
--			free(table[i].sym);
--		}
--	}
--	table_cnt = pos;
-+	for (i = 0; i < table_cnt; i++)
-+		learn_symbol(table[i].sym, table[i].len);
- }
- 
- static void *find_token(unsigned char *str, int len, unsigned char *token)
-@@ -614,12 +628,6 @@ static void optimize_token_table(void)
- 
- 	insert_real_symbols_in_table();
- 
--	/* When valid symbol is not registered, exit to error */
--	if (!table_cnt) {
--		fprintf(stderr, "No valid symbol.\n");
--		exit(1);
--	}
--
- 	optimize_result();
- }
- 
-@@ -756,6 +764,7 @@ int main(int argc, char **argv)
- 		usage();
- 
- 	read_map(stdin);
-+	shrink_table();
- 	if (absolute_percpu)
- 		make_percpus_absolute();
- 	if (base_relative)
 -- 
 2.17.1
 
