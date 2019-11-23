@@ -2,82 +2,103 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F8BC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468052070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vIz5p4JA"
+	by mail.kernel.org (Postfix) with ESMTP id 805402071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:29:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574526569;
+	bh=ttQo5qpoKSKz2fy8gE/OGVK7L+NBmtPsjYZhifg7Ldw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MaO6c0vcS/3n5eMtI7X+/UGS0iqF+vJzqN/+yb3Oj1bjTsi4nRZv4BwP0oHqvglMw
+	 nV3nfdPLO6rc+DlxHNQUfGfmAIYEG5ht+49isIEcTuy1dMC5yBDrw+jUnb8WsdzDVN
+	 G5fvI/jw34KW8aJwPVIEDS7EeOzBtWgreU7mrcFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfKWQFv (ORCPT
+        id S1726855AbfKWQ31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:05:51 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49451 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfKWQFB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 11:05:01 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xANG4l5N019106;
-        Sun, 24 Nov 2019 01:04:50 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5N019106
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574525090;
-        bh=lxCDJ/TzRamerzIHNtq7hRwp1rjH2y4uMZMCuV7ILJg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vIz5p4JABWr2ukQchXCPsHDjkp9lot5DP65ulXNWDBNpkGwr6lpe3sbq6Wq6h4yUI
-         CTPa8hO/pnYsxUW3L8QgPtlW9oPaihXyL0Gyu/M+fwXVTWl+KLNf2L6nkLWQSQvnca
-         MRU4S7CXku89X7hLsHUgk4eyDKmlJw2c011IZ2EHIMKrSgoolLDKHb+B4LqhxYC62V
-         znZ4YrKLWyyp0UEoJXzZHMoMBEyNxQx76fFp+X1gCzi1bHwQABbJjyNZZ/1bvIh002
-         I6SA7YmkDoKKqLoqCL2L2Uurq/XlPmQXHbR4DAygejWWjInPiAO4yvoJXfV4KbL4Zy
-         HI8R+OWSJ+hJQ==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/16] scripts/kallsyms: remove unneeded length check for prefix matching
-Date:   Sun, 24 Nov 2019 01:04:34 +0900
-Message-Id: <20191123160444.11251-7-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191123160444.11251-1-yamada.masahiro@socionext.com>
-References: <20191123160444.11251-1-yamada.masahiro@socionext.com>
+        Sat, 23 Nov 2019 11:29:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726759AbfKWQ31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 11:29:27 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E25720719;
+        Sat, 23 Nov 2019 16:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574526566;
+        bh=ttQo5qpoKSKz2fy8gE/OGVK7L+NBmtPsjYZhifg7Ldw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aZjTAsJ50gfRBobQiO3HkwE0RabAa9hw6FZU6y6ws7MAk4gB68NackN+H1au7l50/
+         rk70OtrJOGnF3gHrxnMBZS7Lg477DAN7UyAQQAON6WvV/iQxELRdHMnmwFlRyIE/W1
+         NegMsBoIwPFWKA7tIepaPD+4O+vJrP/6Fm3rzGqc=
+Date:   Sat, 23 Nov 2019 16:29:21 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: max1027: fix not unregistered iio trigger
+Message-ID: <20191123162921.71499b80@archlinux>
+In-Reply-To: <20191118114018.25431-1-hslester96@gmail.com>
+References: <20191118114018.25431-1-hslester96@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-l <= strlen(sym_name) is unnecessary for prefix matching.
-strncmp() will do.
+On Mon, 18 Nov 2019 19:40:18 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+> The driver forgets to unregister the iio trigger in probe failure and
+> remove.
+> Use devm API to fix it.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Hi.
 
-Changes in v2: None
+This has crossed with some other patches to the driver, but the fix
+is still applicable.  If we want to push this back to older stable
+branches we will need to do manual backports.
 
- scripts/kallsyms.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Adjusted version applied to the fixes-togreg branch of iio.git.
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 14a50c8d3f34..a57636c6f84f 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -246,8 +246,7 @@ static int symbol_valid(struct sym_entry *s)
- 	for (i = 0; special_prefixes[i]; i++) {
- 		int l = strlen(special_prefixes[i]);
- 
--		if (l <= strlen(sym_name) &&
--		    strncmp(sym_name, special_prefixes[i], l) == 0)
-+		if (strncmp(sym_name, special_prefixes[i], l) == 0)
- 			return 0;
- 	}
- 
--- 
-2.17.1
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/max1027.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+> index 214883458582..8caead7dffa5 100644
+> --- a/drivers/iio/adc/max1027.c
+> +++ b/drivers/iio/adc/max1027.c
+> @@ -446,7 +446,12 @@ static int max1027_probe(struct spi_device *spi)
+>  	st->trig->ops = &max1027_trigger_ops;
+>  	st->trig->dev.parent = &spi->dev;
+>  	iio_trigger_set_drvdata(st->trig, indio_dev);
+> -	iio_trigger_register(st->trig);
+> +
+> +	ret = devm_iio_trigger_register(&spi->dev, st->trig);
+> +	if (ret < 0) {
+> +		dev_err(&indio_dev->dev, "Failed to register iio trigger\n");
+> +		return ret;
+> +	}
+>  
+>  	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+>  					iio_trigger_generic_data_rdy_poll,
 
