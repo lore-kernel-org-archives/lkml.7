@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9200CC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE6CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0822071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934BC204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NyXRf2mr"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Atkfyh8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfKWN2g (ORCPT
+        id S1727218AbfKWN2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 08:28:36 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:39547 "EHLO
+        Sat, 23 Nov 2019 08:28:46 -0500
+Received: from conuserg-10.nifty.com ([210.131.2.77]:39537 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfKWN2A (ORCPT
+        with ESMTP id S1726767AbfKWN2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 08:28:00 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id xANDRbkn000733;
-        Sat, 23 Nov 2019 22:27:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xANDRbkn000733
+        by conuserg-10.nifty.com with ESMTP id xANDRbkk000733;
+        Sat, 23 Nov 2019 22:27:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xANDRbkk000733
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574515665;
-        bh=nDLRImXyMlZ9Sa0C3TUQcIOX+p9zCip3EBLry72jMm4=;
+        s=dec2015msa; t=1574515664;
+        bh=WauG9D9YqzAMxDQWtyV5l/7rFsL3kICN4sbEOWLPOkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyXRf2mr61YPIKX/D1c5VdBLre5GK/iwkCt/CzSlA9jOkVNB+Y6ic0XuFR2KR17yr
-         f+9dQuPGW5CiPdHgZfp2KJykooh8fWlgdA4o65ICk+wKjMJ7d9XOCuQIk6JoDO2ba7
-         3slvx8/uwMbimUgTO1HNFXZPxm6BAtx2O40WiI2MxQ29z26+KRFaaubLNt1KWlCLD5
-         raUEPQP8krxcqenzLnDA6V3kA2T5m8BPSuYv97Cv0ZR1/IauVqUOxZ7PIh4mPCL4TZ
-         J0LtmJ2O5j4xvVxxgTjGQoJ8pPMkzhr1Z5+2GAL91hZtd/wT4MzHf55zR2mtnjshH+
-         s3yLvNsFAwJ1Q==
+        b=Atkfyh8QyZvNdKwiRXs5OY/qwqpMMMo2N0WjBKKh+FGfMLwSX7fFeADxa9XOSzcpp
+         vMU8+MhgrX4IjbMl00w26VFNZIRm/dA1R39mMGtONOiPbmosblhDZeEOUlcmgQ5p3l
+         mTZV1ynHyDrhAFRqO2BJHFqcInvnvsGYhOsg6iEr9Dh4DHKElIq/XiOQ/mCBZZaaxl
+         UWvKRv/Tiuv62pGW5eiIhiDIlIpQQD1nrXNoQ4THBDgkhiPyUozLIDdgLHVt+Su8IB
+         1kQGU1yNRmma8S0WWKvHFe8O+/D5LG3hdR6tlQdRzkck4KWwL+BTTkQnVor3EjSXVA
+         j7b6o2WNwFTyg==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/16] scripts/kallsyms: check no valid symbol earlier
-Date:   Sat, 23 Nov 2019 22:27:25 +0900
-Message-Id: <20191123132727.30151-15-yamada.masahiro@socionext.com>
+Subject: [PATCH 11/16] scripts/kallsyms: move more patterns to the ignored_prefixes array
+Date:   Sat, 23 Nov 2019 22:27:22 +0900
+Message-Id: <20191123132727.30151-12-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191123132727.30151-1-yamada.masahiro@socionext.com>
 References: <20191123132727.30151-1-yamada.masahiro@socionext.com>
@@ -53,36 +53,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-insert_real_symbols_in_table() does not touch table_cnt, so the
-no valid symbol check can be moved before it.
+Refactoring for shortening the code.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/kallsyms.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/kallsyms.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
 diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 144f43363c4d..919cb45ce9db 100644
+index 5553843631d4..63473924d4de 100644
 --- a/scripts/kallsyms.c
 +++ b/scripts/kallsyms.c
-@@ -608,14 +608,14 @@ static void optimize_token_table(void)
- {
- 	build_initial_tok_table();
+@@ -105,6 +105,8 @@ static bool is_ignored_symbol(const char *name, char type)
+ 	};
  
--	insert_real_symbols_in_table();
--
- 	/* When valid symbol is not registered, exit to error */
- 	if (!table_cnt) {
- 		fprintf(stderr, "No valid symbol.\n");
- 		exit(1);
+ 	static const char * const ignored_prefixes[] = {
++		"$",			/* local symbols for ARM, MIPS, etc. */
++		".LASANPC",		/* s390 kasan local symbols */
+ 		"__crc_",		/* modversions */
+ 		"__efistub_",		/* arm64 EFI stub namespace */
+ 		NULL
+@@ -198,19 +200,9 @@ static int read_symbol(FILE *in, struct sym_entry *s)
  	}
+ 	else if (toupper(stype) == 'U')
+ 		return -1;
+-	/*
+-	 * Ignore generated symbols such as:
+-	 *  - mapping symbols in ARM ELF files ($a, $t, and $d)
+-	 *  - MIPS ELF local symbols ($L123 instead of .L123)
+-	 */
+-	else if (sym[0] == '$')
+-		return -1;
+ 	/* exclude debugging symbols */
+ 	else if (stype == 'N' || stype == 'n')
+ 		return -1;
+-	/* exclude s390 kasan local symbols */
+-	else if (!strncmp(sym, ".LASANPC", 8))
+-		return -1;
  
-+	insert_real_symbols_in_table();
-+
- 	optimize_result();
- }
- 
+ 	/* include the type field in the symbol name, so that it gets
+ 	 * compressed together */
 -- 
 2.17.1
 
