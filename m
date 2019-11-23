@@ -2,108 +2,92 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD14C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B8B2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMz9JSdb"
+	by mail.kernel.org (Postfix) with ESMTP id 5AC0720714
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574511956;
+	bh=z07hXbxuYWALaZvw5W/e1nEbTvKOPkGW10MgUIV9CjY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Rhuk2lKWlfjbmd7Ch/+7jnC9ADUsF2NB0i6WTUAm2AsDEANu2AlVo8Mk/oXlHzi+N
+	 qNpilWzl+7atCw/C/l4E3Fxpac2a+EHQVz0OksonwQGtZ6EfwpoNGfa93CCTJ0mvEf
+	 8Uf4kISkzxzE/6knzwFQZlF+Ipb4houZm4B9HdXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfKWMZW (ORCPT
+        id S1726784AbfKWMZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 07:25:22 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33131 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfKWMZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 07:25:21 -0500
-Received: by mail-lf1-f66.google.com with SMTP id d6so7568051lfc.0;
-        Sat, 23 Nov 2019 04:25:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9bPAlk5H2fFBXl0/0I4i5G2Ml8jO2DAr9KJz+P/jaNM=;
-        b=hMz9JSdbYfwAELa86xEHNr1O7KXvsq3+gr5CsMLffgYSX5wBrihmbcjyM160ayxp+b
-         jvO9CsICpjigJ1qkaLw+WOC/Um36kx6tqeUarGxd6zg2K2jCO1IX6VgiwjvzMn4pca33
-         F+Wsylt8DUg0XhXP7TB4kPMhe30T+Qy3YgvT+OmMeDh/seYThT51QvgdHC+nXIxaaimb
-         V2zgALbHaiuTEByoPz435dp8Rz8SJk0SKMWKHOKV5btevBv5sRh/AzuYn4WJcO98xVSf
-         I0M/6BOKane8ZrNwbsyRuS/VnyyG/Gw3164wiOtqzr+aefeozljJhkFQ3D9O1bdOgbMy
-         yXVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9bPAlk5H2fFBXl0/0I4i5G2Ml8jO2DAr9KJz+P/jaNM=;
-        b=Yrk4mdomM7z5KUnyJqZiPsSU54TlnICEoQfVa7S/FI4MEUaE6yrImhEB1xJ4dJVPNL
-         gJoqiKM3LdZZKe2TzMHg9GVnZX8Fr8+hNoT5fY7FHvI6vhHV/W/1sy4/L9UVOQPI9Hez
-         vYtZqtlikdTE8oaYJ/ll7EZ/k4xgAeiO+WPLMld3t4I+9Xj6zHbgGGCWiLHASN2DcU4u
-         tMPMElXrIne2HqUtwla8Fgsva1uAGumhyiyKJXkwpYkCP8qGrD7d+6ZYmRGgrYtRuu9+
-         FWkIpZZp3g1JBVfVNComsA1vL9yak/cWBQ7W/dNjbsDLNAUOMvmrV4kQesGV+KVdh54q
-         XjHw==
-X-Gm-Message-State: APjAAAWh5LvurVBlERBPTACpYYzwOnLncKfhnwACnMCdk7NVU2Mbdccs
-        n/5rqFaPNN5egLbjIC5O+LJSvv4kqpcrBWTv/AA=
-X-Google-Smtp-Source: APXvYqxT6NcFyrouxig79V/rPjUvKpEFe1luhwbSFTmicydLzuc/d74UY/7a8ZEjpUaytHq3g+1nOkyT7gKYrTj6kG4=
-X-Received: by 2002:ac2:533c:: with SMTP id f28mr9419931lfh.12.1574511919258;
- Sat, 23 Nov 2019 04:25:19 -0800 (PST)
+        Sat, 23 Nov 2019 07:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbfKWMZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 07:25:53 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD13520714;
+        Sat, 23 Nov 2019 12:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574511953;
+        bh=z07hXbxuYWALaZvw5W/e1nEbTvKOPkGW10MgUIV9CjY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NX9zjUy5SwdZQWO9O5tSZ6mL0TkejzaL0PiMLKnCavTuSbYuDRdxCHPdoYyN6j2BL
+         DX3cfQvZRm8QYY0/eib8okpO/vtMGD/fwxP04RjBzs0mXZLuLBmFxzJqGv7FB6ylYX
+         rvojvzYGYI6NUDaW+/WyNrieyRRL3LMoMmHr66y0=
+Date:   Sat, 23 Nov 2019 12:25:48 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad7292: Update SPDX
+ identifier
+Message-ID: <20191123122548.54f0f529@archlinux>
+In-Reply-To: <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com>
+References: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
+        <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <59793b1ae533636528942b2cec14ec68b9830fcf.1574510649.git.agx@sigxcpu.org>
-In-Reply-To: <59793b1ae533636528942b2cec14ec68b9830fcf.1574510649.git.agx@sigxcpu.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sat, 23 Nov 2019 09:25:21 -0300
-Message-ID: <CAOMZO5B_RWoUA3AX=ivAbEPFMQyD+WO8v1t20gZVef7zDz2YuQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add eLCDIF controller
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido,
+On Fri, 22 Nov 2019 10:05:52 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-On Sat, Nov 23, 2019 at 9:09 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+> On Sat, Nov 16, 2019 at 2:50 PM Marcelo Schmitt
+> <marcelo.schmitt1@gmail.com> wrote:
+> >
+> > Update SPDX identifier to the preferred dual GPL-2.0 OR BSD-2-Clause
+> > licensing.
+> >
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > ---
+> > I split the changes into 2 different patches since they are about
+> > different issues.
+> >
+> >  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)  
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+I've applied this to the fixes-togreg branch so it'll go in during
+the early RCs.  Nice not to have a release with a different
+license, particularly as this was me running too fast at taking
+patches.
 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi
-> index 7f9319452b58..00aa63bfd816 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -448,6 +448,23 @@
->                                 fsl,sdma-ram-script-name =3D "imx/sdma/sd=
-ma-imx7d.bin";
->                         };
->
-> +                       lcdif: lcdif@30320000 {
-> +                               compatible =3D "fsl,imx8mq-lcdif", "fsl,i=
-mx28-lcdif";
+Thanks,
 
-fsl,imx8mq-lcdif should also be documented.
+Jonathan
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Thanks
