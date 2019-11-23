@@ -2,159 +2,113 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09006C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCB62070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574550501;
-	bh=hI60mFmeNURJlV87kKA4zetms7sVC99iKsf0b+qp8zE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tLD40hGYfQmF62XugopPpM/urBBtelfxxQGaF+B3Jz9DQmXzTLcwe/h+EmwTWgAtr
-	 3qXoBuUdVZBnQRIlo8qSqC3k+fXVmEujBjs1+DbdYwAGj2eT+Nr5ptwGvqu8ijHR9S
-	 YpmnV3IBKnZypK7NmE5WAsO0WpybImi5rrQHWfOY=
+	by mail.kernel.org (Postfix) with ESMTP id D376020706
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H6UXLQng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfKWXH7 (ORCPT
+        id S1726905AbfKWX1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 18:07:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbfKWXH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 18:07:58 -0500
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DEAB2070E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 23:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574550477;
-        bh=hI60mFmeNURJlV87kKA4zetms7sVC99iKsf0b+qp8zE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=juPH+U2Uf8cD96sbedsh5RHGozPsz/wQTjsRnuXOiZF9Sd55S4YKWLJsmHaBMOCo/
-         JCj9JwDu046Pc8JvaZr0WLvCpML6LLsTH49Rn1gjZspTdHPv7w8lSSSugW4mfY1s+O
-         0/qmYe3Ki7/hujOSiIjmM7HOeLTAdUUbjG2V0IjY=
-Received: by mail-wm1-f45.google.com with SMTP id b11so11316247wmb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 15:07:56 -0800 (PST)
-X-Gm-Message-State: APjAAAUD6qyJNqLbW3RQ1V1VL8oIvjQm6pKprAD0qgHykgWdEv47QUN2
-        bLLgbCNV96KhKskFPVY6kEAhkBA9ahbAzw2ZOqdmyw==
-X-Google-Smtp-Source: APXvYqwpdaFnWBQuDWJd8TEpDxwmhLvEU3QFtNbAwKhcTfgSz4TA+yCtIs7PHs2P9yVpRUIMXRCbI4emay6x3MTLD/0=
-X-Received: by 2002:a1c:1f8d:: with SMTP id f135mr11373714wmf.79.1574550475449;
- Sat, 23 Nov 2019 15:07:55 -0800 (PST)
+        Sat, 23 Nov 2019 18:27:24 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43135 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfKWX1X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 18:27:23 -0500
+Received: by mail-io1-f65.google.com with SMTP id p12so4750161iog.10
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 15:27:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=WS9mYTny3XR2p4bnvgnXxQTpacFjOo5Hsf/RJbveqqQ=;
+        b=H6UXLQngKv9vBjOIOMqEtBhx81EPzmshinGBD4M/8N9CMpBibk7MmOPV2HyCavMDMC
+         TGzLxdvRO+a5a4LVH/GhyCadWVvtkfvhziav/0vaVx50sdtLesVlfvb9ZhZHEJCCfO71
+         7Rpa04BHMPURMllGZj/IvP+yP6kKwt/kA8fTi2HOYvDzEUvJN+efuy+NrxDHDYHjobzZ
+         F94+0f40fDHM5MRVXx//Lr6XotniPckmjCBoz/Q74iGjgfB0QEN7s9RJLuC5OdtrRa96
+         VDSljAxfpuOSk9IQ8jnEPO2187SIKkL8SDtpkaEnnUrbvpvcBg2Nus+Wv4kktQjRxbv2
+         veew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=WS9mYTny3XR2p4bnvgnXxQTpacFjOo5Hsf/RJbveqqQ=;
+        b=RDSn93BGs3/zRGipKxmif1+7iHXBnTiunmIByo1+QHH1nplPKA7PLpBnLDYoRER0RO
+         BNvaVd525467J0AxGcWngPFHzsKmj1dH9XR82WhH30dNWx0w8M0uGOyW1iXHweyEDCcR
+         g1NBsPl6QSaDbeRrQ3CqRxmP9Xm8lmmS7JQAsRope+bUcQGf1xR65effkXUj3uuDkpHQ
+         McW8Q9Vn7Rf6G72qH9MAgGX5lx/o2DTD8LLIrJUKcwJoN2YmhgF6VMOAjbKfQURwkdgx
+         /TlEfvS3Dv2SelL4wpKtqpymgZtcO5CtbA41ST05ZekyxvLs5yEyFUfDRZ9MrhdG7m3W
+         IgSw==
+X-Gm-Message-State: APjAAAUsOq5KhBYeM2qW2IUIkto5GcbH3Xi0xsgGmrg4FzQF3r/fpoRZ
+        BIc1EvU2D1eo4ZiYSto7jOtzNw==
+X-Google-Smtp-Source: APXvYqxsTcmC3b6H1e2CjD6Fb9bOaOP72eMrbl0d/oKosQ/7J2E1uiFt1sNA/gCGQneqkSXeSCUHhw==
+X-Received: by 2002:a6b:700a:: with SMTP id l10mr19972718ioc.164.1574551642851;
+        Sat, 23 Nov 2019 15:27:22 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id t14sm589551ioi.29.2019.11.23.15.27.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Nov 2019 15:27:22 -0800 (PST)
+Date:   Sat, 23 Nov 2019 15:27:19 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Jonathan Corbet <corbet@lwn.net>
+cc:     linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, krste@berkeley.edu,
+        waterman@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH] Documentation: riscv: add patch acceptance guidelines
+In-Reply-To: <20191123092552.1438bc95@lwn.net>
+Message-ID: <alpine.DEB.2.21.9999.1911231523390.14532@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1911221842200.14532@viisi.sifive.com> <20191123092552.1438bc95@lwn.net>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
-In-Reply-To: <20191115191728.87338-2-jannh@google.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 23 Nov 2019 15:07:43 -0800
-X-Gmail-Original-Message-ID: <CALCETrVQ2NqPnED_E6Y6EsCOEJJcz8GkQhgcKHk7JVAyykq06A@mail.gmail.com>
-Message-ID: <CALCETrVQ2NqPnED_E6Y6EsCOEJJcz8GkQhgcKHk7JVAyykq06A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:17 AM Jann Horn <jannh@google.com> wrote:
->
-> A frequent cause of #GP exceptions are memory accesses to non-canonical
-> addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
-> the kernel doesn't currently print the fault address for #GP.
-> Luckily, we already have the necessary infrastructure for decoding X86
-> instructions and computing the memory address that is being accessed;
-> hook it up to the #GP handler so that we can figure out whether the #GP
-> looks like it was caused by a non-canonical address, and if so, print
-> that address.
->
-> While it is already possible to compute the faulting address manually by
-> disassembling the opcode dump and evaluating the instruction against the
-> register dump, this should make it slightly easier to identify crashes
-> at a glance.
->
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->
-> Notes:
->     v2:
->      - print different message for segment-related GP (Borislav)
->      - rewrite check for non-canonical address (Sean)
->      - make it clear we don't know for sure why the GP happened (Andy)
->
->  arch/x86/kernel/traps.c | 45 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 43 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index c90312146da0..12d42697a18e 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -56,6 +56,8 @@
->  #include <asm/mpx.h>
->  #include <asm/vm86.h>
->  #include <asm/umip.h>
-> +#include <asm/insn.h>
-> +#include <asm/insn-eval.h>
->
->  #ifdef CONFIG_X86_64
->  #include <asm/x86_init.h>
-> @@ -509,6 +511,38 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
->         do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
->  }
->
-> +/*
-> + * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
-> + * address, print that address.
-> + */
-> +static void print_kernel_gp_address(struct pt_regs *regs)
-> +{
-> +#ifdef CONFIG_X86_64
-> +       u8 insn_bytes[MAX_INSN_SIZE];
-> +       struct insn insn;
-> +       unsigned long addr_ref;
-> +
-> +       if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
-> +               return;
-> +
-> +       kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
-> +       insn_get_modrm(&insn);
-> +       insn_get_sib(&insn);
-> +       addr_ref = (unsigned long)insn_get_addr_ref(&insn, regs);
-> +
-> +       /* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
-> +       if (addr_ref >= ~__VIRTUAL_MASK)
-> +               return;
-> +
-> +       /* Bail out if the entire operand is in the canonical user half. */
-> +       if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
-> +               return;
-> +
-> +       pr_alert("probably dereferencing non-canonical address 0x%016lx\n",
-> +                addr_ref);
-> +#endif
-> +}
+Hi Jon,
 
-Could you refactor this a little bit so that we end up with a helper
-that does the computation?  Something like:
+On Sat, 23 Nov 2019, Jonathan Corbet wrote:
 
-int probe_insn_get_memory_ref(void **addr, size_t *len, void *insn_addr);
+> On Fri, 22 Nov 2019 18:44:39 -0800 (PST) Paul Walmsley 
+> <paul.walmsley@sifive.com> wrote:
+> 
+> > Formalize, in kernel documentation, the patch acceptance policy for 
+> > arch/riscv.  In summary, it states that as maintainers, we plan to only 
+> > accept patches for new modules or extensions that have been frozen or 
+> > ratified by the RISC-V Foundation.
+> > 
+> > We've been following these guidelines for the past few months.  In the
+> > meantime, we've received quite a bit of feedback that it would be
+> > helpful to have these guidelines formally documented.
+> 
+> If at all possible, I would really love to have this be part of the
+> maintainer profile documentation:
+> 
+> 	https://lwn.net/ml/linux-kernel/156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com/
+> 
+> ...if we could only (hint...CC'd...) get Dan to resubmit it with the
+> needed tweaks so it could be merged...
 
-returns 1 if there was a memory operand and fills in addr and len,
-returns 0 if there was no memory operand, and returns a negative error
-on error.
+It looks like the main thing that would be needed would be to add the P: 
+entry with the path to our patch-acceptance.rst file into the MAINTAINERS 
+file, after Dan's patches are merged. 
 
-I think we're going to want this for #AC handling, too :)
+Of course, we could also add more information about sparse cleanliness, 
+checkpatch warnings, etc., but we mostly try to follow the common kernel 
+guidelines there.
+
+Is that summary accurate, or did I miss some additional steps?
+
+
+- Paul
