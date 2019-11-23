@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 21:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B0CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 21:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A562068F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 21:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B759A2068F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 21:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfKWVI2 (ORCPT
+        id S1726905AbfKWVI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 16:08:28 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32778 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfKWVIW (ORCPT
+        Sat, 23 Nov 2019 16:08:27 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:37076 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfKWVIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 16:08:22 -0500
-Received: by mail-qt1-f193.google.com with SMTP id y39so12349498qty.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 13:08:20 -0800 (PST)
+        Sat, 23 Nov 2019 16:08:21 -0500
+Received: by mail-qv1-f68.google.com with SMTP id s18so4274385qvr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 13:08:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U73ogPu5oQ0nNykSJGRun0NX2DnBSnxUQ+74Mv45tWo=;
-        b=mz1Nc9ZQ5pl6Ub/W2x0deR7tU3Z9NCRQSpDzy63If2S2DgDlnWQSPS3A7acArOQeGn
-         j939LGs9OJzbFz/TOawC7YWQWp4FmA0TQiQgoNKlkBDX2/vEoRNdqg/IYnirMWmt2aWm
-         un3U7B+yUUwflhMnQwQk++AqjcEULb2IbAgr0rIpoQ5+CojDHRYVh93Gy3yvsJv6yRIG
-         /+5wfANHCXzFR4601CmC5lgAp7HbtmeLI9ebU0+l9zaYHJ27VGouatGoTRRxPFJoIycd
-         InaU14m3pbuxxWV+xy4OImd3Ypu8Uu8xfa7nSZYIi7WVeQfMlIU9rZVR+vPiapf2muEn
-         7wFQ==
-X-Gm-Message-State: APjAAAWF49ttWD9qDP14mYkzQODpufqMKTYeQS8yfkZDyo1hbNawtmGU
-        YF0t9XTulNYBlQN3Kw9jYKPnl6fWbtA=
-X-Google-Smtp-Source: APXvYqxHRwfhyH9OaLwCHLW++8yRqG5pdBvt5K95eDFWmhKfeOxcqYuWpNBAAoy48dlvxlpZv6VQFw==
-X-Received: by 2002:aed:3bf8:: with SMTP id s53mr6526653qte.373.1574543299747;
-        Sat, 23 Nov 2019 13:08:19 -0800 (PST)
+        bh=rYFSQLQUePhEzpBCVJ4C9SU6P0f+WttzJ5CloUXrqVU=;
+        b=rGvhdAVNsU4dxHG1trKI7RUv6iCYS/2Ufol6aIw6VuEpOJqpV6p5QhVQKAjjw9gV9r
+         B8yuAgpSk5nG4vnACdE0hYkeu8EPGqKpdVx3kjjh8A47VxIgT2Vjn6K/RbbydVgvwI7g
+         rII/ospH4xwHcU+SIpcD0T+7KkaV09SRCWj6sbGgAY7ivcKKsltgXEh6WfwZ0J8pyTUq
+         rHDq6y8mjPhaAOFLKhMUxg3IsQU+I+/7/rFpiCQbyXxB1ooD1PK8TGnWU0l8dgk3bCSq
+         1l1RFkprG1StkbT0vAuY7lLvCdMTr8uPKcy7fR7BEbz6fVTRLzxRqVU8qCkkQcsFzS6M
+         MARw==
+X-Gm-Message-State: APjAAAXkrMG29AN0rg3bHXgJOTorGnoOXZd7+dtXQ6+PkeykVM/Mr2BH
+        QVwml7VyB0GuCPzEjCvfPcxRF8AiuTU=
+X-Google-Smtp-Source: APXvYqxxXoo1P1AbCxEyN/enWeTPFCGCtX+GAdPyoqKGKxPH8tvYmFx62vqN2DPK7+E6s427pPogww==
+X-Received: by 2002:a0c:a541:: with SMTP id y59mr12258590qvy.107.1574543300304;
+        Sat, 23 Nov 2019 13:08:20 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c37sm1164978qta.56.2019.11.23.13.08.18
+        by smtp.gmail.com with ESMTPSA id c37sm1164978qta.56.2019.11.23.13.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sat, 23 Nov 2019 13:08:19 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     linux-kernel@vger.kernel.org, nivedita@alum.mit.edu
-Subject: [PATCH 2/3] init/main.c: remove unnecessary repair_env_string in do_initcall_level
-Date:   Sat, 23 Nov 2019 16:08:07 -0500
-Message-Id: <20191123210808.107904-3-nivedita@alum.mit.edu>
+Subject: [PATCH 3/3] init/main.c: fix quoted value handling in unknown_bootoption
+Date:   Sat, 23 Nov 2019 16:08:08 -0500
+Message-Id: <20191123210808.107904-4-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191123210808.107904-1-nivedita@alum.mit.edu>
 References: <20191123210808.107904-1-nivedita@alum.mit.edu>
@@ -57,84 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 08746a65c296 ("init: fix in-place parameter modification
-regression"), parse_args in do_initcall_level is called on a copy of
-saved_command_line. It is unnecessary to call repair_env_string during
-this parsing, as this copy is not used for anything later.
+Commit a99cd1125189 ("init: fix bug where environment vars can't be
+passed via boot args") introduced two minor bugs in unknown_bootoption
+by factoring out the quoted value handling into a separate function.
 
-Remove the now unnecessary arguments from repair_env_string as well.
+When value is quoted, repair_env_string will move the value up 1 byte to
+strip the quotes, so val in unknown_bootoption no longer points to the
+actual location of the value.
+
+The result is that an argument of the form param=".value" is mistakenly
+treated as a potential module parameter and is not placed in init's
+environment, and an argument of the form param="value" can result in a
+duplicate environment variable: eg TERM="vt100" on the command line will
+result in both TERM=linux and TERM=vt100 being placed into init's
+environment.
+
+Fix this by recording the length of the param before calling
+repair_env_string instead of relying on val.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- init/main.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ init/main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/init/main.c b/init/main.c
-index c92f0376b1bc..a2008e7a797f 100644
+index a2008e7a797f..1ee92517c515 100644
 --- a/init/main.c
 +++ b/init/main.c
-@@ -246,8 +246,7 @@ static int __init loglevel(char *str)
- early_param("loglevel", loglevel);
- 
- /* Change NUL term back to "=", to make "param" the whole string. */
--static int __init repair_env_string(char *param, char *val,
--				    const char *unused, void *arg)
-+static void __init repair_env_string(char *param, char *val)
- {
- 	if (val) {
- 		/* param=val or param="val"? */
-@@ -256,11 +255,9 @@ static int __init repair_env_string(char *param, char *val,
- 		else if (val == param+strlen(param)+2) {
- 			val[-2] = '=';
- 			memmove(val-1, val, strlen(val)+1);
--			val--;
- 		} else
- 			BUG();
- 	}
--	return 0;
- }
- 
- /* Anything after -- gets handed straight to init. */
-@@ -272,7 +269,7 @@ static int __init set_init_arg(char *param, char *val,
- 	if (panic_later)
- 		return 0;
- 
--	repair_env_string(param, val, unused, NULL);
-+	repair_env_string(param, val);
- 
- 	for (i = 0; argv_init[i]; i++) {
- 		if (i == MAX_INIT_ARGS) {
-@@ -292,7 +289,7 @@ static int __init set_init_arg(char *param, char *val,
+@@ -289,6 +289,8 @@ static int __init set_init_arg(char *param, char *val,
  static int __init unknown_bootoption(char *param, char *val,
  				     const char *unused, void *arg)
  {
--	repair_env_string(param, val, unused, NULL);
-+	repair_env_string(param, val);
++	size_t len = strlen(param);
++
+ 	repair_env_string(param, val);
  
  	/* Handle obsolete-style parameters */
- 	if (obsolete_checksetup(param))
-@@ -990,6 +987,12 @@ static const char *initcall_level_names[] __initdata = {
- 	"late",
- };
+@@ -296,7 +298,7 @@ static int __init unknown_bootoption(char *param, char *val,
+ 		return 0;
  
-+static int __init ignore_unknown_bootoption(char *param, char *val,
-+			       const char *unused, void *arg)
-+{
-+	return 0;
-+}
-+
- static void __init do_initcall_level(int level)
- {
- 	initcall_entry_t *fn;
-@@ -999,7 +1002,7 @@ static void __init do_initcall_level(int level)
- 		   initcall_command_line, __start___param,
- 		   __stop___param - __start___param,
- 		   level, level,
--		   NULL, &repair_env_string);
-+		   NULL, ignore_unknown_bootoption);
+ 	/* Unused module parameter. */
+-	if (strchr(param, '.') && (!val || strchr(param, '.') < val))
++	if (strnchr(param, len, '.'))
+ 		return 0;
  
- 	trace_initcall_level(initcall_level_names[level]);
- 	for (fn = initcall_levels[level]; fn < initcall_levels[level+1]; fn++)
+ 	if (panic_later)
+@@ -310,7 +312,7 @@ static int __init unknown_bootoption(char *param, char *val,
+ 				panic_later = "env";
+ 				panic_param = param;
+ 			}
+-			if (!strncmp(param, envp_init[i], val - param))
++			if (!strncmp(param, envp_init[i], len+1))
+ 				break;
+ 		}
+ 		envp_init[i] = param;
 -- 
 2.23.0
 
