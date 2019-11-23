@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA60C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41542C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F7C2071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9132071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfKWIQN (ORCPT
+        id S1727340AbfKWIQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 03:16:13 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36257 "EHLO
+        Sat, 23 Nov 2019 03:16:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36275 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfKWIPN (ORCPT
+        with ESMTP id S1726757AbfKWIPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 03:15:13 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYQZM-0002ZN-Gc; Sat, 23 Nov 2019 09:15:04 +0100
+        id 1iYQZQ-0002Yz-15; Sat, 23 Nov 2019 09:15:08 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 83F511C1AD1;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 595E51C19FD;
         Sat, 23 Nov 2019 09:15:01 +0100 (CET)
 Date:   Sat, 23 Nov 2019 08:15:01 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf record: Add aux-sample-size config term
+Subject: [tip: perf/core] perf inject: Cut AUX area samples
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191115124225.5247-8-adrian.hunter@intel.com>
-References: <20191115124225.5247-8-adrian.hunter@intel.com>
+In-Reply-To: <20191115124225.5247-9-adrian.hunter@intel.com>
+References: <20191115124225.5247-9-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157449690144.21853.15093480979478706398.tip-bot2@tip-bot2>
+Message-ID: <157449690128.21853.4094754237556646489.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,294 +57,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     eb7a52d46c6ac95df563f867d526b3d46616b10b
-Gitweb:        https://git.kernel.org/tip/eb7a52d46c6ac95df563f867d526b3d46616b10b
+Commit-ID:     ba2675bf15fc3ec1d54b9bf938cf5b28392f79fb
+Gitweb:        https://git.kernel.org/tip/ba2675bf15fc3ec1d54b9bf938cf5b28392f79fb
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Fri, 15 Nov 2019 14:42:17 +02:00
+AuthorDate:    Fri, 15 Nov 2019 14:42:18 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Fri, 22 Nov 2019 10:48:13 -03:00
 
-perf record: Add aux-sample-size config term
+perf inject: Cut AUX area samples
 
-To allow individual events to be selected for AUX area sampling, add
-aux-sample-size config term. attr.aux_sample_size is updated by
-auxtrace_parse_sample_options() so that the existing validation will see
-the value. Any event that has a non-zero aux_sample_size will cause AUX
-area sampling to be configured, irrespective of the --aux-sample option.
+After decoding AUX area samples, the AUX area data is no longer needed
+(having been replaced by synthesized events) so cut it out.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-8-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-9-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt |  3 +-
- tools/perf/util/auxtrace.c               | 76 ++++++++++++++++++++++-
- tools/perf/util/evsel.c                  | 16 +++++-
- tools/perf/util/evsel_config.h           | 11 +++-
- tools/perf/util/parse-events.c           | 14 ++++-
- tools/perf/util/parse-events.h           |  1 +-
- tools/perf/util/parse-events.l           |  1 +-
- 7 files changed, 121 insertions(+), 1 deletion(-)
+ tools/perf/builtin-inject.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index e216d7b..b23a401 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -62,6 +62,9 @@ OPTIONS
- 		    like this: name=\'CPU_CLK_UNHALTED.THREAD:cmask=0x1\'.
- 	  - 'aux-output': Generate AUX records instead of events. This requires
- 			  that an AUX area event is also provided.
-+	  - 'aux-sample-size': Set sample size for AUX area sampling. If the
-+	  '--aux-sample' option has been used, set aux-sample-size=0 to disable
-+	  AUX area sampling for the event.
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 1e5d283..9664a72 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -45,6 +45,7 @@ struct perf_inject {
+ 	u64			aux_id;
+ 	struct list_head	samples;
+ 	struct itrace_synth_opts itrace_synth_opts;
++	char			event_copy[PERF_SAMPLE_MAX_SIZE];
+ };
  
-           See the linkperf:perf-list[1] man page for more parameters.
- 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 51fbe01..026585b 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -31,6 +31,7 @@
- #include "map.h"
- #include "pmu.h"
- #include "evsel.h"
-+#include "evsel_config.h"
- #include "symbol.h"
- #include "util/synthetic-events.h"
- #include "thread_map.h"
-@@ -76,6 +77,53 @@ static bool perf_evsel__is_aux_event(struct evsel *evsel)
- 	return pmu && pmu->auxtrace;
+ struct event_entry {
+@@ -214,6 +215,28 @@ static int perf_event__drop_aux(struct perf_tool *tool,
+ 	return 0;
  }
  
-+/*
-+ * Make a group from 'leader' to 'last', requiring that the events were not
-+ * already grouped to a different leader.
-+ */
-+static int perf_evlist__regroup(struct evlist *evlist,
-+				struct evsel *leader,
-+				struct evsel *last)
++static union perf_event *
++perf_inject__cut_auxtrace_sample(struct perf_inject *inject,
++				 union perf_event *event,
++				 struct perf_sample *sample)
 +{
-+	struct evsel *evsel;
-+	bool grp;
++	size_t sz1 = sample->aux_sample.data - (void *)event;
++	size_t sz2 = event->header.size - sample->aux_sample.size - sz1;
++	union perf_event *ev = (union perf_event *)inject->event_copy;
 +
-+	if (!perf_evsel__is_group_leader(leader))
-+		return -EINVAL;
++	if (sz1 > event->header.size || sz2 > event->header.size ||
++	    sz1 + sz2 > event->header.size ||
++	    sz1 < sizeof(struct perf_event_header) + sizeof(u64))
++		return event;
 +
-+	grp = false;
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (grp) {
-+			if (!(evsel->leader == leader ||
-+			     (evsel->leader == evsel &&
-+			      evsel->core.nr_members <= 1)))
-+				return -EINVAL;
-+		} else if (evsel == leader) {
-+			grp = true;
-+		}
-+		if (evsel == last)
-+			break;
-+	}
++	memcpy(ev, event, sz1);
++	memcpy((void *)ev + sz1, (void *)event + event->header.size - sz2, sz2);
++	ev->header.size = sz1 + sz2;
++	((u64 *)((void *)ev + sz1))[-1] = 0;
 +
-+	grp = false;
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (grp) {
-+			if (evsel->leader != leader) {
-+				evsel->leader = leader;
-+				if (leader->core.nr_members < 1)
-+					leader->core.nr_members = 1;
-+				leader->core.nr_members += 1;
-+			}
-+		} else if (evsel == leader) {
-+			grp = true;
-+		}
-+		if (evsel == last)
-+			break;
-+	}
-+
-+	return 0;
++	return ev;
 +}
 +
- static bool auxtrace__dont_decode(struct perf_session *session)
+ typedef int (*inject_handler)(struct perf_tool *tool,
+ 			      union perf_event *event,
+ 			      struct perf_sample *sample,
+@@ -226,6 +249,9 @@ static int perf_event__repipe_sample(struct perf_tool *tool,
+ 				     struct evsel *evsel,
+ 				     struct machine *machine)
  {
- 	return !session->itrace_synth_opts ||
-@@ -679,13 +727,16 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 				  struct evlist *evlist,
- 				  struct record_opts *opts, const char *str)
- {
-+	struct perf_evsel_config_term *term;
-+	struct evsel *aux_evsel;
-+	bool has_aux_sample_size = false;
- 	bool has_aux_leader = false;
- 	struct evsel *evsel;
- 	char *endptr;
- 	unsigned long sz;
- 
- 	if (!str)
--		return 0;
-+		goto no_opt;
- 
- 	if (!itr) {
- 		pr_err("No AUX area event to sample\n");
-@@ -712,6 +763,29 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 			evsel->core.attr.aux_sample_size = sz;
- 		}
- 	}
-+no_opt:
-+	aux_evsel = NULL;
-+	/* Override with aux_sample_size from config term */
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (perf_evsel__is_aux_event(evsel))
-+			aux_evsel = evsel;
-+		term = perf_evsel__get_config_term(evsel, AUX_SAMPLE_SIZE);
-+		if (term) {
-+			has_aux_sample_size = true;
-+			evsel->core.attr.aux_sample_size = term->val.aux_sample_size;
-+			/* If possible, group with the AUX event */
-+			if (aux_evsel && evsel->core.attr.aux_sample_size)
-+				perf_evlist__regroup(evlist, aux_evsel, evsel);
-+		}
-+	}
++	struct perf_inject *inject = container_of(tool, struct perf_inject,
++						  tool);
 +
-+	if (!str && !has_aux_sample_size)
-+		return 0;
-+
-+	if (!itr) {
-+		pr_err("No AUX area event to sample\n");
-+		return -EINVAL;
-+	}
+ 	if (evsel && evsel->handler) {
+ 		inject_handler f = evsel->handler;
+ 		return f(tool, event, sample, evsel, machine);
+@@ -233,6 +259,9 @@ static int perf_event__repipe_sample(struct perf_tool *tool,
  
- 	return auxtrace_validate_aux_sample_size(evlist, opts);
- }
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 772f487..ad7665a 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -846,6 +846,9 @@ static void apply_config_terms(struct evsel *evsel,
- 		case PERF_EVSEL__CONFIG_TERM_AUX_OUTPUT:
- 			attr->aux_output = term->val.aux_output ? 1 : 0;
- 			break;
-+		case PERF_EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE:
-+			/* Already applied by auxtrace */
-+			break;
- 		default:
- 			break;
- 		}
-@@ -905,6 +908,19 @@ static bool is_dummy_event(struct evsel *evsel)
- 	       (evsel->core.attr.config == PERF_COUNT_SW_DUMMY);
+ 	build_id__mark_dso_hit(tool, event, sample, evsel, machine);
+ 
++	if (inject->itrace_synth_opts.set && sample->aux_sample.size)
++		event = perf_inject__cut_auxtrace_sample(inject, event, sample);
++
+ 	return perf_event__repipe_synth(tool, event);
  }
  
-+struct perf_evsel_config_term *__perf_evsel__get_config_term(struct evsel *evsel,
-+							     enum evsel_term_type type)
-+{
-+	struct perf_evsel_config_term *term, *found_term = NULL;
-+
-+	list_for_each_entry(term, &evsel->config_terms, list) {
-+		if (term->type == type)
-+			found_term = term;
-+	}
-+
-+	return found_term;
-+}
-+
- /*
-  * The enable_on_exec/disabled value strategy:
-  *
-diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
-index 8a76480..6e654ed 100644
---- a/tools/perf/util/evsel_config.h
-+++ b/tools/perf/util/evsel_config.h
-@@ -25,6 +25,7 @@ enum evsel_term_type {
- 	PERF_EVSEL__CONFIG_TERM_BRANCH,
- 	PERF_EVSEL__CONFIG_TERM_PERCORE,
- 	PERF_EVSEL__CONFIG_TERM_AUX_OUTPUT,
-+	PERF_EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE,
- };
- 
- struct perf_evsel_config_term {
-@@ -44,7 +45,17 @@ struct perf_evsel_config_term {
- 		unsigned long max_events;
- 		bool	      percore;
- 		bool	      aux_output;
-+		u32	      aux_sample_size;
- 	} val;
- 	bool weak;
- };
-+
-+struct evsel;
-+
-+struct perf_evsel_config_term *__perf_evsel__get_config_term(struct evsel *evsel,
-+							     enum evsel_term_type type);
-+
-+#define perf_evsel__get_config_term(evsel, type) \
-+	__perf_evsel__get_config_term(evsel, PERF_EVSEL__CONFIG_TERM_ ## type)
-+
- #endif // __PERF_EVSEL_CONFIG_H
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6bae9d6..fc5e27b 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -996,6 +996,7 @@ static const char *config_term_names[__PARSE_EVENTS__TERM_TYPE_NR] = {
- 	[PARSE_EVENTS__TERM_TYPE_DRV_CFG]		= "driver-config",
- 	[PARSE_EVENTS__TERM_TYPE_PERCORE]		= "percore",
- 	[PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT]		= "aux-output",
-+	[PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE]	= "aux-sample-size",
- };
- 
- static bool config_term_shrinked;
-@@ -1126,6 +1127,15 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
- 		CHECK_TYPE_VAL(NUM);
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
-+		CHECK_TYPE_VAL(NUM);
-+		if (term->val.num > UINT_MAX) {
-+			parse_events__handle_error(err, term->err_val,
-+						strdup("too big"),
-+						NULL);
-+			return -EINVAL;
-+		}
-+		break;
- 	default:
- 		parse_events__handle_error(err, term->err_term,
- 				strdup("unknown term"),
-@@ -1177,6 +1187,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
- 	case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
- 	case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
-+	case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
- 		return config_term_common(attr, term, err);
- 	default:
- 		if (err) {
-@@ -1272,6 +1283,9 @@ do {								\
- 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
- 			ADD_CONFIG_TERM(AUX_OUTPUT, aux_output, term->val.num ? 1 : 0);
- 			break;
-+		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
-+			ADD_CONFIG_TERM(AUX_SAMPLE_SIZE, aux_sample_size, term->val.num);
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index ff367f2..27596cb 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -77,6 +77,7 @@ enum {
- 	PARSE_EVENTS__TERM_TYPE_DRV_CFG,
- 	PARSE_EVENTS__TERM_TYPE_PERCORE,
- 	PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT,
-+	PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE,
- 	__PARSE_EVENTS__TERM_TYPE_NR,
- };
- 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 7469497..7b1c8ee 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -285,6 +285,7 @@ overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_OVERWRITE); }
- no-overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOOVERWRITE); }
- percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
- aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
-+aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
- ,			{ return ','; }
- "/"			{ BEGIN(INITIAL); return '/'; }
- {name_minus}		{ return str(yyscanner, PE_NAME); }
