@@ -2,268 +2,144 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B22C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66096C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 02:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C798D20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:57:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="pfr9OsyS"
+	by mail.kernel.org (Postfix) with ESMTP id 45B3820721
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 02:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKWB50 (ORCPT
+        id S1726686AbfKWCQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 20:57:26 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:49234 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfKWB5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 20:57:25 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 0A16C20B7185; Fri, 22 Nov 2019 17:57:25 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A16C20B7185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1574474245;
-        bh=k5DecXeY7B/HloVG4kw+Eo7utly4mbWEKzaJFXDhGqs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfr9OsyS6yEjMPsOK4fGA8HT4iOoPE+PwMyc3IyXG/FD6zS1twkPvXKY6gi1aUVce
-         RAB+cZJevtiIT7FYBqhNQUCg3MqOI39dBJKiYwdLupC8R2ojdtk+7beV+JbUsZlDM3
-         5gUhBgW6dV0IrYvoexl50GKP4yQVFqwfnW3X5wvc=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2
-Date:   Fri, 22 Nov 2019 17:57:09 -0800
-Message-Id: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
-References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+        Fri, 22 Nov 2019 21:16:55 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6700 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725962AbfKWCQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 21:16:54 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 756A0ABE1A63E148FEE4;
+        Sat, 23 Nov 2019 10:16:51 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 23 Nov 2019
+ 10:16:41 +0800
+Subject: Re: [PATCH] tmpfs: use ida to get inode number
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Hugh Dickins <hughd@google.com>, <viro@zeniv.linux.org.uk>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+        "J. R. Okajima" <hooanon05g@gmail.com>
+References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
+ <20191120154552.GS20752@bombadil.infradead.org>
+ <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
+ <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
+ <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
+ <alpine.LSU.2.11.1911211125190.1697@eggly.anvils>
+ <5423a199-eefb-0a02-6e86-1f6210939c11@huawei.com>
+ <20191122221327.GW20752@bombadil.infradead.org>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <77f67d7a-4a93-4319-e6af-54daffcc37e2@huawei.com>
+Date:   Sat, 23 Nov 2019 10:16:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191122221327.GW20752@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
 
-Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
-PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the bus.
-The vNUMA node tells which guest NUMA node this device is on based on guest
-VM configuration topology and physical device inforamtion.
+On 2019/11/23 6:13, Matthew Wilcox wrote:
+> On Fri, Nov 22, 2019 at 09:23:30AM +0800, zhengbin (A) wrote:
+>> On 2019/11/22 3:53, Hugh Dickins wrote:
+>>> On Thu, 21 Nov 2019, zhengbin (A) wrote:
+>>>> On 2019/11/21 12:52, Hugh Dickins wrote:
+>>>>> Just a rushed FYI without looking at your patch or comments.
+>>>>>
+>>>>> Internally (in Google) we do rely on good tmpfs inode numbers more
+>>>>> than on those of other get_next_ino() filesystems, and carry a patch
+>>>>> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
+>>>>> number space for each superblock) - essentially,
+>>>>>
+>>>>> 	ino = sbinfo->next_ino++;
+>>>>> 	/* Avoid 0 in the low 32 bits: might appear deleted */
+>>>>> 	if (unlikely((unsigned int)ino == 0))
+>>>>> 		ino = sbinfo->next_ino++;
+>>>>>
+>>>>> Which I think would be faster, and need less memory, than IDA.
+>>>>> But whether that is of general interest, or of interest to you,
+>>>>> depends upon how prevalent 32-bit executables built without
+>>>>> __FILE_OFFSET_BITS=64 still are these days.
+>>>> So how google think about this? inode number > 32-bit, but 32-bit executables
+>>>> cat not handle this?
+>>> Google is free to limit what executables are run on its machines,
+>>> and how they are built, so little problem here.
+>>>
+>>> A general-purpose 32-bit Linux distribution does not have that freedom,
+>>> does not want to limit what the user runs.  But I thought that by now
+>>> they (and all serious users of 32-bit systems) were building their own
+>>> executables with _FILE_OFFSET_BITS=64 (I was too generous with the
+>>> underscores yesterday); and I thought that defined __USE_FILE_OFFSET64,
+>>> and that typedef'd ino_t to be __ino64_t.  And the 32-bit kernel would
+>>> have __ARCH_WANT_STAT64, which delivers st_ino as unsigned long long.
+>>>
+>>> So I thought that a modern, professional 32-bit executable would be
+>>> dealing in 64-bit inode numbers anyway.  But I am not a system builder,
+>>> so perhaps I'm being naive.  And of course some users may have to support
+>>> some old userspace, or apps that assign inode numbers to "int" or "long"
+>>> or whatever.  I have no insight into the extent of that problem.
+>> So how to solve this problem?
+>>
+>> 1. tmpfs use ida or other data structure
+>>
+>> 2. tmpfs use 64-bit, each superblock a inode number space
+>>
+>> 3. do not do anything, If somebody hits this bug, let them solve for themselves
+>>
+>> 4. (last_ino change to 64-bit)get_next_ino -->other filesystems will be ok, but it was rejected before
+> 5. Extend the sbitmap API to allow for growing the bitmap.  I had a
+> look at doing that, and it looks hard.  There are a lot of things which
+> are set up at initialisation and changing them mid-use seems tricky.
+> Ccing Jens in case he has an opinion.
+>
+> 6. Creating a percpu IDA.  This doesn't seem too hard.  We need a percpu
+> pointer to an IDA leaf (128 bytes), and a percpu integer which is the
+> current base for this CPU.  At allocation time, find and set the first
+> free bit in the leaf, and add on the current base.
+>
+> If the percpu leaf is full, set the XA_MARK_1 bit on the entry in
+> the XArray.  Then look for any leaves which have both the XA_MARK_0
+> and XA_MARK_1 bits set; if there is one, claim it by clearing the
+> XA_MARK_1 bit.  If not, kzalloc a new one and find a free spot for it
+> in the underlying XArray.
+>
+> Freeing an ID is simply ida_free().  That will involve changing the
+> users of get_next_ino() to call put_ino(), or something.
+>
+> This should generally result in similar contention between threads as
+> the current scheme -- accessing a shared resource every 1024 allocations.
+> Maybe more often as we try to avoid leaving gaps in the data structure,
+> or maybe less as we reuse IDs.
+>
+> (I've tried to explain what I want here, but appreciate it may be
+> inscrutable.  I can try to explain more, or maybe I should just write
+> the code myself)
 
-The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
+I am trying to understand it, if you write the code, I am also very welcome.
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- drivers/pci/controller/pci-hyperv.c | 107 ++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
+By the way, percpu IDA is for reducing performance impact? This patch has 2.16%
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index f2e028cfa7cd..488235563c7d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -63,6 +63,7 @@
- enum pci_protocol_version_t {
- 	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
- 	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
-+	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* VB */
- };
- 
- #define CPU_AFFINITY_ALL	-1ULL
-@@ -72,6 +73,7 @@ enum pci_protocol_version_t {
-  * first.
-  */
- static enum pci_protocol_version_t pci_protocol_versions[] = {
-+	PCI_PROTOCOL_VERSION_1_3,
- 	PCI_PROTOCOL_VERSION_1_2,
- 	PCI_PROTOCOL_VERSION_1_1,
- };
-@@ -124,6 +126,7 @@ enum pci_message_type {
- 	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
- 	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
- 	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
-+	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
- 	PCI_MESSAGE_MAXIMUM
- };
- 
-@@ -169,6 +172,26 @@ struct pci_function_description {
- 	u32	ser;	/* serial number */
- } __packed;
- 
-+enum pci_device_description_flags {
-+	HV_PCI_DEVICE_FLAG_NONE			= 0x0,
-+	HV_PCI_DEVICE_FLAG_NUMA_AFFINITY	= 0x1,
-+};
-+
-+struct pci_function_description2 {
-+	u16	v_id;	/* vendor ID */
-+	u16	d_id;	/* device ID */
-+	u8	rev;
-+	u8	prog_intf;
-+	u8	subclass;
-+	u8	base_class;
-+	u32	subsystem_id;
-+	union win_slot_encoding win_slot;
-+	u32	ser;	/* serial number */
-+	u32	flags;
-+	u16	virtual_numa_node;
-+	u16	reserved;
-+} __packed;
-+
- /**
-  * struct hv_msi_desc
-  * @vector:		IDT entry
-@@ -304,6 +327,12 @@ struct pci_bus_relations {
- 	struct pci_function_description func[0];
- } __packed;
- 
-+struct pci_bus_relations2 {
-+	struct pci_incoming_message incoming;
-+	u32 device_count;
-+	struct pci_function_description2 func[0];
-+} __packed;
-+
- struct pci_q_res_req_response {
- 	struct vmpacket_descriptor hdr;
- 	s32 status;			/* negative values are failures */
-@@ -1417,6 +1446,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
-+	case PCI_PROTOCOL_VERSION_1_3:
- 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
-@@ -1798,6 +1828,25 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
- 	}
- }
- 
-+/*
-+ * Set NUMA node for the devices on the bus
-+ */
-+static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
-+{
-+	struct pci_dev *dev;
-+	struct pci_bus *bus = hbus->pci_bus;
-+	struct hv_pci_dev *hv_dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		hv_dev = get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-+		if (!hv_dev)
-+			continue;
-+
-+		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-+			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -1820,6 +1869,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
- 
- 	pci_lock_rescan_remove();
- 	pci_scan_child_bus(hbus->pci_bus);
-+	pci_assign_numa_node(hbus);
- 	pci_bus_assign_resources(hbus->pci_bus);
- 	hv_pci_assign_slots(hbus);
- 	pci_bus_add_devices(hbus->pci_bus);
-@@ -2088,6 +2138,7 @@ static void pci_devices_present_work(struct work_struct *work)
- 		 */
- 		pci_lock_rescan_remove();
- 		pci_scan_child_bus(hbus->pci_bus);
-+		pci_assign_numa_node(hbus);
- 		hv_pci_assign_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		break;
-@@ -2183,6 +2234,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 		kfree(dr);
- }
- 
-+/**
-+ * hv_pci_devices_present2() - Handles list of new children
-+ * @hbus:	Root PCI bus, as understood by this driver
-+ * @relations2:	Packet from host listing children
-+ *
-+ * This function is the v2 version of hv_pci_devices_present()
-+ */
-+static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
-+				    struct pci_bus_relations2 *relations)
-+{
-+	struct hv_dr_state *dr;
-+	int i;
-+
-+	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-+		     (sizeof(struct hv_pcidev_description) *
-+		      (relations->device_count)), GFP_NOWAIT);
-+
-+	if (!dr)
-+		return;
-+
-+	dr->device_count = relations->device_count;
-+	for (i = 0; i < dr->device_count; i++) {
-+		dr->func[i].v_id = relations->func[i].v_id;
-+		dr->func[i].d_id = relations->func[i].d_id;
-+		dr->func[i].rev = relations->func[i].rev;
-+		dr->func[i].prog_intf = relations->func[i].prog_intf;
-+		dr->func[i].subclass = relations->func[i].subclass;
-+		dr->func[i].base_class = relations->func[i].base_class;
-+		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-+		dr->func[i].win_slot = relations->func[i].win_slot;
-+		dr->func[i].ser = relations->func[i].ser;
-+		dr->func[i].flags = relations->func[i].flags;
-+		dr->func[i].virtual_numa_node =
-+			relations->func[i].virtual_numa_node;
-+	}
-+
-+	if (hv_pci_start_relations_work(hbus, dr))
-+		kfree(dr);
-+}
-+
- /**
-  * hv_eject_device_work() - Asynchronously handles ejection
-  * @work:	Work struct embedded in internal device struct
-@@ -2288,6 +2379,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_response *response;
- 	struct pci_incoming_message *new_message;
- 	struct pci_bus_relations *bus_rel;
-+	struct pci_bus_relations2 *bus_rel2;
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-@@ -2355,6 +2447,21 @@ static void hv_pci_onchannelcallback(void *context)
- 				hv_pci_devices_present(hbus, bus_rel);
- 				break;
- 
-+			case PCI_BUS_RELATIONS2:
-+
-+				bus_rel2 = (struct pci_bus_relations2 *)buffer;
-+				if (bytes_recvd <
-+				    offsetof(struct pci_bus_relations2, func) +
-+				    (sizeof(struct pci_function_description2) *
-+				     (bus_rel2->device_count))) {
-+					dev_err(&hbus->hdev->device,
-+						"bus relations v2 too small\n");
-+					break;
-+				}
-+
-+				hv_pci_devices_present2(hbus, bus_rel2);
-+				break;
-+
- 			case PCI_EJECT:
- 
- 				dev_message = (struct pci_dev_incoming *)buffer;
--- 
-2.17.1
+performance degradation(Use perf to get the cost of ida_alloc_range)
+
+>
+> .
+>
 
