@@ -2,97 +2,81 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F4AC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 02:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62941C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 02:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FD52070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 02:19:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bQyo9ejq"
+	by mail.kernel.org (Postfix) with ESMTP id 329CE2071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 02:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKWCTT (ORCPT
+        id S1726736AbfKWC1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 21:19:19 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41128 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfKWCTT (ORCPT
+        Fri, 22 Nov 2019 21:27:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:50363 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfKWC1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 21:19:19 -0500
-Received: by mail-il1-f194.google.com with SMTP id q15so8952196ils.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 18:19:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=SPBEDeCT3kwOdphyRQBZzPbq5J/p0MlFQsHze9zwisQ=;
-        b=bQyo9ejqUVo3SvgNMyxvNK9k9+90qSUxDJ5A12wqws1rIj8SJo6Aa92G7Gjse8Nril
-         zZARKjLCc2Zsgz783dnfDIeTXUGTLiQETm2X98yOAW0jdfPADM4XHNmDMNze0jH2TrYZ
-         HBZEbJDX9allKnVDZsLPsy8Eoa/Up8HvbKiTJd+eNq0EjX1duDFptRF2II28hwqSc6W/
-         Ly15u1HnKj1gsh0c6hVtDH5fdkXcoGRgLx+QMiZW0dnVtPokUJTjMPZvcQpczAIVRquq
-         jYcYI3K7+/S1XODMR20cc8T6aKC3mscP4oMRK8l3UgA8SgsllRDczqiRkUyk9+26jHt+
-         r4MQ==
+        Fri, 22 Nov 2019 21:27:01 -0500
+Received: by mail-il1-f197.google.com with SMTP id l63so7898502ili.17
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 18:27:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=SPBEDeCT3kwOdphyRQBZzPbq5J/p0MlFQsHze9zwisQ=;
-        b=Pagt6+5O8GA183PCmTJLoIrJ+U6T8YB0Cdr8USWLfrr6cWg/5+WYL7e/8hwN4c81vw
-         XCCmWNLFGkPbX8ERbrsNMGoOe6wvjxXoSM+SuNT1kuY4wASlQd2tPrg3QuvKm24DSvYL
-         XTC5X6CJ3mTOokm313/GV/wKbSSk8VPZim4UVcopRC5XGGo4dnvOZ+1DTWQoAlYcSJQM
-         gv1yAywvELhYQ7NXBylXqaBR9PALkt9iGw47QGf6R37ioKU3twxbiC868OFhW0CiaXgP
-         4YGWQbXWvJRnbfLuAtOc66p/UIQPsi9UDT/JfjSd8XCTeOSsJlrofBOu6QRbAEg1PZ42
-         e12g==
-X-Gm-Message-State: APjAAAWpDnOWzOM+zAvcUcU7FU48AHG34va82LD1Yn3Inge5AtLNnE/7
-        8v03u6ED2xyuLtnD3T4tbCw44Q==
-X-Google-Smtp-Source: APXvYqz+zuCG6ZEnbxgw59YpE+zZ0csSZbj+iHT/o5FT7FRW5zsTsYuareLuZIMohCPWGZ9YVAEuaQ==
-X-Received: by 2002:a92:864f:: with SMTP id g76mr18274844ild.37.1574475556992;
-        Fri, 22 Nov 2019 18:19:16 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id h15sm3497335ilh.85.2019.11.22.18.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 18:19:16 -0800 (PST)
-Date:   Fri, 22 Nov 2019 18:19:14 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: RISC-V nommu support v6
-In-Reply-To: <20191031155222.GA7270@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1911221817010.14532@viisi.sifive.com>
-References: <20191028121043.22934-1-hch@lst.de> <alpine.DEB.2.21.9999.1910301311240.6452@viisi.sifive.com> <20191031155222.GA7270@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=AXD7gA5IclP9MlEfBt3hOECjOVr1z7Xrb3xxCpv2mBI=;
+        b=M4XNTskJo6V3kiz+P15Mp2jz1DkIQqjd55R7GNWsMzio9wDeK4hvTWjP0/ehESTiXK
+         50HhKHreyh0ojS0+XYZJYpOfrCSW+jcg0sk2TyinmVeyN1aNS8e2Z+akRiRYFXtnRMgK
+         +13vaZiLs4fd2AZdbCT8oMGu41gq2JhKPrSkdDoo0NnM3tZfMYF0o0y7NjUZ1P7jl1eW
+         n8cgreJgAx7klhnang5zco2zFXAjvCr6XRBYDG2Jt3XrqgL3DNZVSCODR3A5sxWJPbnX
+         TTRCLkghCrKNlz6LKVuxXbSXIGhtCsfgd+eaS7fNORcTP319mXOclBbUW5/uiMwQuBol
+         h4Aw==
+X-Gm-Message-State: APjAAAV95rFPNplDCiGooGzCEXJmInBAFoMGh7rGWbLMouok6SVy63VW
+        vZSxvecmMcYHz2Arfb3ftgJOOj6lDTrwkdeqx/zzCjCzqjbm
+X-Google-Smtp-Source: APXvYqw+zwi8wEAChrZq2ZVReXjmVskvTdckaXjZ2KbBA0nnhxgLvaWwwG2piW1E9CjkkowM30p50xw7NE0F2nHtTiaknnYm/gUD
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a92:bb95:: with SMTP id x21mr20040816ilk.128.1574476020687;
+ Fri, 22 Nov 2019 18:27:00 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:27:00 -0800
+In-Reply-To: <000000000000d03eea0571adfe83@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ebac4d0597fa4340@google.com>
+Subject: Re: possible deadlock in mnt_want_write
+From:   syzbot <syzbot+ae82084b07d0297e566b@syzkaller.appspotmail.com>
+To:     amir73il@gmail.com, ast@kernel.org, dvyukov@google.com,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        mszeredi@redhat.com, rgoldwyn@suse.de,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, zohar@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019, Christoph Hellwig wrote:
+syzbot has bisected this bug to:
 
-> On Wed, Oct 30, 2019 at 01:21:21PM -0700, Paul Walmsley wrote:
-> > I tried building this series from your git branch mentioned above, and 
-> > booted it with a buildroot userspace built from your custom buildroot 
-> > tree.  Am seeing some segmentation faults from userspace (below). 
-> > 
-> > Am still planning to merge your patches.
-> > 
-> > But I'm wondering whether you are seeing these segmentation faults also? 
-> > Or is it something that might be specific to my test setup?
-> 
-> I just built a fresh image using make -j4 with that report and it works
-> perfectly fine with my tree.
+commit 8e54cadab447dae779f80f79c87cbeaea9594f60
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sun Nov 27 01:05:42 2016 +0000
 
-Another colleague just gave this a quick test, following your instructions 
-as I did.  He encountered the same segmentation faulting issue.  Might be 
-worth taking a look at this once v5.5-rc1 is released.  Could be a 
-userspace issue, though.
+     fix default_file_splice_read()
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15147a36e00000
+start commit:   6d906f99 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17147a36e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13147a36e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=ae82084b07d0297e566b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111767b7200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1611ab2d200000
 
-- Paul
+Reported-by: syzbot+ae82084b07d0297e566b@syzkaller.appspotmail.com
+Fixes: 8e54cadab447 ("fix default_file_splice_read()")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
