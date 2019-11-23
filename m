@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE80DC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD726C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F402071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D2A20719
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574519929;
-	bh=pc1zIEOYRgv9Kk225bxi47Xudf6VWC6bd/TbCUHewJ4=;
+	s=default; t=1574520348;
+	bh=tKBS0EXAvq5wAaV+58kcvj7sQ7sdki2aN1YEypolESg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=M2T8nIv/RB+EXE/Yp00ETno+6m0fEohPg6ZQDqyVB/ftN7yo1Zcat/NaxyFWjwwl7
-	 GuLy0W4DTFm+sMF/rT4w2A9+ib4pWDBleuXPgxOrwk/mdNWJgsxMf2rR+nzOrfqb/E
-	 OSJa5EJ1NxVhTgTA6ayoF6UDW06q0HTqNi6Zvxgg=
+	b=UYwRcv5nBAolAXxLtqm5soFY6hI5q2rfR9aUaHkjGxRMqMjaWXHKlQgskqrm/67ts
+	 raR3dIEtP5hkua/SrcvMrPe0zntU37zR2B7btC8590z2og2zhAdWCqjH0atJNKr2HE
+	 fD925l3bMxwR63QtiuarRWjDu1Hn/gu2Q/FD9l9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKWOis (ORCPT
+        id S1726762AbfKWOpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 09:38:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55586 "EHLO mail.kernel.org"
+        Sat, 23 Nov 2019 09:45:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfKWOis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 09:38:48 -0500
+        id S1726686AbfKWOpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 09:45:47 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EC42204FD;
-        Sat, 23 Nov 2019 14:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67CB220706;
+        Sat, 23 Nov 2019 14:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574519927;
-        bh=pc1zIEOYRgv9Kk225bxi47Xudf6VWC6bd/TbCUHewJ4=;
+        s=default; t=1574520346;
+        bh=tKBS0EXAvq5wAaV+58kcvj7sQ7sdki2aN1YEypolESg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=exFpp/uVkER30wvKiUF/oh7UEd5A28YEcOnk3zMMUWuTRH/o54Wq7kOIWMO2XAfRp
-         sLEL8Pd/YaIzB9lUA8tm6Vxv2FxxXpcbAAW/Qf6CVzPy7HPpOldm+2k9qcUZZYJJJ5
-         u7QWaEpZEzcZ28jmoIxgBXG5LgjWzjIFWM4uQXbM=
-Date:   Sat, 23 Nov 2019 14:38:42 +0000
+        b=DFZ1h+NhgfQNrUlzb2/kP25qm6r6tA1c96RpNJwJmpADlM/GjrdVX66ZRHDCq/phS
+         hlNX3psi3lt1Q+pi400NtUVgF5tT/750IXPnR2yojZbfkbmcFx79wcPAOYYzhQNSjd
+         MuanOEP6n+YvB54Mmpax99bYXyBFRDNMmprUDwT8=
+Date:   Sat, 23 Nov 2019 14:45:42 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH V2] iio: adc: ad7124: Enable internal reference
-Message-ID: <20191123143842.776f2506@archlinux>
-In-Reply-To: <20191118083857.1754-1-mircea.caprioru@analog.com>
-References: <20191118083857.1754-1-mircea.caprioru@analog.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2] iio: Fix Kconfig indentation
+Message-ID: <20191123144542.15adc722@archlinux>
+In-Reply-To: <1574306359-29372-1-git-send-email-krzk@kernel.org>
+References: <1574306359-29372-1-git-send-email-krzk@kernel.org>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,52 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019 10:38:57 +0200
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+On Thu, 21 Nov 2019 04:19:19 +0100
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> When the internal reference was selected by a channel it was not enabled.
-> This patch fixes that and enables it.
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 > 
-> Fixes: b3af341bbd96 ("iio: adc: Add ad7124 support")
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-Applied to the fixes-togreg branch of iio.git and marked
-for stable.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This ends up with 1 space less before the help text than in the rest
+of the file.  Fixed that up and applied.
 
-Thanks,
+thanks,
 
 Jonathan
 
+> 
 > ---
 > 
-> Changelog V2:
-> - add fixes tag in commit message
+> Changes since v1:
+> 1. Fix also 7-space and tab+1 space indentation issues.
+> ---
+>  drivers/iio/gyro/Kconfig | 32 ++++++++++++++++----------------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
 > 
->  drivers/iio/adc/ad7124.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index edc6f1cc90b2..3f03abf100b5 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -39,6 +39,8 @@
->  #define AD7124_STATUS_POR_FLAG_MSK	BIT(4)
+> diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
+> index 95e6f96d4529..7de77419b4a1 100644
+> --- a/drivers/iio/gyro/Kconfig
+> +++ b/drivers/iio/gyro/Kconfig
+> @@ -75,26 +75,26 @@ config BMG160_SPI
+>  	select REGMAP_SPI
 >  
->  /* AD7124_ADC_CONTROL */
-> +#define AD7124_ADC_CTRL_REF_EN_MSK	BIT(8)
-> +#define AD7124_ADC_CTRL_REF_EN(x)	FIELD_PREP(AD7124_ADC_CTRL_REF_EN_MSK, x)
->  #define AD7124_ADC_CTRL_PWR_MSK	GENMASK(7, 6)
->  #define AD7124_ADC_CTRL_PWR(x)		FIELD_PREP(AD7124_ADC_CTRL_PWR_MSK, x)
->  #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
-> @@ -424,7 +426,10 @@ static int ad7124_init_channel_vref(struct ad7124_state *st,
->  		break;
->  	case AD7124_INT_REF:
->  		st->channel_config[channel_number].vref_mv = 2500;
-> -		break;
-> +		st->adc_control &= ~AD7124_ADC_CTRL_REF_EN_MSK;
-> +		st->adc_control |= AD7124_ADC_CTRL_REF_EN(1);
-> +		return ad_sd_write_reg(&st->sd, AD7124_ADC_CONTROL,
-> +				      2, st->adc_control);
->  	default:
->  		dev_err(&st->sd.spi->dev, "Invalid reference %d\n", refsel);
->  		return -EINVAL;
+>  config FXAS21002C
+> -       tristate "NXP FXAS21002C Gyro Sensor"
+> -       select IIO_BUFFER
+> -       select IIO_TRIGGERED_BUFFER
+> -       select FXAS21002C_I2C if (I2C)
+> -       select FXAS21002C_SPI if (SPI)
+> -       depends on (I2C || SPI_MASTER)
+> -       help
+> -         Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
+> -         Sensor driver connected via I2C or SPI.
+> -
+> -         This driver can also be built as a module.  If so, the module
+> -         will be called fxas21002c_i2c or fxas21002c_spi.
+> +	tristate "NXP FXAS21002C Gyro Sensor"
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	select FXAS21002C_I2C if (I2C)
+> +	select FXAS21002C_SPI if (SPI)
+> +	depends on (I2C || SPI_MASTER)
+> +	help
+> +	 Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
+> +	 Sensor driver connected via I2C or SPI.
+> +
+> +	 This driver can also be built as a module.  If so, the module
+> +	 will be called fxas21002c_i2c or fxas21002c_spi.
+>  
+>  config FXAS21002C_I2C
+> -       tristate
+> -       select REGMAP_I2C
+> +	tristate
+> +	select REGMAP_I2C
+>  
+>  config FXAS21002C_SPI
+> -       tristate
+> -       select REGMAP_SPI
+> +	tristate
+> +	select REGMAP_SPI
+>  
+>  config HID_SENSOR_GYRO_3D
+>  	depends on HID_SENSOR_HUB
 
