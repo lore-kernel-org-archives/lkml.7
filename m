@@ -2,84 +2,279 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F79DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99CBC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518DD20658
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEF22068F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:06:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVo0f2SQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfKWNwp (ORCPT
+        id S1726752AbfKWOGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 08:52:45 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:49426 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfKWNwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 08:52:45 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iYVq5-0003gi-7I; Sat, 23 Nov 2019 21:52:41 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iYVq0-00046X-Kk; Sat, 23 Nov 2019 21:52:36 +0800
-Date:   Sat, 23 Nov 2019 21:52:36 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jamie Iles <jamie@jamieiles.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] crypto: picoxcell: adjust the position of
- tasklet_init and fix missed tasklet_kill
-Message-ID: <20191123135236.johugbmuwpecnhsf@gondor.apana.org.au>
-References: <20191123134817.30953-1-hslester96@gmail.com>
+        Sat, 23 Nov 2019 09:06:03 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39544 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfKWOGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 09:06:02 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t26so10850516wmi.4;
+        Sat, 23 Nov 2019 06:06:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LzBH6Boadl2X4V0qpKJ4GfJzn4lxVk+taIl7e3TfpSk=;
+        b=cVo0f2SQMjG9Hgm32KC4vK1EUx4QadFWHUqq7hfcMMWd+XuTsowzRLm3k0R/vUC8HK
+         IkHaynx9K6q1/mekm7TxG6YSsLMpuulArhGMSyaAc0DJJ1OcMyVHXtKRUN4eBpYOYHuS
+         F1a/7LyF/FotC/2joRQLgndM9zVKLVziEKlwYZZwlfB06tadQsqqGJ6Y/8nDrmj+N/HE
+         7sQPjZe7S8gSTA7DcOiR8D+zkfpPG4NPwR5ApV6hN4VWMi5UEx9eTLaUtujLdwwvC0YI
+         cbZzRF+j+eLqIv7BpJT0kvu8mtTYKWtk2ooCYEiqH5MeRgtF+JEbp37IfMILyiqamr8X
+         4XTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LzBH6Boadl2X4V0qpKJ4GfJzn4lxVk+taIl7e3TfpSk=;
+        b=qUcUmg1/4i4ggEm1tMJJPdFPJ+xa+6geWJt/llm+i0i87iRo0R+eO7Fpy+7kTOggMf
+         eqM8sN52k32Z7CUBSLX+izzhmaNxgIIetIxtH9PsOsRgQLqCr+j3wxAwvveGvGm1zFC1
+         Lun/LaDfLd667848WSTQqKlTJNyAg8dEnBcmfITp5XYztqiZMVqVFeFa5qWrnA+ygzS3
+         FYfvSzBaAlc90EGIevbxUhTOvJro3SjqFrV3cW07TCpYWMaEQCv9wYBRN/c5f49j+bg7
+         EnUuQi5eQjj2ykssY9Ti8rXDzo0G3AgHALIqAF/VWvOlJC5XlD3Ogb4n33d4rEhAjlZ4
+         g7wA==
+X-Gm-Message-State: APjAAAUo1SwxJ6QnG9XhSMLYjujcf37agSo0tlJj1c6UblVJx05ij+l/
+        o7sKwgY7SMCwzyX/NXodCxVobbctfHCV/2a5bYs=
+X-Google-Smtp-Source: APXvYqzVqWiQ+apKsrT0oBiaeec4gy/zoma0dtQBf07yF7JGCR5SNhAzslSYZ+fTDlHPoKxtqDWGDPl4l7/aBmKHdYM=
+X-Received: by 2002:a7b:c411:: with SMTP id k17mr20668890wmi.119.1574517959360;
+ Sat, 23 Nov 2019 06:05:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123134817.30953-1-hslester96@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191121195902.6906-1-peron.clem@gmail.com> <20191121195902.6906-6-peron.clem@gmail.com>
+ <20191121211630.slgayfbuykwvlvdt@pengutronix.de> <CAJiuCcdhH9zbRMMYsZbBYL-H8YWn2kimvJEjZ8Z8kF7Uh9MCpg@mail.gmail.com>
+In-Reply-To: <CAJiuCcdhH9zbRMMYsZbBYL-H8YWn2kimvJEjZ8Z8kF7Uh9MCpg@mail.gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sat, 23 Nov 2019 15:05:48 +0100
+Message-ID: <CAJiuCcd8VK2xHqRuWTVpNvw4e+rCR9-KjOSF5KsTcN9qQhaNVw@mail.gmail.com>
+Subject: Re: [PATCH v8 5/6] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 09:48:17PM +0800, Chuhong Yuan wrote:
-> Since tasklet is needed to be initialized before registering IRQ
-> handler, adjust the position of tasklet_init to fix the wrong order.
-> 
-> Besides, to fix the missed tasklet_kill, this patch adds a helper
-> function and uses devm_add_action_or_reset to kill the tasklet
-> automatically.
-> 
-> Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v3:
->   - Use devm_add_action_or_reset to simplify the patch.
-> 
->  drivers/crypto/picoxcell_crypto.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+Hi Uwe,
 
-Thanks for the patch.  It looks much nicer.
+On Thu, 21 Nov 2019 at 22:21, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> Hi Uwe,
+>
+> On Thu, 21 Nov 2019 at 22:16, Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > On Thu, Nov 21, 2019 at 08:59:01PM +0100, Cl=C3=A9ment P=C3=A9ron wrote=
+:
+> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > >
+> > > PWM core has an option to bypass whole logic and output unchanged sou=
+rce
+> > > clock as PWM output. This is achieved by enabling bypass bit.
+> > >
+> > > Note that when bypass is enabled, no other setting has any meaning, n=
+ot
+> > > even enable bit.
+> > >
+> > > This mode of operation is needed to achieve high enough frequency to
+> > > serve as clock source for AC200 chip which is integrated into same
+> > > package as H6 SoC.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > ---
+> > >  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++=
+--
+> > >  1 file changed, 46 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > index 1fa2057419fb..0fe9c680d6d0 100644
+> > > --- a/drivers/pwm/pwm-sun4i.c
+> > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > @@ -3,6 +3,10 @@
+> > >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> > >   *
+> > >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-elec=
+trons.com>
+> > > + *
+> > > + * Limitations:
+> > > + * - When outputing the source clock directly, the PWM logic will be=
+ bypassed
+> > > + *   and the currently running period is not guaranteed to be comple=
+ted
+> > >   */
+> > >
+> > >  #include <linux/bitops.h>
+> > > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> > >
+> > >  struct sun4i_pwm_data {
+> > >       bool has_prescaler_bypass;
+> > > +     bool has_direct_mod_clk_output;
+> > >       unsigned int npwm;
+> > >  };
+> > >
+> > > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip =
+*chip,
+> > >
+> > >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > >
+> > > +     /*
+> > > +      * PWM chapter in H6 manual has a diagram which explains that i=
+f bypass
+> > > +      * bit is set, no other setting has any meaning. Even more, exp=
+eriment
+> > > +      * proved that also enable bit is ignored in this case.
+> > > +      */
+> > > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > > +         sun4i_pwm->data->has_direct_mod_clk_output) {
+> > > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_ra=
+te);
+> > > +             state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2=
+);
+> > > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > > +             state->enabled =3D true;
+> > > +             return;
+> > > +     }
+> > > +
+> > >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) =
+&&
+> > >           sun4i_pwm->data->has_prescaler_bypass)
+> > >               prescaler =3D 1;
+> > > @@ -149,13 +168,24 @@ static void sun4i_pwm_get_state(struct pwm_chip=
+ *chip,
+> > >
+> > >  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+> > >                              const struct pwm_state *state,
+> > > -                            u32 *dty, u32 *prd, unsigned int *prsclr=
+)
+> > > +                            u32 *dty, u32 *prd, unsigned int *prsclr=
+,
+> > > +                            bool *bypass)
+> > >  {
+> > >       u64 clk_rate, div =3D 0;
+> > >       unsigned int pval, prescaler =3D 0;
+> > >
+> > >       clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> > >
+> > > +     *bypass =3D sun4i_pwm->data->has_direct_mod_clk_output &&
+> > > +               state->enabled &&
+> > > +               (state->period * clk_rate >=3D NSEC_PER_SEC) &&
+> > > +               (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
+> > > +               (state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC);
+> > > +
+> > > +     /* Skip calculation of other parameters if we bypass them */
+> > > +     if (*bypass)
+> > > +             return 0;
+> > > +
+> > >       if (sun4i_pwm->data->has_prescaler_bypass) {
+> > >               /* First, test without any prescaler when available */
+> > >               prescaler =3D PWM_PRESCAL_MASK;
+> > > @@ -206,6 +236,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,=
+ struct pwm_device *pwm,
+> > >       int ret;
+> > >       unsigned int delay_us, prescaler;
+> > >       unsigned long now;
+> > > +     bool bypass;
+> > >
+> > >       pwm_get_state(pwm, &cstate);
+> > >
+> > > @@ -220,7 +251,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,=
+ struct pwm_device *pwm,
+> > >       spin_lock(&sun4i_pwm->ctrl_lock);
+> > >       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > >
+> > > -     ret =3D sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &=
+prescaler);
+> > > +     ret =3D sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &=
+prescaler,
+> > > +                               &bypass);
+> > >       if (ret) {
+> > >               dev_err(chip->dev, "period exceeds the maximum value\n"=
+);
+> > >               spin_unlock(&sun4i_pwm->ctrl_lock);
+> > > @@ -229,6 +261,18 @@ static int sun4i_pwm_apply(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> > >               return ret;
+> > >       }
+> > >
+> > > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
+> > > +             if (bypass) {
+> > > +                     ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > > +                     /* We can skip other parameter */
+> > > +                     sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG)=
+;
+> > > +                     spin_unlock(&sun4i_pwm->ctrl_lock);
+> > > +                     return 0;
+> > > +             } else {
+> > > +                     ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > > +             }
+> > > +     }
+> >
+> > This could be simplified to:
+> >
+> >         if (bypass) {
+> >                 ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> >                 /*
+> >                  * Other parameters are not relevant in this mode and s=
+o
+> >                  * writing them can be skipped
+> >                  */
+> >                 sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+> >                 spin_unlock(&sun4i_pwm->ctrl_lock);
+> >                 return 0;
+> >         } else {
+> >                 ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> >         }
+> >
+> > which has the advantage(?) that the bypass bit is also (more obviously)
+> > cleared for SoCs that don't support it and it reduces the indention
+> > level.
+>
+> This bit is not guaranteed to be reserved for all the SoC variants.
+>
+> I don't think it's a good idea to set to 0 a bit which is undefined.
 
-> @@ -1655,6 +1660,14 @@ static int spacc_probe(struct platform_device *pdev)
->  		return -ENXIO;
->  	}
->  
-> +	tasklet_init(&engine->complete, spacc_spacc_complete,
-> +		     (unsigned long)engine);
-> +
-> +	ret = devm_add_action_or_reset(&pdev->dev, spacc_tasklet_kill,
-> +				       &engine->complete);
+Let me know if you agree or not with this and I send the v9 according
+to your answer.
 
-Minor nit.  You only need devm_add_action as calling tasklet_kill
-at this point should be a no-op.
+Regards,
+Cl=C3=A9ment
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+>
+> Regards,
+> Clement
+>
+> >
+> > Best regards
+> > Uwe
+> >
+> > --
+> > Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
+       |
+> > Industrial Linux Solutions                 | https://www.pengutronix.de=
+/ |
