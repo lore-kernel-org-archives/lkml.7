@@ -2,166 +2,171 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290E2C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE06BC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF342070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A6820706
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TDYJmfyA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SWT9RPbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKWAvE (ORCPT
+        id S1726744AbfKWA6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 19:51:04 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43656 "EHLO
+        Fri, 22 Nov 2019 19:58:49 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36702 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKWAvE (ORCPT
+        with ESMTP id S1726089AbfKWA6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 19:51:04 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b1so4148882pgq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 16:51:03 -0800 (PST)
+        Fri, 22 Nov 2019 19:58:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k13so4189090pgh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 16:58:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YEx9gkUUkZlIfBrM5Cbpff4Fb2jz3vKVv8jxLN8IwcM=;
-        b=TDYJmfyA9tvr839j2Qfc5xuu0ZxFLfrMKwvcBzvSaEfMuVOV/sguZJfwo0X5PON/9J
-         8WvxwhWmhYF/baIrJYundj8Y3NxmV0VjnxE0i11PH4XjLZjCNbWa2EFLdEA1a7DX9vXL
-         Rx1qZMykTRmTHZd6lrVleJNQpZOGxho5nemIQ=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=IuWeFnrYeJCjuhCM2V1dA58lGjRpOtXacus/IBoPj+E=;
+        b=SWT9RPbbH0wqbnY590Ng1zNYJSEYMwqyk2hjYVStgfe3cn8J9xhspUE/IhAhMyiyYF
+         ITsmkvVswijzNTydtgsNqLfWO5AlPmHZfgbeP/ck3vqmG8WD1AthVOBjQq/7wIxhNj6N
+         IhmPbMJDedgw7loa0CC2hR6GkM41ieeXfMen6GAXTZZY2Y0aEjcK/Bj1BejspvEmOXyA
+         zo/hn1dh/4KxioncezIii0LXRSfDqEwYu6VZbBVGOhhR7OLAyWwJhZLPdB9oGfMaULZa
+         gsxPSmoSKUVsQOHxRh4sawj5xROFzr/xaOzGB7fddbIKF3FVjM+LXYaqj5zXQ27i30Lz
+         iu+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YEx9gkUUkZlIfBrM5Cbpff4Fb2jz3vKVv8jxLN8IwcM=;
-        b=fNEbzfEd4catoX9392bj1N+Gbs517qGfFmXvrRH1wbhd7awl/c6gbbu9n8NVAsXLFr
-         TBK/+VVoPGjlTiV3MRh4RfBESJvYW4hOCOGcFUXEaO2nyy1EBTfPT8mftxUWQdgzAmod
-         SnPJmdlF3yN8D3+OEC/D4sADtEowjb3OVMGn8usBB0YQoOUiDyqe9xvU9CSxaDKqdK4l
-         cRrw2GAzCoVTigX2Wv4cD1rzFTgnL5rpEmqklH0zDYlacZHj2NH8to5aWDZ5FHcib82M
-         590/50+6Lie216pwtL4Y6Dr0zTXFbKaXAex/y/7zKE7GFMS9guI9AWvBSRYFEVqze41T
-         x+Xg==
-X-Gm-Message-State: APjAAAWfq4Q4RQyIykPOBNhSOhX4KcTWZJDpqsy4VXPsbD+xQWPkACKU
-        uFTPSW5KQYmk6rQq1dcN9kRG1Q==
-X-Google-Smtp-Source: APXvYqwMJMSPAmhp4Go/fyPR9gy++5+i6LNMl7e4m/DKSVuR7t0cqOKww2BvvAz1j2cBMDIATLdQmg==
-X-Received: by 2002:a63:d854:: with SMTP id k20mr19360771pgj.305.1574470263399;
-        Fri, 22 Nov 2019 16:51:03 -0800 (PST)
-Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id v3sm8933989pfi.26.2019.11.22.16.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 16:51:02 -0800 (PST)
-Date:   Fri, 22 Nov 2019 16:51:00 -0800
-From:   Brian Norris <briannorris@chromium.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Chun-Hao Lin <hau@realtek.com>
-Subject: Re: [PATCH] [RFC] r8169: check for valid MAC before clobbering
-Message-ID: <20191123005054.GA116745@google.com>
-References: <20191113005816.37084-1-briannorris@chromium.org>
- <32422b2d-6cab-3ea2-aca3-3e74d68599a3@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=IuWeFnrYeJCjuhCM2V1dA58lGjRpOtXacus/IBoPj+E=;
+        b=rcD9RmMUI5jFqzyKFp2WhWLn9q6QVWuPiisfdDh//poploc5bng8iI3CsQBTm6kEFr
+         m4FGGjytSZQ9b/UCfTWBqizFzIs9WnsPvtfBuX4u2Nb17t5W+NWNfxeS2TWqMSREFhhC
+         AivQkcH3pjDEo2YFzAgmqTzM0YmBDSCU2H2agmQujQkM9TxBS6JAWALeEpaJAvvpko1x
+         iqHYGPuqNkqtly9OwrRs3hh5xcS7PfAz0yLdBm3A2iMaNCwi8qKKz/7vEG1HdizdhU4n
+         jQXbpEnC6/NuLjxHvkvW+jw3JdP1HRyyVDLdA/ZsmRfJ5oZbAbijj3UtRSGGW0A29bSk
+         d3kw==
+X-Gm-Message-State: APjAAAX4+YbcA8YA6AhXLvhMm80dPHp8OcXvcnsVh33lZR+GluML0bbc
+        ZA6lMhlBHpSjdu+PIiSohO82+w==
+X-Google-Smtp-Source: APXvYqz0ZXll8DZmCwf0ofv4uPNO7sFTvsQEUZIIytWRI6hPkiIhvNBJyAjp5BS/LzwHLnPhFD8fWw==
+X-Received: by 2002:a63:fb04:: with SMTP id o4mr1513860pgh.122.1574470727152;
+        Fri, 22 Nov 2019 16:58:47 -0800 (PST)
+Received: from [100.112.92.218] ([104.133.9.106])
+        by smtp.gmail.com with ESMTPSA id w69sm9117470pfc.164.2019.11.22.16.58.45
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 22 Nov 2019 16:58:46 -0800 (PST)
+Date:   Fri, 22 Nov 2019 16:58:34 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Johannes Weiner <hannes@cmpxchg.org>
+cc:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, shakeelb@google.com,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
+In-Reply-To: <20191122161652.GA489821@cmpxchg.org>
+Message-ID: <alpine.LSU.2.11.1911221616580.1144@eggly.anvils>
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com> <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com> <20191119160456.GD382712@cmpxchg.org> <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com> <20191121220613.GB487872@cmpxchg.org>
+ <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com> <20191122161652.GA489821@cmpxchg.org>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32422b2d-6cab-3ea2-aca3-3e74d68599a3@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiner,
+On Fri, 22 Nov 2019, Johannes Weiner wrote:
+> 
+> But that leaves me with one more worry: compaction. We locked out
+> charge moving now, so between that and knowing that the page is alive,
+> we have page->mem_cgroup stable. But compaction doesn't know whether
+> the page is alive - it comes from a pfn and finds out using PageLRU.
+> 
+> In the current code, pgdat->lru_lock remains the same before and after
+> the page is charged to a cgroup, so once compaction has that locked
+> and it observes PageLRU, it can go ahead and isolate the page.
+> 
+> But lruvec->lru_lock changes during charging, and then compaction may
+> hold the wrong lock during isolation:
+> 
+> compaction:				generic_file_buffered_read:
+> 
+> 					page_cache_alloc()
+> 
+> !PageBuddy()
+> 
+> lock_page_lruvec(page)
+>   lruvec = mem_cgroup_page_lruvec()
+>   spin_lock(&lruvec->lru_lock)
+>   if lruvec != mem_cgroup_page_lruvec()
+>     goto again
+> 
+> 					add_to_page_cache_lru()
+> 					  mem_cgroup_commit_charge()
+> 					    page->mem_cgroup = foo
+> 					  lru_cache_add()
+> 					    __pagevec_lru_add()
+> 					      SetPageLRU()
+> 
+> if PageLRU(page):
+>   __isolate_lru_page()
+> 
+> I don't see what prevents the lruvec from changing under compaction,
+> neither in your patches nor in Hugh's. Maybe I'm missing something?
 
-Thanks for the response, and sorry for some delay. I've been busy in the
-last week.
+Speaking for my patches only: I'm humbled, I think you have caught me,
+I cannot find any argument against the race you suggest here.
 
-On Wed, Nov 13, 2019 at 09:30:42PM +0100, Heiner Kallweit wrote:
-> On 13.11.2019 01:58, Brian Norris wrote:
-> > I have some old systems with RTL8168g Ethernet, where the BIOS (based on
-> > Coreboot) programs the MAC address into the MAC0 registers (at offset
-> > 0x0 and 0x4). The relevant Coreboot source is publicly available here:
-> > 
-> > https://review.coreboot.org/cgit/coreboot.git/tree/src/mainboard/google/jecht/lan.c?h=4.10#n139
-> > 
-> > (The BIOS is built off a much older branch, but the code is effectively
-> > the same.)
-> > 
-> > Note that this was apparently the recommended solution in an application
-> > note at the time (I have a copy, but it's not marked for redistribution
-> > :( ), with no mention of the method used in rtl_read_mac_address().
-> > 
-> The application note refers to RTL8105e which is quite different from
-> RTL8168g.
+The race with mem_cgroup_move_account(), which Konstantin pointed out
+in 2012's https://lore.kernel.org/lkml/4F433418.3010401@openvz.org/
+but I later misunderstood, and came to think I needed no patch against,
+until this week coming to perceive the same race in isolate_lru_page():
+that one is easily and satisfactorily fixed by holding lruvec lock in
+mem_cgroup_move_account() - embarrassing, but not too serious.
 
-Understood. But the register mapping for this part does appear to be the
-same, and I'm really having trouble finding any other documentation, so
-I can't really blame whoever was writing the Coreboot code in the first
-place.
+Your race here (again, lruvec lock taken then PageLRU observed, but
+page->mem_cgroup changed in between) really questions my whole scheme:
+I am not going to propose a solution now, I'll have to go back and
+recheck my assumptions all over.  Certainly isolate_migratepage_block()
+has a harder job than any other, but I need to re-review it all.
 
-> For RTL8168g the BIOS has to write the MAC to the respective
-> GigaMAC registers, see rtl_read_mac_address for these registers.
+Maybe we got it right back in the days of PageCgroupUsed, and then I
+paid too little attention when rebasing to your welcome simplifications.
+I don't think any of us want to bring back PageCgroupUsed! And maybe we
+could get it right by always holding lruvec lock in commit_charge(),
+lrucare or not; but that's a much hotter path, and not a change I'd
+expect anyone to embrace.
 
-I already see the code, but do you have any reference docs? For example,
-how am I to determine "has to"? I've totally failed at finding any good
-documentation.
+I'll go away and re-examine it all; probably start by verifying that
+your race actually happens in practice, though we never observed it.
 
-To the contrary, I did find an alleged RTL8169 document (no clue if it's
-legit), and it appears to describe the IDR0-5 registers (i.e., offset
-0000h) as:
-
-  ID Register 0: The ID registers 0-5 are only permitted to write by
-  4-byte access. Read access can be byte, word, or double word access.
-  The initial value is autoloaded from EEPROM EthernetID field. 
-
-If that implies anything, it seems to imply that any EEPROM settings
-should be automatically applied, and that register 0-5h are the correct
-source of truth.
-
-Or it doesn't really imply anything, except that some other similar IP
-doesn't specifically mention this "backup register."
-
-> If recompiling the BIOS isn't an option,
-
-It's not 100% impossible, but it seems highly unlikely to happen. To me
-(and likely the folks responsible for this BIOS), this looks like a
-kernel regression (this driver worked just fine for me before commit
-89cceb2729c7).
-
-> then easiest should be to
-> change the MAC after boot with "ifconfig" or "ip" command.
-
-No, I think the easiest option is to apply my patch, which I'll probably
-do if I can't find anything else.
-
-I'm curious: do you see any problem with my patch? In your
-understanding, what's the purpose of the "backup registers" (as they
-were called in commit 89cceb2729c7)? To be the primary source of MAC
-address information? Or to only be a source if the primary registers are
-empty? If the latter, then my patch should be a fine substitute.
-
-Brian
-
-> > The result is that ever since commit 89cceb2729c7 ("r8169:add support
-> > more chips to get mac address from backup mac address register"), my MAC
-> > address changes to use an address I never intended.
-> > 
-> > Unfortunately, these commits don't really provide any documentation, and
-> > I'm not sure when the recommendation actually changed. So I'm sending
-> > this as RFC, in case I can get any tips from Realtek on how to avoid
-> > breaking compatibility like this.
-> > 
-> > I'll freely admit that the devices in question are currently pinned to
-> > an ancient kernel. We're only recently testing newer kernels on these
-> > devices, which brings me here.
-> > 
-> > I'll also admit that I don't have much means to test this widely, and
-> > I'm not sure what implicit behaviors other systems were depending on
-> > along the way.
-> > 
-> > Fixes: 89cceb2729c7 ("r8169:add support more chips to get mac address from backup mac address register")
-> > Fixes: 6e1d0b898818 ("r8169:add support for RTL8168H and RTL8107E")
-> > Cc: Chun-Hao Lin <hau@realtek.com>
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+Heavy-hearted thanks, Hannes!
+Hugh
