@@ -1,103 +1,130 @@
-Return-Path: <SRS0=i7el=ZO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA47C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53103C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E232071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 23:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276952071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6nMM/vl"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="ufnbRqcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKVX7a (ORCPT
+        id S1726840AbfKWABa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:59:30 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42835 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKVX7a (ORCPT
+        Fri, 22 Nov 2019 19:01:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46354 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfKWAB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 18:59:30 -0500
-Received: by mail-io1-f67.google.com with SMTP id k13so10087239ioa.9;
-        Fri, 22 Nov 2019 15:59:29 -0800 (PST)
+        Fri, 22 Nov 2019 19:01:29 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r18so4072327pgu.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 16:01:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=foB4NLZVZpZHpEP+Jauf8VZD20bjVJasgM3S94B+BBs=;
-        b=X6nMM/vlSIJvr2rQybFVo45ZCgO5wPCt1i501De4QJ38e+Qw9Wfcn6S964E76rZ5KF
-         frkvASOl1adlZxqdpgbEMc+spswWqJQVXjEVQ4xYXLoxF8HQfIJBAh8rg8KHC3rqRRMK
-         0u/HD+Pg63QEocPelHZu/SjSblAGIG+ag7+BdfFJRIyK1tT+sv0gSFa+FKKkkrcyU0IQ
-         wgtONpQEgTGJhNlT7iQoUqIySotOVmas9AjxT+TJziw7x/BLwzLjrAQsCXNFGuvcxIxp
-         xlvYTux9FepMtnIPGoJg8WAX/g1ILkZu5CgqIHHeIsyZmnxBw+35uMtVDbLRDFDo1ygs
-         MLKA==
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8+yuRo8leBwiMoTIdlspRuC+nuf9tPvJBSaoVlCYcr0=;
+        b=ufnbRqcpbY771Xbf6t8odtaI4hw0nxfRj7NahcvgDmBndf0iIb6gSTI8z7gsnj05fk
+         v5UzVehJDvYN2ih7BlyB5r/Zz3Oz64RQkfxntUmVNS90S/e55JchNLCh3GU+Qrwl5mTQ
+         HM8/zjNj91oRJpozOW59hli4SuOoylfoWqn3qTBbQsg7b0hTGx3+0ufO7nVDKLF43Yv2
+         mNIxKYPsv3RJ/7aG4QADxRLAZvC9qoBl03uEN91OUdunLjDOWq0hQAAfatMYsg2r7nbg
+         xId2a0ly59seCF082tZgXIwsQj7NdZG+aSSi7sf7YbBrv7CiEKbk1QabJUBGe1GxftKq
+         zddw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=foB4NLZVZpZHpEP+Jauf8VZD20bjVJasgM3S94B+BBs=;
-        b=ChrdqUXTpCfBix+2oeLBDHh/60ofrsCbG87FaWUXuHJKVtIl/6c2sxc+e2sJFhLDFk
-         zjaA6kM8p+TiRcrQvCjYXnZd8T+qDnH/prz5ErSgO0/mh/5pPCVC5AxTx0xC4p8KVEoO
-         qVdIKNuDLwsEBsQ5K5fZanLPowzzjgqvSwEnMaYyVWpn09Oox0uJDT/gNypGEXcpK30c
-         ZUdgIdU4aP+cpFMUOGPTir2g+p/6cEJcpneK21YHc5V7q4CfJW4chFFDvksmcDawQzGg
-         XwHFZAwQXs11VjubSfPAd6bfqyvZLyRzfksYbgKhYnaHHf2uq+dLTewo9Vdbs7eWTOYU
-         C4hw==
-X-Gm-Message-State: APjAAAWJ5fo2j/Zsvj0e0WA7lkwyBV3tuUNQFhDq4dVH9MEdoDBNYBna
-        T8UC+Hlgd0SB5umNxot2uYDDlsYSonDYQZfrk+8=
-X-Google-Smtp-Source: APXvYqxEYuoR4iMswSx1CzGapDzROgybF2PYu6v6V5p2Czm4oC+E00ZzOCe0P14r8QIPjTBrJxub730kaFAOaD4G31A=
-X-Received: by 2002:a6b:7e0b:: with SMTP id i11mr15044163iom.245.1574467169363;
- Fri, 22 Nov 2019 15:59:29 -0800 (PST)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8+yuRo8leBwiMoTIdlspRuC+nuf9tPvJBSaoVlCYcr0=;
+        b=sFyblAmE+yF4UaHou6oXQlj3Djocgwha3oGUxI57PHnvMfralfqC0jztjQtpwlyXFK
+         mj59NEDbbp3Il4eHt/vJhOrH28Kua7VCIUulhijkQu1kcUL5bRyjyQVjGrYH2GTwIDKn
+         Db+QUbfcKwPz4j6Kk66epVqxo2CE8cPslJGMtpB1k6bSga4zH2gl7SgyTQX24nP5QHay
+         gMOfPjzuZ8Vdudp9s1SYMUidJNSPIVo61u86rdG98jtEBkadht8Il4Jg6z9FN6MDdijg
+         POA2ZI/B5rJ+oq3J5L0CN9XMt8zALSd6/2DXDZpY+ZqkwiRRrVt7j6+2p0NuajjL9GAp
+         h3nA==
+X-Gm-Message-State: APjAAAWgf95uqMZofDT2ijzsZsesgPk4CtJCVSaFn0FMlGE9wd7lxfCR
+        AVKmEYdGXBcRzDG1ihE3c/wIcA==
+X-Google-Smtp-Source: APXvYqwNwR4l3/DAmp3JaZWSOws1GVis8FdeLU3d6En4/y64kMGC8zx/IeoD93wLolOQGxI5vhfttQ==
+X-Received: by 2002:a62:b607:: with SMTP id j7mr20921713pff.39.1574467288498;
+        Fri, 22 Nov 2019 16:01:28 -0800 (PST)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id u207sm8940594pfc.127.2019.11.22.16.01.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 16:01:27 -0800 (PST)
+Date:   Fri, 22 Nov 2019 16:01:27 -0800
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
+        sergei.shtylyov@cogentembedded.com,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH v5 bpf-next 11/15] libbpf: don't use cxx to test_libpf
+ target
+Message-ID: <20191123000127.GC3145429@mini-arch.hsd1.ca.comcast.net>
+References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
+ <20191011002808.28206-12-ivan.khoronzhuk@linaro.org>
+ <20191121214225.GA3145429@mini-arch.hsd1.ca.comcast.net>
+ <CAEf4BzZWPwzC8ZBWcBOfQQmxBkDRjogxw2xHZ+dMWOrrMmU0sg@mail.gmail.com>
+ <20191122163211.GB3145429@mini-arch.hsd1.ca.comcast.net>
+ <20191122234733.GA2474@khorivan>
 MIME-Version: 1.0
-References: <157225677483.3442.4227193290486305330.stgit@buzz>
- <20191028124222.ld6u3dhhujfqcn7w@box> <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
- <20191028125702.xdfbs7rqhm3wer5t@box> <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
- <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
- <f0140b13-cca2-af9e-eb4b-82eda134eb8f@redhat.com> <CAHk-=wh4SKRxKQf5LawRMSijtjRVQevaFioBK+tOZAVPt7ek0Q@mail.gmail.com>
- <640bbe51-706b-8d9f-4abc-5f184de6a701@redhat.com>
-In-Reply-To: <640bbe51-706b-8d9f-4abc-5f184de6a701@redhat.com>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Sat, 23 Nov 2019 00:59:18 +0100
-Message-ID: <CAHpGcM+o2OwXdrj+A2_OqRg6YokfauFNiBJF-BQp0dJFvq_BrQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
- file at read
-To:     Steven Whitehouse <swhiteho@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <sfrench@samba.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122234733.GA2474@khorivan>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 11/23, Ivan Khoronzhuk wrote:
+> On Fri, Nov 22, 2019 at 08:32:11AM -0800, Stanislav Fomichev wrote:
+> > On 11/21, Andrii Nakryiko wrote:
+> > > On Thu, Nov 21, 2019 at 1:42 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+> > > >
+> > > > On 10/11, Ivan Khoronzhuk wrote:
+> > > > > No need to use C++ for test_libbpf target when libbpf is on C and it
+> > > > > can be tested with C, after this change the CXXFLAGS in makefiles can
+> > > > > be avoided, at least in bpf samples, when sysroot is used, passing
+> > > > > same C/LDFLAGS as for lib.
+> > > > > Add "return 0" in test_libbpf to avoid warn, but also remove spaces at
+> > > > > start of the lines to keep same style and avoid warns while apply.
+> > > > Hey, just spotted this patch, not sure how it slipped through.
+> > > > The c++ test was there to make sure libbpf can be included and
+> > > > linked against c++ code (i.e. libbpf headers don't have some c++
+> > > > keywords/etc).
+> > > >
+> > > > Any particular reason you were not happy with it? Can we revert it
+> > > > back to c++ and fix your use-case instead? Alternatively, we can just
+> > > > remove this test if we don't really care about c++.
+> > > >
+> > > 
+> > > No one seemed to know why we have C++ pieces in pure C library and its
+> > > Makefile, so we decide to "fix" this. :)
+> > It's surprising, the commit 8c4905b995c6 clearly states the reason
+> > for adding it. Looks like it deserved a real comment in the Makefile :-)
+> 
+> I dislike changing things like this, but I was asked while review and
+> it seemed logical enough. The comment could prevent us from doing this.
+No worries, I'll add it back with a comment :-)
 
-Am Do., 31. Okt. 2019 um 12:43 Uhr schrieb Steven Whitehouse
-<swhiteho@redhat.com>:
-> Andreas, Bob, have I missed anything here?
-
-I've looked into this a bit, and it seems that there's a reasonable
-way to get rid of the lock taking in ->readpage and ->readpages
-without a lot of code duplication. My proposal for that consists of
-multiple patches, so I've posted it separately:
-
-https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@redhat.com/T/#t
-
-Thanks,
-Andreas
+> > > But I do understand your concern. Would it be possible to instead do
+> > > this as a proper selftests test? Do you mind taking a look at that?
+> > Ack, will move this test_libbpf.c into selftests and convert back to
+> > c++.
+> 
+> -- 
+> Regards,
+> Ivan Khoronzhuk
