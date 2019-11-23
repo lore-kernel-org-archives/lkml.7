@@ -2,265 +2,377 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A210AC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4662C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E9720726
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893D2206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 20:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="Go/bsS0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKWUie (ORCPT
+        id S1727116AbfKWUjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 15:38:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34340 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726638AbfKWUiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 15:38:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 45D66AF10;
-        Sat, 23 Nov 2019 20:38:10 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v4 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-Date:   Sat, 23 Nov 2019 21:37:54 +0100
-Message-Id: <20191123203759.20708-4-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191123203759.20708-1-afaerber@suse.de>
-References: <20191123203759.20708-1-afaerber@suse.de>
+        Sat, 23 Nov 2019 15:39:44 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:32592 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfKWUjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 15:39:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574541579;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=rEUyRP3eQyYc2Unj3lJf7FeYCVrRJr3A0EoMCQy5Lss=;
+        b=Go/bsS0JLjYQ3BWjtqAGoSDnudDjF/uNQeswwpI7aNgkCwwsyexjfua9JNaRHQmvVE
+        9/QWZrOLbxKDjoVAhIZHUde6VwCzBUlFCeLSAr/FFWnb188lDjWSBDzyt4dW4CQd5sLc
+        ZrVA7vJGy95l7kMNYRmpw2wflcynlGOsEM/CBkJtdT04IzNMXskFLGuBigUjAgT+ZT76
+        GHNH5UXqwtsZ9b738PZYTAW1n1fREM/F+diXXSBvwV+dmZP4zf1jdZ9nSHmmM0SQ4NHy
+        83u/HoUxjCi8zzW6tRDimBW4V4z4rinhBArfS8D/9gk4Ke02LBG+WxdDAFjqEsOUbm2p
+        n3Sw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDaJfSfWrhX"
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id N09a57vANKcc3yZ
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sat, 23 Nov 2019 21:38:38 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v26 03/12] LRNG - sysctls and /proc interface
+Date:   Sat, 23 Nov 2019 21:11:15 +0100
+Message-ID: <78729803.QniyU6598I@positron.chronox.de>
+In-Reply-To: <2722222.P16TYeLAVu@positron.chronox.de>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2787174.DQlWHN5GGo@positron.chronox.de> <2722222.P16TYeLAVu@positron.chronox.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
+The LRNG sysctl interface provides the same controls as the existing
+/dev/random implementation. These sysctls behave identically and are
+implemented identically. The goal is to allow a possible merge of the
+existing /dev/random implementation with this implementation which
+implies that this patch tries have a very close similarity. Yet, all
+sysctls are documented at [1].
 
-Reuse the existing RTD1295 watchdog compatible for now.
+In addition, it provides the file lrng_type which provides details about
+the LRNG:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-[AF: Fixed r-bus size, fixed GIC, updated memreserve & memory]
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v3 -> v4:
- * Inserted /memory reg entry to compensate reduced r-bus size (James)
- * Extended GIC reg and added interrupt (Marc)
- * Added comments to /memory node
- 
- v2 -> v3:
- * Fixed r-bus size in /soc ranges from 0x1000000 to 0x70000 (James)
- * Adjusted /memreserve/ to close gap from 0xa800 to 0xc000 for full 0x100000
- * Changed arch timer from GIC_CPU_MASK_RAW(0xf) to GIC_CPU_MASK_SIMPLE(2)
-   squashed from RTD1395 v1 series
- 
- v1 -> v2:
- * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
- * Carved them out from memory reg instead (Rob)
- * Converted some /memreserve/s to reserved-memory nodes
- 
- arch/arm/boot/dts/Makefile               |   2 +
- arch/arm/boot/dts/rtd1195-mele-x1000.dts |  32 ++++++++
- arch/arm/boot/dts/rtd1195.dtsi           | 130 +++++++++++++++++++++++++++++++
- 3 files changed, 164 insertions(+)
- create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
- create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+=2D is the TRNG present
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 08011dc8c7a6..4853a13c8cf2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -865,6 +865,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- dtb-$(CONFIG_ARCH_RDA) += \
- 	rda8810pl-orangepi-2g-iot.dtb \
- 	rda8810pl-orangepi-i96.dtb
-+dtb-$(CONFIG_ARCH_REALTEK) += \
-+	rtd1195-mele-x1000.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
- 	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/rtd1195-mele-x1000.dts b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
+=2D the name of the DRNG that produces the random numbers for /dev/random,
+/dev/urandom, getrandom(2)
+
+=2D the hash used to produce random numbers from the entropy pool
+
+=2D the number of secondary DRNG instances
+
+=2D indicator whether the LRNG operates SP800-90B compliant
+
+=2D indicator whether a high-resolution timer is identified - only with a
+high-resolution timer the interrupt noise source will deliver sufficient
+entropy
+
+=2D indicator whether the LRNG has been minimally seeded (i.e. is the
+secondary DRNG seeded with at least 128 bits of of entropy)
+
+=2D indicator whether the LRNG has been fully seeded (i.e. is the
+secondary DRNG seeded with at least 256 bits of entropy)
+
+[1] https://www.chronox.de/lrng.html
+
+CC: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+CC: Willy Tarreau <w@1wt.eu>
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: Vito Caputo <vcaputo@pengaru.com>
+CC: Andreas Dilger <adilger.kernel@dilger.ca>
+CC: Jan Kara <jack@suse.cz>
+CC: Ray Strode <rstrode@redhat.com>
+CC: William Jon McCann <mccann@jhu.edu>
+CC: zhangjs <zachary@baishancloud.com>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>
+CC: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Tested-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
+=2D--
+ drivers/char/lrng/Makefile          |   1 +
+ drivers/char/lrng/lrng_interfaces.c |   1 -
+ drivers/char/lrng/lrng_internal.h   |   4 +
+ drivers/char/lrng/lrng_proc.c       | 179 ++++++++++++++++++++++++++++
+ 4 files changed, 184 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/char/lrng/lrng_proc.c
+
+diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
+index a00cddb45773..b6240b73e33d 100644
+=2D-- a/drivers/char/lrng/Makefile
++++ b/drivers/char/lrng/Makefile
+@@ -9,3 +9,4 @@ obj-y				+=3D lrng_pool.o lrng_aux.o \
+ 				   lrng_interfaces.o \
+=20
+ obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
++obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
+diff --git a/drivers/char/lrng/lrng_interfaces.c b/drivers/char/lrng/lrng_i=
+nterfaces.c
+index 39fc3282843e..11a810c09720 100644
+=2D-- a/drivers/char/lrng/lrng_interfaces.c
++++ b/drivers/char/lrng/lrng_interfaces.c
+@@ -43,7 +43,6 @@ static DECLARE_WAIT_QUEUE_HEAD(lrng_write_wait);
+ static DECLARE_WAIT_QUEUE_HEAD(lrng_init_wait);
+ static struct fasync_struct *fasync;
+=20
+=2Dstruct ctl_table random_table[];
+ /********************************** Helper *******************************=
+****/
+=20
+ /* Is the primary DRNG seed level too low? */
+diff --git a/drivers/char/lrng/lrng_internal.h b/drivers/char/lrng/lrng_int=
+ernal.h
+index fb7890939089..cca6e3580030 100644
+=2D-- a/drivers/char/lrng/lrng_internal.h
++++ b/drivers/char/lrng/lrng_internal.h
+@@ -110,7 +110,11 @@ void lrng_cc20_init_state(struct chacha20_state *state=
+);
+=20
+ /********************************** /proc ********************************=
+*****/
+=20
++#ifdef CONFIG_SYSCTL
++void lrng_pool_inc_numa_node(void);
++#else
+ static inline void lrng_pool_inc_numa_node(void) { }
++#endif
+=20
+ /****************************** LRNG interfaces **************************=
+*****/
+=20
+diff --git a/drivers/char/lrng/lrng_proc.c b/drivers/char/lrng/lrng_proc.c
 new file mode 100644
-index 000000000000..e2050cb64474
---- /dev/null
-+++ b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+index 000000000000..408bbbf4fa4e
+=2D-- /dev/null
++++ b/drivers/char/lrng/lrng_proc.c
+@@ -0,0 +1,179 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
 +/*
-+ * Copyright (c) 2017-2019 Andreas Färber
++ * LRNG proc and sysctl interfaces
++ *
++ * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
 + */
 +
-+/dts-v1/;
++#include <linux/lrng.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++#include <linux/sysctl.h>
++#include <linux/uuid.h>
 +
-+#include "rtd1195.dtsi"
++#include "lrng_internal.h"
 +
-+/ {
-+	compatible = "mele,x1000", "realtek,rtd1195";
-+	model = "MeLE X1000";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x18000000>, /* up to r-bus */
-+		      <0x18070000 0x00090000>, /* r-bus to NOR flash */
-+		      <0x19100000 0x26f00000>; /* NOR flash to 1 GiB */
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-new file mode 100644
-index 000000000000..c5713a5ef472
---- /dev/null
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
 +/*
-+ * Copyright (c) 2017-2019 Andreas Färber
++ * This function is used to return both the bootid UUID, and random
++ * UUID.  The difference is in whether table->data is NULL; if it is,
++ * then a new UUID is generated and returned to the user.
++ *
++ * If the user accesses this via the proc interface, the UUID will be
++ * returned as an ASCII string in the standard UUID format; if via the
++ * sysctl system call, as 16 bytes of binary data.
 + */
++static int lrng_proc_do_uuid(struct ctl_table *table, int write,
++			     void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct ctl_table fake_table;
++	unsigned char buf[64], tmp_uuid[16], *uuid;
 +
-+/memreserve/ 0x00000000 0x0000a800; /* boot code */
-+/memreserve/ 0x0000a800 0x000f5800;
-+/memreserve/ 0x17fff000 0x00001000;
++	uuid =3D table->data;
++	if (!uuid) {
++		uuid =3D tmp_uuid;
++		generate_random_uuid(uuid);
++	} else {
++		static DEFINE_SPINLOCK(bootid_spinlock);
 +
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++		spin_lock(&bootid_spinlock);
++		if (!uuid[8])
++			generate_random_uuid(uuid);
++		spin_unlock(&bootid_spinlock);
++	}
 +
-+/ {
-+	compatible = "realtek,rtd1195";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++	sprintf(buf, "%pU", uuid);
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	fake_table.data =3D buf;
++	fake_table.maxlen =3D sizeof(buf);
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+			clock-frequency = <1000000000>;
-+		};
++	return proc_dostring(&fake_table, write, buffer, lenp, ppos);
++}
 +
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+			clock-frequency = <1000000000>;
-+		};
-+	};
++static int lrng_proc_do_entropy(struct ctl_table *table, int write,
++				void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct ctl_table fake_table;
++	int entropy_count;
 +
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
++	entropy_count =3D lrng_avail_entropy();
 +
-+		rpc_comm: rpc@b000 {
-+			reg = <0x0000b000 0x1000>;
-+		};
++	fake_table.data =3D &entropy_count;
++	fake_table.maxlen =3D sizeof(entropy_count);
 +
-+		audio@1b00000 {
-+			reg = <0x01b00000 0x400000>;
-+		};
++	return proc_dointvec(&fake_table, write, buffer, lenp, ppos);
++}
 +
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x01ffe000 0x4000>;
-+		};
++static int lrng_sysctl_poolsize =3D LRNG_POOL_SIZE_BITS;
++static int lrng_min_read_thresh =3D LRNG_POOL_WORD_BITS;
++static int lrng_min_write_thresh;
++static int lrng_max_read_thresh =3D LRNG_POOL_SIZE_BITS;
++static int lrng_max_write_thresh =3D LRNG_POOL_SIZE_BITS;
++static char lrng_sysctl_bootid[16];
++static int lrng_sdrng_reseed_max_min;
 +
-+		secure@10000000 {
-+			reg = <0x10000000 0x100000>;
-+			no-map;
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+		clock-frequency = <27000000>;
-+	};
-+
-+	osc27M: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <27000000>;
-+		#clock-cells = <0>;
-+		clock-output-names = "osc27M";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x18000000 0x18000000 0x00070000>,
-+			 <0x18100000 0x18100000 0x01000000>,
-+			 <0x80000000 0x80000000 0x80000000>;
-+
-+		wdt: watchdog@18007680 {
-+			compatible = "realtek,rtd1295-watchdog";
-+			reg = <0x18007680 0x100>;
-+			clocks = <&osc27M>;
-+		};
-+
-+		uart0: serial@18007800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x18007800 0x400>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@1801b200 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x1801b200 0x100>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@ff011000 {
-+			compatible = "arm,cortex-a7-gic";
-+			reg = <0xff011000 0x1000>,
-+			      <0xff012000 0x2000>,
-+			      <0xff014000 0x2000>,
-+			      <0xff016000 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
++struct ctl_table random_table[] =3D {
++	{
++		.procname	=3D "poolsize",
++		.data		=3D &lrng_sysctl_poolsize,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0444,
++		.proc_handler	=3D proc_dointvec,
++	},
++	{
++		.procname	=3D "entropy_avail",
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0444,
++		.proc_handler	=3D lrng_proc_do_entropy,
++	},
++	{
++		.procname	=3D "read_wakeup_threshold",
++		.data		=3D &lrng_read_wakeup_bits,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0644,
++		.proc_handler	=3D proc_dointvec_minmax,
++		.extra1		=3D &lrng_min_read_thresh,
++		.extra2		=3D &lrng_max_read_thresh,
++	},
++	{
++		.procname	=3D "write_wakeup_threshold",
++		.data		=3D &lrng_write_wakeup_bits,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0644,
++		.proc_handler	=3D proc_dointvec_minmax,
++		.extra1		=3D &lrng_min_write_thresh,
++		.extra2		=3D &lrng_max_write_thresh,
++	},
++	{
++		.procname	=3D "boot_id",
++		.data		=3D &lrng_sysctl_bootid,
++		.maxlen		=3D 16,
++		.mode		=3D 0444,
++		.proc_handler	=3D lrng_proc_do_uuid,
++	},
++	{
++		.procname	=3D "uuid",
++		.maxlen		=3D 16,
++		.mode		=3D 0444,
++		.proc_handler	=3D lrng_proc_do_uuid,
++	},
++	{
++		.procname       =3D "urandom_min_reseed_secs",
++		.data           =3D &lrng_sdrng_reseed_max_time,
++		.maxlen         =3D sizeof(int),
++		.mode           =3D 0644,
++		.proc_handler   =3D proc_dointvec,
++		.extra1		=3D &lrng_sdrng_reseed_max_min,
++	},
++	{ }
 +};
--- 
-2.16.4
++
++/* Number of online DRNGs */
++static u32 numa_drngs =3D 1;
++
++void lrng_pool_inc_numa_node(void)
++{
++	numa_drngs++;
++}
++
++static int lrng_proc_type_show(struct seq_file *m, void *v)
++{
++	struct lrng_sdrng *lrng_sdrng_init =3D lrng_sdrng_init_instance();
++	unsigned long flags =3D 0;
++	unsigned char buf[300];
++
++	lrng_sdrng_lock(lrng_sdrng_init, &flags);
++	snprintf(buf, sizeof(buf),
++#ifdef CONFIG_LRNG_TRNG_SUPPORT
++		 "TRNG present: true\n"
++#else
++		 "TRNG present: false\n"
++#endif
++		 "DRNG name: %s\n"
++		 "Hash for reading entropy pool: %s\n"
++		 "DRNG security strength: %d bits\n"
++		 "number of secondary DRNG instances: %u\n"
++		 "SP800-90B compliance: %s\n"
++		 "High-resolution timer: %s\n"
++		 "LRNG minimally seeded: %s\n"
++		 "LRNG fully seeded: %s\n",
++		 lrng_sdrng_init->crypto_cb->lrng_drng_name(),
++		 lrng_sdrng_init->crypto_cb->lrng_hash_name(),
++		 LRNG_DRNG_SECURITY_STRENGTH_BITS, numa_drngs,
++		 lrng_sp80090b_compliant() ? "true" : "false",
++		 lrng_pool_highres_timer() ? "true" : "false",
++		 lrng_state_min_seeded() ? "true" : "false",
++		 lrng_state_fully_seeded() ? "true" : "false");
++	lrng_sdrng_unlock(lrng_sdrng_init, &flags);
++
++	seq_write(m, buf, strlen(buf));
++
++	return 0;
++}
++
++static int __init lrng_proc_type_init(void)
++{
++	proc_create_single("lrng_type", 0444, NULL, &lrng_proc_type_show);
++	return 0;
++}
++
++module_init(lrng_proc_type_init);
+=2D-=20
+2.23.0
+
+
+
 
