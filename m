@@ -2,106 +2,152 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F60C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D60C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A962620674
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95CD20674
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 23:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ASgrvDPj"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ZNI2h/ps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfKWXuB (ORCPT
+        id S1726967AbfKWXvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 18:50:01 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45992 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfKWXuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 18:50:01 -0500
-Received: by mail-il1-f195.google.com with SMTP id o18so10778267ils.12
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 15:50:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=s4GCLK+fIVn+snaTOmwkPoaXDJP7z3FcdVJMD3d4BQk=;
-        b=ASgrvDPj4A/sFmDffZ+2PUQ5GRVEw02fOaSJyhpnDMyd/H5wMQMT7uoyC6CSBOV0DN
-         XshcS1H7NEePIkGvTrLcYM+wJjDXbAY0UALDwOCzKe9eJJU2jp9LBkFJhwqKmQOc06om
-         /3RULDjh5ysrs72RSWCed9tWmL1qV0D0ATRvna9IgeYdj/JxvGbuoJ3mgWWyy4nKgXdT
-         WhRqjru2yEpjEVtQ5VAZiiiN+bjb9NczEH4SKT4u3F8HbVLB29jNhQSDi06IE3ISaQCc
-         Or9q/yVZqf9WmSQ9q71QDzHPdCJ1AlOw1Mra3SKkK84m0+qD88loZLVykWYE/aGiE5dG
-         Z/CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=s4GCLK+fIVn+snaTOmwkPoaXDJP7z3FcdVJMD3d4BQk=;
-        b=htqfRiJ2Kb7xmy8gKdEqIVhs6tBZOBxzXk+mbixnkaUHbugJRfGde+UD8uKDucUZIa
-         D1Zwlx1R1SMx47yFwmV/dlWHAqKUJcMw4ILDeRA4jYb1v6B5cVhhlOci9jJ52gO2x32o
-         QQfx+4df7Fs8kjpPFrKr7XCI8MUd+umj4i4cnk69YyltXy47VMTaVif9Hf+6LH96tqwn
-         JnNSkym5gD+FG6mYgqO45HYyxufP0FEZ/tXH8ThMLgrfd46O9zRIul5hOVF6WCd1DO1j
-         v7JaXySIZKWqumI5wpFk8KjawIZy9qaa89/GieWWi5BaUu+/B94CUjc1bou2LZIvRcQS
-         FQEw==
-X-Gm-Message-State: APjAAAVaaf2yRRGskg00HRUTSSBJOP2eBLA72ep+Gm7E0zb/B+cMMPST
-        y615IyYFbX4S6ABx6ikViZsc7A==
-X-Google-Smtp-Source: APXvYqwfIV3uzdikoiQkcpfkAzGQuZULk1koZ3M8WX2S/VzCwOcD7E1RvKXMwMxHjNC5GYXTXUVh1Q==
-X-Received: by 2002:a92:680e:: with SMTP id d14mr26576786ilc.224.1574553000174;
-        Sat, 23 Nov 2019 15:50:00 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id g12sm596204ion.82.2019.11.23.15.49.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 15:49:59 -0800 (PST)
-Date:   Sat, 23 Nov 2019 15:49:56 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Dan Williams <dan.j.williams@intel.com>
-cc:     Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, krste@berkeley.edu,
-        waterman@eecs.berkeley.edu,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] Documentation: riscv: add patch acceptance guidelines
-In-Reply-To: <CAPcyv4hmagCVLCTYmmv0U8-YD5BEoQPV=wtm5hbp3MxqwZRQUA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1911231546450.14532@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1911221842200.14532@viisi.sifive.com> <20191123092552.1438bc95@lwn.net> <alpine.DEB.2.21.9999.1911231523390.14532@viisi.sifive.com> <CAPcyv4hmagCVLCTYmmv0U8-YD5BEoQPV=wtm5hbp3MxqwZRQUA@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sat, 23 Nov 2019 18:51:22 -0500
+Received: from mail-eopbgr800135.outbound.protection.outlook.com ([40.107.80.135]:29472
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726759AbfKWXvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 18:51:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cESjzx+jltVYNz8+f5CDfp5ysh6yQT2s1XEymXhrXLpLXw2Cn21JyDgYmBh4bHUGyFk8xvC55HugKpmrOcVIBnwsGR9NUQ/HSsYn/exZSTBTXtVsS4uFKqmI+jKKDOwm6KUHMUEMCgoPDPi2mvxNLnkq1N3py0iNfunjCEQ5sEU95E6ggtnNKTaJI+TmQ6Waw2eKNE0DawVhF6c85kaWR7J0lwAKs+UmAWKcFtQr8+L9qe77PceMlbwsth3eC9Jx89Ou+1cSrK4oKdTB4KfpSKlm1Mq/Hk50NBtPUtoEJz2Sp58m5QdhCP33F1KAKP7npnaM3EiTsVlCM/1swxMwJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPoyttWIAfCmtSiJzboeCBHnD1CjPwsA9DGskvn+/O0=;
+ b=OxznLbviZyMzBS9YF4zQLhy+q1K1vgrKIGWyTX5Bn8huzAhi4FdK6ds0f6ZAx3xPuwIjbuf/fay1ysA9KuPHigO9TqU73ex18Dm13hyrVpws+Aqizkb3y6tFhjQ6byhleQRquE+1LwzmgF57RS13EeEfpTCPN7cDUegEV/C+3aeNC1D/HLcOyi03A8cxC6pv14W2i7gRUcXmTqTF6147r8Wb5OfCaqOhaDNSfOkm1XzfCNdKdzTkd7bqHmCDN90IhsoNZY4iaO2YLGipgeQ+iLzhWBDFsN9w24+jCG2ge7fP0DrjfOOhN0Mhy75I2rKdvsmi1QG+Oh+P4LdwEtMBjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPoyttWIAfCmtSiJzboeCBHnD1CjPwsA9DGskvn+/O0=;
+ b=ZNI2h/psy4puvKiMYW+jfOOeA4QB+WCND/PzWvMMvuNGkU7e3zbgnwm29AaCeKrvR1OH+mJGVuTXZSuxyK88IgPZtzbqRgnL4EVa2M55ogPV51BMDR3uYkVTUsh8/7UnO75fRxDSZspQJbMpk0Flc8qv8NuDQngsGkzkhejDkGE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1180.namprd21.prod.outlook.com (20.179.48.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.3; Sat, 23 Nov 2019 23:51:18 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::a8b2:cdb:8839:3031]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::a8b2:cdb:8839:3031%4]) with mapi id 15.20.2495.010; Sat, 23 Nov 2019
+ 23:51:18 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] hv_netvsc: make recording RSS hash depend on feature flag
+Date:   Sat, 23 Nov 2019 15:50:17 -0800
+Message-Id: <1574553017-87877-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR19CA0024.namprd19.prod.outlook.com
+ (2603:10b6:300:d4::34) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR19CA0024.namprd19.prod.outlook.com (2603:10b6:300:d4::34) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Sat, 23 Nov 2019 23:51:17 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 48485434-9539-4f9a-3ac0-08d7707008cf
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1180:|DM6PR21MB1180:|DM6PR21MB1180:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM6PR21MB1180D4AEB0B6051F2856D37EAC480@DM6PR21MB1180.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-Forefront-PRVS: 0230B09AC4
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39860400002)(136003)(199004)(189003)(8676002)(305945005)(50226002)(16526019)(186003)(6436002)(6506007)(4326008)(36756003)(22452003)(52116002)(51416003)(6486002)(26005)(48376002)(956004)(386003)(66476007)(2616005)(50466002)(16586007)(66946007)(316002)(10090500001)(47776003)(2906002)(66066001)(4720700003)(8936002)(6116002)(10290500003)(478600001)(3846002)(81166006)(66556008)(7736002)(25786009)(6512007)(81156014)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1180;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 521CIfvlXbHlFwWdZkDLqx9OxEStgB3PkJJBmTwsztAPvK/mELqDmSmcWGew0QKRAO6kyZMZP0aNcPZkXGKSU4ZRONx8RZgcE0BEAxL7GlnLaDiruNDP2ZKzFTJQTzgBzdKwGZzMfM1592qYzgp5HpRt8dMAZNstT6wrchHNuNc0gKUnXSlLF5ewoRVJ/6rg+3bnphj4nRdA/orZpFCM/PQlTCJ/o3t3uEhSrt3BP8zE3t9OLYYqksq7niJWBeIlUIKZxWATe/WXxw0dXK5ldLClRZ1OyT1sbNIUCPeohiDaw9cBX4AyoPAba4W+Ca79lXBM+Rk6mJm3KiOrKDT1XpYnKIh6dxvNNKWQtjGIFHE1RUEYOtJzuJCENXReX2Y5AilW0Cowhnh7MklSnV7uuGOzpXGXBtbdclDA44ChOHmyo9+0tiAG0TIfcUrFZr7n
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48485434-9539-4f9a-3ac0-08d7707008cf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2019 23:51:18.6169
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 51zfMmdZ8SX9w5M/4+VmVUhENCBO0eMABkNk+vgTusLbrBCVp/7VGngYipHpRh/YduRGSjqiabvrxnolp8iY+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Nov 2019, Dan Williams wrote:
+From: Stephen Hemminger <sthemmin@microsoft.com>
 
-> On Sat, Nov 23, 2019 at 3:27 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> > It looks like the main thing that would be needed would be to add the P:
-> > entry with the path to our patch-acceptance.rst file into the MAINTAINERS
-> > file, after Dan's patches are merged.
-> >
-> > Of course, we could also add more information about sparse cleanliness,
-> > checkpatch warnings, etc., but we mostly try to follow the common kernel
-> > guidelines there.
-> 
-> Those could likely be automated to highlight warnings that a given
-> subsystem treats as errors, but wherever possible my expectation is
-> that the policy should be specified globally.
-> 
-> > Is that summary accurate, or did I miss some additional steps?
-> 
-> I'll go fixup and get the into patch submitted today then we can go from 
-> there.
+The recording of RSS hash should be controlled by NETIF_F_RXHASH.
 
-I guess I'm still looking for guidance along the lines of my earlier 
-question: what (if anything) would we need to change about the current 
-patch to have it work with the maintainer profile documentation (beyond 
-the "P:" entry in MAINTAINERS) ?
+Fixes: 1fac7ca4e63b ("hv_netvsc: record hardware hash in skb")
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ drivers/net/hyperv/hyperv_net.h   | 3 ++-
+ drivers/net/hyperv/netvsc_drv.c   | 2 +-
+ drivers/net/hyperv/rndis_filter.c | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 4209d1cf57f6..0be5ce90dc7c 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -822,7 +822,8 @@ struct nvsp_message {
+ 
+ #define NETVSC_SUPPORTED_HW_FEATURES (NETIF_F_RXCSUM | NETIF_F_IP_CSUM | \
+ 				      NETIF_F_TSO | NETIF_F_IPV6_CSUM | \
+-				      NETIF_F_TSO6 | NETIF_F_LRO | NETIF_F_SG)
++				      NETIF_F_TSO6 | NETIF_F_LRO | \
++				      NETIF_F_SG | NETIF_F_RXHASH)
+ 
+ #define VRSS_SEND_TAB_SIZE 16  /* must be power of 2 */
+ #define VRSS_CHANNEL_MAX 64
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 5fa5c49e481b..868e22e286ca 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -803,7 +803,7 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
+ 			skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 	}
+ 
+-	if (hash_info)
++	if (hash_info && (net->features & NETIF_F_RXHASH))
+ 		skb_set_hash(skb, *hash_info, PKT_HASH_TYPE_L4);
+ 
+ 	if (vlan) {
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index c06178380ac8..206b4e77eaf0 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1214,6 +1214,7 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
+ 	/* Compute tx offload settings based on hw capabilities */
+ 	net->hw_features |= NETIF_F_RXCSUM;
+ 	net->hw_features |= NETIF_F_SG;
++	net->hw_features |= NETIF_F_RXHASH;
+ 
+ 	if ((hwcaps.csum.ip4_txcsum & NDIS_TXCSUM_ALL_TCP4) == NDIS_TXCSUM_ALL_TCP4) {
+ 		/* Can checksum TCP */
+-- 
+2.20.1
 
-- Paul
