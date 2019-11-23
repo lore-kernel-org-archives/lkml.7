@@ -2,68 +2,195 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405E1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D5DC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214B42070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7722071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574527200;
+	bh=vnz+Jf99O/Ww0zYOkfsxikYGzP4iHYLJ6JSbM+xenaM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0yAulOxWifONe33H4TzTQg/qVyy3QlCVVrHlmQhKMzVqpMSB87PbBEhJR4cXKqZkw
+	 sY9o+OzGGqplheC12SH3dM3OGulNo/Q+b1AnWV8xmF/kYWiO2q3hlsqRqaCZnFYjXk
+	 DDPRIiylLekFAhF/yri0Er8yEp2xRJrlXMyns6p4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfKWQj1 (ORCPT
+        id S1726952AbfKWQj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:39:27 -0500
-Received: from ms.lwn.net ([45.79.88.28]:47560 "EHLO ms.lwn.net"
+        Sat, 23 Nov 2019 11:39:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbfKWQj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 11:39:26 -0500
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1726762AbfKWQj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 11:39:57 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D99A0867;
-        Sat, 23 Nov 2019 16:39:25 +0000 (UTC)
-Date:   Sat, 23 Nov 2019 09:39:24 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, krste@berkeley.edu,
-        waterman@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH] Documentation: riscv: add patch acceptance guidelines
-Message-ID: <20191123092552.1438bc95@lwn.net>
-In-Reply-To: <alpine.DEB.2.21.9999.1911221842200.14532@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1911221842200.14532@viisi.sifive.com>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8912070E;
+        Sat, 23 Nov 2019 16:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574527196;
+        bh=vnz+Jf99O/Ww0zYOkfsxikYGzP4iHYLJ6JSbM+xenaM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RCjuMk8jp8ljER3h05cd+zBv3ugxKjB4RTgL/J/EecqJ70vVSGeIm7DQECV6Vphvf
+         MKZIuekQugmD3Ic6e07gBE9EZmpc6HGEUK/FIkolBeLfxnez+FptrY8WBcFK9U6tFX
+         O3It0n3sqsbDMe1KVkwh//+OONx3Im4kQjd6YZAw=
+Date:   Sat, 23 Nov 2019 16:39:52 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>
+Subject: Re: [PATCH] iio: adc: ad7887: Cleanup channel assignment
+Message-ID: <20191123163952.2667157b@archlinux>
+In-Reply-To: <20191118150927.19411-1-beniamin.bia@analog.com>
+References: <20191118150927.19411-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 18:44:39 -0800 (PST)
-Paul Walmsley <paul.walmsley@sifive.com> wrote:
+On Mon, 18 Nov 2019 17:09:27 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-> Formalize, in kernel documentation, the patch acceptance policy for 
-> arch/riscv.  In summary, it states that as maintainers, we plan to only 
-> accept patches for new modules or extensions that have been frozen or 
-> ratified by the RISC-V Foundation.
+> The channels specification assignment in chip info was simplified.
+> This patch makes supporting other devices by this driver easier.
 > 
-> We've been following these guidelines for the past few months.  In the
-> meantime, we've received quite a bit of feedback that it would be
-> helpful to have these guidelines formally documented.
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 
-If at all possible, I would really love to have this be part of the
-maintainer profile documentation:
+I'm not entirely keen on the trick with channel ordering to support
+the use of the second input as vref.
 
-	https://lwn.net/ml/linux-kernel/156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com/
+I would just pay the cost of having two different iio_chan_spec
+arrays and pick the relevant one.
 
-...if we could only (hint...CC'd...) get Dan to resubmit it with the
-needed tweaks so it could be merged...
+Jonathan
 
-Thanks,
 
-jon
+> ---
+>  drivers/iio/adc/ad7887.c | 71 ++++++++++++++++++----------------------
+>  1 file changed, 31 insertions(+), 40 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7887.c b/drivers/iio/adc/ad7887.c
+> index 6223043e432b..65d1338d9392 100644
+> --- a/drivers/iio/adc/ad7887.c
+> +++ b/drivers/iio/adc/ad7887.c
+> @@ -43,11 +43,12 @@ enum ad7887_channels {
+>  /**
+>   * struct ad7887_chip_info - chip specifc information
+>   * @int_vref_mv:	the internal reference voltage
+> - * @channel:		channel specification
+> + * @channels:		channels specification
+>   */
+>  struct ad7887_chip_info {
+>  	u16				int_vref_mv;
+> -	struct iio_chan_spec		channel[3];
+> +	const struct iio_chan_spec	*channels;
+> +	unsigned int			num_channels;
+>  };
+>  
+>  struct ad7887_state {
+> @@ -183,45 +184,36 @@ static int ad7887_read_raw(struct iio_dev *indio_dev,
+>  	return -EINVAL;
+>  }
+>  
+> +#define AD7887_CHANNEL(x) { \
+> +	.type = IIO_VOLTAGE, \
+> +	.indexed = 1, \
+> +	.channel = (x), \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+> +	.address = (x), \
+> +	.scan_index = (x), \
+> +	.scan_type = { \
+> +		.sign = 'u', \
+> +		.realbits = 12, \
+> +		.storagebits = 16, \
+> +		.shift = 0, \
+> +		.endianness = IIO_BE, \
+> +	}, \
+> +}
+> +
+> +static const struct iio_chan_spec ad7887_channels[] = {
+> +	IIO_CHAN_SOFT_TIMESTAMP(8),
+> +	AD7887_CHANNEL(0),
+> +	AD7887_CHANNEL(1),
+> +};
+>  
+>  static const struct ad7887_chip_info ad7887_chip_info_tbl[] = {
+>  	/*
+>  	 * More devices added in future
+>  	 */
+>  	[ID_AD7887] = {
+> -		.channel[0] = {
+> -			.type = IIO_VOLTAGE,
+> -			.indexed = 1,
+> -			.channel = 1,
+> -			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> -			.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> -			.address = 1,
+> -			.scan_index = 1,
+> -			.scan_type = {
+> -				.sign = 'u',
+> -				.realbits = 12,
+> -				.storagebits = 16,
+> -				.shift = 0,
+> -				.endianness = IIO_BE,
+> -			},
+> -		},
+> -		.channel[1] = {
+> -			.type = IIO_VOLTAGE,
+> -			.indexed = 1,
+> -			.channel = 0,
+> -			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> -			.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> -			.address = 0,
+> -			.scan_index = 0,
+> -			.scan_type = {
+> -				.sign = 'u',
+> -				.realbits = 12,
+> -				.storagebits = 16,
+> -				.shift = 0,
+> -				.endianness = IIO_BE,
+> -			},
+> -		},
+> -		.channel[2] = IIO_CHAN_SOFT_TIMESTAMP(2),
+> +		.channels = ad7887_channels,
+> +		.num_channels = ARRAY_SIZE(ad7887_channels),
+>  		.int_vref_mv = 2500,
+>  	},
+>  };
+> @@ -284,6 +276,9 @@ static int ad7887_probe(struct spi_device *spi)
+>  	spi_message_init(&st->msg[AD7887_CH0]);
+>  	spi_message_add_tail(&st->xfer[0], &st->msg[AD7887_CH0]);
+>  
+> +	indio_dev->channels = st->chip_info->channels;
+> +	indio_dev->num_channels = st->chip_info->num_channels;
+> +
+>  	if (pdata && pdata->en_dual) {
+>  		st->tx_cmd_buf[2] = AD7887_CH_AIN1 | mode;
+>  
+> @@ -305,12 +300,8 @@ static int ad7887_probe(struct spi_device *spi)
+>  
+>  		spi_message_init(&st->msg[AD7887_CH1]);
+>  		spi_message_add_tail(&st->xfer[3], &st->msg[AD7887_CH1]);
+> -
+> -		indio_dev->channels = st->chip_info->channel;
+> -		indio_dev->num_channels = 3;
+>  	} else {
+> -		indio_dev->channels = &st->chip_info->channel[1];
+> -		indio_dev->num_channels = 2;
+> +		indio_dev->num_channels = st->chip_info->num_channels - 1;
+>  	}
+>  
+>  	ret = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
+
