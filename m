@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB29C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A25C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F712084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E959320870
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKWIPP (ORCPT
+        id S1727073AbfKWIPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 03:15:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36255 "EHLO
+        Sat, 23 Nov 2019 03:15:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36289 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKWIPM (ORCPT
+        with ESMTP id S1726865AbfKWIPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 03:15:12 -0500
+        Sat, 23 Nov 2019 03:15:15 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYQZK-0002WR-Ge; Sat, 23 Nov 2019 09:15:02 +0100
+        id 1iYQZO-0002a6-Iy; Sat, 23 Nov 2019 09:15:06 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D30691C1ACC;
-        Sat, 23 Nov 2019 09:15:00 +0100 (CET)
-Date:   Sat, 23 Nov 2019 08:15:00 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C97361C1AD4;
+        Sat, 23 Nov 2019 09:15:01 +0100 (CET)
+Date:   Sat, 23 Nov 2019 08:15:01 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf auxtrace: Add support for queuing AUX area samples
+Subject: [tip: perf/core] perf auxtrace: Add support for AUX area sample recording
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191115124225.5247-12-adrian.hunter@intel.com>
-References: <20191115124225.5247-12-adrian.hunter@intel.com>
+In-Reply-To: <20191115124225.5247-6-adrian.hunter@intel.com>
+References: <20191115124225.5247-6-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157449690079.21853.17585003631960442237.tip-bot2@tip-bot2>
+Message-ID: <157449690175.21853.6088707204491010593.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,191 +57,238 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     ac2f445fc8989e152dc35eb7af368fd34b92e48a
-Gitweb:        https://git.kernel.org/tip/ac2f445fc8989e152dc35eb7af368fd34b92e48a
+Commit-ID:     f0bb7ee8530a07d3c23bd2e06984796e66cfbcf1
+Gitweb:        https://git.kernel.org/tip/f0bb7ee8530a07d3c23bd2e06984796e66cfbcf1
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Fri, 15 Nov 2019 14:42:21 +02:00
+AuthorDate:    Fri, 15 Nov 2019 14:42:15 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Fri, 22 Nov 2019 10:48:13 -03:00
 
-perf auxtrace: Add support for queuing AUX area samples
+perf auxtrace: Add support for AUX area sample recording
 
-Add functions to queue AUX area samples in advance
-(auxtrace_queue_data()) or individually (auxtrace_queues__add_sample())
-or find out what queue a sample belongs on
-(auxtrace_queues__sample_queue()).
+Add support for parsing and validating AUX area sample options. At
+present, the only option is the sample size, but it is also necessary to
+ensure that events are in a group with an AUX area event as the leader.
 
-auxtrace_queue_data() can also queue snapshot data which keeps snapshots
-and samples ordered with respect to each other in case support for that
-is desired.
+Committer note:
+
+Add missing 'static inline' in front of auxtrace_parse_sample_options()
+for when we don't HAVE_AUXTRACE_SUPPORT.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-12-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/util/auxtrace.c | 107 ++++++++++++++++++++++++++++++++++++-
- tools/perf/util/auxtrace.h |  15 +++++-
- 2 files changed, 122 insertions(+)
+ tools/perf/util/auxtrace.h |  17 ++++++-
+ tools/perf/util/pmu.h      |   1 +-
+ tools/perf/util/record.h   |   2 +-
+ 4 files changed, 127 insertions(+)
 
 diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 4f5c5fe..eb087e7 100644
+index 263d1d9..51fbe01 100644
 --- a/tools/perf/util/auxtrace.c
 +++ b/tools/perf/util/auxtrace.c
-@@ -1004,6 +1004,113 @@ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
- 	}
+@@ -69,6 +69,13 @@ static struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel)
+ 	return pmu;
  }
  
-+struct auxtrace_queue *auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
-+						     struct perf_sample *sample,
-+						     struct perf_session *session)
++static bool perf_evsel__is_aux_event(struct evsel *evsel)
 +{
-+	struct perf_sample_id *sid;
-+	unsigned int idx;
-+	u64 id;
++	struct perf_pmu *pmu = perf_evsel__find_pmu(evsel);
 +
-+	id = sample->id;
-+	if (!id)
-+		return NULL;
-+
-+	sid = perf_evlist__id2sid(session->evlist, id);
-+	if (!sid)
-+		return NULL;
-+
-+	idx = sid->idx;
-+
-+	if (idx >= queues->nr_queues)
-+		return NULL;
-+
-+	return &queues->queue_array[idx];
++	return pmu && pmu->auxtrace;
 +}
 +
-+int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
-+				struct perf_session *session,
-+				struct perf_sample *sample, u64 data_offset,
-+				u64 reference)
+ static bool auxtrace__dont_decode(struct perf_session *session)
+ {
+ 	return !session->itrace_synth_opts ||
+@@ -609,6 +616,106 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 	return -EINVAL;
+ }
+ 
++/*
++ * Event record size is 16-bit which results in a maximum size of about 64KiB.
++ * Allow about 4KiB for the rest of the sample record, to give a maximum
++ * AUX area sample size of 60KiB.
++ */
++#define MAX_AUX_SAMPLE_SIZE (60 * 1024)
++
++/* Arbitrary default size if no other default provided */
++#define DEFAULT_AUX_SAMPLE_SIZE (4 * 1024)
++
++static int auxtrace_validate_aux_sample_size(struct evlist *evlist,
++					     struct record_opts *opts)
 +{
-+	struct auxtrace_buffer buffer = {
-+		.pid = -1,
-+		.data_offset = data_offset,
-+		.reference = reference,
-+		.size = sample->aux_sample.size,
-+	};
-+	struct perf_sample_id *sid;
-+	u64 id = sample->id;
-+	unsigned int idx;
++	struct evsel *evsel;
++	bool has_aux_leader = false;
++	u32 sz;
 +
-+	if (!id)
-+		return -EINVAL;
-+
-+	sid = perf_evlist__id2sid(session->evlist, id);
-+	if (!sid)
-+		return -ENOENT;
-+
-+	idx = sid->idx;
-+	buffer.tid = sid->tid;
-+	buffer.cpu = sid->cpu;
-+
-+	return auxtrace_queues__add_buffer(queues, session, idx, &buffer, NULL);
-+}
-+
-+struct queue_data {
-+	bool samples;
-+	bool events;
-+};
-+
-+static int auxtrace_queue_data_cb(struct perf_session *session,
-+				  union perf_event *event, u64 offset,
-+				  void *data)
-+{
-+	struct queue_data *qd = data;
-+	struct perf_sample sample;
-+	int err;
-+
-+	if (qd->events && event->header.type == PERF_RECORD_AUXTRACE) {
-+		if (event->header.size < sizeof(struct perf_record_auxtrace))
++	evlist__for_each_entry(evlist, evsel) {
++		sz = evsel->core.attr.aux_sample_size;
++		if (perf_evsel__is_group_leader(evsel)) {
++			has_aux_leader = perf_evsel__is_aux_event(evsel);
++			if (sz) {
++				if (has_aux_leader)
++					pr_err("Cannot add AUX area sampling to an AUX area event\n");
++				else
++					pr_err("Cannot add AUX area sampling to a group leader\n");
++				return -EINVAL;
++			}
++		}
++		if (sz > MAX_AUX_SAMPLE_SIZE) {
++			pr_err("AUX area sample size %u too big, max. %d\n",
++			       sz, MAX_AUX_SAMPLE_SIZE);
 +			return -EINVAL;
-+		offset += event->header.size;
-+		return session->auxtrace->queue_data(session, NULL, event,
-+						     offset);
++		}
++		if (sz) {
++			if (!has_aux_leader) {
++				pr_err("Cannot add AUX area sampling because group leader is not an AUX area event\n");
++				return -EINVAL;
++			}
++			perf_evsel__set_sample_bit(evsel, AUX);
++			opts->auxtrace_sample_mode = true;
++		} else {
++			perf_evsel__reset_sample_bit(evsel, AUX);
++		}
 +	}
 +
-+	if (!qd->samples || event->header.type != PERF_RECORD_SAMPLE)
-+		return 0;
-+
-+	err = perf_evlist__parse_sample(session->evlist, event, &sample);
-+	if (err)
-+		return err;
-+
-+	if (!sample.aux_sample.size)
-+		return 0;
-+
-+	offset += sample.aux_sample.data - (void *)event;
-+
-+	return session->auxtrace->queue_data(session, &sample, NULL, offset);
-+}
-+
-+int auxtrace_queue_data(struct perf_session *session, bool samples, bool events)
-+{
-+	struct queue_data qd = {
-+		.samples = samples,
-+		.events = events,
-+	};
-+
-+	if (auxtrace__dont_decode(session))
-+		return 0;
-+
-+	if (!session->auxtrace || !session->auxtrace->queue_data)
++	if (!opts->auxtrace_sample_mode) {
++		pr_err("AUX area sampling requires an AUX area event group leader plus other events to which to add samples\n");
 +		return -EINVAL;
++	}
 +
-+	return perf_session__peek_events(session, session->header.data_offset,
-+					 session->header.data_size,
-+					 auxtrace_queue_data_cb, &qd);
++	if (!perf_can_aux_sample()) {
++		pr_err("AUX area sampling is not supported by kernel\n");
++		return -EINVAL;
++	}
++
++	return 0;
 +}
 +
- void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd)
++int auxtrace_parse_sample_options(struct auxtrace_record *itr,
++				  struct evlist *evlist,
++				  struct record_opts *opts, const char *str)
++{
++	bool has_aux_leader = false;
++	struct evsel *evsel;
++	char *endptr;
++	unsigned long sz;
++
++	if (!str)
++		return 0;
++
++	if (!itr) {
++		pr_err("No AUX area event to sample\n");
++		return -EINVAL;
++	}
++
++	sz = strtoul(str, &endptr, 0);
++	if (*endptr || sz > UINT_MAX) {
++		pr_err("Bad AUX area sampling option: '%s'\n", str);
++		return -EINVAL;
++	}
++
++	if (!sz)
++		sz = itr->default_aux_sample_size;
++
++	if (!sz)
++		sz = DEFAULT_AUX_SAMPLE_SIZE;
++
++	/* Set aux_sample_size based on --aux-sample option */
++	evlist__for_each_entry(evlist, evsel) {
++		if (perf_evsel__is_group_leader(evsel)) {
++			has_aux_leader = perf_evsel__is_aux_event(evsel);
++		} else if (has_aux_leader) {
++			evsel->core.attr.aux_sample_size = sz;
++		}
++	}
++
++	return auxtrace_validate_aux_sample_size(evlist, opts);
++}
++
+ struct auxtrace_record *__weak
+ auxtrace_record__init(struct evlist *evlist __maybe_unused, int *err)
  {
- 	size_t adj = buffer->data_offset & (page_size - 1);
 diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 4a8ac7d..749d72c 100644
+index 3f4aa54..ab48de1 100644
 --- a/tools/perf/util/auxtrace.h
 +++ b/tools/perf/util/auxtrace.h
-@@ -141,6 +141,8 @@ struct auxtrace_index {
-  * struct auxtrace - session callbacks to allow AUX area data decoding.
-  * @process_event: lets the decoder see all session events
-  * @process_auxtrace_event: process a PERF_RECORD_AUXTRACE event
-+ * @queue_data: queue an AUX sample or PERF_RECORD_AUXTRACE event for later
-+ *              processing
-  * @dump_auxtrace_sample: dump AUX area sample data
-  * @flush_events: process any remaining data
-  * @free_events: free resources associated with event processing
-@@ -154,6 +156,9 @@ struct auxtrace {
- 	int (*process_auxtrace_event)(struct perf_session *session,
- 				      union perf_event *event,
- 				      struct perf_tool *tool);
-+	int (*queue_data)(struct perf_session *session,
-+			  struct perf_sample *sample, union perf_event *event,
-+			  u64 data_offset);
- 	void (*dump_auxtrace_sample)(struct perf_session *session,
- 				     struct perf_sample *sample);
- 	int (*flush_events)(struct perf_session *session,
-@@ -467,9 +472,19 @@ int auxtrace_queues__add_event(struct auxtrace_queues *queues,
- 			       struct perf_session *session,
- 			       union perf_event *event, off_t data_offset,
- 			       struct auxtrace_buffer **buffer_ptr);
-+struct auxtrace_queue *
-+auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
-+			      struct perf_sample *sample,
-+			      struct perf_session *session);
-+int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
-+				struct perf_session *session,
-+				struct perf_sample *sample, u64 data_offset,
-+				u64 reference);
- void auxtrace_queues__free(struct auxtrace_queues *queues);
- int auxtrace_queues__process_index(struct auxtrace_queues *queues,
- 				   struct perf_session *session);
-+int auxtrace_queue_data(struct perf_session *session, bool samples,
-+			bool events);
- struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
- 					      struct auxtrace_buffer *buffer);
- void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd);
+@@ -313,6 +313,7 @@ struct auxtrace_mmap_params {
+  * @reference: provide a 64-bit reference number for auxtrace_event
+  * @read_finish: called after reading from an auxtrace mmap
+  * @alignment: alignment (if any) for AUX area data
++ * @default_aux_sample_size: default sample size for --aux sample option
+  */
+ struct auxtrace_record {
+ 	int (*recording_options)(struct auxtrace_record *itr,
+@@ -336,6 +337,7 @@ struct auxtrace_record {
+ 	u64 (*reference)(struct auxtrace_record *itr);
+ 	int (*read_finish)(struct auxtrace_record *itr, int idx);
+ 	unsigned int alignment;
++	unsigned int default_aux_sample_size;
+ };
+ 
+ /**
+@@ -498,6 +500,9 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 				    struct record_opts *opts,
+ 				    const char *str);
++int auxtrace_parse_sample_options(struct auxtrace_record *itr,
++				  struct evlist *evlist,
++				  struct record_opts *opts, const char *str);
+ int auxtrace_record__options(struct auxtrace_record *itr,
+ 			     struct evlist *evlist,
+ 			     struct record_opts *opts);
+@@ -649,6 +654,18 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr __maybe_unused,
+ }
+ 
+ static inline
++int auxtrace_parse_sample_options(struct auxtrace_record *itr __maybe_unused,
++				  struct evlist *evlist __maybe_unused,
++				  struct record_opts *opts __maybe_unused,
++				  const char *str)
++{
++	if (!str)
++		return 0;
++	pr_err("AUX area tracing not supported\n");
++	return -EINVAL;
++}
++
++static inline
+ int auxtrace__process_event(struct perf_session *session __maybe_unused,
+ 			    union perf_event *event __maybe_unused,
+ 			    struct perf_sample *sample __maybe_unused,
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 3e8cd31..2eb7a70 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -26,6 +26,7 @@ struct perf_pmu {
+ 	__u32 type;
+ 	bool selectable;
+ 	bool is_uncore;
++	bool auxtrace;
+ 	int max_precise;
+ 	struct perf_event_attr *default_config;
+ 	struct perf_cpu_map *cpus;
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 948bbcf..5421fd2 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -32,6 +32,7 @@ struct record_opts {
+ 	bool	      full_auxtrace;
+ 	bool	      auxtrace_snapshot_mode;
+ 	bool	      auxtrace_snapshot_on_exit;
++	bool	      auxtrace_sample_mode;
+ 	bool	      record_namespaces;
+ 	bool	      record_switch_events;
+ 	bool	      all_kernel;
+@@ -56,6 +57,7 @@ struct record_opts {
+ 	u64	      user_interval;
+ 	size_t	      auxtrace_snapshot_size;
+ 	const char    *auxtrace_snapshot_opts;
++	const char    *auxtrace_sample_opts;
+ 	bool	      sample_transaction;
+ 	unsigned      initial_delay;
+ 	bool	      use_clockid;
