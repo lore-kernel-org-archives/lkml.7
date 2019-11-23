@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD667C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9200CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E87320719
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0822071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 13:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="H7Kordq0"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NyXRf2mr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKWN2i (ORCPT
+        id S1726833AbfKWN2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 08:28:38 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:39539 "EHLO
+        Sat, 23 Nov 2019 08:28:36 -0500
+Received: from conuserg-10.nifty.com ([210.131.2.77]:39547 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfKWN2A (ORCPT
+        with ESMTP id S1726813AbfKWN2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 08:28:00 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id xANDRbkd000733;
-        Sat, 23 Nov 2019 22:27:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xANDRbkd000733
+        by conuserg-10.nifty.com with ESMTP id xANDRbkn000733;
+        Sat, 23 Nov 2019 22:27:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xANDRbkn000733
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574515660;
-        bh=TgBBfAjF1gkWIAkBRfUA0hcVefTdXQgpgZ7bt3b2OO4=;
+        s=dec2015msa; t=1574515665;
+        bh=nDLRImXyMlZ9Sa0C3TUQcIOX+p9zCip3EBLry72jMm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7Kordq0Z3UH2HxIwpMry7Xy/ka2OwWKrm8/MbDl8o+VMj6UepLQG0Im0Ge2986cn
-         LdjrPJvM9rw/X9NGSQXcA2zWxw5MlkTQhdSycp26sGeihRfHY/9nPY18veRTm50Tk6
-         uxP2eEJt9NInF+3HypKPbS8G1xTByQBIOM7ZIdenaLjWmyaKdgXNFbmXikWE2u40JF
-         uCGpo+RyQyfZ5yhhtfxj5W2XwztuW5wDUPlGUeFq5zzPsEHBfLTAfsJrBvYmEIr3WO
-         /n+0ONRE+pJiO2Su9xcXjlYRUEFd8r9t/E+7NcovY0LeHx9nLYwUbw3THUEbKkk/r8
-         eh+CNe5vWBn4g==
+        b=NyXRf2mr61YPIKX/D1c5VdBLre5GK/iwkCt/CzSlA9jOkVNB+Y6ic0XuFR2KR17yr
+         f+9dQuPGW5CiPdHgZfp2KJykooh8fWlgdA4o65ICk+wKjMJ7d9XOCuQIk6JoDO2ba7
+         3slvx8/uwMbimUgTO1HNFXZPxm6BAtx2O40WiI2MxQ29z26+KRFaaubLNt1KWlCLD5
+         raUEPQP8krxcqenzLnDA6V3kA2T5m8BPSuYv97Cv0ZR1/IauVqUOxZ7PIh4mPCL4TZ
+         J0LtmJ2O5j4xvVxxgTjGQoJ8pPMkzhr1Z5+2GAL91hZtd/wT4MzHf55zR2mtnjshH+
+         s3yLvNsFAwJ1Q==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/16] scripts/kallsyms: remove redundant is_arm_mapping_symbol()
-Date:   Sat, 23 Nov 2019 22:27:15 +0900
-Message-Id: <20191123132727.30151-5-yamada.masahiro@socionext.com>
+Subject: [PATCH 14/16] scripts/kallsyms: check no valid symbol earlier
+Date:   Sat, 23 Nov 2019 22:27:25 +0900
+Message-Id: <20191123132727.30151-15-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191123132727.30151-1-yamada.masahiro@socionext.com>
 References: <20191123132727.30151-1-yamada.masahiro@socionext.com>
@@ -53,56 +53,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 6f00df24ee39 ("[PATCH] Strip local symbols from kallsyms"),
-all symbols starting '$' are ignored.
-
-is_arm_mapping_symbol() particularly ignores $a, $t, etc. but it is
-redundant.
+insert_real_symbols_in_table() does not touch table_cnt, so the
+no valid symbol check can be moved before it.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/kallsyms.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ scripts/kallsyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 0959e1de381c..265475d3cffb 100644
+index 144f43363c4d..919cb45ce9db 100644
 --- a/scripts/kallsyms.c
 +++ b/scripts/kallsyms.c
-@@ -74,16 +74,6 @@ static void usage(void)
- 	exit(1);
+@@ -608,14 +608,14 @@ static void optimize_token_table(void)
+ {
+ 	build_initial_tok_table();
+ 
+-	insert_real_symbols_in_table();
+-
+ 	/* When valid symbol is not registered, exit to error */
+ 	if (!table_cnt) {
+ 		fprintf(stderr, "No valid symbol.\n");
+ 		exit(1);
+ 	}
+ 
++	insert_real_symbols_in_table();
++
+ 	optimize_result();
  }
  
--/*
-- * This ignores the intensely annoying "mapping symbols" found
-- * in ARM ELF files: $a, $t and $d.
-- */
--static int is_arm_mapping_symbol(const char *str)
--{
--	return str[0] == '$' && strchr("axtd", str[1])
--	       && (str[2] == '\0' || str[2] == '.');
--}
--
- static int check_symbol_range(const char *sym, unsigned long long addr,
- 			      struct addr_range *ranges, int entries)
- {
-@@ -139,10 +129,13 @@ static int read_symbol(FILE *in, struct sym_entry *s)
- 			return -1;
- 
- 	}
--	else if (toupper(stype) == 'U' ||
--		 is_arm_mapping_symbol(sym))
-+	else if (toupper(stype) == 'U')
- 		return -1;
--	/* exclude also MIPS ELF local symbols ($L123 instead of .L123) */
-+	/*
-+	 * Ignore generated symbols such as:
-+	 *  - mapping symbols in ARM ELF files ($a, $t, and $d)
-+	 *  - MIPS ELF local symbols ($L123 instead of .L123)
-+	 */
- 	else if (sym[0] == '$')
- 		return -1;
- 	/* exclude debugging symbols */
 -- 
 2.17.1
 
