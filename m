@@ -2,78 +2,82 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CB52070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468052070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 16:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="p3KMV9ET"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vIz5p4JA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfKWQFy (ORCPT
+        id S1727258AbfKWQFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:05:54 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49455 "EHLO
+        Sat, 23 Nov 2019 11:05:51 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49451 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfKWQFB (ORCPT
+        with ESMTP id S1726760AbfKWQFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 11:05:01 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xANG4l5H019106;
-        Sun, 24 Nov 2019 01:04:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5H019106
+        by conuserg-12.nifty.com with ESMTP id xANG4l5N019106;
+        Sun, 24 Nov 2019 01:04:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xANG4l5N019106
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574525087;
-        bh=H2tGAlg1+h2LUBCWdvUI7VC1wx4Pz4ZqLwpwarMDBnM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=p3KMV9ET1bL7+f4btul4W6Yb2Bt25+Uws5pwgXVILo/j4xfjk6z4NHQ1pUZR0M/jo
-         x00FmR+9UYPfD3KLE01mXOu9s1CBEeWGyCSGBQxqm6craegs40DuwJBLp2wdnqlvOb
-         cp8vOy2rwjbiiw+DYkkXMMh7p+/1zNhLiPQVtF7pkH4cBEqLTsyY4XNvGhNM+zHoPs
-         TlyzBmvA3Y7dhyhlD6ieun7owUTutLBpsKrVymaTPCkUUgi1WX1FV7G5zT1C3YXtEh
-         zC6jJ6opkXat8cBVs0Y1eD0t3GkAqVhIwwTDHplSro3jpMQo2pBFHDqP+pKX4UVrwK
-         Ncy+yQgb4T+2w==
+        s=dec2015msa; t=1574525090;
+        bh=lxCDJ/TzRamerzIHNtq7hRwp1rjH2y4uMZMCuV7ILJg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vIz5p4JABWr2ukQchXCPsHDjkp9lot5DP65ulXNWDBNpkGwr6lpe3sbq6Wq6h4yUI
+         CTPa8hO/pnYsxUW3L8QgPtlW9oPaihXyL0Gyu/M+fwXVTWl+KLNf2L6nkLWQSQvnca
+         MRU4S7CXku89X7hLsHUgk4eyDKmlJw2c011IZ2EHIMKrSgoolLDKHb+B4LqhxYC62V
+         znZ4YrKLWyyp0UEoJXzZHMoMBEyNxQx76fFp+X1gCzi1bHwQABbJjyNZZ/1bvIh002
+         I6SA7YmkDoKKqLoqCL2L2Uurq/XlPmQXHbR4DAygejWWjInPiAO4yvoJXfV4KbL4Zy
+         HI8R+OWSJ+hJQ==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/16] scripts/kallsyms: various cleanups and optimizations
-Date:   Sun, 24 Nov 2019 01:04:28 +0900
-Message-Id: <20191123160444.11251-1-yamada.masahiro@socionext.com>
+Subject: [PATCH v2 06/16] scripts/kallsyms: remove unneeded length check for prefix matching
+Date:   Sun, 24 Nov 2019 01:04:34 +0900
+Message-Id: <20191123160444.11251-7-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191123160444.11251-1-yamada.masahiro@socionext.com>
+References: <20191123160444.11251-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v2:
- - Add a new patch that shrinks the table before the sort.
+l <= strlen(sym_name) is unnecessary for prefix matching.
+strncmp() will do.
 
-Masahiro Yamada (16):
-  scripts/kallsyms: remove unneeded #ifndef ARRAY_SIZE
-  scripts/kallsyms: fix definitely-lost memory leak
-  scripts/kallsyms: shrink table before sorting it
-  scripts/kallsyms: set relative_base more effectively
-  scripts/kallsyms: remove redundant is_arm_mapping_symbol()
-  scripts/kallsyms: remove unneeded length check for prefix matching
-  scripts/kallsyms: add sym_name() to mitigate cast ugliness
-  scripts/kallsyms: replace prefix_underscores_count() with strspn()
-  scripts/kallsyms: make find_token() return (unsigned char *)
-  scripts/kallsyms: add const qualifiers where possible
-  scripts/kallsyms: skip ignored symbols very early
-  scripts/kallsyms: move more patterns to the ignored_prefixes array
-  scripts/kallsyms: move ignored symbol types to is_ignored_symbol()
-  scripts/kallsyms: make check_symbol_range() void function
-  scripts/kallsyms: put check_symbol_range() calls close together
-  scripts/kallsyms: remove redundant initializers
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
- scripts/kallsyms.c | 287 ++++++++++++++++++++++-----------------------
- 1 file changed, 142 insertions(+), 145 deletions(-)
+Changes in v2: None
 
+ scripts/kallsyms.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 14a50c8d3f34..a57636c6f84f 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -246,8 +246,7 @@ static int symbol_valid(struct sym_entry *s)
+ 	for (i = 0; special_prefixes[i]; i++) {
+ 		int l = strlen(special_prefixes[i]);
+ 
+-		if (l <= strlen(sym_name) &&
+-		    strncmp(sym_name, special_prefixes[i], l) == 0)
++		if (strncmp(sym_name, special_prefixes[i], l) == 0)
+ 			return 0;
+ 	}
+ 
 -- 
 2.17.1
 
