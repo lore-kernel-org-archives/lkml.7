@@ -2,106 +2,108 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B96C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD14C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9BB2071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574511719;
-	bh=86VxRLf1DOjqgJ9W3NpRGBGe6avDoiryNAD/GGEwBng=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=R1ye1hqndYsjTo2+fMd2OToCp+5PwV7z9yDeeGFzysPQIijhN3PC+GCPXuAHLwKBB
-	 MzdYvyjybN1N3b3t2nW5O2sbLZ1I60aOiR5wUBZBpYfd67kIJlMlQJzS3nwyO5Tjli
-	 qjMYeGWAq9jMWMRML25NhO9/f5LPGmacy8PhsHNk=
+	by mail.kernel.org (Postfix) with ESMTP id B3B8B2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 12:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMz9JSdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKWMV7 (ORCPT
+        id S1726744AbfKWMZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 07:21:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfKWMV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 07:21:58 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D957520714;
-        Sat, 23 Nov 2019 12:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574511717;
-        bh=86VxRLf1DOjqgJ9W3NpRGBGe6avDoiryNAD/GGEwBng=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uM6YXZuVtsJx6h1No1L+Z5LvqBTW+eeX7fYBKevgddmbMcKwprj/+KjXMc9U7VMq6
-         l0s86HUPyUmT9xuoxMZwcEj0E/gExiKYeOt2lRj8u5A/QA9JGS5VYjNJz18jeJdx1D
-         TTelovGtMF9vCV+4HH2PevldY2Qkjq7ZSFwlGZrY=
-Date:   Sat, 23 Nov 2019 12:21:53 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v2 00/11] iio: imu: adis: cleanup lock usage
-Message-ID: <20191123122153.76fbbc2a@archlinux>
-In-Reply-To: <20191122132421.5500-1-alexandru.ardelean@analog.com>
-References: <20191122132421.5500-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 23 Nov 2019 07:25:22 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33131 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfKWMZV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 07:25:21 -0500
+Received: by mail-lf1-f66.google.com with SMTP id d6so7568051lfc.0;
+        Sat, 23 Nov 2019 04:25:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9bPAlk5H2fFBXl0/0I4i5G2Ml8jO2DAr9KJz+P/jaNM=;
+        b=hMz9JSdbYfwAELa86xEHNr1O7KXvsq3+gr5CsMLffgYSX5wBrihmbcjyM160ayxp+b
+         jvO9CsICpjigJ1qkaLw+WOC/Um36kx6tqeUarGxd6zg2K2jCO1IX6VgiwjvzMn4pca33
+         F+Wsylt8DUg0XhXP7TB4kPMhe30T+Qy3YgvT+OmMeDh/seYThT51QvgdHC+nXIxaaimb
+         V2zgALbHaiuTEByoPz435dp8Rz8SJk0SKMWKHOKV5btevBv5sRh/AzuYn4WJcO98xVSf
+         I0M/6BOKane8ZrNwbsyRuS/VnyyG/Gw3164wiOtqzr+aefeozljJhkFQ3D9O1bdOgbMy
+         yXVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9bPAlk5H2fFBXl0/0I4i5G2Ml8jO2DAr9KJz+P/jaNM=;
+        b=Yrk4mdomM7z5KUnyJqZiPsSU54TlnICEoQfVa7S/FI4MEUaE6yrImhEB1xJ4dJVPNL
+         gJoqiKM3LdZZKe2TzMHg9GVnZX8Fr8+hNoT5fY7FHvI6vhHV/W/1sy4/L9UVOQPI9Hez
+         vYtZqtlikdTE8oaYJ/ll7EZ/k4xgAeiO+WPLMld3t4I+9Xj6zHbgGGCWiLHASN2DcU4u
+         tMPMElXrIne2HqUtwla8Fgsva1uAGumhyiyKJXkwpYkCP8qGrD7d+6ZYmRGgrYtRuu9+
+         FWkIpZZp3g1JBVfVNComsA1vL9yak/cWBQ7W/dNjbsDLNAUOMvmrV4kQesGV+KVdh54q
+         XjHw==
+X-Gm-Message-State: APjAAAWh5LvurVBlERBPTACpYYzwOnLncKfhnwACnMCdk7NVU2Mbdccs
+        n/5rqFaPNN5egLbjIC5O+LJSvv4kqpcrBWTv/AA=
+X-Google-Smtp-Source: APXvYqxT6NcFyrouxig79V/rPjUvKpEFe1luhwbSFTmicydLzuc/d74UY/7a8ZEjpUaytHq3g+1nOkyT7gKYrTj6kG4=
+X-Received: by 2002:ac2:533c:: with SMTP id f28mr9419931lfh.12.1574511919258;
+ Sat, 23 Nov 2019 04:25:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <59793b1ae533636528942b2cec14ec68b9830fcf.1574510649.git.agx@sigxcpu.org>
+In-Reply-To: <59793b1ae533636528942b2cec14ec68b9830fcf.1574510649.git.agx@sigxcpu.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 23 Nov 2019 09:25:21 -0300
+Message-ID: <CAOMZO5B_RWoUA3AX=ivAbEPFMQyD+WO8v1t20gZVef7zDz2YuQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add eLCDIF controller
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 15:24:10 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Hi Guido,
 
-> There is a general effort for cleaning up `indio_dev->mlock` usage in IIO
-> drivers. As part of that some ADIS drivers also need to do that.
-> 
-> This changeset does a little more, by reworking the `txrx_lock` from the
-> ADIS library to be used as a general `state_lock` to protect state between
-> consecutive read/write ops.
-> 
-> As such, all users of the ADIS lib have been verified to have their usage
-> of mlock checked. Some just needed the mlock usage removed (as done in
-> 
-> Changelog v1 -> v2:
-> * this patchset has got more testing in our repo since last time - also
->   found a bug in v1
-> * tested with `make ARCH=x86_64 allmodconfig` ; seems this is how Greg
->   found the issue and we didn't
-> 
-> Alexandru Ardelean (11):
->   iio: imu: adis: rename txrx_lock -> state_lock
->   iio: imu: adis: add unlocked read/write function versions
->   iio: imu: adis[16480]: group RW into a single lock in
->     adis_enable_irq()
->   iio: imu: adis: create an unlocked version of adis_check_status()
->   iio: imu: adis: create an unlocked version of adis_reset()
->   iio: imu: adis: protect initial startup routine with state lock
->   iio: imu: adis: group single conversion under a single state lock
->   iio: imu: adis16400: rework locks using ADIS library's state lock
->   iio: gyro: adis16136: rework locks using ADIS library's state lock
->   iio: imu: adis16480: use state lock for filter freq set
->   iio: gyro: adis16260: replace mlock with ADIS lib's state_lock
-> 
->  drivers/iio/gyro/adis16136.c  |  31 ++++---
->  drivers/iio/gyro/adis16260.c  |   6 +-
->  drivers/iio/imu/adis.c        |  94 +++++++++++----------
->  drivers/iio/imu/adis16400.c   |  51 ++++++------
->  drivers/iio/imu/adis16480.c   |  17 ++--
->  drivers/iio/imu/adis_buffer.c |   4 +-
->  include/linux/iio/imu/adis.h  | 150 ++++++++++++++++++++++++++++++++--
->  7 files changed, 258 insertions(+), 95 deletions(-)
-> 
+On Sat, Nov 23, 2019 at 9:09 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-All applied to the togreg branch of iio.git and pushed out as testing to
-get some build coverage.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
+dts/freescale/imx8mq.dtsi
+> index 7f9319452b58..00aa63bfd816 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -448,6 +448,23 @@
+>                                 fsl,sdma-ram-script-name =3D "imx/sdma/sd=
+ma-imx7d.bin";
+>                         };
+>
+> +                       lcdif: lcdif@30320000 {
+> +                               compatible =3D "fsl,imx8mq-lcdif", "fsl,i=
+mx28-lcdif";
 
-Thanks,
+fsl,imx8mq-lcdif should also be documented.
 
-Jonathan
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+
+Thanks
