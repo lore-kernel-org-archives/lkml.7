@@ -2,114 +2,138 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B26C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 17:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 17:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27672071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 17:09:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QD9WVRWY"
+	by mail.kernel.org (Postfix) with ESMTP id CBA6B20719
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 17:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfKWRJa (ORCPT
+        id S1726846AbfKWRSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 12:09:30 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36412 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKWRJ3 (ORCPT
+        Sat, 23 Nov 2019 12:18:15 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:33537 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726705AbfKWRSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 12:09:29 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k15so10958663lja.3;
-        Sat, 23 Nov 2019 09:09:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j83nFTVfMtqNZdG7bDqp5KO3Sy0JHsgiNUcUKGNznRw=;
-        b=QD9WVRWY3GaW82EE2neF3DzIT1RKW2ZHKO+Ruxgkcm81kVJ5vP93G8wMwXnoWYto2l
-         1765iU4Fe0Iqqo7yi5IrZemz9T/7ur7sFPk83r31GxXBwpmxt0lkKKWsBP9IM6UB9sRE
-         ZDCv+/k/PSg7i+XKEpJtjpBwyrrzpPn1uw3a4nY8wawKwN8Mss0m3y1moxz5dt/VaEby
-         fr3RxjePoV8r/cu9nIAJ/nx9f65uHEBpilkLJV79/AvMvGTzyIQdDATsXpaj/R293ews
-         1H1tVCWn1hXo1DfZEfC32POgm0txPTRb4b+wLdLszIhRPHpL/tvv+8uwLVaAyfmMGDlg
-         SgGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j83nFTVfMtqNZdG7bDqp5KO3Sy0JHsgiNUcUKGNznRw=;
-        b=fOQ0M6EocCe8kBmoxNoyFo7kGVKiWqtr533aZc+njf0p/0tM0uW0ITZuLkjuH1nAho
-         JMdbDq7V0mRzhEZLHX57/1lBdR7babzBbu2bfE/oyoAqnmDHf1FPegrDaGZi6f/phuD9
-         erSaQmqHQc0J5YOElcaeCailwCE6qRqdCQgo0vakeZoZvo3mQT+VvgZWeUs28lUXaXbG
-         /dBDp64mG1RKOc0mucW8qwxydXGPjLSgjgSPe1mhPL7eTt5uK2yoBygY+bjrQhBM65Iu
-         KtSvwJ7EiWBzHMhpjcrqqRrDJ/GAa9H4csDbtrpl9+dpAGYBtq10t8id6L4AJ5pfe9S0
-         cBhA==
-X-Gm-Message-State: APjAAAWm/QGnkU3HXF/+UdKQP0W7HaZvEy+RP1mJi/smCChDQaSEH1yR
-        ki2SL2MeduBt1xHbYptYTqbholmqfW8qv8sQZyNZejtC
-X-Google-Smtp-Source: APXvYqxQ019+TumcDMsHiVKMajnZaruf8NAyKLasRWn/pDaLWWYVx54vzDNZbe0VjeeZE8NSjNIYrlBnFYrI4ts/7UU=
-X-Received: by 2002:a2e:2c1a:: with SMTP id s26mr16591026ljs.239.1574528965875;
- Sat, 23 Nov 2019 09:09:25 -0800 (PST)
+        Sat, 23 Nov 2019 12:18:15 -0500
+Received: (qmail 23030 invoked by uid 500); 23 Nov 2019 12:18:14 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Nov 2019 12:18:14 -0500
+Date:   Sat, 23 Nov 2019 12:18:14 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
+cc:     arnd@arndb.de, <gregkh@linuxfoundation.org>,
+        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
+        <kstewart@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>,
+        <tglx@linutronix.de>, <viro@zeniv.linux.org.uk>,
+        <zaitcev@redhat.com>
+Subject: Re: Re: possible deadlock in mon_bin_vma_fault
+In-Reply-To: <000000000000c789960597f6b88b@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911231212330.22374-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <59793b1ae533636528942b2cec14ec68b9830fcf.1574510649.git.agx@sigxcpu.org>
-In-Reply-To: <59793b1ae533636528942b2cec14ec68b9830fcf.1574510649.git.agx@sigxcpu.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sat, 23 Nov 2019 14:09:28 -0300
-Message-ID: <CAOMZO5DjXfSoWRV-6pvAD+nwXLRAxRASZOsOwLFbsxkNwTUxaw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add eLCDIF controller
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 9:09 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
->
-> Add a node for the eLCDIF controller, "disabled" by default.
->
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> ---
-> With some minimal support on imx8mq we might as well add it to the DT
->
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi
-> index 7f9319452b58..00aa63bfd816 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -448,6 +448,23 @@
->                                 fsl,sdma-ram-script-name =3D "imx/sdma/sd=
-ma-imx7d.bin";
->                         };
->
-> +                       lcdif: lcdif@30320000 {
+On Fri, 22 Nov 2019, syzbot wrote:
 
-Forgot to say that generic node names are preferred, so maybe:
+> > #syz test: linux-4.19.y f6e27dbb1afa
+> 
+> "linux-4.19.y" does not look like a valid git repo address.
 
-lcdif: lcd-controller@30320000 {
+Let's try again.  The "git tree" value in the original bug report was
+"upstream", so I'll use that even though it doesn't look like a valid 
+git repo address either.
 
-instead?
+Alan Stern
+
+#syz test: upstream f6e27dbb1afa
+
+commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
+Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
+Date:   Thu Nov 21 17:24:00 2019 -0600
+
+     usb: Fix a deadlock in usbmon between mmap and read
+
+     Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
+     Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+
+diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+index ac2b4fcc265f..f48a23adbc35 100644
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
+
+  		mutex_lock(&rp->fetch_lock);
+  		spin_lock_irqsave(&rp->b_lock, flags);
+-		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+-		kfree(rp->b_vec);
+-		rp->b_vec  = vec;
+-		rp->b_size = size;
+-		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+-		rp->cnt_lost = 0;
++		if (rp->mmap_active) {
++			mon_free_buff(vec, size/CHUNK_SIZE);
++			kfree(vec);
++			ret = -EBUSY;
++		} else {
++			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
++			kfree(rp->b_vec);
++			rp->b_vec  = vec;
++			rp->b_size = size;
++			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
++			rp->cnt_lost = 0;
++		}
+  		spin_unlock_irqrestore(&rp->b_lock, flags);
+  		mutex_unlock(&rp->fetch_lock);
+  		}
+@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
+  static void mon_bin_vma_open(struct vm_area_struct *vma)
+  {
+  	struct mon_reader_bin *rp = vma->vm_private_data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&rp->b_lock, flags);
+  	rp->mmap_active++;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+  }
+
+  static void mon_bin_vma_close(struct vm_area_struct *vma)
+  {
++	unsigned long flags;
++
+  	struct mon_reader_bin *rp = vma->vm_private_data;
++	spin_lock_irqsave(&rp->b_lock, flags);
+  	rp->mmap_active--;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+  }
+
+  /*
+@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
+  	unsigned long offset, chunk_idx;
+  	struct page *pageptr;
+
+-	mutex_lock(&rp->fetch_lock);
+  	offset = vmf->pgoff << PAGE_SHIFT;
+-	if (offset >= rp->b_size) {
+-		mutex_unlock(&rp->fetch_lock);
++	if (offset >= rp->b_size)
+  		return VM_FAULT_SIGBUS;
+-	}
+  	chunk_idx = offset / CHUNK_SIZE;
+  	pageptr = rp->b_vec[chunk_idx].pg;
+  	get_page(pageptr);
+-	mutex_unlock(&rp->fetch_lock);
+  	vmf->page = pageptr;
+  	return 0;
+  }
+
+
