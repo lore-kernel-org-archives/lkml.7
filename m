@@ -1,75 +1,267 @@
 Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_SCAM,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F20FC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16778C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B2320714
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89F420721
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574467778;
+	bh=2oh0l2G2IRYKdja5yt4xe8E1fvQrav4oY0Y++o7Hrxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vFBYAn6D+fz1AdSs1E3np1yXLAZEph9xlcIbGpL2sOkZeF37lpZyRWsHzbbtIr0E/
+	 I03htk11GjpozbunryHCH14pQRDT9CtShnQYGgi9YlmB7toC1k2DRZ8EFSlbIgv7yO
+	 l0MewvYkN2ILBnkXHII7FzWRvrSeB1LSVTYaPea0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfKWAIz convert rfc822-to-8bit (ORCPT
+        id S1726931AbfKWAJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 19:08:55 -0500
-Received: from static.byfly.gomel.by ([86.57.133.254]:34305 "EHLO asutec.jp"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726089AbfKWAIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 19:08:54 -0500
-X-Greylist: delayed 52976 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Nov 2019 19:08:53 EST
-Reply-To: yuvalrose@free2312.com
-From:   "Yuval" <info@asutec.jp>
-To:     linux-kernel@vger.kernel.org
-Subject: Business For Us
-Date:   23 Nov 2019 03:09:00 +0300
-Message-ID: <20191123030900.14CF886C8AFC9BF1@asutec.jp>
+        Fri, 22 Nov 2019 19:09:37 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39038 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKWAJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 19:09:37 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w24so7750136otk.6;
+        Fri, 22 Nov 2019 16:09:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CGWjpDGzyUOYwEt0Dc6PSe57AXzajvuc/FnHMXylxJ4=;
+        b=iYL3OuV6RNdan0KdjoKZSPPKZWvUov3Ay4JD6uuGC23sW9uj2X4sKFMYP1er1QBRnB
+         JNYN/UlkcY38W5qOCVUq8XyPcyTu4tuzr0YoUWaOiGVcdcYvyZ56ycYJlrymdehyDB6h
+         EIBHynoECsgzgQ1aF3LMIutI+smktqPBeCBTzs6aQ5Mi2DGxlNYAhOOKz6+XqXwWPt8a
+         hxDIf16ZMQi16NcNWyw0eFYi5IAkw0o2RqQWJGcmRY+IBXdTogixcom0VxhRYL9gHTUu
+         Y2/tjr2ZswjPJwwjm+cuoHl8nAt9tHXoqlMSctFnEL1nYztmMsSXL8Cdd7mLa0s4of0f
+         q4Kw==
+X-Gm-Message-State: APjAAAUUz9GaWgXq0qxE47TPSp3GW6SfFxzXL9rUGHz5gR48LzK9BDiJ
+        fXKe+cMobyCsl4yPm3DRIA==
+X-Google-Smtp-Source: APXvYqwG0ZCNJRh0x4/KDrbttT0DNuGmTMw67FdWOi3jmALsWc6tyN7zUAKOMHcy6+7bvS+PY3CObg==
+X-Received: by 2002:a05:6830:1b65:: with SMTP id d5mr12220774ote.122.1574467775783;
+        Fri, 22 Nov 2019 16:09:35 -0800 (PST)
+Received: from localhost ([2607:fb90:bd7:3743:c9ec:246b:67b7:9768])
+        by smtp.gmail.com with ESMTPSA id l18sm2725815oti.11.2019.11.22.16.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 16:09:35 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:09:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 02/12] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+Message-ID: <20191123000933.GA30441@bogus>
+References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+ <20191121170509.10579-3-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121170509.10579-3-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
- 
-My name is Yuval Rose, a Client Relations officer at one of 
-Canada’s foremost Crypto-currency exchange platforms. This is a 
-private and confidential message from me to you and I request 
-that it be treated as such.
- 
-I am contacting you with respect to an urgent issue regarding a 
-Bitcoin account belonging to a deceased account holder. The 
-Bitcoin (500 BTC) which was valued at over 4.6 Million United 
-States Dollars was sold and converted to cash at the request of 
-the late account holder for onward deposit to an account to be 
-advised by her. Upon liquidation, we waited for months for info 
-on the bank account for the deposit but never got a feedback. 
-Upon inquiry, it was confirmed that she passed away (died) after 
-a cancer related ailment.
- 
-At a meeting held 2 weeks ago by my Company’s Management on the 
-matter, it was resolved that unless a Next of Kin or any relative 
-of the late account Holder comes forward for claim of the funds 
-on or before 30th of December 2019 (which is practically 
-impossible) the whole funds would be converted back to Bitcoin 
-and becomes part of the Company's portfolio.
- 
-With the above in mind, I decided to quickly reach out to you so 
-that you can apply to my company for claim of this fund in the 
-capacity of a Next-of-Kin/Relative. Rest assured that this is a 
-straight forward process with no risks involved whatsoever. Start 
-to finish of the process with fund deposited in your nominated 
-bank account can be achieved within a space of 10 banking days or 
-less. All that I require from you is full cooperation and 
-sincerity.
-I will await your reply and indication of interest to give you 
-further/complete details including sharing ratio.
- 
-Best Regards
- 
-Yuval
+On Thu, Nov 21, 2019 at 05:04:59PM +0000, Srinivas Kandagatla wrote:
+> This patch adds bindings for wcd9340/wcd9341 audio codec which can
+> support both SLIMbus and I2S/I2C interface.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/sound/qcom,wcd934x.yaml          | 163 ++++++++++++++++++
+>  1 file changed, 163 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> new file mode 100644
+> index 000000000000..197a53bfa6cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> @@ -0,0 +1,163 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> +  It has in-built Soundwire controller, pin controller, interrupt mux and
+> +  supports both I2S/I2C and SLIMbus audio interfaces.
+> +
+> +properties:
+> +  compatible:
+> +    const: slim217,250
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO spec for reset line to use
+> +    maxItems: 1
+> +
+> +  slim-ifc-dev: true
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: extclk
+> +
+> +  vdd-buck-supply:
+> +    description: A reference to the 1.8V buck supply
+> +
+> +  vdd-buck-sido-supply:
+> +    description: A reference to the 1.8V SIDO buck supply
+> +
+> +  vdd-rx-supply:
+> +    description: A reference to the 1.8V rx supply
+> +
+> +  vdd-tx-supply:
+> +    description: A reference to the 1.8V tx supply
+> +
+> +  vdd-vbat-supply:
+> +    description: A reference to the vbat supply
+> +
+> +  vdd-io-supply:
+> +    description: A reference to the 1.8V I/O supply
+> +
+> +  vdd-micbias-supply:
+> +    description: A reference to the micbias supply
+> +
+> +  qcom,micbias1-microvolt:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+
+Don't need a type here, standard units already have a type.
+
+> +    description: micbias1 voltage between 1800000 - 2850000 microvolt
+
+Sounds like constraints:
+
+minimum: 1800000
+maximum: 2850000
+
+
+> +
+> +  qcom,micbias2-microvolt:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: micbias2 voltage between 1800000 - 2850000 microvolt
+> +
+> +  qcom,micbias3-microvolt:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: micbias3 voltage between 1800000 - 2850000 microvolt
+> +
+> +  qcom,micbias4-microvolt:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: micbias4 voltage between 1800000 - 2850000 microvolt
+> +
+> +  clock-output-names:
+> +    const: mclk
+> +
+> +  clock-frequency:
+> +    description: Clock frequency of output clk in Hz
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  '#sound-dai-cells':
+> +    const: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      WCD934x subnode for each slave devices. Bindings of each subnodes
+> +      depends on the specific driver providing the functionality and
+> +      documented in their respective bindings.
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - slim-ifc-dev
+> +  - interrupts
+> +  - interrupt-controller
+> +  - clock-frequency
+> +  - clock-output-names
+> +  - qcom,micbias1-microvolt
+> +  - qcom,micbias2-microvolt
+> +  - qcom,micbias3-microvolt
+> +  - qcom,micbias4-microvolt
+> +  - "#interrupt-cells"
+> +  - "#clock-cells"
+> +  - "#sound-dai-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    codec@1,0{
+> +        compatible = "slim217,250";
+> +        reg  = <1 0>;
+> +        reset-gpios = <&tlmm 64 0>;
+> +        slim-ifc-dev  = <&wcd9340_ifd>;
+> +        #sound-dai-cells = <1>;
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <54 4>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +        #clock-cells = <0>;
+> +        clock-frequency = <9600000>;
+> +        clock-output-names = "mclk";
+> +        qcom,micbias1-microvolt = <1800000>;
+> +        qcom,micbias2-microvolt = <1800000>;
+> +        qcom,micbias3-microvolt = <1800000>;
+> +        qcom,micbias4-microvolt = <1800000>;
+> +        clock-names = "extclk";
+> +        clocks = <&rpmhcc 2>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        gpioctrl@42 {
+> +            reg = <0x42 0x2>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> 
