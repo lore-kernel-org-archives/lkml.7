@@ -7,50 +7,42 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C152DC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD652071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558222071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 08:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfKWIQ2 (ORCPT
+        id S1727406AbfKWIQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 03:16:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36263 "EHLO
+        Sat, 23 Nov 2019 03:16:34 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36262 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfKWIPM (ORCPT
+        with ESMTP id S1726735AbfKWIPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 23 Nov 2019 03:15:12 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYQZI-0002W7-Ch; Sat, 23 Nov 2019 09:15:00 +0100
+        id 1iYQZP-0002ac-6K; Sat, 23 Nov 2019 09:15:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BAA2A1C19FD;
-        Sat, 23 Nov 2019 09:14:59 +0100 (CET)
-Date:   Sat, 23 Nov 2019 08:14:59 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 16A101C1AD6;
+        Sat, 23 Nov 2019 09:15:02 +0100 (CET)
+Date:   Sat, 23 Nov 2019 08:15:02 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf parse: Fix potential memory leak when handling
- tracepoint errors
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
+Subject: [tip: perf/core] perf record: Add a function to test for kernel
+ support for AUX area sampling
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191120180925.21787-1-irogers@google.com>
-References: <20191120180925.21787-1-irogers@google.com>
+In-Reply-To: <20191115124225.5247-4-adrian.hunter@intel.com>
+References: <20191115124225.5247-4-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157449689963.21853.6064161775610748154.tip-bot2@tip-bot2>
+Message-ID: <157449690202.21853.14789264761246818665.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,84 +58,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     4584f084aa9d8033d5911935837dbee7b082d0e9
-Gitweb:        https://git.kernel.org/tip/4584f084aa9d8033d5911935837dbee7b082d0e9
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Wed, 20 Nov 2019 10:09:25 -08:00
+Commit-ID:     9bca1a4ef5034f0a82861ac0375eb0272c5ce04e
+Gitweb:        https://git.kernel.org/tip/9bca1a4ef5034f0a82861ac0375eb0272c5ce04e
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Fri, 15 Nov 2019 14:42:13 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 22 Nov 2019 10:48:14 -03:00
+CommitterDate: Fri, 22 Nov 2019 10:43:24 -03:00
 
-perf parse: Fix potential memory leak when handling tracepoint errors
+perf record: Add a function to test for kernel support for AUX area sampling
 
-An error may be in place when tracepoint_error is called, use
-parse_events__handle_error to avoid a memory leak and to capture the
-first and last error. Error detected by LLVM's libFuzzer using the
-following event:
+Architectures are expected to know if AUX area sampling is supported by
+the hardware. Add a function perf_can_aux_sample() which will determine
+whether the kernel supports it.
 
-$ perf stat -e 'msr/event/,f:e'
-event syntax error: 'msr/event/,f:e'
-                     \___ can't access trace events
+Committer notes:
 
-Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
-Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
+I reported that this message was taking place on a kernel without the
+required bits:
 
-Initial error:
-event syntax error: 'msr/event/,f:e'
-                                \___ no value assigned for term
-Run 'perf list' for a list of valid events
+  # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
+  Error:
+  The sys_perf_event_open() syscall returned with 7 (Argument list too long) for event (branch-misses:u).
+  /bin/dmesg | grep -i perf may provide additional information.
 
- Usage: perf stat [<options>] [<command>]
+Adrian sent a patch addressing it, with this explanation:
 
-    -e, --event <event>   event selector. use 'perf list' to list available events
+ ----
+  perf_can_aux_sample_size() always returned true because it did not pass
+  the attribute size to sys_perf_event_open, nor correctly check the
+  return value and errno.
+ ----
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
+After applying it I get, later in the series, when --aux-sample is
+added:
+
+  # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
+  AUX area sampling is not supported by kernel
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20191120180925.21787-1-irogers@google.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/util/evlist.h |  1 +
+ tools/perf/util/record.c | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6c313c4..ed7c008 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -511,6 +511,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name)
- {
-+	const char *str;
- 	char help[BUFSIZ];
- 
- 	if (!e)
-@@ -524,18 +525,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 
- 	switch (err) {
- 	case EACCES:
--		e->str = strdup("can't access trace events");
-+		str = "can't access trace events";
- 		break;
- 	case ENOENT:
--		e->str = strdup("unknown tracepoint");
-+		str = "unknown tracepoint";
- 		break;
- 	default:
--		e->str = strdup("failed to add tracepoint");
-+		str = "failed to add tracepoint";
- 		break;
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	e->help = strdup(help);
-+	parse_events__handle_error(e, 0, strdup(str), strdup(help));
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 1305140..3655b9e 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -176,6 +176,7 @@ void perf_evlist__set_id_pos(struct evlist *evlist);
+ bool perf_can_sample_identifier(void);
+ bool perf_can_record_switch_events(void);
+ bool perf_can_record_cpu_wide(void);
++bool perf_can_aux_sample(void);
+ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
+ 			 struct callchain_param *callchain);
+ int record_opts__config(struct record_opts *opts);
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 8579505..7def661 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -136,6 +136,37 @@ bool perf_can_record_cpu_wide(void)
+ 	return true;
  }
  
- static int add_tracepoint(struct list_head *list, int *idx,
++/*
++ * Architectures are expected to know if AUX area sampling is supported by the
++ * hardware. Here we check for kernel support.
++ */
++bool perf_can_aux_sample(void)
++{
++	struct perf_event_attr attr = {
++		.size = sizeof(struct perf_event_attr),
++		.exclude_kernel = 1,
++		/*
++		 * Non-zero value causes the kernel to calculate the effective
++		 * attribute size up to that byte.
++		 */
++		.aux_sample_size = 1,
++	};
++	int fd;
++
++	fd = sys_perf_event_open(&attr, -1, 0, -1, 0);
++	/*
++	 * If the kernel attribute is big enough to contain aux_sample_size
++	 * then we assume that it is supported. We are relying on the kernel to
++	 * validate the attribute size before anything else that could be wrong.
++	 */
++	if (fd < 0 && errno == E2BIG)
++		return false;
++	if (fd >= 0)
++		close(fd);
++
++	return true;
++}
++
+ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
+ 			 struct callchain_param *callchain)
+ {
