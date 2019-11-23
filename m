@@ -2,171 +2,380 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE06BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53959C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A6820706
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 00:58:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SWT9RPbb"
+	by mail.kernel.org (Postfix) with ESMTP id 215D320714
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 01:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfKWA6t (ORCPT
+        id S1726759AbfKWBFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 19:58:49 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36702 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKWA6t (ORCPT
+        Fri, 22 Nov 2019 20:05:45 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:45371 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726089AbfKWBFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 19:58:49 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k13so4189090pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Nov 2019 16:58:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=IuWeFnrYeJCjuhCM2V1dA58lGjRpOtXacus/IBoPj+E=;
-        b=SWT9RPbbH0wqbnY590Ng1zNYJSEYMwqyk2hjYVStgfe3cn8J9xhspUE/IhAhMyiyYF
-         ITsmkvVswijzNTydtgsNqLfWO5AlPmHZfgbeP/ck3vqmG8WD1AthVOBjQq/7wIxhNj6N
-         IhmPbMJDedgw7loa0CC2hR6GkM41ieeXfMen6GAXTZZY2Y0aEjcK/Bj1BejspvEmOXyA
-         zo/hn1dh/4KxioncezIii0LXRSfDqEwYu6VZbBVGOhhR7OLAyWwJhZLPdB9oGfMaULZa
-         gsxPSmoSKUVsQOHxRh4sawj5xROFzr/xaOzGB7fddbIKF3FVjM+LXYaqj5zXQ27i30Lz
-         iu+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=IuWeFnrYeJCjuhCM2V1dA58lGjRpOtXacus/IBoPj+E=;
-        b=rcD9RmMUI5jFqzyKFp2WhWLn9q6QVWuPiisfdDh//poploc5bng8iI3CsQBTm6kEFr
-         m4FGGjytSZQ9b/UCfTWBqizFzIs9WnsPvtfBuX4u2Nb17t5W+NWNfxeS2TWqMSREFhhC
-         AivQkcH3pjDEo2YFzAgmqTzM0YmBDSCU2H2agmQujQkM9TxBS6JAWALeEpaJAvvpko1x
-         iqHYGPuqNkqtly9OwrRs3hh5xcS7PfAz0yLdBm3A2iMaNCwi8qKKz/7vEG1HdizdhU4n
-         jQXbpEnC6/NuLjxHvkvW+jw3JdP1HRyyVDLdA/ZsmRfJ5oZbAbijj3UtRSGGW0A29bSk
-         d3kw==
-X-Gm-Message-State: APjAAAX4+YbcA8YA6AhXLvhMm80dPHp8OcXvcnsVh33lZR+GluML0bbc
-        ZA6lMhlBHpSjdu+PIiSohO82+w==
-X-Google-Smtp-Source: APXvYqz0ZXll8DZmCwf0ofv4uPNO7sFTvsQEUZIIytWRI6hPkiIhvNBJyAjp5BS/LzwHLnPhFD8fWw==
-X-Received: by 2002:a63:fb04:: with SMTP id o4mr1513860pgh.122.1574470727152;
-        Fri, 22 Nov 2019 16:58:47 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id w69sm9117470pfc.164.2019.11.22.16.58.45
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 22 Nov 2019 16:58:46 -0800 (PST)
-Date:   Fri, 22 Nov 2019 16:58:34 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Johannes Weiner <hannes@cmpxchg.org>
-cc:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, shakeelb@google.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
-In-Reply-To: <20191122161652.GA489821@cmpxchg.org>
-Message-ID: <alpine.LSU.2.11.1911221616580.1144@eggly.anvils>
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com> <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com> <20191119160456.GD382712@cmpxchg.org> <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com> <20191121220613.GB487872@cmpxchg.org>
- <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com> <20191122161652.GA489821@cmpxchg.org>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Fri, 22 Nov 2019 20:05:44 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TipYp-z_1574471132;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TipYp-z_1574471132)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 23 Nov 2019 09:05:39 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] mm: shmem: allow split THP when truncating THP partially
+Date:   Sat, 23 Nov 2019 09:05:32 +0800
+Message-Id: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019, Johannes Weiner wrote:
-> 
-> But that leaves me with one more worry: compaction. We locked out
-> charge moving now, so between that and knowing that the page is alive,
-> we have page->mem_cgroup stable. But compaction doesn't know whether
-> the page is alive - it comes from a pfn and finds out using PageLRU.
-> 
-> In the current code, pgdat->lru_lock remains the same before and after
-> the page is charged to a cgroup, so once compaction has that locked
-> and it observes PageLRU, it can go ahead and isolate the page.
-> 
-> But lruvec->lru_lock changes during charging, and then compaction may
-> hold the wrong lock during isolation:
-> 
-> compaction:				generic_file_buffered_read:
-> 
-> 					page_cache_alloc()
-> 
-> !PageBuddy()
-> 
-> lock_page_lruvec(page)
->   lruvec = mem_cgroup_page_lruvec()
->   spin_lock(&lruvec->lru_lock)
->   if lruvec != mem_cgroup_page_lruvec()
->     goto again
-> 
-> 					add_to_page_cache_lru()
-> 					  mem_cgroup_commit_charge()
-> 					    page->mem_cgroup = foo
-> 					  lru_cache_add()
-> 					    __pagevec_lru_add()
-> 					      SetPageLRU()
-> 
-> if PageLRU(page):
->   __isolate_lru_page()
-> 
-> I don't see what prevents the lruvec from changing under compaction,
-> neither in your patches nor in Hugh's. Maybe I'm missing something?
+Currently when truncating shmem file, if the range is partial of THP
+(start or end is in the middle of THP), the pages actually will just get
+cleared rather than being freed unless the range cover the whole THP.
+Even though all the subpages are truncated (randomly or sequentially),
+the THP may still be kept in page cache.  This might be fine for some
+usecases which prefer preserving THP.
 
-Speaking for my patches only: I'm humbled, I think you have caught me,
-I cannot find any argument against the race you suggest here.
+But, when doing balloon inflation in QEMU, QEMU actually does hole punch
+or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
+So, when using shmem THP as memory backend QEMU inflation actually doesn't
+work as expected since it doesn't free memory.  But, the inflation
+usecase really needs get the memory freed.  Anonymous THP will not get
+freed right away too but it will be freed eventually when all subpages are
+unmapped, but shmem THP would still stay in page cache.
 
-The race with mem_cgroup_move_account(), which Konstantin pointed out
-in 2012's https://lore.kernel.org/lkml/4F433418.3010401@openvz.org/
-but I later misunderstood, and came to think I needed no patch against,
-until this week coming to perceive the same race in isolate_lru_page():
-that one is easily and satisfactorily fixed by holding lruvec lock in
-mem_cgroup_move_account() - embarrassing, but not too serious.
+To protect the usecases which may prefer preserving THP, introduce a
+new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP is
+preferred behavior if truncating partial THP.  This mode just makes
+sense to tmpfs for the time being.
 
-Your race here (again, lruvec lock taken then PageLRU observed, but
-page->mem_cgroup changed in between) really questions my whole scheme:
-I am not going to propose a solution now, I'll have to go back and
-recheck my assumptions all over.  Certainly isolate_migratepage_block()
-has a harder job than any other, but I need to re-review it all.
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ drivers/gpu/drm/drm_gem_shmem_helper.c    |  2 +-
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  3 +-
+ include/linux/shmem_fs.h                  |  3 +-
+ include/uapi/linux/falloc.h               |  7 +++
+ mm/shmem.c                                | 99 +++++++++++++++++++++++++++----
+ 5 files changed, 99 insertions(+), 15 deletions(-)
 
-Maybe we got it right back in the days of PageCgroupUsed, and then I
-paid too little attention when rebasing to your welcome simplifications.
-I don't think any of us want to bring back PageCgroupUsed! And maybe we
-could get it right by always holding lruvec lock in commit_charge(),
-lrucare or not; but that's a much hotter path, and not a change I'd
-expect anyone to embrace.
+diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+index f591870..d44780e 100644
+--- a/drivers/gpu/drm/drm_gem_shmem_helper.c
++++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+@@ -408,7 +408,7 @@ void drm_gem_shmem_purge_locked(struct drm_gem_object *obj)
+ 	 * To do this we must instruct the shmfs to drop all of its
+ 	 * backing pages, *now*.
+ 	 */
+-	shmem_truncate_range(file_inode(obj->filp), 0, (loff_t)-1);
++	shmem_truncate_range(file_inode(obj->filp), 0, (loff_t)-1, false);
+ 
+ 	invalidate_mapping_pages(file_inode(obj->filp)->i_mapping,
+ 			0, (loff_t)-1);
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+index 4c4954e..cdee286 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+@@ -222,7 +222,8 @@ static int shmem_get_pages(struct drm_i915_gem_object *obj)
+ 	 * To do this we must instruct the shmfs to drop all of its
+ 	 * backing pages, *now*.
+ 	 */
+-	shmem_truncate_range(file_inode(obj->base.filp), 0, (loff_t)-1);
++	shmem_truncate_range(file_inode(obj->base.filp), 0, (loff_t)-1,
++			     false);
+ 	obj->mm.madv = __I915_MADV_PURGED;
+ 	obj->mm.pages = ERR_PTR(-EFAULT);
+ }
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index de8e4b7..42c6420 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -73,7 +73,8 @@ static inline bool shmem_mapping(struct address_space *mapping)
+ extern void shmem_unlock_mapping(struct address_space *mapping);
+ extern struct page *shmem_read_mapping_page_gfp(struct address_space *mapping,
+ 					pgoff_t index, gfp_t gfp_mask);
+-extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end);
++extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end,
++				 bool split);
+ extern int shmem_unuse(unsigned int type, bool frontswap,
+ 		       unsigned long *fs_pages_to_unuse);
+ 
+diff --git a/include/uapi/linux/falloc.h b/include/uapi/linux/falloc.h
+index 51398fa..26fd272 100644
+--- a/include/uapi/linux/falloc.h
++++ b/include/uapi/linux/falloc.h
+@@ -77,4 +77,11 @@
+  */
+ #define FALLOC_FL_UNSHARE_RANGE		0x40
+ 
++/*
++ * FALLOC_FL_SPLIT_HPAGE is used with FALLOC_FL_PUNCH_HOLE together to
++ * split huge page if the hole punch range is start or end in the middle
++ * of THP.  So far it only makes sense with tmpfs.
++ */
++#define FALLOC_FL_SPLIT_HPAGE		0x80
++
+ #endif /* _UAPI_FALLOC_H_ */
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 220be9f..66e2a82 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -793,7 +793,7 @@ void shmem_unlock_mapping(struct address_space *mapping)
+  * If !unfalloc, truncate or punch hole; if unfalloc, undo failed fallocate.
+  */
+ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+-								 bool unfalloc)
++			     bool unfalloc, bool split)
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+ 	struct shmem_inode_info *info = SHMEM_I(inode);
+@@ -806,12 +806,14 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 	long nr_swaps_freed = 0;
+ 	pgoff_t index;
+ 	int i;
++	struct page *page = NULL;
+ 
+ 	if (lend == -1)
+ 		end = -1;	/* unsigned, so actually very big */
+ 
+ 	pagevec_init(&pvec);
+ 	index = start;
++retry:
+ 	while (index < end) {
+ 		pvec.nr = find_get_entries(mapping, index,
+ 			min(end - index, (pgoff_t)PAGEVEC_SIZE),
+@@ -819,7 +821,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 		if (!pvec.nr)
+ 			break;
+ 		for (i = 0; i < pagevec_count(&pvec); i++) {
+-			struct page *page = pvec.pages[i];
++			page = pvec.pages[i];
+ 
+ 			index = indices[i];
+ 			if (index >= end)
+@@ -839,9 +841,16 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 				continue;
+ 
+ 			if (PageTransTail(page)) {
+-				/* Middle of THP: zero out the page */
++				/*
++				 * Middle of THP: zero out the page. We
++				 * still need clear the page even though
++				 * the THP is going to be split since the
++				 * split may fail.
++				 */
+ 				clear_highpage(page);
+ 				unlock_page(page);
++				if (!unfalloc && split)
++					goto split;
+ 				continue;
+ 			} else if (PageTransHuge(page)) {
+ 				if (index == round_down(end, HPAGE_PMD_NR)) {
+@@ -851,6 +860,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 					 */
+ 					clear_highpage(page);
+ 					unlock_page(page);
++					if (!unfalloc && split)
++						goto split;
+ 					continue;
+ 				}
+ 				index += HPAGE_PMD_NR - 1;
+@@ -866,9 +877,34 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 			}
+ 			unlock_page(page);
+ 		}
++split:
+ 		pagevec_remove_exceptionals(&pvec);
+ 		pagevec_release(&pvec);
+ 		cond_resched();
++
++		if (split && PageTransCompound(page)) {
++			/* The THP may get freed under us */
++			if (!get_page_unless_zero(compound_head(page)))
++				goto out;
++
++			if (!trylock_page(page))
++				goto out_put;
++
++			/*
++			 * The extra pins from page cache lookup have been
++			 * released by pagevec_release().
++			 */
++			if (!split_huge_page(page)) {
++				unlock_page(page);
++				put_page(page);
++				/* Re-look up page cache from current index */
++				goto retry;
++			}
++			unlock_page(page);
++out_put:
++			put_page(page);
++		}
++out:
+ 		index++;
+ 	}
+ 
+@@ -901,6 +937,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 		return;
+ 
+ 	index = start;
++again:
+ 	while (index < end) {
+ 		cond_resched();
+ 
+@@ -937,7 +974,12 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 			lock_page(page);
+ 
+ 			if (PageTransTail(page)) {
+-				/* Middle of THP: zero out the page */
++				/*
++				 * Middle of THP: zero out the page.  We
++				 * still need clear the page even though the
++				 * THP is going to be split since the split
++				 * may fail.
++				 */
+ 				clear_highpage(page);
+ 				unlock_page(page);
+ 				/*
+@@ -947,6 +989,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 				 */
+ 				if (index != round_down(end, HPAGE_PMD_NR))
+ 					start++;
++				if (!unfalloc && split)
++					goto rescan_split;
+ 				continue;
+ 			} else if (PageTransHuge(page)) {
+ 				if (index == round_down(end, HPAGE_PMD_NR)) {
+@@ -956,6 +1000,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 					 */
+ 					clear_highpage(page);
+ 					unlock_page(page);
++					if (!unfalloc && split)
++						goto rescan_split;
+ 					continue;
+ 				}
+ 				index += HPAGE_PMD_NR - 1;
+@@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 			}
+ 			unlock_page(page);
+ 		}
++rescan_split:
+ 		pagevec_remove_exceptionals(&pvec);
+ 		pagevec_release(&pvec);
++
++		if (split && PageTransCompound(page)) {
++			/* The THP may get freed under us */
++			if (!get_page_unless_zero(compound_head(page)))
++				goto rescan_out;
++
++			lock_page(page);
++
++			/*
++			 * The extra pins from page cache lookup have been
++			 * released by pagevec_release().
++			 */
++			if (!split_huge_page(page)) {
++				unlock_page(page);
++				put_page(page);
++				/* Re-look up page cache from current index */
++				goto again;
++			}
++			unlock_page(page);
++			put_page(page);
++		}
++rescan_out:
+ 		index++;
+ 	}
+ 
+@@ -987,9 +1056,10 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 	spin_unlock_irq(&info->lock);
+ }
+ 
+-void shmem_truncate_range(struct inode *inode, loff_t lstart, loff_t lend)
++void shmem_truncate_range(struct inode *inode, loff_t lstart, loff_t lend,
++			  bool split)
+ {
+-	shmem_undo_range(inode, lstart, lend, false);
++	shmem_undo_range(inode, lstart, lend, false, split);
+ 	inode->i_ctime = inode->i_mtime = current_time(inode);
+ }
+ EXPORT_SYMBOL_GPL(shmem_truncate_range);
+@@ -1049,7 +1119,8 @@ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+ 							holebegin, 0, 1);
+ 			if (info->alloced)
+ 				shmem_truncate_range(inode,
+-							newsize, (loff_t)-1);
++							newsize, (loff_t)-1,
++							false);
+ 			/* unmap again to remove racily COWed private pages */
+ 			if (oldsize > holebegin)
+ 				unmap_mapping_range(inode->i_mapping,
+@@ -1089,7 +1160,7 @@ static void shmem_evict_inode(struct inode *inode)
+ 	if (inode->i_mapping->a_ops == &shmem_aops) {
+ 		shmem_unacct_size(info->flags, inode->i_size);
+ 		inode->i_size = 0;
+-		shmem_truncate_range(inode, 0, (loff_t)-1);
++		shmem_truncate_range(inode, 0, (loff_t)-1, false);
+ 		if (!list_empty(&info->shrinklist)) {
+ 			spin_lock(&sbinfo->shrinklist_lock);
+ 			if (!list_empty(&info->shrinklist)) {
+@@ -2724,12 +2795,14 @@ static long shmem_fallocate(struct file *file, int mode, loff_t offset,
+ 	pgoff_t start, index, end;
+ 	int error;
+ 
+-	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
++	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |
++		     FALLOC_FL_SPLIT_HPAGE))
+ 		return -EOPNOTSUPP;
+ 
+ 	inode_lock(inode);
+ 
+ 	if (mode & FALLOC_FL_PUNCH_HOLE) {
++		bool split = mode & FALLOC_FL_SPLIT_HPAGE;
+ 		struct address_space *mapping = file->f_mapping;
+ 		loff_t unmap_start = round_up(offset, PAGE_SIZE);
+ 		loff_t unmap_end = round_down(offset + len, PAGE_SIZE) - 1;
+@@ -2751,7 +2824,7 @@ static long shmem_fallocate(struct file *file, int mode, loff_t offset,
+ 		if ((u64)unmap_end > (u64)unmap_start)
+ 			unmap_mapping_range(mapping, unmap_start,
+ 					    1 + unmap_end - unmap_start, 0);
+-		shmem_truncate_range(inode, offset, offset + len - 1);
++		shmem_truncate_range(inode, offset, offset + len - 1, split);
+ 		/* No need to unmap again: hole-punching leaves COWed pages */
+ 
+ 		spin_lock(&inode->i_lock);
+@@ -2808,7 +2881,8 @@ static long shmem_fallocate(struct file *file, int mode, loff_t offset,
+ 			if (index > start) {
+ 				shmem_undo_range(inode,
+ 				    (loff_t)start << PAGE_SHIFT,
+-				    ((loff_t)index << PAGE_SHIFT) - 1, true);
++				    ((loff_t)index << PAGE_SHIFT) - 1, true,
++				    false);
+ 			}
+ 			goto undone;
+ 		}
+@@ -4068,7 +4142,8 @@ unsigned long shmem_get_unmapped_area(struct file *file,
+ }
+ #endif
+ 
+-void shmem_truncate_range(struct inode *inode, loff_t lstart, loff_t lend)
++void shmem_truncate_range(struct inode *inode, loff_t lstart, loff_t lend,
++			  bool split)
+ {
+ 	truncate_inode_pages_range(inode->i_mapping, lstart, lend);
+ }
+-- 
+1.8.3.1
 
-I'll go away and re-examine it all; probably start by verifying that
-your race actually happens in practice, though we never observed it.
-
-Heavy-hearted thanks, Hannes!
-Hugh
