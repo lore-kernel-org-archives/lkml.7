@@ -2,101 +2,137 @@ Return-Path: <SRS0=E2Zf=ZP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF8EC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21466C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C69420679
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:19:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4LyYeKt"
+	by mail.kernel.org (Postfix) with ESMTP id ED06020719
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Nov 2019 14:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574518982;
+	bh=CZvS75BTOSHfse9UoNY85eRZLojSKzzLceJhQNi3lU4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XvhZlZOIYm1QIhjxUOO67lVhIx6vIZ7hISDgrFjtmX09BJMu84nlP6mRIx/K50LS2
+	 zuD07Zr8W9SenQPifO/F26JX4ZRfEFZrcas7ZkvgGC473arB4iBfG5w4omLfCw1Z4W
+	 L0ryWs8Ug2GSrIoTkybXroBemDsceEsJ2T9Cb1dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfKWOTn (ORCPT
+        id S1726825AbfKWOXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 09:19:43 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38374 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfKWOTn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 09:19:43 -0500
-Received: by mail-pg1-f194.google.com with SMTP id t3so4434360pgl.5;
-        Sat, 23 Nov 2019 06:19:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l9I4KqFGS6ff8/IYdfHFE2ABoOk3S9eLWIs9fo62ASc=;
-        b=W4LyYeKtMUMQo5EEoQI6QKHteSm2OGuC2/43baA3jUpoANrMzlBhI6HbFOGl2zR9Xs
-         INH2OSkN7XARs04dGPMpRUs9im8Zh0X7AVbnd/r7kEX26BFFo9z6lVswFybzXqYRJRFg
-         FudSy19r0zx0MBvALSJanDGtD5Q94vYOlPByOOkdyRL30lpYieFlMlbXANiSXnx6hRe7
-         gjCUXF1kyvh7EfEYKQnoJD99NLRpUOA79yVuqlZbdO4Q13rmgIuhCOT88Goxv+BgUfGn
-         YDOdgWElhG/vNXt0e0dmCm8s1yzfyJcLmYQj8mAaiJFWv8QxHT/Mq4GSgZB5Zq/Uf/om
-         bujQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l9I4KqFGS6ff8/IYdfHFE2ABoOk3S9eLWIs9fo62ASc=;
-        b=EN1UEFJ7NUVx0gvnAhjACymjj+6mhCo6lS+io/biqkdIfasdNe7d8VTPuw7L02wTem
-         Mw2ia9p9r5hlpiA8yhCX0oN8Hyal7UQgOKx5BMu3v4Rwt7W/8XZC/3LV2ahn3iWvylEM
-         vvKvRuoVKA8W/4Z0fy7/eTm3JE0hxPk4dzlIoKg5cu24b6QePfkw0S8IgK1OXeWSgiGm
-         72VMjPxiPD3780yvtRJawDaVwZzRm3rRnqXMhkNDRmwaKpKxXGFKNQACeDIj5o4pk0H/
-         9a42i8wdr8OgNGESnxwnJUIpI5PjD1oM9xNu4Wo+JYcfgNKfUbXKMZeMnOnT7q99vy9B
-         VmYg==
-X-Gm-Message-State: APjAAAU7bINwwWlwWtiA9oydpfzRfOyo13ihlqrZ2SgWlhlOirHjc7o0
-        T7/xLfcb96p4UqUe0gxJysE=
-X-Google-Smtp-Source: APXvYqzQqAJJxpRwZ2VWlAvLN7OUti2D6yEkc7VDBUERoJW1Tq9GFB1SpZMSgzTi1s8A+JhPrBlx+w==
-X-Received: by 2002:a63:6b87:: with SMTP id g129mr13033657pgc.438.1574518782307;
-        Sat, 23 Nov 2019 06:19:42 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id y17sm1836441pfl.92.2019.11.23.06.19.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 06:19:41 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH net v3] net: macb: add missed tasklet_kill
-Date:   Sat, 23 Nov 2019 22:19:18 +0800
-Message-Id: <20191123141918.16239-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 23 Nov 2019 09:23:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfKWOXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 09:23:00 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21A7B20714;
+        Sat, 23 Nov 2019 14:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574518979;
+        bh=CZvS75BTOSHfse9UoNY85eRZLojSKzzLceJhQNi3lU4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A6Ippmz2d3E68AOQsSoys5lqbZlioeIlRhuxapgKiNq1Q74irynbSQScrCqmePs1O
+         TIVOzB5v/3RjP5Rx6PtQY9uv4B5XICzhE5EHPfV1PTUVy1NX2pDGuUqw4j9ykJ3b8A
+         EePqyTFHI5PmN7YPY/uaBLzjkmdxX9pY13NMFrIY=
+Date:   Sat, 23 Nov 2019 14:22:56 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>
+Subject: Re: [PATCH v2] iio: dac: ad7303: use regulator get optional to
+ check for ext supply
+Message-ID: <20191123142256.7bdcee03@archlinux>
+In-Reply-To: <20191118105807.6842-1-alexandru.tachici@analog.com>
+References: <20191113083303.2229-1-alexandru.tachici@analog.com>
+        <20191118105807.6842-1-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver forgets to kill tasklet in remove.
-Add the call to fix it.
+On Mon, 18 Nov 2019 12:58:07 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
 
-Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v3:
-  - Add fixes tag and target 'net'.
+> Previously, the code was using the of_read_property_bool() to check if
+> an external regulator was provided. However, this is redundant, as it's
+> more simple/direct to just ask the regulator is provided, via a
+> `devm_regulator_get_optional()` call.
+> 
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to see if we missed anything.
 
- drivers/net/ethernet/cadence/macb_main.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 1e1b774e1953..2ec416098fa3 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4383,6 +4383,7 @@ static int macb_remove(struct platform_device *pdev)
- 
- 	if (dev) {
- 		bp = netdev_priv(dev);
-+		tasklet_kill(&bp->hresp_err_tasklet);
- 		if (dev->phydev)
- 			phy_disconnect(dev->phydev);
- 		mdiobus_unregister(bp->mii_bus);
--- 
-2.24.0
+Jonathan
+
+> ---
+> Changelog v1 -> v2:
+> 
+> - check for -ENODEV error for devm_regulator_get_optional() call
+> 
+>  drivers/iio/dac/ad7303.c | 25 +++++++------------------
+>  1 file changed, 7 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
+> index 14bbac6bee98..15af8a1cce3e 100644
+> --- a/drivers/iio/dac/ad7303.c
+> +++ b/drivers/iio/dac/ad7303.c
+> @@ -12,7 +12,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/regulator/consumer.h>
+> -#include <linux/of.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> @@ -202,7 +201,6 @@ static int ad7303_probe(struct spi_device *spi)
+>  	const struct spi_device_id *id = spi_get_device_id(spi);
+>  	struct iio_dev *indio_dev;
+>  	struct ad7303_state *st;
+> -	bool ext_ref;
+>  	int ret;
+>  
+>  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> @@ -224,24 +222,15 @@ static int ad7303_probe(struct spi_device *spi)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (spi->dev.of_node) {
+> -		ext_ref = of_property_read_bool(spi->dev.of_node,
+> -				"REF-supply");
+> -	} else {
+> -		struct ad7303_platform_data *pdata = spi->dev.platform_data;
+> -		if (pdata && pdata->use_external_ref)
+> -			ext_ref = true;
+> -		else
+> -		    ext_ref = false;
+> -	}
+> -
+> -	if (ext_ref) {
+> -		st->vref_reg = devm_regulator_get(&spi->dev, "REF");
+> -		if (IS_ERR(st->vref_reg)) {
+> -			ret = PTR_ERR(st->vref_reg);
+> +	st->vref_reg = devm_regulator_get_optional(&spi->dev, "REF");
+> +	if (IS_ERR(st->vref_reg)) {
+> +		ret = PTR_ERR(st->vref_reg);
+> +		if (ret != -ENODEV)
+>  			goto err_disable_vdd_reg;
+> -		}
+> +		st->vref_reg = NULL;
+> +	}
+>  
+> +	if (st->vref_reg) {
+>  		ret = regulator_enable(st->vref_reg);
+>  		if (ret)
+>  			goto err_disable_vdd_reg;
 
