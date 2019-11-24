@@ -2,94 +2,86 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030D9C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE28C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13F8207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6293207FC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574614932;
-	bh=yTmvBBSki+sWQIcHxtO0uYKyI8aK9o6H9e3lZIwE6xE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m0CMZWIujSnQXyvMmehFNK2GnxtCBnOO7JRWqg6DXuar6eC8Q6pchlP40CIAWksEr
-	 RWK8W5L5hl+5qNrghBHYsP6BeKmsLBoTJKWScFKPwDkDBvQJz6q+2m5OPW/e27HliI
-	 6j0PSxFACB/Cr6Fa0B8ja6hnDDTH/SMszY5WE9xg=
+	s=default; t=1574615185;
+	bh=xcebLS6J6XP5yxHYKRl1iBBCcYJyPSa7oDm4voqVEn4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=luubYpKIRRZhGI6ZDt7Av0KRjy01Quza7OyeGvODmh5WbCP1LmCi/nqVGqBE3unVa
+	 LaJT0FV4vJdqKRXxs4VlCpsBLEc2tcJfnL2CtQUWaaLPBfSemhgByRYdU6dBVdoGjr
+	 Ab0QiRV2gNg2kUDEY2hirJk/eDvo3B57VHhbe9Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfKXRCM (ORCPT
+        id S1726937AbfKXRGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 12:02:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
+        Sun, 24 Nov 2019 12:06:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbfKXRCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 12:02:11 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726887AbfKXRGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 12:06:24 -0500
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43805207DD;
-        Sun, 24 Nov 2019 17:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52D9520830
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 17:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574614930;
-        bh=yTmvBBSki+sWQIcHxtO0uYKyI8aK9o6H9e3lZIwE6xE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QCE0iDORjQv/+lPjRQbS6uDIPTuDFpx1N5KlSCY4Vhh9g06dwcW0gVshWusxqRx4s
-         G1ybicyh9H3ERmLK/cMWy7V4NEjeNyJXpT4jtAIV1wN2JARU1ThGhsjWZvkmiHBeW1
-         RYW7rs5BfL2Swo+cSCkHM+q0YcERhXh9yR/iD0Q8=
-Date:   Sun, 24 Nov 2019 18:02:07 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
- ASPM link states
-Message-ID: <20191124170207.GA2267252@kroah.com>
-References: <20191121211017.GA854512@kroah.com>
- <20191121230411.GA92983@google.com>
+        s=default; t=1574615183;
+        bh=xcebLS6J6XP5yxHYKRl1iBBCcYJyPSa7oDm4voqVEn4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TUNTJTU7DIC1H8DYl2qfez3LHi1IRYnUA1eu1A4d2jqHJc/GM2rIaTscZy+oB4VEh
+         CQBkA50hOrebCRvb93/WgS4zs8qqJqFZGHzwdXbDPf3tQpWQZSeEXswzwjRGqb78/X
+         eRS2a7hPJx6SQkI4k42lLHt/z/A16wXU2xeTml+8=
+Received: by mail-wr1-f44.google.com with SMTP id i12so14632529wro.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 09:06:23 -0800 (PST)
+X-Gm-Message-State: APjAAAUnlgEoSHvzfBXa/HN26fMZwFvUZZT334I7DOW9ics6bwY3ioCH
+        YbGhscx8c0Y4VzSxJAzRr4QlG5m7moVlzwzBAxEF+A==
+X-Google-Smtp-Source: APXvYqxnwrj5N9383JzVbSzIbSfa31TZ//NRGDN/BrbTpb+XWtJGRdSU5J+TdOXXT4DVs+Iw1adhsi8jvuucqN8Kxck=
+X-Received: by 2002:a5d:4589:: with SMTP id p9mr11104362wrq.61.1574615181692;
+ Sun, 24 Nov 2019 09:06:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121230411.GA92983@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <157461245729.21853.17367017341063798964.tip-bot2@tip-bot2>
+In-Reply-To: <157461245729.21853.17367017341063798964.tip-bot2@tip-bot2>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 24 Nov 2019 09:06:11 -0800
+X-Gmail-Original-Message-ID: <CALCETrUkRN5wnNe-E8kr5zQNdXd777Ce1VcZBsH-+2+Y7d9tJQ@mail.gmail.com>
+Message-ID: <CALCETrUkRN5wnNe-E8kr5zQNdXd777Ce1VcZBsH-+2+Y7d9tJQ@mail.gmail.com>
+Subject: Re: [tip: x86/urgent] x86/pti/32: Calculate the various PTI
+ cpu_entry_area sizes correctly, make the CPU_ENTRY_AREA_PAGES assert precise
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>, stable@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 05:04:11PM -0600, Bjorn Helgaas wrote:
-> What sort of tools would this break?  There are no AER tools since the
-> AER stats sysfs files don't exist yet, so I assume there are some
-> generic sysfs tools or libraries.
+On Sun, Nov 24, 2019 at 8:21 AM tip-bot2 for Ingo Molnar
+<tip-bot2@linutronix.de> wrote:
+>
+> The following commit has been merged into the x86/urgent branch of tip:
+>
+> Commit-ID:     4d6dd252b80eddbd7425d0b6b07b239f4f070647
+> Gitweb:        https://git.kernel.org/tip/4d6dd252b80eddbd7425d0b6b07b239f4f070647
+> Author:        Ingo Molnar <mingo@kernel.org>
+> AuthorDate:    Sun, 24 Nov 2019 11:21:44 +01:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Sun, 24 Nov 2019 14:22:27 +01:00
+>
+> x86/pti/32: Calculate the various PTI cpu_entry_area sizes correctly, make the CPU_ENTRY_AREA_PAGES assert precise
+>
 
-Any normal tool that looks at sysfs attributes, like udev and friends.
-They will "miss" the uevent for the subdirs and not know how to
-associate anything with the "parent" struct device.
-
-> Incidentally,
-> https://www.kernel.org/doc/html/latest/admin-guide/sysfs-rules.html
-> suggests that maybe we should be documenting these files with
-> /sys/devices paths instead of the symlinks in /sys/bus/pci/devices/,
-> e.g.,
-> 
->   diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
->   -What:		/sys/bus/pci/devices/.../msi_bus
->   -What:		/sys/bus/pci/devices/.../msi_irqs/
->   -What:		/sys/bus/pci/devices/.../msi_irqs/<N>
->   +What:		/sys/devices/pci*/.../msi_bus
->   +What:		/sys/devices/pci*/.../msi_irqs/
->   +What:		/sys/devices/pci*/.../msi_irqs/<N>
-
-Either is fine, but yes, the second one is nicer.
-
-thanks,
-
-greg k-h
+Thanks, much better!
