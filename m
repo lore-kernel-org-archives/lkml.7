@@ -2,90 +2,94 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B3EC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494BFC432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF57207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3EA207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEnE6f+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKXWw7 (ORCPT
+        id S1727029AbfKXXAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 17:52:59 -0500
-Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17478 "EHLO
-        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfKXWw7 (ORCPT
+        Sun, 24 Nov 2019 18:00:33 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35307 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbfKXXAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 17:52:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574635958; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=nkhEXIzF9+0eSVEWhcQyoV6RJb7cH7U8Gr2gkLFCjEeuJUg2huMqkHX0csaHlKyVgttBtlmDlKmWemY0aVu/zthNq2k2KSD+DscGEN05VjaeiZ11vK7T5saX6/nN7xxYjPFNNrByvVz3HcsxcsCB6lL+rDvDFh2aEdoqoFfBLCM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574635958; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=VBlCIOBlmhYT1nXzZeusUrp2ZE5E5KFbCpOclqk1oRI=; 
-        b=H9LIerKIxFLVX+a3CgdMu5BaAD8LkvS1IfTDtU6XBlJ4JhB/Ve3h8gklOB/hfWRDtUAJb9qdkBJOPSTTLVegEd5k5y/ffGTLwnlkWiUVFkDnLjLmFmxuOc7sgFNdTxiYP+cIQzzj6yyU8q8xgptetWnCe8uBeJ8shM+4enZtpTc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1574635957113882.9905876044394; Sun, 24 Nov 2019 14:52:37 -0800 (PST)
-Date:   Sun, 24 Nov 2019 22:37:34 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
-Message-ID: <20191124223734.GA13261@nessie>
-References: <20191018031848.18538-1-dan@dlrobertson.com>
- <20191018031848.18538-3-dan@dlrobertson.com>
- <CAHp75VfMW0fvmO9jGTnQumJ9Sm-SgNL0ohjSR4qRQY365aeMBw@mail.gmail.com>
- <20191019024351.GB8593@nessie>
- <20191021162016.531e6a2e@archlinux>
- <20191118002504.GA29469@nessie>
- <20191123125135.4c7efcb0@archlinux>
+        Sun, 24 Nov 2019 18:00:33 -0500
+Received: by mail-il1-f193.google.com with SMTP id g12so3011559ild.2;
+        Sun, 24 Nov 2019 15:00:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=odza52ilBwlA3qR/sWBKfuk+gEqR3R+QpYiXACzCFos=;
+        b=lEnE6f+4W6HZwageKml38lXSUMQYQ2zwYrERviQkywOciokwQJlcVArXQlhb5DNI4T
+         hAu+vPMlYTsH/QUWiOtkNPaFE43mo0DdOLwZQJinp1qP007Q1pYUN2YBUuWt68JLHnyw
+         QhjqYawiKtrk5pFnpodSFBhlHA1AraKCTw34bJnzIlblBlNTv4/59OcR26uXVSGnjbqu
+         8CMB79FUGM4F07WVpg0vuECMFzvaOLgmF4MTmNWvW5qfYi/K2vzduafn/JNvjmTFq34Y
+         hUYaQjHCNAeOXyLnd886cq9Y7e/gh0knc8cpAUvTI2e5O0lEfter1xwvnZVV1VBmSrI8
+         Rh5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=odza52ilBwlA3qR/sWBKfuk+gEqR3R+QpYiXACzCFos=;
+        b=tH6iiZLNYIEyWPN4spluiKyvo1ujzEoHj04CVysUYeAYUQ8iQrem7lmWX2gUmQf0KK
+         BQBhci+YbFaj+0rMST9SXWcwIOAn5GuId2t7QKui5SqbwW+FPpUeloja3r91SF8UZsRf
+         L6aTX9pvUO1NCLOp/FMfXQSORMR7VQdUPYmBspZYSvHGMevB8rNdrmpmW7Slfjc4b7CN
+         Ct3seN9mboCeZbBF17i5JJyojhEBrZP3cs3gNCZcxlcFr0S+T4gCcYxnJ3lpyAyaDIXb
+         K60pClFMI+hTKtJGSH5KxIIg4LS58Exmls835ARKyU6IAXLIZjyEpfzKVZTwZ2da0d0X
+         IFKg==
+X-Gm-Message-State: APjAAAXmKmIEEeeR1UCrrsaiAmKyzOWTNoMZZERVSd+ah4/LWcGOzH8k
+        ahZeL2+7JKfaL9d76uAp73pA5erQZioaW3Ju5qc=
+X-Google-Smtp-Source: APXvYqwOO13A41HtjuUQe4sv4eu4rVgFn0OC5AVd9V0cE3MSGxeqRZPuKbTrJ/y4K1egU01KhMONsaCryETY/yND3W0=
+X-Received: by 2002:a92:831d:: with SMTP id f29mr31049248ild.263.1574636432052;
+ Sun, 24 Nov 2019 15:00:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123125135.4c7efcb0@archlinux>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
+References: <20191124154334.15366-1-leo.yan@linaro.org>
+In-Reply-To: <20191124154334.15366-1-leo.yan@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Sun, 24 Nov 2019 16:00:21 -0700
+Message-ID: <CAOCk7NoWR4cFepACH_r=tmZ+bX6uXsM4HWNr5uvm6CoRdQTw-w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] tty: serial: msm_serial: Fix lockup for sysrq and oops
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 12:51:35PM +0000, Jonathan Cameron wrote:
-> If a function is your preferred route you could also just use it to compute
-> the values for the available table at startup?
+On Sun, Nov 24, 2019 at 8:44 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+> has mentioned the uart driver might cause recursive locking between
+> normal printing and the kernel debugging facilities (e.g. sysrq and
+> oops).  In the commit it gave out suggestion for fixing recursive
+> locking issue: "The solution is to avoid locking in the sysrq case
+> and trylock in the oops_in_progress case."
+>
+> This patch follows the suggestion (also used the exactly same code with
+> other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+> issue, this can avoid stuck caused by deadlock and print out log for
+> sysrq and oops.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Yeah that makes sense. I'll add that in the next patchset version.
+Shouldn't this patch have a Fixes tag?
 
-> > The sampling ratio, frequency, etc code seems to be the most complicated part
-> > of the driver. Is it typically recommended to upstream a more minimal driver
-> > that might assume the defaults?
-> 
-> Often people upstream a first version that just uses defaults, then follow
-> up (if they care) with later series adding the more fiddly elements.
-> 
-> Sometimes those more fiddly bits never come as a particular author
-> never needed them.  That's absolutely fine.  It's a rare driver
-> that supports all the features on a non trivial device!
-
-Makes sense. I'll likely add some extra bits in a follow-up patchset, so I can
-learn a bit more.
-
-Cheers,
-
- - Dan
-
+Was there a cover letter?
