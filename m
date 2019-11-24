@@ -2,91 +2,79 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83500C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C24C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545612067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="cicZLyeZ"
+	by mail.kernel.org (Postfix) with ESMTP id 796302068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKXXSc (ORCPT
+        id S1727046AbfKXXYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 18:18:32 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44402 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfKXXSc (ORCPT
+        Sun, 24 Nov 2019 18:24:01 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:39110 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKXXYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 18:18:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id e6so6083873pgi.11
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 15:18:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=RQBmwWdIIGgnDdpvfkEM//aOqRA5KBb41NFCx63N7s8=;
-        b=cicZLyeZUh1ZA/1xCHw1eP8L8XEmzJ90PY5aDtWxQ9Aqq1sgKXjE2fdCuw0qblc/bT
-         s2lB5uAouGCo/8VtARjRZJtl0dqwYHWJyGLT0QwXZSMa8lz3n5Lf4B+WFvtjQI27vyNy
-         tZ9p1kA163MHTM2h5tHLrjZ+ljOjcB51zP75SohuxLtIBmqBjJu5ZiX8cTP1FbgAAfnE
-         hbiFlO8IDdsp3Dw1hlgdGvsDKsnP1QPEmej+oUqkaJDeZ/M7h5qiCAMUy7Yr0Hf6vw6W
-         qVfIMgrqncFIlbL/wrDAD6i35tqvkMrVtAeTodMaRYEuKJlTjBTFurvuAPoiMieM5X7J
-         H3AA==
+        Sun, 24 Nov 2019 18:24:01 -0500
+Received: by mail-il1-f199.google.com with SMTP id t4so12253690iln.6
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 15:24:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=RQBmwWdIIGgnDdpvfkEM//aOqRA5KBb41NFCx63N7s8=;
-        b=NROn0DZPeqLOQuyG6vVvkygHuuFkP67izZUIPr2aTZEP5t6IfIfRKWN9WqkVO1rrjc
-         KUDRHnqyWPX2uPugubE9prvY7lffcSm2JWDb/jJviNF2Npn+aR+o4CwujiWZX/oxDBHs
-         hiEowiJnea8scOG1ehh2t0lVeuEKPTpzePz/CEoHaPafXlQjhPaFDWCYEzKgpP/01YXI
-         fiZ9WCAxlKuCkH6CvB9JG9YSCkLNzzbNcQMxvl5O8rxKQtR5Ol5oXxTKwnQq2cxgKEFi
-         jdjr7H2ufrbbfo+YSTzkULawvOjnhMqUZMv+DYPvrTc6DcLZBlMcOUzbyZFtHtm0iVrS
-         pUGQ==
-X-Gm-Message-State: APjAAAWLZwSPHErISTjOUyBrKTATLWsNuaAJW8VszmpiNcvikKG5GZ4z
-        N2DSphsrYJYs7U8oYLYvJAhExw==
-X-Google-Smtp-Source: APXvYqwfqee9EFV7qi5/de/OZmKTc+OVsA3hRqpxIOyEHHYm8ud3mIiED6B+pv+05DPGITadwK78cg==
-X-Received: by 2002:a62:e308:: with SMTP id g8mr31804436pfh.121.1574637511579;
-        Sun, 24 Nov 2019 15:18:31 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id c17sm5559731pfo.42.2019.11.24.15.18.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 15:18:31 -0800 (PST)
-Date:   Sun, 24 Nov 2019 15:18:25 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        davem@davemloft.net, edumazet@google.com, sfr@canb.auug.org.au,
-        linuxppc-dev@ozlabs.org
-Subject: Re: [PATCH v2] powerpc: Add const qual to local_read() parameter
-Message-ID: <20191124151825.70d15916@cakuba.netronome.com>
-In-Reply-To: <20191120011451.28168-1-mpe@ellerman.id.au>
-References: <20191120011451.28168-1-mpe@ellerman.id.au>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=lvmYFxQ4tMpUppOKxWLXexXQSrq67jjHmSMnYwsK918=;
+        b=ggcl6ArpCbytyZ0TjXVDz0fhyvhVXlu/Z+gsNd59ZYuAhAfyRfsRx73PaUDJZMQWc6
+         zqWbwex7B/YyM17nA7ugoVwsmzG2zDGikhzZxzTwJ4+Sdt1yrWow1TUN9gDLPux8hdhs
+         Zfx0RzcIhcCQDrN5Oi7qqYynNamMTefbWbOPmjm8OawNvnM/IcOgWigHqvIY68gRoU5M
+         dW0iUZj9CywCrJuZ1EcBIcCetuiyR0Yy5PA1lkEl3Y0H6WGrJhtPQ5xPL70fY/OBnh/9
+         PmxKzc6A+wFDN09i04Qpyk+qkAj43BeyGQMt3bhn59SHDQlZAiXE7XY1tE5fwFQwxE3x
+         SOIA==
+X-Gm-Message-State: APjAAAWZGgb0X4XsOMJpL8iQq4swYDZsfWHjLKtf0R2hWFu3qiNGiXTp
+        m+nvy2voWgbtLNFpTXP5+r4LJXJ3N1jxRrLzpzSuluQ74H4F
+X-Google-Smtp-Source: APXvYqzybgh35xlc8OCAZI+HDDxRXvIzbywSitZ5fmZRerPy++yQAdBkreUmqiN9FAW1Gh+w6H3FG23oukUmVPMMPPcj1XreIAIA
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:7405:: with SMTP id p5mr31061111ilc.261.1574637840449;
+ Sun, 24 Nov 2019 15:24:00 -0800 (PST)
+Date:   Sun, 24 Nov 2019 15:24:00 -0800
+In-Reply-To: <Pine.LNX.4.44L0.1911241553390.4632-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000214afd05981ff1a8@google.com>
+Subject: Re: possible deadlock in mon_bin_vma_fault
+From:   syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+        jrdr.linux@gmail.com, keescook@chromium.org,
+        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, zaitcev@redhat.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 12:14:51 +1100, Michael Ellerman wrote:
-> From: Eric Dumazet <edumazet@google.com>
-> 
-> A patch in net-next triggered a compile error on powerpc:
-> 
->   include/linux/u64_stats_sync.h: In function 'u64_stats_read':
->   include/asm-generic/local64.h:30:37: warning: passing argument 1 of 'local_read' discards 'const' qualifier from pointer target type
-> 
-> This seems reasonable to relax powerpc local_read() requirements.
-> 
-> Fixes: 316580b69d0a ("u64_stats: provide u64_stats_t type")
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Hello,
 
-Applied to net-next now, thanks.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
+
+Reported-and-tested-by:  
+syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         4d856f72 Linux 5.3
+git tree:        
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v5.3
+kernel config:  https://syzkaller.appspot.com/x/.config?x=86071634b2594991
+dashboard link: https://syzkaller.appspot.com/bug?extid=56f9673bb4cdcbeb0e92
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11ff3eeee00000
+
+Note: testing is done by a robot and is best-effort only.
