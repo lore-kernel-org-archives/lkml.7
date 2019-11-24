@@ -2,201 +2,173 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADCC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 05:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D291C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 06:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5750020748
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 05:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovCu849u"
+	by mail.kernel.org (Postfix) with ESMTP id 65C622053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 06:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfKXF3J (ORCPT
+        id S1726705AbfKXGIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 00:29:09 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37871 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfKXF3J (ORCPT
+        Sun, 24 Nov 2019 01:08:48 -0500
+Received: from pindarots.xs4all.nl ([82.161.210.87]:44848 "EHLO
+        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfKXGIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 00:29:09 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b10so5448262pgd.4;
-        Sat, 23 Nov 2019 21:29:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ON5n9I/25k32O1A/2D3MIyo2BlxDNMBzybIh7RG8xz8=;
-        b=ovCu849udwskipv9/n1UhD8x9SQztBcID0T7scQUYgV/Oqa9t9ykaT5HLGPaH2OfbT
-         iyXIL9hLJ+W4msEziMmzJsDwGEnQoQHZaQxdOJe3qY8OTBhbSZM4K8dGrg4zqN5EW2Ds
-         xySz8L3x/m2cnLnOVjyW4SqeYEZuIXK7hIxrhZAB13CNQgVFex2YyqCg0Nqqg7zSsPzP
-         KQJWNl+6OR9b7UmAW8JG/nFkmK1Dmw/+/hMxRILeHz4aZLVhzNZiGHR+kq7tH7hxdj30
-         4fk6XbUxGUCqzbKE/ZHMG8GoIdA58IEt2++duGOKMGZTet3ZGg6pnLPTuB6748RUZ7mM
-         qrag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ON5n9I/25k32O1A/2D3MIyo2BlxDNMBzybIh7RG8xz8=;
-        b=mn3QJMMuiDuF4dYn8M/nHJxatBg0B7BUP1rvz3flUKFcX3SH1FyG5dtNyRmUcgIBfq
-         oextaWePwgkFONYI/846eLhIOBXLPuwzIRwlY1AVOCRvmXKzQ9O31kRIjhFTe1BJlpe9
-         jLoNVQ5XxaXNpqHsakc412FsGXvHPo9LP/Xrj27N6WRuY78FZPTZRHeyoHu/HjAq7dg/
-         pWIE3GhJTARADED6K//a574mf+wOCrT/E2gOxNYBc7OTOFfTCXX2A37fa76ONVsld5ME
-         49f1L9FgdmoqAl5FX6d1pKqOINKWl/ADRYCu5rGU26vo4F+/f1h2/uxEnFRIwEyhJppJ
-         asmQ==
-X-Gm-Message-State: APjAAAXKP9i76EaZ+9/GxynnuH+upsOfmQT/dYsSIeRXBlYv3H9LtgCD
-        N8WjB1MlkSiSU3ZHg3qLCk0=
-X-Google-Smtp-Source: APXvYqzY/4pwBvAuCjFLW6iGX4cS5O5pnbcB2MKCL8mSMp5arnvtk+SQTE1PdNAwdvov+JskFcDtcg==
-X-Received: by 2002:a62:140d:: with SMTP id 13mr26312229pfu.79.1574573348284;
-        Sat, 23 Nov 2019 21:29:08 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id w2sm3453358pfj.22.2019.11.23.21.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 21:29:07 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] dmaengine: ti: edma: add missed operations
-Date:   Sun, 24 Nov 2019 13:28:55 +0800
-Message-Id: <20191124052855.6472-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 24 Nov 2019 01:08:47 -0500
+Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
+        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id xAO68kgK366987
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Sun, 24 Nov 2019 07:08:46 +0100
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        RT <linux-rt-users@vger.kernel.org>
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+Subject: 5.2.21-rt13 WARN_ON(rt_mutex_owner(lock) != current)
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ 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
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <1dd8d3b0-1fb3-c9fd-a4c3-935d60f0b034@xs4all.nl>
+Date:   Sun, 24 Nov 2019 07:08:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call pm_runtime_disable and pm_runtime_put_sync in
-probe failure and remove.
-Add the calls and modify probe failure handling to fix it.
+Hello,
 
-To simplify the fix, the patch adjusts the calling order and merges checks
-for devm_kcalloc.
+Is the WARNING below rt-specific or what is happening here?
+Please advise...
 
-Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Add the missed pm_runtime_put_sync.
-  - Simplify the patch.
-  - Rebase to dma-next.
 
- drivers/dma/ti/edma.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
+[  600.401576] ------------[ cut here ]------------
+[  600.401583] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) != current)
+[  600.401592] WARNING: CPU: 3 PID: 23306 at
+kernel/locking/rtmutex-debug.c:145 debug_rt_mutex_unlock+0x48/0x50
+[  600.401606] Modules linked in: act_police sch_ingress cls_u32 sch_sfq
+sch_cbq pppoe pppox ip6table_raw nf_log_ipv6 ip6table_mangle xt_u32
+xt_CT xt_nat nf_log_ipv4 nf_log_common xt_statistic nf_nat_sip
+nf_conntrack_sip xt_recent xt_string xt_lscan(O) xt_TARPIT(O)
+iptable_raw nf_nat_h323 nf_conn
+track_h323 xt_TCPMSS xt_length xt_hl xt_tcpmss xt_owner xt_mac xt_mark
+xt_multiport xt_limit nf_nat_irc nf_conntrack_irc xt_LOG xt_DSCP
+xt_REDIRECT xt_MASQUERADE xt_dscp nf_nat_ftp nf_conntrack_ftp
+iptable_mangle iptable_nat mq_deadline 8021q ipt_REJECT nf_reject_ipv4
+iptable_filter ip6t_REJECT n
+f_reject_ipv6 xt_state xt_conntrack ip6table_filter nct6775 ip6_tables
+sunrpc amd_freq_sensitivity aesni_intel pl2303 aes_x86_64 amdgpu
+snd_hda_codec_realtek glue_helper mfd_core snd_hda_codec_generic
+crypto_simd cryptd gpu_sched drm_kms_helper syscopyarea sysfillrect
+sysimgblt i2c_piix4 fb_sys_f
+ops snd_hda_codec_hdmi ttm drm drm_panel_orientation_quirks cfbfillrect
+snd_hda_intel cfbimgblt snd_hda_codec
+[  600.401695]  cfbcopyarea snd_hda_core i2c_algo_bit snd_pcm fb fbdev
+snd_timer backlight snd acpi_cpufreq sr_mod cdrom sd_mod autofs4
+[  600.401710] CPU: 3 PID: 23306 Comm: fsfreeze Tainted: G           O
+   5.2.21-rt13 #9
+[  600.401714] Hardware name: To Be Filled By O.E.M. To Be Filled By
+O.E.M./QC5000M-ITX/PH, BIOS P1.10 05/06/2015
+[  600.401716] RIP: 0010:debug_rt_mutex_unlock+0x48/0x50
+[  600.401721] Code: 75 02 f3 c3 e8 99 47 21 00 85 c0 74 f5 8b 05 ef 08
+04 01 85 c0 75 eb 48 c7 c6 50 f9 d7 81 48 c7 c7 48 06 d7 81 e8 a9 29 fb
+ff <0f> 0b c3 0f 1f 44 00 00 f3 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f
+[  600.401726] RSP: 0018:ffffc900027d3d80 EFLAGS: 00010082
+[  600.401727] RAX: 0000000000000000 RBX: ffff888136d6eb80 RCX:
+ffffffff820708d8
+[  600.401730] RDX: ffffffff82070a00 RSI: 0000000000000000 RDI:
+ffffffff82070c50
+[  600.401732] RBP: ffff888136d6e918 R08: ffffffff820708c0 R09:
+0000000000000001
+[  600.401734] R10: ffffffff82070900 R11: ffffc900027d3cc0 R12:
+0000000000000292
+[  600.401735] R13: ffffc900027d3d98 R14: ffff888136d6e470 R15:
+ffffffff81162a0a
+[  600.401738] FS:  00007f6b80d9d540(0000) GS:ffff88813b380000(0000)
+knlGS:0000000000000000
+[  600.401740] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  600.401742] CR2: 00007fc4a87fe430 CR3: 000000006382c000 CR4:
+00000000000406a0
+[  600.401745] Call Trace:
+[  600.401750]  __rt_mutex_unlock+0x56/0xd0
+[  600.401758]  percpu_up_write+0x1a/0x30
+[  600.401763]  thaw_super_locked+0x10a/0x140
+[  600.401769]  ? thaw_super_locked+0xaa/0x140
+[  600.401773]  do_vfs_ioctl+0x5a4/0x6a0
+[  600.401778]  ? __se_sys_newfstat+0x5a/0x70
+[  600.401782]  ksys_ioctl+0x7b/0xa0
+[  600.401785]  __x64_sys_ioctl+0x11/0x20
+[  600.401788]  do_syscall_64+0x6d/0x310
+[  600.401794]  ? __do_page_fault+0x242/0x510
+[  600.401798]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  600.401803] RIP: 0033:0x7f6b80ccb34b
+[  600.401806] Code: 0f 1e fa 48 8b 05 3d 9b 0c 00 64 c7 00 26 00 00 00
+48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0d 9b 0c 00 f7 d8 64 89 01 48
+[  600.401811] RSP: 002b:00007ffecbbd7c48 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[  600.401812] RAX: ffffffffffffffda RBX: 0000000000000003 RCX:
+00007f6b80ccb34b
+[  600.401814] RDX: 0000000000000000 RSI: 00000000c0045878 RDI:
+0000000000000003
+[  600.401816] RBP: 0000000000000003 R08: 0000000000000001 R09:
+0000000000000000
+[  600.401817] R10: 0000000000000000 R11: 0000000000000246 R12:
+0000000000000002
+[  600.401819] R13: 00007ffecbbda0fe R14: 0000000000000000 R15:
+0000000000000000
+[  600.401822] ---[ end trace 0000000000000002 ]---
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 756a3c951dc7..0628ee4bf1b4 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2289,13 +2289,6 @@ static int edma_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENODEV;
- 
--	pm_runtime_enable(dev);
--	ret = pm_runtime_get_sync(dev);
--	if (ret < 0) {
--		dev_err(dev, "pm_runtime_get_sync() failed\n");
--		return ret;
--	}
--
- 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
- 	if (ret)
- 		return ret;
-@@ -2326,27 +2319,31 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, ecc);
- 
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "pm_runtime_get_sync() failed\n");
-+		pm_runtime_disable(dev);
-+		return ret;
-+	}
-+
- 	/* Get eDMA3 configuration from IP */
- 	ret = edma_setup_from_hw(dev, info, ecc);
- 	if (ret)
--		return ret;
-+		goto err_disable_pm;
- 
- 	/* Allocate memory based on the information we got from the IP */
- 	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
- 					sizeof(*ecc->slave_chans), GFP_KERNEL);
--	if (!ecc->slave_chans)
--		return -ENOMEM;
- 
- 	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
- 				       sizeof(unsigned long), GFP_KERNEL);
--	if (!ecc->slot_inuse)
--		return -ENOMEM;
- 
- 	ecc->channels_mask = devm_kcalloc(dev,
- 					   BITS_TO_LONGS(ecc->num_channels),
- 					   sizeof(unsigned long), GFP_KERNEL);
--	if (!ecc->channels_mask)
--		return -ENOMEM;
-+	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask)
-+		goto err_disable_pm;
- 
- 	/* Mark all channels available initially */
- 	bitmap_fill(ecc->channels_mask, ecc->num_channels);
-@@ -2388,7 +2385,7 @@ static int edma_probe(struct platform_device *pdev)
- 				       ecc);
- 		if (ret) {
- 			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
--			return ret;
-+			goto err_disable_pm;
- 		}
- 		ecc->ccint = irq;
- 	}
-@@ -2404,7 +2401,7 @@ static int edma_probe(struct platform_device *pdev)
- 				       ecc);
- 		if (ret) {
- 			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
--			return ret;
-+			goto err_disable_pm;
- 		}
- 		ecc->ccerrint = irq;
- 	}
-@@ -2412,7 +2409,8 @@ static int edma_probe(struct platform_device *pdev)
- 	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
- 	if (ecc->dummy_slot < 0) {
- 		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
--		return ecc->dummy_slot;
-+		ret = ecc->dummy_slot;
-+		goto err_disable_pm;
- 	}
- 
- 	queue_priority_mapping = info->queue_priority_mapping;
-@@ -2512,6 +2510,9 @@ static int edma_probe(struct platform_device *pdev)
- 
- err_reg1:
- 	edma_free_slot(ecc, ecc->dummy_slot);
-+err_disable_pm:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 	return ret;
- }
- 
-@@ -2542,6 +2543,8 @@ static int edma_remove(struct platform_device *pdev)
- 	if (ecc->dma_memcpy)
- 		dma_async_device_unregister(ecc->dma_memcpy);
- 	edma_free_slot(ecc, ecc->dummy_slot);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 
- 	return 0;
- }
--- 
-2.24.0
 
+Kind regards,
+Udo
