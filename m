@@ -2,128 +2,86 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5B9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54378C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5675C2073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:57:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsG6iwop"
+	by mail.kernel.org (Postfix) with ESMTP id 303052073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKXO5Q (ORCPT
+        id S1727085AbfKXO6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 09:57:16 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44171 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfKXO5P (ORCPT
+        Sun, 24 Nov 2019 09:58:55 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:38363 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726836AbfKXO6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 09:57:15 -0500
-Received: by mail-pf1-f194.google.com with SMTP id d199so1357900pfd.11;
-        Sun, 24 Nov 2019 06:57:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SfWsOmQE/r0rnoMiC9E/xzw8dmYppncobr92itFVVSs=;
-        b=IsG6iwopTfpkSahUG6WT0yB+bF7hDW/WcOu4iU3POG1cggRa/nihBOenHTteUKComn
-         QVl0DDjCxmf9EE7EenT2oriblVHVJ9/to9q0OQEwuehzdoRMQcUSxvjQawTzu/j/BWcV
-         MPrVab+hfkO/mCUxfHkxLvEhsOC+zpWxDEFHOO9VxZ8w97dbccUR4GgTL9NEz+eg6BpA
-         rYFXlupkxzoVEdLBQZDXL8kaEzwZu0rfxnwMnxtTMsQQrlaJTrrGaDw5jxxzZgZfj8iy
-         5tJ/5KgbWrEBCceGl9LLkyc5KaRyMS/shAiHnlA8Z1oCKKu30+Xwsk7Fmix9T8eI0cY9
-         y3wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SfWsOmQE/r0rnoMiC9E/xzw8dmYppncobr92itFVVSs=;
-        b=tmYcT8ZMa+3vE37DKlZEL3ol//P+6FHDUVUVyj0KKnHqUvhcg9V6ol5NuwmHvM+I1v
-         jMuXtNh4yh1ZTsNdlke4j3frWL7e6Kv5g8tcFDwbnIpRgSSJqrpZPtNlqa0RPnJM8fA7
-         d4z7igs55SpSoU2R5zUYH1HfOjQBErEbis2yzF/oXdVyYAdFyiY9cNScXXSbtjXpQ1Ev
-         5OP/8W7MTlpbk92p19NCHKpJIMzWP1qXufepkQKdRLe5N5uiOn/Rm/jn2pDU+CrMz3iF
-         abuAHpcNBb3KYdLIMrhgDz31EUYWRQKFJeSs5GaFVh/Bpgajz+jAwBec2Q6STWLtsbzL
-         MpgA==
-X-Gm-Message-State: APjAAAVVHl4vgWn1E4DY18+23g2FNwZ2zByZG003Cu0ybEdN+HRE2Cjq
-        PWH9MEhVCeHmUNndJUSfLDsHOjANQNJeITVx6DxrzN+E
-X-Google-Smtp-Source: APXvYqwZoLFN1zxu52vVv3dD5/32mEnANCd+XVhQAiRkPPoSM2JkZ9mS6MAzmzvEHaPoZLlNYU+nqc9CBou0i1oYEfw=
-X-Received: by 2002:a62:7590:: with SMTP id q138mr6261090pfc.241.1574607434795;
- Sun, 24 Nov 2019 06:57:14 -0800 (PST)
+        Sun, 24 Nov 2019 09:58:54 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TiwhtFi_1574607525;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TiwhtFi_1574607525)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 24 Nov 2019 22:58:52 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: fix use after free issue
+Date:   Sun, 24 Nov 2019 22:58:35 +0800
+Message-Id: <20191124145835.25999-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com> <1574604530-9024-2-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1574604530-9024-2-git-send-email-akinobu.mita@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 24 Nov 2019 16:57:03 +0200
-Message-ID: <CAHp75VfGt59F5YbEjctvOm00g+Pws+1jYgVbNLnUE3kq3SZi-A@mail.gmail.com>
-Subject: Re: [PATCH 1/8] add header file for kelvin to/from Celsius conversion helpers
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
->
-> There are several helper macros to convert kelvin to/from Celsius in
-> <linux/thermal.h> for thermal drivers.  These are useful for any other
-> drivers or subsystems, but it's odd to include <linux/thermal.h> just for
-> the helpers.
->
-> This adds a new <linux/temperature.h> that provides the equivalent inline
-> functions for any drivers or subsystems.  It is intended to replace the
-> helpers in <linux/thermal.h>.
->
-> Cc: Sujith Thomas <sujith.thomas@intel.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: Jens Axboe <axboe@fb.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->  include/linux/temperature.h | 39 +++++++++++++++++++++++++++++++++++++++
+This is caused by dereferencing 'rdev' after put_device() in
+the _regulator_get()/_regulator_put() functions.
+This patch just moves the put_device() down a bit to avoid the
+issue.
 
->  include/linux/thermal.h     |  1 +
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/regulator/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -14,6 +14,7 @@
->  #include <linux/idr.h>
->  #include <linux/device.h>
->  #include <linux/sysfs.h>
-> +#include <linux/temperature.h>
->  #include <linux/workqueue.h>
->  #include <uapi/linux/thermal.h>
-
-I don't see any users of it. Why did you include?
-
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 679ad3d..09a3550 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1938,8 +1938,8 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
+ 	regulator = create_regulator(rdev, dev, id);
+ 	if (regulator == NULL) {
+ 		regulator = ERR_PTR(-ENOMEM);
+-		put_device(&rdev->dev);
+ 		module_put(rdev->owner);
++		put_device(&rdev->dev);
+ 		return regulator;
+ 	}
+ 
+@@ -2063,13 +2063,13 @@ static void _regulator_put(struct regulator *regulator)
+ 
+ 	rdev->open_count--;
+ 	rdev->exclusive = 0;
+-	put_device(&rdev->dev);
+ 	regulator_unlock(rdev);
+ 
+ 	kfree_const(regulator->supply_name);
+ 	kfree(regulator);
+ 
+ 	module_put(rdev->owner);
++	put_device(&rdev->dev);
+ }
+ 
+ /**
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
+
