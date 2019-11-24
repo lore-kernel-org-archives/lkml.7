@@ -2,133 +2,121 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2C3C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A9BC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49122073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727B92071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8rWUsvs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3A0eO+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfKXNZV (ORCPT
+        id S1726957AbfKXNjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 08:25:21 -0500
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:53149 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfKXNZV (ORCPT
+        Sun, 24 Nov 2019 08:39:44 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34650 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfKXNjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 08:25:21 -0500
-Received: by mail-wm1-f51.google.com with SMTP id l1so12370514wme.2;
-        Sun, 24 Nov 2019 05:25:19 -0800 (PST)
+        Sun, 24 Nov 2019 08:39:44 -0500
+Received: by mail-wm1-f66.google.com with SMTP id j18so14023713wmk.1;
+        Sun, 24 Nov 2019 05:39:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Ht9UUup2TX0xxPIbxBhXRv5NvHEMASjnlgsqsYatr+o=;
-        b=H8rWUsvsMBuqav+SU6Org6cYDcDduGql7qBv3DIREbCjbkguuCdZJbg07eoz2FkZ8j
-         1DQiDcgu/d8GZ9IC740dNmZ2si36Ec8eBQfyVD5daq37++uQprh4G9FPwBooSJ99ydJB
-         55nCill72IuyqaE5AWNBeeuYIyZsK5Yy4qsd1Q1avZSp5/eHDIIU7rE+Av1fH+bCWMok
-         QR5y9cPLtQcj6jbEqh147d7IhgFLUhKe+y2M+jG2I5DSTiridN+lgUFUQOD7tosuuWzi
-         PpQZn7+ITS16YynTnQ5N/vF8dkKHZG+5NNw2GydLnCzP/2f6zi3fyA8T51qmWQdoN63a
-         Vm/Q==
+        bh=d5kjGUzlv1E7Wwg3/Im24rEOibwGt1VTUz9hOtyzDRo=;
+        b=P3A0eO+UU2fkR78M/gKuYSwQIeOWbVT/0VZTKfEjGUvBYg14e6jJ713yB/Nv1rqQEY
+         t0cmRiC/OofksIwBoTP8fHWjG86/G16l7BJzpxvaNUeq2fVTpvLm0H2npMkNnQ5Oe5BY
+         2JP3hGYg2qvTp1vl3h1O8uq2fVXeKSLByiPqXVbgzc4Nc3Ly3MMMn4ev9jVEe9zumeEb
+         Nu1LHl+fOTjs6I64wpQRM8BZq+EWd6fgCa1qziyOZjD3ag6u2/w7VytXLN+NBF9EcpEG
+         Lx9AKCo0uRBnxI1QzeY/pIsiDApm9TktOpUClghsLUIbpNXcL2pFYdQPXFZJPYNCwpXX
+         wBRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ht9UUup2TX0xxPIbxBhXRv5NvHEMASjnlgsqsYatr+o=;
-        b=kMmIeLTnaKZFk+QQtpNgaagGOnKSTl9ohO4JZA3WakDqEnIFx1mSstYiQCYAS2KvE8
-         ZxxatFaA0bpl/LAS8S/B7YcTVobTLz3WWIL3wR2qAAGTA/kqXMpLA+Ti43bkmqS3fbQm
-         ItSXM/U+o2O9XHuIVA+NiD5suU4o+BuketFJ/sxWh+peudQYFgDh+yKPsrGzSWdHBBus
-         BHQkhQH8SytQVNpHrqyDznCmg+3qLFa/RKGerGipW8O6DS6zv7gB4whSPJs4NTOTDfJz
-         6JbQvzQDA7V8owv4OMOZ3GJjlWH8JUIZ0GeeO9fIW/yFvTkRBpIgCK7ljAVu4NMlBsqZ
-         PdKg==
-X-Gm-Message-State: APjAAAW4ztW+bM8HLV4BGWoY52sSjlFRSqWwU8m1PI3R2gDNjt4JJpgo
-        sfrbB13KcgkYuJGNUaFPYg==
-X-Google-Smtp-Source: APXvYqw1mBrZte82t9/JtxDM7dPpYmdS4Mj0JsdsJp6Dnodj+0XQp+Q3uvxJ/0KnnAsgZh3kl2DKsw==
-X-Received: by 2002:a1c:5415:: with SMTP id i21mr25169901wmb.120.1574601919029;
-        Sun, 24 Nov 2019 05:25:19 -0800 (PST)
+        bh=d5kjGUzlv1E7Wwg3/Im24rEOibwGt1VTUz9hOtyzDRo=;
+        b=CXq+4jD6hflGmA9pe0Tg+AhvLx7gomMN5/DQhCf2lEqBtQd5Q+qgCdIBN8/cG9k1Na
+         CNaOijwgeYJDVXlBigvlyRYw+ibAvAC697O07dizLZLRN6NZ9HGhEpJGr38nTkEvPDgK
+         NaSdTivWp1GYttmZZH97kul0474pRKYPQTOZJt9Cv57tZjYS0FzL0VE1r6RCLOMQMhFY
+         ZZCxTUonTGbjMTJkT0vOHennUVohVlsNe+OOqyC4U3qm216HGKnHN5e1egem3Zsq9bdm
+         ZDgGaFQE8H6Qt5jlo4dlcrcZWbYynRLFeyvhjelvdOfbEVOe6jjktM5ED2QLBjVbEa1q
+         nmyQ==
+X-Gm-Message-State: APjAAAV2vXVl6jWJIUuHz/60Qp9SFA4laCKoqwUFP6rjV0ernSYWXt7M
+        98NeyagaidA4YfM/G7BHhT+6D84=
+X-Google-Smtp-Source: APXvYqyKLlVQlZasLJS6qqfxSi+wG6qHJ5Ov+8zsYpLre1cUbqGpDdA30Jg8HonWIYBUqKvc9t+f9A==
+X-Received: by 2002:a1c:9804:: with SMTP id a4mr24218605wme.57.1574602781495;
+        Sun, 24 Nov 2019 05:39:41 -0800 (PST)
 Received: from avx2 ([46.53.250.34])
-        by smtp.gmail.com with ESMTPSA id b2sm6150871wrr.76.2019.11.24.05.25.17
+        by smtp.gmail.com with ESMTPSA id t14sm6049575wrw.87.2019.11.24.05.39.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 05:25:18 -0800 (PST)
-Date:   Sun, 24 Nov 2019 16:25:13 +0300
+        Sun, 24 Nov 2019 05:39:40 -0800 (PST)
+Date:   Sun, 24 Nov 2019 16:39:36 +0300
 From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Chen Yu <yu.chen.surf@gmail.com>
-Subject: Re: [PATCH][v4] x86/resctrl: Add task resctrl information display
-Message-ID: <20191124132513.GA30453@avx2>
-References: <20191122095833.20861-1-yu.c.chen@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        krzk@kernel.org
+Subject: [PATCH] proc: fix Kconfig indentation
+Message-ID: <20191124133936.GA5655@avx2>
+References: <20191120134322.16525-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191122095833.20861-1-yu.c.chen@intel.com>
+In-Reply-To: <20191120134322.16525-1-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 05:58:33PM +0800, Chen Yu wrote:
-> Monitoring tools that want to find out which resctrl control
-> and monitor groups a task belongs to must currently read
-> the "tasks" file in every group until they locate the process
-> ID.
-> 
-> Add an additional file /proc/{pid}/resctrl to provide this
-> information.
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+        $ sed -e 's/^        /\t/' -i */Kconfig
 
-> +		seq_printf(s, "/%s", rdtg->kn->name);
-> +		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
-> +				    mon.crdtgrp_list) {
-> +			if (tsk->rmid != crg->mon.rmid)
-> +				continue;
-> +			seq_printf(s, "%smon_groups/%s",
-> +				   rdtg == &rdtgroup_default ? "" : "/",
-> +				   crg->kn->name);
-> +			break;
-> +		}
-> +		seq_puts(s, "\n");
+[add two spaces where necessary --adobriyan]
 
-This should be seq_putc().
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
+ fs/proc/Kconfig |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> --- /dev/null
-> +++ b/include/linux/resctrl.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _RESCTRL_H
-> +#define _RESCTRL_H
-> +
-> +#ifdef CONFIG_PROC_CPU_RESCTRL
-> +
-> +#include <linux/proc_fs.h>
-
-Forward declaring stuff should be more than enough.
-
-> +int proc_resctrl_show(struct seq_file *m,
-> +		      struct pid_namespace *ns,
-> +		      struct pid *pid,
-> +		      struct task_struct *tsk);
-> +
-> +#endif
-> +
-> +#endif /* _RESCTRL_H */
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -42,8 +42,8 @@ config PROC_VMCORE
+ 	bool "/proc/vmcore support"
+ 	depends on PROC_FS && CRASH_DUMP
+ 	default y
+-        help
+-        Exports the dump image of crashed kernel in ELF format.
++	help
++	  Exports the dump image of crashed kernel in ELF format.
+ 
+ config PROC_VMCORE_DEVICE_DUMP
+ 	bool "Device Hardware/Firmware Log Collection"
+@@ -72,7 +72,7 @@ config PROC_SYSCTL
+ 	  a recompile of the kernel or reboot of the system.  The primary
+ 	  interface is through /proc/sys.  If you say Y here a tree of
+ 	  modifiable sysctl entries will be generated beneath the
+-          /proc/sys directory. They are explained in the files
++	  /proc/sys directory. They are explained in the files
+ 	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
+ 	  option will enlarge the kernel by at least 8 KB.
+ 
+@@ -88,7 +88,7 @@ config PROC_PAGE_MONITOR
+ 	  Various /proc files exist to monitor process memory utilization:
+ 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
+ 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
+-          interfaces will reduce the size of the kernel by approximately 4kb.
++	  interfaces will reduce the size of the kernel by approximately 4kb.
+ 
+ config PROC_CHILDREN
+ 	bool "Include /proc/<pid>/task/<tid>/children file"
