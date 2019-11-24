@@ -2,79 +2,107 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF17C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 07:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11C3C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 07:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A3D207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 07:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574578840;
-	bh=NzzqisF+akJ9nukjZHOfzaIXXKGif2YRt2J9cwGPjwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h+pOf2zYM+3DZ1pOO1MftzZMchl8dkis16+Zrdez8zLPZ4agI5erex0frZhkHg+ZO
-	 P+wZtQ2r/k4+zyb6NtfdnkcSnG4s2UcIc0ueXLo79vHw/+vv9wLve7F3DlUfMn/w1z
-	 XJl07R73tRH2RKPUzuqUGbJDs+nidJLY94SbG0EQ=
+	by mail.kernel.org (Postfix) with ESMTP id 92A192071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 07:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKXHAj (ORCPT
+        id S1726922AbfKXHaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 02:00:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
+        Sun, 24 Nov 2019 02:30:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:57974 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbfKXHAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 02:00:39 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0043207FC;
-        Sun, 24 Nov 2019 07:00:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574578838;
-        bh=NzzqisF+akJ9nukjZHOfzaIXXKGif2YRt2J9cwGPjwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ie1Bb5/q33DsFwagOoqV8xwsLY5P0dDbLONgbo8+lDgTQfIv/FMse0gB/8jssPf2Z
-         CnITMSdepSBzqfInRmKqIs86B4v9TUEr36WgzqhDd8KDkIEPwIs/T0qRgDFzwHOJvM
-         9YdA1xCD8s4gXzJSScRmbu6bU5KvzvDYZUIEQxqg=
-Date:   Sun, 24 Nov 2019 08:00:34 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 0/6] 5.3.13-stable review
-Message-ID: <20191124070034.GA2229527@kroah.com>
-References: <20191122100320.878809004@linuxfoundation.org>
- <20191122181407.GE13514@roeck-us.net>
+        id S1725948AbfKXHaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 02:30:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Nov 2019 23:30:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,237,1571727600"; 
+   d="scan'208";a="210722847"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
+  by orsmga003.jf.intel.com with ESMTP; 23 Nov 2019 23:30:32 -0800
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next] mei: bus: use simple sprintf for sysfs
+Date:   Sun, 24 Nov 2019 12:15:52 +0200
+Message-Id: <20191124101552.13677-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122181407.GE13514@roeck-us.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 10:14:07AM -0800, Guenter Roeck wrote:
-> On Fri, Nov 22, 2019 at 11:30:02AM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.13 release.
-> > There are 6 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 24 Nov 2019 09:59:19 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 156 pass: 156 fail: 0
-> Qemu test results:
-> 	total: 390 pass: 390 fail: 0
+Replace scnprintf with simple sprintf for sysfs files.
+it is implicitly known that the buffer is big enough
+for the variables to fit in.
 
-Thanks for testing all of these and letting me know.
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+ drivers/misc/mei/bus.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-greg k-h
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index a0a495c95e3c..8d468e0a950a 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -765,7 +765,7 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	const uuid_le *uuid = mei_me_cl_uuid(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%pUl", uuid);
++	return sprintf(buf, "%pUl", uuid);
+ }
+ static DEVICE_ATTR_RO(uuid);
+ 
+@@ -775,7 +775,7 @@ static ssize_t version_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 version = mei_me_cl_ver(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%02X", version);
++	return sprintf(buf, "%02X", version);
+ }
+ static DEVICE_ATTR_RO(version);
+ 
+@@ -797,7 +797,7 @@ static ssize_t max_conn_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 maxconn = mei_me_cl_max_conn(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%d", maxconn);
++	return sprintf(buf, "%d", maxconn);
+ }
+ static DEVICE_ATTR_RO(max_conn);
+ 
+@@ -807,7 +807,7 @@ static ssize_t fixed_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 fixed = mei_me_cl_fixed(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%d", fixed);
++	return sprintf(buf, "%d", fixed);
+ }
+ static DEVICE_ATTR_RO(fixed);
+ 
+@@ -817,7 +817,7 @@ static ssize_t max_len_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u32 maxlen = mei_me_cl_max_len(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%u", maxlen);
++	return sprintf(buf, "%u", maxlen);
+ }
+ static DEVICE_ATTR_RO(max_len);
+ 
+-- 
+2.21.0
+
