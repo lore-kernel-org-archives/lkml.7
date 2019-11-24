@@ -2,302 +2,133 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C346C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2C3C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7042075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49122073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 13:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DCKy8v9m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8rWUsvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKXNKG (ORCPT
+        id S1726907AbfKXNZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 08:10:06 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:57994 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfKXNKG (ORCPT
+        Sun, 24 Nov 2019 08:25:21 -0500
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:53149 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfKXNZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 08:10:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574601003; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=79HzHF5v67YtVF80wImOkyHJ+v9Uc7YdeoLCCM0LuYs=;
-        b=DCKy8v9mUnk9rQTkHl94wLJJbM2bfJkipRe+g6bwpf4CVwU5q3vvcILn+uwqD49+BAg1T7
-        8HPxPLmmIeivRRdSb4xLgdI+hEYvJ9DBiidIz/SE1JXnFLaK55D035fhjozO9XgR5C4vSO
-        xLztukPhsMyRA4X8aBU55dlV8WwRhuY=
-Date:   Sun, 24 Nov 2019 14:09:54 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/4] MIPS: Ingenic: initial X1000 support.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Message-Id: <1574600994.3.2@crapouillou.net>
-In-Reply-To: <1574476344-62631-2-git-send-email-zhouyanjie@zoho.com>
-References: <1574476344-62631-1-git-send-email-zhouyanjie@zoho.com>
-        <1574476344-62631-2-git-send-email-zhouyanjie@zoho.com>
+        Sun, 24 Nov 2019 08:25:21 -0500
+Received: by mail-wm1-f51.google.com with SMTP id l1so12370514wme.2;
+        Sun, 24 Nov 2019 05:25:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ht9UUup2TX0xxPIbxBhXRv5NvHEMASjnlgsqsYatr+o=;
+        b=H8rWUsvsMBuqav+SU6Org6cYDcDduGql7qBv3DIREbCjbkguuCdZJbg07eoz2FkZ8j
+         1DQiDcgu/d8GZ9IC740dNmZ2si36Ec8eBQfyVD5daq37++uQprh4G9FPwBooSJ99ydJB
+         55nCill72IuyqaE5AWNBeeuYIyZsK5Yy4qsd1Q1avZSp5/eHDIIU7rE+Av1fH+bCWMok
+         QR5y9cPLtQcj6jbEqh147d7IhgFLUhKe+y2M+jG2I5DSTiridN+lgUFUQOD7tosuuWzi
+         PpQZn7+ITS16YynTnQ5N/vF8dkKHZG+5NNw2GydLnCzP/2f6zi3fyA8T51qmWQdoN63a
+         Vm/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ht9UUup2TX0xxPIbxBhXRv5NvHEMASjnlgsqsYatr+o=;
+        b=kMmIeLTnaKZFk+QQtpNgaagGOnKSTl9ohO4JZA3WakDqEnIFx1mSstYiQCYAS2KvE8
+         ZxxatFaA0bpl/LAS8S/B7YcTVobTLz3WWIL3wR2qAAGTA/kqXMpLA+Ti43bkmqS3fbQm
+         ItSXM/U+o2O9XHuIVA+NiD5suU4o+BuketFJ/sxWh+peudQYFgDh+yKPsrGzSWdHBBus
+         BHQkhQH8SytQVNpHrqyDznCmg+3qLFa/RKGerGipW8O6DS6zv7gB4whSPJs4NTOTDfJz
+         6JbQvzQDA7V8owv4OMOZ3GJjlWH8JUIZ0GeeO9fIW/yFvTkRBpIgCK7ljAVu4NMlBsqZ
+         PdKg==
+X-Gm-Message-State: APjAAAW4ztW+bM8HLV4BGWoY52sSjlFRSqWwU8m1PI3R2gDNjt4JJpgo
+        sfrbB13KcgkYuJGNUaFPYg==
+X-Google-Smtp-Source: APXvYqw1mBrZte82t9/JtxDM7dPpYmdS4Mj0JsdsJp6Dnodj+0XQp+Q3uvxJ/0KnnAsgZh3kl2DKsw==
+X-Received: by 2002:a1c:5415:: with SMTP id i21mr25169901wmb.120.1574601919029;
+        Sun, 24 Nov 2019 05:25:19 -0800 (PST)
+Received: from avx2 ([46.53.250.34])
+        by smtp.gmail.com with ESMTPSA id b2sm6150871wrr.76.2019.11.24.05.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 05:25:18 -0800 (PST)
+Date:   Sun, 24 Nov 2019 16:25:13 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chen Yu <yu.chen.surf@gmail.com>
+Subject: Re: [PATCH][v4] x86/resctrl: Add task resctrl information display
+Message-ID: <20191124132513.GA30453@avx2>
+References: <20191122095833.20861-1-yu.c.chen@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191122095833.20861-1-yu.c.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+On Fri, Nov 22, 2019 at 05:58:33PM +0800, Chen Yu wrote:
+> Monitoring tools that want to find out which resctrl control
+> and monitor groups a task belongs to must currently read
+> the "tasks" file in every group until they locate the process
+> ID.
+> 
+> Add an additional file /proc/{pid}/resctrl to provide this
+> information.
+
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+
+> +		seq_printf(s, "/%s", rdtg->kn->name);
+> +		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
+> +				    mon.crdtgrp_list) {
+> +			if (tsk->rmid != crg->mon.rmid)
+> +				continue;
+> +			seq_printf(s, "%smon_groups/%s",
+> +				   rdtg == &rdtgroup_default ? "" : "/",
+> +				   crg->kn->name);
+> +			break;
+> +		}
+> +		seq_puts(s, "\n");
+
+This should be seq_putc().
 
 
-Le sam., nov. 23, 2019 at 10:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
-> This is left unselectable in Kconfig until a X1000 based board is
-> added in a later commit.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     Rebase on top of mips-next, use ingenic-timer driver
->     for system timer and clocksource.
->=20
->  arch/mips/boot/dts/ingenic/x1000.dtsi | 183=20
-> ++++++++++++++++++++++++++++++++++
->  arch/mips/jz4740/Kconfig              |   6 ++
->  2 files changed, 189 insertions(+)
->  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
-> b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> new file mode 100644
-> index 00000000..02a9b2a
 > --- /dev/null
-> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> @@ -0,0 +1,183 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <dt-bindings/clock/x1000-cgu.h>
+> +++ b/include/linux/resctrl.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _RESCTRL_H
+> +#define _RESCTRL_H
 > +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	compatible =3D "ingenic,x1000", "ingenic,x1000e";
+> +#ifdef CONFIG_PROC_CPU_RESCTRL
 > +
-> +	cpuintc: interrupt-controller {
-> +		#address-cells =3D <0>;
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-controller;
-> +		compatible =3D "mti,cpu-interrupt-controller";
-> +	};
-> +
-> +	intc: interrupt-controller@10001000 {
-> +		compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
-> +		reg =3D <0x10001000 0x50>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		interrupt-parent =3D <&cpuintc>;
-> +		interrupts =3D <2>;
-> +	};
-> +
-> +	exclk: ext {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	rtclk: rtc {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <32768>;
-> +	};
-> +
-> +	cgu: x1000-cgu@10000000 {
-> +		compatible =3D "ingenic,x1000-cgu";
-> +		reg =3D <0x10000000 0x100>;
-> +
-> +		#clock-cells =3D <1>;
-> +
-> +		clocks =3D <&exclk>, <&rtclk>;
-> +		clock-names =3D "ext", "rtc";
-> +	};
-> +
-> +	apb {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <>;
+> +#include <linux/proc_fs.h>
 
-You can drop the 'apb' node and list the children in the top node=20
-directly. That's what we do in the devicetree for the other Ingenic=20
-SoCs.
+Forward declaring stuff should be more than enough.
 
-Cheers,
--Paul
-
-
+> +int proc_resctrl_show(struct seq_file *m,
+> +		      struct pid_namespace *ns,
+> +		      struct pid *pid,
+> +		      struct task_struct *tsk);
 > +
-> +		tcu: timer@10002000 {
-> +			compatible =3D "ingenic,x1000-tcu",
-> +					 "ingenic,jz4770-tcu",
-> +					 "simple-mfd";
-> +			reg =3D <0x10002000 0x1000>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +			ranges =3D <0x0 0x10002000 0x1000>;
+> +#endif
 > +
-> +			#clock-cells =3D <1>;
-> +
-> +			clocks =3D <&cgu X1000_CLK_RTCLK
-> +				  &cgu X1000_CLK_EXCLK
-> +				  &cgu X1000_CLK_PCLK>;
-> +			clock-names =3D "rtc", "ext", "pclk";
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells =3D <1>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <27 26 25>;
-> +		};
-> +
-> +		uart0: serial@10030000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10030000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <51>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart1: serial@10031000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10031000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <50>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart2: serial@10032000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10032000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <49>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		pinctrl: pin-controller@10010000 {
-> +			compatible =3D "ingenic,x1000-pinctrl";
-> +			reg =3D <0x10010000 0x800>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			gpa: gpio@0 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <0>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 0 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <17>;
-> +			};
-> +
-> +			gpb: gpio@1 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <1>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 32 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <16>;
-> +			};
-> +
-> +			gpc: gpio@2 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <2>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 64 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <15>;
-> +			};
-> +
-> +			gpd: gpio@3 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <3>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 96 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <14>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 4dd0c44..6b96844 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -33,3 +33,9 @@ config MACH_JZ4780
->  	select MIPS_CPU_SCACHE
->  	select SYS_HAS_CPU_MIPS32_R2
->  	select SYS_SUPPORTS_HIGHMEM
-> +
-> +config MACH_X1000
-> +	bool
-> +	select MIPS_CPU_SCACHE
-> +	select SYS_HAS_CPU_MIPS32_R2
-> +	select SYS_SUPPORTS_HIGHMEM
-> --
-> 2.7.4
->=20
->=20
-
-=
-
+> +#endif /* _RESCTRL_H */
