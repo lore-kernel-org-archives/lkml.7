@@ -2,119 +2,120 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCE4C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 03:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8DDC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 03:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D813020719
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 03:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD06120659
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 03:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="FypTV9hr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="piZgvaJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfKXDCR (ORCPT
+        id S1726846AbfKXDUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 22:02:17 -0500
-Received: from mail-pf1-f174.google.com ([209.85.210.174]:39539 "EHLO
-        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfKXDCR (ORCPT
+        Sat, 23 Nov 2019 22:20:51 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38903 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfKXDUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 22:02:17 -0500
-Received: by mail-pf1-f174.google.com with SMTP id x28so5560272pfo.6
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Nov 2019 19:02:15 -0800 (PST)
+        Sat, 23 Nov 2019 22:20:50 -0500
+Received: by mail-ed1-f65.google.com with SMTP id s10so9441126edi.5;
+        Sat, 23 Nov 2019 19:20:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=cs410pk2WGGskzmW00wQGEQsVx1UHdJx4TCUeQnvyi8=;
-        b=FypTV9hr1yrpcpZXQxme+38rUMvHaHHI2CgVqm/AnBtCIY2CsCFTkpWxBrTrYDPGKO
-         gYcySGIXSJ0mpfN0y3AxnnrcfIlukFZnocwoTdSmlFk3n52pC9C8In8jFCyu3vjtBSpD
-         ej2KXS46Iu1qn+oOqBGWP+/OfQXUver9IEIyWdU0GVrIpDIMXNDfGOQaJMtH4004iOBq
-         nkYy+c1mnAUtPL86Tx6pKZRrnG6hAfU6Lm0lnBYmkWdTsAghZr/xl8RhqpHUrJQAXQO0
-         Qs816VBxDblr8xtZM5aU8C4NkCS6wGNfnVFen/HYc5ksJkYEs9PfDxVUrPt1WiJCvhFF
-         AX5Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DswDOcFLyZVT9xwF1vsGxZkcCPuWKeyXIg9og7dtlf8=;
+        b=piZgvaJNNJQkFNPD1naXDJPog8oAuiZWrOQxtD1YTv+pcKCBikgoGCMpeqILfe0Gcl
+         rdHxFgCLIY5QG00zAvQ7v5br8WNxct8b8wGKtBExOc9zhmTDuOUyzoKlNOl4kVZbAPBS
+         +3FLkTXVjOI4CAUhp6orJFeregApqmjoRg4Y7jmCfUZbe1YoDrKKA03D4Tb3hPTjbOhd
+         6IkCz89DN/hff2OSqbvRF4URhnC4WaBp5F1nowZVwizhY8Ug0a3NwHajxkJG9o+BHvf2
+         xE8FHM3JhkgfTHmVEYDt8VDwZYsG/0NiTKMQAK3wQ/OIa/7yVWbi5eZ5KefpJxYRPkBU
+         zQ7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=cs410pk2WGGskzmW00wQGEQsVx1UHdJx4TCUeQnvyi8=;
-        b=qPFSejmfokYDudya5MOU3JUQo0l1dnxmAcDpMdYSieW2NAW/6cL99iTeTZP4cpFjbJ
-         mjpNJzp04MOTQ5BhnQkjak9IqAyiHzTesd4yBLhZq5LLIM0MregQad4HK8wRll6aZ1aq
-         iT67Db0UzK7tvhckMbG/lR24lDbvEh5J18xYyGUD8I0o9B6/wAYR/kL2azd3WWdJEeuZ
-         uLj2SBPOwDA6La7rC4Txlqnue9q/wF5aOu+opjM1zfUfAymSvDMcB2uPDtDw7Oe64Zz0
-         x3BYsoJJU3Be80Vh5D1qsM6JsCxlHjl43N+shx047ctywY49QyF5JFvURNawe7xPWXgp
-         p0MQ==
-X-Gm-Message-State: APjAAAXWDAx0bkFSNpz+czLisXeg4y66KkZzlXAVqumxJqGyuS/zH4NF
-        SdFyCgDLoXzIDQ8t5EzabJJs1w==
-X-Google-Smtp-Source: APXvYqxVCh1R4UCxh2jpfBCuVx7MilWEZVy8nP29FUiR2f0oa4d5b+AhH8fW8ZiNhYOVxpWk8q06Xg==
-X-Received: by 2002:a62:501:: with SMTP id 1mr27669598pff.69.1574564535099;
-        Sat, 23 Nov 2019 19:02:15 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id z10sm3287704pgc.5.2019.11.23.19.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 19:02:14 -0800 (PST)
-Date:   Sat, 23 Nov 2019 19:02:09 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Po Liu <po.liu@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [net-next] enetc: add support Credit Based Shaper(CBS) for
- hardware offload
-Message-ID: <20191123190209.5ad772fc@cakuba.netronome.com>
-In-Reply-To: <20191122070321.20915-1-Po.Liu@nxp.com>
-References: <20191122070321.20915-1-Po.Liu@nxp.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DswDOcFLyZVT9xwF1vsGxZkcCPuWKeyXIg9og7dtlf8=;
+        b=aeYLXGZwLUt1tIQUZyz/xu+s0W0QXIxSN93aOzsoqOST/r4K4pn35lbBZ3pEajUirr
+         q6lUoJ1djy7yhM+KdjG3M336/bhAPPWKlNxNOEhqv8RQj/0Dv/Ubtz5jExGvk3zgVGBB
+         zsdt/KflSB4w+Hz0KraUkTiXEReRhG7n6RfW89ILka5mGej8197RXUn1JrPrzt5Y5TP/
+         OYzyY7G+S6I/1CYjSKkBC9qHlUtU5jiofgq5Rd0YqTxiOsa2/OpFrZD454PiR1UHGyLK
+         hoD8Hws2UuEXmPqov+/Z8wQB3ceNlM+UnaTbBQzYJFdh7UUgV4GR7nu8FL5P2LDpc3xU
+         Lyhg==
+X-Gm-Message-State: APjAAAX7IMqPtX7A2IefNFkrG9Mx2wpE4GodLPP3pY1q6yQEFeQIN8JF
+        zm0CeShpHrRfxUz1mq6HOXg4soK6MvrBm6+gIM44H1X54pI=
+X-Google-Smtp-Source: APXvYqxLkOueyCCVMHm0DePIqYpYXzySy3uuoEYtr96WqVqLGFs7hNFPXn3gVAe9suXLaj7G7+0vxP2j2+7SjATIM4o=
+X-Received: by 2002:a17:906:aad0:: with SMTP id kt16mr5218127ejb.223.1574565648659;
+ Sat, 23 Nov 2019 19:20:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191018131338.11713-1-hslester96@gmail.com> <CAPDyKFoBYchP96hv=7XfTo8CrCSD+KC0h_oFRAsOYT-Lc1SFZQ@mail.gmail.com>
+ <20191023153313.GB5153@kunai> <CAPDyKFo9wYwhdy-1BDcRMJKTjADappsT-gBaKZE7hTLE4obxiA@mail.gmail.com>
+ <20191031221211.GA3853@kunai> <CAMuHMdXSKU40E8Br0Z53H2FyrQsLxnB-EERZoN6HQHExP5tqxQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXSKU40E8Br0Z53H2FyrQsLxnB-EERZoN6HQHExP5tqxQ@mail.gmail.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Sun, 24 Nov 2019 11:20:38 +0800
+Message-ID: <CANhBUQ3CsPbPWrs=NUZoFAv6g_ckuEV9sxy0Z_DTiPRJaXi+7g@mail.gmail.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi: add checks for pinctrl_lookup_state
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 07:17:18 +0000, Po Liu wrote:
-> +	if (tc == prio_top) {
-> +		max_interference_size = port_frame_max_size * 8;
-> +	} else {
-> +		u32 m0, ma, r0, ra;
-> +
-> +		m0 = port_frame_max_size * 8;
-> +		ma = enetc_port_rd(&si->hw, ENETC_PTCMSDUR(prio_top)) * 8;
-> +		ra = enetc_get_cbs_bw(&si->hw, prio_top) *
-> +			port_transmit_rate * 10000ULL;
-> +		r0 = port_transmit_rate * 1000000ULL;
-> +		max_interference_size = m0 + ma + (u64)ra * m0 / (r0 - ra);
-> +	}
-> +
-> +	/* hiCredit bits calculate by:
-> +	 *
-> +	 * maxSizedFrame * (idleSlope/portTxRate)
-> +	 */
-> +	hi_credit_bit = max_interference_size * bw / 100;
-> +
-> +	/* hiCredit bits to hiCredit register need to calculated as:
-> +	 *
-> +	 * (enetClockFrequency / portTransmitRate) * 100
-> +	 */
-> +	hi_credit_reg = (ENETC_CLK * 100ULL) * hi_credit_bit
-> +			/ (port_transmit_rate * 1000000ULL);
+On Thu, Nov 7, 2019 at 4:30 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Wolfram,
+>
+> On Thu, Oct 31, 2019 at 11:58 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > > > Well, I don't like to bail out because this error is not fatal for basic
+> > > > operations. How about releasing priv->pinctrl again with an additional
+> > > > warning that pinctrl settings are broken and will prevent 1.8v modes?
+> > > >
+> > > > Opinions?
+> > >
+> > > Hmm, from a mmc driver probe point of view, I don't quite share this approach.
+> > >
+> > > I would rather fail as it forces the DTB to be corrected immediately,
+> > > rather than trusting some developer to look at a warning in a log. The
+> > > point is, in such a case it may never get fixed, if the product is
+> > > shipped with the wrong DTB.
+> >
+> > I could agree to this arguement, iff the only way pinctrl_select fails
+> > is a DT misconfiguration. I am not sure if this is true right now, and
+> > we can't be sure about the future. Or?
+>
+> Isn't "state_uhs" optional? So bailing out if it doesn't exist is wrong.
+> "default" should be there, if the device node has pinctrl properties.
+>
+> renesas_sdhi_start_signal_voltage_switch() already handles fallback
+> to 3v3 operation.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
 
-Hi! The patch looks good to me, but I'm concerned about those 64bit
-divisions here. Don't these need to be div_u64() & co.? Otherwise
-we may see one of the:
+Just ping this thread.
+I am not clear about what is the conclusion of how to deal with the error?
+Should I resend a new version of the patch?
 
-ERROR: "__udivdi3" [drivers/net/ethernet/freescale/enetc/fsl-enetc.ko] undefined!
+Regards,
+Chuhong
 
-messages from the build bot..
-
-I could be wrong, I haven't actually tested..
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
