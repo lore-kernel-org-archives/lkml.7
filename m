@@ -2,125 +2,171 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0395DC43141
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87877C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81152082C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557582071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="cacKqSsc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNQRyLgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKXR7X (ORCPT
+        id S1726910AbfKXSCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 12:59:23 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:13949 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfKXR7X (ORCPT
+        Sun, 24 Nov 2019 13:02:24 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37261 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfKXSCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 12:59:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574618358;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=4Mtvhb9VEGOidBuJ+//uKm9nDMQCGArvHFXBCr1aqTg=;
-        b=cacKqSscy/SDcpWMhbpC2iHiXKLWbGnsbKxz7Db58VYLhExeVAfVsUTkpDVx1yqe7G
-        SqBLDplCfX6X3M1XjpcTEUHk0wKvsB54owNAUZs8eDBxwhaVb0FH98N2O+9rBhc5PUls
-        KLHgfP4Ea6s0zQRAHfTCs+exLC03Sy6MkzNWmEVKQkta7g20fuFnCN6jBeoQM2KZMGla
-        TeljN5VREAdTgJxaSOng25srljyXt5vHcJBu3Uiz/eodlopYLwJViOxt0E3A+gksj3wh
-        EE4jXZh6HHWFAg7cKencCdX4V/99u5GBDb67uC1ErAm0x/Y4b+FLsmAuS6ayHQb7IOQ1
-        JG/g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSfXA4NgJM="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vAOHx8wih
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 24 Nov 2019 18:59:08 +0100 (CET)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v3 8/8] MIPS: DTS: jz4780: add sgx gpu node
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191124174837.GX35479@atomide.com>
-Date:   Sun, 24 Nov 2019 18:59:07 +0100
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sun, 24 Nov 2019 13:02:24 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p24so6113071pfn.4;
+        Sun, 24 Nov 2019 10:02:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kfIxdj2LVxPAZ1Wflylge9S9kE5jfMTIOd5jj5CenZE=;
+        b=pNQRyLgjPx9sp3uAoqGaDL+twbZ6ytwmS3lHalR1VW+f101xGNgn0KnPNZSCOGAHIY
+         fdnbzRv2kmAojPMTZyLQcIjbvqE3u9JFGlsqs2j/vZKVqOLEWl6vbr6OgbyyXVo/4K4i
+         VnTuNIaR820Zf9G6pNUsTuIOad2EvNHtEj64tzgnlCZnr8MW+zcjVEudTYwArBd082k5
+         jqZcgUAyOYM9yu7d1DsXZTjVIkN5gxWWg5iBRC5KoosYopPzkdRNlGoRHgERO0jtsu8r
+         MtaGbV2zLre2cRoHeYILUSCq3Im4rM33T+fW92VeIDyeEpP614VosPlVKmPlZTAbijfa
+         fvCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kfIxdj2LVxPAZ1Wflylge9S9kE5jfMTIOd5jj5CenZE=;
+        b=GYqpCRTFeNFMB8gsudmHmBJ4ySYVyEGAm2NK+fYWG6QMZD+s0dhkKXlovem1T1QG4B
+         3ekpMtOjUaNG+AvmdU0Tp0cNG8eWJwCgjLLhaJrAwkb5z8VqlQ0sN2m+wjxf8UYkyese
+         VIThTw7jOneor7WPj7V+yu61g7NwP/Z4Hy8w9ZLzmF+og4RB8NkCS2gadN+A5QkIY6hN
+         5YyGq5bEshs+zu+daM4Dl7KaWF5X0MFf6O3xhwEjHdQRs8C5YVNV3kwf5IxkI7TMvLxc
+         /ntbSKBcX85eKcDibnQj+D82DqvqYpqNPH3oQTk7rvj059P27qoHbtZaFXdypNaccjnH
+         iJDA==
+X-Gm-Message-State: APjAAAVAPusvRhgMRLayC1V62I08ipuBdKy3F+sqAcWUiCq43cLV7UNC
+        OJtZj25F+a/3L5xkmm6ze2Um3avGw4RopIJCj9I=
+X-Google-Smtp-Source: APXvYqz+QhEQbI+zJvb+yOUQctcHTWpvncfbC+TguFgDqeb6TfTL91Xglo+Y7i3unSyfPSwALiE6ZX/IlBCxuULxOIw=
+X-Received: by 2002:a63:8e:: with SMTP id 136mr21396785pga.355.1574618543209;
+ Sun, 24 Nov 2019 10:02:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20191110162137.230913-1-amirmizi6@gmail.com> <20191110162137.230913-5-amirmizi6@gmail.com>
+ <20191114191054.GA20209@bogus>
+In-Reply-To: <20191114191054.GA20209@bogus>
+From:   Amir Mizinski <amirmizi6@gmail.com>
+Date:   Sun, 24 Nov 2019 20:02:13 +0200
+Message-ID: <CAMHTsUXKUfCwHzucq7+zwkopM-9ZravWqXF8PXH9zegbkWjSgA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] dt-bindings: tpm: Add the TPM TIS I2C device tree
+ binding documentaion
+To:     Rob Herring <robh@kernel.org>
+Cc:     Eyal.Cohen@nuvoton.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <alexander.steffen@infineon.com>,
+        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
         devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, Paul Boddie <paul@boddie.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FA810F13-BF2A-4849-9BAA-01FA2F768976@goldelico.com>
-References: <cover.1574595627.git.hns@goldelico.com> <c73e2cee4f818654f264b0b7b5458bfaa0ac6a7a.1574595627.git.hns@goldelico.com> <1574600246.3.0@crapouillou.net> <20191124174837.GX35479@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        linux-integrity@vger.kernel.org,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, ayna@linux.vnet.ibm.com,
+        IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul, Tony,
+On Thu, Nov 14, 2019 at 9:10 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Nov 10, 2019 at 06:21:36PM +0200, amirmizi6@gmail.com wrote:
+> > From: Amir Mizinski <amirmizi6@gmail.com>
+> >
+> > this file aim at documenting TPM TIS I2C related dt-bindings for the I2C PTP based Physical TPM.
+> >
+> > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> > ---
+> >  .../bindings/security/tpm/tpm_tis_i2c.txt          | 24 ++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
+>
+> Please make this a schema. See
+> Documentation/devicetree/writing-schema.rst.
+>
+> >
+> > diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
+> > new file mode 100644
+> > index 0000000..7d5a69e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
+> > @@ -0,0 +1,24 @@
+> > +* Device Tree Bindings for I2C PTP based Trusted Platform Module(TPM)
+> > +
+> > +The TCG defines hardware protocol, registers and interface (based
+> > +on the TPM Interface Specification) for accessing TPM devices
+> > +implemented with an I2C interface.
+> > +
+> > +Refer to the 'I2C Interface Definition' section in 'TCG PC Client
+> > +PlatformTPMProfile(PTP) Specification' publication for specification.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible     : Should be "tcg,tpm_tis-i2c"
+>
+> s/_/-/
+>
+> As this has to be under an I2C controller node, the '-i2c' part is
+> redundant.
+>
 
-> Am 24.11.2019 um 18:48 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Paul Cercueil <paul@crapouillou.net> [191124 12:58]:
->> Le dim., nov. 24, 2019 at 12:40, H. Nikolaus Schaller =
-<hns@goldelico.com> a
->> =C3=A9crit :
->>> and add interrupt and clocks.
-> ...
->>> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->>> @@ -46,6 +46,17 @@
->>> 		#clock-cells =3D <1>;
->>> 	};
->>>=20
->>> +	gpu: gpu@13040000 {
->>=20
->> We try to keep the nodes ordered by address, could you move this node =
-where
->> it belongs?
-> ...
+I wrote this Respectively with the tpm_tis-spi driver.
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/security/tpm/tpm_tis_spi.txt
+Should i change it anyway or keep the format?
+Also the '-i2c' is added since its not the only protocol used over
+tis, and it is handled differently from spi.
 
-Yes, I have noted.
+> There's a bigger issue that the h/w here is more than just an I2C
+> protocol. The chip may have multiple power supplies, clocks, reset
+> lines, etc. HID over I2C seems like a similar case. Does the spec define
+> *all* of that? If not, you need chip specific compatibles. You can keep
+> this as a fallback though.
+>
+> > +- reg            : Address on the bus
+> > +- tpm-pirq       : Input gpio pin, used for host interrupts
+>
+> GPIO connections are properties ending in '-gpios'. However, if the only
+> use is an interrupt, then you should use 'interrupts'.
+>
 
->=20
->>> +		compatible =3D "ingenic,jz4780-sgx540-120", =
-"img,sgx540-120",
->>> "img,sgx540", "img,sgx5";
->>> +		reg =3D <0x13040000 0x4000>;
->>> +
->>> +		clocks =3D <&cgu JZ4780_CLK_GPU>;
->>> +		clock-names =3D "gpu";
->=20
-> Just checking.. Is there something else to configure here
-> potentially in addition to the clocks?
+My mistake, i didn't implemented interrupts yet so ill clear this for
+now.  thank you.
 
-It doesn't look so. Unfortuantely there isn't much information
-except a v3.18 kernel supported by the vendor and that one also
-just has a gpu node with clock control.
+> > +
+> > +Example (for Raspberry Pie 3 Board with Nuvoton's NPCT75X (2.0)
+> > +-------------------------------------------------------------------
+> > +
+> > +tpm_tis-i2c: tpm_tis-i2c@2e {
+> > +
+> > +       compatible = "tcg,tpm_tis-i2c";
+> > +       reg = <0x2e>;
+> > +       tpm-pirq = <&gpio 24 GPIO_ACTIVE_HIGH>;
+> > +};
+> > --
+> > 2.7.4
+> >
 
-> That is, do we need to do some interconnect specific
-> configuration etc in addition to the clocks to have
-> runtime PM work for enabling and disabling sgx on
-> jz4780?
+Apologies for the late response, had a personal issue that needed my attention
+I'm working on making this a schema for next version. This is new for
+me, if you have additional sources regarding how to write it, i'll
+appreciate if you send me.
+Thank you.
 
-I think we have to leave that open for further study.
-
-BR,
-Nikolaus
-
+Amir Mizinski
