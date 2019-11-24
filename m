@@ -2,96 +2,124 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BCFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D18C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE472073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:07:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBqhh5Em"
+	by mail.kernel.org (Postfix) with ESMTP id ECCC42073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfKXOHJ (ORCPT
+        id S1727028AbfKXOHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 09:07:09 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34454 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfKXOHJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 09:07:09 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m6so5300077ljc.1;
-        Sun, 24 Nov 2019 06:07:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bg5GpAxFjEyHhb6UxLV4Zo8pi9OBMfOKtL7ZoDiUptg=;
-        b=VBqhh5EmM0AiPWFf803YYdLXZoq7psW4zJIbVf245kSW7bbm0DDr2Bm7XGKRmci29s
-         NfjLvKeLlD+z9QUBkLz1zxsAHdfFzBBzb2K6IB6WBqOBwY3P6GXwin5YZM8ykOdLdCIu
-         NP0TgR2W6oEXULKBqFYVrHqQMvwqXi0l5BOyiS1ooO/wGwqNvSPZ1JXTVsFpoYkc5AHs
-         0Z1ARhS0rU0RbFXEaTqYCMfilUfCUF6saA931Usi7tpaEsslDypEyBjUaxrE4UrV/jYU
-         AOpa6T99YDMm8lWpY32Rf4A6gaPrD63io1EOPBXYmR4ntmHlucp9X2KkPB2jwXDz4Nff
-         0aDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bg5GpAxFjEyHhb6UxLV4Zo8pi9OBMfOKtL7ZoDiUptg=;
-        b=Bli48qWnw3wW5rZbqcgA5zRu84uMUxPCJ/V/WlvLDiUBPA9w6anGUw0DRqR6gaTjz9
-         A0V9kxHMLmc/v4KvHZb42YdejeauHDktem0uDq8Ys4FEHpMd8QyOTHNHpOgvWLvLteba
-         Mlq4V8knL+JuAg2Q7DTSkW7gME9RujlRNKNqrq/pM4Rjz4+2Gze+qmq+cNv2vPBKxHCd
-         yCzm74/3SKZ9eS+gDKdHD9MiV0sc7sLuc99WG1NgaFW/sQ8nm9hD/tHtE5qfD/08wNIk
-         SMfQ5pHfar7r3yGT9FE4e+1OObjrmezwlRT4Q9vYKfI7nFLsSptZB5/Kom/XhzA8/D2v
-         4vhQ==
-X-Gm-Message-State: APjAAAUaAgrvB+CnaruUvfl0X0v+ycJ66X+c8fz8ICGkDMFVkWJi92Ju
-        XRJgQTv1LMvs5tJ7t25HdXht0S3u
-X-Google-Smtp-Source: APXvYqyFzOFkvmfBUiGwu814GAnhxLxs6vI94Z/1M3nTu+r7ovxcoTmytPfa5qpMk/oOzb4De+tBpw==
-X-Received: by 2002:a2e:3a12:: with SMTP id h18mr12420071lja.217.1574604425002;
-        Sun, 24 Nov 2019 06:07:05 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id g21sm2273681ljh.2.2019.11.24.06.07.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 06:07:04 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        kristian@klausen.dk, andy@infradead.org, dvhart@infradead.org,
-        corentin.chary@gmail.com, Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v5 0/2] platform/x86 asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
-Date:   Sun, 24 Nov 2019 16:06:25 +0200
-Message-Id: <20191124140625.20736-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 24 Nov 2019 09:07:50 -0500
+Received: from mga04.intel.com ([192.55.52.120]:52659 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbfKXOHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 09:07:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 06:07:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,238,1571727600"; 
+   d="scan'208";a="408068358"
+Received: from cvg-ubt08.iil.intel.com ([143.185.152.138])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Nov 2019 06:07:47 -0800
+From:   Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+Subject: [PATCH] mips: cacheinfo: report shared CPU map
+Date:   Sun, 24 Nov 2019 16:07:31 +0200
+Message-Id: <20191124140731.24430-1-vladimir.kondratiev@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Report L1 caches as shared per core; L2 - per cluster.
 
-this patch series adds support of Throttle themal policy ACPI device to
-existing asus_wmi platform driver. Support of this device is required
-for ASUS TUF laptops on Ryzen CPUs to properly work on Linux.
+This fixes "perf" that went crazy if shared_cpu_map attribute not
+reported on sysfs, in form of
 
-v2: fixed indentation.
-v3: patches 2/3 and 3/3 are refactored.
-v4: patch 2/3 are simplified.
-v5: add new device instead of merging with fan boost mode
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
 
-Leonid Maksymchuk (2):
-  platform/x86 asus_wmi: Support throttle thermal policy
-  platform/x86 asus_wmi: Set throttle thermal policy to default
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+---
+ arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
- drivers/platform/x86/asus-wmi.c            | 128 +++++++++++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |   1 +
- 2 files changed, 129 insertions(+)
-
+diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
+index f777e44653d5..47312c529410 100644
+--- a/arch/mips/kernel/cacheinfo.c
++++ b/arch/mips/kernel/cacheinfo.c
+@@ -50,6 +50,25 @@ static int __init_cache_level(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++
++	for_each_possible_cpu(cpu1)
++		if (cpus_are_siblings(cpu, cpu1))
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
++static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++	int cluster = cpu_cluster(&cpu_data[cpu]);
++
++	for_each_possible_cpu(cpu1)
++		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
+ static int __populate_cache_leaves(unsigned int cpu)
+ {
+ 	struct cpuinfo_mips *c = &current_cpu_data;
+@@ -57,14 +76,20 @@ static int __populate_cache_leaves(unsigned int cpu)
+ 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+ 
+ 	if (c->icache.waysize) {
++		/* L1 caches are per core */
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
+ 	} else {
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
+ 	}
+ 
+-	if (c->scache.waysize)
++	if (c->scache.waysize) {
++		/* L2 cache is per cluster */
++		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
++	}
+ 
+ 	if (c->tcache.waysize)
+ 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
 -- 
-1.8.3.1
+2.20.1
+
+---------------------------------------------------------------------
+Intel Israel (74) Limited
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
