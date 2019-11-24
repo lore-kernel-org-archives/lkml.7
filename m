@@ -2,171 +2,112 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87877C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 557582071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:02:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNQRyLgj"
+	by mail.kernel.org (Postfix) with ESMTP id 3D293207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574620269;
+	bh=eqAsjzVaq3nzz88L4tDGzUcHuWo/o7A+dwamYmqayTY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=VZlrpTJwEfnfSUqECWMCDY9wv6tqTWhkCiDqNe8KBLMWCnVS5feK/NxWc5l49No3E
+	 baviqRWMfB2XVHY8Av1dh+XsdHLmBQvfAKHl7C0XgeT6d0Ms7qNcQ91Ovo8WxxoAdp
+	 G3edtEACUeI48FtdWqk+v7gN5Kdxw99hxcGl/bPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKXSCY (ORCPT
+        id S1726887AbfKXS24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 13:02:24 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37261 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfKXSCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 13:02:24 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p24so6113071pfn.4;
-        Sun, 24 Nov 2019 10:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kfIxdj2LVxPAZ1Wflylge9S9kE5jfMTIOd5jj5CenZE=;
-        b=pNQRyLgjPx9sp3uAoqGaDL+twbZ6ytwmS3lHalR1VW+f101xGNgn0KnPNZSCOGAHIY
-         fdnbzRv2kmAojPMTZyLQcIjbvqE3u9JFGlsqs2j/vZKVqOLEWl6vbr6OgbyyXVo/4K4i
-         VnTuNIaR820Zf9G6pNUsTuIOad2EvNHtEj64tzgnlCZnr8MW+zcjVEudTYwArBd082k5
-         jqZcgUAyOYM9yu7d1DsXZTjVIkN5gxWWg5iBRC5KoosYopPzkdRNlGoRHgERO0jtsu8r
-         MtaGbV2zLre2cRoHeYILUSCq3Im4rM33T+fW92VeIDyeEpP614VosPlVKmPlZTAbijfa
-         fvCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kfIxdj2LVxPAZ1Wflylge9S9kE5jfMTIOd5jj5CenZE=;
-        b=GYqpCRTFeNFMB8gsudmHmBJ4ySYVyEGAm2NK+fYWG6QMZD+s0dhkKXlovem1T1QG4B
-         3ekpMtOjUaNG+AvmdU0Tp0cNG8eWJwCgjLLhaJrAwkb5z8VqlQ0sN2m+wjxf8UYkyese
-         VIThTw7jOneor7WPj7V+yu61g7NwP/Z4Hy8w9ZLzmF+og4RB8NkCS2gadN+A5QkIY6hN
-         5YyGq5bEshs+zu+daM4Dl7KaWF5X0MFf6O3xhwEjHdQRs8C5YVNV3kwf5IxkI7TMvLxc
-         /ntbSKBcX85eKcDibnQj+D82DqvqYpqNPH3oQTk7rvj059P27qoHbtZaFXdypNaccjnH
-         iJDA==
-X-Gm-Message-State: APjAAAVAPusvRhgMRLayC1V62I08ipuBdKy3F+sqAcWUiCq43cLV7UNC
-        OJtZj25F+a/3L5xkmm6ze2Um3avGw4RopIJCj9I=
-X-Google-Smtp-Source: APXvYqz+QhEQbI+zJvb+yOUQctcHTWpvncfbC+TguFgDqeb6TfTL91Xglo+Y7i3unSyfPSwALiE6ZX/IlBCxuULxOIw=
-X-Received: by 2002:a63:8e:: with SMTP id 136mr21396785pga.355.1574618543209;
- Sun, 24 Nov 2019 10:02:23 -0800 (PST)
+        Sun, 24 Nov 2019 13:28:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbfKXS2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 13:28:55 -0500
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C73A207DD;
+        Sun, 24 Nov 2019 18:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574620135;
+        bh=eqAsjzVaq3nzz88L4tDGzUcHuWo/o7A+dwamYmqayTY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GwBimmHc9vpYKYOOilmm0x0n59Q4OL4AlMOqoRGltmUA/ddJvPhW5PZZwUYASrUMe
+         GsYV4S5d3Q4mBYOjajS9Ki3dPGCbmFQCKKX8SZvE3cjgp/OqLgo6P5O8gk1FE3WTHd
+         YxyBRkJelceyQHcG3zIhpAoWOtN1rvgF+mCII1Wc=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>, x86@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
+Date:   Sun, 24 Nov 2019 10:28:52 -0800
+Message-Id: <6bd718e0465dcc8a97e7b2aa75fd762f34e2fd6d.1574620037.git.luto@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191110162137.230913-1-amirmizi6@gmail.com> <20191110162137.230913-5-amirmizi6@gmail.com>
- <20191114191054.GA20209@bogus>
-In-Reply-To: <20191114191054.GA20209@bogus>
-From:   Amir Mizinski <amirmizi6@gmail.com>
-Date:   Sun, 24 Nov 2019 20:02:13 +0200
-Message-ID: <CAMHTsUXKUfCwHzucq7+zwkopM-9ZravWqXF8PXH9zegbkWjSgA@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] dt-bindings: tpm: Add the TPM TIS I2C device tree
- binding documentaion
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eyal.Cohen@nuvoton.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Oshri Alkobi <oshrialkoby85@gmail.com>,
-        Alexander Steffen <alexander.steffen@infineon.com>,
-        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
-        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
-        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, ayna@linux.vnet.ibm.com,
-        IS30 Dan Morav <Dan.Morav@nuvoton.com>,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 9:10 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Sun, Nov 10, 2019 at 06:21:36PM +0200, amirmizi6@gmail.com wrote:
-> > From: Amir Mizinski <amirmizi6@gmail.com>
-> >
-> > this file aim at documenting TPM TIS I2C related dt-bindings for the I2C PTP based Physical TPM.
-> >
-> > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> > ---
-> >  .../bindings/security/tpm/tpm_tis_i2c.txt          | 24 ++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
->
-> Please make this a schema. See
-> Documentation/devicetree/writing-schema.rst.
->
-> >
-> > diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
-> > new file mode 100644
-> > index 0000000..7d5a69e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
-> > @@ -0,0 +1,24 @@
-> > +* Device Tree Bindings for I2C PTP based Trusted Platform Module(TPM)
-> > +
-> > +The TCG defines hardware protocol, registers and interface (based
-> > +on the TPM Interface Specification) for accessing TPM devices
-> > +implemented with an I2C interface.
-> > +
-> > +Refer to the 'I2C Interface Definition' section in 'TCG PC Client
-> > +PlatformTPMProfile(PTP) Specification' publication for specification.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible     : Should be "tcg,tpm_tis-i2c"
->
-> s/_/-/
->
-> As this has to be under an I2C controller node, the '-i2c' part is
-> redundant.
->
+UNWIND_ESPFIX_STACK needs to read the GDT, and the GDT mapping that
+can be accessed via %fs is not mapped in the user pagetables.  Use
+SGDT to find the cpu_entry_area mapping and read the espfix offset
+from that instead.
 
-I wrote this Respectively with the tpm_tis-spi driver.
-https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/security/tpm/tpm_tis_spi.txt
-Should i change it anyway or keep the format?
-Also the '-i2c' is added since its not the only protocol used over
-tis, and it is handled differently from spi.
+Reported-and-tested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/entry/entry_32.S | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-> There's a bigger issue that the h/w here is more than just an I2C
-> protocol. The chip may have multiple power supplies, clocks, reset
-> lines, etc. HID over I2C seems like a similar case. Does the spec define
-> *all* of that? If not, you need chip specific compatibles. You can keep
-> this as a fallback though.
->
-> > +- reg            : Address on the bus
-> > +- tpm-pirq       : Input gpio pin, used for host interrupts
->
-> GPIO connections are properties ending in '-gpios'. However, if the only
-> use is an interrupt, then you should use 'interrupts'.
->
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 0b8c93136650..f07baf0388bc 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -415,7 +415,8 @@
+ 
+ .macro CHECK_AND_APPLY_ESPFIX
+ #ifdef CONFIG_X86_ESPFIX32
+-#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + (GDT_ENTRY_ESPFIX_SS * 8)
++#define GDT_ESPFIX_OFFSET (GDT_ENTRY_ESPFIX_SS * 8)
++#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + GDT_ESPFIX_OFFSET
+ 
+ 	ALTERNATIVE	"jmp .Lend_\@", "", X86_BUG_ESPFIX
+ 
+@@ -1147,12 +1148,26 @@ ENDPROC(entry_INT80_32)
+  * We can't call C functions using the ESPFIX stack. This code reads
+  * the high word of the segment base from the GDT and swiches to the
+  * normal stack and adjusts ESP with the matching offset.
++ *
++ * We might be on user CR3 here, so percpu data is not mapped and we can't
++ * access the GDT through the percpu segment.  Instead, use SGDT to find
++ * the cpu_entry_area alias of the GDT.
+  */
+ #ifdef CONFIG_X86_ESPFIX32
+ 	/* fixup the stack */
+-	mov	GDT_ESPFIX_SS + 4, %al /* bits 16..23 */
+-	mov	GDT_ESPFIX_SS + 7, %ah /* bits 24..31 */
++	pushl	%ecx
++	subl	$2*4, %esp
++	sgdt	(%esp)
++	movl	2(%esp), %ecx				/* GDT address */
++	/*
++	 * Careful: ECX is a linear pointer, so we need to force base
++	 * zero.  %cs is the only known-linear segment we have right now.
++	 */
++	mov	%cs:GDT_ESPFIX_OFFSET + 4(%ecx), %al	/* bits 16..23 */
++	mov	%cs:GDT_ESPFIX_OFFSET + 7(%ecx), %ah	/* bits 24..31 */
+ 	shl	$16, %eax
++	addl	$2*4, %esp
++	popl	%ecx
+ 	addl	%esp, %eax			/* the adjusted stack pointer */
+ 	pushl	$__KERNEL_DS
+ 	pushl	%eax
+-- 
+2.23.0
 
-My mistake, i didn't implemented interrupts yet so ill clear this for
-now.  thank you.
-
-> > +
-> > +Example (for Raspberry Pie 3 Board with Nuvoton's NPCT75X (2.0)
-> > +-------------------------------------------------------------------
-> > +
-> > +tpm_tis-i2c: tpm_tis-i2c@2e {
-> > +
-> > +       compatible = "tcg,tpm_tis-i2c";
-> > +       reg = <0x2e>;
-> > +       tpm-pirq = <&gpio 24 GPIO_ACTIVE_HIGH>;
-> > +};
-> > --
-> > 2.7.4
-> >
-
-Apologies for the late response, had a personal issue that needed my attention
-I'm working on making this a schema for next version. This is new for
-me, if you have additional sources regarding how to write it, i'll
-appreciate if you send me.
-Thank you.
-
-Amir Mizinski
