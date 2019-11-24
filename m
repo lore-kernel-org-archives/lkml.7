@@ -2,176 +2,132 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387F3C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6EBC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3974207FC
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2ACB2073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gcN26IH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfKXPTX (ORCPT
+        id S1726774AbfKXPoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 10:19:23 -0500
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:29300 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbfKXPTX (ORCPT
+        Sun, 24 Nov 2019 10:44:00 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:36312 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfKXPn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 10:19:23 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TiwwSUG_1574608754;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiwwSUG_1574608754)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 24 Nov 2019 23:19:15 +0800
-Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
- <20191119160456.GD382712@cmpxchg.org>
- <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com>
- <20191121220613.GB487872@cmpxchg.org>
- <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com>
- <20191122161652.GA489821@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <bfc046bc-05fb-37d3-12cf-c302d5429f17@linux.alibaba.com>
-Date:   Sun, 24 Nov 2019 23:19:06 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191122161652.GA489821@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Sun, 24 Nov 2019 10:43:59 -0500
+Received: by mail-yb1-f194.google.com with SMTP id v2so4989872ybo.3
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 07:43:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=7GoVKZppoRs4H8MV5EKljB+lt4NwFU2QYQ4kHf9aeFM=;
+        b=gcN26IH29ommNyDhhBdS4LUjBSrhnXAY5ZK1+Yfk+Ut2ikTr3yycJPIH/+RCBpTxej
+         N3TJayJ955EbCu045tGM2rEeL1myhqCn4BIxYOU16q0Shyq0hjbSHBw/MRfXxxVnzG2a
+         hoiIRe8KalUW2+Fl4zEqdIbGYkOibTEl4kdeDcDIM9ExUeU8to+bnMXaGRqKOFlooUmy
+         OWxikAkr9yZ/fEAc3KUdjeUrD7Tzb78Z4PkiftSuvzZAtAvNtPDacWCgA+Kyxle6eoo2
+         H4tCC/DHHg6AbTdmSWPMpy8WHZHMZBfOfC2TZhYTLcO3OoW0VYxhjd/iz+a8H9oY7niu
+         m3XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7GoVKZppoRs4H8MV5EKljB+lt4NwFU2QYQ4kHf9aeFM=;
+        b=ON+QClcxaPn2guloe0quxtsmm3o9jTEr5laLPgC3dXYz8z1vMVHAfUgmBa7+x1SPuN
+         +vWhs1tdB7f/naOFS72wqM1Q/uLjkFIf4U8/T41iQNuI6LvH2un7+BxDkkzj3pfb3t7z
+         DsaPJucVpdy9gHFd24Jo+B7kbfXBnyxRfNMSlFvz+m2zCCU+jG0KRFIlDig7RSN5dt6x
+         jSA+AUoM+K3C5arVWYmwgOaGNKgubyocQWKmX1RCbdZ52cq/3ZGt+4MQqH4UuXyjDxBu
+         l6SlfmzzsnO+EiYe23psFphLVPBszgc2dm8S8kiV2WTj1d3RPAJz1wxnXzopoPuBakOy
+         F6GA==
+X-Gm-Message-State: APjAAAV46kGlKsqeyabaXad7oimNMNk3JFR8hO/1K9c4bYRlCQ/EOyqY
+        b8ZzYp8sPVSgcG3pGXXIfpdytg==
+X-Google-Smtp-Source: APXvYqyEZRjk614ciccDP+789BFWvngD1xEZFN1RKPsZLP+LMRQQPwNkhHtc3XCbgw+xJQsROxYehg==
+X-Received: by 2002:a25:8281:: with SMTP id r1mr19218080ybk.489.1574610237279;
+        Sun, 24 Nov 2019 07:43:57 -0800 (PST)
+Received: from localhost.localdomain (li2093-158.members.linode.com. [172.105.159.158])
+        by smtp.gmail.com with ESMTPSA id h81sm2222564ywa.78.2019.11.24.07.43.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 07:43:56 -0800 (PST)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 1/2] tty: serial: msm_serial: Fix lockup for sysrq and oops
+Date:   Sun, 24 Nov 2019 23:43:33 +0800
+Message-Id: <20191124154334.15366-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+has mentioned the uart driver might cause recursive locking between
+normal printing and the kernel debugging facilities (e.g. sysrq and
+oops).  In the commit it gave out suggestion for fixing recursive
+locking issue: "The solution is to avoid locking in the sysrq case
+and trylock in the oops_in_progress case."
 
+This patch follows the suggestion (also used the exactly same code with
+other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+issue, this can avoid stuck caused by deadlock and print out log for
+sysrq and oops.
 
-在 2019/11/23 上午12:16, Johannes Weiner 写道:
-> On Fri, Nov 22, 2019 at 10:36:32AM +0800, Alex Shi wrote:
->> 在 2019/11/22 上午6:06, Johannes Weiner 写道:
->>> If we could restrict lock_page_lruvec() to working only on PageLRU
->>> pages, we could fix the problem with memory barriers. But this won't
->>> work for split_huge_page(), which is AFAICT the only user that needs
->>> to freeze the lru state of a page that could be isolated elsewhere.
->>>
->>> So AFAICS the only option is to lock out mem_cgroup_move_account()
->>> entirely when the lru_lock is held. Which I guess should be fine.
->>
->> I guess we can try from lock_page_memcg, is that a good start?
-> 
-> Yes.
-> 
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index 7e6387ad01f0..f4bbbf72c5b8 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -1224,7 +1224,7 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
->>                 goto out;
->>         }
->>
->> -       memcg = page->mem_cgroup;
->> +       memcg = lock_page_memcg(page);
->>         /*
->>          * Swapcache readahead pages are added to the LRU - and
->>          * possibly migrated - before they are charged.
-> 
-> test_clear_page_writeback() calls this function with that lock already
-> held so that would deadlock. Let's keep locking in lock_page_lruvec().
-> 
-> lock_page_lruvec():
-> 
-> 	memcg = lock_page_memcg(page);
-> 	lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
-> 
-> 	spin_lock_irqsave(&lruvec->lru_lock, *flags);
-> 	return lruvec;
-> 
-> unlock_lruvec();
-> 
-> 	spin_unlock_irqrestore(&lruvec->lru_lock);
-> 	__unlock_page_memcg(lruvec_memcg(lruvec));
-> 
-> The lock ordering should be fine as well. But it might be a good idea
-> to stick a might_lock(&memcg->move_lock) in lock_page_memcg() before
-> that atomic_read() and test with lockdep enabled.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ drivers/tty/serial/msm_serial.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Hi Johannes,
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index 3657a24913fc..889538182e83 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -1576,6 +1576,7 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 	int num_newlines = 0;
+ 	bool replaced = false;
+ 	void __iomem *tf;
++	int locked = 1;
+ 
+ 	if (is_uartdm)
+ 		tf = port->membase + UARTDM_TF;
+@@ -1588,7 +1589,13 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 			num_newlines++;
+ 	count += num_newlines;
+ 
+-	spin_lock(&port->lock);
++	if (port->sysrq)
++		locked = 0;
++	else if (oops_in_progress)
++		locked = spin_trylock(&port->lock);
++	else
++		spin_lock(&port->lock);
++
+ 	if (is_uartdm)
+ 		msm_reset_dm_count(port, count);
+ 
+@@ -1624,7 +1631,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 		iowrite32_rep(tf, buf, 1);
+ 		i += num_chars;
+ 	}
+-	spin_unlock(&port->lock);
++
++	if (locked)
++		spin_unlock(&port->lock);
+ }
+ 
+ static void msm_console_write(struct console *co, const char *s,
+-- 
+2.17.1
 
-Thanks a lot for the suggestion. I will look into this and try.
-
-> 
-> 
-> But that leaves me with one more worry: compaction. We locked out
-> charge moving now, so between that and knowing that the page is alive,
-> we have page->mem_cgroup stable. But compaction doesn't know whether
-> the page is alive - it comes from a pfn and finds out using PageLRU.
-> 
-> In the current code, pgdat->lru_lock remains the same before and after
-> the page is charged to a cgroup, so once compaction has that locked
-> and it observes PageLRU, it can go ahead and isolate the page.
-> 
-> But lruvec->lru_lock changes during charging, and then compaction may
-> hold the wrong lock during isolation:
-> 
-> compaction:				generic_file_buffered_read:
-> 
-> 					page_cache_alloc()
-> 
-> !PageBuddy()
-> 
-> lock_page_lruvec(page)
->   lruvec = mem_cgroup_page_lruvec()
->   spin_lock(&lruvec->lru_lock)
->   if lruvec != mem_cgroup_page_lruvec()
->     goto again
-> 
-> 					add_to_page_cache_lru()
-> 					  mem_cgroup_commit_charge()
-> 					    page->mem_cgroup = foo
-> 					  lru_cache_add()
-> 					    __pagevec_lru_add()
-> 					      SetPageLRU()
-> 
-> if PageLRU(page):
->   __isolate_lru_page()
-> 
-> I don't see what prevents the lruvec from changing under compaction,
-> neither in your patches nor in Hugh's. Maybe I'm missing something?
-
-Yes, it's a problem. 
-Guess we could move the lruvec recheck after PageLRU() test in compaction. Then it could be safe, and add a bit more burden on compaction should be fine.  at last we have no disturb to file read.
-
-Thanks
-Alex
