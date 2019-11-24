@@ -2,90 +2,104 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 09:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 09:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E797420706
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 09:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F34E20706
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 09:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQhrEfkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfKXJnD (ORCPT
+        id S1726861AbfKXJnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 04:43:03 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:48719 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfKXJnD (ORCPT
+        Sun, 24 Nov 2019 04:43:20 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36972 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKXJnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 04:43:03 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iYoPy-0003sy-Ux; Sun, 24 Nov 2019 09:42:59 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Date:   Sun, 24 Nov 2019 17:42:53 +0800
-Message-Id: <20191124094253.3433-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 24 Nov 2019 04:43:20 -0500
+Received: by mail-pj1-f67.google.com with SMTP id bb19so1552983pjb.4;
+        Sun, 24 Nov 2019 01:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cYCl6tCVXRhGzELJNREu4KHA8Cuxy8ZifAK3A3H2TqQ=;
+        b=XQhrEfklswD/dw/KdVMegl8bW0SjyzX+fySRCa+n7O315I3Na7lkxPAcT0/VEHpxtJ
+         7S/WXKvwQkvFqxiT1aeJkK+dW/rrKlPOpwhvn3huQ7lswM8jcFu80S/EL403dqQkxCjg
+         m43i4Gh0TEaZ/zdBAr45GW8en4xxswxbi/BaWRceaBi3bMg9LXoEiPLAuz0BPzPT/dAs
+         R+n0SFhnh7DMcGVJoA4alAiHookTHm0vLTec2C/caj5nU/+P5A1myleHHuJckiH36mMd
+         X8fAwPEXZa1DNg/xyKMd0+v26TYVWX7lleoC520+ZHmWmm6FICX1eMvbX7I6GNI9lYMR
+         0z4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cYCl6tCVXRhGzELJNREu4KHA8Cuxy8ZifAK3A3H2TqQ=;
+        b=NuhT9Ivz3jJDcoZ17KLJTaFyQ3bnPZR4PmGhGTLj0ssAq6xB1Kq+CxBlS/fxwxMX1v
+         xV07hPWgVr+X7aAr0WOsSnK0zUArDLszkRUaTgemfL8a4dIjEQR+9KsrYTENJswyBR2B
+         xJD2Mtk6GM11ph2Tw6MuzMC00xcPpSi43WBwbvfKYO/+nTlMoebonKEv9kuL0NFcXd/u
+         wpfBPj268t+4Ca0iHzxXADBwLVEtct0tdsJaWAVy+hULKfXsj1OdSMuPIoteJRgMpUz7
+         sHJgVZdMbWY8rmZfcN1DcweRoh2qNtSHmAVm2Bxw6YK74G84Z+f0aSZhGGSycBW86b1L
+         JWYQ==
+X-Gm-Message-State: APjAAAXs2mXfuouonk2LIzMmOAZ9Pj0gG9VGuV3F0WEfwXD9ZwQIQtk1
+        RXZGRvPHLT9vocDv2bM+L34=
+X-Google-Smtp-Source: APXvYqyWFjRWaQ8Px/q90nV7G8rnmuF8zHbfQye+twExMG2QCGL8hKvlHs7yLoSiNccpcqEh/H1XgA==
+X-Received: by 2002:a17:902:6802:: with SMTP id h2mr22565940plk.135.1574588598968;
+        Sun, 24 Nov 2019 01:43:18 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:550c:6dad:1b5f:afc6:7758])
+        by smtp.gmail.com with ESMTPSA id c3sm4091213pfi.91.2019.11.24.01.43.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 01:43:18 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     davem@davemloft.net, keescook@chromium.org
+Cc:     kvalo@codeaurora.org, saeedm@mellanox.com,
+        jeffrey.t.kirsher@intel.com, luciano.coelho@intel.com,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH 0/5] Fix -Wcast-function-type net drivers
+Date:   Sun, 24 Nov 2019 16:43:01 +0700
+Message-Id: <20191124094306.21297-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
+This series is for fixing the compiler warning while enable
+-Wcast-function-type.
 
-According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
-the same here to avoid screen flickering on 4K monitor.
+Almost is incompatible callback prototype in using tasklet.
+The void (*func)(unsigned long) instead of void (*func)(struct foo*).
 
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/961
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/iommu/amd_iommu_init.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Reported by: https://github.com/KSPP/linux/issues/20
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 568c52317757..e05f1b269be6 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2516,6 +2516,7 @@ static int __init early_amd_iommu_init(void)
- 	struct acpi_table_header *ivrs_base;
- 	acpi_status status;
- 	int i, remap_cache_sz, ret = 0;
-+	u32 pci_id;
- 
- 	if (!amd_iommu_detected)
- 		return -ENODEV;
-@@ -2603,6 +2604,13 @@ static int __init early_amd_iommu_init(void)
- 	if (ret)
- 		goto out;
- 
-+	/* Get the host bridge VID/PID and disable IOMMU if it's Stoney Ridge */
-+	pci_id = read_pci_config(0, 0, 0, 0);
-+	if ((pci_id & 0xffff) == 0x1022 && (pci_id >> 16) == 0x1576) {
-+		pr_info("Disable IOMMU on Stoney Ridge\n");
-+		amd_iommu_disabled = true;
-+	}
-+
- 	/* Disable any previously enabled IOMMUs */
- 	if (!is_kdump_kernel() || amd_iommu_disabled)
- 		disable_iommus();
-@@ -2711,7 +2719,7 @@ static int __init state_next(void)
- 		ret = early_amd_iommu_init();
- 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
- 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
--			pr_info("AMD IOMMU disabled on kernel command-line\n");
-+			pr_info("AMD IOMMU disabled\n");
- 			init_state = IOMMU_CMDLINE_DISABLED;
- 			ret = -EINVAL;
- 		}
+Phong Tran (5):
+  drivers: net: hso: Fix -Wcast-function-type
+  drivers: net: usbnet: Fix -Wcast-function-type
+  drivers: net: b43legacy: Fix -Wcast-function-type
+  drivers: net: intel: Fix -Wcast-function-type
+  drivers: net: realtek: Fix -Wcast-function-type
+
+ drivers/net/usb/hso.c                          |  5 +++--
+ drivers/net/usb/usbnet.c                       |  8 +++++++-
+ drivers/net/wireless/broadcom/b43legacy/main.c |  5 +++--
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c   |  7 ++++---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c   |  5 +++--
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c |  5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c |  5 +++--
+ drivers/net/wireless/realtek/rtlwifi/pci.c     | 10 ++++++----
+ 8 files changed, 32 insertions(+), 18 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
