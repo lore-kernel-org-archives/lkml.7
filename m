@@ -2,141 +2,117 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB1BC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425542067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90782067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gY2YIA5C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dFZgmMQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKXXNx (ORCPT
+        id S1727071AbfKXXSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 18:13:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:52137 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfKXXNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 18:13:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47LmF90lW9z9sPL;
-        Mon, 25 Nov 2019 10:13:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574637229;
-        bh=HRAvomeKw8Kd/VbQtURDdcSl58WiQQ1Z4h9XqE3SKaQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gY2YIA5CRrMLyQ/gURPO13XzYApgDMyX+6HhD1k6+i+6GiOzg0blz8PD23/gMOU9F
-         i22iCuq91UpBxTXcPKRqljUoDVIJzGCl4G0vszUP9CjafX3sR3wTJOl1mAI0INg95+
-         QjxNvx5kGUHUwef47E0tLsN6PkADqwg3Hn2B09WBc6SIQlbgw8F3kc9jcV3IIqXxBz
-         LmMp9PEToBvII9Ub6qTlE+lv0u6ToFxgeC8SPC4A0PuAElIUl3Pr+vUZH+BiKInJVw
-         8xcuSYU6EO07QzcXJ+uHWcvjAB8zM0YJQDHXpaKQ6S+Y46o5b3uaKg38ea3p85dIy4
-         1xNFUyiKjC5xQ==
-Date:   Mon, 25 Nov 2019 10:13:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the pm tree with the pci tree
-Message-ID: <20191125101345.760293f3@canb.auug.org.au>
+        Sun, 24 Nov 2019 18:18:11 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28697 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726952AbfKXXSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 18:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574637490;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PClP5vcK7H2hH8iu9CCJfFi1HH/SjqItErOS3dnGhZA=;
+        b=dFZgmMQhN3bnF781esT2h5gsaMX504c370/e+LQwFpOWS83c771GqLousDrIXRI8Qlhude
+        B/gieVGPw++v0jD/bmV/jeECznEqHaJUFK0YVgjW4z2Mz3iqaIR7yizzDXiYdRbV7m9uFL
+        ndj+4yCkfjcoGM/OAKA4uEC2AfdfH7g=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-7XrRfKr8M8Oaj_QLcEbJCQ-1; Sun, 24 Nov 2019 18:18:08 -0500
+Received: by mail-qv1-f69.google.com with SMTP id m12so9107209qvv.8
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 15:18:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fuJZGXqNTPkHKKy9Zo1tRW4D2w7eYV51Z20agxm/QfY=;
+        b=tBR2/+XfkvfyXYDdEso66gMZQkRsZKntHfHuJEsd//aBRs6dMd9KsiKbylNfxga10R
+         ey67iOgEa9vxqF3kkT0LxAsiXf5+5V5O66jP9Fss8NBGTbGuhq819Y9n8qFzT5sXK2fR
+         uTjvr4VagKcsDDlfQATWpClGgOLPjaxNyw1JlnYH/c4Oo34qc06rGJWpZ6zdhPAx+Vr+
+         KQsCQ08vfUEKNHVCGMIPPI7SPk1rWPY3lFpSLrw1ddrRnzi0K0+oPPpGoJfSgp3ff7JP
+         yE+WrNInEJksbdifxC/Cb5WGJxJCkwODr4HNynFOAA87OOXWDUDdn3NUWceAbu24dG/x
+         BOmw==
+X-Gm-Message-State: APjAAAWpJhwvFWktanx09X1Ujuai3AE8F0s7qOYvsiarV+h8cJuxtWX2
+        IdsaL/sra2beBNb2CGLiNDlz4zXmlqGH2eCCngRXuVwba0xbZ2WIqfa2OL+KvxW27414IFfPvU3
+        f7spYNKe1AaFN1T2HE4I0KFFT
+X-Received: by 2002:ac8:754c:: with SMTP id b12mr16779095qtr.291.1574637488459;
+        Sun, 24 Nov 2019 15:18:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzifxug591hBiIzAoyGSEYaT6MrOBiQSwRPRmdW7PdE6LTobqahiQLu0xVWQAlGqwHRLz37Eg==
+X-Received: by 2002:ac8:754c:: with SMTP id b12mr16779087qtr.291.1574637488287;
+        Sun, 24 Nov 2019 15:18:08 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id l45sm2841796qtb.32.2019.11.24.15.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 15:18:07 -0800 (PST)
+Date:   Sun, 24 Nov 2019 18:18:02 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Julio Faracco <jcfaracco@gmail.com>, netdev@vger.kernel.org,
+        Daiane Mendes <dnmendes76@gmail.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] drivers: net: virtio_net: Implement a
+ dev_watchdog handler
+Message-ID: <20191124181750-mutt-send-email-mst@kernel.org>
+References: <20191122013636.1041-1-jcfaracco@gmail.com>
+ <20191122052506-mutt-send-email-mst@kernel.org>
+ <CAENf94KX1XR4_KXz9KLZQ09Ngeaq2qzYY5OE68xJMXMu13SuEg@mail.gmail.com>
+ <20191124100157-mutt-send-email-mst@kernel.org>
+ <20191124164411-mutt-send-email-mst@kernel.org>
+ <20191124150352.5cab3209@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=xbVg28SkS4dUh1QBRlMT3Q";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191124150352.5cab3209@cakuba.netronome.com>
+X-MC-Unique: 7XrRfKr8M8Oaj_QLcEbJCQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=xbVg28SkS4dUh1QBRlMT3Q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Nov 24, 2019 at 03:03:52PM -0800, Jakub Kicinski wrote:
+> On Sun, 24 Nov 2019 16:48:35 -0500, Michael S. Tsirkin wrote:
+> > diff --git a/arch/m68k/emu/nfeth.c b/arch/m68k/emu/nfeth.c
+> > index a4ebd2445eda..8e06e7407854 100644
+> > --- a/arch/m68k/emu/nfeth.c
+> > +++ b/arch/m68k/emu/nfeth.c
+> > @@ -167,7 +167,7 @@ static int nfeth_xmit(struct sk_buff *skb, struct n=
+et_device *dev)
+> >  =09return 0;
+> >  }
+> > =20
+> > -static void nfeth_tx_timeout(struct net_device *dev)
+> > +static void nfeth_tx_timeout(struct net_device *dev, int txqueue)
+>=20
+> Given the recent vf ndo problems, I wonder if it's worth making the
+> queue id unsigned from the start? Since it's coming from the stack
+> there should be no range checking required, but also signed doesn't
+> help anything so why not?
+>=20
+> >  {
+> >  =09dev->stats.tx_errors++;
+> >  =09netif_wake_queue(dev);
 
-Hi all,
+You are right. I'll change this.
 
-Today's linux-next merge of the pm tree got a conflict in:
-
-  Documentation/power/pci.rst
-
-between commits:
-
-  b64cf7a1711d ("PCI/PM: Wrap long lines in documentation")
-  89cdbc354635 ("PCI/PM: Remove unused pci_driver.resume_early() hook")
-  1a1daf097e21 ("PCI/PM: Remove unused pci_driver.suspend_late() hook")
-
-from the pci tree and commit:
-
-  1992b66d2f55 ("PM: Wrap documentation to fit in 80 columns")
-
-from the pm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/power/pci.rst
-index 0924d29636ad,51e0a493d284..000000000000
---- a/Documentation/power/pci.rst
-+++ b/Documentation/power/pci.rst
-@@@ -692,11 -692,11 +692,11 @@@ controlling the runtime power managemen
-  At the time of this writing there are two ways to define power management
-  callbacks for a PCI device driver, the recommended one, based on using a
-  dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst=
-, and
-- the "legacy" one, in which the .suspend() and .resume() callbacks from st=
-ruct
-- pci_driver are used.  The legacy approach, however, doesn't allow one to =
-define
-- runtime power management callbacks and is not really suitable for any new
-- drivers.  Therefore it is not covered by this document (refer to the sour=
-ce code
-- to learn more about it).
- -the "legacy" one, in which the .suspend(), .suspend_late(), .resume_early=
-(), and
- -.resume() callbacks from struct pci_driver are used.  The legacy approach,
- -however, doesn't allow one to define runtime power management callbacks a=
-nd is
- -not really suitable for any new drivers.  Therefore it is not covered by =
-this
- -document (refer to the source code to learn more about it).
-++the "legacy" one, in which the .suspend() and .resume() callbacks from
-++struct pci_driver are used.  The legacy approach, however, doesn't allow
-++one to define runtime power management callbacks and is not really suitab=
-le
-++for any new drivers.  Therefore it is not covered by this document (refer
-++to the source code to learn more about it).
- =20
-  It is recommended that all PCI device drivers define a struct dev_pm_ops =
-object
-  containing pointers to power management (PM) callbacks that will be execu=
-ted by
-
---Sig_/=xbVg28SkS4dUh1QBRlMT3Q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3bDqkACgkQAVBC80lX
-0Gzh+Af5Af+TZXZwXyMdAiNamf/xEMuYuq2DpycHC/9Jf3Wm0oxMsy4XcB8AfIcH
-nV99iYaD6ZSAbi03hE0/lA5GTWStrnSMTdQq4+Js5xZ7PrxL7SqZzfwjhmyLdDOt
-4HJTrG6m3QE3L4MOV1jBPQ7l9SlP+8RAoADAU3hYfYqXcKDNW9RnfCH9VI+8TkHU
-1wmqxQPOxcYLPjoEfvUySMyJ+8qAqiiz2q62jio7hukRFH0QkHahHC+e5LOga6Fg
-ECU/DyzWTniZX3kKdo8yxQEd36W5xx1horlLzr6/lRSXHme5oxfkoAvky84+by9W
-ar5PXsc6VhWXUgyK9V1i8TRJtHjCrg==
-=OZQo
------END PGP SIGNATURE-----
-
---Sig_/=xbVg28SkS4dUh1QBRlMT3Q--
