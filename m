@@ -2,116 +2,90 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4E9C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D850C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6313F207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E81207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="t63HcXb0"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Gj7RiQOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfKXWjT (ORCPT
+        id S1727060AbfKXWj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 17:39:19 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41995 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfKXWjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 17:39:19 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47LlTH2Vrhz9sPT;
-        Mon, 25 Nov 2019 09:39:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574635156;
-        bh=4q1KyTDlb0ND4mkqK8ewLqPEYFfOu065MxrD5xwKFzo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=t63HcXb0b0Mer6zIkRhVWPC2By3UYL+T+Tj4eyhld18gQIEDHHo3HOJdhRSDC+PDw
-         PCXJ9QEwmUY/1391+tu/5Lvyga4E5//cv0G0I/aIBS/EWf+bbd7BRwqb3le/JvVS/N
-         jfwZzGDCQi61f3xJ73B23J2fcEQKsCuO5DCMIPYFdz4HZZA+zjLlpeYdUE1JapuoCc
-         gFhiA8pQRSf+PXYtUEx1XJUmh27DfSwFOnOwFU/kLZ0IYJmV0BPBtAzda15JZFgfwN
-         SNfJnrZZDAkf8otD9T7lpv1KZoYOuw3+rPT/2hK9sKr09RQfiEbJdkwvhlyhtpkyXP
-         qwCfTysJumUCQ==
-Date:   Mon, 25 Nov 2019 09:39:07 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: linux-next: manual merge of the pci tree with the powerpc tree
-Message-ID: <20191125093907.45e3421b@canb.auug.org.au>
+        Sun, 24 Nov 2019 17:39:28 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:45740 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfKXWj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 17:39:27 -0500
+Received: by mail-pj1-f68.google.com with SMTP id m71so5529012pjb.12
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 14:39:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=mJ03a7hesWJNvR2m6hfpaM5qF0D6avZONNtvx1zsFJc=;
+        b=Gj7RiQOKmCUl7rlYZQVUi2mKCnOg5I0nw9OU8vIyXYd/0QJI7iGZFzb8A/gjk4E+JS
+         xOJdNEEuiSMhWnxlWAyzY3TDGJab6QkRA5Q+e9FeTPuhzQ/AEYUFZFzloPjD3PGACWym
+         SEtEro4s2JPqte8X2Pf+p3nxA+N3yyFlbPqGMcKI8aDGrB0AgcK8nlBEFgq8bE004dIh
+         ycirnv1uJfo4XBMc96OLuvYRyUlFwaYIcnglL6w3TuhledodxCYZZRFQooR3B5aUumvb
+         hEGV7k4M4T8W6jyExL6fLt9Cdlr+RPuD8Cuar7Te9Tl2EzW4Kqj/FvMFbWqiEPCIjWrv
+         +rWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=mJ03a7hesWJNvR2m6hfpaM5qF0D6avZONNtvx1zsFJc=;
+        b=MjJObfIlTZ5JoAxm8PUDKZEAMniSa+oSnZhPZXPGzkXMXCLb5T+dLdiQKUZgIwj8Bq
+         CwgDDngF96WhWZoRfl/6rirwecPgHpyqi+dRvzodsU1+GHitTpjGSl/Nja3OyCfMsUqj
+         iMwZsGdGfgkABa/AKDCHPX/1c9ZE3Bi4b9IEcrVkkgLT8NyNJfyBCjt6lmzaJ8dheP7O
+         9/nn9FqhlPtlnUXb4RULSywVcgpn49UEAqo1+2BQgGeh1xWs0UM7eyyWCXWTajI21D26
+         VG3GRsc6EK/NmbsmxuN1qLZ4PvBPWAXPlFIhK9ONih6BXxbIgqjVH5p3NNDtsEbrOyrk
+         Bv0g==
+X-Gm-Message-State: APjAAAV71u5VJLtaioE+Ak2C4tQTfmlPVx+tuj2RzDJipJMqCZRQMXqL
+        1/tqa21uGCNbHWAZFSGa188JcQ==
+X-Google-Smtp-Source: APXvYqx50D+Wd5N5bU/VCxdp0oBYsPZSpIdT6ez+EmZyigA36yD5gxhbXBGUlO6FDAZGYYvd6plU4Q==
+X-Received: by 2002:a17:902:409:: with SMTP id 9mr26724818ple.25.1574635166883;
+        Sun, 24 Nov 2019 14:39:26 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id y12sm5619986pjy.0.2019.11.24.14.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 14:39:26 -0800 (PST)
+Date:   Sun, 24 Nov 2019 14:39:19 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     davem@davemloft.net, keescook@chromium.org, kvalo@codeaurora.org,
+        saeedm@mellanox.com, jeffrey.t.kirsher@intel.com,
+        luciano.coelho@intel.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Fix -Wcast-function-type net drivers
+Message-ID: <20191124143919.63711421@cakuba.netronome.com>
+In-Reply-To: <20191124094306.21297-1-tranmanphong@gmail.com>
+References: <20191124094306.21297-1-tranmanphong@gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/b+Onz14PBl20uhRM4dwdRuw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/b+Onz14PBl20uhRM4dwdRuw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 24 Nov 2019 16:43:01 +0700, Phong Tran wrote:
+> This series is for fixing the compiler warning while enable
+> -Wcast-function-type.
+> 
+> Almost is incompatible callback prototype in using tasklet.
+> The void (*func)(unsigned long) instead of void (*func)(struct foo*).
+> 
+> Reported by: https://github.com/KSPP/linux/issues/20
 
-Hi all,
+Hi Tran, thanks for the patches. Could you split the series into two -
+the wireless changes and the USB changes?
 
-Today's linux-next merge of the pci tree got a conflict in:
-
-  arch/powerpc/include/asm/Kbuild
-
-between commit:
-
-  265c3491c4bc ("powerpc: Add support for GENERIC_EARLY_IOREMAP")
-
-from the powerpc tree and commit:
-
-  356f42aff121 ("asm-generic: Make msi.h a mandatory include/asm header")
-
-from the pci tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/powerpc/include/asm/Kbuild
-index 148bee20e7e2,17726f2e46de..000000000000
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@@ -11,5 -10,3 +11,4 @@@ generic-y +=3D local64.
-  generic-y +=3D mcs_spinlock.h
-  generic-y +=3D preempt.h
-  generic-y +=3D vtime.h
-- generic-y +=3D msi.h
- +generic-y +=3D early_ioremap.h
-
---Sig_/b+Onz14PBl20uhRM4dwdRuw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3bBosACgkQAVBC80lX
-0GxSCQf9GqVqx1LQuv7pxaUpAfSHTgqiURU3NYL+s6pFWcZqlqSZZuwOgW3Dlte5
-Q5CwCC4z6FDugRWucbXvWo2dYTqBypijJugygqXYruHOHl3i40mgSyiTqIXkleWR
-mdBbA8EOYfLfI7f/DboasIxKk/qaN4TZfCjW+rT7bPwHha/kMr1vYR8pUHPLsvVX
-PNHDFavWlCT9UaPOo5CU4Q4H3gsGuag5m6owS42Ifp2gwQF3r25tgjtYDcxLPkh0
-IoiqmtXKYIvHclm1p7QIjwxqbLreiuL/wvJWJYOWUICu66s3a2jkyVVjCCtOX2D8
-8gHptQa/NAyg8RkEzB/F6yGCSJz/Qg==
-=Idfr
------END PGP SIGNATURE-----
-
---Sig_/b+Onz14PBl20uhRM4dwdRuw--
+Those usually go via slightly different trees.
