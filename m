@@ -2,196 +2,140 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE2DC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD77C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F5E207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2AD2073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nh+CvKWE"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="MBoMvaPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfKXPoF (ORCPT
+        id S1726840AbfKXPtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 10:44:05 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46222 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfKXPoE (ORCPT
+        Sun, 24 Nov 2019 10:49:18 -0500
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:49446 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726004AbfKXPtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 10:44:04 -0500
-Received: by mail-yw1-f66.google.com with SMTP id i2so4492492ywg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 07:44:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GqQQ8sAnCYygNP94HJPDN0z12tYLH4hLXTaPwjkO9+w=;
-        b=nh+CvKWEoocTUrSe/I48NOPbqzjjzQmkgbEoRWg8dOwwTRVeUULRRO1wGLj8dFX33D
-         mdJJ4ssRJhV66a4TqHsFKV8Saq1KbocEVBCtv8nBv1Yf1fsBxga1r5fxBgVq/UfqsSfa
-         9yGxhlFlUUWi3rwFaLFwHLCwjj4mvtvNofc2bzk3fDYBNRVmwRZKQDBRjIuRP4mYsH9O
-         tOjsi4vzdN3SirpEuvVuapfoISnOZX1uDkOMpYL1S0ahQyLZfilYi6rztySsfSHMAgia
-         vrqwt0HknnOXHhQj6OwyI06jwL2MxHrjcne19ifUni014Dl/LOcQE4iTJwrvJe6GSleS
-         Gu7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GqQQ8sAnCYygNP94HJPDN0z12tYLH4hLXTaPwjkO9+w=;
-        b=cQinxnk1zN9NcPHNUmWdJ3ghrSpGRpNSN8wrcZv4fP03zxOeIZAfeynZLSDq/R6mRE
-         +Z5bwCWQDibOg0IwBoRUPeE+FUjl6ax4OqfNMFaDvVN5v0cRNGyWlwDPgkCneNUBRLKZ
-         FKoLYCK5LoGy33qB6UBq6SrbhBI64LAtJyLGrJjCVcyBBsOg4DVW6KD/De+Cy0YRX5Mc
-         d0GdBjaACCUhOe/u0/LB3htaV2S+0SNSM7pZobi4Gs+w4/ry5zaDSC/s4DeD6CIRIneD
-         RPm8aEoeC7/uEN1Mvb5v6ygigx2yKEaybHTHbfJ2H/WPoHi/yhlCOXY52K/DFSP5Lgna
-         /qtA==
-X-Gm-Message-State: APjAAAVEtz1748OhkuErJjrqqQ6N68MirWnAmb+iGSwR5O8s7dwvM/yr
-        MUn8kuvCOCS+hPE8WO2okpwBQQ==
-X-Google-Smtp-Source: APXvYqzQMxNKBRsdGeSsn/59/PqlcKP9o5gQMIaZahjp75Xr5m/pW3qW4Nev8c/uGw8zj0uQ7+OhAA==
-X-Received: by 2002:a0d:d651:: with SMTP id y78mr16840971ywd.365.1574610243206;
-        Sun, 24 Nov 2019 07:44:03 -0800 (PST)
-Received: from localhost.localdomain (li2093-158.members.linode.com. [172.105.159.158])
-        by smtp.gmail.com with ESMTPSA id h81sm2222564ywa.78.2019.11.24.07.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 07:44:02 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 2/2] tty: serial: msm_serial: Fix deadlock caused by recursive output
-Date:   Sun, 24 Nov 2019 23:43:34 +0800
-Message-Id: <20191124154334.15366-2-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191124154334.15366-1-leo.yan@linaro.org>
-References: <20191124154334.15366-1-leo.yan@linaro.org>
+        Sun, 24 Nov 2019 10:49:18 -0500
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 4D9A92E0E7E;
+        Sun, 24 Nov 2019 18:49:14 +0300 (MSK)
+Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id wIrsB3SOSP-nD2u1akc;
+        Sun, 24 Nov 2019 18:49:14 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1574610554; bh=xtZMdOlBBD6/tHCSTsT3VJTA4BP38M0wqgm8PCbdSww=;
+        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
+        b=MBoMvaPppgK0GxCmI2p5BcEvddMbXZWFVzL7R2jU6Eyf7NVspC2cX7UWwhdzVP/dj
+         WCX5ndwJ78ehhcYOrRzg5mBqGOgU0BM2QfVThrsXhkDu8RSu9GuxtwK15PTx3z7EpO
+         2mNysXX3J3U24MmLaOkzECiCW8l76VStCEApt11g=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:8807::1:a])
+        by iva4-c987840161f8.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Ve10tljpUq-nDV4v2Wh;
+        Sun, 24 Nov 2019 18:49:13 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v4 0/9] per lruvec lru_lock for memcg
+To:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <aa5499cd-7947-39a5-fc17-bd277be25764@yandex-team.ru>
+Date:   Sun, 24 Nov 2019 18:49:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The uart driver might run into deadlock caused by recursive output; the
-basic flow is after uart driver has acquired the port spinlock, then it
-invokes some functions, e.g. dma engine operations and allocate dma
-descriptor with kzalloc(), if the system has very less free memory, the
-kernel will give out warning by printing logs, thus recursive output
-will happen and at the second time the attempting to acquire lock will
-cause deadlock.  The detailed flow is shown as below:
+On 19/11/2019 15.23, Alex Shi wrote:
+> Hi all,
+> 
+> This patchset move lru_lock into lruvec, give a lru_lock for each of
+> lruvec, thus bring a lru_lock for each of memcg per node.
+> 
+> According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
+> containers on my 2s* 8 core * HT box with the modefied case:
+>    https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+> 
+> With this change above lru_lock censitive testing improved 17% with multiple
+> containers scenario. And no performance lose w/o mem_cgroup.
 
-  msm_uart_irq()
-    spin_lock_irqsave(&port->lock, flags)  => First time to acquire lock
-    msm_handle_tx(port)
-      msm_handle_tx_dma()
-        dmaengine_prep_slave_single()
-          bam_prep_slave_sg()
-            kzalloc()
-               __kmalloc()
-                 ___slab_alloc()
-                   alloc_pages_current()
-                     __alloc_pages_nodemask()
-                       warn_alloc()
-                         printk()
-                           msm_console_write()
-                             __msm_console_write()
-                               spin_lock(&port->lock) => Cause deadlock
+Splitting lru_lock isn't only option for solving this lock contention.
+Also it doesn't help if all this happens in one cgroup.
 
-This patch fixes the deadlock issue for recursive output; it adds a
-variable 'curr_user' to indicate the uart port is used by which CPU, if
-the CPU has acquired spinlock and wants to execute recursive output,
-it will directly bail out.  Here we don't choose to avoid locking and
-print out log, the reason is in this case we don't want to reset the
-uart port with function msm_reset_dm_count(); otherwise it can introduce
-confliction with other flows and results in uart port malfunction and
-later cannot output anymore.
+I think better batching could solve more problems with less overhead.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- drivers/tty/serial/msm_serial.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Like larger per-cpu vectors or queues for each numa node or even for each lruvec.
+This will preliminarily sort and aggregate pages so actual modification under
+lru_lock will be much cheaper and fine grained.
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 889538182e83..06076cd2948f 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -182,6 +182,7 @@ struct msm_port {
- 	bool			break_detected;
- 	struct msm_dma		tx_dma;
- 	struct msm_dma		rx_dma;
-+	struct cpumask		curr_user;
- };
- 
- #define UART_TO_MSM(uart_port)	container_of(uart_port, struct msm_port, uart)
-@@ -436,6 +437,7 @@ static void msm_complete_tx_dma(void *args)
- 	u32 val;
- 
- 	spin_lock_irqsave(&port->lock, flags);
-+	cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
- 
- 	/* Already stopped */
- 	if (!dma->count)
-@@ -470,6 +472,7 @@ static void msm_complete_tx_dma(void *args)
- 
- 	msm_handle_tx(port);
- done:
-+	cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
- 	spin_unlock_irqrestore(&port->lock, flags);
- }
- 
-@@ -544,6 +547,7 @@ static void msm_complete_rx_dma(void *args)
- 	u32 val;
- 
- 	spin_lock_irqsave(&port->lock, flags);
-+	cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
- 
- 	/* Already stopped */
- 	if (!dma->count)
-@@ -590,6 +594,7 @@ static void msm_complete_rx_dma(void *args)
- 
- 	msm_start_rx_dma(msm_port);
- done:
-+	cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
- 	spin_unlock_irqrestore(&port->lock, flags);
- 
- 	if (count)
-@@ -931,6 +936,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
- 	u32 val;
- 
- 	spin_lock_irqsave(&port->lock, flags);
-+	cpumask_set_cpu(smp_processor_id(), &msm_port->curr_user);
- 	misr = msm_read(port, UART_MISR);
- 	msm_write(port, 0, UART_IMR); /* disable interrupt */
- 
-@@ -962,6 +968,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
- 		msm_handle_delta_cts(port);
- 
- 	msm_write(port, msm_port->imr, UART_IMR); /* restore interrupt */
-+	cpumask_clear_cpu(smp_processor_id(), &msm_port->curr_user);
- 	spin_unlock_irqrestore(&port->lock, flags);
- 
- 	return IRQ_HANDLED;
-@@ -1572,6 +1579,7 @@ static inline struct uart_port *msm_get_port_from_line(unsigned int line)
- static void __msm_console_write(struct uart_port *port, const char *s,
- 				unsigned int count, bool is_uartdm)
- {
-+	struct msm_port *msm_port = UART_TO_MSM(port);
- 	int i;
- 	int num_newlines = 0;
- 	bool replaced = false;
-@@ -1593,6 +1601,8 @@ static void __msm_console_write(struct uart_port *port, const char *s,
- 		locked = 0;
- 	else if (oops_in_progress)
- 		locked = spin_trylock(&port->lock);
-+	else if (cpumask_test_cpu(smp_processor_id(), &msm_port->curr_user))
-+		return;
- 	else
- 		spin_lock(&port->lock);
- 
--- 
-2.17.1
-
+> 
+> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
+> 7 years ago. Now I believe considering my testing result, and google internal
+> using fact. This feature is clearly benefit multi-container users.
+> 
+> So I'd like to introduce it here.
+> 
+> Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan,
+> Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
+> 
+> v4:
+>    a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
+>    b, remove the irqsave flags changes, thanks Metthew Wilcox
+>    c, merge/split patches for better understanding and bisection purpose
+> 
+> v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
+> 
+> v2: bypass a performance regression bug and fix some function issues
+> 
+> v1: initial version, aim testing show 5% performance increase
+> 
+> 
+> Alex Shi (9):
+>    mm/swap: fix uninitialized compiler warning
+>    mm/huge_memory: fix uninitialized compiler warning
+>    mm/lru: replace pgdat lru_lock with lruvec lock
+>    mm/mlock: only change the lru_lock iff page's lruvec is different
+>    mm/swap: only change the lru_lock iff page's lruvec is different
+>    mm/vmscan: only change the lru_lock iff page's lruvec is different
+>    mm/pgdat: remove pgdat lru_lock
+>    mm/lru: likely enhancement
+>    mm/lru: revise the comments of lru_lock
+> 
+>   Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +----
+>   Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
+>   Documentation/trace/events-kmem.rst                |  2 +-
+>   Documentation/vm/unevictable-lru.rst               | 22 +++----
+>   include/linux/memcontrol.h                         | 68 ++++++++++++++++++++
+>   include/linux/mm_types.h                           |  2 +-
+>   include/linux/mmzone.h                             |  5 +-
+>   mm/compaction.c                                    | 67 +++++++++++++------
+>   mm/filemap.c                                       |  4 +-
+>   mm/huge_memory.c                                   | 17 ++---
+>   mm/memcontrol.c                                    | 75 +++++++++++++++++-----
+>   mm/mlock.c                                         | 27 ++++----
+>   mm/mmzone.c                                        |  1 +
+>   mm/page_alloc.c                                    |  1 -
+>   mm/page_idle.c                                     |  5 +-
+>   mm/rmap.c                                          |  2 +-
+>   mm/swap.c                                          | 74 +++++++++------------
+>   mm/vmscan.c                                        | 74 ++++++++++-----------
+>   18 files changed, 287 insertions(+), 180 deletions(-)
+> 
