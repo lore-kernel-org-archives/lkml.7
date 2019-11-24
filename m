@@ -2,167 +2,314 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3195FC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BEE20823
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C8E2068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 22:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UusYnkax"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="l11f+KSK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AXJj1iu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKXWAT (ORCPT
+        id S1726962AbfKXWFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 17:00:19 -0500
-Received: from mail-eopbgr800105.outbound.protection.outlook.com ([40.107.80.105]:21523
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726855AbfKXWAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 17:00:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YEs7tXrG1PIArH92fuyCB2eNBsWrdxvqmj0BMNXaKUnrT36QgMj/W9smfv9Z01MwMWaf0PZcUOzCGpzbDEX96RRGVRuXzs/K32AYq3H+MKD6bKP3juPc1jitpgEtMnkIlWNX9tyu7bkYeVAB8vLjqqx+lrMVvyUZ+wpEp0N5NUyWVEHZ2H4v5vFY+1TC1Qttw6eUXSwBLfFeYx5XuuZMKCKVUGUUCZG0tUnU6b3CxXF3zV1TaLujI1G69mKY1scncXuusqLuT0fHXLSYv4uRQ5MzxaDqxlldfBA93soKwse57XuIkSptu80i+HJ5Y+gssus6IzQu9nbzpGqMZwqttw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pv4pKx5fArH55+/oY8o6GpHU/SjhKolsuxec60lZCU4=;
- b=MGCmvMmFD3LS+GgK84Cw874L7F1EkAFjaawklHQQGgOBxpks3uxowR4Ww2tP0Hy/Sbw26yxB8fnXEaSv5v8/UI+T1Zb0rL5n3wDAisQ4/gYH4XDSeIPEuzNkb8xHPGDNFxW+G19aUH7NEl+cX2TIAOjzYXf+YkYYGcwTJs1DGvWEh/1NGhKYHEA/69YUCsNUgmXp1sY1ZIxrjz64lDJTJMZFiS2imUPx9lfgth5g8Yqef9erxmxWxf0xmmUmJ5ZaPWxnw0L07H6uSHYTNHynNqnxb0wdVlYIVPzCvF1oE8TH0h92uoZSpKzQHpzkGXQqyA458NhsMUjGYiVNOTpc6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pv4pKx5fArH55+/oY8o6GpHU/SjhKolsuxec60lZCU4=;
- b=UusYnkax3D8pAmrzF0SxShX9YEMtcS8ni4Oy+dZIjTibLEGe+PTJ86G+W/XyarhBJjm6mefjXsqYRPcBc0tx+iTEf0ec2pbTLNtPDSXbLCcfZy9xKxJveQn61bOhxhJy4ru8sR0nxoZJyjWR+bf3vpJ2QuJtvrbDV+EUpIDX9yE=
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
- CY4PR21MB0853.namprd21.prod.outlook.com (10.173.192.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.0; Sun, 24 Nov 2019 22:00:15 +0000
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.000; Sun, 24 Nov 2019
- 22:00:15 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH v2 3/4] PCI: hv: Change pci_protocol_version to per-hbus
-Thread-Topic: [PATCH v2 3/4] PCI: hv: Change pci_protocol_version to per-hbus
-Thread-Index: AQHVn3KMxNeyeISNr0aRJ94xK3v7R6ea5eIQ
-Date:   Sun, 24 Nov 2019 22:00:15 +0000
-Message-ID: <CY4PR21MB06292E58EB3A53C01F860C55D74B0@CY4PR21MB0629.namprd21.prod.outlook.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
- <1574234218-49195-4-git-send-email-decui@microsoft.com>
-In-Reply-To: <1574234218-49195-4-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-24T22:00:12.6273716Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=11517a81-51b7-4a71-86d1-1209b0d4dbf0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 696bff10-4fbc-4efb-462d-08d77129b010
-x-ms-traffictypediagnostic: CY4PR21MB0853:|CY4PR21MB0853:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR21MB08539C11EE16DE3A90C937DFD74B0@CY4PR21MB0853.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02318D10FB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(39860400002)(396003)(366004)(54534003)(189003)(199004)(26005)(229853002)(6246003)(5660300002)(6636002)(86362001)(76176011)(81166006)(256004)(76116006)(11346002)(102836004)(7696005)(99286004)(52536014)(66066001)(22452003)(81156014)(3846002)(2501003)(1511001)(8676002)(316002)(10090500001)(110136005)(6506007)(446003)(55016002)(74316002)(4744005)(25786009)(7736002)(9686003)(33656002)(8936002)(2201001)(8990500004)(14454004)(186003)(71190400001)(66446008)(64756008)(66556008)(478600001)(66946007)(6436002)(10290500003)(66476007)(305945005)(71200400001)(2906002)(6116002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0853;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: =?us-ascii?Q?Q7CtlVEbUBwYL++AAPjUsIyfFD+hyyV4loT8QgsPdCu3PxKuWMaWkDv5KB3/?=
- =?us-ascii?Q?vf1ksWHxKpHucwU5njwQFNcRLwYYOk1a+/E92K/QKzmwdN16Jnk5a4RAtB8w?=
- =?us-ascii?Q?Zj7SLoWJqhiNyGSN75Idu+o5xaGOudBKhY2Yrnfpi5NRNqzV1S5z2jTvXbH8?=
- =?us-ascii?Q?DlvVwPcC1GqYdgBMg4YGJRVn5Va5tMARD0HhwYNGPbZ4CA8WLhxCf0KUSvLx?=
- =?us-ascii?Q?3wDAxbWwfGcM9cc9tVTRn9ZxSXiuz/BOzLioecCOQLo0RoouSdrePvOGKVfr?=
- =?us-ascii?Q?bXWhVGjK2XsIGCt/wxALUzh6+MCITajeLmjXXA59RI+U+1V/gMSXvycmq9ky?=
- =?us-ascii?Q?GS0SsIHQCqhYbM/0/bHsa9cv5RRw4foTePz8cggOYh5V+nri9QHLZtd844lZ?=
- =?us-ascii?Q?EWcy7qdylu1hAxIQRtB47i8g16wlo+kPtPZEqGKr6XyKlNdsgK1JHZRCKyHT?=
- =?us-ascii?Q?gG2R5wLGbNuykXNooqC8OlwsQ9r+Otkq4wJbnRk0lRxJLn7zGdGgt9kn+wpB?=
- =?us-ascii?Q?1GRMSqPYbFBS8jk3zDyOCWB1Bi1frdQP1iRKa5c5hTPvMMw25P3kWolsqtBw?=
- =?us-ascii?Q?YmMZ5GykuvQcUB7/aQFQSpq9GkfEl4hlcAXMmxyJFM/QOTg+Tg1b0MiaWdL3?=
- =?us-ascii?Q?VhxsvpcVh0HPpqLnFS6UeL+6qSjzwN1gBGkgnGAOReRsqPULN2zVCg4KF/9q?=
- =?us-ascii?Q?BCgBVqAVpGZApF0inOgn455Nta7MznRnk3JWOg2nuKRTEWFSNu0PzwcBx84A?=
- =?us-ascii?Q?D5s6LEifmAgywQkAAyc0DBut10prQxtWCDcS5oXUpg4DjTgTsew4OhAUsHjB?=
- =?us-ascii?Q?Kd2WvXt/4f8LQjB8+NSBzKk8+eXypidlOdw2ATT6nkANhQR5RCp6khuwJNKp?=
- =?us-ascii?Q?kNhUTbujUvBwwka6Hj7rTiZzYlwjVrlSOaIREv+VO8DrSh0RfFSbOHrklFcA?=
- =?us-ascii?Q?2qGGGsOorz0HVYQxe2wg4iZUDgHWmTqE+raZYRY888t+uID/FCNBJIQQJPvK?=
- =?us-ascii?Q?n9PV5aSxV4rkDgBtLYRevF5IK76uccr8AzW9db0uELlq0DboojJE/iYPgU3O?=
- =?us-ascii?Q?MCypWSquEJvAiTYGfKTFeEuVurWGmeTWS8yCNEvoHvZRxztuYo2TjJhsqE2/?=
- =?us-ascii?Q?G1msvsOYgkrEsPfz7GKVXBlytVMqopcotnv7yQgpv17Uanyye/aY0QemxaEq?=
- =?us-ascii?Q?xCACZCHHFuBNardf6mA6d3DzukK6fVIsh04eYMVBDB0NPZbyN3gK6hOm3vau?=
- =?us-ascii?Q?quG9Cv9DBMywC5yNMSBJnRDr0FKzkhSdXC9TssIWxSvPN3RD7Uaw4jdy29dC?=
- =?us-ascii?Q?tAa+LP39EVeuAws3nAZAdA4Tkk8plqIVdSckLI4ccnmwR23IzFeSS1foyMve?=
- =?us-ascii?Q?lhXb5T2V2BG6vVYv94Ric1GqC6S+xDHOjQDYlNT9l0QfNhPEoFxvrEKFyMxB?=
- =?us-ascii?Q?SxzpPHduAsisjCCSbfFL/87VeAck3UlvLL/UDUksuaxtMcCcjAcf/H+zSFSL?=
- =?us-ascii?Q?kbFGITARFdvLmp7xGjXTfyz1dKDvCcq4smhsgb55SCRys1S51B8dsiddLFIt?=
- =?us-ascii?Q?XnBu6IW7y2bqvUoH+/QQj3dnjTnbe9/rlDtxMmYwvo7HO3/JKmuHjDmbvIyv?=
- =?us-ascii?Q?3WokHBAwb1HNFUoCY5DocAHboJ1OGEEFAaj3rIZrbUwVBlCBbZAN18aVDUKe?=
- =?us-ascii?Q?xxjGD9H7G2n6e0YpSClMkQ8xWhndq7cYcdmuSwaW2X+RY3AVBW/oRl+B2ZKq?=
- =?us-ascii?Q?Cd/c6fYVpoMaeM2MKl07xEc13GrTeDvyw+NSRamltBpxjJ/tYM/FBlvQKOlI?=
- =?us-ascii?Q?V+J20K4AepWuKWyH7Zy+tNhUt5GN/SsN/0M0nur9ydL/XxSFQLazTYukgugf?=
- =?us-ascii?Q?+DBGiikhV1WNflHRhvPVklpVBp9VEu8ai1qA19PLTTG7YZShw9BkSlkPuW1C?=
- =?us-ascii?Q?XOTx9m2wIAb+Y2Sm/i0LDg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 696bff10-4fbc-4efb-462d-08d77129b010
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Nov 2019 22:00:15.6249
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HeRaTcQKhxlpeje1a5DGus086NUo/nczWwxt3wGTnkZ5Otzc7ejtoyu/DP0dhSjrXS2y5dG08n8XhFSjlY0of2Gji/vApIeaQ1VJZBzbrC8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0853
+        Sun, 24 Nov 2019 17:05:05 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:54903 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726842AbfKXWFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 17:05:04 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3C47D227D1;
+        Sun, 24 Nov 2019 17:05:03 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 24 Nov 2019 17:05:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=w7VW6B5fKWHMLGaL/fpHr6+gZSU1LDe
+        1lQlUb/zRF1U=; b=l11f+KSKlTkXQ25Iu7y5FHMzsyMiDhjWcAGWqBg1Fpfv+LZ
+        3azFi3TTFlZyb9DuHia/B7y6Bk62cOYI6K60CpQ6KLWiOk9NOaQ/5/6z+sNrUgnB
+        +KRhIE/1BDrUq6cmW4kC4auzgNSoCXZPTgH4ZeS50VQwh2cNMO4m6cx4nObM+ILS
+        LuIQZYcpFaqBErB7GpC/m3iEq8WSiCURdUtABzGxdczryfA8js9F0cVAk3frfILP
+        +OQEMsX0TaY0L+j4vicRS6A7hntrJuE8pPsESycoJK+wlsSJAGCicWw7Re5bOQc1
+        ky5+JIljaeGZ1Gj2FRiIooi8QFTK5pGrfc21Rzw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=w7VW6B
+        5fKWHMLGaL/fpHr6+gZSU1LDe1lQlUb/zRF1U=; b=AXJj1iu9HfKbaJxwQg2c5k
+        Mp3+wnXqpZD2kGOXiygk/Yj3DS3kNNPoCAIOvYfc2aM484zh8Lr5uC6kUOxJiUvR
+        XBOZ7ZKGcZ7yMWO829np8+pxgAapzONMFiAhMCrg3uqBgm5lkpIc7DIZAC/MupBc
+        hnl8rxdwle3TI6YG9izQPr1sSyypvJYdG0GMjROHwS+81IEqXgLZwCC+nex9L/8k
+        MGqfbUbUq+MajUaSnRkmijy8FC2u44L/j6EiB1XuzEO01eusRhvk+G/5WfT/sMCS
+        Dr+l7ojV9WNs0l+UK0FsfsbX5mP/Yo+/UfDpMRqE9w5ItIyUcMjphf/+VY8WeIBQ
+        ==
+X-ME-Sender: <xms:jv7aXSlx4PtFry02C5P87ZYbIeg1McnXmwkfbfhIOfXtscju1VM-WA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehkedgudehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
+    vghrufhiiigvpedt
+X-ME-Proxy: <xmx:jv7aXf_nkcHGpAUj1zvvYRHx0z7UwzsQgAr2OLol7pUGeaTOs3qZJQ>
+    <xmx:jv7aXXKT1EwIq5zkU_yoUpXyt4pf4IeraURUar-h2sGoJYc_fn9xUA>
+    <xmx:jv7aXQnJq0yhXqdR9Ilhk8mOW9QAGzwMFohFGcn9yucKwek0kKfCBQ>
+    <xmx:j_7aXUNplr6oEMfWGjkUa-5rA-LNp9Sza_WzRIA_oNnsbTp6GY6l0A>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0F474E00A5; Sun, 24 Nov 2019 17:05:02 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <7402f01e-9678-4373-9326-d25d569d408a@www.fastmail.com>
+In-Reply-To: <20191122103022.GA15913@cnn>
+References: <20191118123707.GA5560@cnn>
+ <b2f503f0-0f13-46bc-a1be-c82a42b85797@www.fastmail.com>
+ <D34D3A2F-9CD5-4924-8407-F6EB0A4C66B5@fb.com> <20191121074843.GA10607@cnn>
+ <0fce7468-bb35-4d47-8d5d-abc228e99085@www.fastmail.com>
+ <20191122103022.GA15913@cnn>
+Date:   Mon, 25 Nov 2019 08:36:30 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>,
+        "Vijay Khemka" <vijaykhemka@fb.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>  Sent: Tuesday, November 19, 2019 11=
-:17 PM
->=20
-> A VM can have multiple Hyper-V hbus. It's incorrect to set the global
-> variable 'pci_protocol_version' when *every* hbus is initialized in
-> hv_pci_protocol_negotiation(). This is not an issue in practice since
-> every hbus should have the same value of hbus->protocol_version, but
-> we should make the variable per-hbus, so in case we have busses
-> with different protocol_versions, the driver can still work correctly.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->=20
-> changes in v2: Improved the changelog by making it clear that this patch
-> fixes a potential bug if we have busses with different protocol_versions.
->=20
->  drivers/pci/controller/pci-hyperv.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
->=20
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
+On Fri, 22 Nov 2019, at 21:00, Manikandan wrote:
+> 
+> From 9a17872b5faf2c00ab0b572bac0072e44a3d8b91 Mon Sep 17 00:00:00 2001
+> From: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+> Date: Thu, 21 Nov 2019 11:57:07 +0530
+> Subject: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+> 
+> The Yosemite V2 is a facebook multi-node server
+> platform that host four OCP server. The BMC
+> in the Yosemite V2 platorm based on AST2500 SoC.
+> 
+> This patch adds linux device tree entry related to
+> Yosemite V2 specific devices connected to BMC SoC.
+> 
+> Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+> ---
+>  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 152 +++++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> new file mode 100644
+> index 0000000..5f9a2e1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2018 Facebook Inc.
+> +/dts-v1/;
+> +
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +
+> +/ {
+> +	model = "Facebook Yosemitev2 BMC";
+> +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
+> +	aliases {
+> +		serial0 = &uart1;
+
+Is this necessary now that you're not enabling uart1?
+
+But otherwise:
+
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
+
+However, I'm guessing you copy/pasted the patch as we still have the
+reply text at the bottom. Copy/paste can lead to mangled whitespace
+or other errors that prevent the patch from being applied cleanly. I
+recommend getting set up and familiar with `git send-email` to give
+your patch the best chance of being applied without trouble. The
+`git format-patch` / `git send-email` pair also take care of iterating
+on your patch with e.g. the `-v` switch that injects the version number
+of the patch in the appropriate places.
+
+Andrew
+
+> +		serial4 = &uart5;
+> +	};
+> +	chosen {
+> +		stdout-path = &uart5;
+> +		bootargs = "console=ttyS4,115200 earlyprintk";
+> +	};
+> +
+> +	memory@80000000 {
+> +		reg = <0x80000000 0x20000000>;
+> +	};
+> +
+> +	iio-hwmon {
+> +		// VOLATAGE SENSOR
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
+> +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
+> +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
+> +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
+> +	};
+> +};
+> +
+> +&fmc {
+> +	status = "okay";
+> +	flash@0 {
+> +		status = "okay";
+> +		m25p,fast-read;
+> +#include "openbmc-flash-layout.dtsi"
+> +	};
+> +};
+> +
+> +&spi1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_spi1_default>;
+> +	flash@0 {
+> +		status = "okay";
+> +		m25p,fast-read;
+> +		label = "pnor";
+> +	};
+> +};
+> +
+> +&uart5 {
+> +	// BMC Console
+> +	status = "okay";
+> +};
+> +
+> +&mac0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_rmii1_default>;
+> +	use-ncsi;
+> +};
+> +
+> +&adc {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_adc0_default
+> +		&pinctrl_adc1_default
+> +		&pinctrl_adc2_default
+> +		&pinctrl_adc3_default
+> +		&pinctrl_adc4_default
+> +		&pinctrl_adc5_default
+> +		&pinctrl_adc6_default
+> +		&pinctrl_adc7_default
+> +		&pinctrl_adc8_default
+> +		&pinctrl_adc9_default
+> +		&pinctrl_adc10_default
+> +		&pinctrl_adc11_default
+> +		&pinctrl_adc12_default
+> +		&pinctrl_adc13_default
+> +		&pinctrl_adc14_default
+> +		&pinctrl_adc15_default>;
+> +};
+> +
+> +&i2c8 {
+> +	status = "okay";
+> +	//FRU EEPROM
+> +	eeprom@51 {
+> +		compatible = "atmel,24c64";
+> +		reg = <0x51>;
+> +		pagesize = <32>;
+> +	};
+> +};
+> +
+> +&i2c9 {
+> +	status = "okay";
+> +	tmp421@4e {
+> +	//INLET TEMP
+> +		compatible = "ti,tmp421";
+> +		reg = <0x4e>;
+> +	};
+> +	//OUTLET TEMP
+> +	tmp421@4f {
+> +		compatible = "ti,tmp421";
+> +		reg = <0x4f>;
+> +	};
+> +};
+> +
+> +&i2c10 {
+> +	status = "okay";
+> +	//HSC
+> +	adm1278@40 {
+> +		compatible = "adi,adm1278";
+> +		reg = <0x40>;
+> +	};
+> +};
+> +
+> +&i2c11 {
+> +	status = "okay";
+> +	//MEZZ_TEMP_SENSOR
+> +	tmp421@1f {
+> +		compatible = "ti,tmp421";
+> +		reg = <0x1f>;
+> +	};
+> +};
+> +
+> +&i2c12 {
+> +	status = "okay";
+> +	//MEZZ_FRU
+> +	eeprom@51 {
+> +		compatible = "atmel,24c64";
+> +		reg = <0x51>;
+> +		pagesize = <32>;
+> +	};
+> +};
+> +
+> +&pwm_tacho {
+> +	status = "okay";
+> +	//FSC
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> +	fan@0 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+> +	};
+> +	fan@1 {
+> +		reg = <0x01>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
+> 
+> On Fri, Nov 22, 2019 at 09:16:39AM +1030, Andrew Jeffery wrote:
+> > 
+> > 
+> > On Thu, 21 Nov 2019, at 18:18, Manikandan wrote:
+> > > 
+> > > Hi Andrew/Vijay,
+> > > 
+> > > Thanks for the review .
+> > > 
+> > > The following changes done in dts and tested in Facebook Yosemite V2 
+> > > BMC platform,
+> > >   1. LPC feature removed as not supported .
+> > >   2. VUART feature removed as not supported.
+> > >   3. Host UART feature removed as not in the current scope.
+> > >   4. ADC pinctrl details added in dts.
+> > 
+> > Can you please re-send the patch as a v2 and inline to the mail rather than
+> > as an attachment?
+> > 
+> > Cheers,
+> > 
+> > Andrew
+>
