@@ -2,260 +2,124 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E017C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 16:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA47AC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 16:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504B6207FC
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 16:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97449207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 16:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mD9+QwO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKXQVJ convert rfc822-to-8bit (ORCPT
+        id S1726934AbfKXQZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 11:21:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37627 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfKXQVI (ORCPT
+        Sun, 24 Nov 2019 11:25:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56952 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfKXQZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 11:21:08 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iYud8-0000lT-3n; Sun, 24 Nov 2019 17:20:58 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 802E81C0EDC;
-        Sun, 24 Nov 2019 17:20:57 +0100 (CET)
-Date:   Sun, 24 Nov 2019 16:20:57 -0000
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/pti/32: Calculate the various PTI
- cpu_entry_area sizes correctly, make the CPU_ENTRY_AREA_PAGES assert precise
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>, stable@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sun, 24 Nov 2019 11:25:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lEjoxWNG4GP3F7qPycSi9+5U4/aPjTVHFyvcqq6SznI=; b=mD9+QwO27OzdnzGzIJ5kAYRBG
+        93b5yfRQV3yvZ3O0eVPLJtC/x4chCCNrIdLrjfNE45v5/WFtWqynKMmcXke7e8T//idZ7WI7jmbxV
+        S6HmYnPhWM6UDei5nGSl5BXKxE2I7Th27jTNqWlulE2WE9zNnbG2aM/tPdD9gau+HNy+7nXN0JmLm
+        /VSIczBAqAaEo2vSQNpZb3783KBXP0or1PRnFslOooXEFkBZXJQYzZaZlYT7t4Ft4kZX7avdrnive
+        k/l6xHAHJvan2movNuARFbmfVukQk5idgjWZ1dfyN+RXC5VPIC6Z4zMTQDl5Fz/nWnKgfRGxWfP1R
+        wxUdsJEgA==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iYuh2-0001uu-Jj; Sun, 24 Nov 2019 16:25:00 +0000
+Subject: Re: [PATCH] arch/sh/: fix NUMA build errors
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20d33517-6df0-9104-fc0a-7f621f87192e@infradead.org>
+ <CAMuHMdU0Vx1E9V+h8XYTyAJitPT42NdGvgzLAfG-=1BVZd-rbA@mail.gmail.com>
+ <f45f983d-8ff1-a800-2706-d71413ae1824@infradead.org>
+Message-ID: <d6eac4c0-a44b-6209-42a7-8eb535e6f437@infradead.org>
+Date:   Sun, 24 Nov 2019 08:24:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Message-ID: <157461245729.21853.17367017341063798964.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <f45f983d-8ff1-a800-2706-d71413ae1824@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On 11/19/19 1:12 PM, Randy Dunlap wrote:
+> On 11/18/19 11:38 PM, Geert Uytterhoeven wrote:
+>> Hi Randy,
+>>
+>> On Tue, Nov 19, 2019 at 1:55 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>> From: Randy Dunlap <rdunlap@infradead.org>
+>>> Fix SUPERH builds that select SYS_SUPPORTS_NUMA but do not select
+>>> SYS_SUPPORTS_SMP and SMP.
+>>>
+>>> kernel/sched/topology.c is only built for CONFIG_SMP and then the NUMA
+>>> code + data inside topology.c is only built when CONFIG_NUMA is
+>>> set/enabled, so these arch/sh/ configs need to select SMP and
+>>> SYS_SUPPORTS_SMP to build the NUMA support.
+>>>
+>>> Fixes this build error in 3 different SUPERH configs:
+>>>
+>>> mm/page_alloc.o: In function `get_page_from_freelist':
+>>> page_alloc.c:(.text+0x2ca8): undefined reference to `node_reclaim_distance'
+>>>
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+>>> Cc: Rich Felker <dalias@libc.org>
+>>> Cc: linux-sh@vger.kernel.org
+>>> ---
+>>> or maybe these should be fixed in the defconfig files?
+>>>
+>>> or alternatively, does it make any sense to support NUMA without SMP?
+>>
+>> I think it does.  From arch/sh/mm/Kconfig config NUMA help:
+>>
+>>         Some SH systems have many various memories scattered around
+>>         the address space, each with varying latencies. This enables
+>>         support for these blocks by binding them to nodes and allowing
+>>         memory policies to be used for prioritizing and controlling
+>>         allocation behaviour.
+> 
+> Yes, I saw that and suspected it also.
+> 
+> I was (and still am) hoping that a SuperH maintainer comments on
+> this and on how they are currently building kernels for these
+> failing configs.  Maybe they have some patches that aren't in-tree yet?
+> 
 
-Commit-ID:     4d6dd252b80eddbd7425d0b6b07b239f4f070647
-Gitweb:        https://git.kernel.org/tip/4d6dd252b80eddbd7425d0b6b07b239f4f070647
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Sun, 24 Nov 2019 11:21:44 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 24 Nov 2019 14:22:27 +01:00
+Yoshinori-san,
+Can you share with us how you build kernels for SUPERH configs that set
+CONFIG_NUMA but do not set CONFIG_SMP?  Do you have any patches for this?
 
-x86/pti/32: Calculate the various PTI cpu_entry_area sizes correctly, make the CPU_ENTRY_AREA_PAGES assert precise
 
-When two recent commits that increased the size of the 'struct cpu_entry_area'
-were merged in -tip, the 32-bit defconfig build started failing on the following
-build time assert:
+> 
+>> Probably the NUMA-core is too server/x86-centric, by assuming NUMA is
+>> used only on systems with multiple CPUs, each with their own RAM.
 
-  ./include/linux/compiler.h:391:38: error: call to ‘__compiletime_assert_189’ declared with attribute error: BUILD_BUG_ON failed: CPU_ENTRY_AREA_PAGES * PAGE_SIZE < CPU_ENTRY_AREA_MAP_SIZE
-  arch/x86/mm/cpu_entry_area.c:189:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  In function ‘setup_cpu_entry_area_ptes’,
+Yes, I looked at all of that code for a couple of days and got nowhere
+with trying to separate NUMA from SMP.
 
-Which corresponds to the following build time assert:
+thanks.
+-- 
+~Randy
 
-	BUILD_BUG_ON(CPU_ENTRY_AREA_PAGES * PAGE_SIZE < CPU_ENTRY_AREA_MAP_SIZE);
-
-The purpose of this assert is to sanity check the fixed-value definition of
-CPU_ENTRY_AREA_PAGES arch/x86/include/asm/pgtable_32_types.h:
-
-	#define CPU_ENTRY_AREA_PAGES    (NR_CPUS * 41)
-
-The '41' is supposed to match sizeof(struct cpu_entry_area)/PAGE_SIZE, which value
-we didn't want to define in such a low level header, because it would cause
-dependency hell.
-
-Every time the size of cpu_entry_area is changed, we have to adjust CPU_ENTRY_AREA_PAGES
-accordingly - and this assert is checking that constraint.
-
-But the assert is both imprecise and buggy, primarily because it doesn't
-include the single readonly IDT page that is mapped at CPU_ENTRY_AREA_BASE
-(which begins at a PMD boundary).
-
-This bug was hidden by the fact that by accident CPU_ENTRY_AREA_PAGES is defined
-too large upstream (v5.4-rc8):
-
-	#define CPU_ENTRY_AREA_PAGES    (NR_CPUS * 40)
-
-While 'struct cpu_entry_area' is 155648 bytes, or 38 pages. So we had two extra
-pages, which hid the bug.
-
-The following commit (not yet upstream) increased the size to 40 pages:
-
-  x86/iopl: Restrict iopl() permission scope
-
-... but increased CPU_ENTRY_AREA_PAGES only 41 - i.e. shortening the gap
-to just 1 extra page.
-
-Then another not-yet-upstream commit changed the size again:
-
-  880a98c33996: x86/cpu_entry_area: Add guard page for entry stack on 32bit
-
-Which increased the cpu_entry_area size from 38 to 39 pages, but
-didn't change CPU_ENTRY_AREA_PAGES (kept it at 40). This worked
-fine, because we still had a page left from the accidental 'reserve'.
-
-But when these two commits were merged into the same tree, the
-combined size of cpu_entry_area grew from 38 to 40 pages, while
-CPU_ENTRY_AREA_PAGES finally caught up to 40 as well.
-
-Which is fine in terms of functionality, but the assert broke:
-
-	BUILD_BUG_ON(CPU_ENTRY_AREA_PAGES * PAGE_SIZE < CPU_ENTRY_AREA_MAP_SIZE);
-
-because CPU_ENTRY_AREA_MAP_SIZE is the total size of the area,
-which is 1 page larger due to the IDT page.
-
-To fix all this, change the assert to two precise asserts:
-
-	BUILD_BUG_ON((CPU_ENTRY_AREA_PAGES+1)*PAGE_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
-	BUILD_BUG_ON(CPU_ENTRY_AREA_TOTAL_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
-
-This takes the IDT page into account, and also connects the size-based
-define of CPU_ENTRY_AREA_TOTAL_SIZE with the address-subtraction based
-define of CPU_ENTRY_AREA_MAP_SIZE.
-
-Also clean up some of the names which made it rather confusing:
-
- - 'CPU_ENTRY_AREA_TOT_SIZE' wasn't actually the 'total' size of
-   the cpu-entry-area, but the per-cpu array size, so rename this
-   to CPU_ENTRY_AREA_ARRAY_SIZE.
-
- - Introduce CPU_ENTRY_AREA_TOTAL_SIZE that _is_ the total mapping
-   size, with the IDT included.
-
- - Add comments where '+1' denotes the IDT mapping - it wasn't
-   obvious and took me about 3 hours to decode...
-
-Finally, because this particular commit is actually applied after
-this patch:
-
-  880a98c33996: x86/cpu_entry_area: Add guard page for entry stack on 32bit
-
-Fix the CPU_ENTRY_AREA_PAGES value from 40 pages to the correct 39 pages.
-
-All future commits that change cpu_entry_area will have to adjust
-this value precisely.
-
-As a side note, we should probably attempt to remove CPU_ENTRY_AREA_PAGES
-and derive its value directly from the structure, without causing
-header hell - but that is an adventure for another day! :-)
-
-Fixes: 880a98c33996: x86/cpu_entry_area: Add guard page for entry stack on 32bit
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: stable@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/cpu_entry_area.h   | 12 +++++++-----
- arch/x86/include/asm/pgtable_32_types.h |  8 ++++----
- arch/x86/mm/cpu_entry_area.c            |  4 +++-
- 3 files changed, 14 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index 905d89c..ea866c7 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -98,7 +98,6 @@ struct cpu_entry_area {
- 	 */
- 	struct cea_exception_stacks estacks;
- #endif
--#ifdef CONFIG_CPU_SUP_INTEL
- 	/*
- 	 * Per CPU debug store for Intel performance monitoring. Wastes a
- 	 * full page at the moment.
-@@ -109,11 +108,13 @@ struct cpu_entry_area {
- 	 * Reserve enough fixmap PTEs.
- 	 */
- 	struct debug_store_buffers cpu_debug_buffers;
--#endif
- };
- 
--#define CPU_ENTRY_AREA_SIZE	(sizeof(struct cpu_entry_area))
--#define CPU_ENTRY_AREA_TOT_SIZE	(CPU_ENTRY_AREA_SIZE * NR_CPUS)
-+#define CPU_ENTRY_AREA_SIZE		(sizeof(struct cpu_entry_area))
-+#define CPU_ENTRY_AREA_ARRAY_SIZE	(CPU_ENTRY_AREA_SIZE * NR_CPUS)
-+
-+/* Total size includes the readonly IDT mapping page as well: */
-+#define CPU_ENTRY_AREA_TOTAL_SIZE	(CPU_ENTRY_AREA_ARRAY_SIZE + PAGE_SIZE)
- 
- DECLARE_PER_CPU(struct cpu_entry_area *, cpu_entry_area);
- DECLARE_PER_CPU(struct cea_exception_stacks *, cea_exception_stacks);
-@@ -121,13 +122,14 @@ DECLARE_PER_CPU(struct cea_exception_stacks *, cea_exception_stacks);
- extern void setup_cpu_entry_areas(void);
- extern void cea_set_pte(void *cea_vaddr, phys_addr_t pa, pgprot_t flags);
- 
-+/* Single page reserved for the readonly IDT mapping: */
- #define	CPU_ENTRY_AREA_RO_IDT		CPU_ENTRY_AREA_BASE
- #define CPU_ENTRY_AREA_PER_CPU		(CPU_ENTRY_AREA_RO_IDT + PAGE_SIZE)
- 
- #define CPU_ENTRY_AREA_RO_IDT_VADDR	((void *)CPU_ENTRY_AREA_RO_IDT)
- 
- #define CPU_ENTRY_AREA_MAP_SIZE			\
--	(CPU_ENTRY_AREA_PER_CPU + CPU_ENTRY_AREA_TOT_SIZE - CPU_ENTRY_AREA_BASE)
-+	(CPU_ENTRY_AREA_PER_CPU + CPU_ENTRY_AREA_ARRAY_SIZE - CPU_ENTRY_AREA_BASE)
- 
- extern struct cpu_entry_area *get_cpu_entry_area(int cpu);
- 
-diff --git a/arch/x86/include/asm/pgtable_32_types.h b/arch/x86/include/asm/pgtable_32_types.h
-index b0bc0ff..1636eb8 100644
---- a/arch/x86/include/asm/pgtable_32_types.h
-+++ b/arch/x86/include/asm/pgtable_32_types.h
-@@ -44,11 +44,11 @@ extern bool __vmalloc_start_set; /* set once high_memory is set */
-  * Define this here and validate with BUILD_BUG_ON() in pgtable_32.c
-  * to avoid include recursion hell
-  */
--#define CPU_ENTRY_AREA_PAGES	(NR_CPUS * 40)
-+#define CPU_ENTRY_AREA_PAGES	(NR_CPUS * 39)
- 
--#define CPU_ENTRY_AREA_BASE						\
--	((FIXADDR_TOT_START - PAGE_SIZE * (CPU_ENTRY_AREA_PAGES + 1))   \
--	 & PMD_MASK)
-+/* The +1 is for the readonly IDT page: */
-+#define CPU_ENTRY_AREA_BASE	\
-+	((FIXADDR_TOT_START - PAGE_SIZE*(CPU_ENTRY_AREA_PAGES+1)) & PMD_MASK)
- 
- #define LDT_BASE_ADDR		\
- 	((CPU_ENTRY_AREA_BASE - PAGE_SIZE) & PMD_MASK)
-diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
-index 752ad11..d964364 100644
---- a/arch/x86/mm/cpu_entry_area.c
-+++ b/arch/x86/mm/cpu_entry_area.c
-@@ -178,7 +178,9 @@ static __init void setup_cpu_entry_area_ptes(void)
- #ifdef CONFIG_X86_32
- 	unsigned long start, end;
- 
--	BUILD_BUG_ON(CPU_ENTRY_AREA_PAGES * PAGE_SIZE < CPU_ENTRY_AREA_MAP_SIZE);
-+	/* The +1 is for the readonly IDT: */
-+	BUILD_BUG_ON((CPU_ENTRY_AREA_PAGES+1)*PAGE_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
-+	BUILD_BUG_ON(CPU_ENTRY_AREA_TOTAL_SIZE != CPU_ENTRY_AREA_MAP_SIZE);
- 	BUG_ON(CPU_ENTRY_AREA_BASE & ~PMD_MASK);
- 
- 	start = CPU_ENTRY_AREA_BASE;
