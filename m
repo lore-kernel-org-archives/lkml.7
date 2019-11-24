@@ -2,121 +2,129 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5ABC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFCBC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF542073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F502073F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+OD4E+x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVHhFrNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKXOIz (ORCPT
+        id S1727110AbfKXOJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 09:08:55 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39758 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfKXOIz (ORCPT
+        Sun, 24 Nov 2019 09:09:10 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35639 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfKXOJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 09:08:55 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f18so8905188lfj.6;
-        Sun, 24 Nov 2019 06:08:53 -0800 (PST)
+        Sun, 24 Nov 2019 09:09:09 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s8so5258046pji.2;
+        Sun, 24 Nov 2019 06:09:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=djNoRlTWtwWVMyo0eztbYD8jcaOBK45bmqDNKrBX3ow=;
-        b=W+OD4E+xl6FIPz9xKbR7vI/nBDy4v3vm2WSmWFBRLpogBWc+SsHwRwydh1evXXc1EN
-         YIfS3anD0wN/Kg1e4j+/1ARXkZqc2E/TPm/TceqYHGUWy7tgMLx5rbgEQQokoj/5jhNf
-         7+wM073BWI5qFuhHYeFrAOLRIRMKQnOigWlDp+mv31JscR2BUa0VtnQd36o2+op2p1Yh
-         c7Vh905t7Ctx05VH5yy6fixfCo8VQECiuX8h47eUusjnM1qIowtnm72wlZG1FBzyzdHq
-         8y/w6UAcqQq81MVzhQHYHOcGMa4chLOIIv41OfGM5efYZmZYq5fVVJb6vASbBRRNwVMY
-         Dh7A==
+        h=from:to:cc:subject:date:message-id;
+        bh=fytYybgFl7xuOSmQnvp6q1/Ea79YQjw0tWt4Bizw0mA=;
+        b=GVHhFrNwoGoDRtY80N3KIXvLBkqiN+/S+ChGYbUMe8BwAr2Tr1j+hFE8Tmi9VxetkG
+         Bmw3loe+8p46VnVE+5HUsdYV9BPGv0uFwcI2D5UZwibK9Lw46kOIoq9aZrC+Zzr+Cjcj
+         gVEW/xdtdeM07YaDgT3aS2eQrXx1YRAwawXVfjdlohWo2t/F7ujcUBOxSVol0iJrFefT
+         aXu9ud7QrK04QN4gvERRWXrv0Cu5w0JSp8oWnZhFs4wpLPpeXvOIzuEuI8w+IQk20mbu
+         oG3J3H4daa5FOMXPnlZ6DO03N7Ozdcrpz/DAve7sEVECGUK+Hr/5GOMF9YzgZjUwOmE6
+         3jow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=djNoRlTWtwWVMyo0eztbYD8jcaOBK45bmqDNKrBX3ow=;
-        b=KWzobwUfsfQWruXlxWlmgRLvM+WVD/KLEOr04+bmGx1kIbDiHC9kDz7jv+MH0M38dw
-         tEGxq3iHTdWRIifQwwCIHztu5a23R8tC4YbECpbxKysEM9qbYHOuxx8zPjfrMoXjWIjz
-         NyNm/2PmHEdtYkd4GVCHySGMBEYqbh9gTQl25zgurt7/SVNa2QwfjLHoVAUTvIBOL0p6
-         6dQDNK4SvFZblcNkYN7ihSvUQpDHkzG3MfacLR8EFG73DdtEeh4T95zXaMY86PUk5FUs
-         lOElAjIpDOQJsy4hCNEh91QD7dBD/0GoUIJpkV9ErvzLTtUrwZTFtItQTgbQkCx3TtdJ
-         8QLA==
-X-Gm-Message-State: APjAAAUr5t1XXOrXl0tFD18e7nZjn/157LoXu+Hgr+WyAA9KoZficrpE
-        76+kxDOuFOeZeewPZs07XpF+q8Uk4a0=
-X-Google-Smtp-Source: APXvYqySRYbqTJAQgylFf4+k1D9oORKTVhxHwZ3oTPW3BcyKuowO1r82MV6ZxlVb1cMNvENtnO19GA==
-X-Received: by 2002:ac2:4191:: with SMTP id z17mr6752629lfh.22.1574604532666;
-        Sun, 24 Nov 2019 06:08:52 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id i8sm2000110lfl.80.2019.11.24.06.08.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 06:08:52 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        kristian@klausen.dk, andy@infradead.org, dvhart@infradead.org,
-        corentin.chary@gmail.com, Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v5 2/2] platform/x86 asus_wmi: Set throttle thermal policy to default
-Date:   Sun, 24 Nov 2019 16:08:41 +0200
-Message-Id: <20191124140841.20929-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191124140625.20736-1-leonmaxx@gmail.com>
-References: <20191124140625.20736-1-leonmaxx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fytYybgFl7xuOSmQnvp6q1/Ea79YQjw0tWt4Bizw0mA=;
+        b=XokUoAnCypP9L6GpWZ/I94//rWLMDbERyEtmqZ3nhiuKo5WASO2igBkTHTcFuvEMvL
+         O3h/er/WijcOwsw1ayGBMn6/VQBdUcvqTbkpeJV8nmpp1472KEgcoIjfPCMjoKSeVf12
+         r1w6AA2/T8GL97rizP8BYbec9B3nUmR8b9vYCRGlIBsKFaVctb1/ws/XorfgKYJxjOAR
+         CBiZn0zLqBEUXUgoPb04rTgZkTn/WBycOGii0g/IY6AEdoL8TNLb5Sja2FWemJcpfCEY
+         8cG8SCvDUBnbDQPj+Ehgth9hC3ctCpYVwKWhyAszkg0mDyADk5SZBVsdXuFdkhbhjKKp
+         yNWQ==
+X-Gm-Message-State: APjAAAVkG8uODLfETs28Hs9XugI8qsLhUIpHzoLcgjeREm8Nwi4b8Y38
+        ADUkts/JmtFW2wU+fBUnFJxQ6agY3gY=
+X-Google-Smtp-Source: APXvYqyBSLTq/CtXVdy1kZ+42OQ1yYPI2w3yb9lfouKDp/CevSx3IwrqhzpBj4/MpiNWC/bSBrJqaQ==
+X-Received: by 2002:a17:90b:30d7:: with SMTP id hi23mr31851724pjb.10.1574604547338;
+        Sun, 24 Nov 2019 06:09:07 -0800 (PST)
+Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
+        by smtp.gmail.com with ESMTPSA id a3sm4816326pgh.91.2019.11.24.06.09.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 24 Nov 2019 06:09:05 -0800 (PST)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-nvme@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Subject: [PATCH 0/8] add header file for kelvin to/from Celsius conversion helpers
+Date:   Sun, 24 Nov 2019 23:08:42 +0900
+Message-Id: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ASUS TUF FX705DY/FX505DY starts in silent mode and under heavy
-CPU load it overheats and drops CPU frequency to 399MHz and stays
-at it until reboot [1]. Set throttle thermal policy to default
-to avoid overheating and throttlig.
+There are several helper macros to convert kelvin to/from Celsius in
+<linux/thermal.h> for thermal drivers.  These are useful for any other
+drivers or subsystems, but it's odd to include <linux/thermal.h> just for
+the helpers.
 
-[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+This adds a new <linux/temperature.h> that provides the equivalent inline
+functions for any drivers or subsystems, and switches all the users of
+conversion helpers in <linux/thermal.h> to use <linux/temperature.h>
+helpers.
 
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Akinobu Mita (8):
+  add header file for kelvin to/from Celsius conversion helpers
+  ACPI: thermal: switch to use <linux/temperature.h> helpers
+  platform/x86: asus-wmi: switch to use <linux/temperature.h> helpers
+  platform/x86: intel_menlow: switch to use <linux/temperature.h>
+    helpers
+  thermal: int340x: switch to use <linux/temperature.h> helpers
+  thermal: intel_pch: switch to use <linux/temperature.h> helpers
+  nvme: hwmon: switch to use <linux/temperature.h> helpers
+  thermal: remove kelvin to/from Celsius conversion helpers from
+    <linux/thermal.h>
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 88faea6..fe571d1 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1782,6 +1782,15 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 	return 0;
- }
- 
-+static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-+{
-+	if (!asus->throttle_thermal_policy_available)
-+		return 0;
-+
-+	asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-+	return throttle_thermal_policy_write(asus);
-+}
-+
- static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
- {
- 	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-@@ -2552,6 +2561,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	err = throttle_thermal_policy_check_present(asus);
- 	if (err)
- 		goto fail_throttle_thermal_policy;
-+	else
-+		throttle_thermal_policy_set_default(asus);
- 
- 	err = asus_wmi_sysfs_init(asus->platform_device);
- 	if (err)
+ drivers/acpi/thermal.c                             | 17 ++++++----
+ drivers/nvme/host/hwmon.c                          | 13 +++-----
+ drivers/platform/x86/asus-wmi.c                    |  7 ++--
+ drivers/platform/x86/intel_menlow.c                |  8 +++--
+ .../intel/int340x_thermal/int340x_thermal_zone.c   |  6 ++--
+ drivers/thermal/intel/intel_pch_thermal.c          |  2 +-
+ include/linux/temperature.h                        | 39 ++++++++++++++++++++++
+ include/linux/thermal.h                            | 12 +------
+ 8 files changed, 68 insertions(+), 36 deletions(-)
+ create mode 100644 include/linux/temperature.h
+
+Cc: Sujith Thomas <sujith.thomas@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Jens Axboe <axboe@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
 -- 
-1.8.3.1
+2.7.4
 
