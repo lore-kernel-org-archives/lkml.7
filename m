@@ -2,43 +2,38 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B0DC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D221FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 16:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0659C2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C6A207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 16:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKXP7o (ORCPT
+        id S1726855AbfKXQRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 10:59:44 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:34729 "HELO
+        Sun, 24 Nov 2019 11:17:38 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:53673 "HELO
         netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725989AbfKXP7n (ORCPT
+        with SMTP id S1726784AbfKXQRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 10:59:43 -0500
-Received: (qmail 26292 invoked by uid 500); 24 Nov 2019 10:59:42 -0500
+        Sun, 24 Nov 2019 11:17:37 -0500
+Received: (qmail 26958 invoked by uid 500); 24 Nov 2019 11:17:36 -0500
 Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 24 Nov 2019 10:59:42 -0500
-Date:   Sun, 24 Nov 2019 10:59:42 -0500 (EST)
+  by localhost with SMTP; 24 Nov 2019 11:17:36 -0500
+Date:   Sun, 24 Nov 2019 11:17:36 -0500 (EST)
 From:   Alan Stern <stern@rowland.harvard.edu>
 X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-cc:     arnd@arndb.de, <gregkh@linuxfoundation.org>,
-        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
-        <kstewart@linuxfoundation.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
-        <viro@zeniv.linux.org.uk>, <zaitcev@redhat.com>
-Subject: Re: Re: Re: possible deadlock in mon_bin_vma_fault
-In-Reply-To: <00000000000046a8b6059806b796@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911241052300.26037-100000@netrider.rowland.org>
+To:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
+        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: INFO: rcu detected stall in hub_event
+In-Reply-To: <0000000000004b60ec059809412f@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911241115410.26037-100000@netrider.rowland.org>
 MIME-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,110 +41,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Nov 2019, syzbot wrote:
-
-> > On Fri, 22 Nov 2019, syzbot wrote:
-> 
-> >> > #syz test: linux-4.19.y f6e27dbb1afa
-> 
-> >> "linux-4.19.y" does not look like a valid git repo address.
-> 
-> > Let's try again.  The "git tree" value in the original bug report was
-> > "upstream", so I'll use that even though it doesn't look like a valid
-> > git repo address either.
-> 
-> > Alan Stern
-> 
-> > #syz test: upstream f6e27dbb1afa
-> 
-> "upstream" does not look like a valid git repo address.
-
-Andrey, can you do something about that?  It would be a lot nicer if 
-_all_ the syzbot output and records included an actual git repo address 
-in the appropriate places.
+Another diagnostic patch.
 
 Alan Stern
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v5.3
+#syz test: https://github.com/google/kasan.git 46178223
 
-commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
-Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
-Date:   Thu Nov 21 17:24:00 2019 -0600
-
-     usb: Fix a deadlock in usbmon between mmap and read
-
-     Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
-     Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
-
-diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
-index ac2b4fcc265f..f48a23adbc35 100644
---- a/drivers/usb/mon/mon_bin.c
-+++ b/drivers/usb/mon/mon_bin.c
-@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
-
-  		mutex_lock(&rp->fetch_lock);
-  		spin_lock_irqsave(&rp->b_lock, flags);
--		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
--		kfree(rp->b_vec);
--		rp->b_vec  = vec;
--		rp->b_size = size;
--		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
--		rp->cnt_lost = 0;
-+		if (rp->mmap_active) {
-+			mon_free_buff(vec, size/CHUNK_SIZE);
-+			kfree(vec);
-+			ret = -EBUSY;
-+		} else {
-+			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
-+			kfree(rp->b_vec);
-+			rp->b_vec  = vec;
-+			rp->b_size = size;
-+			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
-+			rp->cnt_lost = 0;
+Index: usb-devel/drivers/hid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-core.c
++++ usb-devel/drivers/hid/hid-core.c
+@@ -175,7 +175,8 @@ static int open_collection(struct hid_pa
+ 	collection->level = parser->collection_stack_ptr - 1;
+ 	collection->parent_idx = (collection->level == 0) ? -1 :
+ 		parser->collection_stack[collection->level - 1];
+-
++	hid_info(parser->device, "New collection %px: idx %d parent %d type %d\n",
++		collection, (int) collection_index, collection->parent_idx, type);
+ 	if (type == HID_COLLECTION_APPLICATION)
+ 		parser->device->maxapplication++;
+ 
+@@ -1046,8 +1047,18 @@ static void hid_apply_multiplier(struct
+ 	 */
+ 	multiplier_collection = &hid->collection[multiplier->usage->collection_index];
+ 	while (multiplier_collection->parent_idx != -1 &&
+-	       multiplier_collection->type != HID_COLLECTION_LOGICAL)
++	       multiplier_collection->type != HID_COLLECTION_LOGICAL) {
++		hid_info(hid, "collection %d %px type %d parent %d\n",
++	(int) (multiplier_collection - hid->collection), multiplier_collection,
++	multiplier_collection->type, multiplier_collection->parent_idx);
++		if (multiplier_collection->parent_idx >=
++	multiplier_collection - hid->collection) {
++			hid_info(hid, "BUG: found invalid parent_idx\n");
++			return;
 +		}
-  		spin_unlock_irqrestore(&rp->b_lock, flags);
-  		mutex_unlock(&rp->fetch_lock);
-  		}
-@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
-  static void mon_bin_vma_open(struct vm_area_struct *vma)
-  {
-  	struct mon_reader_bin *rp = vma->vm_private_data;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&rp->b_lock, flags);
-  	rp->mmap_active++;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
-  }
-
-  static void mon_bin_vma_close(struct vm_area_struct *vma)
-  {
-+	unsigned long flags;
-+
-  	struct mon_reader_bin *rp = vma->vm_private_data;
-+	spin_lock_irqsave(&rp->b_lock, flags);
-  	rp->mmap_active--;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
-  }
-
-  /*
-@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
-  	unsigned long offset, chunk_idx;
-  	struct page *pageptr;
-
--	mutex_lock(&rp->fetch_lock);
-  	offset = vmf->pgoff << PAGE_SHIFT;
--	if (offset >= rp->b_size) {
--		mutex_unlock(&rp->fetch_lock);
-+	if (offset >= rp->b_size)
-  		return VM_FAULT_SIGBUS;
--	}
-  	chunk_idx = offset / CHUNK_SIZE;
-  	pageptr = rp->b_vec[chunk_idx].pg;
-  	get_page(pageptr);
--	mutex_unlock(&rp->fetch_lock);
-  	vmf->page = pageptr;
-  	return 0;
-  }
+ 		multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
++	}
++	hid_info(hid, "Got collection\n");
+ 
+ 	effective_multiplier = hid_calculate_multiplier(hid, multiplier);
+ 
+@@ -1060,6 +1071,7 @@ static void hid_apply_multiplier(struct
+ 						      effective_multiplier);
+ 		}
+ 	}
++	hid_info(hid, "Applied multiplier\n");
+ }
+ 
+ /*
+@@ -1094,16 +1106,23 @@ void hid_setup_resolution_multiplier(str
+ 
+ 	rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
+ 	list_for_each_entry(rep, &rep_enum->report_list, list) {
++		hid_info(hid, "Start report %px maxfield %d\n",
++	rep, rep->maxfield);
+ 		for (i = 0; i < rep->maxfield; i++) {
+ 			/* Ignore if report count is out of bounds. */
+ 			if (rep->field[i]->report_count < 1)
+ 				continue;
+ 
++			hid_info(hid, "Field %d %px maxusage %d\n",
++	i, rep->field[i], rep->field[i]->maxusage);
+ 			for (j = 0; j < rep->field[i]->maxusage; j++) {
+ 				usage = &rep->field[i]->usage[j];
+-				if (usage->hid == HID_GD_RESOLUTION_MULTIPLIER)
++				if (usage->hid == HID_GD_RESOLUTION_MULTIPLIER) {
++					hid_info(hid, "Usage %d %px\n",
++	j, usage);
+ 					hid_apply_multiplier(hid,
+ 							     rep->field[i]);
++				}
+ 			}
+ 		}
+ 	}
 
 
 
