@@ -2,112 +2,216 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B476BC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D293207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574620269;
-	bh=eqAsjzVaq3nzz88L4tDGzUcHuWo/o7A+dwamYmqayTY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=VZlrpTJwEfnfSUqECWMCDY9wv6tqTWhkCiDqNe8KBLMWCnVS5feK/NxWc5l49No3E
-	 baviqRWMfB2XVHY8Av1dh+XsdHLmBQvfAKHl7C0XgeT6d0Ms7qNcQ91Ovo8WxxoAdp
-	 G3edtEACUeI48FtdWqk+v7gN5Kdxw99hxcGl/bPM=
+	by mail.kernel.org (Postfix) with ESMTP id 9881120748
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 18:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKXS24 (ORCPT
+        id S1726962AbfKXSlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 13:28:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfKXS2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 13:28:55 -0500
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C73A207DD;
-        Sun, 24 Nov 2019 18:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574620135;
-        bh=eqAsjzVaq3nzz88L4tDGzUcHuWo/o7A+dwamYmqayTY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GwBimmHc9vpYKYOOilmm0x0n59Q4OL4AlMOqoRGltmUA/ddJvPhW5PZZwUYASrUMe
-         GsYV4S5d3Q4mBYOjajS9Ki3dPGCbmFQCKKX8SZvE3cjgp/OqLgo6P5O8gk1FE3WTHd
-         YxyBRkJelceyQHcG3zIhpAoWOtN1rvgF+mCII1Wc=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>, x86@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
-Date:   Sun, 24 Nov 2019 10:28:52 -0800
-Message-Id: <6bd718e0465dcc8a97e7b2aa75fd762f34e2fd6d.1574620037.git.luto@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        Sun, 24 Nov 2019 13:41:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60504 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726851AbfKXSlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 13:41:05 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 24BA1B2AA;
+        Sun, 24 Nov 2019 18:41:02 +0000 (UTC)
+Date:   Sun, 24 Nov 2019 19:40:59 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc:     linux-doc@vger.kernel.org, mahesh@linux.vnet.ibm.com,
+        corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org, hbathini@linux.ibm.com
+Subject: Re: [PATCH v3 2/4] powerpc/fadump: reorganize /sys/kernel/fadump_*
+ sysfs files
+Message-ID: <20191124184059.GP11661@kitsune.suse.cz>
+References: <20191109122339.20484-1-sourabhjain@linux.ibm.com>
+ <20191109122339.20484-3-sourabhjain@linux.ibm.com>
+ <20191109125933.GF1384@kitsune.suse.cz>
+ <8c1ec297-0c34-12de-2528-be436697215a@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8c1ec297-0c34-12de-2528-be436697215a@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UNWIND_ESPFIX_STACK needs to read the GDT, and the GDT mapping that
-can be accessed via %fs is not mapped in the user pagetables.  Use
-SGDT to find the cpu_entry_area mapping and read the espfix offset
-from that instead.
+On Sat, Nov 16, 2019 at 08:07:29PM +0530, Sourabh Jain wrote:
+> 
+> 
+> On 11/9/19 6:29 PM, Michal Suchánek wrote:
+> > On Sat, Nov 09, 2019 at 05:53:37PM +0530, Sourabh Jain wrote:
+> >> As the number of FADump sysfs files increases it is hard to manage all of
+> >> them inside /sys/kernel directory. It's better to have all the FADump
+> >> related sysfs files in a dedicated directory /sys/kernel/fadump. But in
+> >> order to maintain the backward compatibility the /sys/kernel/fadump_*
+> >> sysfs files are replicated inside /sys/kernel/fadump/ and eventually get
+> >> removed in future.
+> >>
+> >> As the FADump sysfs files are now part of dedicated directory there is no
+> >> need to prefix their name with fadump_, hence sysfs file names are also
+> >> updated. For example fadump_enabled sysfs file is now referred as enabled.
+> >>
+> >> Also consolidate ABI documentation for all the FADump sysfs files in a
+> >> single file Documentation/ABI/testing/sysfs-kernel-fadump.
+> >>
+> >> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-kernel-fadump | 41 +++++++++++++++++++
+> >>  arch/powerpc/kernel/fadump.c                  | 38 +++++++++++++++++
+> >>  arch/powerpc/platforms/powernv/opal-core.c    | 10 +++--
+> >>  3 files changed, 86 insertions(+), 3 deletions(-)
+> >>  create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump b/Documentation/ABI/testing/sysfs-kernel-fadump
+> >> new file mode 100644
+> >> index 000000000000..a77f1a5ba389
+> >> --- /dev/null
+> >> +++ b/Documentation/ABI/testing/sysfs-kernel-fadump
+> >> @@ -0,0 +1,41 @@
+> >> +What:		/sys/kernel/fadump/*
+> >> +Date:		Nov 2019
+> >> +Contact:	linuxppc-dev@lists.ozlabs.org
+> >> +Description:
+> >> +		The /sys/kernel/fadump/* is a collection of FADump sysfs
+> >> +		file provide information about the configuration status
+> >> +		of Firmware Assisted Dump (FADump).
+> >> +
+> >> +What:		/sys/kernel/fadump/enabled
+> >> +Date:		Nov 2019
+> >> +Contact:	linuxppc-dev@lists.ozlabs.org
+> >> +Description:	read only
+> >> +		Primarily used to identify whether the FADump is enabled in
+> >> +		the kernel or not.
+> >> +User:		Kdump service
+> >> +
+> >> +What:		/sys/kernel/fadump/registered
+> >> +Date:		Nov 2019
+> >> +Contact:	linuxppc-dev@lists.ozlabs.org
+> >> +Description:	read/write
+> >> +		Helps to control the dump collect feature from userspace.
+> >> +		Setting 1 to this file enables the system to collect the
+> >> +		dump and 0 to disable it.
+> >> +User:		Kdump service
+> >> +
+> >> +What:		/sys/kernel/fadump/release_mem
+> >> +Date:		Nov 2019
+> >> +Contact:	linuxppc-dev@lists.ozlabs.org
+> >> +Description:	write only
+> >> +		This is a special sysfs file and only available when
+> >> +		the system is booted to capture the vmcore using FADump.
+> >> +		It is used to release the memory reserved by FADump to
+> >> +		save the crash dump.
+> >> +
+> >> +What:		/sys/kernel/fadump/release_opalcore
+> >> +Date:		Nov 2019
+> >> +Contact:	linuxppc-dev@lists.ozlabs.org
+> >> +Description:	write only
+> >> +		The sysfs file is available when the system is booted to
+> >> +		collect the dump on OPAL based machine. It used to release
+> >> +		the memory used to collect the opalcore.
+> >> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> >> index ed59855430b9..a9591def0c84 100644
+> >> --- a/arch/powerpc/kernel/fadump.c
+> >> +++ b/arch/powerpc/kernel/fadump.c
+> >> @@ -1418,6 +1418,9 @@ static int fadump_region_show(struct seq_file *m, void *private)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +struct kobject *fadump_kobj;
+> >> +EXPORT_SYMBOL_GPL(fadump_kobj);
+> >> +
+> >>  static struct kobj_attribute fadump_release_attr = __ATTR(fadump_release_mem,
+> >>  						0200, NULL,
+> >>  						fadump_release_memory_store);
+> >> @@ -1428,6 +1431,16 @@ static struct kobj_attribute fadump_register_attr = __ATTR(fadump_registered,
+> >>  						0644, fadump_register_show,
+> >>  						fadump_register_store);
+> >>  
+> >> +static struct kobj_attribute release_attr = __ATTR(release_mem,
+> >> +						0200, NULL,
+> >> +						fadump_release_memory_store);
+> >> +static struct kobj_attribute enable_attr = __ATTR(enabled,
+> >> +						0444, fadump_enabled_show,
+> >> +						NULL);
+> >> +static struct kobj_attribute register_attr = __ATTR(registered,
+> >> +						0644, fadump_register_show,
+> >> +						fadump_register_store);
+> >> +
+> >>  DEFINE_SHOW_ATTRIBUTE(fadump_region);
+> >>  
+> >>  static void fadump_init_files(void)
+> >> @@ -1435,6 +1448,11 @@ static void fadump_init_files(void)
+> >>  	struct dentry *debugfs_file;
+> >>  	int rc = 0;
+> >>  
+> >> +	fadump_kobj = kobject_create_and_add("fadump", kernel_kobj);
+> >> +	if (!fadump_kobj) {
+> >> +		pr_err("failed to create fadump kobject\n");
+> >> +		return;
+> >> +	}
+> >>  	rc = sysfs_create_file(kernel_kobj, &fadump_attr.attr);
+> >>  	if (rc)
+> >>  		printk(KERN_ERR "fadump: unable to create sysfs file"
+> >> @@ -1458,6 +1476,26 @@ static void fadump_init_files(void)
+> >>  			printk(KERN_ERR "fadump: unable to create sysfs file"
+> >>  				" fadump_release_mem (%d)\n", rc);
+> >>  	}
+> >> +	/* Replicating the following sysfs attributes under FADump kobject.
+> >> +	 *
+> >> +	 *	- fadump_enabled -> enabled
+> >> +	 *	- fadump_registered -> registered
+> >> +	 *	- fadump_release_mem -> release_mem
+> >> +	 */
+> >> +	rc = sysfs_create_file(fadump_kobj, &enable_attr.attr);
+> >> +	if (rc)
+> >> +		pr_err("unable to create enabled sysfs file (%d)\n",
+> >> +		       rc);
+> >> +	rc = sysfs_create_file(fadump_kobj, &register_attr.attr);
+> >> +	if (rc)
+> >> +		pr_err("unable to create registered sysfs file (%d)\n",
+> >> +		       rc);
+> >> +	if (fw_dump.dump_active) {
+> >> +		rc = sysfs_create_file(fadump_kobj, &release_attr.attr);
+> >> +		if (rc)
+> >> +			pr_err("unable to create release_mem sysfs file (%d)\n",
+> >> +			       rc);
+> >> +	}
+> >>  	return;
+> >>  }
+> > Hello,
+> > 
+> 
+> I’m so sorry for taking this long to write you back. 
+> 
+> > wouldn't it make more sense to create the files in the new location and
+> > add a symlink at the old location?
+> 
+> There are APIs which allow to create a symlink for an entire kobject but
+> I did not find a way to create symlink of an individual sysfs file.
+> 
+> Do you have any approach in mind to achieve the same?
 
-Reported-and-tested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- arch/x86/entry/entry_32.S | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+There is at least one example of plain symlink:
 
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 0b8c93136650..f07baf0388bc 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -415,7 +415,8 @@
- 
- .macro CHECK_AND_APPLY_ESPFIX
- #ifdef CONFIG_X86_ESPFIX32
--#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_OFFSET (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + GDT_ESPFIX_OFFSET
- 
- 	ALTERNATIVE	"jmp .Lend_\@", "", X86_BUG_ESPFIX
- 
-@@ -1147,12 +1148,26 @@ ENDPROC(entry_INT80_32)
-  * We can't call C functions using the ESPFIX stack. This code reads
-  * the high word of the segment base from the GDT and swiches to the
-  * normal stack and adjusts ESP with the matching offset.
-+ *
-+ * We might be on user CR3 here, so percpu data is not mapped and we can't
-+ * access the GDT through the percpu segment.  Instead, use SGDT to find
-+ * the cpu_entry_area alias of the GDT.
-  */
- #ifdef CONFIG_X86_ESPFIX32
- 	/* fixup the stack */
--	mov	GDT_ESPFIX_SS + 4, %al /* bits 16..23 */
--	mov	GDT_ESPFIX_SS + 7, %ah /* bits 24..31 */
-+	pushl	%ecx
-+	subl	$2*4, %esp
-+	sgdt	(%esp)
-+	movl	2(%esp), %ecx				/* GDT address */
-+	/*
-+	 * Careful: ECX is a linear pointer, so we need to force base
-+	 * zero.  %cs is the only known-linear segment we have right now.
-+	 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 4(%ecx), %al	/* bits 16..23 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 7(%ecx), %ah	/* bits 24..31 */
- 	shl	$16, %eax
-+	addl	$2*4, %esp
-+	popl	%ecx
- 	addl	%esp, %eax			/* the adjusted stack pointer */
- 	pushl	$__KERNEL_DS
- 	pushl	%eax
--- 
-2.23.0
+find /sys -type l -xtype f
+/sys/kernel/security/evm
 
+If there is no interface to do one sanely duplicationg the files is
+better than nothing.
+
+Thanks
+
+Michal
