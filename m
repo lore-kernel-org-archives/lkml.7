@@ -2,153 +2,90 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC281C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32F9C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AE420815
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CFB2080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOscabZb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="a1obUzXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfKXT6B (ORCPT
+        id S1726975AbfKXT6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 14:58:01 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44753 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfKXT6B (ORCPT
+        Sun, 24 Nov 2019 14:58:36 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.219]:21127 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfKXT6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 14:58:01 -0500
-Received: by mail-pg1-f193.google.com with SMTP id e6so5952524pgi.11;
-        Sun, 24 Nov 2019 11:58:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dkRSUp4LWvNPm+vfZgEiYDvglJm3beCRxL71deUAo/A=;
-        b=QOscabZbSDR/sllFcuyMh2fWkaut3t5bOuY0nM8nOMKiyZG47JOoS081/sEHP6TiSj
-         uGU32SMvZMtWe7va8tydQDaKyPTujE/Uyyg2LN5+d6IkKB5zwwzTWFwIQXzl7vDR53ov
-         qMpnw6eDrkP0065xCLc0cF8tbAz8CZympuICLaAj16lD1w8IYzBxaS9CqyvEvAY1LITb
-         A4/c1jqiNY62vbqQdyjhHiY02iU7tjNwKnEe0xffiquj+SOzSW0R0tDQxzr4TZf36xb9
-         BTdBTQgr4qL+qn6RAGZ3KS8xnq3EnmUYHcuAv8yiowvBPu+SZ53MJQanBy0DM/sw+3u3
-         Fhlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dkRSUp4LWvNPm+vfZgEiYDvglJm3beCRxL71deUAo/A=;
-        b=UKuhZpfvISuyU9zZY07CLkqh+sP+CjzyGpohiyi2duvGfSGjY4VfH8GoApdGZ3cdvA
-         y+DO2PP4CRGmZ4DaOo4BCDIgaLqpwyxuLoJ1wPUpv9ffXAeQHYvccV7Xf2X7lDTYldHM
-         +g2HkMqJUSxGDUit1cG4JYAYy6X74KUtHDu/RLjknkARKhUIZJ5ujbKSGRtLB+IW8V7a
-         Iul3MvSyIbYm8QjKAILtlwTT/dp3whIUwVgctDN6pHU0pTTcY/v0eDydvzsW6YKqoLu/
-         MqWwg5zNwixndUXaCDVsYfvJgl8NoG9ubq6tGR5Tzf47xPaYXTTF9kEZJsZcXKl+Ces8
-         C8zQ==
-X-Gm-Message-State: APjAAAVFLzYpUdcTxxS6dQgujkjISDw2bffDyXZCfNl1f/anXIUKVazf
-        GSpouErij0miFJf4PeasGdoE4/ALT98oalvc711V1RNT
-X-Google-Smtp-Source: APXvYqzZWhn8q4bZQQp+nT7h6x2ELej7bYnsrWqD8H+1zhdVeihgLHB4jq7aMAZW914Rfqu8lIObgLw+MrjOOlyJyzk=
-X-Received: by 2002:a65:6118:: with SMTP id z24mr29135288pgu.203.1574625480441;
- Sun, 24 Nov 2019 11:58:00 -0800 (PST)
+        Sun, 24 Nov 2019 14:58:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574625511;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=iSO7OSFSi9+a8PsQWpqFjY4N0FXkjXOq4T1wZeOcwIw=;
+        b=a1obUzXYiQfoeEOVesiLnIjpVzBtfwUnHTxWkePbYfFJ5xBmZlZcGt8kLKtEjltLnY
+        s4olsUiS9heZp5Pru9ZtycQPDgKmHeb49kYIspzEUAEVK8Xnm6RRCX2cisWWRwe3C08k
+        fahAFaAk1kBdpdKxB5cGGHWTwQFSrGIOPQAOUQXpkhA/sVTg6bRamK013QItwLk17ef0
+        C4OfvS7/Lh9QswvxguzPKqhBkGmLPMnOCYBydoOHJ4TEqoQeB5W5xWajxz2XjT/OMwiX
+        9XmiV/clFBTP+wW7FJu1BnCocecr5xzfVja8sFk/QUANGxlPlhMPzi42wCDk8k92/n7q
+        rh2A==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQ7IOGU5qzCBwY93scQxp"
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vAOJwRCTn
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sun, 24 Nov 2019 20:58:27 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] ARM: dts: ux500: Add "simple-bus" compatible to soc node
+Date:   Sun, 24 Nov 2019 20:57:28 +0100
+Message-Id: <20191124195728.32226-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com> <1574604530-9024-5-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1574604530-9024-5-git-send-email-akinobu.mita@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 24 Nov 2019 21:57:49 +0200
-Message-ID: <CAHp75VfOUiN_2bW+o-AqGmAY32mmdNxP54B2f2+gj0NTEr9FTQ@mail.gmail.com>
-Subject: Re: [PATCH 4/8] platform/x86: intel_menlow: switch to use
- <linux/temperature.h> helpers
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
->
-> This switches the intel_menlow driver to use deci_kelvin_to_celsius() and
-> celsius_to_deci_kelvin() in <linux/temperature.h> instead of helpers in
-> <linux/thermal.h>.
->
-> This is preparation for centralizing the kelvin to/from Celsius conversion
-> helpers in <linux/temprature.h>.
->
-> Cc: Sujith Thomas <sujith.thomas@intel.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: Jens Axboe <axboe@fb.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->  drivers/platform/x86/intel_menlow.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-> index b102f6d..6313591 100644
-> --- a/drivers/platform/x86/intel_menlow.c
-> +++ b/drivers/platform/x86/intel_menlow.c
-> @@ -302,8 +302,10 @@ static ssize_t aux_show(struct device *dev, struct device_attribute *dev_attr,
->         int result;
->
->         result = sensor_get_auxtrip(attr->handle, idx, &value);
-> +       if (result)
-> +               return result;
->
-> -       return result ? result : sprintf(buf, "%lu", DECI_KELVIN_TO_CELSIUS(value));
-> +       return sprintf(buf, "%ld", deci_kelvin_to_celsius(value));
+The "soc" node in the Ux500 device tree does not need any special
+handling - it is just a simple I/O bus that can be accessed without
+additional configuration.
 
-Can you explain the change %lu to %ld?
+Therefore we can additionally describe it as compatible with "simple-bus".
+This can be used by platforms to probe devices under the soc node without
+special handling for our custom "stericsson,db8500" compatible
+(e.g. in U-Boot).
 
->  }
->
->  static ssize_t aux0_show(struct device *dev,
-> @@ -332,8 +334,8 @@ static ssize_t aux_store(struct device *dev, struct device_attribute *dev_attr,
->         if (value < 0)
->                 return -EINVAL;
->
-> -       result = sensor_set_auxtrip(attr->handle, idx,
-> -                                   CELSIUS_TO_DECI_KELVIN(value));
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +       result = sensor_set_auxtrip(attr->handle, idx,
-> +                                   celsius_to_deci_kelvin(value));
-
-How come the first line has been changed?
-
->         return result ? result : count;
->  }
->
-> --
-> 2.7.4
->
-
-
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index bda454d12150..51ac65b78be0 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -93,7 +93,7 @@
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "stericsson,db8500";
++		compatible = "stericsson,db8500", "simple-bus";
+ 		interrupt-parent = <&intc>;
+ 		ranges;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.24.0
+
