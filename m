@@ -2,161 +2,416 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0292BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 07:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF92C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 08:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33F4207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 07:50:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Yx8+tMKr"
+	by mail.kernel.org (Postfix) with ESMTP id E72BE20706
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 08:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574585851;
+	bh=cMkCvQAGz3bA5X1biLYMWcwJA3SH3fllDC7ywe5VyFc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OeMhLtaBjqHmYsVQQUKuHwOCSm4PR2YB4CFGxgQaQ5XQ7J4xLi6CNDCFEbwA6Ju1/
+	 QohDmhvbBrtFWtGaPTHxyvDYW+iIGi19IauIqIZgXYsoYcMd3vbtWH3pN2rRisV9bh
+	 zJgNIarNlctHRhyEQrslHLm4YX8scMgtn1kR+MvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKXHuK (ORCPT
+        id S1726752AbfKXI52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 02:50:10 -0500
-Received: from cmta16.telus.net ([209.171.16.89]:48113 "EHLO cmta16.telus.net"
+        Sun, 24 Nov 2019 03:57:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbfKXHuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 02:50:10 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id YmedirLl6FXoiYmeei80Cx; Sun, 24 Nov 2019 00:50:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1574581807; bh=h0LBhE0iQuKPr/tUZesX5007Cm2XS3vVFYqAWfewTQo=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=Yx8+tMKrUUSfV0lMcDOWqcpp3isBKLAj5EGXseY0mMyWQB3zgzZDRHnVeBQygRcH6
-         QsRvtbvsgQTNJNK/Y8s2NOvF6vt9OOe5NutbM5tI148CaJBqJvw+fILwgw6dP+Ybf0
-         /Vule9beZyfSzSpYIiefghVvjk3QQ0tHYqGgQ5pBDsdOItDOwF9ZB87wcn4iNpcrOn
-         PDGC8mWNDnuTTmPfiFK6OUAP6whv6LBf9LJJMT9z5C5TFnVuMaQuxC0GftqnmhfyiG
-         IaRscugbHLkQnGo1+DVt4xHv2U37oEdDogQfGIiNmw9X6HDFrJ0TKDgUG1lqUdjEJM
-         Ayjp9zDncJInQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=HoEI5HbS c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=JfrnYn6hAAAA:8 a=dyyLcSohDm2E6IqdOvAA:9 a=CjuIK1q_8ugA:10
- a=1CNFftbPRP8L7MoqJWF3:22 a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Ingo Molnar'" <mingo@redhat.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Mel Gorman'" <mgorman@techsingularity.net>,
-        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Juri Lelli'" <juri.lelli@redhat.com>,
-        "'Paul Turner'" <pjt@google.com>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        "'Quentin Perret'" <qperret@qperret.net>,
-        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>
-References: <20191113124654.18122-1-ggherdovich@suse.cz> <20191113124654.18122-2-ggherdovich@suse.cz>
-In-Reply-To: <20191113124654.18122-2-ggherdovich@suse.cz>
-Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Date:   Sat, 23 Nov 2019 23:49:57 -0800
-Message-ID: <000001d5a29b$c944fd70$5bcef850$@net>
+        id S1725937AbfKXI52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 03:57:28 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E6320706;
+        Sun, 24 Nov 2019 08:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574585846;
+        bh=cMkCvQAGz3bA5X1biLYMWcwJA3SH3fllDC7ywe5VyFc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=q6VzoeuYrYqyHpqrjmQ57nAWIZYFr26I9nf0e8Snt29o35sBPckCUoXLcNaPipoRc
+         MYJxMomkRsl7Squ5CYTr0PIm5gry8Y+X5LxfSWVYpEgp45DWjXU4WSnpTF3zuCNr5/
+         FE+oHVoaOMXqUT9gAKAyxlptuIT6w90pt9gibU1g=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] sparc64: add support for folded p4d page tables
+Date:   Sun, 24 Nov 2019 10:57:20 +0200
+Message-Id: <20191124085720.6201-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdWaH6kpvI2RPz8IRtKQLXZcAyoYugIIu9uQ
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfN/Lu7m5KE5yhuHdppXc/me+VKZjdiQs2pJ7JaSn+Kt5AJUl0qFJRkFcdIu6vYdqbQ7gCE6Q5G7in/rSUSLVh7EI+SuWH4RBz2reEwFFcUAz3Op/azXq
- GokWLqVZGsIHriQBqsLsmxx74TD1rMTkNC1DYCnMk0KDO4wdS1Cfirhufd/hNKQrQubwAcsgAC5fQ/uAg4aO3wy4QgX5c01GY+j48qYjhowRzmJ8fmuL8y5q
- WOjQQrZvmZklo7wZCYT4gmsc4EF7A8Op7DhepXsTEDgPRSYQRQUSO+/kRv7juyihOnL9UDmqc2BZjlFmH0QK3VTJbqpiciaqNvaQFoM+uScmZgSHysHNV1l8
- C8B76rh/1m0+FPaQm90owXmtliB9Y1rsjSDoRHor9FS0cL2PVOy1mChobVthcO6/2H83IFBMi5wC1CyMflZkQlHcu3XROGwDpDrOJGf6GkqgsynphM92FADY
- /M4c4h9uSmPOfxTjsomCeXkaB1vEGTxvvR5RuqX5MOwg/dhXVrXiazdBb2amwa3y9b5/KJ/dB9BQx+jtcSwTWwW/LwlAItVSPtfMkylwrIL1BJtX+CCXzVwB
- 1tn9Au0I9FHbyGHQmg8DCYmFvCZPgT9U9cn2j5FxfcAkcO9C2lgvdEddANH0HyqEySJYFu/WJ6I5ud2LspKAjaYC/3G7/XAVFryauaQ7je2rRxgUEoWZx36+
- rIJ+xojuqVoO9wHQirjhrAqbGgf1kutjo39Jdj+pG8HIYDHJMo30OA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-The address list here is likely incorrect,
-and this e-mail is really about a kernel 5.4
-bisected regression.
+Implement primitives necessary for the 4th level folding, add walks of p4d
+level where appropriate and replace 5leve-fixup.h with pgtable-nop4d.h.
 
-It had been since mid September, and kernel 5.3-rc8 since
-I had tried this, so I wanted to try it again. Call it due diligence.
-I focused on my own version of the "gitsource" test.
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/sparc/include/asm/pgalloc_64.h |  6 +++---
+ arch/sparc/include/asm/pgtable_64.h | 24 ++++++++++-----------
+ arch/sparc/kernel/signal32.c        |  6 +++++-
+ arch/sparc/kernel/smp_64.c          | 13 +++++++++++-
+ arch/sparc/mm/fault_64.c            |  6 +++++-
+ arch/sparc/mm/hugetlbpage.c         | 28 +++++++++++++++---------
+ arch/sparc/mm/init_64.c             | 33 +++++++++++++++++++++++++----
+ 7 files changed, 84 insertions(+), 32 deletions(-)
 
-Kernel 5.4-rc8 (as a baseline reference).
-
-My results were extremely surprising.
-
-As it turns out, at least on my test computer, both the
-acpi-cpufreq and intel_cpufreq CPU frequency scaling drivers
-using the schedutil governor are broken. For the tests that
-I ran, there is negligible difference between them and the
-performance governor. So, one might argue that they are not
-broken, but rather working incredibly well, which if true
-then this patch is no longer needed.
-
-I bisected the kernel and got:
-
-first bad commit: [04cbfba6208592999d7bfe6609ec01dc3fde73f5]
-Merge tag 'dmaengine-5.4-rc1' of git://git.infradead.org/users/vkoul/slave-dma
-
-Which did not make any sense at all. I don't even know how
-this is being pulled into my kernel compile.
-O.K., I often (usually) make a mistake
-during bisection, so I did it again, and got the same result.
-
-Relevant excerpt from the commit:
-
-diff --cc drivers/dma/Kconfig
-index 413efef,03fa0c5..7c511e3
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@@ -294,8 -294,8 +294,8 @@@ config INTEL_IOATDM
-          If unsure, say N.
-
-  config INTEL_IOP_ADMA
- -      tristate "Intel IOP ADMA support"
- -      depends on ARCH_IOP32X || ARCH_IOP33X || ARCH_IOP13XX
- +      tristate "Intel IOP32x ADMA support"
--       depends on ARCH_IOP32X
-++      depends on ARCH_IOP32X || COMPILE_TEST
-        select DMA_ENGINE
-        select ASYNC_TX_ENABLE_CHANNEL_SWITCH
-        help
-
-If I revert the above, manually, then everything behaves
-as expected (minimally tested only, so far).
-
-Are others seeing the schedutil governors not working as
-expected with any of kernels 5.4-rc1 - 5.4-rc8?
-
-I do have a pretty graph of my method of doing the
-"gitsource" test, but am not ready to post it yet.
-Here is some gitsource test data, 6 runs of "make test",
-the first run is discarded:
-
-"gg 6" means this 6 patch set.
-
-Kernel 5.4-rc8 + revert, intel_cpufreq/schedutil: 3899 seconds
-Kernel 5.4-rc8 + gg 6 + revert, intel_cpufreq/schedutil: 2740.7 seconds
-Ratio: 0.70 (as expected)
-Kernel 5.4-rc8, intel_cpufreq/schedutil: 2334.7 seconds (faster than expected)
-Kernel 5.4-rc8 + gg 6 patch set, intel_cpufreq/schedutil: 2275.0 seconds (faster than expected)
-Ratio: 0.97 (not as expected)
-Kernel 5.4-rc8, intel_cpufreq/performance: 2215.3 seconds
-Kernel 5.4-rc8, intel_cpufreq/ondemand: 3286.3 seconds
-Re-stated from previous e-mail:
-Kernel 5.3-rc8, intel_cpufreq/schedutil: ratio: 0.69 (I don't have the original times)
-
-... Doug
-
+diff --git a/arch/sparc/include/asm/pgalloc_64.h b/arch/sparc/include/asm/pgalloc_64.h
+index 9d3e5cc95bbb..264e76ceccf6 100644
+--- a/arch/sparc/include/asm/pgalloc_64.h
++++ b/arch/sparc/include/asm/pgalloc_64.h
+@@ -16,12 +16,12 @@
+ 
+ extern struct kmem_cache *pgtable_cache;
+ 
+-static inline void __pgd_populate(pgd_t *pgd, pud_t *pud)
++static inline void __p4d_populate(p4d_t *p4d, pud_t *pud)
+ {
+-	pgd_set(pgd, pud);
++	p4d_set(p4d, pud);
+ }
+ 
+-#define pgd_populate(MM, PGD, PUD)	__pgd_populate(PGD, PUD)
++#define p4d_populate(MM, P4D, PUD)	__p4d_populate(P4D, PUD)
+ 
+ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
+ {
+diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+index 6ae8016ef4ec..34ff3b43afbb 100644
+--- a/arch/sparc/include/asm/pgtable_64.h
++++ b/arch/sparc/include/asm/pgtable_64.h
+@@ -13,7 +13,7 @@
+  * the SpitFire page tables.
+  */
+ 
+-#include <asm-generic/5level-fixup.h>
++#include <asm-generic/pgtable-nop4d.h>
+ #include <linux/compiler.h>
+ #include <linux/const.h>
+ #include <asm/types.h>
+@@ -810,9 +810,9 @@ static inline int pmd_present(pmd_t pmd)
+ 
+ #define pud_bad(pud)			(pud_val(pud) & ~PAGE_MASK)
+ 
+-#define pgd_none(pgd)			(!pgd_val(pgd))
++#define p4d_none(p4d)			(!p4d_val(p4d))
+ 
+-#define pgd_bad(pgd)			(pgd_val(pgd) & ~PAGE_MASK)
++#define p4d_bad(p4d)			(p4d_val(p4d) & ~PAGE_MASK)
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+@@ -859,13 +859,13 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+ #define pmd_clear(pmdp)			(pmd_val(*(pmdp)) = 0UL)
+ #define pud_present(pud)		(pud_val(pud) != 0U)
+ #define pud_clear(pudp)			(pud_val(*(pudp)) = 0UL)
+-#define pgd_page_vaddr(pgd)		\
+-	((unsigned long) __va(pgd_val(pgd)))
+-#define pgd_present(pgd)		(pgd_val(pgd) != 0U)
+-#define pgd_clear(pgdp)			(pgd_val(*(pgdp)) = 0UL)
++#define p4d_page_vaddr(p4d)		\
++	((unsigned long) __va(p4d_val(p4d)))
++#define p4d_present(p4d)		(p4d_val(p4d) != 0U)
++#define p4d_clear(p4dp)			(p4d_val(*(p4dp)) = 0UL)
+ 
+ /* only used by the stubbed out hugetlb gup code, should never be called */
+-#define pgd_page(pgd)			NULL
++#define p4d_page(p4d)			NULL
+ 
+ static inline unsigned long pud_large(pud_t pud)
+ {
+@@ -884,8 +884,8 @@ static inline unsigned long pud_pfn(pud_t pud)
+ /* Same in both SUN4V and SUN4U.  */
+ #define pte_none(pte) 			(!pte_val(pte))
+ 
+-#define pgd_set(pgdp, pudp)	\
+-	(pgd_val(*(pgdp)) = (__pa((unsigned long) (pudp))))
++#define p4d_set(p4dp, pudp)	\
++	(p4d_val(*(p4dp)) = (__pa((unsigned long) (pudp))))
+ 
+ /* to find an entry in a page-table-directory. */
+ #define pgd_index(address)	(((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+@@ -896,8 +896,8 @@ static inline unsigned long pud_pfn(pud_t pud)
+ 
+ /* Find an entry in the third-level page table.. */
+ #define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+-#define pud_offset(pgdp, address)	\
+-	((pud_t *) pgd_page_vaddr(*(pgdp)) + pud_index(address))
++#define pud_offset(p4dp, address)	\
++	((pud_t *) p4d_page_vaddr(*(p4dp)) + pud_index(address))
+ 
+ /* Find an entry in the second-level page table.. */
+ #define pmd_offset(pudp, address)	\
+diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
+index a237810aa9f4..2a734ecd0a40 100644
+--- a/arch/sparc/kernel/signal32.c
++++ b/arch/sparc/kernel/signal32.c
+@@ -299,6 +299,7 @@ static void flush_signal_insns(unsigned long address)
+ 	unsigned long pstate, paddr;
+ 	pte_t *ptep, pte;
+ 	pgd_t *pgdp;
++	p4d_t *p4dp;
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 
+@@ -318,7 +319,10 @@ static void flush_signal_insns(unsigned long address)
+ 	pgdp = pgd_offset(current->mm, address);
+ 	if (pgd_none(*pgdp))
+ 		goto out_irqs_on;
+-	pudp = pud_offset(pgdp, address);
++	p4dp = p4d_offset(pgdp, address);
++	if (p4d_none(*p4dp))
++		goto out_irqs_on;
++	pudp = pud_offset(p4dp, address);
+ 	if (pud_none(*pudp))
+ 		goto out_irqs_on;
+ 	pmdp = pmd_offset(pudp, address);
+diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
+index a8275fea4b70..eb9455798338 100644
+--- a/arch/sparc/kernel/smp_64.c
++++ b/arch/sparc/kernel/smp_64.c
+@@ -1621,6 +1621,7 @@ static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
+ static void __init pcpu_populate_pte(unsigned long addr)
+ {
+ 	pgd_t *pgd = pgd_offset_k(addr);
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 
+@@ -1633,7 +1634,17 @@ static void __init pcpu_populate_pte(unsigned long addr)
+ 		pgd_populate(&init_mm, pgd, new);
+ 	}
+ 
+-	pud = pud_offset(pgd, addr);
++	p4d = p4d_offset(pgd, addr);
++	if (p4d_none(*p4d)) {
++		pud_t *new;
++
++		new = memblock_alloc_from(PAGE_SIZE, PAGE_SIZE, PAGE_SIZE);
++		if (!new)
++			goto err_alloc;
++		p4d_populate(&init_mm, p4d, new);
++	}
++
++	pud = pud_offset(p4d, addr);
+ 	if (pud_none(*pud)) {
+ 		pmd_t *new;
+ 
+diff --git a/arch/sparc/mm/fault_64.c b/arch/sparc/mm/fault_64.c
+index 2371fb6b97e4..8b7ddbd14b65 100644
+--- a/arch/sparc/mm/fault_64.c
++++ b/arch/sparc/mm/fault_64.c
+@@ -80,6 +80,7 @@ static void __kprobes bad_kernel_pc(struct pt_regs *regs, unsigned long vaddr)
+ static unsigned int get_user_insn(unsigned long tpc)
+ {
+ 	pgd_t *pgdp = pgd_offset(current->mm, tpc);
++	p4d_t *p4dp;
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 	pte_t *ptep, pte;
+@@ -88,7 +89,10 @@ static unsigned int get_user_insn(unsigned long tpc)
+ 
+ 	if (pgd_none(*pgdp) || unlikely(pgd_bad(*pgdp)))
+ 		goto out;
+-	pudp = pud_offset(pgdp, tpc);
++	p4dp = p4d_offset(pgdp, tpc);
++	if (p4d_none(*p4dp) || unlikely(p4d_bad(*p4dp)))
++		goto out;
++	pudp = pud_offset(p4dp, tpc);
+ 	if (pud_none(*pudp) || unlikely(pud_bad(*pudp)))
+ 		goto out;
+ 
+diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
+index f78793a06bbd..7b9fa861b67c 100644
+--- a/arch/sparc/mm/hugetlbpage.c
++++ b/arch/sparc/mm/hugetlbpage.c
+@@ -277,11 +277,13 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
+ 			unsigned long addr, unsigned long sz)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 
+ 	pgd = pgd_offset(mm, addr);
+-	pud = pud_alloc(mm, pgd, addr);
++	p4d = p4d_offset(pgd, addr);
++	pud = pud_alloc(mm, p4d, addr);
+ 	if (!pud)
+ 		return NULL;
+ 	if (sz >= PUD_SIZE)
+@@ -298,13 +300,17 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 		       unsigned long addr, unsigned long sz)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 
+ 	pgd = pgd_offset(mm, addr);
+ 	if (pgd_none(*pgd))
+ 		return NULL;
+-	pud = pud_offset(pgd, addr);
++	p4d = p4d_offset(pgd, addr);
++	if (p4d_none(*p4d))
++		return NULL;
++	pud = pud_offset(p4d, addr);
+ 	if (pud_none(*pud))
+ 		return NULL;
+ 	if (is_hugetlb_pud(*pud))
+@@ -449,7 +455,7 @@ static void hugetlb_free_pmd_range(struct mmu_gather *tlb, pud_t *pud,
+ 	mm_dec_nr_pmds(tlb->mm);
+ }
+ 
+-static void hugetlb_free_pud_range(struct mmu_gather *tlb, pgd_t *pgd,
++static void hugetlb_free_pud_range(struct mmu_gather *tlb, p4d_t *p4d,
+ 				   unsigned long addr, unsigned long end,
+ 				   unsigned long floor, unsigned long ceiling)
+ {
+@@ -458,7 +464,7 @@ static void hugetlb_free_pud_range(struct mmu_gather *tlb, pgd_t *pgd,
+ 	unsigned long start;
+ 
+ 	start = addr;
+-	pud = pud_offset(pgd, addr);
++	pud = pud_offset(p4d, addr);
+ 	do {
+ 		next = pud_addr_end(addr, end);
+ 		if (pud_none_or_clear_bad(pud))
+@@ -481,8 +487,8 @@ static void hugetlb_free_pud_range(struct mmu_gather *tlb, pgd_t *pgd,
+ 	if (end - 1 > ceiling - 1)
+ 		return;
+ 
+-	pud = pud_offset(pgd, start);
+-	pgd_clear(pgd);
++	pud = pud_offset(p4d, start);
++	p4d_clear(p4d);
+ 	pud_free_tlb(tlb, pud, start);
+ 	mm_dec_nr_puds(tlb->mm);
+ }
+@@ -492,6 +498,7 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb,
+ 			    unsigned long floor, unsigned long ceiling)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	unsigned long next;
+ 
+ 	addr &= PMD_MASK;
+@@ -511,10 +518,11 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb,
+ 		return;
+ 
+ 	pgd = pgd_offset(tlb->mm, addr);
++	p4d = p4d_offset(pgd, addr);
+ 	do {
+-		next = pgd_addr_end(addr, end);
+-		if (pgd_none_or_clear_bad(pgd))
++		next = p4d_addr_end(addr, end);
++		if (p4d_none_or_clear_bad(p4d))
+ 			continue;
+-		hugetlb_free_pud_range(tlb, pgd, addr, next, floor, ceiling);
+-	} while (pgd++, addr = next, addr != end);
++		hugetlb_free_pud_range(tlb, p4d, addr, next, floor, ceiling);
++	} while (p4d++, addr = next, addr != end);
+ }
+diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+index e6d91819da92..1cf0d666dea3 100644
+--- a/arch/sparc/mm/init_64.c
++++ b/arch/sparc/mm/init_64.c
+@@ -530,7 +530,8 @@ void __kprobes flush_icache_range(unsigned long start, unsigned long end)
+ 				paddr = kaddr & mask;
+ 			else {
+ 				pgd_t *pgdp = pgd_offset_k(kaddr);
+-				pud_t *pudp = pud_offset(pgdp, kaddr);
++				p4d_t *p4dp = p4d_offset(pgdp, kaddr);
++				pud_t *pudp = pud_offset(p4dp, kaddr);
+ 				pmd_t *pmdp = pmd_offset(pudp, kaddr);
+ 				pte_t *ptep = pte_offset_kernel(pmdp, kaddr);
+ 
+@@ -1653,6 +1654,7 @@ static unsigned long max_phys_bits = 40;
+ bool kern_addr_valid(unsigned long addr)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+@@ -1674,7 +1676,11 @@ bool kern_addr_valid(unsigned long addr)
+ 	if (pgd_none(*pgd))
+ 		return 0;
+ 
+-	pud = pud_offset(pgd, addr);
++	p4d = p4d_offset(pgd, addr);
++	if (p4d_none(*p4d))
++		return 0;
++
++	pud = pud_offset(p4d, addr);
+ 	if (pud_none(*pud))
+ 		return 0;
+ 
+@@ -1800,6 +1806,7 @@ static unsigned long __ref kernel_map_range(unsigned long pstart,
+ 	while (vstart < vend) {
+ 		unsigned long this_end, paddr = __pa(vstart);
+ 		pgd_t *pgd = pgd_offset_k(vstart);
++		p4d_t *p4d;
+ 		pud_t *pud;
+ 		pmd_t *pmd;
+ 		pte_t *pte;
+@@ -1814,7 +1821,20 @@ static unsigned long __ref kernel_map_range(unsigned long pstart,
+ 			alloc_bytes += PAGE_SIZE;
+ 			pgd_populate(&init_mm, pgd, new);
+ 		}
+-		pud = pud_offset(pgd, vstart);
++
++		p4d = p4d_offset(pgd, vstart);
++		if (p4d_none(*p4d)) {
++			pud_t *new;
++
++			new = memblock_alloc_from(PAGE_SIZE, PAGE_SIZE,
++						  PAGE_SIZE);
++			if (!new)
++				goto err_alloc;
++			alloc_bytes += PAGE_SIZE;
++			p4d_populate(&init_mm, p4d, new);
++		}
++
++		pud = pud_offset(p4d, vstart);
+ 		if (pud_none(*pud)) {
+ 			pmd_t *new;
+ 
+@@ -2612,13 +2632,18 @@ int __meminit vmemmap_populate(unsigned long vstart, unsigned long vend,
+ 	for (; vstart < vend; vstart += PMD_SIZE) {
+ 		pgd_t *pgd = vmemmap_pgd_populate(vstart, node);
+ 		unsigned long pte;
++		p4d_t *p4d;
+ 		pud_t *pud;
+ 		pmd_t *pmd;
+ 
+ 		if (!pgd)
+ 			return -ENOMEM;
+ 
+-		pud = vmemmap_pud_populate(pgd, vstart, node);
++		p4d = vmemmap_p4d_populate(pgd, vstart, node);
++		if (!p4d)
++			return -ENOMEM;
++
++		pud = vmemmap_pud_populate(p4d, vstart, node);
+ 		if (!pud)
+ 			return -ENOMEM;
+ 
+-- 
+2.24.0
 
