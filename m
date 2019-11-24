@@ -2,93 +2,141 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58411C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07003C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C2120836
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="nugwZk+F"
+	by mail.kernel.org (Postfix) with ESMTP id DDB542071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfKXUwF (ORCPT
+        id S1726980AbfKXUzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 15:52:05 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:10830 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfKXUwE (ORCPT
+        Sun, 24 Nov 2019 15:55:31 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:38699 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726855AbfKXUzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 15:52:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574628722;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=mDUqPV5Qhr6G4j4fBcrxLNAXwyQc//1k5IFuN2hMhPg=;
-        b=nugwZk+FtE9t1Mjo2rwpW5Fodoi+BzVbWDG7KH8K/VpaPU0KZxlRasoL8Y6bTPUVxo
-        ocxhi0GNK9vYlrFAZ5B0QP+QpTGo2JNZOQat7jv/qKy2uPQy6STcGqyu7FAF2WdIK8/y
-        LTWH9bZ+4R9lv2Gfn/5iPz2vplT1I33nSDlVECFQ+szS0uuVJzg0WxKx2vBnRrvp7t27
-        NkYsjnx9hOSIC4T0s4k/EeE8Zr24I9OuJ9rHBwf3YybqbgpRFHJrok1k9P6hEEot2C35
-        Wce2OHY0BtZYTPQN2PdReQLe+wNo0W9sbHMbbDa/l/Le6fkzShQ9Rqt4GA6pyRwbH7in
-        o+Ng==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQ7IOGU5qzCBwY93scQxp"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAOKq2CZP
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 24 Nov 2019 21:52:02 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH] ARM: dts: ux500: Use "arm,pl031" compatible for PL031
-Date:   Sun, 24 Nov 2019 21:51:10 +0100
-Message-Id: <20191124205110.48031-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.0
+        Sun, 24 Nov 2019 15:55:31 -0500
+Received: (qmail 4767 invoked by uid 500); 24 Nov 2019 15:55:30 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 24 Nov 2019 15:55:30 -0500
+Date:   Sun, 24 Nov 2019 15:55:30 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <jrdr.linux@gmail.com>,
+        <keescook@chromium.org>, <kstewart@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <viro@zeniv.linux.org.uk>, <zaitcev@redhat.com>
+Subject: Re: possible deadlock in mon_bin_vma_fault
+In-Reply-To: <000000000000ce3cc905981c64bd@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911241553390.4632-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Ux500 device tree uses "arm,rtc-pl031" as compatible for PL031.
-All other boards in Linux describe it using "arm,pl031" instead.
-This works because the compatible is not actually used in Linux:
-AMBA devices get probed based on "arm,primecell" and their peripheral ID.
+On Sun, 24 Nov 2019, syzbot wrote:
 
-Nevertheless, some other projects (e.g. U-Boot) rely on the compatible
-to probe the device with the correct driver. Those will look for
-"arm,pl031" instead of "arm,rtc-pl031", preventing the RTC from being
-probed.
+> Hello,
+> 
+> syzbot tried to test the proposed patch but build/boot failed:
+> 
+> failed to apply patch:
+> checking file drivers/usb/mon/mon_bin.c
+> patch: **** unexpected end of file in patch
 
-Change it to "arm,pl031" to match all other boards.
+One more try...
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Alan Stern
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 51ac65b78be0..0a5b88702b16 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -324,7 +324,7 @@
- 		};
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v5.3
+
+commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
+Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
+Date:   Thu Nov 21 17:24:00 2019 -0600
+
+     usb: Fix a deadlock in usbmon between mmap and read
+
+     Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
+     Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+
+diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+index ac2b4fcc265f..f48a23adbc35 100644
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
  
- 		rtc@80154000 {
--			compatible = "arm,rtc-pl031", "arm,primecell";
-+			compatible = "arm,pl031", "arm,primecell";
- 			reg = <0x80154000 0x1000>;
- 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+ 		mutex_lock(&rp->fetch_lock);
+ 		spin_lock_irqsave(&rp->b_lock, flags);
+-		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+-		kfree(rp->b_vec);
+-		rp->b_vec  = vec;
+-		rp->b_size = size;
+-		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+-		rp->cnt_lost = 0;
++		if (rp->mmap_active) {
++			mon_free_buff(vec, size/CHUNK_SIZE);
++			kfree(vec);
++			ret = -EBUSY;
++		} else {
++			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
++			kfree(rp->b_vec);
++			rp->b_vec  = vec;
++			rp->b_size = size;
++			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
++			rp->cnt_lost = 0;
++		}
+ 		spin_unlock_irqrestore(&rp->b_lock, flags);
+ 		mutex_unlock(&rp->fetch_lock);
+ 		}
+@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
+ static void mon_bin_vma_open(struct vm_area_struct *vma)
+ {
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active++;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
  
--- 
-2.24.0
+ static void mon_bin_vma_close(struct vm_area_struct *vma)
+ {
++	unsigned long flags;
++
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active--;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
+ 
+ /*
+@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
+ 	unsigned long offset, chunk_idx;
+ 	struct page *pageptr;
+ 
+-	mutex_lock(&rp->fetch_lock);
+ 	offset = vmf->pgoff << PAGE_SHIFT;
+-	if (offset >= rp->b_size) {
+-		mutex_unlock(&rp->fetch_lock);
++	if (offset >= rp->b_size)
+ 		return VM_FAULT_SIGBUS;
+-	}
+ 	chunk_idx = offset / CHUNK_SIZE;
+ 	pageptr = rp->b_vec[chunk_idx].pg;
+ 	get_page(pageptr);
+-	mutex_unlock(&rp->fetch_lock);
+ 	vmf->page = pageptr;
+ 	return 0;
+ }
+
 
