@@ -2,86 +2,170 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE28C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6293207FC
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574615185;
-	bh=xcebLS6J6XP5yxHYKRl1iBBCcYJyPSa7oDm4voqVEn4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=luubYpKIRRZhGI6ZDt7Av0KRjy01Quza7OyeGvODmh5WbCP1LmCi/nqVGqBE3unVa
-	 LaJT0FV4vJdqKRXxs4VlCpsBLEc2tcJfnL2CtQUWaaLPBfSemhgByRYdU6dBVdoGjr
-	 Ab0QiRV2gNg2kUDEY2hirJk/eDvo3B57VHhbe9Gc=
+	by mail.kernel.org (Postfix) with ESMTP id 97E53207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vND+AQHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfKXRGY (ORCPT
+        id S1726851AbfKXRaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 12:06:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbfKXRGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 12:06:24 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52D9520830
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 17:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574615183;
-        bh=xcebLS6J6XP5yxHYKRl1iBBCcYJyPSa7oDm4voqVEn4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TUNTJTU7DIC1H8DYl2qfez3LHi1IRYnUA1eu1A4d2jqHJc/GM2rIaTscZy+oB4VEh
-         CQBkA50hOrebCRvb93/WgS4zs8qqJqFZGHzwdXbDPf3tQpWQZSeEXswzwjRGqb78/X
-         eRS2a7hPJx6SQkI4k42lLHt/z/A16wXU2xeTml+8=
-Received: by mail-wr1-f44.google.com with SMTP id i12so14632529wro.5
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 09:06:23 -0800 (PST)
-X-Gm-Message-State: APjAAAUnlgEoSHvzfBXa/HN26fMZwFvUZZT334I7DOW9ics6bwY3ioCH
-        YbGhscx8c0Y4VzSxJAzRr4QlG5m7moVlzwzBAxEF+A==
-X-Google-Smtp-Source: APXvYqxnwrj5N9383JzVbSzIbSfa31TZ//NRGDN/BrbTpb+XWtJGRdSU5J+TdOXXT4DVs+Iw1adhsi8jvuucqN8Kxck=
-X-Received: by 2002:a5d:4589:: with SMTP id p9mr11104362wrq.61.1574615181692;
- Sun, 24 Nov 2019 09:06:21 -0800 (PST)
+        Sun, 24 Nov 2019 12:30:01 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34043 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfKXRaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 12:30:01 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so14725908wrr.1;
+        Sun, 24 Nov 2019 09:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uGgPipfEFZWFwRwOJjgrASaTd0TQYkmoA4Tjo4oBFUc=;
+        b=vND+AQHeVrhINFZ4UDVHu58t/f+qBqUvbP7TqVB3/0goOOJCe8I2oR7GT1/p+RN5/E
+         WxN2vQ9j0KfPfEYNuAPQT+kTxt6FE2XTlFQJLoH+FYwMyzX7bffYruhqjklwBb+arxjw
+         KIW7ED5yJnXpGr5l3MX8b9v7xm4I4iwMtm1tw24mY4FoIk2ezPzNJ8s65Kz8iHRBcflm
+         QbD/DCVmTfkob2TTDwsGfi4dBcoq7TOi2vwYgu1aO5sp1OaHiz15B62BK/PMVugLz15K
+         zHo/qk/WgWPiG3Yc10JGL153B/mda+vShSnfzFKOOer5XG0NPWcq4+trXvs8yP/6UfmY
+         jc5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uGgPipfEFZWFwRwOJjgrASaTd0TQYkmoA4Tjo4oBFUc=;
+        b=UNl5T52rE61L6C2zRUmczgO5wlSNSw6JxWtliHkmfW/WVUgtCajaRIafbzFFRfpQNB
+         yLDe7ycu05A0SrxH4EmXLf7/a7RDr66QWFUn38uYYylY+QNBthcm1Tq7IcFRATbxUhzC
+         fE5X9/Wo8wE0tCG2fn89oG6DoWiM0xITGzK+QDMA66Jzdbw3mrJuWNVz0xOqepWBzebL
+         necMO382KU1EmIoY9Z+PTMcqPyQcOX7o10aTc7vNXG8JxKM8JFSITvAs6s3zgHYNRNNF
+         LngAOvpENbsik0bTD6Xo4fbxpybCpzqOf0Ss+aNw7O8DBPYC2hBayC5dgy+gwoQT1AzO
+         h2Tw==
+X-Gm-Message-State: APjAAAXnh02LVYlBX4MqIS824Ed1erLxJ221lPHI3f9iwQlsyTrPBiOA
+        Jz4pQ1pWHXzSr7Zo8+dWfVU=
+X-Google-Smtp-Source: APXvYqzCaeqjuWWepuHVZDNLDDp3b8VLbgpBzaodvuX34Rg653xyvG74z8MdFcuL0oOfDoO2AS4FHQ==
+X-Received: by 2002:a5d:5484:: with SMTP id h4mr25794215wrv.136.1574616598780;
+        Sun, 24 Nov 2019 09:29:58 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id n13sm5537275wmi.25.2019.11.24.09.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 09:29:57 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v9 0/6] Add support for H6 PWM
+Date:   Sun, 24 Nov 2019 18:29:02 +0100
+Message-Id: <20191124172908.10804-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <157461245729.21853.17367017341063798964.tip-bot2@tip-bot2>
-In-Reply-To: <157461245729.21853.17367017341063798964.tip-bot2@tip-bot2>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 24 Nov 2019 09:06:11 -0800
-X-Gmail-Original-Message-ID: <CALCETrUkRN5wnNe-E8kr5zQNdXd777Ce1VcZBsH-+2+Y7d9tJQ@mail.gmail.com>
-Message-ID: <CALCETrUkRN5wnNe-E8kr5zQNdXd777Ce1VcZBsH-+2+Y7d9tJQ@mail.gmail.com>
-Subject: Re: [tip: x86/urgent] x86/pti/32: Calculate the various PTI
- cpu_entry_area sizes correctly, make the CPU_ENTRY_AREA_PAGES assert precise
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>, stable@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 8:21 AM tip-bot2 for Ingo Molnar
-<tip-bot2@linutronix.de> wrote:
->
-> The following commit has been merged into the x86/urgent branch of tip:
->
-> Commit-ID:     4d6dd252b80eddbd7425d0b6b07b239f4f070647
-> Gitweb:        https://git.kernel.org/tip/4d6dd252b80eddbd7425d0b6b07b239f4f070647
-> Author:        Ingo Molnar <mingo@kernel.org>
-> AuthorDate:    Sun, 24 Nov 2019 11:21:44 +01:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Sun, 24 Nov 2019 14:22:27 +01:00
->
-> x86/pti/32: Calculate the various PTI cpu_entry_area sizes correctly, make the CPU_ENTRY_AREA_PAGES assert precise
->
+Hi,
 
-Thanks, much better!
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
+
+Bindings is still strict but probe in the driver are now optionnals.
+
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
+
+Thanks,
+Clément
+
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
+
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
+
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
+
+[1]: https://patchwork.kernel.org/cover/11061737/
+
+Changes in v9:
+ - print error code in error message
+ - no capital letter to keep coherency
+
+Changes in v8:
+ - Display error return code
+ - split commit
+ - bypass is false if unsupported
+ - return instead of goto
+
+Changes in v7:
+ - Fix indent in Yaml bindings
+
+Changes in v6:
+ - Update git commit log
+ - Distinguish error message
+
+Changes in v5:
+ - Move bypass calculation to pwm_calculate
+ - Split mod_clock fallback from bus_clk probe   
+ - Update comment
+ - Move my SoB after acked-by/reviewed-by
+
+Changes in v4:
+ - item description in correct order and add a blank line
+ - use %pe for printing PTR_ERR
+ - don't print error when it's an EPROBE_DEFER
+ - change output clock bypass formula to match PWM policy
+
+Changes in v3:
+ - Documentation update to allow one clock without name
+ - Change reset optional to shared
+ - If reset probe failed return an error
+ - Remove old clock probe
+ - Update bypass enabled formula
+
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
+
+Clément Péron (2):
+  pwm: sun4i: Prefer "mod" clock to unnamed
+  pwm: sun4i: Always calculate params when applying new parameters
+
+Jernej Skrabec (4):
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+
+ drivers/pwm/pwm-sun4i.c | 187 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 156 insertions(+), 31 deletions(-)
+
+-- 
+2.20.1
+
