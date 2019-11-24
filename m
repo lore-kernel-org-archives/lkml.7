@@ -1,142 +1,144 @@
 Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07003C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A00C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 21:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB542071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7F3207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 21:05:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="s45Tglkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKXUzb (ORCPT
+        id S1726940AbfKXVF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 15:55:31 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:38699 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726855AbfKXUzb (ORCPT
+        Sun, 24 Nov 2019 16:05:29 -0500
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:58476 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbfKXVF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 15:55:31 -0500
-Received: (qmail 4767 invoked by uid 500); 24 Nov 2019 15:55:30 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 24 Nov 2019 15:55:30 -0500
-Date:   Sun, 24 Nov 2019 15:55:30 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <jrdr.linux@gmail.com>,
-        <keescook@chromium.org>, <kstewart@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
-        <viro@zeniv.linux.org.uk>, <zaitcev@redhat.com>
-Subject: Re: possible deadlock in mon_bin_vma_fault
-In-Reply-To: <000000000000ce3cc905981c64bd@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911241553390.4632-100000@netrider.rowland.org>
+        Sun, 24 Nov 2019 16:05:29 -0500
+Date:   Sun, 24 Nov 2019 21:05:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1574629524;
+        bh=ZAxv2jVK0Z3Qt1z6lNZQ74w2PqsNzQE8blamFUnouYI=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=s45Tglkxan9Qh0Dd8J2Z0vYX5Y+oUm3btR7RNAf+2mPcFvutr3mns2TMVKVVCvQLl
+         gdyKhiWgPzXD3Zpdkd/k0rOJffwHE0cC7LMuMv423YGpmF8H//4eCpqITnlTjH7+Zb
+         NiFymq5i3uXERvBBkDOxcUkGkhPZ8eGYuPLIYSa8=
+To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: Re: [PATCH v8 0/2] Logitech HID++ Bluetooth LE support
+Message-ID: <haSzI6CpbhKWB-YGuSryCNj3sW6YXUkBlN1LZyy6pyoYPUD-Z7DwCkoRnVY-1iHX3FlxpsydH2YF_effQsePpDZnTp7937mNgvLVPjneUYY=@protonmail.com>
+In-Reply-To: <_0snBXtGhwWiRLYmuVIeDLYkvksMVMxiBv1lW_bTTaFpcVN45l6yCU5gWZ_5oJr8SQOZA6qCZSkVskkEX0ZePpboYtDYRsTdVg3xfcwmw6M=@protonmail.com>
+References: <_0snBXtGhwWiRLYmuVIeDLYkvksMVMxiBv1lW_bTTaFpcVN45l6yCU5gWZ_5oJr8SQOZA6qCZSkVskkEX0ZePpboYtDYRsTdVg3xfcwmw6M=@protonmail.com>
+Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Nov 2019, syzbot wrote:
+On Sunday, October 27, 2019 1:44 PM, Mazin Rezk <mnrzk@protonmail.com> wrot=
+e:
 
-> Hello,
-> 
-> syzbot tried to test the proposed patch but build/boot failed:
-> 
-> failed to apply patch:
-> checking file drivers/usb/mon/mon_bin.c
-> patch: **** unexpected end of file in patch
+> This series allows hid-logitech-hidpp to support Bluetooth LE HID++
+> devices. Only the MX Master (b012 and b01e) is added right now but more
+> HID++ Bluetooth LE devices can be added once they are tested.
+>
+> Changes since [v7]:
+> - Squashed "HID: logitech-hidpp: Support MX Master (b012, b01e)
+> over Bluetooth" into "HID: logitech-hidpp: Support translations
+> from short to long reports"
+>
+> Changes since [v6]:
+>
+> - Based patch on "HID: logitech-hidpp: rework device validation"
+>
+> - Removed the need for additional quirks
+>
+> Changes since [v5]:
+>
+> - Fixed bug where added quirks would overflow an unsigned long
+>
+> - Changed the reserved quirk class bits from 0..20 to 0..15
+>
+> Changes since [v4]:
+>
+> - Omitted "HID: logitech: Add feature 0x0001: FeatureSet"
+>
+> - Stored WirelessDeviceStatus feature index in hidpp_device
+>
+> - Made Bluetooth quirk class alias quirks instead of vice versa
+>
+> - Omitted non-tested devices
+>
+> Changes since [v3]:
+>
+> - Renamed hidpp20_featureset_get_feature to
+> hidpp20_featureset_get_feature_id.
+>
+> - Re-ordered hidpp20_featureset_get_count and
+> hidpp20_featureset_get_feature_id based on their command IDs.
+>
+> - Made feature_count initialize to 0 before running
+> hidpp20_get_features.
+>
+> Changes since [v2]:
+>
+> - Split up the single patch into a series
+>
+> Changes since [v1]:
+>
+> - Added WirelessDeviceStatus support
+>
+> [v7] https://lore.kernel.org/lkml/t5LOL-A4W7aknqQdC-3TavitC94BY_Ra1qyxCZM=
+h_nprrDNSl4UF-jYpWtaDSU-0oQ5xzRyAo9o_mvSnA78bib_p6I3ePSJnTrp3Eb0X_yg=3D@pro=
+tonmail.com
+> [v6] https://lore.kernel.org/lkml/ggKipcQplIlTFmoP3hPnrQ-7_5-C0PKGd5feFym=
+ts3uenIBA8zOwz47YmKheD34H1rpkguDAGdx5YbS9UqpwfjT5Ir0Lji941liLVp--QtQ=3D@pro=
+tonmail.com
+> [v5] https://lore.kernel.org/lkml/Mbf4goGxXZTfWwWtQQUke_rNf8kezpNOS9DVEVH=
+f6RnnmjS1oRtMOJf4r14WfCC6GRYVs7gi0uZcIJ18Va2OJowzSbyMUGwLrl6I5fjW48o=3D@pro=
+tonmail.com
+> [v4] https://lore.kernel.org/lkml/uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPr=
+xNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=3D@pro=
+tonmail.com
+> [v3] https://lore.kernel.org/lkml/l7xYjnA9EGfZe03FsrFhnH2aMq8qS8plWhHVvOt=
+Y_l4ShZ1NV6HA6hn9aI-jAzbLYUGFCIQCIKkx9z42Uoj4-AZDwBfRcAecYIn-0ZA5upE=3D@pro=
+tonmail.com
+> [v2] https://www.spinics.net/lists/linux-input/msg63467.html
+> [v1] https://www.spinics.net/lists/linux-input/msg63317.html
+>
+> Mazin Rezk (2):
+> HID: logitech-hidpp: Support translations from short to long reports
+> HID: logitech-hidpp: Support WirelessDeviceStatus connect events
+>
+> drivers/hid/hid-logitech-hidpp.c | 69 +++++++++++++++++++++++++++-----
+> 1 file changed, 59 insertions(+), 10 deletions(-)
+>
+> ---
+> 2.23.0
 
-One more try...
+I recently saw "HID: logitech-hidpp: Silence intermittent
+get_battery_capacity errors" get applied into the kernel, would I need to
+rebase this patch on top of https://patchwork.kernel.org/patch/11243871/
 
-Alan Stern
-
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v5.3
-
-commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
-Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
-Date:   Thu Nov 21 17:24:00 2019 -0600
-
-     usb: Fix a deadlock in usbmon between mmap and read
-
-     Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
-     Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
-
-diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
-index ac2b4fcc265f..f48a23adbc35 100644
---- a/drivers/usb/mon/mon_bin.c
-+++ b/drivers/usb/mon/mon_bin.c
-@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
- 
- 		mutex_lock(&rp->fetch_lock);
- 		spin_lock_irqsave(&rp->b_lock, flags);
--		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
--		kfree(rp->b_vec);
--		rp->b_vec  = vec;
--		rp->b_size = size;
--		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
--		rp->cnt_lost = 0;
-+		if (rp->mmap_active) {
-+			mon_free_buff(vec, size/CHUNK_SIZE);
-+			kfree(vec);
-+			ret = -EBUSY;
-+		} else {
-+			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
-+			kfree(rp->b_vec);
-+			rp->b_vec  = vec;
-+			rp->b_size = size;
-+			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
-+			rp->cnt_lost = 0;
-+		}
- 		spin_unlock_irqrestore(&rp->b_lock, flags);
- 		mutex_unlock(&rp->fetch_lock);
- 		}
-@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
- static void mon_bin_vma_open(struct vm_area_struct *vma)
- {
- 	struct mon_reader_bin *rp = vma->vm_private_data;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&rp->b_lock, flags);
- 	rp->mmap_active++;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
- }
- 
- static void mon_bin_vma_close(struct vm_area_struct *vma)
- {
-+	unsigned long flags;
-+
- 	struct mon_reader_bin *rp = vma->vm_private_data;
-+	spin_lock_irqsave(&rp->b_lock, flags);
- 	rp->mmap_active--;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
- }
- 
- /*
-@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
- 	unsigned long offset, chunk_idx;
- 	struct page *pageptr;
- 
--	mutex_lock(&rp->fetch_lock);
- 	offset = vmf->pgoff << PAGE_SHIFT;
--	if (offset >= rp->b_size) {
--		mutex_unlock(&rp->fetch_lock);
-+	if (offset >= rp->b_size)
- 		return VM_FAULT_SIGBUS;
--	}
- 	chunk_idx = offset / CHUNK_SIZE;
- 	pageptr = rp->b_vec[chunk_idx].pg;
- 	get_page(pageptr);
--	mutex_unlock(&rp->fetch_lock);
- 	vmf->page = pageptr;
- 	return 0;
- }
-
+Thanks,
+Mazin
 
