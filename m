@@ -2,84 +2,141 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49957C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB1BC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A1D2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425542067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gY2YIA5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKXXFC (ORCPT
+        id S1727020AbfKXXNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 18:05:02 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:57066 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfKXXFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 18:05:02 -0500
-Received: by mail-il1-f200.google.com with SMTP id e5so12094114ile.23
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 15:05:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=9mvzd7fUp8HPwHRxMhxwkoAC5BApeXYD4JfBSm6Tu7E=;
-        b=Xp+6AJ6fq5IvMPa5hPKFroNCL+ff9LoHYvVA0D3DNZQay5Kv9sOQwTPeyJqOT8M/og
-         tSch7EJrAuJejeGd9xKlKPsp9fp5YNpmLmDfpmg4X5uWpEla/v6dXJ8W6h9SKoSJS0QN
-         gqzOVu0UXjFgV5zra1e5r4jPIcmiW4ribtRGzCmRyqi+mYJhnDaqCy8AKrj02QgZ1CB0
-         SWf7cZKEHkONKFouLZxwnhkOaR+uHCNk0tDNehtzJqCDCwYe9uzVgWAQbGbAS7+ziHv7
-         TJXpCA3euKtPTHTOYNuDdZLcLEBFuKSyDfCynaiuPC9LVmIu90r0cqXt3hAwUq3ckfTc
-         sm9Q==
-X-Gm-Message-State: APjAAAWE/mpy7tZy3zZG8vMcv226p/hUM8NLBtNxOvvo6swphBx5MmFz
-        YNS9/PblhDaRd0b2Ndno5Cy5YKdXEXOPh0hbQhj0dWJ9PJze
-X-Google-Smtp-Source: APXvYqxYdNfz5GYWLNzmDfSQ+/s3z/yI52/HmVxwGcXxgu/73KYY+2OwEOZgsW534ki9gWV9TGl9Da+9VLUkYzNmNkZJKEOy5QEO
+        Sun, 24 Nov 2019 18:13:53 -0500
+Received: from ozlabs.org ([203.11.71.1]:52137 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbfKXXNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 18:13:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47LmF90lW9z9sPL;
+        Mon, 25 Nov 2019 10:13:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574637229;
+        bh=HRAvomeKw8Kd/VbQtURDdcSl58WiQQ1Z4h9XqE3SKaQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gY2YIA5CRrMLyQ/gURPO13XzYApgDMyX+6HhD1k6+i+6GiOzg0blz8PD23/gMOU9F
+         i22iCuq91UpBxTXcPKRqljUoDVIJzGCl4G0vszUP9CjafX3sR3wTJOl1mAI0INg95+
+         QjxNvx5kGUHUwef47E0tLsN6PkADqwg3Hn2B09WBc6SIQlbgw8F3kc9jcV3IIqXxBz
+         LmMp9PEToBvII9Ub6qTlE+lv0u6ToFxgeC8SPC4A0PuAElIUl3Pr+vUZH+BiKInJVw
+         8xcuSYU6EO07QzcXJ+uHWcvjAB8zM0YJQDHXpaKQ6S+Y46o5b3uaKg38ea3p85dIy4
+         1xNFUyiKjC5xQ==
+Date:   Mon, 25 Nov 2019 10:13:45 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the pm tree with the pci tree
+Message-ID: <20191125101345.760293f3@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a92:45cb:: with SMTP id z72mr16071673ilj.101.1574636701349;
- Sun, 24 Nov 2019 15:05:01 -0800 (PST)
-Date:   Sun, 24 Nov 2019 15:05:01 -0800
-In-Reply-To: <0000000000002b532a056ebcb3eb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003c0b2105981fad65@google.com>
-Subject: Re: WARNING: suspicious RCU usage in pid_task
-From:   syzbot <syzbot+c2d4c3ae3fd90bbaf059@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, ast@kernel.org, davem@davemloft.net,
-        dhowells@redhat.com, dsahern@gmail.com, dvyukov@google.com,
-        ebiederm@xmission.com, gs051095@gmail.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        oleg@redhat.com, pasha.tatashin@oracle.com, riel@redhat.com,
-        rppt@linux.vnet.ibm.com, syzkaller-bugs@googlegroups.com,
-        wangkefeng.wang@huawei.com, weiyongjun1@huawei.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="Sig_/=xbVg28SkS4dUh1QBRlMT3Q";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+--Sig_/=xbVg28SkS4dUh1QBRlMT3Q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-commit 23fb93a4d3f118a900790066d03368a296dce0d6
-Author: David Ahern <dsahern@gmail.com>
-Date:   Wed Apr 18 00:33:23 2018 +0000
+Hi all,
 
-     net/ipv6: Cleanup exception and cache route handling
+Today's linux-next merge of the pm tree got a conflict in:
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1295147ae00000
-start commit:   6f0d349d Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1195147ae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1695147ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a63be0c83e84d370
-dashboard link: https://syzkaller.appspot.com/bug?extid=c2d4c3ae3fd90bbaf059
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f0a814400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ce574c400000
+  Documentation/power/pci.rst
 
-Reported-by: syzbot+c2d4c3ae3fd90bbaf059@syzkaller.appspotmail.com
-Fixes: 23fb93a4d3f1 ("net/ipv6: Cleanup exception and cache route handling")
+between commits:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+  b64cf7a1711d ("PCI/PM: Wrap long lines in documentation")
+  89cdbc354635 ("PCI/PM: Remove unused pci_driver.resume_early() hook")
+  1a1daf097e21 ("PCI/PM: Remove unused pci_driver.suspend_late() hook")
+
+from the pci tree and commit:
+
+  1992b66d2f55 ("PM: Wrap documentation to fit in 80 columns")
+
+from the pm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/power/pci.rst
+index 0924d29636ad,51e0a493d284..000000000000
+--- a/Documentation/power/pci.rst
++++ b/Documentation/power/pci.rst
+@@@ -692,11 -692,11 +692,11 @@@ controlling the runtime power managemen
+  At the time of this writing there are two ways to define power management
+  callbacks for a PCI device driver, the recommended one, based on using a
+  dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst=
+, and
+- the "legacy" one, in which the .suspend() and .resume() callbacks from st=
+ruct
+- pci_driver are used.  The legacy approach, however, doesn't allow one to =
+define
+- runtime power management callbacks and is not really suitable for any new
+- drivers.  Therefore it is not covered by this document (refer to the sour=
+ce code
+- to learn more about it).
+ -the "legacy" one, in which the .suspend(), .suspend_late(), .resume_early=
+(), and
+ -.resume() callbacks from struct pci_driver are used.  The legacy approach,
+ -however, doesn't allow one to define runtime power management callbacks a=
+nd is
+ -not really suitable for any new drivers.  Therefore it is not covered by =
+this
+ -document (refer to the source code to learn more about it).
+++the "legacy" one, in which the .suspend() and .resume() callbacks from
+++struct pci_driver are used.  The legacy approach, however, doesn't allow
+++one to define runtime power management callbacks and is not really suitab=
+le
+++for any new drivers.  Therefore it is not covered by this document (refer
+++to the source code to learn more about it).
+ =20
+  It is recommended that all PCI device drivers define a struct dev_pm_ops =
+object
+  containing pointers to power management (PM) callbacks that will be execu=
+ted by
+
+--Sig_/=xbVg28SkS4dUh1QBRlMT3Q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3bDqkACgkQAVBC80lX
+0Gzh+Af5Af+TZXZwXyMdAiNamf/xEMuYuq2DpycHC/9Jf3Wm0oxMsy4XcB8AfIcH
+nV99iYaD6ZSAbi03hE0/lA5GTWStrnSMTdQq4+Js5xZ7PrxL7SqZzfwjhmyLdDOt
+4HJTrG6m3QE3L4MOV1jBPQ7l9SlP+8RAoADAU3hYfYqXcKDNW9RnfCH9VI+8TkHU
+1wmqxQPOxcYLPjoEfvUySMyJ+8qAqiiz2q62jio7hukRFH0QkHahHC+e5LOga6Fg
+ECU/DyzWTniZX3kKdo8yxQEd36W5xx1horlLzr6/lRSXHme5oxfkoAvky84+by9W
+ar5PXsc6VhWXUgyK9V1i8TRJtHjCrg==
+=OZQo
+-----END PGP SIGNATURE-----
+
+--Sig_/=xbVg28SkS4dUh1QBRlMT3Q--
