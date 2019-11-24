@@ -2,130 +2,80 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1EAC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 04:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85EC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 04:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDC92073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 04:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqqaBO8r"
+	by mail.kernel.org (Postfix) with ESMTP id BD4E12077B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 04:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574571335;
+	bh=0CuBaOkD0kZlfygG7//3oYVtOE04F+HFqdcsIYasqxA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Xp0TOeD+dqNvF1/goJyRoms/Qhm0LbLNHNVqCQ5oUtme3wyU4pY2tuq3/7e5lBAgX
+	 tAWY9jJ1k1GXecqr4wlIHeLonTQr8HHOI/UGbF8V6ha5E/rcQH/6xLoZErMpaYb+jh
+	 UR71vq04UzJ45b8bkp0TWFecXmucuhOyEW06LQec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKXEvg (ORCPT
+        id S1726984AbfKXEze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 23:51:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33820 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKXEvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 23:51:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so13415832wrr.1;
-        Sat, 23 Nov 2019 20:51:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UMNvMZ2fiueHFeBLtH1yqoxzy6gBcmr82O5GZYCic0I=;
-        b=cqqaBO8rwLZCQAQHTXvCo2RUBKkg8tdFoISyP22RXsT8TTixtNpakZvXcy6Yd/mQIX
-         sSt4Wd4DXjh34IK6EX00eNiCIJhjF4YyFXVyOMgNzWIRzt4rIUqz0ibinZKsOOU2Bd+k
-         MqZ8DJcC7B2lXlns95IdHGkfWSuBxOzflkmFJziQvDK0lwAHvJmnWrp1lLnFzogIQmUf
-         P83uCcRySIPT4G9dAx3Xs9RzwvIUC/QOfgczueCPmJmjkMTTOMaXckNXxRjF+Gp2tVjh
-         fNPFNNp+vUugcdWyBf/a9ZZur8HzS5F44nlHVKsxTq+lo+gLLQr3EkumPuLgTtt2JTmv
-         ffKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UMNvMZ2fiueHFeBLtH1yqoxzy6gBcmr82O5GZYCic0I=;
-        b=m8w8bieCVaPa2snwVztCmToLo9S7mK3mCXywWBtlpIU//INUSVcawK/Scp3G+fzQOJ
-         MDB9Z2rzHTxz2qRMtakzDC0SF/nMnYmlbNVxNXj2H+ZVMVx/jckhIbIG4FeS63yUP3Ty
-         aOcbSEeilsuYcZeMBordWb4HrveBaoRt5xDhPi+aWUaiOBObM+eifYbHSQRjfozuAE3d
-         86gTm1q9GaD/QnWnxwKx2Wo8Jn5YWCLq6GaPld1xCa4R5AAs9yyDAMDNm6H++VC4mLh1
-         nJ4Jdeth6iNHGhWc0CnnkhetBVJ7S6vYA+v47YLP+7ELJIVIY/5zTlxojc3PFtJtwz4z
-         cWLw==
-X-Gm-Message-State: APjAAAWZ7CCbdmvcYnpR0kAZ2gXa1R9FmuEVnOaLmxN9RavepJDGfBar
-        sWXE7LjHXhlVfErlykRM9Vl950KnFOfN1acVuBQ=
-X-Google-Smtp-Source: APXvYqzbmBMaUZ7OFJ0tend1/u7Cs6qVFDD/rGCvqIMqwRuT0rDHfIou/pqOPQldrOCGd5rCi9+hdcY/eGpacKVnWhE=
-X-Received: by 2002:adf:ea8d:: with SMTP id s13mr24873434wrm.366.1574571093582;
- Sat, 23 Nov 2019 20:51:33 -0800 (PST)
+        Sat, 23 Nov 2019 23:55:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726705AbfKXEze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Nov 2019 23:55:34 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10D8B2073F;
+        Sun, 24 Nov 2019 04:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574571333;
+        bh=0CuBaOkD0kZlfygG7//3oYVtOE04F+HFqdcsIYasqxA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ug/ETyO8KGS+t3KruWh37nI+izedPQ/p2X1Ccx/A6yNCZJ47RVxV3+AczM3Fvh+iR
+         NjC9jN7nZLt+KHlOrbpvRsX4PjIlgab24iCo47dT8mIocN6UhLUatffG9yoR0+NqvK
+         BdFC/bi9EDIIo764kskUwK05ohU0bFrSIRJjgZMk=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BUGFIX PATCH 0/3] selftests/ftrace: Fix ftracetest testcases for non-function tracer case
+Date:   Sun, 24 Nov 2019 13:55:30 +0900
+Message-Id: <157457133001.25666.5309062776021151107.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2369119.jSEA3qhmGI@positron.chronox.de>
-In-Reply-To: <2369119.jSEA3qhmGI@positron.chronox.de>
-From:   Sandy Harris <sandyinchina@gmail.com>
-Date:   Sun, 24 Nov 2019 12:51:19 +0800
-Message-ID: <CACXcFmkBQAZd4bSfQvqeCsoTjMr0-uSjKciD6y9EkMN3c9ppJw@mail.gmail.com>
-Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
-To:     =?UTF-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephan M=C3=BCller <smueller@chronox.de> wrote:
+Hi,
 
-> In an effort to provide a flexible implementation for a random number
-> generator that also ...
+Here is a series of patches to fix some issues which happens on
+the kernel with CONFIG_FUNCTION_TRACER=n but CONFIG_TRACER=y.
 
-As usual, some of your proposals make considerable sense to me &
-others do not, at least on first reading. I may have more comments
-after reflecting some.
+Thank you,
 
-Meanwhile, a couple of things jump out at me:
+---
 
->  (a) When an interrupt occurs, the high-resolution time stamp is mixed
-> into the LFSR. ...
->
->  (b) HID event data like the key stroke or the mouse coordinates are
-> mixed into the LFSR. ...
->
->  (c) Device drivers may provide data that is mixed into the LFSR. ...
+Masami Hiramatsu (3):
+      selftests/ftrace: Fix to check the existence of set_ftrace_filter
+      selftests/ftrace: Fix ftrace test cases to check unsupported
+      selftests/ftrace: Do not to use absolute debugfs path
 
-Why into the LFSR instead of into the entropy pool?
 
-> The LRNG allows the TRNG and secondary DRNG mechanism to be changed
-> at runtime.
+ .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |    2 ++
+ .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    5 +++++
+ tools/testing/selftests/ftrace/test.d/functions    |    4 +++-
+ .../inter-event/trigger-action-hist-xfail.tc       |    4 ++--
+ .../inter-event/trigger-onchange-action-hist.tc    |    2 +-
+ .../inter-event/trigger-snapshot-action-hist.tc    |    4 ++--
+ 6 files changed, 15 insertions(+), 6 deletions(-)
 
-Why? This strikes me as pointless complication.
-
-> * high performance of interrupt handling code: The LRNG impact on the
-> interrupt handling has been reduced to a minimum. On one example
-> system, the LRNG interrupt handling code executes within an average
-> of 65 cycles whereas the existing /dev/random on the same device
-> takes about 97 cycles when measuring the execution time of
-> add_interrupt_randomness().
-
-Assuming you do this without sacrificing the input mixing, this
-would be worth submitting as a separate patch. Saving cycles
-on every interrupt definitely looks worth doing.
-
-> * lockless LFSR to collect raw entropy
-
-This too.
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
