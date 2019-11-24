@@ -2,128 +2,93 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F18BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58411C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17ADB2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C2120836
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 20:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nYZ/N/gv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="nugwZk+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKXUbw (ORCPT
+        id S1726945AbfKXUwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 15:31:52 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16532 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfKXUbv (ORCPT
+        Sun, 24 Nov 2019 15:52:05 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:10830 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfKXUwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 15:31:51 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddae8b10000>; Sun, 24 Nov 2019 12:31:45 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 24 Nov 2019 12:31:50 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 24 Nov 2019 12:31:50 -0800
-Received: from [10.26.11.72] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 24 Nov
- 2019 20:31:48 +0000
-Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <akpm@linux-foundation.org>, <shuah@kernel.org>,
-        <patches@kernelci.org>, <ben.hutchings@codethink.co.uk>,
-        <lkft-triage@lists.linaro.org>, <stable@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191122100704.194776704@linuxfoundation.org>
- <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
- <20191122133931.GA2033651@kroah.com> <20191122134131.GA2050590@kroah.com>
- <20191122134627.GB2050590@kroah.com>
- <9f976044-2dbc-6c19-11e7-210cd7ab35ea@nvidia.com>
- <a5d68f07-5f9a-2809-404d-bcd8ca593d70@roeck-us.net>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <7edc9531-347e-9ac7-2583-5efb49acffdb@nvidia.com>
-Date:   Sun, 24 Nov 2019 20:31:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 24 Nov 2019 15:52:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574628722;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=mDUqPV5Qhr6G4j4fBcrxLNAXwyQc//1k5IFuN2hMhPg=;
+        b=nugwZk+FtE9t1Mjo2rwpW5Fodoi+BzVbWDG7KH8K/VpaPU0KZxlRasoL8Y6bTPUVxo
+        ocxhi0GNK9vYlrFAZ5B0QP+QpTGo2JNZOQat7jv/qKy2uPQy6STcGqyu7FAF2WdIK8/y
+        LTWH9bZ+4R9lv2Gfn/5iPz2vplT1I33nSDlVECFQ+szS0uuVJzg0WxKx2vBnRrvp7t27
+        NkYsjnx9hOSIC4T0s4k/EeE8Zr24I9OuJ9rHBwf3YybqbgpRFHJrok1k9P6hEEot2C35
+        Wce2OHY0BtZYTPQN2PdReQLe+wNo0W9sbHMbbDa/l/Le6fkzShQ9Rqt4GA6pyRwbH7in
+        o+Ng==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQ7IOGU5qzCBwY93scQxp"
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vAOKq2CZP
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sun, 24 Nov 2019 21:52:02 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] ARM: dts: ux500: Use "arm,pl031" compatible for PL031
+Date:   Sun, 24 Nov 2019 21:51:10 +0100
+Message-Id: <20191124205110.48031-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <a5d68f07-5f9a-2809-404d-bcd8ca593d70@roeck-us.net>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574627505; bh=00RRY3NaEJ+g/qehFKv0amPP36sLphWXusYUYs+gDpA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nYZ/N/gvrod1y9ak8zagU6vP3NjfW17eLBEl9WyXCjGPKS554H0nJ6caP6AwRytBb
-         c94UB12i42wof58w//PupvHdlAPQc1I/eZztaBO5x80ykrvJijn0559SZn9zVVwewF
-         woF85np56xaK6ZFtxpHhHQJ4c7t4FkA708oqREPhMATjs4EKRoUKTu2z9dKqMDDJ0M
-         Lv8pBQbviLwjkoOrSd/Y6YxL0Us4Raw/bPBh6olPkIwoQvL/vJNM0Z0JGtejtlM4Fa
-         wTZ3RdvhOve4aAHsWnOsMhOEqJ3kSpPp6ldDdMICuFnUEciHMToWRAfgxBw0a/rGJC
-         rhu4uAtaAeCKg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Ux500 device tree uses "arm,rtc-pl031" as compatible for PL031.
+All other boards in Linux describe it using "arm,pl031" instead.
+This works because the compatible is not actually used in Linux:
+AMBA devices get probed based on "arm,primecell" and their peripheral ID.
 
-On 23/11/2019 15:46, Guenter Roeck wrote:
-> On 11/22/19 6:48 AM, Jon Hunter wrote:
->=20
-> [ ... ]
->=20
->> Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or path
->> dwc3 not found
->> FATAL ERROR: Syntax error parsing input tree
->> scripts/Makefile.lib:293: recipe for target
->> 'arch/arm/boot/dts/omap5-igep0050.dtb' failed
->> make[1]: *** [arch/arm/boot/dts/omap5-igep0050.dtb] Error 1
->> arch/arm/Makefile:338: recipe for target 'dtbs' failed
->> make: *** [dtbs] Error 2
->>
->>
->> This is caused by the following commit ...
->>
->> commit d0abc07b3d752cbe2a8d315f662c53c772caed0f
->> Author: H. Nikolaus Schaller <hns@goldelico.com>
->> Date:=C2=A0=C2=A0 Fri Sep 28 17:54:00 2018 +0200
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0 ARM: dts: omap5: enable OTG role for DWC3 contr=
-oller
->>
->=20
-> On top of the breakage caused by this patch, I would also argue
-> that it is not a bug fix and should not have been included
-> in the first place.
->=20
-> The dwc3 label was added with commit 4c387984618fe ("ARM: dts: omap5:
-> Add l4 interconnect hierarchy and ti-sysc data"). Given the size of
-> that patch, I highly doubt that a backport to 4.4 would work.
+Nevertheless, some other projects (e.g. U-Boot) rely on the compatible
+to probe the device with the correct driver. Those will look for
+"arm,pl031" instead of "arm,rtc-pl031", preventing the RTC from being
+probed.
 
-FYI ... I am still seeing a build failure because of this with -rc2 ...
+Change it to "arm,pl031" to match all other boards.
 
-Test results for stable-v4.4:
-    6 builds:	3 pass, 3 fail
-    6 boots:	6 pass, 0 fail
-    11 tests:	11 pass, 0 fail
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Linux version:	4.4.203-rc2-gdbaac4c54573
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 51ac65b78be0..0a5b88702b16 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -324,7 +324,7 @@
+ 		};
+ 
+ 		rtc@80154000 {
+-			compatible = "arm,rtc-pl031", "arm,primecell";
++			compatible = "arm,pl031", "arm,primecell";
+ 			reg = <0x80154000 0x1000>;
+ 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-- 
+2.24.0
 
-Cheers
-Jon
-
---=20
-nvpublic
