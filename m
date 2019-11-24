@@ -2,148 +2,79 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED20C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB29CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F192075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aF+EL/ua"
+	by mail.kernel.org (Postfix) with ESMTP id 91F2C2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 14:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfKXOJv (ORCPT
+        id S1726998AbfKXOXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 09:09:51 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44826 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfKXOJu (ORCPT
+        Sun, 24 Nov 2019 09:23:12 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:40576 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726779AbfKXOXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 09:09:50 -0500
-Received: by mail-pg1-f195.google.com with SMTP id e6so5745617pgi.11;
-        Sun, 24 Nov 2019 06:09:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HlZyESYLe6A5DAq1XkhuEkfPsYgeQ0ev4dh7nFf6DlA=;
-        b=aF+EL/uaBuy3BwpoI2oa5LtqP9+p1sZ6VjixxtI6M70GSLCINBULaM3WNiSvJ1WIrZ
-         xIp52aIi0nJQeAktwdoDbbpWpUGRijeoTLe1MAm4hB4Z4WYl9NAkew4iN56rugjskot4
-         yt0PkQGxQXJReAVRmTDpxgmvwAEprEGHPYHel8zMm9c4Pbf0nfdxKiEAsstWT0AfLR8r
-         bDsPU9XMtHOa1IO5HUXITzT66ktxxcPF+Z9kAYhRpX5dnnkPp6PRQV0tZTGgJfpG2Hcz
-         Q8Q4/16zkCk9xffjh+a8YQwbn/z/50qSQu4mMZdfby+ch8XiXZOg7GCvCrNQfdl2VLIo
-         mnVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HlZyESYLe6A5DAq1XkhuEkfPsYgeQ0ev4dh7nFf6DlA=;
-        b=iV6zmf0RUu6hsg8v6w0y/b39yhmMlbUsKsvq4E9CQKrm0hRM9iNB2f86trKuP+Q+WA
-         gD6pML8cxJKgQL40qqWn0O/qK3Ew1R2rNuUTKm1t62PbLteA6yTnmY9x8fOtAH1uyexi
-         LkeJO7pvTRgmohvnwo9sHAYbcJp9FjPOL1Mwm8x2a5+QuTAVN0agXp8gYTiBVk2EfCZy
-         iv7hA9zEx23uDwNzWkfxI7X4iQMwAHJ0Ls2YNcWKdeKZrURdCl5u41lV0KtEL/mXgJkc
-         2j46iSBjibqqJZC6kucAfWR2FJ7CwFRwtkCd8XlzIQJgkVBMCw8TqUc0tzGoD1pqxpir
-         BQDA==
-X-Gm-Message-State: APjAAAUUtTVlA0IgxxvpbVF5ju3idunD0fLK29OuFE5+ylWVwoEPACXC
-        LrbNAhrQaUBdK8t/MtIde8QYEYl+35g=
-X-Google-Smtp-Source: APXvYqx7K4Gt18amX+hLKSOMgjI0zyd/A3QfgpeceRkltPJbTjqHafxczzSCZqTAx0AlbO7TqjQWng==
-X-Received: by 2002:a62:8789:: with SMTP id i131mr28078223pfe.221.1574604589140;
-        Sun, 24 Nov 2019 06:09:49 -0800 (PST)
-Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
-        by smtp.gmail.com with ESMTPSA id a3sm4816326pgh.91.2019.11.24.06.09.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 24 Nov 2019 06:09:48 -0800 (PST)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-nvme@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH 8/8] thermal: remove kelvin to/from Celsius conversion helpers from <linux/thermal.h>
-Date:   Sun, 24 Nov 2019 23:08:50 +0900
-Message-Id: <1574604530-9024-9-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
+        Sun, 24 Nov 2019 09:23:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tiwhm23_1574605381;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Tiwhm23_1574605381)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 24 Nov 2019 22:23:09 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: roles: fix a potential use after free
+Date:   Sun, 24 Nov 2019 22:22:36 +0800
+Message-Id: <20191124142236.25671-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This removes the kelvin to/from Celsius conversion helpers in
-<linux/thermal.h> which were switched to <linux/temperature.h> helpers.
+Free the sw structure only after we are done using it.
+This patch just moves the put_device() down a bit to avoid the
+use after free.
 
-DECI_KELVIN_TO_MILLICELSIUS_WITH_OFFSET() is only used by ACPI thermal
-zone driver and the usage is specific to the driver.  So this macro
-is moved to the ACPI thermal driver rather than generic header.
-
-Cc: Sujith Thomas <sujith.thomas@intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Fixes: 5c54fcac9a9d ("usb: roles: Take care of driver module reference counting")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/acpi/thermal.c  |  2 ++
- include/linux/thermal.h | 11 -----------
- 2 files changed, 2 insertions(+), 11 deletions(-)
+ drivers/usb/roles/class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-index bd9b6eb..370e114 100644
---- a/drivers/acpi/thermal.c
-+++ b/drivers/acpi/thermal.c
-@@ -42,6 +42,8 @@
- #define ACPI_THERMAL_MAX_ACTIVE	10
- #define ACPI_THERMAL_MAX_LIMIT_STR_LEN 65
- 
-+#define DECI_KELVIN_TO_MILLICELSIUS_WITH_OFFSET(t, off) (((t) - (off)) * 100)
-+
- #define _COMPONENT		ACPI_THERMAL_COMPONENT
- ACPI_MODULE_NAME("thermal");
- 
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index ed549e4..06e1695 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -33,17 +33,6 @@
- /* use value, which < 0K, to indicate an invalid/uninitialized temperature */
- #define THERMAL_TEMP_INVALID	-274000
- 
--/* Unit conversion macros */
--#define DECI_KELVIN_TO_CELSIUS(t)	({			\
--	long _t = (t);						\
--	((_t-2732 >= 0) ? (_t-2732+5)/10 : (_t-2732-5)/10);	\
--})
--#define CELSIUS_TO_DECI_KELVIN(t)	((t)*10+2732)
--#define DECI_KELVIN_TO_MILLICELSIUS_WITH_OFFSET(t, off) (((t) - (off)) * 100)
--#define DECI_KELVIN_TO_MILLICELSIUS(t) DECI_KELVIN_TO_MILLICELSIUS_WITH_OFFSET(t, 2732)
--#define MILLICELSIUS_TO_DECI_KELVIN_WITH_OFFSET(t, off) (((t) / 100) + (off))
--#define MILLICELSIUS_TO_DECI_KELVIN(t) MILLICELSIUS_TO_DECI_KELVIN_WITH_OFFSET(t, 2732)
--
- /* Default Thermal Governor */
- #if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
- #define DEFAULT_THERMAL_GOVERNOR       "step_wise"
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 8273126..63a00ff 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -169,8 +169,8 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+ void usb_role_switch_put(struct usb_role_switch *sw)
+ {
+ 	if (!IS_ERR_OR_NULL(sw)) {
+-		put_device(&sw->dev);
+ 		module_put(sw->dev.parent->driver->owner);
++		put_device(&sw->dev);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_put);
 -- 
-2.7.4
+1.8.3.1
 
