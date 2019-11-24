@@ -2,118 +2,201 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC608C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 04:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADCC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 05:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93AD62073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 04:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574571363;
-	bh=D8V8wbVGoxN0b1NKNDQiKIOw8YMH+SwZdlsI2fxNDeU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncqr39O5A4s3hKsH2HOFHYAEIH3+FvALB8K2fsKrFesvJgFbqvfMMaCrcpKcWkJ4b
-	 +ZqDAoRqxQGATgkbPPcK1myqyZdIITxpimYVKkG/IwXK9/EdiC08doa2nLRWETFtXc
-	 c9T+3cPg7V0RpRqXey6QdE2wfMHSJHifWL8frLnU=
+	by mail.kernel.org (Postfix) with ESMTP id 5750020748
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 05:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovCu849u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKXE4C (ORCPT
+        id S1726673AbfKXF3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Nov 2019 23:56:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbfKXE4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Nov 2019 23:56:02 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FE3E2080D;
-        Sun, 24 Nov 2019 04:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574571360;
-        bh=D8V8wbVGoxN0b1NKNDQiKIOw8YMH+SwZdlsI2fxNDeU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gsxi0qvKBxDs6yclppEstUsVw8N3pdSAQfuke1uSKvi1l0YdZfHkEC2DwsqoPjiNH
-         lbX60fsL9CNH1d+RjtfFBskibdVwHmtx8FqEVutqt3tIRHXevjaMwXBqbZDu0Zci2M
-         vXdMlBH0LrnS+ESPkw+x95dcSVLVsQXTepnteseI=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [BUGFIX PATCH 3/3] selftests/ftrace: Do not to use absolute debugfs path
-Date:   Sun, 24 Nov 2019 13:55:57 +0900
-Message-Id: <157457135713.25666.16389902435164296254.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157457133001.25666.5309062776021151107.stgit@devnote2>
-References: <157457133001.25666.5309062776021151107.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Sun, 24 Nov 2019 00:29:09 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37871 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfKXF3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 00:29:09 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b10so5448262pgd.4;
+        Sat, 23 Nov 2019 21:29:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ON5n9I/25k32O1A/2D3MIyo2BlxDNMBzybIh7RG8xz8=;
+        b=ovCu849udwskipv9/n1UhD8x9SQztBcID0T7scQUYgV/Oqa9t9ykaT5HLGPaH2OfbT
+         iyXIL9hLJ+W4msEziMmzJsDwGEnQoQHZaQxdOJe3qY8OTBhbSZM4K8dGrg4zqN5EW2Ds
+         xySz8L3x/m2cnLnOVjyW4SqeYEZuIXK7hIxrhZAB13CNQgVFex2YyqCg0Nqqg7zSsPzP
+         KQJWNl+6OR9b7UmAW8JG/nFkmK1Dmw/+/hMxRILeHz4aZLVhzNZiGHR+kq7tH7hxdj30
+         4fk6XbUxGUCqzbKE/ZHMG8GoIdA58IEt2++duGOKMGZTet3ZGg6pnLPTuB6748RUZ7mM
+         qrag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ON5n9I/25k32O1A/2D3MIyo2BlxDNMBzybIh7RG8xz8=;
+        b=mn3QJMMuiDuF4dYn8M/nHJxatBg0B7BUP1rvz3flUKFcX3SH1FyG5dtNyRmUcgIBfq
+         oextaWePwgkFONYI/846eLhIOBXLPuwzIRwlY1AVOCRvmXKzQ9O31kRIjhFTe1BJlpe9
+         jLoNVQ5XxaXNpqHsakc412FsGXvHPo9LP/Xrj27N6WRuY78FZPTZRHeyoHu/HjAq7dg/
+         pWIE3GhJTARADED6K//a574mf+wOCrT/E2gOxNYBc7OTOFfTCXX2A37fa76ONVsld5ME
+         49f1L9FgdmoqAl5FX6d1pKqOINKWl/ADRYCu5rGU26vo4F+/f1h2/uxEnFRIwEyhJppJ
+         asmQ==
+X-Gm-Message-State: APjAAAXKP9i76EaZ+9/GxynnuH+upsOfmQT/dYsSIeRXBlYv3H9LtgCD
+        N8WjB1MlkSiSU3ZHg3qLCk0=
+X-Google-Smtp-Source: APXvYqzY/4pwBvAuCjFLW6iGX4cS5O5pnbcB2MKCL8mSMp5arnvtk+SQTE1PdNAwdvov+JskFcDtcg==
+X-Received: by 2002:a62:140d:: with SMTP id 13mr26312229pfu.79.1574573348284;
+        Sat, 23 Nov 2019 21:29:08 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id w2sm3453358pfj.22.2019.11.23.21.29.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Nov 2019 21:29:07 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] dmaengine: ti: edma: add missed operations
+Date:   Sun, 24 Nov 2019 13:28:55 +0800
+Message-Id: <20191124052855.6472-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use relative path to trigger file instead of absolute debugfs path,
-because if the user uses tracefs instead of debugfs, it can be
-mounted at /sys/kernel/tracing.
-Anyway, since the ftracetest is designed to be run at the tracing
-directory, user doesn't need to use absolute path.
+The driver forgets to call pm_runtime_disable and pm_runtime_put_sync in
+probe failure and remove.
+Add the calls and modify probe failure handling to fix it.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+To simplify the fix, the patch adjusts the calling order and merges checks
+for devm_kcalloc.
+
+Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- .../inter-event/trigger-action-hist-xfail.tc       |    4 ++--
- .../inter-event/trigger-onchange-action-hist.tc    |    2 +-
- .../inter-event/trigger-snapshot-action-hist.tc    |    4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Changes in v2:
+  - Add the missed pm_runtime_put_sync.
+  - Simplify the patch.
+  - Rebase to dma-next.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-index 1221240f8cf6..3f2aee115f6e 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-@@ -21,10 +21,10 @@ grep -q "snapshot()" README || exit_unsupported # version issue
+ drivers/dma/ti/edma.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 756a3c951dc7..0628ee4bf1b4 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2289,13 +2289,6 @@ static int edma_probe(struct platform_device *pdev)
+ 	if (!info)
+ 		return -ENODEV;
  
- echo "Test expected snapshot action failure"
+-	pm_runtime_enable(dev);
+-	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0) {
+-		dev_err(dev, "pm_runtime_get_sync() failed\n");
+-		return ret;
+-	}
+-
+ 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+ 	if (ret)
+ 		return ret;
+@@ -2326,27 +2319,31 @@ static int edma_probe(struct platform_device *pdev)
  
--echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger && exit_fail
-+echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> events/sched/sched_waking/trigger && exit_fail
+ 	platform_set_drvdata(pdev, ecc);
  
- echo "Test expected save action failure"
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0) {
++		dev_err(dev, "pm_runtime_get_sync() failed\n");
++		pm_runtime_disable(dev);
++		return ret;
++	}
++
+ 	/* Get eDMA3 configuration from IP */
+ 	ret = edma_setup_from_hw(dev, info, ecc);
+ 	if (ret)
+-		return ret;
++		goto err_disable_pm;
  
--echo 'hist:keys=comm:onmatch(sched.sched_wakeup).save(comm,prio)' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger && exit_fail
-+echo 'hist:keys=comm:onmatch(sched.sched_wakeup).save(comm,prio)' >> events/sched/sched_waking/trigger && exit_fail
+ 	/* Allocate memory based on the information we got from the IP */
+ 	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
+ 					sizeof(*ecc->slave_chans), GFP_KERNEL);
+-	if (!ecc->slave_chans)
+-		return -ENOMEM;
  
- exit_xfail
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-index 064a284e4e75..c80007aa9f86 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-@@ -16,7 +16,7 @@ grep -q "onchange(var)" README || exit_unsupported # version issue
+ 	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
+ 				       sizeof(unsigned long), GFP_KERNEL);
+-	if (!ecc->slot_inuse)
+-		return -ENOMEM;
  
- echo "Test onchange action"
+ 	ecc->channels_mask = devm_kcalloc(dev,
+ 					   BITS_TO_LONGS(ecc->num_channels),
+ 					   sizeof(unsigned long), GFP_KERNEL);
+-	if (!ecc->channels_mask)
+-		return -ENOMEM;
++	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask)
++		goto err_disable_pm;
  
--echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-+echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> events/sched/sched_waking/trigger
+ 	/* Mark all channels available initially */
+ 	bitmap_fill(ecc->channels_mask, ecc->num_channels);
+@@ -2388,7 +2385,7 @@ static int edma_probe(struct platform_device *pdev)
+ 				       ecc);
+ 		if (ret) {
+ 			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
+-			return ret;
++			goto err_disable_pm;
+ 		}
+ 		ecc->ccint = irq;
+ 	}
+@@ -2404,7 +2401,7 @@ static int edma_probe(struct platform_device *pdev)
+ 				       ecc);
+ 		if (ret) {
+ 			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
+-			return ret;
++			goto err_disable_pm;
+ 		}
+ 		ecc->ccerrint = irq;
+ 	}
+@@ -2412,7 +2409,8 @@ static int edma_probe(struct platform_device *pdev)
+ 	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
+ 	if (ecc->dummy_slot < 0) {
+ 		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
+-		return ecc->dummy_slot;
++		ret = ecc->dummy_slot;
++		goto err_disable_pm;
+ 	}
  
- ping $LOCALHOST -c 3
- nice -n 1 ping $LOCALHOST -c 3
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-index 18fff69fc433..f546c1b66a9b 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-@@ -23,9 +23,9 @@ grep -q "snapshot()" README || exit_unsupported # version issue
+ 	queue_priority_mapping = info->queue_priority_mapping;
+@@ -2512,6 +2510,9 @@ static int edma_probe(struct platform_device *pdev)
  
- echo "Test snapshot action"
+ err_reg1:
+ 	edma_free_slot(ecc, ecc->dummy_slot);
++err_disable_pm:
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
+ 	return ret;
+ }
  
--echo 1 > /sys/kernel/debug/tracing/events/sched/enable
-+echo 1 > events/sched/enable
+@@ -2542,6 +2543,8 @@ static int edma_remove(struct platform_device *pdev)
+ 	if (ecc->dma_memcpy)
+ 		dma_async_device_unregister(ecc->dma_memcpy);
+ 	edma_free_slot(ecc, ecc->dummy_slot);
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
  
--echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-+echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> events/sched/sched_waking/trigger
- 
- ping $LOCALHOST -c 3
- nice -n 1 ping $LOCALHOST -c 3
+ 	return 0;
+ }
+-- 
+2.24.0
 
