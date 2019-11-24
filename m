@@ -2,148 +2,151 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEB8C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E515C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C02207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09812080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 19:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9k+kyqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfKXTwr (ORCPT
+        id S1726967AbfKXTyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 14:52:47 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34536 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfKXTwr (ORCPT
+        Sun, 24 Nov 2019 14:54:39 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36942 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfKXTyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 14:52:47 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t2so15008430wrr.1;
-        Sun, 24 Nov 2019 11:52:45 -0800 (PST)
+        Sun, 24 Nov 2019 14:54:38 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b10so5969681pgd.4;
+        Sun, 24 Nov 2019 11:54:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xgxN+slUElCQpDuU8fsY3BZMJxer4zKWxWFoQzMGtA4=;
+        b=N9k+kyqVqvVAuU5pmVcD05y0P7ep7fkeAyzpfnA8hS2146dGHNMBjSFR9uiJV8PHu0
+         9aJTs33ZWmukHbhGxkM9JoSH+maOgpdQdyDSpGppnHZX79oYQ1DMEBvvya80yKdDrCRn
+         UAhC+xeK8nbxYIHlDlIctzaYwHAhcTTcuw140chiI8mR8MQJetOiFzuSlX+qXYuNjuPC
+         ALXFb25TaINXA4BSo6hqgC/27e33SJxaQdfegL7mzSgjFC+vMNyCowgMcV3yJvVEhnK/
+         XomI1mA4ZMdgY4R282CGbCovH0hL0rqqQ49vvktIoDg5pRbcoXH8+heiUYIo3ezzqGn8
+         h4QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nAjjktBsryRv/PVaxm3tkWTCzqkwFEjwFqTsY62waUM=;
-        b=r0guWQb+8Sf8kZQQFlfojCnX7kjlj0Cs4J4P6Ysmgn4S78Wf8z5rw96Lo/4J1IRQmy
-         YpC1EDFoP+zke+u1N+roOiaVqYjLh5A/TdL7PNLsepYi+5Ci4UMd8TwM5Mp7w00wcw/T
-         vO1otmEjb1gZOUxcCVWUcfmeRg/sBwQZkX6AwAI3qUfoL0bi8/BzuSReeCEVRx9oYE/+
-         0rQNxFjC9h930TXaZTVKKfPtl8q9j0SEdW03LfIHepMwDKGO7VG01XJj7rpNrn+AkSzf
-         jpDyTWwiT/2jsgG4IZTYTpOsPvRUM4J+Z4vz/00Q5IhIV2S2D0+PT4ZzU2fAYWHp4Ipp
-         6y0Q==
-X-Gm-Message-State: APjAAAWkyYIDCycqCpdPHXRszWwPD6dX6FW/yekxIhW+U/3LenI2zLVn
-        xYYZZ7stEf+MKc99MTnGgv6BQFXiHhE=
-X-Google-Smtp-Source: APXvYqzLJqeKFX6DyEuA160m+YBl7o+fydNwXxhs4kSJD352hs7vVgA+RYTAgDTXLjPL8do5xNGcjQ==
-X-Received: by 2002:adf:9124:: with SMTP id j33mr7915726wrj.357.1574625164352;
-        Sun, 24 Nov 2019 11:52:44 -0800 (PST)
-Received: from localhost.localdomain (2001-1c06-18c6-e000-94a8-bf38-d78b-3abb.cable.dynamic.v6.ziggo.nl. [2001:1c06:18c6:e000:94a8:bf38:d78b:3abb])
-        by smtp.gmail.com with ESMTPSA id i127sm6265844wma.35.2019.11.24.11.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 11:52:43 -0800 (PST)
-From:   Kars de Jong <jongk@linux-m68k.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-kernel@vger.kernel.org, Kars de Jong <jongk@linux-m68k.org>,
-        linux-m68k@vger.kernel.org
-Subject: [PATCH] m68k: Wire up clone3() syscall
-Date:   Sun, 24 Nov 2019 20:52:25 +0100
-Message-Id: <20191124195225.31230-1-jongk@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xgxN+slUElCQpDuU8fsY3BZMJxer4zKWxWFoQzMGtA4=;
+        b=IhwXRKubOganLFxgcRgjm6iIMRqHslwtRSlBMIdKPCphg8ZBt83RYS7tySIfi99QkL
+         KXW6z+79ICJyEV0hllHhe/4PFPISJh1K9Ccboy/NYO7MaCLV+HubkDdK1J+cTExCcJfo
+         YsyhEtPJIEP9MxgSHtYyeQP9wbIc4t93O+heiTWUycUrFoIlmX0G2h2hvCoRz6BGYfRL
+         knpW/IhjUrRGBNKCNyRoRknnGPhg/YJ4J2DpcoFJUqkD/krJGrEmevK8ggW8aP+qxuC2
+         DauNkxCeeikw801tve/WEEc6fFPFUH8b9U+322Bn3uXM8fCcUwuK0NzV/eqr/ZEHs58M
+         I3xg==
+X-Gm-Message-State: APjAAAWusOhB2ONbj02EtfKuklYtSDk2kCpm+LEhKmusvflmXtFATqm4
+        A04VjrhfHe1KZ1rY2Vp0BzWCuwLPFyA9kAM4Szs=
+X-Google-Smtp-Source: APXvYqynJhSAT+cBLFOG35mXdSu5donpoINx1X4oii7KCRStNIR2N5Cf8Hh5JzERBkyy6grUixES2mbAfr5mZU7d3zM=
+X-Received: by 2002:a62:168f:: with SMTP id 137mr31383941pfw.151.1574625277865;
+ Sun, 24 Nov 2019 11:54:37 -0800 (PST)
+MIME-Version: 1.0
+References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com> <1574604530-9024-4-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1574604530-9024-4-git-send-email-akinobu.mita@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 24 Nov 2019 21:54:26 +0200
+Message-ID: <CAHp75VdkhFJZ71FS+DhrKTDPEW7Z-6imRSePm8EhgGF2sgTThg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] platform/x86: asus-wmi: switch to use
+ <linux/temperature.h> helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wire up the clone3() syscall for m68k. The special entry point is done in
-assembler as was done for clone() as well. This is needed because all
-registers need to be saved. The C wrapper then calls the generic
-sys_clone3() with the correct arguments.
+On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
+>
+> The asus-wmi driver doesn't implement the thermal device functionality
+> directly, so including <linux/thermal.h> just for DECI_KELVIN_TO_CELSIUS()
+> is a bit odd.
+>
+> This switches the asus-wmi driver to use deci_kelvin_to_millicelsius() in
+> <linux/temperature.h>.
+>
+> Cc: Sujith Thomas <sujith.thomas@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: Jens Axboe <axboe@fb.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 821b08e..6a1a2f9 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -33,7 +33,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/platform_data/x86/asus-wmi.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/thermal.h>
+> +#include <linux/temperature.h>
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+>
+> @@ -1512,9 +1512,8 @@ static ssize_t asus_hwmon_temp1(struct device *dev,
+>         if (err < 0)
+>                 return err;
+>
+> -       value = DECI_KELVIN_TO_CELSIUS((value & 0xFFFF)) * 1000;
+> -
+> -       return sprintf(buf, "%d\n", value);
 
-Tested on A1200 using the simple test program from:
+> +       return sprintf(buf, "%ld\n",
+> +                      deci_kelvin_to_millicelsius(value & 0xFFFF));
 
-  https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
+Leave it in one line.
 
-Cc: linux-m68k@vger.kernel.org
-Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
----
- arch/m68k/include/asm/unistd.h        |  1 +
- arch/m68k/kernel/entry.S              |  7 +++++++
- arch/m68k/kernel/process.c            | 13 ++++++++++++-
- arch/m68k/kernel/syscalls/syscall.tbl |  2 +-
- 4 files changed, 21 insertions(+), 2 deletions(-)
+With above,
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/arch/m68k/include/asm/unistd.h b/arch/m68k/include/asm/unistd.h
-index 2e0047cf86f8..4ae52414cd9d 100644
---- a/arch/m68k/include/asm/unistd.h
-+++ b/arch/m68k/include/asm/unistd.h
-@@ -30,5 +30,6 @@
- #define __ARCH_WANT_SYS_SIGPROCMASK
- #define __ARCH_WANT_SYS_FORK
- #define __ARCH_WANT_SYS_VFORK
-+#define __ARCH_WANT_SYS_CLONE3
- 
- #endif /* _ASM_M68K_UNISTD_H_ */
-diff --git a/arch/m68k/kernel/entry.S b/arch/m68k/kernel/entry.S
-index 97cd3ea5f10b..9dd76fbb7c6b 100644
---- a/arch/m68k/kernel/entry.S
-+++ b/arch/m68k/kernel/entry.S
-@@ -69,6 +69,13 @@ ENTRY(__sys_vfork)
- 	lea     %sp@(24),%sp
- 	rts
- 
-+ENTRY(__sys_clone3)
-+	SAVE_SWITCH_STACK
-+	pea	%sp@(SWITCH_STACK_SIZE)
-+	jbsr	m68k_clone3
-+	lea	%sp@(28),%sp
-+	rts
-+
- ENTRY(sys_sigreturn)
- 	SAVE_SWITCH_STACK
- 	movel	%sp,%sp@-		  | switch_stack pointer
-diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
-index 4e77a06735c1..22e6b8f4f958 100644
---- a/arch/m68k/kernel/process.c
-+++ b/arch/m68k/kernel/process.c
-@@ -30,8 +30,9 @@
- #include <linux/init_task.h>
- #include <linux/mqueue.h>
- #include <linux/rcupdate.h>
--
-+#include <linux/syscalls.h>
- #include <linux/uaccess.h>
-+
- #include <asm/traps.h>
- #include <asm/machdep.h>
- #include <asm/setup.h>
-@@ -119,6 +120,16 @@ asmlinkage int m68k_clone(struct pt_regs *regs)
- 		       (int __user *)regs->d3, (int __user *)regs->d4);
- }
- 
-+/*
-+ * Because extra registers are saved on the stack after the sys_clone3()
-+ * arguments, this C wrapper extracts them from pt_regs * and then calls the
-+ * generic sys_clone3() implementation.
-+ */
-+asmlinkage int m68k_clone3(struct pt_regs *regs)
-+{
-+	return sys_clone3((struct clone_args __user *)regs->d1, regs->d2);
-+}
-+
- int copy_thread(unsigned long clone_flags, unsigned long usp,
- 		 unsigned long arg, struct task_struct *p)
- {
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index a88a285a0e5f..a00a5d0db602 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -434,4 +434,4 @@
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
--# 435 reserved for clone3
-+435	common	clone3				__sys_clone3
+>  }
+>
+>  /* Fan1 */
+> --
+> 2.7.4
+>
+
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
