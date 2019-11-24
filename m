@@ -2,140 +2,154 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD77C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B0DC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2AD2073F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="MBoMvaPp"
+	by mail.kernel.org (Postfix) with ESMTP id 0659C2075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 15:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfKXPtS (ORCPT
+        id S1726774AbfKXP7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 10:49:18 -0500
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:49446 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726004AbfKXPtS (ORCPT
+        Sun, 24 Nov 2019 10:59:44 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:34729 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725989AbfKXP7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 10:49:18 -0500
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 4D9A92E0E7E;
-        Sun, 24 Nov 2019 18:49:14 +0300 (MSK)
-Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id wIrsB3SOSP-nD2u1akc;
-        Sun, 24 Nov 2019 18:49:14 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1574610554; bh=xtZMdOlBBD6/tHCSTsT3VJTA4BP38M0wqgm8PCbdSww=;
-        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
-        b=MBoMvaPppgK0GxCmI2p5BcEvddMbXZWFVzL7R2jU6Eyf7NVspC2cX7UWwhdzVP/dj
-         WCX5ndwJ78ehhcYOrRzg5mBqGOgU0BM2QfVThrsXhkDu8RSu9GuxtwK15PTx3z7EpO
-         2mNysXX3J3U24MmLaOkzECiCW8l76VStCEApt11g=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:8807::1:a])
-        by iva4-c987840161f8.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Ve10tljpUq-nDV4v2Wh;
-        Sun, 24 Nov 2019 18:49:13 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v4 0/9] per lruvec lru_lock for memcg
-To:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <aa5499cd-7947-39a5-fc17-bd277be25764@yandex-team.ru>
-Date:   Sun, 24 Nov 2019 18:49:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 24 Nov 2019 10:59:43 -0500
+Received: (qmail 26292 invoked by uid 500); 24 Nov 2019 10:59:42 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 24 Nov 2019 10:59:42 -0500
+Date:   Sun, 24 Nov 2019 10:59:42 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+cc:     arnd@arndb.de, <gregkh@linuxfoundation.org>,
+        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
+        <kstewart@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <viro@zeniv.linux.org.uk>, <zaitcev@redhat.com>
+Subject: Re: Re: Re: possible deadlock in mon_bin_vma_fault
+In-Reply-To: <00000000000046a8b6059806b796@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911241052300.26037-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/11/2019 15.23, Alex Shi wrote:
-> Hi all,
-> 
-> This patchset move lru_lock into lruvec, give a lru_lock for each of
-> lruvec, thus bring a lru_lock for each of memcg per node.
-> 
-> According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
-> containers on my 2s* 8 core * HT box with the modefied case:
->    https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-> 
-> With this change above lru_lock censitive testing improved 17% with multiple
-> containers scenario. And no performance lose w/o mem_cgroup.
+On Sat, 23 Nov 2019, syzbot wrote:
 
-Splitting lru_lock isn't only option for solving this lock contention.
-Also it doesn't help if all this happens in one cgroup.
+> > On Fri, 22 Nov 2019, syzbot wrote:
+> 
+> >> > #syz test: linux-4.19.y f6e27dbb1afa
+> 
+> >> "linux-4.19.y" does not look like a valid git repo address.
+> 
+> > Let's try again.  The "git tree" value in the original bug report was
+> > "upstream", so I'll use that even though it doesn't look like a valid
+> > git repo address either.
+> 
+> > Alan Stern
+> 
+> > #syz test: upstream f6e27dbb1afa
+> 
+> "upstream" does not look like a valid git repo address.
 
-I think better batching could solve more problems with less overhead.
+Andrey, can you do something about that?  It would be a lot nicer if 
+_all_ the syzbot output and records included an actual git repo address 
+in the appropriate places.
 
-Like larger per-cpu vectors or queues for each numa node or even for each lruvec.
-This will preliminarily sort and aggregate pages so actual modification under
-lru_lock will be much cheaper and fine grained.
+Alan Stern
 
-> 
-> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
-> 7 years ago. Now I believe considering my testing result, and google internal
-> using fact. This feature is clearly benefit multi-container users.
-> 
-> So I'd like to introduce it here.
-> 
-> Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan,
-> Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
-> 
-> v4:
->    a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
->    b, remove the irqsave flags changes, thanks Metthew Wilcox
->    c, merge/split patches for better understanding and bisection purpose
-> 
-> v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
-> 
-> v2: bypass a performance regression bug and fix some function issues
-> 
-> v1: initial version, aim testing show 5% performance increase
-> 
-> 
-> Alex Shi (9):
->    mm/swap: fix uninitialized compiler warning
->    mm/huge_memory: fix uninitialized compiler warning
->    mm/lru: replace pgdat lru_lock with lruvec lock
->    mm/mlock: only change the lru_lock iff page's lruvec is different
->    mm/swap: only change the lru_lock iff page's lruvec is different
->    mm/vmscan: only change the lru_lock iff page's lruvec is different
->    mm/pgdat: remove pgdat lru_lock
->    mm/lru: likely enhancement
->    mm/lru: revise the comments of lru_lock
-> 
->   Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +----
->   Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
->   Documentation/trace/events-kmem.rst                |  2 +-
->   Documentation/vm/unevictable-lru.rst               | 22 +++----
->   include/linux/memcontrol.h                         | 68 ++++++++++++++++++++
->   include/linux/mm_types.h                           |  2 +-
->   include/linux/mmzone.h                             |  5 +-
->   mm/compaction.c                                    | 67 +++++++++++++------
->   mm/filemap.c                                       |  4 +-
->   mm/huge_memory.c                                   | 17 ++---
->   mm/memcontrol.c                                    | 75 +++++++++++++++++-----
->   mm/mlock.c                                         | 27 ++++----
->   mm/mmzone.c                                        |  1 +
->   mm/page_alloc.c                                    |  1 -
->   mm/page_idle.c                                     |  5 +-
->   mm/rmap.c                                          |  2 +-
->   mm/swap.c                                          | 74 +++++++++------------
->   mm/vmscan.c                                        | 74 ++++++++++-----------
->   18 files changed, 287 insertions(+), 180 deletions(-)
-> 
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v5.3
+
+commit 5252eb4c8297fedbf1c5f1e67da44efe00e6ef6b
+Author: Pete Zaitcev <zaitcev@kotori.zaitcev.us>
+Date:   Thu Nov 21 17:24:00 2019 -0600
+
+     usb: Fix a deadlock in usbmon between mmap and read
+
+     Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
+     Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+
+diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+index ac2b4fcc265f..f48a23adbc35 100644
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
+
+  		mutex_lock(&rp->fetch_lock);
+  		spin_lock_irqsave(&rp->b_lock, flags);
+-		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+-		kfree(rp->b_vec);
+-		rp->b_vec  = vec;
+-		rp->b_size = size;
+-		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+-		rp->cnt_lost = 0;
++		if (rp->mmap_active) {
++			mon_free_buff(vec, size/CHUNK_SIZE);
++			kfree(vec);
++			ret = -EBUSY;
++		} else {
++			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
++			kfree(rp->b_vec);
++			rp->b_vec  = vec;
++			rp->b_size = size;
++			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
++			rp->cnt_lost = 0;
++		}
+  		spin_unlock_irqrestore(&rp->b_lock, flags);
+  		mutex_unlock(&rp->fetch_lock);
+  		}
+@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
+  static void mon_bin_vma_open(struct vm_area_struct *vma)
+  {
+  	struct mon_reader_bin *rp = vma->vm_private_data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&rp->b_lock, flags);
+  	rp->mmap_active++;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+  }
+
+  static void mon_bin_vma_close(struct vm_area_struct *vma)
+  {
++	unsigned long flags;
++
+  	struct mon_reader_bin *rp = vma->vm_private_data;
++	spin_lock_irqsave(&rp->b_lock, flags);
+  	rp->mmap_active--;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+  }
+
+  /*
+@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
+  	unsigned long offset, chunk_idx;
+  	struct page *pageptr;
+
+-	mutex_lock(&rp->fetch_lock);
+  	offset = vmf->pgoff << PAGE_SHIFT;
+-	if (offset >= rp->b_size) {
+-		mutex_unlock(&rp->fetch_lock);
++	if (offset >= rp->b_size)
+  		return VM_FAULT_SIGBUS;
+-	}
+  	chunk_idx = offset / CHUNK_SIZE;
+  	pageptr = rp->b_vec[chunk_idx].pg;
+  	get_page(pageptr);
+-	mutex_unlock(&rp->fetch_lock);
+  	vmf->page = pageptr;
+  	return 0;
+  }
+
+
+
