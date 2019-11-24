@@ -2,129 +2,91 @@ Return-Path: <SRS0=xe0T=ZQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1744C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB1DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D86F2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYiNMLLI"
+	by mail.kernel.org (Postfix) with ESMTP id 36DEB207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 17:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKXRaW (ORCPT
+        id S1726945AbfKXRsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 12:30:22 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50728 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfKXRaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 12:30:21 -0500
-Received: by mail-wm1-f65.google.com with SMTP id l17so12733366wmh.0;
-        Sun, 24 Nov 2019 09:30:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Sjixo6ht7XiGZb8/LNb/8Q06mHVbU6wMmziG5mNnwig=;
-        b=OYiNMLLI89jLaAYadwdPkm8CYT0XjYMPJ5j0/PepSiMjSKL7Ho/STOqUc4r2yA8SgD
-         2fSXE/uyQsx58Q93mYXDEGPk1joPHtLRGHOdJ4FeMWPiJ/Mz5s+nNY9k8w34jfVOHDB2
-         dKBcOKD5ar5yZfmeIF5ega5MCRvWQ5a7ma73aWzbjbCo7U5UqtEbi7cah2IIH2JIpsp0
-         wW8s/eHJzP1xxh3uz3xN/wK1V4wtL1z47YoZmCPDHOu7UI+eVUpKzClJ/LHqjFYekFJ4
-         93YidniTK30G3JkwscNuRpPRJKI3jFrQ8s8Z0PY3UkDKY2+izKO9Bf2LekGq7zrBjrRG
-         C00w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Sjixo6ht7XiGZb8/LNb/8Q06mHVbU6wMmziG5mNnwig=;
-        b=J3oPM4iA8yKpUq15Th879PXtUT8qtvQ9TqNN2uAxtyDFEuNMsl3EuFY40Wo4RSEdMR
-         D9B3XHkx01dxaA8lYLGG1FmBoiJDPk9TaEwkOZwskAYvvHJeuCaAilGw1FjbAecfg0rZ
-         kEMt64El9EwnTwBY5ODU87kId5cugVYtYOPOILI9Sw4aBbAOhx2noLLVg81jbiOdGtDU
-         ULw0gVbPH12hB7xaAmcSkHAWEyGNvzlSD6fgDVjAvZHI1motp8a0zu9fuJtzSY4OxC06
-         YyL8qFsHF//Wx4oq5/+CcXhKCryb8xhGU7WmCZvBhZ/sABiIdJQiOdFdf98h8/xzIEZA
-         N5ZA==
-X-Gm-Message-State: APjAAAX9HTiwstfweprSV3QlRb2tyMpWVrJKXPKaEui8qJpjlBjLYMUX
-        U3+wHMNZWBZhPvLw/ELjrMprGmKzB9RPyQ==
-X-Google-Smtp-Source: APXvYqzdwq6I0QuiWDS1GB2PvZLPk9+ENLHHn5zVHJOxjm5uJwP+lPkagFhiQeWjWwyFSGT7X09ZbQ==
-X-Received: by 2002:a7b:c1d3:: with SMTP id a19mr6652300wmj.127.1574616618566;
-        Sun, 24 Nov 2019 09:30:18 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id n13sm5537275wmi.25.2019.11.24.09.30.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 09:30:18 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v9 6/6] pwm: sun4i: Add support for H6 PWM
-Date:   Sun, 24 Nov 2019 18:29:08 +0100
-Message-Id: <20191124172908.10804-7-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191124172908.10804-1-peron.clem@gmail.com>
-References: <20191124172908.10804-1-peron.clem@gmail.com>
+        Sun, 24 Nov 2019 12:48:43 -0500
+Received: from muru.com ([72.249.23.125]:43404 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbfKXRsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 12:48:42 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 738CF80E4;
+        Sun, 24 Nov 2019 17:49:18 +0000 (UTC)
+Date:   Sun, 24 Nov 2019 09:48:37 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        Paul Boddie <paul@boddie.org.uk>
+Subject: Re: [PATCH v3 8/8] MIPS: DTS: jz4780: add sgx gpu node
+Message-ID: <20191124174837.GX35479@atomide.com>
+References: <cover.1574595627.git.hns@goldelico.com>
+ <c73e2cee4f818654f264b0b7b5458bfaa0ac6a7a.1574595627.git.hns@goldelico.com>
+ <1574600246.3.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1574600246.3.0@crapouillou.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+* Paul Cercueil <paul@crapouillou.net> [191124 12:58]:
+> Le dim., nov. 24, 2019 at 12:40, H. Nikolaus Schaller <hns@goldelico.com> a
+> écrit :
+> > and add interrupt and clocks.
+...
+> > --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> > +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> > @@ -46,6 +46,17 @@
+> >  		#clock-cells = <1>;
+> >  	};
+> > 
+> > +	gpu: gpu@13040000 {
+> 
+> We try to keep the nodes ordered by address, could you move this node where
+> it belongs?
+...
 
-Now that sun4i PWM driver supports deasserting reset line and enabling
-bus clock, support for H6 PWM can be added.
+> > +		compatible = "ingenic,jz4780-sgx540-120", "img,sgx540-120",
+> > "img,sgx540", "img,sgx5";
+> > +		reg = <0x13040000 0x4000>;
+> > +
+> > +		clocks = <&cgu JZ4780_CLK_GPU>;
+> > +		clock-names = "gpu";
 
-Note that while H6 PWM has two channels, only first one is wired to
-output pin. Second channel is used as a clock source to companion AC200
-chip which is bundled into same package.
+Just checking.. Is there something else to configure here
+potentially in addition to the clocks?
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- drivers/pwm/pwm-sun4i.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+That is, do we need to do some interconnect specific
+configuration etc in addition to the clocks to have
+runtime PM work for enabling and disabling sgx on
+jz4780?
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 07bf7be6074b..c394878c7e5d 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -360,6 +360,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_bypass = {
- 	.npwm = 1,
- };
- 
-+static const struct sun4i_pwm_data sun50i_h6_pwm_data = {
-+	.has_prescaler_bypass = true,
-+	.has_direct_mod_clk_output = true,
-+	.npwm = 2,
-+};
-+
- static const struct of_device_id sun4i_pwm_dt_ids[] = {
- 	{
- 		.compatible = "allwinner,sun4i-a10-pwm",
-@@ -376,6 +382,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
- 	}, {
- 		.compatible = "allwinner,sun8i-h3-pwm",
- 		.data = &sun4i_pwm_single_bypass,
-+	}, {
-+		.compatible = "allwinner,sun50i-h6-pwm",
-+		.data = &sun50i_h6_pwm_data,
- 	}, {
- 		/* sentinel */
- 	},
--- 
-2.20.1
+Regards,
 
+Tony
