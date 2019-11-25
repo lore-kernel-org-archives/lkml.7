@@ -2,67 +2,97 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0D0C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159B3C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99532073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574642103;
-	bh=Hkrc0yo7dEA/JPqcSDYhv9k5U1qztj+v5Q4RbQAcvQ4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=jXDZBZhDUhV8G510yAAmqm3zxjral/YIJ87auZXimkIPRQ4+C2nAPQYcNIy8J6mS0
-	 hweuERQ+3XqpuFuWzuglhFA5zEf7AlHj7ISh4oY0AW/A6wttWfvZnsyEUYHD2Uxr0/
-	 Ck7wvb5mCF8E9ZqAHrtAn64ZewkJ9PQOXWUBLLX4=
+	by mail.kernel.org (Postfix) with ESMTP id E101E206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="irB0tCRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfKYAfD (ORCPT
+        id S1727146AbfKYAhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 19:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726865AbfKYAfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 19:35:02 -0500
-Subject: Re: [git pull] vfs.git fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574642102;
-        bh=Hkrc0yo7dEA/JPqcSDYhv9k5U1qztj+v5Q4RbQAcvQ4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=T0JK811EL10zkX5r9eFg6iCW4r8xUH1y3R+c68c+hlkL1aXX3pst8vNi86uebNpaM
-         8ncg6gUI/8mJZNAo8lk4flYLgs0Z1heDDfiNbbYKjPFDjNJN94BgV79Ae5r9gJ9oVd
-         +bwLSmDa8PN6MEDWKopE28/bazJbim60MPc6kCPE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191124200553.GC4203@ZenIV.linux.org.uk>
-References: <20191124200553.GC4203@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191124200553.GC4203@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-X-PR-Tracked-Commit-Id: 3e5aeec0e267d4422a4e740ce723549a3098a4d1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b8387f6f34952c09fe9a9f6e4be027f8b16cfd18
-Message-Id: <157464210199.8932.2451584505088350915.pr-tracker-bot@kernel.org>
-Date:   Mon, 25 Nov 2019 00:35:01 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Sun, 24 Nov 2019 19:37:18 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11554 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfKYAhS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 19:37:18 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddb22410000>; Sun, 24 Nov 2019 16:37:21 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 24 Nov 2019 16:37:17 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 24 Nov 2019 16:37:17 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 00:37:17 +0000
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 00:37:17 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 25 Nov 2019 00:37:17 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ddb223c0000>; Sun, 24 Nov 2019 16:37:16 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     Ira Weiny <ira.weiny@intel.com>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 0/2] mm/gup + IB: allow FOLL_FORCE for gup_fast and use in IB
+Date:   Sun, 24 Nov 2019 16:37:13 -0800
+Message-ID: <20191125003715.516290-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574642241; bh=o2tsnwufqtiAaAcjzWDmAxcwkNpfpLpA2IYDm85B8JI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=irB0tCRUPHupwE4qwQoe5I0D8UvNcIkF7OLhCOorIQ9dnOPnV+qVaNEyXYup3lWxM
+         rMe0WefT5a2SiudyNQnKo80GoU2hF8iECplAr2GsIm9LnBCyDlgP57SqC7J+kGjpuE
+         aKP84FMBOdxKX1wQ62yFd68qS8HNZl+w/kRJrNasjqGCWf7UhJTZ7AxMVvXv6g5YXL
+         zZyrmQiMVpGlaKn2UVerD1YATlHryBWkZCDoxY/+MrD7U/DC6xTreI05Ii/6FXGAyo
+         Vq25DeXZpGwhJm+VzLYtyuhWPl2PcN9PKa0pb5lRL2a5/UEL8/48zrdawePmyxSCE7
+         tH5r/fbVLTHqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 24 Nov 2019 20:05:53 +0000:
+Hi Leon, Jason, Christoph,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+Maybe I'm overlooking something, but as I wrote in patch 1, it looks
+like we can simply allow FOLL_FORCE to be passed to gup_fast().
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b8387f6f34952c09fe9a9f6e4be027f8b16cfd18
+This should fix Leon's reported RDMA failure [1]  when using patch 2 by
+itself. (I've compile- and boot-tested these, and also did short LTP
+and fio with direct IO tests, but I don't have an Infiniband runtime
+setup that exercises the umem.c code.)
 
-Thank you!
+[1] https://lore.kernel.org/r/20191124100724.GH136476@unreal
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+John Hubbard (2):
+  mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+  IB/umem: use get_user_pages_fast() to pin DMA pages
+
+ drivers/infiniband/core/umem.c | 17 ++++++-----------
+ mm/gup.c                       |  3 ++-
+ 2 files changed, 8 insertions(+), 12 deletions(-)
+
+--=20
+2.24.0
+
