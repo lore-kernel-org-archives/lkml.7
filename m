@@ -2,219 +2,134 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6725C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD05C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937A220748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DJ2AZzg1"
+	by mail.kernel.org (Postfix) with ESMTP id E15742053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfKYRpo (ORCPT
+        id S1729235AbfKYRyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:45:44 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39433 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727617AbfKYRpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:45:44 -0500
-Received: by mail-il1-f194.google.com with SMTP id a7so14969835ild.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:45:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OfXdjlP1h+SCoJqWCFQmTYwRTN6uEfNQ7Le0lcRPiwU=;
-        b=DJ2AZzg1QqSV459buhgIabvc3+CLoSWj3pZ9cqWbObtRa94yUX/zsV+OnvKDeNWBt6
-         odLdqdKUSCt2WgygaoR4fvwF8UX/NxMRWRG8oH4aIKmR19Sgd9jd61s85LNNKMkgKChS
-         kdA+8lvairLSUagZCPPrCrxd/jk4tDbn96iDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OfXdjlP1h+SCoJqWCFQmTYwRTN6uEfNQ7Le0lcRPiwU=;
-        b=LO2HBzbqO5dlFDZKyUU9qyp3MPc8tv5EgRCtt2X+PTaxIRzb5t4sB0RCVVXFmJDs/1
-         bZ7NZIoexuQfaf+c+qSc89iLufw4PR1qE4qhDgq4lgYLk3HZcMtSGuIweepvRezSf+j3
-         wdjrQk0QhIMrznOuCthO7hj1cc3za0tbDH0FSSz6qDJp6CaJSk1JGqoRPbT/6CwL8XHK
-         6Db0m54q+jtGvwDV8vs+k0DQoSFVU9RMTC0WsfmUszYzGi+NKg0r7iR4g7JWRPgnSiwV
-         P7j7e0zMcLtbxnun0ilWq3s9uYCMDfduB9Pgw8QAJUYXdFORYSwCli0vlHoQh4s/0P9/
-         ApyA==
-X-Gm-Message-State: APjAAAXfFoiOU+BMz4VXpehNECgNrMjumYrsNRXiLhEE5l7sNHi5fpEn
-        FVtJUSeMOFkQBk6bXddm5qZXJg==
-X-Google-Smtp-Source: APXvYqxwrjA8qqsxNPx1/g/aWY4Ka2uf+auzyFzYEuIMocG1n1cJWs9alxvPUpWSeJmU+iE9gbF+Uw==
-X-Received: by 2002:a92:c8:: with SMTP id 191mr35021497ila.287.1574703943596;
-        Mon, 25 Nov 2019 09:45:43 -0800 (PST)
-Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
-        by smtp.gmail.com with ESMTPSA id z3sm2386090ile.26.2019.11.25.09.45.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2019 09:45:42 -0800 (PST)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     enric.balletbo@collabora.com
-Cc:     akshu.agrawal@amd.com, Raul E Rangel <rrangel@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Subject: [PATCH v2] platform/chrome: cros_ec_proto: Add response tracing
-Date:   Mon, 25 Nov 2019 10:45:39 -0700
-Message-Id: <20191125104537.v2.1.Iaf98f0ab455b626537e77cfa71cef6ff2ab6f37b@changeid>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        Mon, 25 Nov 2019 12:54:19 -0500
+Received: from mga12.intel.com ([192.55.52.136]:14985 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729220AbfKYRyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:54:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 09:54:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
+   d="scan'208";a="216979269"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2019 09:54:17 -0800
+Date:   Mon, 25 Nov 2019 09:54:17 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>,
+        James Morris <jmorris@namei.org>,
+        "Raslan, KarimAllah" <karahmed@amazon.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: general protection fault in __schedule (2)
+Message-ID: <20191125175417.GD12178@linux.intel.com>
+References: <000000000000e67a05057314ddf6@google.com>
+ <0000000000005eb1070597ea3a1f@google.com>
+ <20191122205453.GE31235@linux.intel.com>
+ <CACT4Y+b9FD8GTHc0baY-kUkuNFo-gdXCJ-uk5JtJSyjsyt8jTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+b9FD8GTHc0baY-kUkuNFo-gdXCJ-uk5JtJSyjsyt8jTg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to view response codes as well.
+On Sat, Nov 23, 2019 at 06:15:15AM +0100, Dmitry Vyukov wrote:
+> On Fri, Nov 22, 2019 at 9:54 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Thu, Nov 21, 2019 at 11:19:00PM -0800, syzbot wrote:
+> > > syzbot has bisected this bug to:
+> > >
+> > > commit 8fcc4b5923af5de58b80b53a069453b135693304
+> > > Author: Jim Mattson <jmattson@google.com>
+> > > Date:   Tue Jul 10 09:27:20 2018 +0000
+> > >
+> > >     kvm: nVMX: Introduce KVM_CAP_NESTED_STATE
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=124cdbace00000
+> > > start commit:   234b69e3 ocfs2: fix ocfs2 read block panic
+> > > git tree:       upstream
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=114cdbace00000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=164cdbace00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=7e2ab84953e4084a638d
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150f0a4e400000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f67111400000
+> > >
+> > > Reported-by: syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com
+> > > Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
+> > >
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> >
+> > Is there a way to have syzbot stop processing/bisecting these things
+> > after a reasonable amount of time?  The original crash is from August of
+> > last year...
+> >
+> > Note, the original crash is actually due to KVM's put_kvm() fd race, but
+> > whatever we want to blame, it's a duplicate.
+> >
+> > #syz dup: general protection fault in kvm_lapic_hv_timer_in_use
+> 
+> Hi Sean,
+> 
+> syzbot only sends bisection results to open bugs with no known fixes.
+> So what you did (marking the bug as invalid/dup, or attaching a fix)
+> would stop it from doing/sending bisection.
+> 
+> "Original crash happened a long time ago" is not necessary a good
+> signal. On the syzbot dashboard
+> (https://syzkaller.appspot.com/upstream), you can see bugs with the
+> original crash 2+ years ago, but they are still pretty much relevant.
+> The default kernel development process strategy for invalidating bug
+> reports by burying them in oblivion has advantages, but also
+> downsides. FWIW syzbot prefers explicit status tracking.
 
-I dropped the EVENT_CLASS since there is only one event per class.
+I have no objection to explicit status tracking or getting pinged on old
+open bugs.  I suppose I don't even mind the belated bisection, I'd probably
+whine if syzbot didn't do the bisection :-).
 
-cros_ec_cmd has now been renamed to cros_ec_request_start.
+What's annoying is the report doesn't provide any information about when it
+originally occured or on what kernel it originally failed.  It didn't occur
+to me that the original bug might be a year old and I only realized it was
+from an old kernel when I saw "4.19.0-rc4+" in the dashboard's sample crash
+log.  Knowing that the original crash was a year old would have saved me
+5-10 minutes of getting myself oriented.
 
-Example:
-$ echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
-$ cat /sys/kernel/debug/tracing/trace
-
-369.416372: cros_ec_request_start: version: 0, command: EC_CMD_USB_PD_POWER_INFO
-369.420528: cros_ec_request_done: version: 0, command: EC_CMD_USB_PD_POWER_INFO, ec result: EC_RES_SUCCESS, retval: 16
-369.420529: cros_ec_request_start: version: 0, command: EC_CMD_USB_PD_DISCOVERY
-369.421383: cros_ec_request_done: version: 0, command: EC_CMD_USB_PD_DISCOVERY, ec result: EC_RES_SUCCESS, retval: 5
-
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
-
-Changes in v2:
-* Renamed events to cros_ec_request_start and cros_ec_request_done.
-* Minor printf changes.
-* Moved trace_cros_ec_request_start right above xfer_fxn.
-* Fixed comment style.
-END
-
- drivers/platform/chrome/cros_ec_proto.c |  8 ++++++--
- drivers/platform/chrome/cros_ec_trace.c | 24 ++++++++++++++++++++++
- drivers/platform/chrome/cros_ec_trace.h | 27 +++++++++++++++++++------
- 3 files changed, 51 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index bd485ce98a42..1b98193a9fc1 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -54,8 +54,6 @@ static int send_command(struct cros_ec_device *ec_dev,
- 	int ret;
- 	int (*xfer_fxn)(struct cros_ec_device *ec, struct cros_ec_command *msg);
- 
--	trace_cros_ec_cmd(msg);
--
- 	if (ec_dev->proto_version > 2)
- 		xfer_fxn = ec_dev->pkt_xfer;
- 	else
-@@ -72,7 +70,10 @@ static int send_command(struct cros_ec_device *ec_dev,
- 		return -EIO;
- 	}
- 
-+	trace_cros_ec_request_start(msg);
- 	ret = (*xfer_fxn)(ec_dev, msg);
-+	trace_cros_ec_request_done(msg, ret);
-+
- 	if (msg->result == EC_RES_IN_PROGRESS) {
- 		int i;
- 		struct cros_ec_command *status_msg;
-@@ -95,7 +96,10 @@ static int send_command(struct cros_ec_device *ec_dev,
- 		for (i = 0; i < EC_COMMAND_RETRIES; i++) {
- 			usleep_range(10000, 11000);
- 
-+			trace_cros_ec_request_start(status_msg);
- 			ret = (*xfer_fxn)(ec_dev, status_msg);
-+			trace_cros_ec_request_done(status_msg, ret);
-+
- 			if (ret == -EAGAIN)
- 				continue;
- 			if (ret < 0)
-diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
-index 6f80ff4532ae..ef423522bedc 100644
---- a/drivers/platform/chrome/cros_ec_trace.c
-+++ b/drivers/platform/chrome/cros_ec_trace.c
-@@ -120,5 +120,29 @@
- 	TRACE_SYMBOL(EC_CMD_PD_GET_LOG_ENTRY), \
- 	TRACE_SYMBOL(EC_CMD_USB_PD_MUX_INFO)
- 
-+/* See enum ec_status */
-+#define EC_RESULT \
-+	TRACE_SYMBOL(EC_RES_SUCCESS), \
-+	TRACE_SYMBOL(EC_RES_INVALID_COMMAND), \
-+	TRACE_SYMBOL(EC_RES_ERROR), \
-+	TRACE_SYMBOL(EC_RES_INVALID_PARAM), \
-+	TRACE_SYMBOL(EC_RES_ACCESS_DENIED), \
-+	TRACE_SYMBOL(EC_RES_INVALID_RESPONSE), \
-+	TRACE_SYMBOL(EC_RES_INVALID_VERSION), \
-+	TRACE_SYMBOL(EC_RES_INVALID_CHECKSUM), \
-+	TRACE_SYMBOL(EC_RES_IN_PROGRESS), \
-+	TRACE_SYMBOL(EC_RES_UNAVAILABLE), \
-+	TRACE_SYMBOL(EC_RES_TIMEOUT), \
-+	TRACE_SYMBOL(EC_RES_OVERFLOW), \
-+	TRACE_SYMBOL(EC_RES_INVALID_HEADER), \
-+	TRACE_SYMBOL(EC_RES_REQUEST_TRUNCATED), \
-+	TRACE_SYMBOL(EC_RES_RESPONSE_TOO_BIG), \
-+	TRACE_SYMBOL(EC_RES_BUS_ERROR), \
-+	TRACE_SYMBOL(EC_RES_BUSY), \
-+	TRACE_SYMBOL(EC_RES_INVALID_HEADER_VERSION), \
-+	TRACE_SYMBOL(EC_RES_INVALID_HEADER_CRC), \
-+	TRACE_SYMBOL(EC_RES_INVALID_DATA_CRC), \
-+	TRACE_SYMBOL(EC_RES_DUP_UNAVAILABLE)
-+
- #define CREATE_TRACE_POINTS
- #include "cros_ec_trace.h"
-diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/chrome/cros_ec_trace.h
-index 0dd4df30fa89..ee20d8571796 100644
---- a/drivers/platform/chrome/cros_ec_trace.h
-+++ b/drivers/platform/chrome/cros_ec_trace.h
-@@ -18,7 +18,7 @@
- 
- #include <linux/tracepoint.h>
- 
--DECLARE_EVENT_CLASS(cros_ec_cmd_class,
-+TRACE_EVENT(cros_ec_request_start,
- 	TP_PROTO(struct cros_ec_command *cmd),
- 	TP_ARGS(cmd),
- 	TP_STRUCT__entry(
-@@ -33,13 +33,28 @@ DECLARE_EVENT_CLASS(cros_ec_cmd_class,
- 		  __print_symbolic(__entry->command, EC_CMDS))
- );
- 
--
--DEFINE_EVENT(cros_ec_cmd_class, cros_ec_cmd,
--	TP_PROTO(struct cros_ec_command *cmd),
--	TP_ARGS(cmd)
-+TRACE_EVENT(cros_ec_request_done,
-+	TP_PROTO(struct cros_ec_command *cmd, int retval),
-+	TP_ARGS(cmd, retval),
-+	TP_STRUCT__entry(
-+		__field(uint32_t, version)
-+		__field(uint32_t, command)
-+		__field(uint32_t, result)
-+		__field(int, retval)
-+	),
-+	TP_fast_assign(
-+		__entry->version = cmd->version;
-+		__entry->command = cmd->command;
-+		__entry->result = cmd->result;
-+		__entry->retval = retval;
-+	),
-+	TP_printk("version: %u, command: %s, ec result: %s, retval: %d",
-+		  __entry->version,
-+		  __print_symbolic(__entry->command, EC_CMDS),
-+		  __print_symbolic(__entry->result, EC_RESULT),
-+		  __entry->retval)
- );
- 
--
- #endif /* _CROS_EC_TRACE_H_ */
- 
- /* this part must be outside header guard */
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Could syzbot provide the date and reported kernel version (assuming the
+kernel version won't be misleading) of the original failure in its reports?
