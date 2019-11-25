@@ -2,109 +2,77 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE053C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592ABC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37F820748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bROoIXHf";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ab+qhnDH"
+	by mail.kernel.org (Postfix) with ESMTP id 2C63C20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfKYHjG (ORCPT
+        id S1727138AbfKYHjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:39:06 -0500
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:47134
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725763AbfKYHjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:39:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574667545;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=uHHZK8fQ8iUvCN9hPKKy5pWhBlk+VmYWskK2YABSTbk=;
-        b=bROoIXHfU9TTKdhRArjz8BqDk6VeNPb1bxiQV007IW/9l44d/hDJR0UwjTWrJo+Z
-        qT/uk54udm+3Tg9AZZFXWRoBs9seDvzs+fL+B/szhmhzIpW65Vd2lVslbxg1tfrMHhR
-        zWC1KXnlbJNGA6QgMfzpRjAAqwbSVTX95jMBTlpY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574667545;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=uHHZK8fQ8iUvCN9hPKKy5pWhBlk+VmYWskK2YABSTbk=;
-        b=Ab+qhnDHHqNqnxu/dMIflJZDSQ+Q95fLywRQBmJKiFzez1szGuZmEp3LGf1WlwrZ
-        o6/XNO+whJxkx0TK8s/4/IUnoUpZuvM+lkvSG7DKcbbA5Gwl2CNzcxS7C+dzh+jDa/z
-        NTgZiF8FMFffuCwzHKa7ghk9AJYW/GBrCaMuhHXg=
+        Mon, 25 Nov 2019 02:39:31 -0500
+Received: from verein.lst.de ([213.95.11.211]:34632 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbfKYHjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 02:39:31 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0B29A68C65; Mon, 25 Nov 2019 08:39:24 +0100 (CET)
+Date:   Mon, 25 Nov 2019 08:39:23 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>, linux-arch@vger.kernel.org,
+        darren@stevens-zone.net, mad skateman <madskateman@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        paulus@samba.org, rtd2@xtra.co.nz,
+        "contact@a-eon.com" <contact@a-eon.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        nsaenzjulienne@suse.de, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI
+ board installed, unless RAM size limited to 3500M
+Message-ID: <20191125073923.GA30168@lst.de>
+References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de> <20191121072943.GA24024@lst.de> <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de> <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de> <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com> <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de> <20191121180226.GA3852@lst.de> <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 25 Nov 2019 07:39:05 +0000
-From:   cang@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/5] scsi: ufs: Do not clear the DL layer timers
-In-Reply-To: <MN2PR04MB6991FAA95F79EFB1EE030D13FC4A0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1573624824-671-1-git-send-email-cang@codeaurora.org>
- <1573624824-671-5-git-send-email-cang@codeaurora.org>
- <MN2PR04MB6991C35EC2DBBEA17A611755FC4F0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <MN2PR04MB6991FAA95F79EFB1EE030D13FC4A0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <0101016ea17feb57-32ad658c-6c87-413b-93c4-b4a015a02499-000000@us-west-2.amazonses.com>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.25-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-25 15:22, Avri Altman wrote:
->> >
->> > During power mode change, PACP_PWR_Req frame sends
->> PAPowerModeUserData
->> > parameters (and they are considered valid by device if Flags[4] -
->> > UserDataValid bit is set in the same frame).
->> > Currently we don't set these PAPowerModeUserData parameters and
->> > hardware always sets UserDataValid bit which would clear all the DL
->> > layer timeout values of the peer device after the power mode change.
->> >
->> > This change sets the PAPowerModeUserData[0..5] to UniPro specification
->> > recommended default values, in addition we are also setting the
->> > relevant
->> > DME_LOCAL_* timer attributes as required by UFS HCI specification.
->> >
->> > Signed-off-by: Can Guo <cang@codeaurora.org>
->> Reviewed-by Avri Altman <avri.altman@wdc.com>
-> BTW, I noticed that you are only updating the TC0 registers.
-> Why not setting the TC1 registers as well?
-> 
-> Thanks,
-> Avri
+On Sat, Nov 23, 2019 at 12:42:27PM +0100, Christian Zigotzky wrote:
+> Hello Christoph,
+>
+> Please find attached the dmesg of your Git kernel.
 
-Hi Avri,
+Thanks.  It looks like on your platform the swiotlb buffer isn't
+actually addressable based on the bus dma mask limit, which is rather
+interesting.  swiotlb_init uses memblock_alloc_low to allocate the
+buffer, and I'll need some help from Mike and the powerpc maintainers
+to figure out how that select where to allocate the buffer from, and
+how we can move it to a lower address.  My gut feeling would be to try
+to do what arm64 does and define a new ARCH_LOW_ADDRESS_LIMIT, preferably
+without needing too much arch specific magic.
 
-In the HCI spec, it goes
+As a quick hack can you try this patch on top of the tree from Friday?
 
-Currently, UFS uses TC0 only. Therefore, setting the following values 
-are not needed:
- DME_ Local_FC1ProtectionTimeOutVal
- DME_ Local_TC1ReplayTimeOutVal
- DME_ Local_ AFC1ReqTimeOutVal
-
-Best Regards,
-Can Guo.
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index f491690d54c6..e3f95c362922 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -344,7 +344,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+ #define MEMBLOCK_LOW_LIMIT 0
+ 
+ #ifndef ARCH_LOW_ADDRESS_LIMIT
+-#define ARCH_LOW_ADDRESS_LIMIT  0xffffffffUL
++#define ARCH_LOW_ADDRESS_LIMIT  0x0fffffffUL
+ #endif
+ 
+ phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
