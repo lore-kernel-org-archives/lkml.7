@@ -2,56 +2,111 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE96C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C21FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AB220835
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0642075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfKYKrg (ORCPT
+        id S1727614AbfKYKsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:47:36 -0500
-Received: from ozlabs.org ([203.11.71.1]:54269 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbfKYKrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:47:02 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47M3d05Phdz9sR3; Mon, 25 Nov 2019 21:47:00 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 44448640dd0df98891c5ea4695d89a4972cb4c1f
-In-Reply-To: <dd82934ad91aab607d0eb7e626c14e6ac0d654eb.1567068137.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, segher@kernel.crashing.org,
-        npiggin@gmail.com
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] powerpc: permanently include 8xx registers in reg.h
-Message-Id: <47M3d05Phdz9sR3@ozlabs.org>
-Date:   Mon, 25 Nov 2019 21:47:00 +1100 (AEDT)
+        Mon, 25 Nov 2019 05:48:06 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52386 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfKYKsF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 05:48:05 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 141771C1FD1; Mon, 25 Nov 2019 11:48:03 +0100 (CET)
+Date:   Mon, 25 Nov 2019 11:48:03 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
+ function
+Message-ID: <20191125104803.v6goacte2vjakx64@ucw.cz>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119002121.4107-12-sean.j.christopherson@intel.com>
+ <7338293.UcAxln0NAJ@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7338293.UcAxln0NAJ@kreacher>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 08:45:12 UTC, Christophe Leroy wrote:
-> Most 8xx registers have specific names, so just include
-> reg_8xx.h all the time in reg.h in order to have them defined
-> even when CONFIG_PPC_8xx is not selected. This will avoid
-> the need for #ifdefs in C code.
+> On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
+> > Convert acpi_wakeup_address from a raw variable into a function so that
+> > x86 can wrap its dereference of the real mode boot header in a function
+> > instead of broadcasting it to the world via a #define.  This sets the
+> > stage for a future patch to move the definition of acpi_wakeup_address()
+> > out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> Guard SPRN_ICTRL in an #ifdef CONFIG_PPC_8xx as this register
-> has same name but different meaning and different spr number as
-> another register in the mpc7450.
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > --- a/drivers/acpi/sleep.c
+> > +++ b/drivers/acpi/sleep.c
+> > @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+> >  #ifdef CONFIG_ACPI_SLEEP
+> >  	/* do we have a wakeup address for S2 and S3? */
+> >  	if (acpi_state == ACPI_STATE_S3) {
+> > -		if (!acpi_wakeup_address)
+> > +		if (!acpi_wakeup_address())
+> >  			return -EFAULT;
+> > -		acpi_set_waking_vector(acpi_wakeup_address);
+> > +		acpi_set_waking_vector(acpi_wakeup_address());
+> >  
 
-Series applied to powerpc next, thanks.
+You might want to store result in a variable... especially since you are
+turning inline function into real one in a next patch.
 
-https://git.kernel.org/powerpc/c/44448640dd0df98891c5ea4695d89a4972cb4c1f
+And maybe function should be called get_acip_wakeup_address or
+something? This way it is easy to mistake actual wakeup address from
+function that gets it...
 
-cheers
+Best regards,
+									Pavel
+> 
+> 
