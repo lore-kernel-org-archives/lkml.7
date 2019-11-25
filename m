@@ -2,170 +2,335 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BF3C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DA3C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5154E2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OVlSdCyL"
+	by mail.kernel.org (Postfix) with ESMTP id 19D23207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574642833;
+	bh=ur14J20FDHsRW5sZaN2ZdSgfa2m+xIhuSZNdqHjOuDU=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=dLf2LcNNyB+JsGmDO67dFKIO2AvPjs9+/dRzVbp5sgbOuIWM6ooYB9fmWQrrLNhcP
+	 0mjE8NjcDjuxZvZLmSRJf+YY1OJ/qYZA2Oo4btrV5TA3YHK4vHUAta1z0ZFgUTjVG1
+	 vpoeq7gUGzCT4Z/+OV5pfinPlF8hOaqFKs226Kcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfKYAli (ORCPT
+        id S1727110AbfKYArM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 19:41:38 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:10385 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfKYAli (ORCPT
+        Sun, 24 Nov 2019 19:47:12 -0500
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:46159 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726865AbfKYArL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 19:41:38 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191125004135epoutp02417097eca7528594c4b557545073abe7~aQQGuNBjx1022110221epoutp02Y
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 00:41:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191125004135epoutp02417097eca7528594c4b557545073abe7~aQQGuNBjx1022110221epoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574642495;
-        bh=5Ht5K2A6R+wV0tu8tWTA30lFNcsiTm3/tEOPL8Pvps8=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=OVlSdCyLNEjhIuFL2iwUL07cUKO8JBeZVaycz+uXJlEhxpY2w7lv37NxH2bQbAdy+
-         LjryCBL1ssXcG986SU2n82/IPTOxUQq9UAEVi05j3S19dUzRZ6RxkcvqUWezfiNcmW
-         oFxPac2ZVhWbxfay9X1+qyGY70AJYz51ea2JhMvM=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191125004134epcas1p10926a06d8eb9b192d3a9a293f4df0e9f~aQQGUcugf0950409504epcas1p1F;
-        Mon, 25 Nov 2019 00:41:34 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47LpBN1mVmzMqYkY; Mon, 25 Nov
-        2019 00:41:32 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        42.AA.48019.C332BDD5; Mon, 25 Nov 2019 09:41:32 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191125004131epcas1p403cab8b34662b44a704d6f91aa4c4a0f~aQQDb18Y90678506785epcas1p4a;
-        Mon, 25 Nov 2019 00:41:31 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191125004131epsmtrp12c60372583e66436fdf35de64a04b356~aQQDbINHE1367713677epsmtrp1q;
-        Mon, 25 Nov 2019 00:41:31 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-78-5ddb233c4e0b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C7.63.06569.B332BDD5; Mon, 25 Nov 2019 09:41:31 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191125004131epsmtip259b4c20014eb53e09129ec8a38ec16fb~aQQDRQAzs0970409704epsmtip2W;
-        Mon, 25 Nov 2019 00:41:31 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     rafael.j.wysocki@intel.com, gregkh@linuxfoundation.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        cw00.choi@samsung.com, chanwoo@kernel.org, stable@vger.kernel.org
-Subject: [v2 PATCH] PM / devfreq: Add new name attribute for sysfs
-Date:   Mon, 25 Nov 2019 09:47:23 +0900
-Message-Id: <20191125004723.17926-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBKsWRmVeSWpSXmKPExsWy7bCmga6N8u1Yg3kLOC0m3rjCYnH9y3NW
-        i+bF69kszja9Ybe4vGsOm8Xn3iOMFrcbV7BZPF7xlt1iwcZHjA6cHov3vGTy2LSqk81j/9w1
-        7B59W1YxenzeJBfAGpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr
-        5OIToOuWmQN0kJJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0L10v
-        OT/XytDAwMgUqDAhO+N79yLWgh7Bio7WNewNjDv4uhg5OSQETCSufb3I2sXIxSEksINR4s2T
-        vcwQzidGiW3LZzGCVAkJfGOUWN1YD9Mx++NtqI69jBIb5jQyQThfGCWWnN/ADFLFJqAlsf/F
-        DTYQW0TASuL0/w6wscwC24DG7roGNlZYwEniz9oWVhCbRUBVYs6x92DNvEANr05sY4VYJy+x
-        esMBsGYJgRlsEi8ufmKHSLhILOyeBFUkLPHq+BaouJTEy/42KLtaYuXJI2wQzR2MElv2X4Bq
-        MJbYv3Qy0N0cQCdpSqzfpQ8RVpTY+Xsu2HHMAnwS7772sIKUSAjwSnS0CUGUKEtcfnCXCcKW
-        lFjc3skGYXtI3NqxkwUSXLESc7ZdY57AKDsLYcECRsZVjGKpBcW56anFhgUmyNG0iRGcyrQs
-        djDuOedziFGAg1GJh3fD2luxQqyJZcWVuYcYJTiYlUR43c7eiBXiTUmsrEotyo8vKs1JLT7E
-        aAoMvYnMUqLJ+cA0m1cSb2hqZGxsbGFiaGZqaKgkzsvx42KskEB6YklqdmpqQWoRTB8TB6dU
-        A6PfCVV+fXbRNTOa9gZI6ExSkjibavIwYYv3txnTpY2503+eeHRs/5HipVGKsk+mbI3f+Gd1
-        cvOehy++6gi+9HJ2O/xu2dUNsov+ev7eoODzzcj0OXuEuJlxUMuWXUGtt1mPH5+3SujfgbcG
-        x0s2m7s6zorwn6BsIZJ5oSOI0XEyQ9ZCNnf9SUJKLMUZiYZazEXFiQBP5aJOewMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKLMWRmVeSWpSXmKPExsWy7bCSvK618u1YgyX3VS0m3rjCYnH9y3NW
-        i+bF69kszja9Ybe4vGsOm8Xn3iOMFrcbV7BZPF7xlt1iwcZHjA6cHov3vGTy2LSqk81j/9w1
-        7B59W1YxenzeJBfAGsVlk5Kak1mWWqRvl8CV8b17EWtBj2BFR+sa9gbGHXxdjJwcEgImErM/
-        3mbtYuTiEBLYzSgx98MpRoiEpMS0i0eZuxg5gGxhicOHiyFqPjFK7LnzDqyGTUBLYv+LG2wg
-        toiAjcTdxddYQGxmgX2MEm1n7UBsYQEniT9rW1hBbBYBVYk5x94zg9i8AlYSr05sY4XYJS+x
-        esMB5gmMPAsYGVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgQHlpbWDsYTJ+IPMQpw
-        MCrx8HJsuBUrxJpYVlyZe4hRgoNZSYTX7eyNWCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnH
-        IoUE0hNLUrNTUwtSi2CyTBycUg2MIq//WtrGMWasqjpSEel4Wz7/EEPB1q8h1/P4nrErypxI
-        FwpQc5VQ3jcj7Mm+h1rl7mfbd94K3DNZJL6yac2vCbmtXJqb10ufSOeoFPqQcTNuUo11ZJPc
-        jQ5fpa+GRzgyuViC2bz+LZjPENXhnWFkeqyCRfn/1btWTjP3LnlwqY0z9v+TU0pKLMUZiYZa
-        zEXFiQBtuAyxKAIAAA==
-X-CMS-MailID: 20191125004131epcas1p403cab8b34662b44a704d6f91aa4c4a0f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191125004131epcas1p403cab8b34662b44a704d6f91aa4c4a0f
-References: <CGME20191125004131epcas1p403cab8b34662b44a704d6f91aa4c4a0f@epcas1p4.samsung.com>
+        Sun, 24 Nov 2019 19:47:11 -0500
+Received: by mail-lj1-f182.google.com with SMTP id e9so13673159ljp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 16:47:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=71i6XAnis5QNqOaioSv5KcdL5ixS6PrUa+11m9oCwL0=;
+        b=AnaJqdL3xrMjoBYuzPxSxDGN9L22At6/OhtaED1hGCh5VmD3hjzbZMc0QcFJT2pK5S
+         JgW3vZ3AqKgmvmhbzxbORuM3mLPm4cHCPmp7GSpHcxHcEUdaa8p9iAouZ41XtRs+WLtO
+         Q+Li0hxOPbMqsgO+0yokb9k6FD4JqXryOqRSM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=71i6XAnis5QNqOaioSv5KcdL5ixS6PrUa+11m9oCwL0=;
+        b=OvA054/WqcaxUVIZ6hYyizfq0xKhO+2gkEKZ7JYK3hrRzXDHUBsM3LWp747xnYdZ+Q
+         oZmhcisTbR7XDh08DdnUUDeCL+rqdp0TvqvHMJ/TaD6hlSU1puUpAeurhIVLbkNQJ7Q+
+         BTSSC50w3avuyAwCEUlNHbdO56eeqki/GPumb/otRbqzfOocmTbHS0bk3LLz8P+dj9RY
+         KyU2RHS6HFM7jEnYfV01YV7yWa4N8My5CTb1UkGNlc8gHFgF+/pZRFE1/Mgx1SRBhjWN
+         jChLi1HhdLS4rrMwpBJYmI7XxulUP153h3QRUEY/9nX511JWPxgThpElwDZf09xlHE7T
+         R+fw==
+X-Gm-Message-State: APjAAAU1vOvFMCkspdyPz4HXJebfDBI57pZDh8PUKCOFbn5zVDpS9KNO
+        8CZWcb8qGBEzBSIW8Vobx1lP83UbEKo=
+X-Google-Smtp-Source: APXvYqxn1oZTLiQ9t6sJRMyNsCI3ujWCqWHkhqsWrzHblytpCvLTKTv8xV+haThHr/EHrlKH94LgDw==
+X-Received: by 2002:a2e:8188:: with SMTP id e8mr19969845ljg.152.1574642828606;
+        Sun, 24 Nov 2019 16:47:08 -0800 (PST)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id k10sm2620481lfo.76.2019.11.24.16.47.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 Nov 2019 16:47:07 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id e9so13673106ljp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 16:47:07 -0800 (PST)
+X-Received: by 2002:a2e:99d0:: with SMTP id l16mr6900799ljj.1.1574642827345;
+ Sun, 24 Nov 2019 16:47:07 -0800 (PST)
+MIME-Version: 1.0
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 24 Nov 2019 16:46:51 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjmzaD=BZ1hjUYu+RTnSGDLfCRwCdg99GeQpCjEwo9uzw@mail.gmail.com>
+Message-ID: <CAHk-=wjmzaD=BZ1hjUYu+RTnSGDLfCRwCdg99GeQpCjEwo9uzw@mail.gmail.com>
+Subject: Linux 5.4
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
-sysfs") changed the node name to devfreq(x). After this commit, it is not
-possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
+Not a lot happened this last week, which is just how I like it. And as
+expected, most of the pull requests I got were for the 5.5 merge
+window, which I'll obviously start working through tomorrow.
 
-Add new name attribute in order to get device name.
+What little there is here is mostly some networking updates (mix of
+network drivers and core networking), and some minor GPU driver
+updates. Other than that it's a small collection of random other
+things all over. The appended shortlog is small enough that you might
+as well just scroll through it.
 
-Cc: stable@vger.kernel.org
-Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Anyway, this obviously opens the merge window for 5.5. It's not ideal
+timing with Thanksgiving week coming up, but it hopefully shouldn't be
+too much of an issue. If I fall behind (not because I'm all that big
+of a fan of the indiscriminate and relentless turkey-killing holiday)
+it's because we've got all three kids back for the holiday, and I
+might push some ot the merging to the second week as a result. We'll
+see what happens.
+
+Go do the testing thing.
+
+               Linus
+
 ---
-Changes from v1:
-- Update sysfs-class-devfreq documentation
-- Show device name directly from 'devfreq->dev.parent'
 
- Documentation/ABI/testing/sysfs-class-devfreq | 7 +++++++
- drivers/devfreq/devfreq.c                     | 9 +++++++++
- 2 files changed, 16 insertions(+)
+Adi Suresh (1):
+      gve: fix dma sync bug where not all pages synced
 
-diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
-index 01196e19afca..75897e2fde43 100644
---- a/Documentation/ABI/testing/sysfs-class-devfreq
-+++ b/Documentation/ABI/testing/sysfs-class-devfreq
-@@ -7,6 +7,13 @@ Description:
- 		The name of devfreq object denoted as ... is same as the
- 		name of device using devfreq.
- 
-+What:		/sys/class/devfreq/.../name
-+Date:		November 2019
-+Contact:	Chanwoo Choi <cw00.choi@samsung.com>
-+Description:
-+		The /sys/class/devfreq/.../name shows the name of device
-+		of the corresponding devfreq object.
-+
- What:		/sys/class/devfreq/.../governor
- Date:		September 2011
- Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 61c3e2d08969..2e5f64ee1969 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -1476,7 +1476,16 @@ static ssize_t trans_stat_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(trans_stat);
- 
-+static ssize_t name_show(struct device *dev,
-+			struct device_attribute *attr, char *buf)
-+{
-+	struct devfreq *devfreq = to_devfreq(dev);
-+	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
-+}
-+static DEVICE_ATTR_RO(name);
-+
- static struct attribute *devfreq_attrs[] = {
-+	&dev_attr_name.attr,
- 	&dev_attr_governor.attr,
- 	&dev_attr_available_governors.attr,
- 	&dev_attr_cur_freq.attr,
--- 
-2.17.1
+Aditya Pakki (1):
+      net: atm: Reduce the severity of logging in unlink_clip_vcc
 
+Alex Deucher (4):
+      drm/amdgpu: remove experimental flag for Navi14
+      drm/amdgpu: disable gfxoff when using register read interface
+      drm/amdgpu: disable gfxoff on original raven
+      Revert "drm/amd/display: enable S/G for RAVEN chip"
+
+Alex Vesker (3):
+      net/mlx5: DR, Fix invalid EQ vector number on CQ creation
+      net/mlx5: DR, Skip rehash for tables with byte mask zero
+      net/mlx5: DR, Limit STE hash table enlarge based on bytemask
+
+Andrey Ryabinin (1):
+      mm/ksm.c: don't WARN if page is still mapped in remove_stable_node()
+
+Chris Wilson (4):
+      drm/i915/pmu: "Frequency" is reported as accumulated cycles
+      drm/i915/userptr: Try to acquire the page lock around set_page_dirty(=
+)
+      drm/i915: Protect request peeking with RCU
+      drm/i915/fbdev: Restore physical addresses for fb_mmap()
+
+Chuhong Yuan (2):
+      phy: mdio-sun4i: add missed regulator_disable in remove
+      net: fec: fix clock count mis-match
+
+Corinna Vinschen (1):
+      r8169: disable TSO on a single version of RTL8168c to fix performance
+
+Dan Carpenter (2):
+      bpf, offload: Unlock on error in bpf_offload_dev_create()
+      net: rtnetlink: prevent underflows in do_setvfinfo()
+
+David Hildenbrand (1):
+      mm/memory_hotplug: don't access uninitialized memmaps in
+shrink_zone_span()
+
+David Howells (1):
+      afs: Fix missing timeout reset
+
+David S. Miller (1):
+      Revert "mdio_bus: fix mdio_register_device when RESET_CONTROLLER
+is disabled"
+
+Davide Caratti (1):
+      net/sched: act_pedit: fix WARN() in the traffic path
+
+Eli Cohen (2):
+      net/mlx5e: Fix error flow cleanup in mlx5e_tc_tun_create_header_ipv4/=
+6
+      net/mlx5e: Fix ingress rate configuration for representors
+
+Eran Ben Elisha (2):
+      net/mlx5e: Do not use non-EXT link modes in EXT mode
+      net/mlxfw: Verify FSM error code translation doesn't exceed array siz=
+e
+
+Eric Dumazet (1):
+      net-sysfs: fix netdev_queue_add_kobject() breakage
+
+Evan Quan (2):
+      drm/amd/powerplay: issue no PPSMC_MSG_GetCurrPkgPwr on unsupported AS=
+ICs
+      drm/amd/powerplay: correct fine grained dpm force level setting
+
+Florian Westphal (1):
+      udp: drop skb extensions before marking skb stateless
+
+Geert Uytterhoeven (2):
+      mdio_bus: Fix init if CONFIG_RESET_CONTROLLER=3Dn
+      mdio_bus: Fix init if CONFIG_RESET_CONTROLLER=3Dn
+
+Haiyang Zhang (2):
+      hv_netvsc: Fix offset usage in netvsc_send_table()
+      hv_netvsc: Fix send_table offset in case of a host bug
+
+Halil Pasic (1):
+      virtio_ring: fix return code on DMA mapping fails
+
+Hangbin Liu (1):
+      ipv6/route: return if there is no fib_nh_gw_family
+
+Hans de Goede (1):
+      gpiolib: acpi: Add Terra Pad 1061 to the run_edge_events_on_boot_blac=
+klist
+
+Hayes Wang (1):
+      r8152: avoid to call napi_disable twice
+
+Huazhong Tan (1):
+      net: hns3: fix a wrong reset interrupt status mask
+
+Ivan Khoronzhuk (1):
+      taprio: don't reject same mqprio settings
+
+Joseph Qi (1):
+      Revert "fs: ocfs2: fix possible null-pointer dereferences in
+ocfs2_xa_prepare_entry()"
+
+Jouni Hogander (1):
+      net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+
+Julian Wiedmann (2):
+      s390/qeth: fix potential deadlock on workqueue flush
+      s390/qeth: return proper errno on IO error
+
+Juliet Kim (2):
+      Revert "net/ibmvnic: Fix EOI when running in XIVE mode"
+      net/ibmvnic: Ignore H_FUNCTION return from H_EOI to tolerate XIVE mod=
+e
+
+Laura Abbott (1):
+      tools: gpio: Correctly add make dependencies for gpio_utils
+
+Laurent Vivier (1):
+      virtio_console: allocate inbufs in add_port() only if it is needed
+
+Linus Torvalds (1):
+      Linux 5.4
+
+Luc Van Oostenryck (1):
+      fork: fix pidfd_poll()'s return type
+
+Luigi Rizzo (1):
+      net/mlx4_en: fix mlx4 ethtool -N insertion
+
+Lyude Paul (1):
+      Revert "Input: synaptics - enable RMI mode for X1 Extreme 2nd Generat=
+ion"
+
+Maciej =C5=BBenczykowski (1):
+      net-ipv6: IPV6_TRANSPARENT - check NET_RAW prior to NET_ADMIN
+
+Maor Gottlieb (1):
+      net/mlx5: Fix auto group size calculation
+
+Marc Dionne (2):
+      afs: Fix possible assert with callbacks from yfs servers
+      afs: Fix large file support
+
+Marcelo Ricardo Leitner (1):
+      net/ipv4: fix sysctl max for fib_multipath_hash_policy
+
+Marek Beh=C3=BAn (1):
+      mdio_bus: fix mdio_register_device when RESET_CONTROLLER is disabled
+
+Marina Varshaver (1):
+      net/mlx5e: Add missing capability bit check for IP-in-IP
+
+Martin Habets (1):
+      sfc: Only cancel the PPS workqueue if it exists
+
+Matthew Auld (1):
+      drm/i915: make pool objects read-only
+
+Maxime Bizon (1):
+      cramfs: fix usage on non-MTD device
+
+Michael Heimpold (1):
+      net: qca_spi: fix receive buffer size check
+
+Michael S. Tsirkin (1):
+      virtio_balloon: fix shrinker scan number of pages
+
+Oliver Neukum (1):
+      nfc: port100: handle command failure cleanly
+
+Pankaj Sharma (2):
+      can: m_can_platform: set net_device structure as driver data
+      can: m_can_platform: remove unnecessary m_can_class_resume() call
+
+Pavel Tatashin (2):
+      arm64: uaccess: Ensure PAN is re-enabled after unhandled uaccess faul=
+t
+      arm64: uaccess: Remove uaccess_*_not_uao asm macros
+
+Petr Machata (1):
+      mlxsw: spectrum_router: Fix determining underlay for a GRE tunnel
+
+Prashant Malani (1):
+      r8152: Re-order napi_disable in rtl8152_close
+
+Rafael J. Wysocki (1):
+      PM: QoS: Invalidate frequency QoS requests after removal
+
+Roi Dayan (1):
+      net/mlx5e: Fix set vf link state error flow
+
+Russell King (2):
+      net: phylink: update documentation on create and destroy
+      net: phylink: fix link mode modification in PHY mode
+
+Shani Shapp (1):
+      net/mlx5: Update the list of the PCI supported devices
+
+Stefan Wahren (1):
+      net: qca_spi: Move reset_count to struct qcaspi
+
+Stefano Garzarella (1):
+      MAINTAINERS: Add myself as maintainer of virtio-vsock
+
+Sun Ke (1):
+      nbd:fix memory leak in nbd_get_socket()
+
+Tariq Toukan (1):
+      net/mlx4_en: Fix wrong limitation for number of TX rings
+
+Thierry Reding (2):
+      gpio: max77620: Fixup debounce delays
+      gpio: bd70528: Use correct unit for debounce times
+
+Ville Syrj=C3=A4l=C3=A4 (2):
+      drm/i915: Don't oops in dumb_create ioctl if we have no crtcs
+      drm/i915: Preload LUTs if the hw isn't currently using them
+
+Vlad Buslov (1):
+      net/mlx5e: Reorder mirrer action parsing to check for encap first
+
+Wei Wang (1):
+      virtio_balloon: fix shrinker count
+
+Willem de Bruijn (1):
+      net/tls: enable sk_msg redirect to tls socket egress
+
+Xin Long (1):
+      net: sched: ensure opts_len <=3D IP_TUNNEL_OPTS_MAX in act_tunnel_key
+
+Zhu Yanjun (1):
+      MAINTAINERS: forcedeth: Change Zhu Yanjun's email address
