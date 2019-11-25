@@ -2,78 +2,179 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F02C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5BFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8232073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DAC2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ig8Vezo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKYA50 (ORCPT
+        id S1727173AbfKYA6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 19:57:26 -0500
-Received: from mga01.intel.com ([192.55.52.88]:32026 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbfKYA50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 19:57:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 16:57:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,239,1571727600"; 
-   d="scan'208";a="216815045"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Nov 2019 16:57:25 -0800
-Subject: Re: [kbuild-all] Re: {standard input}:211: Error: operand out of
- range (128 is not between -128 and 127)
-To:     Matthew Wilcox <willy@infradead.org>,
-        kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-References: <201911201827.kP7wux6y%lkp@intel.com>
- <20191120123050.GQ20752@bombadil.infradead.org>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <408d25ae-8e3e-dec0-bb06-a4c2c7cfeec8@intel.com>
-Date:   Mon, 25 Nov 2019 08:57:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191120123050.GQ20752@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Sun, 24 Nov 2019 19:58:04 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:60415 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfKYA6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 19:58:03 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191125005800epoutp03319aaa7a51636c5aa2005cac5dc8c177~aQecndzbb2739727397epoutp030
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 00:58:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191125005800epoutp03319aaa7a51636c5aa2005cac5dc8c177~aQecndzbb2739727397epoutp030
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574643480;
+        bh=tSa4S79qDEaWYHC+mpXYSPLWN5N1BoYyfUbew9s5uls=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Ig8Vezo53qH873wRNLbknUAzyU1FD3tU5o1irin+Vrizgzf6sxSnjsmDzE/XIMCHE
+         tAvYQn58GJTbELkcmbUlrFORpueQKUq4YvsOobnxDZ7J+Xvhd7bRX45amMTl/JAkCF
+         VnkWWWmgt4lX4JWrFuLZkjQSgX+O5uNZv7aG/1Fo=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191125005800epcas1p20f99f289ef54158e135c9d832ac1c8c9~aQecD7m240106901069epcas1p2T;
+        Mon, 25 Nov 2019 00:58:00 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47LpYK6HBdzMqYkq; Mon, 25 Nov
+        2019 00:57:57 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7D.0F.48019.3172BDD5; Mon, 25 Nov 2019 09:57:56 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8~aQeXntyqH0106901069epcas1p2L;
+        Mon, 25 Nov 2019 00:57:55 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191125005755epsmtrp2da26d5dafb2823476d724d346b934432~aQeXms3fZ1846218462epsmtrp2V;
+        Mon, 25 Nov 2019 00:57:55 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-14-5ddb27139fed
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B4.C3.10238.3172BDD5; Mon, 25 Nov 2019 09:57:55 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191125005755epsmtip2853975521ca2c524193e297b46a66fe0~aQeXY9sU41971219712epsmtip2H;
+        Mon, 25 Nov 2019 00:57:55 +0000 (GMT)
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     rafael.j.wysocki@intel.com, gregkh@linuxfoundation.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, chanwoo@kernel.org, stable@vger.kernel.org
+Subject: [PATCH v3] PM / devfreq: Add new name attribute for sysfs
+Date:   Mon, 25 Nov 2019 10:03:57 +0900
+Message-Id: <20191125010357.27153-1-cw00.choi@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOKsWRmVeSWpSXmKPExsWy7bCmvq6I+u1Yg8UZFhNvXGGxuP7lOatF
+        8+L1bBZnm96wW1zeNYfN4nPvEUaL240r2Cwer3jLbrFg4yNGB06PxXteMnlsWtXJ5rF/7hp2
+        j74tqxg9Pm+SC2CNyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy
+        8QnQdcvMAbpHSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNgWaBXnJhbXJqXrpec
+        n2tlaGBgZApUmJCd8XLePvaCe8IVi1ZfYGlgPC/QxcjJISFgIvF6xhrWLkYuDiGBHYwSfc8P
+        sUE4nxglbj7eyQThfGOUOH5oJksXIwdYy97dShDxvYwS7Qc2MkI4Xxglbrd9YQeZyyagJbH/
+        xQ02EFtEwEri9P8OZpAiZoFtjBLbdl1jBEkICzhJXDpwlAnEZhFQlTj2YTYziM0L1HC2bz4L
+        xIHyEqs3HABrlhCYwiYxf9MOVoiEi8TXRQ/YIWxhiVfHt0DZUhKf3+1lg7CrJVaePMIG0dzB
+        KLFl/wWoZmOJ/UsnM4H8wyygKbF+lz5EWFFi5++5YMcxC/BJvPvawwrxMq9ER5sQRImyxOUH
+        d5kgbEmJxe2dUKs8JK6v3wUWFxKIlZj59j3bBEbZWQgLFjAyrmIUSy0ozk1PLTYsMEGOpk2M
+        4ESmZbGDcc85n0OMAhyMSjy8G9beihViTSwrrsw9xCjBwawkwut29kasEG9KYmVValF+fFFp
+        TmrxIUZTYOhNZJYSTc4HJtm8knhDUyNjY2MLE0MzU0NDJXFejh8XY4UE0hNLUrNTUwtSi2D6
+        mDg4pRoYy/5+2RTYvW/hy5uN/zZ/TnlwvUli5hvfwnB2rybWqT9y62YIPEme01opHXx3fyjH
+        Tq4nohd8BA427M5aX274n/2yKJdnAYfHrQdOzX2PPJu7Px6Sdzbc7/O8SLdE4PXDj7YRhq7M
+        ew5suFFTWM7mON99bpHur6vaM202X5/w+VPbrm999q8LlFiKMxINtZiLihMBvZ6hwnoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCLMWRmVeSWpSXmKPExsWy7bCSvK6w+u1Yg94/ghYTb1xhsbj+5Tmr
+        RfPi9WwWZ5vesFtc3jWHzeJz7xFGi9uNK9gsHq94y26xYOMjRgdOj8V7XjJ5bFrVyeaxf+4a
+        do++LasYPT5vkgtgjeKySUnNySxLLdK3S+DKeDlvH3vBPeGKRasvsDQwnhfoYuTgkBAwkdi7
+        W6mLkYtDSGA3o8TqzoMsXYycQHFJiWkXjzJD1AhLHD5cDFHziVFi2/JWsBo2AS2J/S9usIHY
+        IgI2EncXXwOLMwvsY5RoO2sHYgsLOElcOnCUCcRmEVCVOPZhNjOIzStgJXG2bz7ULnmJ1RsO
+        ME9g5FnAyLCKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4rLQ0dzBeXhJ/iFGAg1GJ
+        h3fD2luxQqyJZcWVuYcYJTiYlUR43c7eiBXiTUmsrEotyo8vKs1JLT7EKM3BoiTO+zTvWKSQ
+        QHpiSWp2ampBahFMlomDU6qBUfXk1bzzqz99SFX8wdQnUhycLLq8aoeAsz3H1ZopgRdMLbNW
+        F5vmfRXv6+eRO/jvSJHzCoGw6+f/F8iWZhwo8z5Y/fSz1S4ewZoHlu2Sz69+y+ScHHTCIPuq
+        qK9URvpr5qyM01zm4leTS/T4g06f6BCL/qb95OiT53f7Zl37JXL5xFrGlqfdSizFGYmGWsxF
+        xYkAqv4URicCAAA=
+X-CMS-MailID: 20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8
+References: <CGME20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
+sysfs") changed the node name to devfreq(x). After this commit, it is not
+possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
 
+Add new name attribute in order to get device name.
 
-On 11/20/19 8:30 PM, Matthew Wilcox wrote:
-> On Wed, Nov 20, 2019 at 06:31:38PM +0800, kbuild test robot wrote:
->> Hi Matthew,
->>
->> FYI, the error/warning still remains.
-> That's because gcc-7.4.0 is still buggy on arc.
+Cc: stable@vger.kernel.org
+Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ Changes from v2:
+- Change the order of name_show() according to the sequence in devfreq_attrs[]
 
-Hi Matthew,
+Changes from v1:
+- Update sysfs-class-devfreq documentation
+- Show device name directly from 'devfreq->dev.parent'
 
-Thanks for clarifying, we'll take a look.
+Documentation/ABI/testing/sysfs-class-devfreq | 7 +++++++
+ drivers/devfreq/devfreq.c                     | 9 +++++++++
+ 2 files changed, 16 insertions(+)
 
-Best Regards,
-Rong Chen
-
->
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->> head:   c74386d50fbaf4a54fd3fe560f1abc709c0cff4b
->> commit: 5a74ac4c4a97bd8b7dba054304d598e2a882fea6 idr: Fix idr_get_next_ul race with idr_remove
->> date:   3 weeks ago
->> config: arc-defconfig (attached as .config)
->> compiler: arc-elf-gcc (GCC) 7.4.0
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
+index 01196e19afca..75897e2fde43 100644
+--- a/Documentation/ABI/testing/sysfs-class-devfreq
++++ b/Documentation/ABI/testing/sysfs-class-devfreq
+@@ -7,6 +7,13 @@ Description:
+ 		The name of devfreq object denoted as ... is same as the
+ 		name of device using devfreq.
+ 
++What:		/sys/class/devfreq/.../name
++Date:		November 2019
++Contact:	Chanwoo Choi <cw00.choi@samsung.com>
++Description:
++		The /sys/class/devfreq/.../name shows the name of device
++		of the corresponding devfreq object.
++
+ What:		/sys/class/devfreq/.../governor
+ Date:		September 2011
+ Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 65a4b6cf3fa5..6f4d93d2a651 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1169,6 +1169,14 @@ int devfreq_remove_governor(struct devfreq_governor *governor)
+ }
+ EXPORT_SYMBOL(devfreq_remove_governor);
+ 
++static ssize_t name_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct devfreq *devfreq = to_devfreq(dev);
++	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
++}
++static DEVICE_ATTR_RO(name);
++
+ static ssize_t governor_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buf)
+ {
+@@ -1477,6 +1485,7 @@ static ssize_t trans_stat_show(struct device *dev,
+ static DEVICE_ATTR_RO(trans_stat);
+ 
+ static struct attribute *devfreq_attrs[] = {
++	&dev_attr_name.attr,
+ 	&dev_attr_governor.attr,
+ 	&dev_attr_available_governors.attr,
+ 	&dev_attr_cur_freq.attr,
+-- 
+2.17.1
 
