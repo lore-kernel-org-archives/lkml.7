@@ -2,176 +2,328 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B51CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A5C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16ACB2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640542071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574674342;
+	bh=dADhmn6BnRaZH78GKvzi3F0QuozxD8ajxUgpMfjsop4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=krKWAWhcqlapUSA2RxBqDfFv7hKrq0m6l7VLS9kLAy8MO2/TITZGfETUi6xcb4UOA
+	 5jqJtvPVpKmvUWm1BW1Z3i0kEbqXNV3WW1Pt3/NQfR2JRR0aVegDchr/gQXUfZIaMv
+	 vBZnixUTbTG2JL0BCBpUNFBE+42TAyP1KOyyUhOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfKYJcM (ORCPT
+        id S1727329AbfKYJcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:32:12 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725938AbfKYJcL (ORCPT
+        Mon, 25 Nov 2019 04:32:21 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41245 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfKYJcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:32:11 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAP9RhJn060624
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:32:11 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wfjwkb4ks-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:32:10 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 25 Nov 2019 09:32:08 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Nov 2019 09:32:04 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAP9W37i46334404
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Nov 2019 09:32:03 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44DFAAE058;
-        Mon, 25 Nov 2019 09:32:03 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22A35AE045;
-        Mon, 25 Nov 2019 09:32:02 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.137])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 25 Nov 2019 09:32:02 +0000 (GMT)
-Date:   Mon, 25 Nov 2019 11:32:00 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arch@vger.kernel.org, darren@stevens-zone.net,
-        mad skateman <madskateman@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
- installed, unless RAM size limited to 3500M
-References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
- <20191121072943.GA24024@lst.de>
- <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
- <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
- <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
- <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
- <20191121180226.GA3852@lst.de>
- <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
- <20191125073923.GA30168@lst.de>
+        Mon, 25 Nov 2019 04:32:21 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b18so17026183wrj.8;
+        Mon, 25 Nov 2019 01:32:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9g1dsHSkZyIuogn9FJsE8Uhy7HUmJyPQt4umj/Cy1qM=;
+        b=ebZrraCX980kznxsj6PVadip6OfG7OxiQeybCaI5jAz4hgrM5H3JhZTgCx4wo8yphS
+         TBGAXJhH+2aBOfSKm2z+STT4xUISLzsKbb8N8krp0yAwwKPiYxK/41ThPpz4cXsaVH+K
+         ovcWS49YswZOZp5ajy3kvAt3MTqTfEEJrDmRPntsdGuzYxiBMf0aiqDSSPi2mB4Bl6v2
+         pMPJNqW0pX7nl/UHV/3acbVMAYQwbkBMpGjcAfQ+GAHL4BKHFjJ9QlWPskYgDlsKjFiM
+         clzJp/IVuwoXQE/XyNW0XlwDC7BTjD6RKhya2661HKMvCpxZfoCiK/KFKu/zo02stEQl
+         4ICA==
+X-Gm-Message-State: APjAAAUWTMkMbD3uMIQi8Y+HFnW0ZDeTjij9C9QYmIsdZeDz+4MFcRFn
+        GjNU9dFKcOMY7dtBg6LsFXk=
+X-Google-Smtp-Source: APXvYqxVLtRMAmG3OtLqwN04F1cLQln/PkStBpS9dqyei6x12GwZXrBMjfGzYE/Q4E+36GpGh+1hVw==
+X-Received: by 2002:adf:f5c6:: with SMTP id k6mr29557791wrp.245.1574674337631;
+        Mon, 25 Nov 2019 01:32:17 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id q15sm8447341wrv.61.2019.11.25.01.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 01:32:16 -0800 (PST)
+Date:   Mon, 25 Nov 2019 10:32:16 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     x86@kernel.org, Chen Yu <yu.chen.surf@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH][v5] x86/resctrl: Add task resctrl information display
+Message-ID: <20191125093216.GF31714@dhcp22.suse.cz>
+References: <20191125040001.28943-1-yu.c.chen@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191125073923.GA30168@lst.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19112509-0012-0000-0000-0000036BE3F5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112509-0013-0000-0000-000021A78322
-Message-Id: <20191125093159.GA23118@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-25_02:2019-11-21,2019-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- clxscore=1015 impostorscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1911250087
+In-Reply-To: <20191125040001.28943-1-yu.c.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 08:39:23AM +0100, Christoph Hellwig wrote:
-> On Sat, Nov 23, 2019 at 12:42:27PM +0100, Christian Zigotzky wrote:
-> > Hello Christoph,
-> >
-> > Please find attached the dmesg of your Git kernel.
-> 
-> Thanks.  It looks like on your platform the swiotlb buffer isn't
-> actually addressable based on the bus dma mask limit, which is rather
-> interesting.  swiotlb_init uses memblock_alloc_low to allocate the
-> buffer, and I'll need some help from Mike and the powerpc maintainers
-> to figure out how that select where to allocate the buffer from, and
-> how we can move it to a lower address.  My gut feeling would be to try
-> to do what arm64 does and define a new ARCH_LOW_ADDRESS_LIMIT, preferably
-> without needing too much arch specific magic.
+[Cc linux-api]
 
-Presuming the problem is relevant for all CoreNet boards something like
-this could work:
- 
-diff --git a/arch/powerpc/include/asm/dma.h b/arch/powerpc/include/asm/dma.h
-index 1b4f0254868f..7c6cfeeaff52 100644
---- a/arch/powerpc/include/asm/dma.h
-+++ b/arch/powerpc/include/asm/dma.h
-@@ -347,5 +347,11 @@ extern int isa_dma_bridge_buggy;
- #define isa_dma_bridge_buggy	(0)
- #endif
- 
-+#ifdef CONFIG_CORENET_GENERIC
-+extern phys_addr_t ppc_dma_phys_limit;
-+#define ARCH_LOW_ADDRESS_LIMIT	(ppc_dma_phys_limit - 1)
-+#endif
-+
-+
- #endif /* __KERNEL__ */
- #endif	/* _ASM_POWERPC_DMA_H */
-diff --git a/arch/powerpc/platforms/85xx/common.c b/arch/powerpc/platforms/85xx/common.c
-index fe0606439b5a..346b436b6d3f 100644
---- a/arch/powerpc/platforms/85xx/common.c
-+++ b/arch/powerpc/platforms/85xx/common.c
-@@ -126,3 +126,7 @@ void __init mpc85xx_qe_par_io_init(void)
- 	}
- }
- #endif
-+
-+#ifdef CONFIG_CORENET_GENERIC
-+phys_addr_t ppc_dma_phys_limit = 0xffffffffUL;
-+#endif
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
-index 7ee2c6628f64..673bcbdc7c75 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -64,7 +64,7 @@ void __init corenet_gen_setup_arch(void)
- 	mpc85xx_smp_init();
- 
- 	swiotlb_detect_4g();
--
-+	ppc_dma_phys_limit = 0x0fffffffUL;
- 	pr_info("%s board\n", ppc_md.name);
- 
- 	mpc85xx_qe_init();
-
-> As a quick hack can you try this patch on top of the tree from Friday?
+On Mon 25-11-19 12:00:01, Chen Yu wrote:
+> Monitoring tools that want to find out which resctrl control
+> and monitor groups a task belongs to must currently read
+> the "tasks" file in every group until they locate the process
+> ID.
 > 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index f491690d54c6..e3f95c362922 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -344,7 +344,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
->  #define MEMBLOCK_LOW_LIMIT 0
+> Add an additional file /proc/{pid}/resctrl to provide this
+> information.
+> 
+> The output is as followed according to Thomas's suggestion,
+> for example:
+> 
+>  1)   ""
+>       Resctrl is not available.
+> 
+>  2)   "/"
+>       Task is part of the root group, task is not associated to
+>       any monitoring group.
+> 
+>  3)   "/mon_groups/mon0"
+>       Task is part of the root group and monitoring group mon0.
+> 
+>  4)   "/group0"
+>       Task is part of control group group0, task is not associated
+>       to any monitoring group.
+> 
+>  5)   "/group0/mon_groups/mon1"
+>       Task is part of control group group0 and monitoring group mon1.
+> 
+> Tested-by: Jinshi Chen <jinshi.chen@intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Reinette Chatre <reinette.chatre@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+> v2: Reduce indentation level in proc_resctrl_show()
+>     according to Boris's suggestion.
+>     Create the include/linux/resctrl.h header and
+>     declare proc_resctrl_show() in this file, so
+>     that other architectures would probably use it
+>     in the future. Different architectures should
+>     implement architectural specific proc_resctrl_show()
+>     accordingly.
+> 
+> v3: Return empty string if the resctrl filesystem has
+>     not been mounted per Boris's suggestion.
+>     Rename the config from CPU_RESCTRL to PROC_CPU_RESCTRL
+>     to better represent its usage. Move PROC_CPU_RESCTRL
+>     from arch/Kconfig to fs/proc/Kconfig.
+>     And let PROC_CPU_RESCTRL to be depended on PROC_FS.
+> 
+> v4: According to Thomas's suggestion, changed the output
+>     from multiple lines to one single line.
+> 
+> v5: According to Alexey's feedback, removed the header file
+>     proc_fs.h in resctrl.h, and changed seq_puts() to
+>     seq_putc() for simplicity.
+> ---
+>  arch/x86/Kconfig                       |  1 +
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 78 ++++++++++++++++++++++++++
+>  fs/proc/Kconfig                        |  4 ++
+>  fs/proc/base.c                         |  7 +++
+>  include/linux/resctrl.h                | 14 +++++
+>  5 files changed, 104 insertions(+)
+>  create mode 100644 include/linux/resctrl.h
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 8ef85139553f..252364d18887 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -455,6 +455,7 @@ config X86_CPU_RESCTRL
+>  	bool "x86 CPU resource control support"
+>  	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+>  	select KERNFS
+> +	select PROC_CPU_RESCTRL		if PROC_FS
+>  	help
+>  	  Enable x86 CPU resource control support.
 >  
->  #ifndef ARCH_LOW_ADDRESS_LIMIT
-> -#define ARCH_LOW_ADDRESS_LIMIT  0xffffffffUL
-> +#define ARCH_LOW_ADDRESS_LIMIT  0x0fffffffUL
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 2e3b06d6bbc6..f786e7626a65 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -725,6 +725,84 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
+>  	return ret;
+>  }
+>  
+> +#ifdef CONFIG_PROC_CPU_RESCTRL
+> +
+> +/*
+> + * A task can only be part of one control
+> + * group and of one monitoring group which
+> + * is associated to that control group.
+> + * So one line is simple and clear enough:
+> + *
+> + * 1)   ""
+> + *    Resctrl is not available.
+> + *
+> + * 2)   "/"
+> + *    Task is part of the root group, and it is
+> + *    not associated to any monitoring group.
+> + *
+> + * 3)   "/mon_groups/mon0"
+> + *    Task is part of the root group and monitoring
+> + *    group mon0.
+> + *
+> + * 4)   "/group0"
+> + *    Task is part of control group group0, and it is
+> + *    not associated to any monitoring group.
+> + *
+> + * 5)   "/group0/mon_groups/mon1"
+> + *    Task is part of control group group0 and monitoring
+> + *    group mon1.
+> + */
+> +int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
+> +		      struct pid *pid, struct task_struct *tsk)
+> +{
+> +	struct rdtgroup *rdtg;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&rdtgroup_mutex);
+> +
+> +	/* Return empty if resctrl has not been mounted. */
+> +	if (!static_branch_unlikely(&rdt_enable_key))
+> +		goto unlock;
+> +
+> +	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
+> +		struct rdtgroup *crg;
+> +
+> +		/*
+> +		 * Task information is only relevant for shareable
+> +		 * and exclusive groups.
+> +		 */
+> +		if (rdtg->mode != RDT_MODE_SHAREABLE &&
+> +		    rdtg->mode != RDT_MODE_EXCLUSIVE)
+> +			continue;
+> +
+> +		if (rdtg->closid != tsk->closid)
+> +			continue;
+> +
+> +		seq_printf(s, "/%s", rdtg->kn->name);
+> +		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
+> +				    mon.crdtgrp_list) {
+> +			if (tsk->rmid != crg->mon.rmid)
+> +				continue;
+> +			seq_printf(s, "%smon_groups/%s",
+> +				   rdtg == &rdtgroup_default ? "" : "/",
+> +				   crg->kn->name);
+> +			break;
+> +		}
+> +		seq_putc(s, '\n');
+> +		goto unlock;
+> +	}
+> +	/*
+> +	 * The above search should succeed. Otherwise return
+> +	 * with an error.
+> +	 */
+> +	ret = -ENOENT;
+> +unlock:
+> +	mutex_unlock(&rdtgroup_mutex);
+> +
+> +	return ret;
+> +}
+> +#endif
+> +
+>  static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
+>  				    struct seq_file *seq, void *v)
+>  {
+> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+> index cb5629bd5fff..ae96a339d24d 100644
+> --- a/fs/proc/Kconfig
+> +++ b/fs/proc/Kconfig
+> @@ -103,3 +103,7 @@ config PROC_CHILDREN
+>  config PROC_PID_ARCH_STATUS
+>  	def_bool n
+>  	depends on PROC_FS
+> +
+> +config PROC_CPU_RESCTRL
+> +	def_bool n
+> +	depends on PROC_FS
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index ebea9501afb8..0e4b8bf2b986 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -94,6 +94,7 @@
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched/stat.h>
+>  #include <linux/posix-timers.h>
+> +#include <linux/resctrl.h>
+>  #include <trace/events/oom.h>
+>  #include "internal.h"
+>  #include "fd.h"
+> @@ -3060,6 +3061,9 @@ static const struct pid_entry tgid_base_stuff[] = {
 >  #endif
->  
->  phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
+>  #ifdef CONFIG_CGROUPS
+>  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
+> +#endif
+> +#ifdef CONFIG_PROC_CPU_RESCTRL
+> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
+>  #endif
+>  	ONE("oom_score",  S_IRUGO, proc_oom_score),
+>  	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
+> @@ -3460,6 +3464,9 @@ static const struct pid_entry tid_base_stuff[] = {
+>  #endif
+>  #ifdef CONFIG_CGROUPS
+>  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
+> +#endif
+> +#ifdef CONFIG_PROC_CPU_RESCTRL
+> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
+>  #endif
+>  	ONE("oom_score", S_IRUGO, proc_oom_score),
+>  	REG("oom_adj",   S_IRUGO|S_IWUSR, proc_oom_adj_operations),
+> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+> new file mode 100644
+> index 000000000000..daf5cf64c6a6
+> --- /dev/null
+> +++ b/include/linux/resctrl.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _RESCTRL_H
+> +#define _RESCTRL_H
+> +
+> +#ifdef CONFIG_PROC_CPU_RESCTRL
+> +
+> +int proc_resctrl_show(struct seq_file *m,
+> +		      struct pid_namespace *ns,
+> +		      struct pid *pid,
+> +		      struct task_struct *tsk);
+> +
+> +#endif
+> +
+> +#endif /* _RESCTRL_H */
+> -- 
+> 2.17.1
 
 -- 
-Sincerely yours,
-Mike.
-
+Michal Hocko
+SUSE Labs
