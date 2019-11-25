@@ -2,140 +2,140 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BC7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2869C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EE02075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854DE2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfKYMAF (ORCPT
+        id S1727358AbfKYMBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:00:05 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:11529 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725906AbfKYMAB (ORCPT
+        Mon, 25 Nov 2019 07:01:35 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:63357 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfKYMBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:00:01 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Nov 2019 17:29:59 +0530
-IronPort-SDR: dIZVpYKMubnPx89RpbGCZddgRJQFGAdkUk33un/axipKANfWlOY6SnO7uv6FJqOao7dgNDGfx1
- xWgZ0cmUXBs/KKuu6qeqka4D8YWVxEeAQVeve8Zh9jPEeLlGS3/SMwO33JicWtm2mB4dIAM+Im
- ENRyznQoqhmxNXN+/hW2vHtOntTiWNesYfJHYqZS93/UqfaGH9XvYYcDY7MRDECHn3H7u2myjm
- diXGTFSJ+THdFGuvXiLlqIe+1lfF56ZbPXi5uKCi6eNy7L4NCndns5jbp2jPvIH3hXiq83rWBF
- 7+VhF/33SgHL4HtTZ1brfMls
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 25 Nov 2019 17:29:43 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id AC0D7432B; Mon, 25 Nov 2019 17:29:42 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
-        jsanka@codeaurora.org, chandanu@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH 4/4] msm:disp:dpu1: add mixer selection for display topology
-Date:   Mon, 25 Nov 2019 17:29:29 +0530
-Message-Id: <1574683169-19342-5-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
-References: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
+        Mon, 25 Nov 2019 07:01:35 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 25 Nov
+ 2019 20:01:56 +0800
+Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock
+ driver
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com>
+ <1571382865-41978-4-git-send-email-jian.hu@amlogic.com>
+ <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com>
+ <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com>
+ <1jblts3v7e.fsf@starbuckisacylon.baylibre.com>
+ <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com>
+ <1jh839f2ue.fsf@starbuckisacylon.baylibre.com>
+ <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com>
+ <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com>
+ <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com>
+ <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
+ <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <9ec317e8-136e-1ab4-4e9b-21210e7f3e05@amlogic.com>
+Date:   Mon, 25 Nov 2019 20:01:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mixer selection in the display topology is based on multiple
-factors
-1) mixers available in the hw
-2) interfaces to be enabled
-3) merge capability
 
-change will pickup mixer as per the topology need.
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c    | 21 ++++++++++++++++++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  2 ++
- 3 files changed, 21 insertions(+), 3 deletions(-)
+On 2019/11/25 18:14, Jerome Brunet wrote:
+> 
+> On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> Hi, Jerome
+>>
+>> On 2019/11/20 23:35, Jerome Brunet wrote:
+>>>
+>>> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>
+>>>> Hi, jerome
+>>>>
+>>>> Is there any problem about fixed_pll_dco's parent_data?
+>>>>
+>>>> Now both name and fw_name are described in parent_data.
+>>>
+>>> Yes, there is a problem.  This approach is incorrect, as I've tried to
+>>> explain a couple times already. Let me try to re-summarize why this
+>>> approach is incorrect.
+>>>
+>>> Both fw_name and name should be provided when it is possible that
+>>> the DT does not describe the input clock. IOW, it is only for controllers
+>>> which relied on the global name so far and are now starting to describe
+>>> the clock input in DT
+>>>
+>>> This is not your case.
+>>> Your controller is new and DT will have the correct
+>>> info
+>>>
+>>> You are trying work around an ordering issue by providing both fw_name
+>>> and name. This is not correct and I'll continue to nack it.
+>>>
+>>> If the orphan clock is not reparented as you would expect, I suggest you
+>>> try to look a bit further at how the reparenting of orphans is done in
+>>> CCF and why it does not match your expectation.
+>>>
+>> I have debugged the handle for orphan clock in CCF, Maybe you are missing
+>> the last email.
+> 
+> Nope, got it the first time
+> 
+>> Even though the clock index exit, it will get failed for the orphan clock's
+>> parent clock due to it has not beed added to the provider.
+> 
+> If the provider is not registered yet, of course any query to it won't
+> work. This why I have suggested to this debug *further* :
+> 
+> * Is the orphan reparenting done when a new provider is registered ?
+> * If not, should it be done ? is this your problem ?
+> 
+Yes, the orphan reparenting is done when the new provider is registered.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index d82ea99..067ef0b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -58,7 +58,7 @@
- 
- #define IDLE_SHORT_TIMEOUT	1
- 
--#define MAX_VDISPLAY_SPLIT 1080
-+#define MAX_HDISPLAY_SPLIT 1080
- 
- /* timeout in frames waiting for frame done */
- #define DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES 5
-@@ -534,8 +534,23 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 		if (dpu_enc->phys_encs[i])
- 			intf_count++;
- 
--	/* User split topology for width > 1080 */
--	topology.num_lm = (mode->vdisplay > MAX_VDISPLAY_SPLIT) ? 2 : 1;
-+	/* Datapath topology selection
-+	 *
-+	 * Dual display
-+	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
-+	 *
-+	 * Single display
-+	 * 1 LM, 1 INTF
-+	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
-+	 *
-+	 */
-+	if (intf_count == 2)
-+		topology.num_lm = 2;
-+	else if (!dpu_kms->catalog->caps->has_3d_merge)
-+		topology.num_lm = 1;
-+	else
-+		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
-+
- 	topology.num_enc = 0;
- 	topology.num_intf = intf_count;
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 0ee2b6c..de69f71 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -67,6 +67,7 @@
- 	.has_src_split = true,
- 	.has_dim_layer = true,
- 	.has_idle_pc = true,
-+	.has_3d_merge = true,
- };
- 
- static const struct dpu_caps sc7180_dpu_caps = {
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 2607ef3..d0cb41c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -287,6 +287,7 @@ struct dpu_qos_lut_tbl {
-  * @has_src_split      source split feature status
-  * @has_dim_layer      dim layer feature status
-  * @has_idle_pc        indicate if idle power collapse feature is supported
-+ * @has_3d_merge       indicate if 3D merge is supported
-  */
- struct dpu_caps {
- 	u32 max_mixer_width;
-@@ -297,6 +298,7 @@ struct dpu_caps {
- 	bool has_src_split;
- 	bool has_dim_layer;
- 	bool has_idle_pc;
-+	bool has_3d_merge;
- };
- 
- /**
--- 
-1.9.1
+Reparenting the orphan will be done when each clock is registered by 
+devm_clk_hw_register. And at this time the provider has not been 
+registered. After all clocks are registered by devm_clk_hw_register, the
+provider will be registered by devm_of_clk_add_hw_provider.
 
+Reparenting the orphan will fail when fw_name is added alone, the couse 
+is that devm_clk_hw_register is always running ahead of 
+devm_of_clk_add_hw_provider.
+
+That is why it will failed to get parent for the orphan clock.
+
+
+
+> 
+> .
+> 
