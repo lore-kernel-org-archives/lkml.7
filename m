@@ -2,96 +2,107 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89613C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB3CC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6331A20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D922075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YcVMb1LR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNuYAtvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfKYTHg (ORCPT
+        id S1727166AbfKYTHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:07:36 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39747 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKYTHg (ORCPT
+        Mon, 25 Nov 2019 14:07:43 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33277 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfKYTHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:07:36 -0500
-Received: by mail-il1-f193.google.com with SMTP id a7so15207774ild.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:07:35 -0800 (PST)
+        Mon, 25 Nov 2019 14:07:42 -0500
+Received: by mail-pf1-f195.google.com with SMTP id c184so7839679pfb.0;
+        Mon, 25 Nov 2019 11:07:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uxg5HUbuTNPv9TZS2m101TfjoAcQvznXZTZhO4Sew/M=;
-        b=YcVMb1LRVpwa6yTgLQyEh5/k5v9KJIQqzG+ilyfQm7G+taD6dWwghScTobFhZqm6oy
-         eoZWyL79itbjaPV8niFxl3xN2KSZdY6VGbCS0sLvtLA5GfpJMXeTFotFYv7mklb7d34/
-         K+IhdHe94oIErw5pVUpoLK4gdqANMJCyExr8Qx0V9DhTH8CIFh8iX4SrBbryW96nMYHU
-         MCOepLPfTvzgQdx+eZIgcl1S5zgJynSyLANVX15Rm400zIGGMBNgdVuIswbU5JrLC3m6
-         gpYLV2UByG9ArDO9d3sahz0j49ahMLIJ2Kxi7bqsNsUzmwgSP21ckqIvF23zTG0wmlYV
-         0K8w==
+         :cc:content-transfer-encoding;
+        bh=V6RCMCu0u2OME2YGHfLS+ptk7Pmu3SS68O9Jky4kB7Y=;
+        b=gNuYAtvklCeB3PPdPcDxP20KNQXOsNyDP66uuHFOCxg8ce7xWrfKR4uD7H/U5tQSa7
+         3Vi2vOJqV4PN2Ar2XZxdNxYHoiaSOkTYjh85Ts+vtNQtL2mLU6cJbeKjkbc0a5Zt/Tuf
+         OudAAcbtq20THMsD6fNKGGDw7eDdVF1DfNHWFuRLYGIvXrTBs11NDhEDh7r5o+8gzxvI
+         KENfZ51WYIN2CsFXPvoW5JhM6vIAY66DR6+s0wTUQq+9u2nkh9JFx09rmn9jrtPhWz4p
+         OQ0XIFcRCNRwk3QVCgqdHOhwb16cxXPNmCl+YfaOlScoOYn+RNQB5HkEysOHxmsOenIC
+         Dr1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uxg5HUbuTNPv9TZS2m101TfjoAcQvznXZTZhO4Sew/M=;
-        b=JoRcQpXWH6S5tnH8yiOqz2a7j6IQugVUsmGOKMQSyZRIH2CltBo2ePhR+U7ykS5+MW
-         mPD43ztbqMfXZrFXh4+pVHenh0/WftSZfUTgq7bzue4gvkLLqs42tALJj/Pr0yTi8LiC
-         mhDcBG2gbXParId9RxdfpgPP2Vyno4o5OJl55Pzn4CToBHPd78h+TxRxttZ+vNTKVxao
-         wH2o9keh03eJedgQM8E6GNhtDDO8tn5mQS4gEnriPCQqW7wn/rPN0CT7CjXYtzV/Rfmt
-         OOSHUw7h0UOdv+WKqX9QlfZKJ9fKESeBh03YQrv9suaBfmCIlVc4SHfhI/75PjDRAG4f
-         /F7g==
-X-Gm-Message-State: APjAAAVJVjYmRxhSmPsFlNzFV4AmYC/DWamiUSUTYpQRrK1xWNk03FdN
-        Brg0d5A7zVZmdJiABih8JwG5XR6t2+hODrUtppvreg==
-X-Google-Smtp-Source: APXvYqwMpr1hW/rwgUerZPkyrHN4UTM1+E1/N6RPpLYJoWfa0agGgCpfc5HP0OGYjfDrtGgK4Pw6KcNy6Lq/IT0Ug84=
-X-Received: by 2002:a92:c981:: with SMTP id y1mr33566633iln.53.1574708854881;
- Mon, 25 Nov 2019 11:07:34 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V6RCMCu0u2OME2YGHfLS+ptk7Pmu3SS68O9Jky4kB7Y=;
+        b=BHX2mGDE6DnTE4/F2WArTITwPAntYnyc78cHKqV7dSR3et+ivCZhLCrwTDorELPrXl
+         a5nKhnyc/bcOI9wDI07sGgPSbmEYcro1LF0AemRgqbAxhrdk6w/XTht1efn7ZUAkUWDZ
+         iSJWFhrzkDyVwjMCeB0VUsujt6QP8Fdw2xJsqnLX9SMLx4XS2cJbXvmxQeZ8oSQJZ3yM
+         vItvunSQxuk7TWnDyQGbhkIS7errRzlutVvW/lZ0xAWE9cORf/VqE2bNWaZWfmWDwjwJ
+         DuNTnbh6PN97gxq5YzH+gQVSm9npxT/PQPM8bu1MANm+qDCSSc4GL+xbCZG+S1iLJ/Ko
+         OP4w==
+X-Gm-Message-State: APjAAAU1sj/6yBb29Mtued/TMYB/sYgRbibwfTwM0RRGHxMrwmMClBqZ
+        5imRQFTctq8R6OL6xAhOR0Z7rflNid46c3+068M=
+X-Google-Smtp-Source: APXvYqwdv0gIuwtCK0KGXjB0lvaltYm5Uyb+DZ4bp5hvIaqB0rUkOYH37caKpsTrlUZiHIJyhhqBYx9R9AUwrZCpeRA=
+X-Received: by 2002:a65:6118:: with SMTP id z24mr35095773pgu.203.1574708861836;
+ Mon, 25 Nov 2019 11:07:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-9-brijesh.singh@amd.com>
-In-Reply-To: <20190710201244.25195-9-brijesh.singh@amd.com>
-From:   Peter Gonda <pgonda@google.com>
-Date:   Mon, 25 Nov 2019 11:07:23 -0800
-Message-ID: <CAMkAt6ouYHH6tg=SrGLoh1kEua2BY+WksaM0oRhVTW-i64rTaA@mail.gmail.com>
-Subject: Re: [PATCH v3 08/11] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
+ <1574604530-9024-5-git-send-email-akinobu.mita@gmail.com> <CAHp75VfOUiN_2bW+o-AqGmAY32mmdNxP54B2f2+gj0NTEr9FTQ@mail.gmail.com>
+ <CAC5umygc95VBWz1L5CTZO9kmkZL2MCEL2_z9d2TJ6Ow5+fKYPw@mail.gmail.com>
+In-Reply-To: <CAC5umygc95VBWz1L5CTZO9kmkZL2MCEL2_z9d2TJ6Ow5+fKYPw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Nov 2019 21:07:31 +0200
+Message-ID: <CAHp75VfPR7JSa7Mn5s_wJs22tXy7rC+W8x1jHLP=Npyd06BJ5w@mail.gmail.com>
+Subject: Re: [PATCH 4/8] platform/x86: intel_menlow: switch to use
+ <linux/temperature.h> helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  struct kvm_arch_async_pf {
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 3089942f6630..431718309359 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -135,6 +135,8 @@ struct kvm_sev_info {
->         int fd;                 /* SEV device fd */
->         unsigned long pages_locked; /* Number of pages locked */
->         struct list_head regions_list;  /* List of registered regions */
-> +       unsigned long *page_enc_bmap;
-> +       unsigned long page_enc_bmap_size;
->  };
->
+On Mon, Nov 25, 2019 at 4:35 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
+:
+> 2019=E5=B9=B411=E6=9C=8825=E6=97=A5(=E6=9C=88) 4:58 Andy Shevchenko <andy=
+.shevchenko@gmail.com>:
+> > On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> w=
+rote:
 
-Just a high level question. Would it be better for these bitmaps to
-live in kvm_memory_slot and the ioctl to be take a memslot instead of
-a GPA + length? The c-bit status bitmap will probably need to be
-checked at when checking the dirty log and KVM_GET_DIRTY_LOG
-operations on memslots.
+> > > -       return result ? result : sprintf(buf, "%lu", DECI_KELVIN_TO_C=
+ELSIUS(value));
+> > > +       return sprintf(buf, "%ld", deci_kelvin_to_celsius(value));
+> >
+> > Can you explain the change %lu to %ld?
+>
+> Isn't it possible for aux values to be lower than 0 degrees Celsius?
+
+If it's a change due to requirement of new helpers, put it in the
+commit message, otherwise leave as is.
+
+--=20
+With Best Regards,
+Andy Shevchenko
