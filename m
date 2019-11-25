@@ -2,180 +2,548 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED7DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5750C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786E42082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574708951;
-	bh=tf1axfqXEdRY/GSmyEZH3oDNTjKvKlm98mhfFZbNYHk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=nctoOdcWJUihF85KChrnR4lFGg3DgC1kcA2IosQmDb8JSORRahfwltRGrg7h0XSDf
-	 4CwS89qAaROxRyA/GYJycvhbpMHVna9xWupv1cS6AhjUFo99y51qMZyAAOVRt2cc2I
-	 mr+Qz3nRQPU+OlLwjDPvqjY3AiRWT1NMmzr/Ij6A=
+	by mail.kernel.org (Postfix) with ESMTP id 8045F2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKYTJK (ORCPT
+        id S1726866AbfKYTK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:09:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
+        Mon, 25 Nov 2019 14:10:56 -0500
+Received: from mga02.intel.com ([134.134.136.20]:53507 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbfKYTJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:09:10 -0500
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FC12071E;
-        Mon, 25 Nov 2019 19:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574708948;
-        bh=tf1axfqXEdRY/GSmyEZH3oDNTjKvKlm98mhfFZbNYHk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=J2ijnbMBCQbSlPJnQk34IRKwaRZVgYrKT0hZqMNt0ofNXpngQ8NawFe/iRU+9x/VI
-         WA5y4sQu28T8fBq2ajuTQc/SEdNqOEk9frTjf17S+l531k2vlHie1fJ7KVLEtDJBeq
-         RpOJs4yx1t7WZxYnUJmDCcE9gt6BEYaKc3sdHu7A=
-Date:   Mon, 25 Nov 2019 11:09:07 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
-        rpeterso@redhat.com, cluster-devel@redhat.com,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: [GIT PULL] iomap: new code for 5.5
-Message-ID: <20191125190907.GN6219@magnolia>
+        id S1725823AbfKYTK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 14:10:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 11:10:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
+   d="scan'208";a="291482039"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga001.jf.intel.com with SMTP; 25 Nov 2019 11:10:48 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 25 Nov 2019 21:10:47 +0200
+Date:   Mon, 25 Nov 2019 21:10:47 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Thomas Anderson <thomasanderson@google.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/edid: Add modes from CTA-861-G
+Message-ID: <20191125191047.GA1208@intel.com>
+References: <20191123055053.154550-1-thomasanderson@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191123055053.154550-1-thomasanderson@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Nov 22, 2019 at 09:50:53PM -0800, Thomas Anderson wrote:
+> The new modes are needed for exotic displays such as 8K. Verified that
+> modes like 8K60 and 4K120 are properly obtained from a Samsung Q900R.
 
-Please pull this series containing all the new iomap code for 5.5.  In
-this release, we hoisted as much of XFS' writeback code into iomap as
-was practicable, refactored the unshare file data function, added the
-ability to perform buffered io copy on write, and tweaked various parts
-of the directio implementation as needed to port ext4's directio code
-(that will be a separate pull).
+978f6b0693c7 ("drm/edid: Add CTA-861-G modes with VIC < 128")
 
-The branch merges cleanly against this morning's HEAD and survived a few
-days' worth of xfstests.  The merge was completely straightforward, so
-please let me know if you run into anything weird.  I think there'll be
-a second pull request in a week with a few more small cleanups that have
-trickled in.
+and
 
---D
+https://patchwork.freedesktop.org/series/63555/
+(been trying to get someone to review that for >1 year...)
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+> 
+> Signed-off-by: Thomas Anderson <thomasanderson@google.com>
+> ---
+>  drivers/gpu/drm/drm_edid.c  | 388 +++++++++++++++++++++++++++++++++++-
+>  include/drm/drm_connector.h |  16 +-
+>  2 files changed, 391 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 6b0177112e18..ff5c928516fb 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -1278,6 +1278,374 @@ static const struct drm_display_mode edid_cea_modes[] = {
+>  		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
+>  		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+>  	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 108 - 1280x720@48Hz 16:9 */
+> +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
+> +		   2280, 2500, 0, 720, 725, 730, 750, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 109 - 1280x720@48Hz 64:27 */
+> +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
+> +		   2280, 2500, 0, 720, 725, 730, 750, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 110 - 1680x720@48Hz 64:27 */
+> +	{ DRM_MODE("1680x720", DRM_MODE_TYPE_DRIVER, 99000, 1680, 2490,
+> +		   2530, 2750, 0, 720, 725, 730, 750, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 111 - 1920x1080@48Hz 16:9 */
+> +	{ DRM_MODE("1920x1080", DRM_MODE_TYPE_DRIVER, 148500, 1920, 2558,
+> +		   2602, 2750, 0, 1080, 1084, 1089, 1125, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 112 - 1920x1080@48Hz 64:27 */
+> +	{ DRM_MODE("1920x1080", DRM_MODE_TYPE_DRIVER, 148500, 1920, 2558,
+> +		   2602, 2750, 0, 1080, 1084, 1089, 1125, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 113 - 2560x1080@48Hz 64:27 */
+> +	{ DRM_MODE("2560x1080", DRM_MODE_TYPE_DRIVER, 198000, 2560, 3558,
+> +		   3602, 3750, 0, 1080, 1084, 1089, 1100, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 114 - 3840x2160@48Hz 16:9 */
+> +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 594000, 3840, 5116,
+> +		   5204, 5500, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 115 - 4096x2160@48Hz 256:135 */
+> +	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 594000, 4096, 5116,
+> +		   5204, 5500, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48,
+> +	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_256_135, },
+> +	/* 116 - 3840x2160@48Hz 64:27 */
+> +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 594000, 3840, 5116,
+> +		   5204, 5500, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 117 - 3840x2160@100Hz 16:9 */
+> +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4896,
+> +		   4984, 5280, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 118 - 3840x2160@120Hz 16:9 */
+> +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4016,
+> +		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 119 - 3840x2160@100Hz 64:27 */
+> +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4896,
+> +		   4984, 5280, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 120 - 3840x2160@120Hz 64:27 */
+> +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4016,
+> +		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 121 - 5120x2160@24Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 396000, 5120, 7116,
+> +		   7204, 7500, 0, 2160, 2168, 2178, 2200, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 122 - 5120x2160@25Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 396000, 5120, 6816,
+> +		   6904, 7200, 0, 2160, 2168, 2178, 2200, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 123 - 5120x2160@30Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 396000, 5120, 5784,
+> +		   5872, 6000, 0, 2160, 2168, 2178, 2200, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 124 - 5120x2160@48Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 742500, 5120, 5866,
+> +		   5954, 6250, 0, 2160, 2168, 2178, 2475, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 125 - 5120x2160@50Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 742500, 5120, 6216,
+> +		   6304, 6600, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 126 - 5120x2160@60Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 742500, 5120, 5284,
+> +		   5372, 5500, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 127 - 5120x2160@100Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 1485000, 5120, 6216,
+> +		   6304, 6600, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 128 - dummy */
+> +	{ },
+> +	/* 129 - reserved for native timing 1 */
+> +	{ },
+> +	/* 130 - reserved for native timing 2 */
+> +	{ },
+> +	/* 131 - reserved for native timing 3 */
+> +	{ },
+> +	/* 132 - reserved for native timing 4 */
+> +	{ },
+> +	/* 133 - reserved for native timing 5 */
+> +	{ },
+> +	/* 134 - reserved for native timing 6 */
+> +	{ },
+> +	/* 135 - reserved for native timing 7 */
+> +	{ },
+> +	/* 136 - reserved for native timing 8 */
+> +	{ },
+> +	/* 137 - reserved for native timing 9 */
+> +	{ },
+> +	/* 138 - reserved for native timing 10 */
+> +	{ },
+> +	/* 139 - reserved for native timing 11 */
+> +	{ },
+> +	/* 140 - reserved for native timing 12 */
+> +	{ },
+> +	/* 141 - reserved for native timing 13 */
+> +	{ },
+> +	/* 142 - reserved for native timing 14 */
+> +	{ },
+> +	/* 143 - reserved for native timing 15 */
+> +	{ },
+> +	/* 144 - reserved for native timing 16 */
+> +	{ },
+> +	/* 145 - reserved for native timing 17 */
+> +	{ },
+> +	/* 146 - reserved for native timing 18 */
+> +	{ },
+> +	/* 147 - reserved for native timing 19 */
+> +	{ },
+> +	/* 148 - reserved for native timing 20 */
+> +	{ },
+> +	/* 149 - reserved for native timing 21 */
+> +	{ },
+> +	/* 150 - reserved for native timing 22 */
+> +	{ },
+> +	/* 151 - reserved for native timing 23 */
+> +	{ },
+> +	/* 152 - reserved for native timing 24 */
+> +	{ },
+> +	/* 153 - reserved for native timing 25 */
+> +	{ },
+> +	/* 154 - reserved for native timing 26 */
+> +	{ },
+> +	/* 155 - reserved for native timing 27 */
+> +	{ },
+> +	/* 156 - reserved for native timing 28 */
+> +	{ },
+> +	/* 157 - reserved for native timing 29 */
+> +	{ },
+> +	/* 158 - reserved for native timing 30 */
+> +	{ },
+> +	/* 159 - reserved for native timing 31 */
+> +	{ },
+> +	/* 160 - reserved for native timing 32 */
+> +	{ },
+> +	/* 161 - reserved for native timing 33 */
+> +	{ },
+> +	/* 162 - reserved for native timing 34 */
+> +	{ },
+> +	/* 163 - reserved for native timing 35 */
+> +	{ },
+> +	/* 164 - reserved for native timing 36 */
+> +	{ },
+> +	/* 165 - reserved for native timing 37 */
+> +	{ },
+> +	/* 166 - reserved for native timing 38 */
+> +	{ },
+> +	/* 167 - reserved for native timing 39 */
+> +	{ },
+> +	/* 168 - reserved for native timing 40 */
+> +	{ },
+> +	/* 169 - reserved for native timing 41 */
+> +	{ },
+> +	/* 170 - reserved for native timing 42 */
+> +	{ },
+> +	/* 171 - reserved for native timing 43 */
+> +	{ },
+> +	/* 172 - reserved for native timing 44 */
+> +	{ },
+> +	/* 173 - reserved for native timing 45 */
+> +	{ },
+> +	/* 174 - reserved for native timing 46 */
+> +	{ },
+> +	/* 175 - reserved for native timing 47 */
+> +	{ },
+> +	/* 176 - reserved for native timing 48 */
+> +	{ },
+> +	/* 177 - reserved for native timing 49 */
+> +	{ },
+> +	/* 178 - reserved for native timing 50 */
+> +	{ },
+> +	/* 179 - reserved for native timing 51 */
+> +	{ },
+> +	/* 180 - reserved for native timing 52 */
+> +	{ },
+> +	/* 181 - reserved for native timing 53 */
+> +	{ },
+> +	/* 182 - reserved for native timing 54 */
+> +	{ },
+> +	/* 183 - reserved for native timing 55 */
+> +	{ },
+> +	/* 184 - reserved for native timing 56 */
+> +	{ },
+> +	/* 185 - reserved for native timing 57 */
+> +	{ },
+> +	/* 186 - reserved for native timing 58 */
+> +	{ },
+> +	/* 187 - reserved for native timing 59 */
+> +	{ },
+> +	/* 188 - reserved for native timing 60 */
+> +	{ },
+> +	/* 189 - reserved for native timing 61 */
+> +	{ },
+> +	/* 190 - reserved for native timing 62 */
+> +	{ },
+> +	/* 191 - reserved for native timing 63 */
+> +	{ },
+> +	/* 192 - reserved for native timing 64 */
+> +	{ },
+> +	/* 193 - 5120x2160@120Hz 64:27 */
+> +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 1485000, 5120, 5284,
+> +		   5372, 5500, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 194 - 7680x4320@24Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10232,
+> +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 195 - 7680x4320@25Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10032,
+> +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 196 - 7680x4320@30Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 8232,
+> +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 197 - 7680x4320@48Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10232,
+> +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 198 - 7680x4320@50Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10032,
+> +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 199 - 7680x4320@60Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 8232,
+> +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 200 - 7680x4320@100Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 9792,
+> +		   9968, 10560, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 201 - 7680x4320@120Hz 16:9 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 8032,
+> +		   8208, 8800, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+> +	/* 202 - 7680x4320@24Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10232,
+> +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 203 - 7680x4320@25Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10032,
+> +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 204 - 7680x4320@30Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 8232,
+> +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 205 - 7680x4320@48Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10232,
+> +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 206 - 7680x4320@50Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10032,
+> +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 207 - 7680x4320@60Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 8232,
+> +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 208 - 7680x4320@100Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 9792,
+> +		   9968, 10560, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 209 - 7680x4320@120Hz 64:27 */
+> +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 8032,
+> +		   8208, 8800, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 210 - 10240x4320@24Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 1485000, 10240, 11732,
+> +		   11908, 12500, 0, 4320, 4336, 4356, 4950, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 211 - 10240x4320@25Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 1485000, 10240, 12732,
+> +		   12908, 13500, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 212 - 10240x4320@30Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 1485000, 10240, 10528,
+> +		   10704, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 213 - 10240x4320@48Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 2970000, 10240, 11732,
+> +		   11908, 12500, 0, 4320, 4336, 4356, 4950, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 214 - 10240x4320@50Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 2970000, 10240, 12732,
+> +		   12908, 13500, 0, 4320, 4336, 4356, 4400, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 215 - 10240x4320@60Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 2970000, 10240, 10528,
+> +		   10704, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 216 - 10240x4320@100Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 5940000, 10240, 12432,
+> +		   12608, 13200, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 217 - 10240x4320@120Hz 64:27 */
+> +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 5940000, 10240, 10528,
+> +		   10704, 11000, 0, 4320, 4336, 4356, 4500, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+> +	/* 218 - 4096x2160@100Hz 256:135 */
+> +	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 1188000, 4096, 4896,
+> +		   4984, 5280, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 100,
+> +	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_256_135, },
+> +	/* 219 - 4096x2160@120Hz 256:135 */
+> +	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 1188000, 4096, 4184,
+> +		   4272, 4400, 0, 2160, 2168, 2178, 2250, 0,
+> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+> +	  .vrefresh = 120,
+> +	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_256_135, },
+>  };
+>  
+>  /*
+> @@ -3030,6 +3398,12 @@ cea_mode_alternate_timings(u8 vic, struct drm_display_mode *mode)
+>  	return false;
+>  }
+>  
+> +static bool drm_valid_cea_vic(u8 vic)
+> +{
+> +	return (vic > 0 && vic < 128) ||
+> +	       (vic > 192 && vic < ARRAY_SIZE(edid_cea_modes));
+> +}
+> +
+>  static u8 drm_match_cea_mode_clock_tolerance(const struct drm_display_mode *to_match,
+>  					     unsigned int clock_tolerance)
+>  {
+> @@ -3046,6 +3420,9 @@ static u8 drm_match_cea_mode_clock_tolerance(const struct drm_display_mode *to_m
+>  		struct drm_display_mode cea_mode = edid_cea_modes[vic];
+>  		unsigned int clock1, clock2;
+>  
+> +		if (!drm_valid_cea_vic(vic))
+> +			continue;
+> +
+>  		/* Check both 60Hz and 59.94Hz */
+>  		clock1 = cea_mode.clock;
+>  		clock2 = cea_mode_alternate_clock(&cea_mode);
+> @@ -3085,6 +3462,9 @@ u8 drm_match_cea_mode(const struct drm_display_mode *to_match)
+>  		struct drm_display_mode cea_mode = edid_cea_modes[vic];
+>  		unsigned int clock1, clock2;
+>  
+> +		if (!drm_valid_cea_vic(vic))
+> +			continue;
+> +
+>  		/* Check both 60Hz and 59.94Hz */
+>  		clock1 = cea_mode.clock;
+>  		clock2 = cea_mode_alternate_clock(&cea_mode);
+> @@ -3103,11 +3483,6 @@ u8 drm_match_cea_mode(const struct drm_display_mode *to_match)
+>  }
+>  EXPORT_SYMBOL(drm_match_cea_mode);
+>  
+> -static bool drm_valid_cea_vic(u8 vic)
+> -{
+> -	return vic > 0 && vic < ARRAY_SIZE(edid_cea_modes);
+> -}
+> -
+>  /**
+>   * drm_get_cea_aspect_ratio - get the picture aspect ratio corresponding to
+>   * the input VIC from the CEA mode list
+> @@ -3117,6 +3492,9 @@ static bool drm_valid_cea_vic(u8 vic)
+>   */
+>  enum hdmi_picture_aspect drm_get_cea_aspect_ratio(const u8 video_code)
+>  {
+> +	if (!drm_valid_cea_vic(video_code))
+> +		return HDMI_PICTURE_ASPECT_NONE;
+> +
+>  	return edid_cea_modes[video_code].picture_aspect_ratio;
+>  }
+>  EXPORT_SYMBOL(drm_get_cea_aspect_ratio);
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index 681cb590f952..0a90efa0246e 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -188,19 +188,19 @@ struct drm_hdmi_info {
+>  
+>  	/**
+>  	 * @y420_vdb_modes: bitmap of modes which can support ycbcr420
+> -	 * output only (not normal RGB/YCBCR444/422 outputs). There are total
+> -	 * 107 VICs defined by CEA-861-F spec, so the size is 128 bits to map
+> -	 * upto 128 VICs;
+> +	 * output only (not normal RGB/YCBCR444/422 outputs). The max VIC
+> +	 * defined by the CEA-861-G spec is 219, so the size is 256 bits to map
+> +	 * upto 256 VICs.
+>  	 */
+> -	unsigned long y420_vdb_modes[BITS_TO_LONGS(128)];
+> +	unsigned long y420_vdb_modes[BITS_TO_LONGS(256)];
+>  
+>  	/**
+>  	 * @y420_cmdb_modes: bitmap of modes which can support ycbcr420
+> -	 * output also, along with normal HDMI outputs. There are total 107
+> -	 * VICs defined by CEA-861-F spec, so the size is 128 bits to map upto
+> -	 * 128 VICs;
+> +	 * output also, along with normal HDMI outputs. The max VIC defined by
+> +	 * the CEA-861-G spec is 219, so the size is 256 bits to map upto 256
+> +	 * VICs.
+>  	 */
+> -	unsigned long y420_cmdb_modes[BITS_TO_LONGS(128)];
+> +	unsigned long y420_cmdb_modes[BITS_TO_LONGS(256)];
+>  
+>  	/** @y420_cmdb_map: bitmap of SVD index, to extraxt vcb modes */
+>  	u64 y420_cmdb_map;
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.5-merge-11
-
-for you to fetch changes up to 419e9c38aa075ed0cd3c13d47e15954b686bcdb6:
-
-  iomap: Fix pipe page leakage during splicing (2019-11-22 08:36:02 -0800)
-
-----------------------------------------------------------------
-New code for 5.5:
-- Make iomap_dio_rw callers explicitly tell us if they want us to wait
-- Port the xfs writeback code to iomap to complete the buffered io
-  library functions
-- Refactor the unshare code to share common pieces
-- Add support for performing copy on write with buffered writes
-- Other minor fixes
-- Fix unchecked return in iomap_bmap
-- Fix a type casting bug in a ternary statement in iomap_dio_bio_actor
-- Improve tracepoints for easier diagnostic ability
-- Fix pipe page leakage in directio reads
-
-----------------------------------------------------------------
-Andreas Gruenbacher (1):
-      iomap: Fix overflow in iomap_page_mkwrite
-
-Christoph Hellwig (20):
-      xfs: initialize iomap->flags in xfs_bmbt_to_iomap
-      xfs: set IOMAP_F_NEW more carefully
-      xfs: use a struct iomap in xfs_writepage_ctx
-      xfs: refactor the ioend merging code
-      xfs: turn io_append_trans into an io_private void pointer
-      xfs: remove the fork fields in the writepage_ctx and ioend
-      iomap: zero newly allocated mapped blocks
-      iomap: lift common tracing code from xfs to iomap
-      iomap: lift the xfs writeback code to iomap
-      iomap: warn on inline maps in iomap_writepage_map
-      iomap: move struct iomap_page out of iomap.h
-      iomap: cleanup iomap_ioend_compare
-      iomap: pass a struct page to iomap_finish_page_writeback
-      iomap: better document the IOMAP_F_* flags
-      iomap: remove the unused iomap argument to __iomap_write_end
-      iomap: always use AOP_FLAG_NOFS in iomap_write_begin
-      iomap: ignore non-shared or non-data blocks in xfs_file_dirty
-      iomap: move the zeroing case out of iomap_read_page_sync
-      iomap: use write_begin to read pages to unshare
-      iomap: renumber IOMAP_HOLE to 0
-
-Darrick J. Wong (3):
-      iomap: enhance writeback error message
-      iomap: iomap_bmap should check iomap_apply return value
-      iomap: trace iomap_appply results
-
-Dave Chinner (1):
-      iomap: iomap that extends beyond EOF should be marked dirty
-
-Goldwyn Rodrigues (1):
-      iomap: use a srcmap for a read-modify-write I/O
-
-Jan Kara (3):
-      iomap: Allow forcing of waiting for running DIO in iomap_dio_rw()
-      xfs: Use iomap_dio_rw to wait for unaligned direct IO
-      iomap: Fix pipe page leakage during splicing
-
-Jan Stancek (1):
-      iomap: fix return value of iomap_dio_bio_actor on 32bit systems
-
-Joseph Qi (1):
-      fs/iomap: remove redundant check in iomap_dio_rw()
-
- fs/dax.c                 |  13 +-
- fs/ext2/inode.c          |   2 +-
- fs/ext4/inode.c          |   2 +-
- fs/gfs2/bmap.c           |   3 +-
- fs/gfs2/file.c           |   6 +-
- fs/iomap/Makefile        |  16 +-
- fs/iomap/apply.c         |  32 +-
- fs/iomap/buffered-io.c   | 756 +++++++++++++++++++++++++++++++++++++++++------
- fs/iomap/direct-io.c     |  24 +-
- fs/iomap/fiemap.c        |  10 +-
- fs/iomap/seek.c          |   4 +-
- fs/iomap/swapfile.c      |   3 +-
- fs/iomap/trace.c         |  12 +
- fs/iomap/trace.h         | 191 ++++++++++++
- fs/xfs/libxfs/xfs_bmap.c |  14 +-
- fs/xfs/libxfs/xfs_bmap.h |   3 +-
- fs/xfs/xfs_aops.c        | 754 ++++++++--------------------------------------
- fs/xfs/xfs_aops.h        |  17 --
- fs/xfs/xfs_file.c        |  13 +-
- fs/xfs/xfs_iomap.c       |  51 +++-
- fs/xfs/xfs_iomap.h       |   2 +-
- fs/xfs/xfs_pnfs.c        |   2 +-
- fs/xfs/xfs_reflink.c     |   2 +-
- fs/xfs/xfs_super.c       |  11 +-
- fs/xfs/xfs_trace.h       |  65 ----
- include/linux/iomap.h    | 129 +++++---
- 26 files changed, 1215 insertions(+), 922 deletions(-)
- create mode 100644 fs/iomap/trace.c
- create mode 100644 fs/iomap/trace.h
+-- 
+Ville Syrjälä
+Intel
