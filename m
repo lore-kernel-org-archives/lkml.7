@@ -2,182 +2,123 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB377C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D1D2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9235B2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJO2LxWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfKYTE7 (ORCPT
+        id S1727080AbfKYTFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:04:59 -0500
-Received: from mga17.intel.com ([192.55.52.151]:18948 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfKYTE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:04:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 11:04:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
-   d="scan'208";a="291480287"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 25 Nov 2019 11:04:57 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4.19 STABLE] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
-Date:   Mon, 25 Nov 2019 11:04:56 -0800
-Message-Id: <20191125190456.28679-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 25 Nov 2019 14:05:13 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:41409 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfKYTFN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 14:05:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id gc1so7014692pjb.8;
+        Mon, 25 Nov 2019 11:05:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P19DovHn3w/+n6hilY5zf6aVHKgMGVjkSijfGR+10vI=;
+        b=SJO2LxWfQL/RpUPwjCS4HFD6Zi0CFuImYwngKnX2+isiSOQFMhpKZ9dY7m7ErmqtG4
+         u8Ew0Quvr1Acigrzp5DqDA33h/fhbBej0bLLtoOm5gDL6ZBBDzASZkK57S4r97WCAUXv
+         1kdCIwBr+MtYS4zQmwDjV39T7kR7KNCkvSsrsqnGn/RZtQGEgxclKTjXLcVc0+QlBA8/
+         f2OJbsWGWbWcMTTgc86WqTPtoGq/x3aRQUZUATAjf061M9A4fWfzPoEwYDbAmVPYwZZh
+         hdK+LgsacNAMnrFVgGKN0l0g8z5n1Wqe46FZrR+84JSKZupFL3Pm9iu8TlcA8gX7ZayR
+         lA4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P19DovHn3w/+n6hilY5zf6aVHKgMGVjkSijfGR+10vI=;
+        b=MR47lk1i4lW65AGRT2ggZAn+1T/pdIFruBF3ujWigXHgnsRpqCaxwEj4dK2bednCt4
+         vUCIUsUr6LP10F44lzhHh7MeVMftlJdv32NiNPihMzYF1d/Z4lOpKnO06Y8SL7DyHuST
+         Di4N8VlHfJiTOsJJOb2NSLB+hH5zkTpWZyZ94KmvYt9pMFkEXu9NLNlspK4e7xDBECvf
+         19cVVV0kdpilyS1DwOYL8KzFdZVZI0MEX+m8fYc/Lq/QNfsOTgFwFDdwLYof05DXoOtz
+         5BUdPkZ8xc50uYMgK8LrXtP/JnleWd2oBZ3GX+lWx4gjP0b0n39D/q/4OF3HXgkvI0sI
+         5D3w==
+X-Gm-Message-State: APjAAAUfQYB2k/hin0I8UB/Xv5Jpy/4lW5M0mWJNjpSmgT14B9EparY6
+        IRHXV2/ZaIBEKKLqgHIgn1/s6ALNdYf7uju9lew=
+X-Google-Smtp-Source: APXvYqzb9QDOJ3vCeMWuto+UJ4Y/4ebOOkTH+Cb5IJCRGIdMR80O9owbytFNwFLnJBA3iU/X2miKDbF+Jt3xD0q+HaQ=
+X-Received: by 2002:a17:902:bb84:: with SMTP id m4mr29810736pls.255.1574708710742;
+ Mon, 25 Nov 2019 11:05:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
+ <1574604530-9024-2-git-send-email-akinobu.mita@gmail.com> <CAHp75VfGt59F5YbEjctvOm00g+Pws+1jYgVbNLnUE3kq3SZi-A@mail.gmail.com>
+ <CAC5umyjzDODZf8ECWDmR6SAY-TNkdJ+a0GZRgOFcPCAMok2Ddg@mail.gmail.com>
+In-Reply-To: <CAC5umyjzDODZf8ECWDmR6SAY-TNkdJ+a0GZRgOFcPCAMok2Ddg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Nov 2019 21:05:00 +0200
+Message-ID: <CAHp75VdXUKLrnPEnga7An7BnCoGac=XxgWESWyV-ShmK_xiD4g@mail.gmail.com>
+Subject: Re: [PATCH 1/8] add header file for kelvin to/from Celsius conversion helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a78986aae9b2988f8493f9f65a587ee433e83bc3 ]
+On Mon, Nov 25, 2019 at 4:30 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
+:
+> 2019=E5=B9=B411=E6=9C=8824=E6=97=A5(=E6=97=A5) 23:57 Andy Shevchenko <and=
+y.shevchenko@gmail.com>:
+> > On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> w=
+rote:
 
-Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
-instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
-like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
-pages, e.g. put pages grabbed via gup().  But for flows such as setting
-A/D bits or shifting refcounts for transparent huge pages, KVM needs to
-to avoid processing ZONE_DEVICE pages as the flows in question lack the
-underlying machinery for proper handling of ZONE_DEVICE pages.
+> > >  include/linux/thermal.h     |  1 +
 
-This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
-when running a KVM guest backed with /dev/dax memory, as KVM straight up
-doesn't put any references to ZONE_DEVICE pages acquired by gup().
+> > > --- a/include/linux/thermal.h
+> > > +++ b/include/linux/thermal.h
+> > > @@ -14,6 +14,7 @@
+> > >  #include <linux/idr.h>
+> > >  #include <linux/device.h>
+> > >  #include <linux/sysfs.h>
+> > > +#include <linux/temperature.h>
+> > >  #include <linux/workqueue.h>
+> > >  #include <uapi/linux/thermal.h>
+> >
+> > I don't see any users of it. Why did you include?
+>
+> The rest of this patch series starts using it.
+>
+> I decided to include <linux/temperature.h> from <linux/thermal.h> because
+> the existing <linux/thermal.h> provides the conversion helpers.
+>
+> However, not all of the thermal drivers require these conversion helpers,
+> so we can change to include <linux/temperature.h> from each thermal drive=
+r
+> instead of including it from <linux/thermal.h>.
+>
+> Which way do you prefer?
 
-Note, Dan Williams proposed an alternative solution of doing put_page()
-on ZONE_DEVICE pages immediately after gup() in order to simplify the
-auditing needed to ensure is_zone_device_page() is called if and only if
-the backing device is pinned (via gup()).  But that approach would break
-kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
-unmap() when accessing guest memory, unlike KVM's secondary MMU, which
-coordinates with mmu_notifier invalidations to avoid creating stale
-page references, i.e. doesn't rely on pages being pinned.
+I think users should include new header explicitly.
 
-[*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
-
-Reported-by: Adam Borowski <kilobyte@angband.pl>
-Analyzed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[sean: backport to 4.x; resolve conflict in mmu.c]
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu.c       |  8 ++++----
- include/linux/kvm_host.h |  1 +
- virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
- 3 files changed, 28 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index d7db7608de5f..eddf91a0e363 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -3261,7 +3261,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
- 	 * here.
- 	 */
- 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
--	    level == PT_PAGE_TABLE_LEVEL &&
-+	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
- 	    PageTransCompoundMap(pfn_to_page(pfn)) &&
- 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
- 		unsigned long mask;
-@@ -5709,9 +5709,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
- 		 * the guest, and the guest page table is using 4K page size
- 		 * mapping if the indirect sp has level = 1.
- 		 */
--		if (sp->role.direct &&
--			!kvm_is_reserved_pfn(pfn) &&
--			PageTransCompoundMap(pfn_to_page(pfn))) {
-+		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
-+		    !kvm_is_zone_device_pfn(pfn) &&
-+		    PageTransCompoundMap(pfn_to_page(pfn))) {
- 			drop_spte(kvm, sptep);
- 			need_tlb_flush = 1;
- 			goto restart;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 96207939d862..748016ae01e3 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -911,6 +911,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
- void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
- 
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
-+bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
- 
- struct kvm_irq_ack_notifier {
- 	struct hlist_node link;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 7a0d86d52230..df3fc0f214ec 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -147,10 +147,30 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
- 	return 0;
- }
- 
-+bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-+{
-+	/*
-+	 * The metadata used by is_zone_device_page() to determine whether or
-+	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
-+	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
-+	 * page_count() is zero to help detect bad usage of this helper.
-+	 */
-+	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
-+		return false;
-+
-+	return is_zone_device_page(pfn_to_page(pfn));
-+}
-+
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- {
-+	/*
-+	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
-+	 * perspective they are "normal" pages, albeit with slightly different
-+	 * usage rules.
-+	 */
- 	if (pfn_valid(pfn))
--		return PageReserved(pfn_to_page(pfn));
-+		return PageReserved(pfn_to_page(pfn)) &&
-+		       !kvm_is_zone_device_pfn(pfn);
- 
- 	return true;
- }
-@@ -1727,7 +1747,7 @@ EXPORT_SYMBOL_GPL(kvm_release_pfn_dirty);
- 
- void kvm_set_pfn_dirty(kvm_pfn_t pfn)
- {
--	if (!kvm_is_reserved_pfn(pfn)) {
-+	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
- 		struct page *page = pfn_to_page(pfn);
- 
- 		if (!PageReserved(page))
-@@ -1738,7 +1758,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
- 
- void kvm_set_pfn_accessed(kvm_pfn_t pfn)
- {
--	if (!kvm_is_reserved_pfn(pfn))
-+	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
- 		mark_page_accessed(pfn_to_page(pfn));
- }
- EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
--- 
-2.24.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
