@@ -2,104 +2,127 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F923C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3665C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6964B20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574725682;
-	bh=Qp7AOjegG3/6YWgxEi5Y1jDIBMFXeO5JTKgz9dR7sXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1h4AcsNQ2rxqYCKcDxyLct7stU7qvo1ZVx8ZTqlS9W5c+ai5IaxJNO0nRGa7NOeKb
-	 j+Kp9vwjLEM+WaP7YYO+8zALwGNlssDKxWZyG4QY+OySH3b2llQL8M0muYmCaoKlTP
-	 UY1rg0F5jzgAgdQHdyt8RAoSE1PZ406YPn2m2E3k=
+	by mail.kernel.org (Postfix) with ESMTP id A623420733
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:50:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="i0RI/OVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKYXsB (ORCPT
+        id S1727099AbfKYXuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 18:48:01 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44976 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfKYXsB (ORCPT
+        Mon, 25 Nov 2019 18:50:01 -0500
+Received: from mail-vs1-f50.google.com ([209.85.217.50]:40056 "EHLO
+        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfKYXuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 18:48:01 -0500
-Received: by mail-pg1-f194.google.com with SMTP id e6so7985272pgi.11;
-        Mon, 25 Nov 2019 15:48:00 -0800 (PST)
+        Mon, 25 Nov 2019 18:50:01 -0500
+Received: by mail-vs1-f50.google.com with SMTP id m9so11448769vsq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 15:49:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rvY24eePNZt+ycJ3AFHByDgIP1Rv1kswbJLitykNPsM=;
+        b=i0RI/OVoO7H3VElF3DlRBwGuB3cfc8g9JH8Uw3W07sxlXmrk86lAYmebUQPbd5jguf
+         lkmeffv+K/+4Oqcti7XGhYWjIclq6r88iI7Dk37KxTTIMJMgYGCILYmXFyUkZ0Dmv0cy
+         ch41cP7PD8jkpkdM36QQWaCzzJDgtxySyhRSb7emi2vrKAtewWDm/xZ70UOJ2tT+q/n2
+         iQNblP857cmJkw9m/GB3WuM9KXviy4YTFVHZYu20ujMl/zfDgn4udKZjgqr5YI0g95hT
+         NY4oS35utxZZlxsWY02jvIBWVoNJgKTXrY/rA/IFhYgdsPYgmg23o+8KZ3PlzvxVXO4P
+         +9fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MeAqiLlUYvhPf8+12Rs2pe/QyDqA+63WVCf/WAXWie8=;
-        b=XMQzyV+w7TmNh8J3FgbhcKJ8m2CmfcMwIe7JFqEZu1A+bSmfjHOWRBS5DkA3DkBlha
-         gghh1jdqxli1scg6u1xNLDetltrSGm/ASf9QFRlRkd4gNTd7z443maq2BG8UYpzvjZu+
-         NU77T7XGna1cHHzwaWNAstAznxWf9DXF5mphg68H3P3hDhjNAB1XOsUG65yfosdhvXxQ
-         jWSChr3ZV6fdQDhopN1aTVz/rHprSNvqxjazGdoRIPIoGPX/kdSC76uQUtCOpSs+zsZW
-         anPfuDoFvO4wuNYh1AbLOwFrmwJl9tty3SFNhElJSXk2CKrNK6B9DGVJ9qk7+ULK2YeR
-         6Yyw==
-X-Gm-Message-State: APjAAAUCSjYAmX4ulKCe+nB4UENzVu8EbGjixHXhSeZ1CGI3JCevrgRv
-        /xSbt2ISnB01MG4Or4nu0+iUd62QCfrtuQ==
-X-Google-Smtp-Source: APXvYqw4aM4Jq+ybWzZzqVckCs08yRDy6UeWVlGe99hhU4DiLGx9UZmxcz7pXYZDQBu2MilgcW+waw==
-X-Received: by 2002:a63:6b82:: with SMTP id g124mr35552425pgc.178.1574725679797;
-        Mon, 25 Nov 2019 15:47:59 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id r4sm471926pji.11.2019.11.25.15.47.59
+        bh=rvY24eePNZt+ycJ3AFHByDgIP1Rv1kswbJLitykNPsM=;
+        b=G4Wmt6hlC3g3i3JJVElT4IIHJC8c5DWHXKgOSXDOXNZI7QGETqW1i84G1L8/va5PUs
+         M2fM9OxlMAa5Dt3qZyE/BMW7lwSn9050x9qpKrZgZI+t76jYYWHNhY0V4N1VD9yEFubq
+         /rMSpT4JnO7xy6I04yKGElfqpIXmgywGETVmCghJaSGt0txOXRalqxoeKug2RuKAgvF3
+         ignqr5FXnaLecdzwrU+CkCcR8oCSNT2V2HevxpsJPoFAKiCpIKRQ3rgZW6hFsyEx0JxY
+         8ciO4pMcBhoEb2WqIdt/1wlWiM0CMpVQ7ih95w3htqz53t+JEuCbJp4aFU/a4tucTzRy
+         mUyQ==
+X-Gm-Message-State: APjAAAVJYW6lr5R0CTvN7pGNwJNW0fZax6LuaAx1R58FcikPVvD4IY6+
+        k3d44BnQaqv7N4WzX1XOBGm63Q==
+X-Google-Smtp-Source: APXvYqxeCabpQ+se9Zi1Mbc6QyxyiLZn11MsE8kypk/KmsdPdLqn4Mtl7URGnbPmK7vVazhUDvW8Ew==
+X-Received: by 2002:a05:6102:c3:: with SMTP id u3mr20993889vsp.41.1574725798720;
+        Mon, 25 Nov 2019 15:49:58 -0800 (PST)
+Received: from ubuntu1804-desktop ([172.97.41.74])
+        by smtp.gmail.com with ESMTPSA id c21sm2606280vko.45.2019.11.25.15.49.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 15:47:59 -0800 (PST)
-Date:   Mon, 25 Nov 2019 15:48:42 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: Re: Build regressions/improvements in v5.4
-Message-ID: <20191125234842.k53nspuqzbgx4zlq@lantea.localdomain>
-References: <20191125094110.14667-1-geert@linux-m68k.org>
- <CAMuHMdX-N2AHHpBVJCqkh1RoMxFXhGikGn4mj9E7sj0qkR4ukg@mail.gmail.com>
+        Mon, 25 Nov 2019 15:49:58 -0800 (PST)
+Date:   Mon, 25 Nov 2019 18:49:57 -0500
+From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [RFC v2 2/2] docs: ftrace: Fix typos
+Message-ID: <20191125234957.nwbzz72aarbhdni2@ubuntu1804-desktop>
+References: <cover.1574655670.git.frank@generalsoftwareinc.com>
+ <a843617511989679b29fbd62b1b8b3e991f2101e.1574655670.git.frank@generalsoftwareinc.com>
+ <20191125123709.5eff70a9@gandalf.local.home>
+ <20191125164625.01101109@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdX-N2AHHpBVJCqkh1RoMxFXhGikGn4mj9E7sj0qkR4ukg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191125164625.01101109@gandalf.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On Mon, Nov 25, 2019 at 10:50:09AM +0100, Geert Uytterhoeven wrote:
-> On Mon, Nov 25, 2019 at 10:44 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > JFYI, when comparing v5.4[1] to v5.4-rc8[3], the summaries are:
-> >   - build errors: +3/-0
+On Mon, Nov 25, 2019 at 04:46:25PM -0500, Steven Rostedt wrote:
+> On Mon, 25 Nov 2019 12:37:09 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
->   + /kisskb/src/drivers/staging/octeon/ethernet-spi.c: error:
-> 'OCTEON_IRQ_RML' undeclared (first use in this function):  => 224:12,
-> 198:19
->   + /kisskb/src/drivers/staging/octeon/ethernet-spi.c: error:
-> 'OCTEON_IRQ_RML' undeclared (first use in this function); did you mean
-> 'OCTEON_IS_MODEL'?:  => 198:19, 224:12
->   + /kisskb/src/drivers/staging/octeon/ethernet-tx.c: error:
-> 'OCTEON_IRQ_TIMER1' undeclared (first use in this function):  =>
-> 716:11, 705:18
+> > On Sun, 24 Nov 2019 23:38:41 -0500
+> > "Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
+> > 
+> > > --- a/Documentation/trace/ring-buffer-design.txt
+> > > +++ b/Documentation/trace/ring-buffer-design.txt
+> > > @@ -37,7 +37,7 @@ commit_page - a pointer to the page with the last finished non-nested write.
+> > >  
+> > >  cmpxchg - hardware-assisted atomic transaction that performs the following:
+> > >  
+> > > -   A = B iff previous A == C
+> > > +   A = B if previous A == C  
+> > 
+> > This wasn't a typo. "iff" means "if and only if" which is a standard
+> > notation. That is, this is shorthand for:
+> > 
+> >   A = B if previous A == C
+> >   previous A == C if A = B
 > 
-> mips-gcc8/mips-allmodconfig
+> Although thinking about this more, this may not be correct. If
+> previous A == B, then A = B, thus the "iff" notation is not actually
+> accurate.
 > 
-> All seen before, but hidden in v5.4-rcX (X > 5) by other build failures.
+> This wouldn't then be a typo fix, but a real fix to the logic ;-)
 > 
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/219d54332a09e8d8741c1e1982f5eae56099de85/
-> (232 out of 242 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/af42d3466bdc8f39806b26f593604fdc54140bcb/
-> (232 out of 242 configs)
 
-As mentioned before[1], the fix for this[2] is already in staging-next
-but sadly it didn't seem to make it for v5.4...
+What are the odds ;)
 
-Thanks,
-    Paul
+I knew about the concept https://en.wikipedia.org/wiki/If_and_only_if
+from school math but didn't remember the notation. For me was
+suspicious so, I  looked in "the cmpxchg doc" and nothing referring
+to "iff" was there, then I decided to classified it as a typo.
 
-[1] https://lore.kernel.org/lkml/20191014170440.mvwgnj4stpeuzzey@gmail.com/
-[2] https://lore.kernel.org/driverdev-devel/20191007231741.2012860-1-paul.burton@mips.com/
+Now thinking more deeply, I agreed with you that was not a typo but
+a "logic mistake", even not for the same reason ;)
+
+Being not 100% sure of what I'm about to say, I will say it
+anyway because you have been kind enough to write the second email.
+
+"if and only if (shortened as iff) is a biconditional logical
+connective between statements" and A = B can't be considered a
+logical statement in the context of that definition (math/logic),
+even it could be in C.
+
+Thank you Steven one more time for such a quick reply!
+frank a.
