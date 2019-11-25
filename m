@@ -2,100 +2,106 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2940C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A6C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22552073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D62E2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:07:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q6JG///7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfKYCEQ (ORCPT
+        id S1726980AbfKYCHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 21:04:16 -0500
-Received: from cnshjsmin05.nokia-sbell.com ([116.246.26.45]:29508 "EHLO
-        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726830AbfKYCEQ (ORCPT
+        Sun, 24 Nov 2019 21:07:21 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14181 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbfKYCHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 21:04:16 -0500
-X-AuditID: ac18929d-483ff700000014de-56-5ddb369d4d8f
-Received: from CNSHPPEXCH1608.nsn-intra.net (Unknown_Domain [135.251.51.108])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id 81.3E.05342.D963BDD5; Mon, 25 Nov 2019 10:04:13 +0800 (HKT)
-Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
- CNSHPPEXCH1608.nsn-intra.net (135.251.51.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 25 Nov 2019 10:04:13 +0800
-Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
- CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
- Mon, 25 Nov 2019 10:04:13 +0800
-From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-To:     Guenter Roeck <guenter@roeck-us.net>,
-        Guenter Roeck <groeck7@gmail.com>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2.1] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Topic: [PATCH v2.1] watchdog: make DesignWare watchdog allow users to
- set bigger timeout value
-Thread-Index: AdWjNIrZT/zI+n3RTkOdyUq1ShRV4Q==
-Date:   Mon, 25 Nov 2019 02:04:13 +0000
-Message-ID: <8fa54e92c6cd4544a7a3eb60a373ac43@nokia-sbell.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [135.251.51.115]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 24 Nov 2019 21:07:21 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddb375b0000>; Sun, 24 Nov 2019 18:07:24 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 24 Nov 2019 18:07:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 18:07:20 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 02:07:20 +0000
+Subject: Re: [PATCH 0/2] mm/gup + IB: allow FOLL_FORCE for gup_fast and use in
+ IB
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     Ira Weiny <ira.weiny@intel.com>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191125003715.516290-1-jhubbard@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <25e8092a-3a5c-b75b-9ee8-940fece25389@nvidia.com>
+Date:   Sun, 24 Nov 2019 18:07:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42Jp/22cozvX7Haswd8juhb7Oq8zWTT+u89q
-        cXnXHDaLG+v2sVs8fvmP2YHVY+esu+weK9esAbK+N7B7fN4kF8ASxWWTkpqTWZZapG+XwJWx
-        aec/loJVghWn78g3MH4Q6GLk5JAQMJFY/e81excjF4eQwCEmiRs9R9hBEkICfxklTr6whkhs
-        YpR4e2s5G0iCTcBdomnTOjBbRMBb4tns+WwgRcwCuxkl5ja+YQFJCAskSWzYt5AJoihdYtLt
-        3VC2nsSpW9uYQWwWAVWJa/fOgW3jFbCTWLW1A6yXUUBWYtqj+2D1zALiEreezGeCOFVAYsme
-        88wQtqjEy8f/WLsYOYBsJYm+DUwgJrOApsT6XfoQnYoSU7ofQk0XlDg58wnLBEaRWUiGzkLo
-        mIWkYxaSjgWMLKsYpZPzijOyinMz8wxM9fLyszMTdYuTUnNy9JLzczcxAuNojcSkuTsYOzvj
-        DzEKcDAq8fBuWHsrVog1say4MvcQowQHs5IIr9vZG7FCvCmJlVWpRfnxRaU5qcWHGKU5WJTE
-        eVsmL4wVEkhPLEnNTk0tSC2CyTJxcEo1MGpcOPjcnS04Znqp6hOmF/WLovblrvyycm623v1v
-        3xSi1sfeu3z8yN053dLqImLuUnK3+vfOV2IPs3hQFxQ4cVFK/6u0B76zJXhO9k2elFyQkB6w
-        PcDxzClBeY8OwcCj59T3ffK7Mt/UZ0/1ScO4Zz5vN/PH+06y2PrO51zNYe+LGzjkNs5OalNi
-        Kc5INNRiLipOBAA+x4qanwIAAA==
+In-Reply-To: <20191125003715.516290-1-jhubbard@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574647644; bh=VSqCxdntvMfhdiFrZMqW5HdafdMIAWDFCnXZR+sYDKY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Q6JG///7ts3uN8kdWM/tTfdwCyxVNMDg64zNzAkJ0Jn+wf9RufTjn+kXhllGQof/i
+         JkyfF3O9d0tqzeMwaPgZFP7CoHp07w40zI+58KIi0q9SjLi/jubvyW74+I+xnc9brB
+         fxQwMl8I7h2X/ve77uG5U8quInmaT6oqJB+8ZP4ZYIc9AWy7BjSRTILPzZY5IGnGoA
+         kv+KmH3vGBiuz/BPZPSM3iDs5BYditxB5ymKkwMKrmK9In7JRDwHncbi7UQW/uQXpM
+         ooPymYDaxwUXZGWHNwXGcONNKDGu7bDRpkwDULsGfiIUy+XF+H7c1b1zQrU8CgbZIU
+         wr40GLvZX+dsg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbSBhYWJhYTRiNzA5YmQ0NTFlNTY2YzkwNmU4ZDFkY2E0OGY5MmY5YjEyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQ0KRnJvbTogUGVuZyBXYW5nIDxwZW5nLjEud2FuZ0Bub2tpYS1zYmVsbC5j
-b20+DQpEYXRlOiBXZWQsIDIwIE5vdiAyMDE5IDE1OjEyOjU5ICswODAwDQpTdWJqZWN0OiBbUEFU
-Q0ggdjIuMV0gd2F0Y2hkb2c6IG1ha2UgRGVzaWduV2FyZSB3YXRjaGRvZyBhbGxvdyB1c2VycyB0
-byBzZXQgYmlnZ2VyDQogdGltZW91dCB2YWx1ZQ0KDQp3YXRjaGRvZ19kZXYuYyBwcm92aWRlcyBt
-ZWFucyB0byBhbGxvdyB1c2VycyB0byBzZXQgYmlnZ2VyIHRpbWVvdXQgdmFsdWUNCnRoYW4gSFcg
-Y2FuIHN1cHBvcnQsIG1ha2UgRGVzaWduV2FyZSB3YXRjaGRvZyBhbGlnbiB3aXRoIHRoaXMuDQoN
-ClNpZ25lZC1vZmYtYnk6IFBlbmcgV2FuZyA8cGVuZy4xLndhbmdAbm9raWEtc2JlbGwuY29tPg0K
-LS0tDQoNCnYyIC0+IHYyLjE6DQogICAgLSBtb3ZlIFNpZ25lZC1vZmYtYnkgdG8gYmUgYWhlYWQg
-b2Ygc2VjdGlvbiBzZXBhcmF0b3INCg0KdjEgLT4gdjI6DQogICAgLSB1c2UgdG9wX3MgdG8gY29t
-cGFyZSB3aXRoIHdkZC0+bWF4X2h3X2hlYXJ0YmVhdF9tcw0KICAgIC0gdXBkYXRlIHdkZC0+dGlt
-ZW91dCBpbiBjYXNlIGl0J3MgZ3JlYXRlciB0aGFuIEhXIHN1cHBvcnRzDQogICAgLSBmaXggY29t
-bWVudHMgZXJyb3INCg0KdjE6IGluaXRpYWwgdmVyc2lvbg0KDQotLS0NCiBkcml2ZXJzL3dhdGNo
-ZG9nL2R3X3dkdC5jIHwgMTAgKysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlv
-bnMoKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvZHdf
-d2R0LmMgYi9kcml2ZXJzL3dhdGNoZG9nL2R3X3dkdC5jDQppbmRleCBmZWY3YzYxLi4xMmMxMTZl
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy93YXRjaGRvZy9kd193ZHQuYw0KKysrIGIvZHJpdmVycy93
-YXRjaGRvZy9kd193ZHQuYw0KQEAgLTExNCw3ICsxMTQsMTUgQEAgc3RhdGljIGludCBkd193ZHRf
-c2V0X3RpbWVvdXQoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkLCB1bnNpZ25lZCBpbnQgdG9w
-X3MpDQogCXdyaXRlbCh0b3BfdmFsIHwgdG9wX3ZhbCA8PCBXRE9HX1RJTUVPVVRfUkFOR0VfVE9Q
-SU5JVF9TSElGVCwNCiAJICAgICAgIGR3X3dkdC0+cmVncyArIFdET0dfVElNRU9VVF9SQU5HRV9S
-RUdfT0ZGU0VUKTsNCiANCi0Jd2RkLT50aW1lb3V0ID0gZHdfd2R0X3RvcF9pbl9zZWNvbmRzKGR3
-X3dkdCwgdG9wX3ZhbCk7DQorCS8qDQorCSAqIEluIGNhc2UgdXNlcnMgc2V0IGJpZ2dlciB0aW1l
-b3V0IHZhbHVlIHRoYW4gSFcgY2FuIHN1cHBvcnQsDQorCSAqIGtlcm5lbCh3YXRjaGRvZ19kZXYu
-YykgaGVscHMgdG8gZmVlZCB3YXRjaGRvZyBiZWZvcmUNCisJICogd2RkLT5tYXhfaHdfaGVhcnRi
-ZWF0X21zDQorCSAqLw0KKwlpZiAodG9wX3MgKiAxMDAwIDw9IHdkZC0+bWF4X2h3X2hlYXJ0YmVh
-dF9tcykNCisJCXdkZC0+dGltZW91dCA9IGR3X3dkdF90b3BfaW5fc2Vjb25kcyhkd193ZHQsIHRv
-cF92YWwpOw0KKwllbHNlDQorCQl3ZGQtPnRpbWVvdXQgPSB0b3BfczsNCiANCiAJcmV0dXJuIDA7
-DQogfQ0KLS0gDQoxLjguMy4xDQoNCg==
+On 11/24/19 4:37 PM, John Hubbard wrote:
+> Hi Leon, Jason, Christoph,
+> 
+> Maybe I'm overlooking something, but as I wrote in patch 1, it looks
+> like we can simply allow FOLL_FORCE to be passed to gup_fast().
+> 
+> This should fix Leon's reported RDMA failure [1]  when using patch 2 by
+> itself. (I've compile- and boot-tested these, and also did short LTP
+> and fio with direct IO tests, but I don't have an Infiniband runtime
+> setup that exercises the umem.c code.)
+> 
+> [1] https://lore.kernel.org/r/20191124100724.GH136476@unreal
+> 
+> John Hubbard (2):
+>   mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+>   IB/umem: use get_user_pages_fast() to pin DMA pages
+> 
+>  drivers/infiniband/core/umem.c | 17 ++++++-----------
+>  mm/gup.c                       |  3 ++-
+>  2 files changed, 8 insertions(+), 12 deletions(-)
+> 
+
+OK, based on Jason's response [1] that it's too late to put this into
+5.5, let's withdraw this, and I'll resend when it's time to send out
+patches for 5.6.
+
+[1] https://lore.kernel.org/r/20191125005339.GC5634@ziepe.ca
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
