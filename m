@@ -2,201 +2,137 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92B3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4BCC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09E720835
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="e3tFNUQ3"
+	by mail.kernel.org (Postfix) with ESMTP id 4F2CD20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574701553;
+	bh=Rch53xtBqI4lMn/D7GkCc3fpE/XXCB9ERM4kzHfJzJc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=I/cxFl6V9lt849r9Jxn87yAg2M0yQUdtVP7pVpIVmt0642NspLvyZ+Pk8uGKv3JHB
+	 WIGF4uC8FmwOlv8Psux6I0T5zRfmpa31TV5XYQ/cr87l7XmI2vp51kJH8zYh6eD56v
+	 tKVPs7BCme7pRgH4Ru8As04P/8oQd5VDTmLEEhTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfKYRFq (ORCPT
+        id S1729128AbfKYRFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:05:46 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:36471 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbfKYRFl (ORCPT
+        Mon, 25 Nov 2019 12:05:51 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38952 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729073AbfKYRFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:05:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574701538;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=4T58iZwAhzibbxA38Ty05T3UHM/dV8EZ97kepZ5ETG4=;
-        b=e3tFNUQ3QRft4m1yWhM4MZNgJI02fVLtm94kjCXvbTZD20xY3+ivne5k+umfg8veW3
-        wiTfIfs+dJloDqNcuYbEI9uQ1LiTxb+jn6gP+QVkQY5JG6OsISZyj0R/5VxQRvdIHgx0
-        Z37XsM7I5RtNrddj6l74XOFQwueb3gsPR6vY5WWhE4bZDOnzCQDG5nNMI6so4Ax40vMr
-        w8SmjJzzCRsQUNe7K2asKr1fVhqsW7VMUqy9s7+1Ql27ehwr9ri0c9bcF/wsXhL0ptsG
-        apumaNugBd/HmT1DL65iIb+BbjAII1iRBomWDJvvktBoDzbItGdNa7GkpXQT7Gdxz7Q3
-        qGrg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQr4OGUPX+1NmWArOmLo="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id 304194vAPH5c2r7
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 25 Nov 2019 18:05:38 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 2/4] ARM: dts: ux500: Add aliases for I2C and SPI buses
-Date:   Mon, 25 Nov 2019 18:04:26 +0100
-Message-Id: <20191125170428.76069-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191125170428.76069-1-stephan@gerhold.net>
-References: <20191125170428.76069-1-stephan@gerhold.net>
+        Mon, 25 Nov 2019 12:05:50 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e10so7611222ljj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:05:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IP1wfK3f8gL3K5of14NSdEE7VLJRLmDh9Mjfd6jLIUg=;
+        b=di9eo39CEUbDhJQGDGRbvoBzSIsf4IsJ2vpQB30wyKTQ4oZuoI8I8FAMQktMgORFFP
+         8fBVLWpCUhdrhl0hj+dykFizgaSzPbdXAW3q2epeOP6k+UZ1g4c/aPYroPhY+MX/X+vS
+         wBXrAbq1U0ohLCJc7HXm2ySYQ4bv4evW0kCik=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IP1wfK3f8gL3K5of14NSdEE7VLJRLmDh9Mjfd6jLIUg=;
+        b=risU7y1eb1kfQUTJ76OeyuXzMGXZGOXrNQSu+gvt5VcUEUVFEs42oZyNrYC8BllSUT
+         M0aEO0BIt8mgSFscbpUkUwg4GIWknXU416vqkZ91c0td1ZFgCOfWD2i1AeGdJFVTEHVm
+         1brQBjyx6CxS9bQ+m/3kSjQmHkaV/5vZL7WGzi5asBP5Y8IXbIl6ofYViucDJkERwOtz
+         wOzoGrFJDt52yT+06SbgYRsoQvWurVcRGTSn1vTroKZcMyWKVttQWKAwrM9XGzwpeR58
+         h+i4FiYdMXDj3o1SxDMk522m7Waoip6cRb7Vp8/PSCO+StUZ+iHeEXk9FWDCnJElwPkN
+         uROQ==
+X-Gm-Message-State: APjAAAUXxgLlrQJ8ENOfkzi+i0ncRa6dl7uoWgUn1JK86UpUy/Fp0tVJ
+        JM33yOm81D7WRSO9J09TWD468glPuT8=
+X-Google-Smtp-Source: APXvYqzhI8NE5lnXhFgXeppFi8vxDUBh3UWrLvLlrdUyKoC43URJ9grXtIGEyCHBFkO7E1vJPRkvtQ==
+X-Received: by 2002:a05:651c:326:: with SMTP id b6mr23031746ljp.119.1574701547666;
+        Mon, 25 Nov 2019 09:05:47 -0800 (PST)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id u12sm4362194lje.1.2019.11.25.09.05.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 09:05:46 -0800 (PST)
+Received: by mail-lf1-f52.google.com with SMTP id 203so11595584lfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:05:45 -0800 (PST)
+X-Received: by 2002:ac2:5a08:: with SMTP id q8mr21390671lfn.106.1574701545622;
+ Mon, 25 Nov 2019 09:05:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <157225677483.3442.4227193290486305330.stgit@buzz>
+ <20191028124222.ld6u3dhhujfqcn7w@box> <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
+ <20191028125702.xdfbs7rqhm3wer5t@box> <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
+ <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
+ <f0140b13-cca2-af9e-eb4b-82eda134eb8f@redhat.com> <CAHk-=wh4SKRxKQf5LawRMSijtjRVQevaFioBK+tOZAVPt7ek0Q@mail.gmail.com>
+ <640bbe51-706b-8d9f-4abc-5f184de6a701@redhat.com> <CAHpGcM+o2OwXdrj+A2_OqRg6YokfauFNiBJF-BQp0dJFvq_BrQ@mail.gmail.com>
+ <22f04f02-86e4-b379-81c8-08c002a648f0@redhat.com>
+In-Reply-To: <22f04f02-86e4-b379-81c8-08c002a648f0@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 25 Nov 2019 09:05:29 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whRuPkm7zFUiGe_BXkLvEdShZGngkb=uRufgU65ogCxfg@mail.gmail.com>
+Message-ID: <CAHk-=whRuPkm7zFUiGe_BXkLvEdShZGngkb=uRufgU65ogCxfg@mail.gmail.com>
+Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
+ file at read
+To:     Steven Whitehouse <swhiteho@redhat.com>
+Cc:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <sfrench@samba.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we disable the I2C/SPI buses by default, is is even more
-important to assign aliases to the I2C/SPI device nodes.
-Otherwise, enabling/disabling one of them will potentially change
-all device IDs, e.g. i2c2 will be named i2c-0 if it is the only
-enabled I2C bus.
+On Mon, Nov 25, 2019 at 2:53 AM Steven Whitehouse <swhiteho@redhat.com> wrote:
+>
+> Linus, is that roughly what you were thinking of?
 
-Add aliases for the I2C and SPI buses to avoid this.
+So the concept looks ok, but I don't really like the new flags as they
+seem to be gfs2-specific rather than generic.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- arch/arm/boot/dts/ste-dbx5x0.dtsi | 35 +++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+That said, I don't _gate_ them either, since they aren't in any
+critical code sequence, and it's not like they do anything really odd.
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 899368aa6ff7..ed91232a118a 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -13,6 +13,19 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	/* This stablilizes the device enumeration */
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		spi0 = &spi0;
-+		spi1 = &spi1;
-+		spi2 = &spi2;
-+		spi3 = &spi3;
-+	};
-+
- 	chosen {
- 	};
- 
-@@ -633,7 +646,7 @@
- 			};
- 		};
- 
--		i2c@80004000 {
-+		i2c0: i2c@80004000 {
- 			compatible = "stericsson,db8500-i2c", "st,nomadik-i2c", "arm,primecell";
- 			reg = <0x80004000 0x1000>;
- 			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-@@ -650,7 +663,7 @@
- 			status = "disabled";
- 		};
- 
--		i2c@80122000 {
-+		i2c1: i2c@80122000 {
- 			compatible = "stericsson,db8500-i2c", "st,nomadik-i2c", "arm,primecell";
- 			reg = <0x80122000 0x1000>;
- 			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-@@ -668,7 +681,7 @@
- 			status = "disabled";
- 		};
- 
--		i2c@80128000 {
-+		i2c2: i2c@80128000 {
- 			compatible = "stericsson,db8500-i2c", "st,nomadik-i2c", "arm,primecell";
- 			reg = <0x80128000 0x1000>;
- 			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-@@ -686,7 +699,7 @@
- 			status = "disabled";
- 		};
- 
--		i2c@80110000 {
-+		i2c3: i2c@80110000 {
- 			compatible = "stericsson,db8500-i2c", "st,nomadik-i2c", "arm,primecell";
- 			reg = <0x80110000 0x1000>;
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-@@ -704,7 +717,7 @@
- 			status = "disabled";
- 		};
- 
--		i2c@8012a000 {
-+		i2c4: i2c@8012a000 {
- 			compatible = "stericsson,db8500-i2c", "st,nomadik-i2c", "arm,primecell";
- 			reg = <0x8012a000 0x1000>;
- 			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-@@ -722,7 +735,7 @@
- 			status = "disabled";
- 		};
- 
--		spi@80002000 {
-+		ssp0: spi@80002000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80002000 0x1000>;
- 			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-@@ -738,7 +751,7 @@
- 			status = "disabled";
- 		};
- 
--		spi@80003000 {
-+		ssp1: spi@80003000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80003000 0x1000>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-@@ -754,7 +767,7 @@
- 			status = "disabled";
- 		};
- 
--		spi@8011a000 {
-+		spi0: spi@8011a000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x8011a000 0x1000>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-@@ -771,7 +784,7 @@
- 			status = "disabled";
- 		};
- 
--		spi@80112000 {
-+		spi1: spi@80112000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80112000 0x1000>;
- 			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-@@ -788,7 +801,7 @@
- 			status = "disabled";
- 		};
- 
--		spi@80111000 {
-+		spi2: spi@80111000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80111000 0x1000>;
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-@@ -805,7 +818,7 @@
- 			status = "disabled";
- 		};
- 
--		spi@80129000 {
-+		spi3: spi@80129000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80129000 0x1000>;
- 			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.24.0
+I still think the whole gfs2 approach is broken. You're magically ok
+with using stale data from the cache just because it's cached, even if
+another client might have truncated the file or something.
 
+So you're ok with saying "the file used to be X bytes in size, so
+we'll just give you this data because we trust that the X is correct".
+
+But you're not ok to say "oh, the file used to be X bytes in size, but
+we don't want to give you a short read because it might not be correct
+any more".
+
+See the disconnect? You trust the size in one situation, but not in another one.
+
+I also don't really see that you *need* the new flag at all. Since
+you're doing to do a speculative read and then a real read anyway, and
+since the only thing that you seem to care about is the file size
+(because the *data* you will trust if it is cached), then why don't
+you just use the *existing* generic read, and *IFF* you get a
+truncated return value, then you go and double-check that the file
+hasn't changed in size?
+
+See what I'm saying? I think gfs2 is being very inconsistent in when
+it trusts the file size, and I don't see that you even need the new
+behavior that patch gives, because you might as well just use the
+existing code (just move the i_size check earlier, and then teach gfs2
+to double-check the "I didn't get as much as I expected" case).
+
+                 Linus
