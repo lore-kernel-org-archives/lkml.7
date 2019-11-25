@@ -2,84 +2,146 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2B8C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347A1C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD80207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HTROZ17Y"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0B82082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574689113;
+	bh=dWbzYOU+bRrP6xakmEMeeH+lgk7SwLwvQkomm8ilLdw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DKkXL7i4nbEXWjUsM2bXpkrJYw2Oei6fqA9UTcz5t+v7xLFniK5JFOTyAt9kRQHfa
+	 bgXU/S/X8yXlRTTS2ot9/RWHAv54/jngtmKlXqVFlGGxzT/3kV3+JeEDMt/6A5NcVD
+	 yGOxpnt1jxJSp4TWUHk9T1JeQhNZQqLRREMlx/jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfKYNiN (ORCPT
+        id S1727783AbfKYNic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:38:13 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35336 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfKYNiN (ORCPT
+        Mon, 25 Nov 2019 08:38:32 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36124 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfKYNib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:38:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1oPwCncRA2y31PmdF7i8SD1A/QIZHpVvVM+tOv4nEWY=; b=HTROZ17YQfnk9a3KpJMqKCAhj
-        VGwuTT5RUc8NphiI7dy/pQPJUnloOvVbC0qwZGfJi/TLIwiW0JdhYf/iRXS7wG8+Vke9nTs5Lc+cf
-        ij6xzfuNNBUpwH64lffDsUM84vlNw2+yqFXKu5idoDbAyb56mvddL/TpeQJpc+M6J4kB3MzscxlB8
-        OsVK6aBxDRnbtOjDKu3et7x84STnjbV0LQNxgFiMAhDp6PnvO3YjUFz/gFUp0BHeuk+9eKcHfVvOl
-        AVPpvXlz1rx3Ja5V/lmeX8JigyvOYzNCwvkDKXb2QWYe+iTdLaerME3sspRKRiy/1wBfPAQzSfohp
-        h3qiwfOgw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:32788)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iZEZ5-0007zq-MC; Mon, 25 Nov 2019 13:38:07 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iZEZ5-0006iB-3V; Mon, 25 Nov 2019 13:38:07 +0000
-Date:   Mon, 25 Nov 2019 13:38:07 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] clk: Add devm_clk_{prepare,enable,prepare_enable}
-Message-ID: <20191125133806.GT25745@shell.armlinux.org.uk>
-References: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
- <34e32662-c909-9eb3-e561-3274ad0bf3cc@free.fr>
- <20191125125231.GO25745@shell.armlinux.org.uk>
- <45730e3c-efc7-4433-4980-e6aefebdcbff@free.fr>
- <20191125133103.GR25745@shell.armlinux.org.uk>
- <7373182d-753c-a87b-8408-ffe4b7ac341f@free.fr>
+        Mon, 25 Nov 2019 08:38:31 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so18065423wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 05:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=FlshBZLn8Dtz/tmFcJUBq/jo7RmSZXp/coZ76SfQlvY=;
+        b=kk7wV8P6IerK+yYawmp4nwDw3d9cepjP2q8xWeXb0zfkSqM6jfU+NiyVszvfDcpeq3
+         Z2nxVwBlwVtA9/oTFT9on/LtUJhqHvSLetIvzDQV3NJ3uFCrfqo8FDqTBi1fyUH18aId
+         BN5cz8Us+pwW0JlKUzp2YtTBqr1q709+4O6X/mCZZFyIlD1AvkElPe8kTKOMzJbOOxoE
+         o1Em7i8dqUk0iA6o2nD4uQfOGlo8QzjUx+rpMrc1P15GgvbiRfIBmr3YhkPX7rZq56eV
+         AHCVwHdJQuSmcHMI134T2PnzKFrqwvcQo9FDZcqb4w4pxo5OcCbO2Jn+R5Z0JwMJM+DJ
+         +IzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=FlshBZLn8Dtz/tmFcJUBq/jo7RmSZXp/coZ76SfQlvY=;
+        b=s6KIBqmtCzcFnFiD44D2zg91syE5AOt27aetH5Y6pV7dTJ/VlimXtHUsmw5DgR9yfC
+         3GS5fLqdjUNPpPdwdMS8WeU50fL1Ae0zETQ0QMdTQYEI4PZBPyvgPek075RNNrmFNZT6
+         Wgxg+y2MrbIZft4AWNdjFsazUFr1HCxc/0RJ/hvE2bULm2rRMXlr9LFnrnW2DzpwHmGm
+         2ABHyrZNJuxPVEANIvm0m6qdyUNB28lBWDQNS4mBclb33Lv3ytQl3AJ/y9O1hLgWXWjV
+         OgOtORNJINJOT9qClB5KHr2eqGvBcxFRudfodxLk8I477A11Gi88VFJ4NI+n5WTXP9ql
+         2Htg==
+X-Gm-Message-State: APjAAAVnkfQt8TXUG1kg7tob2w3tb8c4oCgiBwtqZ8NtSJk/mY6nJmEH
+        usJVUb3vD1/aJjT8UOzYyp0K+EUO
+X-Google-Smtp-Source: APXvYqwiZSuLmOXL2EkTjlktrcRUA69wRuyiI6+1YuYhNACXJS3M8FPvdghRsAwfW3kZDnUKkui2Rg==
+X-Received: by 2002:adf:f20d:: with SMTP id p13mr30104912wro.325.1574689109430;
+        Mon, 25 Nov 2019 05:38:29 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id m3sm11170256wrb.67.2019.11.25.05.38.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 05:38:28 -0800 (PST)
+Date:   Mon, 25 Nov 2019 14:38:26 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/cpu changes for v5.5
+Message-ID: <20191125133826.GA88582@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7373182d-753c-a87b-8408-ffe4b7ac341f@free.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 02:34:35PM +0100, Marc Gonzalez wrote:
-> On 25/11/2019 14:31, Russell King - ARM Linux admin wrote:
-> 
-> > The clk API and CCF are two different things.  I look after the clk API.
-> > The CCF is an implementation of the clk API.  Do not introduce clk API
-> > code in files that are CCF specific.
-> 
-> CCF is the acronym for Common Clock Framework?
+Linus,
 
-Yes.
+Please pull the latest x86-cpu-for-linus git tree from:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cpu-for-linus
+
+   # HEAD: db8c33f8b5bea59d00ca12dcd6b65d01b1ea98ef x86/cpu: Align the x86_capability array to size of unsigned long
+
+Misc changes:
+
+ - math-emu fixes,
+
+ - CPUID updates,
+
+ - sanity-check RDRAND output to see whether the CPU at least
+   pretends to produce random data,
+
+ - various unaligned-access across cachelines fixes in preparation of 
+   hardware level split-lock detection,
+
+ - Fix MAXSMP constraints to not allow !CPUMASK_OFFSTACK kernels with 
+   larger than 512 NR_CPUS.
+
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Arnd Bergmann (2):
+      x86/math-emu: Check __copy_from_user() result
+      x86/math-emu: Limit MATH_EMULATION to 486SX compatibles
+
+Babu Moger (3):
+      x86/cpufeatures: Add feature bit RDPRU on AMD
+      x86/Kconfig: Rename UMIP config parameter
+      x86/umip: Make the comments vendor-agnostic
+
+Borislav Petkov (1):
+      x86/rdrand: Sanity-check RDRAND output
+
+Fenghua Yu (2):
+      x86/cpu: Align cpu_caps_cleared and cpu_caps_set to unsigned long
+      x86/cpu: Align the x86_capability array to size of unsigned long
+
+Scott Wood (1):
+      x86/Kconfig: Enforce limit of 512 CPUs with MAXSMP and no CPUMASK_OFFSTACK
+
+
+ arch/x86/Kconfig                               | 22 +++++++++++-----------
+ arch/x86/Kconfig.cpu                           | 25 ++++++++++++++++---------
+ arch/x86/Makefile_32.cpu                       |  1 +
+ arch/x86/include/asm/cpufeatures.h             |  1 +
+ arch/x86/include/asm/disabled-features.h       |  2 +-
+ arch/x86/include/asm/module.h                  |  2 ++
+ arch/x86/include/asm/processor.h               | 10 +++++++++-
+ arch/x86/include/asm/umip.h                    |  4 ++--
+ arch/x86/kernel/Makefile                       |  2 +-
+ arch/x86/kernel/cpu/common.c                   |  5 +++--
+ arch/x86/kernel/cpu/rdrand.c                   | 22 +++++++++++++++++++++-
+ arch/x86/kernel/umip.c                         | 12 ++++++------
+ arch/x86/math-emu/fpu_system.h                 |  6 ++++--
+ arch/x86/math-emu/reg_ld_str.c                 |  6 +++---
+ tools/arch/x86/include/asm/disabled-features.h |  2 +-
+ 15 files changed, 82 insertions(+), 40 deletions(-)
+
