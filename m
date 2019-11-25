@@ -2,145 +2,140 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA836C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004D8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B084020823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3BC20823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:36:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mMZ+c5jb"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="pOGsDGS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfKYJfe (ORCPT
+        id S1727379AbfKYJgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:35:34 -0500
-Received: from mail-eopbgr40044.outbound.protection.outlook.com ([40.107.4.44]:15106
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfKYJfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:35:34 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TMp/bjpwZF/x7hueK7oiluIYWT0Zwtk9XfDBEbbcGugcvJoFOvPWnMal9K2zumz0BxAlfrkfQ0mm5iTz4vtSynQRcvzd+qeYKv/l0CU4EsNMaenOi0ptfMAih8nLIan/TvUYZWqWxzPl+swlxscxa5YWlLfGLQH/FrxPee72mF5eRwetRa+vou5Gvy9ZvzQPzjNk24mdPRg2FePaEiX1Y8Ny02FEEIcRQdk27Pq5NHDbh8UUZcO5UdD5d33WkMJ8oE3Z4gKVHnJTZdB4AhU6olhoSEaMXk9zrcJMk9tLXq7SJKV6s5bdidYXser2EiMPIekbd6I9xgp8a7RvYnRhpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vt9SOUBBvRYODrZaBujWY6ol90DM8+mssgncsqlAv7w=;
- b=lElSr+8ifapnhf3xbUsDsrCMDWJg7fUEQ9JbkqoC2PXpa5cYZ0p/KUGwjpINfDidBD5T9Y4qEzJuUOPT/UG6c1unkA8pht9k86nCLduk53ZMGCKlSAsq0AuFcoBMboNnKveoIXaUvqy1UGgGBd12ofRLEUDBBGJbZy+mRaLnL4RNah4npm62zRRoSg90r1GXgp/3v/JszXGDnR/BvZ35Piqle1oYxbHJZxRx1QSgarUcURgT+sGgLeSu9r4XAY4njW/FxPMLYwiSTgp2huU6UFhZloMj8i7nRjy40M662r3Rq8hIDdSfQtS8d3QJvTqKhParpuo3zb6Y5GOMwcF/4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vt9SOUBBvRYODrZaBujWY6ol90DM8+mssgncsqlAv7w=;
- b=mMZ+c5jbGBWIkQmHGwwhUvqVMBNuzgJEHHJcnqaJPZuYtq48evLiWTUFcBqIPFoxlGEEl3gIl6xvWV8lm2SmlvgXjDXWVHklIFilTW0PXe+cXY4t6OlHyG4hWavR7jlpzfSFwOWycW3KNi9NuVyEehgL1N7OpPKFA6Zk0pKHqCk=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB6063.eurprd04.prod.outlook.com (20.179.27.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Mon, 25 Nov 2019 09:35:30 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9%7]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
- 09:35:30 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Wen Yang <wenyang@linux.alibaba.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: roles: fix a potential use after free
-Thread-Topic: [PATCH] usb: roles: fix a potential use after free
-Thread-Index: AQHVotK+QWYpBR3K1EiRCSfQT+CjR6ebobIA
-Date:   Mon, 25 Nov 2019 09:35:30 +0000
-Message-ID: <20191125093528.GC20079@b29397-desktop>
-References: <20191124142236.25671-1-wenyang@linux.alibaba.com>
-In-Reply-To: <20191124142236.25671-1-wenyang@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fe38cf7e-c571-404e-b69c-08d7718ad020
-x-ms-traffictypediagnostic: VI1PR04MB6063:
-x-microsoft-antispam-prvs: <VI1PR04MB606373EF6AF89079717743758B4A0@VI1PR04MB6063.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(43544003)(189003)(199004)(9686003)(6116002)(8676002)(186003)(76176011)(7736002)(305945005)(4326008)(33656002)(66946007)(66446008)(66556008)(64756008)(3846002)(8936002)(6512007)(26005)(81156014)(81166006)(76116006)(91956017)(71190400001)(6506007)(66066001)(71200400001)(102836004)(66476007)(6916009)(316002)(54906003)(1076003)(6486002)(6246003)(2906002)(53546011)(6436002)(229853002)(99286004)(478600001)(33716001)(14454004)(256004)(14444005)(446003)(11346002)(25786009)(86362001)(5660300002)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6063;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: l4O7l8bhEsEB1S5W6KTtTB+sf7Ns3UJiWYKF6M0+NKp1pBJViY6DfOYMeJXZqP1Ebq512XuJV6OSrs9KdwzNGbdSY+ijBX0mbV0ymyL3uSE6QwD+oukmfPHCUyyTpEhw79h/EwTXJHrLWHekfNzOY/c/emBPZeUJvDXs7gZ92gYIQ6HlACAv8ClR0Wj1FquF5D1DzuSmKZIzbBJgLRN3bHsrVgb3XRpIUzVTeYW13j1vJ9FCprOXgv4d52u4LiaVC3vOMyGJTX85RBU/lk8Vag7rhJ877SoDaLj/SHXWmnOJ7/mN6TYZRbt1kgpJeALbykVrx8heG8cZPdYj6AqwLSwYfK9efIOSP7QY+o8mqOkVE5y1XBuFjqYrO4vkKRPOiAkzxke6A+OrqOlzvH3SKGiyKwKGUN/HkeDzhD/4e7Qh+PPJm5RLrhvUro0G8Ooi
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <48D55C999BDD25479D8FBB074CFBCF06@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 04:36:05 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39694 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727247AbfKYJgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 04:36:05 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e10so5827217ljj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 01:36:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Lltk+ABKwMzN4Q3qE+TFYH7hNAzWoOTyrBpQNHINGWg=;
+        b=pOGsDGS1zDV3Ji0L/1c0M+QXhoBqekXbOPlVWITZTZtMhTIefNFnDfdvq1VmiXPfbf
+         teEowcVmzNnApS8P56bu43c43VqftJ+caG5ytLqALGFHSUZCOIRlV1A8/+RVEIBwuAEI
+         cu/kBnw3wE2btTRTTWCz9VSZjeRAOeuskHgL4D1BbzdpssJDQyIeRK3FaZEIlFgoGOIm
+         nzKJABybFIShwvGdy9JUFpJioZ0tQ5huegi1TvIpCsQUuX2J5pKSTnZHluPLlqg2Rs8j
+         EL12ZUlwcre5plySoqzI3zcopFpHXNFi1WncaBkmxw0V9KkOWTGLJ/yCYwkp7e/3wyJ0
+         w27Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lltk+ABKwMzN4Q3qE+TFYH7hNAzWoOTyrBpQNHINGWg=;
+        b=ml6SJW77wGMi81tYf6Jqlxs6zZSYHCPN6WUfgl06vAPoLqoot0mBPfuVf4kQOF6Iq/
+         oQnXI6KZc71O/QGLYSR5/sz1vsEMdHFzO+HDfocZIqhfXqhtziI6xlMfniXPxcj5xtPv
+         QN1g1Za/YLSj9Kn6diODZmAWlaO2bYFVclHd/CRspVaunGIcJwJXLeHG7c5Fc2yQ493+
+         QcIY/JneqxMGnuJf8m5f/SJxFK57sF+ExvvXc0SGOAEWVNM6EbBhz8jRTwZXA8LoBGp0
+         wIFhjQAYPPPgg4yq19n5c8TsHtLAcDr+odRKx9yZG1ylsAZyc/yeTsBs/02yns6z38Le
+         swMQ==
+X-Gm-Message-State: APjAAAWvkcUz3hECstuFT/uAjZf7zRyen0r3Pi1irgUX/cn7vtgbW2qO
+        PYCgSR8eBDDE/uLNJEkSz/J2Uw==
+X-Google-Smtp-Source: APXvYqxvw9ut+oWe1WULJjWqDhYOkJfFZmIR+tYdPozGStrfGODy3Zu4B71kR/bcLVYFsAgb14RoKA==
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr10206471ljh.48.1574674563554;
+        Mon, 25 Nov 2019 01:36:03 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id u67sm3581116lja.78.2019.11.25.01.36.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 01:36:02 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id BBB581032C4; Mon, 25 Nov 2019 12:36:11 +0300 (+03)
+Date:   Mon, 25 Nov 2019 12:36:11 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+Message-ID: <20191125093611.hlamtyo4hvefwibi@box>
+References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe38cf7e-c571-404e-b69c-08d7718ad020
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 09:35:30.6935
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g0NXRlrnuOqRC397xLtDm7HQsle0knmiJts0sEXS4jkV06OYtub4HQfRHqvvPq6PlQ1nXV54Mjxaa5LdGjVZUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-11-24 22:22:36, Wen Yang wrote:
-> Free the sw structure only after we are done using it.
-> This patch just moves the put_device() down a bit to avoid the
-> use after free.
->=20
-> Fixes: 5c54fcac9a9d ("usb: roles: Take care of driver module reference co=
-unting")
-> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/usb/roles/class.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index 8273126..63a00ff 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -169,8 +169,8 @@ struct usb_role_switch *fwnode_usb_role_switch_get(st=
-ruct fwnode_handle *fwnode)
->  void usb_role_switch_put(struct usb_role_switch *sw)
->  {
->  	if (!IS_ERR_OR_NULL(sw)) {
-> -		put_device(&sw->dev);
->  		module_put(sw->dev.parent->driver->owner);
-> +		put_device(&sw->dev);
+On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
+> Currently when truncating shmem file, if the range is partial of THP
+> (start or end is in the middle of THP), the pages actually will just get
+> cleared rather than being freed unless the range cover the whole THP.
+> Even though all the subpages are truncated (randomly or sequentially),
+> the THP may still be kept in page cache.  This might be fine for some
+> usecases which prefer preserving THP.
+> 
+> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
+> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
+> So, when using shmem THP as memory backend QEMU inflation actually doesn't
+> work as expected since it doesn't free memory.  But, the inflation
+> usecase really needs get the memory freed.  Anonymous THP will not get
+> freed right away too but it will be freed eventually when all subpages are
+> unmapped, but shmem THP would still stay in page cache.
+> 
+> To protect the usecases which may prefer preserving THP, introduce a
+> new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP is
+> preferred behavior if truncating partial THP.  This mode just makes
+> sense to tmpfs for the time being.
+
+We need to clarify interaction with khugepaged. This implementation
+doesn't do anything to prevent khugepaged from collapsing the range back
+to THP just after the split.
+
+> @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+>  			}
+>  			unlock_page(page);
+>  		}
+> +rescan_split:
+>  		pagevec_remove_exceptionals(&pvec);
+>  		pagevec_release(&pvec);
+> +
+> +		if (split && PageTransCompound(page)) {
+> +			/* The THP may get freed under us */
+> +			if (!get_page_unless_zero(compound_head(page)))
+> +				goto rescan_out;
+> +
+> +			lock_page(page);
+> +
+> +			/*
+> +			 * The extra pins from page cache lookup have been
+> +			 * released by pagevec_release().
+> +			 */
+> +			if (!split_huge_page(page)) {
+> +				unlock_page(page);
+> +				put_page(page);
+> +				/* Re-look up page cache from current index */
+> +				goto again;
+> +			}
+> +			unlock_page(page);
+> +			put_page(page);
+> +		}
+> +rescan_out:
+>  		index++;
 >  	}
->  }
->  EXPORT_SYMBOL_GPL(usb_role_switch_put);
-> --=20
-> 1.8.3.1
->=20
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Doing get_page_unless_zero() just after you've dropped the pin for the
+page looks very suboptimal.
 
---=20
-
-Thanks,
-Peter Chen=
+-- 
+ Kirill A. Shutemov
