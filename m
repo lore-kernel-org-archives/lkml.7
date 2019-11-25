@@ -2,107 +2,121 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A6AC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B86DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DE62068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B02D2068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kI85VaEU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOECNUjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfKYQ60 (ORCPT
+        id S1729003AbfKYQ7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:58:26 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40391 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbfKYQ60 (ORCPT
+        Mon, 25 Nov 2019 11:59:50 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36119 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728924AbfKYQ7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:58:26 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a137so11544083qkc.7;
-        Mon, 25 Nov 2019 08:58:25 -0800 (PST)
+        Mon, 25 Nov 2019 11:59:50 -0500
+Received: by mail-ot1-f65.google.com with SMTP id f10so13243680oto.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:59:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pu8Eznl5GQtTXPjOvQ9qkpsA+I6ie4l2E52E9iodSKg=;
-        b=kI85VaEUlSWtCUuPFkbQTFWUQOHiHVp00qvsZKCR40vRjJ7HbRRfRKHmOgeCtFNOHJ
-         8DDCLa00uLyj2I6rTtVEjA5+HEtebq+ScYFeXJDfb7hrGvscihd69ZlCg+c7VwuO5NmN
-         9Dxl1DLsqBsV65H4fZN2pnbtO82hguY2+I9Ul5SewP0/adDMhSznjp9DMfMRq5H/ZjIx
-         r8KIf9ouPRbpWKLAKO51I/K7Ra33s3Xh6+BOuzKvB2smCVeO0KFgLMOXxvPplgi0XNxc
-         6JnexIvZikj6CcF1I2baJ2wW9XWWPgDlKdc+QuVoGyhDPclWK9Nbi535sUKs0RXxK9HW
-         HxXA==
+        h=sender:date:from:to:cc:subject:message-id:reply-to:mime-version
+         :content-disposition:user-agent;
+        bh=7wb5i6/FZxQaE8n+z8M7xj50uZOfM6qEKwZxz5PmeaU=;
+        b=iOECNUjZXp49nZ2MCe9bj60ze2SZ2L6VMgYGHDzN3UqmIv35jp4a/RrIMDAzDIlpey
+         DQthatl4TaoPijcV7sPnm/Y0sX87B4U75hyhgDmAk8LvUhDqnqqAexhwjzNtATxJNRek
+         Yr4yM/Ow9vsZi6VnlX844VYln/UamgXuoZjLoiGWUxPcHM+b3welYTaKTGvg4DNiRRWn
+         vbL1aaKT7YRPqBT9RLv6Lkp+RyvwJFJrQfPKpYzkIVCoQsYR6iQHW8en+9rnDxc0riEj
+         8SMGAL3Mtng9qYisg7egnTlugqyO7ccaH8AjpzpXBWanf1Y8uyUSOiptZWyMWirIFMQX
+         3W5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pu8Eznl5GQtTXPjOvQ9qkpsA+I6ie4l2E52E9iodSKg=;
-        b=sE53gTKzBPh2HrjLo5ZBrBLWfNLvODyLtm/zziqmZhGiA+pRnsEbmIy6zDOEgnrhkv
-         tp+8BUedWUWXD3EyS8hfx2UwA52cI5mT5qtZ/JlyBfWs7QYiflW794HGjsR1+Nyjg8BY
-         ZUhhEkmw5U/55VKjO7r+7PagouJvW76kz13Q/8tsmdLTNafiCmdB21nE+gv5Eb+7L7+C
-         LyAG9qVqksS7p0CMX1z6RDecY/wATNN6NkgNd88cnLffs9dKknMHFLXxBSKTF42Tz9GM
-         AzKQtUcGglbaX8y60Rwdy2juJmBIhzX4o6twKrN7TSXKgByrlT893qNkg6MzS40yergu
-         z2UQ==
-X-Gm-Message-State: APjAAAUH2RiMkT9ZZOKUUPCNI1P8gGErDbauS1TxICsqQ/HkHz/sPtPH
-        XBsljiHOZHeBlhP+5VhNUg==
-X-Google-Smtp-Source: APXvYqxO5SzbSMf2GM1QIJxnbLV23bNiR0O9Mm5BFzBdYR1tMAFMsiVe0B+KMLvPAY93McNzzPGxjQ==
-X-Received: by 2002:a37:674d:: with SMTP id b74mr27861468qkc.396.1574701104739;
-        Mon, 25 Nov 2019 08:58:24 -0800 (PST)
-Received: from gabell (209-6-122-159.s2973.c3-0.arl-cbr1.sbo-arl.ma.cable.rcncustomer.com. [209.6.122.159])
-        by smtp.gmail.com with ESMTPSA id j10sm4205971qtb.34.2019.11.25.08.58.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Nov 2019 08:58:24 -0800 (PST)
-Date:   Mon, 25 Nov 2019 11:58:19 -0500
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com
-Subject: Re: [PATCH] fuse: Fix the return code of fuse_direct_IO() to deal
- with the error for aio
-Message-ID: <20191125165819.k2ghv7h4tzyvyr6e@gabell>
-References: <20191118022410.21023-1-msys.mizuma@gmail.com>
- <CAJfpegveuh3b0GMOmC3SuMOq=yi9sgBeOS2LGEetbfKqyS1xtQ@mail.gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:mime-version:content-disposition:user-agent;
+        bh=7wb5i6/FZxQaE8n+z8M7xj50uZOfM6qEKwZxz5PmeaU=;
+        b=kxSy5SAuWbmJ8pInsOekvmTbMB01uM571l15+nEEhzv0XqfVo3KU7ibaDljci7WTt0
+         4eVCRspc1aYfDNZL04HB4n127lohrvOYD7dzD8pM7i+78y9TlOlXFH9bWOy0HmRim/8+
+         TtEaKhOAo297eeYh1/C+WeGee1GJLk7R6GwT49KH/WO9+ckC8cWeQ+x75VKedFwAlXCY
+         ONCV60ooHjj8tvrs7oKPeVLfaESyGvEz+ZjegOnhS4G/95rq5lutChGESETf+sI6DqbC
+         /yf1ZAYjWcXnoTnPQAAsPyBKG+C0szje/lYFI63bQYXwvAhKIPlU8tZJdEYkf2Yp/LVm
+         1TlA==
+X-Gm-Message-State: APjAAAVYepmEnmTuR/QRxUMNpBPavZejZe+7NcJ0zLlFM8xcryZVAQ8D
+        KnP17tpAhS0k39jP92D6Jw==
+X-Google-Smtp-Source: APXvYqw+Aw8aP1poCHyxvIoa6KKGxP3DMLdI3yVaA0nRtNvja4Z0HzUm5BwKby8xArguyaJ988TmuA==
+X-Received: by 2002:a9d:77c5:: with SMTP id w5mr19822955otl.351.1574701187460;
+        Mon, 25 Nov 2019 08:59:47 -0800 (PST)
+Received: from serve.minyard.net ([47.184.136.59])
+        by smtp.gmail.com with ESMTPSA id f93sm2574226otb.64.2019.11.25.08.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 08:59:46 -0800 (PST)
+Received: from minyard.net (unknown [192.168.27.180])
+        by serve.minyard.net (Postfix) with ESMTPSA id 32AFA180046;
+        Mon, 25 Nov 2019 16:59:46 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 10:59:45 -0600
+From:   Corey Minyard <minyard@acm.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: [GIT PULL] IPMI bug fixes for 5.5
+Message-ID: <20191125165945.GC3527@minyard.net>
+Reply-To: minyard@acm.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegveuh3b0GMOmC3SuMOq=yi9sgBeOS2LGEetbfKqyS1xtQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 01:38:38PM +0100, Miklos Szeredi wrote:
-> On Mon, Nov 18, 2019 at 3:24 AM Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
-> >
-> > From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> >
-> > exit_aio() is sometimes stuck in wait_for_completion() after aio is issued
-> > with direct IO and the task receives a signal.
-> >
-> > That is because kioctx in mm->ioctx_table is in use by aio_kiocb.
-> > aio_kiocb->ki_refcnt is 1 at that time. That means iocb_put() isn't
-> > called correctly.
-> >
-> > fuse_get_req() returns as -EINTR when it's blocked and receives a signal.
-> > fuse_direct_IO() deals with the -EINTER as -EIOCBQUEUED and returns as
-> > -EIOCBQUEUED even though the aio isn't queued.
-> > As the result, aio_rw_done() doesn't handle the error, so iocb_put() isn't
-> > called via aio_complete_rw(), which is the callback.
-> 
-> Hi,
-> 
-> Thanks for the report.
-> 
-> Can you please test the attached patch (without your patch)?
+The following changes since commit 3b7c59a1950c75f2c0152e5a9cd77675b09233d6:
 
-The patch you attached works well, thanks! I tested it with virtiofs.
+  Merge tag 'pinctrl-v5.4-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl (2019-10-22 06:40:07 -0400)
 
-Should I post the patch? Or could you take care of it? Let me know.
+are available in the Git repository at:
 
-Thanks!
-Masa
+  https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.5-1
+
+for you to fetch changes up to 8e6a5c833333e14a5023a5dcabb64b7d9e046bc6:
+
+  ipmi: fix ipmb_poll()'s return type (2019-11-22 13:54:55 -0600)
+
+----------------------------------------------------------------
+Some small fixes accumulated for IPMI, nothing major.
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      ipmi: use %*ph to print small buffer
+
+Arnd Bergmann (1):
+      ipmi: kill off 'timespec' usage again
+
+Corey Minyard (1):
+      ipmi: Don't allow device module unload when in use
+
+Luc Van Oostenryck (1):
+      ipmi: fix ipmb_poll()'s return type
+
+Navid Emamdoost (1):
+      ipmi: Fix memory leak in __ipmi_bmc_register
+
+Vijay Khemka (1):
+      drivers: ipmi: Support for both IPMB Req and Resp
+
+YueHaibing (1):
+      ipmi: bt-bmc: use devm_platform_ioremap_resource() to simplify code
+
+ drivers/char/ipmi/bt-bmc.c          |  4 +--
+ drivers/char/ipmi/ipmb_dev_int.c    | 37 ++++++++-----------------
+ drivers/char/ipmi/ipmi_msghandler.c | 55 ++++++++++++++++---------------------
+ drivers/char/ipmi/ipmi_si_intf.c    | 40 +++++++++------------------
+ include/linux/ipmi_smi.h            | 12 +++++---
+ 5 files changed, 58 insertions(+), 90 deletions(-)
+
