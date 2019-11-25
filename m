@@ -2,136 +2,97 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E6BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ABBC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D65E20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BB52071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mgSsVVRa"
+	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="fuSHOk3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfKYEeP (ORCPT
+        id S1727107AbfKYEhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 23:34:15 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1239 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfKYEeO (ORCPT
+        Sun, 24 Nov 2019 23:37:42 -0500
+Received: from mail-ua1-f52.google.com ([209.85.222.52]:46102 "EHLO
+        mail-ua1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfKYEhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 23:34:14 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddb59c90000>; Sun, 24 Nov 2019 20:34:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 24 Nov 2019 20:34:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 20:34:13 -0800
-Received: from [10.25.75.126] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 04:34:09 +0000
-Subject: Re: [PATCH 0/4] Add support to defer core initialization
-To:     "kishon@ti.com" <kishon@ti.com>
-CC:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
- <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <550dd734-acd9-802a-f650-44c32b56b58a@nvidia.com>
-Date:   Mon, 25 Nov 2019 10:03:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sun, 24 Nov 2019 23:37:41 -0500
+Received: by mail-ua1-f52.google.com with SMTP id i31so3952558uae.13
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 20:37:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=bwQqTlKTDKZ2abMdWNVOtZUSwtWKOhRAhvsBA2Mpx5I=;
+        b=fuSHOk3aA1DgmMXAvf4yqAMpCZDfU7RBqCAM75G5MmJd4jFAgJCnJE47ohYW1tHmLz
+         5j+TwUBSQOFIKh8KtzBPOoDXoXX1RihAxy+aX7++qKTaow5CrgUpwI011hDmJJp0Vg+d
+         8YdM+6vl3Tpm9OdOYFNTuqm+nVN86o1o9BoEpReo63f5wTUcuAMAdwsLS2sTNprVdrSc
+         VjnE4HdyNbXt53tfgnXTwgPO3HEqzjCxhPv9DMk9zyvcRsu2R6UZ8119F21J3wqKez6G
+         BfgbTPYGpKCem7op6F/boQiT9U24OKtuvSHXLduew/l/zcmczv9aIbE3zEBM4xQ6i9ib
+         ncsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=bwQqTlKTDKZ2abMdWNVOtZUSwtWKOhRAhvsBA2Mpx5I=;
+        b=Qc8JcZm+6KDi1WwLIrFL39zyO3DREaSrLnJXTX1u+Y+VDmuaqqUThSs1B1tqIDQTQX
+         MAc/3MCOBC/SxoiedwaouPMu+TbuXbazuu2rfrRQaqJ2Ty5zslOgGcAJaDOFOmTGMck7
+         yxLepjIHSl+Gxdgst68D9hCMcYhzHAQKhMBwnDJzzV6pIwpAqPhOSfkTKccgqEl4P7BD
+         rLn3A2T1dqiDG6WOjSzk97WLk6sxkmddoE6wlfJ9bow+o80bGjGkhV4k/4hpKuGU0KCp
+         /oZCq9IU0rWrW0MS9K7Bbabl7HbRKSn7xteT5U9NBXPGRQQ9eM0oBFH9I4nCjvvMKfFe
+         beaA==
+X-Gm-Message-State: APjAAAVr/axtPI2hRCLReV7oa++a9pfMlIb5vg1vYZ1JlK7kDENlkIT/
+        wx3O4jcvRSVpxngI3nSQ4dts7APfRVG1tw==
+X-Google-Smtp-Source: APXvYqyYfS/umk3C9WJ6m+ltXeTQDzU2ehX1ACDpitE/Nf9SkmILFLc9ZOhVD6PuLqh3XC73KE78QA==
+X-Received: by 2002:ab0:49e9:: with SMTP id f38mr16314359uad.71.1574656659044;
+        Sun, 24 Nov 2019 20:37:39 -0800 (PST)
+Received: from ubuntu1804-desktop ([172.97.41.74])
+        by smtp.gmail.com with ESMTPSA id r64sm1818020vkd.9.2019.11.24.20.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 20:37:38 -0800 (PST)
+Date:   Sun, 24 Nov 2019 23:37:37 -0500
+From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org
+Subject: [RFC v2 0/2] docs: ftrace: Clarify the RAM impact of buffer_size_kb
+Message-ID: <cover.1574655670.git.frank@generalsoftwareinc.com>
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574656457; bh=BfDu0Gwt9ZesOr6ba1xsruGLFgOUT7v/gEah2QuX0Xo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mgSsVVRaXXlVb3lQ7dfibXFuo9n7PAR4P5eQ7llheJRBW2O3K1k6GftCp/c9Thalh
-         P5NBzz+9wBnn1GcLwe0778sXWS8PmQFAYDk7HgYSFGOUcEsviaWjDE3genCCZ24D4o
-         tY22kplJKWH4ViVyXa0VA1JCsD6Q68YdJMc+y2s6iRGjz44Lpr8yRfUVl5TJFd/WXv
-         FpySLrhO/eCKubSLinQdt7Bz1CwaSJ9lA4mJ37ZI1O47ZIbWN8hF6RJHBFQKeSPL7t
-         wlgmIo48bxyZS0CeplWxX4E+gOFJVsuy5wqIWDexZkYerGpSJXl7dDrn1ToXisgyiB
-         M+ehyM+cM2I3w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/2019 10:13 PM, Jingoo Han wrote:
->=20
->=20
-> =EF=BB=BFOn 11/18/19, 1:55 AM, Vidya Sagar wrote:
->>
->> On 11/13/2019 2:38 PM, Vidya Sagar wrote:
->>> EPC/DesignWare core endpoint subsystems assume that the core registers =
-are
->>> available always for SW to initialize. But, that may not be the case al=
-ways.
->>> For example, Tegra194 hardware has the core running on a clock that is =
-derived
->>> from reference clock that is coming into the endpoint system from host.
->>> Hence core is made available asynchronously based on when host system i=
-s going
->>> for enumeration of devices. To accommodate this kind of hardwares, supp=
-ort is
->>> required to defer the core initialization until the respective platform=
- driver
->>> informs the EPC/DWC endpoint sub-systems that the core is indeed availa=
-ble for
->>> initiaization. This patch series is attempting to add precisely that.
->>> This series is based on Kishon's patch that adds notification mechanism
->>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>>
->>> Vidya Sagar (4):
->>>     PCI: dwc: Add new feature to skip core initialization
->>>     PCI: endpoint: Add notification for core init completion
->>>     PCI: dwc: Add API to notify core initialization completion
->>>     PCI: pci-epf-test: Add support to defer core initialization
->>>
->>>    .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
->>>    drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
->>>    drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++----=
---
->>>    drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
->>>    include/linux/pci-epc.h                       |   2 +
->>>    include/linux/pci-epf.h                       |   5 +
->>>    6 files changed, 164 insertions(+), 66 deletions(-)
->>>
->>
->> Hi Kishon / Gustavo / Jingoo,
->> Could you please take a look at this patch series?
->=20
-> You need a Ack from Kishon, because he made EP code.
-Hi Kishon,
-Could you please find time to review this series?
+Clarifies the RAM footprint of buffer_size_kb without getting into
+implementation details.
 
-- Vidya Sagar
->=20
->=20
->> - Vidya Sagar
+Changes in v2:
+  - Removes implementation description of the RAM footprint of
+    buffer_size_kb, but still make the corresponded clarification.
+
+  - Removes a patch that was just for illustration purposes because
+    Steven already got the issue that I was referring to.
+
+  - Adds a patch to fix other typos in the doc.
+
+Frank A. Cancio Bello (2):
+  docs: ftrace: Clarify the RAM impact of buffer_size_kb
+  docs: ftrace: Fix typos
+
+ Documentation/trace/ftrace.rst             | 9 +++++----
+ Documentation/trace/ring-buffer-design.txt | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
 
