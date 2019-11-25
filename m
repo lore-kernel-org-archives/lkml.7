@@ -2,89 +2,91 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958C6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55F3C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D6E207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E07207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfKYO6w (ORCPT
+        id S1728431AbfKYO7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:58:52 -0500
-Received: from sauhun.de ([88.99.104.3]:55066 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbfKYO6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:58:52 -0500
-Received: from localhost (x4e37056e.dyn.telefonica.de [78.55.5.110])
-        by pokefinder.org (Postfix) with ESMTPSA id 371DA2C0456;
-        Mon, 25 Nov 2019 15:58:50 +0100 (CET)
-Date:   Mon, 25 Nov 2019 15:58:49 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Peter Rosin <peda@axentia.se>
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: Fix Kconfig indentation
-Message-ID: <20191125145849.GD2412@kunai>
-References: <1574306363-29424-1-git-send-email-krzk@kernel.org>
+        Mon, 25 Nov 2019 09:59:01 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6709 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728196AbfKYO7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:59:01 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F06DE5FD51FD902D2374;
+        Mon, 25 Nov 2019 22:58:56 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 25 Nov 2019
+ 22:58:50 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <evan.quan@amd.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>, <Prike.Liang@amd.com>,
+        <yuehaibing@huawei.com>, <chenwandun@huawei.com>,
+        <yukuai3@huawei.com>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] drm/amd/powerplay: remove set but not used variable 'stretch_amount2'
+Date:   Mon, 25 Nov 2019 22:58:43 +0800
+Message-ID: <20191125145843.15764-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cQXOx3fnlpmgJsTP"
-Content-Disposition: inline
-In-Reply-To: <1574306363-29424-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:
+ In function vegam_populate_clock_stretcher_data_table:
+drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:1489:29:
+ warning: variable stretch_amount2 set but not used [-Wunused-but-set-variable]
 
---cQXOx3fnlpmgJsTP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is never used, so can be removed.
 
-On Thu, Nov 21, 2019 at 04:19:23AM +0100, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> ---
->=20
-> Changes since v1:
-> 1. Fix also 7-space and tab+1 space indentation issues.
-> ---
->  drivers/i2c/busses/Kconfig | 22 +++++++++++-----------
->  drivers/i2c/muxes/Kconfig  | 18 +++++++++---------
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Peter, I'd like to apply this for 5.5. so we don't have to deal with
-whitespace conflicts during the next cycle. Are you fine with me picking
-it up for muxes?
+diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+index 50896e9..b0e0d67 100644
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+@@ -1486,7 +1486,7 @@ static int vegam_populate_clock_stretcher_data_table(struct pp_hwmgr *hwmgr)
+ 	struct vegam_smumgr *smu_data =
+ 			(struct vegam_smumgr *)(hwmgr->smu_backend);
+ 
+-	uint8_t i, stretch_amount, stretch_amount2, volt_offset = 0;
++	uint8_t i, stretch_amount, volt_offset = 0;
+ 	struct phm_ppt_v1_information *table_info =
+ 			(struct phm_ppt_v1_information *)(hwmgr->pptable);
+ 	struct phm_ppt_v1_clock_voltage_dependency_table *sclk_table =
+@@ -1525,11 +1525,9 @@ static int vegam_populate_clock_stretcher_data_table(struct pp_hwmgr *hwmgr)
+ 			(table_info->cac_dtp_table->ucCKS_LDO_REFSEL != 0) ?
+ 			table_info->cac_dtp_table->ucCKS_LDO_REFSEL : 5;
+ 	/* Populate CKS Lookup Table */
+-	if (stretch_amount == 1 || stretch_amount == 2 || stretch_amount == 5)
+-		stretch_amount2 = 0;
+-	else if (stretch_amount == 3 || stretch_amount == 4)
+-		stretch_amount2 = 1;
+-	else {
++	if (!(stretch_amount == 1 || stretch_amount == 2 ||
++	      stretch_amount == 5 || stretch_amount == 3 ||
++	      stretch_amount == 4)) {
+ 		phm_cap_unset(hwmgr->platform_descriptor.platformCaps,
+ 				PHM_PlatformCaps_ClockStretcher);
+ 		PP_ASSERT_WITH_CODE(false,
+-- 
+2.7.4
 
 
---cQXOx3fnlpmgJsTP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3b7CkACgkQFA3kzBSg
-KbYcbxAAlLTnbKDY7JeTE45Y+5GmbWZqpE32VWbcAleUoU12p2NTufGyRB9WMgbh
-TbdF6PEyH590IUjnfwfAG6Xfh5qrF/JaSu4vOgRUxMWxIeBFlK5Lw3DsMSjv5f80
-sTRTNeKA6qXLb4lZ1J2HBsk0tym2n2XROkpRBOOPyT8vxtTwWn66zS/Fnk8rOyG+
-SGOhSwQ/jO+sIDLyZFaNSLssKs0gQE8Roaqv64uT5EZMaFSBlHO2Jb2ErOOZ06fp
-rLiC2jO01O6PLDkZs8wiemPEXvgukdb5ld7C1Qs4ZL11m2aaEzyYoJeFuJyHiP81
-Grl1mhGLSFVXdONGyEa/sW1COVk2106qUNJQ1kuQOy0EKc/8xtqJnPVOrErVDkgF
-govrszAlBPUYAZlV+It3uB206Fn1jQlecDbgsgw+ECRyN7I3P/CCfisbolgQ+C6w
-aa5VLB+0sIGNMw4130Y8eHoXNlAz33tkDuCvCNh6C+gRxL3JQMSOicrM5c0alKyB
-AtoaVG5Vul05v723IXAhojoIt0/fyQo+/1ndAgPNMFNN5PJ6YZWCFvMWkMJ6ob5n
-dQJahJ8/2pV4wrSFraQ2aYg1ej9coJKEvfCbps8YBJUQ4ESvwvHyvR78oNVzkKX7
-HR2cRUQzEd1dQ8adzH62TUujoozrXwwd+HfQ0jUNzt3lVIMp41g=
-=O37+
------END PGP SIGNATURE-----
-
---cQXOx3fnlpmgJsTP--
