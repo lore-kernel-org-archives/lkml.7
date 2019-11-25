@@ -2,112 +2,179 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEE5C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C147BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A350A2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8758A20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Aj6/D5hD"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tQl0LTLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfKYM0p (ORCPT
+        id S1727194AbfKYMa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:26:45 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:23244 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfKYM0p (ORCPT
+        Mon, 25 Nov 2019 07:30:56 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54313 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfKYMa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:26:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574684803;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=slzL0wEBERMw+r5ZllRQGIEHa9MDUC2QNWePkvo5OGQ=;
-        b=Aj6/D5hDk8RCHMrHZG5LpxF1BdW4ShD8Hmxw2cyNKMByVlisGP5TjIVvHHeXsGenK1
-        0MrNbhSp1DW+pNTfNttoiBTe4FqHu/oCOO0tnm9IJG/wVg15YCyj6Ppa0td+mL6uQyVY
-        CrkCqrGdeoPMOj9C42yVm9uy2zAdK71N09klNlMyR/zt2TM3eyG23vSFbUu1pZLyaPkb
-        E8R4/yPa+JoemgXfWpDT8dgjZGiZ66d38j8WvzQvik/Q+17robhh2ewXeLcjc0TJR6Rb
-        14uj2uPNxgB3tGPlYR6rXR29XCuMiI9C3YGqWkosQPzOzjL2MEssYgsDZWanHJrMQUwH
-        h5rQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQr4OGUPX+1NmWArOmLo="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id 304194vAPCQh0FR
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 25 Nov 2019 13:26:43 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 4/5] ARM: dts: ux500: Add pin configs for UART1 CTS/RTS pins
-Date:   Mon, 25 Nov 2019 13:22:55 +0100
-Message-Id: <20191125122256.53482-4-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191125122256.53482-1-stephan@gerhold.net>
-References: <20191125122256.53482-1-stephan@gerhold.net>
+        Mon, 25 Nov 2019 07:30:56 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b11so5802026wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:30:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=uNInIHq/5ROyOJ3aqQnVJSph2LAr19QvURlnsalUvjs=;
+        b=tQl0LTLivZPWkV+iB/q6nU+Rkfy+jfwF9XQe3v42g0+WO5ejRLJh/71CsyT0fsrb/w
+         FWSsAYT1CI743DHti6tih7QymcYu/Ob+3xVQrdvKDcmZwn5Z4bpzefh2YJ5tfWrxpmlL
+         kBqcOc5gQaAJrAhxGEeSQ94QDewI2LPpNUXRtog1IabomUfu/BKHOiz4003vtDAIywV7
+         FZjTL9Wj6dIIFOfdyG63maP5qjysz1C14Wdc8oudFemJMhp7Ux8waAsn/qbaEUD+prac
+         wboCVWo0nChIlb/2n5Vxb+4SX0q0sKsga+U/DtnFjF9Shj5aTF90kSicQ1H+4w4VtTV1
+         U21g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=uNInIHq/5ROyOJ3aqQnVJSph2LAr19QvURlnsalUvjs=;
+        b=RFOQnLzBP/cwew4OLj3MHCT1snUf0nqj186174IJYvFEE/C1Yd7IKWLK7p1OuTUj09
+         Ut/rnyYEkBcNVbAX8pyzBvTcOniVfWeAeVpONNO6bvL/ykCVgqr0j0ET16kHgTnVBEBj
+         wmTnXa5MFuPCZT39SAKH8x6lIkfPPXk9Qa5YFFJd1wPYZvqZs13R0oYQCHKijCrTKV3A
+         Qz79fZht2jveExR4SeR9NGRfPt/+LiDYQ4/4nls28V2UYQiH+h/4Mj/60yKMOAsnacoQ
+         nAJzKwJUmqd7dx+skPXHT6JOzMPq1RAzOTx7SEt0jM/iUKu1Spsqcko5goVpyGIu9edG
+         ArSw==
+X-Gm-Message-State: APjAAAXWlSzXSzUUcb9kBw6Knb/LFAuthXQF3giREqnkZQBCZWZTWnHr
+        OrBQbTtBih6ZdNFvJGrpFKTR1A==
+X-Google-Smtp-Source: APXvYqxhdhdSwqHiu0FU3Axoh8T+PVZunoW9nGMfGUPUqsOhfA8Dl4UFhVJWblM3MATB2crQVoNEJA==
+X-Received: by 2002:a1c:40c1:: with SMTP id n184mr29983297wma.116.1574685053091;
+        Mon, 25 Nov 2019 04:30:53 -0800 (PST)
+Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
+        by smtp.gmail.com with ESMTPSA id x2sm8032581wmc.3.2019.11.25.04.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 04:30:52 -0800 (PST)
+References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com> <1571382865-41978-4-git-send-email-jian.hu@amlogic.com> <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com> <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com> <1jblts3v7e.fsf@starbuckisacylon.baylibre.com> <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com> <1jh839f2ue.fsf@starbuckisacylon.baylibre.com> <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com> <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com> <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com> <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com> <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com> <9ec317e8-136e-1ab4-4e9b-21210e7f3e05@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock driver
+In-reply-to: <9ec317e8-136e-1ab4-4e9b-21210e7f3e05@amlogic.com>
+Date:   Mon, 25 Nov 2019 13:30:50 +0100
+Message-ID: <1j5zj8qgsl.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UART1 an be optionally used with additional CTS/RTS pins.
-The pinctrl driver has an extra "u1ctsrts_a_1" pin group for them.
 
-Add a new pin configuration to configure them correctly if needed.
+On Mon 25 Nov 2019 at 13:01, Jian Hu <jian.hu@amlogic.com> wrote:
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi | 26 +++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> On 2019/11/25 18:14, Jerome Brunet wrote:
+>>
+>> On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>>> Hi, Jerome
+>>>
+>>> On 2019/11/20 23:35, Jerome Brunet wrote:
+>>>>
+>>>> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>>
+>>>>> Hi, jerome
+>>>>>
+>>>>> Is there any problem about fixed_pll_dco's parent_data?
+>>>>>
+>>>>> Now both name and fw_name are described in parent_data.
+>>>>
+>>>> Yes, there is a problem.  This approach is incorrect, as I've tried to
+>>>> explain a couple times already. Let me try to re-summarize why this
+>>>> approach is incorrect.
+>>>>
+>>>> Both fw_name and name should be provided when it is possible that
+>>>> the DT does not describe the input clock. IOW, it is only for controllers
+>>>> which relied on the global name so far and are now starting to describe
+>>>> the clock input in DT
+>>>>
+>>>> This is not your case.
+>>>> Your controller is new and DT will have the correct
+>>>> info
+>>>>
+>>>> You are trying work around an ordering issue by providing both fw_name
+>>>> and name. This is not correct and I'll continue to nack it.
+>>>>
+>>>> If the orphan clock is not reparented as you would expect, I suggest you
+>>>> try to look a bit further at how the reparenting of orphans is done in
+>>>> CCF and why it does not match your expectation.
+>>>>
+>>> I have debugged the handle for orphan clock in CCF, Maybe you are missing
+>>> the last email.
+>>
+>> Nope, got it the first time
+>>
+>>> Even though the clock index exit, it will get failed for the orphan clock's
+>>> parent clock due to it has not beed added to the provider.
+>>
+>> If the provider is not registered yet, of course any query to it won't
+>> work. This why I have suggested to this debug *further* :
+>>
+>> * Is the orphan reparenting done when a new provider is registered ?
+>> * If not, should it be done ? is this your problem ?
+>>
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-index b6d0a60e9aed..e85a08ad2ea7 100644
---- a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-@@ -65,6 +65,32 @@
- 				ste,config = <&slpm_out_wkup_pdis>;
- 			};
- 		};
-+
-+		u1ctsrts_a_1_default: u1ctsrts_a_1_default {
-+			default_mux {
-+				function = "u1";
-+				groups = "u1ctsrts_a_1";
-+			};
-+			default_cfg1 {
-+				pins = "GPIO6_AF6"; /* CTS */
-+				ste,config = <&in_pu>;
-+			};
-+			default_cfg2 {
-+				pins = "GPIO7_AG5"; /* RTS */
-+				ste,config = <&out_hi>;
-+			};
-+		};
-+
-+		u1ctsrts_a_1_sleep: u1ctsrts_a_1_sleep {
-+			sleep_cfg1 {
-+				pins = "GPIO6_AF6"; /* CTS */
-+				ste,config = <&slpm_in_wkup_pdis>;
-+			};
-+			sleep_cfg2 {
-+				pins = "GPIO7_AG5"; /* RTS */
-+				ste,config = <&slpm_out_hi_wkup_pdis>;
-+			};
-+		};
- 	};
- 
- 	uart2 {
--- 
-2.24.0
+Apparently, I was not clear enough so I'll rephrase
+
+> Yes, the orphan reparenting is done when the new provider is
+> registered.
+
+No it is not done yet. Please check the code.
+
+The reparenting of orphan is done only on clock registration, not on
+provider registeration. Now that clocks can be specified by DT, this
+probably needs to added.
+
+That is your problem.
+
+Please fix the underlying issue, then you can post your series again.
+
+>
+> Reparenting the orphan will be done when each clock is registered by
+> devm_clk_hw_register. And at this time the provider has not been
+> registered. After all clocks are registered by devm_clk_hw_register, the
+> provider will be registered by devm_of_clk_add_hw_provider.
+>
+> Reparenting the orphan will fail when fw_name is added alone, the couse is
+> that devm_clk_hw_register is always running ahead of
+> devm_of_clk_add_hw_provider.
+
+Please stop bringing the topic of "fw_name" and "name" field together, I
+told you 3 times why this is wrong. It is not going to change.
+
+>
+> That is why it will failed to get parent for the orphan clock.
+
+It fails because the provider is not registered when you try to reparent
+the orphan.
+
+It shows that you should try again once the provider is registered.
+
+>
+>
+>
+>>
+>> .
+>>
 
