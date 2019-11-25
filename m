@@ -2,82 +2,172 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93B1C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3F5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D4A2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3E120836
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mijzQuOf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jvz4XorG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfKYPXQ (ORCPT
+        id S1728528AbfKYP0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:23:16 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:55312 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbfKYPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:23:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=QxQNDY3h4QEH/474FEBZsr50zPaZur7gyEqjwq7sTZM=; b=mijzQuOfdJ4Y2MJffDpDWUAHJU
-        zAmGh+pHy/bdZumijvMa5jTNBetlh8xEgic7xoCr5sdF5V569i4n4u9j+44Rm+BE/0FhjF9AGp4pL
-        qlxWvESVzBxgOLE7kKvNRpM1iR3tnv/jrHAlPTkezhYDGCk0QbxeQdUjKAgK6tlTQOXk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iZGCm-0007xf-FU; Mon, 25 Nov 2019 16:23:12 +0100
-Date:   Mon, 25 Nov 2019 16:23:12 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>, mkl@pengutronix.de,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, david@protonic.nl
-Subject: Re: [PATCH v1 1/2] net: dsa: sja1105: print info about probet chip
- only after every thing was done.
-Message-ID: <20191125152312.GJ6602@lunn.ch>
-References: <20191125100259.5147-1-o.rempel@pengutronix.de>
- <CA+h21hrOO6AFhvXQL47LwqCKU9vpRZ47feWB6fkn=WfrdZr6tA@mail.gmail.com>
+        Mon, 25 Nov 2019 10:26:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58635 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727785AbfKYP0p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:26:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574695603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=1lRPd7hhBMk9v0DSJEthn5Vd1TjRTql0UVLGeiXIWco=;
+        b=Jvz4XorGBNHvchW+oobhdXPl5ki1ofNckzQjyWEvnHaVOzU0emVLjekCA8fKFInDynDPKZ
+        d8MMrR1Op10gJ06/aqLW66Fp7GjvRed1taGsMfMRlDQEQkmY3uww/Kr+NRCj6lUuu6V655
+        l+FuK81wdLPSkun3bmEqoAzCTjKDNRU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-7hXFZmyBOAqKBwbTiD5azw-1; Mon, 25 Nov 2019 10:26:39 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C03BB18557C6;
+        Mon, 25 Nov 2019 15:26:36 +0000 (UTC)
+Received: from [10.36.118.6] (unknown [10.36.118.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E8CC960C81;
+        Mon, 25 Nov 2019 15:26:34 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/memory_hotplug: Don't allow to online/offline
+ memory blocks with holes
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20191119115237.6662-1-david@redhat.com>
+ <20191125130943.GN31714@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <e282c490-28bd-76a5-aca6-fedb11142eca@redhat.com>
+Date:   Mon, 25 Nov 2019 16:26:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hrOO6AFhvXQL47LwqCKU9vpRZ47feWB6fkn=WfrdZr6tA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125130943.GN31714@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 7hXFZmyBOAqKBwbTiD5azw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If you want to actually fix something, there is also a memory leak
-> related to this. It is present in most DSA drivers. When
-> dsa_register_switch returns -EPROBE_DEFER, anything allocated with
-> devm_kzalloc will be overwritten and the old memory will leak.
+On 25.11.19 14:09, Michal Hocko wrote:
+> On Tue 19-11-19 12:52:37, David Hildenbrand wrote:
+>> Our onlining/offlining code is unnecessarily complicated. Only memory
+>> blocks added during boot can have holes (a range that is not
+>> IORESOURCE_SYSTEM_RAM). Hotplugged memory never has holes (e.g., see
+>> add_memory_resource()). All memory blocks that belong to boot memory are
+>> already online.
+>>
+>> Note that boot memory can have holes and the memmap of the holes is marked
+>> PG_reserved. However, also memory allocated early during boot is
+>> PG_reserved - basically every page of boot memory that is not given to the
+>> buddy is PG_reserved.
+>>
+>> Therefore, when we stop allowing to offline memory blocks with holes, we
+>> implicitly no longer have to deal with onlining memory blocks with holes.
+>> E.g., online_pages() will do a
+>> walk_system_ram_range(..., online_pages_range), whereby
+>> online_pages_range() will effectively only free the memory holes not
+>> falling into a hole to the buddy. The other pages (holes) are kept
+>> PG_reserved (via move_pfn_range_to_zone()->memmap_init_zone()).
+>>
+>> This allows to simplify the code. For example, we no longer have to
+>> worry about marking pages that fall into memory holes PG_reserved when
+>> onlining memory. We can stop setting pages PG_reserved completely in
+>> memmap_init_zone().
+>>
+>> Offlining memory blocks added during boot is usually not guaranteed to work
+>> either way (unmovable data might have easily ended up on that memory during
+>> boot). So stopping to do that should not really hurt. Also, people are not
+>> even aware of a setup where onlining/offlining of memory blocks with
+>> holes used to work reliably (see [1] and [2] especially regarding the
+>> hotplug path) - I doubt it worked reliably.
+>>
+>> For the use case of offlining memory to unplug DIMMs, we should see no
+>> change. (holes on DIMMs would be weird).
+>>
+>> Please note that hardware errors (PG_hwpoison) are not memory holes and
+>> are not affected by this change when offlining.
+>>
+>> [1] https://lkml.org/lkml/2019/10/22/135
+>> [2] https://lkml.org/lkml/2019/8/14/1365
+> 
+> Please do not use lkml.org links, they tend to break longterm. Use
+> http://lkml.kernel.org/r/$msg_id instead.
 
-There is a rather unfortunate chicken/egg problem here for any switch
-using MDIO. At the moment i don't know how to solve it. As a result
-the first probe is pretty much guaranteed to return -EPROBE_DEFER. The
-problem is that the MAC driver registers its MDIO bus. That causes the
-DT to be walked for the bus and the switch probed. The switch probe
-registers the switch with the DSA core. It then tries to get a handle
-on the master device. But the MAC driver has not called
-netdev_register() yet, it is busy registering its MDIO bus. So the
-master device is not there, and so we get a -EPROBE_DEFER and the
-switch driver needs to unwind.
+Thanks for the tip! I read a couple of times that these links are
+problematic but never knew what to use instead ...
 
-So for an MDIO switch, i suggest the probe it kept to a minimum, and
-all the real work is done in the setup callback. Setup is called when
-all resources the DSA core needs are available.
+-- 
 
-I've got a patch somewhere for mv88e6xxx which does this move, and it
-cut boot time by a noticeable amount.
+Thanks,
 
-    Andrew
+David / dhildenb
+
