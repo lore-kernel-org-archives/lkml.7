@@ -2,123 +2,56 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60B5C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CCAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9235B2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJO2LxWf"
+	by mail.kernel.org (Postfix) with ESMTP id EBC062075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKYTFN (ORCPT
+        id S1727109AbfKYTF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:05:13 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:41409 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfKYTFN (ORCPT
+        Mon, 25 Nov 2019 14:05:56 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:53042 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfKYTFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:05:13 -0500
-Received: by mail-pj1-f65.google.com with SMTP id gc1so7014692pjb.8;
-        Mon, 25 Nov 2019 11:05:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=P19DovHn3w/+n6hilY5zf6aVHKgMGVjkSijfGR+10vI=;
-        b=SJO2LxWfQL/RpUPwjCS4HFD6Zi0CFuImYwngKnX2+isiSOQFMhpKZ9dY7m7ErmqtG4
-         u8Ew0Quvr1Acigrzp5DqDA33h/fhbBej0bLLtoOm5gDL6ZBBDzASZkK57S4r97WCAUXv
-         1kdCIwBr+MtYS4zQmwDjV39T7kR7KNCkvSsrsqnGn/RZtQGEgxclKTjXLcVc0+QlBA8/
-         f2OJbsWGWbWcMTTgc86WqTPtoGq/x3aRQUZUATAjf061M9A4fWfzPoEwYDbAmVPYwZZh
-         hdK+LgsacNAMnrFVgGKN0l0g8z5n1Wqe46FZrR+84JSKZupFL3Pm9iu8TlcA8gX7ZayR
-         lA4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=P19DovHn3w/+n6hilY5zf6aVHKgMGVjkSijfGR+10vI=;
-        b=MR47lk1i4lW65AGRT2ggZAn+1T/pdIFruBF3ujWigXHgnsRpqCaxwEj4dK2bednCt4
-         vUCIUsUr6LP10F44lzhHh7MeVMftlJdv32NiNPihMzYF1d/Z4lOpKnO06Y8SL7DyHuST
-         Di4N8VlHfJiTOsJJOb2NSLB+hH5zkTpWZyZ94KmvYt9pMFkEXu9NLNlspK4e7xDBECvf
-         19cVVV0kdpilyS1DwOYL8KzFdZVZI0MEX+m8fYc/Lq/QNfsOTgFwFDdwLYof05DXoOtz
-         5BUdPkZ8xc50uYMgK8LrXtP/JnleWd2oBZ3GX+lWx4gjP0b0n39D/q/4OF3HXgkvI0sI
-         5D3w==
-X-Gm-Message-State: APjAAAUfQYB2k/hin0I8UB/Xv5Jpy/4lW5M0mWJNjpSmgT14B9EparY6
-        IRHXV2/ZaIBEKKLqgHIgn1/s6ALNdYf7uju9lew=
-X-Google-Smtp-Source: APXvYqzb9QDOJ3vCeMWuto+UJ4Y/4ebOOkTH+Cb5IJCRGIdMR80O9owbytFNwFLnJBA3iU/X2miKDbF+Jt3xD0q+HaQ=
-X-Received: by 2002:a17:902:bb84:: with SMTP id m4mr29810736pls.255.1574708710742;
- Mon, 25 Nov 2019 11:05:10 -0800 (PST)
-MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
- <1574604530-9024-2-git-send-email-akinobu.mita@gmail.com> <CAHp75VfGt59F5YbEjctvOm00g+Pws+1jYgVbNLnUE3kq3SZi-A@mail.gmail.com>
- <CAC5umyjzDODZf8ECWDmR6SAY-TNkdJ+a0GZRgOFcPCAMok2Ddg@mail.gmail.com>
-In-Reply-To: <CAC5umyjzDODZf8ECWDmR6SAY-TNkdJ+a0GZRgOFcPCAMok2Ddg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Nov 2019 21:05:00 +0200
-Message-ID: <CAHp75VdXUKLrnPEnga7An7BnCoGac=XxgWESWyV-ShmK_xiD4g@mail.gmail.com>
-Subject: Re: [PATCH 1/8] add header file for kelvin to/from Celsius conversion helpers
-To:     Akinobu Mita <akinobu.mita@gmail.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 14:05:55 -0500
+Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D54471500C677;
+        Mon, 25 Nov 2019 11:05:54 -0800 (PST)
+Date:   Mon, 25 Nov 2019 11:05:54 -0800 (PST)
+Message-Id: <20191125.110554.14941471233332672.davem@davemloft.net>
+To:     maowenan@huawei.com
+Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net v3] net: dsa: ocelot: add dependency for
+ NET_DSA_MSCC_FELIX
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191125124110.145595-1-maowenan@huawei.com>
+References: <3e9d6100-6965-da85-c310-6e1a9318f61d@huawei.com>
+        <20191125124110.145595-1-maowenan@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 25 Nov 2019 11:05:55 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 4:30 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
-:
-> 2019=E5=B9=B411=E6=9C=8824=E6=97=A5(=E6=97=A5) 23:57 Andy Shevchenko <and=
-y.shevchenko@gmail.com>:
-> > On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> w=
-rote:
+From: Mao Wenan <maowenan@huawei.com>
+Date: Mon, 25 Nov 2019 20:41:10 +0800
 
-> > >  include/linux/thermal.h     |  1 +
+> +	select NET_VENDOR_MICROSEMI
 
-> > > --- a/include/linux/thermal.h
-> > > +++ b/include/linux/thermal.h
-> > > @@ -14,6 +14,7 @@
-> > >  #include <linux/idr.h>
-> > >  #include <linux/device.h>
-> > >  #include <linux/sysfs.h>
-> > > +#include <linux/temperature.h>
-> > >  #include <linux/workqueue.h>
-> > >  #include <uapi/linux/thermal.h>
-> >
-> > I don't see any users of it. Why did you include?
->
-> The rest of this patch series starts using it.
->
-> I decided to include <linux/temperature.h> from <linux/thermal.h> because
-> the existing <linux/thermal.h> provides the conversion helpers.
->
-> However, not all of the thermal drivers require these conversion helpers,
-> so we can change to include <linux/temperature.h> from each thermal drive=
-r
-> instead of including it from <linux/thermal.h>.
->
-> Which way do you prefer?
-
-I think users should include new header explicitly.
-
---=20
-With Best Regards,
-Andy Shevchenko
+This is never correct.
