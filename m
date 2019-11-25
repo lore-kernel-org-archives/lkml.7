@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C65BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A516C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDEB20740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2F320740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfKYL20 (ORCPT
+        id S1727843AbfKYL21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 06:28:26 -0500
-Received: from foss.arm.com ([217.140.110.172]:49066 "EHLO foss.arm.com"
+        Mon, 25 Nov 2019 06:28:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:49076 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfKYL2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:28:19 -0500
+        id S1727794AbfKYL2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 06:28:20 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4A941396;
-        Mon, 25 Nov 2019 03:28:18 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EE80139F;
+        Mon, 25 Nov 2019 03:28:20 -0800 (PST)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0644D3F52E;
-        Mon, 25 Nov 2019 03:28:17 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 049813F52E;
+        Mon, 25 Nov 2019 03:28:18 -0800 (PST)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Qais Yousef <qais.yousef@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/14] driver: base: cpu: Export device_online/offline
-Date:   Mon, 25 Nov 2019 11:27:49 +0000
-Message-Id: <20191125112754.25223-10-qais.yousef@arm.com>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 10/14] driver: xen: Replace cpu_up/down with device_online/offline
+Date:   Mon, 25 Nov 2019 11:27:50 +0000
+Message-Id: <20191125112754.25223-11-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191125112754.25223-1-qais.yousef@arm.com>
 References: <20191125112754.25223-1-qais.yousef@arm.com>
@@ -42,56 +44,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And the {lock,unlock}_device_hotplug so that they can be used from
-modules.
+The core device API performs extra housekeeping bits that are missing
+from directly calling cpu_up/down.
 
-This is in preparation to replace cpu_up/down with
-device_online/offline; which kernel/torture.c will require to be
-exported to be built as a module.
+See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+serialization during LPM") for an example description of what might go
+wrong.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This also prepares to make cpu_up/down a private interface for anything
+but the cpu subsystem.
+
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC: Juergen Gross <jgross@suse.com>
+CC: Stefano Stabellini <sstabellini@kernel.org>
+CC: xen-devel@lists.xenproject.org
 CC: linux-kernel@vger.kernel.org
 ---
- drivers/base/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/xen/cpu_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 7bd9cd366d41..29b40c71b1ba 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -883,11 +883,13 @@ void lock_device_hotplug(void)
- {
- 	mutex_lock(&device_hotplug_lock);
- }
-+EXPORT_SYMBOL_GPL(lock_device_hotplug);
+diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
+index f192b6f42da9..ec975decb5de 100644
+--- a/drivers/xen/cpu_hotplug.c
++++ b/drivers/xen/cpu_hotplug.c
+@@ -94,7 +94,7 @@ static int setup_cpu_watcher(struct notifier_block *notifier,
  
- void unlock_device_hotplug(void)
- {
- 	mutex_unlock(&device_hotplug_lock);
- }
-+EXPORT_SYMBOL_GPL(unlock_device_hotplug);
- 
- int lock_device_hotplug_sysfs(void)
- {
-@@ -2679,6 +2681,7 @@ int device_offline(struct device *dev)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(device_offline);
- 
- /**
-  * device_online - Put the device back online after successful device_offline().
-@@ -2710,6 +2713,7 @@ int device_online(struct device *dev)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(device_online);
- 
- struct root_device {
- 	struct device dev;
+ 	for_each_possible_cpu(cpu) {
+ 		if (vcpu_online(cpu) == 0) {
+-			(void)cpu_down(cpu);
++			device_offline(get_cpu_device(cpu));
+ 			set_cpu_present(cpu, false);
+ 		}
+ 	}
 -- 
 2.17.1
 
