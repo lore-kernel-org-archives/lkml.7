@@ -2,144 +2,89 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5291BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3288C43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CB42071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB4E20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="NkipfqBk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gAkEqD43"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ayClCS5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKYXhP (ORCPT
+        id S1727088AbfKYXlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 18:37:15 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:35833 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbfKYXhP (ORCPT
+        Mon, 25 Nov 2019 18:41:09 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12903 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKYXlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 18:37:15 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5C4D7527B;
-        Mon, 25 Nov 2019 18:37:13 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 25 Nov 2019 18:37:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to
-        :subject:content-type; s=fm1; bh=ncriW7ZaZvfQAqjJ9CabdLFVncnOVKJ
-        862KZb8NOlOE=; b=NkipfqBkuZ4AXdbRmxhoqgisaN1XxSTi3kyxhLIhwBZzEIH
-        mVGmsguYxWurjyCvNjfl5pJqWM5sK7K6GVIRiz0I0ejsxjbk0nWPJd6j0IDU1AU5
-        bBYLz9WDOfye2fPk0BK5/TP1AHUrf22h1ffYlCUEiTyzmJFp1ldWPljsp2msxNlg
-        PnZjnskEApqjBTJYWG3Cghay0vevbXVvgo9gUhZDstrwEj01DiyjVnvppOL4qUDo
-        0IVuLR226XHY2HuYrzBvnwXiu04JK8OanmQh1Fc3G9S3LJbF5PdyjAArg/Oz2i2C
-        bNjK9td4JGPNtfQIUepZK/HiaIHfMNSbcS9BF5Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ncriW7
-        ZaZvfQAqjJ9CabdLFVncnOVKJ862KZb8NOlOE=; b=gAkEqD43/G23hkF6xMx0wh
-        QLIH3eaTcj7jvo6+5Wjlza+5tWZUpxNCDUJBXCNUsls+hNS4ctlPkd5311yMzPCo
-        Z/DKE6PZHXbuc+PBaAjMJU9aUhmSN1Bp6fTXefk93MYvFdtS+j+QsO8asw4o7MsH
-        QEvU7hbcwkYRYtaFBKYe7WOiwNHP89rewuO10bEHiXHE3Bx2zEuqngXBX+Ithbo8
-        CAPS+QJqrSoNqKnYO/UaslT5+5/Y4d4hWhSKFqJoP3SN6H7Rx513erEl1RAOYt3T
-        Bhe6HwTF+e6BqEIlilfgdUy5W/imBTAsSayNEstbbx91sFBe3x2AehRis3HZlrag
-        ==
-X-ME-Sender: <xms:qGXcXYFcJTtMu5t3od6KQcIzz4LUe-ruDuXTPVBXBTJX4_QDUSI9bA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeivddgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-    grihhnpehkvghrnhgvlhdrohhrghenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
-    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:qGXcXdKzIaIVyktBSBXW2v6jRStgJAdgsg1HSKNxAF0k3LE7fW1oeA>
-    <xmx:qGXcXdh10fl-eZoHzznF8WLXSlJj7ivGkIcV8dHgEQLgxvyXKifZGA>
-    <xmx:qGXcXTl63bMfZP57wWNP3qYCn8V3-bc5kqfVgjFcdmLbX-LSxPHWVA>
-    <xmx:qWXcXfN55iZ9JNu8mzdN_wZLSf4iOKYa7-mYj7mN31ezNk55BLLSjg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 6BA06E00A3; Mon, 25 Nov 2019 18:37:12 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
-Mime-Version: 1.0
-Message-Id: <ff44cecd-7e05-4e5d-b88f-2d6af6fd8b8b@www.fastmail.com>
-In-Reply-To: <20191125202937.23133-1-roy.van.doormaal@prodrive-technologies.com>
-References: <20191125202937.23133-1-roy.van.doormaal@prodrive-technologies.com>
-Date:   Tue, 26 Nov 2019 10:08:36 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Roy van Doormaal" <roy.van.doormaal@prodrive-technologies.com>,
-        "Brendan Higgins" <brendanhiggins@google.com>,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH] irqchip/aspeed-i2c-ic: Fix irq domain name memory leak
+        Mon, 25 Nov 2019 18:41:08 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddc66950000>; Mon, 25 Nov 2019 15:41:09 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 25 Nov 2019 15:41:07 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 25 Nov 2019 15:41:07 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 23:41:07 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 25 Nov 2019 23:41:06 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ddc66920000>; Mon, 25 Nov 2019 15:41:06 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrii Nakryiko <andriin@fb.com>
+CC:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 0/1] bpf: fix a no-mmu build failure by providing a stub allocator
+Date:   Mon, 25 Nov 2019 15:41:02 -0800
+Message-ID: <20191125234103.1699950-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574725269; bh=+UikYwGL8PF/KNnxAPIPj9xjsgDE5Jat9ThGUVvv3jE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=ayClCS5XxvUorhhDTYQ4QhBFhXsd7dXYeRTt2bTcsLG6cI8TYwG6vHL2QHNDcFXg5
+         CQvT2tWLejsMmf5QWEhBiP203s4Cv1kx+7yUhBIPz3wYUu/Bfgzlf6bi0OTek6lHJl
+         89HXGoftD8P88UnN8HrjILy9Fe8aLqmcpDcWYRob42uYBRtqlNjSiIPzzDxw88rNrX
+         XVaeY5eTNDZiJv0hpck5BgVJlUOHWezEs9iKH96x97uvn6KxidFAxJ5kDpNupoDG1t
+         f8rqgGDwfIUZuqEBBG1vVPGZ21OKhw+TLNfdZyneoXgaRC3tVGJh4fvvkL01p3EPQj
+         QnWUBfewNoKVg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+I ran into this on today's linux-next: commit c165016bac27 ("Add
+linux-next specific files for 20191125"). The kbuild robot reported a
+build failure on my larger (unrelated) patchset, but there were actually
+two build failures, and this patch here fixes the second failure.
 
-On Tue, 26 Nov 2019, at 06:59, Roy van Doormaal wrote:
-> The aspeed irqchip driver overwrites the default irq domain name,
-> but doesn't free the existing domain name.
-> This patch frees the irq domain name before overwriting it.
-> 
-> kmemleak trace:
-> 
-> unreferenced object 0xb8004c40 (size 64):
-> comm "swapper", pid 0, jiffies 4294937303 (age 747.660s)
-> hex dump (first 32 bytes):
-> 3a 61 68 62 3a 61 70 62 3a 62 75 73 40 31 65 37 :ahb:apb:bus@1e7
-> 38 61 30 30 30 3a 69 6e 74 65 72 72 75 70 74 2d 8a000:interrupt-
-> backtrace:
-> [<086b59b8>] kmemleak_alloc+0xa8/0xc0
-> [<b5a3490c>] __kmalloc_track_caller+0x118/0x1a0
-> [<f59c7ced>] kvasprintf+0x5c/0xc0
-> [<49275eec>] kasprintf+0x30/0x50
-> [<5713064b>] __irq_domain_add+0x184/0x25c
-> [<53c594d0>] aspeed_i2c_ic_of_init+0x9c/0x128
-> [<d8d7017e>] of_irq_init+0x1ec/0x314
-> [<f8405bf1>] irqchip_init+0x1c/0x24
-> [<7ef974b3>] init_IRQ+0x30/0x90
-> [<87a1438f>] start_kernel+0x28c/0x458
-> [< (null)>] (null)
-> [<f0763fdf>] 0xffffffff
-> 
-> Signed-off-by: Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
-> ---
->  drivers/irqchip/irq-aspeed-i2c-ic.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-aspeed-i2c-ic.c 
-> b/drivers/irqchip/irq-aspeed-i2c-ic.c
-> index 8d591c179f81..8081b8483a79 100644
-> --- a/drivers/irqchip/irq-aspeed-i2c-ic.c
-> +++ b/drivers/irqchip/irq-aspeed-i2c-ic.c
-> @@ -92,6 +92,8 @@ static int __init aspeed_i2c_ic_of_init(struct 
-> device_node *node,
->  		goto err_iounmap;
->  	}
->  
-> +	if (i2c_ic->irq_domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
-> +		kfree(i2c_ic->irq_domain->name);
->  	i2c_ic->irq_domain->name = "aspeed-i2c-domain";
+John Hubbard (1):
+  bpf: fix a no-mmu build failure by providing a stub allocator
 
-Given that the name is no-longer allocated I think you need to clear the
-IRQ_DOMAIN_NAME_ALLOCATED bit from flags to avoid attempting to
-free the const string in irq_domain_remove():
+ kernel/bpf/syscall.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/irq/irqdomain.c?h=v5.4#n263
+--=20
+2.24.0
 
-Or do a kstrdup().
-
-Andrew
