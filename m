@@ -2,393 +2,179 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4677FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605A7C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25452084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574688580;
-	bh=/QY7rE7+tfXJXaMC3e5oigkaPrxINkRILhVbHWtODmM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=bZQxRoA3H4hHrPN08MOIupdwhKy4KOF6YmAQW2wU/EaU30yNs5AeGzGvGQif9p0nb
-	 DVtjFNoAb9asEhKFHuZwxh4BReboaAWqUCRY+r8I/rAvQmQlgVQS4vTZhsnEilCRHI
-	 9A/6HU9RN8VtW3hyyswb8pFa+TF90NN2OLF9O4Eg=
+	by mail.kernel.org (Postfix) with ESMTP id 352CB207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lY/sopxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfKYN3j (ORCPT
+        id S1727809AbfKYNbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:29:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:50454 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727717AbfKYN3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:29:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D867F31B;
-        Mon, 25 Nov 2019 05:29:37 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53C423F68E;
-        Mon, 25 Nov 2019 05:29:37 -0800 (PST)
-Date:   Mon, 25 Nov 2019 13:29:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [GIT PULL] SPI updates for v5.5
-Message-ID: <20191125132935.GD4535@sirena.org.uk>
+        Mon, 25 Nov 2019 08:31:12 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35228 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfKYNbL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 08:31:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wQ7nNasB5OVBsBnMvb/sZsxt8Jk1ECL1ctS3CZub2Zg=; b=lY/sopxAxAwBWEVTLeQ2JItJ8
+        2XaR30iNcp7runLpb7ia0UP8c89/4xH3dbSACFc5tF61uz0OC1WSrwJRcGq44OIArYDRIiJmHLoED
+        gcWCxz42QnaWAVzFRVrweB0U8GHYnqjrnQj9bjpyF4mdhEUAB3KylbMYguxVQQVX/dl8WIPJKgM53
+        7feLGUI1mLWY5mzcCErRQbT8qwxvRDMIGHApVwmfAZgDA6CVemZRY6fQtzkdvJeH+i7ZAO4T9NY+B
+        L0LkcfmjdqYQ+N8NNgMw+hUXktOknDt0aEPyFEwJTC8ZrNBm351WX6Cfkq4gMcDQUakI54TBuDreI
+        4hAly6Rgg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:32784)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iZESG-0007xc-SD; Mon, 25 Nov 2019 13:31:05 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iZESF-0006ht-IS; Mon, 25 Nov 2019 13:31:03 +0000
+Date:   Mon, 25 Nov 2019 13:31:03 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] clk: Add devm_clk_{prepare,enable,prepare_enable}
+Message-ID: <20191125133103.GR25745@shell.armlinux.org.uk>
+References: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
+ <34e32662-c909-9eb3-e561-3274ad0bf3cc@free.fr>
+ <20191125125231.GO25745@shell.armlinux.org.uk>
+ <45730e3c-efc7-4433-4980-e6aefebdcbff@free.fr>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Cookie: -- Owen Meredith
+In-Reply-To: <45730e3c-efc7-4433-4980-e6aefebdcbff@free.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 25, 2019 at 02:16:17PM +0100, Marc Gonzalez wrote:
+> On 25/11/2019 13:52, Russell King - ARM Linux admin wrote:
+> 
+> > On Mon, Nov 25, 2019 at 01:46:51PM +0100, Marc Gonzalez wrote:
+> > 
+> >> On 15/07/2019 17:34, Marc Gonzalez wrote:
+> >>
+> >>> Provide devm variants for automatic resource release on device removal.
+> >>> probe() error-handling is simpler, and remove is no longer required.
+> >>>
+> >>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> >>> ---
+> >>>  Documentation/driver-model/devres.rst |  3 +++
+> >>>  drivers/clk/clk.c                     | 24 ++++++++++++++++++++++++
+> >>>  include/linux/clk.h                   |  8 ++++++++
+> >>>  3 files changed, 35 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
+> >>> index 1b6ced8e4294..9357260576ef 100644
+> >>> --- a/Documentation/driver-model/devres.rst
+> >>> +++ b/Documentation/driver-model/devres.rst
+> >>> @@ -253,6 +253,9 @@ CLOCK
+> >>>    devm_clk_hw_register()
+> >>>    devm_of_clk_add_hw_provider()
+> >>>    devm_clk_hw_register_clkdev()
+> >>> +  devm_clk_prepare()
+> >>> +  devm_clk_enable()
+> >>> +  devm_clk_prepare_enable()
+> >>>  
+> >>>  DMA
+> >>>    dmaenginem_async_device_register()
+> >>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> >>> index c0990703ce54..5e85548357c0 100644
+> >>> --- a/drivers/clk/clk.c
+> >>> +++ b/drivers/clk/clk.c
+> >>> @@ -914,6 +914,18 @@ int clk_prepare(struct clk *clk)
+> >>>  }
+> >>>  EXPORT_SYMBOL_GPL(clk_prepare);
+> >>>  
+> >>> +static void unprepare(void *clk)
+> >>> +{
+> >>> +	clk_unprepare(clk);
+> >>> +}
+> >>> +
+> >>> +int devm_clk_prepare(struct device *dev, struct clk *clk)
+> >>> +{
+> >>> +	int rc = clk_prepare(clk);
+> >>> +	return rc ? : devm_add_action_or_reset(dev, unprepare, clk);
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(devm_clk_prepare);
+> >>> +
+> >>>  static void clk_core_disable(struct clk_core *core)
+> >>>  {
+> >>>  	lockdep_assert_held(&enable_lock);
+> >>> @@ -1136,6 +1148,18 @@ int clk_enable(struct clk *clk)
+> >>>  }
+> >>>  EXPORT_SYMBOL_GPL(clk_enable);
+> >>>  
+> >>> +static void disable(void *clk)
+> >>> +{
+> >>> +	clk_disable(clk);
+> >>> +}
+> >>> +
+> >>> +int devm_clk_enable(struct device *dev, struct clk *clk)
+> >>> +{
+> >>> +	int rc = clk_enable(clk);
+> >>> +	return rc ? : devm_add_action_or_reset(dev, disable, clk);
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(devm_clk_enable);
+> >>> +
+> >>>  static int clk_core_prepare_enable(struct clk_core *core)
+> >>>  {
+> >>>  	int ret;
+> >>> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> >>> index 3c096c7a51dc..d09b5207e3f1 100644
+> >>> --- a/include/linux/clk.h
+> >>> +++ b/include/linux/clk.h
+> >>> @@ -895,6 +895,14 @@ static inline void clk_restore_context(void) {}
+> >>>  
+> >>>  #endif
+> >>>  
+> >>> +int devm_clk_prepare(struct device *dev, struct clk *clk);
+> >>> +int devm_clk_enable(struct device *dev, struct clk *clk);
+> >>> +static inline int devm_clk_prepare_enable(struct device *dev, struct clk *clk)
+> >>> +{
+> >>> +	int rc = devm_clk_prepare(dev, clk);
+> >>> +	return rc ? : devm_clk_enable(dev, clk);
+> >>> +}
+> >>> +
+> >>>  /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
+> >>>  static inline int clk_prepare_enable(struct clk *clk)
+> >>>  {
+> >>
+> >> Thoughts? Comments?
+> > 
+> > These are part of the clk API rather than the CCF API, and belong in
+> > drivers/clk/clk-devres.c.
+> 
+> I'm totally confused.
+> 
+> Are you saying that a hypothetical devm_clk_prepare() function should not be
+> implemented in the same file as the "raw" clk_prepare() ?
 
---EY/WZ/HvNxOox07X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The clk API and CCF are two different things.  I look after the clk API.
+The CCF is an implementation of the clk API.  Do not introduce clk API
+code in files that are CCF specific.
 
-The following changes since commit af42d3466bdc8f39806b26f593604fdc54140bcb:
-
-  Linux 5.4-rc8 (2019-11-17 14:47:30 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-v5.5
-
-for you to fetch changes up to e2ce328b282d0c7660576c25af6b9be34a6d2614:
-
-  Merge remote-tracking branch 'spi/topic/ptp' into spi-next (2019-11-22 19:56:37 +0000)
-
-----------------------------------------------------------------
-spi: Updates for v5.5
-
-Lots of stuff going on in the core for SPI this time around, the two big
-changes both being around time in different forms:
-
- - A rework of delay times from Alexandru Ardelean which makes the ways
-   in which they are specified more consistent between drivers so that
-   what's available to clients is less dependent on the hardware
-   implementation.
- - Support for PTP timestamping of transfers from Vladimir Oltean,
-   useful for use with precision clocks with SPI control interfaces.
- - Big cleanups for the Atmel, PXA2xx and Zynq QSPI drivers.
-
-----------------------------------------------------------------
-Alexandru Ardelean (20):
-      spi: move `cs_change_delay` backwards compat logic outside switch
-      spi: introduce spi_delay struct as "value + unit" & spi_delay_exec()
-      spi: make `cs_change_delay` the first user of the `spi_delay` logic
-      spi: sprd: convert transfer word delay to spi_delay struct
-      spi: orion: use new `word_delay` field for SPI transfers
-      spi: spidev: use new `word_delay` field for spi transfers
-      spi: core,atmel: convert `word_delay_usecs` -> `word_delay` for spi_device
-      spi: introduce `delay` field for `spi_transfer` + spi_transfer_delay_exec()
-      spi: tegra114: use `spi_transfer_delay_exec` helper
-      spi: tegra20-sflash: use to new `spi_transfer_delay_exec`
-      spi: spi-loopback-test: use new `delay` field
-      spi: spidev: use new `delay` field for spi transfers
-      spi: tegra114: change format for `spi_set_cs_timing()` function
-      spi: implement SW control for CS times
-      spi: spi-fsl-espi: convert transfer delay to `spi_delay` format
-      spi: spi-falcon: extend warning to `delay` as well
-      spi: bcm63xx: extend error condition to `delay` as well
-      spi: spi-axi: extend support for the `delay` field
-      spi: use new `spi_transfer_delay_exec` helper where straightforward
-      spi: document CS setup, hold & inactive times in header
-
-Alvaro Gamez Machado (2):
-      spi: xilinx: add description of new property xlnx,num-transfer-bits
-      spi: xilinx: Add DT support for selecting transfer word width
-
-Andy Shevchenko (8):
-      spi: pxa2xx: No need to keep pointer to platform device
-      spi: pxa2xx: Sort headers
-      spi: pxa2xx: Convert pxa2xx_spi_get_port_id() to take struct device
-      spi: pxa2xx: Convert to use device_get_match_data()
-      spi: pxa2xx: Replace of_device.h with mod_devicetable.h and of.h
-      spi: Fix spelling in the comments
-      spi: pxa2xx: Drop extra check of platform_get_resource() returned value
-      spi: pxa2xx: Introduce temporary variables to increase readability
-
-Benjamin Gaignard (1):
-      dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
-
-Chris Packham (3):
-      spi: bcm2835: fix typo in comment
-      spi: bcm-qspi: Convert to use CS GPIO descriptors
-      spi: spi-mem: fallback to using transfers when CS gpios are used
-
-Chuhong Yuan (5):
-      spi: sifive: disable clk when probe fails and remove
-      spi: nxp-fspi: Use devm API to fix missed unregistration of controller
-      spi: pxa2xx: Add missed security checks
-      spi: tegra20-slink: add missed clk_unprepare
-      spi: st-ssc4: add missed pm_runtime_disable
-
-Colin Ian King (1):
-      spi: fsl-lpspi: clean up indentation issue
-
-Daniel Vetter (1):
-      spi: pxa2xx: Set controller->max_transfer_size in dma mode
-
-Fabrizio Castro (1):
-      dt-bindings: spi: sh-msiof: Add r8a774b1 support
-
-Felipe Balbi (1):
-      SPI: designware: pci: Switch over to MSI interrupts
-
-Frieder Schrempf (1):
-      spi: spi-fsl-qspi: Clear TDH bits in FLSHCR register
-
-Gareth Williams (1):
-      dt-bindings: snps,dw-apb-ssi: Add optional clock domain information
-
-Geert Uytterhoeven (1):
-      spi: rspi: Use platform_get_irq_byname_optional() for optional irqs
-
-Gregory CLEMENT (10):
-      spi: atmel: Remove AVR32 leftover
-      spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
-      spi: atmel: Remove and fix erroneous comments
-      spi: atmel: Fix CS high support
-      spi: atmel: Configure GPIO per CS instead of by controller
-      spi: atmel: Remove useless private field
-      spi: atmel: Remove platform data support
-      spi: atmel: Improve and fix GPIO CS usage
-      spi: atmel: Improve CS0 case support on AT91RM9200
-      spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
-
-Jarkko Nikula (4):
-      spi: dw: Move runtime PM enable/disable from common to platform driver part
-      spi: dw-pci: Fix Chip Select amount on Intel Elkhart Lake PSE SPI
-      spi: pxa2xx: Add support for Intel Comet Lake-H
-      spi: dw: Remove runtime PM enable/disable from common part of the driver
-
-Krzysztof Kozlowski (1):
-      spi: Fix Kconfig indentation
-
-Kuldeep Singh (1):
-      spi: spi-fsl-qspi: Introduce variable to fix different invalid master Id
-
-Lingling Xu (2):
-      spi: sprd: adi: Add missing lock protection when rebooting
-      spi: sprd: adi: Set BIT_WDG_NEW bit when rebooting
-
-Linus Walleij (4):
-      spi: txx9: Convert to use GPIO descriptors
-      spi: dw: Drop GPIO header
-      spi: zynq-qspi: Drop GPIO header
-      spi: fsl-cpm: Correct the free:ing
-
-Luhua Xu (2):
-      spi: add power control when set_cs
-      spi: mediatek: add SPI_CS_HIGH support
-
-Lukasz Majewski (2):
-      spi: Add call to spi_slave_abort() function when spidev driver is released
-      spi: Introduce dspi_slave_abort() function for NXP's dspi SPI driver
-
-Mans Rullgard (1):
-      spi: atmel: fix handling of cs_change set on non-last xfer
-
-Mark Brown (5):
-      Merge branch 'for-5.4' of https://git.kernel.org/.../broonie/spi into spi-5.5
-      Merge tag 'v5.4-rc3' into spi-5.4
-      Merge branch 'spi-5.4' into spi-linus
-      Merge branch 'spi-5.5' into spi-next
-      Merge remote-tracking branch 'spi/topic/ptp' into spi-next
-
-Markus Elfring (4):
-      spi: lantiq-ssc: Use devm_platform_ioremap_resource() in lantiq_ssc_probe()
-      spi: mediatek: Use devm_platform_ioremap_resource() in mtk_spi_probe()
-      spi: mediatek: Use devm_platform_ioremap_resource() in mtk_spi_slave_probe()
-      spi: xtensa-xtfpga: Use devm_platform_ioremap_resource() in xtfpga_spi_probe()
-
-Miquel Raynal (10):
-      spi: mxic: Select SPI_NOR type by default
-      spi: mxic: Fix DMAS_CTRL register layout
-      spi: mxic: Ensure width is respected in spi-mem operations
-      spi: zynq-qspi: Keep the naming consistent across the driver
-      spi: zynq-qspi: Anything else than CS0 is not supported yet
-      spi: zynq-qspi: Keep the bitfields naming consistent
-      spi: zynq-qspi: Enhance the Linear CFG bit definitions
-      spi: zynq-qspi: Clarify the select chip function
-      spi: zynq-qspi: Do the actual hardware initialization later in the probe
-      spi: zynq-qspi: Support two chip selects
-
-Navid Emamdoost (2):
-      spi: gpio: prevent memory leak in spi_gpio_probe
-      spi: lpspi: fix memory leak in fsl_lpspi_probe
-
-Pan Bian (1):
-      spi: img-spfi: fix potential double release
-
-Patrice Chotard (1):
-      spi: stm32-qspi: Fix kernel oops when unbinding driver
-
-Peter Ujfalusi (10):
-      spi: at91-usart: Use dma_request_chan() directly for channel request
-      spi: atmel: Use dma_request_chan() directly for channel request
-      spi: fsl-lpspi: Use dma_request_chan() directly for channel request
-      spi: imx: Use dma_request_chan() directly for channel request
-      spi: pl022: Use dma_request_chan() directly for channel request
-      spi: qup: Use dma_request_chan() directly for channel request
-      spi: s3c64xx: Use dma_request_chan() directly for channel request
-      spi: tegra114: Use dma_request_chan() directly for channel request
-      spi: tegra20-slink: Use dma_request_chan() directly for channel request
-      spi: pic32: Retire dma_request_slave_channel_compat()
-
-Phil Edworthy (3):
-      dt: spi: Add Renesas RZ/N1 binding documentation
-      spi: dw: Add basic runtime PM support
-      spi: dw: Add compatible string for Renesas RZ/N1 SPI Controller
-
-Pragnesh Patel (1):
-      spi: dt-bindings: Convert spi-sifive binding to json-schema
-
-Raymond Tan (1):
-      spi: dw-pci: Add runtime power management support
-
-Simon Horman (2):
-      dt-bindings: hspi: Convert bindings to json-schema
-      dt-bindings: spi: sh-msiof: Convert bindings to json-schema
-
-Stephen Boyd (1):
-      spi: gpio: Look for a device node instead of match
-
-Thor Thayer (1):
-      spi: dw: Fix Designware SPI loopback
-
-Tony Lindgren (1):
-      spi: Fix regression to return zero on success instead of positive value
-
-Vignesh Raghavendra (1):
-      spi: omap2-mcspi: Remove redundant checks
-
-Vladimir Oltean (5):
-      spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode
-      spi: Add a PTP system timestamp to the transfer structure
-      spi: spi-fsl-dspi: Implement the PTP system timestamping for TCFQ mode
-      spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode
-      spi: Add a PTP system timestamp to the transfer structure
-
-tomaspaukrt@email.cz (1):
-      spi: orion: fix runtime PM initialization
-
-zhengbin (2):
-      spi: omap-100k: Remove set but not used variable 'dataH'
-      spi: npcm: Remove set but not used variable 'val'
-
- .../devicetree/bindings/spi/renesas,hspi.yaml      |  57 ++++
- .../devicetree/bindings/spi/renesas,rzn1-spi.txt   |  11 +
- .../devicetree/bindings/spi/renesas,sh-msiof.yaml  | 159 ++++++++++
- Documentation/devicetree/bindings/spi/sh-hspi.txt  |  26 --
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 105 -------
- .../devicetree/bindings/spi/snps,dw-apb-ssi.txt    |   3 +-
- .../devicetree/bindings/spi/spi-sifive.txt         |  37 ---
- .../devicetree/bindings/spi/spi-sifive.yaml        |  86 ++++++
- .../devicetree/bindings/spi/spi-stm32-qspi.txt     |  47 ---
- .../devicetree/bindings/spi/spi-xilinx.txt         |   4 +-
- .../devicetree/bindings/spi/st,stm32-qspi.yaml     |  83 ++++++
- arch/arm/plat-pxa/ssp.c                            |   4 +-
- drivers/iio/imu/adis.c                             |  24 +-
- drivers/spi/Kconfig                                |  19 +-
- drivers/spi/spi-at91-usart.c                       |   4 +-
- drivers/spi/spi-atmel.c                            | 219 ++++++++------
- drivers/spi/spi-axi-spi-engine.c                   |  16 +-
- drivers/spi/spi-bcm-qspi.c                         |   7 +-
- drivers/spi/spi-bcm2835.c                          |   2 +-
- drivers/spi/spi-bcm63xx-hsspi.c                    |   3 +-
- drivers/spi/spi-bcm63xx.c                          |   2 +-
- drivers/spi/spi-cavium.c                           |   3 +-
- drivers/spi/spi-dw-mmio.c                          |   6 +
- drivers/spi/spi-dw-pci.c                           |  24 +-
- drivers/spi/spi-dw.c                               |   4 +-
- drivers/spi/spi-dw.h                               |   1 -
- drivers/spi/spi-falcon.c                           |   2 +-
- drivers/spi/spi-fsl-cpm.c                          |   3 +-
- drivers/spi/spi-fsl-dspi.c                         |  43 ++-
- drivers/spi/spi-fsl-espi.c                         |  19 +-
- drivers/spi/spi-fsl-lpspi.c                        |   8 +-
- drivers/spi/spi-fsl-qspi.c                         |  55 +++-
- drivers/spi/spi-fsl-spi.c                          |   3 +-
- drivers/spi/spi-gpio.c                             |   9 +-
- drivers/spi/spi-img-spfi.c                         |   2 +
- drivers/spi/spi-imx.c                              |   4 +-
- drivers/spi/spi-lantiq-ssc.c                       |  10 +-
- drivers/spi/spi-loopback-test.c                    |  12 +-
- drivers/spi/spi-mem.c                              |   2 +-
- drivers/spi/spi-mpc512x-psc.c                      |   3 +-
- drivers/spi/spi-mpc52xx-psc.c                      |   3 +-
- drivers/spi/spi-mt65xx.c                           |  23 +-
- drivers/spi/spi-mxic.c                             |   8 +-
- drivers/spi/spi-npcm-pspi.c                        |   3 +-
- drivers/spi/spi-nxp-fspi.c                         |   2 +-
- drivers/spi/spi-omap-100k.c                        |   7 +-
- drivers/spi/spi-omap2-mcspi.c                      | 105 +++----
- drivers/spi/spi-orion.c                            |   9 +-
- drivers/spi/spi-pic32.c                            |  46 ++-
- drivers/spi/spi-pl022.c                            |  29 +-
- drivers/spi/spi-pxa2xx.c                           |  95 +++---
- drivers/spi/spi-qup.c                              |   4 +-
- drivers/spi/spi-rspi.c                             |   8 +-
- drivers/spi/spi-s3c64xx.c                          |   6 +-
- drivers/spi/spi-sc18is602.c                        |   3 +-
- drivers/spi/spi-sh-hspi.c                          |   3 +-
- drivers/spi/spi-sifive.c                           |  11 +-
- drivers/spi/spi-slave-mt27xx.c                     |  12 +-
- drivers/spi/spi-sprd-adi.c                         |   8 +
- drivers/spi/spi-sprd.c                             |  15 +-
- drivers/spi/spi-st-ssc4.c                          |   3 +
- drivers/spi/spi-stm32-qspi.c                       |   3 +-
- drivers/spi/spi-tegra114.c                         |  42 +--
- drivers/spi/spi-tegra20-sflash.c                   |   5 +-
- drivers/spi/spi-tegra20-slink.c                    |   8 +-
- drivers/spi/spi-topcliff-pch.c                     |   7 +-
- drivers/spi/spi-txx9.c                             |  78 +++--
- drivers/spi/spi-xcomm.c                            |   3 +-
- drivers/spi/spi-xilinx.c                           |   7 +-
- drivers/spi/spi-xtensa-xtfpga.c                    |  10 +-
- drivers/spi/spi-zynq-qspi.c                        |  84 +++---
- drivers/spi/spi.c                                  | 332 ++++++++++++++++++---
- drivers/spi/spidev.c                               |   9 +-
- include/linux/platform_data/spi-mt65xx.h           |   1 -
- include/linux/pxa2xx_ssp.h                         |   2 +-
- include/linux/spi/spi.h                            | 132 +++++++-
- sound/soc/pxa/mmp-sspa.c                           |   2 +-
- sound/soc/pxa/pxa-ssp.c                            |  10 +-
- 78 files changed, 1509 insertions(+), 760 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/renesas,hspi.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/sh-hspi.txt
- delete mode 100644 Documentation/devicetree/bindings/spi/sh-msiof.txt
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
-
---EY/WZ/HvNxOox07X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3b1z8ACgkQJNaLcl1U
-h9BV/Af/e1fAmmB4oGRvLEyDUvYS+wZyf/Ao2UateyqFmf0D+YOzkWaCACbr1eKD
-BKouCID3G/0KSOgq4IBXmhSEYQlUyNetkR3+/GmniPBi06wL63XPfIytjB29YUa0
-80AGWjitjScuYGXpZzfxYLNvbLMJBNpnpIXYDBm2gRp6GTtOAAD8ZCbne30Xks6Z
-rcQqv1hJPqOLfnar27yDqwoNm+Bhhx1xyJNbPxBrNu8X4/sYVr/f5Yg8z+wumqrb
-Agi5yyDAS4dtGNoimg42ukDE9sTHfd/7MrJI2lzNvNQrdIwoEbZlcoPTnxCLzycQ
-jjQSyW3lRdAvoT0karM1oLdGs13vSQ==
-=SJ7M
------END PGP SIGNATURE-----
-
---EY/WZ/HvNxOox07X--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
