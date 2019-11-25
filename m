@@ -2,72 +2,101 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B600C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65212068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4652064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574679830;
+	bh=SOT5ZFxPv+2om65CDItvSOpiG90G77QO9zjRpy0Q/Lk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gAUrQ4nt+XmTrVG8wTRmPGciubWKhfWOBtpwtpF05dqpHlNJ6MzcnGeSq7xfIbvqp
+	 oO8d2a7CnK8tNfpyBQjBy7t59IFd3zl2ThOpLDma51OBKx93jY9iIlcfd/QosrIITD
+	 ET+pZAJxtBgwG8PqrDCz2dwkBmUirUF8s+yxzlT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfKYLDm (ORCPT
+        id S1727662AbfKYLDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 06:03:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:48566 "EHLO foss.arm.com"
+        Mon, 25 Nov 2019 06:03:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbfKYLDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:03:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD46431B;
-        Mon, 25 Nov 2019 03:03:41 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52BDF3F52E;
-        Mon, 25 Nov 2019 03:03:40 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: fix rework of find_idlest_group()
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        kernel test robot <rong.a.chen@intel.com>
-References: <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
- <1571762798-25900-1-git-send-email-vincent.guittot@linaro.org>
- <2bb75047-4a93-4f1d-e2ff-99c499b5a070@arm.com>
- <CAKfTPtC54O7tY4T2RmYAFdZ7iM-wTnabbdeatRn6zY_P=jM9YQ@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <08220a1c-5f31-75ff-4f07-25c45ccc8a14@arm.com>
-Date:   Mon, 25 Nov 2019 11:03:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727278AbfKYLDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 06:03:48 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C79E32064B;
+        Mon, 25 Nov 2019 11:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574679827;
+        bh=SOT5ZFxPv+2om65CDItvSOpiG90G77QO9zjRpy0Q/Lk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nPx47EmPBYy7o82pEWET+QADNGXcDg0mCrAmS9Q31srgCS/uOKYZSruuW5BovnyzG
+         aKsQlhSVNxX1gQWuxuYUmJrmPdbfDGs/w06JfYC3xAhgzqWZAj1r/V7lnviyay8DsZ
+         mNsIHRNq3sqhSqYp61H7hpDEgr9qn6juXg+1rRP4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jaswinder.singh@linaro.org
+Subject: [BUGFIX PATCH] selftests/x86: Check the availablity of sys/syscall.h
+Date:   Mon, 25 Nov 2019 20:03:44 +0900
+Message-Id: <157467982420.24866.4375165389279465782.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtC54O7tY4T2RmYAFdZ7iM-wTnabbdeatRn6zY_P=jM9YQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/11/2019 09:16, Vincent Guittot wrote:
-> 
-> This is an extension of idle_cpu which also returns int and I wanted
-> to stay consistent with it
-> 
-> So we might want to make some kind of cleanup or rewording of
-> interfaces and their descriptions but this should be done as  a whole
-> and out of the scope of this patch and would worth having a dedicated
-> patch IMO because it would imply to modify other patch of the code
-> that is not covered by this patch like idle_cpu or cpu_util_without
-> 
+Since single_step_syscall.c depends on sys/syscall.h and
+its include, asm/unistd.h, we should check the availability
+of those headers.
+Without this fix, if gcc-multilib is not installed but
+libc6-dev-i386 is installed, kselftest tries to build 32bit
+binary and failed with following error message.
 
-Fair enough.
+In file included from single_step_syscall.c:18:
+/usr/include/sys/syscall.h:24:10: fatal error: asm/unistd.h: No such file or directory
+ #include <asm/unistd.h>
+          ^~~~~~~~~~~~~~
+compilation terminated.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ .../testing/selftests/x86/trivial_32bit_program.c  |    1 +
+ .../testing/selftests/x86/trivial_64bit_program.c  |    1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/tools/testing/selftests/x86/trivial_32bit_program.c b/tools/testing/selftests/x86/trivial_32bit_program.c
+index aa1f58c2f71c..6b455eda24f7 100644
+--- a/tools/testing/selftests/x86/trivial_32bit_program.c
++++ b/tools/testing/selftests/x86/trivial_32bit_program.c
+@@ -8,6 +8,7 @@
+ # error wrong architecture
+ #endif
+ 
++#include <sys/syscall.h>
+ #include <stdio.h>
+ 
+ int main()
+diff --git a/tools/testing/selftests/x86/trivial_64bit_program.c b/tools/testing/selftests/x86/trivial_64bit_program.c
+index 39f4b84fbf15..07ae86df18ff 100644
+--- a/tools/testing/selftests/x86/trivial_64bit_program.c
++++ b/tools/testing/selftests/x86/trivial_64bit_program.c
+@@ -8,6 +8,7 @@
+ # error wrong architecture
+ #endif
+ 
++#include <sys/syscall.h>
+ #include <stdio.h>
+ 
+ int main()
+
