@@ -2,170 +2,106 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0DFC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F95C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507122068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E2E2068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="SbLk8pMb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4Es4BNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfKYQFM (ORCPT
+        id S1728749AbfKYQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:05:12 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:38207 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728533AbfKYQFL (ORCPT
+        Mon, 25 Nov 2019 11:06:18 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:37106 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728533AbfKYQGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:05:11 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ZGrJiMniVLwWdZGrMiWFqH; Mon, 25 Nov 2019 17:05:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1574697909; bh=5JK0Z6JtEdDEZ8KHXzEQxSUtkK89o7DFJUvrrUzmBKU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=SbLk8pMbfu5HpAgWmAO1v/6390pjK238R48Cv6PSr6+7suHtIAp2Z/HCPxgK5bGMw
-         vPY56Wi9WNOLyB3r1o30xP+cYodfww98+XYI/iXRprknv1dA2+rRPI7N+IHQpsHMkb
-         zfYeZdLaV1chfD8rDHibwFIVD+gSFBA0UVcyLPXEte1yyArmAqjDhqykFoPzyW3wDg
-         l4NIzfD3d4pKAz4kLhAqKfTJCPfw6TxTq/i3k7pgs5AhZvTarOpCitSb7bfZQd3tCB
-         fAIONRM1Zr9XZdlPgbwVIX/SLhz4s5arFGwOKidTct79gmW1xTjmzYX9qsF94GOhPB
-         X8TZNxq3G92Ww==
-Subject: Re: [PATCH v2] media: adv7604: extend deep color mode to ADV7611
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>
-References: <20191018112157.31657-1-alexandru.ardelean@analog.com>
- <20191018112955.13652-1-alexandru.ardelean@analog.com>
- <6a524aedf79ba40f3286bf0ad4c7b320b561caf1.camel@analog.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <5278491a-5d48-b171-2194-fe4806397424@xs4all.nl>
-Date:   Mon, 25 Nov 2019 17:05:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 11:06:18 -0500
+Received: by mail-vk1-f196.google.com with SMTP id l5so3581113vkb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:06:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Avttk0P5txS2q04zBlAty7rtXiGTPj5hhaK38ammByQ=;
+        b=e4Es4BNR8tv0qRFadBAbvVXURnUbZZXWCMCs/wpwjIdMh4Jy89Fb9xnhqIRsvSh68a
+         XJsKQJopD1tCEgGI9pChnGtQ7DahHVJ9gq9TKnNNNBulwFYjG+CblUqYW/vtQFu8vJxl
+         w1v1hYKDkFVHLQgwvtj6is/1xKjCpjQYMwvgLrchL+5ApRlQiLDVacv0DmtKybbB8N50
+         CRksIpAlofCr3r2qSaxGOBs8aeFN60Ook6Z7X/RkgjLJ1NolLOSSXCFHCnk9LpFB0T42
+         IwuG9sVc4vmuofxHdOc58LsoGlJYDg+KXcNHmcNmwLbz5Jq0N8EXxOIEHDU1Ew05iA6S
+         Tb8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Avttk0P5txS2q04zBlAty7rtXiGTPj5hhaK38ammByQ=;
+        b=Avlwog2uc/p7rZ4dRIIxU4U0whFTA5Mrgcr1vbpp5zH4WNWOWsS4jYMKJ4VxUzGn86
+         OTORP15HcPQRmZfKmneyql1AwdUprWO9nKju9azZA4F6MxhJI0L+YgJ6LzTgKysJ8T1o
+         tHAmKHC8r+5ubZ7cHz0xrSLiiRLFT84DlhFpRKPqFxA6JbVq307OlXKl36NO2GIvyP3g
+         D2p0yxTr0EvFy9cwgGWF3hNZ2xHcgI6HnkKu/XIAit7wWd2kC6SLq28JNtK/Uth1/vwe
+         F050k6N4MdAC1MfWzro1h1yBpYtCC23HBaS/wBZTzZHK5fLXEP35qFu3Hh0VQLjQlctT
+         cxMw==
+X-Gm-Message-State: APjAAAUZx7/fxf7dpwawnpCXiMgx+Ek4KFm/MYXxcpd7oPlICH8/cXJa
+        oOM8XBQW7Egi3XLg3D5cefOyBxK1HRL/HM2DqTmF8g==
+X-Google-Smtp-Source: APXvYqxNasVkK7MWNtHslDqEaSeS5Uo2U4dtls0PYrqWky4egoEbLjLpsDhsWSjOifL4RHlo/J6b+Vdm7rhS/WEKCJ4=
+X-Received: by 2002:ac5:ce8c:: with SMTP id 12mr17656856vke.34.1574697977355;
+ Mon, 25 Nov 2019 08:06:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <6a524aedf79ba40f3286bf0ad4c7b320b561caf1.camel@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKrVKdJJ5SaaBumnQ1xyG6UtjZlhuG0KGRRhyKe/jGKJOwg6VN6OgfXEZFxRj2P8k+ttghoGvpx3cywUFhbtH/sFR/tlMzVYHl8mPfGywo1gR2v5oGc6
- MpEGu7uul6w2a+vzuFaqmUG9R16YVQXvcoi2RcTx+8RGN7AZ6YfvyrGM0sTsEewZQ5b4lnmPl0KNoVKGqnFQTcQ42ZYIbF6dlBYD9G51160Qc6/7isYDjTvL
- PweQvOyrXHhnhc6VZjCmu5FXkQxOFgtd5HE4s1yNfVFkMYzMDeW772MZR/U5+xdU4GhLfAqEMHLThtJfUTW6XgG/9qeI+CvwOGtDDtKFqk0=
+References: <1574442222-19759-1-git-send-email-christophe.kerello@st.com>
+In-Reply-To: <1574442222-19759-1-git-send-email-christophe.kerello@st.com>
+From:   Steve deRosier <derosier@gmail.com>
+Date:   Mon, 25 Nov 2019 08:05:40 -0800
+Message-ID: <CALLGbRJ00TeZKPfhkqj_mwu9zhMzc_+A8mh4uwaPnFBUatrwTw@mail.gmail.com>
+Subject: Re: mtd: Use mtd device name instead of mtd->name when registering
+ nvmem device
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     miquel.raynal@bootlin.com, Richard Weinberger <richard@nod.at>,
+        vigneshr@ti.com, linux-mtd <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 4:06 PM, Ardelean, Alexandru wrote:
-> On Fri, 2019-10-18 at 14:29 +0300, Alexandru Ardelean wrote:
->> From: Dragos Bogdan <dragos.bogdan@analog.com>
->>
->> The AD7611 chip supports the same Deep Color Mode settings as the AD7604.
->> This change extends support for this feature to the AD7611 by adding a
->> wrapper function for the `read_hdmi_pixelclock` hook and adding the same
->> frequency adjustment logic.
->>
-> 
-> ping here
+On Fri, Nov 22, 2019 at 9:04 AM Christophe Kerello
+<christophe.kerello@st.com> wrote:
+>
+> MTD currently allows to have same partition name on different devices.
+> Since nvmen device registration has been added, it is not more possible
+> to have same partition name on different devices. We get following
+> logs:
+> sysfs: cannot create duplicate filename XXX
+> Failed to register NVMEM device
+>
+> To avoid such issue, the proposed patch uses the mtd device name instead of
+> the partition name.
+...
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 5fac435..559b693 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -551,7 +551,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
+>
+>         config.id = -1;
+>         config.dev = &mtd->dev;
+> -       config.name = mtd->name;
+> +       config.name = dev_name(&mtd->dev);
+>         config.owner = THIS_MODULE;
+>         config.reg_read = mtd_nvmem_reg_read;
+>         config.size = mtd->size;
 
-Not forgotten, it's on my TODO list. But I need some time to dig a bit
-deeper into this code.
+This would be a breaking change for anyone that depended on
+`config.name = mtd->name` behavior. Obviously, if they were using
+multiple devs with the same partition name as you were, they'd have
+already been broken, but I suspect if a lot of people were doing that
+we'd have heard about that before now.
 
-Regards,
-
-	Hans
-
-> 
->> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
->> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->> ---
->>
->> Changelog v1 -> v2:
->> * address checkpatch complaints about 80 col limit and
->>   use of `unsigned` vs `unsigned int`
->>
->>  drivers/media/i2c/adv7604.c | 32 +++++++++++++++++++++-----------
->>  1 file changed, 21 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
->> index 28a84bf9f8a9..c6fe3aa69733 100644
->> --- a/drivers/media/i2c/adv7604.c
->> +++ b/drivers/media/i2c/adv7604.c
->> @@ -1503,23 +1503,14 @@ static void
->> adv76xx_fill_optional_dv_timings_fields(struct v4l2_subdev *sd,
->>  
->>  static unsigned int adv7604_read_hdmi_pixelclock(struct v4l2_subdev *sd)
->>  {
->> -	unsigned int freq;
->>  	int a, b;
->>  
->>  	a = hdmi_read(sd, 0x06);
->>  	b = hdmi_read(sd, 0x3b);
->>  	if (a < 0 || b < 0)
->>  		return 0;
->> -	freq =  a * 1000000 + ((b & 0x30) >> 4) * 250000;
->>  
->> -	if (is_hdmi(sd)) {
->> -		/* adjust for deep color mode */
->> -		unsigned bits_per_channel = ((hdmi_read(sd, 0x0b) & 0x60)
->>>> 4) + 8;
->> -
->> -		freq = freq * 8 / bits_per_channel;
->> -	}
->> -
->> -	return freq;
->> +	return a * 1000000 + ((b & 0x30) >> 4) * 250000;
->>  }
->>  
->>  static unsigned int adv7611_read_hdmi_pixelclock(struct v4l2_subdev *sd)
->> @@ -1530,9 +1521,28 @@ static unsigned int
->> adv7611_read_hdmi_pixelclock(struct v4l2_subdev *sd)
->>  	b = hdmi_read(sd, 0x52);
->>  	if (a < 0 || b < 0)
->>  		return 0;
->> +
->>  	return ((a << 1) | (b >> 7)) * 1000000 + (b & 0x7f) * 1000000 /
->> 128;
->>  }
->>  
->> +static unsigned int adv76xx_read_hdmi_pixelclock(struct v4l2_subdev *sd)
->> +{
->> +	struct adv76xx_state *state = to_state(sd);
->> +	const struct adv76xx_chip_info *info = state->info;
->> +	unsigned int freq, bits_per_channel, pixelrepetition;
->> +
->> +	freq = info->read_hdmi_pixelclock(sd);
->> +	if (is_hdmi(sd)) {
->> +		/* adjust for deep color mode and pixel repetition */
->> +		bits_per_channel = ((hdmi_read(sd, 0x0b) & 0x60) >> 4) + 8;
->> +		pixelrepetition = (hdmi_read(sd, 0x05) & 0x0f) + 1;
->> +
->> +		freq = freq * 8 / bits_per_channel / pixelrepetition;
->> +	}
->> +
->> +	return freq;
->> +}
->> +
->>  static int adv76xx_query_dv_timings(struct v4l2_subdev *sd,
->>  			struct v4l2_dv_timings *timings)
->>  {
->> @@ -1579,7 +1589,7 @@ static int adv76xx_query_dv_timings(struct
->> v4l2_subdev *sd,
->>  
->>  		bt->width = w;
->>  		bt->height = h;
->> -		bt->pixelclock = info->read_hdmi_pixelclock(sd);
->> +		bt->pixelclock = adv76xx_read_hdmi_pixelclock(sd);
->>  		bt->hfrontporch = hdmi_read16(sd, 0x20, info-
->>> hfrontporch_mask);
->>  		bt->hsync = hdmi_read16(sd, 0x22, info->hsync_mask);
->>  		bt->hbackporch = hdmi_read16(sd, 0x24, info-
->>> hbackporch_mask);
-
+- Steve
