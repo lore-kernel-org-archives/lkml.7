@@ -2,137 +2,77 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EC3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8E4C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E8D2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02CDE20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574663957;
+	bh=xkacwS+//iyOXZA1xc8vJ55ct0+c517jzQk5SZvqBFo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e7NHIcurKKV1G9UmmjPp8WkHSNwS//citcYy7M+Vip/Bt6IYWFpVAILP2jmCs9ZrW
+	 IMb4YDxl8Kjk3njEjSe9Z0D+uAwsNTl4U0VUR/KYdF3gu7cZUFlpoQnKz0d1DuZupI
+	 ptcLS3ILdOKg7qfqtafC9BzEtawL1yE/d7lozaEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbfKYGh3 (ORCPT
+        id S1725992AbfKYGjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 01:37:29 -0500
-Received: from mga06.intel.com ([134.134.136.31]:27907 "EHLO mga06.intel.com"
+        Mon, 25 Nov 2019 01:39:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfKYGh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 01:37:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 22:37:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,240,1571727600"; 
-   d="scan'208";a="233304453"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Nov 2019 22:37:26 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iZ7zx-0002qo-Ob; Mon, 25 Nov 2019 14:37:25 +0800
-Date:   Mon, 25 Nov 2019 14:36:40 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Scott Cheloha <cheloha@linux.vnet.ibm.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>, nathanl@linux.ibm.com,
-        ricklind@linux.vnet.ibm.com,
-        Scott Cheloha <cheloha@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] drivers/base/memory.c: cache blocks in radix tree to
- accelerate lookup
-Message-ID: <201911251315.iroYiVrK%lkp@intel.com>
-References: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1725468AbfKYGjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 01:39:15 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6610D2071E;
+        Mon, 25 Nov 2019 06:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574663955;
+        bh=xkacwS+//iyOXZA1xc8vJ55ct0+c517jzQk5SZvqBFo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Hidi7cP3ogbdzhtqsYwewsyfW5pu/76pgY2xutaCoX7tvaTITBFSG3rChtUECQHXq
+         /t7qeq65SCUj5Utzs2v+odgTPkRdPGj8/49Vpyo61tS9TtXbwnIg5fYP+iq82yuaS2
+         lSZF0pPtI5EH+CRXBfQdqRkuoVgy1OAsc6SlSmW4=
+Date:   Mon, 25 Nov 2019 15:39:10 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH v2 0/3] selftests/ftrace: Fix ftracetest
+ testcases for non-function tracer case
+Message-Id: <20191125153910.25b4c34a6bb181ac7ea2e651@kernel.org>
+In-Reply-To: <157464067201.2006.6413506591718899129.stgit@devnote2>
+References: <157464067201.2006.6413506591718899129.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
+On Mon, 25 Nov 2019 09:11:12 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Thank you for the patch! Perhaps something to improve:
+> Hi,
+> 
+> Here is the 2nd version of patches to fix some issues which happens on
+> the kernel with CONFIG_FUNCTION_TRACER=n or CONFIG_DYNAMIC_FTRACE=n.
+> In this version I just updated the descriptions of the first 2 patches
+> according to Steve's comment and add his Reviewed-by to the last patch.
 
-[auto build test WARNING on driver-core/driver-core-testing]
-[also build test WARNING on v5.4]
-[cannot apply to next-20191122]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Oops, I found another bug in ftracetest. I will send v3 with that patch.
+Please ignore this v2.
 
-url:    https://github.com/0day-ci/linux/commits/Scott-Cheloha/drivers-base-memory-c-cache-blocks-in-radix-tree-to-accelerate-lookup/20191124-104557
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 0e4a459f56c32d3e52ae69a4b447db2f48a65f44
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-36-g9305d48-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Thank you,
 
 
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/base/memory.c:874:9: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected void **slot @@    got void [noderef] <asvoid **slot @@
->> drivers/base/memory.c:874:9: sparse:    expected void **slot
->> drivers/base/memory.c:874:9: sparse:    got void [noderef] <asn:4> **
->> drivers/base/memory.c:874:9: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected void **slot @@    got void [noderef] <asvoid **slot @@
->> drivers/base/memory.c:874:9: sparse:    expected void **slot
->> drivers/base/memory.c:874:9: sparse:    got void [noderef] <asn:4> **
->> drivers/base/memory.c:877:45: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void [noderef] <asn:4> **slot @@    got n:4> **slot @@
->> drivers/base/memory.c:877:45: sparse:    expected void [noderef] <asn:4> **slot
->> drivers/base/memory.c:877:45: sparse:    got void **slot
-   drivers/base/memory.c:874:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void [noderef] <asn:4> **slot @@    got n:4> **slot @@
-   drivers/base/memory.c:874:9: sparse:    expected void [noderef] <asn:4> **slot
-   drivers/base/memory.c:874:9: sparse:    got void **slot
->> drivers/base/memory.c:874:9: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected void **slot @@    got void [noderef] <asvoid **slot @@
->> drivers/base/memory.c:874:9: sparse:    expected void **slot
->> drivers/base/memory.c:874:9: sparse:    got void [noderef] <asn:4> **
-
-vim +874 drivers/base/memory.c
-
-   845	
-   846	/**
-   847	 * walk_memory_blocks - walk through all present memory blocks overlapped
-   848	 *			by the range [start, start + size)
-   849	 *
-   850	 * @start: start address of the memory range
-   851	 * @size: size of the memory range
-   852	 * @arg: argument passed to func
-   853	 * @func: callback for each memory section walked
-   854	 *
-   855	 * This function walks through all present memory blocks overlapped by the
-   856	 * range [start, start + size), calling func on each memory block.
-   857	 *
-   858	 * In case func() returns an error, walking is aborted and the error is
-   859	 * returned.
-   860	 */
-   861	int walk_memory_blocks(unsigned long start, unsigned long size,
-   862			       void *arg, walk_memory_blocks_func_t func)
-   863	{
-   864		struct radix_tree_iter iter;
-   865		const unsigned long start_block_id = phys_to_block_id(start);
-   866		const unsigned long end_block_id = phys_to_block_id(start + size - 1);
-   867		struct memory_block *mem;
-   868		void **slot;
-   869		int ret = 0;
-   870	
-   871		if (!size)
-   872			return 0;
-   873	
- > 874		radix_tree_for_each_slot(slot, &memory_blocks, &iter, start_block_id) {
-   875			if (iter.index > end_block_id)
-   876				break;
- > 877			mem = radix_tree_deref_slot(slot);
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
