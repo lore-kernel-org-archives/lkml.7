@@ -2,88 +2,129 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73031C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5466C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463D9207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574657107;
-	bh=aSroA1tJkkhrawkEnz+x1J5uQ7dP73E3kkFNwgxCrjc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=oDvgvsz502e4f6FGnJLkQ3QbFcBpBcePCzHLXj9KtU9J70TU9UnbsccapLLpkjNqt
-	 rmT9FJm0Y6I0gbuCMOL1jG3BvqKgEcTSxC5prJYFkmZF81uuTKqzAObppBF9bhalKR
-	 HGAMCT2n4oKAnvkyECrtfoz8tw3laGgIESf6eptk=
+	by mail.kernel.org (Postfix) with ESMTP id 7C7EE2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O4ezwgD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfKYEpG (ORCPT
+        id S1727158AbfKYEqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 23:45:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbfKYEpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 23:45:05 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2C42071A;
-        Mon, 25 Nov 2019 04:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574657105;
-        bh=aSroA1tJkkhrawkEnz+x1J5uQ7dP73E3kkFNwgxCrjc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=xd6oamJw8cdBpyxa6Dqk9inUzve8hNxbG1AIZD2wMpTNYQ1rW/HtPYBrWv94WluWI
-         phH34pvHnUTvLA9VsvUg3VpCVG/FBlpadA5cPHbsWRlRkw1/f/CZzBrvMjxlsTJzBm
-         nJhcjw7jyYFZqyAiwy5RVmbNPr8nELP2Cg2b24iY=
-Date:   Sun, 24 Nov 2019 20:45:03 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: [GIT PULL] fsverity updates for 5.5
-Message-ID: <20191125044503.GB9817@sol.localdomain>
+        Sun, 24 Nov 2019 23:46:06 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47696 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfKYEqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 23:46:06 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAP4juuR126494;
+        Sun, 24 Nov 2019 22:45:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574657156;
+        bh=Wzx1jESaMfi6+oDwa4IY9LrI/AdCk7z8iODViWIr7tk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O4ezwgD6Wr303rSZXMHkP5aKut8btcoTFDtxsd4ebT9KgDV03PHtQrcckaptEDnVP
+         8NwNPgX8im44gJX9olkQVMEonvvo1+oNokC0uJnLos9msuHFb7sYOdWErGxO2jG4RM
+         1uBGFLMoOOgDJDhSUFz2bwJXE/+2aID8P+gondi0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAP4juLS126096;
+        Sun, 24 Nov 2019 22:45:56 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 24
+ Nov 2019 22:45:56 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 24 Nov 2019 22:45:56 -0600
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAP4jpB7030847;
+        Sun, 24 Nov 2019 22:45:52 -0600
+Subject: Re: [PATCH 0/4] Add support to defer core initialization
+To:     Vidya Sagar <vidyas@nvidia.com>
+CC:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
+ <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+ <550dd734-acd9-802a-f650-44c32b56b58a@nvidia.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <94d5381c-5c39-b040-00a1-8333b6c73423@ti.com>
+Date:   Mon, 25 Nov 2019 10:15:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <550dd734-acd9-802a-f650-44c32b56b58a@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
+Hi,
 
-  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
+On 25/11/19 10:03 AM, Vidya Sagar wrote:
+> On 11/18/2019 10:13 PM, Jingoo Han wrote:
+>>
+>>
+>> ﻿On 11/18/19, 1:55 AM, Vidya Sagar wrote:
+>>>
+>>> On 11/13/2019 2:38 PM, Vidya Sagar wrote:
+>>>> EPC/DesignWare core endpoint subsystems assume that the core registers are
+>>>> available always for SW to initialize. But, that may not be the case always.
+>>>> For example, Tegra194 hardware has the core running on a clock that is derived
+>>>> from reference clock that is coming into the endpoint system from host.
+>>>> Hence core is made available asynchronously based on when host system is going
+>>>> for enumeration of devices. To accommodate this kind of hardwares, support is
+>>>> required to defer the core initialization until the respective platform driver
+>>>> informs the EPC/DWC endpoint sub-systems that the core is indeed available for
+>>>> initiaization. This patch series is attempting to add precisely that.
+>>>> This series is based on Kishon's patch that adds notification mechanism
+>>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+>>>>
+>>>> Vidya Sagar (4):
+>>>>     PCI: dwc: Add new feature to skip core initialization
+>>>>     PCI: endpoint: Add notification for core init completion
+>>>>     PCI: dwc: Add API to notify core initialization completion
+>>>>     PCI: pci-epf-test: Add support to defer core initialization
+>>>>
+>>>>    .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+>>>>    drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+>>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+>>>>    drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+>>>>    include/linux/pci-epc.h                       |   2 +
+>>>>    include/linux/pci-epf.h                       |   5 +
+>>>>    6 files changed, 164 insertions(+), 66 deletions(-)
+>>>>
+>>>
+>>> Hi Kishon / Gustavo / Jingoo,
+>>> Could you please take a look at this patch series?
+>>
+>> You need a Ack from Kishon, because he made EP code.
+> Hi Kishon,
+> Could you please find time to review this series?
 
-are available in the Git repository at:
+I'll review it this week. Sorry for the delay.
 
-  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fsverity-for-linus
-
-for you to fetch changes up to 73f0ec02d670a61afcef49bc0a74d42e324276ea:
-
-  docs: fs-verity: mention statx() support (2019-11-13 12:15:34 -0800)
-
-----------------------------------------------------------------
-
-Expose the fs-verity bit through statx().
-
-----------------------------------------------------------------
-Eric Biggers (5):
-      docs: fs-verity: document first supported kernel version
-      statx: define STATX_ATTR_VERITY
-      ext4: support STATX_ATTR_VERITY
-      f2fs: support STATX_ATTR_VERITY
-      docs: fs-verity: mention statx() support
-
- Documentation/filesystems/fsverity.rst | 12 ++++++++++--
- fs/ext4/inode.c                        |  5 ++++-
- fs/f2fs/file.c                         |  5 ++++-
- include/linux/stat.h                   |  3 ++-
- include/uapi/linux/stat.h              |  2 +-
- 5 files changed, 21 insertions(+), 6 deletions(-)
+-Kishon
