@@ -2,289 +2,153 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C095C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0778C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2772084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D8C20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="MkBFdeRT"
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="cmrRsyyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfKYO6A (ORCPT
+        id S1728408AbfKYO6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:58:00 -0500
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:40735 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728071AbfKYO6A (ORCPT
+        Mon, 25 Nov 2019 09:58:42 -0500
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:35862 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728078AbfKYO6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:58:00 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ZFoHiMB18LwWdZFoLiVtnF; Mon, 25 Nov 2019 15:57:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1574693877; bh=XvRNZgCH8hLwR5jEJKgcTlq2v4reBgb20lYgwZ7hL8g=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=MkBFdeRT2X/t5vPR1K36MLwMUXKWGfoVTPk82r1XUA1we2lyoDWiYXk6DHAB5/3AY
-         p46kGs8DOanKX8IKw+QTMZF5lvR8pptxYcQv6X4KCeNke+Yhg364BpSpuLKAWN+mJI
-         0inOqWMKebPP/VruZTPR+nP2/sag9Qy6nBtEzh39VkzbojkdPvXCg6/genSWg71Bw9
-         +qlzWNDKTjijr88YWCXo7jtcQEQYJfVLpFAUkMS7t2Dhf6VfR5BipcHWaCB1FsuR7k
-         kN1oh0G6k18vgf0+tHObJb8a31m9YJEZsITFIY8LPw5bvBvBjxugDYJdnqjIl5CWDL
-         H5HwgwCt3MFyg==
-Subject: Re: [PATCH v4 6/8] media: v4l2-core: fix v4l2_buffer handling for
- time64 ABI
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org
-References: <20191111203835.2260382-1-arnd@arndb.de>
- <20191111203835.2260382-7-arnd@arndb.de>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d54c82b5-21b7-2d5e-ad0b-206527ad2768@xs4all.nl>
-Date:   Mon, 25 Nov 2019 15:57:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 09:58:42 -0500
+Received: by mail-wr1-f46.google.com with SMTP id z3so18428218wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:58:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=T38u6s14lrIokjD1pfLNotz8RAAutgMlPAmccZz9BPU=;
+        b=cmrRsyyCllSniFrjyjMRP2Yq+xb/s78lts1IDyaIr80zUiVHhSDsEGvLidHhGIrZ6R
+         ZwO3YdZ05CMmvY0kXGTB6Kuyjx7eFQMwmguM9fB8cI/Ma8S8LOrygGjGOJKOtL50dEo1
+         OMCeKeQSxg8uvDKFgQnV3Z/6nUxTFCm3Mtyc744LDIp0Z2vY0h+WPJLvh2q/p+ZKhRMm
+         kxcvSANreT5Olgl4GLV/6pFgznBPeGBMYZO665xL0C5V1K48/iczFWAabN9J8gCwqUfd
+         dHcVHLF3fxRtgVvUaqIBDQdFgukSkp/wjtV43zd0UNKf0E4n9+O2udD7R55snM40piVb
+         c3Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=T38u6s14lrIokjD1pfLNotz8RAAutgMlPAmccZz9BPU=;
+        b=TcZmDeMs7LaRnD2PRJ3BAqLuTh6JJ6mQIPhkK3vUDJkhOLDhCKaw/GI96ORz05Aeja
+         2oB4Kgi3YL7RCsQVPHj+qSoW3bSAxa/qM9fNjzp2g+vw/picfyUs1kXRH74lW+Z+ZVbn
+         EMmVDlY+V6UgZcBWUjvW7UGVMFCfdJLGpngO9LetwoCCZr+6tr5ooKKhpfLx94OUaAF8
+         h283t0yNfw6kwpebEN0XjRKauPdPG256ku+5+MnSl+3jQRY0eOLjJHqrTSZoPPNagk+V
+         YqQZT7f2sOI73jQedrMxq+wwfNtFtrntp1hYfRcNYq/ouq7fk0R8GG8fl4CoIMeLp6Oh
+         mPuw==
+X-Gm-Message-State: APjAAAX/WKpAiQKRYWFRigYts+YymE5CoT7bWeI+5etG0qVS6SU3cEmb
+        79xKsQoh11oP6hw//iGRAKiWxQ==
+X-Google-Smtp-Source: APXvYqwUlTUX50T3KRUQgx3L5evsrTDO/ep5jdtg2X5g0zuWja7jHszHn6fHn5H80Bj3MXxmxcrwTw==
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr13656971wru.181.1574693920561;
+        Mon, 25 Nov 2019 06:58:40 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id x8sm10676344wrm.7.2019.11.25.06.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 06:58:39 -0800 (PST)
+Message-ID: <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Date:   Mon, 25 Nov 2019 15:58:34 +0100
+In-Reply-To: <20191125102928.GA20489@ming.t460p>
+References: <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+         <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
+         <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+         <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
+         <20191109222828.GA30568@ming.t460p>
+         <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
+         <20191123072726.GC25356@ming.t460p>
+         <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
+         <20191125035437.GA3806@ming.t460p>
+         <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
+         <20191125102928.GA20489@ming.t460p>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20191111203835.2260382-7-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMVKvVzoBK6Io7Yd+Khw+0VJ/0/PXGE3VJhSeeK4tMoyWC+iRwaALGZ7o+XXVxhyC3KsoJGkx8Oh6ZyNOztlJcTkr+eZgiPAx2yicU6Nnk4/Ujw91wC3
- Fl1ebQJIM0ukRUkC6BJQqVVLvk9HM6HI1Vv/KM87OOGEWN9ki3bHLH+kSrvRXFxQCEZdVncwyKJMbD8t225/2vDBOXMbBymHJ7I/LGknimXIZWtfSrmGORqh
- CR227myisxPTFA5ZPGQd2HOEW6qHIRdKwMZFFDb4Vj7uPc++xJs7iExo+M/uc75AOgb5wuODfpSyV/N8bncCXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/19 9:38 PM, Arnd Bergmann wrote:
-> The v4l2_buffer structure contains a 'struct timeval' member that is
-> defined by the user space C library, creating an ABI incompatibility
-> when that gets updated to a 64-bit time_t.
+Il giorno lun, 25/11/2019 alle 18.29 +0800, Ming Lei ha scritto:
+> On Mon, Nov 25, 2019 at 11:11:00AM +0100, Andrea Vai wrote:
+> > Il giorno lun, 25/11/2019 alle 11.54 +0800, Ming Lei ha scritto:
+> > > On Sat, Nov 23, 2019 at 04:44:55PM +0100, Andrea Vai wrote:
+> > > > Il giorno sab, 23/11/2019 alle 15.28 +0800, Ming Lei ha
+> scritto:
+> > > > > 
+> > > > > Please post the log of 'lsusb -v', and I will try to make a
+> > > patch
+> > > > > for
+> > > > > addressing the issue.
+> > > > 
+> > > > attached,
+> > > 
+> > > Please apply the attached patch, and re-build & install & reboot
+> > > kernel.
+> > > 
+> > > This time, please don't switch io scheduler.
+> > 
+> > # patch -p1 < usb.patch outputs:
+> > 
+> > (Stripping trailing CRs from patch; use --binary to disable.)
+> > patching file block/blk-mq.c
+> > Hunk #1 succeeded at 1465 (offset 29 lines).
+> > Hunk #2 succeeded at 3061 (offset 13 lines).
+> > (Stripping trailing CRs from patch; use --binary to disable.)
+> > patching file drivers/scsi/scsi_lib.c
+> > Hunk #1 succeeded at 1902 (offset -37 lines).
+> > (Stripping trailing CRs from patch; use --binary to disable.)
+> > patching file drivers/usb/storage/scsiglue.c
+> > Hunk #1 succeeded at 651 (offset -10 lines).
+> > (Stripping trailing CRs from patch; use --binary to disable.)
+> > patching file include/linux/blk-mq.h
+> > Hunk #1 succeeded at 226 (offset -162 lines).
+> > (Stripping trailing CRs from patch; use --binary to disable.)
+> > patching file include/scsi/scsi_host.h
+> > patch unexpectedly ends in middle of line
+> > patch unexpectedly ends in middle of line
+> > 
+> > Just to be sure I have to go on, is this correct? Sounds like an
+> error
+> > but I don't know if it is important.
 > 
-> As in v4l2_event, handle this with a special case in video_put_user()
-> and video_get_user() to replace the memcpy there.
-> 
-> Since the structure also contains a pointer, there are now two
-> native versions (on 32-bit systems) as well as two compat versions
-> (on 64-bit systems), which unfortunately complicates the compat
-> handler quite a bit.
-> 
-> Duplicating the existing handlers for the new types is a safe
-> conversion for now, but unfortunately this may turn into a
-> maintenance burden later. A larger-scale rework of the
-> compat code might be a better alternative, but is out of scope
-> of the y2038 work.
-> 
-> Sparc64 needs a special case because of their special suseconds_t
-> definition.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/media/v4l2-core/v4l2-ioctl.c | 57 ++++++++++++++++++++++++++--
->  include/uapi/linux/videodev2.h       | 45 ++++++++++++++++++++++
->  2 files changed, 98 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 1de939d11628..4ae1bcaec3fa 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -474,10 +474,10 @@ static void v4l_print_buffer(const void *arg, bool write_only)
->  	const struct v4l2_plane *plane;
->  	int i;
->  
-> -	pr_cont("%02ld:%02d:%02d.%08ld index=%d, type=%s, request_fd=%d, flags=0x%08x, field=%s, sequence=%d, memory=%s",
-> -			p->timestamp.tv_sec / 3600,
-> -			(int)(p->timestamp.tv_sec / 60) % 60,
-> -			(int)(p->timestamp.tv_sec % 60),
-> +	pr_cont("%02d:%02d:%02d.%09ld index=%d, type=%s, request_fd=%d, flags=0x%08x, field=%s, sequence=%d, memory=%s",
-> +			(int)p->timestamp.tv_sec / 3600,
-> +			((int)p->timestamp.tv_sec / 60) % 60,
-> +			((int)p->timestamp.tv_sec % 60),
->  			(long)p->timestamp.tv_usec,
->  			p->index,
->  			prt_names(p->type, v4l2_type_names), p->request_fd,
-> @@ -3014,6 +3014,14 @@ static unsigned int video_translate_cmd(unsigned int cmd)
->  #ifdef CONFIG_COMPAT_32BIT_TIME
->  	case VIDIOC_DQEVENT_TIME32:
->  		return VIDIOC_DQEVENT;
-> +	case VIDIOC_QUERYBUF_TIME32:
-> +		return VIDIOC_QUERYBUF;
-> +	case VIDIOC_QBUF_TIME32:
-> +		return VIDIOC_QBUF;
-> +	case VIDIOC_DQBUF_TIME32:
-> +		return VIDIOC_DQBUF;
-> +	case VIDIOC_PREPARE_BUF_TIME32:
-> +		return VIDIOC_PREPARE_BUF;
->  #endif
->  	}
->  
-> @@ -3032,6 +3040,30 @@ static int video_get_user(void __user *arg, void *parg, unsigned int cmd,
->  	}
->  
->  	switch (cmd) {
-> +#ifdef COMPAT_32BIT_TIME
-> +	case VIDIOC_QUERYBUF_TIME32:
-> +	case VIDIOC_QBUF_TIME32:
-> +	case VIDIOC_DQBUF_TIME32:
-> +	case VIDIOC_PREPARE_BUF_TIME32: {
-> +		struct v4l2_buffer_time32 vb32;
-> +		struct v4l2_buffer *vb = parg;
-> +
-> +		if (copy_from_user(&vb32, arg, sizeof(vb32)))
-> +			return -EFAULT;
-> +
-> +		memcpy(vb, &vb32, offsetof(struct v4l2_buffer, timestamp));
-> +		vb->timestamp.tv_sec = vb32.timestamp.tv_sec;
-> +		vb->timestamp.tv_usec = vb32.timestamp.tv_usec;
-> +	        memcpy(&vb->timecode, &vb32.timecode,
-> +		       sizeof(*vb) - offsetof(struct v4l2_buffer, timecode));
+> Looks there is small conflict, however it has been fixed by patch,
+> so
+> it is correct, please go on your test.
 
-I have similar concerns as with dqevent about whether this memcpy is the right approach.
-Unless you can prove with a utility like pahole that this memcpy is safe.
+Done, it still fails (2000 seconds or more to copy 1GB) :-(
 
-> +
-> +		if (cmd == VIDIOC_QUERYBUF_TIME32)
-> +			memset(&vb->length, 0, sizeof(*vb) -
-> +			       offsetof(struct v4l2_buffer, length));
-> +
-> +		break;
-> +	}
-> +#endif
->  	default:
->  		/*
->  		 * In some cases, only a few fields are used as input,
-> @@ -3080,6 +3112,23 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
->  			return -EFAULT;
->  		break;
->  	}
-> +	case VIDIOC_QUERYBUF_TIME32:
-> +	case VIDIOC_QBUF_TIME32:
-> +	case VIDIOC_DQBUF_TIME32:
-> +	case VIDIOC_PREPARE_BUF_TIME32: {
-> +		struct v4l2_buffer_time32 vb32;
-> +		struct v4l2_buffer *vb = parg;
-> +
-> +		memcpy(&vb32, vb, offsetof(struct v4l2_buffer, timestamp));
-> +		vb32.timestamp.tv_sec = vb->timestamp.tv_sec;
-> +		vb32.timestamp.tv_usec = vb->timestamp.tv_usec;
-> +	        memcpy(&vb32.timecode, &vb->timecode,
-> +		       sizeof(*vb) - offsetof(struct v4l2_buffer, timecode));
+cat /sys/block/sdf/queue/scheduler outputs:
+[mq-deadline] none
 
-Ditto.
+What to try next?
 
-> +
-> +		if (copy_to_user(arg, &vb32, sizeof(vb32)))
-> +			return -EFAULT;
-> +		break;
-> +	}
->  #endif
->  	default:
->  		/*  Copy results into user buffer  */
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 1d2553d4ed5b..f05c54d63f96 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -990,7 +990,47 @@ struct v4l2_buffer {
->  	__u32			bytesused;
->  	__u32			flags;
->  	__u32			field;
-> +#ifdef __KERNEL__
-> +	/* match glibc timeval64 format */
-> +	struct {
-> +		long long	tv_sec;
-> +# if defined(__sparc__) && defined(__arch64__)
-> +		int		tv_usec;
-> +		int		__pad;
-> +# else
-> +		long long	tv_usec;
-> +# endif
-> +	} timestamp;
+Thanks,
+Andrea
 
-Ewww!
-
-Are there more places where this is needed? If so, then I very much prefer
-that a __kernel_timeval struct is defined somewhere, with appropriate
-comments.
-
-> +#else
->  	struct timeval		timestamp;
-> +#endif
-> +	struct v4l2_timecode	timecode;
-> +	__u32			sequence;
-> +
-> +	/* memory location */
-> +	__u32			memory;
-> +	union {
-> +		__u32           offset;
-> +		unsigned long   userptr;
-> +		struct v4l2_plane *planes;
-> +		__s32		fd;
-> +	} m;
-> +	__u32			length;
-> +	__u32			reserved2;
-> +	union {
-> +		__s32		request_fd;
-> +		__u32		reserved;
-> +	};
-> +};
-> +
-> +#ifdef __KERNEL__
-> +struct v4l2_buffer_time32 {
-> +	__u32			index;
-> +	__u32			type;
-> +	__u32			bytesused;
-> +	__u32			flags;
-> +	__u32			field;
-> +	struct old_timeval32	timestamp;
->  	struct v4l2_timecode	timecode;
->  	__u32			sequence;
->  
-> @@ -1009,6 +1049,7 @@ struct v4l2_buffer {
->  		__u32		reserved;
->  	};
->  };
-> +#endif
-
-Can this be moved to v4l2-ioctls.h?
-
->  
->  #ifndef __KERNEL__
->  /**
-> @@ -2446,12 +2487,15 @@ struct v4l2_create_buffers {
->  #define VIDIOC_S_FMT		_IOWR('V',  5, struct v4l2_format)
->  #define VIDIOC_REQBUFS		_IOWR('V',  8, struct v4l2_requestbuffers)
->  #define VIDIOC_QUERYBUF		_IOWR('V',  9, struct v4l2_buffer)
-> +#define VIDIOC_QUERYBUF_TIME32	_IOWR('V',  9, struct v4l2_buffer_time32)
-
-And all these should be moved there as well.
-
->  #define VIDIOC_G_FBUF		 _IOR('V', 10, struct v4l2_framebuffer)
->  #define VIDIOC_S_FBUF		 _IOW('V', 11, struct v4l2_framebuffer)
->  #define VIDIOC_OVERLAY		 _IOW('V', 14, int)
->  #define VIDIOC_QBUF		_IOWR('V', 15, struct v4l2_buffer)
-> +#define VIDIOC_QBUF_TIME32	_IOWR('V', 15, struct v4l2_buffer_time32)
->  #define VIDIOC_EXPBUF		_IOWR('V', 16, struct v4l2_exportbuffer)
->  #define VIDIOC_DQBUF		_IOWR('V', 17, struct v4l2_buffer)
-> +#define VIDIOC_DQBUF_TIME32	_IOWR('V', 17, struct v4l2_buffer_time32)
->  #define VIDIOC_STREAMON		 _IOW('V', 18, int)
->  #define VIDIOC_STREAMOFF	 _IOW('V', 19, int)
->  #define VIDIOC_G_PARM		_IOWR('V', 21, struct v4l2_streamparm)
-> @@ -2520,6 +2564,7 @@ struct v4l2_create_buffers {
->  #define	VIDIOC_UNSUBSCRIBE_EVENT _IOW('V', 91, struct v4l2_event_subscription)
->  #define VIDIOC_CREATE_BUFS	_IOWR('V', 92, struct v4l2_create_buffers)
->  #define VIDIOC_PREPARE_BUF	_IOWR('V', 93, struct v4l2_buffer)
-> +#define VIDIOC_PREPARE_BUF_TIME32 _IOWR('V', 93, struct v4l2_buffer_time32)
->  #define VIDIOC_G_SELECTION	_IOWR('V', 94, struct v4l2_selection)
->  #define VIDIOC_S_SELECTION	_IOWR('V', 95, struct v4l2_selection)
->  #define VIDIOC_DECODER_CMD	_IOWR('V', 96, struct v4l2_decoder_cmd)
-> 
-
-Regards,
-
-	Hans
