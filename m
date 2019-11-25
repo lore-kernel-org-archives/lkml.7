@@ -2,109 +2,181 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436A4C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251EC207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F332082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="hEpbOAQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKYIGh (ORCPT
+        id S1726694AbfKYIQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 03:06:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42746 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfKYIGh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 03:06:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id o12so12251234oic.9;
-        Mon, 25 Nov 2019 00:06:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gAuJIv9yn4YXOSzk5PZReQ2dPQGSJ4vZoOY3jPtStjc=;
-        b=QWyvj/CFps7CV2EU9tzcrwuhr5T+shDGdnNpPkBnIHKM+J+s84shb5PExAaVokpBzA
-         Ekhu7Doqily5QBpaNCZ5cIb2T2Al5ggwTyxyxkOADyIKBLZr4cvEu1jduuuSxKE46QJb
-         DwKFStZZRU5z5Alm0f7lrXILu6YcLBXIVdgB7o4l8R8PRdCLZN9LfEtwa/uxtbGUDAFk
-         +pS2Ky1jn0oInBAocvzK1bWQFM23Mik1g+/nzoBdUVybx/IdKKGdsYf7ET3GBtMwEBQT
-         cNrVppLAvfq+N2NSEbPwkfszD8aEp6WgGwsclImgYIow7eRdjpionZxpTVn/Tuipyr3k
-         6pjQ==
-X-Gm-Message-State: APjAAAVG7C3oNcQfKnn8Kx3PbaH9X5Aw/vWLI4KCrfoGWb3g7AeSIDuX
-        bXqZBEquYhlqdXpA1M0y3uKPSnaYP2goQlS/qhc=
-X-Google-Smtp-Source: APXvYqwpeDUhNSpQ/oCrYrAiLsRBMIpwYQpPGW9c/ztktaU9IBlgDfMBbUNbBU4Re6q5x3Nv2eZgOEhw4M2WPaFTbaU=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr20980328oia.131.1574669195789;
- Mon, 25 Nov 2019 00:06:35 -0800 (PST)
+        Mon, 25 Nov 2019 03:16:26 -0500
+Received: from cmta17.telus.net ([209.171.16.90]:50683 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfKYIQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 03:16:26 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id Z9XdidPYlbg38Z9XfipV7L; Mon, 25 Nov 2019 01:16:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1574669783; bh=vFOQhePmh6HbgI64DL81DZAEDX3IaEHaCM2hrpYehi8=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=hEpbOAQfGMKyKXwiLXdUIinAVehnoL8CWGaYB0diF4MsT5hCcWKX9UQpOwiLhxSwf
+         S000PMU2nT1QoG44b0ZkkDcYWXTNh82hpb0PnNoPGMY8IeDSu8HHkjlNAGrsVS/an9
+         0+fq85c3wNNxlq9olHNLJsZB6qqjJB3uLOMGBEb5d7SIvojVk+1ktn/URHeotVPu/5
+         gcGD2I1aZd9JG5Vdz9vhAhB6jmLfKZu7xDBkut+e+BDo/7+rI4rgA3Ee2ix0DN4mXR
+         AxF3E1Q6KRHo7hstDbgGacDRJTckjeuNTb9jqdS0uLbq5F1DNqgOEB8ohLKgW9R7uX
+         xnDUa7KwiZXwg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=O/1HQy1W c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=JfrnYn6hAAAA:8 a=FGbulvE0AAAA:8 a=ODkfB97YEM3lDChqQvcA:9
+ a=I_Xm75vh8Nu1Efj-:21 a=kuUscEa9XYuurKCR:21 a=CjuIK1q_8ugA:10
+ a=1CNFftbPRP8L7MoqJWF3:22 a=svzTaB3SJmTkU8mK-ULk:22 a=pHzHmUro8NiASowvMSCR:22
+ a=xoEH_sTeL_Rfw54TyV31:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
+        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
+Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "'Mel Gorman'" <mgorman@techsingularity.net>,
+        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Juri Lelli'" <juri.lelli@redhat.com>,
+        "'Paul Turner'" <pjt@google.com>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'Quentin Perret'" <qperret@qperret.net>,
+        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>
+References: <20191113124654.18122-1-ggherdovich@suse.cz> <20191113124654.18122-2-ggherdovich@suse.cz> <000001d5a29b$c944fd70$5bcef850$@net>
+In-Reply-To: <000001d5a29b$c944fd70$5bcef850$@net>
+Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
+Date:   Mon, 25 Nov 2019 00:16:15 -0800
+Message-ID: <000001d5a368$9eece830$dcc6b890$@net>
 MIME-Version: 1.0
-References: <20191122101721.7222-1-jslaby@suse.cz>
-In-Reply-To: <20191122101721.7222-1-jslaby@suse.cz>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 Nov 2019 09:06:24 +0100
-Message-ID: <CAMuHMdXETD5azNxPgzzhbx_kNh93EN3a8q6FcEVBV=MvLXzYGw@mail.gmail.com>
-Subject: Re: [PATCH] tty: don't crash in tty_init_dev when missing tty_port
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWaH6kpvI2RPz8IRtKQLXZcAyoYugIIu9uQAEc7qNA=
+X-CMAE-Envelope: MS4wfNcpDtGbvHHZvc7IPZn/W/4wq+UdGU+vMUQBthDnyBdWLZshta4WIqM6GCszJ06iYjFAnam1Kz6pSW55qnj1SudvHrcaO9hSfGpJgROvZYqEMV8qURrE
+ l9G7wCf3BjiEWo43VldlXE5LOD3sA4WxFrgzJCCWZ/uumK4LkHVWpvoBKjcVLuCLTY37+aBk2Y/xNtS8IlrsvTajxQUUMSSAlZh5HFEslmcq+hOZXAAw1JfG
+ icfdDYx5hDt5A5+Ct+h1Hb5RHS6ElS6u5K7vbBWKVZmj66l1ezp2Kt6ODf8nMscJ2W1CK2OdJ+ocAwp9ZO4iRrwMvCgZqnktHeCr5qZ/C8aetto1n9cuCdEu
+ Yu+gJkIJbyIWJLdImh9dWMGsySHBe5SLopvbdDMVwMEbqUwnslS89FgE+9nPh3Zy9ubiZgMaF2/1UwLSyEHW9ykWkmMRem29x/l+Z2LViUlD9mWTVmcB37Pu
+ hnWrMRnSFGOyM2VgTz8j0pjb6rA05Wl93p4ov/mIRYRuUEN5/nEsmSVvx/+okw0oVyBqJzULeRiKoczTi5ljQksIEVOZhUOXQF3I/S/V/QLzbuI7LRwgrXOe
+ wQE2ic9huXX4Ag+59NFi2NPzva1NuEyivgS3noL+yyUXzjOv/fc8r6jx03cxOYjXqpgpoj/Jq7kVWmguR5Dx1RKZ8MgaM6i6U5J+w/Vz6az0kezEGf+hnOq7
+ legl8cZ2/NXorBpbrIxOvTyL/AbUcvR0Pqy2si6CP+J9lNQ/7MedEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+On 2019.11.23 23:50 Doug Smythies wrote:
 
-On Fri, Nov 22, 2019 at 11:20 AM Jiri Slaby <jslaby@suse.cz> wrote:
-> We currently warn the user when tty->port is not set in tty_init_dev
-> yet. The warning says that the kernel will crash later. And it really
-> will only few lines below at:
-> tty->port->itty = tty;
+> Hi all,
 >
-> So be nice and avoid the crash -- return an error instead. And update
-> the warning.
-
-As per Greg's comment on another patch in
-https://lore.kernel.org/lkml/20191121135743.GA552517@kroah.com/,
-that will still cause systems with panic-on-warn to reboot.
-
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> ---
->  drivers/tty/tty_io.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> The address list here is likely incorrect,
+> and this e-mail is really about a kernel 5.4
+> bisected regression.
 >
-> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> index cb6370906a6d..d9f54c7d94f2 100644
-> --- a/drivers/tty/tty_io.c
-> +++ b/drivers/tty/tty_io.c
-> @@ -1345,9 +1345,12 @@ struct tty_struct *tty_init_dev(struct tty_driver *driver, int idx)
->         if (!tty->port)
->                 tty->port = driver->ports[idx];
+> It had been since mid September, and kernel 5.3-rc8 since
+> I had tried this, so I wanted to try it again. Call it due diligence.
+> I focused on my own version of the "gitsource" test.
 >
-> -       WARN_RATELIMIT(!tty->port,
-> -                       "%s: %s driver does not set tty->port. This will crash the kernel later. Fix the driver!\n",
-> -                       __func__, tty->driver->name);
-> +       if (WARN_RATELIMIT(!tty->port,
-> +                       "%s: %s driver does not set tty->port. This would crash the kernel. Fix the driver!\n",
-> +                       __func__, tty->driver->name)) {
-> +               retval = -EINVAL;
-> +               goto err_release_lock;
-> +       }
+> Kernel 5.4-rc8 (as a baseline reference).
 >
->         retval = tty_ldisc_lock(tty, 5 * HZ);
->         if (retval)
+> My results were extremely surprising.
+>
+> As it turns out, at least on my test computer, both the
+> acpi-cpufreq and intel_cpufreq CPU frequency scaling drivers
+> using the schedutil governor are broken. For the tests that
+> I ran, there is negligible difference between them and the
+> performance governor. So, one might argue that they are not
+> broken, but rather working incredibly well, which if true
+> then this patch is no longer needed.
 
-Gr{oetje,eeting}s,
+Should be able to gain better insight here with the 
+intel_pstate_tracer.py utility, watching for differences
+in rates of rotation between CPUs. Too late tonight.
 
-                        Geert
+>
+> I bisected the kernel and got:
+>
+> first bad commit: [04cbfba6208592999d7bfe6609ec01dc3fde73f5]
+> Merge tag 'dmaengine-5.4-rc1' of git://git.infradead.org/users/vkoul/slave-dma
+>
+> Which did not make any sense at all. I don't even know how
+> this is being pulled into my kernel compile.
+> O.K., I often (usually) make a mistake
+> during bisection, so I did it again, and got the same result.
+>
+> Relevant excerpt from the commit:
+>
+> diff --cc drivers/dma/Kconfig
+> index 413efef,03fa0c5..7c511e3
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@@ -294,8 -294,8 +294,8 @@@ config INTEL_IOATDM
+>          If unsure, say N.
+>
+>  config INTEL_IOP_ADMA
+>  -      tristate "Intel IOP ADMA support"
+>  -      depends on ARCH_IOP32X || ARCH_IOP33X || ARCH_IOP13XX
+>  +      tristate "Intel IOP32x ADMA support"
+> -       depends on ARCH_IOP32X
+> ++      depends on ARCH_IOP32X || COMPILE_TEST
+>         select DMA_ENGINE
+>         select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+>         help
+>
+> If I revert the above, manually, then everything behaves
+> as expected (minimally tested only, so far).
+>
+> Are others seeing the schedutil governors not working as
+> expected with any of kernels 5.4-rc1 - 5.4-rc8?
+>
+> I do have a pretty graph of my method of doing the
+> "gitsource" test, but am not ready to post it yet.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Graphs and write up (mostly the same as herein) are now
+here:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+http://www.smythies.com/~doug/linux/single-threaded/k54regression/index.html
+
+The graphs are rather crowded, sorry.
+
+> Here is some gitsource test data, 6 runs of "make test",
+> the first run is discarded:
+>
+> "gg 6" means this 6 patch set.
+>
+> Kernel 5.4-rc8 + revert, intel_cpufreq/schedutil: 3899 seconds
+> Kernel 5.4-rc8 + gg 6 + revert, intel_cpufreq/schedutil: 2740.7 seconds
+> Ratio: 0.70 (as expected)
+
+Kernel 5.4-rc8 + gg 6 + revert, forced CPU affinity performance: 2106.5 seconds
+
+> Kernel 5.4-rc8, intel_cpufreq/schedutil: 2334.7 seconds (faster than expected)
+> Kernel 5.4-rc8 + gg 6 patch set, intel_cpufreq/schedutil: 2275.0 seconds (faster than expected)
+> Ratio: 0.97 (not as expected)
+> Kernel 5.4-rc8, intel_cpufreq/performance: 2215.3 seconds
+> Kernel 5.4-rc8, intel_cpufreq/ondemand: 3286.3 seconds
+> Re-stated from previous e-mail:
+> Kernel 5.3-rc8, intel_cpufreq/schedutil: ratio: 0.69 (I don't have the original times)
+
+... Doug
+
+
