@@ -2,119 +2,69 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE437C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B285EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABB720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF9320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbfKYSYr (ORCPT
+        id S1729341AbfKYS1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 13:24:47 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51861 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727269AbfKYSYr (ORCPT
+        Mon, 25 Nov 2019 13:27:21 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:34954 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727717AbfKYS1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 13:24:47 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tj5DfgO_1574706281;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tj5DfgO_1574706281)
+        Mon, 25 Nov 2019 13:27:21 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tj5E22R_1574706428;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tj5E22R_1574706428)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 Nov 2019 02:24:44 +0800
-Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
- partially
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191125093611.hlamtyo4hvefwibi@box>
+          Tue, 26 Nov 2019 02:27:15 +0800
 From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
-Date:   Mon, 25 Nov 2019 10:24:38 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20191125093611.hlamtyo4hvefwibi@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+To:     songliubraving@fb.com, kirill.shutemov@linux.intel.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: khugepaged: add trace status description for SCAN_PAGE_HAS_PRIVATE
+Date:   Tue, 26 Nov 2019 02:27:08 +0800
+Message-Id: <1574706428-36212-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 99cb0dbd47a15d395bf3faa78dc122bc5efe3fc0 ("mm,thp: add
+read-only THP support for (non-shmem) FS") instroduced a new khugepaged
+scan result: SCAN_PAGE_HAS_PRIVATE, but the corresponding description
+for trance events were not added.
 
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ include/trace/events/huge_memory.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
-> On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
->> Currently when truncating shmem file, if the range is partial of THP
->> (start or end is in the middle of THP), the pages actually will just get
->> cleared rather than being freed unless the range cover the whole THP.
->> Even though all the subpages are truncated (randomly or sequentially),
->> the THP may still be kept in page cache.  This might be fine for some
->> usecases which prefer preserving THP.
->>
->> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
->> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
->> So, when using shmem THP as memory backend QEMU inflation actually doesn't
->> work as expected since it doesn't free memory.  But, the inflation
->> usecase really needs get the memory freed.  Anonymous THP will not get
->> freed right away too but it will be freed eventually when all subpages are
->> unmapped, but shmem THP would still stay in page cache.
->>
->> To protect the usecases which may prefer preserving THP, introduce a
->> new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP is
->> preferred behavior if truncating partial THP.  This mode just makes
->> sense to tmpfs for the time being.
-> We need to clarify interaction with khugepaged. This implementation
-> doesn't do anything to prevent khugepaged from collapsing the range back
-> to THP just after the split.
-
-Yes, it doesn't. Will clarify this in the commit log.
-
->
->> @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->>   			}
->>   			unlock_page(page);
->>   		}
->> +rescan_split:
->>   		pagevec_remove_exceptionals(&pvec);
->>   		pagevec_release(&pvec);
->> +
->> +		if (split && PageTransCompound(page)) {
->> +			/* The THP may get freed under us */
->> +			if (!get_page_unless_zero(compound_head(page)))
->> +				goto rescan_out;
->> +
->> +			lock_page(page);
->> +
->> +			/*
->> +			 * The extra pins from page cache lookup have been
->> +			 * released by pagevec_release().
->> +			 */
->> +			if (!split_huge_page(page)) {
->> +				unlock_page(page);
->> +				put_page(page);
->> +				/* Re-look up page cache from current index */
->> +				goto again;
->> +			}
->> +			unlock_page(page);
->> +			put_page(page);
->> +		}
->> +rescan_out:
->>   		index++;
->>   	}
-> Doing get_page_unless_zero() just after you've dropped the pin for the
-> page looks very suboptimal.
-
-If I don't drop the pins the THP can't be split. And, there might be 
-more than one pins from find_get_entries() if I read the code correctly. 
-For example, truncate 8K length in the middle of THP, the THP's refcount 
-would get bumpped twice since  two sub pages would be returned.
-
->
+diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+index dd4db33..d49fbce 100644
+--- a/include/trace/events/huge_memory.h
++++ b/include/trace/events/huge_memory.h
+@@ -31,7 +31,8 @@
+ 	EM( SCAN_ALLOC_HUGE_PAGE_FAIL,	"alloc_huge_page_failed")	\
+ 	EM( SCAN_CGROUP_CHARGE_FAIL,	"ccgroup_charge_failed")	\
+ 	EM( SCAN_EXCEED_SWAP_PTE,	"exceed_swap_pte")		\
+-	EMe(SCAN_TRUNCATED,		"truncated")			\
++	EM( SCAN_TRUNCATED,		"truncated")			\
++	EMe(SCAN_PAGE_HAS_PRIVATE,	"has_private")			\
+ 
+ #undef EM
+ #undef EMe
+-- 
+1.8.3.1
 
