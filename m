@@ -2,182 +2,108 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2095DC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376C0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCA32071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:36:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="R1fYDaTv"
+	by mail.kernel.org (Postfix) with ESMTP id 19A91207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKYBgK (ORCPT
+        id S1727237AbfKYBgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 20:36:10 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:36521 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbfKYBgK (ORCPT
+        Sun, 24 Nov 2019 20:36:31 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:45359 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727072AbfKYBgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 20:36:10 -0500
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id xAP1Zudx011089;
-        Mon, 25 Nov 2019 10:35:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xAP1Zudx011089
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574645757;
-        bh=4zS9ONB1lX0XUDCYAcZW6UgeXuejST5UVyfhFO/g8d8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R1fYDaTvWZSIXPD0BXg/G6ZmTOZMjjFenSgrGicPFQT+3Y3g/m/ZrhOyG2ZLObk9H
-         jSDKaIdbzPFBTfl1xJZMsZJ81783Qg75CmGSqzoPciMOvaYC3saanAxYYIjtyXFHC5
-         XpMkLxiVblDfIwKlBHkAczgogRU8wVT/JOwppExseIgxtiiL6HSRfwU+JnROtKzXCB
-         0majHYE5wni9B61LcBG+CKkDMhKnKSmaJuTncJPy2oI75R0i2izRD9kV1YGyZXqnXf
-         k9MTvxkdR0dxuhxT8t1KHwfECJzy7sfW/CyqMeI3qoUrxjTmPVy291lkq65GHgy3ml
-         OF0e3gT7gcnCw==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id m5so4261547vsj.3;
-        Sun, 24 Nov 2019 17:35:57 -0800 (PST)
-X-Gm-Message-State: APjAAAXpe2LBex4zkGOTVlJWX6iHVBBIuVi08a/uJ1luAHRoIHv/MW5J
-        +1YG//cQa0FhCG/x9fwv8Z0BDfWP+C17OjPg++s=
-X-Google-Smtp-Source: APXvYqzsFOr3V5Ucu7w0+x7MvZdRFWrrwm3B2vqt1VuyZEdFouFkB+5X8be1VVTCyuUplwtsLKcFkuk0UX620+G6KNg=
-X-Received: by 2002:a05:6102:726:: with SMTP id u6mr17181884vsg.179.1574645756005;
- Sun, 24 Nov 2019 17:35:56 -0800 (PST)
+        Sun, 24 Nov 2019 20:36:31 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Tiyc3wU_1574645775;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tiyc3wU_1574645775)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 25 Nov 2019 09:36:16 +0800
+Subject: Re: [PATCH 0/3] sched/numa: introduce advanced numa statistic
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+Message-ID: <50f167ed-12b5-24b7-a2f7-38d32bf6647a@linux.alibaba.com>
+Date:   Mon, 25 Nov 2019 09:35:30 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191113071202.11287-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20191113071202.11287-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 25 Nov 2019 10:35:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARSSSORFCrTt0abgiyUffnTtgFFh8XbVNvbkxZ=NbcX_A@mail.gmail.com>
-Message-ID: <CAK7LNARSSSORFCrTt0abgiyUffnTtgFFh8XbVNvbkxZ=NbcX_A@mail.gmail.com>
-Subject: Re: [PATCH v3] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
-To:     DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 4:13 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> The DTC v1.5.1 added references to (U)INT32_MAX.
->
-> This is no problem for user-space programs since <stdint.h> defines
-> (U)INT32_MAX along with (u)int32_t.
->
-> For the kernel space, libfdt_env.h needs to be adjusted before we
-> pull in the changes.
->
-> In the kernel, we usually use s/u32 instead of (u)int32_t for the
-> fixed-width types.
->
-> Accordingly, we already have S/U32_MAX for their max values.
-> So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
->
-> Instead, add them to the in-kernel libfdt_env.h to compile the
-> latest libfdt.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+Hi, Peter
 
-Please let me ping this
-in case this is useful for future resync.
+How do you think about this version, does it looks fine to you?
 
+Regards,
+Michael Wang
 
-
-
->
-> My initial plan was to change this in a series of 3 patches
-> since it is clean, and reduces the code.
->
-> [1/3] https://lore.kernel.org/patchwork/patch/1147095/
-> [2/3] https://lore.kernel.org/patchwork/patch/1147096/
-> [3/3] https://lore.kernel.org/patchwork/patch/1147097/
->
-> 1/3 is stuck in the license bikeshed.
->
-> For 2/3, I have not been able to get Ack from Russell.
->
-> So, I chose a straight-forward fixup.
->
->
-> Changes in v3:
->  - Resend as a single patch
->
->  arch/arm/boot/compressed/libfdt_env.h | 4 +++-
->  arch/powerpc/boot/libfdt_env.h        | 2 ++
->  include/linux/libfdt_env.h            | 3 +++
->  3 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-> index b36c0289a308..6a0f1f524466 100644
-> --- a/arch/arm/boot/compressed/libfdt_env.h
-> +++ b/arch/arm/boot/compressed/libfdt_env.h
-> @@ -2,11 +2,13 @@
->  #ifndef _ARM_LIBFDT_ENV_H
->  #define _ARM_LIBFDT_ENV_H
->
-> +#include <linux/limits.h>
->  #include <linux/types.h>
->  #include <linux/string.h>
->  #include <asm/byteorder.h>
->
-> -#define INT_MAX                        ((int)(~0U>>1))
-> +#define INT32_MAX      S32_MAX
-> +#define UINT32_MAX     U32_MAX
->
->  typedef __be16 fdt16_t;
->  typedef __be32 fdt32_t;
-> diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-> index 2abc8e83b95e..9757d4f6331e 100644
-> --- a/arch/powerpc/boot/libfdt_env.h
-> +++ b/arch/powerpc/boot/libfdt_env.h
-> @@ -6,6 +6,8 @@
->  #include <string.h>
->
->  #define INT_MAX                        ((int)(~0U>>1))
-> +#define UINT32_MAX             ((u32)~0U)
-> +#define INT32_MAX              ((s32)(UINT32_MAX >> 1))
->
->  #include "of.h"
->
-> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-> index edb0f0c30904..1adf54aad2df 100644
-> --- a/include/linux/libfdt_env.h
-> +++ b/include/linux/libfdt_env.h
-> @@ -7,6 +7,9 @@
->
->  #include <asm/byteorder.h>
->
-> +#define INT32_MAX      S32_MAX
-> +#define UINT32_MAX     U32_MAX
-> +
->  typedef __be16 fdt16_t;
->  typedef __be32 fdt32_t;
->  typedef __be64 fdt64_t;
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+On 2019/11/13 上午11:43, 王贇 wrote:
+> Modern production environment could use hundreds of cgroup to control
+> the resources for different workloads, along with the complicated
+> resource binding.
+> 
+> On NUMA platforms where we have multiple nodes, things become even more
+> complicated, we hope there are more local memory access to improve the
+> performance, and NUMA Balancing keep working hard to achieve that,
+> however, wrong memory policy or node binding could easily waste the
+> effort, result a lot of remote page accessing.
+> 
+> We need to perceive such problems, then we got chance to fix it before
+> there are too much damages, however, there are no good approach yet to
+> help catch the mouse who introduced the remote access.
+> 
+> This patch set is trying to fill in the missing pieces， by introduce
+> the per-cgroup NUMA locality/exectime statistics, and expose the per-task
+> page migration failure counter, with these statistics, we could achieve
+> the daily monitoring on NUMA efficiency, to give warning when things going
+> too wrong.
+> 
+> Please check the third patch for more details.
+> 
+> Thanks to Peter, Mel and Michal for the good advices :-)
+> 
+> Michael Wang (3):
+>   sched/numa: advanced per-cgroup numa statistic
+>   sched/numa: expose per-task pages-migration-failure counter
+>   sched/numa: documentation for per-cgroup numa stat
+> 
+>  Documentation/admin-guide/cg-numa-stat.rst      | 161 ++++++++++++++++++++++++
+>  Documentation/admin-guide/kernel-parameters.txt |   4 +
+>  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+>  include/linux/sched.h                           |  18 ++-
+>  include/linux/sched/sysctl.h                    |   6 +
+>  init/Kconfig                                    |   9 ++
+>  kernel/sched/core.c                             |  91 ++++++++++++++
+>  kernel/sched/debug.c                            |   1 +
+>  kernel/sched/fair.c                             |  33 +++++
+>  kernel/sched/sched.h                            |  17 +++
+>  kernel/sysctl.c                                 |  11 ++
+>  11 files changed, 359 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+> 
+> 
