@@ -2,218 +2,156 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D39C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E49C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4350D20823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17A32068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WYIOG6ny"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="A/dDl4Ba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfKYDBA (ORCPT
+        id S1727116AbfKYDDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 22:01:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54997 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727050AbfKYDBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 22:01:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574650858;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6P1WQxGh+eOZbLMqUFKkHUrN72jbjpeZrRL9ImAF7xs=;
-        b=WYIOG6nyHacllKmBOx+A5TSzWCnOFHYoBKt7qvNzYCtQkX7KAYlKnPgi2koOj9y/z9tspV
-        oW5g/IIYUJ9Sfe/FXAS0ovg1wXRq+V9vwbMWI21YYU31Lv3DlNmIfGEriA52tqRKycIDyF
-        hqba3aGST7Z3aEYX8aLyfmKiSxgsYtk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432-ToudedkUOK6Ine94EMYuwQ-1; Sun, 24 Nov 2019 22:00:54 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55553800585;
-        Mon, 25 Nov 2019 03:00:52 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C53E8600C1;
-        Mon, 25 Nov 2019 03:00:43 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 11:00:39 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Sun, 24 Nov 2019 22:03:45 -0500
+Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:54985
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726907AbfKYDDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 22:03:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=grCDG7WzflCk8IyTTjrZkMMWXEu4iza8Q7R++4Y59QLjL15LEXOJGsaXGYsUsUX/1i5BgYRZXH0JSSZJRkHhIqfzXFrwRIElf8bKp1wFHDrEO9Mk+Ehs4dsQc5tHranCSU52avmcQ04p+RP4qCWwocsI6YpUMrkNZc1S++wBegxIdwt+9Qr46iwg5yJ04IJRxHrB3DOUC0z1qNjfal1I76RvMFYOWxwtSDZ4+l8RbxXOR2RcxEWvvXMuoM4aOeS19cc+1MojdcaFWLG+HJy+f/amelmo6C+iWebkDVd1SYE9oB1k+qjnYbCbgj/DGUpz6Jo9+aNGLoCKgago5I1LwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=57YYtK8qx6D/v9YZs88nCbjafr0q5rut2S0EWJFzhsY=;
+ b=ab+22QKgyCs+o5uC/vDbI8dDKoQetICdWmt5qqLlkaKREljkwoBJpxmXGIJh2vIgm1nPD5cKpSEIrUc48UqeOADrYG20gnBzhU2WIy+gpFgFmOYW4mLjGy6rnXd5rZ6n6Anp10149CX5q2gyFb9x8g596WtLucINzOzOCXphnYYRbrNTmFCd4SPJCW+vQ9/ZUN5QMnTRPk/amCHj3RqA3S2biwjqARrZq4i/PhBIY0I8t2KVL28ud4rZHvmiXUjP94XQVzORHQVAlL6iEo0pyFjlufbrUeibjXF5jNgjl3gIMrvdcIiVcbtaMrfUEtyJcuZTspFN5YI6q6zBHEVrxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=57YYtK8qx6D/v9YZs88nCbjafr0q5rut2S0EWJFzhsY=;
+ b=A/dDl4Ba5IU2T9zHc5fbjMbeQSZf+eEN2DKr2p/6h32shpptxdMZMI/L8fnaBEHxujqEi41TTSemJqm0C33r7QdKs2j2VbaZkyANc4/lYtIeidMNAOhdSGW8Mshcy8tNQhDTQiaBU6iKZ9zcQj9Ux9OcC6dmQVy3lf69eBoautc=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.232.221) by
+ VE1PR04MB6605.eurprd04.prod.outlook.com (20.179.234.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Mon, 25 Nov 2019 03:03:40 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::7c6e:3d38:6630:5515]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::7c6e:3d38:6630:5515%4]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
+ 03:03:40 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "hare@suse.com" <hare@suse.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-Subject: Re: [PATCH RFC V2 3/5] blk-mq: Facilitate a shared sbitmap per tagset
-Message-ID: <20191125030039.GA29462@ming.t460p>
-References: <1574173658-76818-1-git-send-email-john.garry@huawei.com>
- <1574173658-76818-4-git-send-email-john.garry@huawei.com>
- <20191121085531.GC4755@ming.t460p>
- <db93e0ba-118a-a4f6-41a8-064353568ef7@huawei.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: RE: [EXT] Re: [net-next] enetc: add support Credit Based Shaper(CBS)
+ for hardware offload
+Thread-Topic: [EXT] Re: [net-next] enetc: add support Credit Based Shaper(CBS)
+ for hardware offload
+Thread-Index: AQHVoQTfZRfPw7RK9Uq/YjFUdit1aqeZpRWAgAFYcgCAADjWYA==
+Date:   Mon, 25 Nov 2019 03:03:39 +0000
+Message-ID: <VE1PR04MB6496B0088B6D6558CD714A76924A0@VE1PR04MB6496.eurprd04.prod.outlook.com>
+References: <20191122070321.20915-1-Po.Liu@nxp.com>
+        <20191123190209.5ad772fc@cakuba.netronome.com>
+ <20191124153458.14015cb2@cakuba.netronome.com>
+In-Reply-To: <20191124153458.14015cb2@cakuba.netronome.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7d0844c6-0cbd-45f5-1a61-08d77154130c
+x-ms-traffictypediagnostic: VE1PR04MB6605:|VE1PR04MB6605:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6605E78A1DBD17A460BE1D72924A0@VE1PR04MB6605.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0232B30BBC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(346002)(396003)(376002)(13464003)(189003)(199004)(7696005)(4326008)(44832011)(76116006)(25786009)(186003)(316002)(76176011)(66446008)(99286004)(64756008)(66556008)(66476007)(66946007)(55016002)(6436002)(52536014)(9686003)(54906003)(446003)(14444005)(256004)(11346002)(66066001)(81166006)(81156014)(305945005)(229853002)(8936002)(6916009)(478600001)(74316002)(3846002)(33656002)(6116002)(7736002)(71200400001)(71190400001)(86362001)(53546011)(102836004)(6506007)(6246003)(26005)(2906002)(14454004)(8676002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6605;H:VE1PR04MB6496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 31s9fJjMdZbjwI7vs9I+FPz+NKrQF2u37I04ELUFvRkx17aju5zrmSUhbZGSTLSQFIUYfQjBi2i92gAEEABjBaKNysixtJR6JyI8xx/FHvFTxyCWmsNj5pcOIPm3JI99LHs/uo2abN0PeTlfZBX2xdgY7W6NsvZo3ogaTBY5AFw0boRqo0z9ThvMFyE8PL0QdaW6L9KNvVZbwtMvhPxfM3NoLxrorB7HmqOVxZykb3pQ/jbeqJV0wPQhuVVPOvEJ5+zT95c5tDFGVGvCNa5d+vtAjFbSywBXAOjd84L8THL4wkXYnaKdwzxfumU/MqfuEyuixlZrpyI2ohIpsyM/IHrAE3ljImVMFnLG1Ks6bokTQeDvZfkCyY09/ViPzUeww65Vpz9sXf0IHOsZ+m8JWWyhi3yNMidzSDksEMXtzExGG2+OtxMDkISCnsf7ibXo
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <db93e0ba-118a-a4f6-41a8-064353568ef7@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: ToudedkUOK6Ine94EMYuwQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d0844c6-0cbd-45f5-1a61-08d77154130c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 03:03:40.5117
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: asB8cBbI2oTD8Z+wtObkhVM7zn95hr3LXM01FZltRm3Husjrsv+3Hes4rdgcGDxn
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6605
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 10:24:16AM +0000, John Garry wrote:
-> > >   int blk_mq_init_sched(struct request_queue *q, struct elevator_type=
- *e)
-> > >   {
-> > > +=09struct blk_mq_tag_set *tag_set =3D q->tag_set;
-> > >   =09struct blk_mq_hw_ctx *hctx;
-> > >   =09struct elevator_queue *eq;
-> > >   =09unsigned int i;
-> > > @@ -537,6 +538,19 @@ int blk_mq_init_sched(struct request_queue *q, s=
-truct elevator_type *e)
-> > >   =09=09blk_mq_debugfs_register_sched_hctx(q, hctx);
-> > >   =09}
-> > > +=09if (blk_mq_is_sbitmap_shared(tag_set)) {
-> > > +=09=09if (!blk_mq_init_sched_shared_sbitmap(tag_set, q->nr_requests)=
-) {
-> > > +=09=09=09ret =3D -ENOMEM;
-> > > +=09=09=09goto err;
-> > > +=09=09}
-> > > +=09=09queue_for_each_hw_ctx(q, hctx, i) {
-> > > +=09=09=09struct blk_mq_tags *tags =3D hctx->sched_tags;
-> > > +
-> > > +=09=09=09tags->pbitmap_tags =3D &tag_set->sched_shared_bitmap_tags;
-> > > +=09=09=09tags->pbreserved_tags =3D &tag_set->sched_shared_breserved_=
-tags;
-> >=20
-> > This kind of sharing is wrong, sched tags should be request queue wide
-> > instead of tagset wide, and each request queue has its own & independen=
-t
-> > scheduler queue.
->=20
-> Right, so if we get get a scheduler tag we still need to get a driver tag=
-,
-> and this would be the "shared" tag.
->=20
-> That makes things simpler then.
->=20
-> >=20
-> > > +=09=09}
-> > > +=09}
-> > > +
-> > >   =09return 0;
-> > >   err:
-> > > diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-> > > index 42792942b428..6625bebb46c3 100644
-> > > --- a/block/blk-mq-tag.c
-> > > +++ b/block/blk-mq-tag.c
-> > > @@ -35,9 +35,9 @@ bool __blk_mq_tag_busy(struct blk_mq_hw_ctx *hctx)
-> > >    */
-> > >   void blk_mq_tag_wakeup_all(struct blk_mq_tags *tags, bool include_r=
-eserve)
-> > >   {
-> > > -=09sbitmap_queue_wake_all(&tags->bitmap_tags);
-> > > +=09sbitmap_queue_wake_all(tags->pbitmap_tags);
-> > >   =09if (include_reserve)
-> > > -=09=09sbitmap_queue_wake_all(&tags->breserved_tags);
-> > > +=09=09sbitmap_queue_wake_all(tags->pbreserved_tags);
-> > >   }
->=20
-> [...]
->=20
->=20
-> > >   =09mutex_init(&set->tag_list_lock);
-> > >   =09INIT_LIST_HEAD(&set->tag_list);
-> > > @@ -3137,6 +3151,7 @@ int blk_mq_update_nr_requests(struct request_qu=
-eue *q, unsigned int nr)
-> > >   {
-> > >   =09struct blk_mq_tag_set *set =3D q->tag_set;
-> > >   =09struct blk_mq_hw_ctx *hctx;
-> > > +=09bool sched_tags =3D false;
-> > >   =09int i, ret;
-> > >   =09if (!set)
-> > > @@ -3160,6 +3175,7 @@ int blk_mq_update_nr_requests(struct request_qu=
-eue *q, unsigned int nr)
-> > >   =09=09=09ret =3D blk_mq_tag_update_depth(hctx, &hctx->tags, nr,
-> > >   =09=09=09=09=09=09=09false);
-> > >   =09=09} else {
-> > > +=09=09=09sched_tags =3D true;
-> > >   =09=09=09ret =3D blk_mq_tag_update_depth(hctx, &hctx->sched_tags,
-> > >   =09=09=09=09=09=09=09nr, true);
-> > >   =09=09}
-> > > @@ -3169,8 +3185,41 @@ int blk_mq_update_nr_requests(struct request_q=
-ueue *q, unsigned int nr)
-> > >   =09=09=09q->elevator->type->ops.depth_updated(hctx);
-> > >   =09}
-> > > -=09if (!ret)
-> > > +=09/*
-> > > +=09 * if ret is 0, all queues should have been updated to the same d=
-epth
-> > > +=09 * if not, then maybe some have been updated - yuk, need to handl=
-e this for shared sbitmap...
-> > > +=09 * if some are updated, we should probably roll back the change a=
-ltogether. FIXME
-> > > +=09 */
-> > > +=09if (!ret) {
-> > > +=09=09if (blk_mq_is_sbitmap_shared(set)) {
-> > > +=09=09=09if (sched_tags) {
-> > > +=09=09=09=09sbitmap_queue_free(&set->sched_shared_bitmap_tags);
-> > > +=09=09=09=09sbitmap_queue_free(&set->sched_shared_breserved_tags);
-> > > +=09=09=09=09if (!blk_mq_init_sched_shared_sbitmap(set, nr))
-> > > +=09=09=09=09=09return -ENOMEM; /* fixup error handling */
-> > > +
-> > > +=09=09=09=09queue_for_each_hw_ctx(q, hctx, i) {
-> > > +=09=09=09=09=09hctx->sched_tags->pbitmap_tags =3D &set->sched_shared=
-_bitmap_tags;
-> > > +=09=09=09=09=09hctx->sched_tags->pbreserved_tags =3D &set->sched_sha=
-red_breserved_tags;
-> > > +=09=09=09=09}
-> > > +=09=09=09} else {
-> > > +=09=09=09=09sbitmap_queue_free(&set->shared_bitmap_tags);
-> > > +=09=09=09=09sbitmap_queue_free(&set->shared_breserved_tags);
-> > > +=09=09=09=09if (!blk_mq_init_shared_sbitmap(set))
-> > > +=09=09=09=09=09return -ENOMEM; /* fixup error handling */
-> >=20
-> > No, we can't re-allocate driver tags here which are shared by all LUNs.=
- > And you should see that 'can_grow' is set as false for driver tags
-> > in blk_mq_update_nr_requests(), which can only touch per-request-queue
-> > data, not tagset wide data.
->=20
-> Yeah, I see that. We should just resize for driver tags bitmap.
->=20
-> Personally I think the mainline code is a little loose here, as if we cou=
-ld
-> grow driver tags, then blk_mq_tagset.tags would be out-of-sync with the
-> hctx->tags. Maybe that should be made more explicit in the code.
->=20
-> BTW, do you have anything to say about this (modified slightly) comment:
->=20
-> /*
->  * if ret !=3D 0, q->nr_requests would not be updated, yet the depth
->  * for some hctx sched tags may have changed - is that the right thing
->  * to do?
->  */
-
-In theory, your concern is right, but so far we only support same
-depth of hctx for either sched tags or driver tags, so not an issue
-so far.
-
-
-Thanks,
-Ming
-
+SGkgSmFrdWIsDQoNClRoYW5rcyENCg0KDQpCciwNClBvIExpdQ0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IEpha3ViIEtpY2luc2tpIDxqYWt1Yi5raWNpbnNraUBuZXRy
+b25vbWUuY29tPg0KPiBTZW50OiAyMDE5xOoxMdTCMjXI1SA3OjM1DQo+IFRvOiBQbyBMaXUgPHBv
+LmxpdUBueHAuY29tPg0KPiBDYzogZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsgbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgdmluaWNpdXMuZ29tZXNA
+aW50ZWwuY29tOyBDbGF1ZGl1IE1hbm9pbA0KPiA8Y2xhdWRpdS5tYW5vaWxAbnhwLmNvbT47IFZs
+YWRpbWlyIE9sdGVhbiA8dmxhZGltaXIub2x0ZWFuQG54cC5jb20+Ow0KPiBBbGV4YW5kcnUgTWFy
+Z2luZWFuIDxhbGV4YW5kcnUubWFyZ2luZWFuQG54cC5jb20+OyBYaWFvbGlhbmcgWWFuZw0KPiA8
+eGlhb2xpYW5nLnlhbmdfMUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBN
+aW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54cC5jb20+OyBKZXJyeSBIdWFuZyA8amVycnkuaHVh
+bmdAbnhwLmNvbT47IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPg0KPiBTdWJqZWN0OiBb
+RVhUXSBSZTogW25ldC1uZXh0XSBlbmV0YzogYWRkIHN1cHBvcnQgQ3JlZGl0IEJhc2VkIFNoYXBl
+cihDQlMpIGZvcg0KPiBoYXJkd2FyZSBvZmZsb2FkDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwN
+Cj4gDQo+IE9uIFNhdCwgMjMgTm92IDIwMTkgMTk6MDI6MDkgLTA4MDAsIEpha3ViIEtpY2luc2tp
+IHdyb3RlOg0KPiA+IE9uIEZyaSwgMjIgTm92IDIwMTkgMDc6MTc6MTggKzAwMDAsIFBvIExpdSB3
+cm90ZToNCj4gPiA+ICsgICBpZiAodGMgPT0gcHJpb190b3ApIHsNCj4gPiA+ICsgICAgICAgICAg
+IG1heF9pbnRlcmZlcmVuY2Vfc2l6ZSA9IHBvcnRfZnJhbWVfbWF4X3NpemUgKiA4Ow0KPiA+ID4g
+KyAgIH0gZWxzZSB7DQo+ID4gPiArICAgICAgICAgICB1MzIgbTAsIG1hLCByMCwgcmE7DQo+ID4g
+PiArDQo+ID4gPiArICAgICAgICAgICBtMCA9IHBvcnRfZnJhbWVfbWF4X3NpemUgKiA4Ow0KPiA+
+ID4gKyAgICAgICAgICAgbWEgPSBlbmV0Y19wb3J0X3JkKCZzaS0+aHcsIEVORVRDX1BUQ01TRFVS
+KHByaW9fdG9wKSkgKiA4Ow0KPiA+ID4gKyAgICAgICAgICAgcmEgPSBlbmV0Y19nZXRfY2JzX2J3
+KCZzaS0+aHcsIHByaW9fdG9wKSAqDQo+ID4gPiArICAgICAgICAgICAgICAgICAgIHBvcnRfdHJh
+bnNtaXRfcmF0ZSAqIDEwMDAwVUxMOw0KPiA+ID4gKyAgICAgICAgICAgcjAgPSBwb3J0X3RyYW5z
+bWl0X3JhdGUgKiAxMDAwMDAwVUxMOw0KPiA+ID4gKyAgICAgICAgICAgbWF4X2ludGVyZmVyZW5j
+ZV9zaXplID0gbTAgKyBtYSArICh1NjQpcmEgKiBtMCAvIChyMCAtIHJhKTsNCj4gPiA+ICsgICB9
+DQo+ID4gPiArDQo+ID4gPiArICAgLyogaGlDcmVkaXQgYml0cyBjYWxjdWxhdGUgYnk6DQo+ID4g
+PiArICAgICoNCj4gPiA+ICsgICAgKiBtYXhTaXplZEZyYW1lICogKGlkbGVTbG9wZS9wb3J0VHhS
+YXRlKQ0KPiA+ID4gKyAgICAqLw0KPiA+ID4gKyAgIGhpX2NyZWRpdF9iaXQgPSBtYXhfaW50ZXJm
+ZXJlbmNlX3NpemUgKiBidyAvIDEwMDsNCj4gPiA+ICsNCj4gPiA+ICsgICAvKiBoaUNyZWRpdCBi
+aXRzIHRvIGhpQ3JlZGl0IHJlZ2lzdGVyIG5lZWQgdG8gY2FsY3VsYXRlZCBhczoNCj4gPiA+ICsg
+ICAgKg0KPiA+ID4gKyAgICAqIChlbmV0Q2xvY2tGcmVxdWVuY3kgLyBwb3J0VHJhbnNtaXRSYXRl
+KSAqIDEwMA0KPiA+ID4gKyAgICAqLw0KPiA+ID4gKyAgIGhpX2NyZWRpdF9yZWcgPSAoRU5FVENf
+Q0xLICogMTAwVUxMKSAqIGhpX2NyZWRpdF9iaXQNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAg
+LyAocG9ydF90cmFuc21pdF9yYXRlICogMTAwMDAwMFVMTCk7DQo+ID4NCj4gPiBIaSEgVGhlIHBh
+dGNoIGxvb2tzIGdvb2QgdG8gbWUsIGJ1dCBJJ20gY29uY2VybmVkIGFib3V0IHRob3NlIDY0Yml0
+DQo+ID4gZGl2aXNpb25zIGhlcmUuIERvbid0IHRoZXNlIG5lZWQgdG8gYmUgZGl2X3U2NCgpICYg
+Y28uPyBPdGhlcndpc2Ugd2UNCj4gPiBtYXkgc2VlIG9uZSBvZiB0aGU6DQo+ID4NCj4gPiBFUlJP
+UjogIl9fdWRpdmRpMyIgW2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9mc2wt
+ZW5ldGMua29dDQo+IHVuZGVmaW5lZCENCj4gPg0KPiA+IG1lc3NhZ2VzIGZyb20gdGhlIGJ1aWxk
+IGJvdC4uDQo+ID4NCj4gPiBJIGNvdWxkIGJlIHdyb25nLCBJIGhhdmVuJ3QgYWN0dWFsbHkgdGVz
+dGVkLi4NCj4gDQo+IFl1cDoNCj4gDQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9l
+bmV0Yy9lbmV0Y19xb3MubzogSW4gZnVuY3Rpb24NCj4gYGVuZXRjX3NldHVwX3RjX2Nicyc6DQo+
+IGVuZXRjX3Fvcy5jOigudGV4dCsweDViNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9fdWRp
+dmRpMycNCj4gZW5ldGNfcW9zLmM6KC50ZXh0KzB4NjA4KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0
+byBgX191ZGl2ZGkzJw0KPiAvaG9tZS9qa2ljaW5za2kvZGV2ZWwvbGludXgvTWFrZWZpbGU6MTA3
+NzogcmVjaXBlIGZvciB0YXJnZXQgJ3ZtbGludXgnIGZhaWxlZA0KPiBtYWtlWzFdOiAqKiogW3Zt
+bGludXhdIEVycm9yIDENCj4gbWFrZVsxXTogTGVhdmluZyBkaXJlY3RvcnkgJy9ob21lL2praWNp
+bnNraS9kZXZlbC9saW51eC9idWlsZF90bXAyJw0KPiBNYWtlZmlsZToxNzk6IHJlY2lwZSBmb3Ig
+dGFyZ2V0ICdzdWItbWFrZScgZmFpbGVkDQo+IG1ha2U6ICoqKiBbc3ViLW1ha2VdIEVycm9yIDIN
+Cj4gDQo+IFBsZWFzZSBmaXggYW5kIHJlcG9zdC4NCg0KV2lsbCB1cGRhdGUgdG8gZGl2X3U2NCgp
+Lg0K
