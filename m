@@ -2,128 +2,86 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6991C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8E5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DEC20865
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141DE2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:15:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCQiCCir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfKYLNZ (ORCPT
+        id S1727659AbfKYLP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 06:13:25 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46010 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfKYLNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:13:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 03:13:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,241,1571727600"; 
-   d="scan'208";a="239494659"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Nov 2019 03:13:24 -0800
-Received: from [10.125.252.215] (abudanko-mobl.ccr.corp.intel.com [10.125.252.215])
-        by linux.intel.com (Postfix) with ESMTP id 132935802E4;
-        Mon, 25 Nov 2019 03:13:21 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] perf record: adapt affinity to machines with #CPUs
- > 1K
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <fb356fe9-ac87-71ab-9845-075b3fac3199@linux.intel.com>
- <69bd0062-0f9e-889b-b7ef-0d97d257569b@linux.intel.com>
- <20191125094220.GC4675@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <9b9209ce-ba61-824f-9443-3909991ff222@linux.intel.com>
-Date:   Mon, 25 Nov 2019 14:13:20 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 25 Nov 2019 06:15:27 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37024 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbfKYLP1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 06:15:27 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p24so7223871pfn.4;
+        Mon, 25 Nov 2019 03:15:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=70lfioNuAj/Ldn/hkMoS28PuEmF1/cpUW0s4SKkaIas=;
+        b=jCQiCCirDVnhqhQ1IOwYezVGxYO6+Vxlf1XnDlfzY7V62HdZCTbInFGl7WB7NsHCWh
+         3kxsgOvPDhsEDse6h6jRkIfaSsjYcm8G4LXjtuQZ4HlEzCNQsYRHrWhr+P0K2WOGm+ta
+         v+86UjtLpw6T4LlCEnHbbrtiWPhK6ikrYF3qhNSUMB6H7JQrsO+SnI6IkSMUwo86wzAU
+         jASWtdqufwIlGNoLEj0Y0R8DsnLMvmF1XEd5RZz6rXHRW0ud9tkP1liE23x/ZvaUNHpQ
+         4qJmxWhWllK4Y9OuM+9XCNbVNydGqyn31SEXuWh6mKhiQWEHvBtH6tOVlaLYOfC71QIk
+         HbQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=70lfioNuAj/Ldn/hkMoS28PuEmF1/cpUW0s4SKkaIas=;
+        b=R2bvxJygdeg3wjnelPt5MBKHp+gbXfVF8PRlQCfejhYjU0hUmF8LSlIr2UoTkPEFw7
+         FisusWjr3uEOM3eMflTXWZcge3uzbKYU/A5LF6QU0YAPL0eRTK8l+OMCcJ+baz5IkjUz
+         JG5bkmwueNqF0PFDu5sGbf+eR28iUE4H+pJPphLshd74fjh3HKzT89nTFuzCxMPXWJN5
+         YD7Yi8qNLH6eXcB7iJnx6/XbKkXuyStXllUDsY5PUztD6Qp/6gk7Cq9+joIFp1n7zI52
+         HDbFrmjzthnVD8Q0fnlTbWIDDmp+1Cg1vXNXH9SOaCVJ1lQVMWdCtGEM67vL+yjwiNr6
+         Ihlw==
+X-Gm-Message-State: APjAAAUZq/LNtJnQ8+yxgVcLZd/M3ptus1Z1BwiqHCTOEP4MlKJ4yOAw
+        LmNiaae56tOMi9ecnuIKImHMUegAx6SV/EkPyj3grGXR
+X-Google-Smtp-Source: APXvYqz84v21tBVjguah6amB8yGJXN7Fs+Y2+wxRHWy2SedZtehCLKXWX1scC4ZB/rhSC7/kKrgk2hznzkQIDGraKNE=
+X-Received: by 2002:a63:3c6:: with SMTP id 189mr31419958pgd.4.1574680526578;
+ Mon, 25 Nov 2019 03:15:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191125094220.GC4675@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191121155743.28755-1-info@metux.net>
+In-Reply-To: <20191121155743.28755-1-info@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Nov 2019 13:15:16 +0200
+Message-ID: <CAHp75Vfh5PhGDFCZ0RZuvYwT_4A3nnfJhqnhThEXr=Dq6ie7ZA@mail.gmail.com>
+Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.11.2019 12:42, Jiri Olsa wrote:
-> On Mon, Nov 25, 2019 at 09:08:57AM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
->> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
->>  {
->> -	CPU_ZERO(&map->affinity_mask);
->> +	map->affinity_mask.nbits = cpu__max_cpu();
->> +	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
->> +	if (!map->affinity_mask.bits)
->> +		return -1;
->> +
->>  	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
->>  		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
->>  	else if (mp->affinity == PERF_AFFINITY_CPU)
->> -		CPU_SET(map->core.cpu, &map->affinity_mask);
->> +		set_bit(map->core.cpu, map->affinity_mask.bits);
->> +
->> +	return 0;
->>  }
->>  
->> +#define MASK_SIZE 1023
->>  int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
->>  {
->> +	char mask[MASK_SIZE + 1] = {0};
-> 
-> does this need to be initialized?
+On Thu, Nov 21, 2019 at 5:58 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
+> need to match on DMI data.
+>
+> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
 
-This is to make sure the message is zero terminated for vfprintf call()
+The Fixes tag format is wrong.
+You are not first time contributor...
 
-> 
->> +
->>  	if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
->>  		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
->>  			  errno);
->>  		return -1;
->>  	}
->>  
->> -	perf_mmap__setup_affinity_mask(map, mp);
->> +	if (perf_mmap__setup_affinity_mask(map, mp)) {
->> +		pr_debug2("failed to alloc mmap affinity mask, error %d\n",
->> +			  errno);
->> +		return -1;
->> +	}
->> +	bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, mask, MASK_SIZE);
->> +	pr_debug2("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, mask);
-> 
-> the bitmap_scnprintf could be called only for debug case, right?
+Also the question why do you have it here? Do we have any regression
+(something worked and stopped working)?
 
-Right. It is required to prepare debug message.
-
-> 
-> 	if (version >= 2) {
-> 		bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, mask, MASK_SIZE);
-> 		pr_debug2("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, mask);
-> 	}
-> 
-> ditto int the record__adjust_affinity function
-> 
-> jirka
-> 
-> 
-
-~Alexey
-
+-- 
+With Best Regards,
+Andy Shevchenko
