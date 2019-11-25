@@ -2,151 +2,176 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1931AC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2605EC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30FC207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80CC20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HhXajJ5m"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="M745Ye6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfKYWp2 (ORCPT
+        id S1727208AbfKYWtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 17:45:28 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9919 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKYWp0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 17:45:26 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddc59880000>; Mon, 25 Nov 2019 14:45:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 25 Nov 2019 14:45:25 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 25 Nov 2019 14:45:25 -0800
-Received: from [10.26.11.207] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 22:45:22 +0000
-Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Guenter Roeck <linux@roeck-us.net>, <linux-kernel@vger.kernel.org>,
-        <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191122100704.194776704@linuxfoundation.org>
- <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
- <20191122133931.GA2033651@kroah.com> <20191122134131.GA2050590@kroah.com>
- <20191122134627.GB2050590@kroah.com>
- <9f976044-2dbc-6c19-11e7-210cd7ab35ea@nvidia.com>
- <a5d68f07-5f9a-2809-404d-bcd8ca593d70@roeck-us.net>
- <7edc9531-347e-9ac7-2583-5efb49acffdb@nvidia.com>
- <20191125094116.GA2340170@kroah.com>
- <a6830303-ff96-f7df-b504-ab226aefddca@nvidia.com>
- <20191125160305.GD2683321@kroah.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <013aa2b3-9a68-6227-36bc-093d03547fce@nvidia.com>
-Date:   Mon, 25 Nov 2019 22:45:20 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191125160305.GD2683321@kroah.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 25 Nov 2019 17:49:13 -0500
+Received: from mail-eopbgr730139.outbound.protection.outlook.com ([40.107.73.139]:19484
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725946AbfKYWtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 17:49:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a4hUzbTFSragkAKeywOSHRit6EWbJXF0eoiw3MBWvGrAjhl6USts/sFhUIOggiqbKAUxhOKuIcmvdXtby1HotVJGmMlHXE2yWTzq/b3AZQXl3UvyJbTJ6tyNYUIxrhCcFGNIInRvzTz5TxYDZyzRMtFeeMibbEMuYlLaIwBaCV/FHNrDAlmSTkpRU7+/J0OFUo8BgivyjyCQxdH093PxImeH4Hb5DpfiOL9P+mRHZA93rr5dl8ic6TYTCoXmvLCUMaTEOAUv27x9l1PbrjdNPvuWPjHAb0tmnQXdkcPmciJS/LHRut8WARwHe9t48LD/fjgqEpLbr3LQS6jhPCKGZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EOnAL31v/OdG1AkgbLe9PHBNmFlqrBlhYWuYpi575D4=;
+ b=dV09e1mys+ClgQcml+53htFeD2JKbHpQ1UmhMIB6h1AGKaTCmt2pDelWk1qRvoXBvfFz2HpWlxXI1k7CADqagPnXkhWq4bTdhx17bzPL1G9nL7huGIjAEipxdkujnXpeUBFhdpok6WkJc4676k/Ud1MKnrG2EFiYgPAjbqmKsRm3hJy0niUd8TO43YvCWEs65opJIiihCGeCYQSSMk9diKb5VQNjWI6LrPSBZvtEtzpAp2xTx02b6F+aEHaKZ0L7/3/f5NklLF+Z7TiPD4jikFp7eRgLgoWwefv5Dg2Bw1Erh1Wybof5RXlkdmySYAJkVXuKt1Zqh0Mu4XE6rbz/PA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EOnAL31v/OdG1AkgbLe9PHBNmFlqrBlhYWuYpi575D4=;
+ b=M745Ye6gGwywAh4G/A2VSR2K7sbDNxsApKEZhDlOIsPdB691QUcEbwVqRd/UrJIJZC/h05YHy3e4g4PHQjd/e/UjBQnkOFqN0oS7hmiWgCpqbgP+PTfPTzqUbGtd6h84uZzgucpoNg7OHGeVfTaO1E5d5zcBnIRVMs1ZAowgf3w=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0469.namprd21.prod.outlook.com (10.172.121.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.8; Mon, 25 Nov 2019 22:49:08 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Mon, 25 Nov 2019
+ 22:49:08 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH v3 2/4] PCI: hv: Add the support of hibernation
+Thread-Topic: [PATCH v3 2/4] PCI: hv: Add the support of hibernation
+Thread-Index: AQHVo1H2bol+NsRMTUaaEVqe++3Nr6ecfkfw
+Date:   Mon, 25 Nov 2019 22:49:08 +0000
+Message-ID: <CY4PR21MB0629EB2E3335A2AC69BDA27DD74A0@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <1574660034-98780-1-git-send-email-decui@microsoft.com>
+ <1574660034-98780-3-git-send-email-decui@microsoft.com>
+In-Reply-To: <1574660034-98780-3-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-25T22:49:06.1050107Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b66eec47-b4fa-43de-891d-4431441ee47e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:cc71:9380:de71:b696]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d16209e3-1fdd-4189-6188-08d771f9ae8d
+x-ms-traffictypediagnostic: CY4PR21MB0469:|CY4PR21MB0469:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB0469CB5DA32D10856B4728F2D74A0@CY4PR21MB0469.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0232B30BBC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(39860400002)(376002)(346002)(189003)(199004)(14454004)(33656002)(46003)(305945005)(52536014)(66946007)(76116006)(64756008)(6506007)(8676002)(2501003)(256004)(7696005)(14444005)(81156014)(66476007)(76176011)(110136005)(71200400001)(66556008)(71190400001)(102836004)(6246003)(186003)(7736002)(8936002)(446003)(81166006)(6116002)(478600001)(86362001)(5660300002)(229853002)(55016002)(10290500003)(6436002)(11346002)(25786009)(9686003)(22452003)(316002)(2201001)(8990500004)(2906002)(99286004)(6636002)(10090500001)(66446008)(1511001)(74316002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0469;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: =?us-ascii?Q?j4Nec5CC6KzTHx4qCyIPCgHsfwLWEhRrMboGKYQ5wuk0rrAkYTIexWgN5t/A?=
+ =?us-ascii?Q?h+LleLj/uZBDy1/dMp7iDfshuTnVI+bDD5Au8eBu8jD8ozY52IsRJNb/oJcm?=
+ =?us-ascii?Q?rHNe6Kijli+CpjEHM0qJKi2zINTAbTYneo5jWEAyrpNlz5Gg7+/prTFH0xj2?=
+ =?us-ascii?Q?iWhCnDeDI4jCUfFxtDI+E++2CxSSib6apyKXouk15hUUb5bUQdJS66IPyy8L?=
+ =?us-ascii?Q?CbQPtb97uAItLFwC9rOEb0ZmcrLrJFPZ2J+LzLUkVFckf9BPkbPzopNUl4D/?=
+ =?us-ascii?Q?DCI0Hc6HP3dJFhQLVCZggFEBVx4Q0/QkZrHF8WFXzstkN3TGAPs6JKclBA4i?=
+ =?us-ascii?Q?rLlRcDnnMrI3VKjaK+Wh5vsEt7e3AsT/UGPblOjcK76z0wdzLXWaNHYbHBFN?=
+ =?us-ascii?Q?ivKk/G9ulvFpH7+ntywb+Iug286GcXLb+ju37x1QeAjySnuzUlorNCoixLVR?=
+ =?us-ascii?Q?LlwRnlB7bwh3W6y4+aQAEBPa84nT/uwPHHa6yysR8YuMOKA3HHjQWqZKxQJC?=
+ =?us-ascii?Q?QXU9m869QaROuTt/MlK47+zF01zWAxC0iAVx6ASUkrWB3NpgosHAl50YSnDg?=
+ =?us-ascii?Q?x3hzmJBdRkJ/GEB6kTvJXcSy7q3ZQVi4hhksBBcEhVcZkEzW1ZC6L4lgvzlK?=
+ =?us-ascii?Q?0LT4vFvdSelDnwjjPomluSE9NqT+tkBs5KK7XZDDmOTGysqO2o8LO8hUXpR6?=
+ =?us-ascii?Q?GS8IxV+IIcxM312FCZ3/c180zAPBaw1oyknxxcJFsNjf3HrdOGtCinsa/HD2?=
+ =?us-ascii?Q?Y0IaamVc/SrVfhgu5R2O0qL3FaAJfPcsuDveT6HzWgRRfJ5orMaz/rxdg7LZ?=
+ =?us-ascii?Q?kZhGsS21yRzIRnfy3quF6My+syE5/T1lvQ/GH8jjG6m4LOoKutj8PFuNaRRU?=
+ =?us-ascii?Q?8PT563bif8x/bBlLIJqe+PUj5IgICbEx5sw6KdCLDdpKAjgLjNcE385TX5hb?=
+ =?us-ascii?Q?FUHRtZlbcUeLwLAw/0iJbgX/rbVmSeIasu2rWJtloRzGmS4S1J6P2WiENwF2?=
+ =?us-ascii?Q?e67JAapVEJKO7RNTMdV5tqjQsVYo/ojfWPZARCkYrV/w8NEV5CsCAaPqF/PL?=
+ =?us-ascii?Q?9Az7b8QdlCjjd2lR62dtPEOVYzg7/z06dN2iOWjYHG3Szj1Es7c/gm8x/Xjy?=
+ =?us-ascii?Q?PCtK5Bvu69QCFOn78tATYQK8A/lGq/BZjgNLntF9KgX7HQmMMZzlP/fWe0fa?=
+ =?us-ascii?Q?jHqsVII/G/lx5frKZARjDFky4VrrFXGA0TCHlOY5C6Mvbh1+re2oXqk5iqHO?=
+ =?us-ascii?Q?B/00o4QtnIxpOkUvaPLBBZY8i1TvJ0jxSmn/iOjBooUiAVGA0RkTgRojOjpY?=
+ =?us-ascii?Q?RQLLnthV2/4KRqS6eUWcLelX73MMlIDyPtz+5v99uPQ+KXTcY10OnDmC8iwb?=
+ =?us-ascii?Q?ocLYpWmxH7cHsWwsXyAvleXH4kfoigEnkkZzjFSXKJA3zLXlKaHCNxUpVwWg?=
+ =?us-ascii?Q?ToQKYAOPQ5UzXF6pxlMl63P/DNo3t4tVz29w3s4yeA3KUxwwd/AxQhb2TM9C?=
+ =?us-ascii?Q?eCcJ84sk5SjUJVbna78/15KlaxYYRO6knLrPfNiAj1coh71vtlsh783aIa/v?=
+ =?us-ascii?Q?WGCK93OmoXHb37WdUuWyRc6tNJG5LfD7+Dl4mUCD0UKu3C6Uz5vlLMMkuM3p?=
+ =?us-ascii?Q?A/SU7kt58kvHne6WiBTDr71Pu7W/Ojx52yOIW6TqFkj51nECksUbV9+XjaOT?=
+ =?us-ascii?Q?zdTDLNDBR3oymQxspADqDQlagv1pWYwPT5quiYOuZ73y55sx45plSWVDPWSd?=
+ =?us-ascii?Q?04QlL6AIy14/7uIa5sdL/YYmiRB4IXu2anQwtpmKVFJyg9bMOMHqZxMr6/mE?=
+ =?us-ascii?Q?tC582b6zz5x6wepT03DGTLXQ96l6riEDtCP1+rlol9cre4qaQDFqSdEEWkVg?=
+ =?us-ascii?Q?StW2B9EB0hZZiQHpkA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574721928; bh=/jzytWjKLuYpdZNdb1F0PaN/rMy1Z9oILVLNNnY+7N4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HhXajJ5m4zrGBoHBAJC1hmi7W2UGQYz+jJZ8LUNVVB7RxV0F+KxMK8wQ8nLS810+J
-         SSUo7N0qL5tzBv69eIPImJ5JZc9TxmaKC2fpLUCBr6hG7a0CpZctIXSeCdx2YoSegT
-         YOZhWKh5eVvsXGkZNeBG0zsuLJwrgO1az9+XY8beO+8W423n1DLRwlbB+wzEaktPFK
-         mAIxib0qc9qWRtwfeFAdVZV1hks1acE6fN+Sx892JHjrpDCPSQZBXUyEwq9W053H67
-         md8vqbcGTEVEpMo7rMX4XFb2jaymXEGsg/dx38yo7TdoV66nqiU+qbuIEQ+yQd/IL2
-         b8FqeI1AnunGQ==
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d16209e3-1fdd-4189-6188-08d771f9ae8d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 22:49:08.4211
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ge2qB1lqrEQtLDBZMJ3nU99JX9Mc62cb+wErAzD6oUNZj0cTNuv3TA155TpYFZFnJ0LRtkRAIt6Pp1/zKhr9NW3v1ZaEI97MAZOdhlRthn8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0469
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 25/11/2019 16:03, Greg Kroah-Hartman wrote:
-> On Mon, Nov 25, 2019 at 01:22:58PM +0000, Jon Hunter wrote:
->>
->> On 25/11/2019 09:41, Greg Kroah-Hartman wrote:
->>> On Sun, Nov 24, 2019 at 08:31:46PM +0000, Jon Hunter wrote:
->>>>
->>>> On 23/11/2019 15:46, Guenter Roeck wrote:
->>>>> On 11/22/19 6:48 AM, Jon Hunter wrote:
->>>>>
->>>>> [ ... ]
->>>>>
->>>>>> Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or pa=
-th
->>>>>> dwc3 not found
->>>>>> FATAL ERROR: Syntax error parsing input tree
->>>>>> scripts/Makefile.lib:293: recipe for target
->>>>>> 'arch/arm/boot/dts/omap5-igep0050.dtb' failed
->>>>>> make[1]: *** [arch/arm/boot/dts/omap5-igep0050.dtb] Error 1
->>>>>> arch/arm/Makefile:338: recipe for target 'dtbs' failed
->>>>>> make: *** [dtbs] Error 2
->>>>>>
->>>>>>
->>>>>> This is caused by the following commit ...
->>>>>>
->>>>>> commit d0abc07b3d752cbe2a8d315f662c53c772caed0f
->>>>>> Author: H. Nikolaus Schaller <hns@goldelico.com>
->>>>>> Date:=C2=A0=C2=A0 Fri Sep 28 17:54:00 2018 +0200
->>>>>>
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 ARM: dts: omap5: enable OTG role for DWC3 c=
-ontroller
->>>>>>
->>>>>
->>>>> On top of the breakage caused by this patch, I would also argue
->>>>> that it is not a bug fix and should not have been included
->>>>> in the first place.
->>>>>
->>>>> The dwc3 label was added with commit 4c387984618fe ("ARM: dts: omap5:
->>>>> Add l4 interconnect hierarchy and ti-sysc data"). Given the size of
->>>>> that patch, I highly doubt that a backport to 4.4 would work.
->>>
->>> Good catch, I have now dropped both of these patches and pushed out a
->>> -rc3
->>>
->>>> FYI ... I am still seeing a build failure because of this with -rc2 ..=
-.
->>>
->>> Can you see if -rc3 is also giving you problems?
->>
->> Better, but I appear to be seeing some random suspend failures with this
->> now on one board. I will try to bisect this.
->>
->> Test results for stable-v4.4:
->>     6 builds:	6 pass, 0 fail
->>     12 boots:	12 pass, 0 fail
->>     19 tests:	18 pass, 1 fail
->>
->> Linux version:	4.4.203-rc3-g2576206c30b5
->> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
->>                 tegra30-cardhu-a04
+From: Dexuan Cui <decui@microsoft.com> Sent: Sunday, November 24, 2019 9:34=
+ PM
 >=20
-> Odd.  If you find anything interesting, please let me know.
+> Add suspend() and resume() functions so that Hyper-V virtual PCI devices =
+are
+> handled properly when the VM hibernates and resumes from hibernation.
+>=20
+> Note that the suspend() function must make sure there are no pending work
+> items before calling vmbus_close(), since it runs in a process context as=
+ a
+> callback in dpm_suspend().  When it starts to run, the channel callback
+> hv_pci_onchannelcallback(), which runs in a tasklet context, can be still=
+ running
+> concurrently and scheduling new work items onto hbus->wq in
+> hv_pci_devices_present() and hv_pci_eject_device(), and the work item
+> handlers can access the vmbus channel, which can be being closed by
+> hv_pci_suspend(), e.g. the work item handler pci_devices_present_work() -=
+>
+> new_pcichild_device() writes to the vmbus channel.
+>=20
+> To eliminate the race, hv_pci_suspend() disables the channel callback
+> tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the taskl=
+et.
+> This way, when hv_pci_suspend() proceeds, it knows that no new work item
+> can be scheduled, and then it flushes hbus->wq and safely closes the vmbu=
+s
+> channel.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-Yes will do. Bisect has not found anything yet, so will keeping looking
-to see if this is a false-positive or not.
-
-Cheers Jon
-
---=20
-nvpublic
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
