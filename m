@@ -2,73 +2,62 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CC3C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786802068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182D02068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbfKYOpP (ORCPT
+        id S1728280AbfKYOqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:45:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59054 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728040AbfKYOpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:45:15 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2DFAAB5B76C88C6A4566;
-        Mon, 25 Nov 2019 22:45:11 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 25 Nov 2019
- 22:45:01 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <megaraidlinux.pdl@broadcom.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: megaraid_sas: Make poll_aen_lock static
-Date:   Mon, 25 Nov 2019 22:44:54 +0800
-Message-ID: <20191125144454.22680-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 25 Nov 2019 09:46:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728040AbfKYOp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:45:59 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4D902068F;
+        Mon, 25 Nov 2019 14:45:58 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 09:45:57 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH v3 2/4] selftests/ftrace: Fix ftrace test cases
+ to check unsupported
+Message-ID: <20191125094557.14585d0b@gandalf.local.home>
+In-Reply-To: <157466502948.21973.11090994193254792649.stgit@devnote2>
+References: <157466501169.21973.31401747181477687.stgit@devnote2>
+        <157466502948.21973.11090994193254792649.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On Mon, 25 Nov 2019 15:57:09 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-drivers/scsi/megaraid/megaraid_sas_base.c:187:12:
- warning: symbol 'poll_aen_lock' was not declared. Should it be static?
+> Since dynamic function tracer can be disabled, set_ftrace_filter
+> can be disappeared. Test cases which depends on it, must check
+> whether the set_ftrace_filter exists or not before testing
+> and if not, return as unsupported.
+> 
+> Also, if the function tracer itself is disabled, we can not
+> set "function" to current_tracer. Test cases must check it
+> before testing, and return as unsupported.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index c40fbea..a4bc814 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -199,7 +199,7 @@ static bool support_nvme_encapsulation;
- static bool support_pci_lane_margining;
- 
- /* define lock for aen poll */
--spinlock_t poll_aen_lock;
-+static spinlock_t poll_aen_lock;
- 
- extern struct dentry *megasas_debugfs_root;
- extern void megasas_init_debugfs(void);
--- 
-2.7.4
-
-
+-- Steve
