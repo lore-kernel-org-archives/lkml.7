@@ -2,105 +2,274 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95293C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04166C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D347207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9301220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwfnTrBZ"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ZY5mlQO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfKYOkG (ORCPT
+        id S1728269AbfKYOka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:40:06 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40348 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbfKYOkF (ORCPT
+        Mon, 25 Nov 2019 09:40:30 -0500
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:55923 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728071AbfKYOka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:40:05 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q2so16173491ljg.7;
-        Mon, 25 Nov 2019 06:40:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/SvzLSQc9NaZmiRAfhKzbEgi5swALfQM0gwLxj/g1X4=;
-        b=BwfnTrBZIsf+YbKNO1Y09SKRcT/7JpfVe5u9XdIKMFF3vFkXXD09OebLH+/j2ARwh9
-         1UBsASBFYnpZ7Ar6c/L8nHzM0Xfqfs422qdX0ctAKCgI6tI/rKPsjOKVatdVdp8kqJP0
-         K3cRMjzd/SmBmsAq/X8a8B/4z7CUO2aS6k+gls6PZjaQOfdq4KqNXHSE3FkX38mEg01z
-         xprQHlhqwXFTWSyAKCm1HSJpb3EthA5hG11JB+PnE5YIRJvNkr163ZR++uBnx499Zz+X
-         lIMoKPo3k+/c+gF2+Elw+iJ7EBFbVxZkYH1Ca8nAVKdb35aAptffJ4OLimFdUFjeWn41
-         A8BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/SvzLSQc9NaZmiRAfhKzbEgi5swALfQM0gwLxj/g1X4=;
-        b=pIDmWiJrkdO3p/xLyAS7qYy/rZOWJCX/JiugpyqDUWZae+ZKXX/KRd5d3+OI4rMDpb
-         Y7FVM5zdU+KOeoLlfxzb78qhKag1BLx1bKnYhQIm8WExVNVXxwU2/JJO7zHtYsYG5agg
-         ca59TkT8ZKCWfj3t++rgygh13ohi2hMLyizEy4ucdpReZI/h61yox7byaaVRYGRLbEO/
-         JvTY9ddyiTXioHZFsPPgNa6zQsk74S9goEcD0n+53I35rZc5PPcAZXFBNqZVRGSvwTjY
-         gGNPyNd+FHRNbPNN3pPH6zXM8s7PPm7VhLC0XAE8qfDgicyDq2iKcFWSRf3hKC9iw+3Z
-         CKYA==
-X-Gm-Message-State: APjAAAXNJkAFk+PPG0zBV6cJDv4egSvgHYLQ0zkr3UxqekbBOUoIMyEt
-        zLB9+LEIourS40gxcdNnu1Uo5guscGjkMoNkyQ8=
-X-Google-Smtp-Source: APXvYqxnV6QXzPFLNYYbJkreFA5LHHLQRoa+mUvd3RVfemUmE7NzO9TeNGK9jW4ohjEjbkzC5MK9lxV+ELGJbAuF4NI=
-X-Received: by 2002:a2e:9842:: with SMTP id e2mr22522578ljj.93.1574692801789;
- Mon, 25 Nov 2019 06:40:01 -0800 (PST)
+        Mon, 25 Nov 2019 09:40:30 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id ZFXLiM2iTLwWdZFXOiVnrx; Mon, 25 Nov 2019 15:40:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1574692827; bh=MheHsjwSPUiCriZRvJ/U03lkYmwbtX19+P9swBHtqHE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ZY5mlQO8Yw8qjZC5UBTY7e896PSbeTDSrZrGnWZ3aQBWUUlyeL9YMq7rf5TVlwfLy
+         8DSbbb8NASXSsBFdJPaDGRhupdCx3se9bgMEcSHUTChSjX3X3uAgZ7RJMZk/ywULbf
+         dXrvg1dDcTQAl1/fmaZ20rc86Y95xT22NQ/0WsPxl2Nzj96pEWbIz6SirXGl10y3yp
+         phCa0CJYtLAzVX2oRXQdoVtjW3yivEAQ2qUX2n1oY+ZYCNWbe7roBXSZs0tcGVTxx3
+         xtWF6UiuPquXczrvNhAum8h8tVs2Fy+dVhfiVV12C6g4Ey1rEgqAUFW/Z8ja4UkLzy
+         PxkefUOpb7TVw==
+Subject: Re: [PATCH v4 5/8] media: v4l2-core: fix VIDIOC_DQEVENT for time64
+ ABI
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org
+References: <20191111203835.2260382-1-arnd@arndb.de>
+ <20191111203835.2260382-6-arnd@arndb.de>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <272c471b-a7a9-c830-e19b-d1f19ee47073@xs4all.nl>
+Date:   Mon, 25 Nov 2019 15:40:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
- <1574604530-9024-9-git-send-email-akinobu.mita@gmail.com> <CAHp75Vc6e8xq==QGtEX0MGLoV8QCGQf+vP0x-SauNHyjveZrnQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vc6e8xq==QGtEX0MGLoV8QCGQf+vP0x-SauNHyjveZrnQ@mail.gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Mon, 25 Nov 2019 23:39:50 +0900
-Message-ID: <CAC5umyiMoByGhd6b2xWA4SLO1Lcn2+ag-yEgw6uirsCmj37mkQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] thermal: remove kelvin to/from Celsius conversion
- helpers from <linux/thermal.h>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191111203835.2260382-6-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEw8Mwb1rLQ++/6FT9JbC77qaafHwsidqAyrPVEtyAUWXrwXn8xy3ENo4GswUwklsOeSHQgheTt+nspXm93iyrJG5cvkh0Bz5qqxtuVPIFEwieTQ/l2D
+ ygaCbAM8ZYYogWf9C5hwlo/NY3AoOGnLTzNEQw25q+EBYCjl1up+CQE9sENqQ9/JUyTSb4HqZ+ZFyEC/H7zUZqHs/Xpna78XujOxNRmeUbsVrxAHM2gytW2X
+ Kggsq5aNF06iJQIjPTSMsttVFXw3ZNraNqLni7odmLxh+yboyGBlOu3ZLAoixs34h4Ah2tcBgvYux24Yc+dp4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B411=E6=9C=8825=E6=97=A5(=E6=9C=88) 5:00 Andy Shevchenko <andy.s=
-hevchenko@gmail.com>:
->
-> On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wro=
-te:
-> >
-> > This removes the kelvin to/from Celsius conversion helpers in
-> > <linux/thermal.h> which were switched to <linux/temperature.h> helpers.
-> >
->
-> > DECI_KELVIN_TO_MILLICELSIUS_WITH_OFFSET() is only used by ACPI thermal
-> > zone driver and the usage is specific to the driver.  So this macro
-> > is moved to the ACPI thermal driver rather than generic header.
->
-> I didn't get this point. If we split all helpers, let's do it for all,
-> and not spreading macro per driver.
+On 11/11/19 9:38 PM, Arnd Bergmann wrote:
+> The v4l2_event structure contains a 'struct timespec' member that is
+> defined by the user space C library, creating an ABI incompatibility
+> when that gets updated to a 64-bit time_t.
+> 
+> While passing a 32-bit time_t here would be sufficient for CLOCK_MONOTONIC
+> timestamps, simply redefining the structure to use the kernel's
+> __kernel_old_timespec would not work for any library that uses a copy
+> of the linux/videodev2.h header file rather than including the copy from
+> the latest kernel headers.
+> 
+> This means the kernel has to be changed to handle both versions of the
+> structure layout on a 32-bit architecture. The easiest way to do this
+> is during the copy from/to user space.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/media/v4l2-core/v4l2-event.c  |  5 ++++-
+>  drivers/media/v4l2-core/v4l2-ioctl.c  | 24 ++++++++++++++++++++-
+>  drivers/media/v4l2-core/v4l2-subdev.c | 20 +++++++++++++++++-
+>  include/uapi/linux/videodev2.h        | 30 +++++++++++++++++++++++++++
+>  4 files changed, 76 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-event.c b/drivers/media/v4l2-core/v4l2-event.c
+> index 9d673d113d7a..290c6b213179 100644
+> --- a/drivers/media/v4l2-core/v4l2-event.c
+> +++ b/drivers/media/v4l2-core/v4l2-event.c
+> @@ -27,6 +27,7 @@ static unsigned sev_pos(const struct v4l2_subscribed_event *sev, unsigned idx)
+>  static int __v4l2_event_dequeue(struct v4l2_fh *fh, struct v4l2_event *event)
+>  {
+>  	struct v4l2_kevent *kev;
+> +	struct timespec64 ts;
+>  	unsigned long flags;
+>  
+>  	spin_lock_irqsave(&fh->vdev->fh_lock, flags);
+> @@ -44,7 +45,9 @@ static int __v4l2_event_dequeue(struct v4l2_fh *fh, struct v4l2_event *event)
+>  
+>  	kev->event.pending = fh->navailable;
+>  	*event = kev->event;
+> -	event->timestamp = ns_to_timespec(kev->ts);
+> +	ts = ns_to_timespec64(kev->ts);
+> +	event->timestamp.tv_sec = ts.tv_sec;
+> +	event->timestamp.tv_nsec = ts.tv_nsec;
+>  	kev->sev->first = sev_pos(kev->sev, 1);
+>  	kev->sev->in_use--;
+>  
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index 693f9eb8e01b..1de939d11628 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -821,7 +821,7 @@ static void v4l_print_event(const void *arg, bool write_only)
+>  	const struct v4l2_event *p = arg;
+>  	const struct v4l2_event_ctrl *c;
+>  
+> -	pr_cont("type=0x%x, pending=%u, sequence=%u, id=%u, timestamp=%lu.%9.9lu\n",
+> +	pr_cont("type=0x%x, pending=%u, sequence=%u, id=%u, timestamp=%llu.%9.9llu\n",
+>  			p->type, p->pending, p->sequence, p->id,
+>  			p->timestamp.tv_sec, p->timestamp.tv_nsec);
+>  	switch (p->type) {
+> @@ -3010,6 +3010,13 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
+>  
+>  static unsigned int video_translate_cmd(unsigned int cmd)
+>  {
+> +	switch (cmd) {
+> +#ifdef CONFIG_COMPAT_32BIT_TIME
+> +	case VIDIOC_DQEVENT_TIME32:
+> +		return VIDIOC_DQEVENT;
+> +#endif
+> +	}
+> +
+>  	return cmd;
+>  }
+>  
+> @@ -3059,6 +3066,21 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+>  		return 0;
+>  
+>  	switch (cmd) {
+> +#ifdef CONFIG_COMPAT_32BIT_TIME
+> +	case VIDIOC_DQEVENT_TIME32: {
+> +		struct v4l2_event_time32 ev32;
+> +		struct v4l2_event *ev = parg;
+> +
+> +	        memcpy(&ev32, ev, offsetof(struct v4l2_event, timestamp));
+> +	        ev32.timestamp.tv_sec = ev->timestamp.tv_sec;
+> +	        ev32.timestamp.tv_nsec = ev->timestamp.tv_nsec;
+> +	        memcpy(&ev32.id, &ev->id, sizeof(*ev) - offsetof(struct v4l2_event, id));
 
-OK, I'll add deci_kelvin_to_millicelsius_with_offset() in the header.
-But the unit of 'offset' argument will be in millidegree instead of
-decidegree, because it's a bit more generic.
+This looks dangerous: due to 64-bit alignment requirements the
+v4l2_event struct may end with a 4-byte hole at the end of the struct,
+which you do not want to copy to ev32.
+
+I think it is safer to just copy id and reserved separately:
+
+		ev32.id = ev->id;
+		memcpy(ev32.reserved, ev->reserved, sizeof(ev->reserved));
+
+> +
+> +		if (copy_to_user(arg, &ev32, sizeof(ev32)))
+> +			return -EFAULT;
+> +		break;
+> +	}
+> +#endif
+>  	default:
+>  		/*  Copy results into user buffer  */
+>  		if (copy_to_user(arg, parg, _IOC_SIZE(cmd)))
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index f725cd9b66b9..45454a628e45 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -331,8 +331,8 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+>  	struct v4l2_fh *vfh = file->private_data;
+>  #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+>  	struct v4l2_subdev_fh *subdev_fh = to_v4l2_subdev_fh(vfh);
+> -	int rval;
+>  #endif
+> +	int rval;
+>  
+>  	switch (cmd) {
+>  	case VIDIOC_QUERYCTRL:
+> @@ -392,6 +392,24 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+>  
+>  		return v4l2_event_dequeue(vfh, arg, file->f_flags & O_NONBLOCK);
+>  
+> +	case VIDIOC_DQEVENT_TIME32: {
+> +		struct v4l2_event_time32 *ev32 = arg;
+> +		struct v4l2_event ev;
+> +
+> +		if (!(sd->flags & V4L2_SUBDEV_FL_HAS_EVENTS))
+> +			return -ENOIOCTLCMD;
+> +
+> +		rval = v4l2_event_dequeue(vfh, &ev, file->f_flags & O_NONBLOCK);
+> +
+> +		memcpy(ev32, &ev, offsetof(struct v4l2_event, timestamp));
+> +		ev32->timestamp.tv_sec = ev.timestamp.tv_sec;
+> +		ev32->timestamp.tv_nsec = ev.timestamp.tv_nsec;
+> +		memcpy(&ev32->id, &ev.id,
+> +		       sizeof(ev) - offsetof(struct v4l2_event, id));
+
+Ditto.
+
+> +
+> +		return rval;
+> +	}
+> +
+>  	case VIDIOC_SUBSCRIBE_EVENT:
+>  		return v4l2_subdev_call(sd, core, subscribe_event, vfh, arg);
+>  
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 74d3d522f3db..1d2553d4ed5b 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -2329,11 +2329,40 @@ struct v4l2_event {
+>  	} u;
+>  	__u32				pending;
+>  	__u32				sequence;
+> +#ifdef __KERNEL__
+> +	struct __kernel_timespec	timestamp;
+> +#else
+>  	struct timespec			timestamp;
+> +#endif
+>  	__u32				id;
+>  	__u32				reserved[8];
+>  };
+>  
+> +#ifdef __KERNEL__
+> +/*
+> + * The user space interpretation of the 'v4l2_event' differs
+> + * based on the 'time_t' definition on 32-bit architectures, so
+> + * the kernel has to handle both.
+> + * This is the old version for 32-bit architectures.
+> + */
+> +struct v4l2_event_time32 {
+> +	__u32				type;
+> +	union {
+> +		struct v4l2_event_vsync		vsync;
+> +		struct v4l2_event_ctrl		ctrl;
+> +		struct v4l2_event_frame_sync	frame_sync;
+> +		struct v4l2_event_src_change	src_change;
+> +		struct v4l2_event_motion_det	motion_det;
+> +		__u8				data[64];
+> +	} u;
+> +	__u32				pending;
+> +	__u32				sequence;
+> +	struct old_timespec32		timestamp;
+> +	__u32				id;
+> +	__u32				reserved[8];
+> +};
+> +#endif
+> +
+>  #define V4L2_EVENT_SUB_FL_SEND_INITIAL		(1 << 0)
+>  #define V4L2_EVENT_SUB_FL_ALLOW_FEEDBACK	(1 << 1)
+>  
+> @@ -2486,6 +2515,7 @@ struct v4l2_create_buffers {
+>  #define	VIDIOC_S_DV_TIMINGS	_IOWR('V', 87, struct v4l2_dv_timings)
+>  #define	VIDIOC_G_DV_TIMINGS	_IOWR('V', 88, struct v4l2_dv_timings)
+>  #define	VIDIOC_DQEVENT		 _IOR('V', 89, struct v4l2_event)
+> +#define	VIDIOC_DQEVENT_TIME32	 _IOR('V', 89, struct v4l2_event_time32)
+
+Shouldn't this be under #ifdef __KERNEL__?
+
+And should this be in the public header at all? media/v4l2-ioctl.h might be a better
+place.
+
+Regards,
+
+	Hans
+
+>  #define	VIDIOC_SUBSCRIBE_EVENT	 _IOW('V', 90, struct v4l2_event_subscription)
+>  #define	VIDIOC_UNSUBSCRIBE_EVENT _IOW('V', 91, struct v4l2_event_subscription)
+>  #define VIDIOC_CREATE_BUFS	_IOWR('V', 92, struct v4l2_create_buffers)
+> 
