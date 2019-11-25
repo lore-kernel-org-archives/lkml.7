@@ -2,111 +2,86 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EA4C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2802020740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:07:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QidhwSit"
+	by mail.kernel.org (Postfix) with ESMTP id CBC9E20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfKYPG7 (ORCPT
+        id S1728431AbfKYPHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:06:59 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37287 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbfKYPG7 (ORCPT
+        Mon, 25 Nov 2019 10:07:33 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53374 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727758AbfKYPHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:06:59 -0500
-Received: by mail-pl1-f195.google.com with SMTP id bb5so6631069plb.4;
-        Mon, 25 Nov 2019 07:06:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=glGDXbGDgHhWZX3MtlLpw45TRQKQ7EMUGSl8ozQC3S0=;
-        b=QidhwSitTMeoAuQ8tc0oRXaqJzucf8O9TgmzRhD3qpSzmtxZgUsmZ1MmXbcZFHo1EQ
-         hm9/lBPu6swSRXbTkorN2JhNllQ7r+LJ8MmzQqjdVDW/R1gQepDKNvSQ1d3dZ4vsxESH
-         OSWoZmN/UsRHdbyDWcW2l2Wl8D5Rp+QNXCU1dvgou8eMXBgHrcLWawghMOTj5CvhbiQi
-         ZLhovfuOkg14fTXOpd/KPim3UBMmzWafl9aNhePeVbQWmY2LmsmBPWNPK6y50WcvqNke
-         aSMG3+6xGondb7vb/CNnIaXF9vSAbcQJnSS3esC4liV4vFlnjtjv8EecdBpnNHVYO8Xg
-         E4ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=glGDXbGDgHhWZX3MtlLpw45TRQKQ7EMUGSl8ozQC3S0=;
-        b=ByWGtNK90u3Me6GH2uPqzheZf/X3IjhLUHnyfxZ5mKIMbdAPZHpcEooM9ZQYzunk9H
-         HDlVEBPflWN6TZowyNFKfeUdQo4NDjDA/w/TmtreIJsWUWkMogChtfDdNKWa2FbMRVBt
-         KmHceKgsw8JSUp5Xr/6rPbLxGHttG/3uDPf3GEiFuPTftfv3rsnRjE46xxwjy1bgA2wA
-         f52N2vN7ehSOoeaLhWB3JHmh2ZniEBIsIuRTaKSX6NqTUdP1fX96AP1KKyzHfrGZaJeB
-         fveb6OuTtQb4yWYdUcnnUioBzif5RHxhqYEFhqTB7WrEexScYQb2AEsQrdLBdq6XPljM
-         EeMQ==
-X-Gm-Message-State: APjAAAWFjCrb0M9jGyrQ+e3jRin70a0CcjqMpq0Clgo7MxMJw1dcMJw6
-        QDyJtvsORficA9u26TCDI2iOS5tOGhU=
-X-Google-Smtp-Source: APXvYqx5jR4poQirNWpRJvpZfL50FjIGfDVsw/0N/24MfivZzYxS0Xl4PrvMfdSoN0jb6nQa81ADCw==
-X-Received: by 2002:a17:90a:eb0f:: with SMTP id j15mr39985938pjz.97.1574694417718;
-        Mon, 25 Nov 2019 07:06:57 -0800 (PST)
-Received: from ?IPv6:2405:4800:58f7:550c:6dad:1b5f:afc6:7758? ([2405:4800:58f7:550c:6dad:1b5f:afc6:7758])
-        by smtp.gmail.com with ESMTPSA id x192sm9114889pfd.96.2019.11.25.07.06.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2019 07:06:56 -0800 (PST)
-Cc:     tranmanphong@gmail.com, davem@davemloft.net, keescook@chromium.org,
-        kvalo@codeaurora.org, saeedm@mellanox.com,
-        jeffrey.t.kirsher@intel.com, luciano.coelho@intel.com,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Fix -Wcast-function-type net drivers
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-References: <20191124094306.21297-1-tranmanphong@gmail.com>
- <20191124143919.63711421@cakuba.netronome.com>
-From:   Phong Tran <tranmanphong@gmail.com>
-Message-ID: <252466a8-2cad-7e4a-2a87-ade95365fa75@gmail.com>
-Date:   Mon, 25 Nov 2019 22:06:49 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 25 Nov 2019 10:07:33 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 902251C2004; Mon, 25 Nov 2019 16:07:31 +0100 (CET)
+Date:   Mon, 25 Nov 2019 16:07:30 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+Message-ID: <20191125150730.GA3816@amd>
+References: <20191028183629.11779-7-dmurphy@ti.com>
+ <201910302027.2hNdR993%lkp@intel.com>
+ <29321f74-8200-90cd-40f9-8f5bdb86e34e@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191124143919.63711421@cakuba.netronome.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Content-Disposition: inline
+In-Reply-To: <29321f74-8200-90cd-40f9-8f5bdb86e34e@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 11/25/19 5:39 AM, Jakub Kicinski wrote:
-> On Sun, 24 Nov 2019 16:43:01 +0700, Phong Tran wrote:
->> This series is for fixing the compiler warning while enable
->> -Wcast-function-type.
->>
->> Almost is incompatible callback prototype in using tasklet.
->> The void (*func)(unsigned long) instead of void (*func)(struct foo*).
->>
->> Reported by: https://github.com/KSPP/linux/issues/20
-> 
-> Hi Tran, thanks for the patches. Could you split the series into two -
-> the wireless changes and the USB changes?
-> 
-> Those usually go via slightly different trees.
-> 
+On Wed 2019-10-30 11:43:10, Dan Murphy wrote:
+> Pavel
+>=20
+> On 10/30/19 7:07 AM, kbuild test robot wrote:
+> >Hi Dan,
+> >
+> >I love your patch! Yet something to improve:
+> >
+> >[auto build test ERROR on j.anaszewski-leds/for-next]
+>=20
+> You might want to get your tree to be the base now.
 
-Sent in different series:
+Do you have an idea who I need to contact?
 
-[wireless]
-https://lore.kernel.org/lkml/20191125150215.29263-1-tranmanphong@gmail.com/
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-[USB]
-https://lore.kernel.org/linux-usb/20191125145443.29052-1-tranmanphong@gmail.com/
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards,
-Phong.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3b7jEACgkQMOfwapXb+vLTOwCglq9KPhyea7434BrqlmjBsyZP
+xd8Ani0pFe1+R2RyEcQJRtb48OGM3Fpf
+=F0xF
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
