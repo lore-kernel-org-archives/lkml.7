@@ -2,144 +2,119 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EF7C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF3CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C296207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZG2o2nY"
+	by mail.kernel.org (Postfix) with ESMTP id 0AD1B207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574692230;
+	bh=AJPq8iM8XKX35GeEM/v+3PL7IYZTj8lHeZoM6KqMLx4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=LUOjv4D6CDeuSkAV1hqdp5Z9FODZUv7u5muKmo7rX58VZZLsGSX5VBpJdt2VZBy3A
+	 vrakaCiCOgplJnD8wuGXIgTWBRGzLR89h5T08XTV76vLo50M1xVUkg7okTQf/oVWyz
+	 47cKxcCQXHCiOAhRKqBr4WaxqDkRAR6tdcV2gn4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfKYOaM (ORCPT
+        id S1728133AbfKYOa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:30:12 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35462 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfKYOaL (ORCPT
+        Mon, 25 Nov 2019 09:30:29 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51777 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbfKYOa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:30:11 -0500
-Received: by mail-lf1-f65.google.com with SMTP id r15so8260115lff.2;
-        Mon, 25 Nov 2019 06:30:08 -0800 (PST)
+        Mon, 25 Nov 2019 09:30:28 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g206so15391934wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:30:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LKjdexg+LkffG26VUSsNwV+tvqoIqAg7PNu5vMgemIs=;
-        b=uZG2o2nYUojcIlyWe8PXU+6To4lKeOe9RblB9GWLBDHP0ROIwlChkyw0SKs6JtiR1f
-         MD2l3RucqTGhVbOhYG1uBeE6ZOOh5kvcDBIIW2cMvMhIgT707IS2IweaA8uIIlMxwob4
-         DAmhCFqI+PYiMm5hgaQ7NH9ImizHriobDG60zsBWOlJpMTIMpk23p6obVPnKF8D9Jd0w
-         Msd9NGRiv37kIRGnA1gDRLcvLDRdl8ucZ9K+rextcluWC7tAWJIYhcuQ2TuAL99qtP0E
-         /KglPy0CcvOGFbyFrFpEgQV034Asp79um1Jn3oKBEstlAvZsFeBNDmVdfz7fqdwJAI4u
-         0TmA==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HsN9w+fDw5MnFSUDoKFOCnHxeu5TYCyLe2clUa/gQLU=;
+        b=FJJ5CxsCOKCIiImHFSffNMF+WPqeHrU1OL/fGmB246Y14SbE3Kh5R+i7Wck4fhjbbx
+         7uWYJzF+aAF2NDCi7T6I6ix7j8oKDWzTk0VIBMOGGCmilQEd//JlE+Z9uxrR/YoWg1QO
+         KOKcRxUZjRp+eo+8zsCGFXqLTP2BqBtq0zUAbdsAQ3/9qzMWAsdenfDMm/FBl3MdcaRI
+         4PPYOYYdbq5wM0e/SS0wtXBC0QrQM2y/rLDre5eBN+FC8iAziX7w6TWyaw/LviwV5Ecc
+         yNUSNmqXfsVtg5spDt8/XzOFDdhGUcUG5j9wUAm5fFKMtYjU1SteuodEdgOiXh+YBKM+
+         c1cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LKjdexg+LkffG26VUSsNwV+tvqoIqAg7PNu5vMgemIs=;
-        b=RoS16EbS50y/ne2DmgxUQVEN0ydRLE8a6cXHUyxZkBYcloZjPLBAuukm4x5iPZPtce
-         d8J8Vi+QD63zRueElYp8h8R1VBBlxMnvBZx63awClZcb7rkm59s29C3Udg6vEyInlWgC
-         HZ6G8eSjxf/SvWaCBupu2R9L1l1OL1Hk5Mzjwr637NBQCCogs2XXFnqX0IDpI5KV+X9/
-         spCt1pvERl03jNp/CpZP7FAVcn8sY2VNbJrtlUQSC+9xhsFoer7GhCe/nKdejYqQGrRJ
-         BsvXn/A4dIgj0II0/i4OLcE6A2ByBaOir4f3f8odk/korGZUK/YvecnKzvVmLK979SDc
-         cLXg==
-X-Gm-Message-State: APjAAAWDIuOS2JHT/+lM/EUteBcFkU5iXTQ1nl3psDHo5Zfu3mn2tDCY
-        B12axCioLVDBu3duMqrm7WDOA4sKq44BokgP1TU=
-X-Google-Smtp-Source: APXvYqwNQ1gDP49zPYN8njc+j07Y/QD6fHpbzABV0vcBHhUVmveHtPabf233H4srJ1klzQkQ15yydwmm2QnzFdfBd1w=
-X-Received: by 2002:ac2:428d:: with SMTP id m13mr14985341lfh.64.1574692208081;
- Mon, 25 Nov 2019 06:30:08 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=HsN9w+fDw5MnFSUDoKFOCnHxeu5TYCyLe2clUa/gQLU=;
+        b=HqslMT8OPdFX6RLEplKxoBgoIdjhh0Hbt7ltIZih9wCTNgRqsd4JblW4sw3Ty41vWX
+         +O60oU255qyI30QEKPNaRblcSPFkpnsi0ugfTXNtHnzD6TpQuiMnVLhkwGtFQ8NLxLtw
+         YLzcorb4M+yqgZoaGLQ3Oc6X8+ZCznuxZK3FJObFzj4PYPoqct3JLc+ASnFltlJFEI6/
+         WCSwT3WHFQHRV4cwwKTZJiUk/fciPRgNi/FNCyLtdNDoJe1OYac4HWVacxt/zZ0ZuFav
+         IUzdIanPrpadPpW973sethWdgnn1gzuEVPkgrhdwIc6KFSBramC+AB2dEPn1sLOHoodM
+         t59A==
+X-Gm-Message-State: APjAAAW3/a8wMKFuR53kL96ehvjyCouthKD4noZZ4iV/2cJelKnxtvjk
+        SFaq+5vEmVTCtcTEqCja2YJZp3JB
+X-Google-Smtp-Source: APXvYqw5acLLRPqslG4olW2nK3lZJVciq0/5Hb2YBPaZZIJRnlpFkueLMVAzHv2pTWor8TL8FFfiCw==
+X-Received: by 2002:a1c:ed0e:: with SMTP id l14mr27405206wmh.74.1574692225131;
+        Mon, 25 Nov 2019 06:30:25 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id b14sm8622429wmj.18.2019.11.25.06.30.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 06:30:24 -0800 (PST)
+Date:   Mon, 25 Nov 2019 15:30:22 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/platform changes for v5.5
+Message-ID: <20191125143022.GA113303@gmail.com>
 MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
- <1574604530-9024-2-git-send-email-akinobu.mita@gmail.com> <CAHp75VfGt59F5YbEjctvOm00g+Pws+1jYgVbNLnUE3kq3SZi-A@mail.gmail.com>
-In-Reply-To: <CAHp75VfGt59F5YbEjctvOm00g+Pws+1jYgVbNLnUE3kq3SZi-A@mail.gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Mon, 25 Nov 2019 23:29:56 +0900
-Message-ID: <CAC5umyjzDODZf8ECWDmR6SAY-TNkdJ+a0GZRgOFcPCAMok2Ddg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] add header file for kelvin to/from Celsius conversion helpers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B411=E6=9C=8824=E6=97=A5(=E6=97=A5) 23:57 Andy Shevchenko <andy.=
-shevchenko@gmail.com>:
->
-> On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wro=
-te:
-> >
-> > There are several helper macros to convert kelvin to/from Celsius in
-> > <linux/thermal.h> for thermal drivers.  These are useful for any other
-> > drivers or subsystems, but it's odd to include <linux/thermal.h> just f=
-or
-> > the helpers.
-> >
-> > This adds a new <linux/temperature.h> that provides the equivalent inli=
-ne
-> > functions for any drivers or subsystems.  It is intended to replace the
-> > helpers in <linux/thermal.h>.
-> >
-> > Cc: Sujith Thomas <sujith.thomas@intel.com>
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Cc: Andy Shevchenko <andy@infradead.org>
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> > Cc: Jean Delvare <jdelvare@suse.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Keith Busch <kbusch@kernel.org>
-> > Cc: Jens Axboe <axboe@fb.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Sagi Grimberg <sagi@grimberg.me>
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > ---
-> >  include/linux/temperature.h | 39 +++++++++++++++++++++++++++++++++++++=
-++
->
-> >  include/linux/thermal.h     |  1 +
->
->
-> > --- a/include/linux/thermal.h
-> > +++ b/include/linux/thermal.h
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/idr.h>
-> >  #include <linux/device.h>
-> >  #include <linux/sysfs.h>
-> > +#include <linux/temperature.h>
-> >  #include <linux/workqueue.h>
-> >  #include <uapi/linux/thermal.h>
->
-> I don't see any users of it. Why did you include?
+Linus,
 
-The rest of this patch series starts using it.
+Please pull the latest x86-platform-for-linus git tree from:
 
-I decided to include <linux/temperature.h> from <linux/thermal.h> because
-the existing <linux/thermal.h> provides the conversion helpers.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-for-linus
 
-However, not all of the thermal drivers require these conversion helpers,
-so we can change to include <linux/temperature.h> from each thermal driver
-instead of including it from <linux/thermal.h>.
+   # HEAD: 7a56b81c474619fa84c60d07eaa287c8fc33ac3c x86/jailhouse: Only enable platform UARTs if available
 
-Which way do you prefer?
+UV platform updates (with a "hubless" variant) and Jailhouse updates for 
+better UART support.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Mike Travis (8):
+      x86/platform/uv: Save OEM_ID from ACPI MADT probe
+      x86/platform/uv: Return UV Hubless System Type
+      x86/platform/uv: Add return code to UV BIOS Init function
+      x86/platform/uv: Setup UV functions for Hubless UV Systems
+      x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files
+      x86/platform/uv: Decode UVsystab Info
+      x86/platform/uv: Check EFI Boot to set reboot type
+      x86/platform/uv: Account for UV Hubless in is_uvX_hub Ops
+
+Ralf Ramsauer (2):
+      x86/jailhouse: Improve setup data version comparison
+      x86/jailhouse: Only enable platform UARTs if available
+
+
+ arch/x86/include/asm/uv/bios.h        |   2 +-
+ arch/x86/include/asm/uv/uv.h          |  16 ++-
+ arch/x86/include/asm/uv/uv_hub.h      |  61 ++++-------
+ arch/x86/include/uapi/asm/bootparam.h |  25 +++--
+ arch/x86/kernel/apic/x2apic_uv_x.c    | 184 ++++++++++++++++++++++++++++++----
+ arch/x86/kernel/jailhouse.c           | 136 +++++++++++++++++++------
+ arch/x86/platform/uv/bios_uv.c        |   9 +-
+ 7 files changed, 323 insertions(+), 110 deletions(-)
