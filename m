@@ -2,108 +2,170 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EAAC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F22B2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507122068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:05:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="SbLk8pMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfKYQFE (ORCPT
+        id S1728811AbfKYQFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:05:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:52160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbfKYQFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:05:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4699D31B;
-        Mon, 25 Nov 2019 08:05:03 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 889F73F6C4;
-        Mon, 25 Nov 2019 08:05:01 -0800 (PST)
-Date:   Mon, 25 Nov 2019 16:04:52 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     will@kernel.org, bhelgaas@google.com, gregkh@linuxfoundation.org,
-        iommu@lists.linuxfoundation.org, isaacm@codeaurora.org,
-        jcrouse@codeaurora.org, jean-philippe@linaro.org,
-        john.garry@huawei.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
-        saravanak@google.com
-Subject: Re: [PATCH] iommu/arm-smmu: support SMMU module probing from the IORT
-Message-ID: <20191125160445.GA24078@e121166-lin.cambridge.arm.com>
-References: <20191121114918.2293-1-will@kernel.org>
- <20191122174125.21030-1-ardb@kernel.org>
+        Mon, 25 Nov 2019 11:05:12 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:38207 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728533AbfKYQFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 11:05:11 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id ZGrJiMniVLwWdZGrMiWFqH; Mon, 25 Nov 2019 17:05:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1574697909; bh=5JK0Z6JtEdDEZ8KHXzEQxSUtkK89o7DFJUvrrUzmBKU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=SbLk8pMbfu5HpAgWmAO1v/6390pjK238R48Cv6PSr6+7suHtIAp2Z/HCPxgK5bGMw
+         vPY56Wi9WNOLyB3r1o30xP+cYodfww98+XYI/iXRprknv1dA2+rRPI7N+IHQpsHMkb
+         zfYeZdLaV1chfD8rDHibwFIVD+gSFBA0UVcyLPXEte1yyArmAqjDhqykFoPzyW3wDg
+         l4NIzfD3d4pKAz4kLhAqKfTJCPfw6TxTq/i3k7pgs5AhZvTarOpCitSb7bfZQd3tCB
+         fAIONRM1Zr9XZdlPgbwVIX/SLhz4s5arFGwOKidTct79gmW1xTjmzYX9qsF94GOhPB
+         X8TZNxq3G92Ww==
+Subject: Re: [PATCH v2] media: adv7604: extend deep color mode to ADV7611
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "mchehab@kernel.org" <mchehab@kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>
+References: <20191018112157.31657-1-alexandru.ardelean@analog.com>
+ <20191018112955.13652-1-alexandru.ardelean@analog.com>
+ <6a524aedf79ba40f3286bf0ad4c7b320b561caf1.camel@analog.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <5278491a-5d48-b171-2194-fe4806397424@xs4all.nl>
+Date:   Mon, 25 Nov 2019 17:05:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122174125.21030-1-ardb@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6a524aedf79ba40f3286bf0ad4c7b320b561caf1.camel@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKrVKdJJ5SaaBumnQ1xyG6UtjZlhuG0KGRRhyKe/jGKJOwg6VN6OgfXEZFxRj2P8k+ttghoGvpx3cywUFhbtH/sFR/tlMzVYHl8mPfGywo1gR2v5oGc6
+ MpEGu7uul6w2a+vzuFaqmUG9R16YVQXvcoi2RcTx+8RGN7AZ6YfvyrGM0sTsEewZQ5b4lnmPl0KNoVKGqnFQTcQ42ZYIbF6dlBYD9G51160Qc6/7isYDjTvL
+ PweQvOyrXHhnhc6VZjCmu5FXkQxOFgtd5HE4s1yNfVFkMYzMDeW772MZR/U5+xdU4GhLfAqEMHLThtJfUTW6XgG/9qeI+CvwOGtDDtKFqk0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 06:41:25PM +0100, Ard Biesheuvel wrote:
-> Add support for SMMU drivers built as modules to the ACPI/IORT device
-> probing path, by deferring the probe of the master if the SMMU driver is
-> known to exist but has not been loaded yet. Given that the IORT code
-> registers a platform device for each SMMU that it discovers, we can
-> easily trigger the udev based autoloading of the SMMU drivers by making
-> the platform device identifier part of the module alias.
+On 11/25/19 4:06 PM, Ardelean, Alexandru wrote:
+> On Fri, 2019-10-18 at 14:29 +0300, Alexandru Ardelean wrote:
+>> From: Dragos Bogdan <dragos.bogdan@analog.com>
+>>
+>> The AD7611 chip supports the same Deep Color Mode settings as the AD7604.
+>> This change extends support for this feature to the AD7611 by adding a
+>> wrapper function for the `read_hdmi_pixelclock` hook and adding the same
+>> frequency adjustment logic.
+>>
 > 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  drivers/acpi/arm64/iort.c   | 4 ++--
->  drivers/iommu/arm-smmu-v3.c | 1 +
->  drivers/iommu/arm-smmu.c    | 1 +
->  3 files changed, 4 insertions(+), 2 deletions(-)
+> ping here
 
-I think it is best if Will picks this up and add it to the
-series that modularize the SMMU drivers:
+Not forgotten, it's on my TODO list. But I need some time to dig a bit
+deeper into this code.
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Regards,
 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 5a7551d060f2..a696457a9b11 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -850,9 +850,9 @@ static inline bool iort_iommu_driver_enabled(u8 type)
->  {
->  	switch (type) {
->  	case ACPI_IORT_NODE_SMMU_V3:
-> -		return IS_BUILTIN(CONFIG_ARM_SMMU_V3);
-> +		return IS_ENABLED(CONFIG_ARM_SMMU_V3);
->  	case ACPI_IORT_NODE_SMMU:
-> -		return IS_BUILTIN(CONFIG_ARM_SMMU);
-> +		return IS_ENABLED(CONFIG_ARM_SMMU);
->  	default:
->  		pr_warn("IORT node type %u does not describe an SMMU\n", type);
->  		return false;
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 7669beafc493..bf6a1e8eb9b0 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -3733,4 +3733,5 @@ module_platform_driver(arm_smmu_driver);
->  
->  MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
->  MODULE_AUTHOR("Will Deacon <will@kernel.org>");
-> +MODULE_ALIAS("platform:arm-smmu-v3");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index d55acc48aee3..db5106b0955b 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -2292,4 +2292,5 @@ module_platform_driver(arm_smmu_driver);
->  
->  MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
->  MODULE_AUTHOR("Will Deacon <will@kernel.org>");
-> +MODULE_ALIAS("platform:arm-smmu");
->  MODULE_LICENSE("GPL v2");
-> -- 
-> 2.20.1
+	Hans
+
 > 
+>> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>> ---
+>>
+>> Changelog v1 -> v2:
+>> * address checkpatch complaints about 80 col limit and
+>>   use of `unsigned` vs `unsigned int`
+>>
+>>  drivers/media/i2c/adv7604.c | 32 +++++++++++++++++++++-----------
+>>  1 file changed, 21 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+>> index 28a84bf9f8a9..c6fe3aa69733 100644
+>> --- a/drivers/media/i2c/adv7604.c
+>> +++ b/drivers/media/i2c/adv7604.c
+>> @@ -1503,23 +1503,14 @@ static void
+>> adv76xx_fill_optional_dv_timings_fields(struct v4l2_subdev *sd,
+>>  
+>>  static unsigned int adv7604_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+>>  {
+>> -	unsigned int freq;
+>>  	int a, b;
+>>  
+>>  	a = hdmi_read(sd, 0x06);
+>>  	b = hdmi_read(sd, 0x3b);
+>>  	if (a < 0 || b < 0)
+>>  		return 0;
+>> -	freq =  a * 1000000 + ((b & 0x30) >> 4) * 250000;
+>>  
+>> -	if (is_hdmi(sd)) {
+>> -		/* adjust for deep color mode */
+>> -		unsigned bits_per_channel = ((hdmi_read(sd, 0x0b) & 0x60)
+>>>> 4) + 8;
+>> -
+>> -		freq = freq * 8 / bits_per_channel;
+>> -	}
+>> -
+>> -	return freq;
+>> +	return a * 1000000 + ((b & 0x30) >> 4) * 250000;
+>>  }
+>>  
+>>  static unsigned int adv7611_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+>> @@ -1530,9 +1521,28 @@ static unsigned int
+>> adv7611_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+>>  	b = hdmi_read(sd, 0x52);
+>>  	if (a < 0 || b < 0)
+>>  		return 0;
+>> +
+>>  	return ((a << 1) | (b >> 7)) * 1000000 + (b & 0x7f) * 1000000 /
+>> 128;
+>>  }
+>>  
+>> +static unsigned int adv76xx_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+>> +{
+>> +	struct adv76xx_state *state = to_state(sd);
+>> +	const struct adv76xx_chip_info *info = state->info;
+>> +	unsigned int freq, bits_per_channel, pixelrepetition;
+>> +
+>> +	freq = info->read_hdmi_pixelclock(sd);
+>> +	if (is_hdmi(sd)) {
+>> +		/* adjust for deep color mode and pixel repetition */
+>> +		bits_per_channel = ((hdmi_read(sd, 0x0b) & 0x60) >> 4) + 8;
+>> +		pixelrepetition = (hdmi_read(sd, 0x05) & 0x0f) + 1;
+>> +
+>> +		freq = freq * 8 / bits_per_channel / pixelrepetition;
+>> +	}
+>> +
+>> +	return freq;
+>> +}
+>> +
+>>  static int adv76xx_query_dv_timings(struct v4l2_subdev *sd,
+>>  			struct v4l2_dv_timings *timings)
+>>  {
+>> @@ -1579,7 +1589,7 @@ static int adv76xx_query_dv_timings(struct
+>> v4l2_subdev *sd,
+>>  
+>>  		bt->width = w;
+>>  		bt->height = h;
+>> -		bt->pixelclock = info->read_hdmi_pixelclock(sd);
+>> +		bt->pixelclock = adv76xx_read_hdmi_pixelclock(sd);
+>>  		bt->hfrontporch = hdmi_read16(sd, 0x20, info-
+>>> hfrontporch_mask);
+>>  		bt->hsync = hdmi_read16(sd, 0x22, info->hsync_mask);
+>>  		bt->hbackporch = hdmi_read16(sd, 0x24, info-
+>>> hbackporch_mask);
+
