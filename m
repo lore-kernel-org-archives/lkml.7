@@ -2,121 +2,123 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B86DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E76C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B02D2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOECNUjZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5116E20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfKYQ7u (ORCPT
+        id S1729007AbfKYRAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:59:50 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36119 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728924AbfKYQ7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:59:50 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so13243680oto.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:59:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:mime-version
-         :content-disposition:user-agent;
-        bh=7wb5i6/FZxQaE8n+z8M7xj50uZOfM6qEKwZxz5PmeaU=;
-        b=iOECNUjZXp49nZ2MCe9bj60ze2SZ2L6VMgYGHDzN3UqmIv35jp4a/RrIMDAzDIlpey
-         DQthatl4TaoPijcV7sPnm/Y0sX87B4U75hyhgDmAk8LvUhDqnqqAexhwjzNtATxJNRek
-         Yr4yM/Ow9vsZi6VnlX844VYln/UamgXuoZjLoiGWUxPcHM+b3welYTaKTGvg4DNiRRWn
-         vbL1aaKT7YRPqBT9RLv6Lkp+RyvwJFJrQfPKpYzkIVCoQsYR6iQHW8en+9rnDxc0riEj
-         8SMGAL3Mtng9qYisg7egnTlugqyO7ccaH8AjpzpXBWanf1Y8uyUSOiptZWyMWirIFMQX
-         3W5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:mime-version:content-disposition:user-agent;
-        bh=7wb5i6/FZxQaE8n+z8M7xj50uZOfM6qEKwZxz5PmeaU=;
-        b=kxSy5SAuWbmJ8pInsOekvmTbMB01uM571l15+nEEhzv0XqfVo3KU7ibaDljci7WTt0
-         4eVCRspc1aYfDNZL04HB4n127lohrvOYD7dzD8pM7i+78y9TlOlXFH9bWOy0HmRim/8+
-         TtEaKhOAo297eeYh1/C+WeGee1GJLk7R6GwT49KH/WO9+ckC8cWeQ+x75VKedFwAlXCY
-         ONCV60ooHjj8tvrs7oKPeVLfaESyGvEz+ZjegOnhS4G/95rq5lutChGESETf+sI6DqbC
-         /yf1ZAYjWcXnoTnPQAAsPyBKG+C0szje/lYFI63bQYXwvAhKIPlU8tZJdEYkf2Yp/LVm
-         1TlA==
-X-Gm-Message-State: APjAAAVYepmEnmTuR/QRxUMNpBPavZejZe+7NcJ0zLlFM8xcryZVAQ8D
-        KnP17tpAhS0k39jP92D6Jw==
-X-Google-Smtp-Source: APXvYqw+Aw8aP1poCHyxvIoa6KKGxP3DMLdI3yVaA0nRtNvja4Z0HzUm5BwKby8xArguyaJ988TmuA==
-X-Received: by 2002:a9d:77c5:: with SMTP id w5mr19822955otl.351.1574701187460;
-        Mon, 25 Nov 2019 08:59:47 -0800 (PST)
-Received: from serve.minyard.net ([47.184.136.59])
-        by smtp.gmail.com with ESMTPSA id f93sm2574226otb.64.2019.11.25.08.59.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 08:59:46 -0800 (PST)
-Received: from minyard.net (unknown [192.168.27.180])
-        by serve.minyard.net (Postfix) with ESMTPSA id 32AFA180046;
-        Mon, 25 Nov 2019 16:59:46 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 10:59:45 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net
-Subject: [GIT PULL] IPMI bug fixes for 5.5
-Message-ID: <20191125165945.GC3527@minyard.net>
-Reply-To: minyard@acm.org
+        Mon, 25 Nov 2019 12:00:36 -0500
+Received: from mga05.intel.com ([192.55.52.43]:20026 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728924AbfKYRAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:00:36 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 09:00:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
+   d="scan'208";a="216967925"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2019 09:00:34 -0800
+Date:   Mon, 25 Nov 2019 09:00:34 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
+ function
+Message-ID: <20191125170034.GB12178@linux.intel.com>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119002121.4107-12-sean.j.christopherson@intel.com>
+ <7338293.UcAxln0NAJ@kreacher>
+ <20191125104803.v6goacte2vjakx64@ucw.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191125104803.v6goacte2vjakx64@ucw.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 3b7c59a1950c75f2c0152e5a9cd77675b09233d6:
+On Mon, Nov 25, 2019 at 11:48:03AM +0100, Pavel Machek wrote:
+> > On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
+> > > Convert acpi_wakeup_address from a raw variable into a function so that
+> > > x86 can wrap its dereference of the real mode boot header in a function
+> > > instead of broadcasting it to the world via a #define.  This sets the
+> > > stage for a future patch to move the definition of acpi_wakeup_address()
+> > > out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
+> > > 
+> > > No functional change intended.
+> > > 
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > 
+> > > --- a/drivers/acpi/sleep.c
+> > > +++ b/drivers/acpi/sleep.c
+> > > @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+> > >  #ifdef CONFIG_ACPI_SLEEP
+> > >  	/* do we have a wakeup address for S2 and S3? */
+> > >  	if (acpi_state == ACPI_STATE_S3) {
+> > > -		if (!acpi_wakeup_address)
+> > > +		if (!acpi_wakeup_address())
+> > >  			return -EFAULT;
+> > > -		acpi_set_waking_vector(acpi_wakeup_address);
+> > > +		acpi_set_waking_vector(acpi_wakeup_address());
+> > >  
+> 
+> You might want to store result in a variable... especially since you are
+> turning inline function into real one in a next patch.
+> 
+> And maybe function should be called get_acip_wakeup_address or
+> something? This way it is easy to mistake actual wakeup address from
+> function that gets it...
 
-  Merge tag 'pinctrl-v5.4-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl (2019-10-22 06:40:07 -0400)
+Agreed on both counts.
 
-are available in the Git repository at:
 
-  https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.5-1
+Ingo,
 
-for you to fetch changes up to 8e6a5c833333e14a5023a5dcabb64b7d9e046bc6:
-
-  ipmi: fix ipmb_poll()'s return type (2019-11-22 13:54:55 -0600)
-
-----------------------------------------------------------------
-Some small fixes accumulated for IPMI, nothing major.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      ipmi: use %*ph to print small buffer
-
-Arnd Bergmann (1):
-      ipmi: kill off 'timespec' usage again
-
-Corey Minyard (1):
-      ipmi: Don't allow device module unload when in use
-
-Luc Van Oostenryck (1):
-      ipmi: fix ipmb_poll()'s return type
-
-Navid Emamdoost (1):
-      ipmi: Fix memory leak in __ipmi_bmc_register
-
-Vijay Khemka (1):
-      drivers: ipmi: Support for both IPMB Req and Resp
-
-YueHaibing (1):
-      ipmi: bt-bmc: use devm_platform_ioremap_resource() to simplify code
-
- drivers/char/ipmi/bt-bmc.c          |  4 +--
- drivers/char/ipmi/ipmb_dev_int.c    | 37 ++++++++-----------------
- drivers/char/ipmi/ipmi_msghandler.c | 55 ++++++++++++++++---------------------
- drivers/char/ipmi/ipmi_si_intf.c    | 40 +++++++++------------------
- include/linux/ipmi_smi.h            | 12 +++++---
- 5 files changed, 58 insertions(+), 90 deletions(-)
-
+Would you prefer a v2 of the entire series (with Acks and removal of Fixes),
+or a v2 that includes only the last two patches?
