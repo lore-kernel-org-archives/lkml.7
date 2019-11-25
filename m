@@ -2,162 +2,162 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69032C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4608AC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401C22075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147302075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:28:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h336gUMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfKYT1L (ORCPT
+        id S1727028AbfKYT17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:27:11 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:37131 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfKYT1K (ORCPT
+        Mon, 25 Nov 2019 14:27:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35872 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfKYT17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:27:10 -0500
-Received: by mail-io1-f69.google.com with SMTP id p2so11633424iof.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:27:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0pwB6xZFZUiIa7pPdngbunHncqRPRycOx2CuQXbxJfU=;
-        b=hQmB0LppDKTDAx7GSqaCUXNlF15ytkm9zab9tH6yCv8f1SeNl5IZXIJr9X5pN6QmbY
-         ixpOf8fIqWhgBGi1kGJ03VQPbduV1aRwWhkYIu4IrPAAzjhagDxc2X3mzB668X9Y7lUd
-         d2Q1S2Yo8bBlblfBoSflis72R6u0OLz/MBBrA9wuUeAg06zIVqtbU9yeAJVmP+wEmr2m
-         DSJv53wvJ/shPR1ixGLKka2xjlCKWzafciLBsC5gIJdAhZiZS9nHOWlUxDP4thx710Jw
-         AYjGmgxx1Tv51W805e//06YAZKE7j1/yTPWSu0TYS/IbZgFrj2HfmmmS9Och8eFNWyl0
-         MfTQ==
-X-Gm-Message-State: APjAAAXEew2av6q3k52ssZ21UCfLvNc2qzURDtjQtzb+XGczAa7cUVR0
-        U0CC4XiRMQFfe3FZH5gi+IZOgt/yXp22Syr8Wum2OI4j4Ncq
-X-Google-Smtp-Source: APXvYqxIKl7OyHl5dcVP52YczeBQ166rk8qib62Yec4pkw0SmBtiqopCUtZS32LmNaIrz4QUg5Kz1Mbn9aixVlm/W7eYduXGYAyQ
+        Mon, 25 Nov 2019 14:27:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=sfxOALDlPRJzuV8ITquVtH6b6PPr9YPhpIFDV53VIrQ=; b=h336gUMaE4iSaArMS18qdnigwH
+        Ku4RZx1k3ZzxEEZrFwcK3NRnEp08SrDm4dKoZZjZgJ2eVGDFJAoBQwft9gJoLdg2vX6K76diH5d/7
+        HxSAbd3zBd/jVe55hG1NK3TtSsjBW/JpeHbZFas5Lz6PInmr/k143vDm5q5JyNPU8jks/w2W4ERWI
+        zXGUXFGVK+5c7ZRASCjn85g8NF9ox/8yJm9VJa5hBEkjkeIRZIVR22VYadU2TYpvDs3H7az0eCdIw
+        5KtpOpbV7GZulcfP7e0//Wokxpd2j1Ke+zYG+01GEjvLH1wC/CRk5BTki2wz1+mcVR8Q5+jG8vC1t
+        32PJUycA==;
+Received: from [2001:4bb8:180:2f38:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iZK1e-0008GN-OX; Mon, 25 Nov 2019 19:27:59 +0000
+Date:   Mon, 25 Nov 2019 20:27:58 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] generic ioremap for 5.5
+Message-ID: <20191125192758.GA13913@infradead.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:5d88:: with SMTP id e8mr26254637ilg.95.1574710028322;
- Mon, 25 Nov 2019 11:27:08 -0800 (PST)
-Date:   Mon, 25 Nov 2019 11:27:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dcd191059830bf9e@google.com>
-Subject: INFO: rcu detected stall in dev_ioctl
-From:   syzbot <syzbot+1a41521b3198c9e15c2f@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sven@narfation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Linus,
 
-syzbot found the following crash on:
+this pull requests add the remaining bits for an entirely generic ioremap
+and iounmap to lib/ioremap.c, and to facilitate that cleans up the giant
+mess of weird ioremap variants we had with no users outside the arch
+code.  For now just the three newest ports use the code, but there is
+more than a handful others that can be converted without too much work.
 
-HEAD commit:    6b8a7946 Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=175973cee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4737c15fc47048f2
-dashboard link: https://syzkaller.appspot.com/bug?extid=1a41521b3198c9e15c2f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+There are two conflicts with the riscv tree - one is a trivial makefile
+context one with the nommu support, and the other is the split of the
+riscv <asm/io.h> which means that the removals in this pull request need
+to be applied to the new location that they were moved to in the riscv
+tree.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1a41521b3198c9e15c2f@syzkaller.appspotmail.com
+  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	1-....: (1 GPs behind) idle=e6a/1/0x4000000000000002  
-softirq=14144/14145 fqs=5200
-	(t=10500 jiffies g=14865 q=1519)
-NMI backtrace for cpu 1
-CPU: 1 PID: 10088 Comm: syz-executor.4 Not tainted 5.4.0-rc8-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2795 [inline]
-  rcu_sched_clock_irq.cold+0x4fd/0xc12 kernel/rcu/tree.c:2244
-  update_process_times+0x2d/0x70 kernel/time/timer.c:1726
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1299
-  __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1576
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1638
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1135
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:756  
-[inline]
-RIP: 0010:console_unlock+0xbc7/0xf10 kernel/printk/printk.c:2481
-Code: f3 88 48 c1 e8 03 42 80 3c 30 00 0f 85 e4 02 00 00 48 83 3d 4a 8f 96  
-07 00 0f 84 91 01 00 00 e8 3f c2 16 00 48 8b 7d 98 57 9d <0f> 1f 44 00 00  
-e9 6d ff ff ff e8 2a c2 16 00 48 8b 7d 08 c7 05 dc
-RSP: 0018:ffff888057b17528 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000040000 RBX: 0000000000000200 RCX: ffffc9000e7a9000
-RDX: 0000000000040000 RSI: ffffffff815c94e1 RDI: 0000000000000246
-RBP: ffff888057b175b0 R08: 1ffffffff14f0134 R09: fffffbfff14f0135
-R10: fffffbfff14f0134 R11: ffffffff8a7809a7 R12: 0000000000000000
-R13: ffffffff843e6780 R14: dffffc0000000000 R15: ffffffff895db0f0
-  vprintk_emit+0x2a0/0x700 kernel/printk/printk.c:1996
-  vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
-  vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
-  printk+0xba/0xed kernel/printk/printk.c:2056
-  batadv_tt_local_resize_to_mtu.cold+0x18/0x1e  
-net/batman-adv/translation-table.c:4202
-  batadv_update_min_mtu net/batman-adv/hard-interface.c:626 [inline]
-  batadv_hard_if_event+0x64f/0xfa0 net/batman-adv/hard-interface.c:1056
-  notifier_call_chain+0xc2/0x230 kernel/notifier.c:95
-  __raw_notifier_call_chain kernel/notifier.c:396 [inline]
-  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:403
-  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1668
-  call_netdevice_notifiers_mtu net/core/dev.c:1717 [inline]
-  dev_set_mtu_ext+0x354/0x5a0 net/core/dev.c:8014
-  dev_set_mtu+0xa5/0x130 net/core/dev.c:8035
-  dev_ifsioc+0x357/0xa00 net/core/dev_ioctl.c:244
-  dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:489
-  sock_do_ioctl+0x1b7/0x2f0 net/socket.c:1061
-  sock_ioctl+0x3ed/0x790 net/socket.c:1189
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a639
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f8b5149ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a639
-RDX: 0000000020000180 RSI: 0000000000008922 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f8b5149b6d4
-R13: 00000000004c6652 R14: 00000000004dbae8 R15: 00000000ffffffff
+are available in the Git repository at:
 
+  git://git.infradead.org/users/hch/ioremap.git tags/ioremap-5.5
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+for you to fetch changes up to eafee59440623e06b0ce4a0e49f814a8cf31d8ca:
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+  nds32: use generic ioremap (2019-11-12 11:37:58 +0100)
+
+----------------------------------------------------------------
+generic ioremap support
+
+ - clean up various obsolete ioremap and iounmap variants
+ - add a new generic ioremap implementation and switch csky, nds32 and
+   riscv over to it
+
+----------------------------------------------------------------
+Christoph Hellwig (21):
+      arm: remove ioremap_cached
+      unicore32: remove ioremap_cached
+      ia64: rename ioremap_nocache to ioremap_uc
+      hexagon: clean up ioremap
+      alpha: remove the unused __ioremap wrapper
+      nios2: remove __ioremap
+      parisc: remove __ioremap
+      x86: Clean up ioremap()
+      xtensa: clean up ioremap
+      asm-generic: ioremap_uc should behave the same with and without MMU
+      asm-generic: don't provide ioremap for CONFIG_MMU
+      arch: rely on asm-generic/io.h for default ioremap_* definitions
+      m68k: rename __iounmap and mark it static
+      hexagon: remove __iounmap
+      nios2: remove __iounmap
+      sh: remove __iounmap
+      lib: provide a simple generic ioremap implementation
+      riscv: use the generic ioremap code
+      csky: remove ioremap_cache
+      csky: use generic ioremap
+      nds32: use generic ioremap
+
+ arch/alpha/include/asm/io.h         |   6 ---
+ arch/arc/include/asm/io.h           |   4 --
+ arch/arm/include/asm/io.h           |   7 ---
+ arch/arm/mm/ioremap.c               |   4 --
+ arch/arm/mm/mmu.c                   |   2 +-
+ arch/arm/mm/nommu.c                 |   4 --
+ arch/arm64/include/asm/io.h         |   2 -
+ arch/csky/Kconfig                   |   1 +
+ arch/csky/include/asm/io.h          |  11 ++--
+ arch/csky/include/asm/pgtable.h     |   4 ++
+ arch/csky/mm/ioremap.c              |  52 -------------------
+ arch/hexagon/include/asm/io.h       |  18 ++-----
+ arch/hexagon/kernel/hexagon_ksyms.c |   4 +-
+ arch/hexagon/mm/ioremap.c           |   4 +-
+ arch/ia64/include/asm/io.h          |   5 +-
+ arch/ia64/mm/ioremap.c              |   4 +-
+ arch/m68k/include/asm/kmap.h        |   1 -
+ arch/m68k/mm/kmap.c                 | 100 ++++++++++++++++++------------------
+ arch/microblaze/include/asm/io.h    |   3 --
+ arch/nds32/Kconfig                  |   1 +
+ arch/nds32/include/asm/io.h         |   3 +-
+ arch/nds32/include/asm/pgtable.h    |   4 +-
+ arch/nds32/mm/Makefile              |   3 +-
+ arch/nds32/mm/ioremap.c             |  62 ----------------------
+ arch/nios2/include/asm/io.h         |  25 +--------
+ arch/nios2/mm/ioremap.c             |  23 +++------
+ arch/openrisc/include/asm/io.h      |   1 -
+ arch/parisc/include/asm/io.h        |  11 +---
+ arch/parisc/mm/ioremap.c            |  10 ++--
+ arch/riscv/Kconfig                  |   1 +
+ arch/riscv/include/asm/io.h         |  13 -----
+ arch/riscv/include/asm/pgtable.h    |   6 +++
+ arch/riscv/mm/Makefile              |   1 -
+ arch/riscv/mm/ioremap.c             |  84 ------------------------------
+ arch/s390/include/asm/io.h          |   4 --
+ arch/sh/include/asm/io.h            |   9 +---
+ arch/sh/mm/ioremap.c                |   4 +-
+ arch/sparc/include/asm/io_32.h      |   1 +
+ arch/unicore32/include/asm/io.h     |   4 +-
+ arch/unicore32/mm/ioremap.c         |   8 ---
+ arch/x86/include/asm/io.h           |   7 +--
+ arch/x86/mm/ioremap.c               |   8 +--
+ arch/x86/mm/pageattr.c              |   4 +-
+ arch/xtensa/include/asm/io.h        |  12 +----
+ include/asm-generic/io.h            |  89 +++++++++++++-------------------
+ lib/Kconfig                         |   3 ++
+ lib/ioremap.c                       |  39 ++++++++++++++
+ 47 files changed, 189 insertions(+), 487 deletions(-)
+ delete mode 100644 arch/nds32/mm/ioremap.c
+ delete mode 100644 arch/riscv/mm/ioremap.c
