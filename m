@@ -2,157 +2,98 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DE2C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1430420835
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B34D207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MsGNoi87"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="XOUbVwSr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfKYR1k (ORCPT
+        id S1729089AbfKYR3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:27:40 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41602 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfKYR1j (ORCPT
+        Mon, 25 Nov 2019 12:29:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33457 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKYR3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:27:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 94so13310727oty.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:27:39 -0800 (PST)
+        Mon, 25 Nov 2019 12:29:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id c184so7714290pfb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:29:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ehtg0LDgFByK5WRliTFTt8kMCURVP50x4sdG0deprfY=;
-        b=MsGNoi87guRmgvoKPI/D/lOK0M/mezTFZNaBeRkMe12Xdy9kJ4sQT0icrrtk/cQ7I+
-         XoOUItIX1FSBnkYcrZNSLWVdkvbyYY40szlADlj3lWhFlS5quaL3NVAC+VY+2TVDe7jI
-         KJ+irc2cGqgmeHCwls2VTypiKNL4znvvZVBq7mEG+h2OaXeYPNK1I5f176snrGp3GBXx
-         B8P0Z1NJcl6VH8gT+6fWXSAYEvX+5xYGf7Dpzb4m5qVgjkm4VYf1mvMik/y5MBs39Mlc
-         IptXJd/rvAlz7G/M0cIit1TcxUUhwgZJZwIepPVz//Hd5W1aQ7RNB1qVciD6Jo0S4AlO
-         3PJQ==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=yQi4UEnS+V4u3juz38+xrNNa68rc8Lco57qfpAZ4Ncw=;
+        b=XOUbVwSrwqTDHrN5RPfcILKGSTKyseJzoF72gL9Y0TN/mpORTlPlyTlikUGenHXFND
+         SR/kZK2QIc3T9jWNDOTihkJQ6AFcmW+HHj84r/sNfP5UBA5qGxO/gSctZphhjoKQwBFH
+         uC1aYCTAVW3OKaJXTj+JsmUkHB4moc6e+CENPt5lGStlC8eIWr1+6I8Mf2d03EvwINTs
+         GTUzXY+wWkGh+FEbOCuXFWsZJpvvpkXPYR5RFnieqBu/GdNucSMHOx6hZ9NpVtlghAUM
+         YLKu7Eu6lQXzpeHUeZFdTTdqgz7dy5f+GCRek7PKb1pd7Ft/GukdOaAh6UKGKSJ6/6OM
+         eYgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ehtg0LDgFByK5WRliTFTt8kMCURVP50x4sdG0deprfY=;
-        b=cxioHVBX88xD3rY5gXuczF40HkPpNz57TXJQCMx++MCKI6PVDIRvGg97DfojprJpHl
-         2yr7bmx7+xTSgQLC+uVbazv00n/VR3M5O4KiUQXy50CzELw6m6/vIEaWeUTelYMfbreB
-         WI2d8+44Thl26caUT296RyEnSxZJA6DiKXOBe8F+QJK3ZsrKS7+7yCNz3zWcpru5lClE
-         bRgzMi3CyVfOfsK+0OcQirE2vksIB+PiglTCA8IF+Ti5x5CikZo3vfyTYTEhiVljfpjl
-         p11Rp39H9QVApghNEvg91lvoA7rrX3cSBne2t0TK4jPABmvGGKmef2vdkgQQOGIWxO/D
-         LZVA==
-X-Gm-Message-State: APjAAAW2yEsO1c9gSIOMZ/7XMP6ba4PYase2NKcuUVjx0M3o7ASGakWF
-        1iLtgUoGKpOBYlCpxvIy27q6rvVJnPbrVL7hHLMHYA==
-X-Google-Smtp-Source: APXvYqxpNOnsfH70r6wlFMNUcWUSE7NqnT2MNrFaRB7UYaM0KYhnvGDb5WggsU+yxs0nW8YmcyUasGizxzAArT0Llgg=
-X-Received: by 2002:a9d:3982:: with SMTP id y2mr21401811otb.191.1574702857225;
- Mon, 25 Nov 2019 09:27:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=yQi4UEnS+V4u3juz38+xrNNa68rc8Lco57qfpAZ4Ncw=;
+        b=IaU5YMvwlK5ZqBgS3YEtf5pi2dpPR50CuU2WDspRvyTlNmpJhg6mOVq6ENzLkg1qa/
+         3oAQVoZuUx4EpTfY5UTOlL50+mgsvHYPCTNzCh5dlqaQUVEr6ZE+wb3piJ3AhbDxa5B9
+         jVzupxQgd+VAK5cZL2ZjjfThzZcHYbUoUg7brsaftKCVBBcj6seKvlkO/HiWGunQW7Yp
+         ZeFUxUSJcpCjq4e7QvbzB2+vTt0EC+wfS59/vNaaMaNa8GvHALFPBYbLy0xsUubWAixb
+         Koh/iBldzSvocV8gCORx4RqQPxTJv7pHy23ZJJQ5JaydWQaW/hhja4krU2QzzurVo1Ed
+         4W4A==
+X-Gm-Message-State: APjAAAXhctHLSL7T3xflNfkgERY5y+RdHhoQX1/sgQfVOMygED6ndnSe
+        fb73EH/TXgLS9urZafnyYJO/nA==
+X-Google-Smtp-Source: APXvYqxRiSCtDfFbE9taYkfXX9N0Ym7p7haFk+ZjP19G8KpgpI0PxLMHYcwghp6Xp4Ci6gUbGSXn+w==
+X-Received: by 2002:a63:3409:: with SMTP id b9mr20273251pga.320.1574702939703;
+        Mon, 25 Nov 2019 09:28:59 -0800 (PST)
+Received: from cakuba.hsd1.ca.comcast.net (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id u20sm9183075pgf.29.2019.11.25.09.28.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 09:28:59 -0800 (PST)
+Date:   Mon, 25 Nov 2019 09:28:50 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Phong Tran <tranmanphong@gmail.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        luciano.coelho@intel.com, shahar.s.matityahu@intel.com,
+        johannes.berg@intel.com, emmanuel.grumbach@intel.com,
+        sara.sharon@intel.com, yhchuang@realtek.com, yuehaibing@huawei.com,
+        pkshih@realtek.com, arend.vanspriel@broadcom.com, rafal@milecki.pl,
+        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
+        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
+        keescook@chromium.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] drivers: net: b43legacy: Fix -Wcast-function-type
+Message-ID: <20191125092850.2cc451bb@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <07e73c3b-b1fa-c389-c1c0-80b73e4c1774@lwfinger.net>
+References: <20191125150215.29263-1-tranmanphong@gmail.com>
+        <07e73c3b-b1fa-c389-c1c0-80b73e4c1774@lwfinger.net>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
- <20191119160456.GD382712@cmpxchg.org> <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com>
- <20191121220613.GB487872@cmpxchg.org> <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com>
- <20191122161652.GA489821@cmpxchg.org> <e629f595-df0a-71b2-35b4-b266ba1d0431@linux.alibaba.com>
-In-Reply-To: <e629f595-df0a-71b2-35b4-b266ba1d0431@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 25 Nov 2019 09:27:25 -0800
-Message-ID: <CALvZod4ZKh3HbDWJz5-tD9Q0gcMUjWmqzBGUD-ejOLCoS7ga2w@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 1:26 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
->
-> >
-> > But that leaves me with one more worry: compaction. We locked out
-> > charge moving now, so between that and knowing that the page is alive,
-> > we have page->mem_cgroup stable. But compaction doesn't know whether
-> > the page is alive - it comes from a pfn and finds out using PageLRU.
-> >
-> > In the current code, pgdat->lru_lock remains the same before and after
-> > the page is charged to a cgroup, so once compaction has that locked
-> > and it observes PageLRU, it can go ahead and isolate the page.
-> >
-> > But lruvec->lru_lock changes during charging, and then compaction may
-> > hold the wrong lock during isolation:
-> >
-> > compaction:                           generic_file_buffered_read:
-> >
-> >                                       page_cache_alloc()
-> >
-> > !PageBuddy()
-> >
-> > lock_page_lruvec(page)
-> >   lruvec = mem_cgroup_page_lruvec()
-> >   spin_lock(&lruvec->lru_lock)
-> >   if lruvec != mem_cgroup_page_lruvec()
-> >     goto again
-> >
-> >                                       add_to_page_cache_lru()
-> >                                         mem_cgroup_commit_charge()
-> >                                           page->mem_cgroup = foo
-> >                                         lru_cache_add()
-> >                                           __pagevec_lru_add()
-> >                                             SetPageLRU()
-> >
-> > if PageLRU(page):
-> >   __isolate_lru_page()
-> >
-> > I don't see what prevents the lruvec from changing under compaction,
-> > neither in your patches nor in Hugh's. Maybe I'm missing something?
-> >
->
-> Hi Johannes,
->
-> It looks my patch do the lruvec recheck/relock after PageLRU in compaction.c.
-> It should be fine for your question. So I will try more testing after all changes.
+On Mon, 25 Nov 2019 11:26:31 -0600, Larry Finger wrote:
+> On 11/25/19 9:02 AM, Phong Tran wrote:
+> > correct usage prototype of callback in tasklet_init().
+> > Report by https://github.com/KSPP/linux/issues/20
+> > 
+> > Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> > ---  
+> 
+> This patch was submitted yesterday as "[PATCH 3/5] drivers: net: b43legacy: Fix 
+> -Wcast-function-type". Why was it submitted twice?
 
-Actually no, unless PageLRU check and taking lruvec lock are atomic,
-the race mentioned by Johannes still exist.
-
-Shakeel
+Because the series was split between wireless and netdev changes.
+Tran, please make sure you include a note about the reason for reposting
+in the cover letter.
