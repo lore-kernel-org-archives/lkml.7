@@ -2,87 +2,128 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65732C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB17C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428FA2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F5420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574671843;
+	bh=EYDZogHNR80OurKQa482fcMeSSGrugoBB+rl4NZ8Qpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VxjF+6TTdiqXB6PkoqPJbGOD6UQhbSrp9/vS5P8jrvzKF41StgQpzVKfOIC2yOsz/
+	 qkjAsjGTivWnEBk9tFVaoKz6FLmDQF2qrNSWqoAMDY32us7i6RC2dn3gkpXhrW5qAL
+	 KF0+NLsKIupmOa8AG3tDx5gm+YBz2bmdV7wnm/XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfKYIok (ORCPT
+        id S1727022AbfKYIum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 03:44:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51492 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725938AbfKYIoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 03:44:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38224AFF3;
-        Mon, 25 Nov 2019 08:44:38 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 09:44:28 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] x86/microcode updates for 5.5
-Message-ID: <20191125084428.GC12432@zn.tnic>
+        Mon, 25 Nov 2019 03:50:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfKYIum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 03:50:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 069582071E;
+        Mon, 25 Nov 2019 08:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574671841;
+        bh=EYDZogHNR80OurKQa482fcMeSSGrugoBB+rl4NZ8Qpk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BJSw/xxoG6F7JI9BGq9vZNLbF9UJ9nyMPs4H6wUtqlWfWP8AdA7npwZD/A0p4pq/f
+         ljZrVFKpcEaK4hxavDwxzXz70xhJ0HXpAbf2ftzey/SJCQyy5YLqJG7imSvWr93ngF
+         Xu650y88z2wwy0S015Uk6Bl6DNW06wxCnzvGZpnA=
+Date:   Mon, 25 Nov 2019 09:50:39 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rafael.j.wysocki@intel.com, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, chanwoo@kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v3] PM / devfreq: Add new name attribute for sysfs
+Message-ID: <20191125085039.GA2301674@kroah.com>
+References: <CGME20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8@epcas1p2.samsung.com>
+ <20191125010357.27153-1-cw00.choi@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125010357.27153-1-cw00.choi@samsung.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Nov 25, 2019 at 10:03:57AM +0900, Chanwoo Choi wrote:
+> The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
+> sysfs") changed the node name to devfreq(x). After this commit, it is not
+> possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
+> 
+> Add new name attribute in order to get device name.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  Changes from v2:
+> - Change the order of name_show() according to the sequence in devfreq_attrs[]
+> 
+> Changes from v1:
+> - Update sysfs-class-devfreq documentation
+> - Show device name directly from 'devfreq->dev.parent'
+> 
 
-please pull the below microcode loader updates for 5.5. It converts the
-late loading method to load the microcode in parallel (vs sequentially
-currently). The patch remained in linux-next for the maximum amount of
-time so that any potential and hard to debug fallout be minimized.
+Shouldn't you just revert the original patch here?  Why did the sysfs
+file change?
 
-Now cloud folks have their milliseconds back but all the normal people
-should use early loading anyway. :-)
+> Documentation/ABI/testing/sysfs-class-devfreq | 7 +++++++
+>  drivers/devfreq/devfreq.c                     | 9 +++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
+> index 01196e19afca..75897e2fde43 100644
+> --- a/Documentation/ABI/testing/sysfs-class-devfreq
+> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
+> @@ -7,6 +7,13 @@ Description:
+>  		The name of devfreq object denoted as ... is same as the
+>  		name of device using devfreq.
+>  
+> +What:		/sys/class/devfreq/.../name
+> +Date:		November 2019
+> +Contact:	Chanwoo Choi <cw00.choi@samsung.com>
+> +Description:
+> +		The /sys/class/devfreq/.../name shows the name of device
+> +		of the corresponding devfreq object.
+> +
+>  What:		/sys/class/devfreq/.../governor
+>  Date:		September 2011
+>  Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 65a4b6cf3fa5..6f4d93d2a651 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -1169,6 +1169,14 @@ int devfreq_remove_governor(struct devfreq_governor *governor)
+>  }
+>  EXPORT_SYMBOL(devfreq_remove_governor);
+>  
+> +static ssize_t name_show(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	struct devfreq *devfreq = to_devfreq(dev);
+> +	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
 
-* Enable the late loading method to update microcode in parallel on all CPUs
-  (Ashok Raj)
+Why is the parent's name being set here, and not the device name?
 
-Please pull, thanks.
+The device name should be the name of the directory, and the parent's
+name is the name of the parent directory, why is a sysfs attribute for a
+name needed at all?
 
----
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+confused,
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-microcode-for-linus
-
-for you to fetch changes up to 811ae8ba6dca6b91a3ceccf9d40b98818cc4f400:
-
-  x86/microcode/intel: Issue the revision updated message only on the BSP (2019-10-01 16:06:35 +0200)
-
-----------------------------------------------------------------
-Ashok Raj (1):
-      x86/microcode: Update late microcode in parallel
-
-Borislav Petkov (2):
-      x86/microcode/amd: Fix two -Wunused-but-set-variable warnings
-      x86/microcode/intel: Issue the revision updated message only on the BSP
-
- arch/x86/kernel/cpu/microcode/amd.c   |  4 ++--
- arch/x86/kernel/cpu/microcode/core.c  | 36 ++++++++++++++++++++---------------
- arch/x86/kernel/cpu/microcode/intel.c |  5 +++--
- 3 files changed, 26 insertions(+), 19 deletions(-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+greg k-h
