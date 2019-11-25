@@ -2,68 +2,83 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4303C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C721C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B802053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B273207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfKYVYG (ORCPT
+        id S1726926AbfKYVgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 16:24:06 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:58252 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725930AbfKYVYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 16:24:06 -0500
-Received: (qmail 5654 invoked by uid 2102); 25 Nov 2019 16:24:05 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 25 Nov 2019 16:24:05 -0500
-Date:   Mon, 25 Nov 2019 16:24:05 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
-        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in hub_event
-In-Reply-To: <00000000000003b7c305982885e3@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911251622420.1565-100000@iolanthe.rowland.org>
+        Mon, 25 Nov 2019 16:36:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfKYVgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 16:36:53 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0534D20706;
+        Mon, 25 Nov 2019 21:36:51 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 16:36:50 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20191125163650.6a624fee@gandalf.local.home>
+In-Reply-To: <20191009104611.15363-1-qais.yousef@arm.com>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: https://github.com/google/kasan.git 46178223
+Sorry for the very late response...
 
-Index: usb-devel/drivers/hid/hid-core.c
-===================================================================
---- usb-devel.orig/drivers/hid/hid-core.c
-+++ usb-devel/drivers/hid/hid-core.c
-@@ -1057,6 +1057,8 @@ static void hid_apply_multiplier(struct
- 	while (multiplier_collection->parent_idx != -1 &&
- 	       multiplier_collection->type != HID_COLLECTION_LOGICAL)
- 		multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
-+	if (multiplier_collection->type != HID_COLLECTION_LOGICAL)
-+		multiplier_collection = NULL;
- 
- 	effective_multiplier = hid_calculate_multiplier(hid, multiplier);
- 
-@@ -1191,6 +1193,9 @@ int hid_open_report(struct hid_device *d
- 	}
- 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
- 
-+	/* Needed for usages before the first collection */
-+	device->collection[0].parent_idx = -1;
-+
- 	ret = -EINVAL;
- 	while ((start = fetch_item(start, end, &item)) != NULL) {
- 
+On Wed,  9 Oct 2019 11:46:11 +0100
+Qais Yousef <qais.yousef@arm.com> wrote:
 
+> ATM the uclamp value are only used for frequency selection; but on
+> heterogeneous systems this is not enough and we need to ensure that the
+> capacity of the CPU is >= uclamp_min. Which is what implemented here.
+
+Is it possible that the capacity can be fixed, where the process can
+just have a cpu mask of CPUs that has the capacity for it?
+
+Not that this will affect this patch now, but just something for the
+future.
+
+> 
+> 	capacity_orig_of(cpu) >= rt_task.uclamp_min
+> 
+> Note that by default uclamp.min is 1024, which means that RT tasks will
+> always be biased towards the big CPUs, which make for a better more
+> predictable behavior for the default case.
+> 
+> Must stress that the bias acts as a hint rather than a definite
+> placement strategy. For example, if all big cores are busy executing
+> other RT tasks we can't guarantee that a new RT task will be placed
+> there.
+> 
+> On non-heterogeneous systems the original behavior of RT should be
+> retained. Similarly if uclamp is not selected in the config.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
