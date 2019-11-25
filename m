@@ -2,91 +2,171 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0310FC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10EBC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A5E20740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774C32082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Uhh7wOIq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VfEuXg6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfKYPOO (ORCPT
+        id S1728495AbfKYPOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:14:14 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46748 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbfKYPOO (ORCPT
+        Mon, 25 Nov 2019 10:14:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35060 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728172AbfKYPOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:14:14 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so16551552iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:14:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ALu9igSRSsKi52hn+f9OyAjdyB0mBhNXe9BnXNqIOe4=;
-        b=Uhh7wOIqPQR81MSbRooLEt8qyy+07qluJoDtNGDtuedJKTsKjd14fVckV+hyDQmbo6
-         78MPzzDXsUkzjxgRhAEm9siOrRhNZUiy8r2DTW7OWcdnHo7YHAbfbIO7lH/4mUPXSThw
-         yCn+Oo5iRpC87zL2LqOdI1JCfz+ssecH+ma6A=
+        Mon, 25 Nov 2019 10:14:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574694886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UsViNUF8R5vNPI8HMF3+qgqlgoEtqHxa8xpNMwJsggY=;
+        b=VfEuXg6B+36Xrcn6WpKnMMauy8CU10tnvyA3+RzZ69RgDjjQZ9QCI9EgU3e4kzV0vDvha9
+        P8cH7ucbSz2LClDiVJAC2qFt3D9d9oxUrtTQBCiW84BRAw6m0EZHJDssjDUnoz3LkeqawM
+        s1xzQJFd5gOJqobbqy4RGDlMkHY+iU8=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-iBGJcOFXPhmAGMFXlhoblA-1; Mon, 25 Nov 2019 10:14:43 -0500
+Received: by mail-qt1-f198.google.com with SMTP id f31so10454331qta.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:14:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ALu9igSRSsKi52hn+f9OyAjdyB0mBhNXe9BnXNqIOe4=;
-        b=AAW3JTw8Ebp/x/BLDAEjrHxoM6nnKS4NCIz5t3SbNc+g6QNV5n7eTAOaKO2sQLd41v
-         1VL5Nm3nS4X8J1SgRWAJsNsUgLqZSL5holfFvvyde26n1mMTGjPYKVfkwxzsBjR6jq6O
-         7dsqRsBs2CXMysWZiQV4ndehUwKSDEhIinW1OW8jeV04O54kwjYi8Y9TPryzUcA8oCbz
-         Ko3Cc0POlXK7HZtUoI7/ECAU8n/YXPR25K6RE/KfRMNo/wMt3wEIZTRFQVwnHa3oeaiV
-         vc7a0Xrt1QTSbeLP3ZgVqyanYI0v9TjhFYsbld6BxaMoSAR8YoBv+eiwoVOd/jg6xSqV
-         k+VA==
-X-Gm-Message-State: APjAAAX3ZV2BoXUmKJGqwAti5hd0kFEA+vMyksdANwVMpHIMeYyyKW4W
-        hV9uFS8aWJJHOKsaTCWxocS3Gxs1ee142ihZ185sxQ==
-X-Google-Smtp-Source: APXvYqymUw8TAznCvAM14YFrTvY36Km1p/Eylp7nwOHjzN72m1nqZQk+qCIweSmRGc14oNLOCMmjpk2sZSwXjZnmUyo=
-X-Received: by 2002:a5d:91da:: with SMTP id k26mr26131450ior.252.1574694852323;
- Mon, 25 Nov 2019 07:14:12 -0800 (PST)
+        bh=U8eb8wa21YsOeZ9EHNPAieCGqRK3RoFp6IWeODBsRdM=;
+        b=kNK41jE2civhyhpv2vuIXAvy+dyi3kHIpOEKkBgTH2Ul9eItU2Rg/qHfh9oTv0MX/9
+         jTdVKIqXyOHF6jxBp6BDtUt9nlOwkQ2JwF5Mr8DbWq2WEq5shPbqd5fspVoQcFcNQxJF
+         qzjxs7sh28vPTfYRehma49WkSEU/L02FEqLUs/ccJ06MDEdxqWVFJxKDCQCnzsRa+3RI
+         NKfN5juKa4meajF5y0f9FkuqMDWS7kcCd5y+5HU3XGBtDvWcf29jVhoWMz7L79SONHdx
+         Izc2Fx6YM9D8f0A+YCTqhhK5s7fjMrni5ZWF/7ghOsWk4dVinx4DfuZ8X7ZEvE4eB3Eb
+         CutA==
+X-Gm-Message-State: APjAAAVqJQFB5NgT/3PBvNe4/5L4L/zCt5McT6BYLCdh1DGVwaF9SfEy
+        Xu6bE+7Rt7CJ10MNrtPs8C7md17yEEgOUmIeY/h3lzx29mg2sJuyzZk0cKidhFgvC7puUNPYyAC
+        3+TIf7rN4dKFrMBJMAErpkUYLABqfd9cinPcTnOiK
+X-Received: by 2002:a0c:e085:: with SMTP id l5mr28250895qvk.138.1574694883176;
+        Mon, 25 Nov 2019 07:14:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz231nFYrEpCOtVtPCVvxtw8KqhWa9u2D2TL5w9YZ3DcpHEw3DlDKnUGv/FxcjKOG+Qo5fUmUbxnHwBsYq8Spw=
+X-Received: by 2002:a0c:e085:: with SMTP id l5mr28250865qvk.138.1574694882877;
+ Mon, 25 Nov 2019 07:14:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20191025112917.22518-1-mszeredi@redhat.com> <87r231rlfj.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87r231rlfj.fsf@x220.int.ebiederm.org>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 25 Nov 2019 16:14:01 +0100
-Message-ID: <CAJfpegt_haMDwd6jo3mQzX2vchk_LLMH+V+h4yDs7geLmo4NhA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/5] allow unprivileged overlay mounts
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20191105141807.27054-1-tranmanphong@gmail.com>
+ <CAO-hwJ+cydMPQE_otc8-67=SDKmjac5RXsLs-9x6dH4YqA+DVQ@mail.gmail.com> <0407e8bb-bbf5-ec64-cdac-ef266f1ab391@gmail.com>
+In-Reply-To: <0407e8bb-bbf5-ec64-cdac-ef266f1ab391@gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 25 Nov 2019 16:14:31 +0100
+Message-ID: <CAO-hwJ+r+n4Dy+jqSuCk-vApfP-PR4o2oTzt4XWxH5jUQOeFwA@mail.gmail.com>
+Subject: Re: [PATCH] HID: hid-lg4ff: Fix uninit-value set_autocenter_default
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot <syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com>
+X-MC-Unique: iBGJcOFXPhmAGMFXlhoblA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 3:43 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+On Tue, Nov 19, 2019 at 2:30 PM Phong Tran <tranmanphong@gmail.com> wrote:
 >
-> Miklos Szeredi <mszeredi@redhat.com> writes:
->
-> > Hi Eric,
+> On 11/18/19 4:43 PM, Benjamin Tissoires wrote:
+> > On Tue, Nov 5, 2019 at 3:18 PM Phong Tran <tranmanphong@gmail.com> wrot=
+e:
+> >>
+> >> syzbot found a problem using of uinit pointer in
+> >> lg4ff_set_autocenter_default().
+> >>
+> >> Reported-by: syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+> >>
+> >> Tested by syzbot:
+> >>
+> >> https://groups.google.com/d/msg/syzkaller-bugs/ApnMLW6sfKE/Qq0bIHGEAQA=
+J
 > >
-> > Can you please have a look at this patchset?
+> > This seems weird to me:
 > >
-> > The most interesting one is the last oneliner adding FS_USERNS_MOUNT;
-> > whether I'm correct in stating that this isn't going to introduce any
-> > holes, or not...
+> > the syzbot link above is about `hid_get_drvdata(hid)`, and, as I read
+> > it, the possibility that hid might not have an initialized value.
+> >
 >
-> I will take some time and dig through this.
+> In the dashboard [1] shows
+> BUG: KMSAN: uninit-value in dev_get_drvdata include/linux/device.h:1388
+> [inline]
+> BUG: KMSAN: uninit-value in hid_get_drvdata include/linux/hid.h:628 [inli=
+ne]
+> BUG: KMSAN: uninit-value in lg4ff_set_autocenter_default+0x23a/0xa20
+> drivers/hid/hid-lg4ff.c:477
+> base on that I did the initialization the pointer in the patch.
 >
-> From a robustness standpoint I worry about the stackable filesystem
-> side.  As that is uniquely an attack vector with overlayfs.
+> > Here you are changing the initialized values of value, entry and
+> > drv_data, all 3 are never used before their first assignment.
+> >
+> > I have a feeling this particular syzbot check has already been fixed
+> > upstream by d9d4b1e46d95 "HID: Fix assumption that devices have
+> > inputs".
+> >
 >
-> There is definitely demand for this.
+> I think the commit d9d4b1 fixed this report [2] by syzbot.
+>
+> [1] https://syzkaller.appspot.com/bug?extid=3D1234691fec1b8ceba8b1
+> [2] https://syzkaller.appspot.com/bug?extid=3D403741a091bf41d4ae79
 
-Hi Eric,
+As you can see in my long discussion with syzbot today, d9d4b1 also
+fixed that one.
 
-Have you had time to look into this yet?
+https://groups.google.com/forum/#!msg/syzkaller-bugs/ApnMLW6sfKE/Qq0bIHGEAQ=
+AJ
 
-Thanks,
-Miklos
+Cheers,
+Benjamin
+
+>
+> regards,
+> Phong.
+> > Cheers,
+> > Benjamin
+> >
+> >>
+> >> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> >> ---
+> >>   drivers/hid/hid-lg4ff.c | 6 +++---
+> >>   1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/hid/hid-lg4ff.c b/drivers/hid/hid-lg4ff.c
+> >> index 5e6a0cef2a06..44dfd08b0c32 100644
+> >> --- a/drivers/hid/hid-lg4ff.c
+> >> +++ b/drivers/hid/hid-lg4ff.c
+> >> @@ -468,10 +468,10 @@ static int lg4ff_play(struct input_dev *dev, voi=
+d *data, struct ff_effect *effec
+> >>   static void lg4ff_set_autocenter_default(struct input_dev *dev, u16 =
+magnitude)
+> >>   {
+> >>          struct hid_device *hid =3D input_get_drvdata(dev);
+> >> -       s32 *value;
+> >> +       s32 *value =3D NULL;
+> >>          u32 expand_a, expand_b;
+> >> -       struct lg4ff_device_entry *entry;
+> >> -       struct lg_drv_data *drv_data;
+> >> +       struct lg4ff_device_entry *entry =3D NULL;
+> >> +       struct lg_drv_data *drv_data =3D NULL;
+> >>          unsigned long flags;
+> >>
+> >>          drv_data =3D hid_get_drvdata(hid);
+> >> --
+> >> 2.20.1
+> >>
+> >
+>
+
