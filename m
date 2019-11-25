@@ -2,104 +2,83 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923C7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3235C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683EE20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHOE3NAQ"
+	by mail.kernel.org (Postfix) with ESMTP id 77D2C20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbfKYRav (ORCPT
+        id S1727691AbfKYRct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:30:51 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36504 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfKYRau (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:30:50 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so13344421oto.3;
-        Mon, 25 Nov 2019 09:30:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yx1H5O1mgv+pNnD+lwv4fd9CCd2JK4iu5sf9H+gz744=;
-        b=EHOE3NAQ7+En1anq7kD87m9onTHnR2WTW4cOYMiJZe3M2EiQqvqK7mF9gNV1oWxzSn
-         COFYzGUODG5jkkBEcbvmYE4YwVib3hXv7JdjyCcmpgUr7WG2/2uFj5JJwYDG7aBRoR26
-         HDFL0LXqs9fiZvLKPYpxO3RqoHZpMRH0E+IPzffjCMbNKYaXaeb5HDaUp7IB09rZ+GB8
-         T4QKa7q7aC2ZwcCJYUNACVeN5HgMooIDNIlG7gaUeNCPHT4C/IAdCG6SQR8zNIu6pNav
-         9VDje570hGAjj7plgHyBrJR603gqskIt8+nEBSJJ9fsjiw69QvjRnpNRqxWmRSuRNIwF
-         U1Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yx1H5O1mgv+pNnD+lwv4fd9CCd2JK4iu5sf9H+gz744=;
-        b=iXbBFRJsYDejKzwJU6K83OMEE8BtmLR+GNX7tddtYIs6A3IpiLPwQaUNWJyEqCo9XG
-         c7MRUoXH7au7kENr29kW7+8bOyQTa7SnT4GBj72FGBKGaK3QtsFiqsA3J9anRDTrdb6R
-         TdcBXspCSuLLlTNQ78QZlswM2o+mgtfedqySrWiWjw92c1XvEsmLQeLBGNyqRm/sQWDO
-         8e/RYU933+n6TAAVVlh65RVzAzLCFoU4xStcVChgJnKxfFc+yAipKLVKQywHVLDlOai5
-         QbC2qrwyDcvVeXda8FYcZ9ee0gh7EZmnDidchvJHblMIx8Kg157nSQi+domQhBku3WEo
-         VEKw==
-X-Gm-Message-State: APjAAAUQQzWviNz82gnUpQSL5/Xy/G16ySNZoKdiGFjrV4quFkz+kJAQ
-        u3qT3Vca9rt58bGGjooSg15J8MXZ
-X-Google-Smtp-Source: APXvYqxo0ggMzR3raPo59g/b2tvq/c57ulTw0g6Bv6iVn8OPBoOEnRbz4s6f0wvTtRtsLhXkxPaS3A==
-X-Received: by 2002:a9d:7082:: with SMTP id l2mr20100098otj.213.1574703049717;
-        Mon, 25 Nov 2019 09:30:49 -0800 (PST)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id e193sm2709732oib.53.2019.11.25.09.30.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2019 09:30:49 -0800 (PST)
-Subject: Re: [PATCH 2/3] drivers: net: intel: Fix -Wcast-function-type
-To:     Phong Tran <tranmanphong@gmail.com>, jakub.kicinski@netronome.com,
-        kvalo@codeaurora.org, davem@davemloft.net,
-        luciano.coelho@intel.com, shahar.s.matityahu@intel.com,
-        johannes.berg@intel.com, emmanuel.grumbach@intel.com,
-        sara.sharon@intel.com, yhchuang@realtek.com, yuehaibing@huawei.com,
-        pkshih@realtek.com, arend.vanspriel@broadcom.com, rafal@milecki.pl,
-        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
-        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
-        keescook@chromium.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191125150215.29263-1-tranmanphong@gmail.com>
- <20191125150215.29263-2-tranmanphong@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <61fa4ef5-e4fc-c20c-9e20-158bcdf61cbb@lwfinger.net>
-Date:   Mon, 25 Nov 2019 11:30:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 25 Nov 2019 12:32:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfKYRct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:32:49 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F85620740;
+        Mon, 25 Nov 2019 17:32:46 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 12:32:45 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com, jeyu@kernel.org, alexei.starovoitov@gmail.com
+Subject: Re: [PATCH -v5 00/17] Rewrite x86/ftrace to use text_poke (and
+ more)
+Message-ID: <20191125123245.5ae9cb60@gandalf.local.home>
+In-Reply-To: <20191125125534.2aaaccf00c38a9a25dee623a@kernel.org>
+References: <20191111131252.921588318@infradead.org>
+        <20191125125534.2aaaccf00c38a9a25dee623a@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191125150215.29263-2-tranmanphong@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 9:02 AM, Phong Tran wrote:
-> correct usage prototype of callback in tasklet_init().
-> Report by https://github.com/KSPP/linux/issues/20
+On Mon, 25 Nov 2019 12:55:34 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+> ...
+>         on_each_cpu(do_sync_core, NULL, 1);
+>         /*
+>          * sync_core() implies an smp_mb() and orders this store against
+>          * the writing of the new instruction.
+>          */
+>         bp_patching.vec = NULL;
+>         bp_patching.nr_entries = 0;
+> }
+> -----
 > 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->   drivers/net/wireless/intel/ipw2x00/ipw2100.c   | 7 ++++---
->   drivers/net/wireless/intel/ipw2x00/ipw2200.c   | 5 +++--
->   drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
->   drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
->   4 files changed, 13 insertions(+), 9 deletions(-)
+> I think the "on_each_cpu(do_sync_core, NULL, 1);" can sync the pipeline
+> but doesn't ensure all ongoing int3 handling is done. Thus, we may need a
 
-This patch is "fixing" three different drivers and should be split into at least 
-two parts. To be consistent with previous practices, the subject for the two 
-should be "intel: ipw2100: ...." and "intel: iwlegacy: ...."
+How does it not ensure all ongoing int3 handling is done? int3 is done
+with interrupts disabled, and the on_each_cpu() requires all CPUs to
+have had their interrupts enabled, thus int3 handling should be
+completed. Perhaps we need another sync core?
 
-Larry
+	on_each_cpu(do_sync_core, NULL, 1);
+	bp_patching.nr_entries = 0;
+	on_each_cpu(do_sync_core, NULL, 1);
+	bp_patching.vec = NULL;
+
+?
+
+-- Steve
+
+
+> bigger wait in between bp_patching.nr_entries = 0 and bp_patching.vec = NULL;
