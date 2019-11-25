@@ -2,141 +2,105 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249F3C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A58DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A7220835
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D205420740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MiQIPV7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKYKpH (ORCPT
+        id S1727563AbfKYKpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:45:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:47966 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbfKYKpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:45:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 903EF328;
-        Mon, 25 Nov 2019 02:45:05 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2618F3F52E;
-        Mon, 25 Nov 2019 02:45:04 -0800 (PST)
-Date:   Mon, 25 Nov 2019 10:44:59 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: Re: [PATCH v2 2/4] PCI: hv: Add the support of hibernation
-Message-ID: <20191125104459.GA14328@e121166-lin.cambridge.arm.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
- <1574234218-49195-3-git-send-email-decui@microsoft.com>
- <20191120172026.GE3279@e121166-lin.cambridge.arm.com>
- <PU1P153MB0169D0A99D5687FBDB02536BBF4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20191121114419.GA4318@e121166-lin.cambridge.arm.com>
- <CY4PR21MB06290283219FC78C45688DC4D74B0@CY4PR21MB0629.namprd21.prod.outlook.com>
+        Mon, 25 Nov 2019 05:45:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47852 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727278AbfKYKpS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 05:45:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574678717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QRAeg6sofwTZ7IMOF1+XpMax8/HjXNDIA5l6w+nYTIs=;
+        b=MiQIPV7WY78DFrcwTLEFCLGG0+YKVikAB3LmB0hKEHK0tLAwf0FlQs+Xom00MJ44Zs3qMN
+        ji71qeI/0+AVip8d1qFo1m7Z/OIqroRyNK5xoBOjlh+/Cim1D1v9HDqG7tXAm6+25bwci5
+        lUT5FxcdALcGSZ4PGMAtFxAeRJpjbN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-174-N6dA0LuNPl2MuZqUDdLEIA-1; Mon, 25 Nov 2019 05:45:16 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05DBC80058E;
+        Mon, 25 Nov 2019 10:45:15 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E9665C1D4;
+        Mon, 25 Nov 2019 10:45:10 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
+        hch@lst.de, cai@lca.pw, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iommu: fix KASAN use-after-free in iommu_insert_resv_region
+Date:   Mon, 25 Nov 2019 11:45:07 +0100
+Message-Id: <20191125104507.23704-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR21MB06290283219FC78C45688DC4D74B0@CY4PR21MB0629.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: N6dA0LuNPl2MuZqUDdLEIA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 10:19:46PM +0000, Michael Kelley wrote:
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>  Sent: Thursday, November 21, 2019 3:44 AM
-> > 
-> > On Thu, Nov 21, 2019 at 12:50:17AM +0000, Dexuan Cui wrote:
-> > > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Sent: Wednesday, November 20, 2019 9:20 AM
-> > > >
-> > > > On Tue, Nov 19, 2019 at 11:16:56PM -0800, Dexuan Cui wrote:
-> > > > > Implement the suspend/resume callbacks.
-> > > > >
-> > > > > We must make sure there is no pending work items before we call
-> > > > > vmbus_close().
-> > > >
-> > > > Where ? Why ? Imagine a developer reading this log to try to understand
-> > > > why you made this change, do you really think this commit log is
-> > > > informative in its current form ?
-> > > >
-> > > > I am not asking a book but this is a significant feature please make
-> > > > an effort to explain it (I can update the log for you but please
-> > > > write one and I shall do it).
-> > > >
-> > > > Lorenzo
-> > >
-> > > Sorry for being sloppy on this patch's changelog! Can you please use the
-> > > below? I can also post v3 with the new changelog if that's better.
-> > 
-> > As you wish but more importantly get hyper-V maintainers to ACK these
-> > changes since time is running out for v5.5.
-> > 
-> > Lorenzo
-> > 
-> > > PCI: hv: Add the support of hibernation
-> > >
-> > > hv_pci_suspend() runs in a process context as a callback in dpm_suspend().
-> > > When it starts to run, the channel callback hv_pci_onchannelcallback(),
-> > > which runs in a tasklet context, can be still running concurrently and
-> > > scheduling new work items onto hbus->wq in hv_pci_devices_present() and
-> > > hv_pci_eject_device(), and the work item handlers can access the vmbus
-> > > channel, which can be being closed by hv_pci_suspend(), e.g. the work item
-> > > handler pci_devices_present_work() -> new_pcichild_device() writes to
-> > > the vmbus channel.
-> > >
-> > > To eliminate the race, hv_pci_suspend() disables the channel callback
-> > > tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the tasklet.
-> > >
-> > > This way, when hv_pci_suspend() proceeds, it knows that no new work item
-> > > can be scheduled, and then it flushes hbus->wq and safely closes the vmbus
-> > > channel.
-> > >
-> > > Thanks,
-> > > -- Dexuan
-> 
-> FWIW, I'd like to see the above level of detail also as comments in the code
-> Itself so that whoever next looks at the code sees the explanation directly
-> without having to review the commit logs.
-> 
-> Also, the commit message doesn't say what the commit actually does and
-> why.  I'd suggest the commit message along these lines:
-> 
-> Add suspend() and resume() functions so that Hyper-V virtual PCI devices are
-> handled properly when the VM hibernates and resumes from hibernation.
-> 
-> Note that the suspend() function must make sure there are no pending work
-> items before calling vmbus_close(), since it runs in a process context as a
-> callback in dpm_suspend().  When it starts to run, the channel callback
-> hv_pci_onchannelcallback(), which runs in a tasklet context, can be still running
-> concurrently and scheduling new work items onto hbus->wq in
-> hv_pci_devices_present() and hv_pci_eject_device(), and the work item 
-> handlers can access the vmbus channel, which can be being closed by
-> hv_pci_suspend(), e.g. the work item handler pci_devices_present_work() ->
-> new_pcichild_device() writes to the vmbus channel.
-> 
-> To eliminate the race, hv_pci_suspend() disables the channel callback
-> tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the tasklet.
-> This way, when hv_pci_suspend() proceeds, it knows that no new work item
-> can be scheduled, and then it flushes hbus->wq and safely closes the vmbus
-> channel.
+Store the new region type in a variable. In case the new region
+gets merged into another one, the new node is freed and nr shall
+not be used anymore.
 
-This is much better, thank you, if you are happy with the patches
-please add your tags so that I can pull the series asap, hopefully
-we can merge it in v5.5.
+Fixes: 4dbd258ff63e ("iommu: Revisit iommu_insert_resv_region()
+implementation")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: Stable <stable@vger.kernel.org> #v5.3+
 
-Thanks,
-Lorenzo
+---
+
+- remove spurious new line
+---
+ drivers/iommu/iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index d658c7c6a2ab..4412b876250c 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -293,6 +293,7 @@ int iommu_insert_resv_region(struct iommu_resv_region *=
+new,
+ =09=09=09     struct list_head *regions)
+ {
+ =09struct iommu_resv_region *iter, *tmp, *nr, *top;
++=09enum iommu_resv_type nr_type =3D new->type;
+ =09LIST_HEAD(stack);
+=20
+ =09nr =3D iommu_alloc_resv_region(new->start, new->length,
+@@ -313,7 +314,7 @@ int iommu_insert_resv_region(struct iommu_resv_region *=
+new,
+ =09=09phys_addr_t top_end, iter_end =3D iter->start + iter->length - 1;
+=20
+ =09=09/* no merge needed on elements of different types than @nr */
+-=09=09if (iter->type !=3D nr->type) {
++=09=09if (iter->type !=3D nr_type) {
+ =09=09=09list_move_tail(&iter->list, &stack);
+ =09=09=09continue;
+ =09=09}
+--=20
+2.20.1
+
