@@ -6,183 +6,94 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99077C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A144DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C97620656
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7620B2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Nov 2019 23:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DwrhTfKN"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="YO5yHAIb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TR0N2AZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKXX6w (ORCPT
+        id S1727125AbfKXX7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 18:58:52 -0500
-Received: from ozlabs.org ([203.11.71.1]:51779 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbfKXX6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 18:58:52 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47LnF30Brfz9sPn;
-        Mon, 25 Nov 2019 10:58:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574639928;
-        bh=OAVbe2yC0rx13soTDnUOVwUCtkL0XiHFd05I/rKPaWI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DwrhTfKNn2GaUQjImkc4EHkBrFoupiFqH3pq2omtgqjy5OIe2YHaOHUvNWKxWWX+f
-         AltTISlIxuSkeRe37KRe2w11Aizmukb75oPnEAAJxl60b0M82pjC7wPQFV1To3QSJ7
-         0E8T5AArTIOBw5tDdwm+bNeQm5gMxucQP2a7ui/iLsf6v7kNYOADPGIPHBUUgiDVU2
-         StuAqlveycnPsTO0BayBeuqhSDS0YoAtkVVWROzxdoWKpsJ/BL68Y/RrWHy46HmtFM
-         1rg5XWybaA2PJnCzPA3LS7ET6D3QugNDcQVlzvVgaPYNhqjptKWomaEHmNEBh15svD
-         jPdlXdHQxCD9w==
-Date:   Mon, 25 Nov 2019 10:58:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: linux-next: manual merge of the bpf-next tree with the net-next
- tree
-Message-ID: <20191125105843.2bdea309@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GURF76nV68Qoxv_unG2o0iq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sun, 24 Nov 2019 18:59:48 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:60315 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726803AbfKXX7s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 18:59:48 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id F0F2922967;
+        Sun, 24 Nov 2019 18:59:46 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 24 Nov 2019 18:59:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=x+tDdMWKBIFb/MGGtC1anmSIzBdbBpV
+        lggF2pFtQW5Q=; b=YO5yHAIbA2MZKbPGtU+/WaAHDDljYyrdv7zIHyeHuzlGXOa
+        mCEO6rh9wRCeTmYRzlh6wj5pH8n33JECFLFjRBtctKPsT7cEOkrDlEFP+uAxuRug
+        TD0K2IuOE9mtyfojqTgisq/kHbQrARf/rm2bwkZPugY1EUSf3Iwa3hBhI9iBuPm0
+        /0u1tjyOl2y0wvUTnOvNlb1Lz1yvwup+zvCbhUIjN2gAVpFU1YKccbgJfi2HqlfW
+        zZrDXy952PUpXKR+a7v7U3V3jwdGS+VFTEh7LK+P/gvRme6JvWtdRie1OUSDavlZ
+        DPOYognNxMz7cWOt3SlPu3OOpXBLwFM/7wMiS4w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=x+tDdM
+        WKBIFb/MGGtC1anmSIzBdbBpVlggF2pFtQW5Q=; b=TR0N2AZkZIm/ia6TA/b5oc
+        udFh5CVzCe7O4Eer9P/F7X/FSUjgDBf4SuiqVxGQptf3dlNNyOzZEyCg8CNju3Ky
+        T9X4+hyCQIfLKkZLeQxlG8YtSA3jLoyShGvqV4HX2dtnfqok6HdVzmoqWvnsEQCo
+        jC/PHx7/8RFl6Kpi9UxkbrxWHnzdm7GjcoI0CVralB3iSEJgpVaouGqvYFSjAL8h
+        XjtaG+tlboCATeGDNaD/p2dPlvwM57afOVFYbhpY9B882QFwC1W7BEmOSLRw9evl
+        aeZYZQwC1eFe6U5OlACvLVZkkarehfmH6t2WxfdPRoIVxYA/vcr8ifMCkrn14FNQ
+        ==
+X-ME-Sender: <xms:chnbXVG8PYTrbBW_SGYWSck1Cai7Ca4ZCHgVxEGtNATOXDxA161I4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehledgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgepud
+X-ME-Proxy: <xmx:chnbXR9FgZj_rMxcX_jng8LRSunQmOxJSVB2FFa5qT7Sik6HA0Nacg>
+    <xmx:chnbXehWE_4XX00eIm7NFAYfkrOv9czjls7jpoPVtj76YdlkYOtn8A>
+    <xmx:chnbXVleV2z1RRFyys8JGkayeg3gzEttnS9PKhSUKeCE5zHiEX2yQA>
+    <xmx:chnbXVTa241nWOIGbSkcOofyHnWPMpwiHigLyW5gqjdzcGFmJ7td9w>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C6CC6E00A2; Sun, 24 Nov 2019 18:59:46 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <e4d49ccb-8b83-4c85-9be1-48d77c0000e2@www.fastmail.com>
+In-Reply-To: <a600a526-2f11-4a37-b4f3-8f53c533db02@www.fastmail.com>
+References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
+ <1573244313-9190-7-git-send-email-eajames@linux.ibm.com>
+ <a600a526-2f11-4a37-b4f3-8f53c533db02@www.fastmail.com>
+Date:   Mon, 25 Nov 2019 10:31:13 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     linux-aspeed@lists.ozlabs.org, "Joel Stanley" <joel@jms.id.au>,
+        maz@kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
+        tglx@linutronix.de, "Rob Herring" <robh+dt@kernel.org>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/12] drivers/soc: Add Aspeed XDMA Engine Driver
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GURF76nV68Qoxv_unG2o0iq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+> > +static int aspeed_xdma_remove(struct platform_device *pdev)
+> > +{
+> > +	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
+> > +
+> > +	gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
+> > +		      XDMA_CMDQ_SIZE);
+> 
+> You've used devm_gen_pool_create(), so no need to explicitly free it.
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+Sorry, disregard that, brain-fart.
 
-  kernel/bpf/syscall.c
-
-between commit:
-
-  84bb46cd6228 ("Revert "bpf: Emit audit messages upon successful prog load=
- and unload"")
-
-from the net-next tree and commit:
-
-  8793e6b23b1e ("bpf: Move bpf_free_used_maps into sleepable section")
-
-from the bpf-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc kernel/bpf/syscall.c
-index 4ae52eb05f41,bb002f15b32a..000000000000
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@@ -23,14 -23,16 +23,15 @@@
-  #include <linux/timekeeping.h>
-  #include <linux/ctype.h>
-  #include <linux/nospec.h>
- -#include <linux/audit.h>
-  #include <uapi/linux/btf.h>
- =20
-- #define IS_FD_ARRAY(map) ((map)->map_type =3D=3D BPF_MAP_TYPE_PROG_ARRAY =
-|| \
-- 			   (map)->map_type =3D=3D BPF_MAP_TYPE_PERF_EVENT_ARRAY || \
-- 			   (map)->map_type =3D=3D BPF_MAP_TYPE_CGROUP_ARRAY || \
-- 			   (map)->map_type =3D=3D BPF_MAP_TYPE_ARRAY_OF_MAPS)
-+ #define IS_FD_ARRAY(map) ((map)->map_type =3D=3D BPF_MAP_TYPE_PERF_EVENT_=
-ARRAY || \
-+ 			  (map)->map_type =3D=3D BPF_MAP_TYPE_CGROUP_ARRAY || \
-+ 			  (map)->map_type =3D=3D BPF_MAP_TYPE_ARRAY_OF_MAPS)
-+ #define IS_FD_PROG_ARRAY(map) ((map)->map_type =3D=3D BPF_MAP_TYPE_PROG_A=
-RRAY)
-  #define IS_FD_HASH(map) ((map)->map_type =3D=3D BPF_MAP_TYPE_HASH_OF_MAPS)
-- #define IS_FD_MAP(map) (IS_FD_ARRAY(map) || IS_FD_HASH(map))
-+ #define IS_FD_MAP(map) (IS_FD_ARRAY(map) || IS_FD_PROG_ARRAY(map) || \
-+ 			IS_FD_HASH(map))
- =20
-  #define BPF_OBJ_FLAG_MASK   (BPF_F_RDONLY | BPF_F_WRONLY)
- =20
-@@@ -1302,25 -1307,34 +1306,6 @@@ static int find_prog_type(enum bpf_prog
-  	return 0;
-  }
- =20
-- /* drop refcnt on maps used by eBPF program and free auxilary data */
-- static void free_used_maps(struct bpf_prog_aux *aux)
-- {
-- 	enum bpf_cgroup_storage_type stype;
-- 	int i;
- -enum bpf_event {
- -	BPF_EVENT_LOAD,
- -	BPF_EVENT_UNLOAD,
- -};
---
-- 	for_each_cgroup_storage_type(stype) {
-- 		if (!aux->cgroup_storage[stype])
-- 			continue;
-- 		bpf_cgroup_storage_release(aux->prog,
-- 					   aux->cgroup_storage[stype]);
-- 	}
- -static const char * const bpf_event_audit_str[] =3D {
- -	[BPF_EVENT_LOAD]   =3D "LOAD",
- -	[BPF_EVENT_UNLOAD] =3D "UNLOAD",
- -};
---
-- 	for (i =3D 0; i < aux->used_map_cnt; i++)
-- 		bpf_map_put(aux->used_maps[i]);
- -static void bpf_audit_prog(const struct bpf_prog *prog, enum bpf_event ev=
-ent)
- -{
- -	bool has_task_context =3D event =3D=3D BPF_EVENT_LOAD;
- -	struct audit_buffer *ab;
---
-- 	kfree(aux->used_maps);
- -	if (audit_enabled =3D=3D AUDIT_OFF)
- -		return;
- -	ab =3D audit_log_start(audit_context(), GFP_ATOMIC, AUDIT_BPF);
- -	if (unlikely(!ab))
- -		return;
- -	if (has_task_context)
- -		audit_log_task(ab);
- -	audit_log_format(ab, "%sprog-id=3D%u event=3D%s",
- -			 has_task_context ? " " : "",
- -			 prog->aux->id, bpf_event_audit_str[event]);
- -	audit_log_end(ab);
---}
---
-  int __bpf_prog_charge(struct user_struct *user, u32 pages)
-  {
-  	unsigned long memlock_limit =3D rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
-
---Sig_/GURF76nV68Qoxv_unG2o0iq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3bGTQACgkQAVBC80lX
-0GwZaQf8DsSv4j56gVQOhUUOsFN3X3XPlHTjfRECC5dDUHcaZO/XcM+rXalsAhYB
-3JUB1m6vzz6XPbj+R6dVnvttDLmaULKq0gh+I/S8XL0u6Z9xwwGITqWZ1VXqfTKB
-U3Jyz2sLkFngqaYbt7Ci+iUKJ/aS9E9ASWEy3coI/qX9TlWD7JIxUCw0s+TIQLy7
-BigwfBU8L8ZS3Fc0gmiawX85SwxdcjW1BdJKg7DY62E+8Spbmkao6/A+0Ful7bz1
-76uQSA2Mc4W6I9tflVoWRba8cpOy6GiO18++yuKGd92vbaQLqpXwOv2VzPWu1zfu
-ult1S3jtH1QvbNr2hvFgqqv3gDroRg==
-=oWqT
------END PGP SIGNATURE-----
-
---Sig_/GURF76nV68Qoxv_unG2o0iq--
+Andrew
