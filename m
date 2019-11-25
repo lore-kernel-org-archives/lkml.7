@@ -2,113 +2,180 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F549C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED7DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02572075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Azlhce4p"
+	by mail.kernel.org (Postfix) with ESMTP id 786E42082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574708951;
+	bh=tf1axfqXEdRY/GSmyEZH3oDNTjKvKlm98mhfFZbNYHk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=nctoOdcWJUihF85KChrnR4lFGg3DgC1kcA2IosQmDb8JSORRahfwltRGrg7h0XSDf
+	 4CwS89qAaROxRyA/GYJycvhbpMHVna9xWupv1cS6AhjUFo99y51qMZyAAOVRt2cc2I
+	 mr+Qz3nRQPU+OlLwjDPvqjY3AiRWT1NMmzr/Ij6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfKYTJG (ORCPT
+        id S1727096AbfKYTJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:09:06 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44793 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfKYTJF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:09:05 -0500
-Received: by mail-pl1-f196.google.com with SMTP id az9so6894763plb.11;
-        Mon, 25 Nov 2019 11:09:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ikkTiJJF7DyuxBpIsOZUMlx8g8P8FFkwaJYiKXyPGkU=;
-        b=Azlhce4pb1chMrQml/2O9Hb/ydwympIFo5rZug/EIB/hxnr1PPvdNLzsmrDScjvKhk
-         Nq5NK059+n067h+MGhaJDlz8p/6G8KcOpQCWKVl8rM1ULKyRDZ+/7X6+1Njl5JGrMR5g
-         9aKbWnuq9ZhQ1pRjzle4xjHqGwc47CvQU7taxtqLW40ujpmkK72XoxFyTDj6Lp1rIzn0
-         eARRfPJpuDs0LMsgj2zWNpWcaJXPZwxU62b3cPXAE8B223lCG369o/ShkjmUNV9nR9T1
-         ZTp9nzIKk1pP2xDyUfqMdStGB7tv+6mdkZFRX+s25PNiHI9fR/UPKL55ogXh1VCU44Wx
-         dKkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ikkTiJJF7DyuxBpIsOZUMlx8g8P8FFkwaJYiKXyPGkU=;
-        b=W6MkgQblyLL3jocnAHtJRCcWeVzDmPMEltrg0MITSRQ/aa4vkJHdu8Tfdg6+WDEhzG
-         WxpDwSqU9rCG2MsyqFFQTAW0LfY7umiDCL3pIFfLBW7TNdnl4E0dn56kbOmiDNRarm6X
-         XLFMfiFj0a387TU2BOKG0BnDE17yjFY8gPep5qsYFM1DHblYKVadLtIGCGYR4AzfNUQM
-         VgNyZ0FkpmQuFTZlUAOpy0xKwq+Xvlor4EceO+mOV6CQqFWS+WjTpPrmowEOgaChT87F
-         9p+UUp+bO++dNtfE8exNSdf0PXWGd5+O6/hHqSLPJgUB9SxOafyeaYqCuxWw6Km9liGw
-         UDCw==
-X-Gm-Message-State: APjAAAX4JuqyPglOR2lXEhXXbm6gUeGsIMR0VorDSSIEZxjYM79EhisW
-        NviJ66BHFulp8KvcssbDkHzdxdPvGUgBOIC033Y=
-X-Google-Smtp-Source: APXvYqxdIMRqrIG6lbt22pFjiANsAscQpsPrJ9lvBLoBB04bsEreQiS1atTxsz6l1qN/h2K5PDmCfPmB5QPkSgEpBWw=
-X-Received: by 2002:a17:90a:1b0e:: with SMTP id q14mr631126pjq.132.1574708944081;
- Mon, 25 Nov 2019 11:09:04 -0800 (PST)
+        Mon, 25 Nov 2019 14:09:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfKYTJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 14:09:10 -0500
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FC12071E;
+        Mon, 25 Nov 2019 19:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574708948;
+        bh=tf1axfqXEdRY/GSmyEZH3oDNTjKvKlm98mhfFZbNYHk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=J2ijnbMBCQbSlPJnQk34IRKwaRZVgYrKT0hZqMNt0ofNXpngQ8NawFe/iRU+9x/VI
+         WA5y4sQu28T8fBq2ajuTQc/SEdNqOEk9frTjf17S+l531k2vlHie1fJ7KVLEtDJBeq
+         RpOJs4yx1t7WZxYnUJmDCcE9gt6BEYaKc3sdHu7A=
+Date:   Mon, 25 Nov 2019 11:09:07 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: [GIT PULL] iomap: new code for 5.5
+Message-ID: <20191125190907.GN6219@magnolia>
 MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
- <1574604530-9024-9-git-send-email-akinobu.mita@gmail.com> <CAHp75Vc6e8xq==QGtEX0MGLoV8QCGQf+vP0x-SauNHyjveZrnQ@mail.gmail.com>
- <CAC5umyiMoByGhd6b2xWA4SLO1Lcn2+ag-yEgw6uirsCmj37mkQ@mail.gmail.com>
-In-Reply-To: <CAC5umyiMoByGhd6b2xWA4SLO1Lcn2+ag-yEgw6uirsCmj37mkQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Nov 2019 21:08:54 +0200
-Message-ID: <CAHp75VfJ_+aTYWM6JXtENAD1=DbZwTaVELjDwP=aXnxtR_bHPQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] thermal: remove kelvin to/from Celsius conversion
- helpers from <linux/thermal.h>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 4:40 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
-:
-> 2019=E5=B9=B411=E6=9C=8825=E6=97=A5(=E6=9C=88) 5:00 Andy Shevchenko <andy=
-.shevchenko@gmail.com>:
-> > On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> w=
-rote:
+Hi Linus,
 
-> > > DECI_KELVIN_TO_MILLICELSIUS_WITH_OFFSET() is only used by ACPI therma=
-l
-> > > zone driver and the usage is specific to the driver.  So this macro
-> > > is moved to the ACPI thermal driver rather than generic header.
-> >
-> > I didn't get this point. If we split all helpers, let's do it for all,
-> > and not spreading macro per driver.
->
-> OK, I'll add deci_kelvin_to_millicelsius_with_offset() in the header.
+Please pull this series containing all the new iomap code for 5.5.  In
+this release, we hoisted as much of XFS' writeback code into iomap as
+was practicable, refactored the unshare file data function, added the
+ability to perform buffered io copy on write, and tweaked various parts
+of the directio implementation as needed to port ext4's directio code
+(that will be a separate pull).
 
-Thank you.
+The branch merges cleanly against this morning's HEAD and survived a few
+days' worth of xfstests.  The merge was completely straightforward, so
+please let me know if you run into anything weird.  I think there'll be
+a second pull request in a week with a few more small cleanups that have
+trickled in.
 
-> But the unit of 'offset' argument will be in millidegree instead of
-> decidegree, because it's a bit more generic.
+--D
 
-It's fine as long as the helpers are consolidated and consistent.
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
 
---=20
-With Best Regards,
-Andy Shevchenko
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.5-merge-11
+
+for you to fetch changes up to 419e9c38aa075ed0cd3c13d47e15954b686bcdb6:
+
+  iomap: Fix pipe page leakage during splicing (2019-11-22 08:36:02 -0800)
+
+----------------------------------------------------------------
+New code for 5.5:
+- Make iomap_dio_rw callers explicitly tell us if they want us to wait
+- Port the xfs writeback code to iomap to complete the buffered io
+  library functions
+- Refactor the unshare code to share common pieces
+- Add support for performing copy on write with buffered writes
+- Other minor fixes
+- Fix unchecked return in iomap_bmap
+- Fix a type casting bug in a ternary statement in iomap_dio_bio_actor
+- Improve tracepoints for easier diagnostic ability
+- Fix pipe page leakage in directio reads
+
+----------------------------------------------------------------
+Andreas Gruenbacher (1):
+      iomap: Fix overflow in iomap_page_mkwrite
+
+Christoph Hellwig (20):
+      xfs: initialize iomap->flags in xfs_bmbt_to_iomap
+      xfs: set IOMAP_F_NEW more carefully
+      xfs: use a struct iomap in xfs_writepage_ctx
+      xfs: refactor the ioend merging code
+      xfs: turn io_append_trans into an io_private void pointer
+      xfs: remove the fork fields in the writepage_ctx and ioend
+      iomap: zero newly allocated mapped blocks
+      iomap: lift common tracing code from xfs to iomap
+      iomap: lift the xfs writeback code to iomap
+      iomap: warn on inline maps in iomap_writepage_map
+      iomap: move struct iomap_page out of iomap.h
+      iomap: cleanup iomap_ioend_compare
+      iomap: pass a struct page to iomap_finish_page_writeback
+      iomap: better document the IOMAP_F_* flags
+      iomap: remove the unused iomap argument to __iomap_write_end
+      iomap: always use AOP_FLAG_NOFS in iomap_write_begin
+      iomap: ignore non-shared or non-data blocks in xfs_file_dirty
+      iomap: move the zeroing case out of iomap_read_page_sync
+      iomap: use write_begin to read pages to unshare
+      iomap: renumber IOMAP_HOLE to 0
+
+Darrick J. Wong (3):
+      iomap: enhance writeback error message
+      iomap: iomap_bmap should check iomap_apply return value
+      iomap: trace iomap_appply results
+
+Dave Chinner (1):
+      iomap: iomap that extends beyond EOF should be marked dirty
+
+Goldwyn Rodrigues (1):
+      iomap: use a srcmap for a read-modify-write I/O
+
+Jan Kara (3):
+      iomap: Allow forcing of waiting for running DIO in iomap_dio_rw()
+      xfs: Use iomap_dio_rw to wait for unaligned direct IO
+      iomap: Fix pipe page leakage during splicing
+
+Jan Stancek (1):
+      iomap: fix return value of iomap_dio_bio_actor on 32bit systems
+
+Joseph Qi (1):
+      fs/iomap: remove redundant check in iomap_dio_rw()
+
+ fs/dax.c                 |  13 +-
+ fs/ext2/inode.c          |   2 +-
+ fs/ext4/inode.c          |   2 +-
+ fs/gfs2/bmap.c           |   3 +-
+ fs/gfs2/file.c           |   6 +-
+ fs/iomap/Makefile        |  16 +-
+ fs/iomap/apply.c         |  32 +-
+ fs/iomap/buffered-io.c   | 756 +++++++++++++++++++++++++++++++++++++++++------
+ fs/iomap/direct-io.c     |  24 +-
+ fs/iomap/fiemap.c        |  10 +-
+ fs/iomap/seek.c          |   4 +-
+ fs/iomap/swapfile.c      |   3 +-
+ fs/iomap/trace.c         |  12 +
+ fs/iomap/trace.h         | 191 ++++++++++++
+ fs/xfs/libxfs/xfs_bmap.c |  14 +-
+ fs/xfs/libxfs/xfs_bmap.h |   3 +-
+ fs/xfs/xfs_aops.c        | 754 ++++++++--------------------------------------
+ fs/xfs/xfs_aops.h        |  17 --
+ fs/xfs/xfs_file.c        |  13 +-
+ fs/xfs/xfs_iomap.c       |  51 +++-
+ fs/xfs/xfs_iomap.h       |   2 +-
+ fs/xfs/xfs_pnfs.c        |   2 +-
+ fs/xfs/xfs_reflink.c     |   2 +-
+ fs/xfs/xfs_super.c       |  11 +-
+ fs/xfs/xfs_trace.h       |  65 ----
+ include/linux/iomap.h    | 129 +++++---
+ 26 files changed, 1215 insertions(+), 922 deletions(-)
+ create mode 100644 fs/iomap/trace.c
+ create mode 100644 fs/iomap/trace.h
