@@ -7,67 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294C5C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2FDC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020D3207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BEE207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jY4XKY/9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pSp7Ol94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfKYN7x (ORCPT
+        id S1727968AbfKYN75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:59:53 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33878 "EHLO
+        Mon, 25 Nov 2019 08:59:57 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36151 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbfKYN7x (ORCPT
+        with ESMTP id S1727947AbfKYN7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:59:53 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l28so11134429lfj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 05:59:51 -0800 (PST)
+        Mon, 25 Nov 2019 08:59:54 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f16so11121744lfm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 05:59:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wJXgU1Ng7cyLAs4JFhWANoeuEktL+F9+1MeqR48Alzc=;
-        b=jY4XKY/91dQiNFPe3L28KbxvxKBrbFtLaZUgSfddAtxodbkHZ/5fHWRIsna8DA7F5H
-         miUjEE5uOvc5q98pK6uq7K1CFVeJNxQVGYLF/8tUhfoBQFknfL42uEI3ux8tT8A5SJkE
-         suN+xr+gBO5ofHQDROHoK47oIsE6kTvX5JFZ6+toL498YiRRb8hI9KaVo0gj3KUYIu/c
-         VW/lgGSdP6dhTZ6H4lT2ERz58FjnvUYva+MBYjt+j78jMD0l71zjGKD4vK0IZm/7vdJc
-         hBlSiFQvqSMgCDISmW/RItDQrV9pPchpHpmY89mzDj/9+HBCY6m5NFfi09aA3iJlDMRz
-         9I9g==
+        bh=YXy+WuvOjN2rxo0woDxe37oYVujdXQVJsXHamcAJo8s=;
+        b=pSp7Ol94mVOT8XSa+yWvPEG7xUJEajtbNYMQyAaZdDVkeRekCsbedXVcnvPoSUieBn
+         P/tLgljfOm7z0c6wH2TS8UMcwLqPFrPDehoM8jVdnnKgc5w77nQdjnB12JytOPc3nA6Q
+         YFbGrKPyq2H15ektCpj8/4MeEJKfOsbPJ87kXqS5OA/cjTkSA/UFHxDEGF6B1DHwe81m
+         GX0fEADDRQHmsdsyhIdT8PmmO9eIXM6DFb0kaYuoPvswX1QUh0EssgW2gXcK+Kqo5ObC
+         +gqngfzNrQqNpk0Ff9kgQoOKZ4mkBd3aJbWNUQUDS/tDesp/kYgGJf8/WgST3sutuVof
+         BqLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wJXgU1Ng7cyLAs4JFhWANoeuEktL+F9+1MeqR48Alzc=;
-        b=nu9+nztBjWM1QNryQ+K+fzMnTEU0ZYXks67xLJGojEJsPFWUxhRgKwIdwquc+J4wo9
-         JB48TPZIw8V81SS68bYXxfdcMrHsy/AqgBzocd9t4BwYhhCpTzB6pUz/cIG/ysWnbZ79
-         Zxq3k3Umc/orgUU1xtiuDptGBuPdNQP2kGp7C4QP0Yp5aYXU1Eywn/6nkYv0TMU66Aq1
-         DnPnY7Z6FSU7hKFZ7acQXerNbfaJHGCVjGxZw+cxmj3oQafPQHOV+df5xZMZHdUghF0W
-         E7pNpe216qts9MeYNvMJAUBbxMK4EZ0vk5hdULsoQIISBn5FQRa5mmaBkH9uASTXV6tP
-         J5iA==
-X-Gm-Message-State: APjAAAUBN87zYuaph49kEI0GJuWo1npfQBz4LPrvbsan6mzCf8hb8EBD
-        4y08guccaLk4Erpov9w/ITc3CA==
-X-Google-Smtp-Source: APXvYqz3x/As1OKwSedf76XPDYruYgbzSqZRbTQCUjUICqB818J+1El2T/CtYyY7mD7TaivthOYGaA==
-X-Received: by 2002:ac2:5a08:: with SMTP id q8mr20791341lfn.106.1574690390726;
-        Mon, 25 Nov 2019 05:59:50 -0800 (PST)
+        bh=YXy+WuvOjN2rxo0woDxe37oYVujdXQVJsXHamcAJo8s=;
+        b=nagx4kVViE7+I8yY1/LfZC7eCqbjknEolUSds8Ov3pq21BmGzT/32l+SNIi4fLgv1u
+         tJixgStJi0wmJUKDww2tkR5ga3OpRwvkAxf7OpQXPP/klxmqol+lNaCKeLPcIqtjMzYe
+         99bnEE7wXcJX4UpC4YRV/DojYCiNlnnS1capRF6GS+6WWEjT5lUuEPDqw0H3cUrWbMGj
+         0cEYFFLY2u0CQ5nN9NCc99HaykiKBBfgkvBmiEU8REFFTF4KaGNzpYJq7Kk7QILvcNEp
+         JSVpYUvefmud4fA0GBeD38EEmCz0ot8EvK96INovCzLMjHoepF3lKX68jOh5JDDhXGv9
+         7I4w==
+X-Gm-Message-State: APjAAAWS0PkMCmBf2sUpNK50nQOhh4I74+o+I+DWcr2PXi3IjuWibivn
+        Jkq5kH2qaSGpUyag/zXopBqAwg==
+X-Google-Smtp-Source: APXvYqyPjIvoOQFy64CzwfgIBIRTJ2G/GgebuJdA8M/WZlUJOpD7akE7Mk5euVGlZgzV+RlHm5XUBQ==
+X-Received: by 2002:a19:7d02:: with SMTP id y2mr19657341lfc.86.1574690392148;
+        Mon, 25 Nov 2019 05:59:52 -0800 (PST)
 Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
-        by smtp.gmail.com with ESMTPSA id g11sm3688529lfb.94.2019.11.25.05.59.49
+        by smtp.gmail.com with ESMTPSA id g11sm3688529lfb.94.2019.11.25.05.59.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 05:59:50 -0800 (PST)
+        Mon, 25 Nov 2019 05:59:51 -0800 (PST)
 From:   Niklas Cassel <niklas.cassel@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
+        sboyd@kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/7] clk: qcom: apcs-msm8916: silently error out on EPROBE_DEFER
-Date:   Mon, 25 Nov 2019 14:59:08 +0100
-Message-Id: <20191125135910.679310-7-niklas.cassel@linaro.org>
+Subject: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to specify the parent
+Date:   Mon, 25 Nov 2019 14:59:09 +0100
+Message-Id: <20191125135910.679310-8-niklas.cassel@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191125135910.679310-1-niklas.cassel@linaro.org>
 References: <20191125135910.679310-1-niklas.cassel@linaro.org>
@@ -78,35 +76,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Allow accessing the parent clock names required for the driver
+operation by using the device tree node, while falling back to
+the previous method of using names in the global name space.
 
-If devm_clk_get() fails due to probe deferral, we shouldn't print an
-error message. Just be silent in this case.
+This permits extending the driver to other platforms without having to
+modify its source code.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
 Changes since v2:
--New patch. (This change was previously part of another
-patch in this series.)
+-Use clk_parent_data when specifying clock parents.
 
- drivers/clk/qcom/apcs-msm8916.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/qcom/apcs-msm8916.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8916.c
-index a6c89a310b18..46061b3d230e 100644
+index 46061b3d230e..bb91644edc00 100644
 --- a/drivers/clk/qcom/apcs-msm8916.c
 +++ b/drivers/clk/qcom/apcs-msm8916.c
-@@ -79,7 +79,8 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 	a53cc->pclk = devm_clk_get(parent, NULL);
- 	if (IS_ERR(a53cc->pclk)) {
- 		ret = PTR_ERR(a53cc->pclk);
--		dev_err(dev, "failed to get clk: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clk: %d\n", ret);
- 		return ret;
- 	}
+@@ -19,9 +19,9 @@
+ 
+ static const u32 gpll0_a53cc_map[] = { 4, 5 };
+ 
+-static const char * const gpll0_a53cc[] = {
+-	"gpll0_vote",
+-	"a53pll",
++static const struct clk_parent_data pdata[] = {
++	{ .fw_name = "aux", .name = "gpll0_vote", },
++	{ .fw_name = "pll", .name = "a53pll", },
+ };
+ 
+ /*
+@@ -51,6 +51,19 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+ 	struct clk_init_data init = { };
+ 	int ret = -ENODEV;
+ 
++	/*
++	 * This driver is defined by the devicetree binding
++	 * Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt,
++	 * however, this driver is registered as a platform device by
++	 * qcom-apcs-ipc-mailbox.c. Because of this, when this driver
++	 * uses dev_get_regmap() and devm_clk_get(), it has to send the parent
++	 * device as argument.
++	 * When registering with the clock framework, we cannot use this trick,
++	 * since the clock framework always looks at dev->of_node when it tries
++	 * to find parent clock names using clk_parent_data.
++	 */
++	dev->of_node = parent->of_node;
++
+ 	regmap = dev_get_regmap(parent, NULL);
+ 	if (!regmap) {
+ 		dev_err(dev, "failed to get regmap: %d\n", ret);
+@@ -62,8 +75,8 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	init.name = "a53mux";
+-	init.parent_names = gpll0_a53cc;
+-	init.num_parents = ARRAY_SIZE(gpll0_a53cc);
++	init.parent_data = pdata;
++	init.num_parents = ARRAY_SIZE(pdata);
+ 	init.ops = &clk_regmap_mux_div_ops;
+ 	init.flags = CLK_SET_RATE_PARENT;
  
 -- 
 2.23.0
