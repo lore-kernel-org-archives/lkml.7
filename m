@@ -2,182 +2,132 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A055DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62704C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F142053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3382053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:55:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LH5T5OE6"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bqPrtHOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfKYMyK (ORCPT
+        id S1727555AbfKYMzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:54:10 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55970 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726926AbfKYMyJ (ORCPT
+        Mon, 25 Nov 2019 07:55:35 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57075 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfKYMze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:54:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574686448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=iRxRQELuN94CvU53t48FEHCDA62GPIy2JK0S4shzCn4=;
-        b=LH5T5OE69Vdyr4xPD34PDh3OgSVYnYJ70MGkmXiJn9qbivlf42FDeARshLrVJyaLfCngHI
-        9WKQWINBGTqxerG1ctwWRuCz2bh/AGZTgJ47tqLKGV2pmyTw9UemwYRpj9I6k0MYsNsDGh
-        R/zUZEPw0EG7YubiYMOk+SBLHB0nDqM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-KXsqlLjLNnyH22xgBNIFRA-1; Mon, 25 Nov 2019 07:54:04 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B64181870618;
-        Mon, 25 Nov 2019 12:54:03 +0000 (UTC)
-Received: from rules.brq.redhat.com (unknown [10.40.205.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A318600C6;
-        Mon, 25 Nov 2019 12:53:55 +0000 (UTC)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Cochran <richardcochran@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vdronov@redhat.com
-Subject: [PATCH] fs: fix use-after-free in __fput() when a chardev is removed but a file is still open
-Date:   Mon, 25 Nov 2019 13:53:42 +0100
-Message-Id: <20191125125342.6189-1-vdronov@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: KXsqlLjLNnyH22xgBNIFRA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 07:55:34 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191125125532euoutp0289ce3bfd4f35a727edb22924cfe78aec~aaQ7oX-yZ2673726737euoutp02G
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 12:55:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191125125532euoutp0289ce3bfd4f35a727edb22924cfe78aec~aaQ7oX-yZ2673726737euoutp02G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574686532;
+        bh=ftxI01Ir5QOSE0yFjamiErgIm7/ovyX5nxQuBtdP5cw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=bqPrtHOaE/x/sBIo4oZKGXi5cOfhIdIW0bG6sKni9YURMK1cCeA+RDBzKqa2yTcMq
+         0pMaiO06UujJ7qStnCBt5Q4qTl4NffTZ2hlWrOkshOnwGNCWA0vwF/52wBuprJOeIH
+         OMt/S9uv/Ehd6PMS1ISA0G7qEoW5W0zCIjPArJ1E=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191125125532eucas1p2f1d0e2fbcbda0dcebcf4dd700a914a1b~aaQ7SXxYZ1938019380eucas1p2C;
+        Mon, 25 Nov 2019 12:55:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id E3.06.60679.44FCBDD5; Mon, 25
+        Nov 2019 12:55:32 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191125125531eucas1p17f4044301903eeafe56865ed63738798~aaQ664Zur0061800618eucas1p12;
+        Mon, 25 Nov 2019 12:55:31 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191125125531eusmtrp2e21a5caa7be2f67b6efbfb5c0525e28c~aaQ66POov0412704127eusmtrp2P;
+        Mon, 25 Nov 2019 12:55:31 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-95-5ddbcf443d57
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8C.58.07950.34FCBDD5; Mon, 25
+        Nov 2019 12:55:31 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191125125531eusmtip270dda46411723c7d5e2ea5cf79c1dc55~aaQ6WUQVQ0169101691eusmtip2K;
+        Mon, 25 Nov 2019 12:55:31 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] arm: exynos_config: Restore debugfs support
+Date:   Mon, 25 Nov 2019 13:55:15 +0100
+Message-Id: <20191125125515.30795-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsWy7djPc7ou52/HGjxpYrHYOGM9q8X58xvY
+        LS7vmsNmMeP8PiaLtUfuslvs63jAZPH81VlmB3aPFYv2snu07LvF7rFpVSebR9+WVYwenzfJ
+        BbBGcdmkpOZklqUW6dslcGV0bWxjLHjIVrF02V/mBsZXrF2MnBwSAiYSTxavY+ti5OIQEljB
+        KLHlRB8LhPOFUeL69ZlQzmdGiYuflrPAtNw53wOVWM4o0dPxgx0kAday4m08iM0mYCjR9baL
+        DcQWEXCWaJjayATSwCzwiFHiz87rQA4Hh7CAjcTOZXYgNSwCqhJfuxrYQcK8ArYS3e1pELvk
+        JVZvOMAM0iohcJtN4uu3l8wQCReJ3xfPskHYwhKvjm9hh7BlJP7vnM8E0dDMKPHw3Fp2CKeH
+        UeJy0wxGiCpricPHL7KCbGMW0JRYv0sfIuwocexiE1hYQoBP4sZbQZAwM5A5adt0Zogwr0RH
+        mxBEtZrErOPr4NYevHAJ6jQPiZYrJ1ggQRIr8aZrHfMERrlZCLsWMDKuYhRPLS3OTU8tNspL
+        LdcrTswtLs1L10vOz93ECEwFp/8d/7KDcdefpEOMAhyMSjy8P87ejhViTSwrrsw9xCjBwawk
+        wut29kasEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalFMFkmDk6pBkbD
+        R3kvFbm40xXMns5QPPYgXerb84eP4i8UcXi/qDe2c//70JrhRUG1T3fzJJH2jNrw3edmFT9b
+        581ufUFk24c3Gbv5l0y79mRPV1WfluWB0yUTzm5J+GIfwPZ+BpfVh34rq/R/rj9KCg/sr+ud
+        1dY3v0zuY4dQ4UzFZ1kiFY/Ld6x1/GbOr6fEUpyRaKjFXFScCAAoxsDQAQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsVy+t/xe7rO52/HGrzr1bTYOGM9q8X58xvY
+        LS7vmsNmMeP8PiaLtUfuslvs63jAZPH81VlmB3aPFYv2snu07LvF7rFpVSebR9+WVYwenzfJ
+        BbBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GV0
+        bWxjLHjIVrF02V/mBsZXrF2MnBwSAiYSd873sHQxcnEICSxllPjX1c8OkZCRODmtAapIWOLP
+        tS42iKJPjBJLXv5iBEmwCRhKdL0FSXByiAi4Shxa0csMUsQs8IRR4tS680BFHBzCAjYSO5fZ
+        gdSwCKhKfO1qYAcJ8wrYSnS3p0HMl5dYveEA8wRGngWMDKsYRVJLi3PTc4uN9IoTc4tL89L1
+        kvNzNzECQ3DbsZ9bdjB2vQs+xCjAwajEw/vj7O1YIdbEsuLK3EOMEhzMSiK8bmdvxArxpiRW
+        VqUW5ccXleakFh9iNAXaPZFZSjQ5HxgfeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1Kz
+        U1MLUotg+pg4OKUaGAPvCu0SOMqsPWVhU/q7sgtnpN9vtP6YcW1h1sIpDpk3fqw7ddLJR+y3
+        rrDKScHg/mshXLeNXpTOCOlJ/Tt16sGECcVh36wMfp+Y53ajV3KHgabSNL9fwuZZqWciny48
+        8miBpmXBP9l9T1mS3Wtkbz/i/hCte/G4fOz/MvZP7OaHnTl7l5y/pqLEUpyRaKjFXFScCABF
+        PV2nVwIAAA==
+X-CMS-MailID: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+References: <CGME20191125125531eucas1p17f4044301903eeafe56865ed63738798@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a case when a chardev file (like /dev/ptp0) is open but an underlying
-device is removed, closing this file leads to a use-after-free. This
-reproduces easily in a KVM virtual machine:
+Commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
+removed the dependency between DEBUG_FS and TRACING, so DEBUG_FS is no
+longer enabled in default builds. Enable it again manually, as it provides
+a lots of useful data for automated testing tools.
 
-# cat openptp0.c
-int main() { ... fp =3D fopen("/dev/ptp0", "r"); ... sleep(10); }
-
-# uname -r
-5.4.0-219d5433
-# cat /proc/cmdline
-... slub_debug=3DFZP
-# modprobe ptp_kvm
-# ./openptp0 &
-[1] 670
-opened /dev/ptp0, sleeping 10s...
-# rmmod ptp_kvm
-# ls /dev/ptp*
-ls: cannot access '/dev/ptp*': No such file or directory
-# ...woken up
-[  102.375849] general protection fault: 0000 [#1] SMP
-[  102.377372] CPU: 1 PID: 670 Comm: openptp0 Not tainted 5.4.0-219d5433 #1
-[  102.379163] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), ...
-[  102.381129] RIP: 0010:module_put.part.0+0x7/0x80
-[  102.383019] RSP: 0018:ffff9ba440687e00 EFLAGS: 00010202
-[  102.383451] RAX: 0000000000002000 RBX: 6b6b6b6b6b6b6b6b RCX: ffff91e7368=
-00ad0
-[  102.384030] RDX: ffffcf6408bc2808 RSI: 0000000000000247 RDI: 6b6b6b6b6b6=
-b6b6b
-[  102.386032] ...                                              ^^^ a slub =
-poison
-[  102.389866] Call Trace:
-[  102.390086]  __fput+0x21f/0x240
-[  102.390363]  task_work_run+0x79/0x90
-[  102.390671]  do_exit+0x2c9/0xad0
-[  102.390931]  ? vfs_write+0x16a/0x190
-[  102.391241]  do_group_exit+0x35/0x90
-[  102.391549]  __x64_sys_exit_group+0xf/0x10
-[  102.391898]  do_syscall_64+0x3d/0x110
-[  102.392240]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  102.392695] RIP: 0033:0x7f0fa7016246
-[  102.396615] ...
-[  102.397225] Modules linked in: [last unloaded: ptp_kvm]
-[  102.410323] Fixing recursive fault but reboot is needed!
-
-This happens in:
-
-static void __fput(struct file *file)
-{   ...
-    if (file->f_op->release)
-        file->f_op->release(inode, file); <<< cdev is kfree'd here
-    if (unlikely(S_ISCHR(inode->i_mode) && inode->i_cdev !=3D NULL &&
-             !(mode & FMODE_PATH))) {
-        cdev_put(inode->i_cdev); <<< cdev fields are accessed here
-
-because of:
-
-__fput()
-  posix_clock_release()
-    kref_put(&clk->kref, delete_clock) <<< the last reference
-      delete_clock()
-        delete_ptp_clock()
-          kfree(ptp) <<< cdev is embedded in ptp
-  cdev_put
-    module_put(p->owner) <<< *p is kfree'd
-
-The fix is to call cdev_put() before file->f_op->release(). This fix the
-class of bugs when a chardev device is removed when its file is open, for
-example:
-
-# lspci
-00:09.0 System peripheral: Intel Corporation 6300ESB Watchdog Timer
-# ./openwdog0 &
-[1] 672
-opened /dev/watchdog0, sleeping 10s...
-# echo 1 > /sys/devices/pci0000:00/0000:00:09.0/remove
-# ls /dev/watch*
-ls: cannot access '/dev/watch*': No such file or directory
-# ...woken up
-[   63.500271] general protection fault: 0000 [#1] SMP
-[   63.501757] CPU: 1 PID: 672 Comm: openwdog0 Not tainted 5.4.0-219d5433 #=
-4
-[   63.503605] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), ...
-[   63.507064] RIP: 0010:module_put.part.0+0x7/0x80
-[   63.513841] RSP: 0018:ffffb96b00667e00 EFLAGS: 00010202
-[   63.515376] RAX: 0000000000002000 RBX: 6b6b6b6b6b6b6b6b RCX: 00000000001=
-50013
-[   63.517478] RDX: 0000000000000246 RSI: 0000000000000000 RDI: 6b6b6b6b6b6=
-b6b6b
-
-Analyzed-by: Stephen Johnston <sjohnsto@redhat.com>
-Analyzed-by: Vern Lovejoy <vlovejoy@redhat.com>
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- fs/file_table.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/configs/exynos_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 30d55c9a1744..21ba35024950 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -276,12 +276,12 @@ static void __fput(struct file *file)
- =09=09if (file->f_op->fasync)
- =09=09=09file->f_op->fasync(-1, file, 0);
- =09}
--=09if (file->f_op->release)
--=09=09file->f_op->release(inode, file);
- =09if (unlikely(S_ISCHR(inode->i_mode) && inode->i_cdev !=3D NULL &&
- =09=09     !(mode & FMODE_PATH))) {
- =09=09cdev_put(inode->i_cdev);
- =09}
-+=09if (file->f_op->release)
-+=09=09file->f_op->release(inode, file);
- =09fops_put(file->f_op);
- =09put_pid(file->f_owner.pid);
- =09if ((mode & (FMODE_READ | FMODE_WRITE)) =3D=3D FMODE_READ)
---=20
-2.20.1
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index e7e4bb5ad8d5..fde84f123fbb 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -350,6 +350,7 @@ CONFIG_PRINTK_TIME=y
+ CONFIG_DYNAMIC_DEBUG=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_MAGIC_SYSRQ=y
++CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_SOFTLOCKUP_DETECTOR=y
+ # CONFIG_DETECT_HUNG_TASK is not set
+-- 
+2.17.1
 
