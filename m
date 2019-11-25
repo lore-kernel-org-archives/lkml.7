@@ -2,126 +2,171 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75FBC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668F7C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB3820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A65620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfKYPuv (ORCPT
+        id S1728684AbfKYPuz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:50:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39607 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728592AbfKYPuv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:50:51 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iZGdP-0008Sa-Ou; Mon, 25 Nov 2019 16:50:43 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 467F51C1AF2;
-        Mon, 25 Nov 2019 16:50:43 +0100 (CET)
-Date:   Mon, 25 Nov 2019 15:50:43 -0000
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
-Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Mon, 25 Nov 2019 10:50:55 -0500
+Received: from ms.lwn.net ([45.79.88.28]:57028 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728592AbfKYPuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:50:54 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 0E7202E7;
+        Mon, 25 Nov 2019 15:50:53 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 08:50:52 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        <stable@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joe Perches <joe@perches.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steve French <stfrench@microsoft.com>,
+        Olof Johansson <olof@lixom.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Maintainer Entry Profiles
+Message-ID: <20191125085052.05cfe063@lwn.net>
+In-Reply-To: <157462918268.1729495.10257190766638995699.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157462918268.1729495.10257190766638995699.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Message-ID: <157469704311.21853.13499142066823391029.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Sun, 24 Nov 2019 12:59:42 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Commit-ID:     4a13b0e3e10996b9aa0b45a764ecfe49f6fcd360
-Gitweb:        https://git.kernel.org/tip/4a13b0e3e10996b9aa0b45a764ecfe49f6fcd360
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Sun, 24 Nov 2019 08:50:03 -08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 25 Nov 2019 09:36:47 +01:00
+> Changes since v2 [1]:
+> - Drop any consideration for coding style concerns in the profile. It
+>   was a minor aspect of the proposal that generated the bulk of the
+>   feedback on v2. Lets make progress on the rest.
+> 
+> - Clarify that the "Submit Checklist Addendum" can also include details
+>   that submitters need to take into account before even beginning to
+>   craft a patch. This is in response to the RISC-V use case of
+>   declaring specification readiness as a patch gate, and is now also used
+>   by the libnvdimm subsystem to clarify details about ACPI NVDIMM Device
+>   Specific Method specifications. (Paul)
+> 
+> - Non-change from v2: Kees had asked for a common directory for all
+>   profiles to live, but Mauro noted that this could be handled later
+>   with some scripting to post-process the MAINTAINERS file, or otherwise
+>   converting MAINTAINERS to ReST.
+> 
+> - Clarify the cover letter to focus on the contributor focused
+>   Maintainer Entry Profiles, and defer discussion of a maintainer
+>   focused Handbook.
 
-x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
+OK, some notes...
 
-UNWIND_ESPFIX_STACK needs to read the GDT, and the GDT mapping that
-can be accessed via %fs is not mapped in the user pagetables.  Use
-SGDT to find the cpu_entry_area mapping and read the espfix offset
-from that instead.
+I wish you'd done this against docs-next, that would have saved me
+resolving a few conflicts on the MAINTAINERS file.
 
-Reported-and-tested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+I thought we'd agreed to move this to the process book?  That said, I now
+wonder about that...today I read the document as information for
+maintainers on how to create their profile, so its location in the
+maintainers manual is appropriate.
+
+There were a number RST issues and warnings that I fixed up with the
+following add-on patch; it was mostly a matter of adding blank lines where
+needed.
+
+One other warning resulted from the nvdimm profile document not being
+linked into the TOC tree.  I've added a TOC section to the new document to
+bring these things together for now.  This is almost certainly not what we
+want in the longer term.
+
+It was tempting to ask for this stuff to be fixed up, but I didn't want to
+delay this work any longer.  So it's applied to docs-next; unless something
+explodes in the very near future, I intend to push this for 5.5.
+
+Thanks,
+
+jon
+
+From 0bfa52a43ec085c2f5eb2c35fcc6cf73bb802eae Mon Sep 17 00:00:00 2001
+From: Jonathan Corbet <corbet@lwn.net>
+Date: Mon, 25 Nov 2019 08:42:12 -0700
+Subject: [PATCH 2/2] docs: fix up the maintainer profile document
+
+Add blank lines where needed to get the document to render properly.  Also
+add a TOC of existing profiles just so that the nvdimm profile is linked
+into the toctree, is discoverable, and doesn't generate a warning.
+
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 ---
- arch/x86/entry/entry_32.S | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ .../maintainer/maintainer-entry-profile.rst       | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 0b8c931..f07baf0 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -415,7 +415,8 @@
+diff --git a/Documentation/maintainer/maintainer-entry-profile.rst b/Documentation/maintainer/maintainer-entry-profile.rst
+index 51de3b9e606d..3eaddc8ac56d 100644
+--- a/Documentation/maintainer/maintainer-entry-profile.rst
++++ b/Documentation/maintainer/maintainer-entry-profile.rst
+@@ -18,7 +18,9 @@ Provide an introduction to how the subsystem operates. While MAINTAINERS
+ tells the contributor where to send patches for which files, it does not
+ convey other subsystem-local infrastructure and mechanisms that aid
+ development.
++
+ Example questions to consider:
++
+ - Are there notifications when patches are applied to the local tree, or
+   merged upstream?
+ - Does the subsystem have a patchwork instance? Are patchwork state
+@@ -55,6 +57,7 @@ be settled in soaking in linux-next in advance of the merge window
+ opening. Clarify for the submitter the key dates (in terms rc release
+ week) that patches might considered for merging and when patches need to
+ wait for the next -rc. At a minimum:
++
+ - Last -rc for new feature submissions:
+   New feature submissions targeting the next merge window should have
+   their first posting for consideration before this point. Patches that
+@@ -72,6 +75,7 @@ wait for the next -rc. At a minimum:
+   resubmit for the following merge window.
  
- .macro CHECK_AND_APPLY_ESPFIX
- #ifdef CONFIG_X86_ESPFIX32
--#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_OFFSET (GDT_ENTRY_ESPFIX_SS * 8)
-+#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + GDT_ESPFIX_OFFSET
+ Optional:
++
+ - First -rc at which the development baseline branch, listed in the
+   overview section, should be considered ready for new submissions.
  
- 	ALTERNATIVE	"jmp .Lend_\@", "", X86_BUG_ESPFIX
- 
-@@ -1147,12 +1148,26 @@ ENDPROC(entry_INT80_32)
-  * We can't call C functions using the ESPFIX stack. This code reads
-  * the high word of the segment base from the GDT and swiches to the
-  * normal stack and adjusts ESP with the matching offset.
-+ *
-+ * We might be on user CR3 here, so percpu data is not mapped and we can't
-+ * access the GDT through the percpu segment.  Instead, use SGDT to find
-+ * the cpu_entry_area alias of the GDT.
-  */
- #ifdef CONFIG_X86_ESPFIX32
- 	/* fixup the stack */
--	mov	GDT_ESPFIX_SS + 4, %al /* bits 16..23 */
--	mov	GDT_ESPFIX_SS + 7, %ah /* bits 24..31 */
-+	pushl	%ecx
-+	subl	$2*4, %esp
-+	sgdt	(%esp)
-+	movl	2(%esp), %ecx				/* GDT address */
-+	/*
-+	 * Careful: ECX is a linear pointer, so we need to force base
-+	 * zero.  %cs is the only known-linear segment we have right now.
-+	 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 4(%ecx), %al	/* bits 16..23 */
-+	mov	%cs:GDT_ESPFIX_OFFSET + 7(%ecx), %ah	/* bits 24..31 */
- 	shl	$16, %eax
-+	addl	$2*4, %esp
-+	popl	%ecx
- 	addl	%esp, %eax			/* the adjusted stack pointer */
- 	pushl	$__KERNEL_DS
- 	pushl	%eax
+@@ -85,3 +89,14 @@ section can also indicate a preferred style of update like, resend the
+ full series, or privately send a reminder email. This section might also
+ list how review works for this code area and methods to get feedback
+ that are not directly from the maintainer.
++
++Existing profiles
++-----------------
++
++For now, existing maintainer profiles are listed here; we will likely want
++to do something different in the near future.
++
++.. toctree::
++   :maxdepth: 1
++
++   ../nvdimm/maintainer-entry-profile
+-- 
+2.21.0
+
