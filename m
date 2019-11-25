@@ -2,206 +2,138 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235D7C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDE8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1D52082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625F72082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YR/avMkw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NhjnM0Hp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKYJl5 (ORCPT
+        id S1727391AbfKYJm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:41:57 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45884 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfKYJl5 (ORCPT
+        Mon, 25 Nov 2019 04:42:27 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47316 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfKYJm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:41:57 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAP9fo0H047014;
-        Mon, 25 Nov 2019 03:41:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574674910;
-        bh=BHjdmBMXCMcSGb88sm3bp+JyzgDIOeOSY4gWD4Khgwg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YR/avMkwc/DqOMGkO+XmNiAFMOwoyWsQ1tVsmD1KqwYFAzncs20ndywNuM+A3rVPE
-         u3Kzc/ZrcIXTMfhYVOqGpJRVwYRrCzg52MGOiaIKNWlUS31MiCsJh86Eg2PaC83QlC
-         28CW8ao2jSCFt0cUcItHqxE7eS5Sb8Cw4d/irp/w=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAP9foS7059430;
-        Mon, 25 Nov 2019 03:41:50 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 25
- Nov 2019 03:41:49 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 25 Nov 2019 03:41:49 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAP9fl96024639;
-        Mon, 25 Nov 2019 03:41:48 -0600
-Subject: Re: [PATCH v2] dmaengine: ti: edma: add missed operations
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191124052855.6472-1-hslester96@gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e4b05132-df91-f53d-158c-793fdfd56f25@ti.com>
-Date:   Mon, 25 Nov 2019 11:41:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 04:42:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574674945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ja91wPrXR0QYm8g6TlhyppqtMsZgwbcud4ZTrv5sIt4=;
+        b=NhjnM0HpqhZJLY31/bVW5MH+VzOX1iTaSS+qWBHdYX5UntjjmQmXUVH0E7zrP7SuVtlE/I
+        l64zPmvozu+a2937jG5YBpCPOFdk8BHlt5xvALw1Gs5+hr038rnR3x/8Cj5roFU/UrfpEO
+        4jQqiRmViIumzAkfv10DplxYgAQG334=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-7Q8qCZf6PuWtTLOInafARQ-1; Mon, 25 Nov 2019 04:42:23 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CEB8DC4B;
+        Mon, 25 Nov 2019 09:42:22 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D34E960C81;
+        Mon, 25 Nov 2019 09:42:20 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 10:42:20 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] perf record: adapt affinity to machines with
+ #CPUs > 1K
+Message-ID: <20191125094220.GC4675@krava>
+References: <fb356fe9-ac87-71ab-9845-075b3fac3199@linux.intel.com>
+ <69bd0062-0f9e-889b-b7ef-0d97d257569b@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191124052855.6472-1-hslester96@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <69bd0062-0f9e-889b-b7ef-0d97d257569b@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 7Q8qCZf6PuWtTLOInafARQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 25, 2019 at 09:08:57AM +0300, Alexey Budankov wrote:
 
+SNIP
 
-On 24/11/2019 7.28, Chuhong Yuan wrote:
-> The driver forgets to call pm_runtime_disable and pm_runtime_put_sync in
-> probe failure and remove.
-> Add the calls and modify probe failure handling to fix it.
-> 
-> To simplify the fix, the patch adjusts the calling order and merges checks
-> for devm_kcalloc.
-> 
-> Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v2:
->   - Add the missed pm_runtime_put_sync.
->   - Simplify the patch.
->   - Rebase to dma-next.
-
-Thank you,
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> 
->  drivers/dma/ti/edma.c | 37 ++++++++++++++++++++-----------------
->  1 file changed, 20 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index 756a3c951dc7..0628ee4bf1b4 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -2289,13 +2289,6 @@ static int edma_probe(struct platform_device *pdev)
->  	if (!info)
->  		return -ENODEV;
->  
-> -	pm_runtime_enable(dev);
-> -	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "pm_runtime_get_sync() failed\n");
-> -		return ret;
-> -	}
-> -
->  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->  	if (ret)
->  		return ret;
-> @@ -2326,27 +2319,31 @@ static int edma_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, ecc);
->  
-> +	pm_runtime_enable(dev);
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "pm_runtime_get_sync() failed\n");
-> +		pm_runtime_disable(dev);
-> +		return ret;
-> +	}
+> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap=
+_params *mp)
+> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_=
+params *mp)
+>  {
+> -=09CPU_ZERO(&map->affinity_mask);
+> +=09map->affinity_mask.nbits =3D cpu__max_cpu();
+> +=09map->affinity_mask.bits =3D bitmap_alloc(map->affinity_mask.nbits);
+> +=09if (!map->affinity_mask.bits)
+> +=09=09return -1;
 > +
->  	/* Get eDMA3 configuration from IP */
->  	ret = edma_setup_from_hw(dev, info, ecc);
->  	if (ret)
-> -		return ret;
-> +		goto err_disable_pm;
->  
->  	/* Allocate memory based on the information we got from the IP */
->  	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
->  					sizeof(*ecc->slave_chans), GFP_KERNEL);
-> -	if (!ecc->slave_chans)
-> -		return -ENOMEM;
->  
->  	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
->  				       sizeof(unsigned long), GFP_KERNEL);
-> -	if (!ecc->slot_inuse)
-> -		return -ENOMEM;
->  
->  	ecc->channels_mask = devm_kcalloc(dev,
->  					   BITS_TO_LONGS(ecc->num_channels),
->  					   sizeof(unsigned long), GFP_KERNEL);
-> -	if (!ecc->channels_mask)
-> -		return -ENOMEM;
-> +	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask)
-> +		goto err_disable_pm;
->  
->  	/* Mark all channels available initially */
->  	bitmap_fill(ecc->channels_mask, ecc->num_channels);
-> @@ -2388,7 +2385,7 @@ static int edma_probe(struct platform_device *pdev)
->  				       ecc);
->  		if (ret) {
->  			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
-> -			return ret;
-> +			goto err_disable_pm;
->  		}
->  		ecc->ccint = irq;
->  	}
-> @@ -2404,7 +2401,7 @@ static int edma_probe(struct platform_device *pdev)
->  				       ecc);
->  		if (ret) {
->  			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
-> -			return ret;
-> +			goto err_disable_pm;
->  		}
->  		ecc->ccerrint = irq;
->  	}
-> @@ -2412,7 +2409,8 @@ static int edma_probe(struct platform_device *pdev)
->  	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
->  	if (ecc->dummy_slot < 0) {
->  		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
-> -		return ecc->dummy_slot;
-> +		ret = ecc->dummy_slot;
-> +		goto err_disable_pm;
->  	}
->  
->  	queue_priority_mapping = info->queue_priority_mapping;
-> @@ -2512,6 +2510,9 @@ static int edma_probe(struct platform_device *pdev)
->  
->  err_reg1:
->  	edma_free_slot(ecc, ecc->dummy_slot);
-> +err_disable_pm:
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
->  	return ret;
+>  =09if (mp->affinity =3D=3D PERF_AFFINITY_NODE && cpu__max_node() > 1)
+>  =09=09build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask)=
+;
+>  =09else if (mp->affinity =3D=3D PERF_AFFINITY_CPU)
+> -=09=09CPU_SET(map->core.cpu, &map->affinity_mask);
+> +=09=09set_bit(map->core.cpu, map->affinity_mask.bits);
+> +
+> +=09return 0;
 >  }
->  
-> @@ -2542,6 +2543,8 @@ static int edma_remove(struct platform_device *pdev)
->  	if (ecc->dma_memcpy)
->  		dma_async_device_unregister(ecc->dma_memcpy);
->  	edma_free_slot(ecc, ecc->dummy_slot);
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
->  
->  	return 0;
->  }
-> 
+> =20
+> +#define MASK_SIZE 1023
+>  int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu=
+)
+>  {
+> +=09char mask[MASK_SIZE + 1] =3D {0};
 
-- Péter
+does this need to be initialized?
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +
+>  =09if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
+>  =09=09pr_debug2("failed to mmap perf event ring buffer, error %d\n",
+>  =09=09=09  errno);
+>  =09=09return -1;
+>  =09}
+> =20
+> -=09perf_mmap__setup_affinity_mask(map, mp);
+> +=09if (perf_mmap__setup_affinity_mask(map, mp)) {
+> +=09=09pr_debug2("failed to alloc mmap affinity mask, error %d\n",
+> +=09=09=09  errno);
+> +=09=09return -1;
+> +=09}
+> +=09bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, m=
+ask, MASK_SIZE);
+> +=09pr_debug2("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, =
+mask);
+
+the bitmap_scnprintf could be called only for debug case, right?
+
+=09if (version >=3D 2) {
+=09=09bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, m=
+ask, MASK_SIZE);
+=09=09pr_debug2("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, =
+mask);
+=09}
+
+ditto int the record__adjust_affinity function
+
+jirka
+
