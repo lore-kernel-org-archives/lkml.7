@@ -2,170 +2,88 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF383C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC5CC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5195207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2882D2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:38:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZJwBa6mL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfKYPhu convert rfc822-to-8bit (ORCPT
+        id S1728598AbfKYPih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:37:50 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54083 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbfKYPhu (ORCPT
+        Mon, 25 Nov 2019 10:38:37 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33627 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728587AbfKYPih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:37:50 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 74B281BF207;
-        Mon, 25 Nov 2019 15:37:46 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 16:37:45 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: mtd: Use mtd device name instead of mtd->name when registering
- nvmem device
-Message-ID: <20191125163745.26095b68@xps13>
-In-Reply-To: <20191125160503.1243f817@xps13>
-References: <1574442222-19759-1-git-send-email-christophe.kerello@st.com>
-        <20191125160503.1243f817@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 25 Nov 2019 10:38:37 -0500
+Received: by mail-lj1-f196.google.com with SMTP id t5so16438004ljk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:38:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JP9osWIZmD7xoqDPjZq0lxxN1Et7rRHogEF4lRtbdrI=;
+        b=ZJwBa6mLAtp4tfcRWLhDowPXNpk2LeIj3uvdB3sxr9+ex1gCr5J6qa0uX7+80oHn7+
+         SjhOSxogX9l7fH4YZKdCbpl93wdC5DSoJht5+ivJ7WAqyYKHMg1SvujBXbPKMp7sppMW
+         f9APlJXPYCxHa8lF+KeKsIQCkLSBByepqX/MWZoUexGjkVJgsSNHTpEPeimTipW5KFQI
+         rniH5+65ZfFmcVzJ5AoMi4KcqR/qdMQoikcHXWhLuwyvm9fsLTUiDtYfhCOxTX//npMo
+         Zt71BedVLyaLzMckk+5gQ7z79vUCiNHB1rILlTqhA8inJ1+LS8pbpi6miLMRCjp8haOe
+         uxfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JP9osWIZmD7xoqDPjZq0lxxN1Et7rRHogEF4lRtbdrI=;
+        b=HMTSAaLOiGpMoAc/ennx7/0YYtmseJ+FtQGYs0AVgtz/Z9HDL19UhHVqjT8nNj9nAX
+         4saspmVvBZMDVcbJLtU7qU0Ez4k/xKXvThv4Uyv91W+C0XP9IFKjZUhzozzMwlak8kFP
+         f+uBGF0PHXzXCum+IYdmSHTZDpw2Sy5J4qjGgEmZhjcgzkkUAo5K44BZNASGYrY/wK63
+         Lyu42KDPPL65kgCv2QpgXD9d75dlx4QLQtonntpr3HhqbPqAaH6ASpd/6vWUE+AeIcn4
+         ViYotuXpjlypi//tvPxPNGTKnbaONEmIhrBvRBvb7SIG0ZU8+hBELj8TB3DeeFm58CoF
+         UzRg==
+X-Gm-Message-State: APjAAAXldCADNZpNnr1kHgep42Jauk0CxZmNxRobCYSATDLfYTWtmnUL
+        GrNDI06eAkuGCSq2BssWZGPzF3ChB0FZvFLIZInBUg==
+X-Google-Smtp-Source: APXvYqzyAnvpCh6lNQuPZXbqWJSpuUAH5SCiLYwyha75J4nb4FqI7D3Bv+YpLUqqexRIevgopcC1EPkPCvxWl0Snjx8=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr2329267ljm.233.1574696314927;
+ Mon, 25 Nov 2019 07:38:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20191125122256.53482-1-stephan@gerhold.net> <20191125122256.53482-3-stephan@gerhold.net>
+In-Reply-To: <20191125122256.53482-3-stephan@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 Nov 2019 16:38:23 +0100
+Message-ID: <CACRpkdZ2Ph7X6kP6ngL-K65cx-9q0bfU2ug0Dde1ddEWqJSrFw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] ARM: dts: ux500: Add alternative SDI pin configs
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Mon, 25 Nov 2019
-16:05:03 +0100:
+On Mon, Nov 25, 2019 at 1:26 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-> Hi Christophe,
-> 
-> Christophe Kerello <christophe.kerello@st.com> wrote on Fri, 22 Nov
-> 2019 18:03:42 +0100:
-> 
-> > MTD currently allows to have same partition name on different devices.
-> > Since nvmen device registration has been added, it is not more possible
-> > to have same partition name on different devices. We get following
-> > logs:
-> > sysfs: cannot create duplicate filename XXX
-> > Failed to register NVMEM device
-> > 
-> > To avoid such issue, the proposed patch uses the mtd device name instead of
-> > the partition name.
-> > 
-> > Fixes: c4dfa25ab307 ("mtd: add support for reading MTD devices via the nvmem API")
-> > Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> > ---
-> > Hi,
-> > 
-> > With latest mtd-next branch, we get following logs on our STM32MP1 eval board.
-> > 
-> > [    1.979089] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xd3
-> > [    1.984055] nand: Micron MT29F8G08ABACAH4
-> > [    1.988000] nand: 1024 MiB, SLC, erase size: 256 KiB, page size: 4096, OOB size: 224
-> > [    1.996378] Bad block table found at page 262080, version 0x01
-> > [    2.001945] Bad block table found at page 262016, version 0x01
-> > [    2.008002] 4 fixed-partitions partitions found on MTD device 58002000.nand-controller
-> > [    2.015398] Creating 4 MTD partitions on "58002000.nand-controller":
-> > [    2.021751] 0x000000000000-0x000000200000 : "fsbl"
-> > [    2.028506] 0x000000200000-0x000000400000 : "ssbl1"
-> > [    2.033741] 0x000000400000-0x000000600000 : "ssbl2"
-> > [    2.038924] 0x000000600000-0x000040000000 : "UBI"
-> > [    2.051336] spi-nor spi0.0: mx66l51235l (65536 Kbytes)
-> > [    2.055123] 4 fixed-partitions partitions found on MTD device spi0.0
-> > [    2.061378] Creating 4 MTD partitions on "spi0.0":
-> > [    2.066243] 0x000000000000-0x000000040000 : "fsbl"
-> > [    2.071429] sysfs: cannot create duplicate filename '/bus/nvmem/devices/fsbl'
-> > [    2.078157] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc4-00031-g589e1b6 #176
-> > [    2.085781] Hardware name: STM32 (Device Tree Support)
-> > [    2.090957] [<c0312830>] (unwind_backtrace) from [<c030cbe4>] (show_stack+0x10/0x14)
-> > [    2.098693] [<c030cbe4>] (show_stack) from [<c0e8d340>] (dump_stack+0xb4/0xc8)
-> > [    2.105929] [<c0e8d340>] (dump_stack) from [<c050fcdc>] (sysfs_warn_dup+0x58/0x64)
-> > [    2.113509] [<c050fcdc>] (sysfs_warn_dup) from [<c0510010>] (sysfs_do_create_link_sd+0xe4/0xe8)
-> > [    2.122224] [<c0510010>] (sysfs_do_create_link_sd) from [<c0956f60>] (bus_add_device+0x80/0xfc)
-> > [    2.130938] [<c0956f60>] (bus_add_device) from [<c0953f54>] (device_add+0x35c/0x608)
-> > [    2.138697] [<c0953f54>] (device_add) from [<c0d12e0c>] (nvmem_register.part.2+0x180/0x624)
-> > [    2.147065] [<c0d12e0c>] (nvmem_register.part.2) from [<c09ea5c8>] (add_mtd_device+0x2d8/0x4b8)
-> > [    2.155776] [<c09ea5c8>] (add_mtd_device) from [<c09edbd4>] (add_mtd_partitions+0x84/0x16c)
-> > [    2.164140] [<c09edbd4>] (add_mtd_partitions) from [<c09ed9ac>] (parse_mtd_partitions+0x220/0x3c4)
-> > [    2.173118] [<c09ed9ac>] (parse_mtd_partitions) from [<c09ea8d4>] (mtd_device_parse_register+0x40/0x164)
-> > [    2.182622] [<c09ea8d4>] (mtd_device_parse_register) from [<c0a22dfc>] (spi_nor_probe+0xd0/0x190)
-> > [    2.191513] [<c0a22dfc>] (spi_nor_probe) from [<c0a370a0>] (spi_drv_probe+0x80/0xa4)
-> > [    2.199268] [<c0a370a0>] (spi_drv_probe) from [<c0957f8c>] (really_probe+0x234/0x34c)
-> > [    2.207111] [<c0957f8c>] (really_probe) from [<c095821c>] (driver_probe_device+0x60/0x174)
-> > [    2.215391] [<c095821c>] (driver_probe_device) from [<c0956378>] (bus_for_each_drv+0x58/0xb8)
-> > [    2.223932] [<c0956378>] (bus_for_each_drv) from [<c0957ce4>] (__device_attach+0xd0/0x13c)
-> > [    2.232212] [<c0957ce4>] (__device_attach) from [<c0957060>] (bus_probe_device+0x84/0x8c)
-> > [    2.240404] [<c0957060>] (bus_probe_device) from [<c0953fb4>] (device_add+0x3bc/0x608)
-> > [    2.248334] [<c0953fb4>] (device_add) from [<c0a377b4>] (spi_add_device+0x9c/0x14c)
-> > [    2.256003] [<c0a377b4>] (spi_add_device) from [<c0a37b98>] (of_register_spi_device+0x234/0x370)
-> > [    2.264807] [<c0a37b98>] (of_register_spi_device) from [<c0a384ec>] (spi_register_controller+0x578/0x734)
-> > [    2.274394] [<c0a384ec>] (spi_register_controller) from [<c0a386dc>] (devm_spi_register_controller+0x34/0x6c)
-> > [    2.284331] [<c0a386dc>] (devm_spi_register_controller) from [<c0a4d0b8>] (stm32_qspi_probe+0x338/0x3bc)
-> > [    2.293831] [<c0a4d0b8>] (stm32_qspi_probe) from [<c0959ee0>] (platform_drv_probe+0x48/0x98)
-> > [    2.302285] [<c0959ee0>] (platform_drv_probe) from [<c0957f8c>] (really_probe+0x234/0x34c)
-> > [    2.310566] [<c0957f8c>] (really_probe) from [<c095821c>] (driver_probe_device+0x60/0x174)
-> > [    2.318847] [<c095821c>] (driver_probe_device) from [<c09584d8>] (device_driver_attach+0x58/0x60)
-> > [    2.327735] [<c09584d8>] (device_driver_attach) from [<c0958560>] (__driver_attach+0x80/0xbc)
-> > [    2.336276] [<c0958560>] (__driver_attach) from [<c09562cc>] (bus_for_each_dev+0x74/0xb4)
-> > [    2.344469] [<c09562cc>] (bus_for_each_dev) from [<c09572c4>] (bus_add_driver+0x164/0x1e8)
-> > [    2.352749] [<c09572c4>] (bus_add_driver) from [<c0958fd8>] (driver_register+0x74/0x108)
-> > [    2.360854] [<c0958fd8>] (driver_register) from [<c0302ec8>] (do_one_initcall+0x54/0x22c)
-> > [    2.369047] [<c0302ec8>] (do_one_initcall) from [<c1501024>] (kernel_init_freeable+0x150/0x1ec)
-> > [    2.377762] [<c1501024>] (kernel_init_freeable) from [<c0ea5e74>] (kernel_init+0x8/0x114)
-> > [    2.385951] [<c0ea5e74>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-> > [    2.393525] Exception stack(0xe68c1fb0 to 0xe68c1ff8)
-> > [    2.398583] 1fa0:                                     00000000 00000000 00000000 00000000
-> > [    2.406777] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > [    2.414967] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > [    2.421879] mtd mtd4: Failed to register NVMEM device
-> > 
-> > Before nvmen device registration was added, it was possible to have same partition name on different devices.
-> > Instead of using the partition name, this patch proposes to use the MTD device name (mtdX).
-> > 
-> > Regards,
-> > Christophe Kerello.
-> > 
-> >  drivers/mtd/mtdcore.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-> > index 5fac435..559b693 100644
-> > --- a/drivers/mtd/mtdcore.c
-> > +++ b/drivers/mtd/mtdcore.c
-> > @@ -551,7 +551,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
-> >  
-> >  	config.id = -1;
-> >  	config.dev = &mtd->dev;
-> > -	config.name = mtd->name;
-> > +	config.name = dev_name(&mtd->dev);  
-> 
-> What about creating an mtd->fullname field which would be, for
-> partitions: mtdX:<partition-name> and would be unique?
+> SDI0/SDI1 can be used in configurations where some of the pins
+> (e.g. direction control) are not used. The pinctrl driver has
+> separate pin groups for them.
+>
+> Add new pin configurations for:
+>   - mc0_a_2: like mc0_a_1, but without CMDDIR/DAT0DIR/DAT2DIR
+>   - mc1_a_2: like mc1_a_1, but without FBCLK
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-The actual mtd->name (driver name or label if given) instead of the mtd
-number would be better. That would give things like "nand0:mypart".
+Patch applied for v5.6
 
-> 
-> >  	config.owner = THIS_MODULE;
-> >  	config.reg_read = mtd_nvmem_reg_read;
-> >  	config.size = mtd->size;  
-> 
-> Thanks,
-> Miquèl
-
-Thanks,
-Miquèl
+Yours,
+Linus Walleij
