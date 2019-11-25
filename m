@@ -2,157 +2,205 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98062C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B1C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FF72071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574698592;
-	bh=LbeK490dtTKnopD1Y4NfCpwKGsM1gH9a/RhebP6QoqU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tLfba3ewpIDxxKzmpZtagUwtm8oSLAfxuX0boeZ8OBLPCzPX1blvVg0+AQsN33ziq
-	 UBjyGLoktnQyxcBBJbSL4V0Iy9O5wFd7wpgzde7bXJN1+Tz4iqe9GcfOjIPonCy4wf
-	 FIhxeMoeuLpGbtAz/xi1T5VL0ru8Rdwnrm5voZ2g=
+	by mail.kernel.org (Postfix) with ESMTP id D2FCC2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:17:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="t49B+rqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbfKYQQb (ORCPT
+        id S1728834AbfKYQRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:16:31 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43740 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728660AbfKYQQa (ORCPT
+        Mon, 25 Nov 2019 11:17:47 -0500
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:36856 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728660AbfKYQRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:16:30 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so18835372wra.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:16:29 -0800 (PST)
+        Mon, 25 Nov 2019 11:17:47 -0500
+Received: by mail-pl1-f178.google.com with SMTP id d7so6713480pls.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:17:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=a6ttbE9cHcRYf8vQoG+NYprr9PidmSQZatMLde5ZozA=;
-        b=fW1rxmMPa81pLbFvBgXwQ9+vIeOot0Em31EOUw8HgIw/j9RXJEsaEodMtePMu7EzJc
-         UP86VHUViuD+Hst8lsgiK+gy/cxK++tVADIN9fy7+gAUKnTge0RRHHQwrsgF05cUQRGh
-         jZokl9qaSPN90XurdFR8yrp7Op5jNv5oBpQtH8D/8Q9gBuK5oJhvaX+o+tncMnJdwEYd
-         CIkas8oYUdrxjKFYKEbseBW29hMDdO/SW0b6ikkv1Y9eC3gL9VAwGp5UUuzxctPaxrux
-         YWmc4Uofz04IeqiPKiatF28h9feNH/4V9tUSQLh9C+F0zT/jsTJZjdq4umV0kTLrZvB3
-         PTNw==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hsvydpQdD69LndXzjXcZyETic3mA+X3bOyMHEjBDxo8=;
+        b=t49B+rqAAHN83Al01YnaDrZjj4NvXDQzbrzrh9kgX0tkiad1r/Yb+uYiRkcpSoJG2K
+         Jiu1HwKb+hO2OMHOblLtA+IgYKLJxa6YQBNQfOczgRSdQNcGQo9ODm8kFtdl23Y3VMdB
+         wLkMyUsWLwkLC7YwZskZrVuENIKFdoXJhH3fKRR7svPX/LARAnfAc2w7X/UQwnL9pY1x
+         3LcwzNRfRkUDklmVQFBjc+KfLbFUGU+Q63ACHWhT1oXHtY1kCtBeWEBTPY+T+DZgcAnO
+         7qbHgJC4m3r6JWJFj8QWNiLOboWqZwswYTUImqWnSs0N4pc/aB0+oFdXQvFh4Cs/HPlj
+         tndw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=a6ttbE9cHcRYf8vQoG+NYprr9PidmSQZatMLde5ZozA=;
-        b=TwAb8qLsLXpUCfeqA1ZVfKyiAHDY46G6nvQNwqEdAkRyua74H2GEpE91dzJQXmFZ77
-         RNMJNTbYCwBoTitSUSO5FCKNz9hb4RIWpdCwn+5rdqp4QBo1m0tVnnXC36YjeT9TlSbQ
-         Zzr9T99AP4wi6iWQ7KZ46bPa80ENR370ZDfeEHnqlz95QYdaI8KIz2uQs29SUNGgdOSf
-         eM0q3XsGFCM5xYUzYjtxIOUu8uffznZeYbE0jlbfJLQYYAJQ/eFeN/ln17QgF8H8rU1Z
-         l0Pypg0t9ADC/fqAJHj/ureaQoZuSNrxZusCqCdsijBhf7Cq05i831VoX4RniyXgTlxD
-         K+Lw==
-X-Gm-Message-State: APjAAAXSMAsJ92vx5EyjLZB6zG3xTNQ9UOHml2UsDGyrvS82fNP3/FNT
-        RpFipCKSWC/tZ0r1+gO/GNg=
-X-Google-Smtp-Source: APXvYqxfp04xHoKEd2pFVOHP462yxxTEU4dpbgPLMc4SwawozRQxYWKmEWTumNbC/QWzD8LldVbQQA==
-X-Received: by 2002:adf:f985:: with SMTP id f5mr32740299wrr.364.1574698588571;
-        Mon, 25 Nov 2019 08:16:28 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id o21sm8686825wmc.17.2019.11.25.08.16.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hsvydpQdD69LndXzjXcZyETic3mA+X3bOyMHEjBDxo8=;
+        b=Ka1pokBXC+kvorYuZMokoOI9qyxbrcBMix1KdF/jD4YH6mHuvGNvEJSlSkBM7lepjY
+         5buG75BDP05kzlkTGu5PQaYBvzTn/eEor5mzzPiZsGg9Kf7vzmTiC+XwQDoIWq6ukF6O
+         pnkcoYSfAVY5Evt9EU18htd/7xprvP5BCps5BizLIzL3ibVFMMAufiXWvDCTG5024w6D
+         czm6zS6qkvXL6AfY6nFIqDNiZoWc0Z9DfFAB1uSciGNVcIUokbXcUiPw8pqrX8ui08wV
+         Vo0zseA5w0I1j971+Efcmssiygmn5LMtY5SvOM7yz0Xx9mOOJGRaUZ0FIRL+28tHihhH
+         85OQ==
+X-Gm-Message-State: APjAAAVwEbdtspCJ6uMuoySqYgGChOl+JOyXwELL2V5LJZDcuZZLYJkJ
+        hyWKLX8ifc6fxAxZfwC8tB7KaE669JL9gg==
+X-Google-Smtp-Source: APXvYqzaZF/u9v5YvRA8lexcbeoB1WlGLk0FC8JL68KCGL4FYtFiine1ss9b6upBJs5RojrEOlzGVA==
+X-Received: by 2002:a17:90a:f982:: with SMTP id cq2mr39790269pjb.34.1574698665819;
+        Mon, 25 Nov 2019 08:17:45 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id b18sm9050112pgh.60.2019.11.25.08.17.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 08:16:27 -0800 (PST)
-Date:   Mon, 25 Nov 2019 17:16:26 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [GIT PULL] x86/iopl changes for v5.5
-Message-ID: <20191125161626.GA956@gmail.com>
+        Mon, 25 Nov 2019 08:17:45 -0800 (PST)
+Date:   Mon, 25 Nov 2019 08:17:37 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [ANNOUNCE] iproute2 5.4
+Message-ID: <20191125081737.2ff4a7ca@hermes.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+The 5.4 kernel has been released, and the last patches have
+been applied to iproute2.
 
-Please pull the latest x86-iopl-for-linus git tree from:
+Not a lot of changes in this release, most are related to fixing output
+formatting and documentation.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-iopl-for-linus
+Download:
+    https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.4.0.tar.=
+gz
 
-   # HEAD: e3cb0c7102f04c83bf1a7cb1d052e92749310b46 x86/ioperm: Fix use of deprecated config option
+Repository for upcoming release:
+    git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 
-This tree implements a nice simplification of the iopl and ioperm code 
-that Thomas Gleixner discovered: we can implement the IO privilege 
-features of the iopl system call by using the IO permission bitmap in 
-permissive mode, while trapping CLI/STI/POPF/PUSHF uses in user-space if 
-they change the interrupt flag.
+And future release (net-next):
+    git://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git
 
-This tree implements that feature, with testing facilities and related 
-cleanups.
+Thanks for all the contributions.
 
- Thanks,
+Report problems (or enhancements) to the netdev@vger.kernel.org mailing lis=
+t.
 
-	Ingo
+---
+Andrea Claudi (4):
+      tunnel: factorize printout of GRE key and flags
+      ip tunnel: add json output
+      bpf: replace snprintf with asprintf when dealing with long buffers
+      tc: fix segmentation fault on gact action
 
------------------->
-Alexander Duyck (1):
-      x86/ioperm: Fix use of deprecated config option
+Aya Levin (3):
+      devlink: Add helper for left justification print
+      devlink: Left justification on FMSG output
+      devlink: Fix inconsistency between command input and output
 
-Thomas Gleixner (21):
-      x86/ptrace: Prevent truncation of bitmap size
-      x86/process: Unify copy_thread_tls()
-      x86/cpu: Unify cpu_init()
-      x86/tss: Fix and move VMX BUILD_BUG_ON()
-      x86/iopl: Cleanup include maze
-      x86/ioperm: Simplify first ioperm() invocation logic
-      x86/ioperm: Avoid bitmap allocation if no permissions are set
-      x86/io: Speedup schedule out of I/O bitmap user
-      x86/tss: Move I/O bitmap data into a seperate struct
-      x86/ioperm: Move iobitmap data into a struct
-      x86/ioperm: Add bitmap sequence number
-      x86/ioperm: Move TSS bitmap update to exit to user work
-      x86/ioperm: Remove bitmap if all permissions dropped
-      x86/ioperm: Share I/O bitmap if identical
-      selftests/x86/ioperm: Extend testing so the shared bitmap is exercised
-      x86/iopl: Fixup misleading comment
-      x86/iopl: Restrict iopl() permission scope
-      x86/iopl: Remove legacy IOPL option
-      x86/ioperm: Extend IOPL config to control ioperm() as well
-      selftests/x86/iopl: Extend test to cover IOPL emulation
-      x86/entry/32: Clarify register saving in __switch_to_asm()
+Damien Robert (1):
+      man: add reference to `ip route add encap ... src`
 
+David Ahern (3):
+      Import tc_act/tc_ct.h uapi file
+      Update kernel headers
+      Update kernel headers
 
- arch/x86/Kconfig                        |  18 +++
- arch/x86/entry/common.c                 |   4 +
- arch/x86/entry/entry_32.S               |   8 +-
- arch/x86/include/asm/io_bitmap.h        |  29 +++++
- arch/x86/include/asm/paravirt.h         |   4 -
- arch/x86/include/asm/paravirt_types.h   |   2 -
- arch/x86/include/asm/pgtable_32_types.h |   2 +-
- arch/x86/include/asm/processor.h        | 113 ++++++++++-------
- arch/x86/include/asm/ptrace.h           |   6 +
- arch/x86/include/asm/switch_to.h        |  10 ++
- arch/x86/include/asm/thread_info.h      |  14 ++-
- arch/x86/include/asm/xen/hypervisor.h   |   2 -
- arch/x86/kernel/cpu/common.c            | 188 ++++++++++++----------------
- arch/x86/kernel/doublefault.c           |   2 +-
- arch/x86/kernel/ioport.c                | 209 +++++++++++++++++++++-----------
- arch/x86/kernel/paravirt.c              |   2 -
- arch/x86/kernel/process.c               | 205 ++++++++++++++++++++++++-------
- arch/x86/kernel/process_32.c            |  77 ------------
- arch/x86/kernel/process_64.c            |  86 -------------
- arch/x86/kernel/ptrace.c                |  12 +-
- arch/x86/kvm/vmx/vmx.c                  |   8 --
- arch/x86/mm/cpu_entry_area.c            |   8 ++
- arch/x86/xen/enlighten_pv.c             |  10 --
- tools/testing/selftests/x86/ioperm.c    |  16 ++-
- tools/testing/selftests/x86/iopl.c      | 129 ++++++++++++++++++--
- 25 files changed, 686 insertions(+), 478 deletions(-)
- create mode 100644 arch/x86/include/asm/io_bitmap.h
+David Dai (1):
+      iproute2-next: police: support 64bit rate and peakrate in tc utility
+
+Dirk van der Merwe (2):
+      devlink: add 'reset_dev_on_drv_probe' devlink param
+      devlink: unknown 'fw_load_policy' string validation
+
+Donald Sharp (1):
+      ip nexthop: Allow flush|list operations to specify a specific protocol
+
+Eli Britstein (5):
+      tc_util: introduce a function to print JSON/non-JSON masked numbers
+      tc_util: add an option to print masked numbers with/without a newline
+      tc: flower: fix newline prints for ct-mark and ct-zone
+      tc_util: fix JSON prints for ct-mark and ct-zone
+      tc: flower: fix output for ip tos and ttl
+
+Florent Fourcot (1):
+      man: remove "defaut group" sentence on ip link
+
+Gal Pressman (1):
+      rdma: Add driver QP type string
+
+Guillaume Nault (1):
+      man: remove ppp from list of devices not allowed to change netns
+
+Hritik Vijay (1):
+      ss: show header for --processes/-p
+
+Ido Schimmel (4):
+      devlink: Increase number of supported options
+      devlink: Add devlink trap set and show commands
+      devlink: Add devlink trap group set and show commands
+      devlink: Add man page for devlink-trap
+
+Jakub Kicinski (1):
+      devlink: require resource parameters
+
+Jiri Pirko (3):
+      devlink: implement flash update status monitoring
+      devlink: implement flash status monitoring
+      devlink: add reload failed indication
+
+Julien Fortin (1):
+      ip: fix ip route show json output for multipath nexthops
+
+Micha=C5=82 =C5=81yszczek (3):
+      ipnetns: do not check netns NAME when -all is specified
+      rdma/sys.c: fix possible out-of-bound array access
+      libnetlink.c, ss.c: properly handle fread() errors
+
+Nicolas Dichtel (3):
+      ipnetns: enable to dump nsid conversion table
+      ip-netns.8: document the 'auto' keyword of 'ip netns set'
+      ip-netns.8: document target-nsid and nsid options of list-id
+
+Paul Blakey (3):
+      tc: add NLA_F_NESTED flag to all actions options nested block
+      tc: Introduce tc ct action
+      tc: flower: Add matching on conntrack info
+
+Roman Mashak (2):
+      man: tc-ematch.8: update list of filter using extended matches
+      man: tc-ematch.8: documented canid() ematch rule
+
+Stephen Hemminger (12):
+      uapi: update headers from 5.4-rc
+      uapi: update btf from 5.4-rc1
+      examples: remove out of date cbq stuff
+      examples: remove gaiconf
+      examples: remove diffserv
+      remove out of date README
+      don't install examples
+      uapi: SPDX license updates
+      uapi: devlink.h health timestamp
+      remove no longer useful README for lnstat
+      netem: remove redundant README
+      v5.4.0
+
+Thomas Haller (1):
+      man: add note to ip-macsec manual about necessary key management
+
+Vedang Patel (4):
+      etf: Add skip_sock_check
+      taprio: add support for setting txtime_delay.
+      tc: etf: Add documentation for skip_sock_check.
+      tc: taprio: Update documentation
+
+Vinicius Costa Gomes (1):
+      taprio: Add support for setting flags
+
+Vlad Buslov (1):
+      tc: remove duplicated NEXT_ARG_FWD() in parse_ct()
+
