@@ -2,132 +2,139 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53544C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18268C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC32071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5189207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sA4wb45o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/oZrUep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfKYKO6 (ORCPT
+        id S1727444AbfKYKUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:14:58 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54885 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfKYKO5 (ORCPT
+        Mon, 25 Nov 2019 05:20:06 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38627 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKYKUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:14:57 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b11so5338619wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:14:55 -0800 (PST)
+        Mon, 25 Nov 2019 05:20:04 -0500
+Received: by mail-ed1-f66.google.com with SMTP id s10so12161124edi.5;
+        Mon, 25 Nov 2019 02:20:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=K61KDC/w3VRipSxtXvNga+5fh0z8paKLB1vFxmok1y4=;
-        b=sA4wb45ovcGlqxPBCSA49oBborhJUSfY00UQh7VAfyxGrbMtidhQVtYZFRyr3wqOJA
-         G/m4e9avLJSZHR1Z5k0yAZxZw48uBaTsChuzi6kJbExRffn8gEstelaJfoOhbUlKfUqh
-         u2MBHnSlbHS7ztMLwvFR9EAG81WCr2HReBT/ByfS60J/hJQyFuRop2IIpnhwp3xTuIuZ
-         2Sqshnu6va75Q7n2VH2ZZ0G8nnp/BnQazRgPdcJmtUS6SGGjTEOSlJjcB1B+0KzcgPk0
-         w7eo3ivs+Vgev8jpsJVwduhhIVQC0Jj3RVvbQ7jTcLZG6i3vvqnzeH0x6iWNS6d4ZPU8
-         aRXA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s00peLUfoWinM2SfHWjbV7HKo9HO7vaFN9uRGqLoplI=;
+        b=L/oZrUep+QpQeWsilYHaY3WFk8O/BvCHFYw79CHFPxO8m1V7gp2NR0E5pL7z81kPpB
+         jXW0p1YKJykMxwweaku5N5A3yOBcgQL4gr3fMX+CUY4gLQvN0LllxlY7Eh4AVVgOHxdN
+         AY+hvttlqf1HRL6cxVqaPlSttxIKy8u1SjEs+D1meBh8wgZDFttHPWUjxb+NAlG65G8+
+         ter3ccmtcVavXkFK2iTPVMYOLcbRMtAE1O3dyQuEeLrPS6laToIC9taqS2z3FUVnS66Z
+         p3qLByC+Kt2MPSIa+U+aINPVj6Ih/Dr5yRDLKHDn1dvwEFBmp031VUIezqgHSzet3jfk
+         nvzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=K61KDC/w3VRipSxtXvNga+5fh0z8paKLB1vFxmok1y4=;
-        b=cU2k5jSQrm53xrWXfbtPv3kww1+J6BbkDb5YjnwOgmmt1XaVVmWwjGJWObME4IcSHt
-         CHgllChK1LSda3Dbjlr6ynTKwdqandxO7hxtvbuS0WoMje8JQl1YroNSgIeJDzEtHxcA
-         e0Ft2Mfb2PXsux/++LQ5vN9iJuWw92f7AH0TM4BgUmG4YkdGkSFmR8BpaJMpOBUX7DaP
-         1aHjXJMhZ7PnzeSYDIXRNTI5BlWZ10zAtcXWDwJujvLT/+W3nG0q22qsyEGKo5vUczWZ
-         WQFSzxjfehXr8rbg4qtxjCCjQEAqjbh6IaZ+8QVxmeNPLdnNM/RJDKc9gZOT537xuJCC
-         fNwg==
-X-Gm-Message-State: APjAAAUZ7C3cRztGJoO6mEKGu1WA6u+vaaTfeIPQXx1aB5mH+z+Jh+5w
-        lFcLEACYtqdKw/Q14LetfJwmEQ==
-X-Google-Smtp-Source: APXvYqxlqGbRVb1q7Ats9JEHWlI6DXCc42Eir63k/2XjzqDQfir3rntlAPQcFe8O/L4oiGkYaRuCRQ==
-X-Received: by 2002:a7b:c76a:: with SMTP id x10mr26459343wmk.123.1574676895066;
-        Mon, 25 Nov 2019 02:14:55 -0800 (PST)
-Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
-        by smtp.gmail.com with ESMTPSA id 60sm8778477wrn.86.2019.11.25.02.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 02:14:54 -0800 (PST)
-References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com> <1571382865-41978-4-git-send-email-jian.hu@amlogic.com> <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com> <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com> <1jblts3v7e.fsf@starbuckisacylon.baylibre.com> <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com> <1jh839f2ue.fsf@starbuckisacylon.baylibre.com> <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com> <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com> <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com> <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock driver
-In-reply-to: <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
-Date:   Mon, 25 Nov 2019 11:14:53 +0100
-Message-ID: <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s00peLUfoWinM2SfHWjbV7HKo9HO7vaFN9uRGqLoplI=;
+        b=lQUSiIXtajRzmtFk0T/3DjnocRDmvwvuxTki7NHNqmOgyykNgxOQydaRHfx9XKXFKv
+         fy+nRbfSZSreEuv3BndnMf/+zQHL9iu6K/eGZGukIpQU9SMvqOqkLpA77kGD40eDq+DJ
+         +DplEtcIu1zHhIJaoECIQ4WwALgDO/YC0ozBWkOTQHKnmuWw9gFvxdvczYF14j0URZkC
+         vmHfmmtc+/FWXJvZlGcSA4FXbblSx2YBHhhWakmkY0WL9Ua6FtpAiZAi4wmAW6fTI/0i
+         MYwqQQtzH4sRW6NwbL6ex8zxkc7p2rzVzc8jvvmuf5OGwRBNlgVQo2V1XVVTLGkzcutI
+         l2Lg==
+X-Gm-Message-State: APjAAAU6T3c+KtYZbQ9DHnyp4z/2FJNgrDv2xBvP+1CQHSZ+PonxkznB
+        QsEPPIS6zLaerEz36qbJfNU8NwwuRTQARAIFigo=
+X-Google-Smtp-Source: APXvYqy0BsUCpD6s3pntKidc8OTKecnUvGQDaid6kEAAFpRt+BWseGNpF3yFueq2wMxleXEIJMZNMGg1sVWJmuk3i7s=
+X-Received: by 2002:a05:6402:51:: with SMTP id f17mr17586667edu.123.1574677201422;
+ Mon, 25 Nov 2019 02:20:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191125100259.5147-1-o.rempel@pengutronix.de>
+In-Reply-To: <20191125100259.5147-1-o.rempel@pengutronix.de>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 25 Nov 2019 12:19:50 +0200
+Message-ID: <CA+h21hrOO6AFhvXQL47LwqCKU9vpRZ47feWB6fkn=WfrdZr6tA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] net: dsa: sja1105: print info about probet chip
+ only after every thing was done.
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, david@protonic.nl
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Oleksij,
 
-On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
-
-> Hi, Jerome
+On Mon, 25 Nov 2019 at 12:03, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 >
-> On 2019/11/20 23:35, Jerome Brunet wrote:
->>
->> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
->>
->>> Hi, jerome
->>>
->>> Is there any problem about fixed_pll_dco's parent_data?
->>>
->>> Now both name and fw_name are described in parent_data.
->>
->> Yes, there is a problem.  This approach is incorrect, as I've tried to
->> explain a couple times already. Let me try to re-summarize why this
->> approach is incorrect.
->>
->> Both fw_name and name should be provided when it is possible that
->> the DT does not describe the input clock. IOW, it is only for controllers
->> which relied on the global name so far and are now starting to describe
->> the clock input in DT
->>
->> This is not your case.
->> Your controller is new and DT will have the correct
->> info
->>
->> You are trying work around an ordering issue by providing both fw_name
->> and name. This is not correct and I'll continue to nack it.
->>
->> If the orphan clock is not reparented as you would expect, I suggest you
->> try to look a bit further at how the reparenting of orphans is done in
->> CCF and why it does not match your expectation.
->>
-> I have debugged the handle for orphan clock in CCF, Maybe you are missing
-> the last email.
+> Currently we will get "Probed switch chip" notification multiple times
+> if first probe filed by some reason. To avoid this confusing notifications move
+> dev_info to the end of probe.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/dsa/sja1105/sja1105_main.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+> index 7687ddcae159..1238fd68b2cd 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_main.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
+> @@ -2191,8 +2191,6 @@ static int sja1105_probe(struct spi_device *spi)
+>                 return rc;
+>         }
+>
+> -       dev_info(dev, "Probed switch chip: %s\n", priv->info->name);
+> -
+>         ds = dsa_switch_alloc(dev, SJA1105_NUM_PORTS);
+>         if (!ds)
+>                 return -ENOMEM;
+> @@ -2218,7 +2216,13 @@ static int sja1105_probe(struct spi_device *spi)
+>
+>         sja1105_tas_setup(ds);
+>
+> -       return dsa_register_switch(priv->ds);
+> +       rc = dsa_register_switch(priv->ds);
+> +       if (rc)
+> +               return rc;
+> +
+> +       dev_info(dev, "Probed switch chip: %s\n", priv->info->name);
+> +
+> +       return 0;
+>  }
+>
+>  static int sja1105_remove(struct spi_device *spi)
+> --
+> 2.24.0
+>
 
-Nope, got it the first time
+I don't think cosmetic patches should be send against the "net" tree.
+At the very least I would not keep the RGMII delays fix and this one
+in the same series, since they aren't related and they can be applied
+independently.
 
-> Even though the clock index exit, it will get failed for the orphan clock's
-> parent clock due to it has not beed added to the provider.
+If you want to actually fix something, there is also a memory leak
+related to this. It is present in most DSA drivers. When
+dsa_register_switch returns -EPROBE_DEFER, anything allocated with
+devm_kzalloc will be overwritten and the old memory will leak. It's a
+bit tricky to solve though, and especially tricky to figure out a
+proper Fixes: tag, since that devm_kzalloc was also hidden in
+dsa_switch_alloc for most of the time (which in net-next was
+eliminated by Vivien, thus making it more obvious).
 
-If the provider is not registered yet, of course any query to it won't
-work. This why I have suggested to this debug *further* :
+So I think some better mechanism should be thought of, that as little
+as possible is done in the period of time where -EPROBE_DEFER can be
+returned.
 
-* Is the orphan reparenting done when a new provider is registered ?
-* If not, should it be done ? is this your problem ?
-
-
+Thanks,
+-Vladimir
