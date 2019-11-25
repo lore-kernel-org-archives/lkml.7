@@ -2,116 +2,197 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCA3C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80CFC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838F820706
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5BF2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIw4yyh7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKKJVh9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKYVD0 (ORCPT
+        id S1726333AbfKYVNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 16:03:26 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36279 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfKYVD0 (ORCPT
+        Mon, 25 Nov 2019 16:13:31 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41582 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfKYVNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 16:03:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j7so14535314oib.3;
-        Mon, 25 Nov 2019 13:03:25 -0800 (PST)
+        Mon, 25 Nov 2019 16:13:31 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p26so7976522pfq.8;
+        Mon, 25 Nov 2019 13:13:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OKrMiztgq6n+4o04Pu0o49C5Fq/AysnEyKzVyb5lLq0=;
-        b=UIw4yyh7qFDT5JrbfzE9+B2sRCFPyZO+piBRAfV7WATnqYpS2gy4hjQrxnFSTu9rrx
-         JrRi4CUXU3qtXfeza/lEdtmZ3plNhV6faq4CxWqNpChoAGOoQhYc7zKfjt9nJWw0Lql8
-         qqrUEhUD8jHIBB7vPB6fIPrcA72eaqDGuaT5HVFL7Hq6f5ycNn/f5d2/BsmyQVfaErnu
-         T5OutfcI8SaZHlh6OC1NZ2/MOhr3ZciEjH1w0GN+wDFdFeJWNdtlnvQWCfzAjguRDACa
-         ljO6KbVlmEvkQv0mkSYxU9hpDh3UJvCIg5q9D6IOqtfOqOBRf2xteGFvZiEps8wSSKId
-         VDvQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/KuqJB5l3VS5YWmc0ZRh/KWLxhoYbWPz8odAlgDuw5E=;
+        b=NKKJVh9N0BEXFJtAG/HZvrC45bHCRpqAZL7I9nZGpsPTNettqxVqNsm3WLBAubJnHm
+         GhqcNR2nJhudApwm+ND9QK3ahkZEXJDrbYRxJnTKxQX4e6/SNjAyDzygP+ZKc01nTn6g
+         xZdOMw9rZWHvRnNtiUj0KBYdWbottuDPH39VvbfbzvguoneDBBcNv3+ZVCqb6a+7+PXa
+         +WVY9X20H6rXncAfrRCnItQ8L4miZrNU3OK1cXcOw6bHdzU8NHEVs5u28oauy0ngxLHe
+         /8RyFl0MXjwstc1m6VUXQT58kJe1Bv9qK7vrdutHf3OK+QcU4JHWXxo9/koZGVaV2dLK
+         1sgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OKrMiztgq6n+4o04Pu0o49C5Fq/AysnEyKzVyb5lLq0=;
-        b=gLaZSvnGl9OWVLKtRLEKH4D8TrMFOcoivwOHlQ178OS2LlW4lfaFfi6Q+x3gyDeAwP
-         +Fq4EL5jQIvqgqn+IaxM2NQGzMBBcglzErE2VD2cT2W75e4zLgFgYgkcW0ffT6E/kR0/
-         Nkdq/IZ7k54ei/Xo2rq9B4uSmdyNmMfnAyfqjVWqOrnTOSGxtLDYsfWynjJQLY0hEMgc
-         Xl6GGzMeOs2S0caF8jW1QIA/v5lcWy0D+/M2srkaPwi/vI8auBeKjvBqOsgnulFkXBpC
-         Kuc96EekUMybombv1ErUUBSTNAb6pIWloR6RQbKEdTapFdqTo5kHxXao12m/rUynpPjP
-         K0eA==
-X-Gm-Message-State: APjAAAXzU0NUpcJLog0L62F9i+T1qbk5G5mGsx5u+r/7RAUWHFoVP3y0
-        N9VhXA6O+y4KQmkDbIsQmBY=
-X-Google-Smtp-Source: APXvYqze3Poy3kLoJa0rRu9uvBn9TVbfFGoKcXl7Nh53myivr11uSmd0qMygwUSk6NYzYZPbJmJKjA==
-X-Received: by 2002:aca:f083:: with SMTP id o125mr683892oih.122.1574715805287;
-        Mon, 25 Nov 2019 13:03:25 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id m134sm2924071oig.20.2019.11.25.13.03.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Nov 2019 13:03:24 -0800 (PST)
-Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <a7ac93e3-9a1f-2cd5-bf0b-30b562bd707d@gmail.com>
-Date:   Mon, 25 Nov 2019 15:03:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/KuqJB5l3VS5YWmc0ZRh/KWLxhoYbWPz8odAlgDuw5E=;
+        b=nt2FCtCxmvUQdqWVHLncQl70dqDe5rZFr8AyxUHchdSvPAV07uRIEFqZVrvW74g5XU
+         9Czu3agYZZretEUOVP1dl4isg7PcAhvHcapu87zTxXuO+QoKeoyHThfItGXa2/hsXBWc
+         lJE3LjO/gKcxt/13F9LPcRtf/k3oDXTMKt2t33PAchrWBcGjEkfP6Q/LwSpYI5bGC0gK
+         dEsqBuj4M4tvcMvcacPJNrHn72VdYibKY/en6tkBCDc1rR1xjcbErFdm26S+HPy8VBgw
+         1qx7LDOjTT+x1ufqTvPYri4QU29NJj1KVjnAFG04/ABz7q45QI852Aw+hE/ItuBpOPzk
+         SSlg==
+X-Gm-Message-State: APjAAAU6rkivoDs52V8r67/RsIDmOPii6Rf0mlbUde8qEnLbMWHGi5f4
+        /ukB3EcAvdpAXPN136HLrs0=
+X-Google-Smtp-Source: APXvYqxew5KZZ0qrR2YDEIwvTVxAgRRS29CLv9+5Uv8FOh6XgoMumNo2U1uue2OLUxkoZs5+qbdvVg==
+X-Received: by 2002:a63:3741:: with SMTP id g1mr15023503pgn.434.1574716409329;
+        Mon, 25 Nov 2019 13:13:29 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 186sm9611305pfe.141.2019.11.25.13.13.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 13:13:28 -0800 (PST)
+Date:   Mon, 25 Nov 2019 13:13:26 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Robin van der Gracht <robin@protonic.nl>
+Cc:     "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
+        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
+        RobinGong <yibin.gong@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "linux-arm-kernel @ lists . infradead . org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4] input: keyboard: snvs_pwrkey: Send key events for
+ i.MX6 S, DL and Q
+Message-ID: <20191125211326.GK248138@dtor-ws>
+References: <20191125161210.8275-1-robin@protonic.nl>
 MIME-Version: 1.0
-In-Reply-To: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191125161210.8275-1-robin@protonic.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/12/19 3:59 PM, Stuart Hayes wrote:
-> The pciehp interrupt handler pciehp_isr() will read the slot status
-> register and then write back to it to clear just the bits that caused the
-> interrupt. If a different interrupt event bit gets set between the read and
-> the write, pciehp_isr() will exit without having cleared all of the
-> interrupt event bits, so we will never get another hotplug interrupt from
-> that device.
+On Mon, Nov 25, 2019 at 05:12:10PM +0100, Robin van der Gracht wrote:
+> The first generation i.MX6 processors does not send an interrupt when the
+> power key is pressed. It sends a power down request interrupt if the key is
+> released before a hard shutdown (5 second press). This should allow
+> software to bring down the SoC safely.
 > 
-> That is expected behavior according to the PCI Express spec (v.5.0, section
-> 6.7.3.4, "Software Notification of Hot-Plug Events").
+> For this driver to work as a regular power key with the older SoCs, we need
+> to send a keypress AND release when we get the power down request irq.
 > 
-> Because the "presence detect changed" and "data link layer state changed"
-> event bits are both getting set at nearly the same time when a device is
-> added or removed, this is more likely to happen than it might seem. The
-> issue can be reproduced rather easily by connecting and disconnecting an
-> NVMe device on at least one system model.
+> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+
+Applied, thank you.
+
+> ---
 > 
-> This patch fixes the issue by modifying pciehp_isr() to loop back and
-> re-read the slot status register immediately after writing to it, until
-> it sees that all of the event status bits have been cleared.
+> Changes v3 -> v4:
+>  * The key release irq handler is now emitting the press and release
+>    events directly, instead of the debounce timer handler.
 > 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>  drivers/input/keyboard/Kconfig       |  2 +-
+>  drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++---
+>  2 files changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 7c4f19dab34f..937e58da5ce1 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
+>  	depends on OF
+>  	help
+>  	  This is the snvs powerkey driver for the Freescale i.MX application
+> -	  processors that are newer than i.MX6 SX.
+> +	  processors.
+>  
+>  	  To compile this driver as a module, choose M here; the
+>  	  module will be called snvs_pwrkey.
+> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+> index 5342d8d45f81..4888e137cc5d 100644
+> --- a/drivers/input/keyboard/snvs_pwrkey.c
+> +++ b/drivers/input/keyboard/snvs_pwrkey.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+>  
+> +#define SNVS_HPVIDR1_REG 0xF8
+>  #define SNVS_LPSR_REG	0x4C	/* LP Status Register */
+>  #define SNVS_LPCR_REG	0x38	/* LP Control Register */
+>  #define SNVS_HPSR_REG	0x14
+> @@ -37,6 +38,7 @@ struct pwrkey_drv_data {
+>  	int wakeup;
+>  	struct timer_list check_timer;
+>  	struct input_dev *input;
+> +	u8 minor_rev;
+>  };
+>  
+>  static void imx_imx_snvs_check_for_events(struct timer_list *t)
+> @@ -67,13 +69,29 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+>  {
+>  	struct platform_device *pdev = dev_id;
+>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
+> +	struct input_dev *input = pdata->input;
+>  	u32 lp_status;
+>  
+> -	pm_wakeup_event(pdata->input->dev.parent, 0);
+> +	pm_wakeup_event(input->dev.parent, 0);
+>  
+>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+> -	if (lp_status & SNVS_LPSR_SPO)
+> -		mod_timer(&pdata->check_timer, jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
+> +	if (lp_status & SNVS_LPSR_SPO) {
+> +		if (pdata->minor_rev == 0) {
+> +			/*
+> +			 * The first generation i.MX6 SoCs only sends an
+> +			 * interrupt on button release. To mimic power-key
+> +			 * usage, we'll prepend a press event.
+> +			 */
+> +			input_report_key(input, pdata->keycode, 1);
+> +			input_sync(input);
+> +			input_report_key(input, pdata->keycode, 0);
+> +			input_sync(input);
+> +			pm_relax(input->dev.parent);
+> +		} else {
+> +			mod_timer(&pdata->check_timer,
+> +			          jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
+> +		}
+> +	}
+>  
+>  	/* clear SPO status */
+>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+> @@ -94,6 +112,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+>  	struct input_dev *input = NULL;
+>  	struct device_node *np;
+>  	int error;
+> +	u32 vid;
+>  
+>  	/* Get SNVS register Page */
+>  	np = pdev->dev.of_node;
+> @@ -123,6 +142,9 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
+> +	pdata->minor_rev = vid & 0xff;
+> +
+>  	regmap_update_bits(pdata->snvs, SNVS_LPCR_REG, SNVS_LPCR_DEP_EN, SNVS_LPCR_DEP_EN);
+>  
+>  	/* clear the unexpected interrupt before driver ready */
+> -- 
+> 2.20.1
+> 
 
-Bjorn,
-
-Do you have any comments or issues with this patch set?  Anything I can do?
-
-Thanks!
-Stuart
+-- 
+Dmitry
