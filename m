@@ -2,106 +2,73 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39670C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFC5C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176BE20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEe/TGJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8223320748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfKYSwQ (ORCPT
+        id S1727146AbfKYSxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 13:52:16 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:44342 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKYSwQ (ORCPT
+        Mon, 25 Nov 2019 13:53:33 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:52876 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfKYSxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 13:52:16 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w8so6990849pjh.11;
-        Mon, 25 Nov 2019 10:52:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JEuDBuIbsPCbqhT1+qaFvO9JHqg2+xT1GFhiQC+2+xc=;
-        b=JEe/TGJJlEHUn9idyG7t66OXmw9QvEUOS1J/rnBzoDIcvcaeqwYgAMl0ivexsBYKSY
-         wGFpgZVhe5eRv4sEzbkHHL1IbvkHsYnQGvf8FcAV8crC7GhTPPMQ3ZbBLpyqkz7Bz1K6
-         svHZgcN9X3kosAS7DwoO2Z6oUd2u4+0ImpAhD3mo0Yu+taouax3+Rimcu8wM0RWS4V1M
-         J2F2gjQOP0Fmd460A1E03i/KADeRkWZWbTxFHmgMFDhjxQijyRyS2AIgc714RpMq4PCR
-         he5TgwUgUZs95l9pqtd9RWVBOaOlcNoO/v6fNz+IwdmBNUdd8FzyyfTO0OXv4NJ960Uo
-         YE3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JEuDBuIbsPCbqhT1+qaFvO9JHqg2+xT1GFhiQC+2+xc=;
-        b=p+3FB7tacsr2NncDRw54aUSL2MAApODwPif/KALgv6jCykVQJNLIkQXrIT2sgrK1/X
-         LejamCZxbwbLxqO14nKfb2shULdm8hhfEMR5hQiU2KI/KwEoBiEMTICtgOpPaxgjv4qz
-         /Y5rTKqhOg3JZDYBbtNqz5+x1SBGCzoXNhQxqTtA3ZTvW2892I96CHByFJbvQQ/R+TxN
-         f9JWRLfYkR8mMdWHd2DIqqW13/hI8w4NEApMJPskJZwlMCVsRKwFWaPhdBgpbCbPQl07
-         Wy2Y+0xC/dFENtDsPX8gRFFd3LRJLzsE/FzrAot7S5h8u3FjdKMeDhsyabbF9tKpuc6x
-         Yy7Q==
-X-Gm-Message-State: APjAAAXMmUJMMf8CnQzwwCfjiuRp56IWNXuzYhQauGJAWdoi59dXcqCM
-        K7UERd5UYxrDGASIsRJSJIc=
-X-Google-Smtp-Source: APXvYqxQXj5RSszdRYxGJ7EgTM9XnsG+4Kf7wc8guAWagKfgL63JUiHs9jX9jHcRAgkAEC/QL163fg==
-X-Received: by 2002:a17:902:9a87:: with SMTP id w7mr13859312plp.120.1574707934861;
-        Mon, 25 Nov 2019 10:52:14 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v14sm96558pja.22.2019.11.25.10.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 10:52:14 -0800 (PST)
-Date:   Mon, 25 Nov 2019 10:52:11 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     linux-input@vger.kernel.org, stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>,
-        Nick Black <dankamongmen@gmail.com>,
-        Yussuf Khalil <dev@pp3345.net>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Alexander Mikhaylenko <exalm7659@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "Input: synaptics - enable RMI mode for X1
- Extreme 2nd Generation"
-Message-ID: <20191125185211.GJ248138@dtor-ws>
-References: <20191119234534.10725-1-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119234534.10725-1-lyude@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 25 Nov 2019 13:53:33 -0500
+Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2019615009F94;
+        Mon, 25 Nov 2019 10:53:32 -0800 (PST)
+Date:   Mon, 25 Nov 2019 10:53:31 -0800 (PST)
+Message-Id: <20191125.105331.639161854641719732.davem@davemloft.net>
+To:     po.liu@nxp.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        vinicius.gomes@intel.com, claudiu.manoil@nxp.com,
+        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
+        xiaoliang.yang_1@nxp.com, roy.zang@nxp.com, mingkai.hu@nxp.com,
+        jerry.huang@nxp.com, leoyang.li@nxp.com
+Subject: Re: [v2,net-next] enetc: add support Credit Based Shaper(CBS) for
+ hardware offload
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191125054300.31346-1-Po.Liu@nxp.com>
+References: <20191122070321.20915-1-Po.Liu@nxp.com>
+        <20191125054300.31346-1-Po.Liu@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 25 Nov 2019 10:53:32 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 06:45:33PM -0500, Lyude Paul wrote:
-> This reverts commit 68b9c5066e39af41d3448abfc887c77ce22dd64d.
-> 
-> Ugh, I really dropped the ball on this one :\. So as it turns out RMI4
-> works perfectly fine on the X1 Extreme Gen 2 except for one thing I
-> didn't notice because I usually use the trackpoint: clicking with the
-> touchpad. Somehow this is broken, in fact we don't even seem to indicate
-> BTN_LEFT as a valid event type for the RMI4 touchpad. And, I don't even
-> see any RMI4 events coming from the touchpad when I press down on it.
-> This only seems to work for PS/2 mode.
-> 
-> Since that means we have a regression, and PS/2 mode seems to work fine
-> for the time being - revert this for now. We'll have to do a more
-> thorough investigation on this.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: stable@vger.kernel.org
+From: Po Liu <po.liu@nxp.com>
+Date: Mon, 25 Nov 2019 05:56:56 +0000
 
-This has been applied, thank you.
+> The ENETC hardware support the Credit Based Shaper(CBS) which part
+> of the IEEE-802.1Qav. The CBS driver was loaded by the sch_cbs
+> interface when set in the QOS in the kernel.
+> 
+> Here is an example command to set 20Mbits bandwidth in 1Gbits port
+> for taffic class 7:
+> 
+> tc qdisc add dev eth0 root handle 1: mqprio \
+> 	   num_tc 8 map 0 1 2 3 4 5 6 7 hw 1
+> 
+> tc qdisc replace dev eth0 parent 1:8 cbs \
+> 	   locredit -1470 hicredit 30 \
+> 	   sendslope -980000 idleslope 20000 offload 1
+> 
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
+> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
--- 
-Dmitry
+Applied, thanks.
