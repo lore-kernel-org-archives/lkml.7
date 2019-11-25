@@ -2,115 +2,88 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A386C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF6BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B1F2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE82207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfKYJrO (ORCPT
+        id S1727372AbfKYJuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:47:14 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21898 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727133AbfKYJrO (ORCPT
+        Mon, 25 Nov 2019 04:50:22 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40438 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbfKYJuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:47:14 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAP9lDxl086555
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:47:13 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wfjqxv424-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:47:12 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 25 Nov 2019 09:46:34 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Nov 2019 09:46:29 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAP9kS2G55050384
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Nov 2019 09:46:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42DF6A4064;
-        Mon, 25 Nov 2019 09:46:28 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DA9EA405C;
-        Mon, 25 Nov 2019 09:46:25 +0000 (GMT)
-Received: from localhost.in.ibm.com (unknown [9.124.35.38])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Nov 2019 09:46:25 +0000 (GMT)
-From:   Parth Shah <parth@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        qais.yousef@arm.com, pavel@ucw.cz, dhaval.giani@oracle.com,
-        qperret@qperret.net, David.Laight@ACULAB.COM,
-        morten.rasmussen@arm.com, pjt@google.com, tj@kernel.org,
-        dietmar.eggemann@arm.com, viresh.kumar@linaro.org,
-        rafael.j.wysocki@intel.com, daniel.lezcano@linaro.org
-Subject: [RFC 2/3] Propagate parent task's latency requirements to the child task
-Date:   Mon, 25 Nov 2019 15:16:17 +0530
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191125094618.30298-1-parth@linux.ibm.com>
-References: <20191125094618.30298-1-parth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19112509-0016-0000-0000-000002CBECD7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112509-0017-0000-0000-0000332DBF73
-Message-Id: <20191125094618.30298-3-parth@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-25_02:2019-11-21,2019-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
- bulkscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxscore=0
- clxscore=1015 mlxlogscore=726 spamscore=0 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911250090
+        Mon, 25 Nov 2019 04:50:21 -0500
+Received: by mail-ot1-f65.google.com with SMTP id m15so12021637otq.7;
+        Mon, 25 Nov 2019 01:50:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bMQwMvsg+lPwUnZvGgrwp3V8xVxHE9IKpDMhB02XS+s=;
+        b=KPXh2cpuLsOEO3INDBtgCoz9MuPEqBlfu0qZ6AXelvopW/BWi871N/E8oc4BkzviAT
+         tV2UG9t5S5xVnztUwf+esj5RpWAQXAEqoUrbsh18EW8HZj44L3/sVV7zoqPfq6hZ01jy
+         8Tu2LWEkOdyU2rMCHjxfeHaWeKEOA9i9+gbWxOPUlG7/E0bf31j4sML71BJFMLF7LBf1
+         OAREgVV464kip6jyTLW0PE9xhxhbDDf4hICrgVvoSkD9DGCyrgV3stGlH4xVbo/whsOM
+         J8cXMnytd6wGKrsVpEYn70NcW6xlYRxj1K5K3UvNaX+rN6pjl3vgN0T5Hzc5ahM7GWwO
+         ftDA==
+X-Gm-Message-State: APjAAAXXWhjUOAY35HrcTnq4mgR/cndX3EME+GaL249DijmwiD8rg4iW
+        hn8ZZq9rhJSaGWTUK0LAIogGd1dIidzyCrw87WVjrb2x
+X-Google-Smtp-Source: APXvYqxCudGtj7rgIRB+xAwBzb8X+EExCAa/giJ2DnWTgefeyJAR6CwVpd7366ZFc1VH/0nORYt5XfeoW8QzIGbWoAw=
+X-Received: by 2002:a05:6830:1047:: with SMTP id b7mr18387980otp.107.1574675420457;
+ Mon, 25 Nov 2019 01:50:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20191125094110.14667-1-geert@linux-m68k.org>
+In-Reply-To: <20191125094110.14667-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 25 Nov 2019 10:50:09 +0100
+Message-ID: <CAMuHMdX-N2AHHpBVJCqkh1RoMxFXhGikGn4mj9E7sj0qkR4ukg@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.4
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clone parent task's latency_tolerance attribute to the forked child task.
+On Mon, Nov 25, 2019 at 10:44 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> JFYI, when comparing v5.4[1] to v5.4-rc8[3], the summaries are:
+>   - build errors: +3/-0
 
-Reset the latency_tolerance value to default value when the child task is
-set to sched_reset_on_fork.
+  + /kisskb/src/drivers/staging/octeon/ethernet-spi.c: error:
+'OCTEON_IRQ_RML' undeclared (first use in this function):  => 224:12,
+198:19
+  + /kisskb/src/drivers/staging/octeon/ethernet-spi.c: error:
+'OCTEON_IRQ_RML' undeclared (first use in this function); did you mean
+'OCTEON_IS_MODEL'?:  => 198:19, 224:12
+  + /kisskb/src/drivers/staging/octeon/ethernet-tx.c: error:
+'OCTEON_IRQ_TIMER1' undeclared (first use in this function):  =>
+716:11, 705:18
 
-Signed-off-by: Parth Shah <parth@linux.ibm.com>
----
- kernel/sched/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+mips-gcc8/mips-allmodconfig
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7880f4f64d0e..ea7abbf5c1bb 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2853,6 +2853,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	 */
- 	p->prio = current->normal_prio;
- 
-+	/* Propagate the parent's latency requirements to the child as well */
-+	p->latency_tolerance = current->latency_tolerance;
-+
- 	uclamp_fork(p);
- 
- 	/*
-@@ -2869,6 +2872,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- 		p->prio = p->normal_prio = __normal_prio(p);
- 		set_load_weight(p, false);
- 
-+		p->latency_tolerance = DEFAULT_LATENCY_TOLERANCE;
- 		/*
- 		 * We don't need the reset flag anymore after the fork. It has
- 		 * fulfilled its duty:
+All seen before, but hidden in v5.4-rcX (X > 5) by other build failures.
+
+[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/219d54332a09e8d8741c1e1982f5eae56099de85/
+(232 out of 242 configs)
+[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/af42d3466bdc8f39806b26f593604fdc54140bcb/
+(232 out of 242 configs)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
