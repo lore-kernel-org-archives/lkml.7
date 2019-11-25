@@ -2,110 +2,230 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5746CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDA2C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6AE20740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3170A20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="EzZ2Px6Z"
+	dkim=pass (2048-bit key) header.d=familie-tometzki.de header.i=@familie-tometzki.de header.b="SmKp7ahW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfKYRkH (ORCPT
+        id S1729138AbfKYRkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:40:07 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38754 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfKYRkG (ORCPT
+        Mon, 25 Nov 2019 12:40:37 -0500
+Received: from mail-qk1-f230.google.com ([209.85.222.230]:36545 "EHLO
+        mail-qk1-f230.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfKYRkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:40:06 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c13so7716036pfp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:40:04 -0800 (PST)
+        Mon, 25 Nov 2019 12:40:36 -0500
+Received: by mail-qk1-f230.google.com with SMTP id d13so13534010qko.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:40:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=PU2OcTJib2FEZCO1+EC6n/q7O1nFdX7GUda6zHMnWpk=;
-        b=EzZ2Px6Zht5jTSbcT4wZXq7XoUzg3ELf9KnSjVfwZY6qPCXdLAs0Bud5oD73CKNWcw
-         IogNuIZthU6pcXD47kbxJJcGlr3Z/x6kj7WsJzhaA91cHaEN9fugwnjFAm4j21cRPSoW
-         xCYEqwIRZ3lNSZjaMV3U1PG0Gltb+Bws0aJPqmfPNgLunyrClUgttyvj/D+VCy0Ap3ME
-         WGfc2FSr5LxwkXYhTO62ef3CVexOp18hgj4ilr9/0MgWT4oRk/I01c1yK9AXr8Z2OrzK
-         TzueyAFcOa4PlaKzIm0SZ8iqf/wW/uiUlhiOZjKPAI50KoqSW223yXw9oDa5nKDO65Db
-         21Uw==
+        d=familie-tometzki.de; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+huwJCFXXOEMTc07Kcaz/2nVWKpv10+dNgjYcwOYVxg=;
+        b=SmKp7ahWJXnjNJG2md/iJJ0FMJoFExTujhG38AIwSLtzxmfgQ4jF9PHfa32ql/CZPV
+         4Ar5Mlj+e1/OX17UzQceqQFYgbyEyVS/eR44NKa5YkQUZ5FbMFoPpshZFJ1PsvV6fLwb
+         hM82XE6+gvJmgv5EutE8uSuW1sp/jdQkRtGWWRU8ATLTayl7+fzQ+cz7V62lQh038/EV
+         9r5P2WHGpHhM+no8nJcth/WoOeDEZ4iji+2/ZiqB7mJOLqFtE6olFPBVBGEvLKUL/6hd
+         mvKriEqkwUhYmXRlYb/BxzlLOcMjQ5AL9rb7j7vET1hyt7DEiYjmE891rPSmvT4CRybc
+         7gUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=PU2OcTJib2FEZCO1+EC6n/q7O1nFdX7GUda6zHMnWpk=;
-        b=BuIJcbdg6nR2KAb0U4/9/I3mieG3zONRNy6srbaXKrGqSDOmKRdA7viT3rDVYonuee
-         2jubrIf9VQBGRyljBJlJ6/Dndcz2tY8kPcDz02NfiHq1t67LSwN02AqUu4YU68YG8kdm
-         1TfzqHOCcEZ8Ll5b2JTRlDIFHFUu9InEkNcbrbZxvihY7pu/69kLQTSG/n0T8HXq/i8Q
-         xAnOKPJZuI/LKvTPR/36LResx8M9pg3HkTAnBGmz6K6XgDYtSlF0e5UGeBoG+bV1a0HL
-         EnjEddvaD4wDmocntC//vmFvCR9ZM8ys83n1SBny5fHxChVZJOaJ+dKSNsXK0/8LZBLg
-         QKQg==
-X-Gm-Message-State: APjAAAWk0u58rAGmVs0mQTcW3oqAcrXjy/2XF3Z/cIwgCTdeBl1n4/1P
-        mXhBnSdqOVumnyxORQWjg4aSZw==
-X-Google-Smtp-Source: APXvYqxtGVIhqBr/k4qZbkvbGJ/4yO/5Bkpqb+skwsxuP3qDbEWgyC1v/SGycn6AZG8kDPEo1sUP2w==
-X-Received: by 2002:a63:a449:: with SMTP id c9mr33513974pgp.53.1574703604127;
-        Mon, 25 Nov 2019 09:40:04 -0800 (PST)
-Received: from cakuba.hsd1.ca.comcast.net (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id m6sm8935278pgl.42.2019.11.25.09.40.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=+huwJCFXXOEMTc07Kcaz/2nVWKpv10+dNgjYcwOYVxg=;
+        b=O+oOc4+u2JluOUijDtLhrJFp1idiMBKwLbU3omHaRm83fUto9XbyusT9nAwOhwbW3j
+         jQSsQzCk+kNI99JaJXpbmxPNHUACnL4s4MX546J64WWEOWCzWp4JTNk8mshv/4OD1idx
+         tq7XuN/EIiK2R3lGiOQiG6VGA+nwc0hV87TNnyN8bb+SFXOjQh+rMgc13rJ+C5VASep4
+         seVoxld2as71Ab5DwOgcS+VDzl4BtaLSub5ijc3s8xVWb/OoBSi00qimO4F1rW8YfePs
+         ue3lwrxe7Ri1p7bL29tHNMyCgTjt14xpxIYzMXCRFcsnUlosIzeFc4Z+xjCJdGda5A/L
+         FBEw==
+X-Gm-Message-State: APjAAAWFgtwdqfo5NnpMvHnPa6qqr8ToceOK6CIdr+3PGeOFDQpYkz6c
+        UKCeEAi5FD1wDk2WwrgcD7vz0Bt86Skp+EfTc3hOlJ3Fz/Zs+A==
+X-Google-Smtp-Source: APXvYqyug6y3iBLlHZKNmE08YXCDHxV2pZWQgGUccS4PANp0NI7422vEJm9i15MpiFGaP62GSvAFCNf5VRv4
+X-Received: by 2002:a05:620a:78d:: with SMTP id 13mr27647992qka.311.1574703635558;
+        Mon, 25 Nov 2019 09:40:35 -0800 (PST)
+Received: from freebsd.familie-tometzki.de (freebsd.familie-tometzki.de. [18.210.29.142])
+        by smtp-relay.gmail.com with ESMTPS id f23sm1129510qkg.9.2019.11.25.09.40.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 09:40:03 -0800 (PST)
-Date:   Mon, 25 Nov 2019 09:39:56 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+13e1ee9caeab5a9abc62@syzkaller.appspotmail.com>
-Cc:     aviadye@mellanox.com, borisp@mellanox.com, davejwatson@fb.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        ilyal@mellanox.com, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pombredanne@nexb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Subject: Re: WARNING in sk_stream_kill_queues (3)
-Message-ID: <20191125093956.58133ee8@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <00000000000093bc3b05982dd771@google.com>
-References: <000000000000013b0d056e997fec@google.com>
-        <00000000000093bc3b05982dd771@google.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 25 Nov 2019 09:40:35 -0800 (PST)
+X-Relaying-Domain: familie-tometzki.de
+Received: from freebsd.familie-tometzki.de (freebsd.familie-tometzki.de [10.0.1.7])
+        by freebsd.familie-tometzki.de (Postfix) with ESMTP id 8339427515;
+        Mon, 25 Nov 2019 18:40:34 +0100 (CET)
+Date:   Mon, 25 Nov 2019 18:40:34 +0100
+From:   Damian Tometzki <dti+kernel@familie-tometzki.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v2] mm/memory_hotplug: Don't allow to online/offline
+ memory blocks with holes
+Message-ID: <20191125174034.GA41469@freebsd.familie-tometzki.de>
+Mail-Followup-To: David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20191119115237.6662-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119115237.6662-1-david@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019 07:59:01 -0800, syzbot wrote:
-> syzbot has bisected this bug to:
+On Tue, 19. Nov 12:52, David Hildenbrand wrote:
+> Our onlining/offlining code is unnecessarily complicated. Only memory
+> blocks added during boot can have holes (a range that is not
+> IORESOURCE_SYSTEM_RAM). Hotplugged memory never has holes (e.g., see
+> add_memory_resource()). All memory blocks that belong to boot memory are
+> already online.
 > 
-> commit 3c4d7559159bfe1e3b94df3a657b2cda3a34e218
-> Author: Dave Watson <davejwatson@fb.com>
-> Date:   Wed Jun 14 18:37:39 2017 +0000
+> Note that boot memory can have holes and the memmap of the holes is marked
+> PG_reserved. However, also memory allocated early during boot is
+> PG_reserved - basically every page of boot memory that is not given to the
+> buddy is PG_reserved.
 > 
->      tls: kernel TLS support
+> Therefore, when we stop allowing to offline memory blocks with holes, we
+> implicitly no longer have to deal with onlining memory blocks with holes.
+> E.g., online_pages() will do a
+> walk_system_ram_range(..., online_pages_range), whereby
+> online_pages_range() will effectively only free the memory holes not
+> falling into a hole to the buddy. The other pages (holes) are kept
+> PG_reserved (via move_pfn_range_to_zone()->memmap_init_zone()).
 > 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=127a8f22e00000
-> start commit:   be779f03 Merge tag 'kbuild-v4.18-2' of git://git.kernel.or..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=117a8f22e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=167a8f22e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=855fb54e1e019da2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=13e1ee9caeab5a9abc62
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165a0c1f800000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114591af800000
+> This allows to simplify the code. For example, we no longer have to
+> worry about marking pages that fall into memory holes PG_reserved when
+> onlining memory. We can stop setting pages PG_reserved completely in
+> memmap_init_zone().
 > 
-> Reported-by: syzbot+13e1ee9caeab5a9abc62@syzkaller.appspotmail.com
-> Fixes: 3c4d7559159b ("tls: kernel TLS support")
+> Offlining memory blocks added during boot is usually not guaranteed to work
+> either way (unmovable data might have easily ended up on that memory during
+> boot). So stopping to do that should not really hurt. Also, people are not
+> even aware of a setup where onlining/offlining of memory blocks with
+> holes used to work reliably (see [1] and [2] especially regarding the
+> hotplug path) - I doubt it worked reliably.
 > 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> For the use case of offlining memory to unplug DIMMs, we should see no
+> change. (holes on DIMMs would be weird).
+> 
+> Please note that hardware errors (PG_hwpoison) are not memory holes and
+> are not affected by this change when offlining.
+> 
+> [1] https://lkml.org/lkml/2019/10/22/135
+> [2] https://lkml.org/lkml/2019/8/14/1365
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+> 
+> This patch was part of:
+> 	[PATCH v1 00/10] mm: Don't mark hotplugged pages PG_reserved
+> 	(including ZONE_DEVICE)
+> 	-> https://www.spinics.net/lists/linux-driver-devel/msg130042.html
+> 
+> However, before we can perform the PG_reserved changes, we have to fix
+> pfn_to_online_page() in special scenarios first (bootmem and devmem falling
+> into a single section). Dan is working on that.
+> 
+> I propose to give this patch a churn in -next so we can identify if this
+> change would break any existing setup. I will then follow up with cleanups
+> and the PG_reserved changes later.
+> 
+> ---
+>  mm/memory_hotplug.c | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 46b2e056a43f..fc617ad6f035 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1455,10 +1455,19 @@ static void node_states_clear_node(int node, struct memory_notify *arg)
+>  		node_clear_state(node, N_MEMORY);
+>  }
+>  
+> +static int count_system_ram_pages_cb(unsigned long start_pfn,
+> +				     unsigned long nr_pages, void *data)
+> +{
+> +	unsigned long *nr_system_ram_pages = data;
+> +
+> +	*nr_system_ram_pages += nr_pages;
+> +	return 0;
+> +}
+> +
+Hello David,
 
-Looking at the repro timeline I'm fairly confident that
-commit 9354544cbccf ("net/tls: fix page double free on TX cleanup")
-stopped this. Even though it must had been appearing earlier due to a
-different bug, because what the mentioned commit fixed was more recent
-than the report.
+what is the meaning of the function ? The return is every time 0. 
 
-#syz fix: net/tls: fix page double free on TX cleanup
+I dont understand it ?
+
+Best regards
+Damian
+
+>  static int __ref __offline_pages(unsigned long start_pfn,
+>  		  unsigned long end_pfn)
+>  {
+> -	unsigned long pfn, nr_pages;
+> +	unsigned long pfn, nr_pages = 0;
+>  	unsigned long offlined_pages = 0;
+>  	int ret, node, nr_isolate_pageblock;
+>  	unsigned long flags;
+> @@ -1469,6 +1478,22 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  
+>  	mem_hotplug_begin();
+>  
+> +	/*
+> +	 * Don't allow to offline memory blocks that contain holes.
+> +	 * Consequently, memory blocks with holes can never get onlined
+> +	 * via the hotplug path - online_pages() - as hotplugged memory has
+> +	 * no holes. This way, we e.g., don't have to worry about marking
+> +	 * memory holes PG_reserved, don't need pfn_valid() checks, and can
+> +	 * avoid using walk_system_ram_range() later.
+> +	 */
+> +	walk_system_ram_range(start_pfn, end_pfn - start_pfn, &nr_pages,
+> +			      count_system_ram_pages_cb);
+> +	if (nr_pages != end_pfn - start_pfn) {
+> +		ret = -EINVAL;
+> +		reason = "memory holes";
+> +		goto failed_removal;
+> +	}
+> +
+>  	/* This makes hotplug much easier...and readable.
+>  	   we assume this for now. .*/
+>  	if (!test_pages_in_a_zone(start_pfn, end_pfn, &valid_start,
+> @@ -1480,7 +1505,6 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  
+>  	zone = page_zone(pfn_to_page(valid_start));
+>  	node = zone_to_nid(zone);
+> -	nr_pages = end_pfn - start_pfn;
+>  
+>  	/* set above range as isolated */
+>  	ret = start_isolate_page_range(start_pfn, end_pfn,
+> -- 
+> 2.21.0
+> 
+> 
