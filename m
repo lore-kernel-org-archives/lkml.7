@@ -2,565 +2,158 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D98EC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BEBC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546EA2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PI1dhOSk"
+	by mail.kernel.org (Postfix) with ESMTP id AB9022082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfKYNMD (ORCPT
+        id S1727761AbfKYNMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:12:03 -0500
-Received: from mail-eopbgr60087.outbound.protection.outlook.com ([40.107.6.87]:28022
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Mon, 25 Nov 2019 08:12:08 -0500
+Received: from mail-oln040092254075.outbound.protection.outlook.com ([40.92.254.75]:2576
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbfKYNMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:12:03 -0500
+        id S1725823AbfKYNMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 08:12:07 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VpNCMMZZ+a0RbMAIFdmZm91uk6n7qTBwO3wrl9lfg0ZBiDEe2Q+ojzGYDHQEK2CfawYi5IoPCMwzYSFy/1hTyUhc66cYxX4kyNPKAdNetTpVvWJQ1lnmfA0dZFCq/DG+RCjHs78TBLUM+n6KRK1ePaoT4l4UwH0miLx/Hn+FmLcfTAgXMVxBQPLQsU8xcdvFDHfxKDGzRSv3857UcifG+rUj2uN0Y4DD9UK/S3N8fR9q1uIa6x+hhYi6te1Hvb1v32rnlnSKrMmpgmejuCb24IQ8bhrfm+hFaGob5BY/7/m6ierNyaajM7MsPL3o1XtGI1n+arzP6MbKVnvpXmY4WQ==
+ b=doM9DUeg9z2O2u3MlnbOyTFSwCAnqwzI3ZP1vFwgC2nXdwCEO2n81yi/CuB0w3UAr1L7vnwMJxh9Aph5COdwv0rrK1bHB+W1Lfo8OsyJsQdNQ0kYaEY/xNR4QZplIyiDHfCuibYlMfJ/l0Gn+YYzqnkG0PRpniMeFWVtu/0jNS+EJo8QpxZeTdmjprQ7wNIWdILNCwrOnAULJsa2557UmHH3kTPo2mbwNFBZ5J2gXWbyzFhPOlR9oDgosW19VmBjZ4gI6OvqCM3r2ydkUDF11fAQdbSFbM48zwPKYjnZIA9107NzPz/8FEKuZc3JnuZtdfMgk/RROF4giFuYWA1Qwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0xctPVqWhN9VYZd7W53uK71Wgvpq2QPvBwiKtZE2nsA=;
- b=MbEJkbqMtgM01GbCW1r/xdSdxKJpn0egXkIdUsq/HI9/1lmm93Uj8oFR49o4HenZdAfdRFAPB/614bbXM0/Nw6WBqo9u7ziiHgY/lT0ea6HRBioGVjGUMYX6HLefr1dmNZgKHoi4C/qcgqu+zEXdWl333xhbG/ztKENn/kkcc7ztIkAydNgj1gvfurqpvSFblwsL3uu5cuxBNdNDEkQix8+Eb03QL5pn1QpoAdD+C7i0uMqgdQMZSmF1cqpls3cO5s6s268kcd4bwciM6Dd6ASNmeHgEsfuVRrpYLZUrJjfSCoKqqLEn5dZprNxfF7zSngyfCPmwjwj63uxnVBDrfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0xctPVqWhN9VYZd7W53uK71Wgvpq2QPvBwiKtZE2nsA=;
- b=PI1dhOSkBL3tx1JkxkaJka14WZ3kFGntggdrWSMbzDTT2r/cIVH9MgpTKNp8BgC/PxYQWjNvNREeix+kkOFTRdb9d4AbvdVAl1G6tpo3IFzqM4oev02496NjA+ndmHd38zN+oonUctKpB7NsePo+1vmIfCf3vBXjmCCa+T3fHXo=
-Received: from VE1PR04MB6367.eurprd04.prod.outlook.com (20.179.232.85) by
- VE1PR04MB6752.eurprd04.prod.outlook.com (20.179.234.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Mon, 25 Nov 2019 13:11:53 +0000
-Received: from VE1PR04MB6367.eurprd04.prod.outlook.com
- ([fe80::d1b2:be2c:f082:7ad6]) by VE1PR04MB6367.eurprd04.prod.outlook.com
- ([fe80::d1b2:be2c:f082:7ad6%6]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
- 13:11:53 +0000
-From:   Marco Antonio Franchi <marco.franchi@nxp.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ bh=ohNvp22acW0KVDijrLIXrbuNwLLO3a3PejuCv9xRdcs=;
+ b=YuAw8Ttr+KFp+bvCnneXumrsbpSVTfAsmTRmhvYTNOdhABsjU+MweL5j8wNN+Lo4S1KYXW6FrUAzZFBBNMppp0YVNUcVwKxjFps2ex4k0ul9FhRaET4BK2wKz8xmXscerkaWtLe8jzKBZ/WlqTzc13dehnTe8iB51Kbn7zCofwCVw0t4ghh8wn/ik0FWZsDQ9smtcX0lrUM3iSm2DuO4+ka+JJ5WWJ7gvejlInoH+qmT1cRMuUGJIOLPBhX/6jlJnzYlS9v4kHm8NvMiu6K+OEV7a7krpKltLFm0xBtyojn8/V9WicMOyMiZGjwdRrj0cbyid+IGUO53c2wt0xH5qQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HK2APC01FT032.eop-APC01.prod.protection.outlook.com
+ (10.152.248.59) by HK2APC01HT110.eop-APC01.prod.protection.outlook.com
+ (10.152.249.201) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17; Mon, 25 Nov
+ 2019 13:11:18 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.56) by
+ HK2APC01FT032.mail.protection.outlook.com (10.152.248.188) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17 via Frontend Transport; Mon, 25 Nov 2019 13:11:18 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::b880:961e:dd88:8b5d]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::b880:961e:dd88:8b5d%12]) with mapi id 15.20.2474.023; Mon, 25 Nov
+ 2019 13:11:18 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Edward Cree <ecree@solarflare.com>
+CC:     Alexander Lobakin <alobakin@dlink.ru>,
+        David Miller <davem@davemloft.net>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "petrm@mellanox.com" <petrm@mellanox.com>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcofrk@gmail.com" <marcofrk@gmail.com>
-CC:     "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "atv@google.com" <atv@google.com>,
-        Marco Antonio Franchi <marco.franchi@nxp.com>
-Subject: [PATCH v3 2/2] arm64: dts: freescale: add initial support for Google
- i.MX 8MQ Phanbell
-Thread-Topic: [PATCH v3 2/2] arm64: dts: freescale: add initial support for
- Google i.MX 8MQ Phanbell
-Thread-Index: AQHVo5Hn5+k7FOS1FE+qIc1vsxp5Zw==
-Date:   Mon, 25 Nov 2019 13:11:52 +0000
-Message-ID: <20191125131129.966-2-marco.franchi@nxp.com>
-References: <20191125131129.966-1-marco.franchi@nxp.com>
-In-Reply-To: <20191125131129.966-1-marco.franchi@nxp.com>
-Accept-Language: en-US
+        "johannes.berg@intel.com" <johannes.berg@intel.com>,
+        "emmanuel.grumbach@intel.com" <emmanuel.grumbach@intel.com>,
+        "luciano.coelho@intel.com" <luciano.coelho@intel.com>,
+        "linuxwifi@intel.com" <linuxwifi@intel.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in
+ napi_gro_receive()
+Thread-Topic: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL
+ in napi_gro_receive()
+Thread-Index: AQHVo2IFW7miydWzwUGig6GEl/Vj46ebhG8AgAAIsACAAAw6AIAAFs0AgAAsrQA=
+Date:   Mon, 25 Nov 2019 13:11:18 +0000
+Message-ID: <PSXP216MB0438DBC8CF65DCA2DD0E3441804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
+ <20191015.181649.949805234862708186.davem@davemloft.net>
+ <7e68da00d7c129a8ce290229743beb3d@dlink.ru>
+ <PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <c762f5eee08a8f2d0d6cb927d7fa3848@dlink.ru>
+ <746f768684f266e5a5db1faf8314cd77@dlink.ru>
+ <PSXP216MB0438267E8191486435445DA6804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <cc08834c-ccb3-263a-2967-f72a9d72535a@solarflare.com>
+In-Reply-To: <cc08834c-ccb3-263a-2967-f72a9d72535a@solarflare.com>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: CP2PR80CA0123.lamprd80.prod.outlook.com
- (2603:10d6:102:1b::13) To VE1PR04MB6367.eurprd04.prod.outlook.com
- (2603:10a6:803:11a::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=marco.franchi@nxp.com; 
+x-clientproxiedby: SYBPR01CA0179.ausprd01.prod.outlook.com
+ (2603:10c6:10:52::23) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:83426C5350D6A4CDD52E310BDF6431B834348114CB2D97A5AABB67D9B19F0221;UpperCasedChecksum:06C2698E1D3825EF93B4086A5ED91AD4183A2D94CE9469DB140326ACB0B51424;SizeAsReceived:8820;Count:49
 x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [177.27.230.67]
+x-tmn:  [chpfik922Qy7yqYdy2PbI23sKuMVrgcKos8/m8D/PZyjyaarPYOjprXn4sWf+Hz4r8tRx3PxGWM=]
+x-microsoft-original-message-id: <20191125131102.GB2616@nicholas-usb>
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4bfd079e-f500-4a57-bd95-08d771a909a9
-x-ms-traffictypediagnostic: VE1PR04MB6752:|VE1PR04MB6752:
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 84dbd356-32ea-4374-3a89-08d771a8f577
+x-ms-traffictypediagnostic: HK2APC01HT110:
 x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB67524D6C716FCEA12590DF6DF64A0@VE1PR04MB6752.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(199004)(189003)(6436002)(71200400001)(6486002)(2906002)(11346002)(8676002)(8936002)(81156014)(7736002)(305945005)(6306002)(6512007)(386003)(81166006)(6506007)(446003)(186003)(2201001)(76176011)(52116002)(256004)(14444005)(36756003)(66066001)(6116002)(3846002)(86362001)(66476007)(66556008)(102836004)(66446008)(64756008)(26005)(478600001)(2501003)(14454004)(966005)(110136005)(54906003)(99286004)(30864003)(25786009)(4326008)(316002)(50226002)(2616005)(1076003)(66946007)(71190400001)(5660300002)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6752;H:VE1PR04MB6367.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ghHhy7Cj4vBqx+a7MdEMTEj27GDhFPxXfGMwsdewFYHScoGi98mgXgUonyi0G2U4FufOa5+2AhMZpJEFymmA8Od0bMFNO+dZ1OoEDJgWXepZe5d2PNHcEpa7arlNIXuuhAxw+b/dcMTKiniM9MJHQNsLHLflJHuIZmhQoQDlVdt1L/YJun6/Rm/2tFGqdnULMVJ8T+U5s8bLGy3QoHfo6aePkdx88z72dfHqqvMo8fkGWpCwB11sv35lN9JRQwb8Nxa8a56XqapJ44Wxbzx2Ee8lzfKevte5DqLMnwd5dGYFaltec4bXPK6tKOIE1s7meLAWrF7Bc2RjaiVkioWsaZ9wk5BgOo1NXLkrcFEunDLT7EQTBzHaXhyDRBXVFtFqWlyOwN94YuVdZ6IYkjw5KalWfNoaI6Y3Hjg9Mx4WFaKkdFjD5hwk18DX3qdfEnYzmQFEE7NUb3rIMsvpZurI1u4AYjy/Xyfn/D50vx/Do4Y=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 6Zx8Dv0nzwhNKVjYYcHHIvxKlwxtoxaiH6bmODvUsRL7YwJc4CjPc/YUA9t4OGzDRt0bWQyfZWFTK5+jVH1HC58ADWNErfjAwqTcr+7/yQeyVhVwxKzauL/SfKwqMPHpXZqjXb2W+sdgG+xAI4jR73JVjFMAt2hf4bHSrnt8gquBV2f9o2Sqv2SmgLBBpMAX+iiUJenkGj+5az+oCzyR1IeDrWu/Yexb8kFM/KOEAl8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E7EE88E42A23AB4DAAE5EC533D595284@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bfd079e-f500-4a57-bd95-08d771a909a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 13:11:52.4153
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84dbd356-32ea-4374-3a89-08d771a8f577
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 13:11:18.6159
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VTmTLjzMZFQLchCyxJG/DRkdYQt9ejqvQ6YnLKN4JVGVKlE6Pb+NE9cicre7SL3QoitAex1HKeZYxKEG5QRW+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6752
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the device tree to support Google Coral Edge TPU,
-historicaly named as fsl-imx8mq-phanbell, a computer on module
-which can be used for AI/ML propose.
-
-It introduces a minimal enablement support for this module and
-was based on the i.MX 8MQ Phanbell Google Source Code for Coral=20
-Edge TPU Mendel release:
-https://coral.googlesource.com/linux-imx/
-
-Tested components:
-- PMIC;
-- USB-C OTG;
-- USB-C PWR;
-- micro-USB;
-- USB.
-
-Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
-Changes since v2:
-- remove i.MX 8 MQ EVK from message log
-- fix memory size node
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8mq-phanbell.dts    | 405 ++++++++++++++++++
- 2 files changed, 406 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/f=
-reescale/Makefile
-index 38e344a2f0ff..e50a934e2417 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-hummingboard-pulse.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-librem5-devkit.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-nitrogen.dtb
-+dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-phanbell.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-pico-pi.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-zii-ultra-zest.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64=
-/boot/dts/freescale/imx8mq-phanbell.dts
-new file mode 100644
-index 000000000000..08820ea72427
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -0,0 +1,405 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2017-2019 NXP
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8mq.dtsi"
-+
-+/ {
-+	model =3D "Google i.MX8MQ Phanbell";
-+	compatible =3D "google,imx8mq-phanbell", "fsl,imx8mq";
-+
-+	chosen {
-+		stdout-path =3D &uart1;
-+	};
-+
-+	memory@40000000 {
-+		device_type =3D "memory";
-+		reg =3D <0x00000000 0x40000000 0 0x40000000>;
-+	};
-+
-+	pmic_osc: clock-pmic {
-+		compatible =3D "fixed-clock";
-+		#clock-cells =3D <0>;
-+		clock-frequency =3D <32768>;
-+		clock-output-names =3D "pmic_osc";
-+	};
-+
-+	reg_usdhc2_vmmc: usdhc2_vmmc {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "VSD_3V3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_gpio_dvfs: regulator-gpio {
-+		compatible =3D "regulator-gpio";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_dvfs>;
-+		regulator-min-microvolt =3D <900000>;
-+		regulator-max-microvolt =3D <1000000>;
-+		regulator-name =3D "gpio_dvfs";
-+		regulator-type =3D "voltage";
-+		gpios =3D <&gpio1 13 GPIO_ACTIVE_HIGH>;
-+		states =3D <900000 0x1 1000000 0x0>;
-+	};
-+};
-+
-+&A53_0 {
-+	cpu-supply =3D <&reg_gpio_dvfs>;
-+};
-+
-+&A53_1 {
-+	cpu-supply =3D <&reg_gpio_dvfs>;
-+};
-+
-+&A53_2 {
-+	cpu-supply =3D <&reg_gpio_dvfs>;
-+};
-+
-+&A53_3 {
-+	cpu-supply =3D <&reg_gpio_dvfs>;
-+};
-+
-+&i2c1 {
-+	clock-frequency =3D <400000>;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1>;
-+	status =3D "okay";
-+
-+	pmic: pmic@4b {
-+		reg =3D <0x4b>;
-+		compatible =3D "rohm,bd71837";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_pmic>;
-+		clocks =3D <&pmic_osc>;
-+		clock-names =3D "osc";
-+		clock-output-names =3D "pmic_clk";
-+		interrupt-parent =3D <&gpio1>;
-+		interrupts =3D <3 GPIO_ACTIVE_LOW>;
-+		interrupt-names =3D "irq";
-+
-+		regulators {
-+			buck1: BUCK1 {
-+				regulator-name =3D "buck1";
-+				regulator-min-microvolt =3D <700000>;
-+				regulator-max-microvolt =3D <1300000>;
-+				regulator-boot-on;
-+				regulator-ramp-delay =3D <1250>;
-+				rohm,dvs-run-voltage =3D <900000>;
-+				rohm,dvs-idle-voltage =3D <850000>;
-+				rohm,dvs-suspend-voltage =3D <800000>;
-+			};
-+
-+			buck2: BUCK2 {
-+				regulator-name =3D "buck2";
-+				regulator-min-microvolt =3D <700000>;
-+				regulator-max-microvolt =3D <1300000>;
-+				regulator-boot-on;
-+				regulator-ramp-delay =3D <1250>;
-+				rohm,dvs-run-voltage =3D <1000000>;
-+				rohm,dvs-idle-voltage =3D <900000>;
-+			};
-+
-+			buck3: BUCK3 {
-+				regulator-name =3D "buck3";
-+				regulator-min-microvolt =3D <700000>;
-+				regulator-max-microvolt =3D <1300000>;
-+				regulator-boot-on;
-+				rohm,dvs-run-voltage =3D <1000000>;
-+			};
-+
-+			buck4: BUCK4 {
-+				regulator-name =3D "buck4";
-+				regulator-min-microvolt =3D <700000>;
-+				regulator-max-microvolt =3D <1300000>;
-+				regulator-boot-on;
-+				rohm,dvs-run-voltage =3D <1000000>;
-+			};
-+
-+			buck5: BUCK5 {
-+				regulator-name =3D "buck5";
-+				regulator-min-microvolt =3D <700000>;
-+				regulator-max-microvolt =3D <1350000>;
-+				regulator-boot-on;
-+			};
-+
-+			buck6: BUCK6 {
-+				regulator-name =3D "buck6";
-+				regulator-min-microvolt =3D <3000000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-boot-on;
-+			};
-+
-+			buck7: BUCK7 {
-+				regulator-name =3D "buck7";
-+				regulator-min-microvolt =3D <1605000>;
-+				regulator-max-microvolt =3D <1995000>;
-+				regulator-boot-on;
-+			};
-+
-+			buck8: BUCK8 {
-+				regulator-name =3D "buck8";
-+				regulator-min-microvolt =3D <800000>;
-+				regulator-max-microvolt =3D <1400000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo1: LDO1 {
-+				regulator-name =3D "ldo1";
-+				regulator-min-microvolt =3D <3000000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2: LDO2 {
-+				regulator-name =3D "ldo2";
-+				regulator-min-microvolt =3D <900000>;
-+				regulator-max-microvolt =3D <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo3: LDO3 {
-+				regulator-name =3D "ldo3";
-+				regulator-min-microvolt =3D <1800000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo4: LDO4 {
-+				regulator-name =3D "ldo4";
-+				regulator-min-microvolt =3D <900000>;
-+				regulator-max-microvolt =3D <1800000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo5: LDO5 {
-+				regulator-name =3D "ldo5";
-+				regulator-min-microvolt =3D <1800000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo6: LDO6 {
-+				regulator-name =3D "ldo6";
-+				regulator-min-microvolt =3D <900000>;
-+				regulator-max-microvolt =3D <1800000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo7: LDO7 {
-+				regulator-name =3D "ldo7";
-+				regulator-min-microvolt =3D <1800000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1>;
-+	status =3D "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc1>;
-+	pinctrl-1 =3D <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 =3D <&pinctrl_usdhc1_200mhz>;
-+	bus-width =3D <8>;
-+	non-removable;
-+	status =3D "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 =3D <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&gpio2 12 GPIO_ACTIVE_LOW>;
-+	vmmc-supply =3D <&reg_usdhc2_vmmc>;
-+	status =3D "okay";
-+};
-+
-+&usb3_phy0 {
-+	status =3D "okay";
-+};
-+
-+&usb_dwc3_0 {
-+	status =3D "okay";
-+	dr_mode =3D "otg";
-+};
-+
-+&usb3_phy1 {
-+	status =3D "okay";
-+};
-+
-+&usb_dwc3_1 {
-+	status =3D "okay";
-+	dr_mode =3D "host";
-+};
-+
-+&sai2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sai2>;
-+	assigned-clocks =3D <&clk IMX8MQ_AUDIO_PLL1_BYPASS>, <&clk IMX8MQ_CLK_SAI=
-2>;
-+	assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_P=
-LL1_OUT>;
-+	assigned-clock-rates =3D <0>, <24576000>;
-+	status =3D "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status =3D "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names =3D "default";
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
-+			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
-+		>;
-+	};
-+
-+	pinctrl_dvfs: dvfsgrp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x16
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-+			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-+			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-+			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-+			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-+			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-+			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
-+			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-+			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
-+			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
-+			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
-+			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
-+			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-+			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
-+			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
-+			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
-+			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
-+			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-+			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-+			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-+			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-+			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-+			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-+			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
-+			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-+			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
-+			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
-+			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
-+			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
-+			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
-+			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
-+			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
-+			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
-+			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
-+			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
-+			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+		>;
-+	};
-+
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC	0xd6
-+			MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK	0xd6
-+			MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK	0xd6
-+			MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0	0xd6
-+			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8	0xd6
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
-+		>;
-+	};
-+
-+	pinctrl_pmic: pmicirq {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-+		>;
-+	};
-+};
---=20
-2.17.1
-
+T24gTW9uLCBOb3YgMjUsIDIwMTkgYXQgMTA6MzE6MTJBTSArMDAwMCwgRWR3YXJkIENyZWUgd3Jv
+dGU6DQo+IE9uIDI1LzExLzIwMTkgMDk6MDksIE5pY2hvbGFzIEpvaG5zb24gd3JvdGU6DQo+ID4g
+VGhlIGRlZmF1bHQgdmFsdWUgb2YgL3Byb2Mvc3lzL25ldC9jb3JlL2dyb19ub3JtYWxfYmF0Y2gg
+d2FzIDguDQo+ID4gU2V0dGluZyBpdCB0byAxIGFsbG93ZWQgaXQgdG8gY29ubmVjdCB0byBXaS1G
+aSBuZXR3b3JrLg0KPiA+DQo+ID4gU2V0dGluZyBpdCBiYWNrIHRvIDggZGlkIG5vdCBraWxsIHRo
+ZSBjb25uZWN0aW9uLg0KPiA+DQo+ID4gQnV0IHdoZW4gSSBkaXNjb25uZWN0ZWQgYW5kIHRyaWVk
+IHRvIHJlY29ubmVjdCwgaXQgZGlkIG5vdCByZS1jb25uZWN0Lg0KPiA+DQo+ID4gSGVuY2UsIGl0
+IGFwcGVhcnMgdGhhdCB0aGUgcHJvYmxlbSBvbmx5IGFmZmVjdHMgdGhlIGluaXRpYWwgaGFuZHNo
+YWtlIA0KPiA+IHdoZW4gYXNzb2NpYXRpbmcgd2l0aCBhIG5ldHdvcmssIGFuZCBub3Qgbm9ybWFs
+IHBhY2tldCBmbG93Lg0KPiBUaGF0IHNvdW5kcyBsaWtlIHRoZSBHUk8gYmF0Y2ggaXNuJ3QgZ2V0
+dGluZyBmbHVzaGVkIGF0IHRoZSBlbmRvZiB0aGUNCj4gwqBOQVBJIOKAlCBtYXliZSB0aGUgZHJp
+dmVyIGlzbid0IGNhbGxpbmcgbmFwaV9jb21wbGV0ZV9kb25lKCkgYXQgdGhlDQo+IMKgYXBwcm9w
+cmlhdGUgdGltZT8NCj4gSW5kZWVkLCBmcm9tIGRpZ2dpbmcgdGhyb3VnaCB0aGUgbGF5ZXJzIG9m
+IGl3bHdpZmkgSSBldmVudHVhbGx5IGdldCB0bw0KPiDCoGl3bF9wY2llX3J4X2hhbmRsZSgpIHdo
+aWNoIGRvZXNuJ3QgcmVhbGx5IGhhdmUgYSBOQVBJIHBvbGwgKHRoZQ0KPiDCoG5hcGktPnBvbGwg
+ZnVuY3Rpb24gaXMgaXdsX3BjaWVfZHVtbXlfbmFwaV9wb2xsKCkgeyBXQVJOX09OKDEpOw0KPiDC
+oHJldHVybiAwOyB9KSBhbmQgaW5zdGVhZCBjYWxscyBuYXBpX2dyb19mbHVzaCgpIGF0IHRoZSBl
+bmQgb2YgaXRzIFJYDQo+IMKgaGFuZGxpbmcuwqAgVW5mb3J0dW5hdGVseSwgbmFwaV9ncm9fZmx1
+c2goKSBpcyBubyBsb25nZXIgZW5vdWdoLA0KPiDCoGJlY2F1c2UgaXQgZG9lc24ndCBjYWxsIGdy
+b19ub3JtYWxfbGlzdCgpIHNvIHRoZSBwYWNrZXRzIG9uIHRoZQ0KPiDCoEdST19OT1JNQUwgbGlz
+dCBqdXN0IHNpdCB0aGVyZSBpbmRlZmluaXRlbHkuDQo+IA0KPiBJdCB3YXMgc2VlaW5nIGRyaXZl
+cnMgY2FsbGluZyBuYXBpX2dyb19mbHVzaCgpIGRpcmVjdGx5IHRoYXQgaGFkIG1lDQo+IMKgd29y
+cmllZCBpbiB0aGUgZmlyc3QgcGxhY2UgYWJvdXQgd2hldGhlciBsaXN0aWZ5aW5nIG5hcGlfZ3Jv
+X3JlY2VpdmUoKQ0KPiDCoHdhcyBzYWZlIGFuZCB3aGVyZSB0aGUgZ3JvX25vcm1hbF9saXN0KCkg
+c2hvdWxkIGdvLg0KPiBJIHdvbmRlcmVkIGlmIG90aGVyIGRyaXZlcnMgdGhhdCBzaG93IHVwIGlu
+IFsxXSBuZWVkZWQgZml4aW5nIHdpdGggYQ0KPiDCoGdyb19ub3JtYWxfbGlzdCgpIG5leHQgdG8g
+dGhlaXIgbmFwaV9ncm9fZmx1c2goKSBjYWxsLsKgIEZyb20gYSBjdXJzb3J5DQo+IMKgY2hlY2s6
+DQo+IGJyb2NhZGUvYm5hOiBoYXMgYSByZWFsIHBvbGxlciwgY2FsbHMgbmFwaV9jb21wbGV0ZV9k
+b25lKCkgc28gaXMgT0suDQo+IGNvcnRpbmEvZ2VtaW5pOiBjYWxscyBuYXBpX2NvbXBsZXRlX2Rv
+bmUoKSBzdHJhaWdodCBhZnRlcg0KPiDCoG5hcGlfZ3JvX2ZsdXNoKCksIHNvIGlzIE9LLg0KPiBo
+aXNpbGljb24vaG5zMzogY2FsbHMgbmFwaV9jb21wbGV0ZSgpLCBzbyBpcyBfcHJvYmFibHlfIE9L
+Lg0KPiBCdXQgaXQncyBmYXIgZnJvbSBjbGVhciB0byBtZSB3aHkgKmFueSogb2YgdGhvc2UgZHJp
+dmVycyBhcmUgY2FsbGluZw0KPiDCoG5hcGlfZ3JvX2ZsdXNoKCkgdGhlbXNlbHZlcy4uLg0KUGFy
+ZG9uIG15IGxhY2sgb2YgdW5kZXJzdGFuZGluZywgYnV0IGlzIGl0IHVudXN1YWwgdGhhdCBzb21l
+dGhpbmcgdGhhdCANCnRoZSBkcml2ZXJzIHNob3VsZCBub3QgYmUgY2FsbGluZyBiZSBleHBvc2Vk
+IHRvIHRoZSBkcml2ZXJzPyBDb3VsZCBpdCBiZSANCmhpZGRlbiBmcm9tIHRoZSBkcml2ZXJzIHNv
+IHRoYXQgaXQgaXMgb3V0IG9mIHNjb3BlLCBvbmNlIHRoZSBjdXJyZW50IA0KZHJpdmVycyBhcmUg
+bW9kaWZpZWQgdG8gbm90IHVzZSBpdD8NCg0KPiANCj4gLUVkDQo+IA0KPiBbMV06IGh0dHBzOi8v
+ZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9pZGVudC9uYXBpX2dyb19mbHVzaA0KS2lu
+ZCByZWdhcmRzLA0KTmljaG9sYXMNCg==
