@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F324BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A342075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2E42082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zv0LlB1I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SkDbl5Ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfKYLJU (ORCPT
+        id S1727572AbfKYLMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 06:09:20 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40904 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfKYLJU (ORCPT
+        Mon, 25 Nov 2019 06:12:54 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42151 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727395AbfKYLMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:09:20 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ep1so6453157pjb.7;
-        Mon, 25 Nov 2019 03:09:18 -0800 (PST)
+        Mon, 25 Nov 2019 06:12:53 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q17so7015892pgt.9;
+        Mon, 25 Nov 2019 03:12:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3RKvLOzF9+MmABc+PUEDXQ5lz3mg8l+5+Zx2PV1HpuY=;
-        b=Zv0LlB1InIJ7QdZg4B+r05QW5D5Y3/YdMR63Vn5uiikkZ+b3P1JKYpZowVgoG0RVq7
-         6h9VJuFmgTLyXaZUojuf5axn4e5fI5foANkXSpqXyoDdBk+CO79P4B0vPYZfj+yr/wH8
-         gKHiEHpssNfoJ6v7pH4F58bjPP0zXj0PbkUKkLBwcAkEtyuT7NFCs1qJd70vi2IAjFs0
-         LHEDhSRSaRASRf0jWXZwGGwqLjq6aPSaidH2WN3zUKxC5bQdVKYYvZOOJ5dy316xvtnG
-         Vy2fdigpvWUqYjOs7dvSpXQ7V1i2gmWQVLvelND2pqq2DUgSOqH8i/F3eSMydypcFBvm
-         srhg==
+        bh=QfpO6+VriHjE6MTSEfJjnPs1DI4xFhz3n8jBm6AClVA=;
+        b=SkDbl5EejLsawhQGIGbP5LNRgzNCp6dbSmbcvdoE77wCHVXh0MJ9OWgW+NA6YYmYvJ
+         LXpTHhTDg5q4kC/VwCe2tUo5rBRUBPd7P5szZwLZDV0bAWSwFjWIjUs1JZp2K77jbLUX
+         hXpurxr6KhK7y3douqB8NpWhhXKvxYh6InayiDiNeY9JW0RienG94z6GPp3lXqa0beCJ
+         xqRAsU2UHHROtBrcHSeK52RW88MSjIll5B7wLPTdh+8ObkaF1H6EYM0ci9Pn6MNJ5ZRa
+         IMn2Mzdr7SslIsudVbO7NJ3R8SXJeDwfFmTeIhMCOVHboA138y5t3Ep9nipx8I9LKKAE
+         xodw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3RKvLOzF9+MmABc+PUEDXQ5lz3mg8l+5+Zx2PV1HpuY=;
-        b=NqBjNCzCpPWTXAlPgtUm6Hi3Ih4P8UVNpx/G86f6DNnznJGjnOFeZLLEiG5eS+rDhq
-         gMI8cD5YFGkXhRYlfOUJS+DZQB3UVQSn6ue5k8gb3Gc/3PXlUXXWFPS/f6cMJDfvEVff
-         y7UqOlcnaPiYKRCwNDl4H8d7KG3qU1cQPophZKKjNpJqG8gwsixVSDqSxBxi+51xEELv
-         EorbWJAI2PVROHV2G2kBNt9phUrm23BZAg7ni+c+nOMIQ4kgwRZhGWjBlZb4DC5djw38
-         W8XFrb3Hk4INt0H9kuraxagUBIrGgS11xJrOjIDARq3bKD0Huvqao8FsJTPLX2Uas+cH
-         62OA==
-X-Gm-Message-State: APjAAAVrcQVdr0fIUW1wKPOQ213D2G5inbvl/01I8leNwbjzQ26NxA2E
-        braA83w5a5ZbQTQUe/E3rFR8KC8eBUF9czelKoo=
-X-Google-Smtp-Source: APXvYqz3UC3+6qpjJn7Nqp9Uln3MDVv+yzBF5D/05BEtOGJJse5Ldc7bJGdhz69pWKVV6bGLUNIHHUBQZZiXrJ4qa+4=
-X-Received: by 2002:a17:902:9889:: with SMTP id s9mr28430329plp.18.1574680158260;
- Mon, 25 Nov 2019 03:09:18 -0800 (PST)
+        bh=QfpO6+VriHjE6MTSEfJjnPs1DI4xFhz3n8jBm6AClVA=;
+        b=TmBII9kkwaMAcJAaihntdp/GesuS2D2PC95lRUJkaTk/n8s3nUlsX+0G7uPz5mU3XJ
+         Xxs/uynwLk8lNiAeeTVgVKf8W31/dkggmP1bqQDEqunMMNM1jCuKkqn8DzmjQUcJJJuV
+         ht3zpoHxJliPtW863yGrS0OJPV1HBNllB9PaVsQFSs92WUA9QYKybp4lKdyfSEko4+KZ
+         aIfwuo6ChkVVsDULcGqxIgJkl7/KKJVn1sMJLfh0uN0KyElN2+5Q5ojetuNNyZI1H+y+
+         yeSck6WiRdwVZT/GAburWELdCbDiCiLHD4CcKX8EOpxlpmYWv2ryqCRu0zEkYDUWq2pN
+         fxNg==
+X-Gm-Message-State: APjAAAX0VGv0Ok6KQvODS9EeCrDn13aMuDt6dOf138QwzlXo+wq1zE0Q
+        7Xmn7VcPdzVUVqADo1dkJhckkrOWh4jLYSWfwLA=
+X-Google-Smtp-Source: APXvYqwOuqlvoScFSmIKOVDPZRulf63cB+znh4uPuBAVEUyd0Cj+R4rO9PNf5PXr0+IewxRhcl5Jl13BPejaBtMiOsw=
+X-Received: by 2002:a65:5542:: with SMTP id t2mr30988775pgr.74.1574680373146;
+ Mon, 25 Nov 2019 03:12:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20191124140625.20736-1-leonmaxx@gmail.com>
-In-Reply-To: <20191124140625.20736-1-leonmaxx@gmail.com>
+References: <20191124140625.20736-1-leonmaxx@gmail.com> <20191124140744.20830-1-leonmaxx@gmail.com>
+In-Reply-To: <20191124140744.20830-1-leonmaxx@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Nov 2019 13:09:08 +0200
-Message-ID: <CAHp75VeD4bKLrhnWw6vPa_K7QQXGsvyD3COZb9FwripOVAawvQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] platform/x86 asus_wmi: Support of ASUS TUF laptops
- on Ryzen CPUs
+Date:   Mon, 25 Nov 2019 13:12:43 +0200
+Message-ID: <CAHp75VcVj5=DQ8faTtC2CWk86-VMPGroQ+aCK+tLpkFEyPe-MQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] platform/x86 asus_wmi: Support throttle thermal policy
 To:     Leonid Maksymchuk <leonmaxx@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -77,31 +76,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Nov 24, 2019 at 4:07 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
 >
-> Hi,
->
-> this patch series adds support of Throttle themal policy ACPI device to
-> existing asus_wmi platform driver. Support of this device is required
-> for ASUS TUF laptops on Ryzen CPUs to properly work on Linux.
->
+> Throttle thermal policy ACPI device is used to control CPU cooling and
 
-In both patches you forgot a colon after platform/x86 prefix.
+> throttling. This patch adds sysfs entry for setting current mode and
+> Fn+F5 hotkey that switches to next.
 
-> v2: fixed indentation.
-> v3: patches 2/3 and 3/3 are refactored.
-> v4: patch 2/3 are simplified.
-> v5: add new device instead of merging with fan boost mode
->
-> Leonid Maksymchuk (2):
->   platform/x86 asus_wmi: Support throttle thermal policy
->   platform/x86 asus_wmi: Set throttle thermal policy to default
->
->  drivers/platform/x86/asus-wmi.c            | 128 +++++++++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |   1 +
->  2 files changed, 129 insertions(+)
->
-> --
-> 1.8.3.1
->
+sysfs means ABI. ABI must be documented.
+
+> Policy modes:
+> * 0x00 - default
+> * 0x01 - overboost
+> * 0x02 - silent
+
+> +static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
+> +{
+> +       u32 result;
+> +       int err;
+> +
+> +       asus->throttle_thermal_policy_available = false;
+> +
+> +       err = asus_wmi_get_devstate(asus,
+> +                                   ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
+> +                                   &result);
+> +       if (err) {
+> +               if (err == -ENODEV)
+> +                       return 0;
+
+> +               else
+
+Redundant.
+
+> +                       return err;
+> +       }
+> +
+
+> +       if ((result & ASUS_WMI_DSTS_PRESENCE_BIT))
+
+Too many parentheses.
+
+> +               asus->throttle_thermal_policy_available = true;
+> +
+> +       return 0;
+> +}
+
+> +       pr_info("Set throttle thermal policy: %u\n", value);
+
+Do we really need this message?
+
+> +       return scnprintf(buf, PAGE_SIZE, "%d\n",
+> +                        asus->throttle_thermal_policy_mode);
+
+Can it be one line?
+
+> +       result = kstrtou8(buf, 10, &new_mode);
+> +       if (result < 0) {
+
+> +               pr_warn("Trying to store invalid value\n");
+
+Redundant. By error code user space will get a message.
+
+> +               return result;
+> +       }
+
 
 
 -- 
