@@ -2,102 +2,118 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776C1C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04156C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8E02080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FnZ8CuB8"
+	by mail.kernel.org (Postfix) with ESMTP id DAB3E2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKYDUu (ORCPT
+        id S1727004AbfKYD2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 22:20:50 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39389 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKYDUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 22:20:50 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w24so11338023otk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 19:20:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=72RpSXa/41GCFQnbzlHwP1dZ5nMfYcHZnOpPX9qfEw4=;
-        b=FnZ8CuB8Jaav0sZ6IeBLdo0S0pFI6uWktcnFrPh76h3EjcLbUNcef2Oj+ZbeFs8z1i
-         IPi1wxSBMPSRHu9zUwmhGZXvDYWlkCpdBJqX9fKQ0oJ24/JAqR9Tnq/ZwwFcrJq2cbze
-         RVKynrxQH9feuMHYYhtEeuUvHZs7uGuKLyIaRVMF63rDPw2r2rfgX8hKi234kwQpCj9I
-         g+RMn63vlr7Lyo08UsgHp7j/Cu3Qt2kn1ahGy/vO9U9ImJ2jJHSB6xTOOuYLwPOm5+To
-         ySOTW8i0jngrZ8BKN7ZKhYVRC3f5Fwj4vBQXEalsLB9uk+TCkoHw4oR5LHOAqdIUyZVS
-         O6MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=72RpSXa/41GCFQnbzlHwP1dZ5nMfYcHZnOpPX9qfEw4=;
-        b=Y8ty43org6+fAezeZp9gdKPmPrF+7NFnEMDDdVNMXg7dd+9jGn6YUprcB1U478nYdy
-         VkqMVglV886va2GjJ6jT8YkYKUGOgDEl81Esgk5UB1UlSEA8uWxp9ABK/bqnOa/ZKgKj
-         hbQubO8RQuTs2vj81ClEBGkKtIyZ+CBd5yuOcGDTcn5aeFFAyrGd6lQ9nqQ8GknZ3wzr
-         wDZPwC2UahHKyIbMd+1oXxtdtoNPJWJdxM17FWxkb2bE3GOcAp2fwdRVFkV6CJduD1Di
-         d/n7baWIpwfvyJQh/QDNRPBuMZnqkLmY7d/suw6ovPaCjAPe/w5Mcuy6p4oRKMNiXp6T
-         Pqmw==
-X-Gm-Message-State: APjAAAWE4SLAdZPYqqR5sob72GL8Nwz84aLccbjrqetg5NF0fEHWuDyZ
-        64zjL7eiC5XO5WqduADwLhHOof/PNLA0aZfRXY+IGA==
-X-Google-Smtp-Source: APXvYqzSYjUMsNyaW8sZ9zntR3WRn2N4+MrJ+PCBLWVWhT+aI0bg5hzjDQWFOwtMtWQWDKuQMnfbqSflUKrXtF5NdqY=
-X-Received: by 2002:a9d:2d89:: with SMTP id g9mr18159633otb.126.1574652049319;
- Sun, 24 Nov 2019 19:20:49 -0800 (PST)
+        Sun, 24 Nov 2019 22:28:39 -0500
+Received: from mga11.intel.com ([192.55.52.93]:18031 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfKYD2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 22:28:39 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 19:28:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,240,1571727600"; 
+   d="scan'208";a="239353795"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Nov 2019 19:28:36 -0800
+Date:   Mon, 25 Nov 2019 11:39:30 +0800
+From:   Yu Chen <yu.c.chen@intel.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chen Yu <yu.chen.surf@gmail.com>
+Subject: Re: [PATCH][v4] x86/resctrl: Add task resctrl information display
+Message-ID: <20191125033930.GA28301@chenyu-office.sh.intel.com>
+References: <20191122095833.20861-1-yu.c.chen@intel.com>
+ <20191124132513.GA30453@avx2>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.9999.1911221842200.14532@viisi.sifive.com>
- <20191123092552.1438bc95@lwn.net> <alpine.DEB.2.21.9999.1911231523390.14532@viisi.sifive.com>
- <CAPcyv4hmagCVLCTYmmv0U8-YD5BEoQPV=wtm5hbp3MxqwZRQUA@mail.gmail.com>
- <alpine.DEB.2.21.9999.1911231546450.14532@viisi.sifive.com>
- <CAPcyv4hBNfabaZmKs0XF+UT9Py8zJqpNdu5KsToqp305NASKNA@mail.gmail.com>
- <alpine.DEB.2.21.9999.1911231637510.14532@viisi.sifive.com>
- <CAPcyv4iqTR8s0v8jH7haWCBQAzhZinUEsypiH7Ts9FCf+F9Bvg@mail.gmail.com> <alpine.DEB.2.21.9999.1911241841210.22625@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1911241841210.22625@viisi.sifive.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sun, 24 Nov 2019 19:20:38 -0800
-Message-ID: <CAPcyv4gbz996jwQQ5HEJ-L6uqqR+PoA5X6zdDQVnoqcmk+oXPw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: riscv: add patch acceptance guidelines
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, krste@berkeley.edu,
-        waterman@eecs.berkeley.edu,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191124132513.GA30453@avx2>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 6:49 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Sat, 23 Nov 2019, Dan Williams wrote:
->
-> > I'm open to updating the headers to make a section heading that
-> > matches what you're trying to convey, however that header definition
-> > should be globally agreed upon. I don't want the document that tries
-> > to clarify per-subsystem behaviours itself to have per-subsystem
-> > permutations. I think we, subsystem maintainers, at least need to be
-> > able to agree on the topics we disagree on.
->
-> Unless you're planning to, say, follow up with some kind of automated
-> process working across all of the profile documents in such a way that it
-> would make technical sense for the different sections to be standardized,
-> I personally don't see any need at all for profile document
-> standardization.  As far as I can tell, these documents are meant for
-> humans, rather than computers, to read.  And in the absence of a strong
-> technical rationale to limit how maintainers express themselves here, I
-> don't think it's justified.
->
+Hi Alexey,
+thanks for looking at this patch.
+On Sun, Nov 24, 2019 at 04:25:13PM +0300, Alexey Dobriyan wrote:
+> On Fri, Nov 22, 2019 at 05:58:33PM +0800, Chen Yu wrote:
+> > Monitoring tools that want to find out which resctrl control
+> > and monitor groups a task belongs to must currently read
+> > the "tasks" file in every group until they locate the process
+> > ID.
+> > 
+> > Add an additional file /proc/{pid}/resctrl to provide this
+> > information.
+> 
+> > --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> 
+> > +		seq_printf(s, "/%s", rdtg->kn->name);
+> > +		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
+> > +				    mon.crdtgrp_list) {
+> > +			if (tsk->rmid != crg->mon.rmid)
+> > +				continue;
+> > +			seq_printf(s, "%smon_groups/%s",
+> > +				   rdtg == &rdtgroup_default ? "" : "/",
+> > +				   crg->kn->name);
+> > +			break;
+> > +		}
+> > +		seq_puts(s, "\n");
+> 
+> This should be seq_putc().
+> 
+> 
+Okay, changed in next version.
+> > --- /dev/null
+> > +++ b/include/linux/resctrl.h
+> > @@ -0,0 +1,16 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _RESCTRL_H
+> > +#define _RESCTRL_H
+> > +
+> > +#ifdef CONFIG_PROC_CPU_RESCTRL
+> > +
+> > +#include <linux/proc_fs.h>
+> 
+> Forward declaring stuff should be more than enough.
+> 
+Okay, deleted in next version.
+Then after removing this header, the .c files(besides proc/fs/base.c)
+who include resctrl.h should be responsible to import corresondling
+headers themselves.
 
-It's just a template, you're free to make sub-headings of your own
-choosing, but please try to give a contributor that is spanning
-subsystems a chance to navigate similar information across profile
-documents.
+Thanks,
+Chenyu
+> > +int proc_resctrl_show(struct seq_file *m,
+> > +		      struct pid_namespace *ns,
+> > +		      struct pid *pid,
+> > +		      struct task_struct *tsk);
+> > +
+> > +#endif
+> > +
+> > +#endif /* _RESCTRL_H */
