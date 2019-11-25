@@ -2,111 +2,143 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77BDC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41710C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDDE2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="eXZ2QhdA"
+	by mail.kernel.org (Postfix) with ESMTP id 1363B2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574688520;
+	bh=BwPfiXh/zNYeFGA9sJGWZNDQpiTA2qjZ+6UpOHo6cNk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=OUHpMgNxx6lJn3U2qHQPdZUXEHGQzTj/eBG0ZoZF9xsTtmsi8mWAfExLhNhhCK55s
+	 ov9jxakgvGXNTtJthMMl57ttinPsEit3375q4vcHteAa22UNMNIoR3yHghUQDzB/sG
+	 549ab8HGGD7mfKOJ4Hz86tGFasTdJnyipJUB2Sow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfKYN0V (ORCPT
+        id S1727722AbfKYN2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:26:21 -0500
-Received: from aliyun-cloud.icoremail.net ([47.90.73.12]:18180 "HELO
-        aliyun-sdnproxy-4.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1727393AbfKYN0V (ORCPT
+        Mon, 25 Nov 2019 08:28:39 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41581 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfKYN2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:26:21 -0500
-X-Greylist: delayed 1203 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 08:26:19 EST
+        Mon, 25 Nov 2019 08:28:38 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b18so18025661wrj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 05:28:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
-        Message-Id:MIME-Version:Content-Transfer-Encoding; bh=UP7iGuZyWy
-        7rUnb0BqANyOczNI15OI3BvmT6wTeNlTs=; b=eXZ2QhdAr0Eyh94pU+Rqp9+x7t
-        2zeecmS/wKv+KbWTbb8a6UEeVVp4jNp9wE8FTl18CWzy8edd0vItJ3seI6IeoUhO
-        MN1Fklnl1NIFUTPZGekVfxgQsWOdRnLnpwos6+z8CecGCwKsKRRq+nbdQK+Thai5
-        hZCVHNE/da2va4hEI=
-Received: from localhost.localdomain (unknown [10.136.208.163])
-        by coremail-app1 (Coremail) with SMTP id RYCowACXebb6z9tdwLfmAQ--.36688S2;
-        Mon, 25 Nov 2019 20:58:37 +0800 (CST)
-From:   Yunhao Tian <18373444@buaa.edu.cn>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Yunhao Tian <18373444@buaa.edu.cn>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: sunxi-ng: v3s: Fix incorrect number of hw_clks.
-Date:   Mon, 25 Nov 2019 20:58:32 +0800
-Message-Id: <20191125125833.8023-1-18373444@buaa.edu.cn>
-X-Mailer: git-send-email 2.24.0
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=RPa4rXJAe2pIr0ygYh4omzLjhrt5K4J/XRs2z41ID0o=;
+        b=KxStKqct/jKeKxr4rUeo8/bHXjnnK/stjNHlcee0JD2f6ZrgyRPex1vocIkK9Cg0cc
+         6ZZMYgOxnPIA2+BVEXcOcw6yTX1s/x7TB0mMBhfqE8OcGNkRFMYjdA7eHgyzBRJO48w5
+         bw9iFWOHQhYAwhPy8yoI1sq5Y6QETPkvV+cKP+8SOkm6HdPoPnyO0dS3nTddVKebx3Y1
+         763jt1Xp5pB3A0cKSyG48KscEPvp62Im2U2sJTjigjRYxaeukW6kgrbXbryY89fNhVOK
+         uEIOetgUV51OHTlL+6ROsvfQHfw/6/YMAalNpDxouHY5eILfgkJVuPJIPMsgixqH+n3B
+         CG2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=RPa4rXJAe2pIr0ygYh4omzLjhrt5K4J/XRs2z41ID0o=;
+        b=gAQtMvrBuoRVaNM7xO49beUxjRV4dgiMuLwCYhouBs49Tl6XiXx8GlLrk6AsHsIrvQ
+         tcKEALmsPS3hOebIYLmrYKrOJJZFZXRIQM48Rqq+IHzHAdsbqAxQwrZgnoG3sZNoDw0m
+         YWgWB7lvDCA2kn64dW3T42WmuCTHn4gStxrno0Pmh0Eb1lpn7IMOAwE2czaXkYbBS+Rh
+         JnEKAMECIhbECjdPMucU2i2dvn9Gncxsl8a38x/NO+hgqsoze6pDMgvomAJCJYLtZ7Gx
+         42vP0keYrSuGiIB0FiGlnPFnbTwCyP+1rd6ukTewsT2nEdxJVbU4L0SjD90ZXerW35fR
+         H2ew==
+X-Gm-Message-State: APjAAAV4yS1ZHV3oI7K4Z9pDj9ZWsQhXifiIG04DO9QnzyOAV+AT+t4X
+        cn8ajV+EATXNcPGhCshv3FI=
+X-Google-Smtp-Source: APXvYqy53JZV6YJMBOjXJw4wK30/oImOypqb5IBJ4GxrT7CaHdXtz5pDvStMk8v8cFbv4RmV9pHS2A==
+X-Received: by 2002:adf:f689:: with SMTP id v9mr13356039wrp.28.1574688516814;
+        Mon, 25 Nov 2019 05:28:36 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id w7sm10084181wru.62.2019.11.25.05.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 05:28:36 -0800 (PST)
+Date:   Mon, 25 Nov 2019 14:28:34 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/cleanups for v5.5
+Message-ID: <20191125132834.GA42801@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: RYCowACXebb6z9tdwLfmAQ--.36688S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrZr1xZFy7Ar4fKFWxWr43Awb_yoW8Jr47pF
-        W7J34FqF1rJ3Wagay3Ar1xCFy5ua4Y9FyUCrWUA3y5Zrn7JF1rt3Wjy34DAFykCrWfZr1Y
-        yrnrZry8CF4DZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24V
-        AvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
-        McIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7
-        v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVCm
-        -wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26F1DJr1UJwCFx2IqxVCFs4IE7x
-        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-        67AF67kF1VAFwI0_Jw0_GFylx4CE04Ijxs4lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-        s7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRCg4fUUUUU
-X-CM-SenderInfo: yrytljauuuquxxddhvlgxou0/
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hws field of sun8i_v3s_hw_clks has only 74
-members. However, the number specified by CLK_NUMBER
-is 77 (= CLK_I2S0 + 1). This leads to runtime segmentation
-fault that is not always reproducible.
+Linus,
 
-This patch fixes the problem by specifying correct clock number.
+Please pull the latest x86-cleanups-for-linus git tree from:
 
-Signed-off-by: Yunhao Tian <18373444@buaa.edu.cn>
----
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cleanups-for-linus
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index 5c779eec454b..0e36ca3bf3d5 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -618,7 +618,7 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
- 		[CLK_MBUS]		= &mbus_clk.common.hw,
- 		[CLK_MIPI_CSI]		= &mipi_csi_clk.common.hw,
- 	},
--	.num	= CLK_NUMBER,
-+	.num	= CLK_PLL_DDR1 + 1,
- };
- 
- static struct clk_hw_onecell_data sun8i_v3_hw_clks = {
-@@ -700,7 +700,7 @@ static struct clk_hw_onecell_data sun8i_v3_hw_clks = {
- 		[CLK_MBUS]		= &mbus_clk.common.hw,
- 		[CLK_MIPI_CSI]		= &mipi_csi_clk.common.hw,
- 	},
--	.num	= CLK_NUMBER,
-+	.num	= CLK_I2S0 + 1,
- };
- 
- static struct ccu_reset_map sun8i_v3s_ccu_resets[] = {
--- 
-2.24.0
+   # HEAD: b41d62201b9772c7c750360ab668d2caa502e642 x86: Remove unused asm/rio.h
 
+Misc cleanups, plus the removal of obsolete code such as Calgary IOMMU 
+support, which code hasn't seen any real testing in a long time and 
+there's no known users left.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Borislav Petkov (1):
+      x86/nmi: Remove stale EDAC include leftover
+
+Cao jin (1):
+      x86: Fix typos in comments
+
+Christoph Hellwig (3):
+      x86: Remove the calgary IOMMU driver
+      x86/pci: Remove pci_64.h
+      x86/pci: Remove #ifdef __KERNEL__ guard from <asm/pci.h>
+
+Lianbo Jiang (1):
+      x86/kdump: Remove the unused crash_copy_backup_region()
+
+Thomas Gleixner (1):
+      x86: Remove unused asm/rio.h
+
+Yi Wang (1):
+      x86/apic, x86/uprobes: Correct parameter names in kernel-doc comments
+
+
+ MAINTAINERS                       |   10 -
+ arch/x86/Kconfig                  |   30 -
+ arch/x86/configs/x86_64_defconfig |    1 -
+ arch/x86/include/asm/calgary.h    |   57 --
+ arch/x86/include/asm/crash.h      |    1 -
+ arch/x86/include/asm/pci.h        |    7 -
+ arch/x86/include/asm/pci_64.h     |   28 -
+ arch/x86/include/asm/rio.h        |   64 --
+ arch/x86/include/asm/tce.h        |   35 -
+ arch/x86/kernel/Makefile          |    1 -
+ arch/x86/kernel/apic/apic.c       |    2 +-
+ arch/x86/kernel/pci-calgary_64.c  | 1586 -------------------------------------
+ arch/x86/kernel/pci-dma.c         |    6 -
+ arch/x86/kernel/setup.c           |    6 +-
+ arch/x86/kernel/tce_64.c          |  177 -----
+ arch/x86/kernel/traps.c           |    5 -
+ arch/x86/kernel/uprobes.c         |    2 +-
+ arch/x86/mm/numa.c                |    2 +-
+ 18 files changed, 6 insertions(+), 2014 deletions(-)
+ delete mode 100644 arch/x86/include/asm/calgary.h
+ delete mode 100644 arch/x86/include/asm/pci_64.h
+ delete mode 100644 arch/x86/include/asm/rio.h
+ delete mode 100644 arch/x86/include/asm/tce.h
+ delete mode 100644 arch/x86/kernel/pci-calgary_64.c
+ delete mode 100644 arch/x86/kernel/tce_64.c
