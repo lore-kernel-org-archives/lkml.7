@@ -3,81 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A446C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23899C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08152071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C3820706
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfKYVq2 (ORCPT
+        id S1726980AbfKYVqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 16:46:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
+        Mon, 25 Nov 2019 16:46:35 -0500
+Received: from l2mail1.panix.com ([166.84.1.75]:50933 "EHLO l2mail1.panix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfKYVq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 16:46:27 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9405E20706;
-        Mon, 25 Nov 2019 21:46:26 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 16:46:25 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [RFC v2 2/2] docs: ftrace: Fix typos
-Message-ID: <20191125164625.01101109@gandalf.local.home>
-In-Reply-To: <20191125123709.5eff70a9@gandalf.local.home>
-References: <cover.1574655670.git.frank@generalsoftwareinc.com>
-        <a843617511989679b29fbd62b1b8b3e991f2101e.1574655670.git.frank@generalsoftwareinc.com>
-        <20191125123709.5eff70a9@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725912AbfKYVqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 16:46:35 -0500
+X-Greylist: delayed 945 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 16:46:33 EST
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+        by l2mail1.panix.com (Postfix) with ESMTPS id 47MKvr2g9lzDkf
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 16:30:48 -0500 (EST)
+Received: from hp-x360n (50-76-61-131-ip-static.hfc.comcastbusiness.net [50.76.61.131])
+        by mailbackend.panix.com (Postfix) with ESMTPSA id 47MKvq2mkdz1tRQ;
+        Mon, 25 Nov 2019 16:30:47 -0500 (EST)
+Date:   Mon, 25 Nov 2019 13:30:45 -0800 (PST)
+From:   "Kenneth R. Crudup" <kenny@panix.com>
+Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
+To:     torvalds@linux-foundation.org
+cc:     linux-kernel@vger.kernel.org
+Subject: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in fdget_pos()")
+ breaking userspace
+Message-ID: <alpine.DEB.2.21.1911251322160.2408@hp-x360n>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019 12:37:09 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Sun, 24 Nov 2019 23:38:41 -0500
-> "Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
-> 
-> > --- a/Documentation/trace/ring-buffer-design.txt
-> > +++ b/Documentation/trace/ring-buffer-design.txt
-> > @@ -37,7 +37,7 @@ commit_page - a pointer to the page with the last finished non-nested write.
-> >  
-> >  cmpxchg - hardware-assisted atomic transaction that performs the following:
-> >  
-> > -   A = B iff previous A == C
-> > +   A = B if previous A == C  
-> 
-> This wasn't a typo. "iff" means "if and only if" which is a standard
-> notation. That is, this is shorthand for:
-> 
->   A = B if previous A == C
->   previous A == C if A = B
+FYI. Don't know if the fault lies with these subsystems or not, but I know
+it's been a goal to keep things working. In both cases, reverting this commit
+fixes both these issues. If you need additional information from me, please
+let me know.
 
-Although thinking about this more, this may not be correct. If
-previous A == B, then A = B, thus the "iff" notation is not actually
-accurate.
+First issue manifests itself as a timeout in KDE's upower daemon:
 
-This wouldn't then be a typo fix, but a real fix to the logic ;-)
+----
+Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Start operation timed out. Terminating.
+Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Main process exited, code=killed, status=15/TERM
+Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Failed with result 'timeout'.
+Nov 25 13:18:51 hp-x360n systemd[1]: Failed to start Daemon for power management.
+Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Service RestartSec=100ms expired, scheduling restart.
+Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Scheduled restart job, restart counter is at 9.
+Nov 25 13:18:51 hp-x360n systemd[1]: Stopped Daemon for power management.
+Nov 25 13:18:51 hp-x360n systemd[1]: Starting Daemon for power management...
+----
 
--- Steve
+Second issue:
 
-> 
-> 
-> >  
-> >     R = cmpxchg(A, C, B) is saying that we replace A with B if and only if
-> >        current A is equal to C, and we put the old (current) A into R
-> > --   
+----
+Nov 25 13:19:22 hp-x360n kernel: [  861.213047] INFO: task vmware-vmblock-:1179 blocked for more than 737 seconds.
+Nov 25 13:19:22 hp-x360n kernel: [  861.213053]       Tainted: G     U            5.4.0-Kenny+ #8
+Nov 25 13:19:22 hp-x360n kernel: [  861.213054] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Nov 25 13:19:22 hp-x360n kernel: [  861.213056] vmware-vmblock- D    0  1179      1 0x00000000
+Nov 25 13:19:22 hp-x360n kernel: [  861.213060] Call Trace:
+Nov 25 13:19:22 hp-x360n kernel: [  861.213068]  ? __schedule+0x2b8/0x580
+Nov 25 13:19:22 hp-x360n kernel: [  861.213071]  schedule+0x36/0xc0
+Nov 25 13:19:22 hp-x360n kernel: [  861.213074]  schedule_preempt_disabled+0x11/0x20
+Nov 25 13:19:22 hp-x360n kernel: [  861.213077]  __mutex_lock.isra.11+0x2f0/0x500
+Nov 25 13:19:22 hp-x360n kernel: [  861.213082]  __fdget_pos+0x42/0x50
+Nov 25 13:19:22 hp-x360n kernel: [  861.213085]  do_writev+0x2f/0x110
+Nov 25 13:19:22 hp-x360n kernel: [  861.213088]  do_syscall_64+0x46/0x170
+Nov 25 13:19:22 hp-x360n kernel: [  861.213091]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Nov 25 13:19:22 hp-x360n kernel: [  861.213094] RIP: 0033:0x7f4c6da1d527
+Nov 25 13:19:22 hp-x360n kernel: [  861.213098] Code: Bad RIP value.
+Nov 25 13:19:22 hp-x360n kernel: [  861.213100] RSP: 002b:00007f4c6d6aebc0 EFLAGS: 00000297 ORIG_RAX: 0000000000000014
+Nov 25 13:19:22 hp-x360n kernel: [  861.213102] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f4c6da1d527
+Nov 25 13:19:22 hp-x360n kernel: [  861.213103] RDX: 0000000000000002 RSI: 00007f4c6d6aec50 RDI: 0000000000000003
+Nov 25 13:19:22 hp-x360n kernel: [  861.213104] RBP: 00007f4c6d6aec50 R08: 0000000000000001 R09: 00007f4c6ce8c700
+Nov 25 13:19:22 hp-x360n kernel: [  861.213106] R10: 00007f4c68000080 R11: 0000000000000297 R12: 0000000000000002
+Nov 25 13:19:22 hp-x360n kernel: [  861.213107] R13: 0000000000020000 R14: 0000000000000000 R15: 0000000000000000
+----
 
+	-Kenny
+
+-- 
+Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Silicon Valley
