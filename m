@@ -2,140 +2,216 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2869C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D4CC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854DE2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3F62075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="HZGbst88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfKYMBf (ORCPT
+        id S1727404AbfKYMCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:01:35 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:63357 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKYMBf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:01:35 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 25 Nov
- 2019 20:01:56 +0800
-Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock
- driver
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com>
- <1571382865-41978-4-git-send-email-jian.hu@amlogic.com>
- <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com>
- <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com>
- <1jblts3v7e.fsf@starbuckisacylon.baylibre.com>
- <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com>
- <1jh839f2ue.fsf@starbuckisacylon.baylibre.com>
- <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com>
- <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com>
- <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com>
- <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
- <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <9ec317e8-136e-1ab4-4e9b-21210e7f3e05@amlogic.com>
-Date:   Mon, 25 Nov 2019 20:01:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 25 Nov 2019 07:02:42 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:54766 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfKYMCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 07:02:41 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 30F321B20A35; Mon, 25 Nov 2019 15:02:37 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 30F321B20A35
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1574683357; bh=uOhBuma2uQnNNRxUMn0+HUFU8ipwP8HFLTk2ZlKhkyo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=HZGbst88e+QZyjpvkqJ/dydK9+JXp+8gfJAtKeroEaD4NzpGoS4BRJPlz1JgL8/QM
+         zXTuoNkWAhbTOsgZOOLDIJ2S9HiVgNpbgUfvQAP3jFt+MBf9z5SqMKht4Sje7aLisp
+         0AomsLHUVgKcVBLxQb/WmB2P/Yr2tmkbgVEzcttU=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id E3BF21B20303;
+        Mon, 25 Nov 2019 15:02:24 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru E3BF21B20303
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 63CB31B20AE9;
+        Mon, 25 Nov 2019 15:02:24 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Mon, 25 Nov 2019 15:02:24 +0300 (MSK)
 MIME-Version: 1.0
-In-Reply-To: <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 25 Nov 2019 15:02:24 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Paolo Abeni <pabeni@redhat.com>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        David Miller <davem@davemloft.net>, jiri@mellanox.com,
+        edumazet@google.com, idosch@mellanox.com, petrm@mellanox.com,
+        sd@queasysnail.net, f.fainelli@gmail.com,
+        jaswinder.singh@linaro.org, ilias.apalodimas@linaro.org,
+        linux-kernel@vger.kernel.org, emmanuel.grumbach@intel.com,
+        luciano.coelho@intel.com, linuxwifi@intel.com,
+        kvalo@codeaurora.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in
+ napi_gro_receive()
+In-Reply-To: <b4b92c4d066007d9cb77e1645e667715c17834fb.camel@redhat.com>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
+ <20191015.181649.949805234862708186.davem@davemloft.net>
+ <7e68da00d7c129a8ce290229743beb3d@dlink.ru>
+ <PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <c762f5eee08a8f2d0d6cb927d7fa3848@dlink.ru>
+ <746f768684f266e5a5db1faf8314cd77@dlink.ru>
+ <PSXP216MB0438267E8191486435445DA6804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <cc08834c-ccb3-263a-2967-f72a9d72535a@solarflare.com>
+ <3147bff57d58fce651fe2d3ca53983be@dlink.ru>
+ (sfid-20191125_115913_640375_B340BE47)
+ <414288fcac2ba4fcee48a63bdbf28f7b9a5037c6.camel@sipsolutions.net>
+ <b4b92c4d066007d9cb77e1645e667715c17834fb.camel@redhat.com>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <d535d5142e42b8c550f0220200e3779d@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Paolo Abeni wrote 25.11.2019 14:42:
+> On Mon, 2019-11-25 at 12:05 +0100, Johannes Berg wrote:
+>> On Mon, 2019-11-25 at 13:58 +0300, Alexander Lobakin wrote:
+>> > Edward Cree wrote 25.11.2019 13:31:
+>> > > On 25/11/2019 09:09, Nicholas Johnson wrote:
+>> > > > The default value of /proc/sys/net/core/gro_normal_batch was 8.
+>> > > > Setting it to 1 allowed it to connect to Wi-Fi network.
+>> > > >
+>> > > > Setting it back to 8 did not kill the connection.
+>> > > >
+>> > > > But when I disconnected and tried to reconnect, it did not re-connect.
+>> > > >
+>> > > > Hence, it appears that the problem only affects the initial handshake
+>> > > > when associating with a network, and not normal packet flow.
+>> > > That sounds like the GRO batch isn't getting flushed at the endof the
+>> > >  NAPI — maybe the driver isn't calling napi_complete_done() at the
+>> > >  appropriate time?
+>> >
+>> > Yes, this was the first reason I thought about, but didn't look at
+>> > iwlwifi yet. I already knew this driver has some tricky parts, but
+>> > this 'fake NAPI' solution seems rather strange to me.
+>> 
+>> Truth be told, we kinda just fudged it until we got GRO, since that's
+>> what we really want on wifi (to reduce the costly TCP ACKs if 
+>> possible).
+>> 
+>> Maybe we should call napi_complete_done() instead? But as Edward noted
+>> (below), we don't actually really do NAPI polling, we just fake it for
+>> each interrupt since we will often get a lot of frames in one 
+>> interrupt
+>> if there's high throughput (A-MPDUs are basically coming in all at the
+>> same time). I've never really looked too much at what exactly happens
+>> here, beyond seeing the difference from GRO.
+>> 
+>> 
+>> > > Indeed, from digging through the layers of iwlwifi I eventually get to
+>> > >  iwl_pcie_rx_handle() which doesn't really have a NAPI poll (the
+>> > >  napi->poll function is iwl_pcie_dummy_napi_poll() { WARN_ON(1);
+>> > >  return 0; }) and instead calls napi_gro_flush() at the end of its RX
+>> > >  handling.  Unfortunately, napi_gro_flush() is no longer enough,
+>> > >  because it doesn't call gro_normal_list() so the packets on the
+>> > >  GRO_NORMAL list just sit there indefinitely.
+>> > >
+>> > > It was seeing drivers calling napi_gro_flush() directly that had me
+>> > >  worried in the first place about whether listifying napi_gro_receive()
+>> > >  was safe and where the gro_normal_list() should go.
+>> > > I wondered if other drivers that show up in [1] needed fixing with a
+>> > >  gro_normal_list() next to their napi_gro_flush() call.  From a cursory
+>> > >  check:
+>> > > brocade/bna: has a real poller, calls napi_complete_done() so is OK.
+>> > > cortina/gemini: calls napi_complete_done() straight after
+>> > >  napi_gro_flush(), so is OK.
+>> > > hisilicon/hns3: calls napi_complete(), so is _probably_ OK.
+>> > > But it's far from clear to me why *any* of those drivers are calling
+>> > >  napi_gro_flush() themselves...
+>> >
+>> > Agree. I mean, we _can_ handle this particular problem from networking
+>> > core side, but from my point of view only rethinking driver's logic is
+>> > the correct way to solve this and other issues that may potentionally
+>> > appear in future.
+>> 
+>> Do tell what you think it should be doing :)
+>> 
+>> One additional wrinkle is that we have firmware notifications, command
+>> completions and actual RX interleaved, so I think we do want to have
+>> interrupts for the notifications and command completions?
+> 
+> I think it would be nice moving the iwlwifi driver to full/plain NAPI
+> mode. The interrupt handler could keep processing extra work as it does
+> now and queue real pkts on some internal queue, and than schedule the
+> relevant napi, which in turn could process such queue in the napi poll
+> method. Likely I missed tons of details and/or oversimplified it...
 
+Yep, full NAPI is the best variant, but I may miss a lot too.
 
-On 2019/11/25 18:14, Jerome Brunet wrote:
+> For -net, I *think* something as dumb and hacky as the following could
+> possibly work:
+> ----
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+> b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+> index 4bba6b8a863c..df82fad96cbb 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+> @@ -1527,7 +1527,7 @@ static void iwl_pcie_rx_handle(struct iwl_trans
+> *trans, int queue)
+>                 iwl_pcie_rxq_alloc_rbs(trans, GFP_ATOMIC, rxq);
 > 
-> On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
+>         if (rxq->napi.poll)
+> -               napi_gro_flush(&rxq->napi, false);
+> +               napi_complete_done(&rxq->napi, 0);
 > 
->> Hi, Jerome
->>
->> On 2019/11/20 23:35, Jerome Brunet wrote:
->>>
->>> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
->>>
->>>> Hi, jerome
->>>>
->>>> Is there any problem about fixed_pll_dco's parent_data?
->>>>
->>>> Now both name and fw_name are described in parent_data.
->>>
->>> Yes, there is a problem.  This approach is incorrect, as I've tried to
->>> explain a couple times already. Let me try to re-summarize why this
->>> approach is incorrect.
->>>
->>> Both fw_name and name should be provided when it is possible that
->>> the DT does not describe the input clock. IOW, it is only for controllers
->>> which relied on the global name so far and are now starting to describe
->>> the clock input in DT
->>>
->>> This is not your case.
->>> Your controller is new and DT will have the correct
->>> info
->>>
->>> You are trying work around an ordering issue by providing both fw_name
->>> and name. This is not correct and I'll continue to nack it.
->>>
->>> If the orphan clock is not reparented as you would expect, I suggest you
->>> try to look a bit further at how the reparenting of orphans is done in
->>> CCF and why it does not match your expectation.
->>>
->> I have debugged the handle for orphan clock in CCF, Maybe you are missing
->> the last email.
-> 
-> Nope, got it the first time
-> 
->> Even though the clock index exit, it will get failed for the orphan clock's
->> parent clock due to it has not beed added to the provider.
-> 
-> If the provider is not registered yet, of course any query to it won't
-> work. This why I have suggested to this debug *further* :
-> 
-> * Is the orphan reparenting done when a new provider is registered ?
-> * If not, should it be done ? is this your problem ?
-> 
-Yes, the orphan reparenting is done when the new provider is registered.
+>         iwl_pcie_rxq_restock(trans, rxq);
+>  }
+> ---
 
-Reparenting the orphan will be done when each clock is registered by 
-devm_clk_hw_register. And at this time the provider has not been 
-registered. After all clocks are registered by devm_clk_hw_register, the
-provider will be registered by devm_of_clk_add_hw_provider.
+napi_complete_done(napi, 0) has an equivalent static inline
+napi_complete(napi). I'm not sure it will work without any issues
+as iwlwifi doesn't _really_ turn NAPI into scheduling state.
 
-Reparenting the orphan will fail when fw_name is added alone, the couse 
-is that devm_clk_hw_register is always running ahead of 
-devm_of_clk_add_hw_provider.
+I'm not very familiar with iwlwifi, but as a work around manual
+napi_gro_flush() you can also manually flush napi->rx_list to
+prevent packets from stalling:
 
-That is why it will failed to get parent for the orphan clock.
+diff -Naur a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c 
+b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c	2019-11-25 
+14:55:03.610355230 +0300
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c	2019-11-25 
+14:57:29.399556868 +0300
+@@ -1526,8 +1526,16 @@
+  	if (unlikely(emergency && count))
+  		iwl_pcie_rxq_alloc_rbs(trans, GFP_ATOMIC, rxq);
 
+-	if (rxq->napi.poll)
++	if (rxq->napi.poll) {
++		if (rxq->napi.rx_count) {
++			netif_receive_skb_list(&rxq->napi.rx_list);
++
++			INIT_LIST_HEAD(&rxq->napi.rx_list);
++			rxq->napi.rx_count = 0;
++		}
++
+  		napi_gro_flush(&rxq->napi, false);
++	}
 
+  	iwl_pcie_rxq_restock(trans, rxq);
+  }
 
+> Cheers,
 > 
-> .
-> 
+> Paolo
+
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
