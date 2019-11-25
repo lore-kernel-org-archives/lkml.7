@@ -2,82 +2,155 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A5CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58CA20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C990F20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="qC76Ttwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfKYIWh (ORCPT
+        id S1726937AbfKYI0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 03:22:37 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:21048 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfKYIWh (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 03:22:37 -0500
-X-Greylist: delayed 579 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 03:22:37 EST
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33019662"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 25 Nov 2019 16:12:57 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71510:0:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Mon, 25 Nov 2019 16:12:59 +0800 (CST)
-Received: from 192.168.33.57
-        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(101174:1:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Mon, 25 Nov 2019 16:12:58 +0800 (CST)
-From:   "Dave.Wang" <dave.wang@emc.com.tw>
-To:     <Linux-kernel@vger.kernel.org>, <Linux-input@vger.kernel.org>,
-        <Dmitry.torokhov@gmail.com>
-Subject: [PATCH] Input: elan_i2c - Add more hardware ID for Lenovo laptop
-Date:   Mon, 25 Nov 2019 16:12:56 +0800
-Message-ID: <001e01d5a368$24946950$6dbd3bf0$@emc.com.tw>
+        Mon, 25 Nov 2019 03:26:15 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:33460 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725792AbfKYI0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 03:26:15 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 5A2C31B219EB; Mon, 25 Nov 2019 11:26:11 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 5A2C31B219EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1574670371; bh=CXf4d7mRTFtOxVP/C73Vp+WHBGtRlikKg6MINbfQcRI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=qC76Ttwk9zWMoHh2BWJ1rZjI0dbWe/bLYUccZjXhFhZsLRHm+nRtbw5w5NJjhhvNb
+         TZ2z/5k51PBSt974CNErHbe8TSI7Q4FGSl4JY0wfwDgzviiqqEg95XKRbmtg5UC+rU
+         A0CL7nWVVYnpMhAaHVdmyI7ozHzIsp8nX1XQcBIg=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id F0DD01B21A00;
+        Mon, 25 Nov 2019 11:25:50 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru F0DD01B21A00
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 6A68F1B217D8;
+        Mon, 25 Nov 2019 11:25:50 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Mon, 25 Nov 2019 11:25:50 +0300 (MSK)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AdWjZOUZ82d17nMMTBCQUDb2k6LozQ==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy02MWZiNGU3MS0wZjViLTExZWEtYWExNC04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcNjFmYjRlNzItMGY1Yi0xMWVhLWFhMTQtODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSI4NzIiIHQ9IjEzMjE5MTQzMTc1ODgwNDI1MiIgaD0idCs3Z0xaRVM5TklZMVlvYWlDNFpiNGJoaTNvPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 25 Nov 2019 11:25:50 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     David Miller <davem@davemloft.net>, ecree@solarflare.com,
+        jiri@mellanox.com, edumazet@google.com, idosch@mellanox.com,
+        pabeni@redhat.com, petrm@mellanox.com, sd@queasysnail.net,
+        f.fainelli@gmail.com, jaswinder.singh@linaro.org,
+        ilias.apalodimas@linaro.org, linux-kernel@vger.kernel.org,
+        johannes.berg@intel.com, emmanuel.grumbach@intel.com,
+        luciano.coelho@intel.com, linuxwifi@intel.com,
+        kvalo@codeaurora.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in
+ napi_gro_receive()
+In-Reply-To: <c762f5eee08a8f2d0d6cb927d7fa3848@dlink.ru>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
+ <20191015.181649.949805234862708186.davem@davemloft.net>
+ <7e68da00d7c129a8ce290229743beb3d@dlink.ru>
+ <PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <c762f5eee08a8f2d0d6cb927d7fa3848@dlink.ru>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <746f768684f266e5a5db1faf8314cd77@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add more hardware ID for Lenovo laptop.
+Alexander Lobakin wrote 25.11.2019 10:54:
+> Nicholas Johnson wrote 25.11.2019 10:29:
+>> Hi,
+>> 
+>> On Wed, Oct 16, 2019 at 10:31:31AM +0300, Alexander Lobakin wrote:
+>>> David Miller wrote 16.10.2019 04:16:
+>>> > From: Alexander Lobakin <alobakin@dlink.ru>
+>>> > Date: Mon, 14 Oct 2019 11:00:33 +0300
+>>> >
+>>> > > Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
+>>> > > skbs") made use of listified skb processing for the users of
+>>> > > napi_gro_frags().
+>>> > > The same technique can be used in a way more common napi_gro_receive()
+>>> > > to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers
+>>> > > including gro_cells and mac80211 users.
+>>> > > This slightly changes the return value in cases where skb is being
+>>> > > dropped by the core stack, but it seems to have no impact on related
+>>> > > drivers' functionality.
+>>> > > gro_normal_batch is left untouched as it's very individual for every
+>>> > > single system configuration and might be tuned in manual order to
+>>> > > achieve an optimal performance.
+>>> > >
+>>> > > Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+>>> > > Acked-by: Edward Cree <ecree@solarflare.com>
+>>> >
+>>> > Applied, thank you.
+>>> 
+>>> David, Edward, Eric, Ilias,
+>>> thank you for your time.
+>>> 
+>>> Regards,
+>>> ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+>> 
+>> I am very sorry to be the bearer of bad news. It appears that this
+>> commit is causing a regression in Linux 5.4.0-rc8-next-20191122,
+>> preventing me from connecting to Wi-Fi networks. I have a Dell XPS 
+>> 9370
+>> (Intel Core i7-8650U) with Intel Wireless 8265 [8086:24fd].
+> 
+> Hi!
+> 
+> It's a bit strange as this commit doesn't directly affect the packet
+> flow. I don't have any iwlwifi hardware at the moment, so let's see if
+> anyone else will be able to reproduce this (for now, it is the first
+> report in a ~6 weeks after applying to net-next).
+> Anyway, I'll investigate iwlwifi's Rx processing -- maybe I could find
+> something driver-specific that might produce this.
+> 
+> Thank you for the report.
+> 
+>> I did a bisect, and this commit was named the culprit. I then applied
+>> the reverse patch on another clone of Linux next-20191122, and it
+>> started working.
+>> 
+>> 6570bc79c0dfff0f228b7afd2de720fb4e84d61d
+>> net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
+>> 
+>> You can see more at the bug report I filed at [0].
+>> 
+>> [0]
+>> https://bugzilla.kernel.org/show_bug.cgi?id=205647
+>> 
+>> I called on others at [0] to try to reproduce this - you should not 
+>> pull
+>> a patch because of a single reporter - as I could be wrong.
+>> 
+>> Please let me know if you want me to give more debugging information 
+>> or
+>> test any potential fixes. I am happy to help to fix this. :)
 
-Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
----
- include/linux/input/elan-i2c-ids.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+And you can also set /proc/sys/net/core/gro_normal_batch to the value
+of 1 and see if there are any changes. This value makes GRO stack to
+behave just like without the patch.
 
-diff --git a/include/linux/input/elan-i2c-ids.h
-b/include/linux/input/elan-i2c-ids.h
-index 1ecb6b45812c..247e3f75bae7 100644
---- a/include/linux/input/elan-i2c-ids.h
-+++ b/include/linux/input/elan-i2c-ids.h
-@@ -67,8 +67,15 @@ static const struct acpi_device_id elan_acpi_id[] = {
- 	{ "ELAN062B", 0 },
- 	{ "ELAN062C", 0 },
- 	{ "ELAN062D", 0 },
-+	{ "ELAN062E", 0 },
-+	{ "ELAN062F", 0 },
- 	{ "ELAN0631", 0 },
- 	{ "ELAN0632", 0 },
-+	{ "ELAN0633", 0 },
-+	{ "ELAN0634", 0 },
-+	{ "ELAN0635", 0 },
-+	{ "ELAN0636", 0 },
-+	{ "ELAN0637", 0 },
- 	{ "ELAN1000", 0 },
- 	{ }
- };
--- 
-2.17.1
+>> Kind regards,
+>> Nicholas Johnson
+> 
+> Regards,
+> ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
 
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
