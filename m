@@ -2,151 +2,68 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4303C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07E020727
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:18:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OxsvRh5q"
+	by mail.kernel.org (Postfix) with ESMTP id 85B802053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfKYVSF (ORCPT
+        id S1726333AbfKYVYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 16:18:05 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:56188 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfKYVSF (ORCPT
+        Mon, 25 Nov 2019 16:24:06 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:58252 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725930AbfKYVYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 16:18:05 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAPL9SgQ165259;
-        Mon, 25 Nov 2019 21:17:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=K7hqDnK/TsK5jvG3JC6XMU0Tierrock1H72ajxKsRBk=;
- b=OxsvRh5qJIREV0Nl58dZLErboXL1oTJYkpCY+bN+jUxOsaZnBggZOaWX42HmTWvi5Sdd
- jU/vbr9jriaO9rf9vnnq/9NcUnL44XByndtFygp0jflr1w+2WgYFOylKbTvjSenpWQcA
- Df94UVHciiRbCXw540IQwQfE4TBrib2TGIvfDDsXqpHHC9V2EZTSLY8eBcYJydFhZqtK
- GLy/SVg92+5KEHok13Wp4sRddWEoRaJc8UrIVtl3DqdcY9HSvYoyaX8SbsHvujXaE6Jd
- 0z0ucNwxpPE9soWGJXRUhljiIXmWJn7TqkxYKCg3/cCwCdulaqfxjDfbM79dhPIpDNlp Yg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2wewdr2917-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Nov 2019 21:17:22 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAPL8VPe156913;
-        Mon, 25 Nov 2019 21:15:22 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2wfe80nsw4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Nov 2019 21:15:21 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAPLFBfc020511;
-        Mon, 25 Nov 2019 21:15:11 GMT
-Received: from neelam.us.oracle.com (/10.152.128.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 25 Nov 2019 13:15:11 -0800
-From:   Alex Kogan <alex.kogan@oracle.com>
-To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        alex.kogan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-Subject: [PATCH v7 0/5] Add NUMA-awareness to qspinlock
-Date:   Mon, 25 Nov 2019 16:07:04 -0500
-Message-Id: <20191125210709.10293-1-alex.kogan@oracle.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 25 Nov 2019 16:24:06 -0500
+Received: (qmail 5654 invoked by uid 2102); 25 Nov 2019 16:24:05 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 25 Nov 2019 16:24:05 -0500
+Date:   Mon, 25 Nov 2019 16:24:05 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
+        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: INFO: rcu detected stall in hub_event
+In-Reply-To: <00000000000003b7c305982885e3@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911251622420.1565-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9452 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=988
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911250171
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9452 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911250171
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minor change from v6:
----------------------
+#syz test: https://github.com/google/kasan.git 46178223
 
-- fixed a 32-bit build failure by adding dependency on 64BIT in Kconfig.
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-Summary
--------
-
-Lock throughput can be increased by handing a lock to a waiter on the
-same NUMA node as the lock holder, provided care is taken to avoid
-starvation of waiters on other NUMA nodes. This patch introduces CNA
-(compact NUMA-aware lock) as the slow path for qspinlock. It is
-enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
-
-CNA is a NUMA-aware version of the MCS lock. Spinning threads are
-organized in two queues, a main queue for threads running on the same
-node as the current lock holder, and a secondary queue for threads
-running on other nodes. Threads store the ID of the node on which
-they are running in their queue nodes. After acquiring the MCS lock and
-before acquiring the spinlock, the lock holder scans the main queue
-looking for a thread running on the same node (pre-scan). If found (call
-it thread T), all threads in the main queue between the current lock
-holder and T are moved to the end of the secondary queue.  If such T
-is not found, we make another scan of the main queue after acquiring 
-the spinlock when unlocking the MCS lock (post-scan), starting at the
-node where pre-scan stopped. If both scans fail to find such T, the
-MCS lock is passed to the first thread in the secondary queue. If the
-secondary queue is empty, the MCS lock is passed to the next thread in the
-main queue. To avoid starvation of threads in the secondary queue, those
-threads are moved back to the head of the main queue after a certain
-number of intra-node lock hand-offs.
-
-More details are available at https://arxiv.org/abs/1810.05600.
-
-The series applies on top of v5.4.0, commit eae56099de85.
-Performance numbers are available in previous revisions
-of the series.
-
-Further comments are welcome and appreciated.
-
-Alex Kogan (5):
-  locking/qspinlock: Rename mcs lock/unlock macros and make them more
-    generic
-  locking/qspinlock: Refactor the qspinlock slow path
-  locking/qspinlock: Introduce CNA into the slow path of qspinlock
-  locking/qspinlock: Introduce starvation avoidance into CNA
-  locking/qspinlock: Introduce the shuffle reduction optimization into
-    CNA
-
- .../admin-guide/kernel-parameters.txt         |  18 +
- arch/arm/include/asm/mcs_spinlock.h           |   6 +-
- arch/x86/Kconfig                              |  20 ++
- arch/x86/include/asm/qspinlock.h              |   4 +
- arch/x86/kernel/alternative.c                 |  70 ++++
- include/asm-generic/mcs_spinlock.h            |   4 +-
- kernel/locking/mcs_spinlock.h                 |  20 +-
- kernel/locking/qspinlock.c                    |  77 ++++-
- kernel/locking/qspinlock_cna.h                | 319 ++++++++++++++++++
- kernel/locking/qspinlock_paravirt.h           |   2 +-
- 10 files changed, 517 insertions(+), 23 deletions(-)
- create mode 100644 kernel/locking/qspinlock_cna.h
-
--- 
-2.21.0 (Apple Git-122.2)
+Index: usb-devel/drivers/hid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-core.c
++++ usb-devel/drivers/hid/hid-core.c
+@@ -1057,6 +1057,8 @@ static void hid_apply_multiplier(struct
+ 	while (multiplier_collection->parent_idx != -1 &&
+ 	       multiplier_collection->type != HID_COLLECTION_LOGICAL)
+ 		multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
++	if (multiplier_collection->type != HID_COLLECTION_LOGICAL)
++		multiplier_collection = NULL;
+ 
+ 	effective_multiplier = hid_calculate_multiplier(hid, multiplier);
+ 
+@@ -1191,6 +1193,9 @@ int hid_open_report(struct hid_device *d
+ 	}
+ 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
+ 
++	/* Needed for usages before the first collection */
++	device->collection[0].parent_idx = -1;
++
+ 	ret = -EINVAL;
+ 	while ((start = fetch_item(start, end, &item)) != NULL) {
+ 
 
