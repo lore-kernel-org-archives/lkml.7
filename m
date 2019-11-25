@@ -2,92 +2,84 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23899C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD93C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C3820706
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 21:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BAE20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKYVqf (ORCPT
+        id S1726957AbfKYWFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 16:46:35 -0500
-Received: from l2mail1.panix.com ([166.84.1.75]:50933 "EHLO l2mail1.panix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfKYVqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 16:46:35 -0500
-X-Greylist: delayed 945 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 16:46:33 EST
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-        by l2mail1.panix.com (Postfix) with ESMTPS id 47MKvr2g9lzDkf
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 16:30:48 -0500 (EST)
-Received: from hp-x360n (50-76-61-131-ip-static.hfc.comcastbusiness.net [50.76.61.131])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 47MKvq2mkdz1tRQ;
-        Mon, 25 Nov 2019 16:30:47 -0500 (EST)
-Date:   Mon, 25 Nov 2019 13:30:45 -0800 (PST)
-From:   "Kenneth R. Crudup" <kenny@panix.com>
-Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
-To:     torvalds@linux-foundation.org
-cc:     linux-kernel@vger.kernel.org
-Subject: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in fdget_pos()")
- breaking userspace
-Message-ID: <alpine.DEB.2.21.1911251322160.2408@hp-x360n>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 25 Nov 2019 17:05:00 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52627 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKYWFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 17:05:00 -0500
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xAPM40dL086354;
+        Tue, 26 Nov 2019 07:04:01 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
+ Tue, 26 Nov 2019 07:04:00 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040052248.bbtec.net [126.40.52.248])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xAPM3qjm086324
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 26 Nov 2019 07:04:00 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: general protection fault in selinux_socket_sendmsg (2)
+To:     syzbot <syzbot+314db21f0d5c1f53856c@syzkaller.appspotmail.com>,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <0000000000006c9f4e059830c33c@google.com>
+Cc:     andriin@fb.com, anton@enomsg.org, ast@kernel.org,
+        bpf@vger.kernel.org, ccross@android.com, daniel@iogearbox.net,
+        eparis@parisplace.org, kafai@fb.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, paul@paul-moore.com,
+        sds@tycho.nsa.gov, selinux@vger.kernel.org, songliubraving@fb.com,
+        tony.luck@intel.com, yhs@fb.com
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <2340a1a3-37cf-5f55-1f9a-9052a557f579@I-love.SAKURA.ne.jp>
+Date:   Tue, 26 Nov 2019 07:03:51 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <0000000000006c9f4e059830c33c@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/11/26 4:28, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    6b8a7946 Merge tag 'for_linus' of git://git.kernel.org/pub..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1680ab8ce00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4737c15fc47048f2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=314db21f0d5c1f53856c
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
 
-FYI. Don't know if the fault lies with these subsystems or not, but I know
-it's been a goal to keep things working. In both cases, reverting this commit
-fixes both these issues. If you need additional information from me, please
-let me know.
+Original bug has syz reproducer.
 
-First issue manifests itself as a timeout in KDE's upower daemon:
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+314db21f0d5c1f53856c@syzkaller.appspotmail.com
+> 
 
-----
-Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Start operation timed out. Terminating.
-Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Main process exited, code=killed, status=15/TERM
-Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Failed with result 'timeout'.
-Nov 25 13:18:51 hp-x360n systemd[1]: Failed to start Daemon for power management.
-Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Service RestartSec=100ms expired, scheduling restart.
-Nov 25 13:18:51 hp-x360n systemd[1]: upower.service: Scheduled restart job, restart counter is at 9.
-Nov 25 13:18:51 hp-x360n systemd[1]: Stopped Daemon for power management.
-Nov 25 13:18:51 hp-x360n systemd[1]: Starting Daemon for power management...
-----
+net/rxrpc/output.c:655
 
-Second issue:
-
-----
-Nov 25 13:19:22 hp-x360n kernel: [  861.213047] INFO: task vmware-vmblock-:1179 blocked for more than 737 seconds.
-Nov 25 13:19:22 hp-x360n kernel: [  861.213053]       Tainted: G     U            5.4.0-Kenny+ #8
-Nov 25 13:19:22 hp-x360n kernel: [  861.213054] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Nov 25 13:19:22 hp-x360n kernel: [  861.213056] vmware-vmblock- D    0  1179      1 0x00000000
-Nov 25 13:19:22 hp-x360n kernel: [  861.213060] Call Trace:
-Nov 25 13:19:22 hp-x360n kernel: [  861.213068]  ? __schedule+0x2b8/0x580
-Nov 25 13:19:22 hp-x360n kernel: [  861.213071]  schedule+0x36/0xc0
-Nov 25 13:19:22 hp-x360n kernel: [  861.213074]  schedule_preempt_disabled+0x11/0x20
-Nov 25 13:19:22 hp-x360n kernel: [  861.213077]  __mutex_lock.isra.11+0x2f0/0x500
-Nov 25 13:19:22 hp-x360n kernel: [  861.213082]  __fdget_pos+0x42/0x50
-Nov 25 13:19:22 hp-x360n kernel: [  861.213085]  do_writev+0x2f/0x110
-Nov 25 13:19:22 hp-x360n kernel: [  861.213088]  do_syscall_64+0x46/0x170
-Nov 25 13:19:22 hp-x360n kernel: [  861.213091]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Nov 25 13:19:22 hp-x360n kernel: [  861.213094] RIP: 0033:0x7f4c6da1d527
-Nov 25 13:19:22 hp-x360n kernel: [  861.213098] Code: Bad RIP value.
-Nov 25 13:19:22 hp-x360n kernel: [  861.213100] RSP: 002b:00007f4c6d6aebc0 EFLAGS: 00000297 ORIG_RAX: 0000000000000014
-Nov 25 13:19:22 hp-x360n kernel: [  861.213102] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f4c6da1d527
-Nov 25 13:19:22 hp-x360n kernel: [  861.213103] RDX: 0000000000000002 RSI: 00007f4c6d6aec50 RDI: 0000000000000003
-Nov 25 13:19:22 hp-x360n kernel: [  861.213104] RBP: 00007f4c6d6aec50 R08: 0000000000000001 R09: 00007f4c6ce8c700
-Nov 25 13:19:22 hp-x360n kernel: [  861.213106] R10: 00007f4c68000080 R11: 0000000000000297 R12: 0000000000000002
-Nov 25 13:19:22 hp-x360n kernel: [  861.213107] R13: 0000000000020000 R14: 0000000000000000 R15: 0000000000000000
-----
-
-	-Kenny
-
--- 
-Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Silicon Valley
+#syz dup: KMSAN: use-after-free in rxrpc_send_keepalive
