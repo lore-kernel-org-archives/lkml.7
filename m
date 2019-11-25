@@ -2,161 +2,103 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98317C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90DBC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAE620748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910D820637
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jZjGIWCD";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ze8vI+uQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKYHla (ORCPT
+        id S1726029AbfKYHnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:41:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54482 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725535AbfKYHla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:41:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CE29AB1DC;
-        Mon, 25 Nov 2019 07:41:27 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 08:41:18 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC queue for 5.5
-Message-ID: <20191125074118.GA12432@zn.tnic>
+        Mon, 25 Nov 2019 02:43:45 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:47308
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725535AbfKYHnp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 02:43:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574667824;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=38XBh07YX5GeTtsELU1klOdb/Ja+dN91/lAfvPbITss=;
+        b=jZjGIWCD3iQqHlEwFp64qAXEdAaUp6iFixe+xafbgop8f+zPucTx1m5TAZP6kgKH
+        7uAmO+2y+pdn79UGhAJtAuZY4atAHYagd7j63O7+rxJ0Fc4AiTJdTjV5cffgEdNkMaN
+        0Ghh9YcobxHtmGxyq/MPC6YyW+YYUvDqk8hLRbA8=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574667824;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=38XBh07YX5GeTtsELU1klOdb/Ja+dN91/lAfvPbITss=;
+        b=Ze8vI+uQmXGkIxWi7uQWxQ9ghIZe/CkgF5UqQoeTr8hFAvlG+fcyG1nOzq5zZAo3
+        NeBpB4A28izJIENqBvBwasvbLCZilVS7iRONEMw80G8HV0Lylq4b1AtO3knBrFjPYO7
+        ioS6NXCxEpTptFa1nwnoCTW58yNPh7oHSSg5bUBM=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 Nov 2019 07:43:44 +0000
+From:   cang@codeaurora.org
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 5/5] scsi: ufs: Do not free irq in suspend
+In-Reply-To: <MN2PR04MB69913C6C9ED425F99302D870FC4F0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1573624824-671-1-git-send-email-cang@codeaurora.org>
+ <1573624824-671-6-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB69913C6C9ED425F99302D870FC4F0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <0101016ea1842c0d-bbb3ea3d-c240-472f-87a6-d6b55edfb4a5-000000@us-west-2.amazonses.com>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.25-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2019-11-20 23:36, Avri Altman wrote:
+>> 
+>> If PM QoS is enabled and we set request type to PM_QOS_REQ_AFFINE_IRQ
+>> then freeing up the irq makes the free_irq() print out warning with 
+>> call stack.
+>> We don't really need to free up irq during suspend, disabling it 
+>> during suspend
+>> and reenabling it during resume should be good enough.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Your approach seems reasonable,
+> However I failed to locate in the kernel PM_QOS_REQ_AFFINE_IRQ,
+> Just in codeaurora.
+> 
+> Is the WARN_ON in free_irq still applies?
+> 
+> Thanks,
+> Avri
 
-a lot of changes this time around, tag message has the details. From
-the next cycle onwards, we'll switch the EDAC tree to topic branches
-(instead of a single edac-for-next branch) which should make the
-changes handling more flexible, hopefully. We'll see.
+Hi Avri,
 
-Please pull, thanks.
+Thanks for pointing. It seems PM_QOS_REQ_AFFINE_IRQ is not present
+on upstream yet. But this change is still applicable.
+How about changing the commit message to below?
 
-The following changes since commit 1e72e673b9d102ff2e8333e74b3308d012ddf75b:
+"Since ufshcd irq resource is allocated with the device resource
+management aware IRQ request implementation, we don't really need
+to free up irq during suspend, disabling it during suspend and
+reenabling it during resume should be good enough."
 
-  EDAC/ghes: Fix Use after free in ghes_edac remove path (2019-10-17 11:27:05 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_for_5.5
-
-for you to fetch changes up to 5781823fd0d39082bfe2bbc20408aaa85a6e06ad:
-
-  EDAC/altera: Use the Altera System Manager driver (2019-11-22 10:18:29 +0100)
-
-----------------------------------------------------------------
-* Rework error logging functions to accept a count of errors parameter 	(Hanna Hawa)
-
-* Part one of substantial EDAC core + ghes_edac driver cleanup		(Robert Richter)
-
-* Print additional useful logging information in skx_*			(Tony Luck)
-
-* Improve amd64_edac hw detection + cleanups				(Yazen Ghannam)
-
-* Misc cleanups, fixes and code improvements
-
-----------------------------------------------------------------
-Borislav Petkov (2):
-      Merge branch 'edac-urgent' into edac-for-next
-      EDAC/amd64: Get rid of the ECC disabled long message
-
-Hanna Hawa (1):
-      EDAC/device: Rework error logging API
-
-Markus Elfring (1):
-      EDAC/aspeed: Use devm_platform_ioremap_resource() in aspeed_probe()
-
-Mauro Carvalho Chehab (7):
-      EDAC: i5100_edac: get rid of an unused var
-      EDAC: i7300_edac: rename a kernel-doc var description
-      EDAC: i7300_edac: fix a kernel-doc syntax
-      EDAC: i5400_edac: print type at debug message
-      EDAC: i5400_edac: get rid of some unused vars
-      EDAC: sb_edac: get rid of unused vars
-      EDAC: skx_common: get rid of unused type var
-
-Meng Li (1):
-      EDAC/altera: Use fast register IO for S10 IRQs
-
-Robert Richter (14):
-      EDAC/ghes: Fix locking and memory barrier issues
-      EDAC: Replace EDAC_DIMM_PTR() macro with edac_get_dimm() function
-      EDAC: Remove EDAC_DIMM_OFF() macro
-      EDAC: Introduce an mci_for_each_dimm() iterator
-      EDAC/mc: Do not BUG_ON() in edac_mc_alloc()
-      EDAC/mc: Remove needless zero string termination
-      EDAC/mc: Reduce indentation level in edac_mc_handle_error()
-      EDAC: Remove misleading comment in struct edac_raw_error_desc
-      EDAC/ghes: Use standard kernel macros for page calculations
-      EDAC/ghes: Fix grain calculation
-      EDAC/ghes: Remove intermediate buffer pvt->detail_location
-      EDAC: Unify the mc_event tracepoint call
-      EDAC/Documentation: Describe CPER module definition and DIMM ranks
-      EDAC/ghes: Do not warn when incrementing refcount on 0
-
-Thor Thayer (2):
-      EDAC/altera: Cleanup the ECC Manager
-      EDAC/altera: Use the Altera System Manager driver
-
-Tony Luck (2):
-      EDAC, skx_common: Refactor so that we initialize "dev" in result of adxl decode.
-      EDAC, skx: Retrieve and print retry_rd_err_log registers
-
-Yazen Ghannam (6):
-      EDAC/amd64: Set grain per DIMM
-      EDAC/amd64: Make struct amd64_family_type global
-      EDAC/amd64: Gather hardware information early
-      EDAC/amd64: Save max number of controllers to family type
-      EDAC/amd64: Use cached data when checking for ECC
-      EDAC/amd64: Check for memory before fully initializing an instance
-
- Documentation/admin-guide/ras.rst |  31 +++---
- drivers/edac/altera_edac.c        | 152 ++------------------------
- drivers/edac/amd64_edac.c         | 217 ++++++++++++++++++--------------------
- drivers/edac/amd64_edac.h         |   2 +
- drivers/edac/aspeed_edac.c        |   7 +-
- drivers/edac/edac_device.c        |  50 +++++----
- drivers/edac/edac_device.h        |  54 ++++++++--
- drivers/edac/edac_mc.c            | 138 ++++++++++++------------
- drivers/edac/edac_mc_sysfs.c      |  49 +++------
- drivers/edac/ghes_edac.c          | 128 +++++++++++++---------
- drivers/edac/i10nm_base.c         |   3 +-
- drivers/edac/i3200_edac.c         |   3 +-
- drivers/edac/i5000_edac.c         |   5 +-
- drivers/edac/i5100_edac.c         |  16 +--
- drivers/edac/i5400_edac.c         |  18 +---
- drivers/edac/i7300_edac.c         |   7 +-
- drivers/edac/i7core_edac.c        |   3 +-
- drivers/edac/ie31200_edac.c       |   7 +-
- drivers/edac/pnd2_edac.c          |   4 +-
- drivers/edac/sb_edac.c            |  23 ++--
- drivers/edac/skx_base.c           |  54 +++++++++-
- drivers/edac/skx_common.c         |  65 ++++++------
- drivers/edac/skx_common.h         |   4 +-
- drivers/edac/ti_edac.c            |   2 +-
- include/linux/edac.h              | 146 ++++++++++++-------------
- 25 files changed, 555 insertions(+), 633 deletions(-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+Thanks,
+Can Guo
