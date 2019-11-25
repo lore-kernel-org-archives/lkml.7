@@ -2,162 +2,210 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FB3C43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF84DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A9420409
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="15Bpu0X6"
+	by mail.kernel.org (Postfix) with ESMTP id C31BE2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbfKYSdp (ORCPT
+        id S1726696AbfKYSf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 13:33:45 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41680 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729360AbfKYSdo (ORCPT
+        Mon, 25 Nov 2019 13:35:58 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41647 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfKYSf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 13:33:44 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m4so17071871ljj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 10:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kPjtxI/TrF4UnMikjlggsxMbTRpW7xiQMfu1Q1pQSto=;
-        b=15Bpu0X6m1bgIwc9pGxLJZIxvfZTaxrG3jlKJDzx9i0BU/czx4OvuotVSORu/UJMHA
-         5xAzIKc+sBj6fQJq7T5O+9lHX1m2VhKwfkd0yD8vRmCSzrz2q3HitQYPUdT/0O5TqWNW
-         lWITqzgChNWXPkzX5ejQHEnESq/ytb4CupHwGgWuqWuzEz2CIZfIbGGXxW49d02VEAaJ
-         ajqTbNbaTb3Q7BjdqUbyjB12Qx9qfQUbA0u7ndYqDInYEz75ynlU29iGTUEonXISUMRf
-         y1zDm0i3Wt4IK0Ndyr337xWNITXajNPS9NHKNamlJbrqEiUGGwadbe4Yf5ktuPmKK6iA
-         XFpQ==
+        Mon, 25 Nov 2019 13:35:58 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 207so7598151pge.8;
+        Mon, 25 Nov 2019 10:35:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kPjtxI/TrF4UnMikjlggsxMbTRpW7xiQMfu1Q1pQSto=;
-        b=h/qSp8CfdWaVkzgPqzHDS75NgDGWQd0lzyQJxcAxckt+dmUV3mYr47hzBUTZVUNW7g
-         58vBLNS0z9Bk3rSL4z1gBJnTF3b+cXeBct5K2ED6aTJ2cjXr3IyKLoYr4T0Q/i411vlh
-         cDibFmMEOWPPi4blRh6wjfuzhSC1s7Wn1qx3YsafK7XLU9aoeMCXlA+rMuK/xkWkZrwJ
-         vg06QL5NqiQ+UTYZxOs/gROwavnDzJkKTOHXKhjZTkNlaDptCncZusWB4A3Bx6ruilfC
-         nRXL/3TTBiaD7yEVLs8bWQJO+cj7+uvqWx4VPpgMUUvEj53dteT6vHYgR0C+/6M3WZQU
-         D3Ng==
-X-Gm-Message-State: APjAAAXq3xlhVadTlX7A1FDqMns5PoVWUrBoDfl+GHHWtIlsIBgsBGQ1
-        q1jVHRQ9Ss85QE1Fdm4+zgw0ZQ==
-X-Google-Smtp-Source: APXvYqytq8uQHbgkfOudQHi3MYcOIVXdIxAHGRYx6WisuZYKhE/mnmwsQkgLfFth9cwc6u+RUlHkjw==
-X-Received: by 2002:a2e:9f4d:: with SMTP id v13mr23663505ljk.78.1574706822066;
-        Mon, 25 Nov 2019 10:33:42 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n19sm4019290lfl.85.2019.11.25.10.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 10:33:41 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id B23951032C4; Mon, 25 Nov 2019 21:33:50 +0300 (+03)
-Date:   Mon, 25 Nov 2019 21:33:50 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
- partially
-Message-ID: <20191125183350.5gmcln6t3ofszbsy@box>
-References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191125093611.hlamtyo4hvefwibi@box>
- <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5wNA4KHBKZEp6N1N62CKTMhksw9S2p7XTOcetbk9WWE=;
+        b=cWTRY6iNT8eJpcv5qV5pp1oNWqEIBPxjm4szDfklRuIbCpdZEpyegCb0Q3kTtl3YIs
+         TRNdX1Hbgem4KRTyyYGMiBzuXN2cGUWZ+bmbsl3OlOZ1y8Z2R9zfj0YbSxp5s+ivIKoP
+         nGdXeqVHKYktEow5m5Ys6a7iQiGxcOGGAcgp6uXLGgTmQkTg5tw6VduVIGLZDf6nw0br
+         OfsDq4XVLT3BN2TN+n9Lmdo49uAhmBVHW75XDDDpqxESLjUX651Yg7Tsg+0AdoM6+O4S
+         TSkxqpPA2Io3ZydG3F52CmPPwXItSSK8OdpZnjbPbALPbt2Dz1+t1+DyDJd33sTVhNx1
+         Welg==
+X-Gm-Message-State: APjAAAWHMmjQY2UL5XE1aZai50/y3dXvF9aglwCtzv53vcEGWU95rodc
+        PHYHS1k+P9LAyWEczDRWq4Ote9Zg
+X-Google-Smtp-Source: APXvYqzErU6dZ23s05ZiNGrtpG6AeWwc8RJzdWdziKcpVZeVa76TXRWv7WDf2HY1ETAGufIWNDQbhg==
+X-Received: by 2002:a63:6c3:: with SMTP id 186mr33414159pgg.282.1574706956286;
+        Mon, 25 Nov 2019 10:35:56 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id r5sm9373499pfh.179.2019.11.25.10.35.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 10:35:55 -0800 (PST)
+From:   Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v2] loop: avoid EAGAIN, if offset or block_size are
+ changed
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+References: <20190518004751.18962-1-jaegeuk@kernel.org>
+ <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
+ <1e1aae74-bd6b-dddb-0c88-660aac33872c@acm.org>
+ <20191125175913.GC71634@jaegeuk-macbookpro.roam.corp.google.com>
+Message-ID: <a4e5d6bd-3685-379a-c388-cd2871827b21@acm.org>
+Date:   Mon, 25 Nov 2019 10:35:54 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191125175913.GC71634@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
+On 11/25/19 9:59 AM, Jaegeuk Kim wrote:
+> On 11/19, Bart Van Assche wrote:
+>> On 5/17/19 5:53 PM, Jaegeuk Kim wrote:
+>>> This patch tries to avoid EAGAIN due to nrpages!=0 that was originally trying
+>>> to drop stale pages resulting in wrong data access.
+>>>
+>>> Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+>>
+>> Please provide a more detailed commit description. What is wrong with the
+>> current implementation and why is the new behavior considered the correct
+>> behavior?
 > 
+> Some history would be:
 > 
-> On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
-> > On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
-> > > Currently when truncating shmem file, if the range is partial of THP
-> > > (start or end is in the middle of THP), the pages actually will just get
-> > > cleared rather than being freed unless the range cover the whole THP.
-> > > Even though all the subpages are truncated (randomly or sequentially),
-> > > the THP may still be kept in page cache.  This might be fine for some
-> > > usecases which prefer preserving THP.
-> > > 
-> > > But, when doing balloon inflation in QEMU, QEMU actually does hole punch
-> > > or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
-> > > So, when using shmem THP as memory backend QEMU inflation actually doesn't
-> > > work as expected since it doesn't free memory.  But, the inflation
-> > > usecase really needs get the memory freed.  Anonymous THP will not get
-> > > freed right away too but it will be freed eventually when all subpages are
-> > > unmapped, but shmem THP would still stay in page cache.
-> > > 
-> > > To protect the usecases which may prefer preserving THP, introduce a
-> > > new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP is
-> > > preferred behavior if truncating partial THP.  This mode just makes
-> > > sense to tmpfs for the time being.
-> > We need to clarify interaction with khugepaged. This implementation
-> > doesn't do anything to prevent khugepaged from collapsing the range back
-> > to THP just after the split.
+> Original bug fix is:
+> commit 5db470e229e2 ("loop: drop caches if offset or block_size are changed"),
+> which returns EAGAIN so that user land like Chrome would require enhancing their
+> error handling routines.
 > 
-> Yes, it doesn't. Will clarify this in the commit log.
-
-Okay, but I'm not sure that documention alone will be enough. We need
-proper design.
-
-> > > @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
-> > >   			}
-> > >   			unlock_page(page);
-> > >   		}
-> > > +rescan_split:
-> > >   		pagevec_remove_exceptionals(&pvec);
-> > >   		pagevec_release(&pvec);
-> > > +
-> > > +		if (split && PageTransCompound(page)) {
-> > > +			/* The THP may get freed under us */
-> > > +			if (!get_page_unless_zero(compound_head(page)))
-> > > +				goto rescan_out;
-> > > +
-> > > +			lock_page(page);
-> > > +
-> > > +			/*
-> > > +			 * The extra pins from page cache lookup have been
-> > > +			 * released by pagevec_release().
-> > > +			 */
-> > > +			if (!split_huge_page(page)) {
-> > > +				unlock_page(page);
-> > > +				put_page(page);
-> > > +				/* Re-look up page cache from current index */
-> > > +				goto again;
-> > > +			}
-> > > +			unlock_page(page);
-> > > +			put_page(page);
-> > > +		}
-> > > +rescan_out:
-> > >   		index++;
-> > >   	}
-> > Doing get_page_unless_zero() just after you've dropped the pin for the
-> > page looks very suboptimal.
+> So, this patch tries to avoid EAGAIN while addressing the original bug.
 > 
-> If I don't drop the pins the THP can't be split. And, there might be more
-> than one pins from find_get_entries() if I read the code correctly. For
-> example, truncate 8K length in the middle of THP, the THP's refcount would
-> get bumpped twice since  two sub pages would be returned.
+>>
+>> This patch moves draining code from before the following comment to after
+>> that comment:
+>>
+>> /* I/O need to be drained during transfer transition */
+>>
+>> Is that comment still correct or should it perhaps be updated?
+> 
+> IMHO, it's still valid.
 
-Pin the page before pagevec_release() and avoid get_page_unless_zero().
+Hi Jaegeuk,
 
-Current code is buggy. You need to check that the page is still belong to
-the file after speculative lookup.
+Thank you for the additional and very helpful clarification. Can you have a look at the (totally untested) patch below? I prefer that version because it prevents concurrent processing of requests and syncing/killing the bdev.
 
--- 
- Kirill A. Shutemov
+Thanks,
+
+Bart.
+
+
+Subject: [PATCH] loop: Avoid EAGAIN if offset or block_size are changed
+
+After sync_blockdev() and kill_bdev() have been called, more requests
+can be submitted to the loop device. These requests dirty additional
+pages, causing loop_set_status() to return -EAGAIN. Not all user space
+code that changes the offset and/or the block size handles -EAGAIN
+correctly. Hence make sure that loop_set_status() does not return
+-EAGAIN.
+
+Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
+Reported-by: Gwendal Grignou <gwendal@chromium.org>
+Reported-by: grygorii tertychnyi <gtertych@cisco.com>
+Reported-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+  drivers/block/loop.c | 35 +++++++----------------------------
+  1 file changed, 7 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 739b372a5112..48cfc8b9c247 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1264,15 +1264,15 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+  		goto out_unlock;
+  	}
+
++	/* I/O need to be drained during transfer transition */
++	blk_mq_freeze_queue(lo->lo_queue);
++
+  	if (lo->lo_offset != info->lo_offset ||
+  	    lo->lo_sizelimit != info->lo_sizelimit) {
+  		sync_blockdev(lo->lo_device);
+  		kill_bdev(lo->lo_device);
+  	}
+
+-	/* I/O need to be drained during transfer transition */
+-	blk_mq_freeze_queue(lo->lo_queue);
+-
+  	err = loop_release_xfer(lo);
+  	if (err)
+  		goto out_unfreeze;
+@@ -1298,14 +1298,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+
+  	if (lo->lo_offset != info->lo_offset ||
+  	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		/* kill_bdev should have truncated all the pages */
+-		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+-			err = -EAGAIN;
+-			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-				__func__, lo->lo_number, lo->lo_file_name,
+-				lo->lo_device->bd_inode->i_mapping->nrpages);
+-			goto out_unfreeze;
+-		}
+  		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+  			err = -EFBIG;
+  			goto out_unfreeze;
+@@ -1531,39 +1523,26 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
+
+  static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+  {
+-	int err = 0;
+-
+  	if (lo->lo_state != Lo_bound)
+  		return -ENXIO;
+
+  	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+  		return -EINVAL;
+
++	blk_mq_freeze_queue(lo->lo_queue);
++
+  	if (lo->lo_queue->limits.logical_block_size != arg) {
+  		sync_blockdev(lo->lo_device);
+  		kill_bdev(lo->lo_device);
+  	}
+-
+-	blk_mq_freeze_queue(lo->lo_queue);
+-
+-	/* kill_bdev should have truncated all the pages */
+-	if (lo->lo_queue->limits.logical_block_size != arg &&
+-			lo->lo_device->bd_inode->i_mapping->nrpages) {
+-		err = -EAGAIN;
+-		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-			__func__, lo->lo_number, lo->lo_file_name,
+-			lo->lo_device->bd_inode->i_mapping->nrpages);
+-		goto out_unfreeze;
+-	}
+-
+  	blk_queue_logical_block_size(lo->lo_queue, arg);
+  	blk_queue_physical_block_size(lo->lo_queue, arg);
+  	blk_queue_io_min(lo->lo_queue, arg);
+  	loop_update_dio(lo);
+-out_unfreeze:
++
+  	blk_mq_unfreeze_queue(lo->lo_queue);
+
+-	return err;
++	return 0;
+  }
+
+  static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
