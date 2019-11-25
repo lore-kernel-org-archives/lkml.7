@@ -2,111 +2,104 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50100C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F923C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE3620740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f8JuR9ii"
+	by mail.kernel.org (Postfix) with ESMTP id 6964B20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 23:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574725682;
+	bh=Qp7AOjegG3/6YWgxEi5Y1jDIBMFXeO5JTKgz9dR7sXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1h4AcsNQ2rxqYCKcDxyLct7stU7qvo1ZVx8ZTqlS9W5c+ai5IaxJNO0nRGa7NOeKb
+	 j+Kp9vwjLEM+WaP7YYO+8zALwGNlssDKxWZyG4QY+OySH3b2llQL8M0muYmCaoKlTP
+	 UY1rg0F5jzgAgdQHdyt8RAoSE1PZ406YPn2m2E3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfKYXpT (ORCPT
+        id S1726975AbfKYXsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 18:45:19 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3045 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfKYXpS (ORCPT
+        Mon, 25 Nov 2019 18:48:01 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44976 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKYXsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 18:45:18 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddc67910000>; Mon, 25 Nov 2019 15:45:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 25 Nov 2019 15:45:18 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 25 Nov 2019 15:45:18 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 23:45:17 +0000
-Subject: Re: [PATCH] bpf: fix a no-mmu build failure by providing a stub
- allocator
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>
-CC:     Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-References: <20191125234103.1699950-1-jhubbard@nvidia.com>
- <20191125234103.1699950-2-jhubbard@nvidia.com>
- <8c4d892a-73b5-b4d5-be15-bc81e8297de9@iogearbox.net>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <735f27ed-65dd-d132-e6b4-20ba5749876c@nvidia.com>
-Date:   Mon, 25 Nov 2019 15:45:17 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 25 Nov 2019 18:48:01 -0500
+Received: by mail-pg1-f194.google.com with SMTP id e6so7985272pgi.11;
+        Mon, 25 Nov 2019 15:48:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MeAqiLlUYvhPf8+12Rs2pe/QyDqA+63WVCf/WAXWie8=;
+        b=XMQzyV+w7TmNh8J3FgbhcKJ8m2CmfcMwIe7JFqEZu1A+bSmfjHOWRBS5DkA3DkBlha
+         gghh1jdqxli1scg6u1xNLDetltrSGm/ASf9QFRlRkd4gNTd7z443maq2BG8UYpzvjZu+
+         NU77T7XGna1cHHzwaWNAstAznxWf9DXF5mphg68H3P3hDhjNAB1XOsUG65yfosdhvXxQ
+         jWSChr3ZV6fdQDhopN1aTVz/rHprSNvqxjazGdoRIPIoGPX/kdSC76uQUtCOpSs+zsZW
+         anPfuDoFvO4wuNYh1AbLOwFrmwJl9tty3SFNhElJSXk2CKrNK6B9DGVJ9qk7+ULK2YeR
+         6Yyw==
+X-Gm-Message-State: APjAAAUCSjYAmX4ulKCe+nB4UENzVu8EbGjixHXhSeZ1CGI3JCevrgRv
+        /xSbt2ISnB01MG4Or4nu0+iUd62QCfrtuQ==
+X-Google-Smtp-Source: APXvYqw4aM4Jq+ybWzZzqVckCs08yRDy6UeWVlGe99hhU4DiLGx9UZmxcz7pXYZDQBu2MilgcW+waw==
+X-Received: by 2002:a63:6b82:: with SMTP id g124mr35552425pgc.178.1574725679797;
+        Mon, 25 Nov 2019 15:47:59 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id r4sm471926pji.11.2019.11.25.15.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 15:47:59 -0800 (PST)
+Date:   Mon, 25 Nov 2019 15:48:42 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org
+Subject: Re: Build regressions/improvements in v5.4
+Message-ID: <20191125234842.k53nspuqzbgx4zlq@lantea.localdomain>
+References: <20191125094110.14667-1-geert@linux-m68k.org>
+ <CAMuHMdX-N2AHHpBVJCqkh1RoMxFXhGikGn4mj9E7sj0qkR4ukg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8c4d892a-73b5-b4d5-be15-bc81e8297de9@iogearbox.net>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574725521; bh=WMDeAcbZMWSPJMBANRYNfknq2XJvnNPf3T3fbDniwfE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=f8JuR9ii0ljL+Rl9x2Epbdw3yXw2DiLEhV4ImlGOXOb2aEMhIxpnhMyxcOodL7KKS
-         3sCS/OSXJ5rBN910/7NLXae6d1kMXDHY5I8Kp9T/grvpttQkqodE1Gyf+ocjE0qbm/
-         pt8XKSvPtWYzQYmRMdGFjJUZ7I8S8qcMXcq0UmLVrSuhdPGoDnXt4HIkned6uY3L5k
-         m9LPTdpvBxb5/wUWAmik2+rrxlN1Nnohx+fIREjzS3SOYZkLw3J8qLVSLmrswxvmDU
-         PBFALk1N8P/TjfFzmIP09qtwosruAeG9YZTGaW4P455xmvL07vLGmhaDZ5PMqTLN6c
-         8MyrithA3laFg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX-N2AHHpBVJCqkh1RoMxFXhGikGn4mj9E7sj0qkR4ukg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 3:43 PM, Daniel Borkmann wrote:
-> On 11/26/19 12:41 AM, John Hubbard wrote:
->> Commit fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
->> added code that calls vmalloc_user_node_flags() and therefore requires
->> mm/vmalloc.c. However, that file is not built for the !CONFIG_MMU case.
->> This leads to a build failure when using ARM with the config provided
->> by at least one particular kbuild test robot report [1].
->>
->> [1] https://lore/kernel.org/r/201911251639.UWS3hE3Y%lkp@intel.com
->>
->> Fix the build by providing a stub function for __bpf_map_area_alloc().
->>
->> Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Cc: Andrii Nakryiko <andriin@fb.com>
->> Cc: Daniel Borkmann <daniel@iogearbox.net>
->> Cc: Song Liu <songliubraving@fb.com>
->> Cc: John Fastabend <john.fastabend@gmail.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Hi Geert,
+
+On Mon, Nov 25, 2019 at 10:50:09AM +0100, Geert Uytterhoeven wrote:
+> On Mon, Nov 25, 2019 at 10:44 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > JFYI, when comparing v5.4[1] to v5.4-rc8[3], the summaries are:
+> >   - build errors: +3/-0
 > 
-> Thanks for the patch, already fixed via:
+>   + /kisskb/src/drivers/staging/octeon/ethernet-spi.c: error:
+> 'OCTEON_IRQ_RML' undeclared (first use in this function):  => 224:12,
+> 198:19
+>   + /kisskb/src/drivers/staging/octeon/ethernet-spi.c: error:
+> 'OCTEON_IRQ_RML' undeclared (first use in this function); did you mean
+> 'OCTEON_IS_MODEL'?:  => 198:19, 224:12
+>   + /kisskb/src/drivers/staging/octeon/ethernet-tx.c: error:
+> 'OCTEON_IRQ_TIMER1' undeclared (first use in this function):  =>
+> 716:11, 705:18
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=ed81745a4c96841937f1da35c0eb66ac312e1480
+> mips-gcc8/mips-allmodconfig
+> 
+> All seen before, but hidden in v5.4-rcX (X > 5) by other build failures.
+> 
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/219d54332a09e8d8741c1e1982f5eae56099de85/
+> (232 out of 242 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/af42d3466bdc8f39806b26f593604fdc54140bcb/
+> (232 out of 242 configs)
 
-OK, good, that's a better fix, too. Appreciate the quick answers!
+As mentioned before[1], the fix for this[2] is already in staging-next
+but sadly it didn't seem to make it for v5.4...
 
+Thanks,
+    Paul
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+[1] https://lore.kernel.org/lkml/20191014170440.mvwgnj4stpeuzzey@gmail.com/
+[2] https://lore.kernel.org/driverdev-devel/20191007231741.2012860-1-paul.burton@mips.com/
