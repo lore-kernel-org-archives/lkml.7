@@ -2,88 +2,121 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC5CC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2B9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2882D2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7110207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZJwBa6mL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eWGt2oNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfKYPih (ORCPT
+        id S1728613AbfKYPjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:38:37 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33627 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728587AbfKYPih (ORCPT
+        Mon, 25 Nov 2019 10:39:05 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25392 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728525AbfKYPjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:38:37 -0500
-Received: by mail-lj1-f196.google.com with SMTP id t5so16438004ljk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:38:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JP9osWIZmD7xoqDPjZq0lxxN1Et7rRHogEF4lRtbdrI=;
-        b=ZJwBa6mLAtp4tfcRWLhDowPXNpk2LeIj3uvdB3sxr9+ex1gCr5J6qa0uX7+80oHn7+
-         SjhOSxogX9l7fH4YZKdCbpl93wdC5DSoJht5+ivJ7WAqyYKHMg1SvujBXbPKMp7sppMW
-         f9APlJXPYCxHa8lF+KeKsIQCkLSBByepqX/MWZoUexGjkVJgsSNHTpEPeimTipW5KFQI
-         rniH5+65ZfFmcVzJ5AoMi4KcqR/qdMQoikcHXWhLuwyvm9fsLTUiDtYfhCOxTX//npMo
-         Zt71BedVLyaLzMckk+5gQ7z79vUCiNHB1rILlTqhA8inJ1+LS8pbpi6miLMRCjp8haOe
-         uxfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JP9osWIZmD7xoqDPjZq0lxxN1Et7rRHogEF4lRtbdrI=;
-        b=HMTSAaLOiGpMoAc/ennx7/0YYtmseJ+FtQGYs0AVgtz/Z9HDL19UhHVqjT8nNj9nAX
-         4saspmVvBZMDVcbJLtU7qU0Ez4k/xKXvThv4Uyv91W+C0XP9IFKjZUhzozzMwlak8kFP
-         f+uBGF0PHXzXCum+IYdmSHTZDpw2Sy5J4qjGgEmZhjcgzkkUAo5K44BZNASGYrY/wK63
-         Lyu42KDPPL65kgCv2QpgXD9d75dlx4QLQtonntpr3HhqbPqAaH6ASpd/6vWUE+AeIcn4
-         ViYotuXpjlypi//tvPxPNGTKnbaONEmIhrBvRBvb7SIG0ZU8+hBELj8TB3DeeFm58CoF
-         UzRg==
-X-Gm-Message-State: APjAAAXldCADNZpNnr1kHgep42Jauk0CxZmNxRobCYSATDLfYTWtmnUL
-        GrNDI06eAkuGCSq2BssWZGPzF3ChB0FZvFLIZInBUg==
-X-Google-Smtp-Source: APXvYqzyAnvpCh6lNQuPZXbqWJSpuUAH5SCiLYwyha75J4nb4FqI7D3Bv+YpLUqqexRIevgopcC1EPkPCvxWl0Snjx8=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr2329267ljm.233.1574696314927;
- Mon, 25 Nov 2019 07:38:34 -0800 (PST)
+        Mon, 25 Nov 2019 10:39:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574696343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dneEZm6PaWRTyfChWz3XoPps5h37w7jv4igTylbUPX0=;
+        b=eWGt2oNT4vGAOSIthrtnNifYzMnwNn6hTBCVWXLnyPNyNR9M07JAtmMqOJq4Z3kucXFFYT
+        7rwecUoCZkRZbLA/RgTPykYhpg4p1kk445QdXyFjBjyFHJWUB42fKdY5Wem6ba2vPGOdnj
+        V5MyGtIER8EN+tfbJyArQnOzgYC0giU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-820Ckze9PraQlY4AioAdBA-1; Mon, 25 Nov 2019 10:39:00 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB1AC1010B29;
+        Mon, 25 Nov 2019 15:38:58 +0000 (UTC)
+Received: from dhcp-25.97.bos.redhat.com (unknown [10.18.25.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D23F60C81;
+        Mon, 25 Nov 2019 15:38:56 +0000 (UTC)
+From:   Aaron Conole <aconole@redhat.com>
+To:     Pravin Shelar <pshelar@ovn.org>
+Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, ovs dev <dev@openvswitch.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/2] openvswitch: support asymmetric conntrack
+References: <20191108210714.12426-1-aconole@redhat.com>
+        <CAOrHB_B1ueESwUQSkb7BuFGCCyKKqognoWbukTHo2jTajNca6w@mail.gmail.com>
+        <f7twobwyl53.fsf@dhcp-25.97.bos.redhat.com>
+Date:   Mon, 25 Nov 2019 10:38:56 -0500
+In-Reply-To: <f7twobwyl53.fsf@dhcp-25.97.bos.redhat.com> (Aaron Conole's
+        message of "Mon, 18 Nov 2019 15:39:20 -0500")
+Message-ID: <f7t7e3o9d9r.fsf@dhcp-25.97.bos.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20191125122256.53482-1-stephan@gerhold.net> <20191125122256.53482-3-stephan@gerhold.net>
-In-Reply-To: <20191125122256.53482-3-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 Nov 2019 16:38:23 +0100
-Message-ID: <CACRpkdZ2Ph7X6kP6ngL-K65cx-9q0bfU2ug0Dde1ddEWqJSrFw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] ARM: dts: ux500: Add alternative SDI pin configs
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 820Ckze9PraQlY4AioAdBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 1:26 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+Aaron Conole <aconole@redhat.com> writes:
 
-> SDI0/SDI1 can be used in configurations where some of the pins
-> (e.g. direction control) are not used. The pinctrl driver has
-> separate pin groups for them.
+> Pravin Shelar <pshelar@ovn.org> writes:
 >
-> Add new pin configurations for:
->   - mc0_a_2: like mc0_a_1, but without CMDDIR/DAT0DIR/DAT2DIR
->   - mc1_a_2: like mc1_a_1, but without FBCLK
+>> On Fri, Nov 8, 2019 at 1:07 PM Aaron Conole <aconole@redhat.com> wrote:
+>>>
+>>> The openvswitch module shares a common conntrack and NAT infrastructure
+>>> exposed via netfilter.  It's possible that a packet needs both SNAT and
+>>> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+>>> this because it runs through the NAT table twice - once on ingress and
+>>> again after egress.  The openvswitch module doesn't have such capabilit=
+y.
+>>>
+>>> Like netfilter hook infrastructure, we should run through NAT twice to
+>>> keep the symmetry.
+>>>
+>>> Fixes: 05752523e565 ("openvswitch: Interface with NAT.")
+>>> Signed-off-by: Aaron Conole <aconole@redhat.com>
+>>
+>> The patch looks ok. But I am not able apply it. can you fix the encoding=
+.
 >
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Hrrm.  I didn't make any special changes (just used git send-email).  I
+> will look at spinning a second patch.
 
-Patch applied for v5.6
+Pravin,
 
-Yours,
-Linus Walleij
+I tried the following:
+
+  10:36:59 aconole@dhcp-25 {(312434617cb1...)} ~/git/linux$ curl http://pat=
+chwork.ozlabs.org/patch/1192219/mbox/ > test.patch
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  C=
+urrent
+                                   Dload  Upload   Total   Spent    Left  S=
+peed
+  100  4827  100  4827    0     0   8824      0 --:--:-- --:--:-- --:--:-- =
+ 8808
+  10:37:21 aconole@dhcp-25 {(312434617cb1...)} ~/git/linux$ git am test.pat=
+ch
+  Applying: openvswitch: support asymmetric conntrack
+  10:37:24 aconole@dhcp-25 {(f759cc2b7323...)} ~/git/linux$=20
+
+
+Can you check your mailer settings?  The patchwork mbox worked fine, and
+I was able to apply from my own mbox as well.
+
+-Aaron
+
