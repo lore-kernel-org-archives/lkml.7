@@ -2,114 +2,60 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A91C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B02F20865
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8bWlsWY"
+	by mail.kernel.org (Postfix) with ESMTP id C54F52082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfKYTGV (ORCPT
+        id S1727121AbfKYTHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:06:21 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45003 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfKYTGV (ORCPT
+        Mon, 25 Nov 2019 14:07:10 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:53070 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfKYTHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:06:21 -0500
-Received: by mail-pg1-f193.google.com with SMTP id e6so7626763pgi.11;
-        Mon, 25 Nov 2019 11:06:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LU40ef0rAaum+eK/P6tsM0HgubIoAsYgjhlVKN9TpQs=;
-        b=C8bWlsWYOfJE+eaDIQUHKbAy1HyHWEp+OZ/BByrW20ecGjCJf5WF/yN00gZApPZRmB
-         qH/iXLSeK3uUD0vFmXwb+9BOZhbaDZTxfIArmW7Czw/7CIaoqalB2saiWnFL8iDaSmd1
-         87JBSvaUTYJIndOKi0bgn25mN6nGEd1/4ktZPPPNQgKWiH6Wfgh17guFFlT8govHRFU2
-         jx8ObqaxOpQ9/OI8FaX0FyHZRSJcIe2NRTPE4DZry0Fzu4OP5XZuoGZtg9lDG1irZuzV
-         54itsePORLKovCUk+ojFMyGeeJ/GM0Mr/PVqa57M8ukTWE4QNDnLwEVeAy3HpkJ06tFO
-         7i9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LU40ef0rAaum+eK/P6tsM0HgubIoAsYgjhlVKN9TpQs=;
-        b=bgCEUFaPkpF1zEr3/QCxD4/sIEJJABBz088ZzPO+SFJTJl8DRdUwuJlOneIeoA5HIA
-         5LQjbtuFwgQ8dFCSc25znAMcxGyaFWDyeMHsHCGXj9J1aAZiWFc9I5OcuYwu2o0YnDtq
-         gwsrr2EOMkcNU6dGPIu8SLir+OQvTvySBGWgs6MzWUguPCKeeAPaejjwniH2PndXnm2O
-         pIbuhTua+x15UqkJ73jwHURBEhLQJw6txsvHj2rzI0bNFRUHg749ofy+Dlu5em2GJqSg
-         xzqfUeIxPrKUZqBd8JjKWf2YMxEPcerXRZ1f4H24icTnPqqdtZH1oTp0Bxe5235xI+tI
-         4SHw==
-X-Gm-Message-State: APjAAAUnPQJIhcJn9k0aw6OS6ltxg94ImXGHZ7M+DzXy8ugWC+0Wkult
-        t5cGXIGjpOtYCVO8plwr4C0+BIZ1bNSACM5bP4c=
-X-Google-Smtp-Source: APXvYqy39ijvq81YlLmNNwHzlG7mr/+qq0TmYtKp519K+Bg6nnf0Ofs1DdS6b75x+HwFkKnFdO2IOzskZloIiG9tpJI=
-X-Received: by 2002:a65:5542:: with SMTP id t2mr33354313pgr.74.1574708776962;
- Mon, 25 Nov 2019 11:06:16 -0800 (PST)
-MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
- <1574604530-9024-4-git-send-email-akinobu.mita@gmail.com> <CAHp75VdkhFJZ71FS+DhrKTDPEW7Z-6imRSePm8EhgGF2sgTThg@mail.gmail.com>
- <CAC5umygDcYNd396K=CO7wpfDbESo4Sc39oWjkqu_-hmYbb2R1Q@mail.gmail.com>
-In-Reply-To: <CAC5umygDcYNd396K=CO7wpfDbESo4Sc39oWjkqu_-hmYbb2R1Q@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Nov 2019 21:06:06 +0200
-Message-ID: <CAHp75VcODtDb8Y-6hrfqMtwSstn2DOYMSxNvdeG8VwYpUQ03uw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] platform/x86: asus-wmi: switch to use
- <linux/temperature.h> helpers
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 14:07:10 -0500
+Received: from localhost (c-73-35-209-67.hsd1.wa.comcast.net [73.35.209.67])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 15AF71500C696;
+        Mon, 25 Nov 2019 11:07:09 -0800 (PST)
+Date:   Mon, 25 Nov 2019 11:07:08 -0800 (PST)
+Message-Id: <20191125.110708.76766634808358006.davem@davemloft.net>
+To:     tranmanphong@gmail.com
+Cc:     gregkh@linuxfoundation.org, oneukum@suse.com,
+        alexios.zavras@intel.com, johan@kernel.org, allison@lohutok.net,
+        tglx@linutronix.de, benquike@gmail.com, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drivers: net: usbnet: Fix -Wcast-function-type
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191125145443.29052-2-tranmanphong@gmail.com>
+References: <20191125145443.29052-1-tranmanphong@gmail.com>
+        <20191125145443.29052-2-tranmanphong@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 25 Nov 2019 11:07:09 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 4:32 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
-:
-> 2019=E5=B9=B411=E6=9C=8825=E6=97=A5(=E6=9C=88) 4:54 Andy Shevchenko <andy=
-.shevchenko@gmail.com>:
-> > On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> w=
-rote:
+From: Phong Tran <tranmanphong@gmail.com>
+Date: Mon, 25 Nov 2019 21:54:43 +0700
 
-> > > -       value =3D DECI_KELVIN_TO_CELSIUS((value & 0xFFFF)) * 1000;
-> > > -
-> > > -       return sprintf(buf, "%d\n", value);
-> >
-> > > +       return sprintf(buf, "%ld\n",
-> > > +                      deci_kelvin_to_millicelsius(value & 0xFFFF));
-> >
-> > Leave it in one line.
->
-> It causes this line over 80 characters.
+> @@ -1573,6 +1573,12 @@ static void usbnet_bh (struct timer_list *t)
+>  	}
+>  }
+>  
+> +static void usbnet_bh_tasklet (unsigned long data)
+                                ^
 
-And I don't care.
-
->  Or do you prefer to save the
-> conversion result in 'value' temporarily as before?
-
-No.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Please remove this space and resubmit the patch series.
