@@ -2,84 +2,61 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E09C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD01C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68A62075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574688850;
-	bh=vc2HnUN34cH0J0AqFhxWNVNhyi9ExSD5+ivRH89Arpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gVEfGmtlTZDsWKESb02XeF94qgiN2cvhMwSsHV41RwY4D+mZIi0ba0Y5P6srpqigY
-	 /OepRiS9M+8o0wnoQ8fqLpGic5MvRpA3Zoh3zo2oeKVd7SUSf+Pp0QwKsJp1GgUya2
-	 RqA2KWHNb0rsJlfi7n7zb1fv5d6N9LeW0KY/3XaU=
+	by mail.kernel.org (Postfix) with ESMTP id ED1E92075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfKYNeJ (ORCPT
+        id S1727816AbfKYNeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:34:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        Mon, 25 Nov 2019 08:34:37 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:60626 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727497AbfKYNeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:34:09 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 809622068F;
-        Mon, 25 Nov 2019 13:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574688848;
-        bh=vc2HnUN34cH0J0AqFhxWNVNhyi9ExSD5+ivRH89Arpo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yO88N+sz6lODVPYx5QnehECfOwBRTvGmhOU9CreyH5IJHKrSOmBmc4UBgqzlQGylY
-         OAq8bOL4p5JnOJj2zqogrmFlHVZqDLi6PPyLC2ff2lPJcI4aNiBbiWKVJlqZwoqgqR
-         ZM7+NVewlOXu31Vtu1wesNw1ruV3fGULGE2CaI5w=
-Date:   Mon, 25 Nov 2019 08:34:07 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Lyude Paul <lyude@redhat.com>, linux-input@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 21/21] Input: synaptics - enable RMI mode
- for X1 Extreme 2nd Generation
-Message-ID: <20191125133407.GB12367@sasha-vm>
-References: <20191122194931.24732-1-sashal@kernel.org>
- <20191122194931.24732-21-sashal@kernel.org>
- <20191122195602.GC248138@dtor-ws>
+        id S1727756AbfKYNeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 08:34:36 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 4D17020C37;
+        Mon, 25 Nov 2019 14:34:35 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 3BAEB20C1C;
+        Mon, 25 Nov 2019 14:34:35 +0100 (CET)
+Subject: Re: [PATCH v1] clk: Add devm_clk_{prepare,enable,prepare_enable}
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
+ <34e32662-c909-9eb3-e561-3274ad0bf3cc@free.fr>
+ <20191125125231.GO25745@shell.armlinux.org.uk>
+ <45730e3c-efc7-4433-4980-e6aefebdcbff@free.fr>
+ <20191125133103.GR25745@shell.armlinux.org.uk>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <7373182d-753c-a87b-8408-ffe4b7ac341f@free.fr>
+Date:   Mon, 25 Nov 2019 14:34:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191122195602.GC248138@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125133103.GR25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Nov 25 14:34:35 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:56:02AM -0800, Dmitry Torokhov wrote:
->On Fri, Nov 22, 2019 at 02:49:31PM -0500, Sasha Levin wrote:
->> From: Lyude Paul <lyude@redhat.com>
->>
->> [ Upstream commit 768ea88bcb235ac3a92754bf82afcd3f12200bcc ]
->>
->> Just got one of these for debugging some unrelated issues, and noticed
->> that Lenovo seems to have gone back to using RMI4 over smbus with
->> Synaptics touchpads on some of their new systems, particularly this one.
->> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
->>
->> Signed-off-by: Lyude Paul <lyude@redhat.com>
->> Link: https://lore.kernel.org/r/20191115221814.31903-1-lyude@redhat.com
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->This will be reverted, do not pick up for stable.
+On 25/11/2019 14:31, Russell King - ARM Linux admin wrote:
 
-I'll drop it, thanks!
+> The clk API and CCF are two different things.  I look after the clk API.
+> The CCF is an implementation of the clk API.  Do not introduce clk API
+> code in files that are CCF specific.
 
--- 
-Thanks,
-Sasha
+CCF is the acronym for Common Clock Framework?
