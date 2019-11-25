@@ -2,269 +2,173 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFB5C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1892C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D610520815
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:55:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574654144;
-	bh=513HjHQgO4ZinFCYqgbJc29Row103Q7nU6B7vvQYcjE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1TT7EqFvERdzR1TIKjB1AUOPr5R3UoCaETT3XKuZtqdxlJXZGrt3/zaKCq0PkBlLI
-	 oFJcdy0W6namJDvs/8S9OInm5/nYix0X9ZWLm3wuRPlOEzTk0EENq3HVA+/1XZyUkz
-	 4gYj3/kJAmKpcbqHy7vbd8CLPg64bICMsr6XYwno=
+	by mail.kernel.org (Postfix) with ESMTP id A0E522071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 03:58:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="a5Y+DE8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfKYDzm (ORCPT
+        id S1727071AbfKYD6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 22:55:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfKYDzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 22:55:42 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A3F2071A;
-        Mon, 25 Nov 2019 03:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574654140;
-        bh=513HjHQgO4ZinFCYqgbJc29Row103Q7nU6B7vvQYcjE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ibnWFTeRcAoMwg2qCFigKwa1BnVmKfKzrTjWuHsEjfh5ttaNXzvopy/WmZkmPhhMK
-         AVFTc51m5X+AArlK7JDdY41MhURXq0B7S7WszYNTw4XNzS042SIAmrEwdmuUYk0IzR
-         t9PrV+q2gYaGaHM+Gyo3erS5mVL4HYAsRDlP+bdg=
-Date:   Mon, 25 Nov 2019 12:55:34 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        alexei.starovoitov@gmail.com
-Subject: Re: [PATCH -v5 00/17] Rewrite x86/ftrace to use text_poke (and
- more)
-Message-Id: <20191125125534.2aaaccf00c38a9a25dee623a@kernel.org>
-In-Reply-To: <20191111131252.921588318@infradead.org>
-References: <20191111131252.921588318@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 24 Nov 2019 22:58:24 -0500
+Received: from mail-eopbgr820053.outbound.protection.outlook.com ([40.107.82.53]:25585
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726939AbfKYD6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 22:58:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tx7JeXjWM9jRpnWXHulwkxytc3vTQn+6Bz2LUUIY9rFTxAa/iChSovDs4P7cSH/nqZNf/PCZekrWymjS1ZFzsQ+3NjDKqjD1bmjh6EBOXE5VBFRyxH8wRK8uH8/T71Kkvnd0jo7xJRQ5S2dUQwY3ZYxU2AWA4K0w2NyCoVHufEqH+Mt9n7SNuKXJ+7nlhcTbnlWmuwONIK0fqeOxbqVAWBaLIRRk8s2xdQiGJb072ROc2HeurRx4pAKi0AMo9gJIIcH5vlewIJLDS6xyVEH5rx//wxsaOugsJcsgVvJhbg68U3Ka7L65HhBaY2JjtOc3S02cb48GrYz7MgVxUoRu6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dqsbP0bNaK4BIfI5jh5tXmvqonm9zCaTH/Ru8C/ebC0=;
+ b=J55Pg2XRvqktcQd05bWniuGElDLRFMhj4DPgUG4Wu/rb3MFLzCI9eRVH1b5BxPWXgzoaFfF49Od2hHNXiLwbnr39L3mV1Jjnfp7tcco74WDwHR5xpZ+TT2B7nIwcUd08yqVb1mUFAkQ7Fv4xiwZ6cfdL6bB+TTvOm+LcCa6gLF1Fq4YMvPlvGlLZi9k146wJC1vyMBgGRJ8Pd5Lw7QoVkTgIwmZt9XVTiTWEkmjMsYolT44U2D+aK0vJCFadUbuXQ8aJRRQeX3lO0pxFiP9bLeBkFpks2LHswpRqc0hrzbDW2KbhITsflcaIuciQSa4an75Neu5T1aId/psUBOTbuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dqsbP0bNaK4BIfI5jh5tXmvqonm9zCaTH/Ru8C/ebC0=;
+ b=a5Y+DE8J8VZZt6Si23a4+MU9fZJ2B1BQfcJldvhlUntFaZsAtToxvZtO/Gg4/XniB2Y7JmgW8+DplmVTM3310Qn+Ww1ga3SQgH1ej79AKVEd4cI6gB4Lqy7Meehq9tDmlSRd7pJVrPmYu7IQONB42W/GzftOkGN7VMnGc+0oFg0=
+Received: from MN2PR02MB6400.namprd02.prod.outlook.com (52.132.173.155) by
+ MN2PR02MB5983.namprd02.prod.outlook.com (20.179.86.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.16; Mon, 25 Nov 2019 03:58:14 +0000
+Received: from MN2PR02MB6400.namprd02.prod.outlook.com
+ ([fe80::c413:7dde:1e89:f355]) by MN2PR02MB6400.namprd02.prod.outlook.com
+ ([fe80::c413:7dde:1e89:f355%7]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
+ 03:58:14 +0000
+From:   Appana Durga Kedareswara Rao <appanad@xilinx.com>
+To:     Srinivas Neeli <sneeli@xilinx.com>,
+        "wg@grandegger.com" <wg@grandegger.com>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>
+CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>,
+        Venkatesh Yadav Abbarapu <VABBARAP@xilinx.com>,
+        Srinivas Neeli <sneeli@xilinx.com>
+Subject: RE: [PATCH 1/2] can: xilinx_can: skip error message on deferred probe
+Thread-Topic: [PATCH 1/2] can: xilinx_can: skip error message on deferred
+ probe
+Thread-Index: AQHVn5uyvnYOjQUpgEOekQq4Dc1LUqebSOAg
+Date:   Mon, 25 Nov 2019 03:58:14 +0000
+Message-ID: <MN2PR02MB640088D5A6812ED36864C55CDC4A0@MN2PR02MB6400.namprd02.prod.outlook.com>
+References: <1574251865-19592-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1574251865-19592-2-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1574251865-19592-2-git-send-email-srinivas.neeli@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-Mentions: srinivas.neeli@xilinx.com
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=appanad@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c2633ec4-379e-4dad-20b3-08d7715bb238
+x-ms-traffictypediagnostic: MN2PR02MB5983:|MN2PR02MB5983:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB5983A03A6241BBC2C3F572E2DC4A0@MN2PR02MB5983.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-forefront-prvs: 0232B30BBC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(13464003)(189003)(199004)(33656002)(6506007)(107886003)(6246003)(2201001)(478600001)(25786009)(305945005)(9686003)(7696005)(74316002)(102836004)(186003)(86362001)(53546011)(4326008)(76176011)(7736002)(6636002)(55016002)(66476007)(110136005)(71200400001)(66446008)(2906002)(52536014)(15650500001)(5660300002)(2501003)(8936002)(81166006)(81156014)(76116006)(66946007)(14454004)(6436002)(446003)(11346002)(229853002)(99286004)(6116002)(3846002)(66066001)(316002)(14444005)(8676002)(26005)(256004)(64756008)(71190400001)(66556008)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB5983;H:MN2PR02MB6400.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NIFWHqtd6j18T0Hn8skp9c1y7o22q7JUICuZ2tF0X1WVLGwwPthhkU1c+bVLVKiLU/TZPmkLJWamXoYE7VtVKCYttKKLLiqGarnhYjN9UGHBvYlhmtY4pIQ73XLm8flS+mtPZut9FAUYvkZOTe5ixS8d7/qdXzo+B0/7/d0aAkaAZRAWXKqDGoJeoMa2+ONIxmibrKYonBBtMRkTOfK0GqZPOxwAZe0XvnJaSDAU4vsgcUiZ18zQeyP34r2dgX3V414vRt3SIR/F9pnHaRr63ACtBV8D5dOeyw4FUjC3OfwOlc+gv3T9txxKMINqEYU6mqEhZRJgCdKcR+n1CtxDrXQnYialidP6ldCHZ/VBBqDS4J5uspq8tvFgiMoHBbq5gD9g8Cs/zV8BbT4BLYiStd0m0eBV+1Q6PUPH0+k7ovkaZHjC5elLsEUjSIL3p7Y2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2633ec4-379e-4dad-20b3-08d7715bb238
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 03:58:14.0371
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BXtq/ChvD3w50W0tSEfRHmd8Cyu05eCZw6Ptb0OfDyu2vgfpleEugfEuqqGbCKIf53YMStxv82rDB2lTDGQ15w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5983
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Hi,
 
-I got a BUG in poke_int3_handler() on 8 threads qemu x86-64
-while testing multi-probe testcase.
-I couldn't reproduce it because maybe it is a timing bug.
+> -----Original Message-----
+> From: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> Sent: Wednesday, November 20, 2019 5:41 PM
+> To: wg@grandegger.com; mkl@pengutronix.de; davem@davemloft.net;
+> Michal Simek <michals@xilinx.com>; Appana Durga Kedareswara Rao
+> <appanad@xilinx.com>
+> Cc: linux-can@vger.kernel.org; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git
+> <git@xilinx.com>; Naga Sureshkumar Relli <nagasure@xilinx.com>;
+> Venkatesh Yadav Abbarapu <VABBARAP@xilinx.com>; Srinivas Neeli
+> <sneeli@xilinx.com>
+> Subject: [PATCH 1/2] can: xilinx_can: skip error message on deferred prob=
+e
+>=20
+> From: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
+>=20
+> When can clock is provided from the clock wizard, clock wizard driver may
+> not be available when can driver probes resulting to the error message "b=
+us
+> clock not found error".
+>=20
+> As this error message is not very useful to the end user, skip printing i=
+n the
+> case of deferred probe.
+>=20
+> Signed-off-by: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-(Sorry, since the terminal line-wrap is disabled, the last chars are overwritten)
+@Srinivas Neeli: Please send v2 with improved commit message as Marc sugges=
+ted, feel free to add=20
+Reviewed-by: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com> in =
+v2.=20
 
-BUG: kernel NULL pointer dereference, add8
-[ 1475.147390] #PF: supervisor read access in kernel mode
-[ 1475.148380] #PF: error_code(0x0000) - not-present page
-[ 1475.149362] PGD 0 P4D 0 
-[ 1475.149970] Oops: 0000 [#1] PREEMPT SMP PTI
-[ 1475.150824] CPU: 6 PID: 0 Comm: swapper/6 Not tainted 5.4.0-rc6+ #19
-[ 1475.151996] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a4
-[ 1475.154078] RIP: 0010:poke_int3_handler+0x33/0x70
-[ 1475.155008] Code: d2 75 04 31 c0 5b c3 f6 87 88 00 00 00 03 75 f3 48 8b 87 80 00 00 00 48 89 fb b
-[ 1475.158308] RSP: 0018:ffffc900001a8c10 EFLAGS: 00010046
-[ 1475.159345] RAX: 0000000000000000 RBX: ffffc900001a8c38 RCX: ffffffff81800b57
-[ 1475.160653] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffffff81026ec5
-[ 1475.162032] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-[ 1475.163448] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[ 1475.164828] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[ 1475.166180] FS:  0000000000000000(0000) GS:ffff88807d980000(0000) knlGS:0000000000000000
-[ 1475.167876] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1475.169066] CR2: 0000000000000008 CR3: 000000000201e000 CR4: 00000000000006a0
-[ 1475.170431] Call Trace:
-[ 1475.171064]  <IRQ>
-[ 1475.171609]  do_int3+0xd/0xf0
-[ 1475.172302]  int3+0x42/0x50
-[ 1475.173014] RIP: 0010:sched_clock+0x6/0x10
-[ 1475.174061] Code: d3 ea f6 c1 40 48 0f 45 c2 4c 01 c0 65 ff 0d 99 ee fe 7e 74 02 5d c3 e8 f8 ad f
-[ 1475.178461] RSP: 0018:ffffc900001a8d10 EFLAGS: 00000016
-[ 1475.179475] RAX: 000001577e58ce4d RBX: ffff88807d261c00 RCX: 0000000000000000
-[ 1475.180685] RDX: 0000000000000014 RSI: 0000000000000014 RDI: ffffffff82556180
-[ 1475.181907] RBP: ffff88807d018600 R08: 000002ac502de60d R09: 0000000000000002
-[ 1475.183213] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88807d261ce0
-[ 1475.184365] R13: ffff88807d261d20 R14: 00000000000003e8 R15: 0000000000000002
-[ 1475.185515]  ? sched_clock+0x6/0x10
-[ 1475.186173]  trace_clock_local+0xc/0x20
-[ 1475.186939]  ring_buffer_lock_reserve+0x10d/0x410
-[ 1475.187797]  trace_event_buffer_lock_reserve+0x4a/0xf0
-[ 1475.188740]  kprobe_trace_func+0x10e/0x370
-[ 1475.189489]  ? sched_clock+0x6/0x10
-[ 1475.190141]  kprobe_dispatcher+0x39/0x60
-[ 1475.190911]  aggr_pre_handler+0x4c/0x90
-[ 1475.191602]  ? sched_clock+0x5/0x10
-[ 1475.192317]  kprobe_int3_handler+0x101/0x150
-[ 1475.193133]  do_int3+0x36/0xf0
-[ 1475.193697]  int3+0x42/0x50
-[ 1475.194241] RIP: 0010:sched_clock+0x6/0x10
-[ 1475.194947] Code: d3 ea f6 c1 40 48 0f 45 c2 4c 01 c0 65 ff 0d 99 ee fe 7e 74 02 5d c3 e8 f8 ad f
-[ 1475.197612] RSP: 0018:ffffc900001a8fc8 EFLAGS: 00000012
-[ 1475.198466] RAX: 000001577e58cc7f RBX: 0000000000000000 RCX: 0000000000000000
-[ 1475.199511] RDX: 0000000000000014 RSI: 0000000000000014 RDI: ffffffff82556180
-[ 1475.200552] RBP: 0000000000000000 R08: 000002ac502de274 R09: 0000000000000001
-[ 1475.201641] R10: 0000000000000000 R11: ffff88807d1a9e58 R12: 0000000000000000
-[ 1475.202804] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[ 1475.203932]  ? sched_clock+0x6/0x10
-[ 1475.204557]  ? sched_clock+0x5/0x10
-[ 1475.205176]  sched_clock_cpu+0xe/0xd0
-[ 1475.205830]  irq_exit+0xb3/0xc0
-[ 1475.206512]  call_function_interrupt+0xf/0x20
-[ 1475.207252]  </IRQ>
-[ 1475.207714] RIP: 0010:default_idle+0x23/0x180
-[ 1475.208449] Code: ff 90 90 90 90 90 90 41 55 41 54 55 53 e8 35 29 c7 ff 0f 1f 44 00 00 e8 8b af 5
-[ 1475.211721] RSP: 0018:ffffc9000008feb8 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff03
-[ 1475.213312] RAX: ffff88807d1a95c0 RBX: 0000000000000006 RCX: 0000000000000000
-[ 1475.214687] RDX: 0000000000000046 RSI: 0000000000000006 RDI: ffff88807d1a95c0
-[ 1475.216027] RBP: ffffffff8212da80 R08: 0000000000000001 R09: 0000000000000000
-[ 1475.217399] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[ 1475.218867] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[ 1475.220144]  ? default_idle+0x15/0x180
-[ 1475.220929]  default_idle_call+0x26/0x30
-[ 1475.221809]  do_idle+0x1fe/0x220
-[ 1475.222695]  ? trace_hardirqs_on+0x2c/0xf0
-[ 1475.223550]  cpu_startup_entry+0x14/0x20
-[ 1475.224390]  start_secondary+0x152/0x180
-[ 1475.225157]  secondary_startup_64+0xa4/0xb0
-[ 1475.226011] Modules linked in: [last unloaded: trace_printk]
-[ 1475.227028] CR2: 0000000000000008
-[ 1475.227636] ---[ end trace 5d3d01238a02c9e8 ]---
-[ 1475.228410] RIP: 0010:poke_int3_handler+0x33/0x70
-[ 1475.229187] Code: d2 75 04 31 c0 5b c3 f6 87 88 00 00 00 03 75 f3 48 8b 87 80 00 00 00 48 89 fb b
-[ 1475.232231] RSP: 0018:ffffc900001a8c10 EFLAGS: 00010046
-[ 1475.233180] RAX: 0000000000000000 RBX: ffffc900001a8c38 RCX: ffffffff81800b57
-[ 1475.234374] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffffff81026ec5
-[ 1475.236003] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-[ 1475.237818] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[ 1475.240007] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[ 1475.242493] FS:  0000000000000000(0000) GS:ffff88807d980000(0000) knlGS:0000000000000000
-[ 1475.245272] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1475.247136] CR2: 0000000000000008 CR3: 000000000201e000 CR4: 00000000000006a0
-[ 1475.249053] Kernel panic - not syncing: Fatal exception
-[ 1475.250593] Kernel Offset: disabled
-[ 1475.251459] ---[ end Kernel panic - not syncing: Fatal exception ]---
+Regards,
+Kedar.
+> ---
+>  drivers/net/can/xilinx_can.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c =
+index
+> 4a96e2dd7d77..c5f05b994435 100644
+> --- a/drivers/net/can/xilinx_can.c
+> +++ b/drivers/net/can/xilinx_can.c
+> @@ -1772,7 +1772,8 @@ static int xcan_probe(struct platform_device
+> *pdev)
+>=20
+>  	priv->bus_clk =3D devm_clk_get(&pdev->dev, devtype->bus_clk_name);
+>  	if (IS_ERR(priv->bus_clk)) {
+> -		dev_err(&pdev->dev, "bus clock not found\n");
+> +		if (PTR_ERR(priv->bus_clk) !=3D -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "bus clock not found\n");
+>  		ret =3D PTR_ERR(priv->bus_clk);
+>  		goto err_free;
+>  	}
+> --
+> 2.7.4
 
-$ eu-addr2line -e ./vmlinux poke_int3_handler+0x33
-arch/x86/kernel/alternative.c:996:6
-
------
-int poke_int3_handler(struct pt_regs *regs)
-{
-        struct text_poke_loc *tp;
-        unsigned char int3 = 0xcc;
-        void *ip;
-
-        /*
-         * Having observed our INT3 instruction, we now must observe
-         * bp_patching.nr_entries.
-         *
-         *      nr_entries != 0                 INT3
-         *      WMB                             RMB
-         *      write INT3                      if (nr_entries)
-         *
-         * Idem for other elements in bp_patching.
-         */
-        smp_rmb();
-
-        if (likely(!bp_patching.nr_entries))
-                return 0;
-
-        if (user_mode(regs))
-                return 0;
-
-        /*
-         * Discount the sizeof(int3). See text_poke_bp_batch().
-         */
-        ip = (void *) regs->ip - sizeof(int3);
-
-        /*
-         * Skip the binary search if there is a single member in the vector.
-         */
-        if (unlikely(bp_patching.nr_entries > 1)) {
-                tp = bsearch(ip, bp_patching.vec, bp_patching.nr_entries,
-                             sizeof(struct text_poke_loc),
-                             patch_cmp);
-                if (!tp)
-                        return 0;
-        } else {
-                tp = bp_patching.vec;
-                if (tp->addr != ip)  /* !!!! <-- HERE !!!!! */
-                        return 0;
-        }
-
-        /* set up the specified breakpoint detour */
-        regs->ip = (unsigned long) tp->detour;
-
-        return 1;
-}
------
-
-This seems like caused by bp_patching.vec is NULL but 
-bp_patching.nr_entries != 0. I think there is a small chance to do
-this, because we have no smp_wmb after cleaning bp_patching.nr_entries.
-
------
-void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
-...
-        on_each_cpu(do_sync_core, NULL, 1);
-        /*
-         * sync_core() implies an smp_mb() and orders this store against
-         * the writing of the new instruction.
-         */
-        bp_patching.vec = NULL;
-        bp_patching.nr_entries = 0;
-}
------
-
-I think the "on_each_cpu(do_sync_core, NULL, 1);" can sync the pipeline
-but doesn't ensure all ongoing int3 handling is done. Thus, we may need a
-bigger wait in between bp_patching.nr_entries = 0 and bp_patching.vec = NULL;
-e.g.
-
-	bp_patching.nr_entries = 0;
-	synchronize_rcu();
-	bp_patching.vec = NULL;
-
-What would you think about ?
-
-Thank you,
-
-On Mon, 11 Nov 2019 14:12:52 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> Ftrace is one of the last W^X violators (after this only KLP is left). These
-> patches move it over to the generic text_poke() interface and thereby get rid
-> of this oddity.
-> 
-> The first 14 patches are the same as in the -v4 posting. The last 3 patches are
-> new.
-> 
-> Will, patch 13, arm/ftrace, is unchanged. This is because this way it preserves
-> behaviour, but if you can provide me a tested-by for the simpler variant I can
-> drop that in.
-> 
-> Patch 15 reworks ftrace's event_create_dir(), which ran module code before the
-> module was finished loading (before we even applied jump_labels and all that).
-> 
-> Patch 16 and 17 address minor review feedback.
-> 
-> Ingo, Alexei wants patch #1 for some BPF stuff, can he get that in a topic branch?
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
