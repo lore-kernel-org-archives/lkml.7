@@ -2,119 +2,67 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAB9C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0D0C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 874FC207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99532073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574640703;
-	bh=7KhYAgodYyb0DXk6DOmo0km58xW1FsFbLoY4aD0xgA0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kgs4tueLpi9DRq/5WJsPYcUAphMUTbZPyGUvuIiXZ5YL9H4RTxyU4r5ygXiwiAvts
-	 +EFN1e4FtQVr5rPWEaqcxVJWsD5PCroEeh7AjC44psxnTbB43DS7Y1hgFdR+Lj3ZOx
-	 v5MqnLYS/1glYwVOaCpPO8DJXoEvq0p35vOxNSsA=
+	s=default; t=1574642103;
+	bh=Hkrc0yo7dEA/JPqcSDYhv9k5U1qztj+v5Q4RbQAcvQ4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=jXDZBZhDUhV8G510yAAmqm3zxjral/YIJ87auZXimkIPRQ4+C2nAPQYcNIy8J6mS0
+	 hweuERQ+3XqpuFuWzuglhFA5zEf7AlHj7ISh4oY0AW/A6wttWfvZnsyEUYHD2Uxr0/
+	 Ck7wvb5mCF8E9ZqAHrtAn64ZewkJ9PQOXWUBLLX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfKYALm (ORCPT
+        id S1727110AbfKYAfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 19:11:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
+        Sun, 24 Nov 2019 19:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfKYALm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 19:11:42 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 387472073F;
-        Mon, 25 Nov 2019 00:11:40 +0000 (UTC)
+        id S1726865AbfKYAfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 19:35:02 -0500
+Subject: Re: [git pull] vfs.git fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574640701;
-        bh=7KhYAgodYyb0DXk6DOmo0km58xW1FsFbLoY4aD0xgA0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9bquT4aQ5P+2cqSyC5bvtGDc+f/1mjylFDQiLabiccPJ1Ux35fRsMM0NPColipTc
-         j3DtRnBbA+jwUTbsITHwRRTwOA/tLZVNlTm56beQDu6lB3QfnDKD9dHIr++fJG0ptu
-         i9SFjRYgvAN2IpudqQhN31wb0kVzCEug7PeEqPVI=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [BUGFIX PATCH v2 3/3] selftests/ftrace: Do not to use absolute debugfs path
-Date:   Mon, 25 Nov 2019 09:11:38 +0900
-Message-Id: <157464069798.2006.1926064676962300669.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157464067201.2006.6413506591718899129.stgit@devnote2>
-References: <157464067201.2006.6413506591718899129.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        s=default; t=1574642102;
+        bh=Hkrc0yo7dEA/JPqcSDYhv9k5U1qztj+v5Q4RbQAcvQ4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=T0JK811EL10zkX5r9eFg6iCW4r8xUH1y3R+c68c+hlkL1aXX3pst8vNi86uebNpaM
+         8ncg6gUI/8mJZNAo8lk4flYLgs0Z1heDDfiNbbYKjPFDjNJN94BgV79Ae5r9gJ9oVd
+         +bwLSmDa8PN6MEDWKopE28/bazJbim60MPc6kCPE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191124200553.GC4203@ZenIV.linux.org.uk>
+References: <20191124200553.GC4203@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191124200553.GC4203@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+X-PR-Tracked-Commit-Id: 3e5aeec0e267d4422a4e740ce723549a3098a4d1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b8387f6f34952c09fe9a9f6e4be027f8b16cfd18
+Message-Id: <157464210199.8932.2451584505088350915.pr-tracker-bot@kernel.org>
+Date:   Mon, 25 Nov 2019 00:35:01 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use relative path to trigger file instead of absolute debugfs path,
-because if the user uses tracefs instead of debugfs, it can be
-mounted at /sys/kernel/tracing.
-Anyway, since the ftracetest is designed to be run at the tracing
-directory, user doesn't need to use absolute path.
+The pull request you sent on Sun, 24 Nov 2019 20:05:53 +0000:
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- .../inter-event/trigger-action-hist-xfail.tc       |    4 ++--
- .../inter-event/trigger-onchange-action-hist.tc    |    2 +-
- .../inter-event/trigger-snapshot-action-hist.tc    |    4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
 
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-index 1221240f8cf6..3f2aee115f6e 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-@@ -21,10 +21,10 @@ grep -q "snapshot()" README || exit_unsupported # version issue
- 
- echo "Test expected snapshot action failure"
- 
--echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger && exit_fail
-+echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> events/sched/sched_waking/trigger && exit_fail
- 
- echo "Test expected save action failure"
- 
--echo 'hist:keys=comm:onmatch(sched.sched_wakeup).save(comm,prio)' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger && exit_fail
-+echo 'hist:keys=comm:onmatch(sched.sched_wakeup).save(comm,prio)' >> events/sched/sched_waking/trigger && exit_fail
- 
- exit_xfail
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-index 064a284e4e75..c80007aa9f86 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-@@ -16,7 +16,7 @@ grep -q "onchange(var)" README || exit_unsupported # version issue
- 
- echo "Test onchange action"
- 
--echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-+echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> events/sched/sched_waking/trigger
- 
- ping $LOCALHOST -c 3
- nice -n 1 ping $LOCALHOST -c 3
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-index 18fff69fc433..f546c1b66a9b 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-@@ -23,9 +23,9 @@ grep -q "snapshot()" README || exit_unsupported # version issue
- 
- echo "Test snapshot action"
- 
--echo 1 > /sys/kernel/debug/tracing/events/sched/enable
-+echo 1 > events/sched/enable
- 
--echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-+echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> events/sched/sched_waking/trigger
- 
- ping $LOCALHOST -c 3
- nice -n 1 ping $LOCALHOST -c 3
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b8387f6f34952c09fe9a9f6e4be027f8b16cfd18
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
