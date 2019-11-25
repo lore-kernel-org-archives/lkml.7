@@ -2,119 +2,107 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A6AC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333142068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DE62068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kI85VaEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfKYQzM (ORCPT
+        id S1728980AbfKYQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:55:12 -0500
-Received: from mga18.intel.com ([134.134.136.126]:21593 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfKYQzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:55:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 08:55:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
-   d="scan'208";a="291443540"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 25 Nov 2019 08:55:10 -0800
-Received: from [10.252.11.205] (abudanko-mobl.ccr.corp.intel.com [10.252.11.205])
-        by linux.intel.com (Postfix) with ESMTP id 83F8E580342;
-        Mon, 25 Nov 2019 08:55:08 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] perf record: adapt affinity to machines with #CPUs
- > 1K
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <fb356fe9-ac87-71ab-9845-075b3fac3199@linux.intel.com>
- <69bd0062-0f9e-889b-b7ef-0d97d257569b@linux.intel.com>
- <20191125094220.GC4675@krava>
- <9b9209ce-ba61-824f-9443-3909991ff222@linux.intel.com>
- <20191125112122.GA1201@krava>
- <6c7de0f3-d75e-762d-f16e-10e9561c2afb@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <f9dd565f-a170-ce98-3ed0-23444bd8b89d@linux.intel.com>
-Date:   Mon, 25 Nov 2019 19:55:06 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 25 Nov 2019 11:58:26 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40391 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728915AbfKYQ60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 11:58:26 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a137so11544083qkc.7;
+        Mon, 25 Nov 2019 08:58:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pu8Eznl5GQtTXPjOvQ9qkpsA+I6ie4l2E52E9iodSKg=;
+        b=kI85VaEUlSWtCUuPFkbQTFWUQOHiHVp00qvsZKCR40vRjJ7HbRRfRKHmOgeCtFNOHJ
+         8DDCLa00uLyj2I6rTtVEjA5+HEtebq+ScYFeXJDfb7hrGvscihd69ZlCg+c7VwuO5NmN
+         9Dxl1DLsqBsV65H4fZN2pnbtO82hguY2+I9Ul5SewP0/adDMhSznjp9DMfMRq5H/ZjIx
+         r8KIf9ouPRbpWKLAKO51I/K7Ra33s3Xh6+BOuzKvB2smCVeO0KFgLMOXxvPplgi0XNxc
+         6JnexIvZikj6CcF1I2baJ2wW9XWWPgDlKdc+QuVoGyhDPclWK9Nbi535sUKs0RXxK9HW
+         HxXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pu8Eznl5GQtTXPjOvQ9qkpsA+I6ie4l2E52E9iodSKg=;
+        b=sE53gTKzBPh2HrjLo5ZBrBLWfNLvODyLtm/zziqmZhGiA+pRnsEbmIy6zDOEgnrhkv
+         tp+8BUedWUWXD3EyS8hfx2UwA52cI5mT5qtZ/JlyBfWs7QYiflW794HGjsR1+Nyjg8BY
+         ZUhhEkmw5U/55VKjO7r+7PagouJvW76kz13Q/8tsmdLTNafiCmdB21nE+gv5Eb+7L7+C
+         LyAG9qVqksS7p0CMX1z6RDecY/wATNN6NkgNd88cnLffs9dKknMHFLXxBSKTF42Tz9GM
+         AzKQtUcGglbaX8y60Rwdy2juJmBIhzX4o6twKrN7TSXKgByrlT893qNkg6MzS40yergu
+         z2UQ==
+X-Gm-Message-State: APjAAAUH2RiMkT9ZZOKUUPCNI1P8gGErDbauS1TxICsqQ/HkHz/sPtPH
+        XBsljiHOZHeBlhP+5VhNUg==
+X-Google-Smtp-Source: APXvYqxO5SzbSMf2GM1QIJxnbLV23bNiR0O9Mm5BFzBdYR1tMAFMsiVe0B+KMLvPAY93McNzzPGxjQ==
+X-Received: by 2002:a37:674d:: with SMTP id b74mr27861468qkc.396.1574701104739;
+        Mon, 25 Nov 2019 08:58:24 -0800 (PST)
+Received: from gabell (209-6-122-159.s2973.c3-0.arl-cbr1.sbo-arl.ma.cable.rcncustomer.com. [209.6.122.159])
+        by smtp.gmail.com with ESMTPSA id j10sm4205971qtb.34.2019.11.25.08.58.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Nov 2019 08:58:24 -0800 (PST)
+Date:   Mon, 25 Nov 2019 11:58:19 -0500
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com
+Subject: Re: [PATCH] fuse: Fix the return code of fuse_direct_IO() to deal
+ with the error for aio
+Message-ID: <20191125165819.k2ghv7h4tzyvyr6e@gabell>
+References: <20191118022410.21023-1-msys.mizuma@gmail.com>
+ <CAJfpegveuh3b0GMOmC3SuMOq=yi9sgBeOS2LGEetbfKqyS1xtQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6c7de0f3-d75e-762d-f16e-10e9561c2afb@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegveuh3b0GMOmC3SuMOq=yi9sgBeOS2LGEetbfKqyS1xtQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.11.2019 14:27, Alexey Budankov wrote:
+On Mon, Nov 25, 2019 at 01:38:38PM +0100, Miklos Szeredi wrote:
+> On Mon, Nov 18, 2019 at 3:24 AM Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
+> >
+> > From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> >
+> > exit_aio() is sometimes stuck in wait_for_completion() after aio is issued
+> > with direct IO and the task receives a signal.
+> >
+> > That is because kioctx in mm->ioctx_table is in use by aio_kiocb.
+> > aio_kiocb->ki_refcnt is 1 at that time. That means iocb_put() isn't
+> > called correctly.
+> >
+> > fuse_get_req() returns as -EINTR when it's blocked and receives a signal.
+> > fuse_direct_IO() deals with the -EINTER as -EIOCBQUEUED and returns as
+> > -EIOCBQUEUED even though the aio isn't queued.
+> > As the result, aio_rw_done() doesn't handle the error, so iocb_put() isn't
+> > called via aio_complete_rw(), which is the callback.
 > 
-> On 25.11.2019 14:21, Jiri Olsa wrote:
->> On Mon, Nov 25, 2019 at 02:13:20PM +0300, Alexey Budankov wrote:
->>> On 25.11.2019 12:42, Jiri Olsa wrote:
->>>> On Mon, Nov 25, 2019 at 09:08:57AM +0300, Alexey Budankov wrote:
->>>>
->>>> SNIP
->>>>
->>>>> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
->>>>> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
->>>>>  {
->>>>> -	CPU_ZERO(&map->affinity_mask);
->>>>> +	map->affinity_mask.nbits = cpu__max_cpu();
->>>>> +	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
->>>>> +	if (!map->affinity_mask.bits)
->>>>> +		return -1;
->>>>> +
->>>>>  	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
->>>>>  		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
->>>>>  	else if (mp->affinity == PERF_AFFINITY_CPU)
->>>>> -		CPU_SET(map->core.cpu, &map->affinity_mask);
->>>>> +		set_bit(map->core.cpu, map->affinity_mask.bits);
->>>>> +
->>>>> +	return 0;
->>>>>  }
->>>>>  
->>>>> +#define MASK_SIZE 1023
->>>>>  int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
->>>>>  {
->>>>> +	char mask[MASK_SIZE + 1] = {0};
->>>>
->>>> does this need to be initialized?
->>>
->>> This is to make sure the message is zero terminated for vfprintf call()
->>
->> hum AFAICS it's used only in bitmap_scnprintf, which should
->> terminate the string properly
+> Hi,
 > 
-> If vfprintf() explicitly terminates output buffer with zero then
-> the initialization above can be avoided.
+> Thanks for the report.
+> 
+> Can you please test the attached patch (without your patch)?
 
-Well, bitmap_scnprintf() returns the length of resulting string and 
-the length can be used to make zero termination in the buffer and 
-avoid mask initialization in the beginning.
+The patch you attached works well, thanks! I tested it with virtiofs.
 
-~Alexey
- 
-> 
->>
->> jirka
->>
-> 
-> ~Alexey
-> 
+Should I post the patch? Or could you take care of it? Let me know.
+
+Thanks!
+Masa
