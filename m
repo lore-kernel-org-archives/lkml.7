@@ -2,189 +2,136 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9634C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E6BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DFA20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D65E20718
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 04:34:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mgSsVVRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfKYE1i (ORCPT
+        id S1727060AbfKYEeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 23:27:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:44392 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfKYE1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 23:27:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 948E431B;
-        Sun, 24 Nov 2019 20:27:36 -0800 (PST)
-Received: from [192.168.0.10] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03E013F6C4;
-        Sun, 24 Nov 2019 20:27:21 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V10] mm/debug: Add tests validating architecture page
- table helpers
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1574227906-20550-1-git-send-email-anshuman.khandual@arm.com>
-Message-ID: <d20b95b2-369c-bcb8-3bf0-f7ce32d0fb12@arm.com>
-Date:   Mon, 25 Nov 2019 09:58:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 24 Nov 2019 23:34:15 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:1239 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfKYEeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 23:34:14 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddb59c90000>; Sun, 24 Nov 2019 20:34:17 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 24 Nov 2019 20:34:13 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 20:34:13 -0800
+Received: from [10.25.75.126] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 04:34:09 +0000
+Subject: Re: [PATCH 0/4] Add support to defer core initialization
+To:     "kishon@ti.com" <kishon@ti.com>
+CC:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
+ <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <550dd734-acd9-802a-f650-44c32b56b58a@nvidia.com>
+Date:   Mon, 25 Nov 2019 10:03:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1574227906-20550-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574656457; bh=BfDu0Gwt9ZesOr6ba1xsruGLFgOUT7v/gEah2QuX0Xo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mgSsVVRaXXlVb3lQ7dfibXFuo9n7PAR4P5eQ7llheJRBW2O3K1k6GftCp/c9Thalh
+         P5NBzz+9wBnn1GcLwe0778sXWS8PmQFAYDk7HgYSFGOUcEsviaWjDE3genCCZ24D4o
+         tY22kplJKWH4ViVyXa0VA1JCsD6Q68YdJMc+y2s6iRGjz44Lpr8yRfUVl5TJFd/WXv
+         FpySLrhO/eCKubSLinQdt7Bz1CwaSJ9lA4mJ37ZI1O47ZIbWN8hF6RJHBFQKeSPL7t
+         wlgmIo48bxyZS0CeplWxX4E+gOFJVsuy5wqIWDexZkYerGpSJXl7dDrn1ToXisgyiB
+         M+ehyM+cM2I3w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/2019 11:01 AM, Anshuman Khandual wrote:
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
-> 
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page
-> and validating them.
-> 
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
-> 
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
-> arm64. Going forward, other architectures too can enable this after fixing
-> build or runtime problems (if any) with their page table helpers.
-> 
-> Folks interested in making sure that a given platform's page table helpers
-> conform to expected generic MM semantics should enable the above config
-> which will just trigger this test during boot. Any non conformity here will
-> be reported as an warning which would need to be fixed. This test will help
-> catch any changes to the agreed upon semantics expected from generic MM and
-> enable platforms to accommodate it thereafter.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Steven Price <Steven.Price@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Sri Krishna chowdary <schowdary@nvidia.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This adds a test validation for architecture exported page table helpers.
-> Patch adds basic transformation tests at various levels of the page table.
-> 
-> This test was originally suggested by Catalin during arm64 THP migration
-> RFC discussion earlier. Going forward it can include more specific tests
-> with respect to various generic MM functions like THP, HugeTLB etc and
-> platform specific tests.
-> 
-> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
-> 
-> Needs to be applied on linux-next (next-20191108).
-> 
-> Changes in V10:
-> 
-> - Always enable DEBUG_VM_PGTABLE when DEBUG_VM is enabled per Ingo
-> - Added tags from Ingo
+On 11/18/2019 10:13 PM, Jingoo Han wrote:
+>=20
+>=20
+> =EF=BB=BFOn 11/18/19, 1:55 AM, Vidya Sagar wrote:
+>>
+>> On 11/13/2019 2:38 PM, Vidya Sagar wrote:
+>>> EPC/DesignWare core endpoint subsystems assume that the core registers =
+are
+>>> available always for SW to initialize. But, that may not be the case al=
+ways.
+>>> For example, Tegra194 hardware has the core running on a clock that is =
+derived
+>>> from reference clock that is coming into the endpoint system from host.
+>>> Hence core is made available asynchronously based on when host system i=
+s going
+>>> for enumeration of devices. To accommodate this kind of hardwares, supp=
+ort is
+>>> required to defer the core initialization until the respective platform=
+ driver
+>>> informs the EPC/DWC endpoint sub-systems that the core is indeed availa=
+ble for
+>>> initiaization. This patch series is attempting to add precisely that.
+>>> This series is based on Kishon's patch that adds notification mechanism
+>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+>>>
+>>> Vidya Sagar (4):
+>>>     PCI: dwc: Add new feature to skip core initialization
+>>>     PCI: endpoint: Add notification for core init completion
+>>>     PCI: dwc: Add API to notify core initialization completion
+>>>     PCI: pci-epf-test: Add support to defer core initialization
+>>>
+>>>    .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+>>>    drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++----=
+--
+>>>    drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+>>>    include/linux/pci-epc.h                       |   2 +
+>>>    include/linux/pci-epf.h                       |   5 +
+>>>    6 files changed, 164 insertions(+), 66 deletions(-)
+>>>
+>>
+>> Hi Kishon / Gustavo / Jingoo,
+>> Could you please take a look at this patch series?
+>=20
+> You need a Ack from Kishon, because he made EP code.
+Hi Kishon,
+Could you please find time to review this series?
 
-Hello Andrew,
+- Vidya Sagar
+>=20
+>=20
+>> - Vidya Sagar
 
-There has not been any further comments on the previous version (V9) or this version
-(V10) of the patch which accommodated a comment from Ingo Molnar regarding making
-DEBUG_VM_PGTABLE always enabled when DEBUG_VM is selected. If this version looks okay,
-then would you please consider merging ? But if there is anything which still needs
-to be improved, please do let me know. I will try to incorporate that. Thank you.
-
-- Anshuman
