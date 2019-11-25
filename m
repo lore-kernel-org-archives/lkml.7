@@ -2,130 +2,114 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD8C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0740C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBB320740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8674F20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574691418;
+	bh=FcsYHZTdJycVz6Nd/BJ4X38DCFU4dqeZf1izyPeHsvU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=gDsPE5x4SlSkUUmzc7daXsbyPzrrECVk/G4zJdjzk0hluY6ACe4LxxZoGX6wvPFyP
+	 d3BKptKZP5h1H5Q+Hfo8hXLTfplHpnnFdYw2HmTuT8wqqP8PUT6t272dMx29SqODO/
+	 BtEkBaSNfzf7YAElzeyHPC9puxBoI+E+r+L2e7WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfKYOP2 convert rfc822-to-8bit (ORCPT
+        id S1727954AbfKYOQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:15:28 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37333 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfKYOP2 (ORCPT
+        Mon, 25 Nov 2019 09:16:57 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32930 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727462AbfKYOQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:15:28 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 992E44000D;
-        Mon, 25 Nov 2019 14:15:24 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 15:15:23 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        linux-mtd@lists.infradead.org, Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
-Message-ID: <20191125151523.0766b3b7@xps13>
-In-Reply-To: <20191118221341.GA30937@bogus>
-References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
-        <20191113171505.26128-4-miquel.raynal@bootlin.com>
-        <20191118221341.GA30937@bogus>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 25 Nov 2019 09:16:57 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w9so18315159wrr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:16:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=iugLU0eTHDYBed47rvsz7OukNp7tc48GbQNHELuwgzM=;
+        b=vSOfs0q6FWUJ5RS8oZsDJfNIZEp4TFf98iqAXSAK/uatMsrDHlNctZ3j2woujk8f/+
+         l+WQ1sN9kSN8cXDvdFHWQ7TqTvcJDJARL6iRPbGUGoKSCZYMLEar/IQT1EoMakemxr6l
+         9+zMHcz8nXsX95Ex3qC+X3zXokDNH8YM5wuasz00uklDMpAAYzAoLINzsXAdFcM/F6Y5
+         fwfUqQBlj+vvq2t9Z375sF613X38hXoJ5gcymTd86N4D2DdvHx7vimuCGUySzbBKR4z1
+         HShPlacgU54E1qm3K4ywJFCsO/iqDH6DARNpuPNrzS2wRYFSkifcywiC1KYTFqoaBiBI
+         kpYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=iugLU0eTHDYBed47rvsz7OukNp7tc48GbQNHELuwgzM=;
+        b=NeSbeggRdMLjc2yqQ8V8TNRqK0r7v8vBmBlJTeHlApHCPf+a04RJY2HxZhVAlGIK1k
+         X1TyOyqXhCtcI4oOb1C8RA4oumHingHklhryxv+RO8tG1HXpc9hT6Kbw2cVfvQgaMncW
+         CyY2lRwfr0Mg/oX1QnRSlh24kwGOMynj5OUuwgtd9b0/P8WmqJ/nsN4plJSpXGXaNEa7
+         3G3ycAtl5cOL96l9sU0px4C/atnUxL0f+fdybVQQY/iWgFBsJFwZNwyqvdoxqC1GMTRs
+         R43v4bi+zxf9TKPNtZjQ5X/THFoKwwb8ULwavqCxVNTrA8fpEoOTNu1HKxHWHU0JbbZD
+         n8+g==
+X-Gm-Message-State: APjAAAUSiUEi2qSGazX6pPOATqHaOisPj0mhCHnzch8PBJbpGfsOpTwA
+        jvgSi0shfdksmMWLIlVFdGncEF+J
+X-Google-Smtp-Source: APXvYqyIqSLjR9IC+Q07oYqh8VljIc4Tevai+QHk2pg/FhBPNOgbSgzYduKPT8FdS5CRlvgL8Us07w==
+X-Received: by 2002:a5d:50c3:: with SMTP id f3mr30921343wrt.14.1574691414126;
+        Mon, 25 Nov 2019 06:16:54 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u18sm10781974wrp.14.2019.11.25.06.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 06:16:53 -0800 (PST)
+Date:   Mon, 25 Nov 2019 15:16:51 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/kdump changes for v5.5
+Message-ID: <20191125141651.GA21990@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Linus,
 
-Rob Herring <robh@kernel.org> wrote on Mon, 18 Nov 2019 16:13:41 -0600:
+Please pull the latest x86-kdump-for-linus git tree from:
 
-> On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
-> > From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-> > 
-> > The main use case to concatenate MTD devices is probably SPI-NOR
-> > flashes where the number of address bits is limited to 24, which can
-> > access a range of 16MiB. Board manufacturers might want to double the
-> > SPI storage size by adding a second flash asserted thanks to a second
-> > chip selects which enhances the addressing capabilities to 25 bits,
-> > 32MiB. Having two devices for twice the size is great but without more
-> > glue, we cannot define partition boundaries spread across the two
-> > devices. This is the gap mtd-concat intends to address.
-> > 
-> > There are two options to describe concatenated devices:
-> > 1/ One flash chip is described in the DT with two CS;
-> > 2/ Two flash chips are described in the DT with one CS each, a virtual
-> > device is also created to describe the concatenation.
-> > 
-> > Solution 1/ presents at least 3 issues:
-> > * The hardware description is abused;
-> > * The concatenation only works for SPI devices (while it could be
-> >   helpful for any MTD);
-> > * It would require a lot of rework in the SPI core as most of the
-> >   logic assumes there is and there always will be only one CS per
-> >   chip.  
-> 
-> This seems ok if all the devices are identical.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-kdump-for-linus
 
-This is not an option for Mark and I agree with him as we are faking
-the reality: the two devices we want to virtually concatenate may be
-two physically different devices. Binding them as one is lying.
+   # HEAD: 9eff303725da6530b615e9258f696149baa51df6 x86/crash: Align function arguments on opening braces
 
-> > Solution 2/ also has caveats:
-> > * The virtual device has no hardware reality;
-> > * Possible optimizations at the hardware level will be hard to enable
-> >   efficiently (ie. a common direct mapping abstracted by a SPI
-> >   memories oriented controller).  
-> 
-> Something like this may be necessary if data is interleaved rather than 
-> concatinated.
+This tree solves a kdump artifact where encrypted memory contents are 
+dumped, instead of unencrypted ones. The solution also happens to 
+simplify the kdump code, to everyone's delight.
 
-This is something that is gonna happen too, it is called "dual
-parallel".
+ Thanks,
 
-> Solution 3
-> Describe each device and partition separately and add link(s) from one 
-> partition to the next 
-> 
-> flash0 {
->   partitions {
->     compatible = "fixed-partitions";
->     concat-partition = <&flash1_partitions>;
->     ...
->   };
-> };
-> 
-> flash1 {
->   flash1_partition: partitions {
->     compatible = "fixed-partitions";
->     ...
->   };
-> };
+	Ingo
 
-I honestly don't see how this is different as solution 2/? In one case
-we describe the partition concatenation in one subnode as a "link", in
-the other we create a separate node to describe the link. Are you
-strongly opposed as solution 2/? From a pure conceptual point of view,
-is it really different than 3/?
- 
+------------------>
+Borislav Petkov (1):
+      x86/crash: Align function arguments on opening braces
 
-Thanks,
-Miquèl
+Lianbo Jiang (3):
+      x86/crash: Add a forward declaration of struct kimage
+      x86/kdump: Always reserve the low 1M when the crashkernel option is specified
+      x86/kdump: Remove the backup region handling
+
+
+ arch/x86/include/asm/crash.h       |   8 +++
+ arch/x86/include/asm/kexec.h       |  10 ---
+ arch/x86/include/asm/purgatory.h   |  10 ---
+ arch/x86/kernel/crash.c            | 128 +++++++++++--------------------------
+ arch/x86/kernel/machine_kexec_64.c |  47 --------------
+ arch/x86/purgatory/purgatory.c     |  19 ------
+ arch/x86/realmode/init.c           |   2 +
+ 7 files changed, 46 insertions(+), 178 deletions(-)
