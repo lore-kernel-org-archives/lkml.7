@@ -2,132 +2,113 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3ACC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CC7C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C7320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9732820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTzuu8Wg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbGZAPdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfKYOg4 (ORCPT
+        id S1728205AbfKYOjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:36:56 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34564 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728035AbfKYOgz (ORCPT
+        Mon, 25 Nov 2019 09:39:25 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46722 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbfKYOjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:36:55 -0500
-Received: by mail-pl1-f196.google.com with SMTP id h13so6604860plr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:36:55 -0800 (PST)
+        Mon, 25 Nov 2019 09:39:25 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 193so7457471pfc.13;
+        Mon, 25 Nov 2019 06:39:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ysuSQwdoiGXVRPkAiaiJnsu2siAicLc8PmRbx8aQeCc=;
-        b=XTzuu8Wgu30lZCM2ZeocPdBnl/r97cfM41I9es+Qqx5Lft/DxiSHuuori/v16kK+US
-         DhVT2ilvxqvVbAKtT6RH5r4dcGb5D2nl9WPZ3Gsblik1WxPB9h6KvlbTmoEXVC0h1n0b
-         D+XkP4sfNian+dJMkF+AJ8jbiu68v1zNiwwDZa9WjmI3Cf/384h8QOZIbdb87Zj2JQJQ
-         7ICiYZ9cXVgb6rDY47PNDsEi3F3AzmeQH0rXF3tcjfX2cgLNYgQzi5UPZXpvV/X6YXOu
-         UAiHb0AFdSYFuqyU3bqP1n0QZYQqnwXmWYSaqEb8JdfMMRK2HtDKKuN70DJgqG3ysVMr
-         8xwg==
+        bh=DTFCnl5gh1u+TR9T7mZcMZHn+JFU1MgZVavln5ZZFag=;
+        b=MbGZAPdEGQpokB1vplVcMY1xo9Kfk48iqryyYjtGAlS7hyRFB5zH8YY6aR7mO8Xdis
+         xmo6B2th0X8k5Yb6eoHYHLpaEfeuin0naZZlCoi2AQf4JC+60ccTheRE+eXAaK2kb8Jg
+         Xs16MNWWj6B8pTSOtM0Xfqd/hbGzcZ1rmE7NErdTnSBKbvkVKXQYFAbWiafIyKQSIQt3
+         Z0q1rFAjrt6IlVC2tyEG8fPwKcsqHYmTnIOHTOdRxmKWHdWVa6cz5A/OFo0z+jAy8y5y
+         oy86jgUwg0V18FZ8WeqbGj3D1qxMr216FcQBkggMzHi6UNmuHArME6eZhf4HK9o6psQA
+         zphA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ysuSQwdoiGXVRPkAiaiJnsu2siAicLc8PmRbx8aQeCc=;
-        b=ptaSW/C33/laRheCXf+retF8l2ZpOq6uLM5HkmCaENrtTMCMTEo8SDpwI8SKSE4lUl
-         Eq4fDVf7Nru/luWSnX8dxeVEm9+xpDxOL8TTXxdYCyANHYzEIk4HP66JGM/aP9tVIJZ6
-         We6nAeH6+smI6DqxdzNlxcuxNhefGzB2OX/EFT3wwlyvVJi3MrWIFY/0ZEoYliTvL6YG
-         xcWY3n3ox3npCNojFPh+5tzc6gJEuZFadUtKMf2fSrNK9Z0PsqAVPMs4GrnNarpiArMN
-         xqg42OZ6f2wCeTQVqnMV1hCI11gSeEKMoop1vv0W0UrHcpiFO5eUrPi5uSrFMHoUtVKe
-         9Edg==
-X-Gm-Message-State: APjAAAWgmKlIqtWVsQX6dIgv6KBrHwDVj2XxGebeqBemGerpfSPzPRyt
-        glDTO056X2bqPLWu6kr1hEM=
-X-Google-Smtp-Source: APXvYqxrZv8TLSS2e9Tj+i3G4fjhJe1qimOZjbsMyXuNMmugiduyfQQaj15LsEmop0UcMsXZOQssLg==
-X-Received: by 2002:a17:90a:1913:: with SMTP id 19mr40651035pjg.116.1574692614883;
-        Mon, 25 Nov 2019 06:36:54 -0800 (PST)
-Received: from mail.google.com ([139.180.133.10])
-        by smtp.gmail.com with ESMTPSA id v19sm8821547pjr.14.2019.11.25.06.36.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 06:36:54 -0800 (PST)
-Date:   Mon, 25 Nov 2019 22:36:46 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] perf: add support for logging debug messages to
- file
-Message-ID: <20191125143644.5tkkazvlke5wcbcw@mail.google.com>
-References: <20191018002757.4112-1-changbin.du@gmail.com>
- <20191123040910.dfi65lbev7ydtbdo@mail.google.com>
- <20191125092758.GA4675@krava>
+        bh=DTFCnl5gh1u+TR9T7mZcMZHn+JFU1MgZVavln5ZZFag=;
+        b=f6H0K6GoMcoMCoe4EiPIeFm7I8hTphiS+Oitw9lzNDrSiiTZDpvGoZeplzhHohVEcJ
+         EsvxoFGGWCJfxEgOA7pIxvqBezq9hAEr0WhXc2ne3IOc4wamzhL7jaGXQ2CE6OtwIVC0
+         5GMIMYY4BR8GBvyepQICctDaAYtjeETmqv6sQdcqSNary06UHLXAdvJmqYCT4eSk6eQ4
+         5Ev62ME4ldq7aTVkacCDYEtc5z5Nc3l7cn6/pCxQle4cM+wxQDI05POKQOqrF4ZxZjG9
+         M3uSCUpTc6wGOdpfawC4FtQxTrCCfIWk+FyhZrRD16DZtCiZN9VyLxvxIBZofqF3S66j
+         4s8w==
+X-Gm-Message-State: APjAAAW+yfr1sGzotPC3EhCUdf7+lAswKft8EU8JigjsuFwkCznRy07v
+        OOb0euwqjcG+6dnRQAK8Qro=
+X-Google-Smtp-Source: APXvYqy8f/sNdB9zlR2x/uQai4PddUprffiZxMQivT0emqtkfFV7dardd/K56g6HAct66PyfFGHZWA==
+X-Received: by 2002:a63:d750:: with SMTP id w16mr32248403pgi.156.1574692760406;
+        Mon, 25 Nov 2019 06:39:20 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id u7sm8564035pfh.84.2019.11.25.06.39.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Nov 2019 06:39:19 -0800 (PST)
+Date:   Mon, 25 Nov 2019 20:09:10 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20191125143900.GA2572@nishad>
+References: <20191123130815.GA3288@nishad>
+ <20191123183455.6266e9a8@cakuba.netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191125092758.GA4675@krava>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191123183455.6266e9a8@cakuba.netronome.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 10:27:58AM +0100, Jiri Olsa wrote:
-> On Sat, Nov 23, 2019 at 04:09:10AM +0000, Changbin Du wrote:
-> > Hi Jiri, In case you missed this one in your mailbox. :)
+On Sat, Nov 23, 2019 at 06:34:55PM -0800, Jakub Kicinski wrote:
+> On Sat, 23 Nov 2019 18:38:19 +0530, Nishad Kamdar wrote:
+> > diff --git a/drivers/net/phy/aquantia.h b/drivers/net/phy/aquantia.h
+> > index 5a16caab7b2f..40e0be0f4e1c 100644
+> > --- a/drivers/net/phy/aquantia.h
+> > +++ b/drivers/net/phy/aquantia.h
+> > @@ -1,5 +1,5 @@
+> > -/* SPDX-License-Identifier: GPL-2.0
+> > - * HWMON driver for Aquantia PHY
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*  HWMON driver for Aquantia PHY
 > 
-> sry I mised this and can't apply this anymore.. could you please
-> rebase it to current Arnaldo's perf/core?
->
-no problem, please check it later.
+> You're adding an extra space here. Is this intentional?
 
-> thanks,
-> jirka
-> 
-> > 
-> > On Fri, Oct 18, 2019 at 08:27:55AM +0800, Changbin Du wrote:
-> > > When in TUI mode, it is impossible to show all the debug messages to
-> > > console. This make it hard to debug perf issues using debug messages.
-> > > This patch adds support for logging debug messages to file to resolve
-> > > this problem.
-> > > 
-> > > v5:
-> > >   o doc default log path.
-> > > v4:
-> > >   o fix another segfault.
-> > > v3:
-> > >   o fix a segfault issue.
-> > > v2:
-> > >   o specific all debug options one time.
-> > > 
-> > > Changbin Du (2):
-> > >   perf: support multiple debug options separated by ','
-> > >   perf: add support for logging debug messages to file
-> > > 
-> > >  tools/perf/Documentation/perf.txt |  16 ++--
-> > >  tools/perf/util/debug.c           | 124 ++++++++++++++++++++----------
-> > >  2 files changed, 92 insertions(+), 48 deletions(-)
-> > > 
-> > > -- 
-> > > 2.20.1
-> > > 
-> > 
-> > -- 
-> > Cheers,
-> > Changbin Du
-> > 
-> 
+No, It shouldn't be there.
 
--- 
-Cheers,
-Changbin Du
+Thanks you for pointing it out.
+I'll update and resend the patch.
+
+Thanks for the review.
+
+Regards,
+Nishad
+
+> 
+> >   *
+> >   * Author: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> >   * Author: Andrew Lunn <andrew@lunn.ch>
