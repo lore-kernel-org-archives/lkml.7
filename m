@@ -2,74 +2,111 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3060C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D457320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E15220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfKYMPE (ORCPT
+        id S1727592AbfKYMQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:15:04 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50723 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfKYMPB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:15:01 -0500
-Received: by mail-io1-f69.google.com with SMTP id t193so10686991iof.17
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:15:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=jITXxrgjoInRktckRg5MiJg12GhimBajKoz0PrSCnvg=;
-        b=n2Gh0CKbw54dPd671+u4nRQ8iX7gcVwFzUazXTRV2zytGAuwefB5eY8Kg4Z7BEckkU
-         1TGOx1/94kgJhkIAu/qjUH3orsllGTwWL0BPcBnH8XI41EhEnKF55Tq/5cUsuNbRDRYC
-         aCCG0vKQkezn8fy+AaTMm/Ectj9SGSHEAll7NzXZGeuwxcTqlI/C3LR3Au0PUfHJcOPz
-         m7Nt0b3B0N3sDG6bAHOvX4qmW1bb8Mxj9Tem5kZSwiLmXRmOD54GrENPDFJmYBE0yfXB
-         aPt2rXvRQOthLY3jYNzZQPi/f4nTBMhmJmQrPNuzO9iwfcB21x0S3I7QMwbqwuBjWREB
-         60DA==
-X-Gm-Message-State: APjAAAUwMATfuq/y3SpbbAM1oq6dLOYusuHq5XVXwoxXmrzzK1QXIyOv
-        ohFKA5caoULS8w5hvsYQnsLrjy/7BgEKoVrclq3+IDezvKOQ
-X-Google-Smtp-Source: APXvYqytxmBqTzxizQgvYzjWh0aeEOxa1I9xely09r7l/Ai4MyXcYekdIJPhLUEbto69BSj3w6vEBvOgUIpa+xIav/JGQfvdepWq
+        Mon, 25 Nov 2019 07:16:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:49588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfKYMQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 07:16:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D0BF31B;
+        Mon, 25 Nov 2019 04:16:57 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F28363F52E;
+        Mon, 25 Nov 2019 04:16:55 -0800 (PST)
+Subject: Re: [PATCH] iommu/arm-smmu: support SMMU module probing from the IORT
+To:     Ard Biesheuvel <ardb@kernel.org>, will@kernel.org
+Cc:     bhelgaas@google.com, gregkh@linuxfoundation.org,
+        iommu@lists.linuxfoundation.org, isaacm@codeaurora.org,
+        jcrouse@codeaurora.org, jean-philippe@linaro.org,
+        john.garry@huawei.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        saravanak@google.com
+References: <20191121114918.2293-1-will@kernel.org>
+ <20191122174125.21030-1-ardb@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <37aa4c74-b29a-637c-e434-287089f1e170@arm.com>
+Date:   Mon, 25 Nov 2019 12:16:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2491:: with SMTP id g17mr23420075ioe.160.1574684101188;
- Mon, 25 Nov 2019 04:15:01 -0800 (PST)
-Date:   Mon, 25 Nov 2019 04:15:01 -0800
-In-Reply-To: <CAO-hwJL_P92-PvyDO2gEPovAQ3vmoH4jpQd-9w5G2ug1UPjc7A@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c225e05982ab601@google.com>
-Subject: Re: KMSAN: uninit-value in lg4ff_set_autocenter_default
-From:   syzbot <syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com>
-To:     benjamin.tissoires@redhat.com, glider@google.com, jikos@kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191122174125.21030-1-ardb@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 22/11/2019 5:41 pm, Ard Biesheuvel wrote:
+> Add support for SMMU drivers built as modules to the ACPI/IORT device
+> probing path, by deferring the probe of the master if the SMMU driver is
+> known to exist but has not been loaded yet. Given that the IORT code
+> registers a platform device for each SMMU that it discovers, we can
+> easily trigger the udev based autoloading of the SMMU drivers by making
+> the platform device identifier part of the module alias.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Thanks Ard, I was just gearing up to check the ACPI fallout myself :)
 
-Reported-and-tested-by:  
-syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+AFAICS this looks sufficient to avoid any unexpected behaviour if users 
+start playing with the rest of the series on ACPI systems, so we can 
+investigate 'proper' device links for IORT at some point in future.
 
-Tested on:
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-commit:         4a1d41e3 net: kasan: kmsan: support CONFIG_GENERIC_CSUM on..
-git tree:       https://github.com/google/kmsan.git master
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a8247e2b2298af08
-dashboard link: https://syzkaller.appspot.com/bug?extid=1234691fec1b8ceba8b1
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-
-Note: testing is done by a robot and is best-effort only.
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>   drivers/acpi/arm64/iort.c   | 4 ++--
+>   drivers/iommu/arm-smmu-v3.c | 1 +
+>   drivers/iommu/arm-smmu.c    | 1 +
+>   3 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 5a7551d060f2..a696457a9b11 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -850,9 +850,9 @@ static inline bool iort_iommu_driver_enabled(u8 type)
+>   {
+>   	switch (type) {
+>   	case ACPI_IORT_NODE_SMMU_V3:
+> -		return IS_BUILTIN(CONFIG_ARM_SMMU_V3);
+> +		return IS_ENABLED(CONFIG_ARM_SMMU_V3);
+>   	case ACPI_IORT_NODE_SMMU:
+> -		return IS_BUILTIN(CONFIG_ARM_SMMU);
+> +		return IS_ENABLED(CONFIG_ARM_SMMU);
+>   	default:
+>   		pr_warn("IORT node type %u does not describe an SMMU\n", type);
+>   		return false;
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 7669beafc493..bf6a1e8eb9b0 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -3733,4 +3733,5 @@ module_platform_driver(arm_smmu_driver);
+>   
+>   MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
+>   MODULE_AUTHOR("Will Deacon <will@kernel.org>");
+> +MODULE_ALIAS("platform:arm-smmu-v3");
+>   MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index d55acc48aee3..db5106b0955b 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -2292,4 +2292,5 @@ module_platform_driver(arm_smmu_driver);
+>   
+>   MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
+>   MODULE_AUTHOR("Will Deacon <will@kernel.org>");
+> +MODULE_ALIAS("platform:arm-smmu");
+>   MODULE_LICENSE("GPL v2");
+> 
