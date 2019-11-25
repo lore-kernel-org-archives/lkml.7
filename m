@@ -2,119 +2,158 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF3CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D036C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD1B207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574692230;
-	bh=AJPq8iM8XKX35GeEM/v+3PL7IYZTj8lHeZoM6KqMLx4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=LUOjv4D6CDeuSkAV1hqdp5Z9FODZUv7u5muKmo7rX58VZZLsGSX5VBpJdt2VZBy3A
-	 vrakaCiCOgplJnD8wuGXIgTWBRGzLR89h5T08XTV76vLo50M1xVUkg7okTQf/oVWyz
-	 47cKxcCQXHCiOAhRKqBr4WaxqDkRAR6tdcV2gn4I=
+	by mail.kernel.org (Postfix) with ESMTP id 6E29520740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SrjUydCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfKYOa3 (ORCPT
+        id S1728144AbfKYOap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:30:29 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51777 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfKYOa2 (ORCPT
+        Mon, 25 Nov 2019 09:30:45 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47587 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbfKYOap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:30:28 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g206so15391934wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:30:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=HsN9w+fDw5MnFSUDoKFOCnHxeu5TYCyLe2clUa/gQLU=;
-        b=FJJ5CxsCOKCIiImHFSffNMF+WPqeHrU1OL/fGmB246Y14SbE3Kh5R+i7Wck4fhjbbx
-         7uWYJzF+aAF2NDCi7T6I6ix7j8oKDWzTk0VIBMOGGCmilQEd//JlE+Z9uxrR/YoWg1QO
-         KOKcRxUZjRp+eo+8zsCGFXqLTP2BqBtq0zUAbdsAQ3/9qzMWAsdenfDMm/FBl3MdcaRI
-         4PPYOYYdbq5wM0e/SS0wtXBC0QrQM2y/rLDre5eBN+FC8iAziX7w6TWyaw/LviwV5Ecc
-         yNUSNmqXfsVtg5spDt8/XzOFDdhGUcUG5j9wUAm5fFKMtYjU1SteuodEdgOiXh+YBKM+
-         c1cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=HsN9w+fDw5MnFSUDoKFOCnHxeu5TYCyLe2clUa/gQLU=;
-        b=HqslMT8OPdFX6RLEplKxoBgoIdjhh0Hbt7ltIZih9wCTNgRqsd4JblW4sw3Ty41vWX
-         +O60oU255qyI30QEKPNaRblcSPFkpnsi0ugfTXNtHnzD6TpQuiMnVLhkwGtFQ8NLxLtw
-         YLzcorb4M+yqgZoaGLQ3Oc6X8+ZCznuxZK3FJObFzj4PYPoqct3JLc+ASnFltlJFEI6/
-         WCSwT3WHFQHRV4cwwKTZJiUk/fciPRgNi/FNCyLtdNDoJe1OYac4HWVacxt/zZ0ZuFav
-         IUzdIanPrpadPpW973sethWdgnn1gzuEVPkgrhdwIc6KFSBramC+AB2dEPn1sLOHoodM
-         t59A==
-X-Gm-Message-State: APjAAAW3/a8wMKFuR53kL96ehvjyCouthKD4noZZ4iV/2cJelKnxtvjk
-        SFaq+5vEmVTCtcTEqCja2YJZp3JB
-X-Google-Smtp-Source: APXvYqw5acLLRPqslG4olW2nK3lZJVciq0/5Hb2YBPaZZIJRnlpFkueLMVAzHv2pTWor8TL8FFfiCw==
-X-Received: by 2002:a1c:ed0e:: with SMTP id l14mr27405206wmh.74.1574692225131;
-        Mon, 25 Nov 2019 06:30:25 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id b14sm8622429wmj.18.2019.11.25.06.30.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 06:30:24 -0800 (PST)
-Date:   Mon, 25 Nov 2019 15:30:22 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/platform changes for v5.5
-Message-ID: <20191125143022.GA113303@gmail.com>
+        Mon, 25 Nov 2019 09:30:45 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191125143042euoutp018e6a643b21f8429d02e7eab5212db2a7~abkB5XFRx0115901159euoutp01n
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 14:30:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191125143042euoutp018e6a643b21f8429d02e7eab5212db2a7~abkB5XFRx0115901159euoutp01n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574692242;
+        bh=ZChMOgIHLEnNOY4NNVPrYG8C83I/sXPFP/0oqDp+8Xw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=SrjUydCvgqWZFkck5xn3iIA1/dr3Vi7TB6zVLy49abaHtaFVbDDiYLo0KetnRv6dw
+         Hvc7rEBotPDrn0wy4syoaedgtN2+9LG4XKHKjoKAOAIop/CUW1NUR5BcIOrPPGEZV9
+         1CUjFQOAetSF+1ZifdN9/OxV1h3fSq8Q6bq3KkbU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191125143042eucas1p2abfeb945dd9dcab62ba32796ee0652ed~abkBsjcJ-1853018530eucas1p2J;
+        Mon, 25 Nov 2019 14:30:42 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 57.95.61286.295EBDD5; Mon, 25
+        Nov 2019 14:30:42 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191125143042eucas1p17520800862c01c94da1a25dd30499f37~abkBXE0gc1826918269eucas1p14;
+        Mon, 25 Nov 2019 14:30:42 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191125143042eusmtrp149945470fb5787f16e5f5657e50d7b83~abkBUObOL2840228402eusmtrp14;
+        Mon, 25 Nov 2019 14:30:42 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-5b-5ddbe592dfa8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F4.48.07950.295EBDD5; Mon, 25
+        Nov 2019 14:30:42 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191125143041eusmtip137c3adc4ec8e536202e98eea2305cea5~abkA-Sdyo2945329453eusmtip1J;
+        Mon, 25 Nov 2019 14:30:41 +0000 (GMT)
+Subject: Re: [PATCH] arm: exynos_config: Restore debugfs support
+To:     Kusanagi Kouichi <slash@ac.auone-net.jp>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <7f6a5924-58f9-aafb-18c5-c749ad355a02@samsung.com>
+Date:   Mon, 25 Nov 2019 15:30:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125125515.30795-1-m.szyprowski@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djPc7qTnt6ONXiySMPi/PkN7BaXd81h
+        s5hxfh+Txdojd9kt9nU8YLJ4/uosswObx4pFe9k9WvbdYvfYtKqTzaNvyypGj8+b5AJYo7hs
+        UlJzMstSi/TtErgyLrduYCn4z10x+20jYwNjM1cXIyeHhICJxMbuX+xdjFwcQgIrGCU2/TzO
+        CuF8YZRY2H2SCaRKSOAzo8TpJYYwHQ9WPWCDKFrOKHGx8xIjhPOWUeLR309gHcICDhIPOpcz
+        g9giAjoS6xq/MILYzAIHGSV2HNEBsdkErCQmtq8Ci/MK2Ems23yPBcRmEVCV2PbjKhuILSoQ
+        IfHpwWFWiBpBiZMzn4DVcALVz215zwoxU1zi1pP5TBC2vMT2t3OYIS7dxC7R+K0QwnaR2Dz9
+        DCOELSzx6vgWdghbRuL05B4WkAckBNYxSvzteMEM4WxnlFg++R8bRJW1xOHjF4G2cQBt0JRY
+        v0sfIuwocexiE1hYQoBP4sZbQYgb+CQmbZvODBHmlehoE4KoVpPYsGwDG8zarp0rmScwKs1C
+        8tksJN/MQvLNLIS9CxhZVjGKp5YW56anFhvmpZbrFSfmFpfmpesl5+duYgQmntP/jn/awfj1
+        UtIhRgEORiUe3h9nb8cKsSaWFVfmHmKU4GBWEuF1O3sjVog3JbGyKrUoP76oNCe1+BCjNAeL
+        kjhvNcODaCGB9MSS1OzU1ILUIpgsEwenVAOjX+ISoa9BU6v17qfductXJqy6aOue/3/qllVI
+        bWXRUK1gz6qMK8mbmcD1NDvj/tvMH+q7RLUu+POrnDjftFHxxJkKRwfDWzGM0l9rNq59Yi57
+        J0bgoFzWkrKe9RlTpI1cT+W/8G20dBOdGMt+dV/XZt309dsUlefPn7xri//liqNmcn7xv+8r
+        sRRnJBpqMRcVJwIAZCVKIzgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xu7qTnt6ONfh1i9/i/PkN7BaXd81h
+        s5hxfh+Txdojd9kt9nU8YLJ4/uosswObx4pFe9k9WvbdYvfYtKqTzaNvyypGj8+b5AJYo/Rs
+        ivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyLrduYCn4
+        z10x+20jYwNjM1cXIyeHhICJxINVD9hAbCGBpYwSGxpjuxg5gOIyEsfXl0GUCEv8udYFVMIF
+        VPKaUWLvwj4mkISwgIPEg87lzCC2iICOxLrGL4wgRcwCBxklDh3pZYXomMgo8WLDGkaQKjYB
+        K4mJ7avAbF4BO4l1m++xgNgsAqoS235cBbtCVCBC4vCOWVA1ghInZz4Bq+EEqp/b8p4VxGYW
+        UJf4M+8SM4QtLnHryXwmCFteYvvbOcwTGIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbS
+        K07MLS7NS9dLzs/dxAiMtW3Hfm7Zwdj1LvgQowAHoxIP74+zt2OFWBPLiitzDzFKcDArifC6
+        nb0RK8SbklhZlVqUH19UmpNafIjRFOi5icxSosn5wDSQVxJvaGpobmFpaG5sbmxmoSTO2yFw
+        MEZIID2xJDU7NbUgtQimj4mDU6qBceWrA/ESrsZ1WQzzqmQmznFkm2242y42ZtncFx2574sT
+        Vk+6v2D7lhMLwv4LGxtN365/YPr1uklBN7jjzx/+3fjvw7R4542HPZ1cLeqeXFr288PSzmnm
+        mY7BM8s+mD4xXci87tHlmI8bklem3X+YFdK3aOPJGcs69/V9evL7juzpdVf4LY326L5RYinO
+        SDTUYi4qTgQATFU/ecsCAAA=
+X-CMS-MailID: 20191125143042eucas1p17520800862c01c94da1a25dd30499f37
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+References: <CGME20191125125531eucas1p17f4044301903eeafe56865ed63738798@eucas1p1.samsung.com>
+        <20191125125515.30795-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
 
-Please pull the latest x86-platform-for-linus git tree from:
+Hi,
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-for-linus
+On 11/25/19 1:55 PM, Marek Szyprowski wrote:
+> Commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
+> removed the dependency between DEBUG_FS and TRACING, so DEBUG_FS is no
+> longer enabled in default builds. Enable it again manually, as it provides
+> a lots of useful data for automated testing tools.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/configs/exynos_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-   # HEAD: 7a56b81c474619fa84c60d07eaa287c8fc33ac3c x86/jailhouse: Only enable platform UARTs if available
+It seems that commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
+dependency") disabled DEBUG_FS also in some other ARM defconfigs.
 
-UV platform updates (with a "hubless" variant) and Jailhouse updates for 
-better UART support.
+For some of them it may be a correct change but a preferred way to
+introduce such changes would be to:
 
- Thanks,
+- add explicit CONFIG_DEBUG_FS=y instances to all affected defconfigs
+  while removing DEBUG_FS selection from TRACING config item
 
-	Ingo
+- let platform maintainers disable DEBUG_FS manually in corresponding
+  defconfigs later if desirable
 
------------------->
-Mike Travis (8):
-      x86/platform/uv: Save OEM_ID from ACPI MADT probe
-      x86/platform/uv: Return UV Hubless System Type
-      x86/platform/uv: Add return code to UV BIOS Init function
-      x86/platform/uv: Setup UV functions for Hubless UV Systems
-      x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files
-      x86/platform/uv: Decode UVsystab Info
-      x86/platform/uv: Check EFI Boot to set reboot type
-      x86/platform/uv: Account for UV Hubless in is_uvX_hub Ops
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-Ralf Ramsauer (2):
-      x86/jailhouse: Improve setup data version comparison
-      x86/jailhouse: Only enable platform UARTs if available
-
-
- arch/x86/include/asm/uv/bios.h        |   2 +-
- arch/x86/include/asm/uv/uv.h          |  16 ++-
- arch/x86/include/asm/uv/uv_hub.h      |  61 ++++-------
- arch/x86/include/uapi/asm/bootparam.h |  25 +++--
- arch/x86/kernel/apic/x2apic_uv_x.c    | 184 ++++++++++++++++++++++++++++++----
- arch/x86/kernel/jailhouse.c           | 136 +++++++++++++++++++------
- arch/x86/platform/uv/bios_uv.c        |   9 +-
- 7 files changed, 323 insertions(+), 110 deletions(-)
+> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+> index e7e4bb5ad8d5..fde84f123fbb 100644
+> --- a/arch/arm/configs/exynos_defconfig
+> +++ b/arch/arm/configs/exynos_defconfig
+> @@ -350,6 +350,7 @@ CONFIG_PRINTK_TIME=y
+>  CONFIG_DYNAMIC_DEBUG=y
+>  CONFIG_DEBUG_INFO=y
+>  CONFIG_MAGIC_SYSRQ=y
+> +CONFIG_DEBUG_FS=y
+>  CONFIG_DEBUG_KERNEL=y
+>  CONFIG_SOFTLOCKUP_DETECTOR=y
+>  # CONFIG_DETECT_HUNG_TASK is not set
