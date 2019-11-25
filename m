@@ -2,113 +2,91 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7A0C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0310FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841C920740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A5E20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O4+WwFj8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Uhh7wOIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfKYPLi (ORCPT
+        id S1728455AbfKYPOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:11:38 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33535 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728243AbfKYPLi (ORCPT
+        Mon, 25 Nov 2019 10:14:14 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46748 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbfKYPOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:11:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574694697;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B8aq+4dXm9sTBa7CCt2OVKoRFspOMELtHpVefAUQASU=;
-        b=O4+WwFj8CwU1wbKab5XCNlWzrCmaBmp1VS6ffcB0ZSm0sCWemcOYskJxrUgGbI3gI/PsUx
-        EjTXqYNjO+ynWUH6GiQDdknxHSqeaU56GB3UOePEz4e7enlnXQ55km5zXm3f5J9u5kAbe9
-        pJpHqnrksSbdI3z65MQQ5ljQDWJNZVo=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-hGsNKVxeMJSOLZs2H8k3aA-1; Mon, 25 Nov 2019 10:11:35 -0500
-Received: by mail-qk1-f200.google.com with SMTP id o11so9776453qkk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:11:35 -0800 (PST)
+        Mon, 25 Nov 2019 10:14:14 -0500
+Received: by mail-io1-f66.google.com with SMTP id i11so16551552iol.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALu9igSRSsKi52hn+f9OyAjdyB0mBhNXe9BnXNqIOe4=;
+        b=Uhh7wOIqPQR81MSbRooLEt8qyy+07qluJoDtNGDtuedJKTsKjd14fVckV+hyDQmbo6
+         78MPzzDXsUkzjxgRhAEm9siOrRhNZUiy8r2DTW7OWcdnHo7YHAbfbIO7lH/4mUPXSThw
+         yCn+Oo5iRpC87zL2LqOdI1JCfz+ssecH+ma6A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SRvrk26Tw+YwS7iqlsr/BOs6fc+cs/57lcBe2woWPLA=;
-        b=o1cOaEmnCBi9tmpo+ea0K7W/7NvGw7N4VmGyA/mUMZW+dPgc4fRzT9euXLYHDFbSjz
-         iP9jawcenRDA24My1+eZQwzZfWO4BCch/lvPXX4flZlEkSqkQKBlp6kTvMcWDlPkYDH3
-         A6QhA0eebpQTjFeNaS4aJ6fqflT6W3q010327be7cvGxEON/Vx5kMjy4geoDS9wZrLt0
-         PayZMZGh4rFjr4aZfNJiR3faEozpVXxG6KLRag9BmkjJ1lWS5kifAKefHqN13zsYbe/A
-         8OS+ZBYHu3K0EP1LfoTzpYDZHs8DB/enGXUxrrD43xNTq0uEJGfNGckNRHNu+qHr6ugn
-         TdFw==
-X-Gm-Message-State: APjAAAUjA5tamQiIJp3f4orxE3HrZXDYK5qUTlnch8ftOJ7FO9M9/wcM
-        7928aDK3R+n6FefEJe7DrtJAM6nh2HynoeDxBG+z9PXT8PB7DN3gM/rM8S+8tKH6RGdPIltecPn
-        zFU5+4hfv63UQCjhp/rLgPZjZXJZPcvmHGsD3BG8B
-X-Received: by 2002:ac8:35ac:: with SMTP id k41mr10694191qtb.345.1574694694955;
-        Mon, 25 Nov 2019 07:11:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwwPbijPHkJf3lYg1Hh/+67Ez1Uid4YWzNyZ/Ykn4lB0wgAxoRj1JnbGOvXIYJUvTi4BNJ1NfDfylHT3OtPPqU=
-X-Received: by 2002:ac8:35ac:: with SMTP id k41mr10694172qtb.345.1574694694776;
- Mon, 25 Nov 2019 07:11:34 -0800 (PST)
+        bh=ALu9igSRSsKi52hn+f9OyAjdyB0mBhNXe9BnXNqIOe4=;
+        b=AAW3JTw8Ebp/x/BLDAEjrHxoM6nnKS4NCIz5t3SbNc+g6QNV5n7eTAOaKO2sQLd41v
+         1VL5Nm3nS4X8J1SgRWAJsNsUgLqZSL5holfFvvyde26n1mMTGjPYKVfkwxzsBjR6jq6O
+         7dsqRsBs2CXMysWZiQV4ndehUwKSDEhIinW1OW8jeV04O54kwjYi8Y9TPryzUcA8oCbz
+         Ko3Cc0POlXK7HZtUoI7/ECAU8n/YXPR25K6RE/KfRMNo/wMt3wEIZTRFQVwnHa3oeaiV
+         vc7a0Xrt1QTSbeLP3ZgVqyanYI0v9TjhFYsbld6BxaMoSAR8YoBv+eiwoVOd/jg6xSqV
+         k+VA==
+X-Gm-Message-State: APjAAAX3ZV2BoXUmKJGqwAti5hd0kFEA+vMyksdANwVMpHIMeYyyKW4W
+        hV9uFS8aWJJHOKsaTCWxocS3Gxs1ee142ihZ185sxQ==
+X-Google-Smtp-Source: APXvYqymUw8TAznCvAM14YFrTvY36Km1p/Eylp7nwOHjzN72m1nqZQk+qCIweSmRGc14oNLOCMmjpk2sZSwXjZnmUyo=
+X-Received: by 2002:a5d:91da:: with SMTP id k26mr26131450ior.252.1574694852323;
+ Mon, 25 Nov 2019 07:14:12 -0800 (PST)
 MIME-Version: 1.0
-References: <CAO-hwJL_P92-PvyDO2gEPovAQ3vmoH4jpQd-9w5G2ug1UPjc7A@mail.gmail.com>
- <0000000000007c225e05982ab601@google.com>
-In-Reply-To: <0000000000007c225e05982ab601@google.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 25 Nov 2019 16:11:23 +0100
-Message-ID: <CAO-hwJLO_yoBbROW6fHGc8QAXdPLXKroQd1EfVaEq=x6qyDy=A@mail.gmail.com>
-Subject: Re: KMSAN: uninit-value in lg4ff_set_autocenter_default
-To:     syzbot <syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com>
-Cc:     glider@google.com, Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-X-MC-Unique: hGsNKVxeMJSOLZs2H8k3aA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191025112917.22518-1-mszeredi@redhat.com> <87r231rlfj.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87r231rlfj.fsf@x220.int.ebiederm.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 25 Nov 2019 16:14:01 +0100
+Message-ID: <CAJfpegt_haMDwd6jo3mQzX2vchk_LLMH+V+h4yDs7geLmo4NhA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] allow unprivileged overlay mounts
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: HID: Fix assumption that devices have inputs
+On Fri, Oct 25, 2019 at 3:43 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Miklos Szeredi <mszeredi@redhat.com> writes:
+>
+> > Hi Eric,
+> >
+> > Can you please have a look at this patchset?
+> >
+> > The most interesting one is the last oneliner adding FS_USERNS_MOUNT;
+> > whether I'm correct in stating that this isn't going to introduce any
+> > holes, or not...
+>
+> I will take some time and dig through this.
+>
+> From a robustness standpoint I worry about the stackable filesystem
+> side.  As that is uniquely an attack vector with overlayfs.
+>
+> There is definitely demand for this.
 
-Looks like d9d4b1e46d9543a82c23f6df03f4ad697dab361b was the proper fix
+Hi Eric,
 
-Cheers,
-Benjamin
+Have you had time to look into this yet?
 
-On Mon, Nov 25, 2019 at 1:15 PM syzbot
-<syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch and the reproducer did not trigger
-> crash:
->
-> Reported-and-tested-by:
-> syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
->
-> Tested on:
->
-> commit:         4a1d41e3 net: kasan: kmsan: support CONFIG_GENERIC_CSUM o=
-n..
-> git tree:       https://github.com/google/kmsan.git master
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Da8247e2b2298a=
-f08
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D1234691fec1b8ce=
-ba8b1
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->
-> Note: testing is done by a robot and is best-effort only.
->
-
+Thanks,
+Miklos
