@@ -6,48 +6,39 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F09C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95CCC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF471207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9F7207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbfKYOut (ORCPT
+        id S1728329AbfKYOuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:50:49 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:39258 "EHLO honk.sigxcpu.org"
+        Mon, 25 Nov 2019 09:50:52 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:39280 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728204AbfKYOut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:50:49 -0500
+        id S1728280AbfKYOuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:50:50 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 0E0FEFB02;
+        by honk.sigxcpu.org (Postfix) with ESMTP id ACD1DFB03;
         Mon, 25 Nov 2019 15:50:46 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jRIkPuWtdP79; Mon, 25 Nov 2019 15:50:43 +0100 (CET)
+        with ESMTP id fEh5mS4__lqC; Mon, 25 Nov 2019 15:50:45 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id CA0914928B; Mon, 25 Nov 2019 15:50:07 +0100 (CET)
+        id C616949289; Mon, 25 Nov 2019 15:47:58 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] arm64: dts: imx8mq: Add eLCDIF controller
-Date:   Mon, 25 Nov 2019 15:50:05 +0100
-Message-Id: <cover.1574693313.git.agx@sigxcpu.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/1] leds: backlight: Register with class backlight
+Date:   Mon, 25 Nov 2019 15:47:57 +0100
+Message-Id: <cover.1574692624.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,21 +48,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With some minimal support on imx8mq we might as well add it to the DT
+When using current LCD drivers as ledtrig backlight they're
+not registered with the backlight device class. This has
+two problems: they're usually not found by userspace since
+these tools usually look in /sys/class/backlight and they
+can't be used as backlight phandles in device tree for
+e.g. LCD panels.
 
-Changes from v1:
-- Per review comments by Fabio Estevam
-  - Document compatible
-  - use lcd-controller instead of lcdif as node name
-- Add Reviewed-by: from Fabio Estevam, thanks!
+This is an RFC if this is worthwhile at all? A current problem
+is that changing the LED brightness does currently not notify
+the class backlight so they can get out of sync but i could
+look into that if the approach makes sense.
 
-Guido Günther (2):
-  dt-bindings: mxsfb: Add compatible for iMX8MQ
-  arm64: dts: imx8mq: Add eLCDIF controller
 
- .../devicetree/bindings/display/mxsfb.txt       |  1 +
- arch/arm64/boot/dts/freescale/imx8mq.dtsi       | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+Guido Günther (1):
+  leds: backlight: register with class backlight too
+
+ drivers/leds/trigger/ledtrig-backlight.c | 54 ++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
 -- 
 2.23.0
