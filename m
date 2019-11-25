@@ -2,90 +2,97 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2692C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82DA20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0EF207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yio42PV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfKYRZt (ORCPT
+        id S1729087AbfKYR0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:25:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfKYRZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:25:48 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3BB207FD;
-        Mon, 25 Nov 2019 17:25:47 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 12:25:45 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH RT] locking: Make spinlock_t and rwlock_t a RCU section
- on RT
-Message-ID: <20191125122545.20e721d7@gandalf.local.home>
-In-Reply-To: <20191122180140.bspcwv6xtrwqhmu7@linutronix.de>
-References: <20191119084640.wgsxghvc62mxlqc3@linutronix.de>
-        <20191119092149.06fd8f87@gandalf.local.home>
-        <20191122180140.bspcwv6xtrwqhmu7@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 25 Nov 2019 12:26:34 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35418 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfKYR0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:26:34 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 23so11552638otf.2;
+        Mon, 25 Nov 2019 09:26:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FNPvUWiTudncyl3KlhHhnfA/TfIBtBh/b2tPc9Hn/P0=;
+        b=Yio42PV7diBoMffXmGQ/mrG7l+5yxECdy6vmqgPadep4Ae/j4fDg0J//zWFt0WSMs9
+         AqfiRzHruO0XR27BmUuFQLS/J1qaj49Il661qAwifv5UtM6rHGmYIg3n+GmoS7a4g9Rh
+         gBqOhIjRnEq7ki57nreHJuhn3TUwDqkN26oQ/LqqKveQ3+ip75EQWxUGlve5mgIAm0du
+         Wq0gm/q7CiBrAVxXCWiPsGPf1LsIA5z3E9yg3KTvmtd4kU9pMIXPnL9yQy+MAV+MR8Bv
+         ZFtAYdWQ5AXpUpi4V9YcNijBH8uUn+IYyhmt5riyGtnxHjpksT0bl3VNlefXIYt1A5bp
+         /Gsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FNPvUWiTudncyl3KlhHhnfA/TfIBtBh/b2tPc9Hn/P0=;
+        b=mlpYQ00aszkuvwsxZxUEHRsAqRRV7sjIGslP7ZpUbGmC9Wd2ysVviMZxQ8CXxu0cZZ
+         nxa996TDLdGau5XwQKANYTEIm749iIkJtvFwKsw3a55JgK5Kfk7ekbJlNaU/fdHEo8wq
+         F5r70GcwpJ5Zmf9jEyAckTbUOZt+iypz0JzalCpWWtZrvgRuLyk0oaQmailFZp2G3cE2
+         RMFIIYO0HdMSJFoaV34xCbq6K/7RXht/LL8TuxxN7mW5JPBED1I85z21jVOq77FGZK8d
+         jbHjFOCH0pRySJWyE7QVBIM48i8G0fsAo34W+XnyWB1OTcKCKnYFYrTPR6Sd2Rd7HFxs
+         ebwA==
+X-Gm-Message-State: APjAAAWPakPDLKY2jjV5s3YM19MtQg0H4w++eoUhMmq/LW370N48ZYcb
+        Y35IDydUMJVN1TQwBQbGCoJCxx5h
+X-Google-Smtp-Source: APXvYqzaIGiKjJHMNBMYZekDl882UWn5zUMKBtDtoVpJQ3ktpr5nD+YwavfA2Hl51LllxUgn9RHsYw==
+X-Received: by 2002:a9d:3982:: with SMTP id y2mr21397853otb.191.1574702793182;
+        Mon, 25 Nov 2019 09:26:33 -0800 (PST)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id d21sm2589951otp.66.2019.11.25.09.26.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 09:26:32 -0800 (PST)
+Subject: Re: [PATCH 1/3] drivers: net: b43legacy: Fix -Wcast-function-type
+To:     Phong Tran <tranmanphong@gmail.com>, jakub.kicinski@netronome.com,
+        kvalo@codeaurora.org, davem@davemloft.net,
+        luciano.coelho@intel.com, shahar.s.matityahu@intel.com,
+        johannes.berg@intel.com, emmanuel.grumbach@intel.com,
+        sara.sharon@intel.com, yhchuang@realtek.com, yuehaibing@huawei.com,
+        pkshih@realtek.com, arend.vanspriel@broadcom.com, rafal@milecki.pl,
+        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
+        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
+        keescook@chromium.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191125150215.29263-1-tranmanphong@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <07e73c3b-b1fa-c389-c1c0-80b73e4c1774@lwfinger.net>
+Date:   Mon, 25 Nov 2019 11:26:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191125150215.29263-1-tranmanphong@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Nov 2019 19:01:40 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-
-> Let me give you an example how I got into this:
+On 11/25/19 9:02 AM, Phong Tran wrote:
+> correct usage prototype of callback in tasklet_init().
+> Report by https://github.com/KSPP/linux/issues/20
 > 
-> do_sigaction() acquires p->sighand->siglock and then iterates over list
-> via for_each_thread() which is a list_for_each_entry_rcu(). No RCU lock
-> is held, just the siglock.
-> On removal side, __unhash_process() removes a task from the list but
-> while doing so it holds the siglock and tasklist_lock. So it is
-> perfectly fine.
-> Later, we have:
-> |do_exit()
-> | -> exit_notify()
-> |   -> write_lock_irq(&tasklist_lock);
-> |   -> forget_original_parent()
-> |      -> find_child_reaper()
-> |        -> find_alive_thread()
-> |           -> for_each_thread()
-> 
-> find_alive_thread() does the for_each_thread() and checks PF_EXITING.
-> it might be enough for not operating on "removed" task_struct. It
-> dereferences task_struct->flags while looking for PF_EXITING. At this
-> point only tasklist_lock is acquired.
-> I have *no* idea if the whole synchronisation based on siglock/
-> PF_EXITING/ tasklist_lock is enough and RCU simply doesn't matter. It
-> seems so.
-> 
-> I am a little worried if this construct here (or somewhere else) assumes
-> that holding one of those locks, which disable preemption, is the same
-> as rcu_read_lock() (or rcu_read_lock_sched()).
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
 
-I'm wondering if instead, we should start throwing in rcu_read_lock()
-and explicitly have the preempt disabled rcu use that as well, since
-today it's basically one and the same.
+This patch was submitted yesterday as "[PATCH 3/5] drivers: net: b43legacy: Fix 
+-Wcast-function-type". Why was it submitted twice?
 
-Although, we still need to be careful for some special cases like
-function tracing, that uses its own kind of RCU. But that should be
-fixed when I introduce rcu_read_lock_tasks() :-)
-
--- Steve
-
+Larry
