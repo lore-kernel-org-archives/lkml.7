@@ -2,112 +2,72 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1468FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709D4C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E627E20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEEB20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nIHF3xrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfKYRiC (ORCPT
+        id S1729167AbfKYRj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:38:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:53306 "EHLO foss.arm.com"
+        Mon, 25 Nov 2019 12:39:56 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:60428 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfKYRiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:38:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E134731B;
-        Mon, 25 Nov 2019 09:38:00 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75FDE3F68E;
-        Mon, 25 Nov 2019 09:37:59 -0800 (PST)
-Date:   Mon, 25 Nov 2019 17:37:57 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        arnd@arndb.de, dvyukov@google.com, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-        paulmck@kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 1/2] asm-generic/atomic: Prefer __always_inline for
- wrappers
-Message-ID: <20191125173756.GF32635@lakrids.cambridge.arm.com>
-References: <20191122154221.247680-1-elver@google.com>
+        id S1725868AbfKYRj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:39:56 -0500
+Received: from zn.tnic (p200300EC2F0B8900A59DB9F6058597A2.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8900:a59d:b9f6:585:97a2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 97FD41EC0CB2;
+        Mon, 25 Nov 2019 18:39:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574703594;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=auM2R1zBITya3lgGlmDkiaMDGZJ9GRYCQDJu9FhIfvc=;
+        b=nIHF3xrjsKzebFfz4MWihJN/HUiN6XTV1wDBxv0m+Vrfd5eXEvuMiCUyKZc/XAz5A7xNJi
+        1Y04/1vafUiyJVqToab3nfoEgEokLWKC8tlFxpMqXGAj1h5QEQy1QsvxqCkkL2SN4H5BbH
+        CvxIg3IKtbxfqWxKaJfz8c5rnQ5ydpE=
+Date:   Mon, 25 Nov 2019 18:39:45 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86/asm changes for v5.5
+Message-ID: <20191125173945.GE12413@zn.tnic>
+References: <20191125160821.GA42496@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191122154221.247680-1-elver@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191125160821.GA42496@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 04:42:20PM +0100, Marco Elver wrote:
-> Prefer __always_inline for atomic wrappers. When building for size
-> (CC_OPTIMIZE_FOR_SIZE), some compilers appear to be less inclined to
-> inline even relatively small static inline functions that are assumed to
-> be inlinable such as atomic ops. This can cause problems, for example in
-> UACCESS regions.
+On Mon, Nov 25, 2019 at 05:08:21PM +0100, Ingo Molnar wrote:
+> Unfortunately the symbol rework will generate conflicts with pending 
+> changes to assembly files.
 
-From looking at the link below, the problem is tat objtool isn't happy
-about non-whiteliested calls within UACCESS regions.
+Yap, for at least one other tree:
 
-Is that a problem here? are the kasan/kcsan calls whitelisted?
+https://lkml.kernel.org/r/20191118141110.7f971194@canb.auug.org.au
 
-> By using __always_inline, we let the real implementation and not the
-> wrapper determine the final inlining preference.
+Resolve is simple though.
 
-That sounds reasonable to me, assuming that doesn't end up significantly
-bloating the kernel text. What impact does this have on code size?
+-- 
+Regards/Gruss,
+    Boris.
 
-> This came up when addressing UACCESS warnings with CC_OPTIMIZE_FOR_SIZE
-> in the KCSAN runtime:
-> http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  include/asm-generic/atomic-instrumented.h | 334 +++++++++++-----------
->  include/asm-generic/atomic-long.h         | 330 ++++++++++-----------
->  scripts/atomic/gen-atomic-instrumented.sh |   6 +-
->  scripts/atomic/gen-atomic-long.sh         |   2 +-
->  4 files changed, 336 insertions(+), 336 deletions(-)
-
-Do we need to do similar for gen-atomic-fallback.sh and the fallbacks
-defined in scripts/atomic/fallbacks/ ?
-
-[...]
-
-> diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
-> index 8b8b2a6f8d68..68532d4f36ca 100755
-> --- a/scripts/atomic/gen-atomic-instrumented.sh
-> +++ b/scripts/atomic/gen-atomic-instrumented.sh
-> @@ -84,7 +84,7 @@ gen_proto_order_variant()
->  	[ ! -z "${guard}" ] && printf "#if ${guard}\n"
->  
->  cat <<EOF
-> -static inline ${ret}
-> +static __always_inline ${ret}
-
-We should add an include of <linux/compiler.h> to the preamble if we're
-explicitly using __always_inline.
-
-> diff --git a/scripts/atomic/gen-atomic-long.sh b/scripts/atomic/gen-atomic-long.sh
-> index c240a7231b2e..4036d2dd22e9 100755
-> --- a/scripts/atomic/gen-atomic-long.sh
-> +++ b/scripts/atomic/gen-atomic-long.sh
-> @@ -46,7 +46,7 @@ gen_proto_order_variant()
->  	local retstmt="$(gen_ret_stmt "${meta}")"
->  
->  cat <<EOF
-> -static inline ${ret}
-> +static __always_inline ${ret}
-
-Likewise here
-
-Thanks,
-Mark.
+https://people.kernel.org/tglx/notes-about-netiquette
