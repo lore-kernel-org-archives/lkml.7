@@ -2,124 +2,162 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C860C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FB3C43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2330320706
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A9420409
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZGAgP/i"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="15Bpu0X6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfKYSbC (ORCPT
+        id S1729379AbfKYSdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 13:31:02 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46447 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfKYSbB (ORCPT
+        Mon, 25 Nov 2019 13:33:45 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41680 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729360AbfKYSdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 13:31:01 -0500
-Received: by mail-ot1-f66.google.com with SMTP id n23so13469740otr.13;
-        Mon, 25 Nov 2019 10:31:01 -0800 (PST)
+        Mon, 25 Nov 2019 13:33:44 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m4so17071871ljj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 10:33:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BCZ9ElPD8Y4mMVCJfLlg/SGue6w7FXoSD8+x6lVDs1s=;
-        b=eZGAgP/idKZThrSPvrPiCfLyzW5jhcikm8RwTOJBovl2QwxTySqDFf3TdSkwQODWZf
-         Z58I2e/pAks8TePJ51X31q/EBjLxiXkAoSoZObXJrcdCU6bw6c6bx/ASq4AraEi+GyhA
-         LXvDEkPOSco4x6Nnl24VLv0Mu9wRCXoH6hhLtkivS8jncZ8Mfph2Kp++lmdJrTULv2Nv
-         wBl5OFc2zce81jDsDgNbFoqfCJ5TS+Xuc6CwXfvwOVawGl5ougOnvt5+oXShugSKTJEN
-         f6LT4tgp1tzhILnN1/8aw+2+6VE+MtUpWtn8gUrg6FDDS32GrMmj4PfLUKLRTERS4Ryo
-         pT6Q==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kPjtxI/TrF4UnMikjlggsxMbTRpW7xiQMfu1Q1pQSto=;
+        b=15Bpu0X6m1bgIwc9pGxLJZIxvfZTaxrG3jlKJDzx9i0BU/czx4OvuotVSORu/UJMHA
+         5xAzIKc+sBj6fQJq7T5O+9lHX1m2VhKwfkd0yD8vRmCSzrz2q3HitQYPUdT/0O5TqWNW
+         lWITqzgChNWXPkzX5ejQHEnESq/ytb4CupHwGgWuqWuzEz2CIZfIbGGXxW49d02VEAaJ
+         ajqTbNbaTb3Q7BjdqUbyjB12Qx9qfQUbA0u7ndYqDInYEz75ynlU29iGTUEonXISUMRf
+         y1zDm0i3Wt4IK0Ndyr337xWNITXajNPS9NHKNamlJbrqEiUGGwadbe4Yf5ktuPmKK6iA
+         XFpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BCZ9ElPD8Y4mMVCJfLlg/SGue6w7FXoSD8+x6lVDs1s=;
-        b=eYV3CV0CVTOX6/yEmMQnigtnMR7O79x3FTHY/PvtqhD6yKbc8iVphYd5LZQkP1IZRo
-         4w23QQgHNsg/bO9oBVYI4R577cZdI9dcdHNoJDeZ4If2ae9icIkDV8+sokR51rH8Bdap
-         7Zh3YNF3lizGzZ2qg9jfcqN4OUFE3qG8XLd9HeJKhLk2lKPquCcTvlNcepz3GptMaFz1
-         49gUzgiM5NSKerJEdLzQATcnIuB71HOiybXuV5JxqSDf4hG6kDk4bt77VRLYrCKJ/z+X
-         hdNr43R+c+FffHK2czznYfFsIJXYbF4eQqxVSglGv/tPTu2qZxvMgQyipb1Z6MdCJ+Xj
-         KLwQ==
-X-Gm-Message-State: APjAAAU+60lf2dTqn0GFhI4KinZiJHp+c//InH5wo66B0tjD3E3NiUgF
-        kc67nJzSA7LfAF11jy9xmvVV17Vz
-X-Google-Smtp-Source: APXvYqzwUc7mU5ZKhRAJscRFaWCmTKKzSUWU3snVxFfwS2r440ohfnEsqHgRCDfXTj/JgGh/mY431Q==
-X-Received: by 2002:a05:6830:1e7b:: with SMTP id m27mr21520339otr.8.1574706660772;
-        Mon, 25 Nov 2019 10:31:00 -0800 (PST)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id p3sm2667663oti.22.2019.11.25.10.30.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2019 10:31:00 -0800 (PST)
-Subject: Re: [PATCH 3/5] drivers: net: b43legacy: Fix -Wcast-function-type
-To:     Phong Tran <tranmanphong@gmail.com>, davem@davemloft.net,
-        keescook@chromium.org
-Cc:     kvalo@codeaurora.org, saeedm@mellanox.com,
-        jeffrey.t.kirsher@intel.com, luciano.coelho@intel.com,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191124094306.21297-1-tranmanphong@gmail.com>
- <20191124094306.21297-4-tranmanphong@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <8eb8d6fd-de20-2d04-8210-ad8304d7da9e@lwfinger.net>
-Date:   Mon, 25 Nov 2019 12:30:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kPjtxI/TrF4UnMikjlggsxMbTRpW7xiQMfu1Q1pQSto=;
+        b=h/qSp8CfdWaVkzgPqzHDS75NgDGWQd0lzyQJxcAxckt+dmUV3mYr47hzBUTZVUNW7g
+         58vBLNS0z9Bk3rSL4z1gBJnTF3b+cXeBct5K2ED6aTJ2cjXr3IyKLoYr4T0Q/i411vlh
+         cDibFmMEOWPPi4blRh6wjfuzhSC1s7Wn1qx3YsafK7XLU9aoeMCXlA+rMuK/xkWkZrwJ
+         vg06QL5NqiQ+UTYZxOs/gROwavnDzJkKTOHXKhjZTkNlaDptCncZusWB4A3Bx6ruilfC
+         nRXL/3TTBiaD7yEVLs8bWQJO+cj7+uvqWx4VPpgMUUvEj53dteT6vHYgR0C+/6M3WZQU
+         D3Ng==
+X-Gm-Message-State: APjAAAXq3xlhVadTlX7A1FDqMns5PoVWUrBoDfl+GHHWtIlsIBgsBGQ1
+        q1jVHRQ9Ss85QE1Fdm4+zgw0ZQ==
+X-Google-Smtp-Source: APXvYqytq8uQHbgkfOudQHi3MYcOIVXdIxAHGRYx6WisuZYKhE/mnmwsQkgLfFth9cwc6u+RUlHkjw==
+X-Received: by 2002:a2e:9f4d:: with SMTP id v13mr23663505ljk.78.1574706822066;
+        Mon, 25 Nov 2019 10:33:42 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id n19sm4019290lfl.85.2019.11.25.10.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 10:33:41 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id B23951032C4; Mon, 25 Nov 2019 21:33:50 +0300 (+03)
+Date:   Mon, 25 Nov 2019 21:33:50 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+Message-ID: <20191125183350.5gmcln6t3ofszbsy@box>
+References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191125093611.hlamtyo4hvefwibi@box>
+ <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20191124094306.21297-4-tranmanphong@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/24/19 3:43 AM, Phong Tran wrote:
-> correct usage prototype of callback in tasklet_init().
-> Report by https://github.com/KSPP/linux/issues/20
+On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
 > 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->   drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-
-The subject should be "b43legacy: .....". Otherwise it is OK.
-
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-
-Larry
-
 > 
-> diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
-> index 4325e91736eb..8b6b657c4b85 100644
-> --- a/drivers/net/wireless/broadcom/b43legacy/main.c
-> +++ b/drivers/net/wireless/broadcom/b43legacy/main.c
-> @@ -1275,8 +1275,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
->   }
->   
->   /* Interrupt handler bottom-half */
-> -static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
-> +static void b43legacy_interrupt_tasklet(unsigned long data)
->   {
-> +	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
->   	u32 reason;
->   	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
->   	u32 merged_dma_reason = 0;
-> @@ -3741,7 +3742,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
->   	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
->   	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
->   	tasklet_init(&wldev->isr_tasklet,
-> -		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
-> +		     b43legacy_interrupt_tasklet,
->   		     (unsigned long)wldev);
->   	if (modparam_pio)
->   		wldev->__using_pio = true;
+> On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
+> > On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
+> > > Currently when truncating shmem file, if the range is partial of THP
+> > > (start or end is in the middle of THP), the pages actually will just get
+> > > cleared rather than being freed unless the range cover the whole THP.
+> > > Even though all the subpages are truncated (randomly or sequentially),
+> > > the THP may still be kept in page cache.  This might be fine for some
+> > > usecases which prefer preserving THP.
+> > > 
+> > > But, when doing balloon inflation in QEMU, QEMU actually does hole punch
+> > > or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
+> > > So, when using shmem THP as memory backend QEMU inflation actually doesn't
+> > > work as expected since it doesn't free memory.  But, the inflation
+> > > usecase really needs get the memory freed.  Anonymous THP will not get
+> > > freed right away too but it will be freed eventually when all subpages are
+> > > unmapped, but shmem THP would still stay in page cache.
+> > > 
+> > > To protect the usecases which may prefer preserving THP, introduce a
+> > > new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP is
+> > > preferred behavior if truncating partial THP.  This mode just makes
+> > > sense to tmpfs for the time being.
+> > We need to clarify interaction with khugepaged. This implementation
+> > doesn't do anything to prevent khugepaged from collapsing the range back
+> > to THP just after the split.
 > 
+> Yes, it doesn't. Will clarify this in the commit log.
 
+Okay, but I'm not sure that documention alone will be enough. We need
+proper design.
+
+> > > @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+> > >   			}
+> > >   			unlock_page(page);
+> > >   		}
+> > > +rescan_split:
+> > >   		pagevec_remove_exceptionals(&pvec);
+> > >   		pagevec_release(&pvec);
+> > > +
+> > > +		if (split && PageTransCompound(page)) {
+> > > +			/* The THP may get freed under us */
+> > > +			if (!get_page_unless_zero(compound_head(page)))
+> > > +				goto rescan_out;
+> > > +
+> > > +			lock_page(page);
+> > > +
+> > > +			/*
+> > > +			 * The extra pins from page cache lookup have been
+> > > +			 * released by pagevec_release().
+> > > +			 */
+> > > +			if (!split_huge_page(page)) {
+> > > +				unlock_page(page);
+> > > +				put_page(page);
+> > > +				/* Re-look up page cache from current index */
+> > > +				goto again;
+> > > +			}
+> > > +			unlock_page(page);
+> > > +			put_page(page);
+> > > +		}
+> > > +rescan_out:
+> > >   		index++;
+> > >   	}
+> > Doing get_page_unless_zero() just after you've dropped the pin for the
+> > page looks very suboptimal.
+> 
+> If I don't drop the pins the THP can't be split. And, there might be more
+> than one pins from find_get_entries() if I read the code correctly. For
+> example, truncate 8K length in the middle of THP, the THP's refcount would
+> get bumpped twice since  two sub pages would be returned.
+
+Pin the page before pagevec_release() and avoid get_page_unless_zero().
+
+Current code is buggy. You need to check that the page is still belong to
+the file after speculative lookup.
+
+-- 
+ Kirill A. Shutemov
