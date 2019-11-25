@@ -2,168 +2,212 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DDEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC8AC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608D82082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GGHZW0/q"
+	by mail.kernel.org (Postfix) with ESMTP id DF4E220836
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574709774;
+	bh=W9rdSYIXEkNtuvgcVbxsxMERlao6V+z7XjhC2PXwSGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xgEjmyohq24bA/mTr7bW+NYDCXSyMWGGknJhDSzD7o+/ziEqtZvPl/iZco2ccuobu
+	 gLvJpicll25ybmFFli3RCxYcFhGJhlVR848IDuiNP2kZOD4wbls4iafQuYMYETBoI0
+	 tLffhB1ewr/XMd6JnRGPhG+ct9pm6AigaFQyWup8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfKYTUt (ORCPT
+        id S1726873AbfKYTWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:20:49 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45039 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfKYTUt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:20:49 -0500
-Received: by mail-oi1-f194.google.com with SMTP id s71so14159720oih.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:20:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kHLgwwWlJiLxr2ARt5GzYa5qJrBUsXgP8lqORrP4CBI=;
-        b=GGHZW0/qHglQhTKyr9FT7LArU+/8B2MJwt0ERTENNILqCOR0zSFG5JQ6h85doOjbHk
-         LNTaVuVoX5VDHXd8l/o9UYnIYvh/r+ZYOrUr5VcbqzY5DTyQcIBl8NEIu14TmaCYYAgZ
-         ZnSf0kNazLgPtrS24ssoKF1aJsxWI9Zq6ekt/og/UomfWjhdflUN4vEMEdysBkgO69Y4
-         EVt2jwQQPfU3MiCLeXDPHG+YExP3K/V9K2RFxGeSFVhn+jx8YiIme2BQGVOb39YkP0sx
-         2lZYa0h6a6oKnzbtw/sWu3CYSjSwSo00Kj79t7uQCCl0rrg0l2PegD6+hLz2pQMm/P3h
-         nQUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kHLgwwWlJiLxr2ARt5GzYa5qJrBUsXgP8lqORrP4CBI=;
-        b=ms9+dWUY2ipj72cj8aWOalgXJMhhD3pczwoAe3heNze17zqtrkDZ2jFFTNooZB2pSk
-         GQIUECLHWOh/egIAKIpC03SQ96zB7eit2TqGk6yw0TWzCBgvIAPAt4O02noD2EDN5D9j
-         ExxvZrqPEWsoooarO4FLee5c3S7SZYggFiNCcHec7UkgKsDqq2bGqeAyj3u8aQfZcZZ9
-         MK2qrZ5j4NYalwAJ6JEctafmonuZYfMM62EF+KoCcIK5uCgFBf7out4hKejEdphgUkXV
-         Q4bRCF2TfAkGZ7LSkRzHo8KhuFN3OE/+8/dnhDypCbZ7qb1rvWGLy8WPgy8Ou+jzZOcP
-         rOjA==
-X-Gm-Message-State: APjAAAWWOjsZILmOWgh8OyldTUSjDPrGsrLC6m3VyQUouMcIUTcTLxpm
-        RkqpOI+SWO8isVh3bLcY/ZqyQh/sCArUCOKDOHViNg==
-X-Google-Smtp-Source: APXvYqyD4ah9bhyn/it46CSx9F7IM1K0Q0W5H77mtH0vZkSgt3LuPykHUgPh/okw2tgZ2UWF30HMQ8MfxqKfhIhCQB0=
-X-Received: by 2002:aca:4f58:: with SMTP id d85mr403850oib.142.1574709647312;
- Mon, 25 Nov 2019 11:20:47 -0800 (PST)
+        Mon, 25 Nov 2019 14:22:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfKYTWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 14:22:53 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F5722075C;
+        Mon, 25 Nov 2019 19:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574709772;
+        bh=W9rdSYIXEkNtuvgcVbxsxMERlao6V+z7XjhC2PXwSGk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xZuVXkiLxmY1R7JbFNqcd0PcOSKTeOxB0bG6o4v2D3lraz/evRhn55EKUsgPeduSq
+         Z2vRrKJpYdsSWgHtRX4Icqy4Ltt9Vcl22UewkZ9Q5Q7oc+4N2oUUqCEsvSrS8r1SD6
+         0gy+EOmO3jffbvEe70LuUCZRrl9VR3QuSsfYWERE=
+Date:   Mon, 25 Nov 2019 11:22:51 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH v2] loop: avoid EAGAIN, if offset or block_size are
+ changed
+Message-ID: <20191125192251.GA76721@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190518004751.18962-1-jaegeuk@kernel.org>
+ <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
+ <1e1aae74-bd6b-dddb-0c88-660aac33872c@acm.org>
+ <20191125175913.GC71634@jaegeuk-macbookpro.roam.corp.google.com>
+ <a4e5d6bd-3685-379a-c388-cd2871827b21@acm.org>
 MIME-Version: 1.0
-References: <20191125185453.278468-1-guro@fb.com>
-In-Reply-To: <20191125185453.278468-1-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 25 Nov 2019 11:20:35 -0800
-Message-ID: <CALvZod7bsZcHZpd5i8ahAdKOhOCRxdLTrXCf78vg4_OENqUL9Q@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcg/slab: wait for !root kmem_cache refcnt killing
- on root kmem_cache destruction
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a4e5d6bd-3685-379a-c388-cd2871827b21@acm.org>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 10:55 AM Roman Gushchin <guro@fb.com> wrote:
->
-> Christian reported a warning like the following obtained during running some
-> KVM-related tests on s390:
->
-> WARNING: CPU: 8 PID: 208 at lib/percpu-refcount.c:108 percpu_ref_exit+0x50/0x58
-> Modules linked in: kvm(-) xt_CHECKSUM xt_MASQUERADE bonding xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_na>
-> CPU: 8 PID: 208 Comm: kworker/8:1 Not tainted 5.2.0+ #66
-> Hardware name: IBM 2964 NC9 712 (LPAR)
-> Workqueue: events sysfs_slab_remove_workfn
-> Krnl PSW : 0704e00180000000 0000001529746850 (percpu_ref_exit+0x50/0x58)
->            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-> Krnl GPRS: 00000000ffff8808 0000001529746740 000003f4e30e8e18 0036008100000000
->            0000001f00000000 0035008100000000 0000001fb3573ab8 0000000000000000
->            0000001fbdb6de00 0000000000000000 0000001529f01328 0000001fb3573b00
->            0000001fbb27e000 0000001fbdb69300 000003e009263d00 000003e009263cd0
-> Krnl Code: 0000001529746842: f0a0000407fe        srp        4(11,%r0),2046,0
->            0000001529746848: 47000700            bc         0,1792
->           #000000152974684c: a7f40001            brc        15,152974684e
->           >0000001529746850: a7f4fff2            brc        15,1529746834
->            0000001529746854: 0707                bcr        0,%r7
->            0000001529746856: 0707                bcr        0,%r7
->            0000001529746858: eb8ff0580024        stmg       %r8,%r15,88(%r15)
->            000000152974685e: a738ffff            lhi        %r3,-1
-> Call Trace:
-> ([<000003e009263d00>] 0x3e009263d00)
->  [<00000015293252ea>] slab_kmem_cache_release+0x3a/0x70
->  [<0000001529b04882>] kobject_put+0xaa/0xe8
->  [<000000152918cf28>] process_one_work+0x1e8/0x428
->  [<000000152918d1b0>] worker_thread+0x48/0x460
->  [<00000015291942c6>] kthread+0x126/0x160
->  [<0000001529b22344>] ret_from_fork+0x28/0x30
->  [<0000001529b2234c>] kernel_thread_starter+0x0/0x10
-> Last Breaking-Event-Address:
->  [<000000152974684c>] percpu_ref_exit+0x4c/0x58
-> ---[ end trace b035e7da5788eb09 ]---
->
-> The problem occurs because kmem_cache_destroy() is called immediately
-> after deleting of a memcg, so it races with the memcg kmem_cache
-> deactivation.
->
-> flush_memcg_workqueue() at the beginning of kmem_cache_destroy()
-> is supposed to guarantee that all deactivation processes are finished,
-> but failed to do so. It waits for an rcu grace period, after which all
-> children kmem_caches should be deactivated. During the deactivation
-> percpu_ref_kill() is called for non root kmem_cache refcounters,
-> but it requires yet another rcu grace period to finish the transition
-> to the atomic (dead) state.
->
-> So in a rare case when not all children kmem_caches are destroyed
-> at the moment when the root kmem_cache is about to be gone, we need
-> to wait another rcu grace period before destroying the root
-> kmem_cache.
->
-> Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+Hi Bart,
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+On 11/25, Bart Van Assche wrote:
+> On 11/25/19 9:59 AM, Jaegeuk Kim wrote:
+> > On 11/19, Bart Van Assche wrote:
+> > > On 5/17/19 5:53 PM, Jaegeuk Kim wrote:
+> > > > This patch tries to avoid EAGAIN due to nrpages!=0 that was originally trying
+> > > > to drop stale pages resulting in wrong data access.
+> > > > 
+> > > > Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+> > > 
+> > > Please provide a more detailed commit description. What is wrong with the
+> > > current implementation and why is the new behavior considered the correct
+> > > behavior?
+> > 
+> > Some history would be:
+> > 
+> > Original bug fix is:
+> > commit 5db470e229e2 ("loop: drop caches if offset or block_size are changed"),
+> > which returns EAGAIN so that user land like Chrome would require enhancing their
+> > error handling routines.
+> > 
+> > So, this patch tries to avoid EAGAIN while addressing the original bug.
+> > 
+> > > 
+> > > This patch moves draining code from before the following comment to after
+> > > that comment:
+> > > 
+> > > /* I/O need to be drained during transfer transition */
+> > > 
+> > > Is that comment still correct or should it perhaps be updated?
+> > 
+> > IMHO, it's still valid.
+> 
+> Hi Jaegeuk,
+> 
+> Thank you for the additional and very helpful clarification. Can you have a look at the (totally untested) patch below? I prefer that version because it prevents concurrent processing of requests and syncing/killing the bdev.
 
-> Cc: stable@vger.kernel.org
+Yeah, I thought this was much cleaner way, but wasn't sure it could be doable
+to sync|kill block device after freezing the queue. Is it okay?
+
+> 
+> Thanks,
+> 
+> Bart.
+> 
+> 
+> Subject: [PATCH] loop: Avoid EAGAIN if offset or block_size are changed
+> 
+> After sync_blockdev() and kill_bdev() have been called, more requests
+> can be submitted to the loop device. These requests dirty additional
+> pages, causing loop_set_status() to return -EAGAIN. Not all user space
+> code that changes the offset and/or the block size handles -EAGAIN
+> correctly. Hence make sure that loop_set_status() does not return
+> -EAGAIN.
+> 
+> Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
+> Reported-by: Gwendal Grignou <gwendal@chromium.org>
+> Reported-by: grygorii tertychnyi <gtertych@cisco.com>
+> Reported-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 > ---
->  mm/slab_common.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 8afa188f6e20..f0ab6d4ceb4c 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -904,6 +904,18 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
->          * previous workitems on workqueue are processed.
->          */
->         flush_workqueue(memcg_kmem_cache_wq);
+>  drivers/block/loop.c | 35 +++++++----------------------------
+>  1 file changed, 7 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 739b372a5112..48cfc8b9c247 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -1264,15 +1264,15 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  		goto out_unlock;
+>  	}
+> 
+> +	/* I/O need to be drained during transfer transition */
+> +	blk_mq_freeze_queue(lo->lo_queue);
 > +
-> +       /*
-> +        * If we're racing with children kmem_cache deactivation, it might
-> +        * take another rcu grace period to complete their destruction.
-> +        * At this moment the corresponding percpu_ref_kill() call should be
-> +        * done, but it might take another rcu grace period to complete
-> +        * switching to the atomic mode.
-> +        * Please, note that we check without grabbing the slab_mutex. It's safe
-> +        * because at this moment the children list can't grow.
-> +        */
-> +       if (!list_empty(&s->memcg_params.children))
-> +               rcu_barrier();
+>  	if (lo->lo_offset != info->lo_offset ||
+>  	    lo->lo_sizelimit != info->lo_sizelimit) {
+>  		sync_blockdev(lo->lo_device);
+>  		kill_bdev(lo->lo_device);
+>  	}
+> 
+> -	/* I/O need to be drained during transfer transition */
+> -	blk_mq_freeze_queue(lo->lo_queue);
+> -
+>  	err = loop_release_xfer(lo);
+>  	if (err)
+>  		goto out_unfreeze;
+> @@ -1298,14 +1298,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+> 
+>  	if (lo->lo_offset != info->lo_offset ||
+>  	    lo->lo_sizelimit != info->lo_sizelimit) {
+> -		/* kill_bdev should have truncated all the pages */
+> -		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -			err = -EAGAIN;
+> -			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+> -				__func__, lo->lo_number, lo->lo_file_name,
+> -				lo->lo_device->bd_inode->i_mapping->nrpages);
+> -			goto out_unfreeze;
+> -		}
+>  		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+>  			err = -EFBIG;
+>  			goto out_unfreeze;
+> @@ -1531,39 +1523,26 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
+> 
+>  static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>  {
+> -	int err = 0;
+> -
+>  	if (lo->lo_state != Lo_bound)
+>  		return -ENXIO;
+> 
+>  	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+>  		return -EINVAL;
+> 
+> +	blk_mq_freeze_queue(lo->lo_queue);
+> +
+>  	if (lo->lo_queue->limits.logical_block_size != arg) {
+>  		sync_blockdev(lo->lo_device);
+>  		kill_bdev(lo->lo_device);
+>  	}
+> -
+> -	blk_mq_freeze_queue(lo->lo_queue);
+> -
+> -	/* kill_bdev should have truncated all the pages */
+> -	if (lo->lo_queue->limits.logical_block_size != arg &&
+> -			lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -		err = -EAGAIN;
+> -		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+> -			__func__, lo->lo_number, lo->lo_file_name,
+> -			lo->lo_device->bd_inode->i_mapping->nrpages);
+> -		goto out_unfreeze;
+> -	}
+> -
+>  	blk_queue_logical_block_size(lo->lo_queue, arg);
+>  	blk_queue_physical_block_size(lo->lo_queue, arg);
+>  	blk_queue_io_min(lo->lo_queue, arg);
+>  	loop_update_dio(lo);
+> -out_unfreeze:
+> +
+>  	blk_mq_unfreeze_queue(lo->lo_queue);
+> 
+> -	return err;
+> +	return 0;
 >  }
->  #else
->  static inline int shutdown_memcg_caches(struct kmem_cache *s)
-> --
-> 2.23.0
->
+> 
+>  static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
