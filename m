@@ -2,91 +2,141 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95511C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4372071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7793A2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfKYMnv (ORCPT
+        id S1727247AbfKYMqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:43:51 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44254 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbfKYMnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:43:51 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0B714EF4C4A529C8E644;
-        Mon, 25 Nov 2019 20:43:44 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 25 Nov 2019 20:43:36 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <vladimir.oltean@nxp.com>, <claudiu.manoil@nxp.com>,
-        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH net v3] net: dsa: ocelot: add dependency for NET_DSA_MSCC_FELIX
-Date:   Mon, 25 Nov 2019 20:41:10 +0800
-Message-ID: <20191125124110.145595-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <3e9d6100-6965-da85-c310-6e1a9318f61d@huawei.com>
-References: <3e9d6100-6965-da85-c310-6e1a9318f61d@huawei.com>
+        Mon, 25 Nov 2019 07:46:54 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:48738 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfKYMqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 07:46:54 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 1362320BCE;
+        Mon, 25 Nov 2019 13:46:52 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id F2E6920D4B;
+        Mon, 25 Nov 2019 13:46:51 +0100 (CET)
+Subject: Re: [PATCH v1] clk: Add devm_clk_{prepare,enable,prepare_enable}
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
+Message-ID: <34e32662-c909-9eb3-e561-3274ad0bf3cc@free.fr>
+Date:   Mon, 25 Nov 2019 13:46:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Nov 25 13:46:52 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_NET_DSA_MSCC_FELIX=y, and CONFIG_NET_VENDOR_MICROSEMI=n,
-below errors can be found:
-drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_del':
-felix.c:(.text+0x26e): undefined reference to `ocelot_vlan_del'
-drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_add':
-felix.c:(.text+0x352): undefined reference to `ocelot_vlan_add'
+On 15/07/2019 17:34, Marc Gonzalez wrote:
 
-and warning as below:
-WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
-Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
-NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
-Selected by [y]:
-NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y]
-&& NET_DSA [=y] && PCI [=y]
+> Provide devm variants for automatic resource release on device removal.
+> probe() error-handling is simpler, and remove is no longer required.
+> 
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+>  Documentation/driver-model/devres.rst |  3 +++
+>  drivers/clk/clk.c                     | 24 ++++++++++++++++++++++++
+>  include/linux/clk.h                   |  8 ++++++++
+>  3 files changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
+> index 1b6ced8e4294..9357260576ef 100644
+> --- a/Documentation/driver-model/devres.rst
+> +++ b/Documentation/driver-model/devres.rst
+> @@ -253,6 +253,9 @@ CLOCK
+>    devm_clk_hw_register()
+>    devm_of_clk_add_hw_provider()
+>    devm_clk_hw_register_clkdev()
+> +  devm_clk_prepare()
+> +  devm_clk_enable()
+> +  devm_clk_prepare_enable()
+>  
+>  DMA
+>    dmaenginem_async_device_register()
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index c0990703ce54..5e85548357c0 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -914,6 +914,18 @@ int clk_prepare(struct clk *clk)
+>  }
+>  EXPORT_SYMBOL_GPL(clk_prepare);
+>  
+> +static void unprepare(void *clk)
+> +{
+> +	clk_unprepare(clk);
+> +}
+> +
+> +int devm_clk_prepare(struct device *dev, struct clk *clk)
+> +{
+> +	int rc = clk_prepare(clk);
+> +	return rc ? : devm_add_action_or_reset(dev, unprepare, clk);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_clk_prepare);
+> +
+>  static void clk_core_disable(struct clk_core *core)
+>  {
+>  	lockdep_assert_held(&enable_lock);
+> @@ -1136,6 +1148,18 @@ int clk_enable(struct clk *clk)
+>  }
+>  EXPORT_SYMBOL_GPL(clk_enable);
+>  
+> +static void disable(void *clk)
+> +{
+> +	clk_disable(clk);
+> +}
+> +
+> +int devm_clk_enable(struct device *dev, struct clk *clk)
+> +{
+> +	int rc = clk_enable(clk);
+> +	return rc ? : devm_add_action_or_reset(dev, disable, clk);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_clk_enable);
+> +
+>  static int clk_core_prepare_enable(struct clk_core *core)
+>  {
+>  	int ret;
+> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> index 3c096c7a51dc..d09b5207e3f1 100644
+> --- a/include/linux/clk.h
+> +++ b/include/linux/clk.h
+> @@ -895,6 +895,14 @@ static inline void clk_restore_context(void) {}
+>  
+>  #endif
+>  
+> +int devm_clk_prepare(struct device *dev, struct clk *clk);
+> +int devm_clk_enable(struct device *dev, struct clk *clk);
+> +static inline int devm_clk_prepare_enable(struct device *dev, struct clk *clk)
+> +{
+> +	int rc = devm_clk_prepare(dev, clk);
+> +	return rc ? : devm_clk_enable(dev, clk);
+> +}
+> +
+>  /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
+>  static inline int clk_prepare_enable(struct clk *clk)
+>  {
 
-This patch is to select NET_VENDOR_MICROSEMI and add dependency
-NET_SWITCHDEV, HAS_IOMEM for NET_DSA_MSCC_FELIX.
+Thoughts? Comments?
 
-Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v3: add depends on NET_SWITCHDEV and HAS_IOMEM.
- v2: modify 'depends on' to 'select'.
- drivers/net/dsa/ocelot/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
-index 0031ca814346..1ec2dfbd76ce 100644
---- a/drivers/net/dsa/ocelot/Kconfig
-+++ b/drivers/net/dsa/ocelot/Kconfig
-@@ -2,6 +2,9 @@
- config NET_DSA_MSCC_FELIX
- 	tristate "Ocelot / Felix Ethernet switch support"
- 	depends on NET_DSA && PCI
-+	depends on NET_SWITCHDEV
-+	depends on HAS_IOMEM
-+	select NET_VENDOR_MICROSEMI
- 	select MSCC_OCELOT_SWITCH
- 	select NET_DSA_TAG_OCELOT
- 	help
--- 
-2.20.1
-
+Regards.
