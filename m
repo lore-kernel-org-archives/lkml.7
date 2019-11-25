@@ -2,117 +2,106 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC653C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1BAC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C19A2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FlCxswqj"
+	by mail.kernel.org (Postfix) with ESMTP id 878342082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfKYICu (ORCPT
+        id S1726498AbfKYIEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 03:02:50 -0500
-Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:57861
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727142AbfKYICt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 03:02:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JewMVeP001r9e2jRlPUescjiAEcQB8p5lhd0GQcKHgjAT+Tg91cyIrQkhX9H2qSE05B+j3pE0ys5Qo5pWFOsUCCw6rFP3/6e/Nh4xvDJouXGD1eDF4UCvLEcRBf9+nra6QWvnW2GpPh+uUlgaSb3peAUhxAb9gmRJwZ9OY2/ORCe2+Xx+Jh6Ob7d64MA5jzTNFW4oizcFLdOQcF0WKLI4D0otBq0VuwLgLT+b8+p8sR9y7HVjSAcDxARCOF9GmJ9rhoCvY19w/vnAeauJogrRCorMmWhVfQzTbGiFBkX2sFfeIV462WhlGCpGmh1RElHcT606oGdcsk1mUi6qK/Q0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+uhYEdZCoec9WSffkdF4Oe5jZgL043atWeWMmdXkSzU=;
- b=mGXou2oWH4LAfaZOIo03UWdy+5BsjvCMTYBNSHcPkeIOLMxHhdHnpc/o0WM7S+63TSn8F7GDYjjDR7mimcOUOXq0+HStfRKyy9lPzTm5uYH2NkX/VwlBOns9QicU963mUEc+Kb1v4gS6yyVEWzvfzrzMNh+zOMBoLlAdKxwPwp179+zlVeRoWCm0rqgUR9OW9Tw4gXHaXIDzdv31CEiCiZUWL5e8cEpCvQJfW5YXH4m5HDzbfZ0ErtQd7tih8HRARf3ELW2pMP/dh/Z88sGwmsHgR5wcbUR4uJYI+j9bppjurj0lBrxS98CqBXuWRA/joKCrKlFrEHztyjc4hLWn6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+uhYEdZCoec9WSffkdF4Oe5jZgL043atWeWMmdXkSzU=;
- b=FlCxswqj1yEI2WFC+LbZFsxAOfotSsEhi05IIUUWxOQDpXDv/ZE+HHIXUD+KHtnpNSja3qB1Jcsthy/0cBkNj7/liE9b1452shw5sHdDC8Dhne5xAVk68Xwrjv2/WDU8EGAhJpBx2zsfnKJ/1LOqitcDBDcGPmD4R+03qsVr7lw=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2848.eurprd04.prod.outlook.com (10.175.23.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.21; Mon, 25 Nov 2019 08:02:45 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
- 08:02:45 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v4 1/6] crypto: caam - RNG4 TRNG errata
-Thread-Topic: [PATCH v4 1/6] crypto: caam - RNG4 TRNG errata
-Thread-Index: AQHVoIQxRNGIQZ6nZ0+/zH6oZ3HYNQ==
-Date:   Mon, 25 Nov 2019 08:02:45 +0000
-Message-ID: <VI1PR0402MB348579B485FC139EDA222B0C984A0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20191121155554.1227-1-andrew.smirnov@gmail.com>
- <20191121155554.1227-2-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3d9e3258-d989-4886-d161-08d7717ddb05
-x-ms-traffictypediagnostic: VI1PR0402MB2848:|VI1PR0402MB2848:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB2848A6D2D210AEFF6A581500984A0@VI1PR0402MB2848.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(189003)(199004)(2501003)(76116006)(91956017)(5660300002)(6506007)(53546011)(71200400001)(71190400001)(54906003)(44832011)(478600001)(14454004)(26005)(102836004)(25786009)(316002)(110136005)(76176011)(7696005)(52536014)(6116002)(3846002)(99286004)(6246003)(256004)(4744005)(4326008)(66066001)(229853002)(33656002)(86362001)(9686003)(81166006)(81156014)(55016002)(186003)(305945005)(7736002)(8676002)(8936002)(74316002)(6436002)(66946007)(2906002)(66446008)(446003)(66476007)(66556008)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2848;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: E7et/QmkoETc6r14/w2mSJll/o83MwgDLGM608Cs3hKGKr/We98ZVj34qqnSFQqm+Od4OFgAWmFLLPhpad2jaXpSDucPEK1ma6DFQCDM+n53M4VFH6kA795kYk3VVLaMwn4Mz4zJNkgExAytTkLNUv+cYTov4P0E2XiQder1ZRcuiagxhZrGj4/MvyZhW+jC1Ojz8fKezlQY7qfdXQDWE0lO66FaewKE+H59rcRFNYcJL7DgKcpmzoxcs1QYirogXbKcFm52Fc+yrTA+kkJez7bQCZAkWUpX6MPByNld+hlQtgXUupUSEs04sCdRtcQc4k8vgzXBjmZiHQh3Os9gLMJ2yog9oammFK/2Zc3jd9H74Jga6bqgAXBR2r3BKX24TgSANcb1rqQm1mLBqNt0x6/jHT0uY1aQELsmNYbgIpOc0XcrFyUCCQLVEUIdoLP7
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 03:04:35 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:38495 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfKYIEf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 03:04:35 -0500
+Received: from localhost ([212.237.170.26]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MUpCz-1iQBAa365h-00Ql1O; Mon, 25 Nov 2019 09:03:58 +0100
+Date:   Mon, 25 Nov 2019 09:03:49 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
+Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        davem@davemloft.net, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] iio: add driver for ping))) and laserping sensors
+Message-ID: <20191125080344.qgmarbbhodtmn6ok@arbad>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d9e3258-d989-4886-d161-08d7717ddb05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 08:02:45.4327
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q55ko4pWw+PFfuxqvqv1/aLgZ6ycqTCy0m3/Wj1o3NwBZ8YCk4RZjwfhgNKACRuUtBi1i0hTO0cnfrg+ys9d1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2848
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:DO/bTDdpbdaLmAG7E73wEBlueTaourtYM/8zW/vN3q4paixmhrb
+ WjjJnKVrnVp0tlwQJgv+YCQ2A0aBiAsYWlEhp1ZUyVgPUo6Pv0sj9XZ9cBc0a7kAkooZSRr
+ iZgeiZVRB/jbhAmbqJS83NC0NHNP25haTRjXYc/Y2oD1QeMjkoUtMcJAPVT+2Krdlfsbunq
+ n3ZNB07iOWR4S6gJ/z5cw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Gvyi4oi+sLM=:ZlKpa8QxZD+dJ38hmQVp1r
+ asUfM0qleqFwqBS5alciTXVMCujca1KDKFPhOcVbf5J6NSA37MJOHa4f0FYFc33RBEYloxB30
+ hh6WjtSPS0kO4EjxtoG5QYM08IzDUBp8pYlWsA2opm4xrUx7J3hHVqEneNiBYBbCB9cFgP18Y
+ 5DkPBgIuJzdozyJIV/y2DHTYEQ8SuirjQTwr1kslxk4J0X6YdXThAzweNz8k0i5ioAm4o01lB
+ Ofq23FxjC2GlNlxTGmGSjHbWLyow//SvipmBnTrvu0DLumBrsr6mkSmjXvwJ2QeG3uc3/Wl2F
+ mwOYZwPps+Xwu5eLQEb5UQwH5Wt47eBlPj9W/uPsayOO+d4tZ2dLpWtiJ+A+royPqXKyPdQzY
+ Cp7G/9n+xs/e23YMQJRSgOUUDQ3E4a1I4E/Io4o3qwrhW+m6GmW8nh808L42sH9oz5DTeU4pv
+ dx9cJBFhVl2Bz5qZKYsGtmqEtvKtb1KEmt9T9yz5ARhgb9vy+bbgI2zWouTVtxlqAOqMeU1N5
+ 1Qy7c0RvYiZGqDrDdOTT1NRYZXwhDpRVPLfdgrtjpqG+a0cD/PFOfWt7EjPUTZE/HHEGwvJAO
+ ifRdAUdkd3ndcPM19a4Aec2Nejk+hLIke+CF7LH4LJac0Gk3wrR4iMgHatutSTUSzfQrJiZId
+ YcVSyDvvDPwnKjOlOSsKDuMBtKwX+y/H41Rs4B53S1ff5V9U1Pr8bZE/AjuNgGLOePK4k/y+9
+ A+V9TFd9CJwPYIA8CMLRbMU68drxlubSPEVOpk4VfcNpXjcDYR+KPNbESA8RTVn3bjM1naLQm
+ BI3RyTep1//n8Es9xphHZ+KZ042wEGwwSfDYdIZz9WEd2pCoWdTKdmALg+ACzKcZps9XNsz+3
+ XmK8WVCeT0ojOfhUgrAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/2019 5:56 PM, Andrey Smirnov wrote:=0A=
-> The TRNG as used in RNG4, used in CAAM has a documentation issue. The=0A=
-I assume the "erratum" consists in RTMCTL[TRNG_ACC] bit=0A=
-not being documented, correct?=0A=
-=0A=
-Is there an ID of the erratum?=0A=
-Or at least do you know what parts / SoCs have incorrect documentation?=0A=
-=0A=
-> effect is that it is possible that the entropy used to instantiate the=0A=
-> DRBG may be old entropy, rather than newly generated entropy. There is=0A=
-> proper programming guidance, but it is not in the documentation.=0A=
-> =0A=
-Is the "programming guidance" public?=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+This patchset adds support for parallax PING))) and LaserPING sensors as
+iio driver. The driver is derived from srf04 but the device is using only
+one GPIO for both triggering and the echo.
+
+Only patch 3/4 is sent out this time because the others remain unchanged.
+
+Changes in v4:
+Thanks to Julia for reporting a bug:
+- fix mutex handling in ping_read()
+
+Changes in v3:
+Thanks to Jonathan who found another bug there are two small changes:
+- fix inconsistent use of devm_request_irq() and free_irq()
+- hold mutex until free_irq() is called
+
+Changes in v2:
+Thanks to the reviews of Jonathan, Rob and Michel there are some
+improvements:
+- optimize use of macros with to_platform_device() and
+  of_device_get_match_data()
+- change spacing and typos
+- simplify ascii art timing diagram
+- merge patch for driver and corresponding Kconfig and Makefile
+
+Andreas Klinger (4):
+  dt-bindings: add vendor prefix parallax
+  dt-bindings: add parallax ping sensors
+  iio: ping: add parallax ping sensors
+  MAINTAINERS: add maintainer for ping iio sensors
+
+ .../bindings/iio/proximity/parallax-ping.yaml      |  51 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ MAINTAINERS                                        |   7 +
+ drivers/iio/proximity/Kconfig                      |  15 +
+ drivers/iio/proximity/Makefile                     |   1 +
+ drivers/iio/proximity/ping.c                       | 335 +++++++++++++++++++++
+ 6 files changed, 411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+ create mode 100644 drivers/iio/proximity/ping.c
+
+-- 
+2.11.0
