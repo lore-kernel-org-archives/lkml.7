@@ -2,120 +2,126 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E65C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75FBC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3857B20865
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574696872;
-	bh=ldCr3J8+N1NNmkcDEqOgbhpwLfI96ac1x5J1LWeIZA4=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=uNs9YECvNMciXHwAysp95XCUzmYabxQu1FhI0Gr2F4teXdyl1T8nc4Sas2voGUZvM
-	 xiZRMwxHal1cir3f3VkqJ696tSFP5XgVHsoqCUhdItMpZr6NAAfc8Ig1GbtA7Rpocr
-	 +gS1jANExczk2nCP+xDJ2XbVr5octmpGUlFLenPM=
+	by mail.kernel.org (Postfix) with ESMTP id ABB3820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfKYPrv (ORCPT
+        id S1728673AbfKYPuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:47:51 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:50298 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728454AbfKYPru (ORCPT
+        Mon, 25 Nov 2019 10:50:51 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39607 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbfKYPuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:47:50 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iZGaS-00029Q-Ac; Mon, 25 Nov 2019 16:47:40 +0100
-To:     Jianyong Wu <jianyong.wu@arm.com>
-Subject: Re: [RFC PATCH v8 3/8] ptp: Reorganize =?UTF-8?Q?ptp=5Fkvm=20modu?=  =?UTF-8?Q?les=20to=20make=20it=20arch-independent=2E?=
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 25 Nov 2019 10:50:51 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iZGdP-0008Sa-Ou; Mon, 25 Nov 2019 16:50:43 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 467F51C1AF2;
+        Mon, 25 Nov 2019 16:50:43 +0100 (CET)
+Date:   Mon, 25 Nov 2019 15:50:43 -0000
+From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
+Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <stable@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Message-ID: <157469704311.21853.13499142066823391029.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 Nov 2019 15:47:40 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <netdev@vger.kernel.org>, <yangbo.lu@nxp.com>,
-        <john.stultz@linaro.org>, <tglx@linutronix.de>,
-        <pbonzini@redhat.com>, <sean.j.christopherson@intel.com>,
-        <richardcochran@gmail.com>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <suzuki.poulose@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <steve.capper@arm.com>, <kaly.xin@arm.com>, <justin.he@arm.com>,
-        <nd@arm.com>
-In-Reply-To: <20191125104506.36850-4-jianyong.wu@arm.com>
-References: <20191125104506.36850-1-jianyong.wu@arm.com>
- <20191125104506.36850-4-jianyong.wu@arm.com>
-Message-ID: <a13a4f9554f36a46781308358fc63519@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: jianyong.wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, mark.rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, steve.capper@arm.com, kaly.xin@arm.com, justin.he@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-25 10:45, Jianyong Wu wrote:
-> Currently, ptp_kvm modules implementation is only for x86 which 
-> includs
-> large part of arch-specific code.  This patch move all of those code
-> into new arch related file in the same directory.
->
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  drivers/ptp/Makefile                        |  1 +
->  drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 77 +++++-------------
->  drivers/ptp/ptp_kvm_x86.c                   | 87 
-> +++++++++++++++++++++
->  include/asm-generic/ptp_kvm.h               | 12 +++
->  4 files changed, 118 insertions(+), 59 deletions(-)
->  rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
->  create mode 100644 drivers/ptp/ptp_kvm_x86.c
->  create mode 100644 include/asm-generic/ptp_kvm.h
+The following commit has been merged into the x86/urgent branch of tip:
 
-[...]
+Commit-ID:     4a13b0e3e10996b9aa0b45a764ecfe49f6fcd360
+Gitweb:        https://git.kernel.org/tip/4a13b0e3e10996b9aa0b45a764ecfe49f6fcd360
+Author:        Andy Lutomirski <luto@kernel.org>
+AuthorDate:    Sun, 24 Nov 2019 08:50:03 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 25 Nov 2019 09:36:47 +01:00
 
-> diff --git a/include/asm-generic/ptp_kvm.h 
-> b/include/asm-generic/ptp_kvm.h
-> new file mode 100644
-> index 000000000000..e5dd386f6664
-> --- /dev/null
-> +++ b/include/asm-generic/ptp_kvm.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + *  Virtual PTP 1588 clock for use with KVM guests
-> + *
-> + *  Copyright (C) 2019 ARM Ltd.
+x86/entry/32: Fix FIXUP_ESPFIX_STACK with user CR3
 
-I think you should live the original copyright assignment here.
-This really isn't anything new.
+UNWIND_ESPFIX_STACK needs to read the GDT, and the GDT mapping that
+can be accessed via %fs is not mapped in the user pagetables.  Use
+SGDT to find the cpu_entry_area mapping and read the espfix offset
+from that instead.
 
-> + *  All Rights Reserved
-> + */
-> +
-> +int kvm_arch_ptp_init(void);
-> +int kvm_arch_ptp_get_clock(struct timespec64 *ts);
-> +int kvm_arch_ptp_get_crosststamp(unsigned long *cycle,
-> +		struct timespec64 *tspec, void *cs);
+Reported-and-tested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/entry/entry_32.S | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-Why is this include file in asm-generic? This isn't a kernel-wide API.
-
-I think it should be sitting in drivers/ptp, as it is only shared 
-between
-the generic and arch-specific stuff.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 0b8c931..f07baf0 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -415,7 +415,8 @@
+ 
+ .macro CHECK_AND_APPLY_ESPFIX
+ #ifdef CONFIG_X86_ESPFIX32
+-#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + (GDT_ENTRY_ESPFIX_SS * 8)
++#define GDT_ESPFIX_OFFSET (GDT_ENTRY_ESPFIX_SS * 8)
++#define GDT_ESPFIX_SS PER_CPU_VAR(gdt_page) + GDT_ESPFIX_OFFSET
+ 
+ 	ALTERNATIVE	"jmp .Lend_\@", "", X86_BUG_ESPFIX
+ 
+@@ -1147,12 +1148,26 @@ ENDPROC(entry_INT80_32)
+  * We can't call C functions using the ESPFIX stack. This code reads
+  * the high word of the segment base from the GDT and swiches to the
+  * normal stack and adjusts ESP with the matching offset.
++ *
++ * We might be on user CR3 here, so percpu data is not mapped and we can't
++ * access the GDT through the percpu segment.  Instead, use SGDT to find
++ * the cpu_entry_area alias of the GDT.
+  */
+ #ifdef CONFIG_X86_ESPFIX32
+ 	/* fixup the stack */
+-	mov	GDT_ESPFIX_SS + 4, %al /* bits 16..23 */
+-	mov	GDT_ESPFIX_SS + 7, %ah /* bits 24..31 */
++	pushl	%ecx
++	subl	$2*4, %esp
++	sgdt	(%esp)
++	movl	2(%esp), %ecx				/* GDT address */
++	/*
++	 * Careful: ECX is a linear pointer, so we need to force base
++	 * zero.  %cs is the only known-linear segment we have right now.
++	 */
++	mov	%cs:GDT_ESPFIX_OFFSET + 4(%ecx), %al	/* bits 16..23 */
++	mov	%cs:GDT_ESPFIX_OFFSET + 7(%ecx), %ah	/* bits 24..31 */
+ 	shl	$16, %eax
++	addl	$2*4, %esp
++	popl	%ecx
+ 	addl	%esp, %eax			/* the adjusted stack pointer */
+ 	pushl	$__KERNEL_DS
+ 	pushl	%eax
