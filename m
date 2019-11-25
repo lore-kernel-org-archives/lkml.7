@@ -2,91 +2,117 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55F3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E191EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E07207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B704220748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:02:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bk983ilx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfKYO7B (ORCPT
+        id S1728389AbfKYPCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:59:01 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6709 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728196AbfKYO7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:59:01 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F06DE5FD51FD902D2374;
-        Mon, 25 Nov 2019 22:58:56 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 25 Nov 2019
- 22:58:50 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <evan.quan@amd.com>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <Prike.Liang@amd.com>,
-        <yuehaibing@huawei.com>, <chenwandun@huawei.com>,
-        <yukuai3@huawei.com>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] drm/amd/powerplay: remove set but not used variable 'stretch_amount2'
-Date:   Mon, 25 Nov 2019 22:58:43 +0800
-Message-ID: <20191125145843.15764-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 25 Nov 2019 10:02:32 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41211 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbfKYPCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:02:32 -0500
+Received: by mail-pl1-f194.google.com with SMTP id t8so6550489plr.8;
+        Mon, 25 Nov 2019 07:02:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kKcTzJuC8PJNnzJIm6q83P/GLVLCiZGhOohm6Nds3hc=;
+        b=bk983ilxL0r0Fce8gHo4CaeRf1bGDE1zSkzSIF4yl81SlyBOoPf2fhDfxYEkxsWX2+
+         yuDwYQOkJvmgnIVkInTr8n1pP7Cjwhy+RlbVXv/5Kp0wF/vKikM8U5FXruzADmUKCdRA
+         vnT3OFZ3CiHwm7V47kEVjV6PCIR953jnMxXmt1HToOvRsIeaF24FJ+hm11t2MOkst0/u
+         7PdgQp8SNmAvIgZ9BzifFWo9JEumzW7/IEHQxAZ9gRcX3YMo8gxWOdweOyrhRXetsAyj
+         W9er49FRlHYw/UP4TCWGxw2RdtUjhviv6ZS/h7zmXAJGVL61/mtsJurM1vTE877H88ba
+         moyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kKcTzJuC8PJNnzJIm6q83P/GLVLCiZGhOohm6Nds3hc=;
+        b=rDlCby2mlrsauV3wzs7ZTaGQAHXOONdOgmvHS9OMqVZlL5Opg/01f0l7c6N7ewJnvV
+         sgLi3sEb9c0jsgI8EfUoMex+u5M4HN+UzruyfxuM3WBUGYE7jTEPZTOii2HtAIMmorwh
+         QBO4iyBq4Qx9r1dt4RrVrdFayf2FzXY6qunQNyKIRXfn5iUoizl+qxORYtnCtLMKcDKo
+         i0kdE5k8SSnrwRRsKh5SGwVItJOsylp8iFAtdrwW0H5rHcb3dgejvMBIsVvzlu9Mz0YP
+         evT7iFvRgGk/K5htaBw6/1xiluTYqHze7OK7zQnC66F3kG+TRY4rO+qxCEUE7fd0cxkg
+         Kx4g==
+X-Gm-Message-State: APjAAAWbd9xMGn3z6/6vYurPk1Vc0iqVOxZA/fjC3CRde8TaIXcVuHrA
+        pxfaijIzobMMAfqYyoNTZ2w=
+X-Google-Smtp-Source: APXvYqw8QG/+4RGvVsZBLEC3KCXWc24rJdDz9RFjxp89WY3S9kjTgCE2BoFpSMc4jJeHoa7JGhD/NA==
+X-Received: by 2002:a17:902:bb83:: with SMTP id m3mr28043829pls.94.1574694149877;
+        Mon, 25 Nov 2019 07:02:29 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:550c:6dad:1b5f:afc6:7758])
+        by smtp.gmail.com with ESMTPSA id x2sm8703129pfn.167.2019.11.25.07.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 07:02:29 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     jakub.kicinski@netronome.com, kvalo@codeaurora.org,
+        davem@davemloft.net, luciano.coelho@intel.com,
+        shahar.s.matityahu@intel.com, johannes.berg@intel.com,
+        emmanuel.grumbach@intel.com, sara.sharon@intel.com,
+        Larry.Finger@lwfinger.net, yhchuang@realtek.com,
+        yuehaibing@huawei.com, pkshih@realtek.com,
+        arend.vanspriel@broadcom.com, rafal@milecki.pl,
+        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
+        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
+        keescook@chromium.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH 1/3] drivers: net: b43legacy: Fix -Wcast-function-type
+Date:   Mon, 25 Nov 2019 22:02:13 +0700
+Message-Id: <20191125150215.29263-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:
- In function vegam_populate_clock_stretcher_data_table:
-drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:1489:29:
- warning: variable stretch_amount2 set but not used [-Wunused-but-set-variable]
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-It is never used, so can be removed.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-index 50896e9..b0e0d67 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-@@ -1486,7 +1486,7 @@ static int vegam_populate_clock_stretcher_data_table(struct pp_hwmgr *hwmgr)
- 	struct vegam_smumgr *smu_data =
- 			(struct vegam_smumgr *)(hwmgr->smu_backend);
+diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
+index 4325e91736eb..8b6b657c4b85 100644
+--- a/drivers/net/wireless/broadcom/b43legacy/main.c
++++ b/drivers/net/wireless/broadcom/b43legacy/main.c
+@@ -1275,8 +1275,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+ }
  
--	uint8_t i, stretch_amount, stretch_amount2, volt_offset = 0;
-+	uint8_t i, stretch_amount, volt_offset = 0;
- 	struct phm_ppt_v1_information *table_info =
- 			(struct phm_ppt_v1_information *)(hwmgr->pptable);
- 	struct phm_ppt_v1_clock_voltage_dependency_table *sclk_table =
-@@ -1525,11 +1525,9 @@ static int vegam_populate_clock_stretcher_data_table(struct pp_hwmgr *hwmgr)
- 			(table_info->cac_dtp_table->ucCKS_LDO_REFSEL != 0) ?
- 			table_info->cac_dtp_table->ucCKS_LDO_REFSEL : 5;
- 	/* Populate CKS Lookup Table */
--	if (stretch_amount == 1 || stretch_amount == 2 || stretch_amount == 5)
--		stretch_amount2 = 0;
--	else if (stretch_amount == 3 || stretch_amount == 4)
--		stretch_amount2 = 1;
--	else {
-+	if (!(stretch_amount == 1 || stretch_amount == 2 ||
-+	      stretch_amount == 5 || stretch_amount == 3 ||
-+	      stretch_amount == 4)) {
- 		phm_cap_unset(hwmgr->platform_descriptor.platformCaps,
- 				PHM_PlatformCaps_ClockStretcher);
- 		PP_ASSERT_WITH_CODE(false,
+ /* Interrupt handler bottom-half */
+-static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
++static void b43legacy_interrupt_tasklet(unsigned long data)
+ {
++	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
+ 	u32 reason;
+ 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
+ 	u32 merged_dma_reason = 0;
+@@ -3741,7 +3742,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
+ 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
+ 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
+ 	tasklet_init(&wldev->isr_tasklet,
+-		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
++		     b43legacy_interrupt_tasklet,
+ 		     (unsigned long)wldev);
+ 	if (modparam_pio)
+ 		wldev->__using_pio = true;
 -- 
-2.7.4
-
+2.20.1
 
