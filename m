@@ -2,182 +2,173 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA63DC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FE3C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E9520748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD6C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Kw1EBbZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfKYTCI (ORCPT
+        id S1727006AbfKYTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:02:08 -0500
-Received: from mga04.intel.com ([192.55.52.120]:63776 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfKYTCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:02:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 11:02:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
-   d="scan'208";a="211184605"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 25 Nov 2019 11:02:06 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4.14 STABLE] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
-Date:   Mon, 25 Nov 2019 11:02:05 -0800
-Message-Id: <20191125190205.28474-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 25 Nov 2019 14:03:24 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36220 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfKYTDY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 14:03:24 -0500
+Received: by mail-wm1-f67.google.com with SMTP id n188so505846wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:03:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=UlOSumQoWcAQJdorsUTG6xjcAVup8thJTbtcARuUmQ0=;
+        b=Kw1EBbZmGCF99Iu6qPidBTYZP+Ln6f2Ho//8LK77WLDZ85N/c5klSWbVf8ttN3TWMn
+         7y/TCA4Y6SjE4J4/s65Lr7hi5fznaPguKzjX09nqADZgd5APuHBQCPPMH5Khx+cZnJ1z
+         PAh17CgDZtAUMEI3dMMHpdl7hm/9+xXzw3/UNZHW90Qp6L8+EgI3IkneU7bU5CXbHZQA
+         xzesmvPVgYDlMTuKzb7oNbFMzgTOysaJh1mCSG1O8wDyPtBYVmO4qA4/Ooa2+U5UYaZu
+         KeYoDpYOW7lROFEGZHeNdzYlxIoRLe4b71jbyEdVQZoyj1LstcqR22PEoi5Q3NBe4uCn
+         5s5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=UlOSumQoWcAQJdorsUTG6xjcAVup8thJTbtcARuUmQ0=;
+        b=RRkDz1cKKkFW5TjuEzjSTMU9rEwfyntACTvs24T8RZMcbKhsQC+BLrtr5N5EXR+8pL
+         X06EfCLZTMNBiDYLxsti7vBuSDaT7yLuq5wQ9eT+wiIkx8/kDXEHmQYu/bifWK8Xt6nS
+         1R3Ea5pPN/HYO6LBMdxEV6RZ/cmRTwMjmY2rf7t0/e6JRi27/R6O/sH9CYtJeG7lq0KX
+         8r7iUu10vhtbApgKeHGcd5/IMV77skmZr0uNCavST2YPM275W/eAz3UAKE2W1aiEqph3
+         1QGSzF8zX5IBEi7tzIXdBXeygPvui+OyY2MYot9QsM9ZLu762bAPgqT42SigMD8OP6mA
+         juvA==
+X-Gm-Message-State: APjAAAXBceNpcdMiCvfykrKvNCwNENG0DopiTKvzYfmJuKcnqEotz0wT
+        8K29dpqZiQMVSXNZhkLlEh4wcQ==
+X-Google-Smtp-Source: APXvYqx+dqlHxFDmhdz8og05bzChcXZSp0TX/OuqzavhcN+IGKg3ikpoKuUi8YKS6OABtPRILb6StQ==
+X-Received: by 2002:a1c:3d08:: with SMTP id k8mr296821wma.119.1574708602018;
+        Mon, 25 Nov 2019 11:03:22 -0800 (PST)
+Received: from localhost (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id 4sm242188wmd.33.2019.11.25.11.03.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 11:03:21 -0800 (PST)
+Date:   Mon, 25 Nov 2019 20:03:20 +0100
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "yuchao0@huawei.com" <yuchao0@huawei.com>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>
+Subject: Re: [PATCH] f2fs: disble physical prealloc in LSF mount
+Message-ID: <20191125190320.g7beal27nc5ubju7@mpHalley>
+References: <20191122085952.12754-1-javier@javigon.com>
+ <BYAPR04MB58166AE029D919C6610D8404E74A0@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR04MB58166AE029D919C6610D8404E74A0@BYAPR04MB5816.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a78986aae9b2988f8493f9f65a587ee433e83bc3 ]
+On 25.11.2019 00:48, Damien Le Moal wrote:
+>On 2019/11/22 18:00, Javier González wrote:
+>> From: Javier González <javier.gonz@samsung.com>
+>>
+>> Fix file system corruption when using LFS mount (e.g., in zoned
+>> devices). Seems like the fallback into buffered I/O creates an
+>> inconsistency if the application is assuming both read and write DIO. I
+>> can easily reproduce a corruption with a simple RocksDB test.
+>>
+>> Might be that the f2fs_forced_buffered_io path brings some problems too,
+>> but I have not seen other failures besides this one.
+>>
+>> Problem reproducible without a zoned block device, simply by forcing
+>> LFS mount:
+>>
+>>   $ sudo mkfs.f2fs -f -m /dev/nvme0n1
+>>   $ sudo mount /dev/nvme0n1 /mnt/f2fs
+>>   $ sudo  /opt/rocksdb/db_bench  --benchmarks=fillseq --use_existing_db=0
+>>   --use_direct_reads=true --use_direct_io_for_flush_and_compaction=true
+>>   --db=/mnt/f2fs --num=5000 --value_size=1048576 --verify_checksum=1
+>>   --block_size=65536
+>>
+>> Note that the options that cause the problem are:
+>>   --use_direct_reads=true --use_direct_io_for_flush_and_compaction=true
+>>
+>> Fixes: f9d6d0597698 ("f2fs: fix out-place-update DIO write")
+>>
+>> Signed-off-by: Javier González <javier.gonz@samsung.com>
+>> ---
+>>  fs/f2fs/data.c | 3 ---
+>>  1 file changed, 3 deletions(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 5755e897a5f0..b045dd6ab632 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -1081,9 +1081,6 @@ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from)
+>>  			return err;
+>>  	}
+>>
+>> -	if (direct_io && allow_outplace_dio(inode, iocb, from))
+>> -		return 0;
+>
+>Since for LFS mode, all DIOs can end up out of place, I think that it
+>may be better to change allow_outplace_dio() to always return true in
+>the case of LFS mode. So may be something like:
+>
+>static inline int allow_outplace_dio(struct inode *inode,
+>			struct kiocb *iocb, struct iov_iter *iter)
+>{
+>	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>	int rw = iov_iter_rw(iter);
+>
+>	return test_opt(sbi, LFS) ||
+>	 	(rw == WRITE && !block_unaligned_IO(inode, iocb, iter));
+>}
+>
+>instead of the original:
+>
+>static inline int allow_outplace_dio(struct inode *inode,
+>			struct kiocb *iocb, struct iov_iter *iter)
+>{
+>	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>	int rw = iov_iter_rw(iter);
+>
+>	return (test_opt(sbi, LFS) && (rw == WRITE) &&
+>				!block_unaligned_IO(inode, iocb, iter));
+>}
+>
+>Thoughts ?
+>
 
-Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
-instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
-like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
-pages, e.g. put pages grabbed via gup().  But for flows such as setting
-A/D bits or shifting refcounts for transparent huge pages, KVM needs to
-to avoid processing ZONE_DEVICE pages as the flows in question lack the
-underlying machinery for proper handling of ZONE_DEVICE pages.
+I see what you mean and it makes sense. However, the problem I am seeing
+occurs when allow_outplace_dio() returns true, as this is what creates
+the inconsistency between the write being buffered and the read being
+DIO.
 
-This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
-when running a KVM guest backed with /dev/dax memory, as KVM straight up
-doesn't put any references to ZONE_DEVICE pages acquired by gup().
+I did test the code you propose and, as expected, it still triggered the
+corruption.
 
-Note, Dan Williams proposed an alternative solution of doing put_page()
-on ZONE_DEVICE pages immediately after gup() in order to simplify the
-auditing needed to ensure is_zone_device_page() is called if and only if
-the backing device is pinned (via gup()).  But that approach would break
-kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
-unmap() when accessing guest memory, unlike KVM's secondary MMU, which
-coordinates with mmu_notifier invalidations to avoid creating stale
-page references, i.e. doesn't rely on pages being pinned.
+>> -
+>>  	if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+>>  		return 0;
+>>
+>>
+>
+>
+>-- 
+>Damien Le Moal
+>Western Digital Research
 
-[*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
-
-Reported-by: Adam Borowski <kilobyte@angband.pl>
-Analyzed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[sean: backport to 4.x; resolve conflict in mmu.c]
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu.c       |  8 ++++----
- include/linux/kvm_host.h |  1 +
- virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
- 3 files changed, 28 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 8cd26e50d41c..c0b0135ef07f 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -3177,7 +3177,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
- 	 * here.
- 	 */
- 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
--	    level == PT_PAGE_TABLE_LEVEL &&
-+	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
- 	    PageTransCompoundMap(pfn_to_page(pfn)) &&
- 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
- 		unsigned long mask;
-@@ -5344,9 +5344,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
- 		 * the guest, and the guest page table is using 4K page size
- 		 * mapping if the indirect sp has level = 1.
- 		 */
--		if (sp->role.direct &&
--			!kvm_is_reserved_pfn(pfn) &&
--			PageTransCompoundMap(pfn_to_page(pfn))) {
-+		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
-+		    !kvm_is_zone_device_pfn(pfn) &&
-+		    PageTransCompoundMap(pfn_to_page(pfn))) {
- 			drop_spte(kvm, sptep);
- 			need_tlb_flush = 1;
- 			goto restart;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index bb4758ffd403..7668c68ddb5b 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -890,6 +890,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
- void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
- 
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
-+bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
- 
- struct kvm_irq_ack_notifier {
- 	struct hlist_node link;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index ea61162b2b53..cdaacdf7bc87 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -142,10 +142,30 @@ __weak void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
- {
- }
- 
-+bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-+{
-+	/*
-+	 * The metadata used by is_zone_device_page() to determine whether or
-+	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
-+	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
-+	 * page_count() is zero to help detect bad usage of this helper.
-+	 */
-+	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
-+		return false;
-+
-+	return is_zone_device_page(pfn_to_page(pfn));
-+}
-+
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- {
-+	/*
-+	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
-+	 * perspective they are "normal" pages, albeit with slightly different
-+	 * usage rules.
-+	 */
- 	if (pfn_valid(pfn))
--		return PageReserved(pfn_to_page(pfn));
-+		return PageReserved(pfn_to_page(pfn)) &&
-+		       !kvm_is_zone_device_pfn(pfn);
- 
- 	return true;
- }
-@@ -1730,7 +1750,7 @@ static void kvm_release_pfn_dirty(kvm_pfn_t pfn)
- 
- void kvm_set_pfn_dirty(kvm_pfn_t pfn)
- {
--	if (!kvm_is_reserved_pfn(pfn)) {
-+	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
- 		struct page *page = pfn_to_page(pfn);
- 
- 		if (!PageReserved(page))
-@@ -1741,7 +1761,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
- 
- void kvm_set_pfn_accessed(kvm_pfn_t pfn)
- {
--	if (!kvm_is_reserved_pfn(pfn))
-+	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
- 		mark_page_accessed(pfn_to_page(pfn));
- }
- EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
--- 
-2.24.0
-
+Thanks,
+Javier
