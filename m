@@ -2,583 +2,574 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F954C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712F2C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1852082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4F32082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="KDsLQdZh"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bGDs6/wK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="JXR2WmvB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfKYLtu (ORCPT
+        id S1727209AbfKYLwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 06:49:50 -0500
-Received: from sender4-pp-o97.zoho.com ([136.143.188.97]:25715 "EHLO
-        sender4-pp-o97.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfKYLtu (ORCPT
+        Mon, 25 Nov 2019 06:52:33 -0500
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:51712 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbfKYLwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:49:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574682321; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=YwKkpeiGn5OW72jZyQ2AiIL5nzr1cbJiDqV9otNFaa7oRbazW9kIGE2sszZnVqGdoH8IXtL9Rmfa2zJwwPRp5FWmIFwVdpfwkbKijy0iyMhg1SjrIPLJRjUw4aUuLu9rqU8cvEfjHsfVpL8jY49/tBmh/f019Kgn2LRG+jLwFR0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574682321; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=JVmWpBShrSs6J5uM+gpTyA50b9Aa1JpG6U5h9atc6tw=; 
-        b=H16isz5XDHU1rjxDsEndu/HVrZ4RFYyZ1uCV1lkUYf4IBKoNvoVW6RxoxbPNiEEeT1Rlft/zdHDJHbPA3d2Crq2+ja/OL0XReOIBKrB566Fbt896rGBUuLxkBdz3n5VtreOpRTN0/whzk4l3ufURbt5I97vMKtN0c0XnL5sps5c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=HBYrOKigUDKEKpn5PVwldxDOIdUgDdhqG9mNf82MlqCOvWvWjro9RYOPkNrfBzUdxxikGjKJ63eJ
-    gabK66vSoEpiYq40zH/Ha2bjgZe4C901SsS6u/WwomfYAUW8wKi+  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574682321;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=JVmWpBShrSs6J5uM+gpTyA50b9Aa1JpG6U5h9atc6tw=;
-        b=KDsLQdZhdrb5abQTppPr1kb7zF2bUU0v0DLbbf1rrn8ifjky1k4R+UfB99e7WtB7
-        bT9YqdL2opZcr1EvY/lxvi7fNutxYfNScBQI18vqhbDfvh7RI57Z6KXRT8wIi4G/4e7
-        fOZxMfvhSiboozOHZDq1b4CjyuBRJnZijWABlYvk=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.185 [171.221.113.185]) by mx.zohomail.com
-        with SMTPS id 157468231975867.2149798954324; Mon, 25 Nov 2019 03:45:19 -0800 (PST)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mark.rutland@arm.com, syq@debian.org
-Subject: [PATCH v5 4/4] pinctrl: Ingenic: Add pinctrl driver for X1830.
-Date:   Mon, 25 Nov 2019 19:44:43 +0800
-Message-Id: <1574682283-87655-5-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574682283-87655-1-git-send-email-zhouyanjie@zoho.com>
-References: <1574682283-87655-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Mon, 25 Nov 2019 06:52:32 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9766BC03F3;
+        Mon, 25 Nov 2019 11:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1574682751; bh=uTNu/+eAw0b+5R+LAGy4PUjZ/guVd2if7uVrZPdmKD4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=bGDs6/wKxNvKbjGTvsHnURqmgzpZKOIQbXMBEu44D16SkB5qSnrtfdMFa+RKF7knq
+         Gs7EKfc0NGPbZ+cviM6QoWzm5Gcu7V67s8TZZICaJf333OZdk/dhIyGOh1je5PUC2N
+         0ruHMTZXW5XnV/ASGWL5ToRqrWDbPtobTZUyhEaveZ1svJxAzDB/O3EoFKYWh7VLhF
+         IbjSXZ/Xe/0tA99TYyHh0pya8Srd5SMt8vsJVntKvdraUoHeo9dgF95Hf9X2kkY7ul
+         LsMm3pi4Cn1KLiJqA7nLctumexh6F5wu+dhV8I266cX2Wh/hACodAkHDmlFqVYR4Mz
+         unhfxjsGVsKOA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 20F01A006A;
+        Mon, 25 Nov 2019 11:52:30 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.13.188.44) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 25 Nov 2019 03:52:29 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.177.249)
+ by mrs.synopsys.com (10.13.188.44) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 25 Nov 2019 03:52:29 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KyOQxLyv4OXYixrdblaw4DsRKIjVz7fTdX723P1Q2+AIBsRJqGnv1DQY0ntMoObKlssQixUx8bVbggR/yFeOzWVmGrATnPaoVudtKiUn2MEGck1O+4ANr+A9N3YgvME9pOdTaNMj+07i1dbjXrVDDpfmEOb0663YoY5xl76vD2M27y51F12SJAuDGIF9joAHb9k9MbSU03vAt17JOZflkgXD1mipWJLaCFWN2BW005bk9+1UUYSJwFW8W2tCdUOgCATTWcUMWXjs2Rs/OzHOT5TFSWWkJFMpbvE+NvhVczfrwpSnBAcwqrJw/DtKi+fs0JWDLzWTx8f2iSq/TV8P+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OpuBNxs9hVVxc2EJgktXOTkPVNRGZ/i6Un3IXhTzIns=;
+ b=KdR0v5Ym0ni2kqXa+mNPnbPmVnO7GSofFLxwJQUL1ZhXql3XIdK4Z+LrfIV14sDdVrK52FR71qholv69Eihd1kgsSvcZlYGf+RrfFaQt7kV/p6d/hZKN/YOd92KesBKImBYoAFzMgCu7//KcZcoPRTutNaAi4NWwR5LbTqHSn+/IoqklA26RbtR6Q2K7XDIMarks6fEIVMgkG7zj1EwBffRDQ0yNx230hKYraACcHdS8ZRJtGr2xfkfAWMV2fnOCuErWx3qur9oqvbbahJse1KWE/LrDJIXsa7n4SKZfs+1W5R/sV8RK1+sa2Poks51pzQO0knghfj6rSzLG9XhtTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OpuBNxs9hVVxc2EJgktXOTkPVNRGZ/i6Un3IXhTzIns=;
+ b=JXR2WmvBgo+wcZhjuWn0rpB8i8WgRQcfDeuKlG+l8rwXh75J0Z9QRGKX3ffw4H1JuF5+Sk/8BSroOIt53hVrKeQ4gRe3i7CpLTxY4hBGq/ednWRwAWh/RnQKdgtKfyuyzRFIO6VDfsSp+3R1xf694mbWeXheiQiqtJtqk+nqbLU=
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
+ DM6PR12MB3450.namprd12.prod.outlook.com (20.178.29.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.16; Mon, 25 Nov 2019 11:52:28 +0000
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::b0c9:8724:cdaf:10b1]) by DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::b0c9:8724:cdaf:10b1%2]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
+ 11:52:28 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: RE: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
+ nodes in Tegra194
+Thread-Topic: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
+ nodes in Tegra194
+Thread-Index: AQHVoSIGRtupZ2C36ki3nP3a6spYt6eXLK6AgARTlQCAAALfgIAAQhmw
+Date:   Mon, 25 Nov 2019 11:52:28 +0000
+Message-ID: <DM6PR12MB401074B85B9E9E592648FF65DA4A0@DM6PR12MB4010.namprd12.prod.outlook.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+ <20191122104505.8986-3-vidyas@nvidia.com> <20191122131931.GB1315704@ulmo>
+ <8fbdda8e-84af-576c-e240-61c381c85a8f@nvidia.com>
+ <20191125073359.GD1409040@ulmo>
+In-Reply-To: <20191125073359.GD1409040@ulmo>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTBhOTdhMWEzLTBmN2EtMTFlYS05ODljLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFwwYTk3YTFhNC0wZjdhLTExZWEtOTg5Yy1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjEzOTY5IiB0PSIxMzIxOTE1NjM0NTcy?=
+ =?us-ascii?Q?MTI5NTAiIGg9InZoUnFmV3RLdUpHZHJwa2dMRE1kTkloV3Ixbz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUJRSkFB?=
+ =?us-ascii?Q?QVdzaXZPaHFQVkFmNEtGL2ZxUFVKLy9nb1g5K285UW44T0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUNrQ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBRUdJWXpRQUFBQUFBQUFBQUFBQUFBSjRBQUFCbUFHa0Fi?=
+ =?us-ascii?Q?Z0JoQUc0QVl3QmxBRjhBY0FCc0FHRUFiZ0J1QUdrQWJnQm5BRjhBZHdCaEFI?=
+ =?us-ascii?Q?UUFaUUJ5QUcwQVlRQnlBR3NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3Qm5BR1lBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQVlRQnRBSE1BZFFCdUFHY0FYd0JqQUc4QWJnQm1BQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFjd0Jo?=
+ =?us-ascii?Q?QUcwQWN3QjFBRzRBWndCZkFISUFaUUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCekFHMEFhUUJqQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFi?=
+ =?us-ascii?Q?Z0JsQUhJQWN3QmZBSE1BZEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1B?=
+ =?us-ascii?Q?RzhBZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWRB?=
+ =?us-ascii?Q?QnpBRzBBWXdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFI?=
+ =?us-ascii?Q?a0FYd0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0IxQUcwQVl3QUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFad0IwQUhNQVh3QndBSElBYndCa0FIVUFZd0IwQUY4?=
+ =?us-ascii?Q?QWRBQnlBR0VBYVFCdUFHa0FiZ0JuQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHRUFiQUJsQUhNQVh3QmhBR01BWXdCdkFIVUFiZ0IwQUY4QWNBQnNBR0VB?=
+ =?us-ascii?Q?YmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSE1BWVFCc0FHVUFjd0Jm?=
+ =?us-ascii?Q?QUhFQWRRQnZBSFFBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQWN3QnVBSEFBY3dCZkFHd0FhUUJqQUdVQWJnQnpB?=
+ =?us-ascii?Q?R1VBWHdCMEFHVUFjZ0J0QUY4QU1RQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
+ =?us-ascii?Q?QUJ6QUc0QWNBQnpBRjhBYkFCcEFHTUFaUUJ1QUhNQVpRQmZBSFFBWlFCeUFH?=
+ =?us-ascii?Q?MEFYd0J6QUhRQWRRQmtBR1VBYmdCMEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFIWUFad0JmQUdzQVpR?=
+ =?us-ascii?Q?QjVBSGNBYndCeUFHUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFB?=
+ =?us-ascii?Q?QUFBQUFDQUFBQUFBQT0iLz48L21ldGE+?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: abee0de2-e5fa-4cbc-7690-08d7719df235
+x-ms-traffictypediagnostic: DM6PR12MB3450:
+x-microsoft-antispam-prvs: <DM6PR12MB3450B7FD79A41AC8E63E04E8DA4A0@DM6PR12MB3450.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0232B30BBC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(136003)(366004)(396003)(189003)(199004)(14454004)(76116006)(66946007)(8936002)(2906002)(81166006)(81156014)(66476007)(305945005)(8676002)(25786009)(14444005)(256004)(229853002)(76176011)(30864003)(6506007)(54906003)(316002)(6436002)(66556008)(64756008)(66446008)(7696005)(186003)(99286004)(52536014)(110136005)(26005)(5660300002)(53546011)(33656002)(478600001)(66066001)(71190400001)(71200400001)(446003)(11346002)(9686003)(6116002)(3846002)(86362001)(74316002)(55016002)(4326008)(7736002)(7416002)(6246003)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3450;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6ITP4ZENoAzjZVxoqwbkgGEoH861nv5IeRW6pr8K9mbRUnOgQqZIePmTlcRYDdh2uIwDVluicOgNMgcC9hDSovYc5UUyBnjEH1eIDou/U1s6mo417RF2cs8J2qDtOO1lIekCfffXqnT8jTwPWmVYwXbFJdWDuaFNmjkHQ6/E05rHzOMsOmmt9kCRRWlnYVmqSeXQy736wLPlqn7EReNvC9j9U46Uc0+BtGc+dhfZOTeE9KQj7Z2fEH4G/swBH3KIsyKCQoD7KX0KRnpHpdDk8WiuV0LJDy2wGO03+2jyF8m4faJa1TywAdkReR4nBVVXxgpXo6QPgvNv1X6Y9VQE225BUaGEx5mU29yTtpuUM9qDoQ+8dHoMyzYsGXfAj7q4MBakDRCzIKe1G4ynQr1Arlsj+zP8FxgoropMQZcyxE//88X1iPhB51WtsKAe/V3m
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: abee0de2-e5fa-4cbc-7690-08d7719df235
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 11:52:28.1110
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RkZyVMSfjPyXEIszdIXDl9rPm9AvhljjUis80I34SHhkhJqBvblOXOTIxNkn0A3uYhO422UqBMIeHaf5Z+gkaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3450
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for probing the pinctrl-ingenic driver on the
-X1830 Soc from Ingenic.
+On Mon, Nov 25, 2019 at 7:33:59, Thierry Reding=20
+<thierry.reding@gmail.com> wrote:
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
+> On Mon, Nov 25, 2019 at 12:53:42PM +0530, Vidya Sagar wrote:
+> > On 11/22/2019 6:49 PM, Thierry Reding wrote:
+> > > On Fri, Nov 22, 2019 at 04:15:01PM +0530, Vidya Sagar wrote:
+> > > > Add support for PCIe controllers that can operate in endpoint mode
+> > > > in Tegra194.
+> > > >=20
+> > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > ---
+> > > >   .../bindings/pci/nvidia,tegra194-pcie-ep.txt  | 138 +++++++++++++=
++++++
+> > > >   1 file changed, 138 insertions(+)
+> > > >   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,t=
+egra194-pcie-ep.txt
+> > >=20
+> > > The vast majority of this is a duplication of the host mode device tr=
+ee
+> > > bindings. I think it'd be best to combine both and only highlight whe=
+re
+> > > both modes differ.
+> > >=20
+> > > The designware-pcie.txt binding does something similar.
+> > Ok. I'll merge this into the host mode bindings file and in that differ=
+entiate between
+> > root mode and endpoint mode.
+> >=20
+> > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-=
+pcie-ep.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep=
+.txt
+> > > > new file mode 100644
+> > > > index 000000000000..4676ccf7dfa5
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep=
+.txt
+> > > > @@ -0,0 +1,138 @@
+> > > > +NVIDIA Tegra PCIe Endpoint mode controller (Synopsys DesignWare Co=
+re based)
+> > > > +
+> > > > +Some of the PCIe controllers which are based on Synopsys DesignWar=
+e PCIe IP
+> > > > +are dual mode i.e. they can work in root port mode or endpoint mod=
+e but one
+> > > > + at a time. Since they are based on DesignWare IP, they inherit al=
+l the common
+> > > > +properties defined in designware-pcie.txt.
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+> > >=20
+> > > The device tree snippets that you added have "nvidia,tegra194-pcie-ep=
+"
+> > > for EP mode controllers. So either this is wrong or the DTS files are
+> > > wrong.
+> > DTS file are correct. This is a mistake in this file. I'll correct this=
+.
+> >=20
+> > >=20
+> > > This device tree binding describes the exact same hardware, so I don'=
+t
+> > > think we necessarily need two different compatible strings. It's fair=
+ly
+> > > easy to distinguish between which mode to run in by looking at which
+> > > properties exist. EP mode for example is the only one that uses the
+> > > "addr_space" reg entry.
+> > >=20
+> > > Rob, do you know why a different compatible string was chosen for the=
+ EP
+> > > mode? Looking at the driver, there are only a handful of differences =
+in
+> > > the programming, but most of the driver remains identical. An extra D=
+T
+> > > compatible string seems a bit exaggerated since it suggests that this=
+ is
+> > > actually different hardware, where it clearly isn't.
+> > Since all other implementations have done it this way, I just followed =
+to be in sync
+> > with them. Even I would also like to hear from Rob on the rationale beh=
+ind this.
+> >=20
+> > >=20
+> > > > +  Tegra194: Only C0, C4 & C5 controllers are dual mode controllers=
+.
+> > > > +- power-domains: A phandle to the node that controls power to the =
+respective
+> > > > +  PCIe controller and a specifier name for the PCIe controller. Fo=
+llowing are
+> > > > +  the specifiers for the different PCIe controllers
+> > > > +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+> > > > +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+> > > > +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+> > > > +  these specifiers are defined in
+> > > > +  "include/dt-bindings/power/tegra194-powergate.h" file.
+> > > > +- reg: A list of physical base address and length pairs for each s=
+et of
+> > > > +  controller registers. Must contain an entry for each entry in th=
+e reg-names
+> > > > +  property.
+> > > > +- reg-names: Must include the following entries:
+> > > > +  "appl": Controller's application logic registers
+> > > > +  "atu_dma": iATU and DMA registers. This is where the iATU (inter=
+nal Address
+> > > > +             Translation Unit) registers of the PCIe core are made=
+ available
+> > > > +             for SW access.
+> > > > +  "dbi": The aperture where root port's own configuration register=
+s are
+> > > > +         available
+> > > > +  "addr_space": Used to map remote RC address space
+> > > > +- interrupts: A list of interrupt outputs of the controller. Must =
+contain an
+> > > > +  entry for each entry in the interrupt-names property.
+> > > > +- interrupt-names: Must include the following entry:
+> > > > +  "intr": The Tegra interrupt that is asserted for controller inte=
+rrupts
+> > > > +- clocks: Must contain an entry for each entry in clock-names.
+> > > > +  See ../clocks/clock-bindings.txt for details.
+> > > > +- clock-names: Must include the following entries:
+> > > > +  - core
+> > > > +- resets: Must contain an entry for each entry in reset-names.
+> > > > +  See ../reset/reset.txt for details.
+> > > > +- reset-names: Must include the following entries:
+> > > > +  - apb
+> > > > +  - core
+> > > > +- phys: Must contain a phandle to P2U PHY for each entry in phy-na=
+mes.
+> > > > +- phy-names: Must include an entry for each active lane.
+> > > > +  "p2u-N": where N ranges from 0 to one less than the total number=
+ of lanes
+> > > > +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller n=
+ode followed
+> > > > +  by controller-id. Following are the controller ids for each cont=
+roller.
+> > > > +    0: C0
+> > > > +    4: C4
+> > > > +    5: C5
+> > > > +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signal=
+s
+> > > > +- nvidia,pex-rst-gpio: Must contain a phandle to a GPIO controller=
+ followed by
+> > > > +  GPIO that is being used as PERST signal
+> > >=20
+> > > Why is this NVIDIA specific? Do other instantiations of the DW IP not
+> > > also need a means to define which GPIO is the reset?
+> > I'm not sure. At least I didn't find anything like this in other implem=
+entations.
+> > My understanding is that, controller handles assert/de-assert on the PE=
+RST line
+> > automatically without SW intervention. I think it is for the same reaso=
+n that other
+> > implementations don't wait for the REFCLK to flow in from host to confi=
+gure the IP.
+> > I think they just use some internal clock for the configuration and swi=
+tch to
+> > running the core based on REFCLK as and when it is available
+> > (i.e. whenever a de-assert is perceived on PERST line by the controller=
+)
+>=20
+> That would be somewhat surprising, though. The IP used in Tegra must be
+> pretty close to the IP used in other SoCs, and the code that we need in
+> pex_ep_event_pex_rst_{assert,deassert}() is pretty significant. Why the
+> other instantiations wouldn't need something similar seems unlikely to
+> me.
+>=20
+> Perhaps Jingoo or Gustavo can shed some light on this.
 
-Notes:
-    v2:
-    New patch.
-    
-    v2->v3:
-    Add pinctrl drivers for the PWM of X1830.
-    
-    v3->v4:
-    1.Use local variables to streamline code.
-    2.Prevents processors older than X1830 from being
-      configured in HiZ mode.
-    
-    v4->v5:
-    Fix compile-time warnings.
-    Reported-by: kbuild test robot <lkp@intel.com>
+On my current FPGA prototyping solution, I don't need to control the=20
+PERST line and it's very likely that I don't even have access to control=20
+it. I guess due to some particularity of my solution, the HW team=20
+probably has decided to wire it up directly for some unknown reason to=20
+me.
 
- drivers/pinctrl/pinctrl-ingenic.c | 345 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 324 insertions(+), 21 deletions(-)
+However, It seems to me that exynos, imx6, keystone, meson, al, histb,=20
+kirin, and qcom drivers controls the PERST line in spite of others driver=20
+that doesn't do it like in my prototype solution.
+In the end I'd says that depends of how the IP solution of design by the=20
+HW team.
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 1a99715..1b84b7f 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -28,6 +28,10 @@
- #define GPIO_PIN	0x00
- #define GPIO_MSK	0x20
- 
-+#define GPIO_HIZ		0x00
-+#define GPIO_PULLUP		0x01
-+#define GPIO_PULLDOWN	0x10
-+
- #define JZ4740_GPIO_DATA	0x10
- #define JZ4740_GPIO_PULL_DIS	0x30
- #define JZ4740_GPIO_FUNC	0x40
-@@ -45,6 +49,11 @@
- #define X1000_GPIO_PZ_BASE		0x700
- #define X1000_GPIO_PZ_GID2LD	0x7f0
- 
-+#define X1830_GPIO_PEL0			0x110
-+#define X1830_GPIO_PEL1			0x120
-+#define X1830_GPIO_PZ_BASE		0x7000
-+#define X1830_GPIO_PZ_GID2LD	0x70f0
-+
- #define REG_SET(x) ((x) + 0x4)
- #define REG_CLEAR(x) ((x) + 0x8)
- 
-@@ -60,6 +69,7 @@ enum jz_version {
- 	ID_X1000,
- 	ID_X1000E,
- 	ID_X1500,
-+	ID_X1830,
- };
- 
- struct ingenic_chip_info {
-@@ -1394,6 +1404,220 @@ static const struct ingenic_chip_info x1500_chip_info = {
- 	.pull_downs = x1000_pull_downs,
- };
- 
-+static const u32 x1830_pull_ups[4] = {
-+	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
-+};
-+
-+static const u32 x1830_pull_downs[4] = {
-+	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
-+};
-+
-+static int x1830_uart0_data_pins[] = { 0x33, 0x36, };
-+static int x1830_uart0_hwflow_pins[] = { 0x34, 0x35, };
-+static int x1830_uart1_data_pins[] = { 0x38, 0x37, };
-+static int x1830_sfc_pins[] = { 0x17, 0x18, 0x1a, 0x19, 0x1b, 0x1c, };
-+static int x1830_ssi0_dt_pins[] = { 0x4c, };
-+static int x1830_ssi0_dr_pins[] = { 0x4b, };
-+static int x1830_ssi0_clk_pins[] = { 0x4f, };
-+static int x1830_ssi0_gpc_pins[] = { 0x4d, };
-+static int x1830_ssi0_ce0_pins[] = { 0x50, };
-+static int x1830_ssi0_ce1_pins[] = { 0x4e, };
-+static int x1830_ssi1_dt_c_pins[] = { 0x53, };
-+static int x1830_ssi1_dr_c_pins[] = { 0x54, };
-+static int x1830_ssi1_clk_c_pins[] = { 0x57, };
-+static int x1830_ssi1_gpc_c_pins[] = { 0x55, };
-+static int x1830_ssi1_ce0_c_pins[] = { 0x58, };
-+static int x1830_ssi1_ce1_c_pins[] = { 0x56, };
-+static int x1830_ssi1_dt_d_pins[] = { 0x62, };
-+static int x1830_ssi1_dr_d_pins[] = { 0x63, };
-+static int x1830_ssi1_clk_d_pins[] = { 0x66, };
-+static int x1830_ssi1_gpc_d_pins[] = { 0x64, };
-+static int x1830_ssi1_ce0_d_pins[] = { 0x67, };
-+static int x1830_ssi1_ce1_d_pins[] = { 0x65, };
-+static int x1830_mmc0_1bit_pins[] = { 0x24, 0x25, 0x20, };
-+static int x1830_mmc0_4bit_pins[] = { 0x21, 0x22, 0x23, };
-+static int x1830_mmc1_1bit_pins[] = { 0x42, 0x43, 0x44, };
-+static int x1830_mmc1_4bit_pins[] = { 0x45, 0x46, 0x47, };
-+static int x1830_i2c0_pins[] = { 0x0c, 0x0d, };
-+static int x1830_i2c1_pins[] = { 0x39, 0x3a, };
-+static int x1830_i2c2_pins[] = { 0x5b, 0x5c, };
-+static int x1830_pwm_pwm0_b_pins[] = { 0x31, };
-+static int x1830_pwm_pwm0_c_pins[] = { 0x4b, };
-+static int x1830_pwm_pwm1_b_pins[] = { 0x32, };
-+static int x1830_pwm_pwm1_c_pins[] = { 0x4c, };
-+static int x1830_pwm_pwm2_c_8_pins[] = { 0x48, };
-+static int x1830_pwm_pwm2_c_13_pins[] = { 0x4d, };
-+static int x1830_pwm_pwm3_c_9_pins[] = { 0x49, };
-+static int x1830_pwm_pwm3_c_14_pins[] = { 0x4e, };
-+static int x1830_pwm_pwm4_c_15_pins[] = { 0x4f, };
-+static int x1830_pwm_pwm4_c_25_pins[] = { 0x59, };
-+static int x1830_pwm_pwm5_c_16_pins[] = { 0x50, };
-+static int x1830_pwm_pwm5_c_26_pins[] = { 0x5a, };
-+static int x1830_pwm_pwm6_c_17_pins[] = { 0x51, };
-+static int x1830_pwm_pwm6_c_27_pins[] = { 0x5b, };
-+static int x1830_pwm_pwm7_c_18_pins[] = { 0x52, };
-+static int x1830_pwm_pwm7_c_28_pins[] = { 0x5c, };
-+static int x1830_mac_pins[] = {
-+	0x29, 0x30, 0x2f, 0x28, 0x2e, 0x2d, 0x2a, 0x2b, 0x26, 0x27,
-+};
-+
-+static int x1830_uart0_data_funcs[] = { 0, 0, };
-+static int x1830_uart0_hwflow_funcs[] = { 0, 0, };
-+static int x1830_uart1_data_funcs[] = { 0, 0, };
-+static int x1830_sfc_funcs[] = { 1, 1, 1, 1, 1, 1, };
-+static int x1830_ssi0_dt_funcs[] = { 0, };
-+static int x1830_ssi0_dr_funcs[] = { 0, };
-+static int x1830_ssi0_clk_funcs[] = { 0, };
-+static int x1830_ssi0_gpc_funcs[] = { 0, };
-+static int x1830_ssi0_ce0_funcs[] = { 0, };
-+static int x1830_ssi0_ce1_funcs[] = { 0, };
-+static int x1830_ssi1_dt_c_funcs[] = { 1, };
-+static int x1830_ssi1_dr_c_funcs[] = { 1, };
-+static int x1830_ssi1_clk_c_funcs[] = { 1, };
-+static int x1830_ssi1_gpc_c_funcs[] = { 1, };
-+static int x1830_ssi1_ce0_c_funcs[] = { 1, };
-+static int x1830_ssi1_ce1_c_funcs[] = { 1, };
-+static int x1830_ssi1_dt_d_funcs[] = { 2, };
-+static int x1830_ssi1_dr_d_funcs[] = { 2, };
-+static int x1830_ssi1_clk_d_funcs[] = { 2, };
-+static int x1830_ssi1_gpc_d_funcs[] = { 2, };
-+static int x1830_ssi1_ce0_d_funcs[] = { 2, };
-+static int x1830_ssi1_ce1_d_funcs[] = { 2, };
-+static int x1830_mmc0_1bit_funcs[] = { 0, 0, 0, };
-+static int x1830_mmc0_4bit_funcs[] = { 0, 0, 0, };
-+static int x1830_mmc1_1bit_funcs[] = { 0, 0, 0, };
-+static int x1830_mmc1_4bit_funcs[] = { 0, 0, 0, };
-+static int x1830_i2c0_funcs[] = { 1, 1, };
-+static int x1830_i2c1_funcs[] = { 0, 0, };
-+static int x1830_i2c2_funcs[] = { 1, 1, };
-+static int x1830_pwm_pwm0_b_funcs[] = { 0, };
-+static int x1830_pwm_pwm0_c_funcs[] = { 1, };
-+static int x1830_pwm_pwm1_b_funcs[] = { 0, };
-+static int x1830_pwm_pwm1_c_funcs[] = { 1, };
-+static int x1830_pwm_pwm2_c_8_funcs[] = { 0, };
-+static int x1830_pwm_pwm2_c_13_funcs[] = { 1, };
-+static int x1830_pwm_pwm3_c_9_funcs[] = { 0, };
-+static int x1830_pwm_pwm3_c_14_funcs[] = { 1, };
-+static int x1830_pwm_pwm4_c_15_funcs[] = { 1, };
-+static int x1830_pwm_pwm4_c_25_funcs[] = { 0, };
-+static int x1830_pwm_pwm5_c_16_funcs[] = { 1, };
-+static int x1830_pwm_pwm5_c_26_funcs[] = { 0, };
-+static int x1830_pwm_pwm6_c_17_funcs[] = { 1, };
-+static int x1830_pwm_pwm6_c_27_funcs[] = { 0, };
-+static int x1830_pwm_pwm7_c_18_funcs[] = { 1, };
-+static int x1830_pwm_pwm7_c_28_funcs[] = { 0, };
-+static int x1830_mac_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-+
-+static const struct group_desc x1830_groups[] = {
-+	INGENIC_PIN_GROUP("uart0-data", x1830_uart0_data),
-+	INGENIC_PIN_GROUP("uart0-hwflow", x1830_uart0_hwflow),
-+	INGENIC_PIN_GROUP("uart1-data", x1830_uart1_data),
-+	INGENIC_PIN_GROUP("sfc", x1830_sfc),
-+	INGENIC_PIN_GROUP("ssi0-dt", x1830_ssi0_dt),
-+	INGENIC_PIN_GROUP("ssi0-dr", x1830_ssi0_dr),
-+	INGENIC_PIN_GROUP("ssi0-clk", x1830_ssi0_clk),
-+	INGENIC_PIN_GROUP("ssi0-gpc", x1830_ssi0_gpc),
-+	INGENIC_PIN_GROUP("ssi0-ce0", x1830_ssi0_ce0),
-+	INGENIC_PIN_GROUP("ssi0-ce1", x1830_ssi0_ce1),
-+	INGENIC_PIN_GROUP("ssi1-dt-c", x1830_ssi1_dt_c),
-+	INGENIC_PIN_GROUP("ssi1-dr-c", x1830_ssi1_dr_c),
-+	INGENIC_PIN_GROUP("ssi1-clk-c", x1830_ssi1_clk_c),
-+	INGENIC_PIN_GROUP("ssi1-gpc-c", x1830_ssi1_gpc_c),
-+	INGENIC_PIN_GROUP("ssi1-ce0-c", x1830_ssi1_ce0_c),
-+	INGENIC_PIN_GROUP("ssi1-ce1-c", x1830_ssi1_ce1_c),
-+	INGENIC_PIN_GROUP("ssi1-dt-d", x1830_ssi1_dt_d),
-+	INGENIC_PIN_GROUP("ssi1-dr-d", x1830_ssi1_dr_d),
-+	INGENIC_PIN_GROUP("ssi1-clk-d", x1830_ssi1_clk_d),
-+	INGENIC_PIN_GROUP("ssi1-gpc-d", x1830_ssi1_gpc_d),
-+	INGENIC_PIN_GROUP("ssi1-ce0-d", x1830_ssi1_ce0_d),
-+	INGENIC_PIN_GROUP("ssi1-ce1-d", x1830_ssi1_ce1_d),
-+	INGENIC_PIN_GROUP("mmc0-1bit", x1830_mmc0_1bit),
-+	INGENIC_PIN_GROUP("mmc0-4bit", x1830_mmc0_4bit),
-+	INGENIC_PIN_GROUP("mmc1-1bit", x1830_mmc1_1bit),
-+	INGENIC_PIN_GROUP("mmc1-4bit", x1830_mmc1_4bit),
-+	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
-+	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
-+	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
-+	INGENIC_PIN_GROUP("pwm0-b", x1830_pwm_pwm0_b),
-+	INGENIC_PIN_GROUP("pwm0-c", x1830_pwm_pwm0_c),
-+	INGENIC_PIN_GROUP("pwm1-b", x1830_pwm_pwm1_b),
-+	INGENIC_PIN_GROUP("pwm1-c", x1830_pwm_pwm1_c),
-+	INGENIC_PIN_GROUP("pwm2-c-8", x1830_pwm_pwm2_c_8),
-+	INGENIC_PIN_GROUP("pwm2-c-13", x1830_pwm_pwm2_c_13),
-+	INGENIC_PIN_GROUP("pwm3-c-9", x1830_pwm_pwm3_c_9),
-+	INGENIC_PIN_GROUP("pwm3-c-14", x1830_pwm_pwm3_c_14),
-+	INGENIC_PIN_GROUP("pwm4-c-15", x1830_pwm_pwm4_c_15),
-+	INGENIC_PIN_GROUP("pwm4-c-25", x1830_pwm_pwm4_c_25),
-+	INGENIC_PIN_GROUP("pwm5-c-16", x1830_pwm_pwm5_c_16),
-+	INGENIC_PIN_GROUP("pwm5-c-26", x1830_pwm_pwm5_c_26),
-+	INGENIC_PIN_GROUP("pwm6-c-17", x1830_pwm_pwm6_c_17),
-+	INGENIC_PIN_GROUP("pwm6-c-27", x1830_pwm_pwm6_c_27),
-+	INGENIC_PIN_GROUP("pwm7-c-18", x1830_pwm_pwm7_c_18),
-+	INGENIC_PIN_GROUP("pwm7-c-28", x1830_pwm_pwm7_c_28),
-+	INGENIC_PIN_GROUP("mac", x1830_mac),
-+};
-+
-+static const char *x1830_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
-+static const char *x1830_uart1_groups[] = { "uart1-data", };
-+static const char *x1830_sfc_groups[] = { "sfc", };
-+static const char *x1830_ssi0_groups[] = {
-+	"ssi0-dt", "ssi0-dr", "ssi0-clk", "ssi0-gpc", "ssi0-ce0", "ssi0-ce1",
-+};
-+static const char *x1830_ssi1_groups[] = {
-+	"ssi1-dt-c", "ssi1-dt-d",
-+	"ssi1-dr-c", "ssi1-dr-d",
-+	"ssi1-clk-c", "ssi1-clk-d",
-+	"ssi1-gpc-c", "ssi1-gpc-d",
-+	"ssi1-ce0-c", "ssi1-ce0-d",
-+	"ssi1-ce1-c", "ssi1-ce1-d",
-+};
-+static const char *x1830_mmc0_groups[] = { "mmc0-1bit", "mmc0-4bit", };
-+static const char *x1830_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
-+static const char *x1830_i2c0_groups[] = { "i2c0-data", };
-+static const char *x1830_i2c1_groups[] = { "i2c1-data", };
-+static const char *x1830_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1830_pwm0_groups[] = { "pwm0-b", "pwm0-c", };
-+static const char *x1830_pwm1_groups[] = { "pwm1-b", "pwm1-c", };
-+static const char *x1830_pwm2_groups[] = { "pwm2-c-8", "pwm2-c-13", };
-+static const char *x1830_pwm3_groups[] = { "pwm3-c-9", "pwm3-c-14", };
-+static const char *x1830_pwm4_groups[] = { "pwm4-c-15", "pwm4-c-25", };
-+static const char *x1830_pwm5_groups[] = { "pwm5-c-16", "pwm5-c-26", };
-+static const char *x1830_pwm6_groups[] = { "pwm6-c-17", "pwm6-c-27", };
-+static const char *x1830_pwm7_groups[] = { "pwm7-c-18", "pwm7-c-28", };
-+static const char *x1830_mac_groups[] = { "mac", };
-+
-+static const struct function_desc x1830_functions[] = {
-+	{ "uart0", x1830_uart0_groups, ARRAY_SIZE(x1830_uart0_groups), },
-+	{ "uart1", x1830_uart1_groups, ARRAY_SIZE(x1830_uart1_groups), },
-+	{ "sfc", x1830_sfc_groups, ARRAY_SIZE(x1830_sfc_groups), },
-+	{ "ssi0", x1830_ssi0_groups, ARRAY_SIZE(x1830_ssi0_groups), },
-+	{ "ssi1", x1830_ssi1_groups, ARRAY_SIZE(x1830_ssi1_groups), },
-+	{ "mmc0", x1830_mmc0_groups, ARRAY_SIZE(x1830_mmc0_groups), },
-+	{ "mmc1", x1830_mmc1_groups, ARRAY_SIZE(x1830_mmc1_groups), },
-+	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
-+	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
-+	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
-+	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
-+	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
-+	{ "pwm2", x1830_pwm2_groups, ARRAY_SIZE(x1830_pwm2_groups), },
-+	{ "pwm3", x1830_pwm3_groups, ARRAY_SIZE(x1830_pwm3_groups), },
-+	{ "pwm4", x1830_pwm4_groups, ARRAY_SIZE(x1830_pwm4_groups), },
-+	{ "pwm5", x1830_pwm5_groups, ARRAY_SIZE(x1830_pwm4_groups), },
-+	{ "pwm6", x1830_pwm6_groups, ARRAY_SIZE(x1830_pwm4_groups), },
-+	{ "pwm7", x1830_pwm7_groups, ARRAY_SIZE(x1830_pwm4_groups), },
-+	{ "mac", x1830_mac_groups, ARRAY_SIZE(x1830_mac_groups), },
-+};
-+
-+static const struct ingenic_chip_info x1830_chip_info = {
-+	.num_chips = 4,
-+	.groups = x1830_groups,
-+	.num_groups = ARRAY_SIZE(x1830_groups),
-+	.functions = x1830_functions,
-+	.num_functions = ARRAY_SIZE(x1830_functions),
-+	.pull_ups = x1830_pull_ups,
-+	.pull_downs = x1830_pull_downs,
-+};
-+
- static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8 reg)
- {
- 	unsigned int val;
-@@ -1422,13 +1646,20 @@ static void ingenic_gpio_shadow_set_bit(struct ingenic_gpio_chip *jzgc,
- 	else
- 		reg = REG_CLEAR(reg);
- 
--	regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_BASE + reg, BIT(offset));
-+	if (jzgc->jzpc->version >= ID_X1830)
-+		regmap_write(jzgc->jzpc->map, X1830_GPIO_PZ_BASE + reg, BIT(offset));
-+	else
-+		regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_BASE + reg, BIT(offset));
- }
- 
- static void ingenic_gpio_shadow_set_bit_load(struct ingenic_gpio_chip *jzgc)
- {
--	regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_GID2LD,
--			jzgc->gc.base / PINS_PER_GPIO_CHIP);
-+	unsigned int offt = jzgc->gc.base / PINS_PER_GPIO_CHIP;
-+
-+	if (jzgc->jzpc->version >= ID_X1830)
-+		regmap_write(jzgc->jzpc->map, X1830_GPIO_PZ_GID2LD, offt);
-+	else
-+		regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_GID2LD, offt);
- }
- 
- static inline bool ingenic_gpio_get_value(struct ingenic_gpio_chip *jzgc,
-@@ -1668,25 +1899,36 @@ static inline void ingenic_config_pin(struct ingenic_pinctrl *jzpc,
- 		unsigned int pin, u8 reg, bool set)
- {
- 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
--	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+	unsigned int offt1 = pin / PINS_PER_GPIO_CHIP;
-+	unsigned int offt2 = set ? REG_SET(reg) : REG_CLEAR(reg);
- 
--	regmap_write(jzpc->map, offt * 0x100 +
--			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
-+	if (jzpc->version >= ID_X1830)
-+		regmap_write(jzpc->map, offt1 * 0x1000 + offt2, BIT(idx));
-+	else
-+		regmap_write(jzpc->map, offt1 * 0x100 + offt2, BIT(idx));
- }
- 
- static inline void ingenic_shadow_config_pin(struct ingenic_pinctrl *jzpc,
- 		unsigned int pin, u8 reg, bool set)
- {
- 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = set ? REG_SET(reg) : REG_CLEAR(reg);
- 
--	regmap_write(jzpc->map, X1000_GPIO_PZ_BASE +
--			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
-+	if (jzpc->version >= ID_X1830)
-+		regmap_write(jzpc->map, X1830_GPIO_PZ_BASE + offt, BIT(idx));
-+	else
-+		regmap_write(jzpc->map, X1000_GPIO_PZ_BASE + offt, BIT(idx));
- }
- 
- static inline void ingenic_shadow_config_pin_load(struct ingenic_pinctrl *jzpc,
- 		unsigned int pin)
- {
--	regmap_write(jzpc->map, X1000_GPIO_PZ_GID2LD, pin / PINS_PER_GPIO_CHIP);
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+
-+	if (jzpc->version >= ID_X1830)
-+		regmap_write(jzpc->map, X1830_GPIO_PZ_GID2LD, offt);
-+	else
-+		regmap_write(jzpc->map, X1000_GPIO_PZ_GID2LD, offt);
- }
- 
- static inline bool ingenic_get_pin_config(struct ingenic_pinctrl *jzpc,
-@@ -1696,7 +1938,10 @@ static inline bool ingenic_get_pin_config(struct ingenic_pinctrl *jzpc,
- 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
- 	unsigned int val;
- 
--	regmap_read(jzpc->map, offt * 0x100 + reg, &val);
-+	if (jzpc->version >= ID_X1830)
-+		regmap_read(jzpc->map, offt * 0x1000 + reg, &val);
-+	else
-+		regmap_read(jzpc->map, offt * 0x100 + reg, &val);
- 
- 	return val & BIT(idx);
- }
-@@ -1856,13 +2101,56 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
--static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
--		unsigned int pin, bool enabled)
-+static int ingenic_set_bias(struct ingenic_pinctrl *jzpc,
-+		unsigned int pin, unsigned int bias)
- {
--	if (jzpc->version >= ID_JZ4760)
--		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !enabled);
--	else
--		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
-+	if (jzpc->version >= ID_X1830) {
-+		unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+		unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+
-+		if (bias == GPIO_HIZ) {
-+			if (idx < (PINS_PER_GPIO_CHIP / 2))
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_CLEAR(X1830_GPIO_PEL0), BIT(idx * 2) * 3);
-+			else
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_CLEAR(X1830_GPIO_PEL1), BIT(idx % 16 * 2) * 3);
-+		} else if (bias == GPIO_PULLUP) {
-+			if (idx < (PINS_PER_GPIO_CHIP / 2)) {
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_SET(X1830_GPIO_PEL0), BIT(idx * 2));
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_CLEAR(X1830_GPIO_PEL0), BIT(idx * 2) * 2);
-+			} else {
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_SET(X1830_GPIO_PEL1), BIT(idx % 16 * 2));
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_CLEAR(X1830_GPIO_PEL1), BIT(idx % 16 * 2) * 2);
-+			}
-+		} else {
-+			if (idx < (PINS_PER_GPIO_CHIP / 2)) {
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_CLEAR(X1830_GPIO_PEL0), BIT(idx * 2));
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_SET(X1830_GPIO_PEL0), BIT(idx * 2) * 2);
-+			} else {
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_CLEAR(X1830_GPIO_PEL1), BIT(idx % 16 * 2));
-+				regmap_write(jzpc->map, offt * 0x1000 +
-+						REG_SET(X1830_GPIO_PEL1), BIT(idx % 16 * 2) * 2);
-+			}
-+		}
-+	} else if (jzpc->version >= ID_JZ4760) {
-+		if (bias == GPIO_HIZ)
-+			return -EINVAL;
-+		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !bias);
-+	} else {
-+		if (bias == GPIO_HIZ)
-+			return -EINVAL;
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !bias);
-+	}
-+
-+	return 0;
- }
- 
- static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-@@ -1872,6 +2160,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
- 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
- 	unsigned int cfg;
-+	int ret;
- 
- 	for (cfg = 0; cfg < num_configs; cfg++) {
- 		switch (pinconf_to_config_param(configs[cfg])) {
-@@ -1889,7 +2178,9 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		case PIN_CONFIG_BIAS_DISABLE:
- 			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
- 					'A' + offt, idx);
--			ingenic_set_bias(jzpc, pin, false);
-+			ret = ingenic_set_bias(jzpc, pin, GPIO_HIZ);
-+			if (ret)
-+				return ret;
- 			break;
- 
- 		case PIN_CONFIG_BIAS_PULL_UP:
-@@ -1897,7 +2188,9 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 				return -EINVAL;
- 			dev_dbg(jzpc->dev, "set pull-up for pin P%c%u\n",
- 					'A' + offt, idx);
--			ingenic_set_bias(jzpc, pin, true);
-+			ret = ingenic_set_bias(jzpc, pin, GPIO_PULLUP);
-+			if (ret)
-+				return ret;
- 			break;
- 
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
-@@ -1905,7 +2198,9 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 				return -EINVAL;
- 			dev_dbg(jzpc->dev, "set pull-down for pin P%c%u\n",
- 					'A' + offt, idx);
--			ingenic_set_bias(jzpc, pin, true);
-+			ret = ingenic_set_bias(jzpc, pin, GPIO_PULLDOWN);
-+			if (ret)
-+				return ret;
- 			break;
- 
- 		default:
-@@ -1987,6 +2282,7 @@ static const struct of_device_id ingenic_pinctrl_of_match[] = {
- 	{ .compatible = "ingenic,x1000-pinctrl", .data = (void *) ID_X1000 },
- 	{ .compatible = "ingenic,x1000e-pinctrl", .data = (void *) ID_X1000E },
- 	{ .compatible = "ingenic,x1500-pinctrl", .data = (void *) ID_X1500 },
-+	{ .compatible = "ingenic,x1830-pinctrl", .data = (void *) ID_X1830 },
- 	{},
- };
- 
-@@ -1996,6 +2292,7 @@ static const struct of_device_id ingenic_gpio_of_match[] __initconst = {
- 	{ .compatible = "ingenic,jz4770-gpio", },
- 	{ .compatible = "ingenic,jz4780-gpio", },
- 	{ .compatible = "ingenic,x1000-gpio", },
-+	{ .compatible = "ingenic,x1830-gpio", },
- 	{},
- };
- 
-@@ -2018,7 +2315,10 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- 		return -ENOMEM;
- 
- 	jzgc->jzpc = jzpc;
--	jzgc->reg_base = bank * 0x100;
-+	if (jzpc->version >= ID_X1830)
-+		jzgc->reg_base = bank * 0x1000;
-+	else
-+		jzgc->reg_base = bank * 0x100;
- 
- 	jzgc->gc.label = devm_kasprintf(dev, GFP_KERNEL, "GPIO%c", 'A' + bank);
- 	if (!jzgc->gc.label)
-@@ -2111,7 +2411,9 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
- 	else
- 		jzpc->version = (enum jz_version)id->driver_data;
- 
--	if (jzpc->version >= ID_X1500)
-+	if (jzpc->version >= ID_X1830)
-+		chip_info = &x1830_chip_info;
-+	else if (jzpc->version >= ID_X1500)
- 		chip_info = &x1500_chip_info;
- 	else if (jzpc->version >= ID_X1000E)
- 		chip_info = &x1000e_chip_info;
-@@ -2208,6 +2510,7 @@ static const struct platform_device_id ingenic_pinctrl_ids[] = {
- 	{ "x1000-pinctrl", ID_X1000 },
- 	{ "x1000e-pinctrl", ID_X1000E },
- 	{ "x1500-pinctrl", ID_X1500 },
-+	{ "x1830-pinctrl", ID_X1830 },
- 	{},
- };
- 
--- 
-2.7.4
+Gustavo
+
+>=20
+> Thierry
+>=20
+> >=20
+> > >=20
+> > > > +
+> > > > +Optional properties:
+> > > > +- pinctrl-names: A list of pinctrl state names.
+> > > > +  It is mandatory for C5 controller and optional for other control=
+lers.
+> > > > +  - "default": Configures PCIe I/O for proper operation.
+> > > > +- pinctrl-0: phandle for the 'default' state of pin configuration.
+> > > > +  It is mandatory for C5 controller and optional for other control=
+lers.
+> > > > +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/=
+pci.txt
+> > > > +- nvidia,update-fc-fixup: This is a boolean property and needs to =
+be present to
+> > > > +    improve performance when a platform is designed in such a way =
+that it
+> > > > +    satisfies at least one of the following conditions thereby ena=
+bling root
+> > > > +    port to exchange optimum number of FC (Flow Control) credits w=
+ith
+> > > > +    downstream devices
+> > > > +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed=
+ and MPS)
+> > > > +    2. If C0/C4/C5 operate at their respective max link widths and
+> > > > +       a) speed is Gen-2 and MPS is 256B
+> > > > +       b) speed is >=3D Gen-3 with any MPS
+> > > > +- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operati=
+on of ASPM
+> > > > +   to be specified in microseconds
+> > > > +- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of A=
+SPM to be
+> > > > +   specified in microseconds
+> > > > +- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency t=
+o be
+> > > > +   specified in microseconds
+> > > > +
+> > > > +NOTE:- On Tegra194's P2972-0000 platform, only C5 controller can b=
+e enabled to
+> > > > +operate in the endpoint mode because of the way the platform is de=
+signed.
+> > > > +There is a mux that needs to be programmed to let the REFCLK from =
+the host to
+> > > > +flow into C5 controller when it operates in the endpoint mode. Thi=
+s mux is
+> > > > +controlled by the GPIO (AA, 5) and it needs to be driven 'high'. F=
+or this to
+> > > > +happen, set status of "pex-refclk-sel-high" node under "gpio@c2f00=
+00" node to
+> > > > +'okay'.
+> > > > +	When any dual mode controller is made to operate in the endpoint =
+mode,
+> > > > +please make sure that its respective root port node's status is se=
+t to
+> > > > +'disabled'.
+> > >=20
+> > > This seems very brittle to me. There's no good way how we can detect
+> > > such misconfigurations. If instead we only have one node describing t=
+he
+> > > hardware fully, the chances of configuring things wrong (by for examp=
+le
+> > > enabling both the host and EP mode device tree nodes) can be reduced.
+> > >=20
+> > > So I think instead of duplicating all of the device tree content to h=
+ave
+> > > both a host and an EP node for each controller, it'd be better to jus=
+t
+> > > have a single node and let the device tree bindings specify which
+> > > changes to apply to switch into EP mode.
+> > >=20
+> > > For example, there should be nothing wrong with specifying some of th=
+e
+> > > EP-only properties (like num-ib-windows and num-ob-windows) all the t=
+ime
+> > > and only use them when we actually run in EP mode.
+> > >=20
+> > > As I mentioned earlier, there are a couple of easy ways to distinguis=
+h
+> > > the modes. The presence of the "addr_space" reg entry is one example,
+> > > but we could also key off the nvidia,pex-rst-gpio property, since tha=
+t
+> > > (presumably) wouldn't be needed for host mode.
+> > >=20
+> > > That way we can just add default, host mode entries to tegra194.dtsi =
+and
+> > > whenever somebody wants to enable EP mode, they can just override the
+> > > node in the board-level DTS file, like so:
+> > >=20
+> > > 	pcie@141a0000 {
+> > > 		reg =3D <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K) =
+     */
+> > > 		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K=
+)  */
+> > > 		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)    =
+   */
+> > > 		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)     =
+   */
+> > > 		reg-names =3D "appl", "atu_dma", "dbi", "addr_space";
+> > >=20
+> > > 		nvidia,pex-rst-gpio =3D <&gpio TEGRA194_MAIN_GPIO(GG, 1) GPIO_ACTIV=
+E_LOW>;
+> > > 	};
+> > >=20
+> > > Thierry
+> > I like it and fine with making these modifications also but would like =
+to hear from Rob
+> > also on this.
+> >=20
+> > - Vidya Sagar
+> > >=20
+> > > > +
+> > > > +Examples:
+> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > +
+> > > > +Tegra194:
+> > > > +--------
+> > > > +
+> > > > +	pcie_ep@141a0000 {
+> > > > +		compatible =3D "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
+> > > > +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
+> > > > +		reg =3D <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128=
+K)      */
+> > > > +		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (2=
+56K)  */
+> > > > +		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K) =
+      */
+> > > > +		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)  =
+      */
+> > > > +		reg-names =3D "appl", "atu_dma", "dbi", "addr_space";
+> > > > +
+> > > > +		num-lanes =3D <8>;
+> > > > +		num-ib-windows =3D <2>;
+> > > > +		num-ob-windows =3D <8>;
+> > > > +
+> > > > +		pinctrl-names =3D "default";
+> > > > +		pinctrl-0 =3D <&clkreq_c5_bi_dir_state>;
+> > > > +
+> > > > +		clocks =3D <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
+> > > > +		clock-names =3D "core";
+> > > > +
+> > > > +		resets =3D <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
+> > > > +			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
+> > > > +		reset-names =3D "apb", "core";
+> > > > +
+> > > > +		interrupts =3D <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller i=
+nterrupt */
+> > > > +		interrupt-names =3D "intr";
+> > > > +
+> > > > +		nvidia,bpmp =3D <&bpmp 5>;
+> > > > +
+> > > > +		nvidia,aspm-cmrt-us =3D <60>;
+> > > > +		nvidia,aspm-pwr-on-t-us =3D <20>;
+> > > > +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> > > > +
+> > > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
+> > > > +
+> > > > +		nvidia,pex-rst-gpio =3D <&gpio TEGRA194_MAIN_GPIO(GG, 1)
+> > > > +					GPIO_ACTIVE_LOW>;
+> > > > +
+> > > > +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
+> > > > +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
+> > > > +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
+> > > > +
+> > > > +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
+> > > > +			    "p2u-5", "p2u-6", "p2u-7";
+> > > > +	};
+> > > > --=20
+> > > > 2.17.1
+> > > >=20
+> >=20
 
 
