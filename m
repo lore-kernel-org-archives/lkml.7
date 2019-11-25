@@ -2,130 +2,124 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91983C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBB6C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6772420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="COQiUpXZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9759B20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574697768;
+	bh=skJc9fG/eJBZo5SjIMjAN61t7JCkmNqQuuiP8i9fmKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HMKUed6ZiYb//kTE7MQw/ygg+7u8c4k24Udd7fPA1ymDdbVaum8SqL7RmXXLrCYNQ
+	 utG5rM6QPlhNG1B+C8QDRwR83MYo7qcePlY/dDCqGoB3cBC1yqEqnDgNUczU6E+/yP
+	 1EzmAUBNk6tR8De+ibUHH9x5XRaoLaoIQJQU2PAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbfKYQBj (ORCPT
+        id S1728759AbfKYQCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:01:39 -0500
-Received: from mail-eopbgr20106.outbound.protection.outlook.com ([40.107.2.106]:11429
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728454AbfKYQBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:01:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QpJ8O5vHUvmR7GzooMfvTWgnpQ2EPa+4jKiIAzZK+obC8y/VozWcGW3JCIsRTLeqFyigVjgipiYvjQGPmI4FeLJZz4FUXSehp25zr0BnZ+v8SRvlplJ+AUHPazvi0FyHJ9Ij4ik9nPMj1K55FLuQeoYriyZxtAw72WICEMh0Q/XzoBPIqeCA2nitUTGM4Vbl6MDs2xfJF3DKxBW56rzyKIS+EkPGta/91CR43yUtJvMdTbc7W2bf+4UAFCT6gpUohEICjCTf4pnKQ866hyNB7yDVviyjeMzUgAduN/JEXETmejqEPw8OWOP2FgZPE4T/SGudSsBACGJXCdxQf+W0dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bDyM88MoIHGHhOAblKsemgH9+2ghcqzJ8Cr/PR0kQaw=;
- b=PFr7HKF8504aiBYRUhKQ1USihI+OHv/YVnbzUezbmcRUvptv1CDbBGwJMg4rPxVVodqmdunoS30dWw/d1TuhxDqQ0t486yWfyHolfenNoPPpgR2U5F+pVmGO1P8rYNvHtBt9D3QdFqthJAmDfSyGV+O7+if1qNA/2P+5Xlkg5840BkmNm7WqCBr6I2b7RTtCibQWizKy4lWFKyeLMu0arvY5sZXVqfYmJwmnVtNhn8oZr7SfFp8bYjXFmjU/q97xTxJ/9Af01rit/eDaIHc2Gs8DNZYtneY5NGaahdvrb8s9Dvd2Kc35x915IAXZhnXfaen750K9fI6n6pi6kdm2Hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bDyM88MoIHGHhOAblKsemgH9+2ghcqzJ8Cr/PR0kQaw=;
- b=COQiUpXZaTMZYVJiH6LAGYUW1qovnJL0XkR3NgGgQO1HvUSyCLbLyCrZf7xBlTy+mGn4fgJ7S1SBCpWzv3sePKyV2cdM60EcCBXg34AZ2XjgeKK8PdaY9A0HkigaT6OvE9ncMljwE87LEy5JLeG4fbJPYL5Eka8OMAzFYIQsF+4=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3466.eurprd02.prod.outlook.com (52.134.72.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Mon, 25 Nov 2019 16:01:35 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::477:9510:3e3:f8ca]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::477:9510:3e3:f8ca%7]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
- 16:01:35 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH v2] i2c: Fix Kconfig indentation
-Thread-Topic: [PATCH v2] i2c: Fix Kconfig indentation
-Thread-Index: AQHVoBp9xElXntCxZEao13ofxvqdGqecAXqAgAARhgA=
-Date:   Mon, 25 Nov 2019 16:01:35 +0000
-Message-ID: <63e3fe9d-93c5-1e82-5a4e-c8b7cc6ff301@axentia.se>
-References: <1574306363-29424-1-git-send-email-krzk@kernel.org>
- <20191125145849.GD2412@kunai>
-In-Reply-To: <20191125145849.GD2412@kunai>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR07CA0038.eurprd07.prod.outlook.com
- (2603:10a6:7:66::24) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9dc0294f-84a0-4e79-4b71-08d771c0bf0f
-x-ms-traffictypediagnostic: DB3PR0202MB3466:
-x-microsoft-antispam-prvs: <DB3PR0202MB3466C1B3873091BA213A60E4BC4A0@DB3PR0202MB3466.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(346002)(136003)(39830400003)(189003)(199004)(81156014)(256004)(8676002)(76176011)(305945005)(86362001)(65806001)(102836004)(31696002)(186003)(14454004)(36756003)(110136005)(26005)(508600001)(7736002)(25786009)(54906003)(6512007)(2906002)(99286004)(71190400001)(6116002)(58126008)(71200400001)(4326008)(316002)(31686004)(6246003)(4744005)(229853002)(4001150100001)(66946007)(66066001)(65956001)(3846002)(66476007)(66446008)(64756008)(66556008)(446003)(53546011)(2616005)(52116002)(8936002)(6506007)(11346002)(6436002)(6486002)(386003)(5660300002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3466;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TTkdWPCd8wvRnYCfKeC4FklLfaPqhLSeTt+08ZbXbE1TJxVodfv2GcDwdf154lKlb56QVhruxxTnSDnD5df4rVmp+Lf38qMvUSmDRpqz2skhA7plGscbzArP2IjQKOZIJbmcgG4ypvmJo4l7rRz1rEOJIRfy99Zk8Ah91aG76mr1pye8V1Mqpms2qEUI6QR1JSBtXQvrk9iyiW6kT2LBnrk683YbPtcap7p2S3gKSFzYx4nnswPh9KLmTxs8gijD7zmJZ4QJU6EiWAPF1DDlm5HjAfqqT/5GNLGKrzLBiZc+5ynv55uD93SLn7LvF5yaQmYls2gaQQ7EYGGIdsURFh6ZiDl/2GzWdSxF6eKwUpuhVvyF4NN+B+0iEylAGm9dGuUlrp6iTylLUP/JGgxtLwzg87xq8U5fnUbCTJGwLVp7p3KO82Vc8t5danBi0WJG
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <E5E6E30E572B324596C4B965AFD3C903@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 11:02:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728650AbfKYQCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 11:02:47 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4AF820679;
+        Mon, 25 Nov 2019 16:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574697766;
+        bh=skJc9fG/eJBZo5SjIMjAN61t7JCkmNqQuuiP8i9fmKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pa+ghNJa5+QXMJvuY5ttkyuMX0HqhGsl9Zu/52uR3DekV5IvbVz/c1e6iG/QOxw/d
+         ZvYEYmn9ev7xLmKyq886nUCod9HSLkfjW6NFUHNogq2WTD39jvft7Po8rFm6wkTCiC
+         joae7KFqi1JMldRAnUR9X54gDa7g3GcMOUW5Oycw=
+Date:   Mon, 25 Nov 2019 17:02:44 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+Message-ID: <20191125160244.GC2683321@kroah.com>
+References: <20191122100704.194776704@linuxfoundation.org>
+ <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
+ <20191122133931.GA2033651@kroah.com>
+ <20191122134131.GA2050590@kroah.com>
+ <20191122134627.GB2050590@kroah.com>
+ <9f976044-2dbc-6c19-11e7-210cd7ab35ea@nvidia.com>
+ <a5d68f07-5f9a-2809-404d-bcd8ca593d70@roeck-us.net>
+ <7edc9531-347e-9ac7-2583-5efb49acffdb@nvidia.com>
+ <20191125094116.GA2340170@kroah.com>
+ <db428001-f6b5-3132-2d93-ef04f67078dc@roeck-us.net>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc0294f-84a0-4e79-4b71-08d771c0bf0f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 16:01:35.1393
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BgHd8zurLhNfN6eer7Klfw1Q6omHzpGk4WNlxA04+noBauuk5zueO8s8m0KlVHgo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3466
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db428001-f6b5-3132-2d93-ef04f67078dc@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-25 15:58, Wolfram Sang wrote:
-> On Thu, Nov 21, 2019 at 04:19:23AM +0100, Krzysztof Kozlowski wrote:
->> Adjust indentation from spaces to tab (+optional two spaces) as in
->> coding style with command like:
->> 	$ sed -e 's/^        /\t/' -i */Kconfig
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->>
->> ---
->>
->> Changes since v1:
->> 1. Fix also 7-space and tab+1 space indentation issues.
->> ---
->>  drivers/i2c/busses/Kconfig | 22 +++++++++++-----------
->>  drivers/i2c/muxes/Kconfig  | 18 +++++++++---------
->=20
-> Peter, I'd like to apply this for 5.5. so we don't have to deal with
-> whitespace conflicts during the next cycle. Are you fine with me picking
-> it up for muxes?
+On Mon, Nov 25, 2019 at 06:08:17AM -0800, Guenter Roeck wrote:
+> On 11/25/19 1:41 AM, Greg Kroah-Hartman wrote:
+> > On Sun, Nov 24, 2019 at 08:31:46PM +0000, Jon Hunter wrote:
+> > > 
+> > > On 23/11/2019 15:46, Guenter Roeck wrote:
+> > > > On 11/22/19 6:48 AM, Jon Hunter wrote:
+> > > > 
+> > > > [ ... ]
+> > > > 
+> > > > > Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or path
+> > > > > dwc3 not found
+> > > > > FATAL ERROR: Syntax error parsing input tree
+> > > > > scripts/Makefile.lib:293: recipe for target
+> > > > > 'arch/arm/boot/dts/omap5-igep0050.dtb' failed
+> > > > > make[1]: *** [arch/arm/boot/dts/omap5-igep0050.dtb] Error 1
+> > > > > arch/arm/Makefile:338: recipe for target 'dtbs' failed
+> > > > > make: *** [dtbs] Error 2
+> > > > > 
+> > > > > 
+> > > > > This is caused by the following commit ...
+> > > > > 
+> > > > > commit d0abc07b3d752cbe2a8d315f662c53c772caed0f
+> > > > > Author: H. Nikolaus Schaller <hns@goldelico.com>
+> > > > > Date:   Fri Sep 28 17:54:00 2018 +0200
+> > > > > 
+> > > > >       ARM: dts: omap5: enable OTG role for DWC3 controller
+> > > > > 
+> > > > 
+> > > > On top of the breakage caused by this patch, I would also argue
+> > > > that it is not a bug fix and should not have been included
+> > > > in the first place.
+> > > > 
+> > > > The dwc3 label was added with commit 4c387984618fe ("ARM: dts: omap5:
+> > > > Add l4 interconnect hierarchy and ti-sysc data"). Given the size of
+> > > > that patch, I highly doubt that a backport to 4.4 would work.
+> > 
+> > Good catch, I have now dropped both of these patches and pushed out a
+> > -rc3
+> > 
+> > > FYI ... I am still seeing a build failure because of this with -rc2 ...
+> > 
+> > Can you see if -rc3 is also giving you problems?
+> > 
+> 
+> For v4.4.202-157-g2576206c30b5:
+> 
+> Build results:
+> 	total: 170 pass: 170 fail: 0
+> Qemu test results:
+> 	total: 324 pass: 324 fail: 0
 
-Absolutely!
+Thanks for testing, I'll go with this tree now.
 
-Acked-by: Peter Rosin <peda@axentia.se>
-
-Cheers,
-Peter
+greg k-h
