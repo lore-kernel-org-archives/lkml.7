@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A98DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FEC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A16C20740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC93D20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:16:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gqpuLa9V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AviB7ZG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfKYWK6 (ORCPT
+        id S1726333AbfKYWQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 17:10:58 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35256 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfKYWK5 (ORCPT
+        Mon, 25 Nov 2019 17:16:09 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:43838 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfKYWQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 17:10:57 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k32so7895359pgl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 14:10:55 -0800 (PST)
+        Mon, 25 Nov 2019 17:16:09 -0500
+Received: by mail-pj1-f68.google.com with SMTP id a10so7249351pju.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 14:16:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4uSk89rwk3LhruRumDT0sWFKtI2GO4i/0/5W+hrAVr8=;
-        b=gqpuLa9V7M67zMfZifxpKgfiMf2jhG6/47Y77FtYSr+dqmdGU6cHFYhmk9xmTZkTTn
-         lHOx4vu0wy3zLAA36VvKX4fyXJ5sdoEzvs4yGOKEX2LcgGEzfx3afomZalwfGlTUwJ5q
-         l1kYIDL4TiLa6l1whm4GzsIde+nE86ieg8SFE=
+        bh=i2FzA9U/0kMzyDVMENZ9fqG7bwxFaEkKYL5q8/6pH/U=;
+        b=AviB7ZG1CwpXNrCFxl4vaIWZoScolzPXgFrIjsZVyAIldCRN8E4G0LcOUXT70DPT6f
+         On7X8Vv5S2F6TYajp5stdorneg5Q4UX+Q+smXUePUBtiJoH3adF0cj2/5no2A+jlVCGs
+         KLPPYbuQLqk6muF8+z1UsVXni7+pjeEMPSWo8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4uSk89rwk3LhruRumDT0sWFKtI2GO4i/0/5W+hrAVr8=;
-        b=qHjAdnuVD4XeYA+Oby8RSETi7dQWuL9y33PEx1yyR2nYgY8YgSx0KrsdRvLCPqcst7
-         LRYYYxu+d42nWHnzGkSepgnfro8jUdXlpxSTN6xZ0EnXZ4mHnwzq1NBd4f7s5KMZRlSy
-         Z42gE+Fb7gzUPQ7r+ZCa5IbWJ6xo/+t+ZNo8VCHNTK2wfTVWuvv/miSuYgz5CZJUnBzo
-         A1SY/Si8LD+pXBioM9H8ZK5tpY9PoxlZsykmC8UlgYlOnTfvKGjwBTm5p8SgmpxAGHFr
-         RcPsOvKgYeIe4RNMxdOJUmydOCbM5lAuKkQw+oyfUe7kQCHoMTzJ0Dw12n7mYjxswxeh
-         qcrw==
-X-Gm-Message-State: APjAAAVYeAlxImI3mBhL2BvPg0exwUfv5AICUp+kTHPlcfK/nPLWuxC3
-        qUs0Wtuof6ernGR3h5hG3RfhdtwEm3EZvQ==
-X-Google-Smtp-Source: APXvYqyvgNTzIai+q2u6B6X+xm5pqCuMaQ9uQsBt3beHpfjzLpsoe4qoi1Oesgxs6Tu+NuvMfJqtLA==
-X-Received: by 2002:a63:e44b:: with SMTP id i11mr34828226pgk.437.1574719855265;
-        Mon, 25 Nov 2019 14:10:55 -0800 (PST)
+        bh=i2FzA9U/0kMzyDVMENZ9fqG7bwxFaEkKYL5q8/6pH/U=;
+        b=TptYmWGM2nLb+cMA51i7bzmHMg7c1bYCl/Ko26VS/C1ipKz/Zci6dvZbZJeTaGJus6
+         faINaJXagkLbQ5ZT18mf4Arkfzi+B7RgyO2SmpObUlpaqJJwQb7AmoYyWjJqlX3FzJXg
+         n11uZj8oO1pClmQjwBrbq4MwSrJNzehk2JYTS+oL+Yig/LcyQX4ywgz2rPRGp7NptQJP
+         qtzjnf+MzcF2XacRjBouI0QpC48bXKRixrNeSh4i3VRxrVfWkt6OWNlbL3w59hrY4MNq
+         zssdgNnZZrGofzwDesBrZWKPqrjPmKlTqf4jkH7+FSrghIUffForJ2J2Fa3M2SG4CRCt
+         ZubQ==
+X-Gm-Message-State: APjAAAVNDQWx5MS2DGMqzwmTD4/L026UrGElh5QvJg9+ikLfGcNzzaGX
+        HfgJw6W/QnSmo4wjST1mDzq8k1/C3/KJ+w==
+X-Google-Smtp-Source: APXvYqx4IqEglvEFxaArF2+MB5zygUteLeLlsw3SeHy8Cngmq7LVbsiN1+8gkHi3cFlrFZaubVxj+g==
+X-Received: by 2002:a17:902:24e:: with SMTP id 72mr26023327plc.287.1574720167949;
+        Mon, 25 Nov 2019 14:16:07 -0800 (PST)
 Received: from yichengli2.mtv.corp.google.com ([2620:15c:202:201:900:2031:8afd:85a7])
-        by smtp.gmail.com with ESMTPSA id 16sm9692768pgm.86.2019.11.25.14.10.54
+        by smtp.gmail.com with ESMTPSA id o124sm9814844pfb.56.2019.11.25.14.16.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Nov 2019 14:10:54 -0800 (PST)
+        Mon, 25 Nov 2019 14:16:07 -0800 (PST)
 From:   Yicheng Li <yichengli@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     bleung@chromium.org, yichengli@chromium.org, gwendal@chromium.org,
         enric.balletbo@collabora.com
-Subject: [PATCH v3] mfd / platform: cros_ec: Query EC protocol version if EC transitions between RO/RW
-Date:   Mon, 25 Nov 2019 14:08:59 -0800
-Message-Id: <20191125220859.91412-1-yichengli@chromium.org>
+Subject: [PATCH v4] mfd / platform: cros_ec: Query EC protocol version if EC transitions between RO/RW
+Date:   Mon, 25 Nov 2019 14:15:17 -0800
+Message-Id: <20191125221517.91611-1-yichengli@chromium.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <0f223903-ec93-a5ec-e858-fa0e2e282cf3@collabora.com>
 References: <0f223903-ec93-a5ec-e858-fa0e2e282cf3@collabora.com>
@@ -131,7 +131,7 @@ index 9b2d07422e17..38ec1fb409a5 100644
  
  	return 0;
 diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index 0d4e4aaed37a..a4b255937901 100644
+index 0d4e4aaed37a..a1c545c464e7 100644
 --- a/include/linux/platform_data/cros_ec_proto.h
 +++ b/include/linux/platform_data/cros_ec_proto.h
 @@ -121,6 +121,8 @@ struct cros_ec_command {
@@ -139,7 +139,7 @@ index 0d4e4aaed37a..a4b255937901 100644
   * @event_size: Size in bytes of the event data.
   * @host_event_wake_mask: Mask of host events that cause wake from suspend.
 + * @notifier_ready: The notifier_block to let the kernel re-query EC
-+ * 	communication protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
++ *      communication protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
   * @ec: The platform_device used by the mfd driver to interface with the
   *      main EC.
   * @pd: The platform_device used by the mfd driver to interface with the
