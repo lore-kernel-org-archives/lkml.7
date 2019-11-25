@@ -2,300 +2,152 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94873C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B411AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0E12071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86ADB20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BRIfs3FN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iXN0XOsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbfKYFiT (ORCPT
+        id S1725851AbfKYFsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 00:38:19 -0500
-Received: from mail-eopbgr680109.outbound.protection.outlook.com ([40.107.68.109]:7331
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725992AbfKYFiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 00:38:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J727B7+1r45LJ+kzG/N1xFVquMlw5ZMIrK69clew/pFNhor4bopqDyknaNRDmGTQ/SuHs9wh2d+JxdJEhKjsNw95W2TQIYEX3fvTgxNawA6wbl2nHH1f7xUFkWKqDur3Bb4YrrgcXbNW697FSlmGSRJTKVHYaNLe37Trrf6ajbDFC3eTmDmnVHNu7m7pszwQk4gKN9s1QH6siSfdBezL+ygXdEdbuwe/s1rXXoDTeJVlZmwkX54Y0SwRSUOcppeuFCgYI4GY+J0ggiB+3epqFjAT9kThweSZX78SGqf7t8xifLaxhctYjYIv1ttY6loHn8c4cyDdTg0z/tLjFPZGVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R9vqP/9OMnBq4PWc3YRBg0/Eteu06Bqp8qfNu+jf7pQ=;
- b=QIDOBqtAfjvHswCBDwsrNBBH1S5Gb2iIoUkm9xOKScWPf1sEiLTogR4ZYmDoN2b0jAzFtLk2bwnGYdA5HlC7oNkcAAw+bj7zzJCWc8zEsjsFtUCIk66EUZX6DTld0/adb19j71WBOJkaddFsHe703sD+95GHsS8Jif/4EFZ3Zs9RmcWK3TGh/XmXlfX1YZYnyHdragHMUcR0Am81+IBIz2rZLFj/BA9c+RtbuIfP1+do4TBcYDC4KRRpNDW67ylLkFlQEEEuzP2kEO/okRs0EkEt56UCHES3TU9OyY77eniFIgo1rTurb6QI4P98SrnsR35iQAM2ALco3w/2L/UrnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R9vqP/9OMnBq4PWc3YRBg0/Eteu06Bqp8qfNu+jf7pQ=;
- b=BRIfs3FNe8kyV7SGQzwFviOIrV1HmnlTmP9iehp81RiLYvTyUqriGRE7LlUnGd0J+JsU9iWZcn+E6DsyVw4hm2I6+W2cq8bnka2S9gaYMot0bdN8H5IqOkF/N1jozrl2bILhiF60832fXbDHWJa74cIX4rcicV4A+A20R9BbmDM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BYAPR21MB1141.namprd21.prod.outlook.com (20.179.57.138) by
- BYAPR21MB1189.namprd21.prod.outlook.com (20.179.57.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.1; Mon, 25 Nov 2019 05:34:09 +0000
-Received: from BYAPR21MB1141.namprd21.prod.outlook.com
- ([fe80::5d0f:2e49:3464:7c89]) by BYAPR21MB1141.namprd21.prod.outlook.com
- ([fe80::5d0f:2e49:3464:7c89%3]) with mapi id 15.20.2495.014; Mon, 25 Nov 2019
- 05:34:09 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v3 2/4] PCI: hv: Add the support of hibernation
-Date:   Sun, 24 Nov 2019 21:33:52 -0800
-Message-Id: <1574660034-98780-3-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1574660034-98780-1-git-send-email-decui@microsoft.com>
-References: <1574660034-98780-1-git-send-email-decui@microsoft.com>
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR20CA0011.namprd20.prod.outlook.com
- (2603:10b6:300:13d::21) To BYAPR21MB1141.namprd21.prod.outlook.com
- (2603:10b6:a03:108::10)
-MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR20CA0011.namprd20.prod.outlook.com (2603:10b6:300:13d::21) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 25 Nov 2019 05:34:08 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0dd4cf78-adbb-4da6-5d8e-08d771691851
-X-MS-TrafficTypeDiagnostic: BYAPR21MB1189:|BYAPR21MB1189:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR21MB118901524EEA5885224A3546BF4A0@BYAPR21MB1189.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0232B30BBC
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(376002)(366004)(136003)(346002)(189003)(199004)(6116002)(3846002)(4326008)(107886003)(6486002)(6436002)(10090500001)(3450700001)(2906002)(14444005)(50466002)(48376002)(25786009)(6512007)(76176011)(26005)(6506007)(386003)(51416003)(52116002)(66946007)(66556008)(66476007)(6636002)(4720700003)(86362001)(7736002)(186003)(2616005)(956004)(16526019)(36756003)(11346002)(446003)(66066001)(8936002)(8676002)(5660300002)(81156014)(47776003)(81166006)(1511001)(50226002)(10290500003)(478600001)(316002)(305945005)(6666004)(16586007)(43066004)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1189;H:BYAPR21MB1141.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hDiYusnySB1OkwPh+HcX2gIchH0lcsCzal1X1AyIBfO3TXGK/RrPUO62CXdQlXNmZ9Xxquyf6a3UNVw2eNB0dXvUtjjqpRhJZb1jIkNnMrEKKHAokEhTMKa07cXar6xDufAhW6cT8GsPOpvqw/uB1HPRFz/+WKOAI8x8Gn4Yl9n/Xca9MSKHcq9PDDJc5mTPk6N9TH1KNUGtPgnR9VDXzanhK4cMk0vgwYE2DQcrIEjIK4AuUD6NriVvj29xz26aNHx/45LHYmb3LM0dBs7eJb5VtYoryeWeke2VKV75yIeeID4hF6ZImwWTpeZXOenXbakM1EdtUWounfx0bjTWAEkLsCKXj4Ab5NodHoW1aLiUKJghwWBipzwf/4QlpSsyFyvn9mztbqHy/AuLuWdLW6WDTiVuKB1B4ZfV6BJJtUmLjKhmyhvAj/EHnnlovbTS
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dd4cf78-adbb-4da6-5d8e-08d771691851
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2019 05:34:09.1536
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 83UU6rd9ae9SazHyMLLWCk92KCw773TuOQAR77IAR8fBU3XXSHJkIhkFBLzG2m9rMK6SLTLYNW//HfEAsVeHRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1189
+        Mon, 25 Nov 2019 00:48:45 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:42460 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfKYFsp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 00:48:45 -0500
+Received: by mail-pl1-f201.google.com with SMTP id 30so5662206plb.9
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 21:48:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=FI5EUsnW2tllZPOcKfh8zEZkIgR4ks3oXOOv8BjcIao=;
+        b=iXN0XOsFHMJstMYl4Vb5XIPTGxPwT3L4Q1cQH1j4d+fxXolwz2eWfcJOMbbWaDnTLp
+         rCNYms/m5JQmMFiPh1lCGgbyXCkhbPxCl+ua7iPOdBZ5N64nQr6NrrZg6MszuTB964yY
+         FkfM8IaHuj9dKhI01L8v+hXN7h6cIgvjYeRaLKu91M9aQbB8LukxIMCPQ0JT+Mz6fSLf
+         DNh6D5d9Qt/g22kebr5S0cnjuFeqYIONrjX90oyHQCS/Qj13FLU5lZGY27y/HaFJVF0j
+         dnf495GO6chKkNmddD3SIfRciMopxhzUchqJPDKEMMuOd+OnWJO+oVe4+Vj+6yaM0COu
+         40jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=FI5EUsnW2tllZPOcKfh8zEZkIgR4ks3oXOOv8BjcIao=;
+        b=JcIp2GkTH/jdVSf+oirOllz90LxOKDr0c51j/l92gep1xwC/k54KufZKJEa4/8OPDX
+         kGIx6HtOdqUeGtBk3alE/yb3J95ut+bFN8qwYu79qR6AN+x3wyutErS8DwErNiSR0+pf
+         /iWAOnRNGpIWsfgYoGZWGpJQtBhyUepoXL33II9DKgWBFwPytYQOJsFqubPkcoAyZzsp
+         N7vHrhYwGFH+uIuRO99RiVgcZLI2MIaXJabMtKCefJ2WnhLFZzFnUEQDnAmuR7I8YWwN
+         eSlS6AMz60yVHibzb4k/Slab2AHWupQjfRd1/hcx3EcjbkWOaryxC8JgcGZxFOEFQGb5
+         4kcQ==
+X-Gm-Message-State: APjAAAUfCgicLSLjfic+OZyYVShH8kNtXwpj9F0XY1VxjpySX9CE/Ccc
+        jACvDJ6BQsjbc49zyXAcYCIusw3Pa9VNXhb5SOg4czNkCbM+tZjJxIWJ/+mvDajwNPwds8AIFuI
+        6l2IhbiUpZHns4GqfmP+cRjKQtDGhHEyhffGV93QlW8JCgHSMaZquuGriyP4HkCRwVMXoGNeb6W
+        NJvPTmwKRo
+X-Google-Smtp-Source: APXvYqywa9F4lnnabgW0YUjU70W5puvdkJ5dP/K1PMu8f/6nU1BAv/zqNTek4HnEj6+aZNWabR0k1F+n6/RU8eRanT8=
+X-Received: by 2002:a65:6906:: with SMTP id s6mr13922166pgq.26.1574660922804;
+ Sun, 24 Nov 2019 21:48:42 -0800 (PST)
+Date:   Sun, 24 Nov 2019 21:48:38 -0800
+Message-Id: <20191125054838.137615-1-asteinhauser@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH] Immediate enforcement of /sys/devices/cpu/rdpmc set to 0.
+From:   Anthony Steinhauser <asteinhauser@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        x86@kernel.org, Anthony Steinhauser <asteinhauser@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add suspend() and resume() functions so that Hyper-V virtual PCI devices are
-handled properly when the VM hibernates and resumes from hibernation.
+When you successfully write 0 to /sys/devices/cpu/rdpmc, the RDPMC
+instruction should be disabled unconditionally and immediately (after you
+close the SYSFS file) by the documentation.
+Instead, in the current implementation the PMU must be reloaded which
+happens only eventually some time in the future. Only after that the RDPMC
+instruction becomes disabled (on ring 3) on the respective core.
+This change makes the treatment of the 0 value as blocking and as
+unconditional as the current treatment of the 2 value, only the CR4.PCE
+bit is naturally set to false instead of true.
 
-Note that the suspend() function must make sure there are no pending work
-items before calling vmbus_close(), since it runs in a process context as a
-callback in dpm_suspend().  When it starts to run, the channel callback
-hv_pci_onchannelcallback(), which runs in a tasklet context, can be still running
-concurrently and scheduling new work items onto hbus->wq in
-hv_pci_devices_present() and hv_pci_eject_device(), and the work item
-handlers can access the vmbus channel, which can be being closed by
-hv_pci_suspend(), e.g. the work item handler pci_devices_present_work() ->
-new_pcichild_device() writes to the vmbus channel.
-
-To eliminate the race, hv_pci_suspend() disables the channel callback
-tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the tasklet.
-This way, when hv_pci_suspend() proceeds, it knows that no new work item
-can be scheduled, and then it flushes hbus->wq and safely closes the vmbus
-channel.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 125 +++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 2 deletions(-)
+ arch/x86/events/core.c             | 18 ++++++++++++------
+ arch/x86/include/asm/mmu_context.h |  4 +++-
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 65f18f840ce9..3c4996b073ca 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -455,6 +455,7 @@ enum hv_pcibus_state {
- 	hv_pcibus_init = 0,
- 	hv_pcibus_probed,
- 	hv_pcibus_installed,
-+	hv_pcibus_removing,
- 	hv_pcibus_removed,
- 	hv_pcibus_maximum
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 7b21455d7504..0531092fe8f3 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -49,6 +49,7 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+ 	.enabled = 1,
  };
-@@ -1681,6 +1682,23 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
  
- 	spin_lock_irqsave(&hbus->device_list_lock, flags);
++DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+ DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
  
-+	/*
-+	 * Clear the memory enable bit, in case it's already set. This occurs
-+	 * in the suspend path of hibernation, where the device is suspended,
-+	 * resumed and suspended again: see hibernation_snapshot() and
-+	 * hibernation_platform_enter().
-+	 *
-+	 * If the memory enable bit is already set, Hyper-V sliently ignores
-+	 * the below BAR updates, and the related PCI device driver can not
-+	 * work, because reading from the device register(s) always returns
-+	 * 0xFFFFFFFF.
-+	 */
-+	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-+		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
-+		command &= ~PCI_COMMAND_MEMORY;
-+		_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2, command);
-+	}
+ u64 __read_mostly hw_cache_event_ids
+@@ -2181,21 +2182,26 @@ static ssize_t set_attr_rdpmc(struct device *cdev,
+ 	if (x86_pmu.attr_rdpmc_broken)
+ 		return -ENOTSUPP;
+ 
+-	if ((val == 2) != (x86_pmu.attr_rdpmc == 2)) {
++	if (val != x86_pmu.attr_rdpmc) {
+ 		/*
+-		 * Changing into or out of always available, aka
+-		 * perf-event-bypassing mode.  This path is extremely slow,
++		 * Changing into or out of never available or always available,
++		 * aka perf-event-bypassing mode. This path is extremely slow,
+ 		 * but only root can trigger it, so it's okay.
+ 		 */
++		if (val == 0)
++			static_branch_inc(&rdpmc_never_available_key);
++		else if (x86_pmu.attr_rdpmc == 0)
++			static_branch_dec(&rdpmc_never_available_key);
 +
- 	/* Pick addresses for the BARs. */
- 	do {
- 		list_for_each_entry(hpdev, &hbus->children, list_entry) {
-@@ -2107,6 +2125,12 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 	unsigned long flags;
- 	bool pending_dr;
- 
-+	if (hbus->state == hv_pcibus_removing) {
-+		dev_info(&hbus->hdev->device,
-+			 "PCI VMBus BUS_RELATIONS: ignored\n");
-+		return;
-+	}
+ 		if (val == 2)
+ 			static_branch_inc(&rdpmc_always_available_key);
+-		else
++		else if (x86_pmu.attr_rdpmc == 2)
+ 			static_branch_dec(&rdpmc_always_available_key);
 +
- 	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
- 	if (!dr_wrk)
- 		return;
-@@ -2223,11 +2247,19 @@ static void hv_eject_device_work(struct work_struct *work)
-  */
- static void hv_pci_eject_device(struct hv_pci_dev *hpdev)
+ 		on_each_cpu(refresh_pce, NULL, 1);
++		x86_pmu.attr_rdpmc = val;
+ 	}
+ 
+-	x86_pmu.attr_rdpmc = val;
+-
+ 	return count;
+ }
+ 
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 16ae821483c8..bd60bbd2f959 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -26,12 +26,14 @@ static inline void paravirt_activate_mm(struct mm_struct *prev,
+ 
+ #ifdef CONFIG_PERF_EVENTS
+ 
++DECLARE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+ DECLARE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+ 
+ static inline void load_mm_cr4_irqsoff(struct mm_struct *mm)
  {
-+	struct hv_pcibus_device *hbus = hpdev->hbus;
-+	struct hv_device *hdev = hbus->hdev;
-+
-+	if (hbus->state == hv_pcibus_removing) {
-+		dev_info(&hdev->device, "PCI VMBus EJECT: ignored\n");
-+		return;
-+	}
-+
- 	hpdev->state = hv_pcichild_ejecting;
- 	get_pcichild(hpdev);
- 	INIT_WORK(&hpdev->wrk, hv_eject_device_work);
--	get_hvpcibus(hpdev->hbus);
--	queue_work(hpdev->hbus->wq, &hpdev->wrk);
-+	get_hvpcibus(hbus);
-+	queue_work(hbus->wq, &hpdev->wrk);
- }
- 
- /**
-@@ -3107,6 +3139,93 @@ static int hv_pci_remove(struct hv_device *hdev)
- 	return ret;
- }
- 
-+static int hv_pci_suspend(struct hv_device *hdev)
-+{
-+	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-+	enum hv_pcibus_state old_state;
-+	int ret;
-+
-+	/*
-+	 * hv_pci_suspend() must make sure there are no pending work items
-+	 * before calling vmbus_close(), since it runs in a process context
-+	 * as a callback in dpm_suspend().  When it starts to run, the channel
-+	 * callback hv_pci_onchannelcallback(), which runs in a tasklet
-+	 * context, can be still running concurrently and scheduling new work
-+	 * items onto hbus->wq in hv_pci_devices_present() and
-+	 * hv_pci_eject_device(), and the work item handlers can access the
-+	 * vmbus channel, which can be being closed by hv_pci_suspend(), e.g.
-+	 * the work item handler pci_devices_present_work() ->
-+	 * new_pcichild_device() writes to the vmbus channel.
-+	 *
-+	 * To eliminate the race, hv_pci_suspend() disables the channel
-+	 * callback tasklet, sets hbus->state to hv_pcibus_removing, and
-+	 * re-enables the tasklet. This way, when hv_pci_suspend() proceeds,
-+	 * it knows that no new work item can be scheduled, and then it flushes
-+	 * hbus->wq and safely closes the vmbus channel.
-+	 */
-+	tasklet_disable(&hdev->channel->callback_event);
-+
-+	/* Change the hbus state to prevent new work items. */
-+	old_state = hbus->state;
-+	if (hbus->state == hv_pcibus_installed)
-+		hbus->state = hv_pcibus_removing;
-+
-+	tasklet_enable(&hdev->channel->callback_event);
-+
-+	if (old_state != hv_pcibus_installed)
-+		return -EINVAL;
-+
-+	flush_workqueue(hbus->wq);
-+
-+	ret = hv_pci_bus_exit(hdev, true);
-+	if (ret)
-+		return ret;
-+
-+	vmbus_close(hdev->channel);
-+
-+	return 0;
-+}
-+
-+static int hv_pci_resume(struct hv_device *hdev)
-+{
-+	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-+	enum pci_protocol_version_t version[1];
-+	int ret;
-+
-+	hbus->state = hv_pcibus_init;
-+
-+	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-+			 hv_pci_onchannelcallback, hbus);
-+	if (ret)
-+		return ret;
-+
-+	/* Only use the version that was in use before hibernation. */
-+	version[0] = pci_protocol_version;
-+	ret = hv_pci_protocol_negotiation(hdev, version, 1);
-+	if (ret)
-+		goto out;
-+
-+	ret = hv_pci_query_relations(hdev);
-+	if (ret)
-+		goto out;
-+
-+	ret = hv_pci_enter_d0(hdev);
-+	if (ret)
-+		goto out;
-+
-+	ret = hv_send_resources_allocated(hdev);
-+	if (ret)
-+		goto out;
-+
-+	prepopulate_bars(hbus);
-+
-+	hbus->state = hv_pcibus_installed;
-+	return 0;
-+out:
-+	vmbus_close(hdev->channel);
-+	return ret;
-+}
-+
- static const struct hv_vmbus_device_id hv_pci_id_table[] = {
- 	/* PCI Pass-through Class ID */
- 	/* 44C4F61D-4444-4400-9D52-802E27EDE19F */
-@@ -3121,6 +3240,8 @@ static struct hv_driver hv_pci_drv = {
- 	.id_table	= hv_pci_id_table,
- 	.probe		= hv_pci_probe,
- 	.remove		= hv_pci_remove,
-+	.suspend	= hv_pci_suspend,
-+	.resume		= hv_pci_resume,
- };
- 
- static void __exit exit_hv_pci_drv(void)
+ 	if (static_branch_unlikely(&rdpmc_always_available_key) ||
+-	    atomic_read(&mm->context.perf_rdpmc_allowed))
++	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
++	     atomic_read(&mm->context.perf_rdpmc_allowed)))
+ 		cr4_set_bits_irqsoff(X86_CR4_PCE);
+ 	else
+ 		cr4_clear_bits_irqsoff(X86_CR4_PCE);
 -- 
-2.19.1
+2.24.0.432.g9d3f5f5b63-goog
 
