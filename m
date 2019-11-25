@@ -2,328 +2,179 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A5C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41A9C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640542071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574674342;
-	bh=dADhmn6BnRaZH78GKvzi3F0QuozxD8ajxUgpMfjsop4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=krKWAWhcqlapUSA2RxBqDfFv7hKrq0m6l7VLS9kLAy8MO2/TITZGfETUi6xcb4UOA
-	 5jqJtvPVpKmvUWm1BW1Z3i0kEbqXNV3WW1Pt3/NQfR2JRR0aVegDchr/gQXUfZIaMv
-	 vBZnixUTbTG2JL0BCBpUNFBE+42TAyP1KOyyUhOw=
+	by mail.kernel.org (Postfix) with ESMTP id 743782082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XmbFFQ4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKYJcV (ORCPT
+        id S1727332AbfKYJdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:32:21 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41245 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfKYJcV (ORCPT
+        Mon, 25 Nov 2019 04:33:24 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30539 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725793AbfKYJdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:32:21 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b18so17026183wrj.8;
-        Mon, 25 Nov 2019 01:32:18 -0800 (PST)
+        Mon, 25 Nov 2019 04:33:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574674402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7G+KIPC5ZSXPGPUEtN6Ugx/07ICrSHBG5p0rtNCjvWk=;
+        b=XmbFFQ4sD9w+aclkLNmmI+VzZuL/pV1smj64QGYIUknrkxbTNOrjl+Q/mL3Exm8GtAQo8Q
+        OXt+nHiwEHW6nNCDQweOEHAD3M9lsAXPzYHFRvZ3rA7EPCzsrTiX0iUTA4tGc5j/HeevE5
+        /SMcxOnYBtyhs5A7YHh3ugiwE+GS/cs=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-5qEbbfTTPsGAlUDaC6AA5g-1; Mon, 25 Nov 2019 04:33:20 -0500
+Received: by mail-qt1-f200.google.com with SMTP id m8so7362964qta.20
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 01:33:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9g1dsHSkZyIuogn9FJsE8Uhy7HUmJyPQt4umj/Cy1qM=;
-        b=ebZrraCX980kznxsj6PVadip6OfG7OxiQeybCaI5jAz4hgrM5H3JhZTgCx4wo8yphS
-         TBGAXJhH+2aBOfSKm2z+STT4xUISLzsKbb8N8krp0yAwwKPiYxK/41ThPpz4cXsaVH+K
-         ovcWS49YswZOZp5ajy3kvAt3MTqTfEEJrDmRPntsdGuzYxiBMf0aiqDSSPi2mB4Bl6v2
-         pMPJNqW0pX7nl/UHV/3acbVMAYQwbkBMpGjcAfQ+GAHL4BKHFjJ9QlWPskYgDlsKjFiM
-         clzJp/IVuwoXQE/XyNW0XlwDC7BTjD6RKhya2661HKMvCpxZfoCiK/KFKu/zo02stEQl
-         4ICA==
-X-Gm-Message-State: APjAAAUWTMkMbD3uMIQi8Y+HFnW0ZDeTjij9C9QYmIsdZeDz+4MFcRFn
-        GjNU9dFKcOMY7dtBg6LsFXk=
-X-Google-Smtp-Source: APXvYqxVLtRMAmG3OtLqwN04F1cLQln/PkStBpS9dqyei6x12GwZXrBMjfGzYE/Q4E+36GpGh+1hVw==
-X-Received: by 2002:adf:f5c6:: with SMTP id k6mr29557791wrp.245.1574674337631;
-        Mon, 25 Nov 2019 01:32:17 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id q15sm8447341wrv.61.2019.11.25.01.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 01:32:16 -0800 (PST)
-Date:   Mon, 25 Nov 2019 10:32:16 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     x86@kernel.org, Chen Yu <yu.chen.surf@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH][v5] x86/resctrl: Add task resctrl information display
-Message-ID: <20191125093216.GF31714@dhcp22.suse.cz>
-References: <20191125040001.28943-1-yu.c.chen@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i0aCw5BrybA+WtP+tnX9x0Ga8lkeDoT+3V/QTfor6M4=;
+        b=rRxafV+NkkuHFRnyT8BGJzCKWANKmlheErzK/3++apoeSUs1pu54hE1RD7cMbc2bk6
+         83L30pu21t6flk62yyzx4vVYLtLMrntQBJ6xI2QvB86HdO7LWJ4uBMP7akFJyvdihn6N
+         wDig01yroQ20dKQPWgAb0wRgGJxkSss3BG+hSgbxuuHYGA8KO2j2khhNsftxsRf/I319
+         JqHrNpmG5Ouc4l/q+koo6ZMMTMeN7C6Hxbrk0cgcKqtRoQ3+UqJ+fZyIjbZXEtK6C/ig
+         J5iu3hzO2g86KJyPLoMhfJFOz1N9AIsYaWAPSld4CZfMdMR1mnuOCQKO460FnMEtgGcd
+         r5jw==
+X-Gm-Message-State: APjAAAX4d9kVoWZ+N5vtlPNEOF2fY5hqrzmlikLP8xbA4559XftojWnd
+        iEZAKT8q0Da0/optB/JFSmnq1yO9s2PNqvQCWRQeEELk50HHqXmUZmdonM+hJXvuR0d9fo1Xvfo
+        9jOZ5a9Dl836g4PmfXhjXNjPSOgSdPEWuc+C1A2e3
+X-Received: by 2002:ac8:1c03:: with SMTP id a3mr10600817qtk.31.1574674400446;
+        Mon, 25 Nov 2019 01:33:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzUOruSGQlLplRmMyOJ2E9gm3K4Pzh+01YJRHV+U5OLgHx+9YfYDw+n8uVg7XGj3nTCDlK0QduJBbto4yVczCg=
+X-Received: by 2002:ac8:1c03:: with SMTP id a3mr10600802qtk.31.1574674400189;
+ Mon, 25 Nov 2019 01:33:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125040001.28943-1-yu.c.chen@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191122202559.GA71021@dtor-ws>
+In-Reply-To: <20191122202559.GA71021@dtor-ws>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 25 Nov 2019 10:33:08 +0100
+Message-ID: <CAO-hwJJ0Rxv6wJjRSEGyhQxKRW-iNSiO+8v-YgOa+cL4ZPSWRw@mail.gmail.com>
+Subject: Re: [PATCH] HID: hid-input: clear unmapped usages
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+X-MC-Unique: 5qEbbfTTPsGAlUDaC6AA5g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc linux-api]
+Hi Dmitry,
 
-On Mon 25-11-19 12:00:01, Chen Yu wrote:
-> Monitoring tools that want to find out which resctrl control
-> and monitor groups a task belongs to must currently read
-> the "tasks" file in every group until they locate the process
-> ID.
-> 
-> Add an additional file /proc/{pid}/resctrl to provide this
-> information.
-> 
-> The output is as followed according to Thomas's suggestion,
-> for example:
-> 
->  1)   ""
->       Resctrl is not available.
-> 
->  2)   "/"
->       Task is part of the root group, task is not associated to
->       any monitoring group.
-> 
->  3)   "/mon_groups/mon0"
->       Task is part of the root group and monitoring group mon0.
-> 
->  4)   "/group0"
->       Task is part of control group group0, task is not associated
->       to any monitoring group.
-> 
->  5)   "/group0/mon_groups/mon1"
->       Task is part of control group group0 and monitoring group mon1.
-> 
-> Tested-by: Jinshi Chen <jinshi.chen@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Reinette Chatre <reinette.chatre@intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+On Fri, Nov 22, 2019 at 9:26 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> We should not be leaving half-mapped usages with potentially invalid
+> keycodes, as that may confuse hidinput_find_key() when the key is
+> located by index, which may end up feeding way too large keycode into
+> the VT keyboard handler and cause OOB write there:
+>
+> BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-=
+instrumented.h:56 [inline]
+> BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c=
+:1411 [inline]
+> BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt=
+/keyboard.c:1495
+> Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
+> ...
+>  kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+>  kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+>  input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
+>  input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
+>  input_pass_values drivers/input/input.c:949 [inline]
+>  input_set_keycode+0x290/0x320 drivers/input/input.c:954
+>  evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
+>  evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+>
+> In this case we were dealing with a fuzzed HID device that declared over
+> 12K buttons:
+>
+> https://syzkaller.appspot.com/bug?extid=3D19340dff067c2d3835c0
+>
+> Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
-> v2: Reduce indentation level in proc_resctrl_show()
->     according to Boris's suggestion.
->     Create the include/linux/resctrl.h header and
->     declare proc_resctrl_show() in this file, so
->     that other architectures would probably use it
->     in the future. Different architectures should
->     implement architectural specific proc_resctrl_show()
->     accordingly.
-> 
-> v3: Return empty string if the resctrl filesystem has
->     not been mounted per Boris's suggestion.
->     Rename the config from CPU_RESCTRL to PROC_CPU_RESCTRL
->     to better represent its usage. Move PROC_CPU_RESCTRL
->     from arch/Kconfig to fs/proc/Kconfig.
->     And let PROC_CPU_RESCTRL to be depended on PROC_FS.
-> 
-> v4: According to Thomas's suggestion, changed the output
->     from multiple lines to one single line.
-> 
-> v5: According to Alexey's feedback, removed the header file
->     proc_fs.h in resctrl.h, and changed seq_puts() to
->     seq_putc() for simplicity.
-> ---
->  arch/x86/Kconfig                       |  1 +
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 78 ++++++++++++++++++++++++++
->  fs/proc/Kconfig                        |  4 ++
->  fs/proc/base.c                         |  7 +++
->  include/linux/resctrl.h                | 14 +++++
->  5 files changed, 104 insertions(+)
->  create mode 100644 include/linux/resctrl.h
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 8ef85139553f..252364d18887 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -455,6 +455,7 @@ config X86_CPU_RESCTRL
->  	bool "x86 CPU resource control support"
->  	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
->  	select KERNFS
-> +	select PROC_CPU_RESCTRL		if PROC_FS
->  	help
->  	  Enable x86 CPU resource control support.
->  
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index 2e3b06d6bbc6..f786e7626a65 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -725,6 +725,84 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
->  	return ret;
+>
+> I'll be putting a guard into drivers/tty/vt/keyboard.c as well.
+> Please consider for stable.
+>
+>  drivers/hid/hid-input.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+> index 63855f275a38..3957d1c4d967 100644
+> --- a/drivers/hid/hid-input.c
+> +++ b/drivers/hid/hid-input.c
+> @@ -1215,9 +1215,11 @@ static void hidinput_configure_usage(struct hid_in=
+put *hidinput, struct hid_fiel
+>                 set_bit(MSC_SCAN, input->mscbit);
+>         }
+>
+> -ignore:
+>         return;
+>
+> +ignore:
+> +       usage->type =3D 0;
+> +       usage->code =3D 0;
+
+Unfortunately, this breaks the buttons on the MS precision Touchpads.
+The hid-tools test suite found that for me :)
+
+The problem is:
+hid-multitouch.c|mt_touch_input_mapping() lines 840-857
+ -> we assign the button mapping correctly, but there is a catch for
+the first button:
+hid-multitouch.c|mt_process_mt_event() lines 1123-1126
+ -> we check for the usage type and code to know which button we have
+
+We are entering the ignore case because:
+hid-input.c|hidinput_configure_usage() lines 582-589
+ -> hid-multitouch.c|mt_touch_input_mapping() lines 840-857
+   -> return 1
+ -> goto mapped
+hid-input.c|hidinput_configure_usage() lines 1134-1137
+ -> hid-multitouch.c|mt_input_mapped() lines 1360-1363
+  -> return -1 (we are in the mt collection)
+ -> goto ignore
+
+We would need to change the input_mapped() function to either ignore
+or exit hidinput_configure_usage() based on the return value, or we
+would need to store the original usages in hid-multitouch.
+
+Actually, to fix this without breaking current drivers, we should just
+change the `goto ignore` into a `return` after checking the value of
+.input_mapped()
+
+Cheers,
+Benjamin
+
 >  }
->  
-> +#ifdef CONFIG_PROC_CPU_RESCTRL
-> +
-> +/*
-> + * A task can only be part of one control
-> + * group and of one monitoring group which
-> + * is associated to that control group.
-> + * So one line is simple and clear enough:
-> + *
-> + * 1)   ""
-> + *    Resctrl is not available.
-> + *
-> + * 2)   "/"
-> + *    Task is part of the root group, and it is
-> + *    not associated to any monitoring group.
-> + *
-> + * 3)   "/mon_groups/mon0"
-> + *    Task is part of the root group and monitoring
-> + *    group mon0.
-> + *
-> + * 4)   "/group0"
-> + *    Task is part of control group group0, and it is
-> + *    not associated to any monitoring group.
-> + *
-> + * 5)   "/group0/mon_groups/mon1"
-> + *    Task is part of control group group0 and monitoring
-> + *    group mon1.
-> + */
-> +int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
-> +		      struct pid *pid, struct task_struct *tsk)
-> +{
-> +	struct rdtgroup *rdtg;
-> +	int ret = 0;
-> +
-> +	mutex_lock(&rdtgroup_mutex);
-> +
-> +	/* Return empty if resctrl has not been mounted. */
-> +	if (!static_branch_unlikely(&rdt_enable_key))
-> +		goto unlock;
-> +
-> +	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
-> +		struct rdtgroup *crg;
-> +
-> +		/*
-> +		 * Task information is only relevant for shareable
-> +		 * and exclusive groups.
-> +		 */
-> +		if (rdtg->mode != RDT_MODE_SHAREABLE &&
-> +		    rdtg->mode != RDT_MODE_EXCLUSIVE)
-> +			continue;
-> +
-> +		if (rdtg->closid != tsk->closid)
-> +			continue;
-> +
-> +		seq_printf(s, "/%s", rdtg->kn->name);
-> +		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
-> +				    mon.crdtgrp_list) {
-> +			if (tsk->rmid != crg->mon.rmid)
-> +				continue;
-> +			seq_printf(s, "%smon_groups/%s",
-> +				   rdtg == &rdtgroup_default ? "" : "/",
-> +				   crg->kn->name);
-> +			break;
-> +		}
-> +		seq_putc(s, '\n');
-> +		goto unlock;
-> +	}
-> +	/*
-> +	 * The above search should succeed. Otherwise return
-> +	 * with an error.
-> +	 */
-> +	ret = -ENOENT;
-> +unlock:
-> +	mutex_unlock(&rdtgroup_mutex);
-> +
-> +	return ret;
-> +}
-> +#endif
-> +
->  static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
->  				    struct seq_file *seq, void *v)
->  {
-> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-> index cb5629bd5fff..ae96a339d24d 100644
-> --- a/fs/proc/Kconfig
-> +++ b/fs/proc/Kconfig
-> @@ -103,3 +103,7 @@ config PROC_CHILDREN
->  config PROC_PID_ARCH_STATUS
->  	def_bool n
->  	depends on PROC_FS
-> +
-> +config PROC_CPU_RESCTRL
-> +	def_bool n
-> +	depends on PROC_FS
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index ebea9501afb8..0e4b8bf2b986 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -94,6 +94,7 @@
->  #include <linux/sched/debug.h>
->  #include <linux/sched/stat.h>
->  #include <linux/posix-timers.h>
-> +#include <linux/resctrl.h>
->  #include <trace/events/oom.h>
->  #include "internal.h"
->  #include "fd.h"
-> @@ -3060,6 +3061,9 @@ static const struct pid_entry tgid_base_stuff[] = {
->  #endif
->  #ifdef CONFIG_CGROUPS
->  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-> +#endif
-> +#ifdef CONFIG_PROC_CPU_RESCTRL
-> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
->  #endif
->  	ONE("oom_score",  S_IRUGO, proc_oom_score),
->  	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
-> @@ -3460,6 +3464,9 @@ static const struct pid_entry tid_base_stuff[] = {
->  #endif
->  #ifdef CONFIG_CGROUPS
->  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-> +#endif
-> +#ifdef CONFIG_PROC_CPU_RESCTRL
-> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
->  #endif
->  	ONE("oom_score", S_IRUGO, proc_oom_score),
->  	REG("oom_adj",   S_IRUGO|S_IWUSR, proc_oom_adj_operations),
-> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> new file mode 100644
-> index 000000000000..daf5cf64c6a6
-> --- /dev/null
-> +++ b/include/linux/resctrl.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _RESCTRL_H
-> +#define _RESCTRL_H
-> +
-> +#ifdef CONFIG_PROC_CPU_RESCTRL
-> +
-> +int proc_resctrl_show(struct seq_file *m,
-> +		      struct pid_namespace *ns,
-> +		      struct pid *pid,
-> +		      struct task_struct *tsk);
-> +
-> +#endif
-> +
-> +#endif /* _RESCTRL_H */
-> -- 
-> 2.17.1
+>
+>  static void hidinput_handle_scroll(struct hid_usage *usage,
+> --
+> 2.24.0.432.g9d3f5f5b63-goog
+>
+>
+> --
+> Dmitry
+>
 
--- 
-Michal Hocko
-SUSE Labs
