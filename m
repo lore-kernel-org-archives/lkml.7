@@ -2,184 +2,320 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAE4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868BAC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C4A207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FF220830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ls+60amK";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="E0/8+Fq6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DncNDhuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbfKYHWl (ORCPT
+        id S1726094AbfKYHXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:22:41 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:14510 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfKYHWk (ORCPT
+        Mon, 25 Nov 2019 02:23:53 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17224 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfKYHXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:22:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1574666560; x=1606202560;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4ZA87POlBpYu1pzt8aumD7gQ6OQaYuAqDkdP1Ec0R68=;
-  b=ls+60amKQpApXtgUxu8HG/yiYRN2Y3E1bMAO5n6jiV/5zkE5IGO0gGsy
-   0fN/hP0C3tkf/M4bYL6fWKBbYGLcBdhjmM6wY5Tb/bVosWaRu/WSiKnYF
-   qO3AtA5hzXUvxPCAQZVgBFFrZgHc+HBHNX9i+u3lBrAWGdmVAYCBO1yk5
-   SYwZqJK1F4LbPs+iRNTfJ4UxwW0emixdDZZGIoPAWsPPR3z/T4nOIxv8r
-   aDud24cQEKZT3dIjpoN+1uUA4bCx2Pe8CHnLWOCr952B8xEVerGtCVfh1
-   OM7ziDz+wR/CX+euFrIzH7+qmIAIDQGKf2HqUHOV6yks6hnEINOsdNm02
-   g==;
-IronPort-SDR: grS0I4rgSjvEjTxPy+Di8L8rcOXD0VkqLYTaRnHWGHbSvyTvqM1JxuGbdlHtJbBsvAO4ND7aWp
- dro1QcEbG8rJk95CkgTP9WA/BrYM9CcTJDzMQxk5uS27sn1d4feotjVFkdWP8zrRY06/7pgk4W
- 7W6UI1xrN9737TC6MziKV9ZJL3OqeeihDUMkRCzsKEl0IjJU7dEuDGynpaY7a/550Ho01MlO2a
- 4FMjKgrRmGuUXEp01cMrZhL9C1audtxKhIXI0LwFg+9/4voFolc3rP9ofnLPOVAP5DH190Oazq
- T+Q=
-X-IronPort-AV: E=Sophos;i="5.69,240,1571673600"; 
-   d="scan'208";a="124683004"
-Received: from mail-bn3nam01lp2056.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.56])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Nov 2019 15:22:37 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WSnw8VK8rd08DbGb2yo/yANP+b/CHoFAde6haLxI1xTh2X6Qg98IAlr/qkMTPFZ/H13MH6igGOXaOgpGqYTVnpWYle8LTMuOYjnVY4xDaiYN3+ELV8CTM1/A4ng7PP+CEGEuwfzT1JBdQT+tkepsp/UpiqluGQ1DfdBz9uyHM5SX/QXcnSfC0miv6+MIXU+4UhfoGQ8M0SZsiTDmp4TI0Xl8YktZisPK8yAba8ouXIXcY3/Tz0+8O59WkSyNX8iUsdRUx0KKQmLZob3pTkzHrZvNEalKG473wU3KjsQ6WLdmezKWMt8D35oc7cyGs7RGBVzxDzBEYxJYdpyKnqk1pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ZA87POlBpYu1pzt8aumD7gQ6OQaYuAqDkdP1Ec0R68=;
- b=cuMSTLdQP395WQjcdlFJj7Yw31ZwmU+3af+dB610Ym/HtQYe1+THXA2BQ8DcerW6Qj5FYZU2JYUwAf4Gop1UQcw+LWtf38eGiwvcrKfa5Nf2+JNXl6HHQlDfHiKVJO4iWAOhQOyPUjJEynbtEs/qtk4C2lneb4rEUC7Zc/u4PFc25OsjaMUcTlnAtNpKP2XY1VPoNaocugpcoU1phXrV+RddjnJiErHdBCe39ohEZrWDrvuYwI77B4hmqcQ/u2A6ACKnjeFq7CWmQubbez2f+1ZcKwmKGfy5Z9GEbeC39hpqzuvcRAKkqANe+eymZPArA46P4ucZ0+AGALlUPc6uQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ZA87POlBpYu1pzt8aumD7gQ6OQaYuAqDkdP1Ec0R68=;
- b=E0/8+Fq6OEwOb4jNI8YtETO0MOBSa6WB6MGYivshqk73i2sTQyuKonpoV7ekjrrM49OM89aXSZDoaA6RppzaYRSqS7yyyQVEuM8TnXzLZ/JBWLrqnxwNbovvlHd9XvGzBe3wIZM6XsWK3KypkLXM8TJMrFrNxs3EofGmbtlN7sA=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB6127.namprd04.prod.outlook.com (20.178.248.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Mon, 25 Nov 2019 07:22:35 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::5852:6199:7952:c2ce]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::5852:6199:7952:c2ce%7]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
- 07:22:35 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 4/5] scsi: ufs: Do not clear the DL layer timers
-Thread-Topic: [PATCH v4 4/5] scsi: ufs: Do not clear the DL layer timers
-Thread-Index: AQHVmee89Uj0xO4g1EKSBfsTmVIai6eUMy8AgAda3iA=
-Date:   Mon, 25 Nov 2019 07:22:35 +0000
-Message-ID: <MN2PR04MB6991FAA95F79EFB1EE030D13FC4A0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1573624824-671-1-git-send-email-cang@codeaurora.org>
- <1573624824-671-5-git-send-email-cang@codeaurora.org>
- <MN2PR04MB6991C35EC2DBBEA17A611755FC4F0@MN2PR04MB6991.namprd04.prod.outlook.com>
-In-Reply-To: <MN2PR04MB6991C35EC2DBBEA17A611755FC4F0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8cab56c2-f2d1-468b-8081-08d771783e7c
-x-ms-traffictypediagnostic: MN2PR04MB6127:
-x-microsoft-antispam-prvs: <MN2PR04MB61278B3A712B283A5470C1A7FC4A0@MN2PR04MB6127.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(189003)(199004)(8676002)(81156014)(229853002)(305945005)(81166006)(7736002)(86362001)(8936002)(9686003)(66066001)(6436002)(5660300002)(2201001)(76176011)(7696005)(256004)(26005)(7416002)(102836004)(54906003)(74316002)(2501003)(6506007)(25786009)(6246003)(71200400001)(71190400001)(6116002)(14454004)(33656002)(478600001)(446003)(11346002)(4744005)(99286004)(66946007)(66556008)(52536014)(76116006)(66446008)(55016002)(64756008)(3846002)(4326008)(66476007)(186003)(316002)(110136005)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6127;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: =?us-ascii?Q?6+Shg7HIcXoYogDkwL7z6xS5nty5XHqnc3kqsA/VLyX3V+t4tYx2KZZtK3ZB?=
- =?us-ascii?Q?XGjuQhmrZQghlypGypKodvZfqyuHTazTqxKpm1Twbct6vO656QMiHu+R+8Sv?=
- =?us-ascii?Q?Z9J/m8JF5gyXWfQBA2TesazlYMNmLtaAFy36K8PHSBf+jD4U2TsscKfK1DGQ?=
- =?us-ascii?Q?Q5V1+m7Ww1ZjL/nvXUMNJS2ervQ8RANiIdwW9DNicHILOsMlzGQDVEHtySno?=
- =?us-ascii?Q?yIr5+0EfML6LDdssU9U1gCaMO1Jyb1/wu6tXAu3u7a1quIaHA/nGHFGftawp?=
- =?us-ascii?Q?gWhjpDwlNp6eO5yFIrBwPe7CiLzvw9FfPLwmWkqW2nBlwkoxfpGQ+GMJEaq9?=
- =?us-ascii?Q?A/Bj5IO/LicDk5k1ZbnMPCDsz4nt8OjaxOVYhFXdsaFfCdv6MgVGofKu91Sx?=
- =?us-ascii?Q?P4GGkn/fT573conLgU+lvfbmCRKpp8i3sO3lkoihdxRCaXLudSi62T2NawIX?=
- =?us-ascii?Q?NKpHeq/CZ/SxXhbXF/AK036wUY2k0fo/7/JFWIevbpWFddKy1FjvznrIhcwK?=
- =?us-ascii?Q?fsk8X/NLCKUJhl7n0DsbJAo+BiuT3zlrQ3pSdcYbiJsYetnNfV1M5tIfPQ+6?=
- =?us-ascii?Q?LecJWOWhWRgfEhDrrGpJIR2bKt+MSiwd6Fjp6l6cpVfYJMKQdrTT7TPNMTPJ?=
- =?us-ascii?Q?by84zZVKGTmif/F9+cHpdwVKmq4MviFPaSqBETsZGyl7Kk3AU8ZRJewMNFqh?=
- =?us-ascii?Q?gf+6J+g6+6HeQAvPknCpWKfngc7wpfEumyq76n6wLPyUS9DyWN0bx4FHa4Hs?=
- =?us-ascii?Q?Ksz+0KtK9y+H5vDISqe/YRQ0aReVN5MLqU0aTPTSnW2ENWhvZfzG53NERIG3?=
- =?us-ascii?Q?0UqxLk6mIy0IXd8YhIW9VjJ1X1f8W4HhKOJA4hf5CFQZDdIYKf04UI2dTizY?=
- =?us-ascii?Q?goMN35NZk8i7VxKnGpAMO1gvg2M2UcAJJXHfa7cVLu2dTO5QJZUt6HoBeNPh?=
- =?us-ascii?Q?f9ErTvdJmgsdFjvIq7zAUmxaUBQYohV1ZmTu27zCflJ9Zr+NZMUHfYJEnzF8?=
- =?us-ascii?Q?qZ9jxiq9hHcFYZo9UEXsIKDm0QjzOycDxU3Ps5vvOZaRubLs76OU9DYgNrog?=
- =?us-ascii?Q?KYIZTCzFzDPxtYC9fg4J1pST1QPGCnlqzwjM1NKaJ2ukDwo63apCgFjV+iHo?=
- =?us-ascii?Q?tKjCNiUzBJmqZWnx0h+Z05oJ36zFCIGmlBv9luftyjypAWWlQvvf0q6IfjBJ?=
- =?us-ascii?Q?tP2cI1BWUYVOfcjRa4tLdXWK2kOrFeH6LLiF39KKiFaZV7WJVlMYQWat+mH8?=
- =?us-ascii?Q?fh/i61wV4g4vxKmN+GtO+71LvsTn2liq7sHF9i/7AKFrLGYUlgOFE2Q5qxvO?=
- =?us-ascii?Q?2yfL34+/2kiNP+ZpmR7KSMML/6HtTD817dojcOPm4jgQJYOi0DXeELxMw4vj?=
- =?us-ascii?Q?RUZLWntosF+yO/cCRu8our/pvR9ACZ53FyAo1ApC8IagmnscfDaYvnlq6EaY?=
- =?us-ascii?Q?uq5BASuI6ovkPafLR5fLb0y4qLpeaYNUapK/b4I/+K2sEGJRWhss56DBZx5m?=
- =?us-ascii?Q?sh0t3666F2MlTxRGIXy/7k6IiHi3TVmXoddbLcy5w8KkiDyre5UGv3hFkKai?=
- =?us-ascii?Q?7CLvpgUVT3nhF9KI0P2xSIMBhOH8fSqiHT9cmj/OQmxZCAcjkaannDlH/Chl?=
- =?us-ascii?Q?fQyvpO19Ym5+LAOpSt/8NmqXShPtGkdmoW4tyjm3zsx/861Vc2B61RCWoMnr?=
- =?us-ascii?Q?E2CqooQ4q2MsapQ40rNu4glejN9LuRHABu+cRgDmwl7m99GygPNW/wrqtlaO?=
- =?us-ascii?Q?UP7+WugLeN2Q7oJTlzn3A0wk3CO3LyAaPzb8a0d+ecHF7NUmpzoM?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 02:23:53 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddb81870000>; Sun, 24 Nov 2019 23:23:51 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 24 Nov 2019 23:23:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 23:23:49 -0800
+Received: from [10.25.75.126] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 07:23:45 +0000
+Subject: Re: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
+ nodes in Tegra194
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+ <20191122104505.8986-3-vidyas@nvidia.com> <20191122131931.GB1315704@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <8fbdda8e-84af-576c-e240-61c381c85a8f@nvidia.com>
+Date:   Mon, 25 Nov 2019 12:53:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cab56c2-f2d1-468b-8081-08d771783e7c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 07:22:35.3251
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: skEctqBh1O0vfYhheqcCvH14Rn+fG+0QI16j13VydEjS9IE96jZ4FUt3hkydydpTXHR3hG035WZ2l5SonZaG5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6127
+In-Reply-To: <20191122131931.GB1315704@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574666631; bh=SD5J0Bwrm6CXThVpYdmwQY+mTyslM3LaSGkh0HuWN2E=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=DncNDhuLknaSmmi8yj0sNUd7sAoMhgMEu3cd4o5VP/1GGhQqQpl3HugO6pAluIUzn
+         QqPTZr0OGfrqEXSRvnm60Lio5cZKuy2nZNx8sElIREL3l1wXjfnFvtjgUMZn75l8l7
+         9YfAaTsTpOfJfGGu0Rhv4mmcZ55+sc31ESnZrnqaLDV7DaZxENt4VNFq9JouqrmHx0
+         1oBA+wjXE9DEhdnoMjN2ymxcMzxAYLJxzM0EK/Ep0rXPj8YN5FXp0xekLVDZ9Hqw4S
+         t8hkkAsF1mB5pGi0KegqrMCxC/AVOYqV5G4b+P/0UBDmO9kcw6EGp2zLqMv7M86h6u
+         z6/IKy/YmdvXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >
-> > During power mode change, PACP_PWR_Req frame sends
-> PAPowerModeUserData
-> > parameters (and they are considered valid by device if Flags[4] -
-> > UserDataValid bit is set in the same frame).
-> > Currently we don't set these PAPowerModeUserData parameters and
-> > hardware always sets UserDataValid bit which would clear all the DL
-> > layer timeout values of the peer device after the power mode change.
-> >
-> > This change sets the PAPowerModeUserData[0..5] to UniPro specification
-> > recommended default values, in addition we are also setting the
-> > relevant
-> > DME_LOCAL_* timer attributes as required by UFS HCI specification.
-> >
-> > Signed-off-by: Can Guo <cang@codeaurora.org>
-> Reviewed-by Avri Altman <avri.altman@wdc.com>
-BTW, I noticed that you are only updating the TC0 registers.
-Why not setting the TC1 registers as well?
+On 11/22/2019 6:49 PM, Thierry Reding wrote:
+> On Fri, Nov 22, 2019 at 04:15:01PM +0530, Vidya Sagar wrote:
+>> Add support for PCIe controllers that can operate in endpoint mode
+>> in Tegra194.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   .../bindings/pci/nvidia,tegra194-pcie-ep.txt  | 138 ++++++++++++++++++
+>>   1 file changed, 138 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
+> 
+> The vast majority of this is a duplication of the host mode device tree
+> bindings. I think it'd be best to combine both and only highlight where
+> both modes differ.
+> 
+> The designware-pcie.txt binding does something similar.
+Ok. I'll merge this into the host mode bindings file and in that differentiate between
+root mode and endpoint mode.
 
-Thanks,
-Avri
+> 
+>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
+>> new file mode 100644
+>> index 000000000000..4676ccf7dfa5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
+>> @@ -0,0 +1,138 @@
+>> +NVIDIA Tegra PCIe Endpoint mode controller (Synopsys DesignWare Core based)
+>> +
+>> +Some of the PCIe controllers which are based on Synopsys DesignWare PCIe IP
+>> +are dual mode i.e. they can work in root port mode or endpoint mode but one
+>> + at a time. Since they are based on DesignWare IP, they inherit all the common
+>> +properties defined in designware-pcie.txt.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+> 
+> The device tree snippets that you added have "nvidia,tegra194-pcie-ep"
+> for EP mode controllers. So either this is wrong or the DTS files are
+> wrong.
+DTS file are correct. This is a mistake in this file. I'll correct this.
+
+> 
+> This device tree binding describes the exact same hardware, so I don't
+> think we necessarily need two different compatible strings. It's fairly
+> easy to distinguish between which mode to run in by looking at which
+> properties exist. EP mode for example is the only one that uses the
+> "addr_space" reg entry.
+> 
+> Rob, do you know why a different compatible string was chosen for the EP
+> mode? Looking at the driver, there are only a handful of differences in
+> the programming, but most of the driver remains identical. An extra DT
+> compatible string seems a bit exaggerated since it suggests that this is
+> actually different hardware, where it clearly isn't.
+Since all other implementations have done it this way, I just followed to be in sync
+with them. Even I would also like to hear from Rob on the rationale behind this.
+
+> 
+>> +  Tegra194: Only C0, C4 & C5 controllers are dual mode controllers.
+>> +- power-domains: A phandle to the node that controls power to the respective
+>> +  PCIe controller and a specifier name for the PCIe controller. Following are
+>> +  the specifiers for the different PCIe controllers
+>> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+>> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+>> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+>> +  these specifiers are defined in
+>> +  "include/dt-bindings/power/tegra194-powergate.h" file.
+>> +- reg: A list of physical base address and length pairs for each set of
+>> +  controller registers. Must contain an entry for each entry in the reg-names
+>> +  property.
+>> +- reg-names: Must include the following entries:
+>> +  "appl": Controller's application logic registers
+>> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
+>> +             Translation Unit) registers of the PCIe core are made available
+>> +             for SW access.
+>> +  "dbi": The aperture where root port's own configuration registers are
+>> +         available
+>> +  "addr_space": Used to map remote RC address space
+>> +- interrupts: A list of interrupt outputs of the controller. Must contain an
+>> +  entry for each entry in the interrupt-names property.
+>> +- interrupt-names: Must include the following entry:
+>> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - core
+>> +- resets: Must contain an entry for each entry in reset-names.
+>> +  See ../reset/reset.txt for details.
+>> +- reset-names: Must include the following entries:
+>> +  - apb
+>> +  - core
+>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+>> +- phy-names: Must include an entry for each active lane.
+>> +  "p2u-N": where N ranges from 0 to one less than the total number of lanes
+>> +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node followed
+>> +  by controller-id. Following are the controller ids for each controller.
+>> +    0: C0
+>> +    4: C4
+>> +    5: C5
+>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
+>> +- nvidia,pex-rst-gpio: Must contain a phandle to a GPIO controller followed by
+>> +  GPIO that is being used as PERST signal
+> 
+> Why is this NVIDIA specific? Do other instantiations of the DW IP not
+> also need a means to define which GPIO is the reset?
+I'm not sure. At least I didn't find anything like this in other implementations.
+My understanding is that, controller handles assert/de-assert on the PERST line
+automatically without SW intervention. I think it is for the same reason that other
+implementations don't wait for the REFCLK to flow in from host to configure the IP.
+I think they just use some internal clock for the configuration and switch to
+running the core based on REFCLK as and when it is available
+(i.e. whenever a de-assert is perceived on PERST line by the controller)
+
+> 
+>> +
+>> +Optional properties:
+>> +- pinctrl-names: A list of pinctrl state names.
+>> +  It is mandatory for C5 controller and optional for other controllers.
+>> +  - "default": Configures PCIe I/O for proper operation.
+>> +- pinctrl-0: phandle for the 'default' state of pin configuration.
+>> +  It is mandatory for C5 controller and optional for other controllers.
+>> +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
+>> +- nvidia,update-fc-fixup: This is a boolean property and needs to be present to
+>> +    improve performance when a platform is designed in such a way that it
+>> +    satisfies at least one of the following conditions thereby enabling root
+>> +    port to exchange optimum number of FC (Flow Control) credits with
+>> +    downstream devices
+>> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
+>> +    2. If C0/C4/C5 operate at their respective max link widths and
+>> +       a) speed is Gen-2 and MPS is 256B
+>> +       b) speed is >= Gen-3 with any MPS
+>> +- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operation of ASPM
+>> +   to be specified in microseconds
+>> +- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of ASPM to be
+>> +   specified in microseconds
+>> +- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
+>> +   specified in microseconds
+>> +
+>> +NOTE:- On Tegra194's P2972-0000 platform, only C5 controller can be enabled to
+>> +operate in the endpoint mode because of the way the platform is designed.
+>> +There is a mux that needs to be programmed to let the REFCLK from the host to
+>> +flow into C5 controller when it operates in the endpoint mode. This mux is
+>> +controlled by the GPIO (AA, 5) and it needs to be driven 'high'. For this to
+>> +happen, set status of "pex-refclk-sel-high" node under "gpio@c2f0000" node to
+>> +'okay'.
+>> +	When any dual mode controller is made to operate in the endpoint mode,
+>> +please make sure that its respective root port node's status is set to
+>> +'disabled'.
+> 
+> This seems very brittle to me. There's no good way how we can detect
+> such misconfigurations. If instead we only have one node describing the
+> hardware fully, the chances of configuring things wrong (by for example
+> enabling both the host and EP mode device tree nodes) can be reduced.
+> 
+> So I think instead of duplicating all of the device tree content to have
+> both a host and an EP node for each controller, it'd be better to just
+> have a single node and let the device tree bindings specify which
+> changes to apply to switch into EP mode.
+> 
+> For example, there should be nothing wrong with specifying some of the
+> EP-only properties (like num-ib-windows and num-ob-windows) all the time
+> and only use them when we actually run in EP mode.
+> 
+> As I mentioned earlier, there are a couple of easy ways to distinguish
+> the modes. The presence of the "addr_space" reg entry is one example,
+> but we could also key off the nvidia,pex-rst-gpio property, since that
+> (presumably) wouldn't be needed for host mode.
+> 
+> That way we can just add default, host mode entries to tegra194.dtsi and
+> whenever somebody wants to enable EP mode, they can just override the
+> node in the board-level DTS file, like so:
+> 
+> 	pcie@141a0000 {
+> 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
+> 		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
+> 		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
+> 		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
+> 		reg-names = "appl", "atu_dma", "dbi", "addr_space";
+> 
+> 		nvidia,pex-rst-gpio = <&gpio TEGRA194_MAIN_GPIO(GG, 1) GPIO_ACTIVE_LOW>;
+> 	};
+> 
+> Thierry
+I like it and fine with making these modifications also but would like to hear from Rob
+also on this.
+
+- Vidya Sagar
+> 
+>> +
+>> +Examples:
+>> +=========
+>> +
+>> +Tegra194:
+>> +--------
+>> +
+>> +	pcie_ep@141a0000 {
+>> +		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
+>> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
+>> +		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
+>> +		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
+>> +		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
+>> +		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
+>> +		reg-names = "appl", "atu_dma", "dbi", "addr_space";
+>> +
+>> +		num-lanes = <8>;
+>> +		num-ib-windows = <2>;
+>> +		num-ob-windows = <8>;
+>> +
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
+>> +
+>> +		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
+>> +		clock-names = "core";
+>> +
+>> +		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
+>> +			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
+>> +		reset-names = "apb", "core";
+>> +
+>> +		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
+>> +		interrupt-names = "intr";
+>> +
+>> +		nvidia,bpmp = <&bpmp 5>;
+>> +
+>> +		nvidia,aspm-cmrt-us = <60>;
+>> +		nvidia,aspm-pwr-on-t-us = <20>;
+>> +		nvidia,aspm-l0s-entrance-latency-us = <3>;
+>> +
+>> +		vddio-pex-ctl-supply = <&vdd_1v8ao>;
+>> +
+>> +		nvidia,pex-rst-gpio = <&gpio TEGRA194_MAIN_GPIO(GG, 1)
+>> +					GPIO_ACTIVE_LOW>;
+>> +
+>> +		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
+>> +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
+>> +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
+>> +
+>> +		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
+>> +			    "p2u-5", "p2u-6", "p2u-7";
+>> +	};
+>> -- 
+>> 2.17.1
+>>
+
