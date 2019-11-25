@@ -2,178 +2,162 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7965DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBBAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC6C20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574687857;
-	bh=N4FgeYZKkiQT8Iejbx6PZtDZ69kmI+hro5t6gn41U8s=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=PrgM/6tdbI4prOJ3smgFlmH551BCNAcH/5NgYLZ5fa+HQQRysj2qR152TF4g8tK2Q
-	 thqFDOrR5VGIeBJNWYZaHLsC/3lbPEsG5EG76Tz/NJuBI3kG75rq/TEvUrPGcBDuUx
-	 tBFceYhlIf7HGBcoCemMZi9xMgcuM8DhRzW8IrMo=
+	by mail.kernel.org (Postfix) with ESMTP id 3E65020740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfKYNRg (ORCPT
+        id S1727689AbfKYNUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:17:36 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55284 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfKYNRf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:17:35 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b11so5963886wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 05:17:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=UDLB+hS1jJmJ3wYcAAWpOrQoHI8SabS9Sb+YslLdlM4=;
-        b=Hw60Gmt28Vrso94r8urKA0qlQk4b1sL2MNU2G7Yeb6jrPGefxXKQjcs6a828r/7QEv
-         sPNkzf0Zxw34u2IcM/CNS0+cyqXFAiBBcUiFKtosv9cAJPX/2EHlxsGeGP/PnpH9CxyE
-         GTf6HiyvpTcoj4vt4CcSwXcL6w+XKTUpAJQGXsF95yiYY2UvxnJt6d1E5v94Xp7bVY0f
-         YyCfV/l7M556zL6lRoriS4ApAbqG+HPUr0MY/35K0aaLntx8CIWKI2PwpsgMOd/k5xq0
-         +B+xfDCnstIPME2Tl6sxCKNkyNtQ22/LjP2JQf+C4vP0DrmyTX7myNm6AgFMO9r/dv/m
-         0ulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=UDLB+hS1jJmJ3wYcAAWpOrQoHI8SabS9Sb+YslLdlM4=;
-        b=un4nqmZ5/efvXg4gp23bTlHfMThtTd/kT7GSLcJnncGNqddrLAJ8vtApkwQaBDWQhX
-         t8SuAx9KKFS1+GDiemhRGgAqBBbHxnnppAiXsbIDvbI2iuHA+GfQoO/gka9vBZ2tncAB
-         favfPPDAC3z/guwxn+8QImJDYs+d0Xj4n7R/JdsObYlT8V+emQq37J3lc44lj6EYM1vx
-         f61KiBsshTFkHReCWu4e/csbAIRsBtBTm017I892Vo0CfVnBM4ESXfPGSfd6Df7uYH51
-         QndwJ/zMQ7cSfj0j0vWtckvdMsWgu4lWgTLwYfje6+vUaqco27iNPMi3gwBjYVSWuBUo
-         93Iw==
-X-Gm-Message-State: APjAAAWUM+B+jQu20CWMnWmafyR/fJBryk/1IMF+e5iXJaSfeX/4y7qn
-        URAHo6USBzEla7qPD46MHB0=
-X-Google-Smtp-Source: APXvYqy+hiP6QfQv9auMidhNFgImL/qFKT3WwfodC0mJ5w6ZxLJtN5czS4V99glRqCempRArWIJU+Q==
-X-Received: by 2002:a7b:c307:: with SMTP id k7mr26808528wmj.134.1574687852244;
-        Mon, 25 Nov 2019 05:17:32 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u13sm7970002wmm.45.2019.11.25.05.17.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 05:17:31 -0800 (PST)
-Date:   Mon, 25 Nov 2019 14:17:29 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/apic changes for v5.5
-Message-ID: <20191125131729.GA79722@gmail.com>
+        Mon, 25 Nov 2019 08:20:08 -0500
+Received: from mail-eopbgr820082.outbound.protection.outlook.com ([40.107.82.82]:38909
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725823AbfKYNUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 08:20:08 -0500
+Received: from DM6PR02CA0058.namprd02.prod.outlook.com (2603:10b6:5:177::35)
+ by CY4PR0201MB3587.namprd02.prod.outlook.com (2603:10b6:910:8c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.21; Mon, 25 Nov
+ 2019 13:20:06 +0000
+Received: from BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by DM6PR02CA0058.outlook.office365.com
+ (2603:10b6:5:177::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.18 via Frontend
+ Transport; Mon, 25 Nov 2019 13:20:05 +0000
+Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
+ smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 149.199.60.83 as permitted sender)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT062.mail.protection.outlook.com (10.152.77.57) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Mon, 25 Nov 2019 13:20:05 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iZEDN-0008Di-72; Mon, 25 Nov 2019 05:15:41 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iZEDH-0002Wy-Qe; Mon, 25 Nov 2019 05:15:35 -0800
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAPDFZsI002575;
+        Mon, 25 Nov 2019 05:15:35 -0800
+Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iZEDG-0002Wb-A7; Mon, 25 Nov 2019 05:15:34 -0800
+From:   shubhrajyoti.datta@gmail.com
+To:     linux-kernel@vger.kernel.org
+Cc:     michal.simek@xilinx.com, gregkh@linuxfoundation.org, arnd@arndb.de,
+        Maarten Brock <m.brock@vanmierlo.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCHv2 1/3] serial: xilinx_uartps: Let get_mctrl return status
+Date:   Mon, 25 Nov 2019 18:45:29 +0530
+Message-Id: <1574687731-21563-1-git-send-email-shubhrajyoti.datta@gmail.com>
+X-Mailer: git-send-email 2.1.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--1.851-7.0-31-1
+X-imss-scan-details: No--1.851-7.0-31-1;No--1.851-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-Matching-Connectors: 132191616058011282;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(305945005)(50226002)(82202003)(26005)(70206006)(498600001)(107886003)(81156014)(426003)(6916009)(55446002)(336012)(2906002)(9686003)(2361001)(50466002)(316002)(2616005)(54906003)(76482006)(9786002)(4326008)(48376002)(86362001)(8936002)(73392003)(16586007)(356004)(6666004)(5660300002)(61266001)(51416003)(70586007)(47776003)(81166006)(2351001)(14444005)(36756003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR0201MB3587;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5eb5c979-1bcc-4bf3-da0f-08d771aa2fdb
+X-MS-TrafficTypeDiagnostic: CY4PR0201MB3587:
+X-Microsoft-Antispam-PRVS: <CY4PR0201MB3587B3A44C28CA1F8C106230874A0@CY4PR0201MB3587.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0232B30BBC
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /PpI7T/s7KEuxIzhgtH/rMxfwCOFCpjmIcqqsC1aXm5eeeqOItfbfdABfGVUM/i5zQPybvww0jNmDx/EEvha6uc/vBXO7HtvR0l3XlUhQ0KQZD66JLh1nB6D5/SvsHDhJqA254lxumx9RVenGVnzVJI8BF4dI7PQ4psp/HmA0o/8h/IkPgK/D2tLJlNtY3aSwiJTKgPBkejA1mYPM5eXA6++6cOc44LFFiV6t0r10PC/mf+vUjTBwHR6yYLvJPfuY9zq4RuZgaTYMnwFS8idqh8+Lz3AU1+0Z1DbgFpfortPEYA8cfSYIEHaJnP5MmA1qQ0/H4k9sN2QYMIeertxV5O3Ai532/tCg2H4hDFd+NoU5K38HSA+i7qaynQHaNkFvgX9tKOMAq5P8otPV1lmrdZ9upsqgJ69R1rL9H33Yt3nAjBq5DLSNZ/nKfD96FFy
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2019 13:20:05.5799
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5eb5c979-1bcc-4bf3-da0f-08d771aa2fdb
+X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0201MB3587
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+From: Maarten Brock <m.brock@vanmierlo.com>
 
-Please pull the latest x86-apic-for-linus git tree from:
+Some of the applications like microcom do not work if
+modem is disabled. To fix them we always return
+TIOCM_CTS | TIOCM_DSR | TIOCM_CAR instead of 0 when
+using cts_override. Make get_mctrl return actual status
+when not using cts_override.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-apic-for-linus
+Signed-off-by: Maarten Brock <m.brock@vanmierlo.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+ drivers/tty/serial/xilinx_uartps.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-   # HEAD: 2579a4eefc04d1c23eef8f3f0db3309f955e5792 x86/ioapic: Rename misnamed functions
-
-Two changes: a cleanup and a fix for an (old) race for oneshot threaded 
-IRQ handlers.
-
- Thanks,
-
-	Ingo
-
------------------->
-Thomas Gleixner (2):
-      x86/ioapic: Prevent inconsistent state when moving an interrupt
-      x86/ioapic: Rename misnamed functions
-
-
- arch/x86/kernel/apic/io_apic.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index d6af97fd170a..913c88617848 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1725,19 +1725,20 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
- 	return false;
- }
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 4e55bc3..acdb4fa5 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -158,6 +158,16 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ #define CDNS_UART_MODEMCR_DTR	0x00000001 /* Data Terminal Ready */
  
--static inline bool ioapic_irqd_mask(struct irq_data *data)
-+static inline bool ioapic_prepare_move(struct irq_data *data)
+ /*
++ * Modem Status register:
++ * The read/write Modem Status register reports the interface with the modem
++ * or data set, or a peripheral device emulating a modem.
++ */
++#define CDNS_UART_MODEMSR_DCD	BIT(7) /* Data Carrier Detect */
++#define CDNS_UART_MODEMSR_RI	BIT(6) /* Ting Indicator */
++#define CDNS_UART_MODEMSR_DSR	BIT(5) /* Data Set Ready */
++#define CDNS_UART_MODEMSR_CTS	BIT(4) /* Clear To Send */
++
++/*
+  * Channel Status Register:
+  * The channel status register (CSR) is provided to enable the control logic
+  * to monitor the status of bits in the channel interrupt status register,
+@@ -1007,12 +1017,24 @@ static void cdns_uart_config_port(struct uart_port *port, int flags)
+  */
+ static unsigned int cdns_uart_get_mctrl(struct uart_port *port)
  {
--	/* If we are moving the irq we need to mask it */
-+	/* If we are moving the IRQ we need to mask it */
- 	if (unlikely(irqd_is_setaffinity_pending(data))) {
--		mask_ioapic_irq(data);
-+		if (!irqd_irq_masked(data))
-+			mask_ioapic_irq(data);
- 		return true;
- 	}
- 	return false;
++	u32 val;
++	unsigned int mctrl = 0;
+ 	struct cdns_uart *cdns_uart_data = port->private_data;
+ 
+ 	if (cdns_uart_data->cts_override)
+-		return 0;
+-
+-	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
++		return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
++
++	val = readl(port->membase + CDNS_UART_MODEMSR);
++	if (val & CDNS_UART_MODEMSR_CTS)
++		mctrl |= TIOCM_CTS;
++	if (val & CDNS_UART_MODEMSR_DSR)
++		mctrl |= TIOCM_DSR;
++	if (val & CDNS_UART_MODEMSR_RI)
++		mctrl |= TIOCM_RNG;
++	if (val & CDNS_UART_MODEMSR_DCD)
++		mctrl |= TIOCM_CAR;
++
++	return mctrl;
  }
  
--static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
-+static inline void ioapic_finish_move(struct irq_data *data, bool moveit)
- {
--	if (unlikely(masked)) {
-+	if (unlikely(moveit)) {
- 		/* Only migrate the irq if the ack has been received.
- 		 *
- 		 * On rare occasions the broadcast level triggered ack gets
-@@ -1766,15 +1767,17 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
- 		 */
- 		if (!io_apic_level_ack_pending(data->chip_data))
- 			irq_move_masked_irq(data);
--		unmask_ioapic_irq(data);
-+		/* If the IRQ is masked in the core, leave it: */
-+		if (!irqd_irq_masked(data))
-+			unmask_ioapic_irq(data);
- 	}
- }
- #else
--static inline bool ioapic_irqd_mask(struct irq_data *data)
-+static inline bool ioapic_prepare_move(struct irq_data *data)
- {
- 	return false;
- }
--static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
-+static inline void ioapic_finish_move(struct irq_data *data, bool moveit)
- {
- }
- #endif
-@@ -1783,11 +1786,11 @@ static void ioapic_ack_level(struct irq_data *irq_data)
- {
- 	struct irq_cfg *cfg = irqd_cfg(irq_data);
- 	unsigned long v;
--	bool masked;
-+	bool moveit;
- 	int i;
- 
- 	irq_complete_move(cfg);
--	masked = ioapic_irqd_mask(irq_data);
-+	moveit = ioapic_prepare_move(irq_data);
- 
- 	/*
- 	 * It appears there is an erratum which affects at least version 0x11
-@@ -1842,7 +1845,7 @@ static void ioapic_ack_level(struct irq_data *irq_data)
- 		eoi_ioapic_pin(cfg->vector, irq_data->chip_data);
- 	}
- 
--	ioapic_irqd_unmask(irq_data, masked);
-+	ioapic_finish_move(irq_data, moveit);
- }
- 
- static void ioapic_ir_ack_level(struct irq_data *irq_data)
+ static void cdns_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
+-- 
+2.1.1
+
