@@ -2,127 +2,112 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5162EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756082075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178E32075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="GccwnDO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfKYKcA (ORCPT
+        id S1727530AbfKYKca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:32:00 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50011 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbfKYKcA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:32:00 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1iZBev-0007gt-17; Mon, 25 Nov 2019 11:31:57 +0100
-Subject: Re: [PATCH v1 1/2] net: dsa: sja1105: print info about probet chip
- only after every thing was done.
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, david@protonic.nl
-References: <20191125100259.5147-1-o.rempel@pengutronix.de>
- <CA+h21hrwK-8TWcAowcLC5MOaqE+XYXdogmAE7TYVG5B3dG57cA@mail.gmail.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <caab9bcc-a4a6-db88-aa23-859ffcf6ff85@pengutronix.de>
-Date:   Mon, 25 Nov 2019 11:31:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 05:32:30 -0500
+Received: from ozlabs.org ([203.11.71.1]:46925 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbfKYKc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 05:32:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47M3JC08lPz9sPf;
+        Mon, 25 Nov 2019 21:32:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574677947;
+        bh=wMnGZ8xSm6Bxvf7nFGXPylCgH+dhgGjKCMlcSzJ+TCs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=GccwnDO3NbIS+aKssYRnp1UoFnIX7dCkiOA6cJX5K3dIUzLJ9mdjXWfKcB4MnlSW2
+         1bPmb+64cYkqi26IL4kiPDHs/pVkWwm7UeWutP8AGjmUk6TMXc8zrtAtgMbrDQSF9P
+         dTR/g0XfvjIF6Z3o2OL/PbIYKEuwdot6snUt655Wcz8bNamqsS9bZ89hwDsCF9s8Bc
+         PUBLQHgBp4Ys4l+nqfa1tQ2fPtFlibjojzkOrNnb0lyc6VKJqzypXkbitw+3xVVX+j
+         kTlvFzssouBgO4RzWzFTt4zB6/VBLqPz8gOMNolnNI6dMR79mJGA+0BTqpDUkGCmFa
+         fvxF4GNOxHTVg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and call_do_softirq()
+In-Reply-To: <20191121101552.GR16031@gate.crashing.org>
+References: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr> <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr> <877e3tbvsa.fsf@mpe.ellerman.id.au> <20191121101552.GR16031@gate.crashing.org>
+Date:   Mon, 25 Nov 2019 21:32:23 +1100
+Message-ID: <87y2w49rgo.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hrwK-8TWcAowcLC5MOaqE+XYXdogmAE7TYVG5B3dG57cA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Segher Boessenkool <segher@kernel.crashing.org> writes:
+> On Thu, Nov 21, 2019 at 05:14:45PM +1100, Michael Ellerman wrote:
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> That breaks 64-bit with GCC9:
+>> 
+>>   arch/powerpc/kernel/irq.c: In function 'do_IRQ':
+>>   arch/powerpc/kernel/irq.c:650:2: error: PIC register clobbered by 'r2' in 'asm'
+>>     650 |  asm volatile(
+>>         |  ^~~
+>>   arch/powerpc/kernel/irq.c: In function 'do_softirq_own_stack':
+>>   arch/powerpc/kernel/irq.c:711:2: error: PIC register clobbered by 'r2' in 'asm'
+>>     711 |  asm volatile(
+>>         |  ^~~
+>> 
+>> 
+>> > diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+>> > index 04204be49577..d62fe18405a0 100644
+>> > --- a/arch/powerpc/kernel/irq.c
+>> > +++ b/arch/powerpc/kernel/irq.c
+>> > @@ -642,6 +642,22 @@ void __do_irq(struct pt_regs *regs)
+>> >  	irq_exit();
+>> >  }
+>> >  
+>> > +static inline void call_do_irq(struct pt_regs *regs, void *sp)
+>> > +{
+>> > +	register unsigned long r3 asm("r3") = (unsigned long)regs;
+>> > +
+>> > +	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
+>> > +	asm volatile(
+>> > +		"	"PPC_STLU"	1, %2(%1);\n"
+>> > +		"	mr		1, %1;\n"
+>> > +		"	bl		%3;\n"
+>> > +		"	"PPC_LL"	1, 0(1);\n" :
+>> > +		"+r"(r3) :
+>> > +		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
+>> > +		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
+>> > +		"r0", "r2", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
+>> > +}
+>> 
+>> If we add a nop after the bl, so the linker could insert a TOC restore,
+>> then I don't think there's any circumstance under which we expect this
+>> to actually clobber r2, is there?
+>
+> That is mostly correct.
 
+That's the standard I aspire to :P
 
-On 25.11.19 11:22, Vladimir Oltean wrote:
-> On Mon, 25 Nov 2019 at 12:03, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->>
->> Currently we will get "Probed switch chip" notification multiple times
->> if first probe filed by some reason. To avoid this confusing notifications move
->> dev_info to the end of probe.
->>
->> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->> ---
-> 
-> Also there are some typos which should be corrected:
-> probet -> probed
-> every thing -> everything
-> filed -> failed
-> 
-> "failed for some reason" -> "was deferred"
+> If call_do_irq was a no-inline function, there would not be problems.
+>
+> What TOC does __do_irq require in r2 on entry, and what will be there
+> when it returns?
 
-Ok, thx.
+The kernel TOC, and also the kernel TOC, unless something's gone wrong
+or I'm missing something.
 
-should i resend both patches separately or only this one with spell fixes?
-
-> 
->>   drivers/net/dsa/sja1105/sja1105_main.c | 10 +++++++---
->>   1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
->> index 7687ddcae159..1238fd68b2cd 100644
->> --- a/drivers/net/dsa/sja1105/sja1105_main.c
->> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
->> @@ -2191,8 +2191,6 @@ static int sja1105_probe(struct spi_device *spi)
->>                  return rc;
->>          }
->>
->> -       dev_info(dev, "Probed switch chip: %s\n", priv->info->name);
->> -
->>          ds = dsa_switch_alloc(dev, SJA1105_NUM_PORTS);
->>          if (!ds)
->>                  return -ENOMEM;
->> @@ -2218,7 +2216,13 @@ static int sja1105_probe(struct spi_device *spi)
->>
->>          sja1105_tas_setup(ds);
->>
->> -       return dsa_register_switch(priv->ds);
->> +       rc = dsa_register_switch(priv->ds);
->> +       if (rc)
->> +               return rc;
->> +
->> +       dev_info(dev, "Probed switch chip: %s\n", priv->info->name);
->> +
->> +       return 0;
->>   }
->>
->>   static int sja1105_remove(struct spi_device *spi)
->> --
->> 2.24.0
->>
-> 
-> Thanks,
-> -Vladimir
-> 
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+cheers
