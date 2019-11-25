@@ -2,165 +2,176 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B51CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053FC20823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WBq9O9Pu"
+	by mail.kernel.org (Postfix) with ESMTP id 16ACB2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfKYJ3h (ORCPT
+        id S1727266AbfKYJcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:29:37 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37092 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfKYJ3g (ORCPT
+        Mon, 25 Nov 2019 04:32:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbfKYJcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:29:36 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b20so10438404lfp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 01:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dq6Uw1jKSbn9rliCiVAT4FUxr/UlE/ilqLJWwsbbhdc=;
-        b=WBq9O9PuExFV9HTFziWaBCgQvt3JH6f2e8r4vyVfefdR29OvYXIlTOl1inLzuXFkHA
-         Cge7Ia89Z879Z6DRmmlBYpJ2rArHVGLuNmyqjNAfj4yCC3PXc1rJFABDydW1nQOsQJUH
-         09mYMVHEJzr6yb9asW1zm6h/Zh2T+LsyO1nN4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dq6Uw1jKSbn9rliCiVAT4FUxr/UlE/ilqLJWwsbbhdc=;
-        b=nU1bC/oMBdVY2Wslhfs7FnwT2II/VPppyitFDdqMrQCvMpWhDExzUp47pqDipgi5He
-         aeJTjRBJQdDg7IGG9AzrBCHSvc2TxzcmqpDyNsKY+CmxxTJnY2T5G4b11MD02MozOSLF
-         WAjNFGsWV/bIZAVMNPpxc69M1bks3cYpwIKPwzUtI/BdzT8QX5/6xZ+7Yq9FZ1ul10N2
-         LdlgPDfr7Dgp+MQbAc+1AiZkEJmZqeQHb7WxQI2S31IuGT2GP/uY3G+/H2oNhlJbqWYi
-         T3/uCQ8y5eheuKFIL7GndveiHuvDuhG0t2UrcAB37+M3xasUlM6pcXXGaNEMw+1Mtx+e
-         kKbA==
-X-Gm-Message-State: APjAAAVEa5hUfeVv9V0zxJA8GZHd7HOYHWn4L7Aq0zphvARepSChRDyE
-        cZDgiiUYvZsAQYRz0hQIJcd7dnA1EKkagONO
-X-Google-Smtp-Source: APXvYqySWnXzS1fvpw55EUuXRWyEzUWp9mKbL19/EBAI+oL2WjX/ZoWRXY6kKf6lZWis34X1eWRbkw==
-X-Received: by 2002:ac2:4882:: with SMTP id x2mr994015lfc.103.1574674172665;
-        Mon, 25 Nov 2019 01:29:32 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id q20sm3588896ljg.104.2019.11.25.01.29.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Nov 2019 01:29:32 -0800 (PST)
-Subject: Re: [PATCH] export.h: reduce __ksymtab_strings string duplication by
- using "MS" section flags
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "binutils@sourceware.org" <binutils@sourceware.org>
-References: <20191120145110.8397-1-jeyu@kernel.org>
- <93d3936d-0bc4-9639-7544-42a324f01ac1@rasmusvillemoes.dk>
- <20191121160919.GB22213@linux-8ccs>
- <CAK7LNAT=+VMTpK3nBy3J-M9idf8MBi4dB4WKexYatiV2pNHvMg@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <b280c412-432b-ff54-acbd-a6bcc74b6e72@rasmusvillemoes.dk>
-Date:   Mon, 25 Nov 2019 10:29:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 04:32:11 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAP9RhJn060624
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:32:11 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wfjwkb4ks-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:32:10 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 25 Nov 2019 09:32:08 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 25 Nov 2019 09:32:04 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAP9W37i46334404
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Nov 2019 09:32:03 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44DFAAE058;
+        Mon, 25 Nov 2019 09:32:03 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22A35AE045;
+        Mon, 25 Nov 2019 09:32:02 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.137])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 25 Nov 2019 09:32:02 +0000 (GMT)
+Date:   Mon, 25 Nov 2019 11:32:00 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arch@vger.kernel.org, darren@stevens-zone.net,
+        mad skateman <madskateman@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        paulus@samba.org, rtd2@xtra.co.nz,
+        "contact@a-eon.com" <contact@a-eon.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        nsaenzjulienne@suse.de
+Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
+ installed, unless RAM size limited to 3500M
+References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
+ <20191121072943.GA24024@lst.de>
+ <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
+ <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
+ <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
+ <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
+ <20191121180226.GA3852@lst.de>
+ <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
+ <20191125073923.GA30168@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAT=+VMTpK3nBy3J-M9idf8MBi4dB4WKexYatiV2pNHvMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191125073923.GA30168@lst.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19112509-0012-0000-0000-0000036BE3F5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112509-0013-0000-0000-000021A78322
+Message-Id: <20191125093159.GA23118@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-25_02:2019-11-21,2019-11-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=999 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911250087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cc += binutils ML
-
-[on @progbits v %progbits in generic (data only) assembly code]
-
-On 22/11/2019 12.44, Masahiro Yamada wrote:
-> On Fri, Nov 22, 2019 at 1:09 AM Jessica Yu <jeyu@kernel.org> wrote:
->>
-
->> I think this would work, and it feels like the more correct solution
->> especially if arm isn't the only one with the odd progbits char. It
->> might be overkill if it's just arm that's affected though. I leave it
->> to Masahiro to see what he prefers.
->>
+On Mon, Nov 25, 2019 at 08:39:23AM +0100, Christoph Hellwig wrote:
+> On Sat, Nov 23, 2019 at 12:42:27PM +0100, Christian Zigotzky wrote:
+> > Hello Christoph,
+> >
+> > Please find attached the dmesg of your Git kernel.
 > 
+> Thanks.  It looks like on your platform the swiotlb buffer isn't
+> actually addressable based on the bus dma mask limit, which is rather
+> interesting.  swiotlb_init uses memblock_alloc_low to allocate the
+> buffer, and I'll need some help from Mike and the powerpc maintainers
+> to figure out how that select where to allocate the buffer from, and
+> how we can move it to a lower address.  My gut feeling would be to try
+> to do what arm64 does and define a new ARCH_LOW_ADDRESS_LIMIT, preferably
+> without needing too much arch specific magic.
+
+Presuming the problem is relevant for all CoreNet boards something like
+this could work:
+ 
+diff --git a/arch/powerpc/include/asm/dma.h b/arch/powerpc/include/asm/dma.h
+index 1b4f0254868f..7c6cfeeaff52 100644
+--- a/arch/powerpc/include/asm/dma.h
++++ b/arch/powerpc/include/asm/dma.h
+@@ -347,5 +347,11 @@ extern int isa_dma_bridge_buggy;
+ #define isa_dma_bridge_buggy	(0)
+ #endif
+ 
++#ifdef CONFIG_CORENET_GENERIC
++extern phys_addr_t ppc_dma_phys_limit;
++#define ARCH_LOW_ADDRESS_LIMIT	(ppc_dma_phys_limit - 1)
++#endif
++
++
+ #endif /* __KERNEL__ */
+ #endif	/* _ASM_POWERPC_DMA_H */
+diff --git a/arch/powerpc/platforms/85xx/common.c b/arch/powerpc/platforms/85xx/common.c
+index fe0606439b5a..346b436b6d3f 100644
+--- a/arch/powerpc/platforms/85xx/common.c
++++ b/arch/powerpc/platforms/85xx/common.c
+@@ -126,3 +126,7 @@ void __init mpc85xx_qe_par_io_init(void)
+ 	}
+ }
+ #endif
++
++#ifdef CONFIG_CORENET_GENERIC
++phys_addr_t ppc_dma_phys_limit = 0xffffffffUL;
++#endif
+diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
+index 7ee2c6628f64..673bcbdc7c75 100644
+--- a/arch/powerpc/platforms/85xx/corenet_generic.c
++++ b/arch/powerpc/platforms/85xx/corenet_generic.c
+@@ -64,7 +64,7 @@ void __init corenet_gen_setup_arch(void)
+ 	mpc85xx_smp_init();
+ 
+ 	swiotlb_detect_4g();
+-
++	ppc_dma_phys_limit = 0x0fffffffUL;
+ 	pr_info("%s board\n", ppc_md.name);
+ 
+ 	mpc85xx_qe_init();
+
+> As a quick hack can you try this patch on top of the tree from Friday?
 > 
-> BTW, is there any reason why
-> not use %progbits all the time?
-> 
-> 
-> include/linux/init.h hard-codes %progbits
-> 
->    #define __INITDATA .section ".init.data","aw",%progbits
->    #define __INITRODATA .section ".init.rodata","a",%progbits
-> 
-> 
-> So, my understanding is '%' works for all architectures,
-> but it is better to ask 0-day bot to test it.
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index f491690d54c6..e3f95c362922 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -344,7 +344,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+>  #define MEMBLOCK_LOW_LIMIT 0
+>  
+>  #ifndef ARCH_LOW_ADDRESS_LIMIT
+> -#define ARCH_LOW_ADDRESS_LIMIT  0xffffffffUL
+> +#define ARCH_LOW_ADDRESS_LIMIT  0x0fffffffUL
+>  #endif
+>  
+>  phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
 
-It seems that you're absolutely right. The binutils source has code like
-
-+             if (*input_line_pointer == '@' || *input_line_pointer == '%')
-+               {
-+                 ++input_line_pointer;
-+                 if (strncmp (input_line_pointer, "progbits",
-+                              sizeof "progbits" - 1) == 0)
-+                   {
-+                     type = SHT_PROGBITS;
-+                     input_line_pointer += sizeof "progbits" - 1;
-+                   }
-+                 else if (strncmp (input_line_pointer, "nobits",
-+                                   sizeof "nobits" - 1) == 0)
-+                   {
-+                     type = SHT_NOBITS;
-+                     input_line_pointer += sizeof "nobits" - 1;
-+                   }
-
-
-all the way back from
-
-commit 252b5132c753830d5fd56823373aed85f2a0db63 (tag: binu_ss_19990502)
-Author: Richard Henderson <rth@redhat.com>
-Date:   Mon May 3 07:29:11 1999 +0000
-
-    19990502 sourceware import
-
-So yes, let's just try unconditionally using %progbits, that makes
-everything much simpler.
-
-The only reason I thought one needed to do it differently on ARM is this
-from the gas docs:
-
-===
-   The optional TYPE argument may contain one of the following
-constants:
-
-'@progbits'
-     section contains data
-...
-   Note on targets where the '@' character is the start of a comment (eg
-ARM) then another character is used instead.  For example the ARM port
-uses the '%' character.
-===
-
-That doesn't suggest the possibility that % or some other character
-might work on all architectures.
-
-Jessica, can you resend using just %progbits to let kbuild chew on that?
-Please include a comment about the misleading gas documentation.
-
-Rasmus
+-- 
+Sincerely yours,
+Mike.
 
