@@ -2,97 +2,157 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BB6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DE2C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0EF207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1430420835
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yio42PV7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MsGNoi87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfKYR0e (ORCPT
+        id S1729088AbfKYR1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:26:34 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35418 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfKYR0e (ORCPT
+        Mon, 25 Nov 2019 12:27:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41602 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfKYR1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:26:34 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 23so11552638otf.2;
-        Mon, 25 Nov 2019 09:26:33 -0800 (PST)
+        Mon, 25 Nov 2019 12:27:39 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 94so13310727oty.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 09:27:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FNPvUWiTudncyl3KlhHhnfA/TfIBtBh/b2tPc9Hn/P0=;
-        b=Yio42PV7diBoMffXmGQ/mrG7l+5yxECdy6vmqgPadep4Ae/j4fDg0J//zWFt0WSMs9
-         AqfiRzHruO0XR27BmUuFQLS/J1qaj49Il661qAwifv5UtM6rHGmYIg3n+GmoS7a4g9Rh
-         gBqOhIjRnEq7ki57nreHJuhn3TUwDqkN26oQ/LqqKveQ3+ip75EQWxUGlve5mgIAm0du
-         Wq0gm/q7CiBrAVxXCWiPsGPf1LsIA5z3E9yg3KTvmtd4kU9pMIXPnL9yQy+MAV+MR8Bv
-         ZFtAYdWQ5AXpUpi4V9YcNijBH8uUn+IYyhmt5riyGtnxHjpksT0bl3VNlefXIYt1A5bp
-         /Gsg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ehtg0LDgFByK5WRliTFTt8kMCURVP50x4sdG0deprfY=;
+        b=MsGNoi87guRmgvoKPI/D/lOK0M/mezTFZNaBeRkMe12Xdy9kJ4sQT0icrrtk/cQ7I+
+         XoOUItIX1FSBnkYcrZNSLWVdkvbyYY40szlADlj3lWhFlS5quaL3NVAC+VY+2TVDe7jI
+         KJ+irc2cGqgmeHCwls2VTypiKNL4znvvZVBq7mEG+h2OaXeYPNK1I5f176snrGp3GBXx
+         B8P0Z1NJcl6VH8gT+6fWXSAYEvX+5xYGf7Dpzb4m5qVgjkm4VYf1mvMik/y5MBs39Mlc
+         IptXJd/rvAlz7G/M0cIit1TcxUUhwgZJZwIepPVz//Hd5W1aQ7RNB1qVciD6Jo0S4AlO
+         3PJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FNPvUWiTudncyl3KlhHhnfA/TfIBtBh/b2tPc9Hn/P0=;
-        b=mlpYQ00aszkuvwsxZxUEHRsAqRRV7sjIGslP7ZpUbGmC9Wd2ysVviMZxQ8CXxu0cZZ
-         nxa996TDLdGau5XwQKANYTEIm749iIkJtvFwKsw3a55JgK5Kfk7ekbJlNaU/fdHEo8wq
-         F5r70GcwpJ5Zmf9jEyAckTbUOZt+iypz0JzalCpWWtZrvgRuLyk0oaQmailFZp2G3cE2
-         RMFIIYO0HdMSJFoaV34xCbq6K/7RXht/LL8TuxxN7mW5JPBED1I85z21jVOq77FGZK8d
-         jbHjFOCH0pRySJWyE7QVBIM48i8G0fsAo34W+XnyWB1OTcKCKnYFYrTPR6Sd2Rd7HFxs
-         ebwA==
-X-Gm-Message-State: APjAAAWPakPDLKY2jjV5s3YM19MtQg0H4w++eoUhMmq/LW370N48ZYcb
-        Y35IDydUMJVN1TQwBQbGCoJCxx5h
-X-Google-Smtp-Source: APXvYqzaIGiKjJHMNBMYZekDl882UWn5zUMKBtDtoVpJQ3ktpr5nD+YwavfA2Hl51LllxUgn9RHsYw==
-X-Received: by 2002:a9d:3982:: with SMTP id y2mr21397853otb.191.1574702793182;
-        Mon, 25 Nov 2019 09:26:33 -0800 (PST)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id d21sm2589951otp.66.2019.11.25.09.26.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2019 09:26:32 -0800 (PST)
-Subject: Re: [PATCH 1/3] drivers: net: b43legacy: Fix -Wcast-function-type
-To:     Phong Tran <tranmanphong@gmail.com>, jakub.kicinski@netronome.com,
-        kvalo@codeaurora.org, davem@davemloft.net,
-        luciano.coelho@intel.com, shahar.s.matityahu@intel.com,
-        johannes.berg@intel.com, emmanuel.grumbach@intel.com,
-        sara.sharon@intel.com, yhchuang@realtek.com, yuehaibing@huawei.com,
-        pkshih@realtek.com, arend.vanspriel@broadcom.com, rafal@milecki.pl,
-        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
-        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
-        keescook@chromium.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191125150215.29263-1-tranmanphong@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <07e73c3b-b1fa-c389-c1c0-80b73e4c1774@lwfinger.net>
-Date:   Mon, 25 Nov 2019 11:26:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ehtg0LDgFByK5WRliTFTt8kMCURVP50x4sdG0deprfY=;
+        b=cxioHVBX88xD3rY5gXuczF40HkPpNz57TXJQCMx++MCKI6PVDIRvGg97DfojprJpHl
+         2yr7bmx7+xTSgQLC+uVbazv00n/VR3M5O4KiUQXy50CzELw6m6/vIEaWeUTelYMfbreB
+         WI2d8+44Thl26caUT296RyEnSxZJA6DiKXOBe8F+QJK3ZsrKS7+7yCNz3zWcpru5lClE
+         bRgzMi3CyVfOfsK+0OcQirE2vksIB+PiglTCA8IF+Ti5x5CikZo3vfyTYTEhiVljfpjl
+         p11Rp39H9QVApghNEvg91lvoA7rrX3cSBne2t0TK4jPABmvGGKmef2vdkgQQOGIWxO/D
+         LZVA==
+X-Gm-Message-State: APjAAAW2yEsO1c9gSIOMZ/7XMP6ba4PYase2NKcuUVjx0M3o7ASGakWF
+        1iLtgUoGKpOBYlCpxvIy27q6rvVJnPbrVL7hHLMHYA==
+X-Google-Smtp-Source: APXvYqxpNOnsfH70r6wlFMNUcWUSE7NqnT2MNrFaRB7UYaM0KYhnvGDb5WggsU+yxs0nW8YmcyUasGizxzAArT0Llgg=
+X-Received: by 2002:a9d:3982:: with SMTP id y2mr21401811otb.191.1574702857225;
+ Mon, 25 Nov 2019 09:27:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191125150215.29263-1-tranmanphong@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20191119160456.GD382712@cmpxchg.org> <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com>
+ <20191121220613.GB487872@cmpxchg.org> <d3bbbbf5-52c5-374c-0897-899e787cecb4@linux.alibaba.com>
+ <20191122161652.GA489821@cmpxchg.org> <e629f595-df0a-71b2-35b4-b266ba1d0431@linux.alibaba.com>
+In-Reply-To: <e629f595-df0a-71b2-35b4-b266ba1d0431@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 25 Nov 2019 09:27:25 -0800
+Message-ID: <CALvZod4ZKh3HbDWJz5-tD9Q0gcMUjWmqzBGUD-ejOLCoS7ga2w@mail.gmail.com>
+Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 9:02 AM, Phong Tran wrote:
-> correct usage prototype of callback in tasklet_init().
-> Report by https://github.com/KSPP/linux/issues/20
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
+On Mon, Nov 25, 2019 at 1:26 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+>
+> >
+> > But that leaves me with one more worry: compaction. We locked out
+> > charge moving now, so between that and knowing that the page is alive,
+> > we have page->mem_cgroup stable. But compaction doesn't know whether
+> > the page is alive - it comes from a pfn and finds out using PageLRU.
+> >
+> > In the current code, pgdat->lru_lock remains the same before and after
+> > the page is charged to a cgroup, so once compaction has that locked
+> > and it observes PageLRU, it can go ahead and isolate the page.
+> >
+> > But lruvec->lru_lock changes during charging, and then compaction may
+> > hold the wrong lock during isolation:
+> >
+> > compaction:                           generic_file_buffered_read:
+> >
+> >                                       page_cache_alloc()
+> >
+> > !PageBuddy()
+> >
+> > lock_page_lruvec(page)
+> >   lruvec = mem_cgroup_page_lruvec()
+> >   spin_lock(&lruvec->lru_lock)
+> >   if lruvec != mem_cgroup_page_lruvec()
+> >     goto again
+> >
+> >                                       add_to_page_cache_lru()
+> >                                         mem_cgroup_commit_charge()
+> >                                           page->mem_cgroup = foo
+> >                                         lru_cache_add()
+> >                                           __pagevec_lru_add()
+> >                                             SetPageLRU()
+> >
+> > if PageLRU(page):
+> >   __isolate_lru_page()
+> >
+> > I don't see what prevents the lruvec from changing under compaction,
+> > neither in your patches nor in Hugh's. Maybe I'm missing something?
+> >
+>
+> Hi Johannes,
+>
+> It looks my patch do the lruvec recheck/relock after PageLRU in compaction.c.
+> It should be fine for your question. So I will try more testing after all changes.
 
-This patch was submitted yesterday as "[PATCH 3/5] drivers: net: b43legacy: Fix 
--Wcast-function-type". Why was it submitted twice?
+Actually no, unless PageLRU check and taking lruvec lock are atomic,
+the race mentioned by Johannes still exist.
 
-Larry
+Shakeel
