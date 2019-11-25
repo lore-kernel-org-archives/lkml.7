@@ -2,83 +2,82 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777E9C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CEFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC7E20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A062073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574649952;
+	bh=rRksThIk3ANMx0k3KKiqT1coowGHHsm3yp6vHSO/yJY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pm947GppCqd4y8XKIy1EsO91hEAayCxabEj9Q1oCUSNm3tjA3MqHo7YM7Nwf7QQRN
+	 KDN54IT6maUfs63NDZ4hW8b1enQiHEepA2kUBI4ZuyMnr2Vc5Q5XO43+KQ8Z1gSfZ9
+	 t8B3LRZmeZylIkCHh2qViAoPqs6dcvfW/cMyV7rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKYClC (ORCPT
+        id S1726990AbfKYCpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 21:41:02 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:39358 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfKYClC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 21:41:02 -0500
-Received: by mail-io1-f71.google.com with SMTP id u13so7516827iol.6
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 18:41:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=F6ESBQ5BrJgEXe13MibsQZiG8CziRMl+GW1tZsPwxAk=;
-        b=FCnm7copdRAL4w/1TDVfSybrl5px+wW6YNZPG5s1wdtcCHFyPcU/cjL4rDOdGKnKE8
-         AmcfL7QH7j9vi/BIGqvBJ8bOmPxRazle3lSBrm1G4s+bUFcPjbRAFN3B+64o3GeUqgRH
-         XOKtz5fCqE3KW9sxcj3w/wOz4n+Um+x+gLqcE9w/vH5gJEtUse1U3UQ3uDd1Lj9J7cUf
-         ZQbcczfRSDX3wQ0iKd3EViZ8LZH0gZ5QabcOZuQKcfGzZeG8q8FwMczY+yiY8JQIAYeM
-         HI8HSqWpUq+5b+msvdU05CApCdx1yzHJCrC1u9PI0GP6G3KgtglOt6U1W4ymqLLpMBzk
-         O+Yw==
-X-Gm-Message-State: APjAAAVaK53r4/YqakQO9MvTnwVhcPiovOrAWtP8VyWW1vP8ppm/u8qQ
-        A8jN9NhEUYZtLx2DZyqfD3J3H/GVu6+f0h2CFOCDz2jkvvD0
-X-Google-Smtp-Source: APXvYqzgktbuH19cOR1hGiNDDr9llthRGZ7kDd0HTaEUVdWfkRmuL4IAoR7sjdNEMnGGhyMwqsAMmAbAlIu4rV3hOgC0XgNBFuHt
+        Sun, 24 Nov 2019 21:45:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbfKYCpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 21:45:49 -0500
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 173AC20748
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574649949;
+        bh=rRksThIk3ANMx0k3KKiqT1coowGHHsm3yp6vHSO/yJY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OaV4TRIHyzlBynR9Odd2LazsvhxtgKgqcmg3sGJSaNVbTMVFUYZdIfZf2LTtX0Mx1
+         CAK/p4/4sM7e58ITMAq+Iw9KK01SDr0qXBw2dpKUj++9Shy1PzlbNtH5znT7CAUrFi
+         25mQVm+hZljRpj5y3LVO0lnt0qSa+RaztDefU2os=
+Received: by mail-lf1-f42.google.com with SMTP id 203so9694928lfa.12
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 18:45:49 -0800 (PST)
+X-Gm-Message-State: APjAAAXddb2MK4TmToTBuzz15goYiR7Qa6G4o8okVdjAg1m5aMGZ1HSH
+        rYl3mVuahQMo5xlz7I6p4v00Sn3wkajqAMJlEr0=
+X-Google-Smtp-Source: APXvYqzebOUmdYdPzb72IJa+IGOWUcBhHCWcr75z1vCyIu5oO1Yvgn7kdusnuRFHuVlapdjfV/P1A0LFVthYvYj8z2w=
+X-Received: by 2002:ac2:51b5:: with SMTP id f21mr18634983lfk.159.1574649947280;
+ Sun, 24 Nov 2019 18:45:47 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:d289:: with SMTP id p9mr9707923ilp.201.1574649661538;
- Sun, 24 Nov 2019 18:41:01 -0800 (PST)
-Date:   Sun, 24 Nov 2019 18:41:01 -0800
-In-Reply-To: <00000000000087008b056df8fbb3@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b8c995059822b10d@google.com>
-Subject: Re: possible deadlock in console_unlock
-From:   syzbot <syzbot+43e93968b964e369db0b@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        jslaby@suse.com, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, penguin-kernel@I-love.SAKURA.ne.jp,
-        pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky.work@gmail.com, sergey.senozhatsky@gmail.com,
-        syzkaller-bugs@googlegroups.com, threeearcat@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <1574306457-6251-1-git-send-email-krzk@kernel.org> <alpine.DEB.2.21.9999.1911221853330.14532@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1911221853330.14532@viisi.sifive.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 25 Nov 2019 10:45:35 +0800
+X-Gmail-Original-Message-ID: <CAJKOXPdHgXwt-E-DaKQdeD_jSkhYP5n2NWCZcSWr7Ny-cYxZKQ@mail.gmail.com>
+Message-ID: <CAJKOXPdHgXwt-E-DaKQdeD_jSkhYP5n2NWCZcSWr7Ny-cYxZKQ@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: Fix Kconfig indentation
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sat, 23 Nov 2019 at 10:54, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> On Thu, 21 Nov 2019, Krzysztof Kozlowski wrote:
+>
+> > Adjust indentation from spaces to tab (+optional two spaces) as in
+> > coding style with command like:
+> >       $ sed -e 's/^        /\t/' -i */Kconfig
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> Thanks, queued with Palmer's Reviewed-by: (which I believe would apply
+> equally to this version)
 
-commit b6da31b2c07c46f2dcad1d86caa835227a16d9ff
-Author: DaeRyong Jeong <threeearcat@gmail.com>
-Date:   Mon Apr 30 15:27:04 2018 +0000
+Thanks, I forgot to add it.
 
-     tty: Fix data race in tty_insert_flip_string_fixed_flag
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d9bc0ee00000
-start commit:   0ad39cb3 Merge tag 'kconfig-v4.18' of git://git.kernel.org..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11d9bc0ee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16d9bc0ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b9a1f3aa8b8ddd16
-dashboard link: https://syzkaller.appspot.com/bug?extid=43e93968b964e369db0b
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c89b9f800000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=167f596f800000
-
-Reported-by: syzbot+43e93968b964e369db0b@syzkaller.appspotmail.com
-Fixes: b6da31b2c07c ("tty: Fix data race in  
-tty_insert_flip_string_fixed_flag")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Best regards,
+Krzysztof
