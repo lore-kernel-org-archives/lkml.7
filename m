@@ -2,142 +2,148 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75C6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D5BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAC52071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5512071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="jXrsbGoj"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="6od0Yxwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbfKYHzb (ORCPT
+        id S1727031AbfKYH4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:55:31 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:48526 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfKYHza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:55:30 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 48AB31B20A89; Mon, 25 Nov 2019 10:55:26 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 48AB31B20A89
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1574668526; bh=hvwfIe2HDk9ILc0UQVhg8dykjGSlCUAMb+1VVK6Nd7Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=jXrsbGojjUz1itx5gHaRBnrS0/KftQSPHUmsgorWimUflZEMPZIY7eOsNc+0E1oD2
-         /cO8gHwH1JcsL6WUqIHiA9OAvoLtELouYzf5Fr04Ci3JXZrLmIsIB5kPH8RzPUA38n
-         8OCr34LDlAPU2S/OqWInsSh1CgE2dzBJNqggvymU=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 9B8251B204A3;
-        Mon, 25 Nov 2019 10:55:17 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 9B8251B204A3
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id C9F2A1B2175B;
-        Mon, 25 Nov 2019 10:54:44 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 25 Nov 2019 10:54:44 +0300 (MSK)
+        Mon, 25 Nov 2019 02:56:03 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:63196 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfKYH4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 02:56:03 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAP7rDm8015773;
+        Mon, 25 Nov 2019 02:55:41 -0500
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2059.outbound.protection.outlook.com [104.47.49.59])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wf005c71p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Nov 2019 02:55:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a9Uj3zXgBWt4YXfbIGnsCBfngP0qMO8ty+f6r5z4BJAdSBm6dLN4AAAVodyz+sV17wXyBRa9OasCZOHwCBw/nZGV4mmfGtQYhOwJApoixFwkGtyppiR0LDcXuieA3QpI00IRhm48DH+MZ5hKMHMJFq5qzzt86Q/rF+BiUPJuw6hQO4nnO23hwIdrJRDFy4Jc7wJHAhf+VsjBJu8HbaPF3h4xJam4hiIODxRL1jasX299ETdeCDf+OBQBPlLANc9RYliqic7HXGYrLbfH/nMScEWeTTJzC/aEPe4PGloAFRIF0ovlU9f2Tnrl4RMOxKN/Znv/VmrbiI8TOF2NMfuzLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=03VqBUYM148e+OC9VBKDWOGS8+mWyKNK10joLFMYves=;
+ b=dnDpWwgR3xTZTo2xkYJ9klRHRse+Y8II//XTAb/71GGWcMqqnbrxt4ntURsMWWyFqtR4VRioaZS34Na9mV7vVS6CYQbaOMDcNQrf89lXbIn0tu/d1G7mscviUzzYNMPvvEXkZomBkOV7Oi2EyLkKpqyuCaVKh2ao1nf+Tzh5aTkInqN7fhn3/VdYEi8+TJbxJ0siQQpt4fWnTMTDYlpA6S5UICZ4hDNB6ae6EWnAkvdnpP19FZfqkgyjmwNYWiqHI5r08u/40Ozwka4WSp9bG9rtfT1whmkg/UsiNWj5FlPrluDHZ/Xfw9WQFRkvL/vcGK7jFUagrFBqlI7Vmaq6Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=03VqBUYM148e+OC9VBKDWOGS8+mWyKNK10joLFMYves=;
+ b=6od0YxwpGDY0GRviAh1PsiUfpCHHSfFi2LBkHgyXSCMyq1dIHPSAD3OJ+bMhH/Uj55LoacMj6IaA6pZb1VxLQglQCuc66HaFVuS/HliyJCTWOR68ieXviklRdLkmO9ua2LmNGqTd/2C0Hx9XzztJxYGy2HLdRK77/K/NmmJKNmw=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5223.namprd03.prod.outlook.com (20.180.15.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.22; Mon, 25 Nov 2019 07:55:39 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c%5]) with mapi id 15.20.2474.023; Mon, 25 Nov 2019
+ 07:55:39 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
+CC:     "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] staging: iio: accel: adis16240: enforce SPI mode
+ on probe function
+Thread-Topic: [PATCH v5 1/2] staging: iio: accel: adis16240: enforce SPI mode
+ on probe function
+Thread-Index: AQHVola+Yj8hDk7DMESHXfIfRLi/aKebhxQA
+Date:   Mon, 25 Nov 2019 07:55:39 +0000
+Message-ID: <2e62b4fa3ee93909bfcdc4d9b60015e7c22d510c.camel@analog.com>
+References: <20191123233510.4890-1-rodrigorsdc@gmail.com>
+In-Reply-To: <20191123233510.4890-1-rodrigorsdc@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3f3d540a-7717-4189-3c4a-08d7717cdd08
+x-ms-traffictypediagnostic: CH2PR03MB5223:
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR03MB5223C83F161C99D598CAAE42F94A0@CH2PR03MB5223.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0232B30BBC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(376002)(346002)(396003)(189003)(199004)(6506007)(76176011)(6486002)(7416002)(2201001)(2906002)(102836004)(6246003)(99286004)(6116002)(3846002)(2501003)(446003)(478600001)(118296001)(4001150100001)(26005)(14444005)(256004)(5660300002)(25786009)(76116006)(8936002)(8676002)(6512007)(110136005)(66066001)(71190400001)(71200400001)(11346002)(305945005)(54906003)(229853002)(186003)(66556008)(66476007)(66946007)(66446008)(64756008)(86362001)(4326008)(2616005)(6436002)(81156014)(81166006)(36756003)(316002)(7736002)(14454004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5223;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: em7qJuYlJ9XZbBxQdQW+udb/K+/xCVpHzJgb4fiTO2Mr1fijRwhIyaamj85avmRcNF+N1DSdTYGHK0eIA0pHp2wvVM3u5vU6LU+xItYat4JOF4fAk1dQsnoU6WOC95Z/qpe1nRzb7JgQuTG+//s9vaotY33uPDHmB96kqFp6UXUUUiF60/8AA7rG+ea/tkG8+uMFAAzK0iiOUHiYfChagliJ0waQfw2gR4rWkchcEw8zDl2UVetibLl5QXlEE6EodD4U3H/SBDH4Vug4NRbXADqP0zJ5a27DQM6pLUfNBCKHAhZ5MRzxTdS0PewIEdiHmh5Lhh8/7hQaqjimMlQc2IRwvLKiGRdWw5KBlGSJIg+XVVc/hmW46s4oiZCu9W/PwN2KPh6b1NCkJK9CUR/mccFgtC+Dp+0bSzdIXIgrmpxGRvu/TbDF4tUQ2rXQwrx/
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE1147C6AAA6DB4E8397D1EEF48897B8@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 25 Nov 2019 10:54:44 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     David Miller <davem@davemloft.net>, ecree@solarflare.com,
-        jiri@mellanox.com, edumazet@google.com, idosch@mellanox.com,
-        pabeni@redhat.com, petrm@mellanox.com, sd@queasysnail.net,
-        f.fainelli@gmail.com, jaswinder.singh@linaro.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in
- napi_gro_receive()
-In-Reply-To: <PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <20191014080033.12407-1-alobakin@dlink.ru>
- <20191015.181649.949805234862708186.davem@davemloft.net>
- <7e68da00d7c129a8ce290229743beb3d@dlink.ru>
- <PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <c762f5eee08a8f2d0d6cb927d7fa3848@dlink.ru>
-X-Sender: alobakin@dlink.ru
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f3d540a-7717-4189-3c4a-08d7717cdd08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 07:55:39.3605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 24D2OQfrIcp1kGp1uLBGr4RHk0D0nm4N8ZSvXdhOXXGq6uf7HJTKNVo6+hc4JsQNffIR2ezlyKx3gya3NGu3KN8ny90WGRkr2q1S0CEybyw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5223
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-25_01:2019-11-21,2019-11-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 impostorscore=0 priorityscore=1501 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911250073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicholas Johnson wrote 25.11.2019 10:29:
-> Hi,
-> 
-> On Wed, Oct 16, 2019 at 10:31:31AM +0300, Alexander Lobakin wrote:
->> David Miller wrote 16.10.2019 04:16:
->> > From: Alexander Lobakin <alobakin@dlink.ru>
->> > Date: Mon, 14 Oct 2019 11:00:33 +0300
->> >
->> > > Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
->> > > skbs") made use of listified skb processing for the users of
->> > > napi_gro_frags().
->> > > The same technique can be used in a way more common napi_gro_receive()
->> > > to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers
->> > > including gro_cells and mac80211 users.
->> > > This slightly changes the return value in cases where skb is being
->> > > dropped by the core stack, but it seems to have no impact on related
->> > > drivers' functionality.
->> > > gro_normal_batch is left untouched as it's very individual for every
->> > > single system configuration and might be tuned in manual order to
->> > > achieve an optimal performance.
->> > >
->> > > Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
->> > > Acked-by: Edward Cree <ecree@solarflare.com>
->> >
->> > Applied, thank you.
->> 
->> David, Edward, Eric, Ilias,
->> thank you for your time.
->> 
->> Regards,
->> ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
-> 
-> I am very sorry to be the bearer of bad news. It appears that this
-> commit is causing a regression in Linux 5.4.0-rc8-next-20191122,
-> preventing me from connecting to Wi-Fi networks. I have a Dell XPS 9370
-> (Intel Core i7-8650U) with Intel Wireless 8265 [8086:24fd].
-
-Hi!
-
-It's a bit strange as this commit doesn't directly affect the packet
-flow. I don't have any iwlwifi hardware at the moment, so let's see if
-anyone else will be able to reproduce this (for now, it is the first
-report in a ~6 weeks after applying to net-next).
-Anyway, I'll investigate iwlwifi's Rx processing -- maybe I could find
-something driver-specific that might produce this.
-
-Thank you for the report.
-
-> I did a bisect, and this commit was named the culprit. I then applied
-> the reverse patch on another clone of Linux next-20191122, and it
-> started working.
-> 
-> 6570bc79c0dfff0f228b7afd2de720fb4e84d61d
-> net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
-> 
-> You can see more at the bug report I filed at [0].
-> 
-> [0]
-> https://bugzilla.kernel.org/show_bug.cgi?id=205647
-> 
-> I called on others at [0] to try to reproduce this - you should not 
-> pull
-> a patch because of a single reporter - as I could be wrong.
-> 
-> Please let me know if you want me to give more debugging information or
-> test any potential fixes. I am happy to help to fix this. :)
-> 
-> Kind regards,
-> Nicholas Johnson
-
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+T24gU2F0LCAyMDE5LTExLTIzIGF0IDIwOjM1IC0wMzAwLCBSb2RyaWdvIENhcnZhbGhvIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBBY2NvcmRpbmcgdG8gdGhlIGRhdGFzaGVldCwgdGhpcyBk
+cml2ZXIgc3VwcG9ydHMgb25seSBTUEkgbW9kZSAzLA0KPiBzbyB3ZSBzaG91bGQgZW5mb3JjZSBp
+dCBhbmQgY2FsbCBzcGlfc2V0dXAoKSBvbiBwcm9iZSBmdW5jdGlvbi4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IFJvZHJpZ28gUmliZWlybyBDYXJ2YWxobyA8cm9kcmlnb3JzZGNAZ21haWwuY29tPg0K
+PiAtLS0NCj4gVjU6DQo+ICAgLSBBZGQgdGhpcyBwYXRjaCB0byB0aGUgcGF0Y2hzZXQNCj4gDQo+
+ICBkcml2ZXJzL3N0YWdpbmcvaWlvL2FjY2VsL2FkaXMxNjI0MC5jIHwgNyArKysrKysrDQo+ICAx
+IGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9zdGFnaW5nL2lpby9hY2NlbC9hZGlzMTYyNDAuYw0KPiBiL2RyaXZlcnMvc3RhZ2luZy9paW8v
+YWNjZWwvYWRpczE2MjQwLmMNCj4gaW5kZXggODIwOTlkYjRiZjBjLi43N2I2YjgxNzY3YjkgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy9paW8vYWNjZWwvYWRpczE2MjQwLmMNCj4gKysr
+IGIvZHJpdmVycy9zdGFnaW5nL2lpby9hY2NlbC9hZGlzMTYyNDAuYw0KPiBAQCAtNDAwLDYgKzQw
+MCwxMyBAQCBzdGF0aWMgaW50IGFkaXMxNjI0MF9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3Bp
+KQ0KPiAgCWluZGlvX2Rldi0+bnVtX2NoYW5uZWxzID0gQVJSQVlfU0laRShhZGlzMTYyNDBfY2hh
+bm5lbHMpOw0KPiAgCWluZGlvX2Rldi0+bW9kZXMgPSBJTkRJT19ESVJFQ1RfTU9ERTsNCj4gIA0K
+PiArCXNwaS0+bW9kZSA9IFNQSV9NT0RFXzM7DQoNCkEgZ2VuZXJpYyBxdWVzdGlvbiBmcm9tIG1l
+IGhlcmUsIHNpbmNlIEkgYW0gbm90IHN1cmUuDQoNCldvdWxkIHRoaXMgbGltaXQgdGhlIGNvbmZp
+Z3VyYXRpb25zIG9mIHRoaXMgY2hpcCBvbiB0aGUgYm9hcmQ/DQpJbiBjYXNlIHRoZXJlIGlzIHNv
+bWUgbGV2ZWwtaW52ZXJ0ZXIgW2ZvciB2YXJpb3VzIHdlaXJkIHJlYXNvbnNdIG9uIHRoZQ0KYm9h
+cmQsIHRoaXMgbWF5IG5vdCB3b3JrLCBiZWNhdXNlIHRoZSBTUEkgY29udHJvbGxlciB3b3VsZCBu
+ZWVkIENQT0wgdG8gYmUNCjAuDQoNCk5vdCBzdXJlIGlmIHRoaXMgcXVlc3Rpb24gaXMgdmFsaWQs
+IG9yIHdoZXRoZXIgd2UgbmVlZCB0byBjYXJlIGFib3V0IHN1Y2gNCmNvbmZpZ3VyYXRpb25zLg0K
+DQpUaGFua3MNCkFsZXgNCg0KPiArCXJldCA9IHNwaV9zZXR1cChzcGkpOw0KPiArCWlmIChyZXQp
+IHsNCj4gKwkJZGV2X2Vycigmc3BpLT5kZXYsICJzcGlfc2V0dXAgZmFpbGVkIVxuIik7DQo+ICsJ
+CXJldHVybiByZXQ7DQo+ICsJfQ0KPiArDQo+ICAJcmV0ID0gYWRpc19pbml0KHN0LCBpbmRpb19k
+ZXYsIHNwaSwgJmFkaXMxNjI0MF9kYXRhKTsNCj4gIAlpZiAocmV0KQ0KPiAgCQlyZXR1cm4gcmV0
+Ow0K
