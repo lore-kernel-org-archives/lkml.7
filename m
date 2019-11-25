@@ -7,167 +7,155 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3F5C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25580C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3E120836
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89832068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jvz4XorG"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iGw7/Cej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfKYP0p (ORCPT
+        id S1728416AbfKYPbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:26:45 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58635 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727785AbfKYP0p (ORCPT
+        Mon, 25 Nov 2019 10:31:11 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:43753 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbfKYPbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:26:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574695603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=1lRPd7hhBMk9v0DSJEthn5Vd1TjRTql0UVLGeiXIWco=;
-        b=Jvz4XorGBNHvchW+oobhdXPl5ki1ofNckzQjyWEvnHaVOzU0emVLjekCA8fKFInDynDPKZ
-        d8MMrR1Op10gJ06/aqLW66Fp7GjvRed1taGsMfMRlDQEQkmY3uww/Kr+NRCj6lUuu6V655
-        l+FuK81wdLPSkun3bmEqoAzCTjKDNRU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-7hXFZmyBOAqKBwbTiD5azw-1; Mon, 25 Nov 2019 10:26:39 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C03BB18557C6;
-        Mon, 25 Nov 2019 15:26:36 +0000 (UTC)
-Received: from [10.36.118.6] (unknown [10.36.118.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E8CC960C81;
-        Mon, 25 Nov 2019 15:26:34 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/memory_hotplug: Don't allow to online/offline
- memory blocks with holes
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20191119115237.6662-1-david@redhat.com>
- <20191125130943.GN31714@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <e282c490-28bd-76a5-aca6-fedb11142eca@redhat.com>
-Date:   Mon, 25 Nov 2019 16:26:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 25 Nov 2019 10:31:11 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191125153108euoutp010ec037890f39bfc744b661b73e6e421a~acYyu35Lc2047520475euoutp01k
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 15:31:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191125153108euoutp010ec037890f39bfc744b661b73e6e421a~acYyu35Lc2047520475euoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574695868;
+        bh=zyQApnRr5/uY+OBifPWLgMt43tJ6dLGKcvYE+WFaW0k=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=iGw7/Cej8iAST/6OSrr1G8ZxDTDsQtYSvI3KiO0E4SBpgmeuUgBgHFnfjNu5wUs6q
+         ZJIOiqNlsVRM0qvTen879W1n1JUuZHmAJEtASIyuHwRC6wmeFMZ1e2QhKcVrNnkfvl
+         tzktXaPz5SHW75Uwd6ZMC7us4VjYephs8pn5xBHE=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191125153108eucas1p24ef93f99b96a7c5235af004772091d46~acYyjofOT0854108541eucas1p2e;
+        Mon, 25 Nov 2019 15:31:08 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 9C.1E.60698.CB3FBDD5; Mon, 25
+        Nov 2019 15:31:08 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191125153108eucas1p23b303e27870b77e79260e1ea01ab03f8~acYyQJNaG0854108541eucas1p2d;
+        Mon, 25 Nov 2019 15:31:08 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191125153108eusmtrp168f20da1d257e8c77e5c34570c043e8f~acYyPjVsp0379503795eusmtrp1z;
+        Mon, 25 Nov 2019 15:31:08 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-fa-5ddbf3bcea1a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 02.71.07950.CB3FBDD5; Mon, 25
+        Nov 2019 15:31:08 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191125153107eusmtip19b8d155e9ec3d4cea4c3ec1dfed444e1~acYxxUc3_0345503455eusmtip1Q;
+        Mon, 25 Nov 2019 15:31:07 +0000 (GMT)
+Subject: Re: [PATCH] arm: exynos_config: Restore debugfs support
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <5fdca7d0-c130-457a-2ce2-74f645b60f8d@samsung.com>
+Date:   Mon, 25 Nov 2019 16:31:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191125130943.GN31714@dhcp22.suse.cz>
+In-Reply-To: <20191125093932.4a111dc8@gandalf.local.home>
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 7hXFZmyBOAqKBwbTiD5azw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djPc7p7Pt+ONZh7QsHi/PkN7BaXd81h
+        s5hxfh+Txdojd9kt9nU8YLJ4/uosswObx4pFe9k9WvbdYvfYtKqTzaNvyypGj8+b5AJYo7hs
+        UlJzMstSi/TtErgyTu2ezViwmqfi5eGfjA2MPzm7GDk5JARMJA4c+cPSxcjFISSwglHi7vWj
+        bBDOF0aJuUf/sEI4nxkltvScZ+pi5ABrOfY0F6RbSGA5o0TP/wqImreMEq1Xz7GCJIQFHCQe
+        dC5nBrFFBDQkWhY8B1vBLHCUUaJ9xyx2kASbgJXExPZVjCA2r4CdxJ1V89hAbBYBVYmnz16D
+        xUUFIiQ+PTjMClEjKHFy5hMWkCM4BSwlDr62BQkzC4hL3HoynwnClpfY/nYOM8guCYF17BJH
+        Hj9mg/jTRWLptk+sELawxKvjW9ghbBmJ05N7WKAaGCX+dryA6t7OKLF88j+obmuJw8cvsoJs
+        ZhbQlFi/Sx8i7Chx7GITKyRU+CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iQ3LNrDBrO3auZJ5
+        AqPSLCSfzULyziwk78xC2LuAkWUVo3hqaXFuemqxcV5quV5xYm5xaV66XnJ+7iZGYOI5/e/4
+        1x2M+/4kHWIU4GBU4uH9cfZ2rBBrYllxZe4hRgkOZiURXrezN2KFeFMSK6tSi/Lji0pzUosP
+        MUpzsCiJ81YzPIgWEkhPLEnNTk0tSC2CyTJxcEo1MN5UNXtgGXRxqhvTCtN3LLlr/Kbttg5M
+        uqwh/W51KffL7CXR5ap1jm23/k7+f+5LjeU1A765efwq03ekq4tFCU+J5VuSnhm96MUad/45
+        cxyNfU/e/PzV79fLm+/v5QkZvvGYG/JXtDFBW+nnnKkPVeQtFXcsZ4z342LaHiJmEOG2sSD7
+        AOOUyUosxRmJhlrMRcWJAEjkiCw4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsVy+t/xu7p7Pt+ONXi+iNfi/PkN7BaXd81h
+        s5hxfh+Txdojd9kt9nU8YLJ4/uosswObx4pFe9k9WvbdYvfYtKqTzaNvyypGj8+b5AJYo/Rs
+        ivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyTu2ezViw
+        mqfi5eGfjA2MPzm7GDk4JARMJI49ze1i5OIQEljKKHHj9U0WiLiMxPH1ZV2MnECmsMSfa11s
+        ILaQwGtGid5WZhBbWMBB4kHncjBbREBDomXBcxaQOcwCxxklzp06xggx9CujxMqLm8Cq2ASs
+        JCa2r2IEsXkF7CTurJoHNpVFQFXi6bPXYHFRgQiJwztmQdUISpyc+QTsIE4BS4mDr21BwswC
+        6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo9AsJN2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xUZ6
+        xYm5xaV56XrJ+bmbGIFxtu3Yzy07GLveBR9iFOBgVOLh/XH2dqwQa2JZcWXuIUYJDmYlEV63
+        szdihXhTEiurUovy44tKc1KLDzGaAv02kVlKNDkfmALySuINTQ3NLSwNzY3Njc0slMR5OwQO
+        xggJpCeWpGanphakFsH0MXFwSjUw8l5dmfJ8iq/Eed6f9+U1X/3c2mqrZXt5xdd0bTn/6oMT
+        98fNzaueVO6arhaQzfto9vqtJQ9tm+es94hcMvNfXP3015MNHkXfDT++cIdxZw1j51QRdR/D
+        OfcvTNGvENo8m8/d6o+i4EFBySsuUQeYGjae333ZS7/aOMtj2/xmob3rmXc8YXDoVGIpzkg0
+        1GIuKk4EAPOa+YvJAgAA
+X-CMS-MailID: 20191125153108eucas1p23b303e27870b77e79260e1ea01ab03f8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
+References: <CGME20191125125531eucas1p17f4044301903eeafe56865ed63738798@eucas1p1.samsung.com>
+        <20191125125515.30795-1-m.szyprowski@samsung.com>
+        <7f6a5924-58f9-aafb-18c5-c749ad355a02@samsung.com>
+        <20191125093932.4a111dc8@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.11.19 14:09, Michal Hocko wrote:
-> On Tue 19-11-19 12:52:37, David Hildenbrand wrote:
->> Our onlining/offlining code is unnecessarily complicated. Only memory
->> blocks added during boot can have holes (a range that is not
->> IORESOURCE_SYSTEM_RAM). Hotplugged memory never has holes (e.g., see
->> add_memory_resource()). All memory blocks that belong to boot memory are
->> already online.
->>
->> Note that boot memory can have holes and the memmap of the holes is marked
->> PG_reserved. However, also memory allocated early during boot is
->> PG_reserved - basically every page of boot memory that is not given to the
->> buddy is PG_reserved.
->>
->> Therefore, when we stop allowing to offline memory blocks with holes, we
->> implicitly no longer have to deal with onlining memory blocks with holes.
->> E.g., online_pages() will do a
->> walk_system_ram_range(..., online_pages_range), whereby
->> online_pages_range() will effectively only free the memory holes not
->> falling into a hole to the buddy. The other pages (holes) are kept
->> PG_reserved (via move_pfn_range_to_zone()->memmap_init_zone()).
->>
->> This allows to simplify the code. For example, we no longer have to
->> worry about marking pages that fall into memory holes PG_reserved when
->> onlining memory. We can stop setting pages PG_reserved completely in
->> memmap_init_zone().
->>
->> Offlining memory blocks added during boot is usually not guaranteed to work
->> either way (unmovable data might have easily ended up on that memory during
->> boot). So stopping to do that should not really hurt. Also, people are not
->> even aware of a setup where onlining/offlining of memory blocks with
->> holes used to work reliably (see [1] and [2] especially regarding the
->> hotplug path) - I doubt it worked reliably.
->>
->> For the use case of offlining memory to unplug DIMMs, we should see no
->> change. (holes on DIMMs would be weird).
->>
->> Please note that hardware errors (PG_hwpoison) are not memory holes and
->> are not affected by this change when offlining.
->>
->> [1] https://lkml.org/lkml/2019/10/22/135
->> [2] https://lkml.org/lkml/2019/8/14/1365
+
+On 11/25/19 3:39 PM, Steven Rostedt wrote:
+> On Mon, 25 Nov 2019 15:30:39 +0100
+> Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> wrote:
 > 
-> Please do not use lkml.org links, they tend to break longterm. Use
-> http://lkml.kernel.org/r/$msg_id instead.
+>> It seems that commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
+>> dependency") disabled DEBUG_FS also in some other ARM defconfigs.
+>>
+>> For some of them it may be a correct change but a preferred way to
+>> introduce such changes would be to:
+>>
+>> - add explicit CONFIG_DEBUG_FS=y instances to all affected defconfigs
+>>   while removing DEBUG_FS selection from TRACING config item
+>>
+> 
+> I strongly disagree. It was wrong to assume DEBUG_FS is attached to
+> TRACING. If someone wanted DEBUG_FS in their def config, they should
+> have added it specifically. The addition of DEBUG_FS to defconfigs no
 
-Thanks for the tip! I read a couple of times that these links are
-problematic but never knew what to use instead ...
+There is a theory and a practice.
 
--- 
+In theory you are are correct. ;-)
 
-Thanks,
+In practice people don't manually edit configuration files nowadays.
 
-David / dhildenb
+They do 'make menuconfig' and enable what they need and disable what
+they do not need.  Then they do 'make savedefconfig' and copy resulting
+"stripped" defconfig file as their new platform defconfig. As a result
+defconfigs rely on many default settings (also they explicitly disable
+only items that are enabled by default but you don't want them).
 
+> way belongs to the patch that removed DEBUG_FS from TRACING.
+> 
+> -- Steve
+> 
+> 
+>> - let platform maintainers disable DEBUG_FS manually in corresponding
+>>   defconfigs later if desirable
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
