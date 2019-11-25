@@ -2,243 +2,213 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB77C43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21644C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A6120823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16EE2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 00:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="m1Cur0PI"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ORgRROeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfKYAFV (ORCPT
+        id S1727166AbfKYAGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 19:05:21 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10959 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfKYAFU (ORCPT
+        Sun, 24 Nov 2019 19:06:33 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:36263 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfKYAGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 19:05:20 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddb1ac10000>; Sun, 24 Nov 2019 16:05:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 24 Nov 2019 16:05:18 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 24 Nov 2019 16:05:18 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 00:05:17 +0000
-Subject: Re: [PATCH v7 07/24] IB/umem: use get_user_pages_fast() to pin DMA
- pages
-To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191121071354.456618-1-jhubbard@nvidia.com>
- <20191121071354.456618-8-jhubbard@nvidia.com>
- <20191121080746.GC30991@infradead.org> <20191121143643.GC7448@ziepe.ca>
- <20191124100724.GH136476@unreal>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e8319590-a3f0-5ba4-af4c-65213358a742@nvidia.com>
-Date:   Sun, 24 Nov 2019 16:05:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191124100724.GH136476@unreal>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
+        Sun, 24 Nov 2019 19:06:32 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191125000629epoutp0353c7613365467196b7581594b6aff81c~aPxdgiyB41697716977epoutp03D
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 00:06:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191125000629epoutp0353c7613365467196b7581594b6aff81c~aPxdgiyB41697716977epoutp03D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574640389;
+        bh=LB45WzBOQI0KmJUhhSFF2FmDFRt66YAbZuIxnR+Pkxg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=ORgRROeb50CxL2xLredYk/oPgYUEdFSQ7PY1TqdBP+JGZzL1PiM7v0mNmZv9utWLU
+         QCgUf2lOmHKN1vhgdYFwki6mtUOUaljqtgktzN3WN4h0n53Dcfx2ipnXLANdsu6DMR
+         UmHiQohawTZW2FDoXnq6xYLgrcT1+tlv+fedhByU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191125000628epcas1p3c2f193b9e78380d777a27a8899352661~aPxdAM__B3108631086epcas1p37;
+        Mon, 25 Nov 2019 00:06:28 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47LnPv6QTFzMqYkv; Mon, 25 Nov
+        2019 00:06:27 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        40.32.48019.30B1BDD5; Mon, 25 Nov 2019 09:06:27 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191125000627epcas1p376a5a32c90e491f8cac92d053fb5e453~aPxb2y35Y0344003440epcas1p3o;
+        Mon, 25 Nov 2019 00:06:27 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191125000627epsmtrp2a86715a5ca073b192f0740cb1756eadf~aPxb1-u0_2415424154epsmtrp2h;
+        Mon, 25 Nov 2019 00:06:27 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-8c-5ddb1b036d04
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EA.60.10238.30B1BDD5; Mon, 25 Nov 2019 09:06:27 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191125000627epsmtip2e63a7a60173d2f4e4bba8e12ce19a1f3~aPxbqXmvE2594225942epsmtip2F;
+        Mon, 25 Nov 2019 00:06:27 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        linkinjeon@gmail.com, Markus.Elfring@web.de,
+        sj1557.seo@samsung.com, dwagner@suse.de, nborisov@suse.com,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH v5 00/13] add the latest exfat driver
+Date:   Sun, 24 Nov 2019 19:03:13 -0500
+Message-Id: <20191125000326.24561-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTN60ynA1gyFJQnBKkT+UAFWktxUIoakYzKB3H5UNPUkU4KsVs6
+        hQhGrWCAEDViP1QU1JiYCJhWqIisFUQ07hiUJRiX4IKENSoqFVsG1L/z7jnnnfvuuzgiycfC
+        8CyjlbUYGT2J+aN17dGyGCS8Xy2zX46n2t+fFlEFVxwYda2qQ0C9GuhDqKbmByj1ouECRs2U
+        fRRSU2eOUDPDx1DK9fuukOoaHUPXB9C3ywZEdGt5tYhu7LVh9ElXJaAdrm6Urn14kJ6sWUK3
+        3RrG6P4PdWi63259UibLaFmLlDVmmLRZRp2K3Lpds1GjTJDJY+SJ1GpSamQMrIpMSUuPSc3S
+        e5slpTmMPttbSmc4joxLTrKYsq2sNNPEWVUka9bqzXKZOZZjDFy2URebYTKskctkq5Re5V59
+        ZvdQjcg8GnGg2PMFtYHG0BLgh0MiHhYNtwAflhD1AF6YjCwB/l48AeDbiinAH74B2PjIBeYd
+        1Y5BAU80A1hvt4n+Wl523/CqcBwjVsBp10KfIYRYB2vPu1GfBiFeAfih76zQRwQTSliRP4j6
+        MEpEwTs/RmaxmEiCzx4UC/m0SFjldCM+MyTcGLzf8U3AEylwsunRHA6GQ50uEY/D4ORIM+Zr
+        AhIH4XgrwpeLAfz0XcVjBex1OIU+CUJEQ0dDHF9eCm//Kp99JEIEwpGvx4X8LWJYXCjhJVHw
+        ZFf7XGg4LCkamwulocN+TcRPUQ2f2i4ip0BE2b+ASwBUgkWsmTPoWE5ujv//j2rA7P4tp+pB
+        05O0NkDggFwgdl7vU0uETA6Xa2gDEEfIEHHq4x61RKxlcvNYi0ljydazXBtQemdXioQtzDB5
+        t9lo1ciVqxQKBRWfsDpBqSBDxfjUc7WE0DFWdj/LmlnLvE+A+4XZQOQ65FOp0dPz075nMPr4
+        tN/Ko/njyfS08035YWnL1q6gd2Ld07htHqGgUj/k1ow4r6YEFKwtDBw4sW1i8ee8XbWvQ5d1
+        nfP3vOtBinLc9lOHTmvrdgRETNX0pe4TdUoqzBvUQeOS2HuBnjTMvy5ZNUZpRzdvwWJ2Ribu
+        KpVtujlAolwmI1+OWDjmDwXYhEmVAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSvC6z9O1Yg0m7ZC0OP57EbtG8eD2b
+        xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyf9ZzV4sf0eov/b1pYLLb8O8Jqcen9BxYHbo+ds+6y
+        e+yfu4bdY/fNBjaPvi2rGD3Wb7nK4rH5dLXH501yHoe2v2HzuP1sG0sAZxSXTUpqTmZZapG+
+        XQJXxtVXm9gL3stWdPx9zdLAuFu8i5GTQ0LARGLN+qdMILaQwG5GieUHnCDi0hLHTpxh7mLk
+        ALKFJQ4fLu5i5AIq+cAosfLBS7A4m4C2xJ8toiDlIgKOEr27DrOA1DALPGaUOHH+CSNIQljA
+        VGJe01MWEJtFQFXi4M93YDavgI3EhZMdrBC75CVWbzjAPIGRZwEjwypGydSC4tz03GLDAsO8
+        1HK94sTc4tK8dL3k/NxNjOBw1NLcwXh5SfwhRgEORiUe3g1rb8UKsSaWFVfmHmKU4GBWEuF1
+        O3sjVog3JbGyKrUoP76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQZGfbM3
+        mTEpywJOnpQ3NJh0pW/1pBdBm/9mL9jUaXnN07knfucSvTli0je2m2eLXYqq3T3PZ9kd/jce
+        nEx859055LN0vMV5kxfP2xbftFTrxbnpO/R9g2QslxfdPHfe8zyPce3G8PbwzLsXftZ7hgsV
+        3FhXts41+22vUPpksdLpLYINHR3+tn5KLMUZiYZazEXFiQD3N5KTQwIAAA==
+X-CMS-MailID: 20191125000627epcas1p376a5a32c90e491f8cac92d053fb5e453
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574640321; bh=LD2/8CChGaLRqwmCQwChsDcrQNaYP+P0SNIyxfam1DE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=m1Cur0PIy3/gI1zO5nV/8By6N43vWGtuN3DH4UA+V5btajIgmajkoqysSp76dAM7w
-         IjD++zms/7U0GGOl8H1gvnNrWhHWhVeKks5+FnTeGfmeFzSgL9stvUxQHdGHcRSpYo
-         R3DhHzHen8GFnhgTTJui8NWTHWe8ATpW8fDVP5C1LALRj6SKkngA39wPoPH2DIIK+J
-         +UKod6U+vX3PK6ephcVmHTxq0zUWIVkMBfEaq7/xc7P3ltk2DNSjaGhY5cT49gyP2u
-         jH1s4PE7IC41UINf5rjHYQtI6U45lVsEN7ZT+BkTbP2xn4k8PFfNWniDCzwNggU9zg
-         iu5V3RFGAA2WA==
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191125000627epcas1p376a5a32c90e491f8cac92d053fb5e453
+References: <CGME20191125000627epcas1p376a5a32c90e491f8cac92d053fb5e453@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/24/19 2:07 AM, Leon Romanovsky wrote:
-> On Thu, Nov 21, 2019 at 10:36:43AM -0400, Jason Gunthorpe wrote:
->> On Thu, Nov 21, 2019 at 12:07:46AM -0800, Christoph Hellwig wrote:
->>> On Wed, Nov 20, 2019 at 11:13:37PM -0800, John Hubbard wrote:
->>>> And get rid of the mmap_sem calls, as part of that. Note
->>>> that get_user_pages_fast() will, if necessary, fall back to
->>>> __gup_longterm_unlocked(), which takes the mmap_sem as needed.
->>>>
->>>> Reviewed-by: Jan Kara <jack@suse.cz>
->>>> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
->>>> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->>>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->>>
->>> Looks fine,
->>>
->>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>>
->>> Jason, can you queue this up for 5.5 to reduce this patch stack a bit?
->>
->> Yes, I said I'd do this in an earlier revision. Now that it is clear this
->> won't go through Andrew's tree, applied to rdma for-next
-> 
-> Jason,
-> 
-> This patch broke RDMA completely.
-> Change from get_user_pages() to get_user_pages_fast() causes to endless
-> amount of splats due to combination of the following code:
-> 
-> 189 struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
-> 190                             size_t size, int access)
-> ...
-> 263         if (!umem->writable)
-> 264                 gup_flags |= FOLL_FORCE;
-> 265
-> 
-> and
-> 
-> 2398 int get_user_pages_fast(unsigned long start, int nr_pages,
-> 2399                         unsigned int gup_flags, struct page **pages)
-> 2400 {
-> 2401         unsigned long addr, len, end;
-> 2402         int nr = 0, ret = 0;
-> 2403
-> 2404         if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
-> 2405                 return -EINVAL;
-> 
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-Hi Leon,
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-I looked into this, and I believe that the problem is in gup.c. There appears to
-have been an oversight, in commit 817be129e6f2 ("mm: validate get_user_pages_fast
-flags"), in filtering out FOLL_FORCE. There is nothing in the _fast() implementation
-that requires that we avoid writing to the pages.
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-So I intend, to post a two-patch series that includes this fix, first, but maybe this
-means that it should go in via -mm. I'm not sure what's the best tree.
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 8f236a335ae9..745b4036cdfd 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2401,7 +2401,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
- 	unsigned long addr, len, end;
- 	int nr = 0, ret = 0;
- 
--	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
-+	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
-+				       FOLL_FORCE)))
- 		return -EINVAL;
- 
- 	start = untagged_addr(start) & PAGE_MASK;
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename label with
+   free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
 
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
 
-thanks,
+v3:
+ - fix wrong sbi->s_dirt set.
+
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
+
+Namjae Jeon (13):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add exfat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  exfat: add exfat in fs/Kconfig and fs/Makefile
+  MAINTAINERS: add exfat filesystem
+
+ MAINTAINERS          |    7 +
+ fs/Kconfig           |    3 +-
+ fs/Makefile          |    1 +
+ fs/exfat/Kconfig     |   21 +
+ fs/exfat/Makefile    |    8 +
+ fs/exfat/balloc.c    |  272 ++++++++
+ fs/exfat/cache.c     |  325 ++++++++++
+ fs/exfat/dir.c       | 1307 +++++++++++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h  |  538 ++++++++++++++++
+ fs/exfat/exfat_raw.h |  191 ++++++
+ fs/exfat/fatent.c    |  472 ++++++++++++++
+ fs/exfat/file.c      |  343 ++++++++++
+ fs/exfat/inode.c     |  693 ++++++++++++++++++++
+ fs/exfat/misc.c      |  240 +++++++
+ fs/exfat/namei.c     | 1459 ++++++++++++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c       |  808 +++++++++++++++++++++++
+ fs/exfat/super.c     |  738 +++++++++++++++++++++
+ 17 files changed, 7425 insertions(+), 1 deletion(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
 -- 
-John Hubbard
-NVIDIA
+2.17.1
 
-
-> 
-> [   72.623266] ------------[ cut here ]------------
-> [   72.624143] WARNING: CPU: 1 PID: 2557 at mm/gup.c:2404 get_user_pages_fast+0x115/0x180
-> [   72.625426] Modules linked in: xt_MASQUERADE iptable_nat nf_nat
->    br_netfilter overlay ib_srp scsi_transport_srp rpcrdma rdma_ucm
->    ib_iser libiscsi scsi_transport_iscsi rdma_cm ib_umad iw_cm ib_ipoib
->    ib_cm mlx5_ib ib_uverbs ib_core mlx5_core mlxfw ptp pps_core
-> [   72.629024] CPU: 1 PID: 2557 Comm: python3 Not tainted 5.4.0-rc5-J6120-Geeb831ec5b80 #1
-> [   72.630435] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> [   72.631973] RIP: 0010:get_user_pages_fast+0x115/0x180
-> [   72.632873] Code: 8d 0c 10 85 c0 89 d0 0f 49 c1 eb 97 fa 4c 8d
->        44 24 0c 4c 89 e9 44 89 e2 48 89 df e8 25 dd ff ff fb 8b 44 24 0c
->        e9 75 ff ff ff <0f> 0b b8 ea ff ff ff e9 6d ff ff ff 65 4c 8b 2c
->        25 00 5d 01 00 49
-> [   72.635967] RSP: 0018:ffffc90000edf930 EFLAGS: 00010202
-> [   72.636896] RAX: 0000000000000000 RBX: 00007f931c392000 RCX: ffff8883f4909000
-> [   72.638117] RDX: 0000000000010011 RSI: 0000000000000001 RDI: 00007f931c392000
-> [   72.639353] RBP: 00007f931c392000 R08: 0000000000000020 R09: ffff8883f4909000
-> [   72.640602] R10: 0000000000000000 R11: ffff8884068d6760 R12: ffff888409e45ba0
-> [   72.641858] R13: ffff8884068d6760 R14: 0000160000000000 R15: ffff8883f4909000
-> [   72.643115] FS:  00007f9323754700(0000) GS:ffff88842fa80000(0000) knlGS:0000000000000000
-> [   72.644586] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   72.645628] CR2: 00007f931c3ca000 CR3: 00000003f83d6006 CR4: 00000000007606a0
-> [   72.646875] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   72.648120] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   72.649374] PKRU: 55555554
-> [   72.649935] Call Trace:
-> [   72.650477]  ib_umem_get+0x298/0x550 [ib_uverbs]
-> [   72.651347]  mlx5_ib_db_map_user+0xad/0x130 [mlx5_ib]
-> [   72.652279]  mlx5_ib_create_cq+0x1e8/0xaa0 [mlx5_ib]
-> [   72.653207]  create_cq+0x1c8/0x2d0 [ib_uverbs]
-> [   72.654050]  ib_uverbs_create_cq+0x70/0xa0 [ib_uverbs]
-> [   72.654988]  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xc2/0xf0 [ib_uverbs]
-> [   72.656331]  ib_uverbs_cmd_verbs.isra.6+0x5be/0xbe0 [ib_uverbs]
-> [   72.657398]  ? uverbs_disassociate_api+0xd0/0xd0 [ib_uverbs]
-> [   72.658423]  ? kvm_clock_get_cycles+0xd/0x10
-> [   72.659229]  ? kmem_cache_alloc+0x176/0x1c0
-> [   72.660025]  ? filemap_map_pages+0x18c/0x350
-> [   72.660838]  ib_uverbs_ioctl+0xc0/0x120 [ib_uverbs]
-> [   72.661756]  do_vfs_ioctl+0xa1/0x610
-> [   72.662458]  ksys_ioctl+0x70/0x80
-> [   72.663119]	__x64_sys_ioctl+0x16/0x20
-> [   72.663850]  do_syscall_64+0x42/0x110
-> [   72.664562]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   72.665492] RIP: 0033:0x7f9332958267
-> [   72.666185] Code: b3 66 90 48
-> 	8b 05 19 3c 2c 00 64 c7 00 26 00
-> 	00 00 48 c7 c0 ff ff ff ff c3 66
-> 	2e 0f 1f 84 00 00 00 00 00 b8 10
-> 	00 00 00 0f 05 <48> 3d 01 f0 ff
-> 	ff 73 01 c3 48 8b 0d e9 3b 2c 00
-> 	f7 d8 64 89 01 48
-> [   72.669347] RSP: 002b:00007f9323751928 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> [   72.670706] RAX: ffffffffffffffda RBX: 00007f93237519b8 RCX:	00007f9332958267
-> [   72.671937] RDX: 00007f93237519a0 RSI: 00000000c0181b01 RDI: 0000000000000008
-> [   72.673176] RBP: 00007f9323751980 R08: 0000000000000005 R09: 00007f931c3ffef0
-> [   72.674415] R10: 0000000000001000 R11: 0000000000000246 R12: 00007f931c400030
-> [   72.675653] R13: 00007f9323751980 R14: 00007f9323751ea8 R15: 00000000000000ff
-> [   72.676885] ---[ end trace 033465440517865c ]---
-> 
->>
->> Thanks,
->> Jason
->>
