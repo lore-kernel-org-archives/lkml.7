@@ -2,70 +2,112 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDCBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1468FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2440720836
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E627E20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfKYRhM (ORCPT
+        id S1729157AbfKYRiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:37:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        Mon, 25 Nov 2019 12:38:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:53306 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfKYRhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:37:11 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9801820748;
-        Mon, 25 Nov 2019 17:37:10 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 12:37:09 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [RFC v2 2/2] docs: ftrace: Fix typos
-Message-ID: <20191125123709.5eff70a9@gandalf.local.home>
-In-Reply-To: <a843617511989679b29fbd62b1b8b3e991f2101e.1574655670.git.frank@generalsoftwareinc.com>
-References: <cover.1574655670.git.frank@generalsoftwareinc.com>
-        <a843617511989679b29fbd62b1b8b3e991f2101e.1574655670.git.frank@generalsoftwareinc.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725868AbfKYRiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:38:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E134731B;
+        Mon, 25 Nov 2019 09:38:00 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75FDE3F68E;
+        Mon, 25 Nov 2019 09:37:59 -0800 (PST)
+Date:   Mon, 25 Nov 2019 17:37:57 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marco Elver <elver@google.com>
+Cc:     will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+        arnd@arndb.de, dvyukov@google.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+        paulmck@kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 1/2] asm-generic/atomic: Prefer __always_inline for
+ wrappers
+Message-ID: <20191125173756.GF32635@lakrids.cambridge.arm.com>
+References: <20191122154221.247680-1-elver@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122154221.247680-1-elver@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Nov 2019 23:38:41 -0500
-"Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
+On Fri, Nov 22, 2019 at 04:42:20PM +0100, Marco Elver wrote:
+> Prefer __always_inline for atomic wrappers. When building for size
+> (CC_OPTIMIZE_FOR_SIZE), some compilers appear to be less inclined to
+> inline even relatively small static inline functions that are assumed to
+> be inlinable such as atomic ops. This can cause problems, for example in
+> UACCESS regions.
 
-> --- a/Documentation/trace/ring-buffer-design.txt
-> +++ b/Documentation/trace/ring-buffer-design.txt
-> @@ -37,7 +37,7 @@ commit_page - a pointer to the page with the last finished non-nested write.
+From looking at the link below, the problem is tat objtool isn't happy
+about non-whiteliested calls within UACCESS regions.
+
+Is that a problem here? are the kasan/kcsan calls whitelisted?
+
+> By using __always_inline, we let the real implementation and not the
+> wrapper determine the final inlining preference.
+
+That sounds reasonable to me, assuming that doesn't end up significantly
+bloating the kernel text. What impact does this have on code size?
+
+> This came up when addressing UACCESS warnings with CC_OPTIMIZE_FOR_SIZE
+> in the KCSAN runtime:
+> http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  include/asm-generic/atomic-instrumented.h | 334 +++++++++++-----------
+>  include/asm-generic/atomic-long.h         | 330 ++++++++++-----------
+>  scripts/atomic/gen-atomic-instrumented.sh |   6 +-
+>  scripts/atomic/gen-atomic-long.sh         |   2 +-
+>  4 files changed, 336 insertions(+), 336 deletions(-)
+
+Do we need to do similar for gen-atomic-fallback.sh and the fallbacks
+defined in scripts/atomic/fallbacks/ ?
+
+[...]
+
+> diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
+> index 8b8b2a6f8d68..68532d4f36ca 100755
+> --- a/scripts/atomic/gen-atomic-instrumented.sh
+> +++ b/scripts/atomic/gen-atomic-instrumented.sh
+> @@ -84,7 +84,7 @@ gen_proto_order_variant()
+>  	[ ! -z "${guard}" ] && printf "#if ${guard}\n"
 >  
->  cmpxchg - hardware-assisted atomic transaction that performs the following:
+>  cat <<EOF
+> -static inline ${ret}
+> +static __always_inline ${ret}
+
+We should add an include of <linux/compiler.h> to the preamble if we're
+explicitly using __always_inline.
+
+> diff --git a/scripts/atomic/gen-atomic-long.sh b/scripts/atomic/gen-atomic-long.sh
+> index c240a7231b2e..4036d2dd22e9 100755
+> --- a/scripts/atomic/gen-atomic-long.sh
+> +++ b/scripts/atomic/gen-atomic-long.sh
+> @@ -46,7 +46,7 @@ gen_proto_order_variant()
+>  	local retstmt="$(gen_ret_stmt "${meta}")"
 >  
-> -   A = B iff previous A == C
-> +   A = B if previous A == C
+>  cat <<EOF
+> -static inline ${ret}
+> +static __always_inline ${ret}
 
-This wasn't a typo. "iff" means "if and only if" which is a standard
-notation. That is, this is shorthand for:
+Likewise here
 
-  A = B if previous A == C
-  previous A == C if A = B
-
--- Steve
-
-
->  
->     R = cmpxchg(A, C, B) is saying that we replace A with B if and only if
->        current A is equal to C, and we put the old (current) A into R
-> -- 
+Thanks,
+Mark.
