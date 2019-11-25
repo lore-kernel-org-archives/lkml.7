@@ -2,77 +2,194 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592ABC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EEDC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C63C20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD53020748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AUHRyzZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfKYHjb (ORCPT
+        id S1727165AbfKYHjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:39:31 -0500
-Received: from verein.lst.de ([213.95.11.211]:34632 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfKYHjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:39:31 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0B29A68C65; Mon, 25 Nov 2019 08:39:24 +0100 (CET)
-Date:   Mon, 25 Nov 2019 08:39:23 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-arch@vger.kernel.org,
-        darren@stevens-zone.net, mad skateman <madskateman@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI
- board installed, unless RAM size limited to 3500M
-Message-ID: <20191125073923.GA30168@lst.de>
-References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de> <20191121072943.GA24024@lst.de> <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de> <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de> <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com> <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de> <20191121180226.GA3852@lst.de> <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
+        Mon, 25 Nov 2019 02:39:45 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23062 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725535AbfKYHjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 02:39:44 -0500
+X-UUID: a7f8c4951e594b3491593be5caa19473-20191125
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Xonewz7MZl6qXBBtwf96bK209oNV+emC1DroLdN2dlg=;
+        b=AUHRyzZJnrWnHnf6EinjG0QPl4pVx25U9jLWI22N1I42eSS1dtaByszWJ0qKGN9UtqSYhRNmZSNoqedexRiTczzN1FBz0h6GgwzGn6D7+97DoxxkHdiGW0duo9fGpVQRWYeNNPI2T0OqyfMJpFWFcKENaXd6Fv+g7erbrF7YE2w=;
+X-UUID: a7f8c4951e594b3491593be5caa19473-20191125
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2012890805; Mon, 25 Nov 2019 15:39:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 25 Nov 2019 15:39:26 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 25 Nov 2019 15:38:52 +0800
+Message-ID: <1574667574.9851.3.camel@mtkswgap22>
+Subject: Re: [PATCH v1 07/12] soc: mediatek: cmdq: add write_s function
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 25 Nov 2019 15:39:34 +0800
+In-Reply-To: <1574647703.4712.16.camel@mtksdaap41>
+References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574412997.19450.16.camel@mtksdaap41>
+         <1574417507.11977.14.camel@mtkswgap22>
+         <1574647703.4712.16.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 12:42:27PM +0100, Christian Zigotzky wrote:
-> Hello Christoph,
->
-> Please find attached the dmesg of your Git kernel.
+SGkgQ0ssDQoNCk9uIE1vbiwgMjAxOS0xMS0yNSBhdCAxMDowOCArMDgwMCwgQ0sgSHUgd3JvdGU6
+DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBGcmksIDIwMTktMTEtMjIgYXQgMTg6MTEgKzA4MDAs
+IERlbm5pcy1ZQyBIc2llaCB3cm90ZToNCj4gPiBIaSBDSywNCj4gPiANCj4gPiBPbiBGcmksIDIw
+MTktMTEtMjIgYXQgMTY6NTYgKzA4MDAsIENLIEh1IHdyb3RlOg0KPiA+ID4gSGksIERlbm5pczoN
+Cj4gPiA+IA0KPiA+ID4gT24gVGh1LCAyMDE5LTExLTIxIGF0IDE3OjEyICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+ID4gPiA+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVs
+cGVyIGZ1bmN0aW9ucyB3aGljaA0KPiA+ID4gPiBzdXBwb3J0IGxhcmdlIGRtYSBhY2Nlc3MuDQo+
+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15
+Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgICB8ICAgMzQgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrDQo+ID4gPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5oIHwgICAgMiArKw0KPiA+ID4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNt
+ZHEuaCAgICB8ICAgMTMgKysrKysrKysrKysrDQo+ID4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ5
+IGluc2VydGlvbnMoKykNCj4gPiA+ID4gDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1j
+bWRxLWhlbHBlci5jDQo+ID4gPiA+IGluZGV4IGQ0MTllOTkuLjFiMDc0YTkgMTAwNjQ0DQo+ID4g
+PiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gPiA+
+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gPiA+IEBA
+IC0xNSw2ICsxNSw5IEBADQo+ID4gPiA+ICAjZGVmaW5lIENNRFFfRU9DX0NNRAkJKCh1NjQpKChD
+TURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkpIFwNCj4gPiA+ID4gIAkJCQk8PCAz
+MiB8IENNRFFfRU9DX0lSUV9FTikNCj4gPiA+ID4gICNkZWZpbmUgQ01EUV9SRUdfVFlQRQkJMQ0K
+PiA+ID4gPiArI2RlZmluZSBDTURRX0FERFJfSElHSChhZGRyKQkoKHUzMikoKChhZGRyKSA+PiAx
+NikgJiBHRU5NQVNLKDMxLCAwKSkpDQo+ID4gPiA+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklU
+CUJJVCgxKQ0KPiA+ID4gPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRy
+KSB8IENNRFFfQUREUl9MT1dfQklUKQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICBzdHJ1Y3QgY21kcV9p
+bnN0cnVjdGlvbiB7DQo+ID4gPiA+ICAJdW5pb24gew0KPiA+ID4gPiBAQCAtMjI0LDYgKzIyNywz
+NyBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vi
+c3lzLA0KPiA+ID4gPiAgfQ0KPiA+ID4gPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9t
+YXNrKTsNCj4gPiA+ID4gIA0KPiA+ID4gPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNt
+ZHFfcGt0ICpwa3QsIGRtYV9hZGRyX3QgYWRkciwNCj4gPiA+ID4gKwkJICAgICB1MzIgdmFsdWUs
+IHUzMiBtYXNrKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9u
+IGluc3QgPSB7IHswfSB9Ow0KPiA+ID4gPiArCWludCBlcnI7DQo+ID4gPiA+ICsJY29uc3QgdTE2
+IGRzdF9yZWdfaWR4ID0gQ01EUV9TUFJfVEVNUDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWVyciA9
+IGNtZHFfcGt0X2Fzc2lnbihwa3QsIGRzdF9yZWdfaWR4LCBDTURRX0FERFJfSElHSChhZGRyKSk7
+DQo+ID4gPiA+ICsJaWYgKGVyciA8IDApDQo+ID4gPiA+ICsJCXJldHVybiBlcnI7DQo+ID4gPiA+
+ICsNCj4gPiA+ID4gKwlpZiAobWFzayAhPSBVMzJfTUFYKSB7DQo+ID4gPiA+ICsJCWluc3Qub3Ag
+PSBDTURRX0NPREVfTUFTSzsNCj4gPiA+ID4gKwkJaW5zdC5tYXNrID0gfm1hc2s7DQo+ID4gPiA+
+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gPiA+ICsJ
+CWlmIChlcnIgPCAwKQ0KPiA+ID4gPiArCQkJcmV0dXJuIGVycjsNCj4gPiA+ID4gKw0KPiA+ID4g
+PiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gPiA+ID4gKwl9IGVsc2Ug
+ew0KPiA+ID4gPiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1M7DQo+ID4gPiA+ICsJfQ0K
+PiA+ID4gPiArDQo+ID4gPiA+ICsJaW5zdC5zb3AgPSBkc3RfcmVnX2lkeDsNCj4gPiA+ID4gKwlp
+bnN0Lm9mZnNldCA9IENNRFFfQUREUl9MT1coYWRkcik7DQo+ID4gPiA+ICsJaW5zdC52YWx1ZSA9
+IHZhbHVlOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21t
+YW5kKHBrdCwgaW5zdCk7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICtFWFBPUlRfU1lNQk9MKGNtZHFf
+cGt0X3dyaXRlX3MpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICBpbnQgY21kcV9wa3Rfd2ZlKHN0cnVj
+dCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpDQo+ID4gPiA+ICB7DQo+ID4gPiA+ICAJc3RydWN0
+IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9saW51eC9t
+YWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+ID4gPiBpbmRleCAxMjFjM2JiLi44ZWY4N2Ux
+IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFp
+bGJveC5oDQo+ID4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWls
+Ym94LmgNCj4gPiA+ID4gQEAgLTU5LDYgKzU5LDggQEAgZW51bSBjbWRxX2NvZGUgew0KPiA+ID4g
+PiAgCUNNRFFfQ09ERV9KVU1QID0gMHgxMCwNCj4gPiA+ID4gIAlDTURRX0NPREVfV0ZFID0gMHgy
+MCwNCj4gPiA+ID4gIAlDTURRX0NPREVfRU9DID0gMHg0MCwNCj4gPiA+ID4gKwlDTURRX0NPREVf
+V1JJVEVfUyA9IDB4OTAsDQo+ID4gPiA+ICsJQ01EUV9DT0RFX1dSSVRFX1NfTUFTSyA9IDB4OTEs
+DQo+ID4gPiA+ICAJQ01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4gPiA+ID4gIH07DQo+ID4gPiA+
+ICANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmggYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gPiA+IGlu
+ZGV4IDgzMzQwMjEuLjhkYmQwNDYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
+c29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+ID4gPiBAQCAtMTIsNiArMTIsNyBAQA0KPiA+ID4gPiAg
+I2luY2x1ZGUgPGxpbnV4L3RpbWVyLmg+DQo+ID4gPiA+ICANCj4gPiA+ID4gICNkZWZpbmUgQ01E
+UV9OT19USU1FT1VUCQkweGZmZmZmZmZmdQ0KPiA+ID4gPiArI2RlZmluZSBDTURRX1NQUl9URU1Q
+CQkwDQo+ID4gPiA+ICANCj4gPiA+ID4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gPiA+ID4gIA0KPiA+
+ID4gPiBAQCAtMTAzLDYgKzEwNCwxOCBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3Qg
+Y21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiA+ID4gPiAgCQkJdTE2IG9mZnNldCwgdTMyIHZh
+bHVlLCB1MzIgbWFzayk7DQo+ID4gPiA+ICANCj4gPiA+ID4gIC8qKg0KPiA+ID4gPiArICogY21k
+cV9wa3Rfd3JpdGVfcygpIC0gYXBwZW5kIHdyaXRlX3MgY29tbWFuZCB3aXRoIG1hc2sgdG8gdGhl
+IENNRFEgcGFja2V0DQo+ID4gPiA+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNrZXQNCj4gPiA+ID4g
+KyAqIEBhZGRyOgl0aGUgcGh5c2ljYWwgYWRkcmVzcyBvZiByZWdpc3RlciBvciBkbWENCj4gPiA+
+ID4gKyAqIEB2YWx1ZToJdGhlIHNwZWNpZmllZCB0YXJnZXQgdmFsdWUNCj4gPiA+ID4gKyAqIEBt
+YXNrOgl0aGUgc3BlY2lmaWVkIHRhcmdldCBtYXNrDQo+ID4gPiA+ICsgKg0KPiA+ID4gPiArICog
+UmV0dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+
+ID4gPiA+ICsgKi8NCj4gPiA+ID4gK2ludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3Br
+dCAqcGt0LCBkbWFfYWRkcl90IGFkZHIsDQo+ID4gPiA+ICsJCSAgICAgdTMyIHZhbHVlLCB1MzIg
+bWFzayk7DQo+ID4gPiANCj4gPiA+IFlvdSBoYXZlIGFuIEFQSSBjbWRxX3BrdF9yZWFkX3MoKSB3
+aGljaCByZWFkIGRhdGEgaW50byBnY2UgaW50ZXJuYWwNCj4gPiA+IHJlZ2lzdGVyLCBzbyBJIGV4
+cGVjdCB0aGF0IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBhbiBBUEkgd2hpY2ggd3JpdGUgZGF0YQ0K
+PiA+ID4gZnJvbSBnY2UgaW50ZXJuYWwgcmVnaXN0ZXIsIHRoZSBleHBlY3RlZCBwcm90b3R5cGUg
+aXMNCj4gPiA+IA0KPiA+ID4gaW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpw
+a3QsIHBoeXNfYWRkcl90IGFkZHIsIHUxNg0KPiA+ID4gcmVnX2lkeCk7DQo+ID4gPiANCj4gPiA+
+IFlvdXIgdmVyc2lvbiB3b3VsZCBjb25mdXNlIHRoZSB1c2VyIGJlY2F1c2UgeW91IGhpZGUgdGhl
+IGludGVybmFsDQo+ID4gPiByZWdpc3RlciBwYXJhbWV0ZXIuIElmIHlvdSB3YW50IHRvIHByb3Zp
+ZGUgdGhpcyBzZXJ2aWNlLCBJIHdvdWxkIGxpa2UNCj4gPiA+IHlvdSB0byBjaGFuZ2UgdGhlIGZ1
+bmN0aW9uIG5hbWUgc28gdGhhdCB1c2VyIHdvdWxkIG5vdCBiZSBjb25mdXNlZCBhbmQNCj4gPiA+
+IGVhc2lseSB0byB1bmRlcnN0YW5kIHdoYXQgeW91IHdhbnQgdG8gZG8gaW4gdGhpcyBmdW5jdGlv
+bi4NCj4gPiA+IA0KPiA+ID4gQW5vdGhlciBjaG9pY2UgaXM6IGNtZHFfcGt0X3dyaXRlX3MoKSBp
+cyBpbXBsZW1lbnRlZCBpbiBteSBkZWZpbml0aW9uLA0KPiA+ID4gYW5kIHVzZXIgY291bGQgY2Fs
+bCBjbWRxX3BrdF9hc3NpZ24oKSBhbmQgY21kcV9wa3Rfd3JpdGVfcygpIHRvIGFjaGlldmUNCj4g
+PiA+IHRoaXMgZnVuY3Rpb24uDQo+ID4gPiANCj4gPiA+IFJlZ2FyZHMsDQo+ID4gPiBDSw0KPiA+
+ID4gDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQuDQo+ID4gDQo+ID4gT2ssIHdl
+IGhhdmUgdG8gcHJvdmlkZSB3cml0ZSBjb25zdGFudCB2YWx1ZSBzZXJ2aWNlIHRvIGNsaWVudCwg
+c28gSSB3aWxsDQo+ID4gY2hhbmdlIHRoZSBmdW5jdGlvbiBuYW1lIHRvIGNtZHFfcGt0X3dyaXRl
+X3NfdmFsdWUoKSBpbiB0aGlzIHBhdGNoLg0KPiA+IA0KPiA+IEFuZCBzaW5jZSBpdCBpcyBiZXR0
+ZXIgdG8gcHJvdmlkZSBjb25zaXN0ZW50IEFQSSBzbyBJIHdpbGwgZGVzaWduDQo+ID4gYW5vdGhl
+ciBmdW5jdGlvbiB3aXRoIGludGVyZmFjZSBhcyB5b3VyIHN1Z2dlc3Rpb246DQo+ID4gaW50IGNt
+ZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90IGFkZHIsIHUx
+Ng0KPiA+IHJlZ19pZHgpOw0KPiA+IA0KPiA+IEluIGFub3RoZXIgcGF0Y2ggSSBwcm92aWRlIGNt
+ZHFfcGt0X21lbV9tb3ZlKCkuIEkgd2lsbCBtb3ZlIHBhcnQgb2YNCj4gPiBpbXBsZW1lbnRhdGlv
+biB0byBjbWRxX3BrdF93cml0ZV9zKCksIHNvIHRoYXQgY21kcV9wa3RfbWVtX21vdmUoKSBjYW4g
+YmUNCj4gPiBjb21iaW5hdGlvbiBvZiBjbWRxX3BrdF9yZWFkX3MoKSBhbmQgY21kcV9wa3Rfd3Jp
+dGVfcygpLg0KPiA+IA0KPiA+IEhvdyBkbyB5b3UgdGhpbms/DQo+IA0KPiBTbyBjbWRxX3BrdF9y
+ZWFkX3MoKS9jbWRxX3BrdF93cml0ZV9zKCkgYXJlIHRoZSBiYXNpYyBmdW5jdGlvbiBhbmQNCj4g
+Y21kcV9wa3Rfd3JpdGVfc192YWx1ZSgpL2NtZHFfcGt0X21lbV9tb3ZlKCkgYXJlIGNvbWJpbmF0
+aW9uIGZ1bmN0aW9uLiBJDQo+IHdvdWxkIGxpa2UgdG8ga2VlcCB0aGUgYmFzaWMgZnVuY3Rpb24g
+YW5kIGRyb3AgdGhlIGNvbWJpbmF0aW9uIGZ1bmN0aW9uDQo+IGF0IGZpcnN0LiBJIHRoaW5rIHdo
+YXQgd2UgcGxhY2UgaW4gaGVscGVyIGlzIHVzZWQgYnkgdHdvIG9yIG1vcmUNCj4gY2xpZW50cy4g
+SXQncyBzdHJvbmcgYmVsaWV2ZWQgdGhhdCBiYXNpYyBmdW5jdGlvbiBjb3VsZCBiZSB1c2VkIGJ5
+IHR3bw0KPiBvciBtb3JlIGNsaWVudCwgYnV0IGl0J3MgZG91YnQgdGhhdCBjb21iaW5hdGlvbiB3
+b3VsZCBiZS4gSWYgb25seSBvbmUNCj4gY2xpZW50IHVzZSB0aGlzIGNvbWJpbmF0aW9uLCBqdXN0
+IHBsYWNlIHRoZSBjb21iaW5hdGlvbiBpbiB0aGF0IGNsaWVudC4NCj4gSWYgbGF0ZXIgc2Vjb25k
+IGNsaWVudCB1c2UgdGhpcyBjb21iaW5hdGlvbiwgd2UgdGhlbiBtb3ZlIHRoZSBjb21tb24NCj4g
+Y29kZSBpbiBoZWxwZXIgYW5kIGJvdGggY2xpZW50IGNhbGwgdGhlIGhlbHBlciBmdW5jdGlvbi4g
+SWYgeW91IGNvdWxkDQo+IHByb3ZlIHRoYXQgdGhpcyBjb21iaW5hdGlvbiBpcyB1c2VkIGJ5IHR3
+byBvciBtb3JlIGNsaWVudHMgbm93LCBqdXN0DQo+IHNob3cgbWUuDQo+IA0KPiBSZWdhcmRzLA0K
+PiBDSw0KPiANCg0KT2ssIEknbGwgcmVtb3ZlIGNvbWJpbmF0aW9uIGZ1bmN0aW9uIGluIG5leHQg
+dmVyc2lvbi4NClRoYW5rcyBmb3IgeW91IGNvbW1lbnQuDQoNCg0KUmVnYXJkcywNCkRlbm5pcw0K
+DQo+ID4gDQo+ID4gDQo+ID4gUmVnYXJkcywNCj4gPiBEZW5uaXMNCj4gPiANCj4gPiA+ID4gKw0K
+PiA+ID4gPiArLyoqDQo+ID4gPiA+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZv
+ciBldmVudCBjb21tYW5kIHRvIHRoZSBDTURRIHBhY2tldA0KPiA+ID4gPiAgICogQHBrdDoJdGhl
+IENNRFEgcGFja2V0DQo+ID4gPiA+ICAgKiBAZXZlbnQ6CXRoZSBkZXNpcmVkIGV2ZW50IHR5cGUg
+dG8gIndhaXQgYW5kIENMRUFSIg0KPiA+ID4gDQo+ID4gPiANCj4gPiANCj4gPiANCj4gDQo+IA0K
+DQo=
 
-Thanks.  It looks like on your platform the swiotlb buffer isn't
-actually addressable based on the bus dma mask limit, which is rather
-interesting.  swiotlb_init uses memblock_alloc_low to allocate the
-buffer, and I'll need some help from Mike and the powerpc maintainers
-to figure out how that select where to allocate the buffer from, and
-how we can move it to a lower address.  My gut feeling would be to try
-to do what arm64 does and define a new ARCH_LOW_ADDRESS_LIMIT, preferably
-without needing too much arch specific magic.
-
-As a quick hack can you try this patch on top of the tree from Friday?
-
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index f491690d54c6..e3f95c362922 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -344,7 +344,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
- #define MEMBLOCK_LOW_LIMIT 0
- 
- #ifndef ARCH_LOW_ADDRESS_LIMIT
--#define ARCH_LOW_ADDRESS_LIMIT  0xffffffffUL
-+#define ARCH_LOW_ADDRESS_LIMIT  0x0fffffffUL
- #endif
- 
- phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
