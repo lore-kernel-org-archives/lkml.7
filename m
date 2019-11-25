@@ -6,116 +6,77 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DB8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8C72082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0112D20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfKYPRE (ORCPT
+        id S1728587AbfKYPRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:17:04 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54402 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbfKYPRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:17:04 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7CD081C2007; Mon, 25 Nov 2019 16:17:02 +0100 (CET)
-Date:   Mon, 25 Nov 2019 16:17:01 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>, dtor@google.com,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dan Murphy <dmurphy@ti.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Subject: Re: [PATCH v5 03/26] dt-bindings: leds: Add LED_FUNCTION definitions
-Message-ID: <20191125151701.GB3816@amd>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
- <20190609190803.14815-4-jacek.anaszewski@gmail.com>
- <CAMuHMdXkQCVXdsbS1Tf+7wkafJ4JxhxXeh4R7OWOz5uGs-jL5Q@mail.gmail.com>
+        Mon, 25 Nov 2019 10:17:50 -0500
+Received: from smtp1.axis.com ([195.60.68.17]:47971 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728388AbfKYPRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:17:49 -0500
+IronPort-SDR: v9qq5ru8n09NwMwAv62WLnVblLhJV7NObe8FOI3PcYeHa9Z52LrN2MGXYxRgfbNcnjSkPmUo2P
+ NXwc1sZ1b9qcXO6NxH44PtgOm79Gfc1NcFHXxqqRyuP/+KLGo2f1qgxgMWNucDfkaZeui6gHjE
+ lWp9iRTJCgvmlogGG+EUwlJW2+RngiFDVnue1V8H9KxGazln0LyuodC4Y43tTGC6b4n9I12rgs
+ XyBChdNteBYEnsa8SPYYOJUDTfe7xcSHuAgdPaMoWHtfs8Z4MPG0QWDHpUXiTs4kdpNHmg3sZD
+ wNw=
+X-IronPort-AV: E=Sophos;i="5.69,241,1571695200"; 
+   d="scan'208";a="2895546"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Date:   Mon, 25 Nov 2019 16:17:47 +0100
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>,
+        Pantelis Antoniou <panto@antoniou-consulting.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH] of: overlay: add_changeset_property() memory leak
+Message-ID: <20191125151747.hqm55drde5ldkrte@axis.com>
+References: <1574363816-13981-1-git-send-email-frowand.list@gmail.com>
+ <9eda204f-aaa0-54a1-83eb-a012ddeeaac3@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXkQCVXdsbS1Tf+7wkafJ4JxhxXeh4R7OWOz5uGs-jL5Q@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <9eda204f-aaa0-54a1-83eb-a012ddeeaac3@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 08:20:21PM +0100, Frank Rowand wrote:
+> On 11/21/19 1:16 PM, frowand.list@gmail.com wrote:
+> > From: Frank Rowand <frank.rowand@sony.com>
+> > 
+> > No changeset entries are created for #address-cells and #size-cells
+> > properties, but the duplicated properties are never freed.  This
+> > results in a memory leak which is detected by kmemleak:
+> > 
+> >  unreferenced object 0x85887180 (size 64):
+> >    backtrace:
+> >      kmem_cache_alloc_trace+0x1fb/0x1fc
+> >      __of_prop_dup+0x25/0x7c
+> >      add_changeset_property+0x17f/0x370
+> >      build_changeset_next_level+0x29/0x20c
+> >      of_overlay_fdt_apply+0x32b/0x6b4
+> >      ...
+> > 
+> > Fixes: 6f75118800acf77f8 ("of: overlay: validate overlay properties #address-cells and #size-cells")
+> > Reported-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> > Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> 
+> Can you please check whether this patch fixes the memleak that you
+> found and fixed in "[PATCH 1/2] of: overlay: fix properties memory leak"?
 
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-On Fri 2019-11-15 14:01:50, Geert Uytterhoeven wrote:
-> Hi Jacek,
->=20
-> On Sun, Jun 9, 2019 at 9:09 PM Jacek Anaszewski
-> <jacek.anaszewski@gmail.com> wrote:
-> > Add initial set of common LED function definitions.
-> >
-> > Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->=20
-> > --- a/include/dt-bindings/leds/common.h
-> > +++ b/include/dt-bindings/leds/common.h
-> > @@ -30,4 +31,45 @@
-> >  #define LED_COLOR_ID_IR                7
-> >  #define LED_COLOR_ID_MAX       8
-> >
-> > +/* Standard LED functions */
-> > +#define LED_FUNCTION_ACTIVITY "activity"
->=20
-> What's the appropriate function for "general purpose" or "user" LEDs on
-> development boards, where the LEDs don't have fixed functions, unlike
-> on real products?
-> Perhaps just LED_FUNCTION_INDICATOR?
-
-I'd prefer such LEDs to not exist :-).
-
-> I noticed your very initial submission defined LED_FUNCTION_USER "user".
-> I couldn't find an explanation for the rationale behind its removal in la=
-ter
-> revisions, or any discussion asking for that.
-
-There are "user" leds even on non-development boads... one is labeled
-"scroll lock".
-
-For the development board, I'd actually prefer to assign some
-reasonable functions. If vendor BSP uses the LEDs for disk and network
-indicators (for example) I'd just mark it as a disk and network
-LEDs...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3b8GwACgkQMOfwapXb+vKOngCeMPIGUI5sLmxz2QWwUEawrSyU
-Wu4An2/gtTGMzwzqq4R6aHay3jUaFgBo
-=JtRl
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
+Thanks.
