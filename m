@@ -2,321 +2,200 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F12C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F462207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC18207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfKYMdu (ORCPT
+        id S1727209AbfKYMga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:33:50 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:24866 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfKYMds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:33:48 -0500
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 25 Nov 2019
- 20:34:07 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/2] watchdog: add meson secure watchdog driver
-Date:   Mon, 25 Nov 2019 20:33:38 +0800
-Message-ID: <1574685218-31164-3-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574685218-31164-1-git-send-email-xingyu.chen@amlogic.com>
-References: <1574685218-31164-1-git-send-email-xingyu.chen@amlogic.com>
+        Mon, 25 Nov 2019 07:36:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35022 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfKYMg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 07:36:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4FA3AC9F;
+        Mon, 25 Nov 2019 12:36:26 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 13:36:25 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] printk for 5.5
+Message-ID: <20191125123625.ddtry6j75bfjrbvi@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The watchdog controller on the Meson-A/C series SoCs is moved to secure
-world, watchdog operation needs to be done in secure EL3 mode via ATF,
-Non-secure world can call SMC instruction to trap to AFT for watchdog
-operation.
+Linus,
 
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
----
- drivers/watchdog/Kconfig         |  16 +++
- drivers/watchdog/Makefile        |   1 +
- drivers/watchdog/meson_sec_wdt.c | 207 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 224 insertions(+)
- create mode 100644 drivers/watchdog/meson_sec_wdt.c
+please pull the latest printk changes from
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 58e7c10..e305fba 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -826,6 +826,22 @@ config MESON_GXBB_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called meson_gxbb_wdt.
- 
-+config MESON_SEC_WATCHDOG
-+	tristate "Amlogic Meson Secure watchdog support"
-+	depends on MESON_SM
-+	select WATCHDOG_CORE
-+	help
-+	  The watchdog controller on the Meson-A/C series SoCs is moved to
-+	  secure world, watchdog operation needs to be done in secure EL3
-+	  mode via ATF, non-secure world can call SMC instruction to trap
-+	  to ATF for the watchdog operation.
-+
-+	  Say Y here if watchdog controller on Meson SoCs is located in
-+	  secure world.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called meson_sec_wdt.
-+
- config MESON_WATCHDOG
- 	tristate "Amlogic Meson SoCs watchdog support"
- 	depends on ARCH_MESON || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 2ee352b..5e6b73d 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
- obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
- obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
- obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
-+obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
- obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
- obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
- obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
-diff --git a/drivers/watchdog/meson_sec_wdt.c b/drivers/watchdog/meson_sec_wdt.c
-new file mode 100644
-index 00000000..c022d6d
---- /dev/null
-+++ b/drivers/watchdog/meson_sec_wdt.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-+ *
-+ */
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/watchdog.h>
-+#include <linux/firmware/meson/meson_sm.h>
-+
-+#define MESON_SIP_WDT_DISABLE		0x1
-+#define MESON_SIP_WDT_ENABLE		0x2
-+#define MESON_SIP_WDT_PING		0x3
-+#define MESON_SIP_WDT_INIT		0x4
-+#define MESON_SIP_WDT_RESETNOW		0x5
-+#define MESON_SIP_WDT_SETTIMEOUT	0x6
-+#define MESON_SIP_WDT_GETTIMELEFT	0x7
-+
-+#define DEFAULT_TIMEOUT			30 /* seconds */
-+
-+/*
-+ * Watchdog timer tick is set to 1ms in secfw side, and tick count is
-+ * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
-+ * timeout value is 0xffff ms.
-+ */
-+#define MAX_TIMEOUT_MS			0xFFFF
-+#define DRV_NAME			"meson-sec-wdt"
-+
-+static struct platform_device *platform_device;
-+struct meson_sec_wdt {
-+	struct watchdog_device wdt_dev;
-+	struct meson_sm_firmware *fw;
-+};
-+
-+static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_ENABLE, 0, 0, 0, 0);
-+}
-+
-+static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
-+}
-+
-+static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_PING, 0, 0, 0, 0);
-+}
-+
-+static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
-+				     unsigned int timeout)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	wdt_dev->timeout = timeout;
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_SETTIMEOUT,
-+			     wdt_dev->timeout * 1000, 0, 0, 0);
-+}
-+
-+static unsigned int meson_sec_wdt_get_timeleft(struct watchdog_device *wdt_dev)
-+{
-+	int ret;
-+	unsigned int timeleft;
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	ret = meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, &timeleft,
-+			    MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
-+
-+	if (ret)
-+		return 0;
-+
-+	return timeleft;
-+}
-+
-+static const struct watchdog_ops meson_sec_wdt_ops = {
-+	.start = meson_sec_wdt_start,
-+	.stop = meson_sec_wdt_stop,
-+	.ping = meson_sec_wdt_ping,
-+	.set_timeout = meson_sec_wdt_set_timeout,
-+	.get_timeleft = meson_sec_wdt_get_timeleft,
-+};
-+
-+static const struct watchdog_info meson_sec_wdt_info = {
-+	.identity = "Meson Secure Watchdog Timer",
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+};
-+
-+static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
-+{
-+	struct meson_sec_wdt *data = dev_get_drvdata(dev);
-+
-+	if (watchdog_active(&data->wdt_dev))
-+		return meson_sec_wdt_start(&data->wdt_dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
-+{
-+	struct meson_sec_wdt *data = dev_get_drvdata(dev);
-+
-+	if (watchdog_active(&data->wdt_dev))
-+		return meson_sec_wdt_stop(&data->wdt_dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, meson_sec_wdt_resume)
-+};
-+
-+static int meson_sec_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct meson_sec_wdt *data;
-+	struct device_node *sm_np;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	sm_np = of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm");
-+	if (!sm_np) {
-+		dev_err(&pdev->dev, "no secure-monitor node\n");
-+		return -EINVAL;
-+	}
-+
-+	data->fw = meson_sm_get(sm_np);
-+	of_node_put(sm_np);
-+	if (!data->fw)
-+		return -EPROBE_DEFER;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->wdt_dev.parent = dev;
-+	data->wdt_dev.info = &meson_sec_wdt_info;
-+	data->wdt_dev.ops = &meson_sec_wdt_ops;
-+	data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
-+	data->wdt_dev.min_timeout = 1;
-+	data->wdt_dev.timeout = DEFAULT_TIMEOUT;
-+	watchdog_set_drvdata(&data->wdt_dev, data);
-+
-+	ret = meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			    MESON_SIP_WDT_INIT,
-+			    data->wdt_dev.timeout * 1000, 0, 0, 0);
-+	if (ret)
-+		return ret;
-+
-+	watchdog_stop_on_reboot(&data->wdt_dev);
-+
-+	return devm_watchdog_register_device(dev, &data->wdt_dev);
-+}
-+
-+static struct platform_driver meson_sec_wdt_driver = {
-+	.probe	= meson_sec_wdt_probe,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.pm = &meson_sec_wdt_pm_ops,
-+	},
-+};
-+
-+static int __init meson_sec_wdt_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&meson_sec_wdt_driver);
-+	if (ret)
-+		return ret;
-+
-+	platform_device = platform_device_register_simple(DRV_NAME,
-+							  -1, NULL, 0);
-+	if (IS_ERR(platform_device)) {
-+		ret = PTR_ERR(platform_device);
-+		platform_driver_unregister(&meson_sec_wdt_driver);
-+	}
-+
-+	return ret;
-+}
-+
-+static void __exit meson_sec_wdt_exit(void)
-+{
-+	platform_device_unregister(platform_device);
-+	platform_driver_unregister(&meson_sec_wdt_driver);
-+}
-+
-+module_init(meson_sec_wdt_init);
-+module_exit(meson_sec_wdt_exit);
-+
-+MODULE_AUTHOR("Xingyu Chen <xingyu.chen@amlogic.com>");
-+MODULE_DESCRIPTION("Amlogic Secure Watchdog Timer Driver");
-+MODULE_LICENSE("Dual MIT/GPL");
--- 
-2.7.4
+  git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk tags/printk-for-5.5
 
+
+===========================
+
+- Allow to print symbolic error names via new %pe modifier.
+
+- Use pr_warn() instead of the remaining pr_warning() calls.
+  Fix formatting of the related lines.
+
+- Add VSPRINTF entry to MAINTAINERS.
+
+===========================
+
+There are 3 expected merge conflicts:
+
+  + with 'AKPM' tree:
+    + both trees add a new independent configure option in lib/Kconfig.debug
+
+  + with 'pm' tree:
+    + both trees add new independent printf selftest
+
+    + 'printk' tree adds 'e' into 'extension' string;
+      'pm' tree adds support to check the third letter
+      and detect %pfw
+
+
+----------------------------------------------------------------
+Kefeng Wang (29):
+      alpha: Use pr_warn instead of pr_warning
+      arm64: Use pr_warn instead of pr_warning
+      ia64: Use pr_warn instead of pr_warning
+      riscv: Use pr_warn instead of pr_warning
+      sh: Use pr_warn instead of pr_warning
+      sparc: Use pr_warn instead of pr_warning
+      x86: Use pr_warn instead of pr_warning
+      acpi: Use pr_warn instead of pr_warning
+      drbd: Use pr_warn instead of pr_warning
+      gdrom: Use pr_warn instead of pr_warning
+      clocksource: samsung_pwm_timer: Use pr_warn instead of pr_warning
+      crypto: n2: Use pr_warn instead of pr_warning
+      ide: Use pr_warn instead of pr_warning
+      idsn: Use pr_warn instead of pr_warning
+      macintosh: Use pr_warn instead of pr_warning
+      of: Use pr_warn instead of pr_warning
+      oprofile: Use pr_warn instead of pr_warning
+      platform/x86: eeepc-laptop: Use pr_warn instead of pr_warning
+      platform/x86: asus-laptop: Use pr_warn instead of pr_warning
+      platform/x86: intel_oaktrail: Use pr_warn instead of pr_warning
+      scsi: Use pr_warn instead of pr_warning
+      sh/intc: Use pr_warn instead of pr_warning
+      fs: afs: Use pr_warn instead of pr_warning
+      vgacon: Use pr_warn instead of pr_warning
+      dma-debug: Use pr_warn instead of pr_warning
+      trace: Use pr_warn instead of pr_warning
+      lib: cpu_rmap: Use pr_warn instead of pr_warning
+      ASoC: samsung: Use pr_warn instead of pr_warning
+      tools lib api: Renaming pr_warning to pr_warn
+
+Petr Mladek (2):
+      Merge branch 'for-5.5-pr-warn' into for-5.5
+      MAINTAINERS: Add VSPRINTF
+
+Rasmus Villemoes (1):
+      printf: add support for printing symbolic error names
+
+Uwe Kleine-König (1):
+      checkpatch: don't warn about new vsprintf pointer extension '%pe'
+
+ Documentation/core-api/printk-formats.rst |  12 ++
+ MAINTAINERS                               |  12 ++
+ arch/alpha/kernel/perf_event.c            |   4 +-
+ arch/arm64/kernel/hw_breakpoint.c         |   8 +-
+ arch/arm64/kernel/smp.c                   |  11 +-
+ arch/ia64/kernel/setup.c                  |   2 +-
+ arch/riscv/kernel/module.c                |   4 +-
+ arch/sh/boards/mach-sdk7786/nmi.c         |   2 +-
+ arch/sh/drivers/pci/fixups-sdk7786.c      |   2 +-
+ arch/sh/kernel/io_trapped.c               |   2 +-
+ arch/sh/kernel/setup.c                    |   2 +-
+ arch/sh/mm/consistent.c                   |   5 +-
+ arch/sparc/kernel/smp_64.c                |   6 +-
+ arch/x86/kernel/amd_gart_64.c             |  12 +-
+ arch/x86/kernel/apic/apic.c               |  41 +++---
+ arch/x86/kernel/setup_percpu.c            |   4 +-
+ arch/x86/kernel/tboot.c                   |  15 +-
+ arch/x86/kernel/tsc_sync.c                |   8 +-
+ arch/x86/kernel/umip.c                    |   6 +-
+ arch/x86/mm/kmmio.c                       |   7 +-
+ arch/x86/mm/mmio-mod.c                    |   6 +-
+ arch/x86/mm/numa_emulation.c              |   4 +-
+ arch/x86/mm/testmmiotrace.c               |   6 +-
+ arch/x86/oprofile/op_x86_model.h          |   6 +-
+ arch/x86/platform/olpc/olpc-xo15-sci.c    |   2 +-
+ arch/x86/platform/sfi/sfi.c               |   3 +-
+ arch/x86/xen/setup.c                      |   2 +-
+ drivers/acpi/apei/apei-base.c             |  44 +++---
+ drivers/acpi/apei/einj.c                  |   4 +-
+ drivers/acpi/apei/erst-dbg.c              |   5 +-
+ drivers/acpi/apei/ghes.c                  |  25 ++--
+ drivers/acpi/apei/hest.c                  |  14 +-
+ drivers/acpi/battery.c                    |   2 +-
+ drivers/acpi/resource.c                   |   4 +-
+ drivers/block/drbd/drbd_nl.c              |  13 +-
+ drivers/cdrom/gdrom.c                     |   4 +-
+ drivers/clocksource/samsung_pwm_timer.c   |   3 +-
+ drivers/crypto/n2_core.c                  |  12 +-
+ drivers/ide/tx4938ide.c                   |   2 +-
+ drivers/ide/tx4939ide.c                   |   6 +-
+ drivers/isdn/hardware/mISDN/avmfritz.c    |  16 +--
+ drivers/isdn/hardware/mISDN/hfcmulti.c    |   8 +-
+ drivers/isdn/hardware/mISDN/hfcpci.c      |   3 +-
+ drivers/isdn/hardware/mISDN/hfcsusb.c     |   4 +-
+ drivers/isdn/hardware/mISDN/mISDNipac.c   |   4 +-
+ drivers/isdn/hardware/mISDN/mISDNisar.c   |  10 +-
+ drivers/isdn/hardware/mISDN/netjet.c      |   8 +-
+ drivers/isdn/hardware/mISDN/w6692.c       |  12 +-
+ drivers/isdn/mISDN/hwchannel.c            |   7 +-
+ drivers/macintosh/windfarm_fcu_controls.c |   4 +-
+ drivers/macintosh/windfarm_lm87_sensor.c  |   4 +-
+ drivers/macintosh/windfarm_pm72.c         |  22 +--
+ drivers/macintosh/windfarm_rm31.c         |   6 +-
+ drivers/of/fdt.c                          |  20 +--
+ drivers/oprofile/oprofile_perf.c          |   8 +-
+ drivers/platform/x86/asus-laptop.c        |   2 +-
+ drivers/platform/x86/eeepc-laptop.c       |   2 +-
+ drivers/platform/x86/intel_oaktrail.c     |  10 +-
+ drivers/scsi/a3000.c                      |   2 +-
+ drivers/sh/intc/core.c                    |   4 +-
+ drivers/video/console/vgacon.c            |   6 +-
+ fs/afs/flock.c                            |   4 +-
+ fs/afs/inode.c                            |  13 +-
+ fs/afs/yfsclient.c                        |   4 +-
+ include/linux/errname.h                   |  16 +++
+ kernel/dma/debug.c                        |   2 +-
+ kernel/trace/trace_benchmark.c            |   4 +-
+ lib/Kconfig.debug                         |   9 ++
+ lib/Makefile                              |   1 +
+ lib/cpu_rmap.c                            |   2 +-
+ lib/errname.c                             | 223 ++++++++++++++++++++++++++++++
+ lib/test_printf.c                         |  21 +++
+ lib/vsprintf.c                            |  27 ++++
+ scripts/checkpatch.pl                     |   2 +-
+ sound/soc/samsung/s3c-i2s-v2.c            |   6 +-
+ tools/lib/api/debug-internal.h            |   4 +-
+ tools/lib/api/debug.c                     |   4 +-
+ tools/lib/api/fs/fs.c                     |   4 +-
+ 78 files changed, 571 insertions(+), 269 deletions(-)
+ create mode 100644 include/linux/errname.h
+ create mode 100644 lib/errname.c
