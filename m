@@ -2,273 +2,135 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ED6C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC41C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942A420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="pwFxMwL5"
+	by mail.kernel.org (Postfix) with ESMTP id CC5D920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfKYRFp (ORCPT
+        id S1729033AbfKYRJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:05:45 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:14092 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbfKYRFn (ORCPT
+        Mon, 25 Nov 2019 12:09:12 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:32944 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728915AbfKYRJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:05:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574701539;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=53qG48IklGrDeQf7pc+hhg5H/dz6HcMn6cl+jKa+Pn8=;
-        b=pwFxMwL50TeCnvhz7eQ8TwF4rizpX+wbZExt5+CjRobScgXTsK/3PgIjh6myKemVyb
-        V7M6ZpSZfRv5rfqXBA6rnFAAdomI2nEnVZa+iNYq4qDFteEN1zvAT9Xh1ujK8aLHSZkD
-        j9QbFbjLzai3g/DIhXGGxXpgm1JBq0hxIsGgk/bKQwVcPGjyUKLYk5l1NdoHs7rHFKwx
-        1q0irm1zPjwxDFWetybSyc+lyD5IPpZHHiHlK9rS7vlal1k9tyY1APhcMfyzt6yNihbD
-        Q3pghJnGSrxDdcsKFphf63gWsH1GHa96vt31RXHTIMGVKmv1XUCUzzmyr8gUORCFkRir
-        nOSQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQr4OGUPX+1NmWArOmLo="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id 304194vAPH5b2r6
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 25 Nov 2019 18:05:37 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/4] ARM: dts: ux500: Disable I2C/SPI buses by default
-Date:   Mon, 25 Nov 2019 18:04:25 +0100
-Message-Id: <20191125170428.76069-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.0
+        Mon, 25 Nov 2019 12:09:11 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A2F4D28FB79
+Subject: Re: [PATCH v2] mfd / platform: cros_ec: Query EC protocol version if
+ EC transitions between RO/RW
+To:     Yicheng Li <yichengli@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     bleung@chromium.org, gwendal@chromium.org
+References: <20191122212905.35679-1-yichengli@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <0f223903-ec93-a5ec-e858-fa0e2e282cf3@collabora.com>
+Date:   Mon, 25 Nov 2019 18:09:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191122212905.35679-1-yichengli@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, all 5 I2C and 6 SPI buses are probed and exposed
-to user-space by default - even if they are not muxed to any pins
-on the board. This means that user-space sees an I2C/SPI bus that
-cannot be actually used properly.
+Hi,
 
-In some cases this was used to put the corresponding pins into
-a low power sleep mode - but even then the pins first need to be
-configured by the board-specific device tree part.
+On 22/11/19 22:29, Yicheng Li wrote:
+> RO and RW of EC may have different EC protocol version. If EC transitions
+> between RO and RW, but AP does not reboot (this is true for fingerprint
+> microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+> still uses the protocol version queried before transition, which can
+> cause problems. In the case of fingerprint microcontroller, this causes
+> AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+> interrupt handler, which in turn prevents RO to clear the interrupt
+> line to AP, in an infinite loop.
+> 
+> Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+> might have been a transition between RO and RW, so re-query the protocol.
+> 
+> Signed-off-by: Yicheng Li <yichengli@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec.c           | 23 +++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |  5 +++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+> index 9b2d07422e17..a72514ac3ce7 100644
+> --- a/drivers/platform/chrome/cros_ec.c
+> +++ b/drivers/platform/chrome/cros_ec.c
+> @@ -104,6 +104,22 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>  	return ret;
+>  }
+>  
+> +static int cros_ec_ready_event(struct notifier_block *nb,
+> +	unsigned long queued_during_suspend, void *_notify)
+> +{
+> +	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
+> +						     notifier_ready);
+> +	u32 host_event = cros_ec_get_host_event(ec_dev);
+> +
+> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
+> +		mutex_lock(&ec_dev->lock);
+> +		cros_ec_query_all(ec_dev);
+> +		mutex_unlock(&ec_dev->lock);
+> +		return NOTIFY_OK;
 
-Avoid exposing unconfigured devices to user-space by disabling
-the I2C/SPI buses by default. Enable them in the board device trees
-when needed.
+I think you're missing a closing bracket here. Please make sure to do a build
+test before sending the patches to the mailing list.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- arch/arm/boot/dts/ste-dbx5x0.dtsi     | 22 ++++++++++++++++++++++
- arch/arm/boot/dts/ste-href.dtsi       |  4 ++++
- arch/arm/boot/dts/ste-hrefprev60.dtsi |  1 +
- arch/arm/boot/dts/ste-snowball.dts    |  5 +++++
- 4 files changed, 32 insertions(+)
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+>  /**
+>   * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+>   * @ec_dev: Device to register.
+> @@ -201,6 +217,13 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>  		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
+>  			err);
+>  
+> +	/* Register the notifier for EC_HOST_EVENT_INTERFACE_READY event. */
+> +	ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
+> +	err = blocking_notifier_chain_register(&ec_dev->event_notifier,
+> +					       &ec_dev->notifier_ready);
+> +	if (err)
+> +		return err;
+> +
+>  	dev_info(dev, "Chrome EC device registered\n");
+>  
+>  	return 0;
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 0d4e4aaed37a..4b016d5dbf50 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -161,6 +161,11 @@ struct cros_ec_device {
+>  	int event_size;
+>  	u32 host_event_wake_mask;
+>  	u32 last_resume_result;
+> +	/*
+> +	 * The notifier block to let the kernel re-query EC communication
+> +	 * protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
+> +	 */
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index a53657b83288..899368aa6ff7 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -646,6 +646,8 @@
- 			clocks = <&prcc_kclk 3 3>, <&prcc_pclk 3 3>;
- 			clock-names = "i2cclk", "apb_pclk";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		i2c@80122000 {
-@@ -662,6 +664,8 @@
- 			clocks = <&prcc_kclk 1 2>, <&prcc_pclk 1 2>;
- 			clock-names = "i2cclk", "apb_pclk";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		i2c@80128000 {
-@@ -678,6 +682,8 @@
- 			clocks = <&prcc_kclk 1 6>, <&prcc_pclk 1 6>;
- 			clock-names = "i2cclk", "apb_pclk";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		i2c@80110000 {
-@@ -694,6 +700,8 @@
- 			clocks = <&prcc_kclk 2 0>, <&prcc_pclk 2 0>;
- 			clock-names = "i2cclk", "apb_pclk";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		i2c@8012a000 {
-@@ -710,6 +718,8 @@
- 			clocks = <&prcc_kclk 1 9>, <&prcc_pclk 1 10>;
- 			clock-names = "i2cclk", "apb_pclk";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		spi@80002000 {
-@@ -724,6 +734,8 @@
- 			       <&dma 8 0 0x0>; /* Logical - MemToDev */
- 			dma-names = "rx", "tx";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		spi@80003000 {
-@@ -738,6 +750,8 @@
- 			       <&dma 9 0 0x0>; /* Logical - MemToDev */
- 			dma-names = "rx", "tx";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		spi@8011a000 {
-@@ -753,6 +767,8 @@
- 			       <&dma 0 0 0x0>; /* Logical - MemToDev */
- 			dma-names = "rx", "tx";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		spi@80112000 {
-@@ -768,6 +784,8 @@
- 			       <&dma 35 0 0x0>; /* Logical - MemToDev */
- 			dma-names = "rx", "tx";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		spi@80111000 {
-@@ -783,6 +801,8 @@
- 			       <&dma 33 0 0x0>; /* Logical - MemToDev */
- 			dma-names = "rx", "tx";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		spi@80129000 {
-@@ -798,6 +818,8 @@
- 			       <&dma 40 0 0x0>; /* Logical - MemToDev */
- 			dma-names = "rx", "tx";
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		ux500_serial0: uart@80120000 {
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 7613a40421d5..5eafd5d8a8cd 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -39,18 +39,21 @@
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c0_a_1_default>;
- 			pinctrl-1 = <&i2c0_a_1_sleep>;
-+			status = "okay";
- 		};
- 
- 		i2c@80122000 {
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c1_b_2_default>;
- 			pinctrl-1 = <&i2c1_b_2_sleep>;
-+			status = "okay";
- 		};
- 
- 		i2c@80128000 {
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c2_b_2_default>;
- 			pinctrl-1 = <&i2c2_b_2_sleep>;
-+			status = "okay";
- 			lp5521@33 {
- 				compatible = "national,lp5521";
- 				reg = <0x33>;
-@@ -98,6 +101,7 @@
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c3_c_2_default>;
- 			pinctrl-1 = <&i2c3_c_2_sleep>;
-+			status = "okay";
- 		};
- 
- 		/* ST6G3244ME level translator for 1.8/2.9 V */
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index a036defdf164..937f942f0961 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -58,6 +58,7 @@
- 			 */
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ssp0_hrefprev60_mode>;
-+			status = "okay";
- 		};
- 
- 		// External Micro SD slot
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index 8b80dcdf6e5b..ce136412b6da 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -307,18 +307,21 @@
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c0_a_1_default>;
- 			pinctrl-1 = <&i2c0_a_1_sleep>;
-+			status = "okay";
- 		};
- 
- 		i2c@80122000 {
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c1_b_2_default>;
- 			pinctrl-1 = <&i2c1_b_2_sleep>;
-+			status = "okay";
- 		};
- 
- 		i2c@80128000 {
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c2_b_2_default>;
- 			pinctrl-1 = <&i2c2_b_2_sleep>;
-+			status = "okay";
- 			lsm303dlh@18 {
- 				/* Accelerometer */
- 				compatible = "st,lsm303dlh-accel";
-@@ -369,11 +372,13 @@
- 			pinctrl-names = "default","sleep";
- 			pinctrl-0 = <&i2c3_c_2_default>;
- 			pinctrl-1 = <&i2c3_c_2_sleep>;
-+			status = "okay";
- 		};
- 
- 		spi@80002000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ssp0_snowball_mode>;
-+			status = "okay";
- 		};
- 
- 		prcmu@80157000 {
--- 
-2.24.0
+The comment should go in the documentation of the struct, above `struct
+cros_ec_device` in correct kernel-doc format, not here.
 
+Thanks,
+ Enric
+
+> +	struct notifier_block notifier_ready;
+>  
+>  	/* The platform devices used by the mfd driver */
+>  	struct platform_device *ec;
+> 
