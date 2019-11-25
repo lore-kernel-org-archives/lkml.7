@@ -2,236 +2,109 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68531C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE053C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DBA20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37F820748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlDyDy1b"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bROoIXHf";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ab+qhnDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKYHhf (ORCPT
+        id S1727120AbfKYHjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:37:35 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55177 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfKYHhe (ORCPT
+        Mon, 25 Nov 2019 02:39:06 -0500
+Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:47134
+        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725763AbfKYHjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:37:34 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so4798214wmj.4;
-        Sun, 24 Nov 2019 23:37:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=spOYPQyDQtuNEGLCHEbAJ7anyJ/giN6OPQ7cjoFVqtw=;
-        b=nlDyDy1bfjSORe36KRrKoxyh1jVH/ihgGW13qb9uCsWsbbcz19LRcGrtkT9W5ZrMGC
-         +tKS9Dfp38yKpBPgACnInVIxacpfJ7ZE/BeKArG7aP+efZgl4tVNCEr/vw5QIHCilJyl
-         7dKaEmFVTIHK8+7GxoTp+kL2/c1aFO2UnhzCIOAifWtWdiQdeGC4X3CnVwqs53D9QZY+
-         wjeaL2PUSLmyB1yGV2lXD60kolNTN/488gYgpjI+wSpZpYPrmCifNZezI5wdp+36jLwJ
-         BBqQgu7uqTyZkW/TsFZRdd3V2IfGabSOnVOIyzH++cmlhDBLzGbmSZjfPkl17jbpOfyu
-         NXtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=spOYPQyDQtuNEGLCHEbAJ7anyJ/giN6OPQ7cjoFVqtw=;
-        b=VTSvXpsihvUpw6HZlvV38Sgg2CIKf3V9O0Vt5Kpy9qyEPdUiNiDSEhLiA7YghzBl4Q
-         J4WwOqiTaF5ZzjUhkCWgF1VRSFDKPkmWy+Py4SzFrpvr2Bjxd/DG4TrSTQh6dSBbULTk
-         L+9xsSAmZlkG/t4jAaS+J+cmcSNhYooMBupE/rOF3ARFIsnW92owk1Q81icQTUJILMcj
-         cK2DgwOWwA99IxmYKnk3agBnJTJ2tADGARzssYCDK5kO8+pH4rrLYRuE71R5d0R5wu5/
-         yqeWxG6LvKbBMtO/L2nJ5SRbWyxqVcwPGdqxax0B+DM/FijQfVZ6M3WffVkXZoWnQey7
-         I47Q==
-X-Gm-Message-State: APjAAAXXDtazwYjSeGGx0gn+12GYZ3SmgoiopEH4rkX4hOyEflU2VUHD
-        L/KSAzFVIXQ+rERKH2cyMp8=
-X-Google-Smtp-Source: APXvYqxZwJODIeVnoLPKFmWYnHWUGAjusnjwrz98gdEmEHkkGT+LRb5niD1I0kDACqZ48rhUBncHpQ==
-X-Received: by 2002:a1c:c906:: with SMTP id f6mr15652550wmb.14.1574667450845;
-        Sun, 24 Nov 2019 23:37:30 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id b8sm9130086wrt.39.2019.11.24.23.37.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 23:37:29 -0800 (PST)
-Date:   Mon, 25 Nov 2019 08:37:28 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 6/6] arm64: tegra: Add support for PCIe endpoint mode in
- P2972-0000 platform
-Message-ID: <20191125073728.GE1409040@ulmo>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-7-vidyas@nvidia.com>
- <20191122132533.GD1315704@ulmo>
- <e1e44c1c-c1ab-27dd-b3ac-a9ed878411a2@nvidia.com>
- <20191125072542.GC1409040@ulmo>
- <4f92c07a-ea0f-a632-f5c5-b87666f8ecdd@nvidia.com>
+        Mon, 25 Nov 2019 02:39:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574667545;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=uHHZK8fQ8iUvCN9hPKKy5pWhBlk+VmYWskK2YABSTbk=;
+        b=bROoIXHfU9TTKdhRArjz8BqDk6VeNPb1bxiQV007IW/9l44d/hDJR0UwjTWrJo+Z
+        qT/uk54udm+3Tg9AZZFXWRoBs9seDvzs+fL+B/szhmhzIpW65Vd2lVslbxg1tfrMHhR
+        zWC1KXnlbJNGA6QgMfzpRjAAqwbSVTX95jMBTlpY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574667545;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=uHHZK8fQ8iUvCN9hPKKy5pWhBlk+VmYWskK2YABSTbk=;
+        b=Ab+qhnDHHqNqnxu/dMIflJZDSQ+Q95fLywRQBmJKiFzez1szGuZmEp3LGf1WlwrZ
+        o6/XNO+whJxkx0TK8s/4/IUnoUpZuvM+lkvSG7DKcbbA5Gwl2CNzcxS7C+dzh+jDa/z
+        NTgZiF8FMFffuCwzHKa7ghk9AJYW/GBrCaMuhHXg=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CGDBiGfvSTbxKZlW"
-Content-Disposition: inline
-In-Reply-To: <4f92c07a-ea0f-a632-f5c5-b87666f8ecdd@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 25 Nov 2019 07:39:05 +0000
+From:   cang@codeaurora.org
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/5] scsi: ufs: Do not clear the DL layer timers
+In-Reply-To: <MN2PR04MB6991FAA95F79EFB1EE030D13FC4A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1573624824-671-1-git-send-email-cang@codeaurora.org>
+ <1573624824-671-5-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB6991C35EC2DBBEA17A611755FC4F0@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <MN2PR04MB6991FAA95F79EFB1EE030D13FC4A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <0101016ea17feb57-32ad658c-6c87-413b-93c4-b4a015a02499-000000@us-west-2.amazonses.com>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.25-54.240.27.186
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-11-25 15:22, Avri Altman wrote:
+>> >
+>> > During power mode change, PACP_PWR_Req frame sends
+>> PAPowerModeUserData
+>> > parameters (and they are considered valid by device if Flags[4] -
+>> > UserDataValid bit is set in the same frame).
+>> > Currently we don't set these PAPowerModeUserData parameters and
+>> > hardware always sets UserDataValid bit which would clear all the DL
+>> > layer timeout values of the peer device after the power mode change.
+>> >
+>> > This change sets the PAPowerModeUserData[0..5] to UniPro specification
+>> > recommended default values, in addition we are also setting the
+>> > relevant
+>> > DME_LOCAL_* timer attributes as required by UFS HCI specification.
+>> >
+>> > Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Reviewed-by Avri Altman <avri.altman@wdc.com>
+> BTW, I noticed that you are only updating the TC0 registers.
+> Why not setting the TC1 registers as well?
+> 
+> Thanks,
+> Avri
 
---CGDBiGfvSTbxKZlW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Avri,
 
-On Mon, Nov 25, 2019 at 01:03:27PM +0530, Vidya Sagar wrote:
-> On 11/25/2019 12:55 PM, Thierry Reding wrote:
-> > On Mon, Nov 25, 2019 at 12:30:53PM +0530, Vidya Sagar wrote:
-> > > On 11/22/2019 6:55 PM, Thierry Reding wrote:
-> > > > On Fri, Nov 22, 2019 at 04:15:05PM +0530, Vidya Sagar wrote:
-> > > > > Add endpoint mode support for PCIe C5 controller in P2972-0000 pl=
-atform
-> > > > > with information about supplies, PHY, PERST GPIO and GPIO that co=
-ntrols
-> > > > > PCIe reference clock coming from the host system.
-> > > > >=20
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > ---
-> > > > >    .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 29 +++++++++++=
-++++++++
-> > > > >    1 file changed, 29 insertions(+)
-> > > > >=20
-> > > > > diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b=
-/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > > > index 7eb64b816e08..58c3a9677bc8 100644
-> > > > > --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > > > +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > > > @@ -43,6 +43,19 @@
-> > > > >    		gpio@c2f0000 {
-> > > > >    			status =3D "okay";
-> > > > > +			/*
-> > > > > +			 * Change the below node's status to 'okay' when
-> > > > > +			 * PCIe C5 controller is enabled to operate in endpoint
-> > > > > +			 * to allow REFCLK from the host system to flow into
-> > > > > +			 * the controller.
-> > > > > +			 */
-> > > > > +			pex-refclk-sel-high {
-> > > > > +				gpio-hog;
-> > > > > +				output-high;
-> > > > > +				gpios =3D <TEGRA194_AON_GPIO(AA, 5) 0>;
-> > > > > +				label =3D "pex_refclk_sel_high";
-> > > > > +				status =3D "disabled";
-> > > > > +			};
-> > > >=20
-> > > > Why don't we put this into the PCIe controller's node as a referenc=
-e to
-> > > > that GPIO? Seems like the controller would know exactly when this p=
-in
-> > > > needs to go high or low, so why does it have to be a hog?
-> > > >=20
-> > > > Thierry
-> > > Are you saying something like 'nvidia,enable-refclk-in'?
-> > > I was thinking, since this is like a board level configuration specif=
-ic to Jetson-Xavier,
-> > > it would suffice to just hog it according to the mode of operation of=
- PCIe controller.
-> > > But, I see one advantage of referencing it in the PCIe node (so that =
-the driver can configure
-> > > it as and when needed) is that one has to be careful just to enable e=
-ither PCIe RP or EP
-> > > node and not worry about other thing (like this).
-> > > Let me know if I got this right.
-> >=20
-> > Yeah, that's exactly why I think referencing this from the controller
-> > and controlling it in the driver is preferable.
-> >=20
-> > If this is some sort of select signal I think it makes sense to name it
-> > "nvidia,refclk-select-gpios" or something. Does this appear in the
-> > schematic somewhere? Or does the IP have a name for this? Those are
-> > usually good places to look for inspiration on the name because it's
-> > what hardware designers will be familiar with and they are technically
-> > the ones who should write the DT, even if that's rarely the case.
-> Schematic has "PEX_REFCLK_SEL" name.
-> I would go with 'nvidia,refclk-select-gpios' and make the change.
+In the HCI spec, it goes
 
-It might be worth checking the interface definition of the IP if you
-have access to that, since it may be using a different name from the
-one that we have in the schematics.
+Currently, UFS uses TC0 only. Therefore, setting the following values 
+are not needed:
+ DME_ Local_FC1ProtectionTimeOutVal
+ DME_ Local_TC1ReplayTimeOutVal
+ DME_ Local_ AFC1ReqTimeOutVal
 
-Also, given that other instantiations don't have this, I'm beginning
-to wonder if this is perhaps somehow specific to how this is used in
-this particular board design. If it is, then I think the nvidia,
-prefix would be appropriate. But if this is something that is part of
-the IP interface then we can probably drop the prefix since it would
-be applicable to non-NVIDIA instantiations as well.
-
-Thierry
-
->=20
-> - Vidya Sagar
-> >=20
-> > Thierry
-> >=20
-> > >=20
-> > > - Vidya Sagar
-> > >=20
-> > > >=20
-> > > > >    		};
-> > > > >    		pwm@c340000 {
-> > > > > @@ -144,6 +157,22 @@
-> > > > >    			    "p2u-5", "p2u-6", "p2u-7";
-> > > > >    	};
-> > > > > +	pcie_ep@141a0000 {
-> > > > > +		status =3D "disabled";
-> > > > > +
-> > > > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > > > +
-> > > > > +		nvidia,pex-rst-gpio =3D <&gpio TEGRA194_MAIN_GPIO(GG, 1)
-> > > > > +					GPIO_ACTIVE_LOW>;
-> > > > > +
-> > > > > +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-> > > > > +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-> > > > > +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-> > > > > +
-> > > > > +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-> > > > > +			    "p2u-5", "p2u-6", "p2u-7";
-> > > > > +	};
-> > > > > +
-> > > > >    	fan: fan {
-> > > > >    		compatible =3D "pwm-fan";
-> > > > >    		pwms =3D <&pwm4 0 45334>;
-> > > > > --=20
-> > > > > 2.17.1
-> > > > >=20
-> > >=20
->=20
-
---CGDBiGfvSTbxKZlW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3bhLgACgkQ3SOs138+
-s6HApQ//e75Pd2TTuRk8Ulcx+orM6hsy/Qq8oquSg3Y2HV/NLxPyy7RnpDOhpDT2
-wdR6nr3z4f/90SLR4gyyqmDBqTOlms/sULvoDK79MyBT8aTDVQrvCtAKXONxc9O0
-fCYYXz5IMWRSpjRT4EDrZ2Gj7LZcQGJDTRfrqVoauP2VuWQK7FKv/on6k420cA2v
-mlgkoI7VwwJNuhNXjZj8EM2NLgfSjmR9HJM/fvJl6J3eO3EGiMorY2PBFAfT0j4H
-YFPM0O/lKRH0MiOiOCP/dxtIG17jpr4F1/2yQterNtAEV+o58ERpNT0b8SeSHXMr
-yN84gFWN4Fw3CniylVoASwp3xBJAPPBIFUjckLLMf5GJ2r3hZzMj8pGYyav5EwOI
-xYOrR1WyMV57D50rLA4Fy0dolQazQETy4OXahwI7T0s0JIgH2gDkh+6fUT3o+5eG
-PyFqczNXV2oVoCWrnnqpo1GrHSUwUh3RUoUFvRH0xjKGfaXDGqdRlcP40kktiP9V
-tDvv70n6J4+s1uk6Bac1FwTtFz0ecLXG8Ktj2p7oVGKHhEY5kfkdrwJ3p/c7cGlf
-JrmseXbCM1CZUsQphVDml+7z5tedqKk/pdTZ6hqClqnyznW9qIR4qNA6IsQOECCB
-jSqZ9evt0ALz2r9ndRc/BLxBt2+gcspZ/gFV0c37L0D+HBCE5EQ=
-=04cV
------END PGP SIGNATURE-----
-
---CGDBiGfvSTbxKZlW--
+Best Regards,
+Can Guo.
