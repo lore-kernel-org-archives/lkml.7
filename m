@@ -2,104 +2,151 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB74C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C19C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C600A20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBBD2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:31:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="gH4v+ctB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aSf2LBm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfKYCVf (ORCPT
+        id S1726967AbfKYCb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 21:21:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36237 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfKYCVf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 21:21:35 -0500
-Received: by mail-pf1-f195.google.com with SMTP id b19so6607348pfd.3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 18:21:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=0Slbk7FHKESeFqcEuY8H04LKnF7/drC0hQa4BJ/FDvg=;
-        b=gH4v+ctBIPNMcQL86nKHecbkeJwpsrU/V3M2WbEfwawz+TRk/u6ND6wuIqXpt6t8t9
-         5a5Y8zWBllvB5EANzgYSeR2+KsJsQpZHsYDqW6ELNTnyBqgwqfYnJV81PgeJHndccNjb
-         igkz2bEdeFgZfOcnb6h1x+XIoXWn6FI84lA6bN1lHNmcLKElj1bRzDzmn2PTws27jfdL
-         BOiw0PZjJ/8lC5NygqkGOJUbJujon5jBOxkEwQiI166JObmhx3FlUyiMuhAgBVrF0BLl
-         WwsjasT/v0ktfcRkUltnpCnu/xXr4ShmWiNVv8KMI2qPFPar2t1eB/8WW9JAV8PxD6R1
-         QsFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=0Slbk7FHKESeFqcEuY8H04LKnF7/drC0hQa4BJ/FDvg=;
-        b=LQojJ898z9gZe1X0LOkg1pS/nDnU098JgVqxsbiaOEnDGCO1bNwKPHuolRoqDymR8M
-         ScPlSnkTP7GmHuIpryRoL9tD+qGyctihyOvRye6/bWRMCfT0yax6b5+4rik7MJJ2WMCL
-         g89MIsGfINSwAQvHU0yi1Z1mYpk2okRsSQIa+pX+Z9A3Zg9H0y+pTemZFTzrQLK30vdL
-         K7jPxFNz7S7Cbnqrr+O7qu1Oxj8j/6SgERgOgKujXYkJtC8yvjatWJ6m9IfTpDtTsT4I
-         W/6mVUy7RNrUnp9nfM7z6fnMpS85cG88gPx5XtHsQ5I0fDZk7mnwWL6D1SjBdf0agBp6
-         CcQQ==
-X-Gm-Message-State: APjAAAXW9z/E7RQV2YoQqjw+zkGcpvrm1osSv+P9JNfQkeqIir4/7nJD
-        Y3TGWDSHDARFxuX6/jes0gnKHg==
-X-Google-Smtp-Source: APXvYqy2NXWAYVFU4lF8cJY4DfT9esmtA2nl94dpzBrdQ+ER0JKUb0rxNsKuqL7Yn5+iqaTu/PgtcQ==
-X-Received: by 2002:a63:6705:: with SMTP id b5mr30162797pgc.23.1574648494395;
-        Sun, 24 Nov 2019 18:21:34 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id x2sm5822449pgc.67.2019.11.24.18.21.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 18:21:34 -0800 (PST)
-Date:   Sun, 24 Nov 2019 18:21:28 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v3] net: macb: add missed tasklet_kill
-Message-ID: <20191124182113.481f984b@cakuba.netronome.com>
-In-Reply-To: <20191123141918.16239-1-hslester96@gmail.com>
-References: <20191123141918.16239-1-hslester96@gmail.com>
-Organization: Netronome Systems, Ltd.
+        Sun, 24 Nov 2019 21:31:29 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46427 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbfKYCb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 21:31:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Lrd83MmGz9s3Z;
+        Mon, 25 Nov 2019 13:31:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574649085;
+        bh=BzRBNWLSBnO1sMeoG28bNh55SJgbkWN8n682XaAPfPI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=aSf2LBm7JDPh292XPXIwNfbOP34d0CyRIF7/eVcBRyHdhVjPPLGT31WOOBtt7N+ji
+         u3RFPLTpPh/90eijAjgLJxpWGjQ0xQLLQA+YGmxP7YgswRYmSH6MgWt+cO2J5Vaoto
+         5/gyklW2f7bP2NKpLX9lgd2xIa1rJevUzQY+Pu6oyDc101URbPCWnWzkUt4VK9nIpF
+         VZSpTvhmVoTK7YeQMntGsKYBTnJcPezsDwJg7R+jHLA6lD3ofj4Zroj3EVsFs+VLs8
+         RUDWWZyRP9beYKpCP67l88zbpHqFf0FqjPLCOKQW9+sTRnCGWbBUns0LEbkK56BzGU
+         9tpiev54hUkgg==
+Date:   Mon, 25 Nov 2019 13:31:20 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: linux-next: manual merge of the ftrace tree with the arm64 tree
+Message-ID: <20191125133120.553097b7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/DZ9/N/+VBIja8LnYfxmT.oj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Nov 2019 22:19:18 +0800, Chuhong Yuan wrote:
-> This driver forgets to kill tasklet in remove.
-> Add the call to fix it.
-> 
-> Fixes: 032dc41ba6e2 ("net: macb: Handle HRESP error")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+--Sig_/DZ9/N/+VBIja8LnYfxmT.oj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I think this leaves a race condition, as far as I can tell
-tasklet_kill() just kills the currently scheduled tasklet,
-but doesn't prevent it from being scheduled again. If the 
-interrupt fires just after the tasklet_kill() call the tasklet
-will be scheduled back in. I think you'd need to mask the interrupt 
-(through the IDR register?) or just put the tasklet_kill() call after
-unregister_netdev(), because AFAICT closing the netdev disables all
-irqs.
+Hi all,
 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index 1e1b774e1953..2ec416098fa3 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -4383,6 +4383,7 @@ static int macb_remove(struct platform_device *pdev)
->  
->  	if (dev) {
->  		bp = netdev_priv(dev);
-> +		tasklet_kill(&bp->hresp_err_tasklet);
->  		if (dev->phydev)
->  			phy_disconnect(dev->phydev);
->  		mdiobus_unregister(bp->mii_bus);
+Today's linux-next merge of the ftrace tree got a conflict in:
 
+  include/asm-generic/vmlinux.lds.h
+
+between commit:
+
+  a1326b17ac03 ("module/ftrace: handle patchable-function-entry")
+
+from the arm64 tree and commits:
+
+  b83b43ffc6e4 ("fgraph: Fix function type mismatches of ftrace_graph_retur=
+n using ftrace_stub")
+  46f9469247c6 ("ftrace: Rename ftrace_graph_stub to ftrace_stub_graph")
+
+from the ftrace tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/asm-generic/vmlinux.lds.h
+index 63cedc3c0c77,996db32c491b..000000000000
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@@ -136,19 -110,30 +136,28 @@@
+  #endif
+ =20
+  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ -#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
+  /*
+ + * The ftrace call sites are logged to a section whose name depends on the
+ + * compiler option used. A given kernel image will only use one, AKA
+ + * FTRACE_CALLSITE_SECTION. We capture all of them here to avoid header
+ + * dependencies for FTRACE_CALLSITE_SECTION's definition.
+++ *
++  * Need to also make ftrace_stub_graph point to ftrace_stub
++  * so that the same stub location may have different protocols
++  * and not mess up with C verifiers.
+   */
+ -#define MCOUNT_REC()	. =3D ALIGN(8);				\
+ -			__start_mcount_loc =3D .;			\
+ -			KEEP(*(__patchable_function_entries))	\
+ -			__stop_mcount_loc =3D .;			\
+ -			ftrace_stub_graph =3D ftrace_stub;
+ -#else
+  #define MCOUNT_REC()	. =3D ALIGN(8);				\
+  			__start_mcount_loc =3D .;			\
+  			KEEP(*(__mcount_loc))			\
+ +			KEEP(*(__patchable_function_entries))	\
+- 			__stop_mcount_loc =3D .;
++ 			__stop_mcount_loc =3D .;			\
++ 			ftrace_stub_graph =3D ftrace_stub;
+ -#endif
+  #else
+- #define MCOUNT_REC()
++ # ifdef CONFIG_FUNCTION_TRACER
++ #  define MCOUNT_REC()	ftrace_stub_graph =3D ftrace_stub;
++ # else
++ #  define MCOUNT_REC()
++ # endif
+  #endif
+ =20
+  #ifdef CONFIG_TRACE_BRANCH_PROFILING
+
+--Sig_/DZ9/N/+VBIja8LnYfxmT.oj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3bPPgACgkQAVBC80lX
+0GzvoAf9FF7bDyxJxWnKnIRuywcv/X+fqBtC/9M0+C06gSBaF5Px/FfU6CvgGiQ6
+ROyXX/8gpqmcDzs7Qf3MRTKOuD9sh1k9IRuYYfOs48yfk1j0Ie9r52emO+J/ORKw
+xrc80hXneNGZvFSk8qvEFGHvqWeTntGTrLwvxSeetBKFA6N499pvlN68J4cQKzV3
+yyxi4uyHi+P1d4sOb7avF1O+URREKuy8Pviz46tU5pammDsivdutoF0wpN/PsAPT
+Vy+9zzF5dYVDYUIqhOH5Bv7J/ugybJ9BObz03MyJV51IByTHS/OGZjupgkufgWzy
+wOEC8h63hOXmfE6Ijw8vF2KQujVXzQ==
+=KRiG
+-----END PGP SIGNATURE-----
+
+--Sig_/DZ9/N/+VBIja8LnYfxmT.oj--
