@@ -2,75 +2,165 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED5C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7168C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BC920679
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B083320748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574690814;
+	bh=BzJVgwBAwb4fHGnSImlrlJjuXvyWjGJYoST3KN7QX9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BDldpC7gyogLGODGMrAOVv95l3SQ2YtySZfu69RPG1tzbyXauOCAZpneIT0xewfd3
+	 NZKvZfXiO0tRJ5+Xn4dMlZzs67qvfbFlhhsrhVvRkg1Fv0aVOZSXfjKMMxNaRhxP1q
+	 YOFQCIvBunSUQhD+T/451OW/vyLsJngo8pgpBxXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfKYOGL (ORCPT
+        id S1727953AbfKYOGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:06:11 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60792 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfKYOGK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:06:10 -0500
-Received: from 79.184.255.91.ipv4.supernova.orange.pl (79.184.255.91) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 6c5a3eb053090b24; Mon, 25 Nov 2019 15:06:08 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the pm tree with the pci tree
-Date:   Mon, 25 Nov 2019 15:06:08 +0100
-Message-ID: <9514618.IhCT8fYLWX@kreacher>
-In-Reply-To: <20191125101345.760293f3@canb.auug.org.au>
-References: <20191125101345.760293f3@canb.auug.org.au>
+        Mon, 25 Nov 2019 09:06:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727666AbfKYOGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:06:53 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7082520748;
+        Mon, 25 Nov 2019 14:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574690812;
+        bh=BzJVgwBAwb4fHGnSImlrlJjuXvyWjGJYoST3KN7QX9w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z862imtl/relCWKoHlsc4QFiNhnxcLP5NhqfeYNWAUk8xjWW30M1VqkJ6VYJMXrSB
+         HjkopeqGLOz0pa6coQJcGrf68iQmAOmX68RIQIcs3jLNUzSi0N13e8nb0ealzXLFw1
+         2LbhyFX5pkc3JSly90U3IdUEq8hWGnosckklFZD4=
+Date:   Mon, 25 Nov 2019 09:06:51 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 100/237] libceph: don't consume a ref on
+ pagelist in ceph_msg_data_add_pagelist()
+Message-ID: <20191125140651.GE5861@sasha-vm>
+References: <20191116154113.7417-1-sashal@kernel.org>
+ <20191116154113.7417-100-sashal@kernel.org>
+ <CAOi1vP8ZTyaGsn-hXtnr+AnCrEQfSB6sTLYwkkZ8P1oY9EgPXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAOi1vP8ZTyaGsn-hXtnr+AnCrEQfSB6sTLYwkkZ8P1oY9EgPXg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, November 25, 2019 12:13:45 AM CET Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the pm tree got a conflict in:
-> 
->   Documentation/power/pci.rst
-> 
-> between commits:
-> 
->   b64cf7a1711d ("PCI/PM: Wrap long lines in documentation")
->   89cdbc354635 ("PCI/PM: Remove unused pci_driver.resume_early() hook")
->   1a1daf097e21 ("PCI/PM: Remove unused pci_driver.suspend_late() hook")
-> 
-> from the pci tree and commit:
-> 
->   1992b66d2f55 ("PM: Wrap documentation to fit in 80 columns")
-> 
-> from the pm tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Sat, Nov 16, 2019 at 05:23:28PM +0100, Ilya Dryomov wrote:
+>On Sat, Nov 16, 2019 at 4:43 PM Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Ilya Dryomov <idryomov@gmail.com>
+>>
+>> [ Upstream commit 894868330a1e038ea4a65dbb81741eef70ad71b1 ]
+>>
+>> Because send_mds_reconnect() wants to send a message with a pagelist
+>> and pass the ownership to the messenger, ceph_msg_data_add_pagelist()
+>> consumes a ref which is then put in ceph_msg_data_destroy().  This
+>> makes managing pagelists in the OSD client (where they are wrapped in
+>> ceph_osd_data) unnecessarily hard because the handoff only happens in
+>> ceph_osdc_start_request() instead of when the pagelist is passed to
+>> ceph_osd_data_pagelist_init().  I counted several memory leaks on
+>> various error paths.
+>>
+>> Fix up ceph_msg_data_add_pagelist() and carry a pagelist ref in
+>> ceph_osd_data.
+>>
+>> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  fs/ceph/mds_client.c  | 2 +-
+>>  net/ceph/messenger.c  | 1 +
+>>  net/ceph/osd_client.c | 8 ++++++++
+>>  3 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+>> index 09db6d08614d2..94494d05a94cb 100644
+>> --- a/fs/ceph/mds_client.c
+>> +++ b/fs/ceph/mds_client.c
+>> @@ -2184,7 +2184,6 @@ static struct ceph_msg *create_request_message(struct ceph_mds_client *mdsc,
+>>
+>>         if (req->r_pagelist) {
+>>                 struct ceph_pagelist *pagelist = req->r_pagelist;
+>> -               refcount_inc(&pagelist->refcnt);
+>>                 ceph_msg_data_add_pagelist(msg, pagelist);
+>>                 msg->hdr.data_len = cpu_to_le32(pagelist->length);
+>>         } else {
+>> @@ -3289,6 +3288,7 @@ static void send_mds_reconnect(struct ceph_mds_client *mdsc,
+>>         mutex_unlock(&mdsc->mutex);
+>>
+>>         up_read(&mdsc->snap_rwsem);
+>> +       ceph_pagelist_release(pagelist);
+>>         return;
+>>
+>>  fail:
+>> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+>> index f7d7f32ac673c..2c8cd339d59ea 100644
+>> --- a/net/ceph/messenger.c
+>> +++ b/net/ceph/messenger.c
+>> @@ -3323,6 +3323,7 @@ void ceph_msg_data_add_pagelist(struct ceph_msg *msg,
+>>
+>>         data = ceph_msg_data_create(CEPH_MSG_DATA_PAGELIST);
+>>         BUG_ON(!data);
+>> +       refcount_inc(&pagelist->refcnt);
+>>         data->pagelist = pagelist;
+>>
+>>         list_add_tail(&data->links, &msg->data);
+>> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+>> index 76c41a84550e7..c3494c1fb3a9a 100644
+>> --- a/net/ceph/osd_client.c
+>> +++ b/net/ceph/osd_client.c
+>> @@ -126,6 +126,9 @@ static void ceph_osd_data_init(struct ceph_osd_data *osd_data)
+>>         osd_data->type = CEPH_OSD_DATA_TYPE_NONE;
+>>  }
+>>
+>> +/*
+>> + * Consumes @pages if @own_pages is true.
+>> + */
+>>  static void ceph_osd_data_pages_init(struct ceph_osd_data *osd_data,
+>>                         struct page **pages, u64 length, u32 alignment,
+>>                         bool pages_from_pool, bool own_pages)
+>> @@ -138,6 +141,9 @@ static void ceph_osd_data_pages_init(struct ceph_osd_data *osd_data,
+>>         osd_data->own_pages = own_pages;
+>>  }
+>>
+>> +/*
+>> + * Consumes a ref on @pagelist.
+>> + */
+>>  static void ceph_osd_data_pagelist_init(struct ceph_osd_data *osd_data,
+>>                         struct ceph_pagelist *pagelist)
+>>  {
+>> @@ -362,6 +368,8 @@ static void ceph_osd_data_release(struct ceph_osd_data *osd_data)
+>>                 num_pages = calc_pages_for((u64)osd_data->alignment,
+>>                                                 (u64)osd_data->length);
+>>                 ceph_release_page_vector(osd_data->pages, num_pages);
+>> +       } else if (osd_data->type == CEPH_OSD_DATA_TYPE_PAGELIST) {
+>> +               ceph_pagelist_release(osd_data->pagelist);
+>>         }
+>>         ceph_osd_data_init(osd_data);
+>>  }
+>
+>Hi Sasha,
+>
+>This commit was part of a larger series and shouldn't be backported on
+>its own.  Please drop it.
 
-Thanks, the fix looks good to me.
+Dropped, thanks!
 
-Cheers,
-Rafael
-
-
-
+-- 
+Thanks,
+Sasha
