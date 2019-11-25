@@ -2,132 +2,166 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62704C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3382053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8902053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bqPrtHOa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wBbIMGcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKYMzf (ORCPT
+        id S1727641AbfKYMzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:55:35 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57075 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfKYMze (ORCPT
+        Mon, 25 Nov 2019 07:55:38 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34800 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbfKYMzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:55:34 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191125125532euoutp0289ce3bfd4f35a727edb22924cfe78aec~aaQ7oX-yZ2673726737euoutp02G
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 12:55:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191125125532euoutp0289ce3bfd4f35a727edb22924cfe78aec~aaQ7oX-yZ2673726737euoutp02G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574686532;
-        bh=ftxI01Ir5QOSE0yFjamiErgIm7/ovyX5nxQuBtdP5cw=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=bqPrtHOaE/x/sBIo4oZKGXi5cOfhIdIW0bG6sKni9YURMK1cCeA+RDBzKqa2yTcMq
-         0pMaiO06UujJ7qStnCBt5Q4qTl4NffTZ2hlWrOkshOnwGNCWA0vwF/52wBuprJOeIH
-         OMt/S9uv/Ehd6PMS1ISA0G7qEoW5W0zCIjPArJ1E=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191125125532eucas1p2f1d0e2fbcbda0dcebcf4dd700a914a1b~aaQ7SXxYZ1938019380eucas1p2C;
-        Mon, 25 Nov 2019 12:55:32 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E3.06.60679.44FCBDD5; Mon, 25
-        Nov 2019 12:55:32 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191125125531eucas1p17f4044301903eeafe56865ed63738798~aaQ664Zur0061800618eucas1p12;
-        Mon, 25 Nov 2019 12:55:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191125125531eusmtrp2e21a5caa7be2f67b6efbfb5c0525e28c~aaQ66POov0412704127eusmtrp2P;
-        Mon, 25 Nov 2019 12:55:31 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-95-5ddbcf443d57
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8C.58.07950.34FCBDD5; Mon, 25
-        Nov 2019 12:55:31 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191125125531eusmtip270dda46411723c7d5e2ea5cf79c1dc55~aaQ6WUQVQ0169101691eusmtip2K;
-        Mon, 25 Nov 2019 12:55:31 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kusanagi Kouichi <slash@ac.auone-net.jp>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] arm: exynos_config: Restore debugfs support
-Date:   Mon, 25 Nov 2019 13:55:15 +0100
-Message-Id: <20191125125515.30795-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsWy7djPc7ou52/HGjxpYrHYOGM9q8X58xvY
-        LS7vmsNmMeP8PiaLtUfuslvs63jAZPH81VlmB3aPFYv2snu07LvF7rFpVSebR9+WVYwenzfJ
-        BbBGcdmkpOZklqUW6dslcGV0bWxjLHjIVrF02V/mBsZXrF2MnBwSAiYSTxavY+ti5OIQEljB
-        KLHlRB8LhPOFUeL69ZlQzmdGiYuflrPAtNw53wOVWM4o0dPxgx0kAday4m08iM0mYCjR9baL
-        DcQWEXCWaJjayATSwCzwiFHiz87rQA4Hh7CAjcTOZXYgNSwCqhJfuxrYQcK8ArYS3e1pELvk
-        JVZvOMAM0iohcJtN4uu3l8wQCReJ3xfPskHYwhKvjm9hh7BlJP7vnM8E0dDMKPHw3Fp2CKeH
-        UeJy0wxGiCpricPHL7KCbGMW0JRYv0sfIuwocexiE1hYQoBP4sZbQZAwM5A5adt0Zogwr0RH
-        mxBEtZrErOPr4NYevHAJ6jQPiZYrJ1ggQRIr8aZrHfMERrlZCLsWMDKuYhRPLS3OTU8tNspL
-        LdcrTswtLs1L10vOz93ECEwFp/8d/7KDcdefpEOMAhyMSjy8P87ejhViTSwrrsw9xCjBwawk
-        wut29kasEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalFMFkmDk6pBkbD
-        R3kvFbm40xXMns5QPPYgXerb84eP4i8UcXi/qDe2c//70JrhRUG1T3fzJJH2jNrw3edmFT9b
-        581ufUFk24c3Gbv5l0y79mRPV1WfluWB0yUTzm5J+GIfwPZ+BpfVh34rq/R/rj9KCg/sr+ud
-        1dY3v0zuY4dQ4UzFZ1kiFY/Ld6x1/GbOr6fEUpyRaKjFXFScCAAoxsDQAQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsVy+t/xe7rO52/HGrzr1bTYOGM9q8X58xvY
-        LS7vmsNmMeP8PiaLtUfuslvs63jAZPH81VlmB3aPFYv2snu07LvF7rFpVSebR9+WVYwenzfJ
-        BbBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GV0
-        bWxjLHjIVrF02V/mBsZXrF2MnBwSAiYSd873sHQxcnEICSxllPjX1c8OkZCRODmtAapIWOLP
-        tS42iKJPjBJLXv5iBEmwCRhKdL0FSXByiAi4Shxa0csMUsQs8IRR4tS680BFHBzCAjYSO5fZ
-        gdSwCKhKfO1qYAcJ8wrYSnS3p0HMl5dYveEA8wRGngWMDKsYRVJLi3PTc4uN9IoTc4tL89L1
-        kvNzNzECQ3DbsZ9bdjB2vQs+xCjAwajEw/vj7O1YIdbEsuLK3EOMEhzMSiK8bmdvxArxpiRW
-        VqUW5ccXleakFh9iNAXaPZFZSjQ5HxgfeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1Kz
-        U1MLUotg+pg4OKUaGAPvCu0SOMqsPWVhU/q7sgtnpN9vtP6YcW1h1sIpDpk3fqw7ddLJR+y3
-        rrDKScHg/mshXLeNXpTOCOlJ/Tt16sGECcVh36wMfp+Y53ajV3KHgabSNL9fwuZZqWciny48
-        8miBpmXBP9l9T1mS3Wtkbz/i/hCte/G4fOz/MvZP7OaHnTl7l5y/pqLEUpyRaKjFXFScCABF
-        PV2nVwIAAA==
-X-CMS-MailID: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191125125531eucas1p17f4044301903eeafe56865ed63738798
-References: <CGME20191125125531eucas1p17f4044301903eeafe56865ed63738798@eucas1p1.samsung.com>
+        Mon, 25 Nov 2019 07:55:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YNG9MHfU+4M/7tHZfAwuQAAIZ/jdAGHITsMC8SlHI3Y=; b=wBbIMGcQJbcYna2ZsphcX+i1S
+        PgCnDMaRIpct7x1uzMA0U8sMvKwsoIbuYIt0Vp6dMX7KLCyw70C3vXSxC/mFztoKbwXlonSd+ZU5Y
+        AM7eNSnl6+gKq2ovIdeMhOVlLuXIW6q7AaufEY+oSC/ebXLH76b3so6nxlA3uOs7lZGJShT1jUFkV
+        O4ghOdBi2HBbuPuLx/VFh1ULpLl9533bCkCF5HiSwUdqvIDnOuJtUkbPiKcfpwQ+HoAqD7XmD0MKP
+        AEXVPwjVPpr5Vca8TvJY5VW03rYW3NEBrAFbIbnpcQiWA819rPFM30c0kj3DUzdnP7mHL4BpwYPS4
+        hz9eUYArg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44422)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iZDtr-0007nO-Jj; Mon, 25 Nov 2019 12:55:31 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iZDtq-0006gE-RQ; Mon, 25 Nov 2019 12:55:30 +0000
+Date:   Mon, 25 Nov 2019 12:55:30 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] clk: Add devm_clk_{prepare,enable,prepare_enable}
+Message-ID: <20191125125530.GP25745@shell.armlinux.org.uk>
+References: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
+ <34e32662-c909-9eb3-e561-3274ad0bf3cc@free.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34e32662-c909-9eb3-e561-3274ad0bf3cc@free.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-removed the dependency between DEBUG_FS and TRACING, so DEBUG_FS is no
-longer enabled in default builds. Enable it again manually, as it provides
-a lots of useful data for automated testing tools.
+On Mon, Nov 25, 2019 at 01:46:51PM +0100, Marc Gonzalez wrote:
+> On 15/07/2019 17:34, Marc Gonzalez wrote:
+> 
+> > Provide devm variants for automatic resource release on device removal.
+> > probe() error-handling is simpler, and remove is no longer required.
+> > 
+> > Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > ---
+> >  Documentation/driver-model/devres.rst |  3 +++
+> >  drivers/clk/clk.c                     | 24 ++++++++++++++++++++++++
+> >  include/linux/clk.h                   |  8 ++++++++
+> >  3 files changed, 35 insertions(+)
+> > 
+> > diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
+> > index 1b6ced8e4294..9357260576ef 100644
+> > --- a/Documentation/driver-model/devres.rst
+> > +++ b/Documentation/driver-model/devres.rst
+> > @@ -253,6 +253,9 @@ CLOCK
+> >    devm_clk_hw_register()
+> >    devm_of_clk_add_hw_provider()
+> >    devm_clk_hw_register_clkdev()
+> > +  devm_clk_prepare()
+> > +  devm_clk_enable()
+> > +  devm_clk_prepare_enable()
+> >  
+> >  DMA
+> >    dmaenginem_async_device_register()
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index c0990703ce54..5e85548357c0 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -914,6 +914,18 @@ int clk_prepare(struct clk *clk)
+> >  }
+> >  EXPORT_SYMBOL_GPL(clk_prepare);
+> >  
+> > +static void unprepare(void *clk)
+> > +{
+> > +	clk_unprepare(clk);
+> > +}
+> > +
+> > +int devm_clk_prepare(struct device *dev, struct clk *clk)
+> > +{
+> > +	int rc = clk_prepare(clk);
+> > +	return rc ? : devm_add_action_or_reset(dev, unprepare, clk);
+> > +}
+> > +EXPORT_SYMBOL_GPL(devm_clk_prepare);
+> > +
+> >  static void clk_core_disable(struct clk_core *core)
+> >  {
+> >  	lockdep_assert_held(&enable_lock);
+> > @@ -1136,6 +1148,18 @@ int clk_enable(struct clk *clk)
+> >  }
+> >  EXPORT_SYMBOL_GPL(clk_enable);
+> >  
+> > +static void disable(void *clk)
+> > +{
+> > +	clk_disable(clk);
+> > +}
+> > +
+> > +int devm_clk_enable(struct device *dev, struct clk *clk)
+> > +{
+> > +	int rc = clk_enable(clk);
+> > +	return rc ? : devm_add_action_or_reset(dev, disable, clk);
+> > +}
+> > +EXPORT_SYMBOL_GPL(devm_clk_enable);
+> > +
+> >  static int clk_core_prepare_enable(struct clk_core *core)
+> >  {
+> >  	int ret;
+> > diff --git a/include/linux/clk.h b/include/linux/clk.h
+> > index 3c096c7a51dc..d09b5207e3f1 100644
+> > --- a/include/linux/clk.h
+> > +++ b/include/linux/clk.h
+> > @@ -895,6 +895,14 @@ static inline void clk_restore_context(void) {}
+> >  
+> >  #endif
+> >  
+> > +int devm_clk_prepare(struct device *dev, struct clk *clk);
+> > +int devm_clk_enable(struct device *dev, struct clk *clk);
+> > +static inline int devm_clk_prepare_enable(struct device *dev, struct clk *clk)
+> > +{
+> > +	int rc = devm_clk_prepare(dev, clk);
+> > +	return rc ? : devm_clk_enable(dev, clk);
+> > +}
+> > +
+> >  /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
+> >  static inline int clk_prepare_enable(struct clk *clk)
+> >  {
+> 
+> Thoughts? Comments?
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- arch/arm/configs/exynos_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+It's also worth reading https://lore.kernel.org/patchwork/patch/755667/
+and considering whether you really are using the clk_prepare() and
+clk_enable() APIs correctly.  Wanting these devm functions suggests
+you aren't...
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index e7e4bb5ad8d5..fde84f123fbb 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -350,6 +350,7 @@ CONFIG_PRINTK_TIME=y
- CONFIG_DYNAMIC_DEBUG=y
- CONFIG_DEBUG_INFO=y
- CONFIG_MAGIC_SYSRQ=y
-+CONFIG_DEBUG_FS=y
- CONFIG_DEBUG_KERNEL=y
- CONFIG_SOFTLOCKUP_DETECTOR=y
- # CONFIG_DETECT_HUNG_TASK is not set
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
