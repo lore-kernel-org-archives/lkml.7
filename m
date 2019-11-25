@@ -2,130 +2,135 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F299C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE52C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507772075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F73C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 12:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="ONC6lkQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfKYMsd (ORCPT
+        id S1727451AbfKYMuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:48:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:50002 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbfKYMsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:48:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEED031B;
-        Mon, 25 Nov 2019 04:48:31 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70C8C3F68E;
-        Mon, 25 Nov 2019 04:48:30 -0800 (PST)
-Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com,
-        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
-        riel@surriel.com
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <e33e1896-01e1-665d-862a-e73384b0fbe6@arm.com>
-Date:   Mon, 25 Nov 2019 12:48:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 07:50:04 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36723 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfKYMuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 07:50:03 -0500
+Received: by mail-pl1-f194.google.com with SMTP id d7so6483215pls.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 04:50:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=4Dyj3TFAf2a0awBxIC0/58dYWGnIo6wfhRywN+QDFMQ=;
+        b=ONC6lkQj3zxvkiT8BAl0ZtYPE2RQWpupKsSqjfd0JT/qhrTqFTrCvq3oko/FbJYxRg
+         KHy20N2dQM5C8Pm1VfafoBnw0NqjuX7y6rbporwQnSWUHrA0UE31Md3/CpAzhsyHT6km
+         qkcqXt0L5/7o7kfyM84gWC5LPmIjVBtl1xM4U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4Dyj3TFAf2a0awBxIC0/58dYWGnIo6wfhRywN+QDFMQ=;
+        b=gD5zbnFRrf8mtE+Vx388k9hzOUOmkKSiRWC6r0ir399Yux4iCd61cWyUpDGmcgsCIi
+         /JTwXuSorwcegxJZw453VT7R3H14E04r5xaiMVnPhynfyNscg+P2h6+SCSmTbh7AHdyZ
+         lQ1a7jvQgu2u9PJbpg0AVRJQ3NggRapt7w3enGZheIOro4DDqhwnKef4yEADPuCm/9FZ
+         wVcnOOjBEGKW14AKT8IYjYsBhqeVG6qfEl82VBV0BxcTxkdhbFNdFsq4BqEbIDertjEY
+         KlJyIL21+tc1uxqYwHHXXHQL23O9L47xEzIgsM5Q7ljlJ3fprdYRTpECkiN8AWG60c4y
+         XMRQ==
+X-Gm-Message-State: APjAAAVh7QCaXvMrj9xLqES6W2dzGW7x8IQPS68YxG+tpp6BPafWOu7j
+        Y49zPVqO6vB1m9eSj6mtwUeYKg==
+X-Google-Smtp-Source: APXvYqx+hG30RzYfSJHZPM5tJ9YTXat/yYcK7hJJWoGFjjL2MnTwx3SjA/GCJdbj/Z0fnE/MlFImcw==
+X-Received: by 2002:a17:90a:c385:: with SMTP id h5mr39051342pjt.95.1574686203240;
+        Mon, 25 Nov 2019 04:50:03 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-f00e-a399-4df8-3035.static.ipv6.internode.on.net. [2001:44b8:1113:6700:f00e:a399:4df8:3035])
+        by smtp.gmail.com with ESMTPSA id q41sm8433576pja.20.2019.11.25.04.50.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 04:50:02 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Michael Ellerman <michael@ellerman.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Bart Van Assche <bvanassche@acm.org>, Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lockdep warning while booting POWER9 PowerNV
+In-Reply-To: <EA225D34-2394-4C77-B989-38C275818590@ellerman.id.au>
+References: <1567199630.5576.39.camel@lca.pw> <9b8b287a-4ae1-ca9b-cff1-6d93672b6893@acm.org> <87ef0vpfbc.fsf@mpe.ellerman.id.au> <87v9r8g3oe.fsf@dja-thinkpad.axtens.net> <EA225D34-2394-4C77-B989-38C275818590@ellerman.id.au>
+Date:   Mon, 25 Nov 2019 23:49:57 +1100
+Message-ID: <87lfs4f7d6.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/2019 14:26, Vincent Guittot wrote:
->            tip/sched/core        w/ this patchset    improvement
-> schedpipe      53125 +/-0.18%        53443 +/-0.52%   (+0.60%)
-> 
-> hackbench -l (2560/#grp) -g #grp
->  1 groups      1.579 +/-29.16%       1.410 +/-13.46% (+10.70%)
->  4 groups      1.269 +/-9.69%        1.205 +/-3.27%   (+5.00%)
->  8 groups      1.117 +/-1.51%        1.123 +/-1.27%   (+4.57%)
-> 16 groups      1.176 +/-1.76%        1.164 +/-2.42%   (+1.07%)
-> 
-> Unixbench shell8
->   1 test     1963.48 +/-0.36%       1902.88 +/-0.73%    (-3.09%)
-> 224 tests    2427.60 +/-0.20%       2469.80 +/-0.42%  (1.74%)
-> 
-> - large arm64 2 nodes / 224 cores system
-> 
->            tip/sched/core        w/ this patchset    improvement
-> schedpipe     124084 +/-1.36%       124445 +/-0.67%   (+0.29%)
-> 
-> hackbench -l (256000/#grp) -g #grp
->   1 groups    15.305 +/-1.50%       14.001 +/-1.99%   (+8.52%)
->   4 groups     5.959 +/-0.70%        5.542 +/-3.76%   (+6.99%)
->  16 groups     3.120 +/-1.72%        3.253 +/-0.61%   (-4.92%)
->  32 groups     2.911 +/-0.88%        2.837 +/-1.16%   (+2.54%)
->  64 groups     2.805 +/-1.90%        2.716 +/-1.18%   (+3.17%)
-> 128 groups     3.166 +/-7.71%        3.891 +/-6.77%   (+5.82%)
-> 256 groups     3.655 +/-10.09%       3.185 +/-6.65%  (+12.87%)
-> 
-> dbench
->   1 groups   328.176 +/-0.29%      330.217 +/-0.32%   (+0.62%)
->   4 groups   930.739 +/-0.50%      957.173 +/-0.66%   (+2.84%)
->  16 groups  1928.292 +/-0.36%     1978.234 +/-0.88%   (+0.92%)
->  32 groups  2369.348 +/-1.72%     2454.020 +/-0.90%   (+3.57%)
->  64 groups  2583.880 +/-3.39%     2618.860 +/-0.84%   (+1.35%)
-> 128 groups  2256.406 +/-10.67%    2392.498 +/-2.13%   (+6.03%)
-> 256 groups  1257.546 +/-3.81%     1674.684 +/-4.97%  (+33.17%)
-> 
-> Unixbench shell8
->   1 test     6944.16 +/-0.02     6605.82 +/-0.11      (-4.87%)
-> 224 tests   13499.02 +/-0.14    13637.94 +/-0.47%     (+1.03%)
-> lkp reported a -10% regression on shell8 (1 test) for v3 that 
-> seems that is partially recovered on my platform with v4.
-> 
+powerpc: define arch_is_kernel_initmem_freed() for lockdep
 
-I've been busy trying to get some perf numbers on arm64 server~ish systems,
-I finally managed to get some specjbb numbers on TX2 (the 2 nodes, 224
-CPUs version which I suspect is the same as you used in the above). I only
-have a limited number of iterations (5, although each runs for about 2h)
-because I wanted to get some (usable) results by today, I'll spin some more
-during the week.
+Under certain circumstances, we hit a warning in lockdep_register_key:
 
+        if (WARN_ON_ONCE(static_obj(key)))
+                return;
 
-This is based on the "critical-jOPs" metric which AFAIU higher is better:
+This occurs when the key falls into initmem that has since been freed
+and can now be reused. This has been observed on boot, and under memory
+pressure.
 
-Baseline, SMTOFF:
-  mean     12156.400000
-  std        660.640068
-  min      11016.000000
-  25%      12158.000000
-  50%      12464.000000
-  75%      12521.000000
-  max      12623.000000
+Define arch_is_kernel_initmem_freed(), which allows lockdep to correctly
+identify this memory as dynamic.
 
-Patches (+ find_idlest_group() fixup), SMTOFF:
-  mean     12487.250000
-  std        184.404221
-  min      12326.000000
-  25%      12349.250000
-  50%      12449.500000
-  75%      12587.500000
-  max      12724.000000
+This fixes a bug picked up by the powerpc64 syzkaller instance where we
+hit the WARN via alloc_netdev_mqs.
 
+Link: https://github.com/linuxppc/issues/issues/284
+Link: https://lore.kernel.org/linuxppc-dev/87ef0vpfbc.fsf@mpe.ellerman.id.au/
+Reported-by: Qian Cai <cai@lca.pw>
+Reported-by: ppc syzbot c/o Andrew Donnellan <ajd@linux.ibm.com>
+Commit-message-by: Daniel Axtens <dja@axtens.net>
+<mpe signoff here>
 
-It looks slightly better overall (mean, stddev), but I'm annoyed by that
-low iteration count. I also had some issues with my SMTON run and I only
-got numbers for 2 iterations, so I'll respin that before complaining.
+---
 
-FWIW the branch I've been using is:
+The ppc64 syzkaller link is probably not stable enough to go into
+the git history forever, but fwiw:
+https://syzkaller-ppc64.appspot.com/bug?id=cfdf75cd985012d0124cd41e6fa095d33e7d0f6b
 
-  http://www.linux-arm.org/git?p=linux-vs.git;a=shortlog;h=refs/heads/mainline/load-balance/vincent_rework/tip
+---
+ arch/powerpc/include/asm/sections.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/sections.h b/arch/powerpc/include/asm/sections.h
+index 5a9b6eb651b6..d19871763ed4 100644
+--- a/arch/powerpc/include/asm/sections.h
++++ b/arch/powerpc/include/asm/sections.h
+@@ -5,8 +5,22 @@
+ 
+ #include <linux/elf.h>
+ #include <linux/uaccess.h>
++
++#define arch_is_kernel_initmem_freed arch_is_kernel_initmem_freed
++
+ #include <asm-generic/sections.h>
+ 
++extern bool init_mem_is_free;
++
++static inline int arch_is_kernel_initmem_freed(unsigned long addr)
++{
++	if (!init_mem_is_free)
++		return 0;
++
++	return addr >= (unsigned long)__init_begin &&
++		addr < (unsigned long)__init_end;
++}
++
+ extern char __head_end[];
+ 
+ #ifdef __powerpc64__
+
