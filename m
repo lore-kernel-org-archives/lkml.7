@@ -2,105 +2,154 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A58DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E87C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D205420740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MiQIPV7W"
+	by mail.kernel.org (Postfix) with ESMTP id D93E620740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfKYKpS (ORCPT
+        id S1727592AbfKYKpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:45:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47852 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727278AbfKYKpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:45:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574678717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QRAeg6sofwTZ7IMOF1+XpMax8/HjXNDIA5l6w+nYTIs=;
-        b=MiQIPV7WY78DFrcwTLEFCLGG0+YKVikAB3LmB0hKEHK0tLAwf0FlQs+Xom00MJ44Zs3qMN
-        ji71qeI/0+AVip8d1qFo1m7Z/OIqroRyNK5xoBOjlh+/Cim1D1v9HDqG7tXAm6+25bwci5
-        lUT5FxcdALcGSZ4PGMAtFxAeRJpjbN4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-N6dA0LuNPl2MuZqUDdLEIA-1; Mon, 25 Nov 2019 05:45:16 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05DBC80058E;
-        Mon, 25 Nov 2019 10:45:15 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E9665C1D4;
-        Mon, 25 Nov 2019 10:45:10 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
-        hch@lst.de, cai@lca.pw, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iommu: fix KASAN use-after-free in iommu_insert_resv_region
-Date:   Mon, 25 Nov 2019 11:45:07 +0100
-Message-Id: <20191125104507.23704-1-eric.auger@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: N6dA0LuNPl2MuZqUDdLEIA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 05:45:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:47982 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbfKYKpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 05:45:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF2FA328;
+        Mon, 25 Nov 2019 02:45:31 -0800 (PST)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CEC5D3F52E;
+        Mon, 25 Nov 2019 02:45:26 -0800 (PST)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v8 0/7] Enable ptp_kvm for arm64
+Date:   Mon, 25 Nov 2019 18:44:58 +0800
+Message-Id: <20191125104506.36850-1-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Store the new region type in a variable. In case the new region
-gets merged into another one, the new node is freed and nr shall
-not be used anymore.
+kvm ptp targets to provide high precision time sync between guest
+and host in virtualization environment. Here, we enable kvm ptp
+for arm64.
+This patch set base on [1][2][3]
 
-Fixes: 4dbd258ff63e ("iommu: Revisit iommu_insert_resv_region()
-implementation")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: Stable <stable@vger.kernel.org> #v5.3+
+change log:
 
----
+from v7 to v8:
+        (1) separate adding clocksource id for arm_arch_counter as a
+single patch.
+        (2) update commit message for patch 4/8.
+        (3) refine patch 7/8 and patch 8/8 to make them more independent.
 
-- remove spurious new line
----
- drivers/iommu/iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+from v6 to v7:
+        (1) include the omitted clocksource_id.h in last version.
+        (2) reorder the header file in patch.
+        (3) refine some words in commit message to make it more impersonal.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index d658c7c6a2ab..4412b876250c 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -293,6 +293,7 @@ int iommu_insert_resv_region(struct iommu_resv_region *=
-new,
- =09=09=09     struct list_head *regions)
- {
- =09struct iommu_resv_region *iter, *tmp, *nr, *top;
-+=09enum iommu_resv_type nr_type =3D new->type;
- =09LIST_HEAD(stack);
-=20
- =09nr =3D iommu_alloc_resv_region(new->start, new->length,
-@@ -313,7 +314,7 @@ int iommu_insert_resv_region(struct iommu_resv_region *=
-new,
- =09=09phys_addr_t top_end, iter_end =3D iter->start + iter->length - 1;
-=20
- =09=09/* no merge needed on elements of different types than @nr */
--=09=09if (iter->type !=3D nr->type) {
-+=09=09if (iter->type !=3D nr_type) {
- =09=09=09list_move_tail(&iter->list, &stack);
- =09=09=09continue;
- =09=09}
---=20
-2.20.1
+from v5 to v6:
+        (1) apply Mark's patch[4] to get SMCCC conduit.
+        (2) add mechanism to recognize current clocksource by add
+clocksouce_id value into struct clocksource instead of method in patch-v5.
+        (3) rename kvm_arch_ptp_get_clock_fn into
+kvm_arch_ptp_get_crosststamp.
+
+from v4 to v5:
+        (1) remove hvc delay compensasion as it should leave to userspace.
+        (2) check current clocksource in hvc call service.
+        (3) expose current clocksource by adding it to
+system_time_snapshot.
+        (4) add helper to check if clocksource is arm_arch_counter.
+        (5) rename kvm_ptp.c to ptp_kvm_common.c
+
+from v3 to v4:
+        (1) fix clocksource of ptp_kvm to arch_sys_counter.
+        (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
+        (3) subtract cntvoff before return cycles from host.
+        (4) use ktime_get_snapshot instead of getnstimeofday and
+get_current_counterval to return time and counter value.
+        (5) split ktime and counter into two 32-bit block respectively
+to avoid Y2038-safe issue.
+        (6) set time compensation to device time as half of the delay of
+hvc call.
+        (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for
+arm64.
+
+from v2 to v3:
+        (1) fix some issues in commit log.
+        (2) add some receivers in send list.
+
+from v1 to v2:
+        (1) move arch-specific code from arch/ to driver/ptp/
+        (2) offer mechanism to inform userspace if ptp_kvm service is
+available.
+        (3) separate ptp_kvm code for arm64 into hypervisor part and
+guest part.
+        (4) add API to expose monotonic clock and counter value.
+        (5) refine code: remove no necessary part and reconsitution.
+
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=125ea89e4a21e2fc5235410f966a996a1a7148bf
+[2]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=464f5a1741e5959c3e4d2be1966ae0093b4dce06
+[3]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=6597490e005d0eeca8ed8c1c1d7b4318ee014681
+[4]https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/
+commit/?h=for-next/smccc-conduit-cleanup&id=6b7fe77c334ae59fed9500140e08f4f896b36871
+
+Jianyong Wu (6):
+  psci: let arm_smccc_1_1_invoke available by modules
+  ptp: Reorganize ptp_kvm modules to make it arch-independent.
+  clocksource: Add clocksource id for arm arch counter
+  psci: Add hvc call service for ptp_kvm.
+  ptp: arm64: Enable ptp_kvm for arm64
+  kvm: arm64: Add capability check extension for ptp_kvm
+
+Mark Rutland (1):
+  arm/arm64: smccc/psci: add arm_smccc_1_1_get_conduit()
+
+Thomas Gleixner (1):
+  time: Add mechanism to recognize clocksource in time_get_snapshot
+
+ drivers/clocksource/arm_arch_timer.c        | 24 ++++++
+ drivers/firmware/psci/psci.c                | 16 ++++
+ drivers/ptp/Kconfig                         |  2 +-
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_kvm_arm64.c                 | 53 +++++++++++++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 77 +++++-------------
+ drivers/ptp/ptp_kvm_x86.c                   | 87 +++++++++++++++++++++
+ include/asm-generic/ptp_kvm.h               | 12 +++
+ include/linux/arm-smccc.h                   | 30 ++++++-
+ include/linux/clocksource.h                 |  6 ++
+ include/linux/clocksource_ids.h             | 13 +++
+ include/linux/timekeeping.h                 | 12 +--
+ include/uapi/linux/kvm.h                    |  1 +
+ kernel/time/clocksource.c                   |  3 +
+ kernel/time/timekeeping.c                   |  1 +
+ virt/kvm/arm/arm.c                          |  1 +
+ virt/kvm/arm/psci.c                         | 22 ++++++
+ 17 files changed, 295 insertions(+), 66 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
+ create mode 100644 include/asm-generic/ptp_kvm.h
+ create mode 100644 include/linux/clocksource_ids.h
+
+-- 
+2.17.1
 
