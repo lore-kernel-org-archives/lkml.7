@@ -2,149 +2,130 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C213FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981642075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574677805;
-	bh=wcr4Dbs+GKk3yIBshMMLNEN248Wy+1lMokXYm9xs71E=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wEbJfuBpyiOg1Fl5LrDguxZIu7S7oLg4ZwQYUBHew6XW2EN9k3+IDOItN+KgOxkxd
-	 sGiheQQAqJDHafdNKuzgyg0BRTSeAnVBiyW3VzTgpbuZ/6TM5AG8Nn8v6YdyUHCUwP
-	 1l702wXq32HRHiEZzCKdThBryk+hbjX38A0gkWu8=
+	by mail.kernel.org (Postfix) with ESMTP id 9EDF92075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfKYKaE (ORCPT
+        id S1727502AbfKYKb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:30:04 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43437 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfKYKaE (ORCPT
+        Mon, 25 Nov 2019 05:31:29 -0500
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:42192 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727316AbfKYKb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:30:04 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so17296570wra.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=P4mQAf1F6Wws3NlD+mJiOOwSaE1RlOjFXhpxEh/DmBs=;
-        b=ZQ2zGJPmxuzfV1CxjlD2sPcIGsgDMqCELCbAknwwwACeiU6ulOFOTO3YvKSN/LQt5Y
-         gatHTI4vJdanika65aU4XeVMCzNNPh/I2ZWstO6hRDzffWzPTLMll/ja5OKZoRZiNt2i
-         e6OjbkAN3HG5MnNusTEUUSUpaVkM5cx4F15J7ztHO2R+sWifPv4K1z+K7VraPagjr4Az
-         n0UqRQZPlOyjqeClD5OlfQSULt9mMgzB/18wBzdqVOOKuiI8627uvpnkxlFd0bMzRPh6
-         d2BROEe/30f/9Gjly9AZnQDKt13nx05c2JRCgv7gLMYOJMT+jpM/HztEOm+UfQporWtO
-         COwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=P4mQAf1F6Wws3NlD+mJiOOwSaE1RlOjFXhpxEh/DmBs=;
-        b=F83E2jHdac0XABjkufx3ZYcUwIKHj6S1w1noU5XRH4YnbYaB3CW8sOaKQI4hO3wxAx
-         F7g7S64i44XkhpftjBj9cIE8R42zndmKHOwWQfkpzfBEEdLpFa8YWT4PfJOIujsb56Sk
-         9jAalkRiA/FSxt/4Qs3Ampy4Qs0HQOUjiDopfqYiIimkJ06VJllF3ryoLlcwkbNYXR5A
-         9q6z7r7DxKKYIKQPba9x76yXKhxkdNU0629MtoxofuUVZsrx/I3j20m7kQhj0RIX8yTc
-         8/a2nzQRr31usDZm+U6z2UWajBIWvMDXMtuGHQEzJ1sdcwum88UnvT7c0iv+fpDcri6p
-         lJvA==
-X-Gm-Message-State: APjAAAXwdQl2/CXAlMq11EfD8BxULAPXBKNoKdQJsgOIXRE8a5uxD81b
-        SR7Z7QmpZtNcrtXLwZ7fmbg=
-X-Google-Smtp-Source: APXvYqwcSuhX02h/frUmHKWdWv/luZzJ6KbP72qQ3pR3amrHyI7X4yuEYI6jjKo/ZA/yBq7tqkFkqQ==
-X-Received: by 2002:a5d:4684:: with SMTP id u4mr29928191wrq.352.1574677801595;
-        Mon, 25 Nov 2019 02:30:01 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id j17sm10085094wrr.75.2019.11.25.02.30.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 02:30:00 -0800 (PST)
-Date:   Mon, 25 Nov 2019 11:29:59 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [GIT PULL] x86/decoder change for v5.5
-Message-ID: <20191125102959.GA107197@gmail.com>
+        Mon, 25 Nov 2019 05:31:29 -0500
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us3.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 17D9AB8005A;
+        Mon, 25 Nov 2019 10:31:27 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 25 Nov
+ 2019 10:31:16 +0000
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in
+ napi_gro_receive()
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Alexander Lobakin" <alobakin@dlink.ru>
+CC:     David Miller <davem@davemloft.net>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "petrm@mellanox.com" <petrm@mellanox.com>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "johannes.berg@intel.com" <johannes.berg@intel.com>,
+        "emmanuel.grumbach@intel.com" <emmanuel.grumbach@intel.com>,
+        "luciano.coelho@intel.com" <luciano.coelho@intel.com>,
+        "linuxwifi@intel.com" <linuxwifi@intel.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
+ <20191015.181649.949805234862708186.davem@davemloft.net>
+ <7e68da00d7c129a8ce290229743beb3d@dlink.ru>
+ <PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <c762f5eee08a8f2d0d6cb927d7fa3848@dlink.ru>
+ <746f768684f266e5a5db1faf8314cd77@dlink.ru>
+ <PSXP216MB0438267E8191486435445DA6804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <cc08834c-ccb3-263a-2967-f72a9d72535a@solarflare.com>
+Date:   Mon, 25 Nov 2019 10:31:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <PSXP216MB0438267E8191486435445DA6804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-25064.003
+X-TM-AS-Result: No-1.151000-8.000000-10
+X-TMASE-MatchedRID: UuaOI1zLN1j4ECMHJTM/ufZvT2zYoYOwC/ExpXrHizy8YDH/UBNnm3z4
+        lkFFZozya26WJASrL3w0+NJuUFRWY2j8oZRXwTGoxcDvxm0Uv+AGchEhVwJY35KK7cYRdL7/Vsm
+        drKQylyhpaitsZvBsZIHdbZCx6yrRdsj49V16pSkNwUVhIF6pVkqAhuLHn5fEjiLABC6i+1idW2
+        C/Ex2sg7Ooz1ouKUE5VNP1aViTJ070aUnP7vi4bKiUivh0j2PvFfK1en1S7ASk+oW3oLzmHhrlf
+        Onvg2DrfeTxrBFoEvNRw+drvbtM+VI3mP8aC0PBA9lly13c/gH4qCLIu0mtIGOMyb1Ixq8VOI1Z
+        1dPBhuC1qON8SzJ0P5soi2XrUn/JIq95DjCZh0wfRoCwBzgRYsK21zBg2KlfStBGwEBjie75G5W
+        ryQ6GyOk4Bm1wCfA4CvSKnd9MgcyDtEH2wvxTnhjdkxo5gR4SnVm6UUeKDSIBwP3ZU9+WVuv1VZ
+        5IK4cftLvi6hXUM9JR029mOM6P0LrcE8xytxC5d5hZXZFoB8PxWx93BSYyye53VB1DJl7uftwZ3
+        X11IV0=
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10-1.151000-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-25064.003
+X-MDID: 1574677888-6w8_0MOmzWTL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 25/11/2019 09:09, Nicholas Johnson wrote:
+> The default value of /proc/sys/net/core/gro_normal_batch was 8.
+> Setting it to 1 allowed it to connect to Wi-Fi network.
+>
+> Setting it back to 8 did not kill the connection.
+>
+> But when I disconnected and tried to reconnect, it did not re-connect.
+>
+> Hence, it appears that the problem only affects the initial handshake 
+> when associating with a network, and not normal packet flow.
+That sounds like the GRO batch isn't getting flushed at the endof the
+ NAPI — maybe the driver isn't calling napi_complete_done() at the
+ appropriate time?
+Indeed, from digging through the layers of iwlwifi I eventually get to
+ iwl_pcie_rx_handle() which doesn't really have a NAPI poll (the
+ napi->poll function is iwl_pcie_dummy_napi_poll() { WARN_ON(1);
+ return 0; }) and instead calls napi_gro_flush() at the end of its RX
+ handling.  Unfortunately, napi_gro_flush() is no longer enough,
+ because it doesn't call gro_normal_list() so the packets on the
+ GRO_NORMAL list just sit there indefinitely.
 
-Please pull the latest core-objtool-for-linus git tree from:
+It was seeing drivers calling napi_gro_flush() directly that had me
+ worried in the first place about whether listifying napi_gro_receive()
+ was safe and where the gro_normal_list() should go.
+I wondered if other drivers that show up in [1] needed fixing with a
+ gro_normal_list() next to their napi_gro_flush() call.  From a cursory
+ check:
+brocade/bna: has a real poller, calls napi_complete_done() so is OK.
+cortina/gemini: calls napi_complete_done() straight after
+ napi_gro_flush(), so is OK.
+hisilicon/hns3: calls napi_complete(), so is _probably_ OK.
+But it's far from clear to me why *any* of those drivers are calling
+ napi_gro_flush() themselves...
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-objtool-for-linus
+-Ed
 
-   # HEAD: 700c1018b86d0d4b3f1f2d459708c0cdf42b521d x86/insn: Fix awk regexp warnings
-
-Fix a gawk 5.0 incompatibility in gen-insn-attr-x86.awk. Most distros are 
-still on gawk 4.2.x.
-
- Thanks,
-
-	Ingo
-
------------------->
-Alexander Kapshuk (1):
-      x86/insn: Fix awk regexp warnings
-
-
- arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
- tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b2c14f..a42015b305f4 100644
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
-diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b2c14f..a42015b305f4 100644
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
+[1]: https://elixir.bootlin.com/linux/latest/ident/napi_gro_flush
