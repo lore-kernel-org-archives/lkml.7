@@ -2,152 +2,256 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C555C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B7720740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4322D20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 13:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574688055;
+	bh=nS5pH1uixntvQ9oOj648sDAnIBDwE7SVI19fBjULy4o=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=poKoAqkSlNBvlubxcZBT/70OIoaEkASWBljOFTxyXXrop91UreYnX4tkGSN15msof
+	 5wYI4Y4x0NoUhCLZ0JgodjWDMIrcWx9Ok8NKF2aNV7HCch9q0pGfEKYjj4URAVFc30
+	 iUTi7indL9SjeIq82OoEuOR/1YJkxDft3rhrG8Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfKYNUP (ORCPT
+        id S1727761AbfKYNUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 08:20:15 -0500
-Received: from mail-eopbgr800078.outbound.protection.outlook.com ([40.107.80.78]:60059
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbfKYNUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 08:20:14 -0500
-Received: from BL0PR02CA0038.namprd02.prod.outlook.com (2603:10b6:207:3d::15)
- by BYAPR02MB5143.namprd02.prod.outlook.com (2603:10b6:a03:64::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.19; Mon, 25 Nov
- 2019 13:20:10 +0000
-Received: from BL2NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::200) by BL0PR02CA0038.outlook.office365.com
- (2603:10b6:207:3d::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
- Transport; Mon, 25 Nov 2019 13:20:10 +0000
-Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
- smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- gmail.com discourages use of 149.199.60.83 as permitted sender)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT039.mail.protection.outlook.com (10.152.77.152) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Mon, 25 Nov 2019 13:20:10 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1iZEDS-0008Dp-QO; Mon, 25 Nov 2019 05:15:46 -0800
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1iZEDN-0002XV-Db; Mon, 25 Nov 2019 05:15:41 -0800
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAPDFeng002616;
-        Mon, 25 Nov 2019 05:15:41 -0800
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1iZEDM-0002Wb-5q; Mon, 25 Nov 2019 05:15:40 -0800
-From:   shubhrajyoti.datta@gmail.com
-To:     linux-kernel@vger.kernel.org
-Cc:     michal.simek@xilinx.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-        Maarten Brock <m.brock@vanmierlo.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCHv2 3/3] serial: xilinx_uartps: set_mctrl sets RTS and DTR
-Date:   Mon, 25 Nov 2019 18:45:31 +0530
-Message-Id: <1574687731-21563-3-git-send-email-shubhrajyoti.datta@gmail.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1574687731-21563-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1574687731-21563-1-git-send-email-shubhrajyoti.datta@gmail.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--5.124-7.0-31-1
-X-imss-scan-details: No--5.124-7.0-31-1;No--5.124-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-Matching-Connectors: 132191616104858297;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(396003)(39860400002)(199004)(189003)(9686003)(86362001)(4326008)(82202003)(51416003)(305945005)(2351001)(6666004)(356004)(54906003)(316002)(36756003)(2906002)(55446002)(2361001)(48376002)(76482006)(50466002)(446003)(76176011)(498600001)(16586007)(9786002)(107886003)(26005)(5660300002)(70586007)(336012)(426003)(73392003)(11346002)(2616005)(70206006)(4744005)(50226002)(81166006)(81156014)(47776003)(8676002)(61266001)(8936002)(6916009)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5143;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Mon, 25 Nov 2019 08:20:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:50378 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfKYNUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 08:20:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 166C131B;
+        Mon, 25 Nov 2019 05:20:52 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 869663F68E;
+        Mon, 25 Nov 2019 05:20:51 -0800 (PST)
+Date:   Mon, 25 Nov 2019 13:20:49 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Subject: [GIT PULL] regulator updates for v5.5
+Message-ID: <20191125132049.GC4535@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f4a80fb2-092f-4a1a-7947-08d771aa32a3
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5143:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5143D5FC005AB3943D50F5C1874A0@BYAPR02MB5143.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:88;
-X-Forefront-PRVS: 0232B30BBC
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?eERPhYBpqwKkmGa1uGhdR17PxKXUv7K9ln4PCNEQNK4tcFaUL/ZyzJfdwZyl?=
- =?us-ascii?Q?dAzZMPAjRS2xpNR/Zw4+a5OYxsV9zVI8YGjgTNZt89lfZoHN+Y7+kjv5unxr?=
- =?us-ascii?Q?8WFAzqREDEUpwKQosRJ0jjGp2Bt2Ze3Zk2slvoVwHbI4A3eOw4LCzAtzHTOC?=
- =?us-ascii?Q?1Cf7sMhYETTHKzDZwUCEa8RrRRAEf7dGhYwebPj45zULpzEUaFQdXUUPmDlL?=
- =?us-ascii?Q?qKmx/CXmmzRFxhG/EWtXWtxfa3mh3pHv0/z4PQYpEUYaUrBQ0KV8jc6ON3aj?=
- =?us-ascii?Q?VtE2HEaggeI4Hui3Ibts3XdKoOHdfjBnbEE9GIbj4X1wLaF50Yb8RZHyYvk9?=
- =?us-ascii?Q?OiuWn4Skvgct0iX11qwNS3UgrF8moGeOXG9OY3qtRD3JdSawfZBedIYBDQk0?=
- =?us-ascii?Q?bAW1/wejfELJ97wSHvSPOIHxrC604p0Bw0Q9bNo0w8fKZtBeIqc64fQpo7HQ?=
- =?us-ascii?Q?J9XbHwXPYLWwMp8o4n2peqLkQ/ioVLwizEGgk+MhlqPJOXHfrb9BsI2glKf8?=
- =?us-ascii?Q?Nc9XOL/Db5HL1+x9BCwSrmL/NnBvvnvxA10lDeFtqHCnpcYhfIeghEBSDb1g?=
- =?us-ascii?Q?W2uQfcfXPTCVpKkxNxo8atWiLvlYRQNU4Xy2erIxoHAjWX8QTGaX8XOWvzBR?=
- =?us-ascii?Q?K9w2iPCkK9DPkqcmUJ26BXhnplCXNZTouswp3TfhFZSOgjLvPnid+SDucSSq?=
- =?us-ascii?Q?r1RHPFpfX1iTNJbm8L/XPQvFFBz1ZsPQY3/M1v2QVirSFj08P7pO+Zw8XdAP?=
- =?us-ascii?Q?k4qtOUPUbI95xS7XLU1F1dsngW1SNqc8l9zMuR5hw06G9Oks3ZvXK0BMIapm?=
- =?us-ascii?Q?aRF6qrmFkFWWymCfen6+4FSzvJonXv+CwdHZC3BlbBnPn+f3VNUBxXdscmFB?=
- =?us-ascii?Q?FCix0CfHs1MKBA1Q+TWSY2rXqdpZfXLUJ50+itNrXnl+4cNOyygaK5OH7ht3?=
- =?us-ascii?Q?AkneXi8S1s33hwl5jyAPDsnS91Gy1F8In+Y4zJIz1BFV+sF8114HVVA+s8M3?=
- =?us-ascii?Q?Uep+eW5bshD/hjgm8Q5et6iJ9VGrqavbAZx6SHUFUGDkX6PfCVXaN5/0xEyr?=
- =?us-ascii?Q?nYt9KKDrIa0kjWzKSzIeq5GM4yIqV421F0WaNZF1piDWhMrsyskO3jgW61xm?=
- =?us-ascii?Q?tv3O2z4cctRBPAJHWBuT/ikz6IAjemSdPsZhpuMyzy7x+oTmpcZFUhageRKO?=
- =?us-ascii?Q?ryBEnhEc3qAA4wyR1mXd6DfOOGRnY8U0WnjlGWpK4bPz0tZa+yig+MuPmjYq?=
- =?us-ascii?Q?51AvU7MYde8sn6oDmOKGco+YX6vaqTNiMeGHx6/azMzkg27cTHbWAnwm9U7r?=
- =?us-ascii?Q?UDh3vQp2j+X+K+I03rgZaidudcZgaNz8b7xFl/dLc9TpLQJ9iYE57ZpBB3gi?=
- =?us-ascii?Q?wiTVzrtnpYjaRnfj6TW7l6mJeOXnD4kw3ac1wKiSn7yrLP+qKYTa6ImfBe5j?=
- =?us-ascii?Q?F+GehXtzhpM5lPdLJoMDQDiagFUyd7usu6AE7P0xS8E1Ce1AAqdAcnJQH7z3?=
- =?us-ascii?Q?Rm01edM06CaT+GTPSTCywcDq2s/Az51Qb7XATq7TCE5xAOF+sF6eRuM8psNk?=
- =?us-ascii?Q?DSrhLjpVBswSS4fkejBXjnciOMbsyb7pMEBdw0zh?=
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2019 13:20:10.2426
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4a80fb2-092f-4a1a-7947-08d771aa32a3
-X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5143
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+Content-Disposition: inline
+X-Cookie: -- Owen Meredith
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maarten Brock <m.brock@vanmierlo.com>
 
-set_mctrl now sets RTS and DTR.
+--kVXhAStRUZ/+rrGn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Maarten Brock <m.brock@vanmierlo.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- drivers/tty/serial/xilinx_uartps.c | 4 ++++
- 1 file changed, 4 insertions(+)
+The following changes since commit af42d3466bdc8f39806b26f593604fdc54140bcb:
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index e82f8db..b4fd550 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1059,6 +1059,10 @@ static void cdns_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 	val &= ~(CDNS_UART_MODEMCR_RTS | CDNS_UART_MODEMCR_DTR);
- 	mode_reg &= ~CDNS_UART_MR_CHMODE_MASK;
- 
-+	if (mctrl & TIOCM_RTS)
-+		val |= CDNS_UART_MODEMCR_RTS;
-+	if (mctrl & TIOCM_DTR)
-+		val |= CDNS_UART_MODEMCR_DTR;
- 	if (mctrl & TIOCM_LOOP)
- 		mode_reg |= CDNS_UART_MR_CHMODE_L_LOOP;
- 	else
--- 
-2.1.1
+  Linux 5.4-rc8 (2019-11-17 14:47:30 -0800)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tag=
+s/regulator-v5.5
+
+for you to fetch changes up to a21da94f617bce0771144ea8093b6987184b38d0:
+
+  Merge branch 'regulator-5.5' into regulator-next (2019-11-22 19:56:20 +00=
+00)
+
+----------------------------------------------------------------
+regulator: Updates for v5.5
+
+Another fairly quiet release for the regulator API, some work all around
+including some core work but mostly in specialist or driver specific
+code:
+
+ - Fix for powering off boot-on regulators.
+ - Enhancements to the coupled regulator support introduced in the last
+   release.
+ - Conversion of a bunch of drivers to the fwnode API for GPIOs.
+ - Mode support for DA9062.
+ - New device support for Qualcomm PM1650, PM8004 and PM895 and Silergy
+   SR83X.
+ - Removal of obsolete AB8505 support.
+
+----------------------------------------------------------------
+Andreas Kemnade (1):
+      regulator: rn5t618: fix rc5t619 ldo10 enable
+
+Angelo G. Del Regno (3):
+      regulator: qcom_spmi: Add PM8950 SPMI regulator
+      regulator: qcom_smd: Add PM8950 regulators
+      regulator: qcom_spmi: Add support for PM8004 regulators
+
+Axel Lin (9):
+      regulator: pbias: Use of_device_get_match_data
+      regulator: da9063: Simplify da9063_buck_set_mode for BUCK_MODE_MANUAL=
+ case
+      regulator: da9062: Simplify the code iterating all regulators
+      regulator: pbias: Get rid of struct pbias_regulator_data
+      regulator: rk808: Constify rk817 regulator_ops
+      regulator: rk808: Fix warning message in rk817_set_ramp_delay
+      regulator: rk808: Remove rk817_set_suspend_voltage function
+      regulator: da9062: Simplify da9062_buck_set_mode for BUCK_MODE_MANUAL=
+ case
+      regulator: da9062: Return REGULATOR_MODE_INVALID for invalid mode
+
+Christoph Fritz (3):
+      regulator: da9062: refactor buck modes into header
+      regulator: da9062: add of_map_mode support for bucks
+      dt-bindings: mfd: da9062: describe buck modes
+
+Dmitry Osipenko (2):
+      regulator: core: Release coupled_rdevs on regulator_init_coupling() e=
+rror
+      regulator: core: Allow generic coupling only for always-on regulators
+
+Dmitry Torokhov (9):
+      gpiolib: introduce devm_fwnode_gpiod_get_index()
+      gpiolib: introduce fwnode_gpiod_get_index()
+      regulator: s5m8767: switch to using devm_fwnode_gpiod_get
+      regulator: slg51000: switch to using fwnode_gpiod_get_index
+      regulator: tps65090: switch to using devm_fwnode_gpiod_get
+      regulator: s2mps11: switch to using devm_fwnode_gpiod_get
+      regulator: da9211: switch to using devm_fwnode_gpiod_get
+      regulator: tps65132: switch to using devm_fwnode_gpiod_get()
+      regulator: max77686: switch to using fwnode_gpiod_get_index
+
+Douglas Anderson (1):
+      regulator: Document "regulator-boot-on" binding more thoroughly
+
+Guido G=FCnther (1):
+      regulator: bd718x7: Add MODULE_ALIAS()
+
+Kiran Gunda (2):
+      regulator: dt-bindings: Add PM6150x compatibles
+      regulator: qcom-rpmh: add PM6150/PM6150L regulator support
+
+Krzysztof Kozlowski (1):
+      regulator: Fix Kconfig indentation
+
+Mark Brown (4):
+      Merge branch 'ib-fwnode-gpiod-get-index' of git://git.kernel.org/.../=
+linusw/linux-gpio into regulator-5.5
+      Merge branch 'regulator-5.4' into regulator-5.5
+      Merge branch 'regulator-5.4' into regulator-linus
+      Merge branch 'regulator-5.5' into regulator-next
+
+Matti Vaittinen (1):
+      regulator: bd70528: Add MODULE_ALIAS to allow module auto loading
+
+Pascal Paillet (2):
+      regulator: core: Let boot-on regulators be powered off
+      regulator: stpmic1: Set a default ramp delay value
+
+Peng Fan (2):
+      dt-bindings: regulator: fixed: add off-on-delay-us property
+      regulator: fixed: add off-on-delay
+
+Pragnesh Patel (1):
+      fixed-regulator: dt-bindings: Fixed building error for compatible pro=
+perty
+
+Saravana Kannan (1):
+      regulator: core: Don't try to remove device links if add failed
+
+Stephan Gerhold (2):
+      regulator: ab8500: Remove AB8505 USB regulator
+      regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
+
+Sven Van Asbroeck (2):
+      tps6105x: add optional devicetree support
+      regulator: tps6105x: add optional devicetree support
+
+Vasily Khoruzhick (1):
+      regulator: fan53555: add chip id for Silergy SYR83X
+
+Yizhuo (1):
+      regulator: max8907: Fix the usage of uninitialized variable in max890=
+7_regulator_probe()
+
+YueHaibing (3):
+      regulator: pcap-regulator: remove unused variable 'SW3_table'
+      regulator: stm32-vrefbuf: use devm_platform_ioremap_resource() to sim=
+plify code
+      regulator: uniphier: use devm_platform_ioremap_resource() to simplify=
+ code
+
+zhengbin (1):
+      regulator: vexpress: Use PTR_ERR_OR_ZERO() to simplify code
+
+ Documentation/devicetree/bindings/mfd/da9062.txt   |  4 +
+ .../bindings/regulator/fixed-regulator.yaml        |  4 +
+ .../bindings/regulator/qcom,rpmh-regulator.txt     |  4 +
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 21 +++++
+ .../bindings/regulator/qcom,spmi-regulator.txt     | 25 ++++++
+ .../devicetree/bindings/regulator/regulator.yaml   |  7 +-
+ drivers/gpio/gpiolib-devres.c                      | 33 +++-----
+ drivers/gpio/gpiolib.c                             | 48 +++++++++++
+ drivers/mfd/tps6105x.c                             | 34 +++++++-
+ drivers/regulator/Kconfig                          |  8 +-
+ drivers/regulator/ab8500.c                         | 17 ----
+ drivers/regulator/bd70528-regulator.c              |  1 +
+ drivers/regulator/bd718x7-regulator.c              |  1 +
+ drivers/regulator/core.c                           | 19 ++++-
+ drivers/regulator/da9062-regulator.c               | 63 ++++++++-------
+ drivers/regulator/da9063-regulator.c               |  9 +--
+ drivers/regulator/da9211-regulator.c               | 12 +--
+ drivers/regulator/fan53555.c                       |  2 +
+ drivers/regulator/fixed.c                          |  2 +
+ drivers/regulator/internal.h                       |  1 +
+ drivers/regulator/max77686-regulator.c             |  5 +-
+ drivers/regulator/max8907-regulator.c              | 15 +++-
+ drivers/regulator/pbias-regulator.c                | 75 +++++++-----------
+ drivers/regulator/pcap-regulator.c                 |  4 -
+ drivers/regulator/qcom-rpmh-regulator.c            | 62 ++++++++++++++-
+ drivers/regulator/qcom_smd-regulator.c             | 92 ++++++++++++++++++=
+++++
+ drivers/regulator/qcom_spmi-regulator.c            | 41 ++++++++++
+ drivers/regulator/rk808-regulator.c                | 29 ++-----
+ drivers/regulator/rn5t618-regulator.c              |  2 +-
+ drivers/regulator/s2mps11.c                        |  7 +-
+ drivers/regulator/s5m8767.c                        |  7 +-
+ drivers/regulator/slg51000-regulator.c             | 13 ++-
+ drivers/regulator/stm32-vrefbuf.c                  |  4 +-
+ drivers/regulator/stpmic1_regulator.c              |  6 ++
+ drivers/regulator/tps6105x-regulator.c             |  2 +
+ drivers/regulator/tps65090-regulator.c             | 26 +++---
+ drivers/regulator/tps65132-regulator.c             | 17 ++--
+ drivers/regulator/uniphier-regulator.c             |  4 +-
+ drivers/regulator/vexpress-regulator.c             |  5 +-
+ .../dt-bindings/regulator/dlg,da9063-regulator.h   | 16 ++++
+ include/linux/gpio/consumer.h                      | 54 ++++++++++---
+ include/linux/regulator/ab8500.h                   |  3 -
+ include/linux/regulator/fixed.h                    |  1 +
+ 43 files changed, 576 insertions(+), 229 deletions(-)
+ create mode 100644 include/dt-bindings/regulator/dlg,da9063-regulator.h
+
+--kVXhAStRUZ/+rrGn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3b1TEACgkQJNaLcl1U
+h9CYBQf8DLE6c1Hmi+lDtfE9UwkuRRIBJtjShuQTU5mNDwb5vK8TZufkHfOYBrss
+xSVmSW0PChW+QDGqR+e7w37jNHzdHHhEzTjGN9IMSnlEE2pD2L7K1YlywdzGdJ33
++fGMxpBfSsWuAr62d+aPUs1cIHlsjoqy6lU42T9c3i9fzGrMVaCYZWuuY14EmuFB
+l165rPShUHhGlVxol5HlPQbKH7NKmvdzj9qJHgKbn4wdGF34gUcUNnn4try+jEK6
+Bf7SE9VmmbhlcASjW1m4g0qOJ51J14bdlJPNTGOuHh/7MrZnD3eK/up77ylIOavB
+iPZH8FJSRtaJJoWqY+mJKrJAztyNuA==
+=AKzk
+-----END PGP SIGNATURE-----
+
+--kVXhAStRUZ/+rrGn--
