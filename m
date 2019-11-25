@@ -6,92 +6,73 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E1C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB5BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83062082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFAA20740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfKYQd1 (ORCPT
+        id S1728909AbfKYQen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:33:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:52534 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfKYQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:33:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8683A31B;
-        Mon, 25 Nov 2019 08:33:25 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A7713F6C4;
-        Mon, 25 Nov 2019 08:33:20 -0800 (PST)
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Christoph Hellwig <hch@lst.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mon, 25 Nov 2019 11:34:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46556 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728683AbfKYQen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 11:34:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BCE8DAF42;
+        Mon, 25 Nov 2019 16:34:41 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 16:34:38 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
- <20191123165108.GA15306@ubuntu-x2-xlarge-x86> <20191125074412.GA30595@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
-Date:   Mon, 25 Nov 2019 16:33:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [GIT PULL] scheduler changes for v5.5
+Message-ID: <20191125163438.GL28938@suse.de>
+References: <20191125125944.GA22218@gmail.com>
+ <9af8a5eb-5104-ad0b-bf46-dedb65d66a07@arm.com>
+ <20191125150811.GA116487@gmail.com>
+ <d2312678-f3a1-9e22-0c95-2a161cd67bd7@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191125074412.GA30595@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <d2312678-f3a1-9e22-0c95-2a161cd67bd7@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/11/2019 7:44 am, Christoph Hellwig wrote:
-> On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
->> Just as an FYI, this introduces a warning on arm32 allyesconfig for me:
+On Mon, Nov 25, 2019 at 04:20:21PM +0000, Valentin Schneider wrote:
+> On 25/11/2019 15:08, Ingo Molnar wrote:
+> > We can give testers a linearized tree for testing, should this come up 
+> > (which I doubt it will ...), ok?
+> > 
 > 
-> I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
-> and/or we need to use min_t and open code the zero exception.
+> My worry (and I think Mel's) is on performance bisection of the mainline
+> tree (not specifically on the load balancer rework), by LKP or else. It's
+> not something I personally do (nor expect to do in the foreseeable future),
+> so Mel is much better positioned than I to argue for/against this.
 > 
-> Robin, Nicolas - any opinions?
 
-Yeah, given that it's always held a mask I'm not entirely sure why it 
-was ever a dma_addr_t rather than a u64. Unless anyone else is desperate 
-to do it I'll get a cleanup patch ready for rc1.
+This was a concern. If there is a regression then a bisection may point to
+one of the earlier patches. That will be ok as long as people remember
+to look at the whole series instead of just the patch the bisection
+identifies.  The second source of confusion may be that LKP reports
+a regression followed by a gain that will lack a comparison with the
+baseline so we may not be able to rely on LKP to detect regressions/gains
+from the series. It's inconvenient but not critical enough to dump the
+testing the existing branch has.
 
-> Also I wonder how this file gets compiled on arm32 given that arm32
-> has its own set of iommu dma ops..
-
-As long as the dependencies for CONFIG_IOMMU_DMA are met it can be built 
-even when it's not actually used. That said, I might have expected that 
-arm allyesconfig ends up with CONFIG_ARCH_DMA_ADDR_T_64BIT=y anyway; I 
-guess it must pick some of CONFIG_ARM_LPAE's negative dependencies.
-
-(/me doesn't feel like jumping down the all*config rabbit hole today)
-
-Robin.
+-- 
+Mel Gorman
+SUSE Labs
