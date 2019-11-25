@@ -2,138 +2,164 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDE8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D20BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625F72082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:42:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NhjnM0Hp"
+	by mail.kernel.org (Postfix) with ESMTP id 52CFD2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 09:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574675167;
+	bh=SmxMpsS12PjFHRDcNUQ51+o9OMvfqAy4ZRREUthu25g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pJ6zCf6CfuD9XqUZYCuREoKQjlBK/pLTcMeWYMZJd5r43PT0qcfeuHflcxeIF6Vy9
+	 Eu3ZHsSax0Qm5+o/QSgvYi2Oa1tTsJYObdfSFJY5X+OSebo4cu5y8y92l66Fjo4MBM
+	 pj/LKK5OQaNm8mDnHX6T3HlZNgH2e9F0l/ui5qd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfKYJm1 (ORCPT
+        id S1727318AbfKYJqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 04:42:27 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47316 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfKYJm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 04:42:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574674945;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ja91wPrXR0QYm8g6TlhyppqtMsZgwbcud4ZTrv5sIt4=;
-        b=NhjnM0HpqhZJLY31/bVW5MH+VzOX1iTaSS+qWBHdYX5UntjjmQmXUVH0E7zrP7SuVtlE/I
-        l64zPmvozu+a2937jG5YBpCPOFdk8BHlt5xvALw1Gs5+hr038rnR3x/8Cj5roFU/UrfpEO
-        4jQqiRmViIumzAkfv10DplxYgAQG334=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-7Q8qCZf6PuWtTLOInafARQ-1; Mon, 25 Nov 2019 04:42:23 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 25 Nov 2019 04:46:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727133AbfKYJqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 04:46:05 -0500
+Received: from linux-8ccs (x2f7fe0e.dyn.telefonica.de [2.247.254.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CEB8DC4B;
-        Mon, 25 Nov 2019 09:42:22 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D34E960C81;
-        Mon, 25 Nov 2019 09:42:20 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 10:42:20 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] perf record: adapt affinity to machines with
- #CPUs > 1K
-Message-ID: <20191125094220.GC4675@krava>
-References: <fb356fe9-ac87-71ab-9845-075b3fac3199@linux.intel.com>
- <69bd0062-0f9e-889b-b7ef-0d97d257569b@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 57B33207FD;
+        Mon, 25 Nov 2019 09:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574675165;
+        bh=SmxMpsS12PjFHRDcNUQ51+o9OMvfqAy4ZRREUthu25g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xvWGAkj0GDfi1tdbON1LdGTuWpZ7O3xx+xtdatiaaVC5Z/ZP3CCu0JVVUdXk2md58
+         DCS7MHQ6CfmFWRCEFgGQudELFUuHJgXYbbktG/PuB7DbCbEyMqZjvj2zpjEJCKHIPV
+         U2gHjfoUmoswHcLmzhR82lhiIIJ7CeuS4ZQuTBQ4=
+Date:   Mon, 25 Nov 2019 10:45:58 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "binutils@sourceware.org" <binutils@sourceware.org>
+Subject: Re: [PATCH] export.h: reduce __ksymtab_strings string duplication by
+ using "MS" section flags
+Message-ID: <20191125094557.GA31961@linux-8ccs>
+References: <20191120145110.8397-1-jeyu@kernel.org>
+ <93d3936d-0bc4-9639-7544-42a324f01ac1@rasmusvillemoes.dk>
+ <20191121160919.GB22213@linux-8ccs>
+ <CAK7LNAT=+VMTpK3nBy3J-M9idf8MBi4dB4WKexYatiV2pNHvMg@mail.gmail.com>
+ <b280c412-432b-ff54-acbd-a6bcc74b6e72@rasmusvillemoes.dk>
 MIME-Version: 1.0
-In-Reply-To: <69bd0062-0f9e-889b-b7ef-0d97d257569b@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 7Q8qCZf6PuWtTLOInafARQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <b280c412-432b-ff54-acbd-a6bcc74b6e72@rasmusvillemoes.dk>
+X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 09:08:57AM +0300, Alexey Budankov wrote:
++++ Rasmus Villemoes [25/11/19 10:29 +0100]:
+>cc += binutils ML
+>
+>[on @progbits v %progbits in generic (data only) assembly code]
+>
+>On 22/11/2019 12.44, Masahiro Yamada wrote:
+>> On Fri, Nov 22, 2019 at 1:09 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>>
+>
+>>> I think this would work, and it feels like the more correct solution
+>>> especially if arm isn't the only one with the odd progbits char. It
+>>> might be overkill if it's just arm that's affected though. I leave it
+>>> to Masahiro to see what he prefers.
+>>>
+>>
+>>
+>> BTW, is there any reason why
+>> not use %progbits all the time?
+>>
+>>
+>> include/linux/init.h hard-codes %progbits
+>>
+>>    #define __INITDATA .section ".init.data","aw",%progbits
+>>    #define __INITRODATA .section ".init.rodata","a",%progbits
+>>
+>>
+>> So, my understanding is '%' works for all architectures,
+>> but it is better to ask 0-day bot to test it.
+>
+>It seems that you're absolutely right. The binutils source has code like
+>
+>+             if (*input_line_pointer == '@' || *input_line_pointer == '%')
+>+               {
+>+                 ++input_line_pointer;
+>+                 if (strncmp (input_line_pointer, "progbits",
+>+                              sizeof "progbits" - 1) == 0)
+>+                   {
+>+                     type = SHT_PROGBITS;
+>+                     input_line_pointer += sizeof "progbits" - 1;
+>+                   }
+>+                 else if (strncmp (input_line_pointer, "nobits",
+>+                                   sizeof "nobits" - 1) == 0)
+>+                   {
+>+                     type = SHT_NOBITS;
+>+                     input_line_pointer += sizeof "nobits" - 1;
+>+                   }
 
-SNIP
+Yeah, I saw this too while digging. I also came across this commit in
+the binutils source:
 
-> -static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap=
-_params *mp)
-> +static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_=
-params *mp)
->  {
-> -=09CPU_ZERO(&map->affinity_mask);
-> +=09map->affinity_mask.nbits =3D cpu__max_cpu();
-> +=09map->affinity_mask.bits =3D bitmap_alloc(map->affinity_mask.nbits);
-> +=09if (!map->affinity_mask.bits)
-> +=09=09return -1;
-> +
->  =09if (mp->affinity =3D=3D PERF_AFFINITY_NODE && cpu__max_node() > 1)
->  =09=09build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask)=
-;
->  =09else if (mp->affinity =3D=3D PERF_AFFINITY_CPU)
-> -=09=09CPU_SET(map->core.cpu, &map->affinity_mask);
-> +=09=09set_bit(map->core.cpu, map->affinity_mask.bits);
-> +
-> +=09return 0;
->  }
-> =20
-> +#define MASK_SIZE 1023
->  int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu=
-)
->  {
-> +=09char mask[MASK_SIZE + 1] =3D {0};
+commit ecc054c097e7ced281d02ef9632eb0261a410b96
+Author: Thomas Preud'homme <thomas.preudhomme@arm.com>
+Date:   Fri Mar 2 11:51:34 2018 +0000
 
-does this need to be initialized?
+    [GDB/testsuite] Use %progbits in watch-loc.c
 
-> +
->  =09if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
->  =09=09pr_debug2("failed to mmap perf event ring buffer, error %d\n",
->  =09=09=09  errno);
->  =09=09return -1;
->  =09}
-> =20
-> -=09perf_mmap__setup_affinity_mask(map, mp);
-> +=09if (perf_mmap__setup_affinity_mask(map, mp)) {
-> +=09=09pr_debug2("failed to alloc mmap affinity mask, error %d\n",
-> +=09=09=09  errno);
-> +=09=09return -1;
-> +=09}
-> +=09bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, m=
-ask, MASK_SIZE);
-> +=09pr_debug2("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, =
-mask);
+    While using @progbits in .pushsection work on some targets, it does not
+    work on arm target where this introduces a comment. This patch replaces
+    its use in gdb.dlang/watch-loc.c and gdb.mi/dw2-ref-missing-frame-func.c
+    by %progbits which should work on all targets since it is used in
+    target-independent elf/section7.s GAS test.
 
-the bitmap_scnprintf could be called only for debug case, right?
+    2018-03-02  Thomas Preud'homme  <thomas.preudhomme@arm.com>
 
-=09if (version >=3D 2) {
-=09=09bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, m=
-ask, MASK_SIZE);
-=09=09pr_debug2("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, =
-mask);
-=09}
+    gdb/testsuite/
+            * gdb.dlang/watch-loc.c: Use %progbits instead of @progbits.
+            * gdb.mi/dw2-ref-missing-frame-func.c: Likewise.
 
-ditto int the record__adjust_affinity function
+So that seems to confirm this theory :-) I'm just surprised it isn't
+documented anywhere it seems.
 
-jirka
+>The only reason I thought one needed to do it differently on ARM is this
+>from the gas docs:
+>
+>===
+>   The optional TYPE argument may contain one of the following
+>constants:
+>
+>'@progbits'
+>     section contains data
+>...
+>   Note on targets where the '@' character is the start of a comment (eg
+>ARM) then another character is used instead.  For example the ARM port
+>uses the '%' character.
+>===
+>
+>That doesn't suggest the possibility that % or some other character
+>might work on all architectures.
+>
+>Jessica, can you resend using just %progbits to let kbuild chew on that?
+>Please include a comment about the misleading gas documentation.
 
+Yup, sounds good. Thanks!
+
+Jessica
