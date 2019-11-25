@@ -2,159 +2,124 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88F1C43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96631C43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8591C20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA6220836
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:55:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p9Gy1z3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfKYGuK (ORCPT
+        id S1726033AbfKYGzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 01:50:10 -0500
-Received: from mga05.intel.com ([192.55.52.43]:40999 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfKYGuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 01:50:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 22:50:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,240,1571727600"; 
-   d="scan'208";a="198356887"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 24 Nov 2019 22:50:09 -0800
-Received: from [10.226.39.11] (unknown [10.226.39.11])
-        by linux.intel.com (Postfix) with ESMTP id 87D3D580495;
-        Sun, 24 Nov 2019 22:50:07 -0800 (PST)
-Subject: Re: [PATCH v3 1/2] dt-bindings: reset: Add YAML schemas for the Intel
- Reset controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     p.zabel@pengutronix.de, martin.blumenstingl@googlemail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
- <20191123004219.GA14198@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <e2ba7c95-ce75-22d8-d70e-0cc8d04b5c49@linux.intel.com>
-Date:   Mon, 25 Nov 2019 14:50:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 01:55:19 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6863 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfKYGzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 01:55:19 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddb7ad90000>; Sun, 24 Nov 2019 22:55:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 24 Nov 2019 22:55:18 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 22:55:18 -0800
+Received: from [10.25.75.126] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
+ 2019 06:55:14 +0000
+Subject: Re: [PATCH 5/6] arm64: tegra: Enable GPIO controllers nodes for
+ P2972-0000 platform
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <jonathanh@nvidia.com>,
+        <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+ <20191122104505.8986-6-vidyas@nvidia.com> <20191122132007.GC1315704@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <4a09729b-9a77-65a1-645a-a31e6e62ad1e@nvidia.com>
+Date:   Mon, 25 Nov 2019 12:25:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191123004219.GA14198@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191122132007.GC1315704@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574664922; bh=dZm59GUkaOsNMNa4wcA2Fs2VFYZ5cQM3eTAH8Kq6GxM=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=p9Gy1z3oS4qCpf5Tt+L15YV34yFk8wEmfoXyb+rFiEH4jEhMeHhmJvGHEHbDBAsQw
+         3NA5vl4A/ygey/Upu97VRWgQ8ZiBIgf3OyivONITooLQNn9a4Rj/hQC+MP58jB7006
+         5nGE2GqsGojSNTHYaMKIEOLE9+unATmsTPiImhFy72dipKgv9MXbi05ZuIOJEfZeXL
+         O8L0TnveJLRxVYO+idQs3lJCrQyJqvREKgVdI2CEwWvmWBQUNvZQrHec2LzXEGzMBh
+         bBBbgykMn4OequUElLaktRwlQkI04NglDMbjjImyKkDf9S5dbGAYLBDl49ADKFL+Tq
+         VZz/aCcO12GDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/23/2019 8:42 AM, Rob Herring wrote:
-> On Wed, Nov 20, 2019 at 02:10:23PM +0800, Dilip Kota wrote:
->> Add YAML schemas for the reset controller on Intel
->> Gateway SoC.
+On 11/22/2019 6:50 PM, Thierry Reding wrote:
+> On Fri, Nov 22, 2019 at 04:15:04PM +0530, Vidya Sagar wrote:
+>> Enable GPIO controllers nodes for P2972-0000 platform which are required
+>> by other controllers in the SoC for example when PCIe C5 controller
+>> operates in endpoint mode.
 >>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 >> ---
->> Changes on v3:
->> 	Fix DTC warnings
->> 	Add support to legacy xrx200 SoC
->> 	Change file name to intel,rcu-gw.yaml
+>>   arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+> 
+> The GPIO controllers are enabled by default, so there's no need to
+> explicitly enable them.
+Yup. I'll remove this patch.
+Since I didn't see 'status' entry in GPIO nodes in tegra194.dtsi file, I thought
+it means 'disabled'. But, contrary to my understanding, absence of 'status' entry
+seems to mean 'okay'.
+
+- Vidya Sagar
+> 
+> Thierry
+> 
 >>
->>   .../devicetree/bindings/reset/intel,rcu-gw.yaml    | 59 ++++++++++++++++++++++
->>   1 file changed, 59 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
->> new file mode 100644
->> index 000000000000..743be2c49fb8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
->> @@ -0,0 +1,59 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/reset/intel,rcu-gw.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> index 353a6a22196d..7eb64b816e08 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> @@ -37,6 +37,14 @@
+>>   			status = "okay";
+>>   		};
+>>   
+>> +		gpio@2200000 {
+>> +			status = "okay";
+>> +		};
 >> +
->> +title: System Reset Controller on Intel Gateway SoCs
+>> +		gpio@c2f0000 {
+>> +			status = "okay";
+>> +		};
 >> +
->> +maintainers:
->> +  - Dilip Kota <eswara.kota@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - items:
-> You can drop oneOf and items here.
-Ok.
-Got it, mentioning 'enum:' tells that compatible will take one of the 
-enum values. (Again, I just gone through existing yaml files after 
-reading your comment).
-
-So, no need of oneOf and items:,  I will update in the next patch revision.
-
->
->> +          - enum:
->> +              - intel,rcu-lgm
->> +              - intel,rcu-xrx200
->> +
->> +  reg:
->> +    description: Reset controller registers.
-> maxItems: 1
-Ok. I will add it.
->
->> +
->> +  intel,global-reset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    description: Global reset register offset and bit offset.
-> maxItems: 2
-Ok. I will add it.
-
-Regards,
-Dilip
->
->> +
->> +  "#reset-cells":
->> +    minimum: 2
->> +    maximum: 3
->> +    description: |
->> +      First cell is reset request register offset.
->> +      Second cell is bit offset in reset request register.
->> +      Third cell is bit offset in reset status register.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - intel,global-reset
->> +  - "#reset-cells"
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    rcu0: reset-controller@e0000000 {
->> +        compatible = "intel,rcu-lgm";
->> +        reg = <0xe0000000 0x20000>;
->> +        intel,global-reset = <0x10 30>;
->> +        #reset-cells = <2>;
->> +    };
->> +
->> +    pwm: pwm@e0d00000 {
->> +        status = "disabled";
->> +        compatible = "intel,lgm-pwm";
->> +        reg = <0xe0d00000 0x30>;
->> +        clocks = <&cgu0 1>;
->> +        #pwm-cells = <2>;
->> +        resets = <&rcu0 0x30 21>;
->> +    };
+>>   		pwm@c340000 {
+>>   			status = "okay";
+>>   		};
 >> -- 
->> 2.11.0
+>> 2.17.1
 >>
+
