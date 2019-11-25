@@ -2,156 +2,97 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D0C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B398C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A477420870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vm9h9oP4"
+	by mail.kernel.org (Postfix) with ESMTP id CF6412084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574692521;
+	bh=5ls0Y5M93Vgvnl4gV57OFRw4tiAJA6Xp1o4BD351SpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CgYb7YHZx+OYPo/o0WOsNITzWMyvgiQdoin6yY0Vy3e3lFtXWuQ6FSV6tFgpJNbjp
+	 roHVkUx/B7GsWT1Kl1MalziokzVL+oMpibKcuKT7EYK+DUHS8Hi/EqqClur7Mc6Dut
+	 i6sGBG8/V47SVMYOCC6IS9TLEYwTylFlBfniAiWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfKYOfE (ORCPT
+        id S1728181AbfKYOfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:35:04 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40261 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728026AbfKYOfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:35:04 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v24so11191757lfi.7;
-        Mon, 25 Nov 2019 06:35:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mOb7drR/WTWufTxzUC4FI8sP3G8txIhCN7WbUI3E994=;
-        b=Vm9h9oP4w8AakWL2fpCxlWT8rExaAbM1+kSqScdhnmQG1luK1zgK6Jdlquh2waUpHm
-         RyapDHjTaFbxM32TvEKBApfC1ZzIfq/ddxiMGvmNPWU0jFOQofKhnhYGIuenJEo9NJh9
-         YX2bY8OEFxZZX8p9ZDUh6bY4c82EAlazeV2P8fpk65wyUCN40/3CF2zqDgvCI9J5uoGb
-         VKByqCEAwySpm39p8W7jQycG9Ufsh4BO/IRn6fvYXWpFXgXbxwED9tePDWk/RURVP+jw
-         qqckozcfMLX8scEKBgiP+kWniBitb80gZKNMZDbv2qBWO5nZ5Og9dSZxDpWX4Q9R82r2
-         nR7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mOb7drR/WTWufTxzUC4FI8sP3G8txIhCN7WbUI3E994=;
-        b=BWS72isxoJFecucUVHSBpRs92apOmc3ZsPKaAH+pLc5MFKY7ZMPnCZH6aonPJ+P2DA
-         6HHzgOcAaOExmOVYGFVd+opzZ8TzUY5mbF1ojKEVFt9j1eK45kJ7Bbt9XhQyYczdc6CO
-         AocSsLKCpFTJKXlNET5a9o0Xh+bvubHC2qrZapHK9K8ZrBgfs+3nDPsjbiIiPlC+Omrj
-         yzQHtPPkR8h5iM0mJ7syD4PpDFWlavUCjDwd8Rv5n7juWdoFNOxlw5mnj8bPIgsKgWCG
-         PMcnqcs9f/lVFnD+tt93o3+HCcLtBl+wXAjdqQIfWOI3CjLFJOQBk0k4+82LkkqLcBob
-         FMhQ==
-X-Gm-Message-State: APjAAAUgJqu0B8cV+FiNxM9MdbVGtq5ebx7DttBrUz7VsvQzbNq2G+7g
-        oKSBliEdAEHobKAgcusXjW+iufseBraCOzjQZdQ=
-X-Google-Smtp-Source: APXvYqzbXX4EpoK9rwjhMiOUCyPCyQLDSuvkp+U1kLrHk/9+VVPTL0+HDaQ9/gLUpO6yoEMWsqdZTWB6OqR8naZMiq0=
-X-Received: by 2002:ac2:428d:: with SMTP id m13mr15000406lfh.64.1574692501816;
- Mon, 25 Nov 2019 06:35:01 -0800 (PST)
+        Mon, 25 Nov 2019 09:35:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728072AbfKYOfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:35:20 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D085120740;
+        Mon, 25 Nov 2019 14:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574692520;
+        bh=5ls0Y5M93Vgvnl4gV57OFRw4tiAJA6Xp1o4BD351SpA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2vV7cAaRHNJk4XbDjn3VexHXvThLpmaayWqZ9C4dvwmf2Pf7FUu/WUAEL6q6zNL23
+         /b278eNHja7j9nmOZo4z6aJDEIkfQfrxwavl6npVd18fdhLzUliBRN5KVQBoF9g1i5
+         PJAAshqw6GqRcfLO1Yx1eV8c/l697GJllEO2jU8I=
+Date:   Mon, 25 Nov 2019 09:35:18 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Mike Manning <mmanning@vyatta.att-mail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.9 89/99] vrf: mark skb for multicast or
+ link-local as enslaved to VRF
+Message-ID: <20191125143518.GF5861@sasha-vm>
+References: <20191116155103.10971-1-sashal@kernel.org>
+ <20191116155103.10971-89-sashal@kernel.org>
+ <a6c038cb-4b95-beb0-abf3-8938825d379e@gmail.com>
 MIME-Version: 1.0
-References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
- <1574604530-9024-5-git-send-email-akinobu.mita@gmail.com> <CAHp75VfOUiN_2bW+o-AqGmAY32mmdNxP54B2f2+gj0NTEr9FTQ@mail.gmail.com>
-In-Reply-To: <CAHp75VfOUiN_2bW+o-AqGmAY32mmdNxP54B2f2+gj0NTEr9FTQ@mail.gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Mon, 25 Nov 2019 23:34:50 +0900
-Message-ID: <CAC5umygc95VBWz1L5CTZO9kmkZL2MCEL2_z9d2TJ6Ow5+fKYPw@mail.gmail.com>
-Subject: Re: [PATCH 4/8] platform/x86: intel_menlow: switch to use
- <linux/temperature.h> helpers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <a6c038cb-4b95-beb0-abf3-8938825d379e@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B411=E6=9C=8825=E6=97=A5(=E6=9C=88) 4:58 Andy Shevchenko <andy.s=
-hevchenko@gmail.com>:
+On Sun, Nov 17, 2019 at 09:44:38AM -0700, David Ahern wrote:
+>On 11/16/19 8:50 AM, Sasha Levin wrote:
+>> From: Mike Manning <mmanning@vyatta.att-mail.com>
+>>
+>> [ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
+>>
+>> The skb for packets that are multicast or to a link-local address are
+>> not marked as being enslaved to a VRF, if they are received on a socket
+>> bound to the VRF. This is needed for ND and it is preferable for the
+>> kernel not to have to deal with the additional use-cases if ll or mcast
+>> packets are handled as enslaved. However, this does not allow service
+>> instances listening on unbound and bound to VRF sockets to distinguish
+>> the VRF used, if packets are sent as multicast or to a link-local
+>> address. The fix is for the VRF driver to also mark these skb as being
+>> enslaved to the VRF.
+>>
+>> Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
+>> Reviewed-by: David Ahern <dsahern@gmail.com>
+>> Tested-by: David Ahern <dsahern@gmail.com>
+>> Signed-off-by: David S. Miller <davem@davemloft.net>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/net/vrf.c | 19 +++++++++----------
+>>  1 file changed, 9 insertions(+), 10 deletions(-)
+>>
 >
-> On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wro=
-te:
-> >
-> > This switches the intel_menlow driver to use deci_kelvin_to_celsius() a=
-nd
-> > celsius_to_deci_kelvin() in <linux/temperature.h> instead of helpers in
-> > <linux/thermal.h>.
-> >
-> > This is preparation for centralizing the kelvin to/from Celsius convers=
-ion
-> > helpers in <linux/temprature.h>.
-> >
-> > Cc: Sujith Thomas <sujith.thomas@intel.com>
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Cc: Andy Shevchenko <andy@infradead.org>
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> > Cc: Jean Delvare <jdelvare@suse.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Keith Busch <kbusch@kernel.org>
-> > Cc: Jens Axboe <axboe@fb.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Sagi Grimberg <sagi@grimberg.me>
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > ---
-> >  drivers/platform/x86/intel_menlow.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86=
-/intel_menlow.c
-> > index b102f6d..6313591 100644
-> > --- a/drivers/platform/x86/intel_menlow.c
-> > +++ b/drivers/platform/x86/intel_menlow.c
-> > @@ -302,8 +302,10 @@ static ssize_t aux_show(struct device *dev, struct=
- device_attribute *dev_attr,
-> >         int result;
-> >
-> >         result =3D sensor_get_auxtrip(attr->handle, idx, &value);
-> > +       if (result)
-> > +               return result;
-> >
-> > -       return result ? result : sprintf(buf, "%lu", DECI_KELVIN_TO_CEL=
-SIUS(value));
-> > +       return sprintf(buf, "%ld", deci_kelvin_to_celsius(value));
->
-> Can you explain the change %lu to %ld?
+>backporting this patch and it's bug fix, "ipv6: Fix handling of LLA with
+>VRF and sockets bound to VRF" to 4.14 is a bit questionable. They
+>definitely do not need to come back to 4.9.
 
-Isn't it possible for aux values to be lower than 0 degrees Celsius?
+I'll drop it, thanks.
 
-> >  }
-> >
-> >  static ssize_t aux0_show(struct device *dev,
-> > @@ -332,8 +334,8 @@ static ssize_t aux_store(struct device *dev, struct=
- device_attribute *dev_attr,
-> >         if (value < 0)
-> >                 return -EINVAL;
-> >
-> > -       result =3D sensor_set_auxtrip(attr->handle, idx,
-> > -                                   CELSIUS_TO_DECI_KELVIN(value));
->
-> > +       result =3D sensor_set_auxtrip(attr->handle, idx,
-> > +                                   celsius_to_deci_kelvin(value));
->
-> How come the first line has been changed?
-
-Because the trailing space is removed.  I'll mention it in the commit log.
+-- 
+Thanks,
+Sasha
