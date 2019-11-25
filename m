@@ -2,82 +2,170 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CEFC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9BCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A062073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574649952;
-	bh=rRksThIk3ANMx0k3KKiqT1coowGHHsm3yp6vHSO/yJY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pm947GppCqd4y8XKIy1EsO91hEAayCxabEj9Q1oCUSNm3tjA3MqHo7YM7Nwf7QQRN
-	 KDN54IT6maUfs63NDZ4hW8b1enQiHEepA2kUBI4ZuyMnr2Vc5Q5XO43+KQ8Z1gSfZ9
-	 t8B3LRZmeZylIkCHh2qViAoPqs6dcvfW/cMyV7rE=
+	by mail.kernel.org (Postfix) with ESMTP id 4BB142073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKYCpu (ORCPT
+        id S1727051AbfKYCsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 21:45:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        Sun, 24 Nov 2019 21:48:11 -0500
+Received: from mga17.intel.com ([192.55.52.151]:34958 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbfKYCpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 21:45:49 -0500
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173AC20748
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574649949;
-        bh=rRksThIk3ANMx0k3KKiqT1coowGHHsm3yp6vHSO/yJY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OaV4TRIHyzlBynR9Odd2LazsvhxtgKgqcmg3sGJSaNVbTMVFUYZdIfZf2LTtX0Mx1
-         CAK/p4/4sM7e58ITMAq+Iw9KK01SDr0qXBw2dpKUj++9Shy1PzlbNtH5znT7CAUrFi
-         25mQVm+hZljRpj5y3LVO0lnt0qSa+RaztDefU2os=
-Received: by mail-lf1-f42.google.com with SMTP id 203so9694928lfa.12
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Nov 2019 18:45:49 -0800 (PST)
-X-Gm-Message-State: APjAAAXddb2MK4TmToTBuzz15goYiR7Qa6G4o8okVdjAg1m5aMGZ1HSH
-        rYl3mVuahQMo5xlz7I6p4v00Sn3wkajqAMJlEr0=
-X-Google-Smtp-Source: APXvYqzebOUmdYdPzb72IJa+IGOWUcBhHCWcr75z1vCyIu5oO1Yvgn7kdusnuRFHuVlapdjfV/P1A0LFVthYvYj8z2w=
-X-Received: by 2002:ac2:51b5:: with SMTP id f21mr18634983lfk.159.1574649947280;
- Sun, 24 Nov 2019 18:45:47 -0800 (PST)
+        id S1726895AbfKYCsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Nov 2019 21:48:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 18:48:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,240,1571727600"; 
+   d="scan'208";a="205972989"
+Received: from hu.sh.intel.com ([10.239.158.51])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Nov 2019 18:48:08 -0800
+From:   "Chen, Hu" <hu1.chen@intel.com>
+Cc:     avagin@openvz.org, hu1.chen@intel.com, lkp@intel.com,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] proc: align mnt_id in /proc/pid/fdinfo and /proc/pid/mountinfo
+Date:   Mon, 25 Nov 2019 10:26:37 +0800
+Message-Id: <20191125022641.4169-1-hu1.chen@intel.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <201911221116.HjFCwKbG%lkp@intel.com>
+References: <201911221116.HjFCwKbG%lkp@intel.com>
 MIME-Version: 1.0
-References: <1574306457-6251-1-git-send-email-krzk@kernel.org> <alpine.DEB.2.21.9999.1911221853330.14532@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1911221853330.14532@viisi.sifive.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 25 Nov 2019 10:45:35 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPdHgXwt-E-DaKQdeD_jSkhYP5n2NWCZcSWr7Ny-cYxZKQ@mail.gmail.com>
-Message-ID: <CAJKOXPdHgXwt-E-DaKQdeD_jSkhYP5n2NWCZcSWr7Ny-cYxZKQ@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Fix Kconfig indentation
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Nov 2019 at 10:54, Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Thu, 21 Nov 2019, Krzysztof Kozlowski wrote:
->
-> > Adjust indentation from spaces to tab (+optional two spaces) as in
-> > coding style with command like:
-> >       $ sed -e 's/^        /\t/' -i */Kconfig
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Thanks, queued with Palmer's Reviewed-by: (which I believe would apply
-> equally to this version)
+For Android application process, we found that the mnt_id read from
+/proc/pid/fdinfo doesn't exist in /proc/pid/mountinfo. Thus CRIU fails
+to dump such process and it complains
 
-Thanks, I forgot to add it.
+"(00.019206) Error (criu/files-reg.c:1299): Can't lookup mount=42 for
+fd=-3 path=/data/dalvik-cache/x86_64/system@framework@boot.art"
 
-Best regards,
-Krzysztof
+This is due to how Android application is launched. In Android, there is
+a special process called Zygote which handles the forking of each new
+application process:
+0. Zygote opens and maps some files, for example
+   "/data/dalvik-cache/x86_64/system@framework@boot.art" in its current
+   mount namespace, say "old mnt ns".
+1. Zygote waits for the request to fork a new application.
+2. Zygote gets a request, it forks and run the new process in a new
+   mount namespace, say "new mnt ns".
+
+The file opened in step 0 ties to the mount point in "old mnt ns". The
+mnt_id of that mount is listed in /proc/pid/fdinfo. However,
+/proc/pid/mountinfo points to current ns, i.e., "new mnt ns".
+
+Althgouh this issue is exposed in Android, we believe it's generic.
+Prcoess may open files and enter new mnt ns.
+
+To address it, this patch searches the mirror mount in current ns with
+MAJOR and MINOR and shows the mirror's mnt_id.
+
+v2: fix warning reported by lkp
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Chen, Hu <hu1.chen@intel.com>
+---
+ fs/mount.h     |  2 ++
+ fs/namespace.c | 30 ++++++++++++++++++++++++++++++
+ fs/proc/fd.c   | 12 ++++++++++--
+ 3 files changed, 42 insertions(+), 2 deletions(-)
+
+diff --git a/fs/mount.h b/fs/mount.h
+index 711a4093e475..6bbfc2b3b8ba 100644
+--- a/fs/mount.h
++++ b/fs/mount.h
+@@ -153,3 +153,5 @@ static inline bool is_anon_ns(struct mnt_namespace *ns)
+ {
+ 	return ns->seq == 0;
+ }
++
++extern struct mount *lookup_mirror_mnt(const struct mount *mnt);
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 2adfe7b166a3..131b36517472 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -683,6 +683,36 @@ bool __is_local_mountpoint(struct dentry *dentry)
+ 	return is_covered;
+ }
+ 
++/*
++ * lookup_mirror_mnt - Return @mnt's mirror mount in the current/local mount
++ * namespace. If mirror isn't found, just return NULL.
++ */
++struct mount *lookup_mirror_mnt(const struct mount *mnt)
++{
++	struct mnt_namespace *ns = current->nsproxy->mnt_ns;
++	struct mount *mnt_local;
++	bool is_matched = false;
++
++	/* mnt belongs to current namesapce */
++	if (mnt->mnt_ns == ns)
++		return (struct mount *) mnt;
++
++	down_read(&namespace_sem);
++	list_for_each_entry(mnt_local, &ns->list, mnt_list) {
++		struct super_block *sb = mnt->mnt.mnt_sb;
++		struct super_block *sb_local = mnt_local->mnt.mnt_sb;
++
++		if (MAJOR(sb->s_dev) == MAJOR(sb_local->s_dev) &&
++		    MINOR(sb->s_dev) == MINOR(sb_local->s_dev)) {
++			is_matched = true;
++			break;
++		}
++	}
++	up_read(&namespace_sem);
++
++	return is_matched ? mnt_local : NULL;
++}
++
+ static struct mountpoint *lookup_mountpoint(struct dentry *dentry)
+ {
+ 	struct hlist_head *chain = mp_hash(dentry);
+diff --git a/fs/proc/fd.c b/fs/proc/fd.c
+index 81882a13212d..cbf2571b0620 100644
+--- a/fs/proc/fd.c
++++ b/fs/proc/fd.c
+@@ -23,6 +23,7 @@ static int seq_show(struct seq_file *m, void *v)
+ 	int f_flags = 0, ret = -ENOENT;
+ 	struct file *file = NULL;
+ 	struct task_struct *task;
++	struct mount *mount = NULL;
+ 
+ 	task = get_proc_task(m->private);
+ 	if (!task)
+@@ -53,9 +54,16 @@ static int seq_show(struct seq_file *m, void *v)
+ 	if (ret)
+ 		return ret;
+ 
++	/* After unshare -m, real_mount(file->f_path.mnt) is not meaningful in
++	 * current mount namesapce. We want to know the mnt_id in current mount
++	 * namespace
++	 */
++	mount = lookup_mirror_mnt(real_mount(file->f_path.mnt));
++	if (!mount)
++		mount = real_mount(file->f_path.mnt);
++
+ 	seq_printf(m, "pos:\t%lli\nflags:\t0%o\nmnt_id:\t%i\n",
+-		   (long long)file->f_pos, f_flags,
+-		   real_mount(file->f_path.mnt)->mnt_id);
++		   (long long)file->f_pos, f_flags, mount->mnt_id);
+ 
+ 	show_fd_locks(m, file, files);
+ 	if (seq_has_overflowed(m))
+-- 
+2.22.0
+
