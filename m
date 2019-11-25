@@ -2,145 +2,207 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D92C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9CB20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E372071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:38:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EblvNfcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfKYTdw (ORCPT
+        id S1726033AbfKYTiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:33:52 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:58372 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725823AbfKYTdw (ORCPT
+        Mon, 25 Nov 2019 14:38:54 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35104 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfKYTix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:33:52 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tj5FL5p_1574710425;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tj5FL5p_1574710425)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 Nov 2019 03:33:49 +0800
-Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
- partially
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191125093611.hlamtyo4hvefwibi@box>
- <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
- <20191125183350.5gmcln6t3ofszbsy@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <9a68b929-2f84-083d-0ac8-2ceb3eab8785@linux.alibaba.com>
-Date:   Mon, 25 Nov 2019 11:33:41 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 25 Nov 2019 14:38:53 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r16so13880286edq.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:38:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=djEAfYHreXKtPBDNkFF0syVNOskqLgoPYGB55xHve3U=;
+        b=EblvNfcAHkVrVcIa52iC9sAg7eSYwWrAe2+R+DWbqwdY9a+6FpI7rAEI9E89d6uMQw
+         PUueHUYpOOYfvgLu1Yn1/5xHVONiJI9kzrfSZdEOgYaMZZLR/f3IuiXBt5pPN2+KDucu
+         BfquVNrw39/qyxNAIZDz42pFa7ykBBU8DBVXo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=djEAfYHreXKtPBDNkFF0syVNOskqLgoPYGB55xHve3U=;
+        b=aYn0bcyzWs9VZOQJXLf+YwAvriu5tpgMlHnN4k4CV34k16s4kWOjNzye3t5rALQMdm
+         x/73Bp5PI26gjgvfLZoae2I4cKIRj7+cDiV6biE2lyU2xJkjxU47zLO6WV0cuIwfgQ2U
+         2FF+ixkNSO/FeE8Oq0e7LdDV8lBZPC7QomZt85uuMDDafljCONaxVVAddP36D2SuXg09
+         FBtNDgAnngOVfFqyXn1TaGpNkPXL4uk4KXw1NmoOsAqQQTdl5gWGQOMChzA2spNBkapz
+         u84VV0eOu8jSJmDcUYsjFxdAsNeyz3kpl1EXlYYBA+3noouc6DSVrzuSNXNdnqZK/4Hy
+         gbhw==
+X-Gm-Message-State: APjAAAXm2a6B4ayfVAic1nkmevct0NLuYarG1bceDMB0xpZ7yhuw27DG
+        z6Hr9CVL0wQ8lRmyTgYfprb5rstPxSQ=
+X-Google-Smtp-Source: APXvYqyWvPCwCWhllbWGE4Kw8N6/WOUn6e298wFOcMaWG45sZNMl9kg0bp7/ZJHZ5Sql3iD2gTSQWQ==
+X-Received: by 2002:a17:906:1354:: with SMTP id x20mr39704599ejb.131.1574710730937;
+        Mon, 25 Nov 2019 11:38:50 -0800 (PST)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id r22sm314855edt.47.2019.11.25.11.38.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 11:38:49 -0800 (PST)
+Received: by mail-wr1-f53.google.com with SMTP id a15so19628004wrf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:38:48 -0800 (PST)
+X-Received: by 2002:adf:9185:: with SMTP id 5mr34386955wri.389.1574710728150;
+ Mon, 25 Nov 2019 11:38:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191125183350.5gmcln6t3ofszbsy@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20191121211053.48861-1-rrangel@chromium.org> <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
+ <f8645254-ce59-3d3e-0f82-975f9e283a9c@collabora.com>
+In-Reply-To: <f8645254-ce59-3d3e-0f82-975f9e283a9c@collabora.com>
+From:   Raul Rangel <rrangel@chromium.org>
+Date:   Mon, 25 Nov 2019 12:38:36 -0700
+X-Gmail-Original-Message-ID: <CAHQZ30ALXjfnpvbqRrVw6q3jk5C-3g6vRWCQP7cwOxr5kBEk7g@mail.gmail.com>
+Message-ID: <CAHQZ30ALXjfnpvbqRrVw6q3jk5C-3g6vRWCQP7cwOxr5kBEk7g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] platform/chrome: i2c: i2c-cros-ec-tunnel: Convert i2c
+ tunnel to MFD Cell
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Akshu Agrawal <Akshu.Agrawal@amd.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Benson Leung <bleung@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> > +     if (!ec) {
+> > +             dev_err(dev, "%s: ec is missing!\n", __func__);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (!ec->ec_dev) {
+> > +             dev_err(dev, "%s: ec->ec_dev is missing!\n", __func__);
+> > +             return -EINVAL;
+> > +     }
+> > +
+>
+> Are those checks needed? Is that possible?
+I don't think it's possible anymore now that the driver has been
+converted into an MFD Cell. Previously it would panic if the
+i2c-cros-ec-tunnel was compiled as a built-in because it could be
+probed before the cros_ec. If the i2c-cros-ec-tunnel was compiled as a
+module it worked as expected. So this patch really just fixes the race
+condition on initialization.
 
+[    3.733397] BUG: kernel NULL pointer dereference, address: 0000000000000060
+...
+[    3.734358] RIP: 0010:ec_i2c_probe+0x2f/0x158
+0xffffffff81834990 is in ec_i2c_probe
+(/mnt/host/source/src/third_party/kernel/next/drivers/i2c/busses/i2c-cros-ec-tunnel.c:250).
+245             struct device *dev = &pdev->dev;
+246             struct ec_i2c_device *bus = NULL;
+247             u32 remote_bus;
+248             int err;
+249
+250             if (!ec->cmd_xfer) {
+251                     dev_err(dev, "Missing sendrecv\n");
+252                     return -EINVAL;
+253             }
+254
 
-On 11/25/19 10:33 AM, Kirill A. Shutemov wrote:
-> On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
->>
->> On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
->>> On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
->>>> Currently when truncating shmem file, if the range is partial of THP
->>>> (start or end is in the middle of THP), the pages actually will just get
->>>> cleared rather than being freed unless the range cover the whole THP.
->>>> Even though all the subpages are truncated (randomly or sequentially),
->>>> the THP may still be kept in page cache.  This might be fine for some
->>>> usecases which prefer preserving THP.
->>>>
->>>> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
->>>> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
->>>> So, when using shmem THP as memory backend QEMU inflation actually doesn't
->>>> work as expected since it doesn't free memory.  But, the inflation
->>>> usecase really needs get the memory freed.  Anonymous THP will not get
->>>> freed right away too but it will be freed eventually when all subpages are
->>>> unmapped, but shmem THP would still stay in page cache.
->>>>
->>>> To protect the usecases which may prefer preserving THP, introduce a
->>>> new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting THP is
->>>> preferred behavior if truncating partial THP.  This mode just makes
->>>> sense to tmpfs for the time being.
->>> We need to clarify interaction with khugepaged. This implementation
->>> doesn't do anything to prevent khugepaged from collapsing the range back
->>> to THP just after the split.
->> Yes, it doesn't. Will clarify this in the commit log.
-> Okay, but I'm not sure that documention alone will be enough. We need
-> proper design.
+If you want, I can remove them. But I also don't think they hurt
+anything either.
 
-Maybe we could try to hold inode lock with read during collapse_file(). 
-The shmem fallocate does acquire inode lock with write, this should be 
-able to synchronize hole punch and khugepaged. And, shmem just needs 
-hold inode lock for llseek and fallocate, I'm supposed they are should 
-be called not that frequently to have impact on khugepaged. The llseek 
-might be often, but it should be quite fast. However, they might get 
-blocked by khugepaged.
+> > -static const struct of_device_id cros_ec_i2c_of_match[] = {
+> > -     { .compatible = "google,cros-ec-i2c-tunnel" },
+> > -     {},
+> > -};
+> > -MODULE_DEVICE_TABLE(of, cros_ec_i2c_of_match);
+> > -
+> > -static const struct acpi_device_id cros_ec_i2c_tunnel_acpi_id[] = {
+> > -     { "GOOG0012", 0 },
+>
+> So, you're removing something that you just added in a previous patch. So is
+> really the change in the previous patch needed?
 
-It sounds safe to hold a rwsem during collapsing THP.
+The previous patch also switched over to using
+device_property_read_u32, so it's still needed.
 
-Or we could set VM_NOHUGEPAGE in shmem inode's flag with hole punch and 
-clear it after truncate, then check the flag before doing collapse in 
-khugepaged. khugepaged should not need hold the inode lock during 
-collapse since it could be released after the flag is checked.
+> > -     { }
+> > -};
+> > -MODULE_DEVICE_TABLE(acpi, cros_ec_i2c_tunnel_acpi_id);
+> > -
+> >  static struct platform_driver ec_i2c_tunnel_driver = {
+> >       .probe = ec_i2c_probe,
+> >       .remove = ec_i2c_remove,
+> >       .driver = {
+> >               .name = "cros-ec-i2c-tunnel",
+> > -             .acpi_match_table = ACPI_PTR(cros_ec_i2c_tunnel_acpi_id),
+> > -             .of_match_table = of_match_ptr(cros_ec_i2c_of_match),
+>
+> I don't understand this change, why? The id should be in the driver to match.
+
+I removed it here because I want the driver to enumerate as an MFD
+cell instead of a stand alone driver.
+
+> >       },
+> >  };
+> >
+> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> > index 1efdba18f20b..61b20e061f75 100644
+> > --- a/drivers/mfd/cros_ec_dev.c
+> > +++ b/drivers/mfd/cros_ec_dev.c
+> > @@ -113,6 +113,18 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
+> >       { .name = "cros-ec-vbc", }
+> >  };
+> >
+> > +static struct mfd_cell_acpi_match cros_ec_i2c_tunnel_acpi_match = {
+> > +     .pnpid = "GOOG0012"
+> > +};
+> > +
+> > +static struct mfd_cell cros_ec_fw_cells[] = {
+> > +     {
+> > +             .name = "cros-ec-i2c-tunnel",
+> > +             .acpi_match = &cros_ec_i2c_tunnel_acpi_match,
+> > +             .of_compatible = "google,cros-ec-i2c-tunnel"
+>
+> Ah, I see. The acpi_match and the of_compatible should be in the
+> i2c-cros-ec-tunnel driver not here. Why you changed? Didn't work?
+
+The cell needs to be the one that defines the ACPI match so the MFD
+can find the node and set the parent correctly.
 
 >
->>>> @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
->>>>    			}
->>>>    			unlock_page(page);
->>>>    		}
->>>> +rescan_split:
->>>>    		pagevec_remove_exceptionals(&pvec);
->>>>    		pagevec_release(&pvec);
->>>> +
->>>> +		if (split && PageTransCompound(page)) {
->>>> +			/* The THP may get freed under us */
->>>> +			if (!get_page_unless_zero(compound_head(page)))
->>>> +				goto rescan_out;
->>>> +
->>>> +			lock_page(page);
->>>> +
->>>> +			/*
->>>> +			 * The extra pins from page cache lookup have been
->>>> +			 * released by pagevec_release().
->>>> +			 */
->>>> +			if (!split_huge_page(page)) {
->>>> +				unlock_page(page);
->>>> +				put_page(page);
->>>> +				/* Re-look up page cache from current index */
->>>> +				goto again;
->>>> +			}
->>>> +			unlock_page(page);
->>>> +			put_page(page);
->>>> +		}
->>>> +rescan_out:
->>>>    		index++;
->>>>    	}
->>> Doing get_page_unless_zero() just after you've dropped the pin for the
->>> page looks very suboptimal.
->> If I don't drop the pins the THP can't be split. And, there might be more
->> than one pins from find_get_entries() if I read the code correctly. For
->> example, truncate 8K length in the middle of THP, the THP's refcount would
->> get bumpped twice since  two sub pages would be returned.
-> Pin the page before pagevec_release() and avoid get_page_unless_zero().
+> > +     },
+> > +};
+> > +
+> >  int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+> >  {
+> >       struct cros_ec_command *msg;
+> > @@ -485,6 +497,13 @@ static int ec_device_probe(struct platform_device *pdev)
+> >                        "failed to add cros-ec platform devices: %d\n",
+> >                        retval);
+> >
+> > +     retval = mfd_add_hotplug_devices(ec->dev, cros_ec_fw_cells,
+> > +                                      ARRAY_SIZE(cros_ec_fw_cells));
+> > +     if (retval)
+> > +             dev_warn(ec->dev,
+> > +                      "failed to add cros-ec fw platform devices: %d\n",
+> > +                      retval);
+> > +
 >
-> Current code is buggy. You need to check that the page is still belong to
-> the file after speculative lookup.
+> I think this should go inside the cros_ec_platform_cells, so drop this and
+> add the "cros-ec-i2c-tunnel" in the cros_ec_platform_cells[] table is enough.
 
-Yes, I missed this point. Thanks for the suggestion.
+Good idea. I'll do that.
 
->
-
+Thanks
