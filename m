@@ -2,211 +2,132 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D19C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53544C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933F82075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEC32071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sA4wb45o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfKYKOA (ORCPT
+        id S1727474AbfKYKO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:14:00 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:41516 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbfKYKN6 (ORCPT
+        Mon, 25 Nov 2019 05:14:58 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54885 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfKYKO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:13:58 -0500
-Received: by mail-il1-f198.google.com with SMTP id o185so13187533ila.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:13:56 -0800 (PST)
+        Mon, 25 Nov 2019 05:14:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b11so5338619wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:14:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=K61KDC/w3VRipSxtXvNga+5fh0z8paKLB1vFxmok1y4=;
+        b=sA4wb45ovcGlqxPBCSA49oBborhJUSfY00UQh7VAfyxGrbMtidhQVtYZFRyr3wqOJA
+         G/m4e9avLJSZHR1Z5k0yAZxZw48uBaTsChuzi6kJbExRffn8gEstelaJfoOhbUlKfUqh
+         u2MBHnSlbHS7ztMLwvFR9EAG81WCr2HReBT/ByfS60J/hJQyFuRop2IIpnhwp3xTuIuZ
+         2Sqshnu6va75Q7n2VH2ZZ0G8nnp/BnQazRgPdcJmtUS6SGGjTEOSlJjcB1B+0KzcgPk0
+         w7eo3ivs+Vgev8jpsJVwduhhIVQC0Jj3RVvbQ7jTcLZG6i3vvqnzeH0x6iWNS6d4ZPU8
+         aRXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=BDjKl6+YEJB71X3rG9kCtIk3SZ4moQflugwXeKmaEL4=;
-        b=uOmMOn4mU3CzCEcl6B6nBJQdJUxfHs7jAa+R+zW6ztbEgAl4N8k5cZcPj+nIxj/yVP
-         pDBVglZfHFaYujMEiQ6SMs3AgHq00/vWrMr8lc/V2Vgt5BNnLI9ZeqdpGtiNtcJGBvwZ
-         IlcoORQqo6t/g3D30Nze/Z5lf+z1lmPuN+nWHuJSnbZe0Vvwd9Ke8nXpdvwCgQSA55cE
-         IQQCvPrtx2N5/m+g7Xgbq+v5FRgb2d6BPRfoQmyhJ0lQgS5rC2wxmLVK4ddjM90+bvOU
-         I1Ea6H1k/LAet5yymWZl0Nu7ZBx3ajIJQgZfaADRcg1CdUrCdhqs7p1nbKoAuP02XxjG
-         UsAg==
-X-Gm-Message-State: APjAAAVOrBFFbADUVcUKkOYd9RhPe44mBa6pfsNwk0wwpwlwiESAD2YX
-        cVoYLK9REB/J8vQAp2ryh+pO//obgtQd96WeFvoi+B8jdjSG
-X-Google-Smtp-Source: APXvYqzgIQlRQZOZ032SsFdDps8tYs64/xMSTo6tzI7iIH9tR/sN20ATm9HAp6U8eOSOWW3DTi9iZ/Th2LI+ttQ41L4ZcjP+XiDN
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=K61KDC/w3VRipSxtXvNga+5fh0z8paKLB1vFxmok1y4=;
+        b=cU2k5jSQrm53xrWXfbtPv3kww1+J6BbkDb5YjnwOgmmt1XaVVmWwjGJWObME4IcSHt
+         CHgllChK1LSda3Dbjlr6ynTKwdqandxO7hxtvbuS0WoMje8JQl1YroNSgIeJDzEtHxcA
+         e0Ft2Mfb2PXsux/++LQ5vN9iJuWw92f7AH0TM4BgUmG4YkdGkSFmR8BpaJMpOBUX7DaP
+         1aHjXJMhZ7PnzeSYDIXRNTI5BlWZ10zAtcXWDwJujvLT/+W3nG0q22qsyEGKo5vUczWZ
+         WQFSzxjfehXr8rbg4qtxjCCjQEAqjbh6IaZ+8QVxmeNPLdnNM/RJDKc9gZOT537xuJCC
+         fNwg==
+X-Gm-Message-State: APjAAAUZ7C3cRztGJoO6mEKGu1WA6u+vaaTfeIPQXx1aB5mH+z+Jh+5w
+        lFcLEACYtqdKw/Q14LetfJwmEQ==
+X-Google-Smtp-Source: APXvYqxlqGbRVb1q7Ats9JEHWlI6DXCc42Eir63k/2XjzqDQfir3rntlAPQcFe8O/L4oiGkYaRuCRQ==
+X-Received: by 2002:a7b:c76a:: with SMTP id x10mr26459343wmk.123.1574676895066;
+        Mon, 25 Nov 2019 02:14:55 -0800 (PST)
+Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
+        by smtp.gmail.com with ESMTPSA id 60sm8778477wrn.86.2019.11.25.02.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 02:14:54 -0800 (PST)
+References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com> <1571382865-41978-4-git-send-email-jian.hu@amlogic.com> <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com> <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com> <1jblts3v7e.fsf@starbuckisacylon.baylibre.com> <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com> <1jh839f2ue.fsf@starbuckisacylon.baylibre.com> <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com> <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com> <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com> <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock driver
+In-reply-to: <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
+Date:   Mon, 25 Nov 2019 11:14:53 +0100
+Message-ID: <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c010:: with SMTP id u16mr25038271iol.275.1574676836500;
- Mon, 25 Nov 2019 02:13:56 -0800 (PST)
-Date:   Mon, 25 Nov 2019 02:13:56 -0800
-In-Reply-To: <CAO-hwJJYucLrBSYqK4UM08XBgPTn_gLYRyJO=RxKscX90JG+MQ@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000079cbad05982905f4@google.com>
-Subject: Re: Re: KMSAN: uninit-value in lg4ff_set_autocenter_default
-From:   syzbot <syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     benjamin.tissoires@redhat.com, glider@google.com, jikos@kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Pretty sure this is already fixed
 
-> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git  
-> for-next
+On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
 
-KMSAN bugs can only be tested on https://github.com/google/kmsan.git tree
-because KMSAN tool is not upstreamed yet.
-See https://goo.gl/tpsmEJ#kmsan-bugs for details.
+> Hi, Jerome
+>
+> On 2019/11/20 23:35, Jerome Brunet wrote:
+>>
+>> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>>> Hi, jerome
+>>>
+>>> Is there any problem about fixed_pll_dco's parent_data?
+>>>
+>>> Now both name and fw_name are described in parent_data.
+>>
+>> Yes, there is a problem.  This approach is incorrect, as I've tried to
+>> explain a couple times already. Let me try to re-summarize why this
+>> approach is incorrect.
+>>
+>> Both fw_name and name should be provided when it is possible that
+>> the DT does not describe the input clock. IOW, it is only for controllers
+>> which relied on the global name so far and are now starting to describe
+>> the clock input in DT
+>>
+>> This is not your case.
+>> Your controller is new and DT will have the correct
+>> info
+>>
+>> You are trying work around an ordering issue by providing both fw_name
+>> and name. This is not correct and I'll continue to nack it.
+>>
+>> If the orphan clock is not reparented as you would expect, I suggest you
+>> try to look a bit further at how the reparenting of orphans is done in
+>> CCF and why it does not match your expectation.
+>>
+> I have debugged the handle for orphan clock in CCF, Maybe you are missing
+> the last email.
 
+Nope, got it the first time
 
+> Even though the clock index exit, it will get failed for the orphan clock's
+> parent clock due to it has not beed added to the provider.
 
-> On Mon, Oct 28, 2019 at 11:32 AM syzbot
-> <syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com> wrote:
+If the provider is not registered yet, of course any query to it won't
+work. This why I have suggested to this debug *further* :
 
->> Hello,
+* Is the orphan reparenting done when a new provider is registered ?
+* If not, should it be done ? is this your problem ?
 
->> syzbot found the following crash on:
-
->> HEAD commit:    d86c1556 kmsan: add printk_test()
->> git tree:       https://github.com/google/kmsan.git master
->> console output: https://syzkaller.appspot.com/x/log.txt?x=125e96e0e00000
->> kernel config:   
->> https://syzkaller.appspot.com/x/.config?x=c07a3d4f8a59e198
->> dashboard link:  
->> https://syzkaller.appspot.com/bug?extid=1234691fec1b8ceba8b1
->> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
->> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->> syz repro:       
->> https://syzkaller.appspot.com/x/repro.syz?x=179da024e00000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=157f40a8e00000
-
->> IMPORTANT: if you fix the bug, please add the following tag to the  
->> commit:
->> Reported-by: syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
-
->> logitech 0003:046D:CA03.0001: hidraw0: USB HID v0.00 Device [HID  
->> 046d:ca03]
->> on usb-dummy_hcd.3-1/input0
->> =====================================================
->> BUG: KMSAN: uninit-value in dev_get_drvdata include/linux/device.h:1388
->> [inline]
->> BUG: KMSAN: uninit-value in hid_get_drvdata include/linux/hid.h:628  
->> [inline]
->> BUG: KMSAN: uninit-value in lg4ff_set_autocenter_default+0x23a/0xa20
->> drivers/hid/hid-lg4ff.c:477
->> CPU: 1 PID: 49 Comm: kworker/1:1 Not tainted 5.4.0-rc3+ #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> Workqueue: usb_hub_wq hub_event
->> Call Trace:
->>    __dump_stack lib/dump_stack.c:77 [inline]
->>    dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->>    kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
->>    __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
->>    dev_get_drvdata include/linux/device.h:1388 [inline]
->>    hid_get_drvdata include/linux/hid.h:628 [inline]
->>    lg4ff_set_autocenter_default+0x23a/0xa20 drivers/hid/hid-lg4ff.c:477
->>    lg4ff_init+0x1e3d/0x33a0 drivers/hid/hid-lg4ff.c:1355
->>    lg_probe+0x103d/0x1110 drivers/hid/hid-lg.c:850
->>    hid_device_probe+0x490/0x820 drivers/hid/hid-core.c:2209
->>    really_probe+0xcc2/0x1f90 drivers/base/dd.c:548
->>    driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
->>    __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
->>    bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
->>    __device_attach+0x489/0x750 drivers/base/dd.c:894
->>    device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
->>    bus_probe_device+0x131/0x390 drivers/base/bus.c:490
->>    device_add+0x25b5/0x2df0 drivers/base/core.c:2201
->>    hid_add_device+0x12f1/0x1440 drivers/hid/hid-core.c:2365
->>    usbhid_probe+0x152b/0x1880 drivers/hid/usbhid/hid-core.c:1386
->>    usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
->>    really_probe+0xd91/0x1f90 drivers/base/dd.c:552
->>    driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
->>    __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
->>    bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
->>    __device_attach+0x489/0x750 drivers/base/dd.c:894
->>    device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
->>    bus_probe_device+0x131/0x390 drivers/base/bus.c:490
->>    device_add+0x25b5/0x2df0 drivers/base/core.c:2201
->>    usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
->>    generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
->>    usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
->>    really_probe+0xd91/0x1f90 drivers/base/dd.c:552
->>    driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
->>    __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
->>    bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
->>    __device_attach+0x489/0x750 drivers/base/dd.c:894
->>    device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
->>    bus_probe_device+0x131/0x390 drivers/base/bus.c:490
->>    device_add+0x25b5/0x2df0 drivers/base/core.c:2201
->>    usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
->>    hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->>    hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->>    port_event drivers/usb/core/hub.c:5359 [inline]
->>    hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
->>    process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
->>    process_scheduled_works kernel/workqueue.c:2331 [inline]
->>    worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
->>    kthread+0x4b5/0x4f0 kernel/kthread.c:256
->>    ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
->> Uninit was created at:
->>    kmsan_save_stack_with_flags+0x3f/0x90 mm/kmsan/kmsan.c:151
->>    kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:362  
->> [inline]
->>    kmsan_alloc_page+0x153/0x360 mm/kmsan/kmsan_shadow.c:391
->>    __alloc_pages_nodemask+0x149d/0x60c0 mm/page_alloc.c:4794
->>    alloc_pages_current+0x68d/0x9a0 mm/mempolicy.c:2188
->>    alloc_pages include/linux/gfp.h:511 [inline]
->>    alloc_slab_page+0x10e/0x12c0 mm/slub.c:1536
->>    allocate_slab mm/slub.c:1681 [inline]
->>    new_slab+0x2ca/0x1990 mm/slub.c:1747
->>    new_slab_objects mm/slub.c:2498 [inline]
->>    ___slab_alloc+0x1423/0x1fb0 mm/slub.c:2649
->>    __slab_alloc mm/slub.c:2689 [inline]
->>    slab_alloc_node mm/slub.c:2752 [inline]
->>    slab_alloc mm/slub.c:2801 [inline]
->>    __kmalloc+0x356/0x430 mm/slub.c:3832
->>    kmalloc include/linux/slab.h:561 [inline]
->>    kzalloc+0x53/0xb0 include/linux/slab.h:690
->>    crypto_create_tfm+0xfd/0x640 crypto/api.c:459
->>    crypto_alloc_tfm+0x339/0x630 crypto/api.c:538
->>    crypto_alloc_shash+0x99/0xb0 crypto/shash.c:450
->>    ima_alloc_tfm security/integrity/ima/ima_crypto.c:87 [inline]
->>    ima_calc_field_array_hash+0x20c/0xbb0
->> security/integrity/ima/ima_crypto.c:519
->>    ima_store_template security/integrity/ima/ima_api.c:109 [inline]
->>    ima_store_measurement+0x4d6/0xd00 security/integrity/ima/ima_api.c:328
->>    process_measurement+0x1f4e/0x2bd0 security/integrity/ima/ima_main.c:334
->>    ima_bprm_check+0x13d/0x300 security/integrity/ima/ima_main.c:413
->>    security_bprm_check+0x192/0x1e0 security/security.c:787
->>    search_binary_handler+0xb2/0xac0 fs/exec.c:1646
->>    exec_binprm fs/exec.c:1702 [inline]
->>    __do_execve_file+0x2218/0x2e90 fs/exec.c:1822
->>    do_execveat_common fs/exec.c:1868 [inline]
->>    do_execve fs/exec.c:1885 [inline]
->>    __do_sys_execve fs/exec.c:1961 [inline]
->>    __se_sys_execve+0xec/0x110 fs/exec.c:1956
->>    __x64_sys_execve+0x4a/0x70 fs/exec.c:1956
->>    do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->>    entry_SYSCALL_64_after_hwframe+0x63/0xe7
->> =====================================================
-
-
->> ---
->> This bug is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
-
->> syzbot will keep track of this bug report. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> syzbot can test patches for this bug, for details see:
->> https://goo.gl/tpsmEJ#testing-patches
 
