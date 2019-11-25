@@ -2,154 +2,131 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B139C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CB0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41B520862
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="e7nznEJ8"
+	by mail.kernel.org (Postfix) with ESMTP id 10B342068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574697789;
+	bh=e3RNFqhlVMx635UZaLAUa7sMCUwMhdEuTtITXZcy+Oo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KQt9nTev5SMgZloxYcr6srlI/ojoJJx65iWTxds3NmTE+iLbU8rU9Ad6pGV3cFWML
+	 mqrUMnwCkumIMnxzJflO21BYfYP/tFNG/OGDcpeY8i0/IjWBrrmNo2lM6gIzDovT99
+	 1w57c+slbxLB+4pz35ocnuYQdzq+v9XwNWWCNJy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfKYQCv (ORCPT
+        id S1728780AbfKYQDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:02:51 -0500
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:37355 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728454AbfKYQCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:02:47 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ZGoziMmHfLwWdZGp2iWEUQ; Mon, 25 Nov 2019 17:02:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1574697765; bh=AHbEf+/uYAJZausDz9WJwqDqubKqMjahXc2wm+teEoE=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=e7nznEJ8ibhxT2WAQRjTuMLhmq0cH9NN3yF18vKM5n14d8/x5jf1pmduzI0KyoQE9
-         JsArKCwxrVvZ8ByLbVXwAW2CFnE8P2dXE4IoS0q2mKilF7pffIKXF6G8sWFlt01ARp
-         L59OzlI62cpdtBEof9bKVGvH88LaX6f94BYHoYG221j4lyLr3m9D+nhho1Zic6M7S4
-         OEuUeEVlRGdKn2BF5JDiwZCISP9yPRUQuNZCadkoVx2M92mxjSV8XNHfIVzHo7IHYs
-         +vidT+Fo+MQcKSEEHls4JAWW2+9Rdrhot9WR9Tu/+qann4xvN8eDpcQjB89tAO+5tf
-         3f/fEDZPKDlAA==
-Subject: Re: [PATCH v4 0/8] y2038 safety in v4l2
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org
-References: <20191111203835.2260382-1-arnd@arndb.de>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5c7bed6e-12d9-15e0-236e-d4f99710fbbd@xs4all.nl>
-Date:   Mon, 25 Nov 2019 17:02:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 25 Nov 2019 11:03:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728454AbfKYQDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 11:03:08 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA2BE20679;
+        Mon, 25 Nov 2019 16:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574697787;
+        bh=e3RNFqhlVMx635UZaLAUa7sMCUwMhdEuTtITXZcy+Oo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TsM0djEnEoyX5dZb1FmnjwOvHPYHxxkSfO1ovNoVA6chyzWg/bEsnvS/Fu6m6kQ9R
+         udN2BUsakoeDuy8JD4dcCQaXTjx/dY6v079nCsyiXe5jViU5tfhZmggMX/IT8meZ2z
+         XKevHITcgd9J9IW8CSKafwoJR6/Mnu7AbpMuWfok=
+Date:   Mon, 25 Nov 2019 17:03:05 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.4 000/159] 4.4.203-stable review
+Message-ID: <20191125160305.GD2683321@kroah.com>
+References: <20191122100704.194776704@linuxfoundation.org>
+ <f0f505ae-5113-1abd-d4f7-0c3535c83de4@nvidia.com>
+ <20191122133931.GA2033651@kroah.com>
+ <20191122134131.GA2050590@kroah.com>
+ <20191122134627.GB2050590@kroah.com>
+ <9f976044-2dbc-6c19-11e7-210cd7ab35ea@nvidia.com>
+ <a5d68f07-5f9a-2809-404d-bcd8ca593d70@roeck-us.net>
+ <7edc9531-347e-9ac7-2583-5efb49acffdb@nvidia.com>
+ <20191125094116.GA2340170@kroah.com>
+ <a6830303-ff96-f7df-b504-ab226aefddca@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191111203835.2260382-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfN4Wd3LR6zAOvg78glb7of3z1K8Q858nkje+p+Sv5jB2zsxa4z+pSSMN9YXOEsRiW8ZKh/QX46WFA9qObtho5Yacc6ueCmTKat4J9KrC7zRoqS8YQXq/
- 99O+IQhaBaOcB1G27c9Z05xKgMmzXIO6e72MIpU4Qwar5dn98SmVB47z0HmgDtHklHRi4UKF9vVzDOR2xdrb3gp54+Z8fP7QHUhcWVU8t50EfTpPbtYExnwb
- jg5s8dLku38hiKqAXH9SRx3cKmaPnqEFRFmC5lvAnR6i/gPdRjTUC7SyMwc+3E8QK00g3Nd7qLcnfwEU4/yt/w==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a6830303-ff96-f7df-b504-ab226aefddca@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
-On 11/11/19 9:38 PM, Arnd Bergmann wrote:
-> I'm in the process of finishing up the last bits on y2038-unsafe
-> code in the kernel, this series is for v4l2, which has no problem
-> with overflow, but has multiple ioctls that break with user space
-> built against a new 32-bit libc.
-
-Thank you for working on this. Much appreciated!
-
-I've reviewed this v4 series and found a few issues (mostly things
-that ended up in videodev2.h that shouldn't be there).
-
-Once a v5 is posted I'll try to test this more.
-
-Is there an easy(-ish) way to test this with a time64 ABI? Do you
-have such an environment set up for testing?
-
+On Mon, Nov 25, 2019 at 01:22:58PM +0000, Jon Hunter wrote:
 > 
-> I posted similar patches as part of a series back in 2015, the
-> new version was rewritten from scratch and I double-checked with
-> the old version to make sure I did not miss anything I had already
-> taken care of before.
+> On 25/11/2019 09:41, Greg Kroah-Hartman wrote:
+> > On Sun, Nov 24, 2019 at 08:31:46PM +0000, Jon Hunter wrote:
+> >>
+> >> On 23/11/2019 15:46, Guenter Roeck wrote:
+> >>> On 11/22/19 6:48 AM, Jon Hunter wrote:
+> >>>
+> >>> [ ... ]
+> >>>
+> >>>> Error: arch/arm/boot/dts/omap5-board-common.dtsi:636.1-6 Label or path
+> >>>> dwc3 not found
+> >>>> FATAL ERROR: Syntax error parsing input tree
+> >>>> scripts/Makefile.lib:293: recipe for target
+> >>>> 'arch/arm/boot/dts/omap5-igep0050.dtb' failed
+> >>>> make[1]: *** [arch/arm/boot/dts/omap5-igep0050.dtb] Error 1
+> >>>> arch/arm/Makefile:338: recipe for target 'dtbs' failed
+> >>>> make: *** [dtbs] Error 2
+> >>>>
+> >>>>
+> >>>> This is caused by the following commit ...
+> >>>>
+> >>>> commit d0abc07b3d752cbe2a8d315f662c53c772caed0f
+> >>>> Author: H. Nikolaus Schaller <hns@goldelico.com>
+> >>>> Date:   Fri Sep 28 17:54:00 2018 +0200
+> >>>>
+> >>>>      ARM: dts: omap5: enable OTG role for DWC3 controller
+> >>>>
+> >>>
+> >>> On top of the breakage caused by this patch, I would also argue
+> >>> that it is not a bug fix and should not have been included
+> >>> in the first place.
+> >>>
+> >>> The dwc3 label was added with commit 4c387984618fe ("ARM: dts: omap5:
+> >>> Add l4 interconnect hierarchy and ti-sysc data"). Given the size of
+> >>> that patch, I highly doubt that a backport to 4.4 would work.
+> > 
+> > Good catch, I have now dropped both of these patches and pushed out a
+> > -rc3
+> > 
+> >> FYI ... I am still seeing a build failure because of this with -rc2 ...
+> > 
+> > Can you see if -rc3 is also giving you problems?
 > 
-> Hans Verkuil worked on a different patch set in 2017, but this
-> also did not get to the point of being merged.
+> Better, but I appear to be seeing some random suspend failures with this
+> now on one board. I will try to bisect this.
 > 
-> My new version contains compat-ioctl support, which the old one
-> did not and should be complete, but given its size likely contains
-> bugs. I did randconfig build tests, but no runtime test, so
-> careful review as well as testing would be much appreciated.
+> Test results for stable-v4.4:
+>     6 builds:	6 pass, 0 fail
+>     12 boots:	12 pass, 0 fail
+>     19 tests:	18 pass, 1 fail
 > 
-> With this version, the newly added code takes care of the existing
-> ABI, while the existing code got moved to the 64-bit time_t
-> interface and is used internally. This means that testing with
-> existing binaries should exercise most of the modifications
-> and if that works and doesn't get shot down in review, we can
-> probably live without testing the new ABI explicitly.
-> 
-> I'm not entirely happy with the compat-ioctl implementation that
-> adds quite a bit of code duplication, but I hope this is
-> acceptable anyway, as a better implementation would likely
-> require a larger refactoring of the compat-ioctl file, while
-> my approach simply adds support for the additional data structure
-> variants.
+> Linux version:	4.4.203-rc3-g2576206c30b5
+> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+>                 tegra30-cardhu-a04
 
-A cleanup is indeed much more work. This y2038 code is awful, but that's
-really because the original structs are aligned in the worst possible
-way.
+Odd.  If you find anything interesting, please let me know.
 
-Regards,
+thanks for testing,
 
-	Hans
-
-> 
-> This is a minor update compared to version 3 of this series,
-> with bugfixes for small mistakes that I found or that were
-> reported by automated build bots. I updated the tree at [2]
-> to this version now.
-> 
->       Arnd
-> 
-> [1] https://lwn.net/Articles/657754/
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038-v4l2
-> 
-> Arnd Bergmann (8):
->   media: documentation: fix video_event description
->   media: v4l2: abstract timeval handling in v4l2_buffer
->   media: v4l2-core: compat: ignore native command codes
->   media: v4l2-core: split out data copy from video_usercopy
->   media: v4l2-core: fix VIDIOC_DQEVENT for time64 ABI
->   media: v4l2-core: fix v4l2_buffer handling for time64 ABI
->   media: v4l2-core: fix compat VIDIOC_DQEVENT for time64 ABI
->   media: v4l2-core: fix compat v4l2_buffer handling for time64 ABI
-> 
->  .../media/uapi/dvb/video-get-event.rst        |   2 +-
->  Documentation/media/uapi/dvb/video_types.rst  |   2 +-
->  .../media/common/videobuf2/videobuf2-v4l2.c   |   4 +-
->  drivers/media/pci/meye/meye.c                 |   4 +-
->  drivers/media/usb/cpia2/cpia2_v4l.c           |   4 +-
->  drivers/media/usb/stkwebcam/stk-webcam.c      |   2 +-
->  drivers/media/usb/usbvision/usbvision-video.c |   4 +-
->  drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 470 +++++++++++++++---
->  drivers/media/v4l2-core/v4l2-event.c          |   5 +-
->  drivers/media/v4l2-core/v4l2-ioctl.c          | 188 +++++--
->  drivers/media/v4l2-core/v4l2-subdev.c         |  20 +-
->  drivers/media/v4l2-core/videobuf-core.c       |   4 +-
->  include/linux/videodev2.h                     |  17 +-
->  include/trace/events/v4l2.h                   |   2 +-
->  include/uapi/linux/videodev2.h                |  77 +++
->  15 files changed, 669 insertions(+), 136 deletions(-)
-> 
-
+greg k-h
