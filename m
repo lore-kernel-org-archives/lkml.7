@@ -2,181 +2,132 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B619C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F332082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="hEpbOAQf"
+	by mail.kernel.org (Postfix) with ESMTP id 69CDF207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 08:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfKYIQ0 (ORCPT
+        id S1727111AbfKYITW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 03:16:26 -0500
-Received: from cmta17.telus.net ([209.171.16.90]:50683 "EHLO cmta17.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfKYIQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 03:16:26 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id Z9XdidPYlbg38Z9XfipV7L; Mon, 25 Nov 2019 01:16:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1574669783; bh=vFOQhePmh6HbgI64DL81DZAEDX3IaEHaCM2hrpYehi8=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=hEpbOAQfGMKyKXwiLXdUIinAVehnoL8CWGaYB0diF4MsT5hCcWKX9UQpOwiLhxSwf
-         S000PMU2nT1QoG44b0ZkkDcYWXTNh82hpb0PnNoPGMY8IeDSu8HHkjlNAGrsVS/an9
-         0+fq85c3wNNxlq9olHNLJsZB6qqjJB3uLOMGBEb5d7SIvojVk+1ktn/URHeotVPu/5
-         gcGD2I1aZd9JG5Vdz9vhAhB6jmLfKZu7xDBkut+e+BDo/7+rI4rgA3Ee2ix0DN4mXR
-         AxF3E1Q6KRHo7hstDbgGacDRJTckjeuNTb9jqdS0uLbq5F1DNqgOEB8ohLKgW9R7uX
-         xnDUa7KwiZXwg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=O/1HQy1W c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=JfrnYn6hAAAA:8 a=FGbulvE0AAAA:8 a=ODkfB97YEM3lDChqQvcA:9
- a=I_Xm75vh8Nu1Efj-:21 a=kuUscEa9XYuurKCR:21 a=CjuIK1q_8ugA:10
- a=1CNFftbPRP8L7MoqJWF3:22 a=svzTaB3SJmTkU8mK-ULk:22 a=pHzHmUro8NiASowvMSCR:22
- a=xoEH_sTeL_Rfw54TyV31:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Ingo Molnar'" <mingo@redhat.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Mel Gorman'" <mgorman@techsingularity.net>,
-        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Juri Lelli'" <juri.lelli@redhat.com>,
-        "'Paul Turner'" <pjt@google.com>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        "'Quentin Perret'" <qperret@qperret.net>,
-        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>
-References: <20191113124654.18122-1-ggherdovich@suse.cz> <20191113124654.18122-2-ggherdovich@suse.cz> <000001d5a29b$c944fd70$5bcef850$@net>
-In-Reply-To: <000001d5a29b$c944fd70$5bcef850$@net>
-Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Date:   Mon, 25 Nov 2019 00:16:15 -0800
-Message-ID: <000001d5a368$9eece830$dcc6b890$@net>
+        Mon, 25 Nov 2019 03:19:22 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38680 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfKYITV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 03:19:21 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iZ9aR-0001QR-Gd; Mon, 25 Nov 2019 09:19:11 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 23B611C1AF2;
+        Mon, 25 Nov 2019 09:19:11 +0100 (CET)
+Date:   Mon, 25 Nov 2019 08:19:11 -0000
+From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] locking/refcount: Remove unused
+ 'refcount_error_report()' function
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191121115902.2551-10-will@kernel.org>
+References: <20191121115902.2551-10-will@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
+Message-ID: <157466995104.21853.2462265674410709018.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWaH6kpvI2RPz8IRtKQLXZcAyoYugIIu9uQAEc7qNA=
-X-CMAE-Envelope: MS4wfNcpDtGbvHHZvc7IPZn/W/4wq+UdGU+vMUQBthDnyBdWLZshta4WIqM6GCszJ06iYjFAnam1Kz6pSW55qnj1SudvHrcaO9hSfGpJgROvZYqEMV8qURrE
- l9G7wCf3BjiEWo43VldlXE5LOD3sA4WxFrgzJCCWZ/uumK4LkHVWpvoBKjcVLuCLTY37+aBk2Y/xNtS8IlrsvTajxQUUMSSAlZh5HFEslmcq+hOZXAAw1JfG
- icfdDYx5hDt5A5+Ct+h1Hb5RHS6ElS6u5K7vbBWKVZmj66l1ezp2Kt6ODf8nMscJ2W1CK2OdJ+ocAwp9ZO4iRrwMvCgZqnktHeCr5qZ/C8aetto1n9cuCdEu
- Yu+gJkIJbyIWJLdImh9dWMGsySHBe5SLopvbdDMVwMEbqUwnslS89FgE+9nPh3Zy9ubiZgMaF2/1UwLSyEHW9ykWkmMRem29x/l+Z2LViUlD9mWTVmcB37Pu
- hnWrMRnSFGOyM2VgTz8j0pjb6rA05Wl93p4ov/mIRYRuUEN5/nEsmSVvx/+okw0oVyBqJzULeRiKoczTi5ljQksIEVOZhUOXQF3I/S/V/QLzbuI7LRwgrXOe
- wQE2ic9huXX4Ag+59NFi2NPzva1NuEyivgS3noL+yyUXzjOv/fc8r6jx03cxOYjXqpgpoj/Jq7kVWmguR5Dx1RKZ8MgaM6i6U5J+w/Vz6az0kezEGf+hnOq7
- legl8cZ2/NXorBpbrIxOvTyL/AbUcvR0Pqy2si6CP+J9lNQ/7MedEw==
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.11.23 23:50 Doug Smythies wrote:
+The following commit has been merged into the locking/core branch of tip:
 
-> Hi all,
->
-> The address list here is likely incorrect,
-> and this e-mail is really about a kernel 5.4
-> bisected regression.
->
-> It had been since mid September, and kernel 5.3-rc8 since
-> I had tried this, so I wanted to try it again. Call it due diligence.
-> I focused on my own version of the "gitsource" test.
->
-> Kernel 5.4-rc8 (as a baseline reference).
->
-> My results were extremely surprising.
->
-> As it turns out, at least on my test computer, both the
-> acpi-cpufreq and intel_cpufreq CPU frequency scaling drivers
-> using the schedutil governor are broken. For the tests that
-> I ran, there is negligible difference between them and the
-> performance governor. So, one might argue that they are not
-> broken, but rather working incredibly well, which if true
-> then this patch is no longer needed.
+Commit-ID:     2f30b36943adca070f2e1551f701bd524ed1ae5a
+Gitweb:        https://git.kernel.org/tip/2f30b36943adca070f2e1551f701bd524ed1ae5a
+Author:        Will Deacon <will@kernel.org>
+AuthorDate:    Thu, 21 Nov 2019 11:59:01 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 25 Nov 2019 09:15:42 +01:00
 
-Should be able to gain better insight here with the 
-intel_pstate_tracer.py utility, watching for differences
-in rates of rotation between CPUs. Too late tonight.
+locking/refcount: Remove unused 'refcount_error_report()' function
 
->
-> I bisected the kernel and got:
->
-> first bad commit: [04cbfba6208592999d7bfe6609ec01dc3fde73f5]
-> Merge tag 'dmaengine-5.4-rc1' of git://git.infradead.org/users/vkoul/slave-dma
->
-> Which did not make any sense at all. I don't even know how
-> this is being pulled into my kernel compile.
-> O.K., I often (usually) make a mistake
-> during bisection, so I did it again, and got the same result.
->
-> Relevant excerpt from the commit:
->
-> diff --cc drivers/dma/Kconfig
-> index 413efef,03fa0c5..7c511e3
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@@ -294,8 -294,8 +294,8 @@@ config INTEL_IOATDM
->          If unsure, say N.
->
->  config INTEL_IOP_ADMA
->  -      tristate "Intel IOP ADMA support"
->  -      depends on ARCH_IOP32X || ARCH_IOP33X || ARCH_IOP13XX
->  +      tristate "Intel IOP32x ADMA support"
-> -       depends on ARCH_IOP32X
-> ++      depends on ARCH_IOP32X || COMPILE_TEST
->         select DMA_ENGINE
->         select ASYNC_TX_ENABLE_CHANNEL_SWITCH
->         help
->
-> If I revert the above, manually, then everything behaves
-> as expected (minimally tested only, so far).
->
-> Are others seeing the schedutil governors not working as
-> expected with any of kernels 5.4-rc1 - 5.4-rc8?
->
-> I do have a pretty graph of my method of doing the
-> "gitsource" test, but am not ready to post it yet.
+'refcount_error_report()' has no callers. Remove it.
 
-Graphs and write up (mostly the same as herein) are now
-here:
+Signed-off-by: Will Deacon <will@kernel.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191121115902.2551-10-will@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/kernel.h |  7 -------
+ kernel/panic.c         | 11 -----------
+ 2 files changed, 18 deletions(-)
 
-http://www.smythies.com/~doug/linux/single-threaded/k54regression/index.html
-
-The graphs are rather crowded, sorry.
-
-> Here is some gitsource test data, 6 runs of "make test",
-> the first run is discarded:
->
-> "gg 6" means this 6 patch set.
->
-> Kernel 5.4-rc8 + revert, intel_cpufreq/schedutil: 3899 seconds
-> Kernel 5.4-rc8 + gg 6 + revert, intel_cpufreq/schedutil: 2740.7 seconds
-> Ratio: 0.70 (as expected)
-
-Kernel 5.4-rc8 + gg 6 + revert, forced CPU affinity performance: 2106.5 seconds
-
-> Kernel 5.4-rc8, intel_cpufreq/schedutil: 2334.7 seconds (faster than expected)
-> Kernel 5.4-rc8 + gg 6 patch set, intel_cpufreq/schedutil: 2275.0 seconds (faster than expected)
-> Ratio: 0.97 (not as expected)
-> Kernel 5.4-rc8, intel_cpufreq/performance: 2215.3 seconds
-> Kernel 5.4-rc8, intel_cpufreq/ondemand: 3286.3 seconds
-> Re-stated from previous e-mail:
-> Kernel 5.3-rc8, intel_cpufreq/schedutil: ratio: 0.69 (I don't have the original times)
-
-... Doug
-
-
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index d83d403..09f7592 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -328,13 +328,6 @@ extern int oops_may_print(void);
+ void do_exit(long error_code) __noreturn;
+ void complete_and_exit(struct completion *, long) __noreturn;
+ 
+-#ifdef CONFIG_ARCH_HAS_REFCOUNT
+-void refcount_error_report(struct pt_regs *regs, const char *err);
+-#else
+-static inline void refcount_error_report(struct pt_regs *regs, const char *err)
+-{ }
+-#endif
+-
+ /* Internal, do not use. */
+ int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
+ int __must_check _kstrtol(const char *s, unsigned int base, long *res);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index f470a03..b69ee9e 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -671,17 +671,6 @@ EXPORT_SYMBOL(__stack_chk_fail);
+ 
+ #endif
+ 
+-#ifdef CONFIG_ARCH_HAS_REFCOUNT
+-void refcount_error_report(struct pt_regs *regs, const char *err)
+-{
+-	WARN_RATELIMIT(1, "refcount_t %s at %pB in %s[%d], uid/euid: %u/%u\n",
+-		err, (void *)instruction_pointer(regs),
+-		current->comm, task_pid_nr(current),
+-		from_kuid_munged(&init_user_ns, current_uid()),
+-		from_kuid_munged(&init_user_ns, current_euid()));
+-}
+-#endif
+-
+ core_param(panic, panic_timeout, int, 0644);
+ core_param(panic_print, panic_print, ulong, 0644);
+ core_param(pause_on_oops, pause_on_oops, int, 0644);
