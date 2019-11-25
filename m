@@ -2,118 +2,65 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66043C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18E1C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DA02068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3123207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfKYOtB (ORCPT
+        id S1728299AbfKYOtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:49:01 -0500
-Received: from sauhun.de ([88.99.104.3]:54938 "EHLO pokefinder.org"
+        Mon, 25 Nov 2019 09:49:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbfKYOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:49:01 -0500
-Received: from localhost (x4e37056e.dyn.telefonica.de [78.55.5.110])
-        by pokefinder.org (Postfix) with ESMTPSA id 06B0F2C0456;
-        Mon, 25 Nov 2019 15:48:57 +0100 (CET)
-Date:   Mon, 25 Nov 2019 15:48:57 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lei YU <mine260309@gmail.com>, Jean Delvare <jdelvare@suse.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Message-ID: <20191125144857.GA2412@kunai>
-References: <1574162632-65848-1-git-send-email-mine260309@gmail.com>
+        id S1728078AbfKYOtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:49:21 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDBE207FD;
+        Mon, 25 Nov 2019 14:49:20 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 09:49:18 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH v3 4/4] selftests/ftrace: Fix multiple kprobe
+ testcase
+Message-ID: <20191125094918.738f2c0c@gandalf.local.home>
+In-Reply-To: <157466504736.21973.15722652829669648396.stgit@devnote2>
+References: <157466501169.21973.31401747181477687.stgit@devnote2>
+        <157466504736.21973.15722652829669648396.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
-Content-Disposition: inline
-In-Reply-To: <1574162632-65848-1-git-send-email-mine260309@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 25 Nov 2019 15:57:27 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Fix multiple kprobe event testcase to work it correctly.
+> There are 2 bugfixes.
+>  - Since `wc -l FILE` returns not only line number but also
+>    FILE filename, following "if" statement always failed.
+>    Fix this bug by replacing it with 'cat FILE | wc -l'
+>  - Since "while do-done loop" block with pipeline becomes a
+>    subshell, $N local variable is not update outside of
+>    the loop.
+>    Fix this bug by using actual target number (256) instead
+>    of $N.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-On Tue, Nov 19, 2019 at 07:23:52PM +0800, Lei YU wrote:
-> In i2c/dev-interface.rst it said
->=20
-> > All these transactions return -1 on failure
->=20
-> But actually the i2c_smbus_xxx functions return negative error numbers
-> on failure, instead of -1.
->=20
-> Fix the document and remove the following sentence.
->=20
-> Signed-off-by: Lei YU <mine260309@gmail.com>
-> ---
->  Documentation/i2c/dev-interface.rst | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/i2c/dev-interface.rst b/Documentation/i2c/dev-=
-interface.rst
-> index 69c23a3..f2f2b28 100644
-> --- a/Documentation/i2c/dev-interface.rst
-> +++ b/Documentation/i2c/dev-interface.rst
-> @@ -163,11 +163,10 @@ for details) through the following functions::
->    __s32 i2c_smbus_write_block_data(int file, __u8 command, __u8 length,
->                                     __u8 *values);
-> =20
-> -All these transactions return -1 on failure; you can read errno to see
-> -what happened. The 'write' transactions return 0 on success; the
-> -'read' transactions return the read value, except for read_block, which
-> -returns the number of values read. The block buffers need not be longer
-> -than 32 bytes.
-> +All these transactions return a negative error number on failure.
-> +The 'write' transactions return 0 on success; the 'read' transactions
-> +return the read value, except for read_block, which returns the number
-> +of values read. The block buffers need not be longer than 32 bytes.
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-I think the correct solution is to remove this paragraph entirely.
-Because the returned value does not depend on the kernel but on the
-libi2c version. Check this commit from 2012 in the i2c-tools repo:
+-- Steve
 
-330bba2 ("libi2c: Properly propagate real error codes on read errors")
-
-So, I think we should document it there. Jean, what do you think?
-
-
->  The above functions are made available by linking against the libi2c lib=
-rary,
->  which is provided by the i2c-tools project.  See:
-> --=20
-> 2.7.4
->=20
-
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3b6dUACgkQFA3kzBSg
-KbaPQg/+MmrOr+FUSQ7FXtf8yk4h1WIUeMafkVFytIXVI/oAwIba9jTOK796qwem
-wgpThFpOjIVw2IxKC/bx2FEYys39aOJBU+1X+qyvhlqvxI96a36seSXLArzoAQBO
-xvn2v1xCB8TqlQAqMr80vnp5lz30kLVcW0KIiJuF9ayHsn/wqdGEBy2yz93hf8n9
-wk+SSj5lR5aF71lcgSyypq8y79NbKjJhLfx2lU48sgw6VIn5PR7XjL0A/XEw29uk
-lcJOI9VTaaWhSR+X553GSewJ4f5xmLWn7aMf5fLa8eilBkf/JAp2yM+Hxzu9E5uj
-fNhWBDkjVCNsYZdfdEhy+QWkVH5Jxe2dpjOf3sUic5TCC9cxqDgl9OAZRnnEethH
-f2MorU7coV7RyqLIrS89xUew0dkEKZAAln3n8uAKPOLLsS5LJXRYgxe1X+d1sqGW
-9OkGxzbzpPgZ/TjvAC9KbRzHkBRLoqejPUBvXIFSC7PFqwz93chObKmdMZnK0x4I
-gEZe86wt2k9p4I/7J+zEKXcDe45jMAmo6MBsO9Dq9vayo8GwAk5bQW/6Sf6cf6IG
-80iZA1dFFSAALauR1vmRx6itOSR1IAIJXfQHiKSOfUhBh2+7iJbXBKpbCv7BWoql
-ETGd6JizdPYFzZjy5Q0cCRJd0Seh58uQMfAc7KgOJWLDDXdeF/0=
-=cVqu
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
