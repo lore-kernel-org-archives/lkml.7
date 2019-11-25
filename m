@@ -2,126 +2,141 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE66C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0660BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FCA20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBNkAIWf"
+	by mail.kernel.org (Postfix) with ESMTP id CE1D4207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574691696;
+	bh=NE33tX2qJSpGxxufTErRCgkY/RZ1dxsE1foTjtF8tts=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=2LmcxWaYRG9coDEkqVrP4hF1u6nCzc9G6aajSEYc+WmOyefQzUvUF4MotrTEKqPhm
+	 Mwu1uMCo4jlMKJTCfilVOQ4tjitAd2jnR7YIYLAQxN00Eh7ddqlqC5mhoReUf3s+pR
+	 VXLN8sEoZtw8ImBefgA+lrhCrhsvNblr5htfDvH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfKYOUX (ORCPT
+        id S1728022AbfKYOVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:20:23 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33170 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727655AbfKYOUW (ORCPT
+        Mon, 25 Nov 2019 09:21:35 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34428 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbfKYOVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:20:22 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so2733438pgk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:20:22 -0800 (PST)
+        Mon, 25 Nov 2019 09:21:35 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so18269206wrr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:21:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/jORnAlcsB1daMxnJzmULfdvfXi6vOqocPRyBnYdUVA=;
-        b=hBNkAIWf8+LBWPlsDUD00QD9+AKz1qIs1x59fc1Nk5ly2W2wEO/TkCRAGG/OE/E2A9
-         9eaNEM33oJTzQH/APVjsQsMcMHdLs+9r9WgLRmXM1ZMksDs7PzAQO033dgV3BHOWy2c6
-         c+kBcNXlm9D1wI1DAOCRo6bFWpjZCEszr7o+01ph+ypMROwTnkMTG9SRYIsoK+rzzQp8
-         uP09l3D7KfNLjbQ5+NjPxNkxZGK0hubGF3iLUEV1H/49cwxVh8jptNrH3r5cfq5lGxTI
-         eRcKkup8sKnpjuRns4XxrCaGgHsOJLJrsR4a5VrQ5spzEC+zk0PjDJFh6hIoWTPlJVYq
-         HF+g==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=az3sebe4g6Usvkn3Ey27KQsyFcxxMl/3gUmN1MHpvsg=;
+        b=MzwLiZRrOAKZBpAI/7mU6ABv2rrby6VLC9vdT3YtW1POdWseIAy/hLLmNbvJV/2riO
+         Xckvru7gbkL69zZd62FTKz4g6JqZt88nDg5SZYfutdBzi+WoWyv4kgsV1cM78lNGkPP/
+         Uhpr7SbeIrst5YPBqRiYZxqnejPx1idNPv2m46/Rjktvw2QzEhhuwL353cznVGkGvlhX
+         B/mT/nU6WQ0D2O0Qd3GcBKe8ksWvr/zClFerzSXFV7278X3jbJ7ZXwKMxe7IMeGjOd9b
+         IApR0DR7fnfNXWIjQeLvcnTla2ISO/l3JNZLKt00aQjuBYeGF7iY4vn/jPZ719yp2Xfh
+         x7Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/jORnAlcsB1daMxnJzmULfdvfXi6vOqocPRyBnYdUVA=;
-        b=DAiInIHNZIS6+TFpKBY9CU2T8YyGgDmazdt2AVyVAhamkrIiDZRYb/JOTNf2nZGNUJ
-         pdKBfvLtREfwfF3IEBqvYLPAMtQZZ1IBZE4EK3Z1aLGNZ9mHHWZbfqDwr0jhMqhVYM3h
-         Iccibt05DusXHZU5PYIX7PA4AxYiLWGN+9hiGblPXDiHlj27yAcj6C575p+tPi85Dcdz
-         7q/LuhcMWoTYQ+sSDE+F4lvtyfrQFnxJu6zStuC5zjjflTJD6+J1eH3uLbwoHgNo3421
-         uRg9oI5yuD1YqglQocTNsXr/dL8F6FAV7epLYUv9i2TW9B2HwdzjmAd05EYmzwDsxqhz
-         /8jA==
-X-Gm-Message-State: APjAAAV88XgVRFZf3oAScDA4wwEBxxY2UHW+xTSNr4WOrhvHJEQtXvB1
-        LHoG55VPy0eD5jv+F4nL1c2fwlHu
-X-Google-Smtp-Source: APXvYqz34yPE6/0lcVzrz2QQP4L1aQrII4umO4xBoyJH+jffy/JCtTjy/PMCVhJoSiXGCHV9DWVVzw==
-X-Received: by 2002:aa7:9f08:: with SMTP id g8mr35463808pfr.59.1574691621266;
-        Mon, 25 Nov 2019 06:20:21 -0800 (PST)
-Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
-        by smtp.gmail.com with ESMTPSA id f59sm7930121pje.0.2019.11.25.06.20.19
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=az3sebe4g6Usvkn3Ey27KQsyFcxxMl/3gUmN1MHpvsg=;
+        b=hN6e3bg1qQFcEeNJvAUVpFPfletyx8cTi6+iOalfLsfKADuKXi91YAxymn3GSBWRpy
+         +VDAeHTxKHM4oNBiwP4Qho5ysRvPM+YGpItHo9B1VWp2jYNEBy41e1LoYoFUt0w6COWV
+         tj7EUCy6elNP9wcmDvjRizaUtyhG1y7QCzsWVyxMlLxlUjHdUnukyrOf7DDD/wykWeCX
+         ezaezD3+m0ivOTLIgLowlv7UUKGA25uiTYw9lefvbGLVkd2gRUZ7XiPW/dN1ppor4Q7h
+         CkvjvJFPUeCQbjb3f1IpZQux7jdBZlswyZOzGB/IB1qxhz4a4rxAWcSzNnxum8cDtEwd
+         1mbg==
+X-Gm-Message-State: APjAAAX/de+gyeCTeqSKQT84q/WwHs59oQtJIdibgmhrzH4TPSUWq4oA
+        sZeDOflUOrCwjCC9Xph4VfVn8e3F
+X-Google-Smtp-Source: APXvYqzyGpj/0E+0PCaR9cPrIm+3wxJMCzY1vtjNHOPe6Va09gYWiP+9BjGVJqGwUHihdfpOYrUkAQ==
+X-Received: by 2002:adf:ba4f:: with SMTP id t15mr29962673wrg.24.1574691693451;
+        Mon, 25 Nov 2019 06:21:33 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id x10sm10698497wrp.58.2019.11.25.06.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 06:20:20 -0800 (PST)
-Date:   Mon, 25 Nov 2019 14:20:18 +0000
-From:   Hao Lee <haolee.swjtu@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     mgorman@techsingularity.net, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, haolee.swjtu@gmail.com
-Subject: [PATCH] mm: fix comments related to node reclaim
-Message-ID: <20191125142018.GA21373@haolee.github.io>
+        Mon, 25 Nov 2019 06:21:32 -0800 (PST)
+Date:   Mon, 25 Nov 2019 15:21:30 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [GIT PULL] x86/mm changes for v5.5
+Message-ID: <20191125142130.GA25523@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As zone reclaim has been replaced by node reclaim, this patch fixes related
-comments.
+Linus,
 
-Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
----
- include/linux/mmzone.h          | 2 +-
- include/uapi/linux/capability.h | 2 +-
- include/uapi/linux/sysctl.h     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Please pull the latest x86-mm-for-linus git tree from:
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 9e47289a4511..7e3208f4f5bc 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -747,7 +747,7 @@ typedef struct pglist_data {
- 
- #ifdef CONFIG_NUMA
- 	/*
--	 * zone reclaim becomes active if more unmapped pages exist.
-+	 * node reclaim becomes active if more unmapped pages exist.
- 	 */
- 	unsigned long		min_unmapped_pages;
- 	unsigned long		min_slab_pages;
-diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-index 240fdb9a60f6..dd6772f16eec 100644
---- a/include/uapi/linux/capability.h
-+++ b/include/uapi/linux/capability.h
-@@ -273,7 +273,7 @@ struct vfs_ns_cap_data {
- /* Allow enabling/disabling tagged queuing on SCSI controllers and sending
-    arbitrary SCSI commands */
- /* Allow setting encryption key on loopback filesystem */
--/* Allow setting zone reclaim policy */
-+/* Allow setting node reclaim policy */
- 
- #define CAP_SYS_ADMIN        21
- 
-diff --git a/include/uapi/linux/sysctl.h b/include/uapi/linux/sysctl.h
-index 87aa2a6d9125..27c1ed2822e6 100644
---- a/include/uapi/linux/sysctl.h
-+++ b/include/uapi/linux/sysctl.h
-@@ -195,7 +195,7 @@ enum
- 	VM_MIN_UNMAPPED=32,	/* Set min percent of unmapped pages */
- 	VM_PANIC_ON_OOM=33,	/* panic at out-of-memory */
- 	VM_VDSO_ENABLED=34,	/* map VDSO into new processes? */
--	VM_MIN_SLAB=35,		 /* Percent pages ignored by zone reclaim */
-+	VM_MIN_SLAB=35,		 /* Percent pages ignored by node reclaim */
- };
- 
- 
--- 
-2.14.5
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
+
+   # HEAD: 7f264dab5b60343358e788d4c939c166c22ea4a2 x86/mm/pat: Rename pat_rbtree.c to pat_interval.c
+
+The main changes in this cycle were:
+
+ - A PAT series from Davidlohr Bueso, which simplifies the memtype rbtree 
+   by using the interval tree helpers. (There's more cleanups in this 
+   area queued up, but they didn't make the merge window.)
+
+ - Also flip over CONFIG_X86_5LEVEL to default-y. This might draw in a 
+   few more testers, as all the major distros are going to have 5-level 
+   paging enabled by default in their next iterations.
+
+ - Misc cleanups.
+
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Davidlohr Bueso (4):
+      x86/mm/pat: Convert the PAT tree to a generic interval tree
+      x86/mm/pat: Do not pass 'rb_root' down the memtype tree helper functions
+      x86/mm/pat: Drop the rbt_ prefix from external memtype calls
+      x86/mm/pat: Rename pat_rbtree.c to pat_interval.c
+
+Ingo Molnar (1):
+      x86/mm: Clean up the pmd_read_atomic() comments
+
+Kirill A. Shutemov (1):
+      x86/mm: Enable 5-level paging support by default
+
+Sylvain 'ythier' Hitier (1):
+      x86/cpu: Clean up intel_tlb_table[]
+
+Wei Yang (1):
+      x86/mm: Fix function name typo in pmd_read_atomic() comment
+
+
+ arch/x86/Kconfig                      |   1 +
+ arch/x86/include/asm/pgtable-3level.h |  46 +++---
+ arch/x86/kernel/cpu/intel.c           |   8 +-
+ arch/x86/mm/Makefile                  |   2 +-
+ arch/x86/mm/pat.c                     |   8 +-
+ arch/x86/mm/pat_internal.h            |  20 +--
+ arch/x86/mm/pat_interval.c            | 185 +++++++++++++++++++++++
+ arch/x86/mm/pat_rbtree.c              | 268 ----------------------------------
+ 8 files changed, 229 insertions(+), 309 deletions(-)
+ create mode 100644 arch/x86/mm/pat_interval.c
+ delete mode 100644 arch/x86/mm/pat_rbtree.c
 
