@@ -2,272 +2,117 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BFBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA34C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 20:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89852082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C0E20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 20:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="wSBFCeel"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfKYTxe (ORCPT
+        id S1726957AbfKYULg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfKYTxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:53:34 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B9D207FD;
-        Mon, 25 Nov 2019 19:53:32 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 14:53:30 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] tracing: Updates for 5.5
-Message-ID: <20191125145330.1fc13984@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 25 Nov 2019 15:11:36 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43359 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfKYULg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 15:11:36 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 3so7883868pfb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 12:11:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version;
+        bh=ARYWqlkS9QHfZESyu1KBrBTXXqzp3nzYRz0JMjZfuDc=;
+        b=wSBFCeelLA/gVNaD0m2jrt6AloUF1Ec+3Kq1ak0rzzT+olqIq5hIlkTY0NaASSjSLc
+         FujfCAsJcHq5lcaiNFeAnNMaaloYH9PTS9asBeXpP8evFPOl9udVwdy7yc/+BYJ/zqKL
+         z5qZK89mnA1SzeJ2OfEzHQsunEKJVjL8NO5OppOT1VoFLBFakb/GBb9lRSDz3ylxu5kt
+         Ts7zo7z8xMv5olSIeeb0Bsln77d+ZqwcZ/hbbXXGTQfw5ZmP+MAN9p0CgVRoGd1QURsW
+         qD5VzdemO4BEasqGc2+M0HJEHaoBgq0vQre18vyI6YPqdH/lojvREg2iQ6bv5DH96fMc
+         87Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version;
+        bh=ARYWqlkS9QHfZESyu1KBrBTXXqzp3nzYRz0JMjZfuDc=;
+        b=dWGsfVUhnNVo66w5uQLhoc/imzrm/ZHx3F285UamDg+ayUa7xvRHluNkk7z7BXuiEZ
+         RGMlU8VgqfNDIrWYl1jNjIeCPShRWZ1WpYtcU9Nvrm2iLZdqRJHCo4CmzlF9pgjj37fv
+         H0murOEvNKYy3CLpntaTGZ/BhpVsjbLC+/rsDhkKBlNcLAgzZX7S9z2d/ZkfyI2ANRFF
+         iZPkfEsyIF+4RI04CJ93liaINrXlqBOqNU6rTvMf3t42azeqDLkvq1EoBf0vMwHAa+5t
+         sMaGD1d59SSvcK5jJxiihROth5H6N75uXmKdvtNvgIV58Dlljk1M0UM4t485HdDboVab
+         GDmg==
+X-Gm-Message-State: APjAAAXJ7C+o3shIH1/gPDynS33QTjUxrNJYXcaQL6gIVY2TYC/WTWZ6
+        TYzAh5DAi3pMyquDBArXdD3dwg==
+X-Google-Smtp-Source: APXvYqwNDyR3cGe0rgNGztXiGOxKRK+T2MMJkWz6tPY/v+T/qJgtZdZJYImHD6MDMVXfsTkvCBXZvg==
+X-Received: by 2002:a65:47c1:: with SMTP id f1mr33469573pgs.393.1574712693905;
+        Mon, 25 Nov 2019 12:11:33 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id v3sm9617299pfi.26.2019.11.25.12.11.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 12:11:33 -0800 (PST)
+Date:   Mon, 25 Nov 2019 12:11:25 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Christian Hesse <list@eworm.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [ANNOUNCE] iproute2 5.4
+Message-ID: <20191125121125.3cae8724@hermes.lan>
+In-Reply-To: <20191125202111.1bb32360@leda>
+References: <20191125081737.2ff4a7ca@hermes.lan>
+        <20191125202111.1bb32360@leda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/wd7FgAUV4011kp3pA7M.Jkj"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/wd7FgAUV4011kp3pA7M.Jkj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Mon, 25 Nov 2019 20:21:11 +0100
+Christian Hesse <list@eworm.de> wrote:
 
-A couple of known conflicts with linux-next:
+> Stephen Hemminger <stephen@networkplumber.org> on Mon, 2019/11/25 08:17:
+> > The 5.4 kernel has been released, and the last patches have
+> > been applied to iproute2.
+> >=20
+> > Not a lot of changes in this release, most are related to fixing output
+> > formatting and documentation.
+> >=20
+> > Download:
+> >     https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.4.0.=
+tar.gz =20
+>=20
+> The file is not (yet) available. Did you miss to push it to the servers?
 
- One with arch64 that both updated vmlinux.lds.h and the conflict
- resolution is here:
+Repushed, original transfer failed.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git ftrace/aarch64-conflict
+--Sig_/wd7FgAUV4011kp3pA7M.Jkj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-And the other is a trivial conflict with livepatching in the
-selftest Makefile. I think Stephen reported some other minor ones too.
+-----BEGIN PGP SIGNATURE-----
 
-New tracing features:
+iQIzBAEBCAAdFiEEn2/DRbBb5+dmuDyPgKd/YJXN5H4FAl3cNW0ACgkQgKd/YJXN
+5H5lxxAAkqUjT90wDMhnYDr+7XlQU0hqKUtHihqQyZViFD9+dhJ5RanQxP2wD0QC
+wgBNpeqGYAq3E3HC3TSPd55BxkEE5FUyzpikon9qDLVXntp8XP+hu/lhdNEKbGGy
+9bfGA+WyKD3nYVooW7A2SeX4Lm9NQZz7Gy/UfEe0rDT2zAF75vUP/Btkw0OMgYgu
+p63QttAyOfvDmXbmsL64m1FCWnyQmswrEtElagylHa4ZDiuAIkOV4BII52OPtAVd
+ZEtnbGQ073e6J+Gxxfa9B1FjaPz0HRs1EqcYM4bXsoiWZTJ6vD49Qk+YczjWe4MX
+cWXIB+YweqQTS+HaZ6DCzYaVgaTYqzf/XEuOhgjOMv073He2uHQtSroB61rBssR3
+KHnwAgZ125lX+Th9rJdu+OAFyPmxK+rbJhLzDYQ/iWQ4Z6INbuSQkE9rLlt1/tw8
+x7/q7v0JU6mQmyTVmS757ejLbK7pa3MwNNEpy1kMMkk0mIziPeU3hJsUDr/7+On7
+f0qLi+jC6xOOyyeAYdpDylHJD/BoaADT2Ewkb+0C1CxzIzMBYm2H0nmPyzdWtoV6
+TxE0RdsYfvtxDBQS3PBeQ+KTs46q1r6mLKLK6o7+nEna8Wu/MNNlYZCABkJKCtsg
+eNoFKjh7WSKMabppB1RRtD+NbjdqnZYlxT+hNjrJOG6JIEO7H2M=
+=gLhG
+-----END PGP SIGNATURE-----
 
- - PERAMAENT flag to ftrace_ops when attaching a callback to a function
-   As /proc/sys/kernel/ftrace_enabled when set to zero will disable all
-   attached callbacks in ftrace, this has a detrimental impact on live
-   kernel tracing, as it disables all that it patched. If a ftrace_ops
-   is registered to ftrace with the PERMANENT flag set, it will prevent
-   ftrace_enabled from being disabled, and if ftrace_enabled is already
-   disabled, it will prevent a ftrace_ops with PREMANENT flag set from
-   being registered.
-
- - New register_ftrace_direct(). As eBPF would like to register its own
-   trampolines to be called by the ftrace nop locations directly,
-   without going through the ftrace trampoline, this function has been
-   added. This allows for eBPF trampolines to live along side of
-   ftrace, perf, kprobe and live patching. It also utilizes the ftrace
-   enabled_functions file that keeps track of functions that have been
-   modified in the kernel, to allow for security auditing.
-
- - Allow for kernel internal use of ftrace instances. Subsystems in
-   the kernel can now create and destroy their own tracing instances
-   which allows them to have their own tracing buffer, and be able
-   to record events without worrying about other users from writing over
-   their data.
-
- - New seq_buf_hex_dump() that lets users use the hex_dump() in their
-   seq_buf usage.
-
- - Notifications now added to tracing_max_latency to allow user space
-   to know when a new max latency is hit by one of the latency tracers.
-
- - Wider spread use of generic compare operations for use of bsearch and
-   friends.
-
- - More synthetic event fields may be defined (32 up from 16)
-
- - Use of xarray for architectures with sparse system calls, for the
-   system call trace events.
-
-This along with small clean ups and fixes.
-
-Please pull the latest trace-v5.5 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.5
-
-Tag SHA1: e1b5446490496ec6b12aa207c5aaa83f94f6f44a
-Head SHA1: 16c0f03f629a89e6a1249497202b2c154ff46206
-
-
-Alexei Starovoitov (1):
-      ftrace: Return ENOTSUPP when DYNAMIC_FTRACE_WITH_DIRECT_CALLS is not configured
-
-Andy Shevchenko (3):
-      lib/sort: Move swap, cmp and cmp_r function types for wider use
-      lib/bsearch: Use generic type for comparator function
-      tracing: Use generic type for comparator function
-
-Artem Bityutskiy (1):
-      tracing: Increase SYNTH_FIELDS_MAX for synthetic_events
-
-Ben Dooks (1):
-      tracing: Make internal ftrace events static
-
-Borislav Petkov (1):
-      tracing: Remove stray tab in TRACE_EVAL_MAP_FILE's help text
-
-Colin Ian King (1):
-      ftrace/selftests: Fix spelling mistake "wakeing" -> "waking"
-
-Divya Indi (5):
-      tracing: Declare newly exported APIs in include/linux/trace.h
-      tracing: Verify if trace array exists before destroying it.
-      tracing: Adding NULL checks for trace_array descriptor pointer
-      tracing: Adding new functions for kernel access to Ftrace instances
-      tracing: Sample module to demonstrate kernel access to Ftrace instances.
-
-Enrico Weigelt, metux IT consult (1):
-      ftrace: Use BIT() macro
-
-Hassan Naveed (2):
-      tracing: Use xarray for syscall trace events
-      tracing: Enable syscall optimization for MIPS
-
-Joe Lawrence (2):
-      selftests/livepatch: Make dynamic debug setup and restore generic
-      selftests/livepatch: Test interaction with ftrace_enabled
-
-Josh Poimboeuf (1):
-      ftrace/x86: Tell objtool to ignore nondeterministic ftrace stack layout
-
-Krzysztof Kozlowski (1):
-      tracing: Fix Kconfig indentation
-
-Masami Hiramatsu (1):
-      tracing/kprobe: Check whether the non-suffixed symbol is notrace
-
-Miroslav Benes (1):
-      ftrace: Introduce PERMANENT ftrace_ops flag
-
-Piotr Maziarz (2):
-      seq_buf: Add printing formatted hex dumps
-      tracing: Use seq_buf_hex_dump() to dump buffers
-
-Sebastian Andrzej Siewior (1):
-      tracing: Use CONFIG_PREEMPTION
-
-Srivatsa S. Bhat (VMware) (1):
-      tracing/hwlat: Fix a few trivial nits
-
-Steven Rostedt (VMware) (21):
-      ftrace: Separate out the copying of a ftrace_hash from __ftrace_hash_move()
-      ftrace: Separate out functionality from ftrace_location_range()
-      ftrace: Add register_ftrace_direct()
-      ftrace: Add ftrace_find_direct_func()
-      ftrace: Add sample module that uses register_ftrace_direct()
-      ftrace/selftest: Add tests to test register_ftrace_direct()
-      ftrace: Add another example of register_ftrace_direct() use case
-      ftrace/selftests: Update the direct call selftests to test two direct calls
-      ftrace/x86: Add register_ftrace_direct() for custom trampolines
-      ftrace/x86: Add a counter to test function_graph with direct
-      ftrace: Add information on number of page groups allocated
-      fgraph: Fix function type mismatches of ftrace_graph_return using ftrace_stub
-      tracing/selftests: Turn off timeout setting
-      tracing: Add missing "inline" in stub function of latency_fsnotify()
-      ftrace: Add modify_ftrace_direct()
-      ftrace/samples: Add a sample module that implements modify_ftrace_direct()
-      ftrace: Fix accounting bug with direct->count in register_ftrace_direct()
-      ftrace: Add another check for match in register_ftrace_direct()
-      ftrace: Add helper find_direct_entry() to consolidate code
-      ftrace: Add a helper function to modify_ftrace_direct() to allow arch optimization
-      ftrace: Rename ftrace_graph_stub to ftrace_stub_graph
-
-Viktor Rosendahl (BMW) (2):
-      ftrace: Implement fs notification for tracing_max_latency
-      preemptirq_delay_test: Add the burst feature and a sysfs trigger
-
-Xianting Tian (1):
-      ring-buffer: Fix typos in function ring_buffer_producer
-
-Yuming Han (1):
-      tracing: use kvcalloc for tgid_map array allocation
-
-----
- Documentation/trace/ftrace-uses.rst                |  10 +-
- Documentation/trace/ftrace.rst                     |   4 +-
- arch/Kconfig                                       |   8 +
- arch/mips/Kconfig                                  |   1 +
- arch/sh/boot/compressed/misc.c                     |   5 +
- arch/x86/Kconfig                                   |   1 +
- arch/x86/include/asm/ftrace.h                      |  13 +
- arch/x86/include/asm/unwind_hints.h                |   8 +
- arch/x86/kernel/ftrace.c                           |  14 +
- arch/x86/kernel/ftrace_64.S                        |  42 +-
- include/asm-generic/vmlinux.lds.h                  |  17 +-
- include/linux/bsearch.h                            |   2 +-
- include/linux/ftrace.h                             | 112 +++-
- include/linux/seq_buf.h                            |   3 +
- include/linux/sort.h                               |   8 +-
- include/linux/trace.h                              |   8 +
- include/linux/trace_events.h                       |   8 +-
- include/linux/trace_seq.h                          |   4 +
- include/linux/types.h                              |   5 +
- include/trace/trace_events.h                       |   6 +
- kernel/livepatch/patch.c                           |   3 +-
- kernel/module.c                                    |   6 +-
- kernel/trace/Kconfig                               |  26 +-
- kernel/trace/fgraph.c                              |  11 +-
- kernel/trace/ftrace.c                              | 613 +++++++++++++++++++--
- kernel/trace/preemptirq_delay_test.c               | 144 ++++-
- kernel/trace/ring_buffer_benchmark.c               |   4 +-
- kernel/trace/trace.c                               | 214 +++++--
- kernel/trace/trace.h                               |  25 +-
- kernel/trace/trace_branch.c                        |   8 +-
- kernel/trace/trace_events.c                        |  29 +-
- kernel/trace/trace_events_hist.c                   |   2 +-
- kernel/trace/trace_export.c                        |   4 +-
- kernel/trace/trace_hwlat.c                         |  15 +-
- kernel/trace/trace_kprobe.c                        |  27 +-
- kernel/trace/trace_output.c                        |  15 +
- kernel/trace/trace_seq.c                           |  30 +
- kernel/trace/trace_stat.c                          |   6 +-
- kernel/trace/trace_stat.h                          |   2 +-
- kernel/trace/trace_syscalls.c                      |  32 +-
- lib/bsearch.c                                      |   2 +-
- lib/seq_buf.c                                      |  62 +++
- lib/sort.c                                         |  15 +-
- samples/Kconfig                                    |  15 +
- samples/Makefile                                   |   2 +
- samples/ftrace/Makefile                            |   8 +
- samples/ftrace/ftrace-direct-modify.c              |  88 +++
- samples/ftrace/ftrace-direct-too.c                 |  51 ++
- samples/ftrace/ftrace-direct.c                     |  45 ++
- samples/ftrace/sample-trace-array.c                | 131 +++++
- samples/ftrace/sample-trace-array.h                |  84 +++
- tools/testing/selftests/ftrace/settings            |   1 +
- .../ftrace/test.d/direct/ftrace-direct.tc          |  69 +++
- .../ftrace/test.d/direct/kprobe-direct.tc          |  84 +++
- tools/testing/selftests/livepatch/Makefile         |   3 +-
- tools/testing/selftests/livepatch/functions.sh     |  34 +-
- .../testing/selftests/livepatch/test-callbacks.sh  |   2 +-
- tools/testing/selftests/livepatch/test-ftrace.sh   |  65 +++
- .../testing/selftests/livepatch/test-livepatch.sh  |   2 +-
- .../selftests/livepatch/test-shadow-vars.sh        |   2 +-
- 60 files changed, 2054 insertions(+), 206 deletions(-)
- create mode 100644 samples/ftrace/Makefile
- create mode 100644 samples/ftrace/ftrace-direct-modify.c
- create mode 100644 samples/ftrace/ftrace-direct-too.c
- create mode 100644 samples/ftrace/ftrace-direct.c
- create mode 100644 samples/ftrace/sample-trace-array.c
- create mode 100644 samples/ftrace/sample-trace-array.h
- create mode 100644 tools/testing/selftests/ftrace/settings
- create mode 100644 tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
- create mode 100755 tools/testing/selftests/livepatch/test-ftrace.sh
----------------------------
+--Sig_/wd7FgAUV4011kp3pA7M.Jkj--
