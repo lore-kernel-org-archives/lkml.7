@@ -2,155 +2,102 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBF9C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417CAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5782920740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gAgopknF"
+	by mail.kernel.org (Postfix) with ESMTP id 2042420740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfKYPP6 (ORCPT
+        id S1728559AbfKYPQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:15:58 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58413 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728172AbfKYPP5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:15:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574694955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FZC4Tpkk+CwwwL93QU1+o+P6o/ZYTmixyeklL1zRZCY=;
-        b=gAgopknFzMapF6Ud3+nITuCrxdO6Qez4j2xf2AnoJN+qOmyxPtARiIyGPebVOXAONuek2F
-        H4V5ENFfrv4DWPmfC5MM7fRHtpMnelkJ5hXFNe0GvqA80Mil9xApWF1JeDtsiXZkx/7Ayp
-        oWAQYWQ0yMzvFXWbAXmzEDyn8oiiP74=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-cvZ0gjUlPAqUKcag45LBpg-1; Mon, 25 Nov 2019 10:15:52 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B31DDB60;
-        Mon, 25 Nov 2019 15:15:50 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F7621001B05;
-        Mon, 25 Nov 2019 15:15:39 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 23:15:35 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Andrea Vai <andrea.vai@unipv.it>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Message-ID: <20191125151535.GA8044@ming.t460p>
-References: <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
- <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
- <20191109222828.GA30568@ming.t460p>
- <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
- <20191123072726.GC25356@ming.t460p>
- <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
- <20191125035437.GA3806@ming.t460p>
- <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
- <20191125102928.GA20489@ming.t460p>
- <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+        Mon, 25 Nov 2019 10:16:22 -0500
+Received: from sauhun.de ([88.99.104.3]:55242 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbfKYPQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:16:21 -0500
+Received: from localhost (x4e37056e.dyn.telefonica.de [78.55.5.110])
+        by pokefinder.org (Postfix) with ESMTPSA id 596772C0456;
+        Mon, 25 Nov 2019 16:16:19 +0100 (CET)
+Date:   Mon, 25 Nov 2019 16:16:18 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com,
+        venture@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
+        syniurge@gmail.com, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] i2c: npcm: Add Nuvoton NPCM I2C controller driver
+Message-ID: <20191125151618.GE2412@kunai>
+References: <20191121095350.158689-1-tali.perry1@gmail.com>
+ <20191121095350.158689-3-tali.perry1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: cvZ0gjUlPAqUKcag45LBpg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
 Content-Disposition: inline
+In-Reply-To: <20191121095350.158689-3-tali.perry1@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 03:58:34PM +0100, Andrea Vai wrote:
-> Il giorno lun, 25/11/2019 alle 18.29 +0800, Ming Lei ha scritto:
-> > On Mon, Nov 25, 2019 at 11:11:00AM +0100, Andrea Vai wrote:
-> > > Il giorno lun, 25/11/2019 alle 11.54 +0800, Ming Lei ha scritto:
-> > > > On Sat, Nov 23, 2019 at 04:44:55PM +0100, Andrea Vai wrote:
-> > > > > Il giorno sab, 23/11/2019 alle 15.28 +0800, Ming Lei ha
-> > scritto:
-> > > > > >=20
-> > > > > > Please post the log of 'lsusb -v', and I will try to make a
-> > > > patch
-> > > > > > for
-> > > > > > addressing the issue.
-> > > > >=20
-> > > > > attached,
-> > > >=20
-> > > > Please apply the attached patch, and re-build & install & reboot
-> > > > kernel.
-> > > >=20
-> > > > This time, please don't switch io scheduler.
-> > >=20
-> > > # patch -p1 < usb.patch outputs:
-> > >=20
-> > > (Stripping trailing CRs from patch; use --binary to disable.)
-> > > patching file block/blk-mq.c
-> > > Hunk #1 succeeded at 1465 (offset 29 lines).
-> > > Hunk #2 succeeded at 3061 (offset 13 lines).
-> > > (Stripping trailing CRs from patch; use --binary to disable.)
-> > > patching file drivers/scsi/scsi_lib.c
-> > > Hunk #1 succeeded at 1902 (offset -37 lines).
-> > > (Stripping trailing CRs from patch; use --binary to disable.)
-> > > patching file drivers/usb/storage/scsiglue.c
-> > > Hunk #1 succeeded at 651 (offset -10 lines).
-> > > (Stripping trailing CRs from patch; use --binary to disable.)
-> > > patching file include/linux/blk-mq.h
-> > > Hunk #1 succeeded at 226 (offset -162 lines).
-> > > (Stripping trailing CRs from patch; use --binary to disable.)
-> > > patching file include/scsi/scsi_host.h
-> > > patch unexpectedly ends in middle of line
-> > > patch unexpectedly ends in middle of line
-> > >=20
-> > > Just to be sure I have to go on, is this correct? Sounds like an
-> > error
-> > > but I don't know if it is important.
-> >=20
-> > Looks there is small conflict, however it has been fixed by patch,
-> > so
-> > it is correct, please go on your test.
+
+--Lb0e7rgc7IsuDeGj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Nov 21, 2019 at 11:53:50AM +0200, Tali Perry wrote:
+> Add Nuvoton NPCM BMC i2c controller driver.
 >=20
-> Done, it still fails (2000 seconds or more to copy 1GB) :-(
->=20
-> cat /sys/block/sdf/queue/scheduler outputs:
-> [mq-deadline] none
->=20
-> What to try next?
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
 
-1) cat /sys/kernel/debug/block/$DISK/hctx0/flags
+Looking at all this SMB_* naming of the registers and also the quirks,
+this looks more like an SMBUS controller to me?
 
-note: replace $DISK with disk name of your usb drive, such as, if it is
-/dev/sdb, pass $DISK as sdb.
+> +	// currently I2C slave IF only supports single byte operations.
+> +	// in order to utilyze the npcm HW FIFO, the driver will ask for 16bytes
+> +	// at a time, pack them in buffer, and then transmit them all together
+> +	// to the FIFO and onward to the bus .
+> +	// NACK on read will be once reached to bus->adap->quirks->max_read_len
+> +	// sending a NACK whever the backend requests for it is not supported.
 
-2) echo 128 > /sys/block/$DISK/queue/nr_requests and run your copy 1GB
-test again.
+This for example...
+
+> +static const struct i2c_adapter_quirks npcm_i2c_quirks =3D {
+> +	.max_read_len =3D 32768,
+> +	.max_write_len =3D 32768,
+> +	.max_num_msgs =3D 2,
+> +	.flags =3D I2C_AQ_COMB_WRITE_THEN_READ
+> +};
+
+=2E.. and this. Like SMBus with the only exception of being able to send
+32K in a row. Or?
 
 
-Thanks,=20
-Ming
+--Lb0e7rgc7IsuDeGj
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3b8EIACgkQFA3kzBSg
+Kbabdg//Vlk6yGrJ9uPwF66dwUUKyE2M66t+W5miyttrphuZsLZXK7MGI2sQlF0D
+0ZTP0+fskh6L8uFpIK2eplGzHCyNHxz9yiGlluRMCohfL0HYVZw0TtLz08cKbg9p
+35Mqs8JhklbBQ6EaO+FCd3WBAUA244fmekZa4ltRs66A7EZ+40kB8JEGJ9UF4yZl
+AUop8BPaVGEJ9lw4x3n6DvsiNrGSuxbMJmmm2FU8HY2I31A2cUAv1B26xkjJ4NBW
+We7ts4jy4tJv6Uo0KxvBbvCgaxle/zwPkl7s2dPvajxLbMEXfq/yOrCWEAX7mg/u
+3ENhA7SETaZFcn4Yj3J0uVlbv/DIzPUcsGP499PW0DIsRY6i7dFl0JypETEceu8W
+/QQJO62nl3vh13bLcv1Nl6HtQjOX5EtVmUBwakasELQ+HMWp3zt7dHu7FgKtPaIJ
+eAL9AjrgCymz1v0kAzlXRx7KTi+285oWNUUVBtRedc76A60ONDmim7nsSkx+lmem
+djPX2bSGT0v1gp16CAMe07ZOmCB7Wu8S6pIK9Yo639bi9MnhblsXYRlF7unpO4RX
+8+xUos0Y2tLw28tU7g/pELYyBoKWoEDNCQrWy/3FHh41PFKGPRfOme0ZudIFgcPM
+Vu12YjeAhb1fqMqRyEMs8uwjx+4PBqJS7dzJvobQSgZyc9tjW+k=
+=Yu4F
+-----END PGP SIGNATURE-----
+
+--Lb0e7rgc7IsuDeGj--
