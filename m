@@ -2,134 +2,97 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD05C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04B3C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15742053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BBA2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Rw8lPNsi";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="R1A2l2zQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfKYRyT (ORCPT
+        id S1729251AbfKYR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:54:19 -0500
-Received: from mga12.intel.com ([192.55.52.136]:14985 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbfKYRyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:54:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 09:54:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
-   d="scan'208";a="216979269"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2019 09:54:17 -0800
-Date:   Mon, 25 Nov 2019 09:54:17 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: general protection fault in __schedule (2)
-Message-ID: <20191125175417.GD12178@linux.intel.com>
-References: <000000000000e67a05057314ddf6@google.com>
- <0000000000005eb1070597ea3a1f@google.com>
- <20191122205453.GE31235@linux.intel.com>
- <CACT4Y+b9FD8GTHc0baY-kUkuNFo-gdXCJ-uk5JtJSyjsyt8jTg@mail.gmail.com>
+        Mon, 25 Nov 2019 12:56:04 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:53792
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725823AbfKYR4E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:56:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574704563;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=IrTYOqMqEOxm64GeOhR8U6dXnIpA0jutoDa4mZ0DD3k=;
+        b=Rw8lPNsipmCaUViAQtvN0xjhd9Tica/Ps+4FAvItNFhKPy1+T60FDFKkDny+Cin5
+        BwdRDWH3NphC+KI96IBiBcNNra3R5EJo31mOtlJyDq4F8TgyDgZDMBppoK5cmOtVFr4
+        73QbtYLZ+YF5NYmIH3omYUjMoZMZMjRwSGVfiG/0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574704563;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=IrTYOqMqEOxm64GeOhR8U6dXnIpA0jutoDa4mZ0DD3k=;
+        b=R1A2l2zQbt8Yay4Sc1/PrD+T1iWZc74BW6q8s4B91JS/8Pe6fQQEwaOMOd12Ay5k
+        F83QwYvYWOXblkjis5lXTX0CT0J5/ZnrfCiGkZvpvJDIghpd6Pc+XrQ6usvN6mtmxSx
+        TXEyhdZzLl6S9xZzXoVOYLt+AZm3HQ2ATf62yGvQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33D0FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Phong Tran <tranmanphong@gmail.com>, jakub.kicinski@netronome.com,
+        davem@davemloft.net, luciano.coelho@intel.com,
+        shahar.s.matityahu@intel.com, johannes.berg@intel.com,
+        emmanuel.grumbach@intel.com, sara.sharon@intel.com,
+        yhchuang@realtek.com, yuehaibing@huawei.com, pkshih@realtek.com,
+        arend.vanspriel@broadcom.com, rafal@milecki.pl,
+        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
+        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
+        keescook@chromium.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] drivers: net: intel: Fix -Wcast-function-type
+References: <20191125150215.29263-1-tranmanphong@gmail.com>
+        <20191125150215.29263-2-tranmanphong@gmail.com>
+        <61fa4ef5-e4fc-c20c-9e20-158bcdf61cbb@lwfinger.net>
+Date:   Mon, 25 Nov 2019 17:56:03 +0000
+In-Reply-To: <61fa4ef5-e4fc-c20c-9e20-158bcdf61cbb@lwfinger.net> (Larry
+        Finger's message of "Mon, 25 Nov 2019 11:30:47 -0600")
+Message-ID: <0101016ea3b4c45e-39ce3a65-7fba-4bf6-a788-ba579c1ea122-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+b9FD8GTHc0baY-kUkuNFo-gdXCJ-uk5JtJSyjsyt8jTg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-SES-Outgoing: 2019.11.25-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 06:15:15AM +0100, Dmitry Vyukov wrote:
-> On Fri, Nov 22, 2019 at 9:54 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 11:19:00PM -0800, syzbot wrote:
-> > > syzbot has bisected this bug to:
-> > >
-> > > commit 8fcc4b5923af5de58b80b53a069453b135693304
-> > > Author: Jim Mattson <jmattson@google.com>
-> > > Date:   Tue Jul 10 09:27:20 2018 +0000
-> > >
-> > >     kvm: nVMX: Introduce KVM_CAP_NESTED_STATE
-> > >
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=124cdbace00000
-> > > start commit:   234b69e3 ocfs2: fix ocfs2 read block panic
-> > > git tree:       upstream
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=114cdbace00000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=164cdbace00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=7e2ab84953e4084a638d
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150f0a4e400000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f67111400000
-> > >
-> > > Reported-by: syzbot+7e2ab84953e4084a638d@syzkaller.appspotmail.com
-> > > Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
-> > >
-> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> >
-> > Is there a way to have syzbot stop processing/bisecting these things
-> > after a reasonable amount of time?  The original crash is from August of
-> > last year...
-> >
-> > Note, the original crash is actually due to KVM's put_kvm() fd race, but
-> > whatever we want to blame, it's a duplicate.
-> >
-> > #syz dup: general protection fault in kvm_lapic_hv_timer_in_use
-> 
-> Hi Sean,
-> 
-> syzbot only sends bisection results to open bugs with no known fixes.
-> So what you did (marking the bug as invalid/dup, or attaching a fix)
-> would stop it from doing/sending bisection.
-> 
-> "Original crash happened a long time ago" is not necessary a good
-> signal. On the syzbot dashboard
-> (https://syzkaller.appspot.com/upstream), you can see bugs with the
-> original crash 2+ years ago, but they are still pretty much relevant.
-> The default kernel development process strategy for invalidating bug
-> reports by burying them in oblivion has advantages, but also
-> downsides. FWIW syzbot prefers explicit status tracking.
+Larry Finger <Larry.Finger@lwfinger.net> writes:
 
-I have no objection to explicit status tracking or getting pinged on old
-open bugs.  I suppose I don't even mind the belated bisection, I'd probably
-whine if syzbot didn't do the bisection :-).
+> On 11/25/19 9:02 AM, Phong Tran wrote:
+>> correct usage prototype of callback in tasklet_init().
+>> Report by https://github.com/KSPP/linux/issues/20
+>>
+>> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+>> ---
+>>   drivers/net/wireless/intel/ipw2x00/ipw2100.c   | 7 ++++---
+>>   drivers/net/wireless/intel/ipw2x00/ipw2200.c   | 5 +++--
+>>   drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+>>   drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+>>   4 files changed, 13 insertions(+), 9 deletions(-)
+>
+> This patch is "fixing" three different drivers and should be split
+> into at least two parts. To be consistent with previous practices, the
+> subject for the two should be "intel: ipw2100: ...." and "intel:
+> iwlegacy: ...."
 
-What's annoying is the report doesn't provide any information about when it
-originally occured or on what kernel it originally failed.  It didn't occur
-to me that the original bug might be a year old and I only realized it was
-from an old kernel when I saw "4.19.0-rc4+" in the dashboard's sample crash
-log.  Knowing that the original crash was a year old would have saved me
-5-10 minutes of getting myself oriented.
+Actually, please drop even "intel:". So "ipw2x00: " and "iwlegacy: " is
+enough.
 
-Could syzbot provide the date and reported kernel version (assuming the
-kernel version won't be misleading) of the original failure in its reports?
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
