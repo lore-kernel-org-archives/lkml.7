@@ -2,91 +2,155 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA29C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFB1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC87207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57CF2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSZsoT+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKYTlx (ORCPT
+        id S1727072AbfKYTmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:41:53 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36743 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfKYTlw (ORCPT
+        Mon, 25 Nov 2019 14:42:35 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:47097 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfKYTmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:41:52 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b19so7870500pfd.3;
-        Mon, 25 Nov 2019 11:41:52 -0800 (PST)
+        Mon, 25 Nov 2019 14:42:35 -0500
+Received: by mail-ed1-f68.google.com with SMTP id t11so13814873eds.13;
+        Mon, 25 Nov 2019 11:42:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rf3FSO6RUL2bsEm6SKsnvhlblxptOIwHTATB1ub2D/4=;
+        b=oSZsoT+f47GWVRRm3j7pkBFxUkbOyax80NZhlw5o2tcfTYK8m6gcG7oAsJ4KNb3Dzd
+         p+GEpKoY1ufJmF6JVVgRMTT4QDkrbpz8utavFZE3LGRnn55EoSFKYHtCDRFDpjzfn/Jy
+         ejNHceETPcc9zO0k3ZtK4HeDJ5F861+/0qLrt2cqeANxp38EW5uHpOZcDw7Axtzwiq26
+         64MDwdAGMOCtVbYMd8tlB+/As4jZsiy83uLPTVLmfOh03k9FqYNs6OTwadYyQyBaquVH
+         /qZqs0Dl43hCquTl9K3GKZcJ6d8ZpBWSi0uFs2JlXk637JrOdWcmeOVoNwj2TVDX/qBs
+         YRHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=42S2SQ4poaCqsC6y0USRopdPGs/iLjn//hI75VsW/20=;
-        b=NNiTz/N/jn3ECok0ZBNk3dM9uZjJ9fxSurv0c3tnygJwrnfEwIxDsXwBCGiaPTMuJH
-         VN9BqrpzT4Y7y6/oGR/gofidm0pEeb2uZmx2EsBAWcJ/nxPHd2jjZ/ytek5mpB4tAdAc
-         PZwxxS4R2/3kR1dsYvLWrMe6wOre/gkc2jhiacLulnq4CnqhA9kB2H0RJ+F7mzMS8T+x
-         M20oW8/OjjZOdBlVOjmOjH94HRVCUnDYWDdXQVISn6QUsWPjgxnMOc2qsyuQ32wJUdsR
-         gSGEWuN4CjubN5YxfZJdkJJ4NMcOrAPIUyqkRCBGR5NofohbyZvzKmE3pjnYxkB+q3R9
-         4uNw==
-X-Gm-Message-State: APjAAAUPq0iFfhBUtIwilfBKgsbEZSWgKkmk/8QJO+45as9KAJIjsDT8
-        6OSp8yFX7/exOAJp9FrnJuImkgwi
-X-Google-Smtp-Source: APXvYqwdQYkz+o5leZlnK7ZcW9MZs/t4kmmvK7Y8obAlwUG16DQsWhXBgHy6kz+uCDoeegQX6aE9Cw==
-X-Received: by 2002:a65:4ccf:: with SMTP id n15mr35051760pgt.248.1574710911337;
-        Mon, 25 Nov 2019 11:41:51 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id s2sm9668983pfb.109.2019.11.25.11.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2019 11:41:50 -0800 (PST)
-Subject: Re: [PATCH v2] loop: avoid EAGAIN, if offset or block_size are
- changed
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-References: <20190518004751.18962-1-jaegeuk@kernel.org>
- <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
- <1e1aae74-bd6b-dddb-0c88-660aac33872c@acm.org>
- <20191125175913.GC71634@jaegeuk-macbookpro.roam.corp.google.com>
- <a4e5d6bd-3685-379a-c388-cd2871827b21@acm.org>
- <20191125192251.GA76721@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <baaf9725-09b4-3f2d-1408-ead415f5c20d@acm.org>
-Date:   Mon, 25 Nov 2019 11:41:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rf3FSO6RUL2bsEm6SKsnvhlblxptOIwHTATB1ub2D/4=;
+        b=miyy/v90QrwLWfkbbJCQ1MZigF/tepgGUutvmNSBm5HkHpUKMxQv4XdkwJx1Ue+/zT
+         myFiabC+iIenkpg/yfLYANn6I5gZwidcRxKDLrmtztIE80k2XUIIJpreRvtdSdq61lJm
+         wDokUEENtyTsVEQXc4qcSaAl38Bh8OH1sRD8JEeUA9SKRkV71a/HZ2oHQf+qvHyy+6Lj
+         5duuRuQmtcDC/9P6B7u37oqkb7zIQpeM6ebWvJVGarC0sYdyntiCKL+M0fqrzZfSTZ7x
+         WycZraT1pds3MyjKC/ufkOLnppGUMB4mft8qgQSh0tG5dohX8fhQFYAbs/Rlo8BOlX2v
+         TvlA==
+X-Gm-Message-State: APjAAAWPDn+enVIZ05OrJ4AfsKiYNw0KcgDFYsmDi/Q9g82l9fJOkf56
+        evMxOEDwhRxVQrJzVlR2DzzlEsr5OS189LIz18s=
+X-Google-Smtp-Source: APXvYqyrTzA9w7jUCwyffl2Ii7h5REuqFEe9pHEjYqfkJ4Rk0ikLFyjWW95W5CsA4t+ayxFALMnt5vIEn160QKL2344=
+X-Received: by 2002:a17:906:4910:: with SMTP id b16mr38694023ejq.133.1574710953610;
+ Mon, 25 Nov 2019 11:42:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191125192251.GA76721@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <3e9d6100-6965-da85-c310-6e1a9318f61d@huawei.com> <20191125124110.145595-1-maowenan@huawei.com>
+In-Reply-To: <20191125124110.145595-1-maowenan@huawei.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 25 Nov 2019 21:42:22 +0200
+Message-ID: <CA+h21hphrWr84wHGj1U4fVHd8OdmpGVPeouznCCPrZC05PLcig@mail.gmail.com>
+Subject: Re: [PATCH net v3] net: dsa: ocelot: add dependency for NET_DSA_MSCC_FELIX
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/25/19 11:22 AM, Jaegeuk Kim wrote:
-> On 11/25, Bart Van Assche wrote:
->> Thank you for the additional and very helpful clarification. Can you have a look at the (totally untested) patch below? I prefer that version because it prevents concurrent processing of requests and syncing/killing the bdev.
-> 
-> Yeah, I thought this was much cleaner way, but wasn't sure it could be doable
-> to sync|kill block device after freezing the queue. Is it okay?
+On Mon, 25 Nov 2019 at 14:47, Mao Wenan <maowenan@huawei.com> wrote:
+>
+> If CONFIG_NET_DSA_MSCC_FELIX=y, and CONFIG_NET_VENDOR_MICROSEMI=n,
+> below errors can be found:
+> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_del':
+> felix.c:(.text+0x26e): undefined reference to `ocelot_vlan_del'
+> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_add':
+> felix.c:(.text+0x352): undefined reference to `ocelot_vlan_add'
+>
+> and warning as below:
+> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+> Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
+> NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+> Selected by [y]:
+> NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y]
+> && NET_DSA [=y] && PCI [=y]
+>
+> This patch is to select NET_VENDOR_MICROSEMI and add dependency
+> NET_SWITCHDEV, HAS_IOMEM for NET_DSA_MSCC_FELIX.
+>
+> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
 
-Hi Jaegeuk,
+NET_DSA already selects NET_SWITCHDEV
+MSCC_OCELOT_SWITCH already selects HAS_IOMEM
+As for NET_VENDOR_MICROSEMI, does anyone care what are the results
+after Kconfig prints this?
 
-That patch was based on an incorrect interpretation of the meaning of 
-lo_device. After having taken another loop at the block driver, I don't 
-think that calling sync after freezing the queue is OK. How about using 
-the following call sequence:
-* sync_blockdev()
-* blk_mq_freeze_queue()
-* kill_bdev()
+WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+  Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
+NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y] &&
+NET_DSA [=y] && PCI [=y]
 
-Thanks,
+WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+  Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
+NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y] &&
+NET_DSA [=y] && PCI [=y]
 
-Bart.
+WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+  Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
+NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y] &&
+NET_DSA [=y] && PCI [=y]
+
+If yes. why?
+
+It's like executing code after return.
+
+>  v3: add depends on NET_SWITCHDEV and HAS_IOMEM.
+>  v2: modify 'depends on' to 'select'.
+>  drivers/net/dsa/ocelot/Kconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
+> index 0031ca814346..1ec2dfbd76ce 100644
+> --- a/drivers/net/dsa/ocelot/Kconfig
+> +++ b/drivers/net/dsa/ocelot/Kconfig
+> @@ -2,6 +2,9 @@
+>  config NET_DSA_MSCC_FELIX
+>         tristate "Ocelot / Felix Ethernet switch support"
+>         depends on NET_DSA && PCI
+> +       depends on NET_SWITCHDEV
+> +       depends on HAS_IOMEM
+> +       select NET_VENDOR_MICROSEMI
+>         select MSCC_OCELOT_SWITCH
+>         select NET_DSA_TAG_OCELOT
+>         help
+> --
+> 2.20.1
+>
+
+Regards,
+-Vladimir
