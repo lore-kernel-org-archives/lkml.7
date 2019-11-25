@@ -2,133 +2,98 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC84CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AF5C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4752082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D3E2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 19:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKYT2J (ORCPT
+        id S1726016AbfKYTbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:28:09 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:46265 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfKYT2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:28:08 -0500
-Received: by mail-il1-f197.google.com with SMTP id i74so14541159ild.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 11:28:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vepHw2FCtDai2doID+pQcicHSRg4AAVaV69lUY8SeNc=;
-        b=GToI0KKBGSOc/IrajxeqeZR/onSeTmANLGcxaGG9KjgbJKgGZEwYZBWujoCz0lPLdN
-         xJN9HK64Ct5lL9srbiRfcIPYIvmwxUFHugaOdglWX21NjRtod09hX0TxjoCJEQsHAJzP
-         QNyUAufZbKkA4BjJ8nlRs1ujLt/GHdy+Z0EcOST5rrcU0k3s2RtI0+lCygR8ogW5ohTB
-         Vhpr/b/1KXO2lVWbXUfg2yDbzIlFtWB0OgMpYZN+TsPPtif8aY5nEoUJx8FFqlMlRawy
-         5arAfiOY+n71p+wqYiAj7xYWbiPO1T+AyNJscD4EfQ+XqCUds5KfxF0Z1MDWIcF3+C2L
-         zeJA==
-X-Gm-Message-State: APjAAAUmWt29iPx8IqUZh2vMnZYD42J6FAc9WVAyjq6oTkSr6LlefUnA
-        RzTV4gmIOlu34sBLxspjV7oshz580ahoVeXlJcL3pXY5P5y9
-X-Google-Smtp-Source: APXvYqy9j/n9HPTJPkHiUlSCPsZh3oe7S2pyT8r5kW0yvcYxtwD0vMn4rZli+fUaFR17ZHhevavNreq77VK2Vn/4uWHbujIQHC/t
-MIME-Version: 1.0
-X-Received: by 2002:a92:9e0e:: with SMTP id q14mr20742629ili.151.1574710088077;
- Mon, 25 Nov 2019 11:28:08 -0800 (PST)
-Date:   Mon, 25 Nov 2019 11:28:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006c9f4e059830c33c@google.com>
-Subject: general protection fault in selinux_socket_sendmsg (2)
-From:   syzbot <syzbot+314db21f0d5c1f53856c@syzkaller.appspotmail.com>
-To:     andriin@fb.com, anton@enomsg.org, ast@kernel.org,
-        bpf@vger.kernel.org, ccross@android.com, daniel@iogearbox.net,
-        eparis@parisplace.org, kafai@fb.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        paul@paul-moore.com, sds@tycho.nsa.gov, selinux@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tony.luck@intel.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Mon, 25 Nov 2019 14:31:12 -0500
+Received: from mga12.intel.com ([192.55.52.136]:22629 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfKYTbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 14:31:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 11:31:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,242,1571727600"; 
+   d="scan'208";a="216994573"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2019 11:31:11 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "David Laight" <David.Laight@ACULAB.COM>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v2 0/4] Fix some 4-byte vs. 8-byte alignment issues in atomic bit operations
+Date:   Mon, 25 Nov 2019 11:43:00 -0800
+Message-Id: <1574710984-208305-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+A split lock is an unaligned atomic operation that spans two cache
+lines. The split lock access needs to hold bus lock and will
+degrade performance.
 
-syzbot found the following crash on:
+Accessing one split lock long can take over one thousand extra cycles
+than atomically accessing one unaligned long within one cache line.
+And while the split lock access holds the bus lock, any other
+memory accesses are not allowed and the overall memory access performance
+is degraded.
 
-HEAD commit:    6b8a7946 Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1680ab8ce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4737c15fc47048f2
-dashboard link: https://syzkaller.appspot.com/bug?extid=314db21f0d5c1f53856c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Because badly performance impact by split lock, this patch series
+solve the split lock issues instead of other alignment issues.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+These parts are all simple fixes which are a necessary pre-cursor 
+before we can enable #AC traps for split lock access. But they 
+are also worthwhile performance fixes in their own right. So 
+no sense in holding them back while we discuss the merits of 
+the rest of the series. 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+314db21f0d5c1f53856c@syzkaller.appspotmail.com
+The alignment issues may be fixed by changing the atomic bit operations
+APIs e.g. new set_bit_32() for 4-byte alignment. But the fixes will
+be complex because they touch a lot of call sites and architectures.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 4616 Comm: kworker/1:0 Not tainted 5.4.0-rc8-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: krxrpcd rxrpc_peer_keepalive_worker
-RIP: 0010:selinux_socket_sendmsg+0x22/0x40 security/selinux/hooks.c:4828
-Code: c3 e8 c2 40 ac fe eb e8 55 48 89 e5 53 48 89 fb e8 43 d5 70 fe 48 8d  
-7b 18 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-11 48 8b 7b 18 be 04 00 00 00 e8 fa fb ff ff 5b 5d
-RSP: 0000:ffff888089fd79f0 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff83427eb5
-RDX: 0000000000000003 RSI: ffffffff830281dd RDI: 0000000000000018
-RBP: ffff888089fd79f8 R08: ffff888098698400 R09: fffffbfff14f0154
-R10: fffffbfff14f0153 R11: ffffffff8a780a9f R12: dffffc0000000000
-R13: ffff888089fd7b20 R14: ffff888089fd7b20 R15: 000000000000001d
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c000064008 CR3: 00000000a87b8000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  security_socket_sendmsg+0x77/0xc0 security/security.c:2013
-  sock_sendmsg+0x45/0x130 net/socket.c:654
-  kernel_sendmsg+0x44/0x50 net/socket.c:677
-  rxrpc_send_keepalive+0x1ff/0x940 net/rxrpc/output.c:655
-  rxrpc_peer_keepalive_dispatch net/rxrpc/peer_event.c:376 [inline]
-  rxrpc_peer_keepalive_worker+0x7be/0xd02 net/rxrpc/peer_event.c:437
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace f42fd501ecc72d8d ]---
-RIP: 0010:selinux_socket_sendmsg+0x22/0x40 security/selinux/hooks.c:4828
-Code: c3 e8 c2 40 ac fe eb e8 55 48 89 e5 53 48 89 fb e8 43 d5 70 fe 48 8d  
-7b 18 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-11 48 8b 7b 18 be 04 00 00 00 e8 fa fb ff ff 5b 5d
-RSP: 0000:ffff888089fd79f0 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff83427eb5
-RDX: 0000000000000003 RSI: ffffffff830281dd RDI: 0000000000000018
-RBP: ffff888089fd79f8 R08: ffff888098698400 R09: fffffbfff14f0154
-R10: fffffbfff14f0153 R11: ffffffff8a780a9f R12: dffffc0000000000
-R13: ffff888089fd7b20 R14: ffff888089fd7b20 R15: 000000000000001d
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9c00057120 CR3: 00000000a3e31000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Change Log:
+v2:
+- Remove patch 1 and 3 in v1 because they are in the tip tree already.
+- Add new patches 2-4 per David Laight's comments:
+https://lore.kernel.org/lkml/e7c75de9191847ed98c573f9ad871518@AcuMS.aculab.com/
+Running "grep -r --include '*.[ch]' '_bit([^(]*, *([^)]*\*)' ."
+returns about 200 results. Most of them don't have split lock issues.
 
+Fenghua Yu (3):
+  xen-pcifront: Align address of flags to size of unsigned long
+  mtd: rawnand: fsmc: Change to non-atomic bit operations
+  x86/mce: Force alignment for atomic bit operations
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Peter Zijlstra (1):
+  drivers/net/b44: Change to non-atomic bit operations
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ arch/x86/include/asm/mce.h          | 3 ++-
+ drivers/mtd/nand/raw/fsmc_nand.c    | 4 ++--
+ drivers/net/ethernet/broadcom/b44.c | 4 ++--
+ include/xen/interface/io/pciif.h    | 7 +++++--
+ 4 files changed, 11 insertions(+), 7 deletions(-)
+
+-- 
+2.19.1
+
