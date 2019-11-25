@@ -2,154 +2,182 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BDFC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2095DC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A4D207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCA32071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 01:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="u9zngwTi"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="R1fYDaTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfKYBfK (ORCPT
+        id S1727216AbfKYBgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 20:35:10 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:56859 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727072AbfKYBfK (ORCPT
+        Sun, 24 Nov 2019 20:36:10 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:36521 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfKYBgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 20:35:10 -0500
-X-UUID: 109875d1632a427ba820bc611fca374b-20191125
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=00LGHORmokkPoPcNjJ+Zddp+9DEjWWvNVgNl7wIE5SU=;
-        b=u9zngwTiGqJDzn9Jqh1cHN4GjJi2HkH+KJ7qebZcuLj/yLdIocL381vBiZkadMpKGg3oPbs+63qcw7oMNG/aObspgd/15YhurVLq5AktrI8Q3VKQBdMXc6eswaJJf2da8ujndfdk+TXTgX6/5q3CCqSwdSsBUXh/pKifEFHIAVU=;
-X-UUID: 109875d1632a427ba820bc611fca374b-20191125
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1326527061; Mon, 25 Nov 2019 09:35:04 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 25 Nov 2019 09:34:55 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 25 Nov 2019 09:35:30 +0800
-Message-ID: <1574645703.4712.7.camel@mtksdaap41>
-Subject: Re: [PATCH v1 10/12] soc: mediatek: cmdq: add loop function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 25 Nov 2019 09:35:03 +0800
-In-Reply-To: <1574418540.11977.19.camel@mtkswgap22>
-References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574327552-11806-11-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574415960.19450.23.camel@mtksdaap41>
-         <1574418540.11977.19.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 24 Nov 2019 20:36:10 -0500
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id xAP1Zudx011089;
+        Mon, 25 Nov 2019 10:35:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xAP1Zudx011089
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1574645757;
+        bh=4zS9ONB1lX0XUDCYAcZW6UgeXuejST5UVyfhFO/g8d8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R1fYDaTvWZSIXPD0BXg/G6ZmTOZMjjFenSgrGicPFQT+3Y3g/m/ZrhOyG2ZLObk9H
+         jSDKaIdbzPFBTfl1xJZMsZJ81783Qg75CmGSqzoPciMOvaYC3saanAxYYIjtyXFHC5
+         XpMkLxiVblDfIwKlBHkAczgogRU8wVT/JOwppExseIgxtiiL6HSRfwU+JnROtKzXCB
+         0majHYE5wni9B61LcBG+CKkDMhKnKSmaJuTncJPy2oI75R0i2izRD9kV1YGyZXqnXf
+         k9MTvxkdR0dxuhxT8t1KHwfECJzy7sfW/CyqMeI3qoUrxjTmPVy291lkq65GHgy3ml
+         OF0e3gT7gcnCw==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id m5so4261547vsj.3;
+        Sun, 24 Nov 2019 17:35:57 -0800 (PST)
+X-Gm-Message-State: APjAAAXpe2LBex4zkGOTVlJWX6iHVBBIuVi08a/uJ1luAHRoIHv/MW5J
+        +1YG//cQa0FhCG/x9fwv8Z0BDfWP+C17OjPg++s=
+X-Google-Smtp-Source: APXvYqzsFOr3V5Ucu7w0+x7MvZdRFWrrwm3B2vqt1VuyZEdFouFkB+5X8be1VVTCyuUplwtsLKcFkuk0UX620+G6KNg=
+X-Received: by 2002:a05:6102:726:: with SMTP id u6mr17181884vsg.179.1574645756005;
+ Sun, 24 Nov 2019 17:35:56 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20191113071202.11287-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20191113071202.11287-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 25 Nov 2019 10:35:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARSSSORFCrTt0abgiyUffnTtgFFh8XbVNvbkxZ=NbcX_A@mail.gmail.com>
+Message-ID: <CAK7LNARSSSORFCrTt0abgiyUffnTtgFFh8XbVNvbkxZ=NbcX_A@mail.gmail.com>
+Subject: Re: [PATCH v3] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
+To:     DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDE5LTExLTIyIGF0IDE4OjI5ICswODAwLCBEZW5uaXMt
-WUMgSHNpZWggd3JvdGU6DQo+IEhpIENLLA0KPiANCj4gT24gRnJpLCAyMDE5LTExLTIyIGF0IDE3
-OjQ2ICswODAwLCBDSyBIdSB3cm90ZToNCj4gPiBIaSwgRGVubmlzOg0KPiA+IA0KPiA+IE9uIFRo
-dSwgMjAxOS0xMS0yMSBhdCAxNzoxMiArMDgwMCwgRGVubmlzIFlDIEhzaWVoIHdyb3RlOg0KPiA+
-ID4gQWRkIGZpbmFsaXplIGxvb3AgZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgZnVuY3Rpb25zIHdo
-aWNoIGxvb3Agd2hvbGUgcGt0DQo+ID4gPiBpbiBnY2UgaGFyZHdhcmUgdGhyZWFkIHdpdGhvdXQg
-Y3B1IG9wZXJhdGlvbi4NCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhz
-aWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgfCAgIDQxICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrDQo+ID4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRr
-LWNtZHEuaCAgfCAgICA4ICsrKysrKysNCj4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDQ5IGluc2Vy
-dGlvbnMoKykNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVr
-L210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
-LmMNCj4gPiA+IGluZGV4IDQyMzVjZjguLjNiMTAyNDEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ID4gKysrIGIvZHJpdmVycy9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiA+IEBAIC0zODUsMTIgKzM4NSwyNyBA
-QCBpbnQgY21kcV9wa3RfYXNzaWduKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgcmVnX2lkeCwg
-dTMyIHZhbHVlKQ0KPiA+ID4gIH0NCj4gPiA+ICBFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X2Fzc2ln
-bik7DQo+ID4gPiAgDQo+ID4gPiArc3RhdGljIGJvb2wgY21kcV9wa3RfZmluYWxpemVkKHN0cnVj
-dCBjbWRxX3BrdCAqcGt0KQ0KPiA+ID4gK3sNCj4gPiA+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rp
-b24gKmluc3Q7DQo+ID4gPiArDQo+ID4gPiArCWlmIChwa3QtPmNtZF9idWZfc2l6ZSA8IDIgKiBD
-TURRX0lOU1RfU0laRSkNCj4gPiA+ICsJCXJldHVybiBmYWxzZTsNCj4gPiA+ICsNCj4gPiA+ICsJ
-aW5zdCA9IHBrdC0+dmFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplIC0gMiAqIENNRFFfSU5TVF9T
-SVpFOw0KPiA+ID4gKwlyZXR1cm4gaW5zdC0+b3AgPT0gQ01EUV9DT0RFX0VPQzsNCj4gPiA+ICt9
-DQo+ID4gPiArDQo+ID4gPiAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21k
-cV9wa3QgKnBrdCkNCj4gPiA+ICB7DQo+ID4gPiAgCXN0cnVjdCBjbWRxX2NsaWVudCAqY2wgPSBw
-a3QtPmNsOw0KPiA+ID4gIAlzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsN
-Cj4gPiA+ICAJaW50IGVycjsNCj4gPiA+ICANCj4gPiA+ICsJLyogZG8gbm90IGZpbmFsaXplIHR3
-aWNlICovDQo+ID4gPiArCWlmIChjbWRxX3BrdF9maW5hbGl6ZWQocGt0KSkNCj4gPiA+ICsJCXJl
-dHVybiAwOw0KPiA+ID4gKw0KPiA+ID4gIAkvKiBpbnNlcnQgRU9DIGFuZCBnZW5lcmF0ZSBJUlEg
-Zm9yIGVhY2ggY29tbWFuZCBpdGVyYXRpb24gKi8NCj4gPiA+ICAJaW5zdC5vcCA9IENNRFFfQ09E
-RV9FT0M7DQo+ID4gPiAgCWluc3QudmFsdWUgPSBDTURRX0VPQ19JUlFfRU47DQo+ID4gPiBAQCAt
-NDA2LDYgKzQyMSwzMiBAQCBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRx
-X3BrdCAqcGt0KQ0KPiA+ID4gIAlyZXR1cm4gZXJyOw0KPiA+ID4gIH0NCj4gPiA+ICANCj4gPiA+
-ICtpbnQgY21kcV9wa3RfZmluYWxpemVfbG9vcChzdHJ1Y3QgY21kcV9wa3QgKnBrdCkNCj4gPiA+
-ICt7DQo+ID4gPiArCXN0cnVjdCBjbWRxX2NsaWVudCAqY2wgPSBwa3QtPmNsOw0KPiA+ID4gKwlz
-dHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gPiA+ICsJaW50IGVycjsN
-Cj4gPiA+ICsNCj4gPiA+ICsJLyogZG8gbm90IGZpbmFsaXplIHR3aWNlICovDQo+ID4gPiArCWlm
-IChjbWRxX3BrdF9maW5hbGl6ZWQocGt0KSkNCj4gPiA+ICsJCXJldHVybiAwOw0KPiA+IA0KPiA+
-IFdoeSBub3QganVzdCBleHBvcnQgY21kcV9wa3RfZmluYWxpemUoKSBmb3IgdXNlciBhbmQgZG8g
-bm90IGNhbGwNCj4gPiBjbWRxX3BrdF9maW5hbGl6ZSgpIGluIGNtZHFfcGt0X2ZsdXNoX2FzeW5j
-KCksIHNvIHlvdSBkb24ndCBuZWVkIHRvDQo+ID4gY2hlY2sgdGhpcy4NCj4gPiANCj4gPiBJIHdv
-dWxkIGJlIG1vcmUgbGlrZSB0byBleHBvcnQgQVBJIHN1Y2ggYXMgY21kcV9wa3RfZW9jKCksDQo+
-ID4gY21kcV9wa3RfanVtcCgpLCB0aGlzIHdvdWxkIHByb3ZpZGUgbW9yZSBmbGV4aWJpbGl0eSBm
-b3IgdXNlciB0bw0KPiA+IGFzc2VtYmxlIHRoZSBjb21tYW5kIGl0IHdhbnQuDQo+ID4gDQo+ID4g
-UmVnYXJkcywNCj4gPiBDSw0KPiANCj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQuDQo+IA0KPiBT
-aG91bGQgd2UgYmFja3dhcmQgY29tcGF0aWJsZSB3aXRoIGV4aXN0aW5nIGNsaWVudHM/IFJlbW92
-ZSBmaW5hbGl6ZSBpbg0KPiBmbHVzaCB3aWxsIGNhdXNlIGV4aXN0aW5nIGNsaWVudCBmbHVzaCB3
-aXRob3V0IElSUS4NCg0KVGhlIGxhdGVzdCBrZXJuZWwgKHY1LjQtcmM4KSBzdGlsbCBoYXMgbm8g
-Y2xpZW50cyB3aGljaCB1c2UgY21kcSBsYW5kZWQNCm9uIHVwc3RyZWFtLCBhbmQgd2UgZG9uJ3Qg
-bmVlZCB0byBjb25zaWRlciBiYWNrd2FyZCBjb21wYXRpYmxlLiBbMV0gaXMNCnRoZSBleGFtcGxl
-IHRoYXQgaW9tbXUgd291bGQgcmVwbGFjZSB0aGUgcHJvcHJpZXRhcnkgaW50ZXJmYWNlIHdpdGgN
-CnN0YW5kYXJkIGludGVyZmFjZSwgc28gaXQgd291bGQgbW9kaWZ5IGFsbCBjbGllbnRzIHdoaWNo
-IHVzZSB0aGUNCnByb3ByaWV0YXJ5IGludGVyZmFjZS4gU28gd2hhdCB5b3Ugc2hvdWxkIGRvIGlz
-IHRvIG1vZGlmeSBjbGllbnQgYXMNCndlbGwuDQoNClsxXQ0KaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3QvP3Nlcmllcz0xNjg4MDENCg0KUmVn
-YXJkcywNCkNLDQoNCj4gDQo+IA0KPiBSZWdhcmRzLA0KPiBEZW5uaXMNCj4gDQo+ID4gDQo+ID4g
-PiArDQo+ID4gPiArCS8qIGluc2VydCBFT0MgYW5kIGdlbmVyYXRlIElSUSBmb3IgZWFjaCBjb21t
-YW5kIGl0ZXJhdGlvbiAqLw0KPiA+ID4gKwlpbnN0Lm9wID0gQ01EUV9DT0RFX0VPQzsNCj4gPiA+
-ICsJZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiA+ICsJaWYg
-KGVyciA8IDApDQo+ID4gPiArCQlyZXR1cm4gZXJyOw0KPiA+ID4gKw0KPiA+ID4gKwkvKiBKVU1Q
-IGFiYW9sdXRlIHRvIGJlZ2luICovDQo+ID4gPiArCWluc3Qub3AgPSBDTURRX0NPREVfSlVNUDsN
-Cj4gPiA+ICsJaW5zdC5vZmZzZXQgPSAxOw0KPiA+ID4gKwlpbnN0LnZhbHVlID0gcGt0LT5wYV9i
-YXNlID4+IGNtZHFfbWJveF9zaGlmdChjbC0+Y2hhbik7DQo+ID4gPiArCWVyciA9IGNtZHFfcGt0
-X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiBlcnI7
-DQo+ID4gPiArfQ0KPiA+ID4gK0VYUE9SVF9TWU1CT0woY21kcV9wa3RfZmluYWxpemVfbG9vcCk7
-DQo+ID4gPiArDQo+ID4gPiAgc3RhdGljIHZvaWQgY21kcV9wa3RfZmx1c2hfYXN5bmNfY2Ioc3Ry
-dWN0IGNtZHFfY2JfZGF0YSBkYXRhKQ0KPiA+ID4gIHsNCj4gPiA+ICAJc3RydWN0IGNtZHFfcGt0
-ICpwa3QgPSAoc3RydWN0IGNtZHFfcGt0ICopZGF0YS5kYXRhOw0KPiA+ID4gZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggYi9pbmNsdWRlL2xpbnV4L3Nv
-Yy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gPiBpbmRleCBiMzQ3NGYyLi43N2U4OTQ0IDEwMDY0
-NA0KPiA+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+
-ID4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+ID4gQEAg
-LTIwMyw2ICsyMDMsMTQgQEAgaW50IGNtZHFfcGt0X3BvbGxfbWFzayhzdHJ1Y3QgY21kcV9wa3Qg
-KnBrdCwgdTggc3Vic3lzLA0KPiA+ID4gIGludCBjbWRxX3BrdF9hc3NpZ24oc3RydWN0IGNtZHFf
-cGt0ICpwa3QsIHUxNiByZWdfaWR4LCB1MzIgdmFsdWUpOw0KPiA+ID4gIA0KPiA+ID4gIC8qKg0K
-PiA+ID4gKyAqIGNtZHFfcGt0X2ZpbmFsaXplX2xvb3AoKSAtIEFwcGVuZCBFT0MgYW5kIGp1bXAg
-Y29tbWFuZCB0byBsb29wIHBrdC4NCj4gPiA+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNrZXQNCj4g
-PiA+ICsgKg0KPiA+ID4gKyAqIFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3Ig
-Y29kZSBpcyByZXR1cm5lZA0KPiA+ID4gKyAqLw0KPiA+ID4gK2ludCBjbWRxX3BrdF9maW5hbGl6
-ZV9sb29wKHN0cnVjdCBjbWRxX3BrdCAqcGt0KTsNCj4gPiA+ICsNCj4gPiA+ICsvKioNCj4gPiA+
-ICAgKiBjbWRxX3BrdF9mbHVzaF9hc3luYygpIC0gdHJpZ2dlciBDTURRIHRvIGFzeW5jaHJvbm91
-c2x5IGV4ZWN1dGUgdGhlIENNRFENCj4gPiA+ICAgKiAgICAgICAgICAgICAgICAgICAgICAgICAg
-cGFja2V0IGFuZCBjYWxsIGJhY2sgYXQgdGhlIGVuZCBvZiBkb25lIHBhY2tldA0KPiA+ID4gICAq
-IEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiA+IA0KPiA+IA0KPiANCj4gDQoNCg==
+On Wed, Nov 13, 2019 at 4:13 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> The DTC v1.5.1 added references to (U)INT32_MAX.
+>
+> This is no problem for user-space programs since <stdint.h> defines
+> (U)INT32_MAX along with (u)int32_t.
+>
+> For the kernel space, libfdt_env.h needs to be adjusted before we
+> pull in the changes.
+>
+> In the kernel, we usually use s/u32 instead of (u)int32_t for the
+> fixed-width types.
+>
+> Accordingly, we already have S/U32_MAX for their max values.
+> So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
+>
+> Instead, add them to the in-kernel libfdt_env.h to compile the
+> latest libfdt.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
+Please let me ping this
+in case this is useful for future resync.
+
+
+
+
+>
+> My initial plan was to change this in a series of 3 patches
+> since it is clean, and reduces the code.
+>
+> [1/3] https://lore.kernel.org/patchwork/patch/1147095/
+> [2/3] https://lore.kernel.org/patchwork/patch/1147096/
+> [3/3] https://lore.kernel.org/patchwork/patch/1147097/
+>
+> 1/3 is stuck in the license bikeshed.
+>
+> For 2/3, I have not been able to get Ack from Russell.
+>
+> So, I chose a straight-forward fixup.
+>
+>
+> Changes in v3:
+>  - Resend as a single patch
+>
+>  arch/arm/boot/compressed/libfdt_env.h | 4 +++-
+>  arch/powerpc/boot/libfdt_env.h        | 2 ++
+>  include/linux/libfdt_env.h            | 3 +++
+>  3 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+> index b36c0289a308..6a0f1f524466 100644
+> --- a/arch/arm/boot/compressed/libfdt_env.h
+> +++ b/arch/arm/boot/compressed/libfdt_env.h
+> @@ -2,11 +2,13 @@
+>  #ifndef _ARM_LIBFDT_ENV_H
+>  #define _ARM_LIBFDT_ENV_H
+>
+> +#include <linux/limits.h>
+>  #include <linux/types.h>
+>  #include <linux/string.h>
+>  #include <asm/byteorder.h>
+>
+> -#define INT_MAX                        ((int)(~0U>>1))
+> +#define INT32_MAX      S32_MAX
+> +#define UINT32_MAX     U32_MAX
+>
+>  typedef __be16 fdt16_t;
+>  typedef __be32 fdt32_t;
+> diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+> index 2abc8e83b95e..9757d4f6331e 100644
+> --- a/arch/powerpc/boot/libfdt_env.h
+> +++ b/arch/powerpc/boot/libfdt_env.h
+> @@ -6,6 +6,8 @@
+>  #include <string.h>
+>
+>  #define INT_MAX                        ((int)(~0U>>1))
+> +#define UINT32_MAX             ((u32)~0U)
+> +#define INT32_MAX              ((s32)(UINT32_MAX >> 1))
+>
+>  #include "of.h"
+>
+> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+> index edb0f0c30904..1adf54aad2df 100644
+> --- a/include/linux/libfdt_env.h
+> +++ b/include/linux/libfdt_env.h
+> @@ -7,6 +7,9 @@
+>
+>  #include <asm/byteorder.h>
+>
+> +#define INT32_MAX      S32_MAX
+> +#define UINT32_MAX     U32_MAX
+> +
+>  typedef __be16 fdt16_t;
+>  typedef __be32 fdt32_t;
+>  typedef __be64 fdt64_t;
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
