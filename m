@@ -2,97 +2,96 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04B3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F135AC43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BBA2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Rw8lPNsi";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="R1A2l2zQ"
+	by mail.kernel.org (Postfix) with ESMTP id C360520869
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 17:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574704755;
+	bh=KeQcj2AKHVhcae5ILgNCmFk/tRvBlisVKhy3DFIZA1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ms0Da+HBn0ld/VdDMiMCrvNqeGfGf108aLOC13nRZWbl3f3jCMIOYSWqBojUTQKwP
+	 KfIKQe6RVESRNUtFOUeK0H0GqerLsEKihUazV4ZTOfjRI6/DHhljp7HybmV2Q+uvJu
+	 jwQwIHcJZUWhZKIWSgcnUBKuqb1dsY/HuQk4gNhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbfKYR4E (ORCPT
+        id S1729255AbfKYR7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:56:04 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:53792
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725823AbfKYR4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:56:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574704563;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=IrTYOqMqEOxm64GeOhR8U6dXnIpA0jutoDa4mZ0DD3k=;
-        b=Rw8lPNsipmCaUViAQtvN0xjhd9Tica/Ps+4FAvItNFhKPy1+T60FDFKkDny+Cin5
-        BwdRDWH3NphC+KI96IBiBcNNra3R5EJo31mOtlJyDq4F8TgyDgZDMBppoK5cmOtVFr4
-        73QbtYLZ+YF5NYmIH3omYUjMoZMZMjRwSGVfiG/0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574704563;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=IrTYOqMqEOxm64GeOhR8U6dXnIpA0jutoDa4mZ0DD3k=;
-        b=R1A2l2zQbt8Yay4Sc1/PrD+T1iWZc74BW6q8s4B91JS/8Pe6fQQEwaOMOd12Ay5k
-        F83QwYvYWOXblkjis5lXTX0CT0J5/ZnrfCiGkZvpvJDIghpd6Pc+XrQ6usvN6mtmxSx
-        TXEyhdZzLl6S9xZzXoVOYLt+AZm3HQ2ATf62yGvQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33D0FC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Phong Tran <tranmanphong@gmail.com>, jakub.kicinski@netronome.com,
-        davem@davemloft.net, luciano.coelho@intel.com,
-        shahar.s.matityahu@intel.com, johannes.berg@intel.com,
-        emmanuel.grumbach@intel.com, sara.sharon@intel.com,
-        yhchuang@realtek.com, yuehaibing@huawei.com, pkshih@realtek.com,
-        arend.vanspriel@broadcom.com, rafal@milecki.pl,
-        franky.lin@broadcom.com, pieter-paul.giesberts@broadcom.com,
-        p.figiel@camlintechnologies.com, Wright.Feng@cypress.com,
-        keescook@chromium.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] drivers: net: intel: Fix -Wcast-function-type
-References: <20191125150215.29263-1-tranmanphong@gmail.com>
-        <20191125150215.29263-2-tranmanphong@gmail.com>
-        <61fa4ef5-e4fc-c20c-9e20-158bcdf61cbb@lwfinger.net>
-Date:   Mon, 25 Nov 2019 17:56:03 +0000
-In-Reply-To: <61fa4ef5-e4fc-c20c-9e20-158bcdf61cbb@lwfinger.net> (Larry
-        Finger's message of "Mon, 25 Nov 2019 11:30:47 -0600")
-Message-ID: <0101016ea3b4c45e-39ce3a65-7fba-4bf6-a788-ba579c1ea122-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 25 Nov 2019 12:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfKYR7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:59:14 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1721720679;
+        Mon, 25 Nov 2019 17:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574704754;
+        bh=KeQcj2AKHVhcae5ILgNCmFk/tRvBlisVKhy3DFIZA1c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yAhngtwOvHCL1fYdnEEbD3QRzDnSUoSdtwsxjwj6+a1i1oT56fZJhYAeDWOX9pYoJ
+         xqaYgcyIFhuTi5dVMgwAvRXZ0wF5ScvW9P8jBQhJVFk86A8Oz0PT3jLdQXlMaD6ayz
+         ORtsLGOdmTQelG61JjEYrNOPWeP55O76jyMrx3o4=
+Date:   Mon, 25 Nov 2019 09:59:13 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH v2] loop: avoid EAGAIN, if offset or block_size are
+ changed
+Message-ID: <20191125175913.GC71634@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190518004751.18962-1-jaegeuk@kernel.org>
+ <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
+ <1e1aae74-bd6b-dddb-0c88-660aac33872c@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2019.11.25-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e1aae74-bd6b-dddb-0c88-660aac33872c@acm.org>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Larry Finger <Larry.Finger@lwfinger.net> writes:
+On 11/19, Bart Van Assche wrote:
+> On 5/17/19 5:53 PM, Jaegeuk Kim wrote:
+> > This patch tries to avoid EAGAIN due to nrpages!=0 that was originally trying
+> > to drop stale pages resulting in wrong data access.
+> > 
+> > Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+> 
+> Please provide a more detailed commit description. What is wrong with the
+> current implementation and why is the new behavior considered the correct
+> behavior?
 
-> On 11/25/19 9:02 AM, Phong Tran wrote:
->> correct usage prototype of callback in tasklet_init().
->> Report by https://github.com/KSPP/linux/issues/20
->>
->> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
->> ---
->>   drivers/net/wireless/intel/ipw2x00/ipw2100.c   | 7 ++++---
->>   drivers/net/wireless/intel/ipw2x00/ipw2200.c   | 5 +++--
->>   drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
->>   drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
->>   4 files changed, 13 insertions(+), 9 deletions(-)
->
-> This patch is "fixing" three different drivers and should be split
-> into at least two parts. To be consistent with previous practices, the
-> subject for the two should be "intel: ipw2100: ...." and "intel:
-> iwlegacy: ...."
+Some history would be:
 
-Actually, please drop even "intel:". So "ipw2x00: " and "iwlegacy: " is
-enough.
+Original bug fix is:
+commit 5db470e229e2 ("loop: drop caches if offset or block_size are changed"),
+which returns EAGAIN so that user land like Chrome would require enhancing their
+error handling routines.
 
+So, this patch tries to avoid EAGAIN while addressing the original bug.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> 
+> This patch moves draining code from before the following comment to after
+> that comment:
+> 
+> /* I/O need to be drained during transfer transition */
+> 
+> Is that comment still correct or should it perhaps be updated?
+
+IMHO, it's still valid.
+
+> 
+> Thanks,
+> 
+
+> Bart.
