@@ -2,114 +2,130 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37F3C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41624C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8AE20869
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C52320866
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574696817;
+	bh=Ny6lop3d8OCuPBF/M6hCSIX9bwpLPqscXgrmdHRemVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DEpTKvvp+2tScw2ZCW5xDWNSh6wA1yaBXL2ZHrmu89sjMSNMMtHk6vausCyeoy00Y
+	 LjmLRgscSISVZYjtUrCnhbIFoM2T4DwopFTWyN4v9MoNwu7t7FcOG+wH4l1Utjwolf
+	 d6AKfz7kiVaDXBO2aU+PPDhM+GMfQn36qrMtUSdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfKYPq1 (ORCPT
+        id S1728648AbfKYPq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:46:27 -0500
-Received: from muru.com ([72.249.23.125]:43484 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbfKYPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:46:27 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3A89A80EA;
-        Mon, 25 Nov 2019 15:47:02 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 07:46:21 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, Paul Boddie <paul@boddie.org.uk>
-Subject: Re: [PATCH v3 8/8] MIPS: DTS: jz4780: add sgx gpu node
-Message-ID: <20191125154621.GY35479@atomide.com>
-References: <cover.1574595627.git.hns@goldelico.com>
- <c73e2cee4f818654f264b0b7b5458bfaa0ac6a7a.1574595627.git.hns@goldelico.com>
- <1574600246.3.0@crapouillou.net>
- <20191124174837.GX35479@atomide.com>
- <FA810F13-BF2A-4849-9BAA-01FA2F768976@goldelico.com>
+        Mon, 25 Nov 2019 10:46:56 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51728 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbfKYPqz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:46:55 -0500
+Received: by mail-wm1-f66.google.com with SMTP id g206so15697130wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:46:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OuIgeyITz3hMqeZdtOyVywD/hNAEdNGAJ5DgsDKYZg8=;
+        b=T/JmJDPZ4z2hhzHeWCm6DStHv3tUzayhVAlyOVsg+k70A6J/SZ39HlaLZZ1KacQWjp
+         leQimfGw01Go88pn4ySzHMnp7plYcGBB06cFtNlBguJ4ZphnPC4Ui5F/B/dhUQCvFdri
+         1Pwt7Q6mtaBtTBZVg/3UEVOJn68xOBrRBZGd6u8ssDqNpLKFrcdyM1svlrpUNMuf/jra
+         o13YktGoCbbYipfE1T8mY5bgQlb8e5p367yLdia+UUtfqI+WoFpFAdLFgQB9Xldiz0Ka
+         dXHkbKvRu16Taf6IErK4lpO/Qht/v7s7GRpuaOMSawqAP1fxXA8VBLphmzX0Sq2W51fM
+         lHSA==
+X-Gm-Message-State: APjAAAXa+SDoiq4jH/T9+v+nnCQZFBC804tuDomIztMN9Bu88Zpuh4j6
+        VR48MwfGz33/6HVrEYtw7FYrQbGq
+X-Google-Smtp-Source: APXvYqykJqodyyfq8OLxx0nqs51Z8v7G5EX8tYJjoHrygdNlt0J5kGY9cBZxHsD+/it0jF7dfO/jEg==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr22657988wmc.131.1574696813540;
+        Mon, 25 Nov 2019 07:46:53 -0800 (PST)
+Received: from localhost (ip-37-188-171-132.eurotel.cz. [37.188.171.132])
+        by smtp.gmail.com with ESMTPSA id u14sm11051978wrm.51.2019.11.25.07.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 07:46:52 -0800 (PST)
+Date:   Mon, 25 Nov 2019 16:46:51 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pengfei Li <fly@kernel.page>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz, cl@linux.com, iamjoonsoo.kim@lge.com, guro@fb.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
+Message-ID: <20191125154651.GA31703@dhcp22.suse.cz>
+References: <20191121151811.49742-1-fly@kernel.page>
+ <20191121180401.GL23213@dhcp22.suse.cz>
+ <20191122230543.2f106c80.fly@kernel.page>
+ <20191125084058.GD31714@dhcp22.suse.cz>
+ <20191125224603.688cb69c.fly@kernel.page>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <FA810F13-BF2A-4849-9BAA-01FA2F768976@goldelico.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191125224603.688cb69c.fly@kernel.page>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191124 18:00]:
-> Hi Paul, Tony,
+On Mon 25-11-19 22:46:03, Pengfei Li wrote:
+> On Mon, 25 Nov 2019 09:40:58 +0100
+> Michal Hocko <mhocko@kernel.org> wrote:
 > 
-> > Am 24.11.2019 um 18:48 schrieb Tony Lindgren <tony@atomide.com>:
+> > On Fri 22-11-19 23:05:43, Pengfei Li wrote:
+> > > On Thu, 21 Nov 2019 19:04:01 +0100
+> > > Michal Hocko <mhocko@kernel.org> wrote:
+> > > 
+> > > > On Thu 21-11-19 23:17:52, Pengfei Li wrote:
+> > > > [...]
+> > > > > Since I don't currently have multiple node NUMA systems, I
+> > > > > would be grateful if anyone would like to test this series of
+> > > > > patches.
+> > > > 
+> > > > I didn't really get to think about the actual patchset. From a
+> > > > very quick glance I am wondering whether we need to optimize as
+> > > > there are usually only small amount of numa nodes. But I am quite
+> > > > busy so I cannot really do any claims.
+> > > 
+> > > Thanks for your comments.
+> > > 
+> > > I think it's time to modify the zonelist to nodelist because the
+> > > zonelist is always in node order and the page reclamation is based
+> > > on node.
+> > > 
+> > > I will do more performance testing to show that multi-node systems
+> > > will benefit from this series of patches.
 > > 
-> > * Paul Cercueil <paul@crapouillou.net> [191124 12:58]:
-> >> Le dim., nov. 24, 2019 at 12:40, H. Nikolaus Schaller <hns@goldelico.com> a
-> >> écrit :
-> >>> and add interrupt and clocks.
-> > ...
-> >>> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> >>> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> >>> @@ -46,6 +46,17 @@
-> >>> 		#clock-cells = <1>;
-> >>> 	};
-> >>> 
-> >>> +	gpu: gpu@13040000 {
-> >> 
-> >> We try to keep the nodes ordered by address, could you move this node where
-> >> it belongs?
-> > ...
+> > Sensible performance numbers on multiple workloads (ideally some real
+> > world ones rather than artificial microbenchmarks) is essential for a
+> > performance optimization that is this large.
 > 
-> Yes, I have noted.
 > 
-> > 
-> >>> +		compatible = "ingenic,jz4780-sgx540-120", "img,sgx540-120",
-> >>> "img,sgx540", "img,sgx5";
-> >>> +		reg = <0x13040000 0x4000>;
-> >>> +
-> >>> +		clocks = <&cgu JZ4780_CLK_GPU>;
-> >>> +		clock-names = "gpu";
-> > 
-> > Just checking.. Is there something else to configure here
-> > potentially in addition to the clocks?
+> Thank you for your suggestion.
 > 
-> It doesn't look so. Unfortuantely there isn't much information
-> except a v3.18 kernel supported by the vendor and that one also
-> just has a gpu node with clock control.
-> 
-> > That is, do we need to do some interconnect specific
-> > configuration etc in addition to the clocks to have
-> > runtime PM work for enabling and disabling sgx on
-> > jz4780?
-> 
-> I think we have to leave that open for further study.
+> But this is probably a bit difficult because I don't have a NUMA server
+> to do real-world workload testing.
 
-OK for now, let's assume we just need to call
-clk_enable/disable from the PM runtime functions if a
-clock exists.
+For this particular feature you really do not need any real NUMA server.
+Your patch shouldn't introduce NUMA locality. All you are aiming for is
+to optimize the zone list iteration.
 
-Regards,
+> I will do as many performance benchmarks as possible, just like Mel
+> Gorman's "Move LRU page reclaim from zones to nodes v9"
+> (https://lwn.net/Articles/694121/).
 
-Tony
+Be aware that this will be quite time consuming and non-trivial to
+process/evaluate. Not that I want to discourage you from this endeavor
+but it is always good to think whether your final goal really has a
+potential to a visible optimization. I might be wrong but only the page
+allocator should really be the hot path which iterates over zonelist
+so a microbenchmark targeting this path would be something I would start
+with. Unless there are some really nice results from there I would lose
+more time with other benchmarks.
+-- 
+Michal Hocko
+SUSE Labs
