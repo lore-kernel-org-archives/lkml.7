@@ -6,64 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DC8C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F2920748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EC420748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 22:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574721904;
-	bh=AXP7zQMapTN1rWqrZDwdb3wcRiMjJxVjBSUx1h+liqY=;
+	s=default; t=1574721905;
+	bh=pt93TpD3bcRM2woCPlb5kjxWwt/2vu3TsxLgqWDZZ9w=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=UR2LEuLoaXck1wHH1mA2augzZZaQ1DRrOZteZRnqHDsueiRDG4jVoJ88PvRVwnUKR
-	 ELoGQ3jQZKNycbJ5eXG/JNmzU0ErLJbhh6xhgzhbm0MQdz/4DfW3Z5fQQPiHrLWw34
-	 EtN81tavaV73FTHIPnhAgw+F9Lnh7WksTqawDMP8=
+	b=Xrg30qRGNb+MuuHcNaxRe2o327zrxsYOoNyt2d43ZotjVvLU8G5hD1b7vKgTFfiXZ
+	 PLnhVaw7NRgeB4FPPndVlwfoBRcw/jcaq728vIkDV4bFleU6iy2Bk7d6djT4sqkJw8
+	 n0LOXFQsJtmBmuqweIe5A1DPc2uSabrhl5qZolJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfKYWpD (ORCPT
+        id S1727230AbfKYWpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 25 Nov 2019 17:45:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:39676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfKYWpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 17:45:02 -0500
-Subject: Re: [GIT PULL] fscrypt updates for 5.5
+        id S1727139AbfKYWpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 17:45:03 -0500
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1574721902;
-        bh=AXP7zQMapTN1rWqrZDwdb3wcRiMjJxVjBSUx1h+liqY=;
+        bh=pt93TpD3bcRM2woCPlb5kjxWwt/2vu3TsxLgqWDZZ9w=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=f9AlqeliSTi2q+Z5YE7YxcEWbjXZMvGJhzMVylW3dD8QZvEoai2ZvVOk0flLPy82f
-         0zjKG7wasISlpZIYVBFxEOuITOEy0AgNQJhLZ7OWFVFGm2b7n2jffMHyrpafDCMm75
-         VOMjbO6obTXmLy/oBkvIobk6BkMlRnz+IZ4v+obM=
+        b=ALUiLUDYFnYHGCpY7Qtp8e7lDTF1DAr1U9MKAGnJpYzItxJZy8MX1W/h6NKXQbM0e
+         OFZuvNas3vXqXG+rRI/G34rNSmnIZOLBaMa5WMoHDlfJVhtIl2c6TkgRdzNQ43589m
+         5OmXYC/I9Xjmg16ibUCLWbj18S8Xya+dW5U5fzD4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191125044122.GA9817@sol.localdomain>
-References: <20191125044122.GA9817@sol.localdomain>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191125044122.GA9817@sol.localdomain>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git
- tags/fscrypt-for-linus
-X-PR-Tracked-Commit-Id: 0eee17e3322625b87ce5fa631bda16562a8dc494
+In-Reply-To: <20191112195542.GA10619@linux.intel.com>
+References: <20191112195542.GA10619@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191112195542.GA10619@linux.intel.com>
+X-PR-Tracked-Remote: git://git.infradead.org/users/jjs/linux-tpmdd.git
+ tags/tpmdd-next-20191112
+X-PR-Tracked-Commit-Id: 0b40dbcbba923b5379bd1d601edd6d51e23fe72c
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ea4b71bc0bb646f811e4728389485f1d0522f7ea
-Message-Id: <157472190221.22729.18046740901098864621.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 54f0e54011c9e83277e84ec2f60696285066dfa9
+Message-Id: <157472190290.22729.17187770371067659051.pr-tracker-bot@kernel.org>
 Date:   Mon, 25 Nov 2019 22:45:02 +0000
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, jmorris@namei.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 24 Nov 2019 20:41:22 -0800:
+The pull request you sent on Tue, 12 Nov 2019 21:55:42 +0200:
 
-> https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt-for-linus
+> git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20191112
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ea4b71bc0bb646f811e4728389485f1d0522f7ea
+https://git.kernel.org/torvalds/c/54f0e54011c9e83277e84ec2f60696285066dfa9
 
 Thank you!
 
