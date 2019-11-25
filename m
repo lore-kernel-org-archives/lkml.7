@@ -2,144 +2,77 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075FAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2E42082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SkDbl5Ee"
+	by mail.kernel.org (Postfix) with ESMTP id DA85920865
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 11:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfKYLMy (ORCPT
+        id S1727633AbfKYLND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 06:12:54 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42151 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbfKYLMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 06:12:53 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q17so7015892pgt.9;
-        Mon, 25 Nov 2019 03:12:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QfpO6+VriHjE6MTSEfJjnPs1DI4xFhz3n8jBm6AClVA=;
-        b=SkDbl5EejLsawhQGIGbP5LNRgzNCp6dbSmbcvdoE77wCHVXh0MJ9OWgW+NA6YYmYvJ
-         LXpTHhTDg5q4kC/VwCe2tUo5rBRUBPd7P5szZwLZDV0bAWSwFjWIjUs1JZp2K77jbLUX
-         hXpurxr6KhK7y3douqB8NpWhhXKvxYh6InayiDiNeY9JW0RienG94z6GPp3lXqa0beCJ
-         xqRAsU2UHHROtBrcHSeK52RW88MSjIll5B7wLPTdh+8ObkaF1H6EYM0ci9Pn6MNJ5ZRa
-         IMn2Mzdr7SslIsudVbO7NJ3R8SXJeDwfFmTeIhMCOVHboA138y5t3Ep9nipx8I9LKKAE
-         xodw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QfpO6+VriHjE6MTSEfJjnPs1DI4xFhz3n8jBm6AClVA=;
-        b=TmBII9kkwaMAcJAaihntdp/GesuS2D2PC95lRUJkaTk/n8s3nUlsX+0G7uPz5mU3XJ
-         Xxs/uynwLk8lNiAeeTVgVKf8W31/dkggmP1bqQDEqunMMNM1jCuKkqn8DzmjQUcJJJuV
-         ht3zpoHxJliPtW863yGrS0OJPV1HBNllB9PaVsQFSs92WUA9QYKybp4lKdyfSEko4+KZ
-         aIfwuo6ChkVVsDULcGqxIgJkl7/KKJVn1sMJLfh0uN0KyElN2+5Q5ojetuNNyZI1H+y+
-         yeSck6WiRdwVZT/GAburWELdCbDiCiLHD4CcKX8EOpxlpmYWv2ryqCRu0zEkYDUWq2pN
-         fxNg==
-X-Gm-Message-State: APjAAAX0VGv0Ok6KQvODS9EeCrDn13aMuDt6dOf138QwzlXo+wq1zE0Q
-        7Xmn7VcPdzVUVqADo1dkJhckkrOWh4jLYSWfwLA=
-X-Google-Smtp-Source: APXvYqwOuqlvoScFSmIKOVDPZRulf63cB+znh4uPuBAVEUyd0Cj+R4rO9PNf5PXr0+IewxRhcl5Jl13BPejaBtMiOsw=
-X-Received: by 2002:a65:5542:: with SMTP id t2mr30988775pgr.74.1574680373146;
- Mon, 25 Nov 2019 03:12:53 -0800 (PST)
+        Mon, 25 Nov 2019 06:13:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:48670 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727395AbfKYLND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 06:13:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04D8231B;
+        Mon, 25 Nov 2019 03:13:03 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C2233F52E;
+        Mon, 25 Nov 2019 03:13:01 -0800 (PST)
+Subject: Re: [PATCH v4 11/11] sched/fair: rework find_idlest_group
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
+ <5b4d204f-ce18-948a-416b-1920bcea7cf7@arm.com>
+ <CAKfTPtDHY6oQRyMr0uH69UTCWyptyfdu9uEac3Um=fgGb5-eCQ@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <10684db8-8ecc-9e1e-743a-fcbe1ac1fa67@arm.com>
+Date:   Mon, 25 Nov 2019 11:13:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191124140625.20736-1-leonmaxx@gmail.com> <20191124140744.20830-1-leonmaxx@gmail.com>
-In-Reply-To: <20191124140744.20830-1-leonmaxx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Nov 2019 13:12:43 +0200
-Message-ID: <CAHp75VcVj5=DQ8faTtC2CWk86-VMPGroQ+aCK+tLpkFEyPe-MQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] platform/x86 asus_wmi: Support throttle thermal policy
-To:     Leonid Maksymchuk <leonmaxx@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Chris Chiu <chiu@endlessm.com>,
-        Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtDHY6oQRyMr0uH69UTCWyptyfdu9uEac3Um=fgGb5-eCQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 4:07 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
->
-> Throttle thermal policy ACPI device is used to control CPU cooling and
+On 25/11/2019 09:59, Vincent Guittot wrote:
+>>> +     case group_imbalanced:
+>>> +     case group_asym_packing:
+>>> +             /* Those type are not used in the slow wakeup path */
+>>> +             return NULL;
+>>
+>> I suppose group_asym_packing could be handled similarly to misfit, right?
+>> i.e. make the group type group_asym_packing if
+>>
+>>   !sched_asym_prefer(sg.asym_prefer_cpu, local.asym_prefer_cpu)
+> 
+> Unlike group_misfit_task that was somehow already taken into account
+> through the comparison of spare capacity, group_asym_packing was not
+> considered at all in find_idlest_group so I prefer to stay
+> conservative and wait for users of asym_packing to come with a need
+> before adding this new mechanism.
+> 
 
-> throttling. This patch adds sysfs entry for setting current mode and
-> Fn+F5 hotkey that switches to next.
-
-sysfs means ABI. ABI must be documented.
-
-> Policy modes:
-> * 0x00 - default
-> * 0x01 - overboost
-> * 0x02 - silent
-
-> +static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-> +{
-> +       u32 result;
-> +       int err;
-> +
-> +       asus->throttle_thermal_policy_available = false;
-> +
-> +       err = asus_wmi_get_devstate(asus,
-> +                                   ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> +                                   &result);
-> +       if (err) {
-> +               if (err == -ENODEV)
-> +                       return 0;
-
-> +               else
-
-Redundant.
-
-> +                       return err;
-> +       }
-> +
-
-> +       if ((result & ASUS_WMI_DSTS_PRESENCE_BIT))
-
-Too many parentheses.
-
-> +               asus->throttle_thermal_policy_available = true;
-> +
-> +       return 0;
-> +}
-
-> +       pr_info("Set throttle thermal policy: %u\n", value);
-
-Do we really need this message?
-
-> +       return scnprintf(buf, PAGE_SIZE, "%d\n",
-> +                        asus->throttle_thermal_policy_mode);
-
-Can it be one line?
-
-> +       result = kstrtou8(buf, 10, &new_mode);
-> +       if (result < 0) {
-
-> +               pr_warn("Trying to store invalid value\n");
-
-Redundant. By error code user space will get a message.
-
-> +               return result;
-> +       }
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Right, makes sense.
