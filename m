@@ -2,137 +2,234 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7814C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CE4C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06E82071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18A52075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 10:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="vSvVHULp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikgBN6zb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfKYKLF (ORCPT
+        id S1727433AbfKYKN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:11:05 -0500
-Received: from mail-wm1-f50.google.com ([209.85.128.50]:54814 "EHLO
-        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfKYKLF (ORCPT
+        Mon, 25 Nov 2019 05:13:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50779 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727360AbfKYKN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:11:05 -0500
-Received: by mail-wm1-f50.google.com with SMTP id b11so5326100wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:11:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=Bwpubt5kO9MpF6+DhDd9tFXMqNxMMg0/sf7IorDXQyk=;
-        b=vSvVHULp7DD7lYRvr2dnS4yvZFxgC2sHfS0hqs1sHp7uGdaRTaNLgh0nB15KXx49yI
-         d9ndwlfx2sBiMePPGdCUiqrUVJmYbHkrbYzXF1vesYOZZldXSUjTo0a2hTmF9sjR9QyD
-         6dxBUB1R7IAurqg4iAsu2obFxdeuVcAGHjc2J6u/3AGjCcEp8zpO6q7DjhE7qiu26MJN
-         n9Yw/S1l3/MMIS/hPH2Wb1cTFITadmvYybyppnsA7vXNq8pdC/rO5U2rhFgsastbCupJ
-         wdlwv5oVuAWFt07xWyzgcbt/Y0Hi1PQsGRAp1XBC1tThcm+in8vhIenirOlQClvvhFD9
-         3BDg==
+        Mon, 25 Nov 2019 05:13:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574676834;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RH8bBmpzi7HHoIZIpjEjD1gS6DnN0ErNd15eXyQm43E=;
+        b=ikgBN6zbMpMaK6LPpnFbvOc3q7FMeYlXFvVczUObb+CoRieKyh42sdSZuCCTUmSLmJU6Hr
+        gvxPnEU7m2FqJ+MQpwL43LTc/kkIvMOud8sthbjg9LdThnC1i3g2hRCYYo7Jx9Kbw7Kr53
+        F9W5GalOFnN1GSfPAUKh3W0HgJIr8pU=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-qHD2tgx5N3qLxQDBlB9qDg-1; Mon, 25 Nov 2019 05:13:53 -0500
+Received: by mail-qt1-f197.google.com with SMTP id b26so9873010qtr.23
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 02:13:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Bwpubt5kO9MpF6+DhDd9tFXMqNxMMg0/sf7IorDXQyk=;
-        b=YElo29VmnzPRlhSJqNrVDpFUvcSCUdghL/0Hiy+JJPuU3P12sgMnD5Lu9wJru5WHuP
-         E2MOMKyVZWPmzK/l9ugjQkyqrlZgaJBZik3DYEy7oQot4OG/6pr3Kf7HA6G3sqdO7JIf
-         JJmAd4rIldjO0J59tQksop6DV/f5pLx62EjZFQM7dBaZqZrTXCBd0NERuLgqYC4wP4lD
-         MlAbZtalV/ycmX4zpUHyYkfytxRvsuyjzl9x2DzFV4kBnpYDTAVzPbbwuXlfBWLnbciW
-         bqyGTx85w75YwHx67oSeJrunPFhaaWau3XMWGJpYkPblhvObEe5i85ma8fioF4xI6mWO
-         LtGg==
-X-Gm-Message-State: APjAAAXteRvbb3NdhNe2KKRelEfn0v4cms0MxVznxQ36Y/bUn2lZdjoL
-        cz2aZIhlfAO1WOFMnhJH3H4yqA==
-X-Google-Smtp-Source: APXvYqxYaE+TwA2dYd5tAr202DSVevWFDYjL18tBGvRXf25h/jnPJLpvFlNOJvKfFSjgx+2nhWTsXg==
-X-Received: by 2002:a05:600c:2257:: with SMTP id a23mr29322180wmm.143.1574676662350;
-        Mon, 25 Nov 2019 02:11:02 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id 4sm8142393wmd.33.2019.11.25.02.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 02:11:01 -0800 (PST)
-Message-ID: <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
-Subject: Re: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Date:   Mon, 25 Nov 2019 11:11:00 +0100
-In-Reply-To: <20191125035437.GA3806@ming.t460p>
-References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
-         <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
-         <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
-         <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
-         <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
-         <20191109222828.GA30568@ming.t460p>
-         <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
-         <20191123072726.GC25356@ming.t460p>
-         <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
-         <20191125035437.GA3806@ming.t460p>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k1L6Yz7wYOMvkzieIeh0LdiGjwJlEPC6drD1/ds8KWI=;
+        b=RBFasDXvEMPRP6KOI/9hdunolIMpw1qJIxZeVfEGuVbj6FJdVdcpRg552cG6CFRn+x
+         VIZH0A7feZrQyJkfrwYBYq4A8Ij6rr6OA8ZCrzjuf+lK1+SKr433qziYeriObYEmPASM
+         7vg8E+3yWdDCHLqmQ12sZBcWFud0CaQm4VKDL0V3NjqV13HsJ/cNt0sXmmMq/tU6Cl+h
+         iMJt9mG7lEYzRHAawyDQQeGV0W+IE2bKnnv0w2s2ug5AIJolAy2Cz6te17QiubyTKxt9
+         ydIbOVQvXkJEVJcB7a3VxuHE5Q/oR26U7W52/g/stdxmvKRoo8jsywwbkoIorsXBcUNa
+         YLDA==
+X-Gm-Message-State: APjAAAXJFsPpQLIzmDZcLw3yMA/qpg9Zwh6sndxYdEB2VFZ+BrlWf0iB
+        3TNp4JZ3rjl8xHmSR+/UKpgJ+5Bi2oILfCMtZI1TtCzNWcrgH++DlmseCJZuP9BCSCiKMW3O6+e
+        gCu4agLErCOeON2SssOVvAPlsSWABoaV4Fz3DEtC+
+X-Received: by 2002:ac8:45d4:: with SMTP id e20mr11797118qto.260.1574676832990;
+        Mon, 25 Nov 2019 02:13:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxrA7ouBc08BPmeDIQfEFI0+m51aE5go4JhnT5mR8o/Ip0qvlwWp8gOFP5U3QDVciON4HERp0yAwoAvrEfPiHY=
+X-Received: by 2002:ac8:45d4:: with SMTP id e20mr11797096qto.260.1574676832746;
+ Mon, 25 Nov 2019 02:13:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <000000000000feb3800595f60205@google.com>
+In-Reply-To: <000000000000feb3800595f60205@google.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 25 Nov 2019 11:13:41 +0100
+Message-ID: <CAO-hwJJYucLrBSYqK4UM08XBgPTn_gLYRyJO=RxKscX90JG+MQ@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in lg4ff_set_autocenter_default
+To:     syzbot <syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com>
+Cc:     glider@google.com, Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+X-MC-Unique: qHD2tgx5N3qLxQDBlB9qDg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno lun, 25/11/2019 alle 11.54 +0800, Ming Lei ha scritto:
-> On Sat, Nov 23, 2019 at 04:44:55PM +0100, Andrea Vai wrote:
-> > Il giorno sab, 23/11/2019 alle 15.28 +0800, Ming Lei ha scritto:
-> > > 
-> > > Please post the log of 'lsusb -v', and I will try to make a
-> patch
-> > > for
-> > > addressing the issue.
-> > 
-> > attached,
-> 
-> Please apply the attached patch, and re-build & install & reboot
-> kernel.
-> 
-> This time, please don't switch io scheduler.
+Pretty sure this is already fixed
 
-# patch -p1 < usb.patch outputs:
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-ne=
+xt
 
-(Stripping trailing CRs from patch; use --binary to disable.)
-patching file block/blk-mq.c
-Hunk #1 succeeded at 1465 (offset 29 lines).
-Hunk #2 succeeded at 3061 (offset 13 lines).
-(Stripping trailing CRs from patch; use --binary to disable.)
-patching file drivers/scsi/scsi_lib.c
-Hunk #1 succeeded at 1902 (offset -37 lines).
-(Stripping trailing CRs from patch; use --binary to disable.)
-patching file drivers/usb/storage/scsiglue.c
-Hunk #1 succeeded at 651 (offset -10 lines).
-(Stripping trailing CRs from patch; use --binary to disable.)
-patching file include/linux/blk-mq.h
-Hunk #1 succeeded at 226 (offset -162 lines).
-(Stripping trailing CRs from patch; use --binary to disable.)
-patching file include/scsi/scsi_host.h
-patch unexpectedly ends in middle of line
-patch unexpectedly ends in middle of line
 
-Just to be sure I have to go on, is this correct? Sounds like an error
-but I don't know if it is important.
-
-Thanks,
-Andrea
+On Mon, Oct 28, 2019 at 11:32 AM syzbot
+<syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    d86c1556 kmsan: add printk_test()
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D125e96e0e0000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc07a3d4f8a59e=
+198
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D1234691fec1b8ce=
+ba8b1
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D179da024e00=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D157f40a8e0000=
+0
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit=
+:
+> Reported-by: syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+>
+> logitech 0003:046D:CA03.0001: hidraw0: USB HID v0.00 Device [HID 046d:ca0=
+3]
+> on usb-dummy_hcd.3-1/input0
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> BUG: KMSAN: uninit-value in dev_get_drvdata include/linux/device.h:1388
+> [inline]
+> BUG: KMSAN: uninit-value in hid_get_drvdata include/linux/hid.h:628 [inli=
+ne]
+> BUG: KMSAN: uninit-value in lg4ff_set_autocenter_default+0x23a/0xa20
+> drivers/hid/hid-lg4ff.c:477
+> CPU: 1 PID: 49 Comm: kworker/1:1 Not tainted 5.4.0-rc3+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+>   kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+>   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
+>   dev_get_drvdata include/linux/device.h:1388 [inline]
+>   hid_get_drvdata include/linux/hid.h:628 [inline]
+>   lg4ff_set_autocenter_default+0x23a/0xa20 drivers/hid/hid-lg4ff.c:477
+>   lg4ff_init+0x1e3d/0x33a0 drivers/hid/hid-lg4ff.c:1355
+>   lg_probe+0x103d/0x1110 drivers/hid/hid-lg.c:850
+>   hid_device_probe+0x490/0x820 drivers/hid/hid-core.c:2209
+>   really_probe+0xcc2/0x1f90 drivers/base/dd.c:548
+>   driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+>   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+>   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+>   __device_attach+0x489/0x750 drivers/base/dd.c:894
+>   device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+>   bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+>   device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+>   hid_add_device+0x12f1/0x1440 drivers/hid/hid-core.c:2365
+>   usbhid_probe+0x152b/0x1880 drivers/hid/usbhid/hid-core.c:1386
+>   usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+>   really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+>   driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+>   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+>   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+>   __device_attach+0x489/0x750 drivers/base/dd.c:894
+>   device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+>   bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+>   device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+>   usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+>   generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+>   really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+>   driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+>   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+>   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+>   __device_attach+0x489/0x750 drivers/base/dd.c:894
+>   device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+>   bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+>   device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+>   usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+>   process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>   worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
+>   kthread+0x4b5/0x4f0 kernel/kthread.c:256
+>   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+>
+> Uninit was created at:
+>   kmsan_save_stack_with_flags+0x3f/0x90 mm/kmsan/kmsan.c:151
+>   kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:362 [inline=
+]
+>   kmsan_alloc_page+0x153/0x360 mm/kmsan/kmsan_shadow.c:391
+>   __alloc_pages_nodemask+0x149d/0x60c0 mm/page_alloc.c:4794
+>   alloc_pages_current+0x68d/0x9a0 mm/mempolicy.c:2188
+>   alloc_pages include/linux/gfp.h:511 [inline]
+>   alloc_slab_page+0x10e/0x12c0 mm/slub.c:1536
+>   allocate_slab mm/slub.c:1681 [inline]
+>   new_slab+0x2ca/0x1990 mm/slub.c:1747
+>   new_slab_objects mm/slub.c:2498 [inline]
+>   ___slab_alloc+0x1423/0x1fb0 mm/slub.c:2649
+>   __slab_alloc mm/slub.c:2689 [inline]
+>   slab_alloc_node mm/slub.c:2752 [inline]
+>   slab_alloc mm/slub.c:2801 [inline]
+>   __kmalloc+0x356/0x430 mm/slub.c:3832
+>   kmalloc include/linux/slab.h:561 [inline]
+>   kzalloc+0x53/0xb0 include/linux/slab.h:690
+>   crypto_create_tfm+0xfd/0x640 crypto/api.c:459
+>   crypto_alloc_tfm+0x339/0x630 crypto/api.c:538
+>   crypto_alloc_shash+0x99/0xb0 crypto/shash.c:450
+>   ima_alloc_tfm security/integrity/ima/ima_crypto.c:87 [inline]
+>   ima_calc_field_array_hash+0x20c/0xbb0
+> security/integrity/ima/ima_crypto.c:519
+>   ima_store_template security/integrity/ima/ima_api.c:109 [inline]
+>   ima_store_measurement+0x4d6/0xd00 security/integrity/ima/ima_api.c:328
+>   process_measurement+0x1f4e/0x2bd0 security/integrity/ima/ima_main.c:334
+>   ima_bprm_check+0x13d/0x300 security/integrity/ima/ima_main.c:413
+>   security_bprm_check+0x192/0x1e0 security/security.c:787
+>   search_binary_handler+0xb2/0xac0 fs/exec.c:1646
+>   exec_binprm fs/exec.c:1702 [inline]
+>   __do_execve_file+0x2218/0x2e90 fs/exec.c:1822
+>   do_execveat_common fs/exec.c:1868 [inline]
+>   do_execve fs/exec.c:1885 [inline]
+>   __do_sys_execve fs/exec.c:1961 [inline]
+>   __se_sys_execve+0xec/0x110 fs/exec.c:1956
+>   __x64_sys_execve+0x4a/0x70 fs/exec.c:1956
+>   do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+>   entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
