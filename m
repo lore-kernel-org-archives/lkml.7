@@ -2,100 +2,86 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAA8C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F5720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466AC20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574665017;
+	bh=BMLaCwsngB/HdLBRSJI+6cd9xLQhImPzjy3DKs9abbc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NIhJaslCrGTl82ms0bBzVKbwcmaC1+wO5D2HrfERq/D+LVidyL5nspW2/UEjF2nL0
+	 2JQz1pkL57oCID2rMDECiaxgZ1gwGeLnO5UGW2fkVfB8V+zWSQBKtoxvD45C9lfqcL
+	 oE+CrjhoO6EZDqfbn+y7o7cBR8hIaubpEMJwlRUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfKYGzw (ORCPT
+        id S1727071AbfKYG44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 01:55:52 -0500
-Received: from out1.zte.com.cn ([202.103.147.172]:62792 "EHLO mxct.zte.com.cn"
+        Mon, 25 Nov 2019 01:56:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfKYGzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 01:55:51 -0500
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id C52E119180CE6A9A69DF;
-        Mon, 25 Nov 2019 14:55:45 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id xAP6tSDA049700;
-        Mon, 25 Nov 2019 14:55:28 +0800 (GMT-8)
-        (envelope-from dong.menglong@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019112514553215-735049 ;
-          Mon, 25 Nov 2019 14:55:32 +0800 
-From:   Menglong Dong <dong.menglong@zte.com.cn>
-To:     davem@davemloft.net
-Cc:     petrm@mellanox.com, jiri@mellanox.com, gustavo@embeddedor.com,
-        liuhangbin@gmail.com, ap420073@gmail.com, jwi@linux.ibm.com,
-        mcroce@redhat.com, tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
-        Menglong Dong <dong.menglong@zte.com.cn>
-Subject: [PATCH] macvlan.c: schedule port->bc_work even if error
-Date:   Mon, 25 Nov 2019 14:59:03 +0800
-Message-Id: <1574665143-21650-1-git-send-email-dong.menglong@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-11-25 14:55:32,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-11-25 14:55:29,
-        Serialize complete at 2019-11-25 14:55:29
-X-MAIL: mse-fl2.zte.com.cn xAP6tSDA049700
+        id S1725535AbfKYG4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 01:56:55 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2BD20679;
+        Mon, 25 Nov 2019 06:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574665015;
+        bh=BMLaCwsngB/HdLBRSJI+6cd9xLQhImPzjy3DKs9abbc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L+wEJ33PJz6Y+agzR82A4B782GG55WpubyIgQmw1DI830clVfSfU19C8ZlgGQqm59
+         3xyyVba/CK0neafDI2dFZctYajkbYlnYcTfbApZQyjltCc4ph5OKDsE9idL0PoSqzB
+         TY9BDh+Os3PoyOsYlJJKzWJz38YzURGlIdTPw8SQ=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BUGFIX PATCH v3 0/4] selftests/ftrace: Fix ftracetest testcases for non-function tracer case
+Date:   Mon, 25 Nov 2019 15:56:51 +0900
+Message-Id: <157466501169.21973.31401747181477687.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While enqueueing a broadcast skb to port->bc_queue, schedule_work()
-is called to add port->bc_work, which processes the skbs in
-bc_queue, to "events" work queue. If port->bc_queue is full, the
-skb will be discarded and schedule_work(&port->bc_work) won't be
-called. However, if port->bc_queue is full and port->bc_work is not
-running or pending, port->bc_queue will keep full and schedule_work()
-won't be called any more, and all broadcast skbs to macvlan will be
-discarded. This case can happen:
+Hi,
 
-macvlan_process_broadcast() is the pending function of port->bc_work,
-it moves all the skbs in port->bc_queue to the queue "list", and
-processes the skbs in "list". During this, new skbs will keep being
-added to port->bc_queue in macvlan_broadcast_enqueue(), and
-port->bc_queue may already full when macvlan_process_broadcast()
-return. This may happen, especially when there are a lot of real-time
-threads and the process is preempted.
+Here is the 3rd version of patches to fix some issues which happens on
+the kernel with CONFIG_FUNCTION_TRACER=n or CONFIG_DYNAMIC_FTRACE=n.
 
-Fix this by calling schedule_work(&port->bc_work) even if
-port->bc_work is full in macvlan_broadcast_enqueue()
+In this version and v2, I updated the descriptions of the first 2 patches
+according to Steve's comment, added Steve's Reviewed-by to the 3rd patch,
+and added the 4th patch which was newly found.
 
-Signed-off-by: Menglong Dong <dong.menglong@zte.com.cn>
+Thank you,
+
 ---
- drivers/net/macvlan.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 940192c..ef2c4f7 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -359,10 +359,11 @@ static void macvlan_broadcast_enqueue(struct macvlan_port *port,
- 	}
- 	spin_unlock(&port->bc_queue.lock);
- 
-+	schedule_work(&port->bc_work);
-+
- 	if (err)
- 		goto free_nskb;
--
--	schedule_work(&port->bc_work);
-+
- 	return;
- 
- free_nskb:
--- 
-2.11.0
+Masami Hiramatsu (4):
+      selftests/ftrace: Fix to check the existence of set_ftrace_filter
+      selftests/ftrace: Fix ftrace test cases to check unsupported
+      selftests/ftrace: Do not to use absolute debugfs path
+      selftests/ftrace: Fix multiple kprobe testcase
 
+
+ .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |    2 ++
+ .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    5 +++++
+ tools/testing/selftests/ftrace/test.d/functions    |    4 +++-
+ .../ftrace/test.d/kprobe/multiple_kprobes.tc       |    6 +++---
+ .../inter-event/trigger-action-hist-xfail.tc       |    4 ++--
+ .../inter-event/trigger-onchange-action-hist.tc    |    2 +-
+ .../inter-event/trigger-snapshot-action-hist.tc    |    4 ++--
+ 7 files changed, 18 insertions(+), 9 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
