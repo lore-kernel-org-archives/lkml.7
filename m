@@ -2,119 +2,106 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39670C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB3E20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176BE20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 18:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="0q6Imda0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEe/TGJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfKYSvj (ORCPT
+        id S1727330AbfKYSwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 13:51:39 -0500
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:39039 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKYSvi (ORCPT
+        Mon, 25 Nov 2019 13:52:16 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:44342 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfKYSwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 13:51:38 -0500
-Received: by mail-wr1-f54.google.com with SMTP id y11so16351197wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 10:51:36 -0800 (PST)
+        Mon, 25 Nov 2019 13:52:16 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w8so6990849pjh.11;
+        Mon, 25 Nov 2019 10:52:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=DXGmbfWdvrXuzWAE8BTOxQjhRPkzvMn2ZsCmjYzmHWg=;
-        b=0q6Imda0TKBHEocYjyoSHIc0I6FRCKxOhTi8Zqg1IED3XejYap3FokRHDhuJkUBpnb
-         atX5/nUhOZTRxVZIP1RBj3prnNo01hrBVS6/9h0boB3cdpGd00MMjbQCuLPjWH8ghS/2
-         +I7CIIR5VYVN05/X8cDCLajhxNC8mZOygCIivvDQACae+/BoQ05kpCrwiwRZmeC5COsV
-         u3w3eepWApVFgdKhrR/eoGIvXNDkiie9xbIQ4X6qU9KSVkFQTwpT0TxkZpG/mWyAVeh0
-         G5GBxo08sw/78ZQXGSuYqCLvOF57i1C8rYVF88v7Ey+S8sdCcCta/JyT+Ls4CRFyzMfh
-         uBjw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JEuDBuIbsPCbqhT1+qaFvO9JHqg2+xT1GFhiQC+2+xc=;
+        b=JEe/TGJJlEHUn9idyG7t66OXmw9QvEUOS1J/rnBzoDIcvcaeqwYgAMl0ivexsBYKSY
+         wGFpgZVhe5eRv4sEzbkHHL1IbvkHsYnQGvf8FcAV8crC7GhTPPMQ3ZbBLpyqkz7Bz1K6
+         svHZgcN9X3kosAS7DwoO2Z6oUd2u4+0ImpAhD3mo0Yu+taouax3+Rimcu8wM0RWS4V1M
+         J2F2gjQOP0Fmd460A1E03i/KADeRkWZWbTxFHmgMFDhjxQijyRyS2AIgc714RpMq4PCR
+         he5TgwUgUZs95l9pqtd9RWVBOaOlcNoO/v6fNz+IwdmBNUdd8FzyyfTO0OXv4NJ960Uo
+         YE3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=DXGmbfWdvrXuzWAE8BTOxQjhRPkzvMn2ZsCmjYzmHWg=;
-        b=avjOVvlqUNcThuHZmjIXP13ODw9Jk9GbLx/eGvPZ9AHDxY7t5nBvQMTTfB5LgMgJjn
-         RoN/Tz7R8uy/6qWxx4KeEuvbvJOygiIe1XCV2IBtiS5ajdOOhuCdmUq+2urXarB7yfQe
-         Hj4JJFiAuQ1Idqs0lBSxSidooKn57owD7goTsRrOeQ9kcj0VsbTK3kpf0jk8wM4BVD9Q
-         NbAnNIWWAjAuF33uabWvTrJlevGpRHSMiRVxAaUB+36C04p4Tq9FdF8ON7XOB88x7Yr+
-         nzgBESrA2UhoMXfJAD08daS02ptYwn1rsiYta2oAiaP0PByb13npzFk5IREOdhS6NtAQ
-         42iQ==
-X-Gm-Message-State: APjAAAUREfmwH5j0OC/F4OwEBmN8vdP7Aj3jiqVGxwwwpQrkvOsD2erK
-        fQWP7O2oP6Cub3phOAXdw8EsOA==
-X-Google-Smtp-Source: APXvYqxhi6d9VcJssE3tE++11y8WGzYUwhsoFvGeh2gwaSz6FwkiZLQXnVXysYm4T3TJTd+4v1/gyQ==
-X-Received: by 2002:adf:e94e:: with SMTP id m14mr34093476wrn.233.1574707895385;
-        Mon, 25 Nov 2019 10:51:35 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id b186sm197328wmb.21.2019.11.25.10.51.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JEuDBuIbsPCbqhT1+qaFvO9JHqg2+xT1GFhiQC+2+xc=;
+        b=p+3FB7tacsr2NncDRw54aUSL2MAApODwPif/KALgv6jCykVQJNLIkQXrIT2sgrK1/X
+         LejamCZxbwbLxqO14nKfb2shULdm8hhfEMR5hQiU2KI/KwEoBiEMTICtgOpPaxgjv4qz
+         /Y5rTKqhOg3JZDYBbtNqz5+x1SBGCzoXNhQxqTtA3ZTvW2892I96CHByFJbvQQ/R+TxN
+         f9JWRLfYkR8mMdWHd2DIqqW13/hI8w4NEApMJPskJZwlMCVsRKwFWaPhdBgpbCbPQl07
+         Wy2Y+0xC/dFENtDsPX8gRFFd3LRJLzsE/FzrAot7S5h8u3FjdKMeDhsyabbF9tKpuc6x
+         Yy7Q==
+X-Gm-Message-State: APjAAAXMmUJMMf8CnQzwwCfjiuRp56IWNXuzYhQauGJAWdoi59dXcqCM
+        K7UERd5UYxrDGASIsRJSJIc=
+X-Google-Smtp-Source: APXvYqxQXj5RSszdRYxGJ7EgTM9XnsG+4Kf7wc8guAWagKfgL63JUiHs9jX9jHcRAgkAEC/QL163fg==
+X-Received: by 2002:a17:902:9a87:: with SMTP id w7mr13859312plp.120.1574707934861;
+        Mon, 25 Nov 2019 10:52:14 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id v14sm96558pja.22.2019.11.25.10.52.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 10:51:34 -0800 (PST)
-Message-ID: <0876e232feace900735ac90d27136288b54dafe1.camel@unipv.it>
-Subject: Re: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Date:   Mon, 25 Nov 2019 19:51:33 +0100
-In-Reply-To: <20191125151535.GA8044@ming.t460p>
-References: <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
-         <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
-         <20191109222828.GA30568@ming.t460p>
-         <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
-         <20191123072726.GC25356@ming.t460p>
-         <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
-         <20191125035437.GA3806@ming.t460p>
-         <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
-         <20191125102928.GA20489@ming.t460p>
-         <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
-         <20191125151535.GA8044@ming.t460p>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 25 Nov 2019 10:52:14 -0800 (PST)
+Date:   Mon, 25 Nov 2019 10:52:11 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     linux-input@vger.kernel.org, stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>,
+        Nick Black <dankamongmen@gmail.com>,
+        Yussuf Khalil <dev@pp3345.net>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Alexander Mikhaylenko <exalm7659@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "Input: synaptics - enable RMI mode for X1
+ Extreme 2nd Generation"
+Message-ID: <20191125185211.GJ248138@dtor-ws>
+References: <20191119234534.10725-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119234534.10725-1-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno lun, 25/11/2019 alle 23.15 +0800, Ming Lei ha scritto:
-> On Mon, Nov 25, 2019 at 03:58:34PM +0100, Andrea Vai wrote:
+On Tue, Nov 19, 2019 at 06:45:33PM -0500, Lyude Paul wrote:
+> This reverts commit 68b9c5066e39af41d3448abfc887c77ce22dd64d.
 > 
-> [...]
+> Ugh, I really dropped the ball on this one :\. So as it turns out RMI4
+> works perfectly fine on the X1 Extreme Gen 2 except for one thing I
+> didn't notice because I usually use the trackpoint: clicking with the
+> touchpad. Somehow this is broken, in fact we don't even seem to indicate
+> BTN_LEFT as a valid event type for the RMI4 touchpad. And, I don't even
+> see any RMI4 events coming from the touchpad when I press down on it.
+> This only seems to work for PS/2 mode.
 > 
-> > What to try next?
+> Since that means we have a regression, and PS/2 mode seems to work fine
+> for the time being - revert this for now. We'll have to do a more
+> thorough investigation on this.
 > 
-> 1) cat /sys/kernel/debug/block/$DISK/hctx0/flags
-result:
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Cc: stable@vger.kernel.org
 
-alloc_policy=FIFO SHOULD_MERGE|2
+This has been applied, thank you.
 
-> 
-> 
-> 2) echo 128 > /sys/block/$DISK/queue/nr_requests and run your copy
-> 1GB
-> test again.
-
-done, and still fails. What to try next?
-
-Thanks,
-Andrea
-
+-- 
+Dmitry
