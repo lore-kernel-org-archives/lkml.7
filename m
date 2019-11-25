@@ -2,107 +2,156 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AB8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDD320740
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574692496;
-	bh=y1ldojMJX5MFRGBuDlmJDHo7qG4uS3dd9JPM3yhfOYI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=KNy0BkmscWzIvX2jUDKRlyIWXh2Ep4cJDrHeSif9gPZLEGBTywJtSyijz+uDgMXRz
-	 4E5heRJwYahnfP22fGzTj0p9bfCZSx3e/NVJVXjNL9/5gws4n4yfoUkCvvpMmHTx/H
-	 rSp5Vr90Xkzvkbnxaw9Br5lbFrZGAd7ZwfNCgRec=
+	by mail.kernel.org (Postfix) with ESMTP id A477420870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:35:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vm9h9oP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfKYOez (ORCPT
+        id S1728164AbfKYOfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:34:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38492 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728026AbfKYOez (ORCPT
+        Mon, 25 Nov 2019 09:35:04 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40261 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728026AbfKYOfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:34:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so18394950wro.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:34:53 -0800 (PST)
+        Mon, 25 Nov 2019 09:35:04 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v24so11191757lfi.7;
+        Mon, 25 Nov 2019 06:35:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hsCHkSe4yiTHlZ/ob7mBGFXAFtIdPFWVmJbJbHu7lhM=;
-        b=tUY0HhjpdqZHcU+HA7gBU0/ljh1Owrz2Z+p4NlGH5hwUe1I7ve2QaBGuhPmTbH7R0w
-         hcqEhdjGPRB1aI1N8mimEiJLuXbgVX0QMH09li38ZQrGvnbe+68cGQcE3BW0aqPgB/UZ
-         Sqt01wbICVRYnP+oRl90Ic4JTckXKVUnc0WEMiMuVD0Da84I+bfXBGQIQ+LkkV+qpM2D
-         lOcA6eX/WGWfem4alN6zzSStCUnwN108XkRaoYXtACeNL9jA+SS8sIPwKm7ZCBweho2f
-         /DVC0zColrht2J9qU+DgrqBxhxNZBRh2ksQbvowc0Ls19c2r80kbtP5ymY74NfkRuC8W
-         TM4Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mOb7drR/WTWufTxzUC4FI8sP3G8txIhCN7WbUI3E994=;
+        b=Vm9h9oP4w8AakWL2fpCxlWT8rExaAbM1+kSqScdhnmQG1luK1zgK6Jdlquh2waUpHm
+         RyapDHjTaFbxM32TvEKBApfC1ZzIfq/ddxiMGvmNPWU0jFOQofKhnhYGIuenJEo9NJh9
+         YX2bY8OEFxZZX8p9ZDUh6bY4c82EAlazeV2P8fpk65wyUCN40/3CF2zqDgvCI9J5uoGb
+         VKByqCEAwySpm39p8W7jQycG9Ufsh4BO/IRn6fvYXWpFXgXbxwED9tePDWk/RURVP+jw
+         qqckozcfMLX8scEKBgiP+kWniBitb80gZKNMZDbv2qBWO5nZ5Og9dSZxDpWX4Q9R82r2
+         nR7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=hsCHkSe4yiTHlZ/ob7mBGFXAFtIdPFWVmJbJbHu7lhM=;
-        b=cnoUyy1TzcIjpWpuKrkuWDLqEC8YCwBjYYzahMuL4Vgw0tiClJF6JLbUa9rs9TqU+Z
-         VNT3OLfpAWKRbi9YNtowhATTyKaF5UWJbmdlRxU1Ww5MDOBV8Z7KtcBEFE56G8Aq0PY1
-         YDKLGFdD+rSK4UFbz1daTnB/z6h0r5moxDsnU/7D/P7l8bJI7nQlZV35bHyhsU2ggRIq
-         CpbRg0N8QHEqxzwy0dYoF0WMivliOTZ2omWEoGiDjELMIYgdHefeeDwLa8nV/C3a0T3G
-         /dP/BB9+utS3YI1A/koWYb2KIC3va7WcWr1XyHNTcZxeTkgbJmGwsPOcl+q7lkaciKGH
-         BXhQ==
-X-Gm-Message-State: APjAAAWn8/XQO8cA7eEf65nok3YJwlaWbngeix17Y2QmubElnktw4ywU
-        CSqBW9sz4lsUWazrMV4ZBKo=
-X-Google-Smtp-Source: APXvYqxkF2bbo30zFdGa2V8H2D3/2pEeZM5yuPuhMBugBdPyuFxrGtn+xmiF3Km3vd/kucUUukwmAw==
-X-Received: by 2002:adf:f445:: with SMTP id f5mr9495913wrp.193.1574692493298;
-        Mon, 25 Nov 2019 06:34:53 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id t185sm9039620wmf.45.2019.11.25.06.34.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2019 06:34:52 -0800 (PST)
-Date:   Mon, 25 Nov 2019 15:34:50 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/pti updates for v5.5
-Message-ID: <20191125143450.GA26649@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mOb7drR/WTWufTxzUC4FI8sP3G8txIhCN7WbUI3E994=;
+        b=BWS72isxoJFecucUVHSBpRs92apOmc3ZsPKaAH+pLc5MFKY7ZMPnCZH6aonPJ+P2DA
+         6HHzgOcAaOExmOVYGFVd+opzZ8TzUY5mbF1ojKEVFt9j1eK45kJ7Bbt9XhQyYczdc6CO
+         AocSsLKCpFTJKXlNET5a9o0Xh+bvubHC2qrZapHK9K8ZrBgfs+3nDPsjbiIiPlC+Omrj
+         yzQHtPPkR8h5iM0mJ7syD4PpDFWlavUCjDwd8Rv5n7juWdoFNOxlw5mnj8bPIgsKgWCG
+         PMcnqcs9f/lVFnD+tt93o3+HCcLtBl+wXAjdqQIfWOI3CjLFJOQBk0k4+82LkkqLcBob
+         FMhQ==
+X-Gm-Message-State: APjAAAUgJqu0B8cV+FiNxM9MdbVGtq5ebx7DttBrUz7VsvQzbNq2G+7g
+        oKSBliEdAEHobKAgcusXjW+iufseBraCOzjQZdQ=
+X-Google-Smtp-Source: APXvYqzbXX4EpoK9rwjhMiOUCyPCyQLDSuvkp+U1kLrHk/9+VVPTL0+HDaQ9/gLUpO6yoEMWsqdZTWB6OqR8naZMiq0=
+X-Received: by 2002:ac2:428d:: with SMTP id m13mr15000406lfh.64.1574692501816;
+ Mon, 25 Nov 2019 06:35:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1574604530-9024-1-git-send-email-akinobu.mita@gmail.com>
+ <1574604530-9024-5-git-send-email-akinobu.mita@gmail.com> <CAHp75VfOUiN_2bW+o-AqGmAY32mmdNxP54B2f2+gj0NTEr9FTQ@mail.gmail.com>
+In-Reply-To: <CAHp75VfOUiN_2bW+o-AqGmAY32mmdNxP54B2f2+gj0NTEr9FTQ@mail.gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Mon, 25 Nov 2019 23:34:50 +0900
+Message-ID: <CAC5umygc95VBWz1L5CTZO9kmkZL2MCEL2_z9d2TJ6Ow5+fKYPw@mail.gmail.com>
+Subject: Re: [PATCH 4/8] platform/x86: intel_menlow: switch to use
+ <linux/temperature.h> helpers
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+2019=E5=B9=B411=E6=9C=8825=E6=97=A5(=E6=9C=88) 4:58 Andy Shevchenko <andy.s=
+hevchenko@gmail.com>:
+>
+> On Sun, Nov 24, 2019 at 4:09 PM Akinobu Mita <akinobu.mita@gmail.com> wro=
+te:
+> >
+> > This switches the intel_menlow driver to use deci_kelvin_to_celsius() a=
+nd
+> > celsius_to_deci_kelvin() in <linux/temperature.h> instead of helpers in
+> > <linux/thermal.h>.
+> >
+> > This is preparation for centralizing the kelvin to/from Celsius convers=
+ion
+> > helpers in <linux/temprature.h>.
+> >
+> > Cc: Sujith Thomas <sujith.thomas@intel.com>
+> > Cc: Darren Hart <dvhart@infradead.org>
+> > Cc: Andy Shevchenko <andy@infradead.org>
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: Eduardo Valentin <edubezval@gmail.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+> > Cc: Jean Delvare <jdelvare@suse.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Keith Busch <kbusch@kernel.org>
+> > Cc: Jens Axboe <axboe@fb.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Sagi Grimberg <sagi@grimberg.me>
+> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > ---
+> >  drivers/platform/x86/intel_menlow.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86=
+/intel_menlow.c
+> > index b102f6d..6313591 100644
+> > --- a/drivers/platform/x86/intel_menlow.c
+> > +++ b/drivers/platform/x86/intel_menlow.c
+> > @@ -302,8 +302,10 @@ static ssize_t aux_show(struct device *dev, struct=
+ device_attribute *dev_attr,
+> >         int result;
+> >
+> >         result =3D sensor_get_auxtrip(attr->handle, idx, &value);
+> > +       if (result)
+> > +               return result;
+> >
+> > -       return result ? result : sprintf(buf, "%lu", DECI_KELVIN_TO_CEL=
+SIUS(value));
+> > +       return sprintf(buf, "%ld", deci_kelvin_to_celsius(value));
+>
+> Can you explain the change %lu to %ld?
 
-Please pull the latest x86-pti-for-linus git tree from:
+Isn't it possible for aux values to be lower than 0 degrees Celsius?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-pti-for-linus
+> >  }
+> >
+> >  static ssize_t aux0_show(struct device *dev,
+> > @@ -332,8 +334,8 @@ static ssize_t aux_store(struct device *dev, struct=
+ device_attribute *dev_attr,
+> >         if (value < 0)
+> >                 return -EINVAL;
+> >
+> > -       result =3D sensor_set_auxtrip(attr->handle, idx,
+> > -                                   CELSIUS_TO_DECI_KELVIN(value));
+>
+> > +       result =3D sensor_set_auxtrip(attr->handle, idx,
+> > +                                   celsius_to_deci_kelvin(value));
+>
+> How come the first line has been changed?
 
-   # HEAD: cd5a2aa89e847bdda7b62029d94e95488d73f6b2 x86/speculation: Fix redundant MDS mitigation message
-
-Fix reporting bugs of the MDS and TAA mitigation status, if one or both 
-are set via a boot option. No change to mitigation behavior intended.
-
- Thanks,
-
-	Ingo
-
------------------->
-Waiman Long (2):
-      x86/speculation: Fix incorrect MDS/TAA mitigation status
-      x86/speculation: Fix redundant MDS mitigation message
-
-
- Documentation/admin-guide/hw-vuln/mds.rst          |  7 +++--
- .../admin-guide/hw-vuln/tsx_async_abort.rst        |  5 +++-
- Documentation/admin-guide/kernel-parameters.txt    | 11 ++++++++
- arch/x86/kernel/cpu/bugs.c                         | 30 ++++++++++++++++++++--
- 4 files changed, 48 insertions(+), 5 deletions(-)
-
+Because the trailing space is removed.  I'll mention it in the commit log.
