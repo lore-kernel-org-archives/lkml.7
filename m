@@ -2,78 +2,133 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DE0C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E34C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC0020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A13120748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:35:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGTycsad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfKYFe6 (ORCPT
+        id S1727194AbfKYFfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 00:34:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37828 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725882AbfKYFe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 00:34:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AB0ACB042;
-        Mon, 25 Nov 2019 05:34:55 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com
-Subject: [GIT PULL] xen: fixes for xen
-Date:   Mon, 25 Nov 2019 06:34:54 +0100
-Message-Id: <20191125053454.19556-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Mon, 25 Nov 2019 00:35:16 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35321 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfKYFfQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 00:35:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 23so9749300otf.2;
+        Sun, 24 Nov 2019 21:35:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wXFe5IRkpmYw35jezCOFXYaWV3iTtdk0uF/bLAb2KN8=;
+        b=OGTycsadouQJuXYb24/RO8prEiQyQtwqh6DAC5aCfAwdv914oShVGMkOrPoEgLQe2+
+         KoZCnNlVh95l1bojLoxUDPJEVSqQgYj69W9UUvdQKh1LkOKVCD/yP7qDM+eXxGMQ87Wr
+         hPBI9S1kOwLSjZ6J1nLb4CAhjzy2X/Q/RSckk1oeeVtzhq1sRecaazofHmef5DVYAyV9
+         NrwdpfOgSrNae72KucHXjKtz7W1x9oLQOdkdlfYpzEs0idJYAUVYZTsWzi5wJMNzt11W
+         VSfPN+mi/o8/+fLnDJGwQhxFrrCMgEuZjX/iWvD9s0WqbGENHzsQmNYxGVKxWM9JTBzZ
+         bspQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wXFe5IRkpmYw35jezCOFXYaWV3iTtdk0uF/bLAb2KN8=;
+        b=lBptrgb0QABxEj/MhryFUgFE3X58SxE2Wo6c247tNQ955pnyRde8qW+XiTgGfz8Nni
+         n51kD03w7G5gJn48wHE+Jhhpa044ioLkOKDK5K2SjxEVVnCtF7KCHePTkQKLahT5e/yg
+         I/fPpLuG0U2kHJbV13oaDKR9VtaXoQz9+BPhZFm86sNPweze/+6GM6rBoXaLnzJ1Khuh
+         0RNsa/zGwJ4Qt6LkuWc5ZAnYwaEqn0GmYZzAdMaq71LJJDYmAdVeoELoKgjYFhNZyFZ9
+         0Uc0Po1UF3Vywur7TkJuGuSzHI+AaXOtGUeLRWdLjdY05EhzO/bwyJLaGqcZP1M63C54
+         G7rg==
+X-Gm-Message-State: APjAAAXlJNTmtCpFtPBi8a6RXDTuzJdB7zhuDVuTznEEhz+JrJ8L3Lwe
+        HEYHUvtImLA9f3EUs5tv0qvT1cGW
+X-Google-Smtp-Source: APXvYqzBrCNoQTiHjhXVFLrZggDIlVl4nuUoZBvB5aUHTzhXw8r0nZq4mlLgFV5h0Ax4vZr464IU9A==
+X-Received: by 2002:a9d:7b50:: with SMTP id f16mr1052382oto.264.1574660115047;
+        Sun, 24 Nov 2019 21:35:15 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u1sm2233860oie.37.2019.11.24.21.35.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 24 Nov 2019 21:35:14 -0800 (PST)
+Date:   Sun, 24 Nov 2019 21:35:12 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+Cc:     Guenter Roeck <guenter@roeck-us.net>,
+        Guenter Roeck <groeck7@gmail.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2.1] watchdog: make DesignWare watchdog allow users to
+ set bigger timeout value
+Message-ID: <20191125053512.GA5636@roeck-us.net>
+References: <8fa54e92c6cd4544a7a3eb60a373ac43@nokia-sbell.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8fa54e92c6cd4544a7a3eb60a373ac43@nokia-sbell.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Mon, Nov 25, 2019 at 02:04:13AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+> From aabaa4b709bd451e566c906e8d1dca48f92f9b12 Mon Sep 17 00:00:00 2001
+> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+> Date: Wed, 20 Nov 2019 15:12:59 +0800
+> Subject: [PATCH v2.1] watchdog: make DesignWare watchdog allow users to set bigger
+>  timeout value
+> 
+> watchdog_dev.c provides means to allow users to set bigger timeout value
+> than HW can support, make DesignWare watchdog align with this.
+> 
+> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
 
-Please git pull the following tag:
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
- git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.5a-rc1-tag
-
-xen: fixes for xen
-
-It contains following patches:
-
-- a small series to remove the build constraint of Xen x86 MCE handling
-  to 64-bit only
-
-- a bunch of minor cleanups
-  
-
-Thanks.
-
-Juergen
-
- arch/arm/xen/mm.c                |  3 +-
- arch/x86/include/asm/msr-index.h |  2 ++
- drivers/xen/Kconfig              | 63 ++++++++++++++++++++--------------------
- drivers/xen/mcelog.c             | 14 +++++++--
- include/xen/interface/xen-mca.h  | 10 +++++--
- 5 files changed, 56 insertions(+), 36 deletions(-)
-
-Ben Dooks (Codethink) (2):
-      xen: mm: include <xen/xen-ops.h> for missing declarations
-      xen: mm: make xen_mm_init static
-
-Jan Beulich (3):
-      xen/mcelog: drop __MC_MSR_MCGCAP
-      xen/mcelog: add PPIN to record when available
-      xen/mcelog: also allow building for 32-bit kernels
-
-Jason Gunthorpe (1):
-      xen/gntdev: Use select for DMA_SHARED_BUFFER
-
-Krzysztof Kozlowski (1):
-      xen: Fix Kconfig indentation
+> ---
+> 
+> v2 -> v2.1:
+>     - move Signed-off-by to be ahead of section separator
+> 
+> v1 -> v2:
+>     - use top_s to compare with wdd->max_hw_heartbeat_ms
+>     - update wdd->timeout in case it's greater than HW supports
+>     - fix comments error
+> 
+> v1: initial version
+> 
+> ---
+>  drivers/watchdog/dw_wdt.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index fef7c61..12c116e 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+>  
+> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	/*
+> +	 * In case users set bigger timeout value than HW can support,
+> +	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> +	 * wdd->max_hw_heartbeat_ms
+> +	 */
+> +	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
+> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	else
+> +		wdd->timeout = top_s;
+>  
+>  	return 0;
+>  }
+> -- 
+> 1.8.3.1
+> 
