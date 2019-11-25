@@ -2,905 +2,655 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57646C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7504C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C722520748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1C920823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 07:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gQo2FY8b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cwnyc+rN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbfKYHEx (ORCPT
+        id S1725912AbfKYHOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:04:53 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36849 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfKYHEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 02:04:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47LyhW1Hzlz9s7T;
-        Mon, 25 Nov 2019 18:04:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574665483;
-        bh=Bn1+Qfl1YB6Hs+5WigotyEocyvz/jROmYhwaKIMHd5k=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gQo2FY8b/hoakfMneDd/kfswI/xleEW2EDGb2JBQsYkfIDcnmGtCJ7NlgCtWaiTev
-         8Rmi4+BFAyoO8orOnAtP/vkr2OD31ZcfXsTY5IJA/SD/TKvAdLiyU52dkD9CG2LXB9
-         hS3zzUcTiqnBMDGEUaQ0kAf2e9n7ZOqNPhbkh5T8HK4VYhkr7S/TiTToFXsRKDigpv
-         WGHXt8KUgbBHmspnDWwZxOevFdzPMMXqIFaDSY7cdGfqc9xdHr/Wa+TtyqleYNW64Y
-         uB3dROgnaUIIM7X2HvCCGkKJO3ndlQRV27AtMandIMeE0xWMcDBb5xJAB0COsgQSbH
-         9jKF5DSSgADXg==
-Date:   Mon, 25 Nov 2019 18:04:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Tree for Nov 25
-Message-ID: <20191125180439.64c14a55@canb.auug.org.au>
+        Mon, 25 Nov 2019 02:14:37 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38632 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfKYHOh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 02:14:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z19so14597331wmk.3;
+        Sun, 24 Nov 2019 23:14:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bJd+GQAQCuqkQilX5Q5Gm3gbG79NJp94+Sz20uvyhhg=;
+        b=Cwnyc+rNkkqqZkkUmi/3/PzYtJJxDowJJTSN+3BpjyVwgnWdf+KcanHCC0PMYDK8Hk
+         6txvJ67JPnl/s1MpNb8GUCm4rFKvjYMnPd01KlhEqds85AVega12ee/52NgHiQ8ytX66
+         GN+fCo6Y7nBfF3wFhVxKwTouMrHCpKjEVtauSwy6agy0M872n0NPD+0H7LCujBLZaAmb
+         utrxDAMooeoYhPr5fTz2+WChXqBYteVB5FFrELeKSj5kvaHrmQQ/gbkzkDqp0u/h1XYs
+         ofmMy8Lnn7dafDeWC46NzlnVAwSzLYN8LbrCRR/OMxCQdnksWiFslgEyRm/aomajO3RU
+         SrTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bJd+GQAQCuqkQilX5Q5Gm3gbG79NJp94+Sz20uvyhhg=;
+        b=rGfCiakTtBEJIwzhu48PA0OzVi/GM0fJmW5t2Fvutauh7PI/AJbySHzofWYOyVRvFM
+         b3Imfgu7qfe/u3YHT7I9vb33zKMMeOOkr7wrzvhTCD1JB5ruwS0ZpVEPcGoFrEZ/ClTY
+         zuKoMxdCrvfb9AapolYtBVu53ulGu5YYavdneGr+yhXREBV738IGkBAroHJfaO2Vu2FR
+         Jp5/NZ8Ax2fdrHYYCzaSPQgBjLZcvwTjX5OrsjHMuxVFwOzTrv7Z+zIGegXeBqwkSKQB
+         OnWPp202UguDS69puwjlb/V+rY1+P/BGVmqrx6Q+lk+sugt4o9klQrJoz8fTjThRUiiO
+         dy2g==
+X-Gm-Message-State: APjAAAWzypLMjBgPI5UXuWgFjHFnBogcNcj3OtOaZoIsb15oUm+oum+/
+        HjoYRWbdwcWVKW9tac5dICI=
+X-Google-Smtp-Source: APXvYqy5JgIkeblCslRWGPgIbYsJ4tyuPrB5SrQqJNP4P+8C6yFf4lQoECFPSs1QPp5/cCx7u6L0iA==
+X-Received: by 2002:a1c:f214:: with SMTP id s20mr16153302wmc.81.1574666071747;
+        Sun, 24 Nov 2019 23:14:31 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id w4sm7702850wmk.29.2019.11.24.23.14.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 23:14:30 -0800 (PST)
+Date:   Mon, 25 Nov 2019 08:14:29 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        u.kleine-koenig@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191125071429.GB1409040@ulmo>
+References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+gocKvSlQD85zwZpuRBD1Of";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
+Content-Disposition: inline
+In-Reply-To: <20191122113230.16486-1-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+gocKvSlQD85zwZpuRBD1Of
-Content-Type: text/plain; charset=US-ASCII
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Fri, Nov 22, 2019 at 12:32:30PM +0100, Miquel Raynal wrote:
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
+>=20
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>=20
+> Changes in v3:
+> * Added two error messages in ->request().
+> * Protected the PWM count agains races with an additional mutex.
+> * Dropped an useless check on the period value in ->apply().
+> * Forced the .period to be constant.
+> * Checked state->polarity when needed.
+> * Used DIV_ROUND_DOWN_ULL for computing the duty_cycle.
+> * Implemented ->get_state().
+> * Added a comment to explain that the GPIO functionality is not harmed
+>   by the global intensity setting.
+>=20
+> Changes in v2:
+> * Removed the hardcoding of PWM_CHANNELS, changed the code to use the
+>   number of GPIO lines which is programatically known.
+> * Used per pwm_device chip data to store the GPIO descriptors instead
+>   of having a static array of GPIO descriptors in the private PWM
+>   structure. It also enhanced the readability.
+> * Rename an offset variable: s/off/shift/.
+> * The default PWM state is now static low instead of input.
+> * Used the GPIO as regular consumer thanks to the stored GPIO
+>   descriptors to "make it more idiomatic" (requested by Thierry).
+> * Used gpiochip_request_own_desc() instead of
+>   gpio_to_desc()/gpiod_request(). This prevented the build issue and
+>   an additional dependency that would have requested a DEPENDS ON line
+>   in Kconfig.
+> * Enhanced the return line of max7313_pwm_probe().
+>=20
+>=20
+>  drivers/gpio/gpio-pca953x.c | 332 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 330 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index de5d1383f28d..baf639bec18d 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -12,18 +12,22 @@
+>  #include <linux/bits.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/gpio/machine.h>
+>  #include <linux/i2c.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_data/pca953x.h>
+> +#include <linux/pwm.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+> =20
+>  #include <asm/unaligned.h>
+> =20
+> +#include "gpiolib.h"
+> +
+>  #define PCA953X_INPUT		0x00
+>  #define PCA953X_OUTPUT		0x01
+>  #define PCA953X_INVERT		0x02
+> @@ -63,11 +67,18 @@
+> =20
+>  #define PCA_INT			BIT(8)
+>  #define PCA_PCAL		BIT(9)
+> +#define MAX_PWM			BIT(10)
+>  #define PCA_LATCH_INT		(PCA_PCAL | PCA_INT)
+>  #define PCA953X_TYPE		BIT(12)
+>  #define PCA957X_TYPE		BIT(13)
+>  #define PCA_TYPE_MASK		GENMASK(15, 12)
+> =20
+> +#define MAX7313_MASTER		0x0E
+> +#define MAX7313_CONFIGURATION	0x0F
+> +#define MAX7313_INTENSITY	0x10
+> +
+> +#define MAX7313_GLOB_INTENSITY	BIT(2)
+> +
+>  #define PCA_CHIP_TYPE(x)	((x) & PCA_TYPE_MASK)
+> =20
+>  static const struct i2c_device_id pca953x_id[] =3D {
+> @@ -93,7 +104,7 @@ static const struct i2c_device_id pca953x_id[] =3D {
+> =20
+>  	{ "max7310", 8  | PCA953X_TYPE, },
+>  	{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
+> -	{ "max7313", 16 | PCA953X_TYPE | PCA_INT, },
+> +	{ "max7313", 16 | PCA953X_TYPE | PCA_INT | MAX_PWM, },
+>  	{ "max7315", 8  | PCA953X_TYPE | PCA_INT, },
+>  	{ "max7318", 16 | PCA953X_TYPE | PCA_INT, },
+>  	{ "pca6107", 8  | PCA953X_TYPE | PCA_INT, },
+> @@ -118,6 +129,14 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
+> =20
+>  #define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
+> =20
+> +#define PWM_PER_REG 2
+> +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
+> +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
+> +
+> +#define PWM_PERIOD_NS 31250
+> +#define PWM_DC_STATES 16
+> +#define PWM_OFFSET_NS (PWM_PERIOD_NS / PWM_DC_STATES)
+> +
+>  struct pca953x_reg_config {
+>  	int direction;
+>  	int output;
+> @@ -139,6 +158,22 @@ static const struct pca953x_reg_config pca957x_regs =
+=3D {
+>  	.invert =3D PCA957X_INVRT,
+>  };
+> =20
+> +struct max7313_pwm_data {
+> +	struct gpio_desc *desc;
+> +	bool enabled;
+> +	unsigned int duty_cycle;
+> +};
+> +
+> +struct max7313_pwm {
+> +	struct pwm_chip chip;
+> +	/*
+> +	 * Protect races when counting active PWMs for enabling or disabling
+> +	 * the internal oscillator.
+> +	 */
+> +	struct mutex count_lock;
+> +	unsigned int count;
+> +};
+> +
+>  struct pca953x_chip {
+>  	unsigned gpio_start;
+>  	struct mutex i2c_lock;
+> @@ -161,6 +196,8 @@ struct pca953x_chip {
+>  	struct regulator *regulator;
+> =20
+>  	const struct pca953x_reg_config *regs;
+> +
+> +	struct max7313_pwm pwm;
+>  };
+> =20
+>  static int pca953x_bank_shift(struct pca953x_chip *chip)
+> @@ -241,8 +278,16 @@ static bool pca953x_check_register(struct pca953x_ch=
+ip *chip, unsigned int reg,
+>  static bool pca953x_readable_register(struct device *dev, unsigned int r=
+eg)
+>  {
+>  	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+> +	unsigned int bank_sz =3D chip->driver_data & PCA_GPIO_MASK;
+>  	u32 bank;
+> =20
+> +	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE &&
+> +	    chip->driver_data & MAX_PWM) {
+> +		if (reg >=3D MAX7313_MASTER &&
+> +		    reg < (MAX7313_INTENSITY + bank_sz))
+> +			return true;
+> +	}
+> +
+>  	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE) {
+>  		bank =3D PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
+>  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
+> @@ -264,8 +309,16 @@ static bool pca953x_readable_register(struct device =
+*dev, unsigned int reg)
+>  static bool pca953x_writeable_register(struct device *dev, unsigned int =
+reg)
+>  {
+>  	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+> +	unsigned int bank_sz =3D chip->driver_data & PCA_GPIO_MASK;
+>  	u32 bank;
+> =20
+> +	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE &&
+> +	    chip->driver_data & MAX_PWM) {
+> +		if (reg >=3D MAX7313_MASTER &&
+> +		    reg < (MAX7313_INTENSITY + bank_sz))
+> +			return true;
+> +	}
+> +
+>  	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE) {
+>  		bank =3D PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
+>  			PCA953x_BANK_CONFIG;
+> @@ -886,6 +939,278 @@ static int device_pca957x_init(struct pca953x_chip =
+*chip, u32 invert)
+>  	return ret;
+>  }
+> =20
+> +/* PWM specific methods */
+> +
+> +static struct max7313_pwm *to_max7313_pwm(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct max7313_pwm, chip);
+> +}
+> +
+> +static struct pca953x_chip *to_pca953x(struct max7313_pwm *chip)
+> +{
+> +	return container_of(chip, struct pca953x_chip, pwm);
+> +}
+> +
+> +static u8 max7313_pwm_get_intensity(struct pca953x_chip *chip,
+> +				    unsigned int idx)
+> +{
+> +	unsigned int reg, shift, val;
+> +	u8 duty_cycle;
+> +
+> +	reg =3D MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> +	shift =3D (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
+> +
+> +	mutex_lock(&chip->i2c_lock);
+> +	regmap_read(chip->regmap, reg, &val);
+> +	mutex_unlock(&chip->i2c_lock);
+> +
+> +	if (shift)
+> +		val >>=3D shift;
+> +
+> +	val &=3D PWM_INTENSITY_MASK;
+> +
+> +	/*
+> +	 * Register values in the [0;15] range mean a value in the [1;16] range.
+> +	 * A register value of 16 means the logic has been inverted to produce a
+> +	 * static low output.
+> +	 */
+> +	if (val =3D=3D PWM_INTENSITY_MASK)
+> +		duty_cycle =3D 0;
+> +	else
+> +		duty_cycle =3D val + 1;
 
-Please do not add any material for v5.6 to your linux-next included
-trees until after v5.5-rc1 has been released.
+That comment doesn't seem right. PWM_INTENSITY_MASK is 0xf as far as I
+can tell, which means that your comment above is off-by-one with regards
+to the upper limit of the range.
 
-Changes since 20191122:
+Also, a register value of 16 doesn't make sense if your field is 4 bits
+wide.
 
-The pci tree gained a conflict against the powerpc tree.
+> +
+> +	return duty_cycle;
+> +}
+> +
+> +static int max7313_pwm_set_intensity(struct pca953x_chip *chip,
+> +				     unsigned int idx, u8 duty_cycle)
+> +{
+> +	/* Duty-cycle is in the range [1;16] while registers expect [0;15] */
+> +	u8 intensity =3D (duty_cycle - 1) & PWM_INTENSITY_MASK;
+> +	unsigned int reg, shift;
+> +	u8 val, mask;
+> +	int ret;
+> +
+> +	reg =3D MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> +	shift =3D (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
+> +
+> +	mask =3D PWM_INTENSITY_MASK << shift;
+> +	val =3D intensity << shift;
+> +
+> +	mutex_lock(&chip->i2c_lock);
+> +	ret =3D regmap_write_bits(chip->regmap, reg, mask, val);
+> +	mutex_unlock(&chip->i2c_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * For a given PWM channel, when the blink phase 0 bit is set, the inten=
+sity
+> + * range is only [1/16;16/16]. With this range, a static low output is
+> + * physically not possible. When the blink phase 0 bit is cleared, the i=
+ntensity
+> + * range is [15/16;0/16] which then allows a static low output but not a=
+ static
+> + * high output.
+> + *
+> + * In this driver we choose to set the blink phase 0 bit by default, hen=
+ce we
+> + * can slide from a low output to a fully high output without glitch. Ho=
+wever,
+> + * the only way to get a static low output is by clearing the blink phas=
+e 0 bit,
+> + * and by changing the intensity value to its maximum (as, at this momen=
+t,
+> + * intensity is reversed). There is no way to atomically flip the regist=
+er *and*
+> + * change the PWM value at the same time so this will produce a small gl=
+itch.
+> + */
+> +static int max7313_pwm_set_state(struct pca953x_chip *chip,
+> +				 struct pwm_device *pwm_device,
+> +				 unsigned int duty_cycle)
+> +{
+> +	struct max7313_pwm_data *data =3D pwm_get_chip_data(pwm_device);
+> +	struct gpio_desc *desc =3D data->desc;
+> +	int ret;
+> +
+> +	/* A null duty_cycle will invert the phase */
+> +	ret =3D gpiod_direction_output(desc, duty_cycle);
 
-The pm tree gained a conflict against the pci tree.
+It might be worth making this a little more explicit. While gpiolib does
+reduce the value to [0, 1], and hence this should work correctly, I find
+this a little confusing to read.
 
-The bpf-next tree gained a conflict against the net-next tree.
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Maximize the low time in case of static low state */
+> +	if (!duty_cycle)
+> +		duty_cycle =3D PWM_DC_STATES;
+> +
+> +	return max7313_pwm_set_intensity(chip, pwm_device->hwpwm, duty_cycle);
+> +}
+> +
+> +static int max7313_pwm_request(struct pwm_chip *pwm_chip,
+> +			       struct pwm_device *pwm_device)
+> +{
+> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
+> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
+> +	struct max7313_pwm_data *data;
+> +	struct gpio_desc *desc;
+> +	int ret;
+> +
+> +	desc =3D gpiochip_request_own_desc(&chip->gpio_chip, pwm_device->hwpwm,
+> +					 "max7313-pwm", GPIO_ACTIVE_HIGH,
+> +					 GPIOD_OUT_LOW);
+> +	if (IS_ERR(desc)) {
+> +		dev_err(&chip->client->dev,
+> +			"pin already in use (probably as GPIO)\n");
+> +		return PTR_ERR(desc);
+> +	}
+> +
+> +	data =3D devm_kzalloc(&chip->client->dev, sizeof(*data), GFP_KERNEL);
 
-The ftrace tree gained a conflict against the arm64 tree.
+There should be no need to use managed memory in this case since the
+core will take care of calling ->free() on the PWM at the right time. I
+can't think of a case where the memory wouldn't be freed, unless perhaps
+if there's a crash somewhere and the subsystem is thrown off course, in
+which case memory leaks should be the least of your worries.
 
-The devfreq tree lost its build failure.
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->desc =3D desc;
+> +	pwm_set_chip_data(pwm_device, data);
+> +
+> +	ret =3D max7313_pwm_set_state(chip, pwm_device, 0);
+> +	if (ret) {
+> +		dev_err(&chip->client->dev, "cannot set PWM default state\n");
+> +		goto free_gpiod;
+> +	}
+> +
+> +	/*
+> +	 * Set master intensity to the maximum level to let individual outputs
+> +	 * the greatest flexibility range. Also enables the internal oscillator.
+> +	 */
+> +	mutex_lock(&pwm->count_lock);
+> +	if (!pwm->count) {
+> +		mutex_lock(&chip->i2c_lock);
+> +		ret =3D regmap_write_bits(chip->regmap, MAX7313_MASTER,
+> +					PWM_INTENSITY_MASK << PWM_BITS_PER_REG,
+> +					PWM_INTENSITY_MASK << PWM_BITS_PER_REG);
 
-Non-merge commits (relative to Linus' tree): 12456
- 10856 files changed, 537515 insertions(+), 236781 deletions(-)
+This is a bit of a nitpick, but it seems to me like PWM_BITS_PER_REG
+isn't really appropriate here since this is a register completely
+different from those that control the PWM functionality of the PWMs.
 
-----------------------------------------------------------------------------
+Using the same definition implies some sort of correlation here, even
+though it seems like this is really just a coincidence.
 
-I have created today's linux-next tree at
-git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-are tracking the linux-next tree using git, you should not use "git pull"
-to do so as that will try to merge the new linux-next release with the
-old one.  You should use "git fetch" and checkout or reset to the new
-master.
+> +		mutex_unlock(&chip->i2c_lock);
+> +	}
+> +
+> +	if (!ret)
+> +		pwm->count++;
+> +
+> +	mutex_unlock(&pwm->count_lock);
+> +
+> +	if (ret)
+> +		goto free_gpiod;
+> +
+> +	return 0;
+> +
+> +free_gpiod:
+> +	gpiochip_free_own_desc(data->desc);
+> +
+> +	return ret;
+> +}
+> +
+> +static void max7313_pwm_free(struct pwm_chip *pwm_chip,
+> +			     struct pwm_device *pwm_device)
+> +{
+> +	struct max7313_pwm_data *data =3D pwm_get_chip_data(pwm_device);
+> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
+> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
+> +
+> +	max7313_pwm_set_state(chip, pwm_device, 0);
+> +
+> +	mutex_lock(&pwm->count_lock);
+> +
+> +	pwm->count--;
+> +
+> +	/* Disable the internal oscillator if no channel is in use */
+> +	if (!pwm->count) {
+> +		mutex_lock(&chip->i2c_lock);
+> +		regmap_write_bits(chip->regmap, MAX7313_MASTER,
+> +				  PWM_INTENSITY_MASK << PWM_BITS_PER_REG, 0);
+> +		mutex_unlock(&chip->i2c_lock);
+> +	}
+> +
+> +	mutex_unlock(&pwm->count_lock);
+> +
+> +	gpiochip_free_own_desc(data->desc);
+> +}
+> +
+> +static int max7313_pwm_apply(struct pwm_chip *pwm_chip,
+> +			     struct pwm_device *pwm_device,
 
-You can see which trees have been included by looking in the Next/Trees
-file in the source.  There are also quilt-import.log and merge.log
-files in the Next directory.  Between each merge, the tree was built
-with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-multi_v7_defconfig for arm and a native build of tools/perf. After
-the final fixups (if any), I do an x86_64 modules_install followed by
-builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-and sparc64 defconfig. And finally, a simple boot test of the powerpc
-pseries_le_defconfig kernel in qemu (with and without kvm enabled).
+We'd typically just call this "pwm".
 
-Below is a summary of the state of the merge.
+> +			     const struct pwm_state *state)
+> +{
+> +	struct max7313_pwm_data *data =3D pwm_get_chip_data(pwm_device);
+> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
+> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
+> +	unsigned int duty_cycle;
+> +
+> +	if (state->period !=3D PWM_PERIOD_NS ||
+> +	    state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+> +
+> +	data->enabled =3D state->enabled;
+> +	data->duty_cycle =3D state->duty_cycle;
+> +
+> +	if (!state->enabled || !state->duty_cycle)
+> +		duty_cycle =3D 0;
+> +	else
+> +		/* Convert the duty-cycle to be in the [1;16] range */
+> +		duty_cycle =3D DIV_ROUND_DOWN_ULL(state->duty_cycle,
+> +						PWM_OFFSET_NS);
 
-I am currently merging 313 trees (counting Linus' and 78 trees of bug
-fix patches pending for the current merge release).
+If duty-cycle is somewhere in the range [1, PWM_OFFSET_NS - 1], then you
+still end up with duty-cycle =3D 0 here, right?
 
-Stats about the size of the tree over time can be seen at
-http://neuling.org/linux-next-size.html .
+> +
+> +	/* The hardware is supposedly glitch-free */
 
-Status of my local build tests will be at
-http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-advice about cross compilers/configs that work, we are always open to add
-more builds.
+Not sure I understand this comment. Didn't you say above that it's in
+fact not glitch-free in the case where you need to change the blink bit?
 
-Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-Gortmaker for triage and bug fixes.
+> +	return max7313_pwm_set_state(chip, pwm_device, duty_cycle);
+> +}
+> +
+> +static void max7313_pwm_get_state(struct pwm_chip *pwm_chip,
+> +				  struct pwm_device *pwm_device,
+> +				  struct pwm_state *state)
+> +{
+> +	struct max7313_pwm_data *data =3D pwm_get_chip_data(pwm_device);
+> +	struct max7313_pwm *pwm =3D to_max7313_pwm(pwm_chip);
+> +	struct pca953x_chip *chip =3D to_pca953x(pwm);
+> +	u8 duty_cycle;
+> +
+> +	state->period =3D PWM_PERIOD_NS;
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +
+> +	if (!data)
+> +		return;
+> +
+> +	state->enabled =3D data->enabled;
+> +	if (!state->enabled) {
+> +		state->duty_cycle =3D data->duty_cycle;
+> +	} else {
+> +		duty_cycle =3D max7313_pwm_get_intensity(chip, pwm_device->hwpwm);
+> +		state->duty_cycle =3D duty_cycle * PWM_OFFSET_NS;
+> +	}
+> +};
+> +
+> +static const struct pwm_ops max7313_pwm_ops =3D {
+> +	.request =3D max7313_pwm_request,
+> +	.free =3D max7313_pwm_free,
+> +	.apply =3D max7313_pwm_apply,
+> +	.get_state =3D max7313_pwm_get_state,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int max7313_pwm_probe(struct device *dev,
+> +			     struct pca953x_chip *chip)
+> +{
+> +	struct max7313_pwm *pwm =3D &chip->pwm;
+> +	struct pwm_chip *pwm_chip =3D &pwm->chip;
+> +	int ret;
+> +
+> +	if (!(chip->driver_data & MAX_PWM))
+> +		return 0;
+> +
+> +	pwm_chip->dev =3D dev;
+> +	pwm_chip->ops =3D &max7313_pwm_ops;
+> +	pwm_chip->npwm =3D chip->gpio_chip.ngpio;
+> +	pwm_chip->base =3D -1;
+> +
+> +	/* Disable global control (does not affect GPIO functionality) */
+> +	mutex_lock(&chip->i2c_lock);
+> +	ret =3D regmap_write_bits(chip->regmap, MAX7313_CONFIGURATION,
+> +				MAX7313_GLOB_INTENSITY, 0);
+> +	mutex_unlock(&chip->i2c_lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mutex_init(&pwm->count_lock);
+> +
+> +	return pwmchip_add(pwm_chip);
+> +}
+> +
+>  static const struct of_device_id pca953x_dt_ids[];
+> =20
+>  static int pca953x_probe(struct i2c_client *client,
+> @@ -1018,6 +1343,9 @@ static int pca953x_probe(struct i2c_client *client,
+>  			dev_warn(&client->dev, "setup failed, %d\n", ret);
+>  	}
+> =20
+> +	if (IS_ENABLED(CONFIG_PWM))
+> +		return max7313_pwm_probe(&client->dev, chip);
 
---=20
-Cheers,
-Stephen Rothwell
+Might be more cautious to use a regular error check here, rather than a
+plain return statement. As it is, if somebody's not careful, they'll go
+and add some code between this and the "return 0;" below and end up
+scratching their head why the code isn't getting executed on chips that
+support PWM.
 
-$ git checkout master
-$ git reset --hard stable
-Merging origin/master (6b8a79467876 Merge tag 'for_linus' of git://git.kern=
-el.org/pub/scm/linux/kernel/git/mst/vhost)
-Merging fixes/master (31f4f5b495a6 Linux 5.4-rc7)
-Merging kbuild-current/fixes (80591e61a0f7 kbuild: tell sparse about the $A=
-RCH)
-Merging arc-current/for-curr (5effc09c4907 ARC: perf: Accommodate big-endia=
-n CPU)
-Merging arm-current/fixes (39f4d4410484 Merge branch 'misc' into fixes)
-Merging arm-soc-fixes/arm/fixes (db6efda85437 Merge tag 'tee-fixes-for-v5.4=
-' of git://git.linaro.org/people/jens.wiklander/linux-tee into arm/fixes)
-Merging arm64-fixes/for-next/fixes (e50be648aaa3 arm64: uaccess: Remove uac=
-cess_*_not_uao asm macros)
-Merging m68k-current/for-linus (0f1979b402df m68k: Remove ioremap_fullcache=
-())
-Merging powerpc-fixes/fixes (7d6475051fb3 powerpc/powernv: Fix CPU idle to =
-be called with IRQs disabled)
-Merging s390-fixes/fixes (a99d8080aaf3 Linux 5.4-rc6)
-Merging sparc/master (038029c03e21 sparc: remove unneeded uapi/asm/statfs.h)
-Merging fscrypt-current/for-stable (ae64f9bd1d36 Linux 4.15-rc2)
-Merging net/master (312434617cb1 sctp: cache netns in sctp_ep_common)
-Merging bpf/master (34e59836565e net/mlx4_en: fix mlx4 ethtool -N insertion)
-Merging ipsec/master (a56dcc6b4558 net: cdc_ncm: Signedness bug in cdc_ncm_=
-set_dgram_size())
-Merging netfilter/master (064a18998b0b Merge tag 'mlx5-fixes-2019-11-20' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/saeed/linux)
-Merging ipvs/master (c24b75e0f923 ipvs: move old_secure_tcp into struct net=
-ns_ipvs)
-Merging wireless-drivers/master (cb1a4badf592 iwlwifi: pcie: don't consider=
- IV len in A-MSDU)
-Merging mac80211/master (285531f9e677 mac80211: fix station inactive_time s=
-hortly after boot)
-Merging rdma-fixes/for-rc (411c1e6774e2 RDMA/hns: Correct the value of srq_=
-desc_size)
-Merging sound-current/for-linus (976a68f06b2e ALSA: usb-audio: Fix incorrec=
-t size check for processing/extension units)
-Merging sound-asoc-fixes/for-linus (3701d2cb8767 Merge branch 'asoc-5.4' in=
-to asoc-linus)
-Merging regmap-fixes/for-linus (af42d3466bdc Linux 5.4-rc8)
-Merging regulator-fixes/for-linus (c642e8708684 Merge branch 'regulator-5.4=
-' into regulator-linus)
-Merging spi-fixes/for-linus (8f3ed6d0b0db Merge branch 'spi-5.4' into spi-l=
-inus)
-Merging pci-current/for-linus (54ecb8f7028c Linux 5.4-rc1)
-Merging driver-core.current/driver-core-linus (d6d5df1db6e9 Linux 5.4-rc5)
-Merging tty.current/tty-linus (d6d5df1db6e9 Linux 5.4-rc5)
-Merging usb.current/usb-linus (a99d8080aaf3 Linux 5.4-rc6)
-Merging usb-gadget-fixes/fixes (f3fb802efaef usb: cdns3: gadget: Don't mana=
-ge pullups)
-Merging usb-serial-fixes/usb-linus (a99d8080aaf3 Linux 5.4-rc6)
-Merging usb-chipidea-fixes/ci-for-usb-stable (16009db47c51 usb: chipidea: u=
-dc: workaround for endpoint conflict issue)
-Merging phy/fixes (54ecb8f7028c Linux 5.4-rc1)
-Merging staging.current/staging-linus (31f4f5b495a6 Linux 5.4-rc7)
-Merging char-misc.current/char-misc-linus (31f4f5b495a6 Linux 5.4-rc7)
-Merging soundwire-fixes/fixes (7b47ad3322d1 soundwire: slave: fix scanf for=
-mat)
-Merging thunderbolt-fixes/fixes (af42d3466bdc Linux 5.4-rc8)
-Merging input-current/for-linus (8791663435e7 Revert "Input: synaptics - en=
-able RMI mode for X1 Extreme 2nd Generation")
-Merging crypto-current/master (08e97aec700a Revert "hwrng: core - Freeze kh=
-wrng thread during suspend")
-Merging ide/master (baf6722aa0cb ide: Use dev_get_drvdata where possible)
-Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
-base)
-Merging kselftest-fixes/fixes (ed2d8fa734e7 selftests: sync: Fix cast warni=
-ngs on arm)
-Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
- to pass all module source files to spatch)
-Merging slave-dma-fixes/fixes (bacdcb6675e1 dmaengine: cppi41: Fix cppi41_d=
-ma_prep_slave_sg() when idle)
-Merging backlight-fixes/for-backlight-fixes (e93c9c99a629 Linux 5.1)
-Merging mtd-fixes/mtd/fixes (df8fed831cbc mtd: rawnand: au1550nd: Fix au_re=
-ad_buf16() prototype)
-Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
-changing mt6397-core)
-Merging v4l-dvb-fixes/fixes (3e84a18a259e media: meson/ao-cec: move cec_not=
-ifier_cec_adap_register after hw setup)
-Merging reset-fixes/reset/fixes (cc67d61e31ec reset: Do not register resour=
-ce data for missing resets)
-Merging mips-fixes/mips-fixes (f6929c92e283 MAINTAINERS: Remove Kevin as ma=
-intainer of BMIPS generic platforms)
-Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
-Merging omap-fixes/fixes (6aed5a0e0f56 Merge branch 'watchdog-fix' into fix=
-es)
-Merging kvm-fixes/master (9cb09e7c1c9a KVM: Add a comment describing the /d=
-ev/kvm no_compat handling)
-Merging kvms390-fixes/master (53936b5bf35e KVM: s390: Do not leak kernel st=
-ack data in the KVM_S390_INTERRUPT ioctl)
-Merging hwmon-fixes/hwmon (92b39ad44096 hwmon: (pmbus/ibm-cffps) Fix LED bl=
-ink behavior)
-Merging nvdimm-fixes/libnvdimm-fixes (6370740e5f8e fs/dax: Fix pmd vs pte c=
-onflict detection)
-Merging btrfs-fixes/next-fixes (bfbbf8cb43a7 Merge branch 'misc-5.4' into n=
-ext-fixes)
-Merging vfs-fixes/fixes (3e5aeec0e267 cramfs: fix usage on non-MTD device)
-Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
-rrect dma mask when we are bypassing the IOMMU)
-Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
-Merging drivers-x86-fixes/fixes (7d194c2100ad Linux 5.4-rc4)
-Merging samsung-krzk-fixes/fixes (54ecb8f7028c Linux 5.4-rc1)
-Merging pinctrl-samsung-fixes/pinctrl-fixes (5f9e832c1370 Linus 5.3-rc1)
-Merging devicetree-fixes/dt/linus (5dba51754b04 of: reserved_mem: add missi=
-ng of_node_put() for proper ref-counting)
-Merging scsi-fixes/fixes (9393c8de628c scsi: core: Handle drivers which set=
- sg_tablesize to zero)
-Merging drm-fixes/drm-fixes (51658c04c338 Merge tag 'drm-intel-fixes-2019-1=
-1-21' of git://anongit.freedesktop.org/drm/drm-intel into drm-fixes)
-Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
-cac() failed issue)
-Merging drm-intel-fixes/for-linux-next-fixes (71d122629c04 drm/i915/fbdev: =
-Restore physical addresses for fb_mmap())
-Merging mmc-fixes/fixes (fed23c5829ec mmc: sdhci-of-at91: fix quirk2 overwr=
-ite)
-Merging rtc-fixes/rtc-fixes (5f9e832c1370 Linus 5.3-rc1)
-Merging gnss-fixes/gnss-linus (54ecb8f7028c Linux 5.4-rc1)
-Merging hyperv-fixes/hyperv-fixes (af42d3466bdc Linux 5.4-rc8)
-Merging soc-fsl-fixes/fix (5674a92ca4b7 soc/fsl/qe: Fix an error code in qe=
-_pin_request())
-Merging risc-v-fixes/fixes (1d9b0b66c3ef MAINTAINERS: Change to my personal=
- email address)
-Merging pidfd-fixes/fixes (9e77716a75bc fork: fix pidfd_poll()'s return typ=
-e)
-Merging fpga-fixes/fixes (dec43da46f63 fpga: altera-ps-spi: Fix getting of =
-optional confd gpio)
-Merging spdx/spdx-linus (bf49d9dd6fef export,module: add SPDX GPL-2.0 licen=
-se identifier to headers with no license)
-Merging gpio-intel-fixes/fixes (7d194c2100ad Linux 5.4-rc4)
-Merging pinctrl-intel-fixes/fixes (af42d3466bdc Linux 5.4-rc8)
-Merging erofs-fixes/fixes (da0c9ea146cb Linux 5.4-rc2)
-Merging drm-misc-fixes/for-linux-next-fixes (c131280c03bd drm/mcde: dsi: Fi=
-x invalid pointer dereference if panel cannot be found)
-Merging kspp-gustavo/for-next/kspp (da0c9ea146cb Linux 5.4-rc2)
-Merging kbuild/for-next (b1fbfcb4a209 kbuild: make single target builds eve=
-n faster)
-Merging compiler-attributes/compiler-attributes (54ecb8f7028c Linux 5.4-rc1)
-Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
-Merging dma-mapping/for-next (a7ba70f1787f dma-mapping: treat dev->bus_dma_=
-mask as a DMA limit)
-Merging asm-generic/master (9b87647c665d asm-generic: add unlikely to defau=
-lt BUG_ON(x))
-Merging arc/for-next (9fbea0b7e842 ARC: add kmemleak support)
-Merging arm/for-next (1a70cf0e7ee6 ARM: 8940/1: ftrace: remove mcount(),ftr=
-ace_caller_old() and ftrace_call_old())
-Merging arm64/for-next/core (d8e85e144bbe arm64: Kconfig: add a choice for =
-endianness)
-CONFLICT (content): Merge conflict in arch/arm64/include/asm/asm-uaccess.h
-Merging arm-perf/for-next/perf (8703317ae576 drivers/perf: hisi: update the=
- sccl_id/ccl_id for certain HiSilicon platform)
-Merging arm-soc/for-next (e1351090dd4a ARM: Document merges)
-CONFLICT (modify/delete): include/Kbuild deleted in HEAD and modified in ar=
-m-soc/for-next. Version arm-soc/for-next of include/Kbuild left in tree.
-$ git rm -f include/Kbuild
-Merging amlogic/for-next (1e1693ee7764 Merge branch 'v5.5/fixes' into tmp/a=
-ml-rebuild)
-Merging aspeed/for-next (2aee80727dca Merge branch 'defconfig-for-v5.5' int=
-o for-next)
-Merging at91/at91-next (571c4b1fe42b Merge branches 'at91-drivers', 'at91-d=
-t' and 'at91-defconfig' into at91-next)
-Merging bcm2835/for-next (f14234184671 Merge branch 'bcm2835-maintainers-ne=
-xt' into for-next)
-Merging imx-mxs/for-next (71918b15d58f Merge branch 'imx/defconfig' into fo=
-r-next)
-Merging keystone/next (2af8e1f26c65 Merge branch 'for_5.5/driver-soc' into =
-next)
-Merging mediatek/for-next (4ae1ce88e9a0 Merge branch 'v5.3-next/soc' into f=
-or-next)
-Merging mvebu/for-next (3aa22be2d6b1 Merge branch 'mvebu/dt64' into mvebu/f=
-or-next)
-Merging omap/for-next (369f4ddb51bb Merge branch 'omap-for-v5.5/dt-v2' into=
- for-next)
-Merging qcom/for-next (6a363f34a300 Merge remote-tracking branches 'origin/=
-arm64-defconfig-for-5.5', 'origin/arm64-for-5.5', 'origin/defconfig-for-5.5=
-', 'origin/drivers-for-5.5' and 'origin/dts-for-5.5' into for-next)
-CONFLICT (content): Merge conflict in arch/arm64/configs/defconfig
-Merging realtek/for-next (6a41c7019bca Merge branch 'v5.5/dt64' into next)
-Merging renesas/next (9c45f53abb97 Merge branches 'renesas-arm-defconfig-fo=
-r-v5.5', 'renesas-arm64-defconfig-for-v5.5', 'renesas-arm64-dt-for-v5.5', '=
-renesas-drivers-for-v5.5' and 'renesas-dt-bindings-for-v5.5' into renesas-n=
-ext)
-Merging reset/reset/next (b3f1d036f26d reset: npcm: add NPCM reset controll=
-er driver)
-Merging rockchip/for-next (f0d0e0810786 Merge branch 'v5.5-armsoc/dts64' in=
-to for-next)
-Merging samsung-krzk/for-next (6780daf48588 Merge branch 'next/dt' into for=
--next)
-Merging scmi/for-linux-next (af42d3466bdc Linux 5.4-rc8)
-Merging sunxi/sunxi/for-next (2ddd531f8c80 Merge branches 'sunxi/clk-for-5.=
-5' and 'sunxi/dt-for-5.5' into sunxi/for-next)
-Merging tegra/for-next (e0fd54137bf5 Merge branch for-5.5/cpufreq into for-=
-next)
-Merging clk/clk-next (cd89054e321a Merge branch 'clk-init-leak' into clk-ne=
-xt)
-Merging clk-samsung/for-next (54ecb8f7028c Linux 5.4-rc1)
-Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
-git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
-Merging csky/linux-next (044cf5e15357 csky: Initial stack protector support)
-Merging h8300/h8300-next (a5de8865cb3e h8300: move definition of __kernel_s=
-ize_t etc. to posix_types.h)
-Merging ia64/next (0d3d343560ba genirq: remove the is_affinity_mask_valid h=
-ook)
-Merging m68k/for-next (5ed0794cde59 m68k/atari: Convert Falcon IDE drivers =
-to platform drivers)
-Merging m68knommu/for-next (3ad3cbe305b5 m68k/coldfire: Use CONFIG_PREEMPTI=
-ON)
-Merging microblaze/next (22648c989cb8 microblaze: Increase max dtb size to =
-64K from 32K)
-Merging mips/mips-next (b02efeb05699 MIPS: Ingenic: Disable abandoned HPTLB=
- function.)
-CONFLICT (content): Merge conflict in arch/mips/sgi-ip27/ip27-init.c
-Merging nds32/next (a7f96fce201c MAINTAINERS: add nds32 maintainer)
-Merging nios2/for-next (91d99a724e9c nios2: force the string buffer NULL-te=
-rminated)
-Merging openrisc/for-next (0ecdcaa6d5e7 openrisc: Fix Kconfig indentation)
-Merging parisc-hd/for-next (e9c837c6ab07 parisc: Avoid spurious inequivalen=
-t alias kernel error messages)
-Merging powerpc/next (bf9c95e23324 selftests/powerpc: spectre_v2 test must =
-be built 64-bit)
-Merging fsl/next (a76bea0287ce powerpc/kmcent2: add ranges to the pci bridg=
-es)
-Merging soc-fsl/next (3b8db0348c50 soc: fsl: add RCPM driver)
-Merging risc-v/for-next (070389ef0f4b Merge branch 'next/add-nonstable-guid=
-ance' into for-next)
-Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
-://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
-Merging s390/features (6a82e23f45fe s390/cpumf: Adjust registration of s390=
- PMU device drivers)
-Merging sh/sh-next (baf58858e8b6 sh: prefer __section from compiler_attribu=
-tes.h)
-CONFLICT (modify/delete): arch/sh/include/uapi/asm/types.h deleted in sh/sh=
--next and modified in HEAD. Version HEAD of arch/sh/include/uapi/asm/types.=
-h left in tree.
-CONFLICT (modify/delete): arch/sh/include/uapi/asm/setup.h deleted in sh/sh=
--next and modified in HEAD. Version HEAD of arch/sh/include/uapi/asm/setup.=
-h left in tree.
-$ git rm -f arch/sh/include/uapi/asm/setup.h arch/sh/include/uapi/asm/types=
-.h
-Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
-ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
-Merging uml/linux-next (73625ed66389 um: irq: Fix LAST_IRQ usage in init_IR=
-Q())
-Merging xtensa/xtensa-for-next (e86e4bdfc0cb Merge branch 'xtensa-5.5' into=
- xtensa-for-next)
-Merging fscrypt/master (0eee17e33226 f2fs: add support for IV_INO_LBLK_64 e=
-ncryption policies)
-Merging afs/afs-next (297c6f6378a6 afs: Remove set but not used variable 'r=
-et')
-Merging btrfs/for-next (897636c94003 Merge branch 'misc-5.5' into for-next-=
-20191119)
-Merging ceph/master (633739b2fedb rbd: silence bogus uninitialized warning =
-in rbd_object_map_update_finish())
-Merging cifs/for-next (0966aa813a7f cifs: dump channel info in DebugData)
-Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
-rent item)
-Merging ecryptfs/next (b4a81b87a4cf ecryptfs: fix a memory leak bug in ecry=
-ptfs_init_messaging())
-Merging erofs/dev (3dcb5fa23e16 erofs: remove unnecessary output in erofs_s=
-how_options())
-Merging ext3/for_next (15d8f21beaae Pull ext2 cleanup and quota stats fixes=
-.)
-Merging ext4/dev (dfdeeb41fb08 Merge branch 'tt/misc' into dev)
-Merging f2fs/dev (7c15ed5f37a3 f2fs: avoid kernel panic on corruption test)
-Merging fsverity/fsverity (73f0ec02d670 docs: fs-verity: mention statx() su=
-pport)
-Merging fuse/for-next (00929447f575 virtiofs: Fix old-style declaration)
-Merging jfs/jfs-next (a5fdd713d256 jfs: fix bogus variable self-initializat=
-ion)
-Merging nfs/linux-next (e8d70b321ecc SUNRPC: Fix another issue with MIC buf=
-fer space)
-Merging nfs-anna/linux-next (79cc55422ce9 NFS: Fix an RCU lock leak in nfs4=
-_refresh_delegation_stateid())
-Merging nfsd/nfsd-next (8729aaba7462 SUNRPC: Fix backchannel latency metric=
-s)
-Merging orangefs/for-next (e6b998ab62be orangefs: remove redundant assignme=
-nt to err)
-Merging overlayfs/overlayfs-next (5c2e9f346b81 ovl: filter of trusted xattr=
- results in audit)
-Merging ubifs/linux-next (f9c34bb52997 ubi: Fix producing anchor PEBs)
-Merging v9fs/9p-next (aafee43b7286 9p/vfs_super.c: Remove unused parameter =
-data in v9fs_fill_super)
-Merging xfs/for-next (22858d0ab9b3 xfs: Convert kmem_alloc() users)
-Merging iomap/iomap-for-next (419e9c38aa07 iomap: Fix pipe page leakage dur=
-ing splicing)
-Merging djw-vfs/vfs-for-next (3253d9d09337 splice: only read in as much inf=
-ormation as there is pipe buffer space)
-Merging file-locks/locks-next (b41dae061bbd Merge tag 'xfs-5.4-merge-7' of =
-git://git.kernel.org/pub/scm/fs/xfs/xfs-linux)
-Merging vfs/for-next (3e501af8dd7b Merge branches 'work.misc', 'work.mount3=
-', 'work.namei', 'work.dcache' and 'work.autofs' into for-next)
-Merging printk/for-next (7c88431552f3 Merge branch 'for-5.5' into for-next)
-Merging pci/next (d3d7b62ffff9 Merge branch 'pci/trivial')
-CONFLICT (content): Merge conflict in arch/powerpc/include/asm/Kbuild
-CONFLICT (content): Merge conflict in arch/arm64/boot/dts/amlogic/meson-sm1=
-.dtsi
-CONFLICT (content): Merge conflict in arch/arm64/boot/dts/amlogic/meson-g12=
--common.dtsi
-Merging pstore/for-next/pstore (8d82cee2f8aa pstore: Make pstore_choose_com=
-pression() static)
-Merging hid/for-next (4b8c2dffbb85 Merge branch 'for-5.5/core' into for-nex=
-t)
-Merging i2c/i2c/for-next (3274d632cb1a Merge branch 'i2c/for-current' into =
-i2c/for-next)
-Merging i3c/i3c/next (ae24f2b6f828 MAINTAINERS: add myself as maintainer of=
- Cadence I3C master controller driver)
-Merging dmi/master (9a85ac3936ad firmware: dmi: Add dmi_memdev_handle)
-Merging hwmon-staging/hwmon-next (4a1288f1c1cf dell-smm-hwmon: Add document=
-ation)
-Merging jc_docs/docs-next (51e46c7a4007 docs, parallelism: Rearrange how jo=
-bserver reservations are made)
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/pensando/ionic.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/ixgbevf.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/ixgbe.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/igbvf.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/igb.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/ice.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/iavf.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/i40e.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/fm10k.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/e1000e.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/e1000.rst
-CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
-rs/intel/e100.rst
-CONFLICT (content): Merge conflict in Documentation/admin-guide/perf/imx-dd=
-r.rst
-Merging v4l-dvb/master (dca6b3733a4a media: Revert "media: mtk-vcodec: Remo=
-ve extra area allocation in an input buffer on encoding")
-Merging v4l-dvb-next/master (d45331b00ddb Linux 5.3-rc4)
-Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
-in imxfb_probe())
-Merging pm/linux-next (16512c3e4523 Merge branches 'pm-cpuidle' and 'pm-doc=
-s' into linux-next)
-CONFLICT (content): Merge conflict in scripts/checkpatch.pl
-CONFLICT (content): Merge conflict in lib/test_printf.c
-CONFLICT (content): Merge conflict in Documentation/power/pci.rst
-Merging cpufreq-arm/cpufreq/arm/linux-next (c23734487fb4 cpufreq: sun50i: F=
-ix CPU speed bin detection)
-Merging cpupower/cpupower (4611a4fb0cce cpupower: ToDo: Update ToDo with id=
-eas for per_cpu_schedule handling)
-Merging opp/opp/linux-next (25cb20a212a1 PM / OPP: Support adjusting OPP vo=
-ltages at runtime)
-Merging thermal/thermal/linux-next (def0aa869050 thermal: Fix deadlock in t=
-hermal thermal_zone_device_check)
-Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
-Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
-e OF sensor)
-Merging ieee1394/for-next (7807759e4ad8 firewire: core: code cleanup after =
-vm_map_pages_zero introduction)
-Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
-s_create functions)
-Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
-d xen_create_contiguous_region())
-Merging rdma/for-next (9067f2f0b41d RDMA/iw_cgxb4: Fix an error handling pa=
-th in 'c4iw_connect()')
-CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx5/mr.c
-Merging net-next/master (c392bccf2c10 powerpc: Add const qual to local_read=
-() parameter)
-Merging bpf-next/master (b633b4ea8a96 bpf: Simplify __bpf_arch_text_poke po=
-ke type handling)
-CONFLICT (content): Merge conflict in kernel/bpf/syscall.c
-Merging ipsec-next/master (72c996099dc6 cxgb4: Fix an error code in cxgb4_m=
-qprio_alloc_hw_resources())
-Merging mlx5-next/mlx5-next (9c0015ef0928 IB/mlx5: Implement callbacks for =
-getting VFs GUID attributes)
-Merging netfilter-next/master (f3c9a666b285 net: sfp: soft status and contr=
-ol support)
-Merging nfc-next/master (1f008cfec5d5 NFC: fdp: Fix unused variable warning=
-s)
-CONFLICT (content): Merge conflict in drivers/nfc/st21nfca/se.c
-Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
-ltiple devices per netdev hook)
-Merging wireless-drivers-next/master (05d6c8cfdbd6 mt76: fix fix ampdu lock=
-ing)
-Merging bluetooth/master (a4f95f31a9f3 Bluetooth: btbcm: Use the BDADDR_PRO=
-PERTY quirk)
-Merging mac80211-next/master (7a89233ac504 mac80211: Use Airtime-based Queu=
-e Limits (AQL) on packet dequeue)
-Merging gfs2/for-next (ade48088937f gfs2: Don't write log headers after fil=
-e system withdraw)
-Merging mtd/mtd/next (589e1b6c47ce Merge tag 'nand/for-5.5' into mtd/next)
-Merging nand/nand/next (777260a5c992 mtd: rawnand: remove unecessary checki=
-ng if dmac is NULL)
-Merging spi-nor/spi-nor/next (83cba933a6db mtd: spi-nor: Set default Quad E=
-nable method for ISSI flashes)
-Merging crypto/master (4ee812f6143d crypto: vmx - Avoid weird build failure=
-s)
-CONFLICT (content): Merge conflict in arch/arm/crypto/Kconfig
-Merging drm/drm-next (17eee668b3ca Merge tag 'drm-misc-next-fixes-2019-11-2=
-0' of git://anongit.freedesktop.org/drm/drm-misc into drm-next)
-CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/i915_scheduler.c
-CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/i915_drv.c
-CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/Kconfig.debug
-Applying: cec: fix up for "cec: add cec_adapter to cec_notifier_cec_adap_un=
-register()"
-Applying: drm/v3d: Fix double free in v3d_submit_cl_ioctl()
-Merging amdgpu/drm-next (ba77517eba6d MAINTAINERS: Drop Rex Zhu for amdgpu =
-powerplay)
-Merging drm-intel/for-linux-next (15b9cbb2c5e1 Revert "drm/i915/gt: Wait fo=
-r new requests in intel_gt_retire_requests()")
-Merging drm-tegra/drm/tegra/for-next (84db889e6d82 drm/tegra: Unconditional=
-ly select IOMMU_IOVA)
-Merging drm-misc/for-linux-next (9786b65bc61a drm/ttm: fix mmap refcounting)
-Merging drm-msm/msm-next (e20c9284c8f2 drm/msm/adreno: Add support for Adre=
-no 510 GPU)
-Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
-d optional property node define for Mali DP500)
-Merging imx-drm/imx-drm/next (4d24376370fb gpu: ipu-v3: image-convert: only=
- sample into the next tile if necessary)
-Merging etnaviv/etnaviv/next (22567d017c2c dt-bindings: etnaviv: Add #cooli=
-ng-cells)
-Merging regmap/for-next (0c4b6e03b8ad Merge branch 'regmap-5.5' into regmap=
--next)
-Merging sound/for-next (c6b6fc206586 ALSA: aloop: Fix dependency on timer A=
-PI)
-Merging sound-asoc/for-next (8c4d2a0bfbd2 Merge branch 'asoc-5.5' into asoc=
--next)
-CONFLICT (content): Merge conflict in sound/soc/codecs/Kconfig
-Merging modules/modules-next (5d603311615f kernel/module.c: wakeup processe=
-s in module_wq on module unload)
-Merging input/next (bcf1e034d3aa Input: fix Kconfig indentation)
-Merging block/for-next (832ef6680601 Merge branch 'for-5.5/io_uring-post' i=
-nto for-next)
-CONFLICT (modify/delete): include/Kbuild deleted in HEAD and modified in bl=
-ock/for-next. Version block/for-next of include/Kbuild left in tree.
-$ git rm -f include/Kbuild
-Merging device-mapper/for-next (f612b2132db5 Revert "dm crypt: use WQ_HIGHP=
-RI for the IO and crypt workqueues")
-Merging pcmcia/pcmcia-next (bd9d6e0371d1 pcmcia: remove unused dprintk defi=
-nition)
-Merging mmc/next (def7bd940f8c dt-bindings: mmc: Correct the type of the cl=
-k phase properties)
-Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
-er)
-Merging mfd/for-mfd-next (de98a43eb76b mfd: ti_am335x_tscadc: Fix static ch=
-ecker warning)
-CONFLICT (content): Merge conflict in drivers/mfd/mt6397-core.c
-Merging backlight/for-backlight-next (9afa302473f3 backlight: gpio: Pull gp=
-io_backlight_initial_power_state() into probe)
-Merging battery/for-next (9480029fe5c2 power: supply: bd70528: Add MODULE_A=
-LIAS to allow module auto loading)
-Merging regulator/for-next (a21da94f617b Merge branch 'regulator-5.5' into =
-regulator-next)
-Merging security/next-testing (45893a0abee6 kexec: Fix file verification on=
- S390)
-Merging apparmor/apparmor-next (341c1fda5e17 apparmor: make it so work buff=
-ers can be allocated from atomic context)
-Merging integrity/next-integrity (2a7f0e53daf2 ima: ima_api: Use struct_siz=
-e() in kzalloc())
-Merging keys/keys-next (48274e1e5d24 Merge branch 'notifications-core' into=
- keys-next)
-Merging selinux/next (42345b68c2e3 selinux: default_range glblub implementa=
-tion)
-Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
-e_smack::smk_lock)
-Merging tomoyo/master (79c8ca578dbf Revert "printk: Monitor change of conso=
-le loglevel.")
-Merging tpmdd/next (0b40dbcbba92 KEYS: trusted: Remove set but not used var=
-iable 'keyhndl')
-CONFLICT (modify/delete): include/Kbuild deleted in HEAD and modified in tp=
-mdd/next. Version tpmdd/next of include/Kbuild left in tree.
-$ git rm -f include/Kbuild
-Merging watchdog/master (33c26ab4d6be watchdog: jz4740: Drop dependency on =
-MACH_JZ47xx)
-Merging iommu/next (9b3a713feef8 Merge branches 'iommu/fixes', 'arm/qcom', =
-'arm/renesas', 'arm/rockchip', 'arm/mediatek', 'arm/tegra', 'arm/smmu', 'x8=
-6/amd', 'x86/vt-d', 'virtio' and 'core' into next)
-Merging vfio/next (026948f01eac vfio/type1: remove hugepage checks in is_in=
-valid_reserved_pfn())
-Merging audit/next (c34c78dfc1fc audit: remove redundant condition check in=
- kauditd_thread())
-Merging devicetree/for-next (10378fadadef dt-bindings: interrupt-controller=
-: arm,gic-v3: Add missing type to interrupt-partition-* nodes)
-CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/usb=
-/generic-ehci.yaml
-CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/usb=
-/amlogic,dwc3.txt
-CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/gpu=
-/arm,mali-midgard.yaml
-Merging mailbox/mailbox-for-next (556a0964e28c mailbox: qcom-apcs: fix max_=
-register value)
-Merging spi/for-next (e2ce328b282d Merge remote-tracking branch 'spi/topic/=
-ptp' into spi-next)
-Merging tip/auto-latest (e16a444976e9 Merge branch 'locking/core')
-CONFLICT (content): Merge conflict in include/trace/events/rpcrdma.h
-CONFLICT (content): Merge conflict in include/linux/security.h
-CONFLICT (content): Merge conflict in fs/jbd2/transaction.c
-CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/gem/i915_gem_shr=
-inker.c
-CONFLICT (content): Merge conflict in arch/xtensa/kernel/vmlinux.lds.S
-CONFLICT (content): Merge conflict in arch/x86/kernel/kprobes/opt.c
-CONFLICT (content): Merge conflict in arch/x86/kernel/jump_label.c
-CONFLICT (content): Merge conflict in arch/x86/kernel/alternative.c
-CONFLICT (content): Merge conflict in arch/x86/include/asm/text-patching.h
-Applying: drm/i915: update for mutex_release API change
-Applying: fix up for "x86/asm: Change all ENTRY+ENDPROC to SYM_FUNC_*"
-Merging clockevents/timers/drivers/next (6e001f6a4cc7 clocksource/drivers/a=
-sm9260: Add a check for of_clk_get)
-Merging edac/edac-for-next (5781823fd0d3 EDAC/altera: Use the Altera System=
- Manager driver)
-Merging irqchip/irq/irqchip-next (585d1183ffee pinctrl/sdm845: Add PDC wake=
-up interrupt map for GPIOs)
-Merging ftrace/for-next (16c0f03f629a tracing: Enable syscall optimization =
-for MIPS)
-CONFLICT (content): Merge conflict in kernel/trace/trace_export.c
-CONFLICT (content): Merge conflict in include/asm-generic/vmlinux.lds.h
-Merging rcu/rcu/next (e100e2f047de Merge commit '8dcdfb7096a304130ab36fbb0f=
-2961deaf863e5a' into for-mingo)
-Merging kvm/linux-next (c50d8ae3a127 KVM: x86: create mmu/ subdirectory)
-CONFLICT (modify/delete): include/Kbuild deleted in HEAD and modified in kv=
-m/linux-next. Version kvm/linux-next of include/Kbuild left in tree.
-$ git rm -f include/Kbuild
-Merging kvm-arm/next (cd7056ae34af Merge remote-tracking branch 'kvmarm/mis=
-c-5.5' into kvmarm/next)
-Merging kvm-ppc/kvm-ppc-next (30486e72093e KVM: PPC: Book3S HV: XIVE: Fix p=
-otential page leak on error path)
-Merging kvms390/next (c7b7de631246 KVM: s390: Do not yield when target is a=
-lready running)
-Merging xen-tip/linux-next (23c1cce9f317 xen: Fix Kconfig indentation)
-Merging percpu/for-next (91998940dc4b Merge branch 'for-5.5' into for-next)
-Merging workqueues/for-next (49e9d1a9faf2 workqueue: Add RCU annotation for=
- pwq list walk)
-CONFLICT (content): Merge conflict in kernel/workqueue.c
-Merging drivers-x86/for-next (20183ccd3e4d tools/power/x86/intel-speed-sele=
-ct: Ignore missing config level)
-Merging chrome-platform/for-next (99bfcd3993d3 Revert "Input: cros_ec_keyb:=
- mask out extra flags in event_type")
-Merging hsi/for-next (c1030cd45619 HSI: Remove dev_err() usage after platfo=
-rm_get_irq())
-Merging leds/for-next (5f820ed52371 leds: trigger: netdev: fix handling on =
-interface rename)
-Merging ipmi/for-next (8e6a5c833333 ipmi: fix ipmb_poll()'s return type)
-Merging driver-core/driver-core-next (0e4a459f56c3 tracing: Remove unnecess=
-ary DEBUG_FS dependency)
-CONFLICT (content): Merge conflict in Documentation/filesystems/debugfs.txt
-Merging usb/usb-next (91a9f2d3f976 usb: gadget: udc: gr_udc: create debugfs=
- directory under usb root)
-Merging usb-gadget/next (726b4fba94be usb: dwc3: of-simple: add a shutdown)
-Merging usb-serial/usb-next (c1a1f273d082 USB: serial: ftdi_sio: add device=
- IDs for U-Blox C099-F9P)
-Merging usb-chipidea-next/ci-for-usb-next (4d6141288c33 usb: chipidea: imx:=
- pinctrl for HSIC is optional)
-Merging phy-next/next (4569e64ab6a5 phy: phy-rockchip-inno-usb2: add phy de=
-scription for px30)
-Merging tty/tty-next (b2b2dd71e085 tty: vt: keyboard: reject invalid keycod=
-es)
-Merging char-misc/char-misc-next (b78cda795ac8 Merge tag 'misc-habanalabs-n=
-ext-2019-11-21' of git://people.freedesktop.org/~gabbayo/linux into char-mi=
-sc-next)
-CONFLICT (content): Merge conflict in samples/Makefile
-CONFLICT (content): Merge conflict in samples/Kconfig
-Merging extcon/extcon-next (ddd1bbbae486 extcon: sm5502: remove redundant a=
-ssignment to variable cable_type)
-Merging soundwire/next (2e8c4ad1f044 soundwire: ignore uniqueID when irrele=
-vant)
-Merging thunderbolt/next (b001da2905e7 thunderbolt: Power cycle the router =
-if NVM authentication fails)
-Merging staging/staging-next (0f6f8749872e staging: vchiq: Have vchiq_dump_=
-* functions return an error code)
-CONFLICT (content): Merge conflict in drivers/staging/Makefile
-Merging mux/for-next (05fb8284a417 Merge branch 'i2c-mux/for-next' into for=
--next)
-Merging icc/icc-next (a99d8080aaf3 Linux 5.4-rc6)
-Merging slave-dma/next (67805a4b3c92 dmaengine: Fix Kconfig indentation)
-Merging cgroup/for-next (078cb46c8a52 Merge branch 'for-5.5' into for-next)
-Merging scsi/for-next (4220129431ad Merge branch 'misc' into for-next)
-CONFLICT (content): Merge conflict in drivers/scsi/scsi_sysfs.c
-Merging scsi-mkp/for-next (65309ef6b258 scsi: bnx2fc: timeout calculation i=
-nvalid for bnx2fc_eh_abort())
-Merging vhost/linux-next (88d3c7697f25 vhost: last descriptor must have NEX=
-T clear)
-Merging rpmsg/for-next (070a8e805ff5 Merge branches 'hwspinlock-next', 'rpm=
-sg-next' and 'rproc-next' into for-next)
-CONFLICT (modify/delete): Documentation/devicetree/bindings/remoteproc/stm3=
-2-rproc.txt deleted in HEAD and modified in rpmsg/for-next. Version rpmsg/f=
-or-next of Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt lef=
-t in tree.
-$ git rm -f Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
-Merging gpio/for-next (ac72719b626f Merge branch 'devel' into for-next)
-Merging gpio-brgl/gpio/for-next (0f67f16a6e88 gpio: mmio: remove untrue lef=
-tover comment)
-Merging gpio-intel/for-next (4a5e0f9e7351 gpio: merrifield: Pass irqchip wh=
-en adding gpiochip)
-Merging pinctrl/for-next (f130d5fd1fa0 Merge branch 'devel' into for-next)
-Merging pinctrl-intel/for-next (8ae93b5ed9be pinctrl: cherryview: Missed ty=
-pe change to unsigned int)
-Merging pinctrl-samsung/for-next (a322b3377f4b pinctrl: samsung: Fix device=
- node refcount leaks in init code)
-Merging pwm/for-next (9e1b4999a169 pwm: stm32: Pass breakinput instead of i=
-ts values)
-CONFLICT (modify/delete): Documentation/devicetree/bindings/pwm/pwm-stm32.t=
-xt deleted in HEAD and modified in pwm/for-next. Version pwm/for-next of Do=
-cumentation/devicetree/bindings/pwm/pwm-stm32.txt left in tree.
-$ git rm -f Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-Merging userns/for-next (318759b4737c signal/x86: Move tsk inside of CONFIG=
-_MEMORY_FAILURE in do_sigbus)
-Merging ktest/for-next (9b5f852ae20d ktest: Make default build option oldco=
-nfig not randconfig)
-Merging random/dev (58be0106c530 random: fix soft lockup when trying to rea=
-d from an uninitialized blocking pool)
-Merging kselftest/next (54ecb8f7028c Linux 5.4-rc1)
-Merging y2038/y2038 (6d5b3a41ae04 Merge tag 'y2038-cleanups-5.5' of git://g=
-it.kernel.org/pub/scm/linux/kernel/git/arnd/playground into y2038)
-CONFLICT (content): Merge conflict in fs/compat_ioctl.c
-CONFLICT (content): Merge conflict in drivers/scsi/sg.c
-Applying: fix up for "compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c"
-Merging livepatching/for-next (7f436b3066e3 Merge branch 'for-5.5/core' int=
-o for-next)
-CONFLICT (content): Merge conflict in tools/testing/selftests/livepatch/Mak=
-efile
-Merging coresight/next (9a5d847c0bda coresight: replicator: Fix missing spi=
-n_lock_init())
-Merging rtc/rtc-next (32c4d9e8a4eb rtc: msm6242: Remove unneeded msm6242_se=
-t()/msm6242_clear() functions)
-Merging nvdimm/libnvdimm-for-next (e23d1c2d10fd dax: Add numa_node to the d=
-efault device-dax attributes)
-Merging at24/at24/for-next (285be87c79e1 eeprom: at24: Improve confusing lo=
-g message)
-Merging ntb/ntb-next (1ef512b16bc8 NTB: Fix an error in get link status)
-Merging kspp/for-next/kspp (ec2f877856e0 treewide: Use sizeof_member() macr=
-o)
-CONFLICT (content): Merge conflict in arch/x86/kernel/fpu/xstate.c
-Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
-Merging gnss/gnss-next (54ecb8f7028c Linux 5.4-rc1)
-Merging fsi/next (2c01397b71c5 fsi: aspeed: Fix OPB0 byte order register va=
-lues)
-Merging slimbus/for-next (54ecb8f7028c Linux 5.4-rc1)
-Merging nvmem/for-next (6bd17868c992 nvmem: add Rockchip OTP driver)
-Merging xarray/xarray (6b81141deb73 XArray: Improve documentation of search=
- marks)
-Merging hyperv/hyperv-next (7a1323b5dfe4 Drivers: hv: vmbus: Fix crash hand=
-ler reset of Hyper-V synic)
-Merging auxdisplay/auxdisplay (54ecb8f7028c Linux 5.4-rc1)
-Merging kgdb/kgdb/for-next (c58ff643763c kdb: Tweak escape handling for vi =
-users)
-Merging pidfd/for-next (04882c321b26 Merge branch 'pidfd' into for-next)
-CONFLICT (content): Merge conflict in include/uapi/linux/sched.h
-Merging devfreq/devfreq-next (a258d17d511c PM / devfreq: Add dynamic scalin=
-g for imx8m ddr controller)
-Merging hmm/hmm (67815bec3ae9 mm/hmm: remove hmm_range_dma_map and hmm_rang=
-e_dma_unmap)
-CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx5/odp.c
-CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
-Merging fpga/for-next (fddc9fcbe69a fpga: dfl: fme: add power management su=
-pport)
-Merging kunit/test (ea2dd7c0875e lib/list-test: add a test for the 'list' d=
-oubly linked list)
-Merging cel/cel-next (a99d8080aaf3 Linux 5.4-rc6)
-Merging kasan-bitops/topic/kasan-bitops (5bece3d66153 powerpc: support KASA=
-N instrumentation of bitops)
-Merging generic-ioremap/for-next (eafee5944062 nds32: use generic ioremap)
-CONFLICT (content): Merge conflict in arch/riscv/mm/Makefile
-CONFLICT (content): Merge conflict in arch/riscv/include/asm/io.h
-Applying: fixup for moved code in riscv
-Merging akpm-current/current (a4cee976e966 ipc/msg.c: consolidate all xxxct=
-l_down() functions)
-CONFLICT (content): Merge conflict in lib/ubsan.c
-CONFLICT (content): Merge conflict in include/linux/syscalls.h
-$ git checkout -b akpm remotes/origin/akpm/master
-Applying: drivers/block/null_blk_main.c: fix layout
-Applying: drivers/block/null_blk_main.c: fix uninitialized var warnings
-Applying: pinctrl: fix pxa2xx.c build warnings
-Applying: lib/genalloc.c: export symbol addr_in_gen_pool
-Applying: lib/genalloc.c: rename addr_in_gen_pool to gen_pool_has_addr
-Applying: Documentation: rename addr_in_gen_pool to gen_pool_has_addr
-Applying: kernel-hacking: group sysrq/kgdb/ubsan into 'Generic Kernel Debug=
-ging Instruments'
-Applying: kernel-hacking: create submenu for arch special debugging options
-Applying: kernel-hacking: group kernel data structures debugging together
-Applying: kernel-hacking: move kernel testing and coverage options to same =
-submenu
-Applying: kernel-hacking: move Oops into 'Lockups and Hangs'
-Applying: kernel-hacking: move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
-Applying: kernel-hacking: create a submenu for scheduler debugging options
-Applying: kernel-hacking: move DEBUG_BUGVERBOSE to 'printk and dmesg option=
-s'
-Applying: kernel-hacking: move DEBUG_FS to 'Generic Kernel Debugging Instru=
-ments'
-Applying: bitops: introduce the for_each_set_clump8 macro
-Applying: linux/bitmap.h: fix potential sign-extension overflow
-Applying: bitops-introduce-the-for_each_set_clump8-macro-fix-fix
-Applying: linux/bitopts.h: Add for_each_set_clump8 documentation
-Applying: lib/test_bitmap.c: add for_each_set_clump8 test cases
-Applying: gpio: 104-dio-48e: utilize for_each_set_clump8 macro
-Applying: gpio: 104-idi-48: utilize for_each_set_clump8 macro
-Applying: gpio: gpio-mm: utilize for_each_set_clump8 macro
-Applying: gpio: ws16c48: utilize for_each_set_clump8 macro
-Applying: gpio: pci-idio-16: utilize for_each_set_clump8 macro
-Applying: gpio: pcie-idio-24: utilize for_each_set_clump8 macro
-Applying: gpio: uniphier: utilize for_each_set_clump8 macro
-Applying: gpio: 74x164: utilize the for_each_set_clump8 macro
-Applying: thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 m=
-acro
-Applying: gpio: pisosr: utilize the for_each_set_clump8 macro
-Applying: gpio: max3191x: utilize the for_each_set_clump8 macro
-Applying: gpio: pca953x: utilize the for_each_set_clump8 macro
-Applying: lib/test_bitmap: force argument of bitmap_parselist_user() to pro=
-per address space
-Applying: lib/test_bitmap: undefine macros after use
-Applying: lib/test_bitmap: name EXP_BYTES properly
-Applying: lib/test_bitmap: rename exp to exp1 to avoid ambiguous name
-Applying: lib/test_bitmap: move exp1 and exp2 upper for others to use
-Applying: lib/test_bitmap: fix comment about this file
-Applying: lib/bitmap: introduce bitmap_replace() helper
-Applying: gpio: pca953x: remove redundant variable and check in IRQ handler
-Applying: gpio: pca953x: use input from regs structure in pca953x_irq_pendi=
-ng()
-Applying: gpio: pca953x: convert to use bitmap API
-Applying: gpio: pca953x: reduce stack usage in couple of functions
-Applying: gpio: pca953x: tighten up indentation
-Applying: mm: add generic p?d_leaf() macros
-Applying: arc: mm: add p?d_leaf() definitions
-Applying: arm: mm: add p?d_leaf() definitions
-Applying: arm64: mm: add p?d_leaf() definitions
-Applying: mips: mm: add p?d_leaf() definitions
-Applying: powerpc: mm: add p?d_leaf() definitions
-Applying: riscv: mm: add p?d_leaf() definitions
-Applying: s390: mm: add p?d_leaf() definitions
-Applying: sparc: mm: add p?d_leaf() definitions
-Applying: x86: mm: add p?d_leaf() definitions
-Applying: mm: pagewalk: add p4d_entry() and pgd_entry()
-Applying: mm: pagewalk: allow walking without vma
-Applying: mm-pagewalk-allow-walking-without-vma-v15
-Applying: mm-pagewalk-allow-walking-without-vma-fix
-Applying: mm: pagewalk: add test_p?d callbacks
-Applying: mm: pagewalk: add 'depth' parameter to pte_hole
-Applying: x86: mm: point to struct seq_file from struct pg_state
-Applying: x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct
-Applying: x86: mm: convert ptdump_walk_pgd_level_debugfs() to take an mm_st=
-ruct
-Applying: x86: mm: convert ptdump_walk_pgd_level_core() to take an mm_struct
-Applying: mm: add generic ptdump
-Applying: mm-add-generic-ptdump-v15
-Applying: mm/ptdump: fix a -Wold-style-declaration warning
-Applying: x86: mm: convert dump_pagetables to use walk_page_range
-Applying: arm64: mm: convert mm/dump.c to use walk_page_range()
-Applying: arm64: mm: display non-present entries in ptdump
-Applying: mm: ptdump: reduce level numbers by 1 in note_page()
-Applying: alpha: use pgtable-nopud instead of 4level-fixup
-Applying: arm: nommu: use pgtable-nopud instead of 4level-fixup
-Applying: c6x: use pgtable-nopud instead of 4level-fixup
-Applying: m68k: nommu: use pgtable-nopud instead of 4level-fixup
-Applying: m68k: mm: use pgtable-nopXd instead of 4level-fixup
-Applying: microblaze: use pgtable-nopmd instead of 4level-fixup
-Applying: nds32: use pgtable-nopmd instead of 4level-fixup
-Applying: parisc: use pgtable-nopXd instead of 4level-fixup
-Applying: parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
-Applying: sparc32: use pgtable-nopud instead of 4level-fixup
-Applying: um: remove unused pxx_offset_proc() and addr_pte() functions
-Applying: um: add support for folded p4d page tables
-Applying: mm: remove __ARCH_HAS_4LEVEL_HACK and include/asm-generic/4level-=
-fixup.h
-Applying: kernel.h: update comment about simple_strto<foo>() functions
-Applying: auxdisplay: charlcd: deduplicate simple_strtoul()
-Applying: drivers/tty/serial/sh-sci.c: suppress warning
-Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
-rflow
-Merging akpm/master (2a3cf7b6ac17 drivers/media/platform/sti/delta/delta-ip=
-c.c: fix read buffer overflow)
+I guess that would be on them, but why not be proactive about preventing
+that from happening in the first place? You never know if the person you
+might be helping out ends up being yourself...
 
---Sig_/+gocKvSlQD85zwZpuRBD1Of
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thierry
+
+> +
+>  	return 0;
+> =20
+>  err_exit:
+> @@ -1162,7 +1490,7 @@ static const struct of_device_id pca953x_dt_ids[] =
+=3D {
+> =20
+>  	{ .compatible =3D "maxim,max7310", .data =3D OF_953X( 8, 0), },
+>  	{ .compatible =3D "maxim,max7312", .data =3D OF_953X(16, PCA_INT), },
+> -	{ .compatible =3D "maxim,max7313", .data =3D OF_953X(16, PCA_INT), },
+> +	{ .compatible =3D "maxim,max7313", .data =3D OF_953X(16, PCA_INT | MAX_=
+PWM), },
+>  	{ .compatible =3D "maxim,max7315", .data =3D OF_953X( 8, PCA_INT), },
+>  	{ .compatible =3D "maxim,max7318", .data =3D OF_953X(16, PCA_INT), },
+> =20
+> --=20
+> 2.20.1
+>=20
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3bfQcACgkQAVBC80lX
-0Gw4oggAoJO7mOnHAUkliEKqrh3wcmVTbty5Dt8lGdeDHkShq7TskvH9cvGBitEA
-AZDqWt2rU+XbxhpcsRbAOg5R2P71Hb4wydOdA9NuvXfByMXMQfSX/SFNzr/37shc
-gHhVNJ/d/1QQvM4qaeGjF9h2U3tf6tarH7ni3sJnWtahIPKK4iPSviE8r2ylpG/n
-sdtM6/qXJQFYIiJfbpvG92APn6Wdue3cnYbSK2cwfwfGbvAoIqRNTOTgCnwhZTHL
-5S6Za+fUNAcfztGbStLaa1g88B7zWtsiNN9SWki81fDx8lbL6SCLJ+x1oab8a1d3
-LhNeXGbLvdBIAkzbQXFl50eHEe+gPg==
-=Z6zy
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3bf1MACgkQ3SOs138+
+s6ETZQ/+PWJMVx2DhGPCfrQPY8SmDAwFcix2c+7We2g7LB/UsSIa0iexaWmE9GVI
+sc3B+7RtlwiSyLzGmNe/NcHI9x9Xm1y6fUBAqPAMYz5kfKTHacptzrmV3WcTc3Xz
+UQ2lrQUwSXiyxrx6llf0y0p7auqnhK4nC/tHoVLmrFgmvJNG3ra740ZjQ7zEiBnX
+vkuhboRQpwefaAx8sMm44E5+QLpzFn0GM/VgQAovDiid7z+SFjSizXluAFWdkUki
+4pPGP2PFA7dywoFevO8ifxfoMFulMLFv/syE7vi2ySI+ry71Hk8JUT68bPJegSGV
+fNDadek1ZRe4lsQDw2VS8mSXX2hO+WpLyCiDh5lDdrGdFcxUjHZUitoIGtti3yJN
+sTfqVk9KRnlc9S6wDqnrpzLcyCop/xMnq4XvP+e7Wyd4f/zCsp/Egt3fIA53qRWK
+xvwRGUy1hy7gG38ZW9qVbdMBggpBMvc+GxXZcjUpUHTJLSZLZywfVO9GsVKKAjv9
+lvvkexOy4rQIIPQh5yCxbN6wweH914+20RkuflB6iYLA3VNRt93ULCj1YD9KSf0F
+gwimtJ0rWi8cE0IYi57p8T/CdNW4QKCKb9SAYOLSexG/Luitsv0dt4nOcom63hUO
+XSlCLo88+MJyoPxi4HFqy0f/vzkyIGyI3vjuEdwq+yG+NFacLfk=
+=Btc/
 -----END PGP SIGNATURE-----
 
---Sig_/+gocKvSlQD85zwZpuRBD1Of--
+--7ZAtKRhVyVSsbBD2--
