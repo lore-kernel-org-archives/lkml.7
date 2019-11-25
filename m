@@ -2,136 +2,115 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4215C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA7C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD7520748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="kfzWheBu"
+	by mail.kernel.org (Postfix) with ESMTP id 81ED42086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 16:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574700550;
+	bh=//Vk9skfhYpfLNzSjPMrouF0EQDfG8iC+SYwFumm9YI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QhIj2QawLfzya5NmnAlPgOK7w8x7b0q8uXZ97d2FFY6ginxxedsfnd0cK9219iznx
+	 rqfcu+58MI4rPKVu6gzVzC3nkc3VzxdkRd4fZS+B1XNtn2fmDzt4KI7U5z66hRm4r8
+	 6tvHoqJRSK4lpka8QCFxJ762sRHZLgeKqZPvj7jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfKYQl3 (ORCPT
+        id S1728938AbfKYQtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:41:29 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36570 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728877AbfKYQl3 (ORCPT
+        Mon, 25 Nov 2019 11:49:09 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34492 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728860AbfKYQtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:41:29 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j7so13714582oib.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:41:28 -0800 (PST)
+        Mon, 25 Nov 2019 11:49:09 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m6so9331177ljc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:49:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l+EcTLko/p4bJ6jJO0C9lQhVndIFrtgXLxWfjta1Ss4=;
-        b=kfzWheBuxI2ukOAG9YRc+e7L4+AXM8seHNFuLi8U8M94hZ/VbKgdur7a3Ds5NPYiWX
-         J0XtYyzH24XRYTNUO8LzK4+El6WxhD8fI2sHErrOOjqEzE6VYoI60KoPm7+JSq0miySx
-         2jiFlVr51/mToK+hE5Ji1aO3RLhIRJAmDO/8CQ0w/0fMaSjEEaHym2yswK3Hog4d4ETN
-         MKBnnhq5ZYO1np2HOWo25ydRkjAY1+CJOpd+LRV9RoQWKgfmnMXB5+BHFUff9Q73H267
-         SZzbuI+ZR8ui6UOqTiFwvreRACziXE0h02J6Yke9kT3/rwf3gC4pI4E8s4iCc9Y2tED9
-         ahBw==
+        bh=1E1EUN5Uc4Q2o2hi1DztWyCr1Ev456MpyPBq9OxAAVU=;
+        b=fsY7s9faAco1KtisSTem5KxbOeCQZhC5Mw5Hg+wFjVdVR+bA3K6eyUFiMvwlvtXqWW
+         9rV67R31ok1Ifi5dc6/RHSu7cS7VOt4vYCFiOFeihXxdn9s+02WGqBWzBKWIOfD/eu8S
+         q9lOCb0CmvOZgbeSJoLcPC6hKot4CWxCBIj3o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l+EcTLko/p4bJ6jJO0C9lQhVndIFrtgXLxWfjta1Ss4=;
-        b=gv3Wu6dnzsVE2hVcdAwekJ8cCuXxYdYCr/+yam9jCQTamm3kunMkpmis5Zf9inwxCV
-         ZSqm1jpCfVVkliiO48yVjaXNT9LVHANqmfsE017W3SbuO7WLxH1R1/iQzClcqRcGleor
-         WvQBkrMrBbNIckEz+bf0p/KTnZMlZc7IcSbrXQW9SR3yJefjIlTWrwWGZlz3/enJ5vT2
-         R7o7A2dQgCnn0bwdpd0Eg4Hx+3dP+akuftT6b6MPS5wEp/S9kx8Ocwnt6oWgheF/+1s+
-         oVngClphYUBL+c1oy1H9cli8uivBR2iq3NZ3i5Wftqd1ng3AMLtZ7WO21v1C2g/KMTLd
-         S4CQ==
-X-Gm-Message-State: APjAAAVnUUMkxOOfap76JYby/pds2f3YtM/Kwgw4/t4mda/N9ayH+60h
-        b40P5dHAtPRHZ0wDek0Sria11oOYv9wFWFyDAQOxng==
-X-Google-Smtp-Source: APXvYqxm6md6vLwzQ4bD00wEiiMr9oWkW4o3uzNKoxR9r2p4WilcYr70KCmNXGLZ1mPoFYnSCJZpz2SdsryKXe8d67g=
-X-Received: by 2002:a05:6808:1da:: with SMTP id x26mr24438096oic.149.1574700088026;
- Mon, 25 Nov 2019 08:41:28 -0800 (PST)
+        bh=1E1EUN5Uc4Q2o2hi1DztWyCr1Ev456MpyPBq9OxAAVU=;
+        b=Nc6FBkEcq1gFB0vuS5f3d/rBNcTjueik6iyLyaGWD1CcO7mgKqzxc86tLLxEsuFtrg
+         jPZFy3P2f+DZLjXvpOAA/G6Y8k4D7OSKCv9/bmyE/kD8C+5Db2ojwC6vDWYExUlW0TU4
+         EhKk29FHK/8MvbgKB6ZtZAuJ7tEORw/VTtdpmpYdShZH/vgeIhfrr2aCdE7E+6TkXkP5
+         BqtdSy0fgd/qxB4kOolNYC3PkKKx8StpwOkYLD7EExcikpO1ELJk6H2u9Ha+9mdYTs+S
+         XE0gU4+TlIU0eDweEFmG7N10/fLHYr+q0kvAZoMtGNAnECiQZ6OO8V7X/Q6LeSPFCBIR
+         FaUw==
+X-Gm-Message-State: APjAAAVCSNH2NTGjmRZEwYIdLXkD+2uj7OnMtqmfrl/5eo6VAzB/yCot
+        +OOSNnDRVKoUa2kiUgB7w2MP3JLNVIc=
+X-Google-Smtp-Source: APXvYqwn+IJ/raA1VPb20C85ts2bMf+ofKS2C9I/WNase2WgEuA14SK8wpOxPstJPYHCl4oeb44x1Q==
+X-Received: by 2002:a2e:9904:: with SMTP id v4mr23038008lji.211.1574700546150;
+        Mon, 25 Nov 2019 08:49:06 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id g14sm3943558lfj.17.2019.11.25.08.49.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 08:49:03 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id j6so7682356lja.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 08:49:03 -0800 (PST)
+X-Received: by 2002:a2e:8809:: with SMTP id x9mr23297700ljh.82.1574700542740;
+ Mon, 25 Nov 2019 08:49:02 -0800 (PST)
 MIME-Version: 1.0
-References: <157462918268.1729495.10257190766638995699.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20191125085052.05cfe063@lwn.net>
-In-Reply-To: <20191125085052.05cfe063@lwn.net>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 25 Nov 2019 08:41:16 -0800
-Message-ID: <CAPcyv4gHTz4Zw=hQgkJ1e-_O5PSyMosfQ4iTHZLD03Vw+MWZWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Maintainer Entry Profiles
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joe Perches <joe@perches.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steve French <stfrench@microsoft.com>,
-        Olof Johansson <olof@lixom.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+References: <20191125125944.GA22218@gmail.com> <9af8a5eb-5104-ad0b-bf46-dedb65d66a07@arm.com>
+In-Reply-To: <9af8a5eb-5104-ad0b-bf46-dedb65d66a07@arm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 25 Nov 2019 08:48:46 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjV6CGaVXYoWvQER4_xmFdX2eTBSYf+6WhcgAx+K9M+Og@mail.gmail.com>
+Message-ID: <CAHk-=wjV6CGaVXYoWvQER4_xmFdX2eTBSYf+6WhcgAx+K9M+Og@mail.gmail.com>
+Subject: Re: [GIT PULL] scheduler changes for v5.5
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Mel Gorman <mgorman@suse.de>, Ben Segall <bsegall@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 7:51 AM Jonathan Corbet <corbet@lwn.net> wrote:
+On Mon, Nov 25, 2019 at 5:49 AM Valentin Schneider
+<valentin.schneider@arm.com> wrote:
 >
-> On Sun, 24 Nov 2019 12:59:42 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
+> On 25/11/2019 12:59, Ingo Molnar wrote:
 >
-> > Changes since v2 [1]:
-> > - Drop any consideration for coding style concerns in the profile. It
-> >   was a minor aspect of the proposal that generated the bulk of the
-> >   feedback on v2. Lets make progress on the rest.
-> >
-> > - Clarify that the "Submit Checklist Addendum" can also include details
-> >   that submitters need to take into account before even beginning to
-> >   craft a patch. This is in response to the RISC-V use case of
-> >   declaring specification readiness as a patch gate, and is now also used
-> >   by the libnvdimm subsystem to clarify details about ACPI NVDIMM Device
-> >   Specific Method specifications. (Paul)
-> >
-> > - Non-change from v2: Kees had asked for a common directory for all
-> >   profiles to live, but Mauro noted that this could be handled later
-> >   with some scripting to post-process the MAINTAINERS file, or otherwise
-> >   converting MAINTAINERS to ReST.
-> >
-> > - Clarify the cover letter to focus on the contributor focused
-> >   Maintainer Entry Profiles, and defer discussion of a maintainer
-> >   focused Handbook.
+> So I really don't want to be labeled as "that annoying scheduler PR guy",
+> but some patches in Vincent's rework should be squashed to avoid being
+> performance bisection honeypots.
 >
-> OK, some notes...
+> > Vincent Guittot (14):
+> >       sched/fair: Remove meaningless imbalance calculation
+> >       sched/fair: Rework load_balance()
 >
-> I wish you'd done this against docs-next, that would have saved me
-> resolving a few conflicts on the MAINTAINERS file.
+> These two ^ (were split for ease of reviewing, [1])
 >
-> I thought we'd agreed to move this to the process book?  That said, I now
-> wonder about that...today I read the document as information for
-> maintainers on how to create their profile, so its location in the
-> maintainers manual is appropriate.
+> >       sched/fair: Rework find_idlest_group()
+> >       sched/fair: Fix rework of find_idlest_group()
 >
-> There were a number RST issues and warnings that I fixed up with the
-> following add-on patch; it was mostly a matter of adding blank lines where
-> needed.
->
-> One other warning resulted from the nvdimm profile document not being
-> linked into the TOC tree.  I've added a TOC section to the new document to
-> bring these things together for now.  This is almost certainly not what we
-> want in the longer term.
->
-> It was tempting to ask for this stuff to be fixed up, but I didn't want to
-> delay this work any longer.  So it's applied to docs-next; unless something
-> explodes in the very near future, I intend to push this for 5.5.
+> And these two ^ (Mel voiced similar concerns at [2])
 
-Apologies for all of the above. I rushed it without considering the
-docs submission basics. Thanks for moving this forward.
+If they were split for ease of reviewing, then they should be split in
+the history too.
+
+I worry a lot less about some possible (temporary!) performance dip
+than about a hard bug, and if the code is easier to review in two
+steps then it's going to be easier to find the bug in two steps too.
+
+                     Linus
