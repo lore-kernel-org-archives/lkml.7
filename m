@@ -2,106 +2,183 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A6C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AA6C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D62E2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396312071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 02:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q6JG///7"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="S6BJTPJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKYCHV (ORCPT
+        id S1727008AbfKYCId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Nov 2019 21:07:21 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14181 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfKYCHV (ORCPT
+        Sun, 24 Nov 2019 21:08:33 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:14621 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726855AbfKYCId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Nov 2019 21:07:21 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddb375b0000>; Sun, 24 Nov 2019 18:07:24 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 24 Nov 2019 18:07:20 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 18:07:20 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 02:07:20 +0000
-Subject: Re: [PATCH 0/2] mm/gup + IB: allow FOLL_FORCE for gup_fast and use in
- IB
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191125003715.516290-1-jhubbard@nvidia.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <25e8092a-3a5c-b75b-9ee8-940fece25389@nvidia.com>
-Date:   Sun, 24 Nov 2019 18:07:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 24 Nov 2019 21:08:33 -0500
+X-UUID: 5e0647652d6843f39f94265bb959e526-20191125
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fqkSi9NknIDShb1QKQOMXUGDh0Q49rrogX0BLcZahGU=;
+        b=S6BJTPJzDnZA4kIaxuMdMnKZYKwsAsjdPV7CJmPU6ZdY0rI/jAXJDdEr9qteQ1IcXoZ2H3HHKMseICs9YiJaU0rX7PQFeAHz8CVG4dWMaFh2gN8TPXB+MqoRx2ETzvpCrlQC51DapXj3YhMcIgJq0S8gAjvIB0qMAdnAoSzTd6Y=;
+X-UUID: 5e0647652d6843f39f94265bb959e526-20191125
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2024275285; Mon, 25 Nov 2019 10:08:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 25 Nov 2019 10:07:51 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 25 Nov 2019 10:08:09 +0800
+Message-ID: <1574647703.4712.16.camel@mtksdaap41>
+Subject: Re: [PATCH v1 07/12] soc: mediatek: cmdq: add write_s function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 25 Nov 2019 10:08:23 +0800
+In-Reply-To: <1574417507.11977.14.camel@mtkswgap22>
+References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574412997.19450.16.camel@mtksdaap41>
+         <1574417507.11977.14.camel@mtkswgap22>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191125003715.516290-1-jhubbard@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574647644; bh=VSqCxdntvMfhdiFrZMqW5HdafdMIAWDFCnXZR+sYDKY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Q6JG///7ts3uN8kdWM/tTfdwCyxVNMDg64zNzAkJ0Jn+wf9RufTjn+kXhllGQof/i
-         JkyfF3O9d0tqzeMwaPgZFP7CoHp07w40zI+58KIi0q9SjLi/jubvyW74+I+xnc9brB
-         fxQwMl8I7h2X/ve77uG5U8quInmaT6oqJB+8ZP4ZYIc9AWy7BjSRTILPzZY5IGnGoA
-         kv+KmH3vGBiuz/BPZPSM3iDs5BYditxB5ymKkwMKrmK9In7JRDwHncbi7UQW/uQXpM
-         ooPymYDaxwUXZGWHNwXGcONNKDGu7bDRpkwDULsGfiIUy+XF+H7c1b1zQrU8CgbZIU
-         wr40GLvZX+dsg==
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/24/19 4:37 PM, John Hubbard wrote:
-> Hi Leon, Jason, Christoph,
-> 
-> Maybe I'm overlooking something, but as I wrote in patch 1, it looks
-> like we can simply allow FOLL_FORCE to be passed to gup_fast().
-> 
-> This should fix Leon's reported RDMA failure [1]  when using patch 2 by
-> itself. (I've compile- and boot-tested these, and also did short LTP
-> and fio with direct IO tests, but I don't have an Infiniband runtime
-> setup that exercises the umem.c code.)
-> 
-> [1] https://lore.kernel.org/r/20191124100724.GH136476@unreal
-> 
-> John Hubbard (2):
->   mm/gup: allow FOLL_FORCE for get_user_pages_fast()
->   IB/umem: use get_user_pages_fast() to pin DMA pages
-> 
->  drivers/infiniband/core/umem.c | 17 ++++++-----------
->  mm/gup.c                       |  3 ++-
->  2 files changed, 8 insertions(+), 12 deletions(-)
-> 
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDE5LTExLTIyIGF0IDE4OjExICswODAwLCBEZW5uaXMt
+WUMgSHNpZWggd3JvdGU6DQo+IEhpIENLLA0KPiANCj4gT24gRnJpLCAyMDE5LTExLTIyIGF0IDE2
+OjU2ICswODAwLCBDSyBIdSB3cm90ZToNCj4gPiBIaSwgRGVubmlzOg0KPiA+IA0KPiA+IE9uIFRo
+dSwgMjAxOS0xMS0yMSBhdCAxNzoxMiArMDgwMCwgRGVubmlzIFlDIEhzaWVoIHdyb3RlOg0KPiA+
+ID4gYWRkIHdyaXRlX3MgZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgZnVuY3Rpb25zIHdoaWNoDQo+
+ID4gPiBzdXBwb3J0IGxhcmdlIGRtYSBhY2Nlc3MuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiA+
+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAg
+IDM0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gIGluY2x1ZGUvbGludXgv
+bWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggfCAgICAyICsrDQo+ID4gPiAgaW5jbHVkZS9saW51
+eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8ICAgMTMgKysrKysrKysrKysrDQo+ID4gPiAg
+MyBmaWxlcyBjaGFuZ2VkLCA0OSBpbnNlcnRpb25zKCspDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29j
+L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gPiBpbmRleCBkNDE5ZTk5Li4xYjA3NGE5
+IDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
+LmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+
+ID4gPiBAQCAtMTUsNiArMTUsOSBAQA0KPiA+ID4gICNkZWZpbmUgQ01EUV9FT0NfQ01ECQkoKHU2
+NCkoKENNRFFfQ09ERV9FT0MgPDwgQ01EUV9PUF9DT0RFX1NISUZUKSkgXA0KPiA+ID4gIAkJCQk8
+PCAzMiB8IENNRFFfRU9DX0lSUV9FTikNCj4gPiA+ICAjZGVmaW5lIENNRFFfUkVHX1RZUEUJCTEN
+Cj4gPiA+ICsjZGVmaW5lIENNRFFfQUREUl9ISUdIKGFkZHIpCSgodTMyKSgoKGFkZHIpID4+IDE2
+KSAmIEdFTk1BU0soMzEsIDApKSkNCj4gPiA+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklUCUJJ
+VCgxKQ0KPiA+ID4gKyNkZWZpbmUgQ01EUV9BRERSX0xPVyhhZGRyKQkoKHUxNikoYWRkcikgfCBD
+TURRX0FERFJfTE9XX0JJVCkNCj4gPiA+ICANCj4gPiA+ICBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlv
+biB7DQo+ID4gPiAgCXVuaW9uIHsNCj4gPiA+IEBAIC0yMjQsNiArMjI3LDM3IEBAIGludCBjbWRx
+X3BrdF93cml0ZV9tYXNrKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ID4gPiAg
+fQ0KPiA+ID4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3Rfd3JpdGVfbWFzayk7DQo+ID4gPiAgDQo+
+ID4gPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIGRtYV9hZGRy
+X3QgYWRkciwNCj4gPiA+ICsJCSAgICAgdTMyIHZhbHVlLCB1MzIgbWFzaykNCj4gPiA+ICt7DQo+
+ID4gPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiA+ID4gKwlp
+bnQgZXJyOw0KPiA+ID4gKwljb25zdCB1MTYgZHN0X3JlZ19pZHggPSBDTURRX1NQUl9URU1QOw0K
+PiA+ID4gKw0KPiA+ID4gKwllcnIgPSBjbWRxX3BrdF9hc3NpZ24ocGt0LCBkc3RfcmVnX2lkeCwg
+Q01EUV9BRERSX0hJR0goYWRkcikpOw0KPiA+ID4gKwlpZiAoZXJyIDwgMCkNCj4gPiA+ICsJCXJl
+dHVybiBlcnI7DQo+ID4gPiArDQo+ID4gPiArCWlmIChtYXNrICE9IFUzMl9NQVgpIHsNCj4gPiA+
+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfTUFTSzsNCj4gPiA+ICsJCWluc3QubWFzayA9IH5tYXNr
+Ow0KPiA+ID4gKwkJZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4g
+PiA+ICsJCWlmIChlcnIgPCAwKQ0KPiA+ID4gKwkJCXJldHVybiBlcnI7DQo+ID4gPiArDQo+ID4g
+PiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gPiA+ICsJfSBlbHNlIHsN
+Cj4gPiA+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfV1JJVEVfUzsNCj4gPiA+ICsJfQ0KPiA+ID4g
+Kw0KPiA+ID4gKwlpbnN0LnNvcCA9IGRzdF9yZWdfaWR4Ow0KPiA+ID4gKwlpbnN0Lm9mZnNldCA9
+IENNRFFfQUREUl9MT1coYWRkcik7DQo+ID4gPiArCWluc3QudmFsdWUgPSB2YWx1ZTsNCj4gPiA+
+ICsNCj4gPiA+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+
+ID4gPiArfQ0KPiA+ID4gK0VYUE9SVF9TWU1CT0woY21kcV9wa3Rfd3JpdGVfcyk7DQo+ID4gPiAr
+DQo+ID4gPiAgaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50
+KQ0KPiA+ID4gIHsNCj4gPiA+ICAJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9
+IH07DQo+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1h
+aWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiA+
+IGluZGV4IDEyMWMzYmIuLjhlZjg3ZTEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4
+L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4L21h
+aWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gPiBAQCAtNTksNiArNTksOCBAQCBlbnVtIGNt
+ZHFfY29kZSB7DQo+ID4gPiAgCUNNRFFfQ09ERV9KVU1QID0gMHgxMCwNCj4gPiA+ICAJQ01EUV9D
+T0RFX1dGRSA9IDB4MjAsDQo+ID4gPiAgCUNNRFFfQ09ERV9FT0MgPSAweDQwLA0KPiA+ID4gKwlD
+TURRX0NPREVfV1JJVEVfUyA9IDB4OTAsDQo+ID4gPiArCUNNRFFfQ09ERV9XUklURV9TX01BU0sg
+PSAweDkxLA0KPiA+ID4gIAlDTURRX0NPREVfTE9HSUMgPSAweGEwLA0KPiA+ID4gIH07DQo+ID4g
+PiAgDQo+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNt
+ZHEuaCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiA+IGluZGV4
+IDgzMzQwMjEuLjhkYmQwNDYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3NvYy9t
+ZWRpYXRlay9tdGstY21kcS5oDQo+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRl
+ay9tdGstY21kcS5oDQo+ID4gPiBAQCAtMTIsNiArMTIsNyBAQA0KPiA+ID4gICNpbmNsdWRlIDxs
+aW51eC90aW1lci5oPg0KPiA+ID4gIA0KPiA+ID4gICNkZWZpbmUgQ01EUV9OT19USU1FT1VUCQkw
+eGZmZmZmZmZmdQ0KPiA+ID4gKyNkZWZpbmUgQ01EUV9TUFJfVEVNUAkJMA0KPiA+ID4gIA0KPiA+
+ID4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gPiA+ICANCj4gPiA+IEBAIC0xMDMsNiArMTA0LDE4IEBA
+IGludCBjbWRxX3BrdF93cml0ZV9tYXNrKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMs
+DQo+ID4gPiAgCQkJdTE2IG9mZnNldCwgdTMyIHZhbHVlLCB1MzIgbWFzayk7DQo+ID4gPiAgDQo+
+ID4gPiAgLyoqDQo+ID4gPiArICogY21kcV9wa3Rfd3JpdGVfcygpIC0gYXBwZW5kIHdyaXRlX3Mg
+Y29tbWFuZCB3aXRoIG1hc2sgdG8gdGhlIENNRFEgcGFja2V0DQo+ID4gPiArICogQHBrdDoJdGhl
+IENNRFEgcGFja2V0DQo+ID4gPiArICogQGFkZHI6CXRoZSBwaHlzaWNhbCBhZGRyZXNzIG9mIHJl
+Z2lzdGVyIG9yIGRtYQ0KPiA+ID4gKyAqIEB2YWx1ZToJdGhlIHNwZWNpZmllZCB0YXJnZXQgdmFs
+dWUNCj4gPiA+ICsgKiBAbWFzazoJdGhlIHNwZWNpZmllZCB0YXJnZXQgbWFzaw0KPiA+ID4gKyAq
+DQo+ID4gPiArICogUmV0dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlz
+IHJldHVybmVkDQo+ID4gPiArICovDQo+ID4gPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0
+IGNtZHFfcGt0ICpwa3QsIGRtYV9hZGRyX3QgYWRkciwNCj4gPiA+ICsJCSAgICAgdTMyIHZhbHVl
+LCB1MzIgbWFzayk7DQo+ID4gDQo+ID4gWW91IGhhdmUgYW4gQVBJIGNtZHFfcGt0X3JlYWRfcygp
+IHdoaWNoIHJlYWQgZGF0YSBpbnRvIGdjZSBpbnRlcm5hbA0KPiA+IHJlZ2lzdGVyLCBzbyBJIGV4
+cGVjdCB0aGF0IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBhbiBBUEkgd2hpY2ggd3JpdGUgZGF0YQ0K
+PiA+IGZyb20gZ2NlIGludGVybmFsIHJlZ2lzdGVyLCB0aGUgZXhwZWN0ZWQgcHJvdG90eXBlIGlz
+DQo+ID4gDQo+ID4gaW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBo
+eXNfYWRkcl90IGFkZHIsIHUxNg0KPiA+IHJlZ19pZHgpOw0KPiA+IA0KPiA+IFlvdXIgdmVyc2lv
+biB3b3VsZCBjb25mdXNlIHRoZSB1c2VyIGJlY2F1c2UgeW91IGhpZGUgdGhlIGludGVybmFsDQo+
+ID4gcmVnaXN0ZXIgcGFyYW1ldGVyLiBJZiB5b3Ugd2FudCB0byBwcm92aWRlIHRoaXMgc2Vydmlj
+ZSwgSSB3b3VsZCBsaWtlDQo+ID4geW91IHRvIGNoYW5nZSB0aGUgZnVuY3Rpb24gbmFtZSBzbyB0
+aGF0IHVzZXIgd291bGQgbm90IGJlIGNvbmZ1c2VkIGFuZA0KPiA+IGVhc2lseSB0byB1bmRlcnN0
+YW5kIHdoYXQgeW91IHdhbnQgdG8gZG8gaW4gdGhpcyBmdW5jdGlvbi4NCj4gPiANCj4gPiBBbm90
+aGVyIGNob2ljZSBpczogY21kcV9wa3Rfd3JpdGVfcygpIGlzIGltcGxlbWVudGVkIGluIG15IGRl
+ZmluaXRpb24sDQo+ID4gYW5kIHVzZXIgY291bGQgY2FsbCBjbWRxX3BrdF9hc3NpZ24oKSBhbmQg
+Y21kcV9wa3Rfd3JpdGVfcygpIHRvIGFjaGlldmUNCj4gPiB0aGlzIGZ1bmN0aW9uLg0KPiA+IA0K
+PiA+IFJlZ2FyZHMsDQo+ID4gQ0sNCj4gPiANCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBjb21tZW50
+Lg0KPiANCj4gT2ssIHdlIGhhdmUgdG8gcHJvdmlkZSB3cml0ZSBjb25zdGFudCB2YWx1ZSBzZXJ2
+aWNlIHRvIGNsaWVudCwgc28gSSB3aWxsDQo+IGNoYW5nZSB0aGUgZnVuY3Rpb24gbmFtZSB0byBj
+bWRxX3BrdF93cml0ZV9zX3ZhbHVlKCkgaW4gdGhpcyBwYXRjaC4NCj4gDQo+IEFuZCBzaW5jZSBp
+dCBpcyBiZXR0ZXIgdG8gcHJvdmlkZSBjb25zaXN0ZW50IEFQSSBzbyBJIHdpbGwgZGVzaWduDQo+
+IGFub3RoZXIgZnVuY3Rpb24gd2l0aCBpbnRlcmZhY2UgYXMgeW91ciBzdWdnZXN0aW9uOg0KPiBp
+bnQgY21kcV9wa3Rfd3JpdGVfcyhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgcGh5c19hZGRyX3QgYWRk
+ciwgdTE2DQo+IHJlZ19pZHgpOw0KPiANCj4gSW4gYW5vdGhlciBwYXRjaCBJIHByb3ZpZGUgY21k
+cV9wa3RfbWVtX21vdmUoKS4gSSB3aWxsIG1vdmUgcGFydCBvZg0KPiBpbXBsZW1lbnRhdGlvbiB0
+byBjbWRxX3BrdF93cml0ZV9zKCksIHNvIHRoYXQgY21kcV9wa3RfbWVtX21vdmUoKSBjYW4gYmUN
+Cj4gY29tYmluYXRpb24gb2YgY21kcV9wa3RfcmVhZF9zKCkgYW5kIGNtZHFfcGt0X3dyaXRlX3Mo
+KS4NCj4gDQo+IEhvdyBkbyB5b3UgdGhpbms/DQoNClNvIGNtZHFfcGt0X3JlYWRfcygpL2NtZHFf
+cGt0X3dyaXRlX3MoKSBhcmUgdGhlIGJhc2ljIGZ1bmN0aW9uIGFuZA0KY21kcV9wa3Rfd3JpdGVf
+c192YWx1ZSgpL2NtZHFfcGt0X21lbV9tb3ZlKCkgYXJlIGNvbWJpbmF0aW9uIGZ1bmN0aW9uLiBJ
+DQp3b3VsZCBsaWtlIHRvIGtlZXAgdGhlIGJhc2ljIGZ1bmN0aW9uIGFuZCBkcm9wIHRoZSBjb21i
+aW5hdGlvbiBmdW5jdGlvbg0KYXQgZmlyc3QuIEkgdGhpbmsgd2hhdCB3ZSBwbGFjZSBpbiBoZWxw
+ZXIgaXMgdXNlZCBieSB0d28gb3IgbW9yZQ0KY2xpZW50cy4gSXQncyBzdHJvbmcgYmVsaWV2ZWQg
+dGhhdCBiYXNpYyBmdW5jdGlvbiBjb3VsZCBiZSB1c2VkIGJ5IHR3bw0Kb3IgbW9yZSBjbGllbnQs
+IGJ1dCBpdCdzIGRvdWJ0IHRoYXQgY29tYmluYXRpb24gd291bGQgYmUuIElmIG9ubHkgb25lDQpj
+bGllbnQgdXNlIHRoaXMgY29tYmluYXRpb24sIGp1c3QgcGxhY2UgdGhlIGNvbWJpbmF0aW9uIGlu
+IHRoYXQgY2xpZW50Lg0KSWYgbGF0ZXIgc2Vjb25kIGNsaWVudCB1c2UgdGhpcyBjb21iaW5hdGlv
+biwgd2UgdGhlbiBtb3ZlIHRoZSBjb21tb24NCmNvZGUgaW4gaGVscGVyIGFuZCBib3RoIGNsaWVu
+dCBjYWxsIHRoZSBoZWxwZXIgZnVuY3Rpb24uIElmIHlvdSBjb3VsZA0KcHJvdmUgdGhhdCB0aGlz
+IGNvbWJpbmF0aW9uIGlzIHVzZWQgYnkgdHdvIG9yIG1vcmUgY2xpZW50cyBub3csIGp1c3QNCnNo
+b3cgbWUuDQoNClJlZ2FyZHMsDQpDSw0KDQo+IA0KPiANCj4gUmVnYXJkcywNCj4gRGVubmlzDQo+
+IA0KPiA+ID4gKw0KPiA+ID4gKy8qKg0KPiA+ID4gICAqIGNtZHFfcGt0X3dmZSgpIC0gYXBwZW5k
+IHdhaXQgZm9yIGV2ZW50IGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQo+ID4gPiAgICogQHBr
+dDoJdGhlIENNRFEgcGFja2V0DQo+ID4gPiAgICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0
+eXBlIHRvICJ3YWl0IGFuZCBDTEVBUiINCj4gPiANCj4gPiANCj4gDQo+IA0KDQo=
 
-OK, based on Jason's response [1] that it's too late to put this into
-5.5, let's withdraw this, and I'll resend when it's time to send out
-patches for 5.6.
-
-[1] https://lore.kernel.org/r/20191125005339.GC5634@ziepe.ca
-
-thanks,
--- 
-John Hubbard
-NVIDIA
