@@ -2,141 +2,155 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD14EC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBF9C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67FF2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5782920740
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 15:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDKmKl1e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gAgopknF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfKYPPX (ORCPT
+        id S1728550AbfKYPP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:15:23 -0500
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:38207 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbfKYPPW (ORCPT
+        Mon, 25 Nov 2019 10:15:58 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58413 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728172AbfKYPP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:15:22 -0500
-Received: by mail-wm1-f52.google.com with SMTP id z19so16391790wmk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 07:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2e8atIpq5wHkQYzwJBKMcz9j6oQ/6fS/TGFVTRvgBmc=;
-        b=CDKmKl1eS0ZuvZZuyMc8GeAIR1AVwWTWWbhbNmWkxCOXYk7EX3DUQY4Ueas/nyRTYq
-         OH+QK+mEravSn2lvF4wG9LIxP7wNpUuE5PgVVF4W4wZYNOPiD/jdZnWIUeTuQPUOiXTg
-         sOT+okPdMyv3ed7q/+XgZUkfnDfmSCbH6uRO2LUpcqgv4wi534oAClbhEBsjbDQ/ODQA
-         3DbqrlierkAZNY3vvR4Lyn4fB6do6T5/hek+pjD6DNlTZ2lKM+oVsn0lw2wlqxcmV9wA
-         7TuDLLQsq+v/b46kUZexnIg3RmzCPz2m350Hn8v7wWRy2cjlqb6/9DSjvPUtFLmkrFZj
-         xGOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2e8atIpq5wHkQYzwJBKMcz9j6oQ/6fS/TGFVTRvgBmc=;
-        b=B1jiC7GZPs5ZamGSDXSofuD1NB1LgIOfHSGmsMIsMT//xDVi0Jx1ATBkdl1I6p1TD2
-         oYZVpda1noUWucrdwP+Z/5552Uro7W0RA6i9rdBpDS0vuEjjXu8l5ply+gTrwDx+dUiB
-         /xMcUFyDs6x99nN2vrmqbSfpXFFxKGtmU4GIQTFwborV4tYh3gWbgHCw8xnuCZwK1Zia
-         IejNaEKdYhyxz3GDtL8HIqGoxIhR2bDsIVn6tS5F+M82LDD5nMTEbSnv7JRUpF7niL3N
-         wEJzrImJjvoIgqy7QmGF/rVOSNi4LRvSWFWBE1yQhuM+OBCOZNFI9OuShweUxmSWqfQN
-         Mxxw==
-X-Gm-Message-State: APjAAAX8RRR9pkhBapdoTL9Fb6obOHMHL7de8qNu9qWz4mRXXpprCWcC
-        lIG44+ciUgVmA7i4Z9Jis3vaVc1V7KLphG0Y0fg=
-X-Google-Smtp-Source: APXvYqxghyvx1jkPcUDgdPxir+0bmwzReEZdqf7LJpD3R7pzdk4Kx6P1GT0/XU/Wv8MHK0eSJq5KaspqeHZxqNKHHRY=
-X-Received: by 2002:a05:600c:214a:: with SMTP id v10mr29227430wml.102.1574694919884;
- Mon, 25 Nov 2019 07:15:19 -0800 (PST)
+        Mon, 25 Nov 2019 10:15:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574694955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FZC4Tpkk+CwwwL93QU1+o+P6o/ZYTmixyeklL1zRZCY=;
+        b=gAgopknFzMapF6Ud3+nITuCrxdO6Qez4j2xf2AnoJN+qOmyxPtARiIyGPebVOXAONuek2F
+        H4V5ENFfrv4DWPmfC5MM7fRHtpMnelkJ5hXFNe0GvqA80Mil9xApWF1JeDtsiXZkx/7Ayp
+        oWAQYWQ0yMzvFXWbAXmzEDyn8oiiP74=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-cvZ0gjUlPAqUKcag45LBpg-1; Mon, 25 Nov 2019 10:15:52 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B31DDB60;
+        Mon, 25 Nov 2019 15:15:50 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F7621001B05;
+        Mon, 25 Nov 2019 15:15:39 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 23:15:35 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191125151535.GA8044@ming.t460p>
+References: <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
+ <20191109222828.GA30568@ming.t460p>
+ <fa3b0cf1f88e42e1200101bccbc797e4e7778d58.camel@unipv.it>
+ <20191123072726.GC25356@ming.t460p>
+ <a9ffcca93657cbbb56819fd883c474a702423b41.camel@unipv.it>
+ <20191125035437.GA3806@ming.t460p>
+ <bf47a6c620b847fa9e27f8542eb761529f3e0381.camel@unipv.it>
+ <20191125102928.GA20489@ming.t460p>
+ <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
 MIME-Version: 1.0
-References: <20191125145445.21648-1-yuehaibing@huawei.com>
-In-Reply-To: <20191125145445.21648-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 25 Nov 2019 10:15:07 -0500
-Message-ID: <CADnq5_Ms09to8Pr7BedmTZ37an=bBO+6ghHQQGJZBiefctRMZA@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/display: remove set but not used variable 'msg_out'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e5093535c60fd5dff8f92b76dcd52a1030938f62.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: cvZ0gjUlPAqUKcag45LBpg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 10:00 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp_psp.c: In function mod_hdcp_hdcp2_enable_encryption:
-> drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp_psp.c:633:77: warning: variable msg_out set but not used [-Wunused-but-set-variable]
-> drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp_psp.c: In function mod_hdcp_hdcp2_enable_dp_stream_encryption:
-> drivers/gpu/drm/amd/amdgpu/../display/modules/hdcp/hdcp_psp.c:710:77: warning: variable msg_out set but not used [-Wunused-but-set-variable]
->
-> It is never used, so remove it.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Mon, Nov 25, 2019 at 03:58:34PM +0100, Andrea Vai wrote:
+> Il giorno lun, 25/11/2019 alle 18.29 +0800, Ming Lei ha scritto:
+> > On Mon, Nov 25, 2019 at 11:11:00AM +0100, Andrea Vai wrote:
+> > > Il giorno lun, 25/11/2019 alle 11.54 +0800, Ming Lei ha scritto:
+> > > > On Sat, Nov 23, 2019 at 04:44:55PM +0100, Andrea Vai wrote:
+> > > > > Il giorno sab, 23/11/2019 alle 15.28 +0800, Ming Lei ha
+> > scritto:
+> > > > > >=20
+> > > > > > Please post the log of 'lsusb -v', and I will try to make a
+> > > > patch
+> > > > > > for
+> > > > > > addressing the issue.
+> > > > >=20
+> > > > > attached,
+> > > >=20
+> > > > Please apply the attached patch, and re-build & install & reboot
+> > > > kernel.
+> > > >=20
+> > > > This time, please don't switch io scheduler.
+> > >=20
+> > > # patch -p1 < usb.patch outputs:
+> > >=20
+> > > (Stripping trailing CRs from patch; use --binary to disable.)
+> > > patching file block/blk-mq.c
+> > > Hunk #1 succeeded at 1465 (offset 29 lines).
+> > > Hunk #2 succeeded at 3061 (offset 13 lines).
+> > > (Stripping trailing CRs from patch; use --binary to disable.)
+> > > patching file drivers/scsi/scsi_lib.c
+> > > Hunk #1 succeeded at 1902 (offset -37 lines).
+> > > (Stripping trailing CRs from patch; use --binary to disable.)
+> > > patching file drivers/usb/storage/scsiglue.c
+> > > Hunk #1 succeeded at 651 (offset -10 lines).
+> > > (Stripping trailing CRs from patch; use --binary to disable.)
+> > > patching file include/linux/blk-mq.h
+> > > Hunk #1 succeeded at 226 (offset -162 lines).
+> > > (Stripping trailing CRs from patch; use --binary to disable.)
+> > > patching file include/scsi/scsi_host.h
+> > > patch unexpectedly ends in middle of line
+> > > patch unexpectedly ends in middle of line
+> > >=20
+> > > Just to be sure I have to go on, is this correct? Sounds like an
+> > error
+> > > but I don't know if it is important.
+> >=20
+> > Looks there is small conflict, however it has been fixed by patch,
+> > so
+> > it is correct, please go on your test.
+>=20
+> Done, it still fails (2000 seconds or more to copy 1GB) :-(
+>=20
+> cat /sys/block/sdf/queue/scheduler outputs:
+> [mq-deadline] none
+>=20
+> What to try next?
 
-Applied.  Thanks!
+1) cat /sys/kernel/debug/block/$DISK/hctx0/flags
 
-Alex
+note: replace $DISK with disk name of your usb drive, such as, if it is
+/dev/sdb, pass $DISK as sdb.
 
-> ---
->  drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
-> index 2dd5fee..468f5e6 100644
-> --- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
-> +++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
-> @@ -630,14 +630,12 @@ enum mod_hdcp_status mod_hdcp_hdcp2_enable_encryption(struct mod_hdcp *hdcp)
->         struct psp_context *psp = hdcp->config.psp.handle;
->         struct ta_hdcp_shared_memory *hdcp_cmd;
->         struct ta_hdcp_cmd_hdcp2_process_prepare_authentication_message_input_v2 *msg_in;
-> -       struct ta_hdcp_cmd_hdcp2_process_prepare_authentication_message_output_v2 *msg_out;
->         struct mod_hdcp_display *display = get_first_added_display(hdcp);
->
->         hdcp_cmd = (struct ta_hdcp_shared_memory *)psp->hdcp_context.hdcp_shared_buf;
->         memset(hdcp_cmd, 0, sizeof(struct ta_hdcp_shared_memory));
->
->         msg_in = &hdcp_cmd->in_msg.hdcp2_prepare_process_authentication_message_v2;
-> -       msg_out = &hdcp_cmd->out_msg.hdcp2_prepare_process_authentication_message_v2;
->
->         hdcp2_message_init(hdcp, msg_in);
->
-> @@ -707,14 +705,12 @@ enum mod_hdcp_status mod_hdcp_hdcp2_enable_dp_stream_encryption(struct mod_hdcp
->         struct psp_context *psp = hdcp->config.psp.handle;
->         struct ta_hdcp_shared_memory *hdcp_cmd;
->         struct ta_hdcp_cmd_hdcp2_process_prepare_authentication_message_input_v2 *msg_in;
-> -       struct ta_hdcp_cmd_hdcp2_process_prepare_authentication_message_output_v2 *msg_out;
->         uint8_t i;
->
->         hdcp_cmd = (struct ta_hdcp_shared_memory *)psp->hdcp_context.hdcp_shared_buf;
->         memset(hdcp_cmd, 0, sizeof(struct ta_hdcp_shared_memory));
->
->         msg_in = &hdcp_cmd->in_msg.hdcp2_prepare_process_authentication_message_v2;
-> -       msg_out = &hdcp_cmd->out_msg.hdcp2_prepare_process_authentication_message_v2;
->
->         hdcp2_message_init(hdcp, msg_in);
->
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+2) echo 128 > /sys/block/$DISK/queue/nr_requests and run your copy 1GB
+test again.
+
+
+Thanks,=20
+Ming
+
