@@ -2,123 +2,126 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D58C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE66C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D9820748
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FCA20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 14:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="AP9CdUHy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBNkAIWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfKYORw (ORCPT
+        id S1728019AbfKYOUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:17:52 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:15530 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfKYORw (ORCPT
+        Mon, 25 Nov 2019 09:20:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33170 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbfKYOUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:17:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574691470;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=r/C4z8eqmf4EqK6PYy8WsArzStWXQ+mb5cSxKvoTl4Q=;
-        b=AP9CdUHyBSFSe2UT87PwY1eREKGTGKaYgZ+bVxcnXUYGb/y3AVx+JK5CGbNYu1hv7l
-        Q4SJ1fqChqo2xzZuWmCDvY8upa+XNb+fSYmcLmt1u5jGHGsNFxwRVqSy+6xd4AtZGKpV
-        eyZ1E5fr8Py+pGnnq8LWq8g/h4++RrqjEVJ/9x4STZcU29BowrZBASFtzlIbunHZZMbG
-        SDLcFVyLR5O4uSV/SeQXUVRtwl88wOeTW5JFUgKn12AQoWW4pfRO+CWZuR21IKz0sRLy
-        wGmyvMBM6z+0ro003JarnwHU6bLjdB8w5argiQJMvB7vSMBP61/a0fL22bJOGro2jt/U
-        STQA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266HpF+ORJDYrryYBhveg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id 304194vAPEHn0tU
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 25 Nov 2019 15:17:49 +0100 (CET)
-Date:   Mon, 25 Nov 2019 15:17:40 +0100
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] ARM: dts: ux500: Add pin configs for UART1 CTS/RTS
- pins
-Message-ID: <20191125141740.GA55734@gerhold.net>
-References: <20191125122256.53482-1-stephan@gerhold.net>
- <20191125122256.53482-4-stephan@gerhold.net>
+        Mon, 25 Nov 2019 09:20:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so2733438pgk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 06:20:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/jORnAlcsB1daMxnJzmULfdvfXi6vOqocPRyBnYdUVA=;
+        b=hBNkAIWf8+LBWPlsDUD00QD9+AKz1qIs1x59fc1Nk5ly2W2wEO/TkCRAGG/OE/E2A9
+         9eaNEM33oJTzQH/APVjsQsMcMHdLs+9r9WgLRmXM1ZMksDs7PzAQO033dgV3BHOWy2c6
+         c+kBcNXlm9D1wI1DAOCRo6bFWpjZCEszr7o+01ph+ypMROwTnkMTG9SRYIsoK+rzzQp8
+         uP09l3D7KfNLjbQ5+NjPxNkxZGK0hubGF3iLUEV1H/49cwxVh8jptNrH3r5cfq5lGxTI
+         eRcKkup8sKnpjuRns4XxrCaGgHsOJLJrsR4a5VrQ5spzEC+zk0PjDJFh6hIoWTPlJVYq
+         HF+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/jORnAlcsB1daMxnJzmULfdvfXi6vOqocPRyBnYdUVA=;
+        b=DAiInIHNZIS6+TFpKBY9CU2T8YyGgDmazdt2AVyVAhamkrIiDZRYb/JOTNf2nZGNUJ
+         pdKBfvLtREfwfF3IEBqvYLPAMtQZZ1IBZE4EK3Z1aLGNZ9mHHWZbfqDwr0jhMqhVYM3h
+         Iccibt05DusXHZU5PYIX7PA4AxYiLWGN+9hiGblPXDiHlj27yAcj6C575p+tPi85Dcdz
+         7q/LuhcMWoTYQ+sSDE+F4lvtyfrQFnxJu6zStuC5zjjflTJD6+J1eH3uLbwoHgNo3421
+         uRg9oI5yuD1YqglQocTNsXr/dL8F6FAV7epLYUv9i2TW9B2HwdzjmAd05EYmzwDsxqhz
+         /8jA==
+X-Gm-Message-State: APjAAAV88XgVRFZf3oAScDA4wwEBxxY2UHW+xTSNr4WOrhvHJEQtXvB1
+        LHoG55VPy0eD5jv+F4nL1c2fwlHu
+X-Google-Smtp-Source: APXvYqz34yPE6/0lcVzrz2QQP4L1aQrII4umO4xBoyJH+jffy/JCtTjy/PMCVhJoSiXGCHV9DWVVzw==
+X-Received: by 2002:aa7:9f08:: with SMTP id g8mr35463808pfr.59.1574691621266;
+        Mon, 25 Nov 2019 06:20:21 -0800 (PST)
+Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
+        by smtp.gmail.com with ESMTPSA id f59sm7930121pje.0.2019.11.25.06.20.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 06:20:20 -0800 (PST)
+Date:   Mon, 25 Nov 2019 14:20:18 +0000
+From:   Hao Lee <haolee.swjtu@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     mgorman@techsingularity.net, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, haolee.swjtu@gmail.com
+Subject: [PATCH] mm: fix comments related to node reclaim
+Message-ID: <20191125142018.GA21373@haolee.github.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191125122256.53482-4-stephan@gerhold.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 01:22:55PM +0100, Stephan Gerhold wrote:
-> UART1 an be optionally used with additional CTS/RTS pins.
+As zone reclaim has been replaced by node reclaim, this patch fixes related
+comments.
 
-s/an/can, duh.
-I will fix this if a v2 is needed for some reason; otherwise,
-can you fix this when applying the patch?
+Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
+---
+ include/linux/mmzone.h          | 2 +-
+ include/uapi/linux/capability.h | 2 +-
+ include/uapi/linux/sysctl.h     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Thanks!
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 9e47289a4511..7e3208f4f5bc 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -747,7 +747,7 @@ typedef struct pglist_data {
+ 
+ #ifdef CONFIG_NUMA
+ 	/*
+-	 * zone reclaim becomes active if more unmapped pages exist.
++	 * node reclaim becomes active if more unmapped pages exist.
+ 	 */
+ 	unsigned long		min_unmapped_pages;
+ 	unsigned long		min_slab_pages;
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index 240fdb9a60f6..dd6772f16eec 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -273,7 +273,7 @@ struct vfs_ns_cap_data {
+ /* Allow enabling/disabling tagged queuing on SCSI controllers and sending
+    arbitrary SCSI commands */
+ /* Allow setting encryption key on loopback filesystem */
+-/* Allow setting zone reclaim policy */
++/* Allow setting node reclaim policy */
+ 
+ #define CAP_SYS_ADMIN        21
+ 
+diff --git a/include/uapi/linux/sysctl.h b/include/uapi/linux/sysctl.h
+index 87aa2a6d9125..27c1ed2822e6 100644
+--- a/include/uapi/linux/sysctl.h
++++ b/include/uapi/linux/sysctl.h
+@@ -195,7 +195,7 @@ enum
+ 	VM_MIN_UNMAPPED=32,	/* Set min percent of unmapped pages */
+ 	VM_PANIC_ON_OOM=33,	/* panic at out-of-memory */
+ 	VM_VDSO_ENABLED=34,	/* map VDSO into new processes? */
+-	VM_MIN_SLAB=35,		 /* Percent pages ignored by zone reclaim */
++	VM_MIN_SLAB=35,		 /* Percent pages ignored by node reclaim */
+ };
+ 
+ 
+-- 
+2.14.5
 
-> The pinctrl driver has an extra "u1ctsrts_a_1" pin group for them.
-> 
-> Add a new pin configuration to configure them correctly if needed.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
->  arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi | 26 +++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-> index b6d0a60e9aed..e85a08ad2ea7 100644
-> --- a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-> @@ -65,6 +65,32 @@
->  				ste,config = <&slpm_out_wkup_pdis>;
->  			};
->  		};
-> +
-> +		u1ctsrts_a_1_default: u1ctsrts_a_1_default {
-> +			default_mux {
-> +				function = "u1";
-> +				groups = "u1ctsrts_a_1";
-> +			};
-> +			default_cfg1 {
-> +				pins = "GPIO6_AF6"; /* CTS */
-> +				ste,config = <&in_pu>;
-> +			};
-> +			default_cfg2 {
-> +				pins = "GPIO7_AG5"; /* RTS */
-> +				ste,config = <&out_hi>;
-> +			};
-> +		};
-> +
-> +		u1ctsrts_a_1_sleep: u1ctsrts_a_1_sleep {
-> +			sleep_cfg1 {
-> +				pins = "GPIO6_AF6"; /* CTS */
-> +				ste,config = <&slpm_in_wkup_pdis>;
-> +			};
-> +			sleep_cfg2 {
-> +				pins = "GPIO7_AG5"; /* RTS */
-> +				ste,config = <&slpm_out_hi_wkup_pdis>;
-> +			};
-> +		};
->  	};
->  
->  	uart2 {
-> -- 
-> 2.24.0
-> 
