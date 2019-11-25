@@ -2,189 +2,197 @@ Return-Path: <SRS0=OOqn=ZR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD81EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B70C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B9920722
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="g3Fn5ncq"
+	by mail.kernel.org (Postfix) with ESMTP id B23D32071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Nov 2019 06:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfKYF60 (ORCPT
+        id S1725828AbfKYGEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 00:58:26 -0500
-Received: from mail-eopbgr690051.outbound.protection.outlook.com ([40.107.69.51]:8004
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725844AbfKYF6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 00:58:09 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ii7J97d3BWRzzzLTFdnuszDhFjIqtCCgA2LXBlzKGVEXwxJ5BzB9OmpP1MG7gr8PzrHWoBfYvRdYktsaBb0J/ah+8EnFyYKnsG5+QV8rAKLJLRz/t9zXJi7NTPW/hcP1Ndaa5Id09MTI1TfsNBWESXCWN2H/xR2++3GhrcEKdXZbVIKrVxP2nmBPCqS66M2QqL0Eeel6a53ux+rAd63bXsS7dS8Ircd5LnbFl7tswyoZC3BHm0ObpQK0/iXaGnDr0eyvMO88XXohdO6PAzgLu9TNumK9WTMizadQIrGLhlB+5j989G2J/cHTRy142Lwu3xtyz0kRo3CCbrrXk9WfDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xDfzxDQGZW6XheT+Y4JFDKwUOe7QfA8Tz7Bn/45KXYw=;
- b=GIKjGjMbZnaP1PCt+DYB/2z90Sl+cLhKzzEW2lY7dZYn3Z/CFEMzpBknBB5829X912MvpaCNRJbnjEe9eglfz8SR3iZr3denYT+xqUS7/0KBCXnt3XAeRSS1FVF6HRQfC0KN3xS+euZQHMsAPO97mbNu2CZTs8xEDIBvo0622ayOU7QFIJGrb/arAgEL+3hhgrb2FNPaq+Rjs4vxpUR5C0B8NtOXfSiLA4QLeapeU/ixNw8dMJ8oyz89BxD743SBjv57em+mEgQ4BEelC5IBADbWU1bG9OWllDsE8deIIu8vZfsj+MdhIeUBwKeR1FkPhS0ASyi6tzppT2dSYfYUFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xDfzxDQGZW6XheT+Y4JFDKwUOe7QfA8Tz7Bn/45KXYw=;
- b=g3Fn5ncqkYl9zRXJPyqXOtxGeXvmpoNLAHAwItzNY8mvkhVd4UE5rfSHIhPBCO7wSLrZNCswjAXfXXFFW95PePvxHy4zTAfiJLD8ViABIKzXxMNDrVYqHK7BrgUtxb4Qp3uoB1ugCdcFvJbA9o8yTe/XFujTMXSnMHM1dpN59vI=
-Received: from MN2PR13MB3374.namprd13.prod.outlook.com (10.255.236.83) by
- MN2PR13MB2622.namprd13.prod.outlook.com (20.178.254.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.10; Mon, 25 Nov 2019 05:57:58 +0000
-Received: from MN2PR13MB3374.namprd13.prod.outlook.com
- ([fe80::4481:4560:7083:e4c6]) by MN2PR13MB3374.namprd13.prod.outlook.com
- ([fe80::4481:4560:7083:e4c6%7]) with mapi id 15.20.2495.014; Mon, 25 Nov 2019
- 05:57:58 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>
-CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v3 3/6] irqchip: sifive: Support hierarchy irq domain
-Thread-Topic: [PATCH v3 3/6] irqchip: sifive: Support hierarchy irq domain
-Thread-Index: AQHVo1VJzc9tV+G/IEy0msjY0/LtiA==
-Date:   Mon, 25 Nov 2019 05:57:58 +0000
-Message-ID: <1574661437-28486-4-git-send-email-yash.shah@sifive.com>
-References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BMXPR01CA0053.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::17) To MN2PR13MB3374.namprd13.prod.outlook.com
- (2603:10b6:208:162::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [114.143.65.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 100a0099-b65f-408c-1263-08d7716c6c38
-x-ms-traffictypediagnostic: MN2PR13MB2622:
-x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR13MB2622964B0608327AD26E9A7E8C4A0@MN2PR13MB2622.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(366004)(396003)(39840400004)(189003)(199004)(186003)(6436002)(2906002)(316002)(14454004)(7416002)(54906003)(4326008)(11346002)(71190400001)(2616005)(50226002)(8936002)(110136005)(478600001)(6512007)(446003)(6116002)(8676002)(36756003)(3846002)(25786009)(81156014)(44832011)(305945005)(5660300002)(52116002)(76176011)(256004)(26005)(81166006)(71200400001)(6506007)(386003)(2501003)(6636002)(66446008)(66556008)(86362001)(66946007)(102836004)(99286004)(6486002)(7736002)(107886003)(64756008)(66476007)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR13MB2622;H:MN2PR13MB3374.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GmoKl45B8NeGeNdjtomAcMY+p1y5BlMeE3kPPR08QccuQ333Du6eHdg4D8OLlrOkcpHLaw0f2Pm/hOIrvYuW5WeC9jEFb6bF4IY8ezQJRnVjzOHXTt+qVlRYI57j2Up0x9ngqABIpfI2jZNOEIkKBdvRflJjCi0nmmWk4K+PpFVReryJS47psNZyPhiIVNlq5qdRsFD3zbz1JvpDsS2luArvuvARr+xPPb9mn2ix2l/4S+55f30+CIF5/j32DHtt6ZbG+Jqyb5ZVYTclNb8jGMDmkTzB1EqD+UHDBhp4ReM6ClUZw/0H1JLBwaGSbtTVu1IPkrlKAbIKORWECZnXAeFB6/jPgaRq/fUmHTjPoUkPn6MSyI24PaknwCpp5sI+E72H1lq/w+Kfw68f2DrrYX4yMltwR5no5WT/MpDZ9PYWTdJdYoyoWjBZqfUBW93i
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Nov 2019 01:04:24 -0500
+Received: from mga07.intel.com ([134.134.136.100]:23846 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfKYGEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Nov 2019 01:04:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Nov 2019 22:04:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,240,1571727600"; 
+   d="scan'208";a="239391717"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Nov 2019 22:04:22 -0800
+Received: from [10.251.82.176] (abudanko-mobl.ccr.corp.intel.com [10.251.82.176])
+        by linux.intel.com (Postfix) with ESMTP id 90822580495;
+        Sun, 24 Nov 2019 22:04:19 -0800 (PST)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v2 0/3] perf record: adapt NUMA awareness to machines with
+ #CPUs > 1K
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Organization: Intel Corp.
+Message-ID: <fb356fe9-ac87-71ab-9845-075b3fac3199@linux.intel.com>
+Date:   Mon, 25 Nov 2019 09:04:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 100a0099-b65f-408c-1263-08d7716c6c38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 05:57:58.4194
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: izcCoBjval2l3asTKBNwDYbG/fE9l4ESGZ0xwTYhLZn3zjSuwo9hstJB9PW4HiedfR5EqVBJ96Q20F2HZTEINg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2622
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for hierarchy irq domains. This is needed as pre-requisite for
-gpio-sifive driver.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Current implementation of cpu_set_t type by glibc has internal cpu
+mask size limitation of no more than 1024 CPUs. This limitation confines
+NUMA awareness of Perf tool in record mode, thru --affinity option,
+to the first 1024 CPUs on machines with larger amount of CPUs.
+
+This patch set enables Perf tool to overcome 1024 CPUs limitation by
+using a dedicated struct mmap_cpu_mask type and applying tool's bitmap
+API operations to manipulate affinity masks of the tool's thread and
+the mmaped data buffers.
+
+tools bitmap API has been extended with bitmap_free() function and
+bitmap_equal() operation whose implementation is derived from the
+kernel one.
+
 ---
- drivers/irqchip/Kconfig           |  1 +
- drivers/irqchip/irq-sifive-plic.c | 30 ++++++++++++++++++++++++++----
- 2 files changed, 27 insertions(+), 4 deletions(-)
+Alexey Budankov (3):
+  tools bitmap: implement bitmap_equal() operation at bitmap API
+  perf mmap: declare type for cpu mask of arbitrary length
+  perf record: adapt affinity to machines with #CPUs > 1K
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index ccbb897..a398552 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -488,6 +488,7 @@ endmenu
- config SIFIVE_PLIC
- 	bool "SiFive Platform-Level Interrupt Controller"
- 	depends on RISCV
-+	select IRQ_DOMAIN_HIERARCHY
- 	help
- 	   This enables support for the PLIC chip found in SiFive (and
- 	   potentially other) RISC-V systems.  The PLIC controls devices
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive=
--plic.c
-index 7d0a12f..1592ef2 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -154,15 +154,37 @@ static struct irq_chip plic_chip =3D {
- static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
- 			      irq_hw_number_t hwirq)
- {
--	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
--	irq_set_chip_data(irq, NULL);
-+	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
-+			    handle_fasteoi_irq, NULL, NULL);
- 	irq_set_noprobe(irq);
- 	return 0;
- }
-=20
-+static int plic_irq_domain_alloc(struct irq_domain *domain, unsigned int v=
-irq,
-+				 unsigned int nr_irqs, void *arg)
-+{
-+	int i, ret;
-+	irq_hw_number_t hwirq;
-+	unsigned int type;
-+	struct irq_fwspec *fwspec =3D arg;
-+
-+	ret =3D irq_domain_translate_onecell(domain, fwspec, &hwirq, &type);
-+	if (ret)
-+		return ret;
-+
-+	for (i =3D 0; i < nr_irqs; i++) {
-+		ret =3D plic_irqdomain_map(domain, virq + i, hwirq + i);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct irq_domain_ops plic_irqdomain_ops =3D {
--	.map		=3D plic_irqdomain_map,
--	.xlate		=3D irq_domain_xlate_onecell,
-+	.translate	=3D irq_domain_translate_onecell,
-+	.alloc		=3D plic_irq_domain_alloc,
-+	.free		=3D irq_domain_free_irqs_top,
- };
-=20
- static struct irq_domain *plic_irqdomain;
---=20
-2.7.4
+ tools/include/linux/bitmap.h | 30 ++++++++++++++++++++++++++++++
+ tools/lib/bitmap.c           | 15 +++++++++++++++
+ tools/perf/builtin-record.c  | 30 ++++++++++++++++++++++++------
+ tools/perf/util/mmap.c       | 31 +++++++++++++++++++++++++------
+ tools/perf/util/mmap.h       | 11 ++++++++++-
+ 5 files changed, 104 insertions(+), 13 deletions(-)
+
+---
+Changes in v2:
+- implemented bitmap_free() for symmetry with bitmap_alloc()
+- capitalized MMAP_CPU_MASK_BYTES() macro
+- returned -1 from perf_mmap__setup_affinity_mask()
+- implemented releasing of masks using bitmap_free()
+- moved debug printing under -vv option
+
+---
+Testing:
+
+  tools/perf/perf record -vv --affinity=cpu -- ls
+  thread mask[8]: empty
+  Using CPUID GenuineIntel-6-5E-3
+  intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+  nr_cblocks: 0
+  affinity: CPU
+  mmap flush: 1
+  comp level: 0
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             112
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|PERIOD
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    enable_on_exec                   1
+    task                             1
+    precise_ip                       3
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 28649  cpu 0  group_fd -1  flags 0x8 = 4
+  sys_perf_event_open: pid 28649  cpu 1  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid 28649  cpu 2  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid 28649  cpu 3  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid 28649  cpu 4  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid 28649  cpu 5  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid 28649  cpu 6  group_fd -1  flags 0x8 = 12
+  sys_perf_event_open: pid 28649  cpu 7  group_fd -1  flags 0x8 = 13
+  mmap size 528384B
+  0x7f1898200010: mmap mask[8]: 0
+  0x7f18982100d8: mmap mask[8]: 1
+  0x7f18982201a0: mmap mask[8]: 2
+  0x7f1898230268: mmap mask[8]: 3
+  0x7f1898240330: mmap mask[8]: 4
+  0x7f18982503f8: mmap mask[8]: 5
+  0x7f18982604c0: mmap mask[8]: 6
+  0x7f1898270588: mmap mask[8]: 7
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             112
+    config                           0x9
+    watermark                        1
+    sample_id_all                    1
+    bpf_event                        1
+    { wakeup_events, wakeup_watermark } 1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 14
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 15
+  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 16
+  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 17
+  sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 18
+  sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 19
+  sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 20
+  sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 21
+  ...
+  Synthesizing TSC conversion information
+  thread mask[8]: 0
+  thread mask[8]: 1
+  thread mask[8]: 2
+  thread mask[8]: 3
+  thread mask[8]: 4
+  arch			      copy     Documentation  init     kernel	 MAINTAINERS	  modules.builtin.modinfo  perf.data	  scripts   System.map	vmlinux
+  block			      COPYING  drivers	      ipc      lbuild	 Makefile	  modules.order		   perf.data.old  security  tools	vmlinux.o
+  certs			      CREDITS  fs	      Kbuild   lib	 mm		  Module.symvers	   README	  sound     usr
+  config-5.2.7-100.fc29.x86_64  crypto   include	      Kconfig  LICENSES  modules.builtin  net			   samples	  stdio     virt
+  thread mask[8]: 5
+  thread mask[8]: 6
+  thread mask[8]: 7
+  thread mask[8]: 0
+  thread mask[8]: 1
+  thread mask[8]: 2
+  thread mask[8]: 3
+  thread mask[8]: 4
+  thread mask[8]: 5
+  thread mask[8]: 6
+  thread mask[8]: 7
+  [ perf record: Woken up 0 times to write data ]
+  thread mask[8]: 0
+  thread mask[8]: 1
+  thread mask[8]: 2
+  thread mask[8]: 3
+  thread mask[8]: 4
+  thread mask[8]: 5
+  thread mask[8]: 6
+  thread mask[8]: 7
+  Looking at the vmlinux_path (8 entries long)
+  Using vmlinux for symbols
+  [ perf record: Captured and wrote 0.014 MB perf.data (8 samples) ]
+
+-- 
+2.20.1
 
