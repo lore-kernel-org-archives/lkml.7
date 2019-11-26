@@ -2,94 +2,123 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C624C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C77CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAFD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C7F2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FExPVgWd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXH19YTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfKZMRl (ORCPT
+        id S1728291AbfKZMSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:17:41 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41119 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727615AbfKZMRk (ORCPT
+        Tue, 26 Nov 2019 07:18:46 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36489 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727615AbfKZMSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:17:40 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m4so19935160ljj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 04:17:39 -0800 (PST)
+        Tue, 26 Nov 2019 07:18:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id f10so15700345oto.3;
+        Tue, 26 Nov 2019 04:18:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K5QyhOqHcLHyB/soUlYt5FDv11OM5DdtmqTnCRv6jT4=;
-        b=FExPVgWdtbMNIuXTPIXVc5qOikzvjSuB64a/ScIIZSKl19OwHNQKVYPtkkAlqMwZXP
-         j5XDbE9V/3TX3K70QMYPlGQ8FupeV7rNuUDQLuk494Pg+0MILV7n2iCi2v6khecWN+T9
-         a9JgwJPPFmXPInR15J9P66L8nnMYrm8uSxrfzVH3NA4poamD2ACpPi+SZ0jQ4lkTMc9E
-         xY5tl3JicyvMNramXtTuIAiL72X12FecnsKqCpbKX3owxV3D2KhJOByg40sGlmxPoWQL
-         vuwzzb/lR1c3hx9o9LfibGB/3z74EsRFvMeM0Da22dC7m0gNE3IofczV4Y731G2JOHYg
-         vnhA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GPjIoPKAdBU2rhij0XkCzvo+ahx+quTsSMqV7wK7Go4=;
+        b=kXH19YTYWBb/zAuzTG2D+tFgg9MZ74NGM3I9FEiCDfBIv4BipMdk0YtT7FQh0nx5du
+         5PsAvauJPiHo77O5deZ5/3NbsAg0+Gdmezpq8R3AStdJGmuATFgOVZok7YMKr9sqs8bm
+         HXUzJ+zkd2cmITUiWpjDt4aoRMoDG4XqMfmhVeppEEFlKLejOy8ykHb+qo0LUaA7+U1s
+         M+CvJ/EWC9H+Teu1OtUwbORx5axg9qB3wN8xa2iq7JvgnMsGc/itO705yS1BuWj/YNDJ
+         OhokstKZZ0/DL6vn1/DLgvxJ0tVhmUCiFP8sb881PmusrfoU0XCHQQcFCCDncHkUSvLB
+         UDxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K5QyhOqHcLHyB/soUlYt5FDv11OM5DdtmqTnCRv6jT4=;
-        b=ahOD09Y/KdYQ6pVXxlaJKPhXJGYK4tpjOjWKludnyBZZNX5SZ8Ynx0ut84fJHWYqTv
-         RFLtpa4nwD4C83GZcvHPxh0XI+1x1vgh42hnJQFGR0sYh9ki1zFg/uFLDXEOPotYZJST
-         dZU/R6xHD+iamUxdMFH0CxPk9u5B6nejyMEOakTBSrN1rhZWkesdMVDzP6MCGoTtZK2x
-         Fqic8rVR0iW0bAyoJFbizJamDmKZPHbflMycBNL4XlCXXkzs3hR1tMhlQTviTLj2xumb
-         XhChXvlU+lv74ckilJV0ZpaqmL3+a/+6uHwuOePn2vWvViEpptFDf++fy9aI4PBBKy/J
-         xIsQ==
-X-Gm-Message-State: APjAAAX5IK63xWpa/faTR8dPSBCpY8WcgivgLL7x/jh5xeOfoKWbd/Na
-        W/VhOzNb2PqSzRt/96Gcqa2uULY8L+yHLhh0VGv4Xg==
-X-Google-Smtp-Source: APXvYqyUvqGJTGlKL4forstKqT+EkT3JZiUWQ8b6UX/M2Coqf+nunSw34Afbi8voYdN3pSylpBVhvtHtd41ceJu+itg=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr13958204ljm.218.1574770658404;
- Tue, 26 Nov 2019 04:17:38 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GPjIoPKAdBU2rhij0XkCzvo+ahx+quTsSMqV7wK7Go4=;
+        b=OuiOdAB3QuTdKju8C9ULQ6Piio2kcFmVMxD6n7Yvns2JJzt7in5FBI2Y8plKeYIIXZ
+         D0lZbe7JERm35e83Zga8YWm9bDLUyaKVt+Dd5ZYcfA8zIjdhLSnDSDhEWrq5ktxZLSFT
+         WjAP/akxXkeAW/rP8wLy5Askc4rAyynt9QCRH04hT1CNCg+MYlnU5e2x5kx46a5v5fqj
+         sYJ4qanj9Stt1lxG2y8bmZ5Ptb1wl34zlkSQOa8Ko5UeEd4yGp5SXanpyY8rniW5XaMy
+         sv0WDlh+Ph9qmPwf360ahrzFyDoZguRJ1RfvDw1tpOukZux3+dyNTAD5rYQkY5cHGLSP
+         Uo8w==
+X-Gm-Message-State: APjAAAWYGWGsaGqoUdZ1dkbbiCvgjitPsMCe/NGo2asnyhY9aFaPExID
+        PNSchz1T/WbkiwUk2GSa9sc=
+X-Google-Smtp-Source: APXvYqz/ELJmUcs3pP92+oVmdlJk7E+Dzm6ctuvIFTGCxQmgLgtcI9qH8dxQ7s2bJR6TaZ355x0psQ==
+X-Received: by 2002:a9d:470f:: with SMTP id a15mr24541053otf.290.1574770724780;
+        Tue, 26 Nov 2019 04:18:44 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j8sm3567921otj.42.2019.11.26.04.18.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 04:18:43 -0800 (PST)
+Subject: Re: [PATCH v1 2/4] watchdog: populate reboot mode node in toprgu node
+ of MTK RGU (Reset Generation Unit)
+To:     freddy.hsin@mediatek.com, sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wim@linux-watchdog.org,
+        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc:     Chang-An.Chen@mediatek.com, wsd_upstream@mediatek.com
+References: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
+ <1574746490-625-3-git-send-email-freddy.hsin@mediatek.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <ca66e52e-df80-388e-3018-7bf35aef5f43@roeck-us.net>
+Date:   Tue, 26 Nov 2019 04:18:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191125170428.76069-1-stephan@gerhold.net>
-In-Reply-To: <20191125170428.76069-1-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Nov 2019 13:17:26 +0100
-Message-ID: <CACRpkdZMQft4oY+jrJ1Y8aNm9RSjr_B9dC5ScKbST-vi1ZZ4CQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: ux500: Disable I2C/SPI buses by default
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1574746490-625-3-git-send-email-freddy.hsin@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 6:05 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+On 11/25/19 9:34 PM, freddy.hsin@mediatek.com wrote:
+> From: Freddy Hsin <freddy.hsin@mediatek.com>
+> 
+> of_platform_population should be added in the probe function of
+> toprgu driver, or the reboot mode driver will not be probed
+> 
+> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
+> ---
+>   drivers/watchdog/mtk_wdt.c |    3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
+> index 9c3d003..2fb2614 100644
+> --- a/drivers/watchdog/mtk_wdt.c
+> +++ b/drivers/watchdog/mtk_wdt.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/types.h>
+>   #include <linux/watchdog.h>
+>   #include <linux/delay.h>
+> +#include <linux/of_platform.h>
+>   
+>   #define WDT_MAX_TIMEOUT		31
+>   #define WDT_MIN_TIMEOUT		1
+> @@ -167,6 +168,8 @@ static int mtk_wdt_probe(struct platform_device *pdev)
+>   	if (IS_ERR(mtk_wdt->wdt_base))
+>   		return PTR_ERR(mtk_wdt->wdt_base);
+>   
+> +	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +
 
-> At the moment, all 5 I2C and 6 SPI buses are probed and exposed
-> to user-space by default - even if they are not muxed to any pins
-> on the board. This means that user-space sees an I2C/SPI bus that
-> cannot be actually used properly.
->
-> In some cases this was used to put the corresponding pins into
-> a low power sleep mode - but even then the pins first need to be
-> configured by the board-specific device tree part.
->
-> Avoid exposing unconfigured devices to user-space by disabling
-> the I2C/SPI buses by default. Enable them in the board device trees
-> when needed.
->
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+This seems just wrong. Such a driver should not be a child of the watchdog driver.
 
-All 4 patches applied and pushed to ux500-dts for v5.6!
+Guenter
 
-Yours,
-Linus Walleij
+>   	mtk_wdt->wdt_dev.info = &mtk_wdt_info;
+>   	mtk_wdt->wdt_dev.ops = &mtk_wdt_ops;
+>   	mtk_wdt->wdt_dev.timeout = WDT_MAX_TIMEOUT;
+> 
+
