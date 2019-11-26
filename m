@@ -2,176 +2,76 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE0BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A021C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266A42073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F8520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="m3CRJ8Gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbfKZRHE (ORCPT
+        id S1728620AbfKZRHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:07:04 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:52650 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727756AbfKZRHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:07:03 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iZeIk-0004un-K7; Tue, 26 Nov 2019 10:06:59 -0700
-To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <3cd1d36f-a8ba-92dc-f991-19e2f9196eba@deltatee.com>
-Date:   Tue, 26 Nov 2019 10:06:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, linux-pci@vger.kernel.org, jamessewart@arista.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2] PCI: Add DMA alias quirk for PLX PEX NTB
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        Tue, 26 Nov 2019 12:07:20 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25864 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfKZRHT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:07:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574788000; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=AhsO/clZZEG3jjlJcaOADFNrZBs3QQUAtftWtms4XMsUusy0OD0kiJ9DjEMbZp5IZ/KfISPmTnUKwlGdcNN/wKExD2ixWO4z6YpH/KhMXaTMYk/EViQcP93o6L19a9nwSZeFj3JKUp59XfIgVYb9kdkHxEof6Y0eJi+aH6j0b9I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574788000; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=9rst/KNdAOi1RygK7VeZo3nqOJHjpCDuY0gWSPfISSU=; 
+        b=nEsBacAtJFBBLIkK0pZf5nhw46Hj1ovfOqWAc06cQKQ0JEQMpylhn5sthA5kVRL8pQcl2xBc/kwuLcf498oiAOBAWM1OWfQRYzINXFcs4EnFsXQltjPNFQpVptqakHhgGvqlSuxxthWGvwLsWUcmBC39jNAISo0QRkwJgcCjhbw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=PrUcg4B8YQkhaYO3RAsVP397+Ray7U4ckmc58zzM5MfVVs6LDqX1aedWqITpBqADIg13q7pOkH+Y
+    hSrmyQGujf3BLkBmhxeONV+KkBijBwKrBVrg8q394eyjxhFFXqJb  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574788000;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=9rst/KNdAOi1RygK7VeZo3nqOJHjpCDuY0gWSPfISSU=;
+        b=m3CRJ8Gm1n6xSy/UlbyGnr4sGSlDYP6BHOn1mW83Yrgj47i9JusUzK6o64AEdhv0
+        s2ZV6vemjuBineNwZstchk0ionZDUKs3AERcedvHMu9OR3chhPJWg1Li7yd6fdILrPk
+        yc2curyfIEAF4+vXd0ZE41VKREoHvb90m1aeJHfI=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.112.214 [171.221.112.214]) by mx.zohomail.com
+        with SMTPS id 1574787998363855.623005154438; Tue, 26 Nov 2019 09:06:38 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: Add initial support for Ingenic X1000 SoC and Y&A CU Neo board v4.
+Date:   Wed, 27 Nov 2019 01:06:08 +0800
+Message-Id: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+1.Adjust the description in "devices.yaml" to make it more reasonable.
+2.Adjust "model" in "cu1000.dts" to match the description in "devices.yaml".
+3.Adjust "bool" in "Kconfig" to avoid duplicate names with subsequent boards.
+4.Add pdma controller DT node and Update defconfig for pdma controller.
 
 
-On 2019-11-26 10:03 a.m., James Sewart wrote:
-> The PLX PEX NTB forwards DMA transactions using Requester ID's that
-> don't exist as PCI devices. The devfn for a transaction is used as an
-> index into a lookup table storing the origin of a transaction on the
-> other side of the bridge.
-> 
-> Add helper pci_add_dma_alias_range that can alias a range of devfns in 
-> dma_alias_mask.
-> 
-> This patch aliases all possible devfn's to the NTB device so that any
-> transaction coming in is governed by the mappings for the NTB.
-> 
-> Signed-off-by: James Sewart <jamessewart@arista.com>
-
-Looks good to me, save a nit below; and you may want to split this into
-two patches: one that introduces the new interface and one that uses it.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-> ---
->  drivers/pci/pci.c    | 29 ++++++++++++++++++++++-------
->  drivers/pci/quirks.c | 15 +++++++++++++++
->  include/linux/pci.h  |  1 +
->  3 files changed, 38 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a97e2571a527..f502af1b5d10 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5854,6 +5854,18 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  	return 0;
->  }
->  
-> +int _pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len)
-> +{
-> +	if (!dev->dma_alias_mask)
-> +		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
-> +	if (!dev->dma_alias_mask) {
-> +		pci_warn(dev, "Unable to allocate DMA alias mask\n");
-> +		return -ENOMEM;
-> +	}
-> +	bitmap_set(dev->dma_alias_mask, devfn_from, len);
-> +	return 0;
-> +}
-> +
->  /**
->   * pci_add_dma_alias - Add a DMA devfn alias for a device
->   * @dev: the PCI device for which alias is added
-> @@ -5875,18 +5887,21 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   */
->  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
->  {
-> -	if (!dev->dma_alias_mask)
-> -		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
-> -	if (!dev->dma_alias_mask) {
-> -		pci_warn(dev, "Unable to allocate DMA alias mask\n");
-> +	if (_pci_add_dma_alias_range(dev, devfn, 1) != 0)
->  		return;
-> -	}
-> -
-> -	set_bit(devfn, dev->dma_alias_mask);
->  	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
->  		 PCI_SLOT(devfn), PCI_FUNC(devfn));
->  }
->  
-> +void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len)
-> +{
-> +	int devfn_to = devfn_from + len - 1;
-
-Nit: there should be a blank line between the variable declarations and
-the code in the functions.
-
-> +	if (_pci_add_dma_alias_range(dev, devfn_from, len) != 0)
-> +		return;
-> +	pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
-> +		 PCI_SLOT(devfn_from), PCI_FUNC(devfn_from), PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
-> +}
-> +
->  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
->  {
->  	return (dev1->dma_alias_mask &&
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 320255e5e8f8..1ed230f739a4 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5315,6 +5315,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
->  SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
->  SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
->  
-> +/*
-> + * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. These IDs
-> + * are used to forward responses to the originator on the other side of the
-> + * NTB. Alias all possible IDs to the NTB to permit access when the IOMMU is
-> + * turned on.
-> + */
-> +static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-> +{
-> +	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-> +	/* PLX NTB may use all 256 devfns */
-> +	pci_add_dma_alias_range(pdev, 0, 256);
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
-> +
->  /*
->   * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
->   * not always reset the secondary Nvidia GPU between reboots if the system
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1a6cf19eac2d..6765f3d0102b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2324,6 +2324,7 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
->  #endif
->  
->  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
-> +void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len);
->  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
->  int pci_for_each_dma_alias(struct pci_dev *pdev,
->  			   int (*fn)(struct pci_dev *pdev,
-> 
