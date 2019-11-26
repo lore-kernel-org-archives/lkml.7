@@ -1,95 +1,97 @@
 Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0E7C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C31BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45A22073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AD62071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WzLM8aj/";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="KnJdKpOt"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="LRCXODLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfKZPva (ORCPT
+        id S1728160AbfKZPwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:51:30 -0500
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:33060
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727309AbfKZPv3 (ORCPT
+        Tue, 26 Nov 2019 10:52:53 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37416 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfKZPwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:51:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574783488;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=OZJTMwpsVQ23liobAV7+2B2ZxI/UOTY/zs9RL+K5fZo=;
-        b=WzLM8aj/HH7Nyy0k28Ui2n4Wj/4tHKEbRRPRLRaIwuRXs4+mSvqFcIKWmgWibbyV
-        H876WkHEgAqHBd2VZ4fqpnLCKOmDbog1pPaXeHCVG9/QrvJabCQ2upR6zrcFxh9QiQk
-        VD//p+zAsQ6VMsGmIcFsFav00j9Tro62p/HP6ibg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574783488;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=OZJTMwpsVQ23liobAV7+2B2ZxI/UOTY/zs9RL+K5fZo=;
-        b=KnJdKpOtT8pczrzGcs5LLyui+Q7csaLksouPGaroAM9r/xvNlVinOZrOPJOoSHan
-        VFKB42zARC8JkJimuiBzXr3IgBJpZ0ZeyJJ9iRikzYmtUjF4/9HLr8sqz3odKpherwt
-        dfWzhbEiAxoiwjEEXDs0xVhd5rUe2prQhC1d71Cg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 55329C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [PATCH 0/2] net: wireless: ti: wl1251: sdio: remove ti,power-gpio
-References: <cover.1574591746.git.hns@goldelico.com>
-Date:   Tue, 26 Nov 2019 15:51:28 +0000
-In-Reply-To: <cover.1574591746.git.hns@goldelico.com> (H. Nikolaus Schaller's
-        message of "Sun, 24 Nov 2019 11:35:44 +0100")
-Message-ID: <0101016ea8691216-b66b8927-1253-47c6-9c57-ec4d52776c7c-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 26 Nov 2019 10:52:53 -0500
+Received: by mail-qk1-f196.google.com with SMTP id e187so16530095qkf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:52:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O3f3EeNDCGqbP17ATNYzQA2fraEUA3qHPgg/ocitAC0=;
+        b=LRCXODLsW3T/isyZrmMRVLf/MdTJdlDe0WL95t1G7dIcz7vAls41eXRbPza/0SCDrN
+         p3XwF0+l1VqCOlRMAcim4F9RvPZNfMQM+MKr3BVjl8n6/Th72nFEeiCxBZVae9SdQbAW
+         6N8LYQSDm6rcbg7pq7anLPKJkfEABkAb7agGujp9fVqC2smB7Q2okVkeQNK4sc1g8J46
+         h19jUqwbjRNe5Frq8qYnC+Yk5v5RkyN0E/u04UsCvv/qNd/q08z/UxrdIo9MFHAw5e0B
+         rbcswYphSxWCqgYPy2SmUGzO42xOGyDxc0LFlpqHXVOlEUuhWKYnWne9RHyfefsQ7Dyy
+         BY3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O3f3EeNDCGqbP17ATNYzQA2fraEUA3qHPgg/ocitAC0=;
+        b=j4HLO7a81EKCTyKYMn5j7qag5b8fOrtlm/7OrCsYuJ+56tE1XFqGc7/BhF8g6nNBz1
+         sr7A06nYKnteN2igY1GS1bY/lhhsJ2x4CLt96O/somgX5hNq3RmnUfBys7vTZLH/YGjV
+         Wf2D2z0gkaVqVJN/S5qP2TZX9bMuhrrhThtPHIEUBG2u1FYO8ePs8FtkOfTHPkoyGyoL
+         S5e3xlowx+dn0NJrhR9D9sAt0hGe7rO89ZFRdMQFm7TLj0eiMv91kriK+RqZnLHJiUvU
+         NCc2ewExRs6cforqhet7qaJpvZXxZxg+L9rS6G49UzYVnR1eL5+LxWJO/XRgjQMTpxHl
+         OPRQ==
+X-Gm-Message-State: APjAAAWlznMFYaoiGKRfAgH/kb5p+Bfr8JKsTP4OsDWAJoUaNw0uOoR8
+        MFgqb75reXgT1MTJMqtt3NXTHA==
+X-Google-Smtp-Source: APXvYqw/hTILiAsPj2NKsupddCm2m9m0Y0Tg3j93FtRHPv8fhS9ztgRxjX7bZOOBhLSnO98A+BVEAQ==
+X-Received: by 2002:a37:de12:: with SMTP id h18mr16528254qkj.256.1574783571892;
+        Tue, 26 Nov 2019 07:52:51 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::1218])
+        by smtp.gmail.com with ESMTPSA id z7sm6183512qth.85.2019.11.26.07.52.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 07:52:51 -0800 (PST)
+Date:   Tue, 26 Nov 2019 10:52:49 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
+Message-ID: <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
+References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
+ <20191126144130.75710-6-zaslonko@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2019.11.26-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126144130.75710-6-zaslonko@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"H. Nikolaus Schaller" <hns@goldelico.com> writes:
+On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
+> Due to the small size of zlib buffer (1 page) set in btrfs code, s390
+> hardware compression is rather limited in terms of performance. Increasing
+> the buffer size to 4 pages would bring significant benefit for s390
+> hardware compression (up to 60% better performance compared to the
+> PAGE_SIZE buffer) and should not bring much overhead in terms of memory
+> consumption due to order 2 allocations.
+> 
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 
-> The driver has been updated to use the mmc/sdio core
-> which does full power control. So we do no longer need
-> the power control gipo.
->
-> Note that it is still needed for the SPI based interface
-> (N900).
->
-> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> Tested by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600MHz
->
-> H. Nikolaus Schaller (2):
->   DTS: bindings: wl1251: mark ti,power-gpio as optional
->   net: wireless: ti: wl1251: sdio: remove ti,power-gpio
->
->  .../bindings/net/wireless/ti,wl1251.txt       |  3 +-
->  drivers/net/wireless/ti/wl1251/sdio.c         | 30 -------------------
->  2 files changed, 2 insertions(+), 31 deletions(-)
+We may have to make these allocations under memory pressure in the IO context,
+order 2 allocations here is going to be not awesome.  If you really want it then
+you need to at least be able to fall back to single page if you fail to get the
+allocation.  Thanks,
 
-Via which tree are these planned to go? Please always document that in
-the cover letter so that maintainers don't need to guess.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+josef
