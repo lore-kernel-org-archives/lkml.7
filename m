@@ -2,136 +2,158 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40025C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CB4C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F272068E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8F820722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574788467;
+	bh=5/vsRRYGBkOdnCVAQdr7GNvrRAJBjtnfDKoaheMVtQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ez3wR7n2YGyz+f54cLgjH31q0TaploWjqccB3Q/jxN2iWBB8vx0v8DODmwGbYhOHZ
+	 gL19DqNsDcJi/zV7kEMs95CyI4WWT5hF9SGS4yjAyV3QV81LIIv0XGTJyDgFJ5qieD
+	 Aa6N0l1v5WXVpUq/K4qyqx4ugs+xKfK15ozrYS1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfKZROR (ORCPT
+        id S1728629AbfKZRO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:14:17 -0500
-Received: from mga14.intel.com ([192.55.52.115]:28954 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfKZROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:14:17 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 09:14:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
-   d="scan'208";a="206514949"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Nov 2019 09:14:16 -0800
-Date:   Tue, 26 Nov 2019 09:14:16 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
- to kvm
-Message-ID: <20191126171416.GA22233@linux.intel.com>
-References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
- <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+        Tue, 26 Nov 2019 12:14:26 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42060 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbfKZRO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:14:26 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a15so23405583wrf.9;
+        Tue, 26 Nov 2019 09:14:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hJ+mySIKZE9YWQww3Oig0WCOhwfH8Gl6sLfsRd7dgOA=;
+        b=Z8EmiFm6SeX3lT4w2Huk2NheYOE3OG8m79056nuuaErHIUPSSC7FE3MkAtcLatqCRI
+         DGT0ISdlccrFlnjaITKVJHp7m1fa4LQBG6gwUVKGWbsQTOPZmOwGuVjWfh+dG00XjxeR
+         f9UVS2+hLg4ryx+V3jxx5IFhBuBl7e2gfwB7DMlUYYFicjmB9lkFHxwmKn5JJXOYIRQ5
+         zvTCAseoGIakNzrjU9/+i2JHUmX57kq2yGzpWJu2IMvZOv8EErtFt05gy2fqSYmH/gRb
+         W1fVxQMxSDNNrJFIdziaeAm4LhLeuhaecX4dhYZnByjaBxdiVdb047pWHWS/O3QU4mCU
+         xiPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hJ+mySIKZE9YWQww3Oig0WCOhwfH8Gl6sLfsRd7dgOA=;
+        b=Lhb2+T3wM5ecDHKHD8xE/JbKbU0ygcm1fjwA1GoqqHQe3QD/cLe2Jl+IiN+wROxH9q
+         dhy0snkYPtPloMEZdCpneW3qeZHvFJnfo2PCqxTae/VU2KrFAGNKbJGXAKE4mx9HoYtL
+         NzJkJ6JDdI+VMzCrp9o2XXcD3DgFn7DHThcGngGcCDSiOUGUWlgnVhmJBUcfpW5rDoEI
+         FZjmMM7XlolqGO+gpqI3od1M9RQiiHRPtYckdZRnnDVrTy47RKKgEVdddmxaXdi2upFi
+         hgeCrBhSq0OhGnSsCuDdZq5CiSch/PuroXHHme6SF6OF9BDUOnWLqyvbnuckCwwz8JHS
+         qu0w==
+X-Gm-Message-State: APjAAAV/ltPJvb1/e1LyPqJNRQhBRw63x1FVDWrmUfCAz/Ceg7xjIDGA
+        DwDcAbcS3drxvLZHLwUOy7vy0irU
+X-Google-Smtp-Source: APXvYqzSAqyz0xqEcDhKNWq7dHM/jDKYKJSqTZdjOGh5UIOm/2LA7Fh+D3a7l0MS00ge0XTQsVgFlQ==
+X-Received: by 2002:adf:ecc7:: with SMTP id s7mr3789882wro.54.1574788464404;
+        Tue, 26 Nov 2019 09:14:24 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id f19sm16649587wrf.23.2019.11.26.09.14.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 09:14:23 -0800 (PST)
+Date:   Tue, 26 Nov 2019 18:14:21 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH -tip, v2] x86/mm/32: Sync only to VMALLOC_END in
+ vmalloc_sync_all()
+Message-ID: <20191126171421.GB28423@gmail.com>
+References: <20191126100942.13059-1-joro@8bytes.org>
+ <20191126111119.GA110513@gmail.com>
+ <20191126123043.GH21753@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191126123043.GH21753@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 01:44:14PM -0300, Leonardo Bras wrote:
-> On Mon, 2019-10-21 at 15:58 -0700, Sean Christopherson wrote:
 
-...
+* Joerg Roedel <jroedel@suse.de> wrote:
 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 67ef3f2e19e8..b8534c6b8cf6 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -772,6 +772,18 @@ void kvm_put_kvm(struct kvm *kvm)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_put_kvm);
-> > 
-> > +/*
-> > + * Used to put a reference that was taken on behalf of an object associated
-> > + * with a user-visible file descriptor, e.g. a vcpu or device, if installation
-> > + * of the new file descriptor fails and the reference cannot be transferred to
-> > + * its final owner.  In such cases, the caller is still actively using @kvm and
-> > + * will fail miserably if the refcount unexpectedly hits zero.
-> > + */
-> > +void kvm_put_kvm_no_destroy(struct kvm *kvm)
-> > +{
-> > +	WARN_ON(refcount_dec_and_test(&kvm->users_count));
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_put_kvm_no_destroy);
-> > 
-> >  static int kvm_vm_release(struct inode *inode, struct file *filp)
-> >  {
-> > @@ -2679,7 +2691,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm
-> > *kvm, u32 id)
-> >  	kvm_get_kvm(kvm);
-> >  	r = create_vcpu_fd(vcpu);
-> >  	if (r < 0) {
-> > -		kvm_put_kvm(kvm);
-> > +		kvm_put_kvm_no_destroy(kvm);
-> >  		goto unlock_vcpu_destroy;
-> >  	}
-> > 
-> > @@ -3117,7 +3129,7 @@ static int kvm_ioctl_create_device(struct kvm
-> > *kvm,
-> >  	kvm_get_kvm(kvm);
-> >  	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR
-> > | O_CLOEXEC);
-> >  	if (ret < 0) {
-> > -		kvm_put_kvm(kvm);
-> > +		kvm_put_kvm_no_destroy(kvm);
-> >  		mutex_lock(&kvm->lock);
-> >  		list_del(&dev->vm_node);
-> >  		mutex_unlock(&kvm->lock);
+> Hi Ingo,
 > 
-> Hello,
+> On Tue, Nov 26, 2019 at 12:11:19PM +0100, Ingo Molnar wrote:
+> > The vmalloc_sync_all() also iterating over the LDT range is buggy, 
+> > because for the LDT the mappings are *intentionally* and fundamentally 
+> > different between processes, i.e. not synchronized.
 > 
-> I see what are you solving here, but would not this behavior cause the
-> refcount to reach negative values?
->
-> If so, is not there a problem? I mean, in some archs (powerpc included)
-> refcount_dec_and_test() will decrement and then test if the value is
-> equal 0. If we ever reach a negative value, this will cause that memory
-> to never be released. 
->
-> An example is that refcount_dec_and_test(), on other archs than x86,
-> will call atomic_dec_and_test(), which on include/linux/atomic-
-> fallback.h will do:
+> Yes, you are right, your patch description is much better, thanks for
+> making it more clear and correct.
 > 
-> return atomic_dec_return(v) == 0;
+> > Furthermore I'm not sure we need to iterate over the PKMAP range either: 
+> > those are effectively permanent PMDs as well, and they are not part of 
+> > the vmalloc.c lazy deallocation scheme in any case - they are handled 
+> > entirely separately in mm/highmem.c et al.
 > 
-> To change this behavior, it would mean change the whole atomic_*_test
-> behavior, or do a copy function in order to change this '== 0' to 
-> '<= 0'. 
-> 
-> Does it make sense? Do you need any help on this?
+> I looked a bit at that, and I didn't find an explict place where the
+> PKMAP PMD gets established. It probably happens implicitly on the first
+> kmap() call, so we are safe as long as the first call to kmap happens
+> before the kernel starts the first userspace process.
 
-I don't think so.  refcount_dec_and_test() will WARN on an underflow when
-the kernel is built with CONFIG_REFCOUNT_FULL=y.  I see no value in
-duplicating those sanity checks in KVM.
+No, it happens during early boot, in permanent_kmaps_init():
 
-This new helper and WARN is to explicitly catch @users_count unexpectedly
-hitting zero, which is orthogonal to an underflow (although odds are good
-that a bug that triggers the WARN in kvm_put_kvm_no_destroy() will also
-lead to an underflow).  Leaking the memory is deliberate as the alternative
-is a guaranteed use-after-free, i.e. kvm_put_kvm_no_destroy() is intended
-to be used when users_count is guaranteed to be valid after it is
-decremented.
+        vaddr = PKMAP_BASE;
+        page_table_range_init(vaddr, vaddr + PAGE_SIZE*LAST_PKMAP, pgd_base);
+
+That page_table_range_init() will go from PKMAP_BASE to the last PKMAP, 
+which on PAE kernels is typically 0xff600000...0xff800000, 2MB in size, 
+taking up exactly one PMD entry.
+
+This single pagetable page, covering 2MB of virtual memory via 4K 
+entries, gets passed on to the mm/highmem.c code via:
+
+        pkmap_page_table = pte;
+
+The pkmap_page_table is mapped early on into init_mm, every task started 
+after that with a new pgd inherits it, and the pmd entry never changes, 
+so there's nothing to synchronize.
+
+The pte entries within this single pagetable page do change frequently 
+according to the kmap() code, but since the pagetable page is shared 
+between all tasks and the TLB flushes are SMP safe, it's all synchronized 
+by only modifying pkmap_page_table, as it should.
+
+> But that is not an issue that should be handled by vmalloc_sync_all(), 
+> as the name already implies that it only cares about the vmalloc range.
+
+Well, hypothetically it could *accidentally* have some essentially effect 
+on bootstrapping the PKMAP pagetables - I don't think that's so, based on 
+the reading of the code, but only testing will tell for sure.
+
+> So your change to only iterate to VMALLOC_END makes sense and we should 
+> establish the PKMAP PMD at a defined place to make sure it exists when 
+> we start the first process.
+
+I believe that's done in permanent_kmaps_init().
+
+> > Note that this is *completely* untested - I might have wrecked PKMAP in 
+> > my ignorance. Mind giving it a careful review and a test?
+> 
+> My testing environment for 32 bit is quite limited these days, but I 
+> tested it in my PTI-x32 environment and the patch below works perfectly 
+> fine there and still fixes the ldt_gdt selftest.
+
+Cool, thanks! I'll apply it with your Tested-by.
+
+	Ingo
