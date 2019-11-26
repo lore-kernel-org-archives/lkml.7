@@ -2,124 +2,321 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8368C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BABC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE9620727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC5B2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YtJgMBkM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pR/sw8tN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfKZSRM (ORCPT
+        id S1726445AbfKZSa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 13:17:12 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45747 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfKZSRM (ORCPT
+        Tue, 26 Nov 2019 13:30:58 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45597 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfKZSa6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 13:17:12 -0500
-Received: by mail-pf1-f194.google.com with SMTP id z4so9559874pfn.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 10:17:10 -0800 (PST)
+        Tue, 26 Nov 2019 13:30:58 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x1so2270825qkl.12;
+        Tue, 26 Nov 2019 10:30:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9h7U+x++jdUZb4s45/RCLZWEaWGQ6wogzBkHa5vWa1c=;
-        b=YtJgMBkMNLBBUyohAKOr2QoA8hcEAC6cOCr86aCbV9SLFPrvzs48B0wVURW8hx7jwg
-         S7NemHWmKB/ZO25Fr+7To27zSD3sPMLbnJzC6irFe7w4JHamjhZ2oHaPycvFYrEJ7lZV
-         ytAItYERiAI4RUpXtGCh3g8asJbFtaabSeXn5YOfcCPIgQDF8krHH1U9+zIn15oI6ERB
-         Om8HC9dbwRrWCSwWpRFwljfRTMEUbzi2Z2T5cJKbG/XMd8UGU3BuBuSiU9yMw/DYU9z8
-         uhkIobyyHdOhgEhC8QtWnKHLc2dgfY/oE44cyoxa+ZHufFpm2+U7CNBkUiMXRdoZWPRC
-         OwIg==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5I47FhKtlA/Vz/ZlNGJCrofVg3jgWr0DMDAGwujjeow=;
+        b=pR/sw8tNJUnAssk91I7qagBGZc/bwsVQtMzuvY4Oh7cC9vNm6wRKfanqIdiQoEUEHX
+         Lqx0x1Upuxwus9dOpk9Wsix/k3lXWktJuMZJPSMSnp+G2pkUatGqsRQeB8d4yGgoCznl
+         BNwF47JY9paJrgbppDGDtwiPHmypY4WwKdvnrwB9BdZFo7kKnEDpSXU/6IcE0izZHtF+
+         PBDbF0rSqf6ur6PgljZsHJRfIKtmLSBGUSjCWIzq7ev1W8kl5zQIAkUZOLliCKeFyR/9
+         +4CJmwpoh53DLjJp7RcaaTvKhiEwDcK6IDfQkt/LOSg+RyiVgLY2dRu0rShnDTVjIop+
+         XABg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9h7U+x++jdUZb4s45/RCLZWEaWGQ6wogzBkHa5vWa1c=;
-        b=G+OTc9B9wRxC+bOgynuOWuDYhMK29Oh16w1frb60UazQunE/pbRza7FzJ7EH7p8Ojh
-         UtjgJGETubp7nIpMEQCDrIwT5C6ObwoUHDYlXfCXzt8a9V/1qFPNm4Yri+AXL+ParA22
-         JGpiQpivyMEK+y7+rBN1M63Zuw1sCL0cxA8xQLJcgtxVn+1akOGfpyNy8FJ9A2RVvFN2
-         DkNGqr9tXYGyASN0WHNQeqLYHQjWicIHb80pyB+EUaJ7Fkkv7TkceCXQSkUdnd5I6YsU
-         B/Fh+GyC9fYN4n5UjRLXUZ4Yk3cT8f3U4Z51+VRODHOjNNAhtesID317YIVglSZuIi1r
-         Le2Q==
-X-Gm-Message-State: APjAAAUyVBQ69D2ICJ9287gppEE16SE0BMVXibBQsCYTt8cdmm10bP0M
-        heHvJlZU0WM4CXCP9y8MAMeicaz4I+bWtA==
-X-Google-Smtp-Source: APXvYqzY85TIWjylJTTxHR8+Y1AIgEMNdTmM1zegjeA2L2+lHzTO4vxHHYtJw9wRX8NEN8DhDJt5XQ==
-X-Received: by 2002:a63:364d:: with SMTP id d74mr40556554pga.408.1574792229426;
-        Tue, 26 Nov 2019 10:17:09 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id q70sm4342162pjq.26.2019.11.26.10.17.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 10:17:08 -0800 (PST)
-Subject: Re: [PATCH] io-wq: fix handling of NUMA node IDs
-To:     Jann Horn <jannh@google.com>
-Cc:     io-uring@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-References: <20191126181020.17593-1-jannh@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a61b62a2-8530-59ab-f96c-ccb4ad274d4a@kernel.dk>
-Date:   Tue, 26 Nov 2019 11:17:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5I47FhKtlA/Vz/ZlNGJCrofVg3jgWr0DMDAGwujjeow=;
+        b=mE6ICg82msgyMNssEw/DKAvf19PEaxfyjCZnNaUEIK+GtQn4BSgAUnKW9GD9eR/ciM
+         s29wluR7KW/4lqsD8LX4VnMRSmEnPkpPHzg8RX8LeE2AZjwbQQYU7Dlvsu2y92ysFKDV
+         r+YCHAjzBIJT3E26CdgzJ0a/4Z/YmcG15zS1B7cASbSsQ9vOeBoKRHoLOzLUbVsXbMNg
+         9N7m+scEeZCqGAZAROQFmeV4BvRAasVn7JciaSI+aoFu+NgxYcVrO93VOTltaKvKymWM
+         laA1m4NnlFyZtOOXGlOVzwA5x5X6vH8pHw+CWRKoQkfKmlGylSxJaoS6b3LxYEP2SWxU
+         WOpQ==
+X-Gm-Message-State: APjAAAWNm4qyel6yQdcZaFlHI7bLrN+6zupG8mgnYRfvvci+NVwX71Ei
+        mPdy3CzeZtRqGo8WRt24DvA=
+X-Google-Smtp-Source: APXvYqzBCsX9I2hXDVuAZtBsR1HXpfdn4Fvm6DCSUERnrMNYGCVUA0ACU1a6oAsJtPoO9/dfn0Y0dA==
+X-Received: by 2002:a37:96c1:: with SMTP id y184mr33306513qkd.44.1574793055994;
+        Tue, 26 Nov 2019 10:30:55 -0800 (PST)
+Received: from quaco.ghostprotocols.net (179-240-181-120.3g.claro.net.br. [179.240.181.120])
+        by smtp.gmail.com with ESMTPSA id w76sm641145qkb.8.2019.11.26.10.30.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 10:30:55 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 73FB740D3E; Tue, 26 Nov 2019 15:30:51 -0300 (-03)
+Date:   Tue, 26 Nov 2019 15:30:51 -0300
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
+Message-ID: <20191126183051.GB29071@kernel.org>
+References: <20191126151045.GB19483@kernel.org>
+ <CAADnVQLfyDChpDeo0VQUwZ+M6+ivAKvfqWRAieYZVco6AKugpg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191126181020.17593-1-jannh@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQLfyDChpDeo0VQUwZ+M6+ivAKvfqWRAieYZVco6AKugpg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/26/19 11:10 AM, Jann Horn wrote:
-> There are several things that can go wrong in the current code on NUMA
-> systems, especially if not all nodes are online all the time:
+Em Tue, Nov 26, 2019 at 08:53:53AM -0800, Alexei Starovoitov escreveu:
+> On Tue, Nov 26, 2019 at 7:10 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Hi guys,
+> >
+> >    While merging perf/core with mainline I found the problem below for
+> > which I'm adding this patch to my perf/core branch, that soon will go
+> > Ingo's way, etc. Please let me know if you think this should be handled
+> > some other way,
+> >
+> > Thanks,
+> >
+> > - Arnaldo
+> >
+> > commit 94b2e22463f592d2161eb491ddb0b4659e2a91b4
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Tue Nov 26 11:46:08 2019 -0300
+> >
+> >     libbpf: Fix up generation of bpf_helper_defs.h
+> >
+> >     Building perf as a detached tarball, i.e. by using one of:
+> >
+> >       $ make help | grep perf
+> >         perf-tar-src-pkg    - Build perf-5.4.0.tar source tarball
+> >         perf-targz-src-pkg  - Build perf-5.4.0.tar.gz source tarball
+> >         perf-tarbz2-src-pkg - Build perf-5.4.0.tar.bz2 source tarball
+> >         perf-tarxz-src-pkg  - Build perf-5.4.0.tar.xz source tarball
+> >       $
+> >
+> >     And then trying to build the resulting tarball, which is the first thing
+> >     that running:
+> >
+> >       $ make -C tools/perf build-test
+> >
+> >     does, ends up with these two problems:
+> >
+> >       make[3]: *** No rule to make target '/tmp/tmp.zq13cHILGB/perf-5.3.0/include/uapi/linux/bpf.h', needed by 'bpf_helper_defs.h'.  Stop.
+> >       make[3]: *** Waiting for unfinished jobs....
+> >       make[2]: *** [Makefile.perf:757: /tmp/tmp.zq13cHILGB/perf-5.3.0/tools/lib/bpf/libbpf.a] Error 2
+> >       make[2]: *** Waiting for unfinished jobs....
+> >
+> >     Because $(srcdir) points to the /tmp/tmp.zq13cHILGB/perf-5.3.0 directory
+> >     and we need '/tools/ after that variable, and after fixing this then we
+> >     get to another problem:
+> >
+> >       /bin/sh: /home/acme/git/perf/tools/scripts/bpf_helpers_doc.py: No such file or directory
+> >       make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 127
+> >       make[3]: *** Deleting file 'bpf_helper_defs.h'
+> >         LD       /tmp/build/perf/libapi-in.o
+> >       make[2]: *** [Makefile.perf:778: /tmp/build/perf/libbpf.a] Error 2
+> >       make[2]: *** Waiting for unfinished jobs....
+> >
+> >     Because this requires something outside the tools/ directories that gets
+> >     collected into perf's detached tarballs, to fix it just add it to
+> >     tools/perf/MANIFEST, which this patch does, now it works for that case
+> >     and also for all these other cases after doing a:
+> >
+> >       $ make -C tools clean
+> >
+> >     On a kernel sources directory:
+> >
+> >       $ make -C tools/bpf/bpftool/
+> >       make: Entering directory '/home/acme/git/perf/tools/bpf/bpftool'
+> >
+> >       Auto-detecting system features:
+> >       ...                        libbfd: [ on  ]
+> >       ...        disassembler-four-args: [ on  ]
+> >       ...                          zlib: [ on  ]
+> >
+> >         CC       map_perf_ring.o
+> >       <SNIP>
+> >         CC       disasm.o
+> >       make[1]: Entering directory '/home/acme/git/perf/tools/lib/bpf'
+> >
+> >       Auto-detecting system features:
+> >       ...                        libelf: [ on  ]
+> >       ...                           bpf: [ on  ]
+> >
+> >         MKDIR    staticobjs/
+> >         CC       staticobjs/libbpf.o
+> >       <SNIP>
+> >         LD       staticobjs/libbpf-in.o
+> >         LINK     libbpf.a
+> >       make[1]: Leaving directory '/home/acme/git/perf/tools/lib/bpf'
+> >         LINK     bpftool
+> >       make: Leaving directory '/home/acme/git/perf/tools/bpf/bpftool'
+> >       $
+> >
+> >       $ make -C tools/perf
+> >       <SNIP>
+> >       Auto-detecting system features:
+> >       ...                         dwarf: [ on  ]
+> >       ...            dwarf_getlocations: [ on  ]
+> >       ...                         glibc: [ on  ]
+> >       ...                          gtk2: [ on  ]
+> >       ...                      libaudit: [ on  ]
+> >       ...                        libbfd: [ on  ]
+> >       ...                        libcap: [ on  ]
+> >       ...                        libelf: [ on  ]
+> >       ...                       libnuma: [ on  ]
+> >       ...        numa_num_possible_cpus: [ on  ]
+> >       ...                       libperl: [ on  ]
+> >       ...                     libpython: [ on  ]
+> >       ...                     libcrypto: [ on  ]
+> >       ...                     libunwind: [ on  ]
+> >       ...            libdw-dwarf-unwind: [ on  ]
+> >       ...                          zlib: [ on  ]
+> >       ...                          lzma: [ on  ]
+> >       ...                     get_cpuid: [ on  ]
+> >       ...                           bpf: [ on  ]
+> >       ...                        libaio: [ on  ]
+> >       ...                       libzstd: [ on  ]
+> >       ...        disassembler-four-args: [ on  ]
+> >
+> >         GEN      common-cmds.h
+> >         CC       exec-cmd.o
+> >         <SNIP>
+> >         CC       util/pmu.o
+> >         CC       util/pmu-flex.o
+> >         LD       util/perf-in.o
+> >         LD       perf-in.o
+> >         LINK     perf
+> >       make: Leaving directory '/home/acme/git/perf/tools/perf'
+> >       $
+> >
+> >       $ make -C tools/lib/bpf
+> >       make: Entering directory '/home/acme/git/perf/tools/lib/bpf'
+> >
+> >       Auto-detecting system features:
+> >       ...                        libelf: [ on  ]
+> >       ...                           bpf: [ on  ]
+> >
+> >         HOSTCC   fixdep.o
+> >         HOSTLD   fixdep-in.o
+> >         LINK     fixdep
+> >       Parsed description of 117 helper function(s)
+> >         MKDIR    staticobjs/
+> >         CC       staticobjs/libbpf.o
+> >         CC       staticobjs/bpf.o
+> >         CC       staticobjs/nlattr.o
+> >         CC       staticobjs/btf.o
+> >         CC       staticobjs/libbpf_errno.o
+> >         CC       staticobjs/str_error.o
+> >         CC       staticobjs/netlink.o
+> >         CC       staticobjs/bpf_prog_linfo.o
+> >         CC       staticobjs/libbpf_probes.o
+> >         CC       staticobjs/xsk.o
+> >         CC       staticobjs/hashmap.o
+> >         CC       staticobjs/btf_dump.o
+> >         LD       staticobjs/libbpf-in.o
+> >         LINK     libbpf.a
+> >         MKDIR    sharedobjs/
+> >         CC       sharedobjs/libbpf.o
+> >         CC       sharedobjs/bpf.o
+> >         CC       sharedobjs/nlattr.o
+> >         CC       sharedobjs/btf.o
+> >         CC       sharedobjs/libbpf_errno.o
+> >         CC       sharedobjs/str_error.o
+> >         CC       sharedobjs/netlink.o
+> >         CC       sharedobjs/bpf_prog_linfo.o
+> >         CC       sharedobjs/libbpf_probes.o
+> >         CC       sharedobjs/xsk.o
+> >         CC       sharedobjs/hashmap.o
+> >         CC       sharedobjs/btf_dump.o
+> >         LD       sharedobjs/libbpf-in.o
+> >         LINK     libbpf.so.0.0.6
+> >         GEN      libbpf.pc
+> >         LINK     test_libbpf
+> >       make: Leaving directory '/home/acme/git/perf/tools/lib/bpf'
+> >       $
+> >
+> >     Fixes: e01a75c15969 ("libbpf: Move bpf_{helpers, helper_defs, endian, tracing}.h into libbpf")
+> >     Cc: Adrian Hunter <adrian.hunter@intel.com>
+> >     Cc: Alexei Starovoitov <ast@kernel.org>
+> >     Cc: Andrii Nakryiko <andriin@fb.com>
+> >     Cc: Daniel Borkmann <daniel@iogearbox.net>
+> >     Cc: Jiri Olsa <jolsa@kernel.org>
+> >     Cc: Martin KaFai Lau <kafai@fb.com>
+> >     Cc: Namhyung Kim <namhyung@kernel.org>
+> >     Link: https://lkml.kernel.org/n/tip-4pnkg2vmdvq5u6eivc887wen@git.kernel.org
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> > diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> > index 99425d0be6ff..8ec6bc4e5e46 100644
+> > --- a/tools/lib/bpf/Makefile
+> > +++ b/tools/lib/bpf/Makefile
+> > @@ -180,9 +180,9 @@ $(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
+> >  $(BPF_IN_STATIC): force elfdep bpfdep bpf_helper_defs.h
+> >         $(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
+> >
+> > -bpf_helper_defs.h: $(srctree)/include/uapi/linux/bpf.h
+> > +bpf_helper_defs.h: $(srctree)/tools/include/uapi/linux/bpf.h
+> >         $(Q)$(srctree)/scripts/bpf_helpers_doc.py --header              \
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > -               --file $(srctree)/include/uapi/linux/bpf.h > bpf_helper_defs.h
+> > +               --file $(srctree)/tools/include/uapi/linux/bpf.h > bpf_helper_defs.h
 > 
->   - If the identifiers of the online nodes do not form a single contiguous
->     block starting at zero, wq->wqes will be too small, and OOB memory
->     accesses will occur e.g. in the loop in io_wq_create().
->   - If a node comes online between the call to num_online_nodes() and the
->     for_each_node() loop in io_wq_create(), an OOB write will occur.
->   - If a node comes online between io_wq_create() and io_wq_enqueue(), a
->     lookup is performed for an element that doesn't exist, and an OOB read
->     will probably occur.
+> fwiw. this bit looks good. Makes sense to do regardless.
 > 
-> Fix it by:
+> >  $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
+> >
+> > diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+> > index 70f1ff4e2eb4..4934edb5adfd 100644
+> > --- a/tools/perf/MANIFEST
+> > +++ b/tools/perf/MANIFEST
+> > @@ -19,3 +19,4 @@ tools/lib/bitmap.c
+> >  tools/lib/str_error_r.c
+> >  tools/lib/vsprintf.c
+> >  tools/lib/zalloc.c
+> > +scripts/bpf_helpers_doc.py
 > 
->   - using nr_node_ids instead of num_online_nodes() for the allocation size;
->     nr_node_ids is calculated by setup_nr_node_ids() to be bigger than the
->     highest node ID that could possibly come online at some point, even if
->     those nodes' identifiers are not a contiguous block
->   - creating workers for all possible CPUs, not just all online ones
-> 
-> This is basically what the normal workqueue code also does, as far as I can
-> tell.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
-> 
-> Notes:
->      compile-tested only.
->      
->      While I think I probably got this stuff right, it might be good if
->      someone more familiar with the NUMA logic could give an opinion on this.
->      
->      An alternative might be to only allocate workers for online nodes, but
->      then we'd have to either fiddle together logic to create more workers
->      on demand or punt requests on newly-onlined nodes over to older nodes.
->      Both of those don't seem very nice to me.
+> This one I don't understand. I couldn't find any piece that uses this file.
+> Some out of tree usage?
 
-I don't think caring about not-online nodes in terms of savings is worth
-the trouble. I'll run this through the regular testing I have with no
-and 2 nodes, thanks.
+See above on the part that you considered good.
 
--- 
-Jens Axboe
+First it couldn't find  $(srctree)/include/uapi/linux/bpf.h when it
+tried to handle that bpf_helper_defs.h target, I fixed that by adding
+the missing /tools/ bit and then it tried to run
+scripts/bpf_helpers_doc.py.
 
+The perf tarball doesn't use anything from the kernel sources (outside
+tools/), but since libbpf now uses something that is in the kernel top
+level 'scripts' directory, I have to put that script in
+tools/perf/MANIFEST so that it can be used when building from the
+tarball, detached from the kernel sources.
+
+Or am I still missing something?
+
+- Arnaldo
