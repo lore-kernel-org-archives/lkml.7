@@ -2,115 +2,70 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0722C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCCBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810E420748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFFC20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfKZKhK convert rfc822-to-8bit (ORCPT
+        id S1727831AbfKZKmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 05:37:10 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42105 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbfKZKhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:37:10 -0500
-Received: by mail-oi1-f195.google.com with SMTP id o12so16142341oic.9;
-        Tue, 26 Nov 2019 02:37:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=zopcK9DsIvrRMoKJaFBKq6wC/oxcFlyic0ael7BkN/8=;
-        b=ZwVGY8zZHU5ZLlSEHGkPOB3WBZlU+FiSvWqw44quKppgl1s6DVA0XOwR/NoRmZKAqp
-         G9F7+R3vQgynRQndg27qMClcfGPlquhPu1hT8D/dAQaWhaPBKgoTm34N4ntgWccIWQ66
-         avgX31kibPnRfWKhTm34CXTORtTEovoNsD1wiQCEmCsw3tTtMySmX8jYycJ6NTQuLfyg
-         XRfU14g70wJgEAV1xQg15my1zL8ZBMpNz8kzq8DNWUfc9JQ4K93SAMe+0OzcVLlbq1V8
-         R1FfmF1LJZGZstb861SXWChE3arTel8q8w2JMU6VsR2HzmZWWifSa4QD9OjM2DGRPSM2
-         bq9A==
-X-Gm-Message-State: APjAAAUV6hPUiPm7vpIBV5oeArCblh2/6Lieo2R4Ae/47reKO//92F8W
-        kIi13oOB9oe5X+t5lupMA7abLXK2qBez588NsHI=
-X-Google-Smtp-Source: APXvYqy4IeHlk78TvbZm1ZoZWnHSVBVTAMMciv5D+d1SOKzarsswVbnPuPy/zEICeY+bC7LzL429WWkDb12wjApJxSY=
-X-Received: by 2002:a05:6808:5d9:: with SMTP id d25mr3047363oij.54.1574764629163;
- Tue, 26 Nov 2019 02:37:09 -0800 (PST)
+        Tue, 26 Nov 2019 05:42:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:60936 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727603AbfKZKmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:42:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE9A230E;
+        Tue, 26 Nov 2019 02:42:04 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F5FC3F52E;
+        Tue, 26 Nov 2019 02:42:03 -0800 (PST)
+Subject: Re: [PATCH] arm: Fix topology setup in case of CPU hotplug for
+ CONFIG_SCHED_MC
+To:     Atish Patra <atish.patra@wdc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20191120104212.14791-1-dietmar.eggemann@arm.com>
+ <20191124214753.m6lwcdemnddltctw@core.my.home>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <50dfafee-55c3-767c-55f4-7d263feafe87@arm.com>
+Date:   Tue, 26 Nov 2019 11:42:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191108213853.16635-1-afaerber@suse.de> <20191108213853.16635-2-afaerber@suse.de>
- <20191111183158.GT3001@twin.jikos.cz>
-In-Reply-To: <20191111183158.GT3001@twin.jikos.cz>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 26 Nov 2019 11:36:58 +0100
-Message-ID: <CAMuHMdVbcfB0FFS=gLDathXFM3x0WYXJEq99S_g7mjAPS94rAQ@mail.gmail.com>
-Subject: Re: [PATCH next 1/2] btrfs: tree-checker: Fix error format string
-To:     David Sterba <dsterba@suse.cz>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191124214753.m6lwcdemnddltctw@core.my.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On 24/11/2019 22:47, Ondřej Jirman wrote:
+> Hello,
+> 
+> On Wed, Nov 20, 2019 at 10:42:12AM +0000, Dietmar Eggemann wrote:
 
-On Mon, Nov 11, 2019 at 7:32 PM David Sterba <dsterba@suse.cz> wrote:
-> On Fri, Nov 08, 2019 at 10:38:52PM +0100, Andreas Färber wrote:
-> > From: Andreas Färber <afaerber@suse.com>
-> >
-> > Argument BTRFS_FILE_EXTENT_INLINE_DATA_START is defined as offsetof(),
-> > which returns type size_t, so we need %zu instead of %lu.
-> >
-> > This fixes a build warning on 32-bit arm:
-> >
-> >   ../fs/btrfs/tree-checker.c: In function 'check_extent_data_item':
-> >   ../fs/btrfs/tree-checker.c:230:43: warning: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'unsigned int' [-Wformat=]
-> >     230 |     "invalid item size, have %u expect [%lu, %u)",
-> >         |                                         ~~^
-> >         |                                           |
-> >         |                                           long unsigned int
-> >         |                                         %u
->
-> Is there a gcc warning option that can catch that on 64bit too?
-> -Wformat=2 does not and I don't see any other of the option family to do
-> that. We've had fixups of the size_t printk formats and I'd like to
-> catch that when the patches are added to the devel branches. I can't run
-> 32bit build check each time but this seems to be the only way so far.
+[...]
 
-Yep. On 64-bit, size_t _is_ unsigned long.
-So you have to compile for both 32-bit and 64-bit.
+>> Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
+>> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> 
+> This fixes CPU hotplug and correspondent suspend to ram/resume failures (that
+> disables and re-enables non-boot CPUs) on A83T SoC, that I've seen since
+> 5.4-rc1.
+> 
+> Tested-by: Ondrej Jirman <megous@megous.com>
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Thanks for testing! Which Cpufreq driver is your system using?
 
-> > Fixes: a31ccb4b7ba2 ("btrfs: tree-checker: Check item size before reading file extent type")
->
-> As the patch is still in the devel branch, the commit id is not stable
-
-It indeed is not:
-Fixes: 153a6d299956983d ("btrfs: tree-checker: Check item size before
-reading file extent type")
-
-> and I'll fold the change to to the patch. Thanks.
-
-Apparently that was forgotten, and now the issue is part of Linus' tree.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[...]
