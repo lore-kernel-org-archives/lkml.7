@@ -2,196 +2,151 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F122920835
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5621207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1pKrMQr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bX2uVdb8";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="gPDqufTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKZTMO (ORCPT
+        id S1727158AbfKZTM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:12:14 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45538 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfKZTMN (ORCPT
+        Tue, 26 Nov 2019 14:12:26 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:17027 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfKZTM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:12:13 -0500
-Received: by mail-qt1-f193.google.com with SMTP id 30so22599210qtz.12;
-        Tue, 26 Nov 2019 11:12:12 -0800 (PST)
+        Tue, 26 Nov 2019 14:12:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1574795546; x=1606331546;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=U+JxvNoXq3UAD7DRH+k72uPXzjJus7iETq/4nsBX7HY=;
+  b=bX2uVdb8YyoS77RF5zCw81JfzVgV3VBQdcY6elvLzyUUcCbKFAu79Ab7
+   jTNRDPyz9n0kHHBgsU9DGIQNiuLux86vIi6uAxKRiGHngjCZYjtseFYIL
+   eanNuvLRLbK3s7MP4GYuB/lTl+OKcp9yLY8AwHyATSffsQVa54cbZzHLW
+   ZqwVBHuaWEQ7woB/n//rOEkKEuQBn2uyAYrMRXtwxqsK0iXmLYvVZXa22
+   2cgyhn7TtcBGMlzb+2ZQTlAsPrUuhoJY8cNbiSMYzYSHIj1CSUF9UYOUZ
+   UAQaeVeDOAZusZW06uIw9BbMKv03MfHYZhkIN+2x/tve+yLRSRRLoq9wQ
+   A==;
+IronPort-SDR: sZMMIH05jNVmGxv+c4ClbgCzbEaQTAuLiVBoflrJIOK9tcIHUnatvFavrAABec8FMnwib8YT1x
+ nbLSJBJSN0K5Z9WHaxUW9R/klVL4dXe1fCNqfh742PVBWWaAK0ZBTSujpm6pnLmNn4LBvaGKGb
+ FIuFaoWKMu1sdaIGCWABd73Cn+TqOkAE6VQaZVL549iGbTnhf3DKHdxEIHqbeo/aXXTPGZaTqe
+ +tpaflbHNKbMawRldN6rBtRQSb+kHsfegrGOEY9/trM3dyOy40S5C/3h6X3xqPzaB3C1mxuy1D
+ Llw=
+X-IronPort-AV: E=Sophos;i="5.69,246,1571673600"; 
+   d="scan'208";a="125670931"
+Received: from mail-bl2nam02lp2059.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.59])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Nov 2019 03:12:24 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HURcx1037FCqvqmCXaA1A3b2PneejtYXKfapF6jWLKb9+c6SBW5zYJ8ZhxqTpxpbOe2BLt2cw++1RRrWhcmfN67WWOzmxVlZZQxbYT+ncslmVELHt433o8JgniLCtt+tjVfKgeNuzVLuJSX47Z/RhzpWuzfoo47QpoS+ZBwYgk3FXUewu+8sEzIdM570q7nOPwqjsZvULpRvJ5eauQxVCPI9znyMUzwtCGC1JV3uxaECUNutveURV1TsNBZuJ6STjTb6GEsNByMigo1Jf8zjvvzce22WV7xGtmmcYXImgkT/ES1/1X7YL/zmt38Ohgce8/MqC5e13aF3xKyOf06xBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+JxvNoXq3UAD7DRH+k72uPXzjJus7iETq/4nsBX7HY=;
+ b=jcPaRyjzwoIJAXWqrIWCWoC1DxS7/Wywm1cMY3COWrbux28dyan0ZFHdWqkT30/uKOAxTjuY//br3USBLh46SVHmSgqUmR609aGY95ThoByyy45gaFjTGtkT7Qe3leY61N5prWnFh/sCFCzA9QGsMzJv8k8IAGA2zopP23Eh3QLmp//QtT4tkqKOlW/d5C2XfKp5VKqfxkrYZ1cENrQivBgGovVNh5LHUBEOnR+UXk4GtMdeOPGiH/vajDN67hWWO9fdE/KSoL4g9ghOpZU8eTM6x95SmJc/wDYY5mLLxJpTPDXZuyJr54bhScrnuR7WcmvUMBVN+F38sB05hF6TKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=KjGyaSiUKmJdB9E8MZospziw2v4nGOZn1672kkp9/8M=;
-        b=S1pKrMQrWEycS+aFsuMbpYub6ZnYzf7SsJd3Q+Fa2GlIxEHOscRAlMUNfY8UAjMHHr
-         NlLogQI1LKz2t29IPDNrXqS58k/PJP1wKBwHhExK5r+HfP8QWQVRyhgYnRFPAatNrqFq
-         OH8X3qGU8b3vEfOOiBuBGMk3ZjZgmK8sVYZjuiq1PjZfBXm1GhcKOpzDJmkxP6iQBPsQ
-         EzEVYAFpg8yrkNsH7mbg1qaipqgqOdrWZ6hvL4XuwPOHoNJSIq07XGArzqX0Ajjjop17
-         c8PTSyjfbPnAo4BLwGKM4kjK1PmUwrngmt09jTjIcpwM4Wscyb794IEBNn2KdEriAuMG
-         S0/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=KjGyaSiUKmJdB9E8MZospziw2v4nGOZn1672kkp9/8M=;
-        b=VfPPL87c4S+UoolWTQlCzVxfwetBpAJxERLgIUdsb5m0khHWWQ5XQJoyTzlwVriCOS
-         QKjcsfkssHlFpMWc4pU7iKjw+WJgRaRZAMjsaPxNUdiuBedfFvfYloyVpJBFb0/X2om/
-         6Rfw/xjFFuwb5c3Ko5fiwr3FzLq9vDp7tpS/NowedbtDpC3JgMwrKOM+ZZrC/ytQtmZ5
-         dTApAw88Uj2HG1xT76IPFa9Cy+PuLZKgj9hAV4bXDDbMlUbbme2qf9ARxKWGmJYItqh3
-         Wmng0PSa8Qy7VAEvg7wPzyfIkUAiwa+tAZSco8hEtLV5NcEwU5fIRFOm+0ojaIqGxlFj
-         O/rg==
-X-Gm-Message-State: APjAAAUeGilAvkDTGUNmWX09W1STrQ4jqU1SdAdrz+QddmS8fPMhnsfR
-        VOph9fz83nMdHn+MahJmxcA=
-X-Google-Smtp-Source: APXvYqyxkbb3ltVCzAL9ujSkpYmh+k+5SdSvHtIqfMfGyuWFbLc2sZLc6XDhsOZqn5+tHFPyY5rwAQ==
-X-Received: by 2002:ac8:73c6:: with SMTP id v6mr36967132qtp.137.1574795531820;
-        Tue, 26 Nov 2019 11:12:11 -0800 (PST)
-Received: from quaco.ghostprotocols.net (179-240-181-120.3g.claro.net.br. [179.240.181.120])
-        by smtp.gmail.com with ESMTPSA id z17sm6162363qtq.69.2019.11.26.11.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 11:12:11 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2ADDD40D3E; Tue, 26 Nov 2019 16:04:50 -0300 (-03)
-Date:   Tue, 26 Nov 2019 16:04:50 -0300
-To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
-Message-ID: <20191126190450.GD29071@kernel.org>
-References: <20191126151045.GB19483@kernel.org>
- <20191126154836.GC19483@kernel.org>
- <87imn6y4n9.fsf@toke.dk>
- <20191126183451.GC29071@kernel.org>
- <87d0dexyij.fsf@toke.dk>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+JxvNoXq3UAD7DRH+k72uPXzjJus7iETq/4nsBX7HY=;
+ b=gPDqufTweS2Dsm+pd/njp1nhQUwZwu0nanl6QSwpBCziDNlWhu0bSwhAcxplzIIA84iHERdYs6GrP8JDwTyYD5msFKFBLSyPJ4x8v25UlYqpIp23HHWOs2Kx2m1eRbaRpTNpNgn3pFOeJg8buPROrtvEqY3oDMETgPdeY5f7zMc=
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com (52.135.215.29) by
+ BYAPR04MB5959.namprd04.prod.outlook.com (20.178.235.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.16; Tue, 26 Nov 2019 19:12:23 +0000
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::1d22:29b6:df03:86f7]) by BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::1d22:29b6:df03:86f7%3]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 19:12:22 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] RISC-V: Add kconfig option for QEMU virt machine
+Thread-Topic: [PATCH 1/4] RISC-V: Add kconfig option for QEMU virt machine
+Thread-Index: AQHVo5Nfdy6Dk930FkiYD7mQlZsw86ed07UA
+Date:   Tue, 26 Nov 2019 19:12:22 +0000
+Message-ID: <256d158d64bc747431855f4593e008ff744fdcfd.camel@wdc.com>
+References: <20191125132147.97111-1-anup.patel@wdc.com>
+         <20191125132147.97111-2-anup.patel@wdc.com>
+In-Reply-To: <20191125132147.97111-2-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [2601:646:8280:fdf0:69be:1cca:a557:65ea]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f0d7db1a-1fe8-4207-3d68-08d772a4910d
+x-ms-traffictypediagnostic: BYAPR04MB5959:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB59593FB77223BE95950213ECFA450@BYAPR04MB5959.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(366004)(396003)(376002)(189003)(199004)(5660300002)(2616005)(2171002)(71190400001)(71200400001)(11346002)(446003)(46003)(76176011)(305945005)(36756003)(316002)(81156014)(4001150100001)(6116002)(8676002)(6506007)(8936002)(81166006)(7736002)(102836004)(2501003)(54906003)(256004)(99286004)(2906002)(478600001)(6512007)(86362001)(186003)(14454004)(6486002)(6246003)(66946007)(4326008)(66556008)(110136005)(66476007)(76116006)(66446008)(64756008)(25786009)(6436002)(118296001)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5959;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EEpmhXz3cJ3UKxRSFHTdYm70x6VV9KdZjkttc01aW1Mqll97lda2yNGtZQNklrjOqOoWe4mg11ogZHPaVt0v9ZqaFHkFEvxuwMsGsEim7pz7XJr0XrBjFhAuqrGYLenXGOgKq8hkhKTgY8rW2uVnLGONvUi4qLn8udVYoGZ8AGN+C0fXuGfHDWVUGOk6hpYc/HtBN6ETAM+gcIu3hdAKNDf4E5+WBvnRfaRhbZ6hr8TlJrixIa0iFQhB7PORllBlSXiqX81Jv8EVEX+D/vEG/96zZqf1hsr32Lrb8TUupALFewZU+5kT9QUkNJr5R+VbUxuThRHcRfP08nHOGtA9HLNuj4rYMqo8LrwShrQ8WpdAxNn1LUK+80h/EmgTdcd8VltZr5BIpRQbcis841aPgKmeolLEqlZKW5407If9d3FGZs8rHqcj45sD3O7aOkh/
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C8993BB3D52D3A42B7BB29DB05DBA6E1@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87d0dexyij.fsf@toke.dk>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0d7db1a-1fe8-4207-3d68-08d772a4910d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 19:12:22.8822
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yH/w0ZCbtUKxUfE3aeHoYb8x9gjUAFD5Bwwhrk3Li6KhnRzfJiDTlEFW5t3TBhOWshRYii8T/eGHDLSlSdmXFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5959
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Nov 26, 2019 at 07:50:44PM +0100, Toke Høiland-Jørgensen escreveu:
-> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
-> 
-> > Em Tue, Nov 26, 2019 at 05:38:18PM +0100, Toke Høiland-Jørgensen escreveu:
-> >> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
-> >> 
-> >> > Em Tue, Nov 26, 2019 at 12:10:45PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> >> Hi guys,
-> >> >> 
-> >> >>    While merging perf/core with mainline I found the problem below for
-> >> >> which I'm adding this patch to my perf/core branch, that soon will go
-> >> >> Ingo's way, etc. Please let me know if you think this should be handled
-> >> >> some other way,
-> >> >
-> >> > This is still not enough, fails building in a container where all we
-> >> > have is the tarball contents, will try to fix later.
-> >> 
-> >> Wouldn't the right thing to do not be to just run the script, and then
-> >> put the generated bpf_helper_defs.h into the tarball?
-
-> > I would rather continue just running tar and have the build process
-> > in-tree or outside be the same.
-> 
-> Hmm, right. Well that Python script basically just parses
-> include/uapi/linux/bpf.h; and it can be given the path of that file with
-> the --filename argument. So as long as that file is present, it should
-> be possible to make it work, I guess?
- 
-> However, isn't the point of the tarball to make a "stand-alone" source
-> distribution?
-
-Yes, it is, and as far as possible without any prep, just include the
-in-source tree files needed to build it.
-
-> I'd argue that it makes more sense to just include the
-> generated header, then: The point of the Python script is specifically
-> to extract the latest version of the helper definitions from the kernel
-> source tree. And if you're "freezing" a version into a tarball, doesn't
-> it make more sense to also freeze the list of BPF helpers?
-
-Your suggestion may well even be the only solution, as older systems
-don't have python3, and that script requires it :-\
-
-Some containers were showing this:
-
-/bin/sh: 1: /git/linux/scripts/bpf_helpers_doc.py: not found
-Makefile:184: recipe for target 'bpf_helper_defs.h' failed
-make[3]: *** [bpf_helper_defs.h] Error 127
-make[3]: *** Deleting file 'bpf_helper_defs.h'
-Makefile.perf:778: recipe for target '/tmp/build/perf/libbpf.a' failed
-
-That "not found" doesn't mean what it looks from staring at the above,
-its just that:
-
-nobody@1fb841e33ba3:/tmp/perf-5.4.0$ head -1 /tmp/perf-5.4.0/scripts/bpf_helpers_doc.py
-#!/usr/bin/python3
-nobody@1fb841e33ba3:/tmp/perf-5.4.0$ ls -la /usr/bin/python3
-ls: cannot access /usr/bin/python3: No such file or directory
-nobody@1fb841e33ba3:/tmp/perf-5.4.0$
-
-So, for now, I'll keep my fix and start modifying the containers where
-this fails and disable testing libbpf/perf integration with BPF on those
-containers :-\
-
-I.e. doing:
-
-nobody@1fb841e33ba3:/tmp/perf-5.4.0$ make NO_LIBBPF=1 -C /tmp/perf-5.4.0/tools/perf/ O=/tmp/build/perf
-
-which ends up with a functional perf, just one without libbpf linked in:
-
-nobody@1fb841e33ba3:/tmp/perf-5.4.0$ /tmp/build/perf/perf -vv
-perf version 5.4.gf69779ce8f86
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ OFF ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-                  gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ OFF ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ OFF ]  # HAVE_ZSTD_SUPPORT
-nobody@1fb841e33ba3:/tmp/perf-5.4.0$
-
-The the build tests for libbpf and the bpf support in perf will
-continue, but for a reduced set of containers, those with python3.
-
-People wanting to build libbpf on such older systems will hopefully find
-this discussion in google, run the script, get the output and have it
-working.
-
-- Arnaldo
+T24gTW9uLCAyMDE5LTExLTI1IGF0IDEzOjIyICswMDAwLCBBbnVwIFBhdGVsIHdyb3RlOg0KPiBX
+ZSBhZGQga2NvbmZpZyBvcHRpb24gZm9yIFFFTVUgdmlydCBtYWNoaW5lIGFuZCBzZWxlY3QgYWxs
+DQo+IHJlcXVpcmVkIFZJUlRJTyBkcml2ZXJzIHVzaW5nIHRoaXMga2NvbmZpZyBvcHRpb24uDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnVwIFBhdGVsIDxhbnVwLnBhdGVsQHdkYy5jb20+DQo+IC0t
+LQ0KPiAgYXJjaC9yaXNjdi9LY29uZmlnLnNvY3MgfCAyMCArKysrKysrKysrKysrKysrKysrKw0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9h
+cmNoL3Jpc2N2L0tjb25maWcuc29jcyBiL2FyY2gvcmlzY3YvS2NvbmZpZy5zb2NzDQo+IGluZGV4
+IDUzNmMwZWY0YWVlOC4uNjIzODM5NTFiZjJlIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Jpc2N2L0tj
+b25maWcuc29jcw0KPiArKysgYi9hcmNoL3Jpc2N2L0tjb25maWcuc29jcw0KPiBAQCAtMTAsNCAr
+MTAsMjQgQEAgY29uZmlnIFNPQ19TSUZJVkUNCj4gICAgICAgICBoZWxwDQo+ICAgICAgICAgICBU
+aGlzIGVuYWJsZXMgc3VwcG9ydCBmb3IgU2lGaXZlIFNvQyBwbGF0Zm9ybSBoYXJkd2FyZS4NCj4g
+IA0KPiArY29uZmlnIFNPQ19WSVJUDQo+ICsgICAgICAgYm9vbCAiUUVNVSBWaXJ0IE1hY2hpbmUi
+DQo+ICsgICAgICAgc2VsZWN0IFZJUlRJT19QQ0kNCj4gKyAgICAgICBzZWxlY3QgVklSVElPX0JB
+TExPT04NCj4gKyAgICAgICBzZWxlY3QgVklSVElPX01NSU8NCj4gKyAgICAgICBzZWxlY3QgVklS
+VElPX0NPTlNPTEUNCj4gKyAgICAgICBzZWxlY3QgVklSVElPX05FVA0KPiArICAgICAgIHNlbGVj
+dCBORVRfOVBfVklSVElPDQo+ICsgICAgICAgc2VsZWN0IFZJUlRJT19CTEsNCj4gKyAgICAgICBz
+ZWxlY3QgU0NTSV9WSVJUSU8NCj4gKyAgICAgICBzZWxlY3QgRFJNX1ZJUlRJT19HUFUNCj4gKyAg
+ICAgICBzZWxlY3QgSFdfUkFORE9NX1ZJUlRJTw0KPiArICAgICAgIHNlbGVjdCBSUE1TR19DSEFS
+DQo+ICsgICAgICAgc2VsZWN0IFJQTVNHX1ZJUlRJTw0KPiArICAgICAgIHNlbGVjdCBDUllQVE9f
+REVWX1ZJUlRJTw0KPiArICAgICAgIHNlbGVjdCBWSVJUSU9fSU5QVVQNCj4gKyAgICAgICBzZWxl
+Y3QgU0lGSVZFX1BMSUMNCj4gKyAgICAgICBoZWxwDQo+ICsgICAgICAgICBUaGlzIGVuYWJsZXMg
+c3VwcG9ydCBmb3IgUUVNVSBWaXJ0IE1hY2hpbmUuDQo+ICsNCj4gIGVuZG1lbnUNCg0KTG9va3Mg
+Z29vZC4NCg0KUmV2aWV3ZWQtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0K
+DQotLSANClJlZ2FyZHMsDQpBdGlzaA0K
