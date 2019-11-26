@@ -2,96 +2,81 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BD2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A32EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0F42071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6EB2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfKZPq6 (ORCPT
+        id S1728639AbfKZPrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:46:58 -0500
-Received: from mga11.intel.com ([192.55.52.93]:64419 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbfKZPq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:46:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 07:46:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
-   d="scan'208";a="217183719"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 26 Nov 2019 07:46:55 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 26 Nov 2019 17:46:54 +0200
-Date:   Tue, 26 Nov 2019 17:46:54 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Wen Yang <wenyang@linux.alibaba.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: fix use after free in typec_register_port()
-Message-ID: <20191126154654.GA6428@kuha.fi.intel.com>
-References: <20191126140452.14048-1-wenyang@linux.alibaba.com>
+        Tue, 26 Nov 2019 10:47:03 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39804 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbfKZPrC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:47:02 -0500
+Received: by mail-io1-f72.google.com with SMTP id u13so11212548iol.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:47:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=NMIhDQ1/TzZzQjr2wWUncjr9UXV8W0Q6CWNH9QCoYyc=;
+        b=KkFioigWia6dYcH6KyCfrwkhfOcC+uirunuzVVU0UW1ez9m2pPMrlbQ7MpUellbP9W
+         TZSr47fdWMv8cGm/aVKz3a+y1T6OlelLoX0eJ8WBoSgaYYVSk4E+7oltZhd0FxvL0Bwf
+         fjQExVCzg1AZ93c6ziyW+R1AImAB1es4vlB27sawsMlf8tt+y/mXIjreVeT0m35CQrNp
+         dY+L2wn9M5d+cDLmj/YjXc9j55r45u+GKwI/5vO0OZpEn3h+KXjR1MQJuByT20uXJAmv
+         KkcIEdQfPzkyl1vk9MrKo/27aB1glZVeeEwYOtyZji25zfOY9G84kAC8koVh+ENR6rD2
+         i5CA==
+X-Gm-Message-State: APjAAAXfws1+/rgF/1i03W53Z1xf6DRdW1AbpUaqGL6lXI9sPsqn8YpQ
+        /7CmPO0VDeMUWogHanVPGMqG+mVlX8XCvNhDVCLZhOuN7y38
+X-Google-Smtp-Source: APXvYqwGLVmd6lBzBXRckmAQHo5bBkT8ic7o+qm5KSqWVZbE1t3yqtpg3LGxYvDX6Q2q+YWCGwHbZNwPiZQhQ+pyU2BTIV7K7AFJ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191126140452.14048-1-wenyang@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Received: by 2002:a6b:3b06:: with SMTP id i6mr14691402ioa.185.1574783220874;
+ Tue, 26 Nov 2019 07:47:00 -0800 (PST)
+Date:   Tue, 26 Nov 2019 07:47:00 -0800
+In-Reply-To: <94eb2c059ce0bca273056940d77d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007a85c4059841ca66@google.com>
+Subject: Re: INFO: task hung in do_ip_vs_set_ctl (2)
+From:   syzbot <syzbot+7810ed2e0cb359580c17@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        horms@verge.net.au, ja@ssi.bg, kadlec@blackhole.kfki.hu,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvs-devel@vger.kernel.org, mmarek@suse.com, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        wensong@linux-vs.org, yamada.masahiro@socionext.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 10:04:52PM +0800, Wen Yang wrote:
-> We can't use "port->sw" and/or "port->mux" after it has been freed.
-> 
-> Fixes: 23481121c81d ("usb: typec: class: Don't use port parent for getting mux handles")
-> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+syzbot has bisected this bug to:
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+commit 6f7da290413ba713f0cdd9ff1a2a9bb129ef4f6c
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Jul 2 23:07:02 2017 +0000
 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/usb/typec/class.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 7ece6ca..91d6227 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1612,14 +1612,16 @@ struct typec_port *typec_register_port(struct device *parent,
->  
->  	port->sw = typec_switch_get(&port->dev);
->  	if (IS_ERR(port->sw)) {
-> +		ret = PTR_ERR(port->sw);
->  		put_device(&port->dev);
-> -		return ERR_CAST(port->sw);
-> +		return ERR_PTR(ret);
->  	}
->  
->  	port->mux = typec_mux_get(&port->dev, NULL);
->  	if (IS_ERR(port->mux)) {
-> +		ret = PTR_ERR(port->mux);
->  		put_device(&port->dev);
-> -		return ERR_CAST(port->mux);
-> +		return ERR_PTR(ret);
->  	}
->  
->  	ret = device_add(&port->dev);
-> -- 
-> 1.8.3.1
+     Linux 4.12
 
-thanks,
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11a2b78ce00000
+start commit:   17dec0a9 Merge branch 'userns-linus' of git://git.kernel.o..
+git tree:       net-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=da08d02b86752ade
+dashboard link: https://syzkaller.appspot.com/bug?extid=7810ed2e0cb359580c17
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130abb47800000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150a15bb800000
 
--- 
-heikki
+Reported-by: syzbot+7810ed2e0cb359580c17@syzkaller.appspotmail.com
+Fixes: 6f7da290413b ("Linux 4.12")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
