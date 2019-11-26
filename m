@@ -2,211 +2,121 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C8DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C431207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0E220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b+pbj3pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfKZCez (ORCPT
+        id S1727107AbfKZCsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 21:34:55 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:22340 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbfKZCez (ORCPT
+        Mon, 25 Nov 2019 21:48:41 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33842 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfKZCsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 21:34:55 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 26 Nov
- 2019 10:35:17 +0800
-Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock
- driver
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com>
- <1571382865-41978-4-git-send-email-jian.hu@amlogic.com>
- <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com>
- <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com>
- <1jblts3v7e.fsf@starbuckisacylon.baylibre.com>
- <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com>
- <1jh839f2ue.fsf@starbuckisacylon.baylibre.com>
- <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com>
- <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com>
- <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com>
- <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
- <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
- <9ec317e8-136e-1ab4-4e9b-21210e7f3e05@amlogic.com>
- <1j5zj8qgsl.fsf@starbuckisacylon.baylibre.com>
- <7a3f1e14-e5a5-407a-335a-eb68d3082eb9@amlogic.com>
-Message-ID: <1ca0c5e1-8417-c5dc-7ad1-80ea707554b2@amlogic.com>
-Date:   Tue, 26 Nov 2019 10:35:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 25 Nov 2019 21:48:41 -0500
+Received: by mail-qk1-f194.google.com with SMTP id d202so6517559qkb.1;
+        Mon, 25 Nov 2019 18:48:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=N6aJnWMZRZWzAAOOxFKD/hxOJ1yM0VSBu9ZPQ2gP2ck=;
+        b=b+pbj3pNm3mI0H5Jny7sffyoMIg+dE6lT3iDy+6M8R26CGE+GWExEQR8QFRrPqu7Qc
+         jqoBVHq93NwtbThidmbbC/AHesulYfBdwzNLg6zTt6V8VhFR0hKqCNQqItEiAfeggUJb
+         99hfx4aNIfNZhOxoUsUE1R6O6Dp8W1gmh1rIFZ8a38S9V/G2oll/7YAXUg131HDTDIx0
+         JaVG2nO7o7U/M4YOAKcTtZyAGCIl6J78+10NsHN+etc+baeF5zlqHognh84jcWjg4sot
+         YlP/vEi2f5uEDjtYSfygGnyucH9SLln4evpVPxAUKTNrgWKtlTddZXZvmqs2tiIVe9CJ
+         M+MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=N6aJnWMZRZWzAAOOxFKD/hxOJ1yM0VSBu9ZPQ2gP2ck=;
+        b=ZWhoNXnyqyPPmijYbM/iM9QTAejSUr+RzrwNgfkVmefxWkzzw8YB884UEMCadQXFpG
+         7/EBlyPr9NtC6jIZUoh1XLKDOLqsxb8Q5+W9P+DHW13/eCsmu2LZXUZQ2O6Sg92EnpV6
+         dMtUxWYHql3igsFHtZ7Kw6s4jAbrMUdzNJmVD+XsizKoaiqNKlQaZT6+xwowlqX7OxHf
+         0QbsV3sUKptpWOgfAp03rrQY7WUs9vHZQKfa5jLKSUgE83QLysbKIESQG0zpZqP/2Fmq
+         uyiJeoaq46EWQdOHGlufsUqyy6/yqYN3lfy6q5izoKraAtSZVtSiQAxfrySTgs+hncs3
+         BQcQ==
+X-Gm-Message-State: APjAAAWzBrKDPBYxhujsOmYMAmbt+7c6HsvoFrNUYMwuLVuWSvKn1zv2
+        eg74cxI+nnlp48dmUCH71NOXe8bLCA==
+X-Google-Smtp-Source: APXvYqw7JlmG7TScZx6Y//aZoyvRhNLOtpm50KVrhsiCNH3hmfvifKTObWTnr2Hu2JIoGgMi6p3+YA==
+X-Received: by 2002:a37:bf82:: with SMTP id p124mr13666700qkf.337.1574736519893;
+        Mon, 25 Nov 2019 18:48:39 -0800 (PST)
+Received: from [120.7.1.38] ([184.175.21.212])
+        by smtp.gmail.com with ESMTPSA id r37sm5158715qtj.44.2019.11.25.18.48.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Nov 2019 18:48:39 -0800 (PST)
+Subject: Re: kernel 5.2+: suspend freeze in VMware Player.
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <bc51bc4e-21e5-d6a9-22ee-7c1194deefc8@gmail.com>
+ <1725395.bLeSF54TfN@kreacher>
+From:   Woody Suwalski <terraluna977@gmail.com>
+Message-ID: <fd0e4df9-9619-8465-37e6-0ed14e4a2912@gmail.com>
+Date:   Mon, 25 Nov 2019 21:48:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101 Firefox/52.0
+ SeaMonkey/2.49.5
 MIME-Version: 1.0
-In-Reply-To: <7a3f1e14-e5a5-407a-335a-eb68d3082eb9@amlogic.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+In-Reply-To: <1725395.bLeSF54TfN@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rafael J. Wysocki wrote:
+> On Saturday, November 23, 2019 11:51:19 PM CET Woody Suwalski wrote:
+>> Rafael, Thomas, this is the same VMware Player 15.2 freeze on suspend issue
+>> I have been discussing with you in August.
+>>
+>> It has surfaced after Thomas Gleixner's change in kernel 5.2
+>> dfe0cf8b  x86/ioapic: Implement irq_get irqchip_state() callback
+>>
+>> It is still with us in 5.4, 100% repeatable on a second suspend after a
+>> reboot.
+>>
+>> I have traced it down to the ioapic_irq_get_chip_state() function, where
+>> rentry.rr is stuck hi.
+>>
+>> On the first suspend I can see that for IRQ9 the test exits with irr=0,
+>> trigger=1, but on second and consecutive suspends it is returning
+>> irr=1 trigger=1, so *state=1, and this results in a never-ending loop
+>> in __synchronize_hardirq(), because inprogress is always 1.
+>>
+>> I have been usig a "fix" to timeout in __synchronize_hardirq() after
+>> 64 iterations, and that seems to work OK (no side-effects noticed),
+>> but of course is not addressing the underlying problem.
+>>
+>> And the problem may be somewhere in VMware emulation code, returning bad
+>> data?
+>>
+>> Would you have ideas as to what should be the right setting for
+>> IRQ9 in VM environment?  Edge or level?
+>> And which part of code is reading the "hardware" state from VMware?
+>>
+>> OTOH, current implementation is not really safe, as the wait loop should
+> It is not clear to me the current implementation of what exactly you mean here.
+Sorry, by implementation I have meant the source code of a never-ending 
+loop where suspend may be indefinitely blocked by a flaky hardware bit. 
+The result is a frozen VM. (check kernel/irq/manage.c line 73 on version 
+5.4)
+>> have a timeout, or else it may get stuck. Should I provide my safety-exit patch?
+> Thanks!
+>
+>
+>
 
-
-On 2019/11/25 21:51, Jian Hu wrote:
-> 
-> 
-> On 2019/11/25 20:30, Jerome Brunet wrote:
->>
->> On Mon 25 Nov 2019 at 13:01, Jian Hu <jian.hu@amlogic.com> wrote:
->>
->>> On 2019/11/25 18:14, Jerome Brunet wrote:
->>>>
->>>> On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
->>>>
->>>>> Hi, Jerome
->>>>>
->>>>> On 2019/11/20 23:35, Jerome Brunet wrote:
->>>>>>
->>>>>> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
->>>>>>
->>>>>>> Hi, jerome
->>>>>>>
->>>>>>> Is there any problem about fixed_pll_dco's parent_data?
->>>>>>>
->>>>>>> Now both name and fw_name are described in parent_data.
->>>>>>
->>>>>> Yes, there is a problem.  This approach is incorrect, as I've 
->>>>>> tried to
->>>>>> explain a couple times already. Let me try to re-summarize why this
->>>>>> approach is incorrect.
->>>>>>
->>>>>> Both fw_name and name should be provided when it is possible that
->>>>>> the DT does not describe the input clock. IOW, it is only for 
->>>>>> controllers
->>>>>> which relied on the global name so far and are now starting to 
->>>>>> describe
->>>>>> the clock input in DT
->>>>>>
->>>>>> This is not your case.
->>>>>> Your controller is new and DT will have the correct
->>>>>> info
->>>>>>
->>>>>> You are trying work around an ordering issue by providing both 
->>>>>> fw_name
->>>>>> and name. This is not correct and I'll continue to nack it.
->>>>>>
->>>>>> If the orphan clock is not reparented as you would expect, I 
->>>>>> suggest you
->>>>>> try to look a bit further at how the reparenting of orphans is 
->>>>>> done in
->>>>>> CCF and why it does not match your expectation.
->>>>>>
->>>>> I have debugged the handle for orphan clock in CCF, Maybe you are 
->>>>> missing
->>>>> the last email.
->>>>
->>>> Nope, got it the first time
->>>>
->>>>> Even though the clock index exit, it will get failed for the orphan 
->>>>> clock's
->>>>> parent clock due to it has not beed added to the provider.
->>>>
->>>> If the provider is not registered yet, of course any query to it won't
->>>> work. This why I have suggested to this debug *further* :
->>>>
->>>> * Is the orphan reparenting done when a new provider is registered ?
->>>> * If not, should it be done ? is this your problem ?
->>>>
->>
->> Apparently, I was not clear enough so I'll rephrase
->>
->>> Yes, the orphan reparenting is done when the new provider is
->>> registered.
->>
->> No it is not done yet. Please check the code.
->>
->> The reparenting of orphan is done only on clock registration, not on
->> provider registeration. Now that clocks can be specified by DT, this
->> probably needs to added.The action of reparenting the orphan is before 
->> the provider registration 
-> with the current code.
->>
->> That is your problem.
-> Yes, if the provider is registered before the clock registration, it
-> will reparent successfully.
->>
->> Please fix the underlying issue, then you can post your series again.
->>
->>>
->>> Reparenting the orphan will be done when each clock is registered by
->>> devm_clk_hw_register. And at this time the provider has not been
->>> registered. After all clocks are registered by devm_clk_hw_register, the
->>> provider will be registered by devm_of_clk_add_hw_provider.
->>>
->>> Reparenting the orphan will fail when fw_name is added alone, the 
->>> couse is
->>> that devm_clk_hw_register is always running ahead of
->>> devm_of_clk_add_hw_provider.
->>
->> Please stop bringing the topic of "fw_name" and "name" field together, I
->> told you 3 times why this is wrong. It is not going to change.
->>
->>>
->>> That is why it will failed to get parent for the orphan clock.
->>
->> It fails because the provider is not registered when you try to reparent
->> the orphan.
->>
->> It shows that you should try again once the provider is registered.
->>
-> OK, I have exchanged the position for devm_clk_hw_register and 
-> devm_of_clk_add_hw_provider in meson-eeclk.c.
-> 
-> It reparents successfully for orphan clock.
-> 
-> Is is ok that put devm_of_clk_add_hw_provider ahead?
-> 
-> As far as I am concerned, there is no any effect.Sorry, If the provider is registered first, I find it will affect the 
-assigned-clock-parents and assigned-clock-rates configurations in DT 
-when the provider is registered.
-
-It will fail to set the assigned parent and assigned rate for one clock 
-because of the related clocks are not registered yet.
-
-Moreover, registering provider is always after clock registration in 
-other vendor clock drivers.
-
-Maybe registering provider is better after the clock registration.
-
-
->>>
->>>
->>>
->>>>
->>>> .
->>>>
->>
->> .
->>
