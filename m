@@ -2,122 +2,92 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B7FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DD4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F9A20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4036E2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 10:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfKZJ7J (ORCPT
+        id S1727730AbfKZKCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:59:09 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2115 "EHLO huawei.com"
+        Tue, 26 Nov 2019 05:02:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51762 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727731AbfKZJ7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:59:09 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id BEDD7F409889221F4407;
-        Tue, 26 Nov 2019 09:59:07 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 26 Nov 2019 09:59:07 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 26 Nov
- 2019 09:59:06 +0000
-Subject: Re: linuxnext-2019119 edac warns (was Re: edac KASAN warning in
- experimental arm64 allmodconfig boot)
-To:     Robert Richter <rrichter@marvell.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        wanghuiqiang <wanghuiqiang@huawei.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Huangming (Mark)" <huangming23@huawei.com>
-References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
- <93bdc04e-9e8f-b766-6e97-9fd9e1460a8c@huawei.com>
- <20191121142302.rhvgkgqpiubidhtu@rric.localdomain>
- <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
- <20191122112842.tmf4lkj52hpv6tqd@rric.localdomain>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4c1bd075-75ec-8445-9595-467b88a406b3@huawei.com>
-Date:   Tue, 26 Nov 2019 09:59:05 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1727629AbfKZKCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 05:02:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F9B7B38D;
+        Tue, 26 Nov 2019 10:02:16 +0000 (UTC)
+Subject: Re: [PATCH v2 2/4] xen-pcifront: Align address of flags to size of
+ unsigned long
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+References: <1574710984-208305-1-git-send-email-fenghua.yu@intel.com>
+ <1574710984-208305-3-git-send-email-fenghua.yu@intel.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <e236e8fe-3a81-e17a-2286-228bfde9919a@suse.com>
+Date:   Tue, 26 Nov 2019 11:02:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191122112842.tmf4lkj52hpv6tqd@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1574710984-208305-3-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/11/2019 11:28, Robert Richter wrote:
-> On 21.11.19 15:23:42, John Garry wrote:
->> On 21/11/2019 14:23, Robert Richter wrote:
->>> On 21.11.19 12:34:22, John Garry wrote:
+On 25.11.19 20:43, Fenghua Yu wrote:
+> The address of "flags" is passed to atomic bitops which require the
+> address is aligned to size of unsigned long.
 > 
->>>> [   22.046666] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.046666]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.058311] ghes_edac: Can't register at EDAC core
->>>> [   22.065402] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.065402]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.077080] ghes_edac: Can't register at EDAC core
->>>> [   22.084140] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.084140]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.095789] ghes_edac: Can't register at EDAC core
->>>> [   22.102873] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.102873]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.115442] ghes_edac: Can't register at EDAC core
->>>> [   22.122536] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.122536]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.134344] ghes_edac: Can't register at EDAC core
->>>> [   22.141441] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.141441]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.153089] ghes_edac: Can't register at EDAC core
->>>> [   22.160161] EDAC MC: bug in low-level driver: attempt to assign
->>>> [   22.160161]     duplicate mc_idx 0 in add_mc_to_global_list()
->>>> [   22.171810] ghes_edac: Can't register at EDAC core
->>>
->>> What I am more concerned is this here. In total this implies 8 ghes
->>> users that all try to register a (single-instance) ghes mc device. For
->>> non-x86 only one instance is allowed (see ghes_edac_register(), idx =
->>> 0).
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+>   include/xen/interface/io/pciif.h | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> I also looked into this: With refcount_inc_checked() enabled, the
-> refcount is *not* increased from 0 to 1. 
-
-Yeah, I had quickly checked this back then and I think you're right.
-
-Thanks,
-John
-
-Under the hood only
-> refcount_inc_not_zero() is called instead of refcount_inc(). So the
-> refcount is still zero after an edac mc device was registered. Instead
-> of sharing the edac mc device, the driver tries to allocate another mc
-> device for each GHESv2 entry in the HEST table. This causes the
-> 'duplicate mc_idx' message. Also, it is ok to have multiple GHESv2
-> entries (your system seems to have 8 entries), e.g. to serve different
-> kind of errors in the system.
-> 
-> Thanks,
-> 
-> -Robert
-> .
+> diff --git a/include/xen/interface/io/pciif.h b/include/xen/interface/io/pciif.h
+> index d9922ae36eb5..639d5fb484a3 100644
+> --- a/include/xen/interface/io/pciif.h
+> +++ b/include/xen/interface/io/pciif.h
+> @@ -103,8 +103,11 @@ struct xen_pcie_aer_op {
+>   	uint32_t devfn;
+>   };
+>   struct xen_pci_sharedinfo {
+> -	/* flags - XEN_PCIF_* */
+> -	uint32_t flags;
+> +	/* flags - XEN_PCIF_*. Force alignment for atomic bit operations. */
+> +	union {
+> +		uint32_t	flags;
+> +		unsigned long	flags_alignment;
+> +	};
+>   	struct xen_pci_op op;
+>   	struct xen_pcie_aer_op aer_op;
+>   };
 > 
 
+NAK.
+
+This is an interface definition for communication between Xen dom0 and
+guests via shared memory. It can't be changed.
+
+BTW: you should Cc: the maintainers for the files you are modifying.
+
+
+Juergen
