@@ -2,185 +2,131 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5075C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC33C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811282084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574804244;
-	bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=h7dy+zEbFzGQt/wQYvxohRSPlI4ViS1DYDnxfCRyBRfOaBGamcd2Y4pgFPZw7E0XR
-	 heVx+P7EeuEd4H3690TaPbyHqbc+gsGq5PLH3ySdFxupQmu4126lsFqEAHYOteeD5W
-	 RuYSxe6QLI9uO3/H1wn0s28uskapJEbIQ2pI2iRU=
+	by mail.kernel.org (Postfix) with ESMTP id AA3DF2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:44:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDw8REuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKZVhX (ORCPT
+        id S1726200AbfKZVoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 16:37:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfKZVhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 16:37:23 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B0120835;
-        Tue, 26 Nov 2019 21:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574804242;
-        bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=drZqipwPeS+niJFsQ0qSF6WD0LHQSIqKXEeHnUMsVLnVc7MNuISEmOaQH+sDLt2g/
-         zMyTvJUM46sxgLF7lkaIhja1ULdda7AL64iLWUwrXiH0nczywhEf6oFTFeuLNA5HY6
-         hlclqFVo9MpY/gYtPhZbpczXork0in44N12KPgbI=
-Date:   Tue, 26 Nov 2019 15:37:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20191126213718.GA185422@google.com>
+        Tue, 26 Nov 2019 16:44:46 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37095 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfKZVoq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:44:46 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so5116589wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 13:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3TCvikHiROllDrcma+CvPeIZvgOAa0DLqL9aOfiW+v0=;
+        b=eDw8REuPwOPqWU2sJ0BdoRVPWKUzTj0YbRhRQicf7aRtg+PGgtxw8sQrt+ehKPldab
+         5Dwy2fhc9u1vkpmctrriVLMl8oM14lEykl7FUpFaq7z8DZyPiTAQ15aQY/539wKteIsr
+         PisqlDWBEUmELtSDpWswAvRPvWzb8PxcFGyB2YSldaUc/KJNZJ5xSrFXBExtlQZTtnbi
+         yVA2wl3bFw8rtMJHYIgKpbAr6viP0/SLeXLVyjJVpba+oUcFvxhU8axe3RmrwZPRAH1E
+         jeSYxPlmbTqb3sH23BN2jiUb/FCQyeEIIuvJJsNlYeo/G+mKIf/K+yryI7MdWHcPfB6w
+         86kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3TCvikHiROllDrcma+CvPeIZvgOAa0DLqL9aOfiW+v0=;
+        b=B7GGt5F3u/y8OwECpQyMtirTtI2+4YeLtRUxfWCUFrb4FbDMHMM+n6xR1AT73+fioA
+         DtFNevpPZIfsbjJ8sJZX5hZXXTbdFqfd+CllIGfJk76APWbe3P+H4zjwU8fCV9IYPDWl
+         UTl6IMBntlgg39HFxGQQ+CxeY3fMWLAWKy7GwChxytl8wte6uiVzS4aXdNx4af6aR7qO
+         5Ebopkd11QpWlNOf0nfadRNl+R21lTDg+uCeCAnQ90TvLD8AbcpHguYgy8Hn1/QUC3Jm
+         oKi1r8rzBzT/wQE/++qeiF5ZkY4ZIjl5rN8Q96hssgT6JmCLXHSZl57NqzPWVEW8A3Hs
+         73fw==
+X-Gm-Message-State: APjAAAUInRJHWj68kSf1quQa6e25GWLonF7u71KxhIw+XZqjrWf/P1Kp
+        JmVgkxfJzLiekQXZSdMWXWY=
+X-Google-Smtp-Source: APXvYqzKuSB3cAu0EuiMT+9vrB+n7dd0HVpAtyzd2Elni0TH64QZnLUu2tuPSqhTHT8AOVtai1OAWg==
+X-Received: by 2002:a1c:f20c:: with SMTP id s12mr999955wmc.37.1574804683968;
+        Tue, 26 Nov 2019 13:44:43 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:404e:f500:ac14:4c10:6104:457f])
+        by smtp.gmail.com with ESMTPSA id x10sm16353061wrp.58.2019.11.26.13.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 13:44:43 -0800 (PST)
+Date:   Tue, 26 Nov 2019 22:44:41 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Michal Suchanek <msuchanek@suse.de>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Breno Leitao <leitao@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 26/35] powerpc/64: system call: Fix sparse warning
+ about missing declaration
+Message-ID: <20191126214441.4wziibsax2mvpl3p@ltop.local>
+References: <cover.1574798487.git.msuchanek@suse.de>
+ <d0a6b5235c4e1544f4c253724a5b8f2106cc43bd.1574798487.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122104505.8986-4-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d0a6b5235c4e1544f4c253724a5b8f2106cc43bd.1574798487.git.msuchanek@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
-> Add support for the endpoint mode of Synopsys DesignWare core based
-> dual mode PCIe controllers present in Tegra194 SoC.
+On Tue, Nov 26, 2019 at 09:13:40PM +0100, Michal Suchanek wrote:
+> Sparse warns about missing declarations for these functions:
+> 
+> +arch/powerpc/kernel/syscall_64.c:108:23: warning: symbol 'syscall_exit_prepare' was not declared. Should it be static?
+> +arch/powerpc/kernel/syscall_64.c:18:6: warning: symbol 'system_call_exception' was not declared. Should it be static?
+> +arch/powerpc/kernel/syscall_64.c:200:23: warning: symbol 'interrupt_exit_user_prepare' was not declared. Should it be static?
+> +arch/powerpc/kernel/syscall_64.c:288:23: warning: symbol 'interrupt_exit_kernel_prepare' was not declared. Should it be static?
+> 
+> Add declaration for them.
 
-> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
-> +{
-> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
-> +	u32 val, tmp;
-> +
-> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
-> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
-> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
-> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
-> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
-> +			/* clear any stale PEX_RST interrupt */
-> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
-> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
-> +				return IRQ_HANDLED;
-> +			}
-> +			wake_up(&pcie->wq);
-> +		}
-> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
-> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
-> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
-> +				dev_info(pcie->dev, "Link is up with Host\n");
-> +				dw_pcie_ep_linkup(ep);
-> +			}
-> +		}
-> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+I'm fine with this patch but, just FYI, lately people seems to
+prefer to add '__visible' to the function definition instead
+of creating such header files.
 
-Is it really the case that only one of
-APPL_INTR_STATUS_L0_LINK_STATE_INT and
-APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
-
-If it's possible that both could be set, maybe this should be
-something like this?
-
-  int spurious = 1;
-
-  if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
-    ...
-    spurious = 0;
-  }
-  if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
-    ...
-    spurious = 0;
-  }
-
-  if (spurious) {
-    dev_warn(...)
-  }
-
-> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
-> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
-> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
-> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
-> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
-> +				return IRQ_HANDLED;
-> +			}
-> +			wake_up(&pcie->wq);
-> +		}
-> +	} else {
-> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
-> +			 val);
-> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-> +static int tegra_pcie_ep_work_thread(void *p)
-> +{
-> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
-> +	u32 event;
-> +
-> +	while (true) {
-> +		wait_event_interruptible(pcie->wq,
-> +					 !kfifo_is_empty(&pcie->event_fifo));
-> +
-> +		if (kthread_should_stop())
-> +			break;
-> +
-> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
-> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
-> +			continue;
-> +		}
-> +
-> +		switch (event) {
-> +		case EP_PEX_RST_DEASSERT:
-> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
-> +			pex_ep_event_pex_rst_deassert(pcie);
-> +			break;
-> +
-> +		case EP_PEX_RST_ASSERT:
-> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
-> +			pex_ep_event_pex_rst_assert(pcie);
-> +			break;
-> +
-> +		case EP_HOT_RST_DONE:
-> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
-> +			pex_ep_event_hot_rst_done(pcie);
-> +			break;
-> +
-> +		case EP_BME_CHANGE:
-> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
-> +			pex_ep_event_bme_change(pcie);
-> +			break;
-> +
-> +		case EP_EVENT_EXIT:
-> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
-> +			return 0;
-> +
-> +		default:
-> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
-
-Maybe include the invalid event value in the message?
-
-> +			break;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
+Best regards,
+-- Luc Van Oostenryck
