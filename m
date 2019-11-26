@@ -2,408 +2,211 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1352080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12632075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="eHLLCcN2"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="oG4z8HUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfKZRCU (ORCPT
+        id S1728534AbfKZRDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:02:20 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:40476 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727339AbfKZRCU (ORCPT
+        Tue, 26 Nov 2019 12:03:31 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55144 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727339AbfKZRDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:02:20 -0500
-Received: from [85.158.142.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id 23/5F-19913-69A5DDD5; Tue, 26 Nov 2019 17:02:14 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSbUxTZxTHee69vb0gF68Fx1kn+9BBMnGtsLn
-  sYgYaNpc63yOJk0HGRS600pbSlwDL1jCQMGAFHEOBgYJWsmHG614AmRuVIAqIAkaD6dTJEqlR
-  pxZ1MnS3veC2L09+5/z/zzknJ4fCZb+TcorPtfAmA6dTkAGEZjX2prI60ZUcNdWwlp284MTY6
-  uvTJNt17gsJ+3Dyc4yd6K0n2ZLeCgnrurWVbX/0HVpPqdsfFJDqbpcDqXvqXFJ1Z0sJqT55u5
-  lUt31/kVA/6Hx5uzRRojWkZuWmSDROx13c2Lchdzb/tDQftb5VigIoxBzDYfTXeVwMBgkouDS
-  KxKALwZz9L7IU+VMEM4RD/my2V5AxBzCoszswMbiOoLv8HPK6SIaFqqFrvh8hjA5664/6TDhz
-  B4M5p90nBDNx4Cn8BYmmdVBy765U5HhwXz1BiO0ioNgxIPEyzXBQc7DD91fG7MOgvTXIy/5ML
-  HjOTvjyiAkDz2fHcS/jTChMTR/GvAwMA46+MVzk5TBz46lE9PNwpuAyEvOvweil6QVWwKGGgQ
-  UOg/HDZQu8Ba70H5Iu+hsn3ITILDjKigSmBA6Hp848EY1wr4MXMQIuTgaK5hXg7h/zbQSYKQn
-  8WFIlqUSr6/4ztMhCgxP3SZFXQXPTLbzOt4hlcKZ2mmhERAuKSTVpMzQWPafVKaOjopTR0W8o
-  hTeGVXEfKzkVb1Xu4Q0WEyeoKi7HrDLn6ffo0lQG3tKJhHNLy/Yb7EZl92+rnOhFClMsp3dIX
-  cmyoNSstDwNZ9Z8ZLLqeLMTraAoBdDyDwRtmYnP4HPTtTrhaBdloAIVIbRqtyDTZiOnN2szRO
-  ksUlKVMw1HcBlhyDLw8lDa7q3BeE0aq+F5icXTH0dh8mAa+fn5yQKNvEmvtfxfd6NQCimCaYm
-  3VaDWYHneyS0MgQlDYLVT3iEs3L+SPB/LKb2y89mALTEh7pXyl97ptA/G1vvvXAdN3yT9Oesp
-  PsmPBPH1rqFt1/5WpBjPv74/SX782LD61MBVuTFzq8S63t3oOuBcWaPdm/n4k+r3W4qPjqXP5
-  0fm1CyxzZjtScX0kaLdTVq9/nFuQsjN5m9vxof3x2yOz64Jj+185Az4jfzh1cpIUwYYU37umL
-  F6tm30Hzff+PrDyw21B79MD2wMqXhY2DP/R+VKGlUErTEUJcR5ht/Oktk2EW0J5U92nS7re7L
-  FmgxtI5v2TW63hAV8NVf16VIbDHjoVRXNFV0Xct5NcI1seFaIvZcZsaZnbUDWxo5dp0JbG2LP
-  D/8UPGdb8sKdHXsVhFnDRUfiJjP3D3grI0J1BAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-11.tower-233.messagelabs.com!1574787733!22037!1
-X-Originating-IP: [104.47.2.53]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 8162 invoked from network); 26 Nov 2019 17:02:13 -0000
-Received: from mail-db5eur01lp2053.outbound.protection.outlook.com (HELO EUR01-DB5-obe.outbound.protection.outlook.com) (104.47.2.53)
-  by server-11.tower-233.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Nov 2019 17:02:13 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aj3kOKKhXdqspBtJWUW2MXQhQmydgjOy90HZ/yvevd+dzJ4GEixkae2RI4Bo1dOofjp51dtsrct2bpe0Zj/kJy71ZkT/t5xJmu/T/VYpe9GE5bwj8aFQI9gXe1HgraQYRMZD0fv88fwRJTCb55ODuwcKg5ESGbwjiDGIyH1A/VcJHEINrRBzu9WY0v+xoucdypdt8L9y9CzilbOoGWdCyqEO5yugRqoKqN9qa7zMCaqjb2A0PE6CMsmJfTatmmp0+QZ+4mP0Pr8RF8wsEYr6TpsLM5QvD0YkeIgJq/HBGlVqF7EjNLmgbCaS/S1BORmusYgjUEUJkHoLYYxbsRksGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2V0gz/tfXQyJZe3+mCkQjDXOpzMjnYkTppIKtgjiRgs=;
- b=ZOGaCs8vAf85MNRCRhPqJvdZ6ctT3HNwofTxf50hwQFCS+B0hZ4KyoS4s3JyeKFw+oHu0wpyVSowFrNPc2H2UF21HRRMAjGm9XGBvXROP6jeSc5QoXl0O9P2EdN3S3MO1DXCnR3COKax6mt8+xWhRiFQhHiQzbzyP9B2354PuBMMZRvfKWE+g9ViUeXHtQV22W0c41BM+bdxqF8dp3/0XalCjzJXvhhpOoH52EbMgyvPFglKtXxdzx+f/trflTuj1Dt6jsxwmx2NysJpnywnBLVtcrXlj3FBPyLjUc59TVEkH2DlUgqeR85y8byJDyPBdVnlhjaKjTal9zWecKeiZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+        Tue, 26 Nov 2019 12:03:31 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b11so4003683wmj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:03:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2V0gz/tfXQyJZe3+mCkQjDXOpzMjnYkTppIKtgjiRgs=;
- b=eHLLCcN2e69i8Un1u/zcu6SXh7yNHRJQmrvgJsuWamnqByAeZxnhIM4rTDz9YYBFxjtTnD8xYvafYk3jQbfcNWHdB1ZpzcaOGJmBB7IeCbcguAT0f6eDqXzLvQPa5QNWLYTaVuA5Fv6YJX2iE2cvokltL8wJPPVhgTYu5G0i0pk=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1170.EURPRD10.PROD.OUTLOOK.COM (10.169.155.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Tue, 26 Nov 2019 17:02:12 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
- 17:02:12 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: RE: [PATCHv2 2/6] ASoC: da7213: Add regulator support
-Thread-Topic: [PATCHv2 2/6] ASoC: da7213: Add regulator support
-Thread-Index: AQHVn7aUUebhVdnv70SSWjcAgccCf6eWEA7QgAFfzACABkV0cA==
-Date:   Tue, 26 Nov 2019 17:02:12 +0000
-Message-ID: <AM5PR1001MB09941D80A91358F99189CB6D80450@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
- <20191120152406.2744-3-sebastian.reichel@collabora.com>
- <AM5PR1001MB09945AE319B4ED33C193ABE9804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191122170946.kbodf45wa24jnz2n@earth.universe>
-In-Reply-To: <20191122170946.kbodf45wa24jnz2n@earth.universe>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7225f1b6-2e41-4163-3dfd-08d7729261b7
-x-ms-traffictypediagnostic: AM5PR1001MB1170:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB11702A790A80AFC3B6E4AC33A7450@AM5PR1001MB1170.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:765;
-x-forefront-prvs: 0233768B38
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(396003)(39860400002)(136003)(199004)(189003)(86362001)(52536014)(6506007)(55236004)(71200400001)(53546011)(26005)(76116006)(7696005)(71190400001)(6436002)(64756008)(66446008)(102836004)(9686003)(54906003)(25786009)(110136005)(55016002)(446003)(11346002)(8936002)(2906002)(186003)(6116002)(66476007)(99286004)(66946007)(3846002)(66556008)(5660300002)(66066001)(33656002)(6246003)(14444005)(256004)(74316002)(305945005)(7736002)(8676002)(81166006)(229853002)(81156014)(76176011)(316002)(478600001)(4326008)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1170;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FuCtYvvOcm3csR2ks8ieiZpp3k+XpdID5p9KKV3RW53GJqDtxHmUmpsHDZ8WcKZ4QxV+MOKE5RMgXeq9lnTBsK/GNRBvFBEbR+ieHKi+Do6QwJNhf3vPIdPAJyXl5EFj9BOl99idXI3tJ/Rz/UiwWK2K/DkiNy2gcY/UtIwUaAW3BjDTmUSrGbhhmvM7PzmGvu2YUEwM0a4P82GwovwxJJ0aSOpPO2VgKLOR6PPj8lw0pkd05++rB8dy2NrklOLbaIFsOtqPxZQYrxbpggNBIwZ+431+cVuz9GYkyJd6laeIsRbMszraLSVCVB+myKZTYU4Wb5D9o+S8mMEaHg91Wy3n9ALnfM5rmJ9TdSN2bEJqWuGt1WAkh9xFxdZypc17fi5xyt8NYaI9coVaHY8SffraSHFQUTsPf0M5q+MpbcFzVk1OR41RkZ4H17ps8WFx
-Content-Type: text/plain; charset="us-ascii"
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YDMkod26jBuYIctmZERW8YY/mOMbA2drn1QF1QAAIto=;
+        b=oG4z8HUair3Guh/qOumEgxFQ6aBIbp46KkUmOTfHLc1N6N6/R9FKZH98lfCfS7K3cP
+         gho0Bc8vDd7Y8WKXwjtG4rwG40ORm4nem3ny7EZDqZuEB/lMXSIdZtW2HokCNwyR+38t
+         7Fe+gFVuCePWsD1JlCD/t1PA4VdaKONbLApcgQBKvw62AAPRzDvNuiczBT1mWUxDpaVW
+         KMbgfYl7Gu6b9fZopFI2I6IL/ADvgD8sQ/pZYqdQ1i/hgRzumn81ik79ASXic9H7heMW
+         mZ62q79cHrJcNi789FodWJgNEu1yxddYXSsj7JfuwXHeQCsIL+ZS004Cr5KPJcoybqqG
+         hoYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YDMkod26jBuYIctmZERW8YY/mOMbA2drn1QF1QAAIto=;
+        b=SCbBIa5fs36/TzQaXs4Va734VJBvv5L1fXwfIupluVa5zdJ26SxIlojHwmLYB/HJWf
+         /HNJmzQkpqWDR4taHJ/ss7fed37JMuh5TI8iQtHc+SYWV8iMUA8NIKavj4HpcmpKMrjy
+         5QMVbY8/8fPkRIuoq/fgL4owXHrVIVnhL0HP7HhADfHYqTNXsqGatv3fLBZMah5N2FfO
+         ufd+CbRbCYPPLeJjjcY/kISjLg7XHNbZwB9NZUw038ADAjkhDCMd2Jj9Lkug+h9I+pXP
+         IKIzezz9AzKEMu3OzGZ4BjSdca3U6yQpos85RjcS5EFj+LmzVszeEwjtGSB9ui8z5bn7
+         QUcw==
+X-Gm-Message-State: APjAAAWGRg0hyRjKKD1x9josovicsZKd1Py1d68ktNqaZc+ksFDd7qZz
+        QlfgIJzqeL94x4mBotpzIr5SD2OM+/ycsTcR
+X-Google-Smtp-Source: APXvYqwReaa4bwtmNp/NSgCoIIpzSMoMUduHgUDieWiBxVI+QLcOG66Jh98wtBHj+VxoZ+3N5o8lkg==
+X-Received: by 2002:a7b:c75a:: with SMTP id w26mr61452wmk.18.1574787808072;
+        Tue, 26 Nov 2019 09:03:28 -0800 (PST)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id 19sm17789770wrc.47.2019.11.26.09.03.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Nov 2019 09:03:27 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v2] PCI: Add DMA alias quirk for PLX PEX NTB
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <20191120193228.GA103670@google.com>
+Date:   Tue, 26 Nov 2019 17:03:23 +0000
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7225f1b6-2e41-4163-3dfd-08d7729261b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 17:02:12.5185
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TWOKvclp6Ff8AGuj97NglcBh1Gze/j2OY26YBUpm+FXIwTIPhdYRsOdfXtsbGgTYrHVyrrMxk1NW42oLu4nhCuabIyDO0zdeCYu8UFqUDYU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1170
+Message-Id: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+References: <20191120193228.GA103670@google.com>
+To:     linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22 November 2019 17:10, Sebastian Reichel wrote:
+The PLX PEX NTB forwards DMA transactions using Requester ID's that
+don't exist as PCI devices. The devfn for a transaction is used as an
+index into a lookup table storing the origin of a transaction on the
+other side of the bridge.
 
-> Hi,
+Add helper pci_add_dma_alias_range that can alias a range of devfns in=20=
 
-Ok, based on feedback I have no further comment so:
+dma_alias_mask.
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+This patch aliases all possible devfn's to the NTB device so that any
+transaction coming in is governed by the mappings for the NTB.
 
->=20
-> On Thu, Nov 21, 2019 at 09:15:02PM +0000, Adam Thomson wrote:
-> > On 20 November 2019 15:24, Sebastian Reichel wrote:
-> >
-> > > This adds support for most regulators of da7212 for improved
-> > > power management. The only thing skipped was the speaker supply,
-> > > which has some undocumented dependencies. It's supposed to be
-> > > either always-enabled or always-disabled.
-> > >
-> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > > ---
-> > >  .../devicetree/bindings/sound/da7213.txt      |  4 +
-> > >  sound/soc/codecs/da7213.c                     | 79 +++++++++++++++++=
-+-
-> > >  sound/soc/codecs/da7213.h                     |  9 +++
-> > >  3 files changed, 91 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/da7213.txt
-> > > b/Documentation/devicetree/bindings/sound/da7213.txt
-> > > index 759bb04e0283..cc8200b7d748 100644
-> > > --- a/Documentation/devicetree/bindings/sound/da7213.txt
-> > > +++ b/Documentation/devicetree/bindings/sound/da7213.txt
-> > > @@ -21,6 +21,10 @@ Optional properties:
-> > >  - dlg,dmic-clkrate : DMIC clock frequency (Hz).
-> > >  	[<1500000>, <3000000>]
-> > >
-> > > + - VDDA-supply : Regulator phandle for Analogue power supply
-> > > + - VDDMIC-supply : Regulator phandle for Mic Bias
-> > > + - VDDIO-supply : Regulator phandle for I/O power supply
-> > > +
-> > >  =3D=3D=3D=3D=3D=3D
-> > >
-> > >  Example:
-> > > diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
-> > > index aff306bb58df..0359249118d0 100644
-> > > --- a/sound/soc/codecs/da7213.c
-> > > +++ b/sound/soc/codecs/da7213.c
-> > > @@ -19,6 +19,7 @@
-> > >  #include <linux/module.h>
-> > >  #include <sound/pcm.h>
-> > >  #include <sound/pcm_params.h>
-> > > +#include <linux/pm_runtime.h>
-> > >  #include <sound/soc.h>
-> > >  #include <sound/initval.h>
-> > >  #include <sound/tlv.h>
-> > > @@ -806,6 +807,11 @@ static int da7213_dai_event(struct
-> > > snd_soc_dapm_widget *w,
-> > >   */
-> > >
-> > >  static const struct snd_soc_dapm_widget da7213_dapm_widgets[] =3D {
-> > > +	/*
-> > > +	 * Power Supply
-> > > +	 */
-> > > +	SND_SOC_DAPM_REGULATOR_SUPPLY("VDDMIC", 0, 0),
-> > > +
-> > >  	/*
-> > >  	 * Input & Output
-> > >  	 */
-> > > @@ -932,6 +938,9 @@ static const struct snd_soc_dapm_route
-> > > da7213_audio_map[] =3D {
-> > >  	/* Dest       Connecting Widget    source */
-> > >
-> > >  	/* Input path */
-> > > +	{"Mic Bias 1", NULL, "VDDMIC"},
-> > > +	{"Mic Bias 2", NULL, "VDDMIC"},
-> > > +
-> > >  	{"MIC1", NULL, "Mic Bias 1"},
-> > >  	{"MIC2", NULL, "Mic Bias 2"},
-> > >
-> > > @@ -1691,6 +1700,8 @@ static int da7213_probe(struct snd_soc_componen=
-t
-> > > *component)
-> > >  {
-> > >  	struct da7213_priv *da7213 =3D
-> > > snd_soc_component_get_drvdata(component);
-> > >
-> > > +	pm_runtime_get_sync(component->dev);
-> >
-> > It seems that this function can return errors, although I do see lots o=
-f
-> > instances of this being called where the return value isn't checked. No=
-t had
-> > time to walk the code fully but are we sure no errors are going to happ=
-en here?
->=20
-> In this case, the runtime PM is already enabled because of
-> pm_runtime_set_active() being called previously. So this only
-> increases the usage counter.
->=20
-> > > +
-> > >  	/* Default to using ALC auto offset calibration mode. */
-> > >  	snd_soc_component_update_bits(component, DA7213_ALC_CTRL1,
-> > >  			    DA7213_ALC_CALIB_MODE_MAN, 0);
-> > > @@ -1811,6 +1822,8 @@ static int da7213_probe(struct snd_soc_componen=
-t
-> > > *component)
-> > >  				    DA7213_DMIC_CLK_RATE_MASK, dmic_cfg);
-> > >  	}
-> > >
-> > > +	pm_runtime_put_sync(component->dev);
-> >
-> > Same question here.
->=20
-> da7213_runtime_suspend() always returns 0.
->=20
-> > > +
-> > >  	/* Check if MCLK provided */
-> > >  	da7213->mclk =3D devm_clk_get(component->dev, "mclk");
-> > >  	if (IS_ERR(da7213->mclk)) {
-> > > @@ -1848,11 +1861,22 @@ static const struct regmap_config
-> > > da7213_regmap_config =3D {
-> > >  	.cache_type =3D REGCACHE_RBTREE,
-> > >  };
-> > >
-> > > +static void da7213_power_off(void *data)
-> > > +{
-> > > +	struct da7213_priv *da7213 =3D data;
-> > > +	regulator_bulk_disable(DA7213_NUM_SUPPLIES, da7213->supplies);
-> > > +}
-> > > +
-> > > +static const char *da7213_supply_names[DA7213_NUM_SUPPLIES] =3D {
-> > > +	[DA7213_SUPPLY_VDDA] =3D "VDDA",
-> > > +	[DA7213_SUPPLY_VDDIO] =3D "VDDIO",
-> > > +};
-> > > +
-> > >  static int da7213_i2c_probe(struct i2c_client *i2c,
-> > >  			    const struct i2c_device_id *id)
-> > >  {
-> > >  	struct da7213_priv *da7213;
-> > > -	int ret;
-> > > +	int i, ret;
-> > >
-> > >  	da7213 =3D devm_kzalloc(&i2c->dev, sizeof(*da7213), GFP_KERNEL);
-> > >  	if (!da7213)
-> > > @@ -1860,6 +1884,25 @@ static int da7213_i2c_probe(struct i2c_client =
-*i2c,
-> > >
-> > >  	i2c_set_clientdata(i2c, da7213);
-> > >
-> > > +	/* Get required supplies */
-> > > +	for (i =3D 0; i < DA7213_NUM_SUPPLIES; ++i)
-> > > +		da7213->supplies[i].supply =3D da7213_supply_names[i];
-> > > +
-> > > +	ret =3D devm_regulator_bulk_get(&i2c->dev, DA7213_NUM_SUPPLIES,
-> > > +				      da7213->supplies);
-> > > +	if (ret) {
-> > > +		dev_err(&i2c->dev, "Failed to get supplies: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	ret =3D regulator_bulk_enable(DA7213_NUM_SUPPLIES, da7213-
-> > > >supplies);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	ret =3D devm_add_action_or_reset(&i2c->dev, da7213_power_off,
-> > > da7213);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > >  	da7213->regmap =3D devm_regmap_init_i2c(i2c, &da7213_regmap_config)=
-;
-> > >  	if (IS_ERR(da7213->regmap)) {
-> > >  		ret =3D PTR_ERR(da7213->regmap);
-> > > @@ -1867,6 +1910,11 @@ static int da7213_i2c_probe(struct i2c_client =
-*i2c,
-> > >  		return ret;
-> > >  	}
-> > >
-> > > +	pm_runtime_set_autosuspend_delay(&i2c->dev, 100);
-> > > +	pm_runtime_use_autosuspend(&i2c->dev);
-> > > +	pm_runtime_set_active(&i2c->dev);
-> >
-> > Again this can return an error. Are we certain this won't fail?
->=20
-> This only provides the information, that the device is running. The
-> parent might be affected, but that is running anyways since we are
-> probing a child device.
->=20
-> > > +	pm_runtime_enable(&i2c->dev);
-> > > +
-> > >  	ret =3D devm_snd_soc_register_component(&i2c->dev,
-> > >  			&soc_component_dev_da7213, &da7213_dai, 1);
-> > >  	if (ret < 0) {
-> > > @@ -1876,6 +1924,34 @@ static int da7213_i2c_probe(struct i2c_client =
-*i2c,
-> > >  	return ret;
-> > >  }
-> > >
-> > > +static int __maybe_unused da7213_runtime_suspend(struct device *dev)
-> > > +{
-> > > +	struct da7213_priv *da7213 =3D dev_get_drvdata(dev);
-> > > +
-> > > +	regcache_cache_only(da7213->regmap, true);
-> > > +	regcache_mark_dirty(da7213->regmap);
-> > > +	regulator_bulk_disable(DA7213_NUM_SUPPLIES, da7213->supplies);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int __maybe_unused da7213_runtime_resume(struct device *dev)
-> > > +{
-> > > +	struct da7213_priv *da7213 =3D dev_get_drvdata(dev);
-> > > +	int ret;
-> > > +
-> > > +	ret =3D regulator_bulk_enable(DA7213_NUM_SUPPLIES, da7213-
-> > > >supplies);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +	regcache_cache_only(da7213->regmap, false);
-> > > +	regcache_sync(da7213->regmap);
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct dev_pm_ops da7213_pm =3D {
-> > > +	SET_RUNTIME_PM_OPS(da7213_runtime_suspend,
-> > > da7213_runtime_resume, NULL)
-> > > +};
-> > > +
-> > >  static const struct i2c_device_id da7213_i2c_id[] =3D {
-> > >  	{ "da7213", 0 },
-> > >  	{ }
-> > > @@ -1888,6 +1964,7 @@ static struct i2c_driver da7213_i2c_driver =3D =
-{
-> > >  		.name =3D "da7213",
-> > >  		.of_match_table =3D of_match_ptr(da7213_of_match),
-> > >  		.acpi_match_table =3D ACPI_PTR(da7213_acpi_match),
-> > > +		.pm =3D &da7213_pm,
-> > >  	},
-> > >  	.probe		=3D da7213_i2c_probe,
-> > >  	.id_table	=3D da7213_i2c_id,
-> > > diff --git a/sound/soc/codecs/da7213.h b/sound/soc/codecs/da7213.h
-> > > index 3250a3821fcc..3890829dfb6e 100644
-> > > --- a/sound/soc/codecs/da7213.h
-> > > +++ b/sound/soc/codecs/da7213.h
-> > > @@ -12,6 +12,7 @@
-> > >
-> > >  #include <linux/clk.h>
-> > >  #include <linux/regmap.h>
-> > > +#include <linux/regulator/consumer.h>
-> > >  #include <sound/da7213.h>
-> > >
-> > >  /*
-> > > @@ -521,9 +522,17 @@ enum da7213_sys_clk {
-> > >  	DA7213_SYSCLK_PLL_32KHZ
-> > >  };
-> > >
-> > > +/* Regulators */
-> > > +enum da7213_supplies {
-> > > +	DA7213_SUPPLY_VDDA =3D 0,
-> > > +	DA7213_SUPPLY_VDDIO,
-> > > +	DA7213_NUM_SUPPLIES,
-> > > +};
-> > > +
-> > >  /* Codec private data */
-> > >  struct da7213_priv {
-> > >  	struct regmap *regmap;
-> > > +	struct regulator_bulk_data supplies[DA7213_NUM_SUPPLIES];
-> > >  	struct clk *mclk;
-> > >  	unsigned int mclk_rate;
-> > >  	int clk_src;
-> > > --
-> > > 2.24.0
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/pci/pci.c    | 29 ++++++++++++++++++++++-------
+ drivers/pci/quirks.c | 15 +++++++++++++++
+ include/linux/pci.h  |  1 +
+ 3 files changed, 38 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..f502af1b5d10 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5854,6 +5854,18 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+ 	return 0;
+ }
+=20
++int _pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
+len)
++{
++	if (!dev->dma_alias_mask)
++		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
+GFP_KERNEL);
++	if (!dev->dma_alias_mask) {
++		pci_warn(dev, "Unable to allocate DMA alias mask\n");
++		return -ENOMEM;
++	}
++	bitmap_set(dev->dma_alias_mask, devfn_from, len);
++	return 0;
++}
++
+ /**
+  * pci_add_dma_alias - Add a DMA devfn alias for a device
+  * @dev: the PCI device for which alias is added
+@@ -5875,18 +5887,21 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+  */
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+-	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
+GFP_KERNEL);
+-	if (!dev->dma_alias_mask) {
+-		pci_warn(dev, "Unable to allocate DMA alias mask\n");
++	if (_pci_add_dma_alias_range(dev, devfn, 1) !=3D 0)
+ 		return;
+-	}
+-
+-	set_bit(devfn, dev->dma_alias_mask);
+ 	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+ 		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+ }
+=20
++void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
+len)
++{
++	int devfn_to =3D devfn_from + len - 1;
++	if (_pci_add_dma_alias_range(dev, devfn_from, len) !=3D 0)
++		return;
++	pci_info(dev, "Enabling fixed DMA alias for devfn range from =
+%02x.%d to %02x.%d\n",
++		 PCI_SLOT(devfn_from), PCI_FUNC(devfn_from), =
+PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
++}
++
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2)
+ {
+ 	return (dev1->dma_alias_mask &&
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 320255e5e8f8..1ed230f739a4 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5315,6 +5315,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+ SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+ SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+=20
++/*
++ * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. =
+These IDs
++ * are used to forward responses to the originator on the other side of =
+the
++ * NTB. Alias all possible IDs to the NTB to permit access when the =
+IOMMU is
++ * turned on.
++ */
++static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
++{
++	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
++	/* PLX NTB may use all 256 devfns */
++	pci_add_dma_alias_range(pdev, 0, 256);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, =
+quirk_plx_ntb_dma_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, =
+quirk_plx_ntb_dma_alias);
++
+ /*
+  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS =
+does
+  * not always reset the secondary Nvidia GPU between reboots if the =
+system
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 1a6cf19eac2d..6765f3d0102b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2324,6 +2324,7 @@ static inline struct eeh_dev =
+*pci_dev_to_eeh_dev(struct pci_dev *pdev)
+ #endif
+=20
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
++void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
+len);
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
+*dev2);
+ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 			   int (*fn)(struct pci_dev *pdev,
+--=20
+2.24.0
+
