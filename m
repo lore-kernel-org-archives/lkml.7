@@ -2,31 +2,30 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16325C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7798C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF5620659
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17C320659
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfKZUOE (ORCPT
+        id S1726618AbfKZUOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45486 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:14:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45704 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbfKZUOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:02 -0500
+        id S1726957AbfKZUOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:04 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 39C4BAAD0;
-        Tue, 26 Nov 2019 20:13:59 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 2AB20AF3B;
+        Tue, 26 Nov 2019 20:14:02 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Oleg Nesterov <oleg@redhat.com>,
@@ -35,6 +34,7 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Nicholas Piggin <npiggin@gmail.com>,
         Allison Randal <allison@lohutok.net>,
         "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Breno Leitao <leitao@debian.org>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
@@ -66,10 +66,12 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/35] exception cleanup, syscall in C and !COMPAT
-Date:   Tue, 26 Nov 2019 21:13:14 +0100
-Message-Id: <cover.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 02/35] powerpc/64s/exception: Add GEN_COMMON macro that uses INT_DEFINE parameters
+Date:   Tue, 26 Nov 2019 21:13:16 +0100
+Message-Id: <feab2b2c94c63f4b7f1378edfda0cdae63108539.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
+References: <cover.1574798487.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,109 +79,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Nicholas Piggin <npiggin@gmail.com>
 
-This is merge of https://patchwork.ozlabs.org/cover/1162376/ (except two
-last experimental patches) and
-https://patchwork.ozlabs.org/patch/1162079/ rebased on top of master.
+No generated code change.
 
-There was minor conflict in Makefile in the latter series.
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/powerpc/kernel/exceptions-64s.S | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-Refreshed the patchset to fix build error on ppc32 and ppc64e.
-
-Thanks
-
-Michal
-
-Michal Suchanek (10):
-  powerpc/64: system call: Fix sparse warning about missing declaration
-  powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
-  powerpc: move common register copy functions from signal_32.c to
-    signal.c
-  powerpc/perf: remove current_is_64bit()
-  powerpc/perf: consolidate read_user_stack_32
-  powerpc/perf: consolidate valid_user_sp
-  powerpc/64: make buildable without CONFIG_COMPAT
-  powerpc/64: Make COMPAT user-selectable disabled on littleendian by
-    default.
-  powerpc/perf: split callchain.c by bitness
-  MAINTAINERS: perf: Add pattern that matches ppc perf to the perf
-    entry.
-
-Nicholas Piggin (25):
-  powerpc/64s/exception: Introduce INT_DEFINE parameter block for code
-    generation
-  powerpc/64s/exception: Add GEN_COMMON macro that uses INT_DEFINE
-    parameters
-  powerpc/64s/exception: Add GEN_KVM macro that uses INT_DEFINE
-    parameters
-  powerpc/64s/exception: Expand EXC_COMMON and EXC_COMMON_ASYNC macros
-  powerpc/64s/exception: Move all interrupt handlers to new style code
-    gen macros
-  powerpc/64s/exception: Remove old INT_ENTRY macro
-  powerpc/64s/exception: Remove old INT_COMMON macro
-  powerpc/64s/exception: Remove old INT_KVM_HANDLER
-  powerpc/64s/exception: Add ISIDE option
-  powerpc/64s/exception: move real->virt switch into the common handler
-  powerpc/64s/exception: move soft-mask test to common code
-  powerpc/64s/exception: move KVM test to common code
-  powerpc/64s/exception: remove confusing IEARLY option
-  powerpc/64s/exception: remove the SPR saving patch code macros
-  powerpc/64s/exception: trim unused arguments from KVMTEST macro
-  powerpc/64s/exception: hdecrementer avoid touching the stack
-  powerpc/64s/exception: re-inline some handlers
-  powerpc/64s/exception: Clean up SRR specifiers
-  powerpc/64s/exception: add more comments for interrupt handlers
-  powerpc/64s/exception: only test KVM in SRR interrupts when PR KVM is
-    supported
-  powerpc/64s/exception: soft nmi interrupt should not use
-    ret_from_except
-  powerpc/64: system call remove non-volatile GPR save optimisation
-  powerpc/64: system call implement the bulk of the logic in C
-  powerpc/64s: interrupt return in C
-  powerpc/64s/exception: remove lite interrupt return
-
- MAINTAINERS                                   |    2 +
- arch/powerpc/Kconfig                          |    5 +-
- arch/powerpc/include/asm/asm-prototypes.h     |   17 +-
- .../powerpc/include/asm/book3s/64/kup-radix.h |   24 +-
- arch/powerpc/include/asm/cputime.h            |   24 +
- arch/powerpc/include/asm/exception-64s.h      |    4 -
- arch/powerpc/include/asm/hw_irq.h             |    4 +
- arch/powerpc/include/asm/ptrace.h             |    3 +
- arch/powerpc/include/asm/signal.h             |    3 +
- arch/powerpc/include/asm/switch_to.h          |   11 +
- arch/powerpc/include/asm/thread_info.h        |    4 +-
- arch/powerpc/include/asm/time.h               |    4 +-
- arch/powerpc/include/asm/unistd.h             |    1 +
- arch/powerpc/kernel/Makefile                  |    9 +-
- arch/powerpc/kernel/entry_64.S                |  880 ++------
- arch/powerpc/kernel/exceptions-64e.S          |  255 ++-
- arch/powerpc/kernel/exceptions-64s.S          | 1937 ++++++++++++-----
- arch/powerpc/kernel/process.c                 |   89 +-
- arch/powerpc/kernel/signal.c                  |  144 +-
- arch/powerpc/kernel/signal.h                  |    2 -
- arch/powerpc/kernel/signal_32.c               |  140 --
- arch/powerpc/kernel/syscall_64.c              |  349 +++
- arch/powerpc/kernel/syscalls/syscall.tbl      |   22 +-
- arch/powerpc/kernel/systbl.S                  |    9 +-
- arch/powerpc/kernel/time.c                    |    9 -
- arch/powerpc/kernel/vdso.c                    |    3 +-
- arch/powerpc/kernel/vector.S                  |    2 +-
- arch/powerpc/kvm/book3s_hv_rmhandlers.S       |   11 -
- arch/powerpc/kvm/book3s_segment.S             |    7 -
- arch/powerpc/perf/Makefile                    |    5 +-
- arch/powerpc/perf/callchain.c                 |  387 +---
- arch/powerpc/perf/callchain.h                 |   20 +
- arch/powerpc/perf/callchain_32.c              |  197 ++
- arch/powerpc/perf/callchain_64.c              |  178 ++
- fs/read_write.c                               |    3 +-
- 35 files changed, 2799 insertions(+), 1965 deletions(-)
- create mode 100644 arch/powerpc/kernel/syscall_64.c
- create mode 100644 arch/powerpc/perf/callchain.h
- create mode 100644 arch/powerpc/perf/callchain_32.c
- create mode 100644 arch/powerpc/perf/callchain_64.c
-
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index e6ad6e6cf65e..591ae2a73e18 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -206,6 +206,9 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
+ #define IMASK		.L_IMASK_\name\()
+ #define IKVM_REAL	.L_IKVM_REAL_\name\()
+ #define IKVM_VIRT	.L_IKVM_VIRT_\name\()
++#define ISTACK		.L_ISTACK_\name\()
++#define IRECONCILE	.L_IRECONCILE_\name\()
++#define IKUAP		.L_IKUAP_\name\()
+ 
+ #define INT_DEFINE_BEGIN(n)						\
+ .macro int_define_ ## n name
+@@ -246,6 +249,15 @@ do_define_int n
+ 	.ifndef IKVM_VIRT
+ 		IKVM_VIRT=0
+ 	.endif
++	.ifndef ISTACK
++		ISTACK=1
++	.endif
++	.ifndef IRECONCILE
++		IRECONCILE=1
++	.endif
++	.ifndef IKUAP
++		IKUAP=1
++	.endif
+ .endm
+ 
+ .macro INT_KVM_HANDLER name, vec, hsrr, area, skip
+@@ -670,6 +682,10 @@ END_FTR_SECTION_NESTED(CPU_FTR_CFAR, CPU_FTR_CFAR, 66)
+ 	.endif
+ .endm
+ 
++.macro GEN_COMMON name
++	INT_COMMON IVEC, IAREA, ISTACK, IKUAP, IRECONCILE, IDAR, IDSISR
++.endm
++
+ /*
+  * Restore all registers including H/SRR0/1 saved in a stack frame of a
+  * standard exception.
+@@ -1221,13 +1237,7 @@ EXC_VIRT_BEGIN(data_access, 0x4300, 0x80)
+ EXC_VIRT_END(data_access, 0x4300, 0x80)
+ INT_KVM_HANDLER data_access, 0x300, EXC_STD, PACA_EXGEN, 1
+ EXC_COMMON_BEGIN(data_access_common)
+-	/*
+-	 * Here r13 points to the paca, r9 contains the saved CR,
+-	 * SRR0 and SRR1 are saved in r11 and r12,
+-	 * r9 - r13 are saved in paca->exgen.
+-	 * EX_DAR and EX_DSISR have saved DAR/DSISR
+-	 */
+-	INT_COMMON 0x300, PACA_EXGEN, 1, 1, 1, 1, 1
++	GEN_COMMON data_access
+ 	ld	r4,_DAR(r1)
+ 	ld	r5,_DSISR(r1)
+ BEGIN_MMU_FTR_SECTION
 -- 
 2.23.0
 
