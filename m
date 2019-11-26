@@ -2,211 +2,119 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81959C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12632075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6EB2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="oG4z8HUa"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZYSjrdq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfKZRDb (ORCPT
+        id S1728564AbfKZRDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:03:31 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55144 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfKZRDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:03:31 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b11so4003683wmj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:03:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YDMkod26jBuYIctmZERW8YY/mOMbA2drn1QF1QAAIto=;
-        b=oG4z8HUair3Guh/qOumEgxFQ6aBIbp46KkUmOTfHLc1N6N6/R9FKZH98lfCfS7K3cP
-         gho0Bc8vDd7Y8WKXwjtG4rwG40ORm4nem3ny7EZDqZuEB/lMXSIdZtW2HokCNwyR+38t
-         7Fe+gFVuCePWsD1JlCD/t1PA4VdaKONbLApcgQBKvw62AAPRzDvNuiczBT1mWUxDpaVW
-         KMbgfYl7Gu6b9fZopFI2I6IL/ADvgD8sQ/pZYqdQ1i/hgRzumn81ik79ASXic9H7heMW
-         mZ62q79cHrJcNi789FodWJgNEu1yxddYXSsj7JfuwXHeQCsIL+ZS004Cr5KPJcoybqqG
-         hoYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YDMkod26jBuYIctmZERW8YY/mOMbA2drn1QF1QAAIto=;
-        b=SCbBIa5fs36/TzQaXs4Va734VJBvv5L1fXwfIupluVa5zdJ26SxIlojHwmLYB/HJWf
-         /HNJmzQkpqWDR4taHJ/ss7fed37JMuh5TI8iQtHc+SYWV8iMUA8NIKavj4HpcmpKMrjy
-         5QMVbY8/8fPkRIuoq/fgL4owXHrVIVnhL0HP7HhADfHYqTNXsqGatv3fLBZMah5N2FfO
-         ufd+CbRbCYPPLeJjjcY/kISjLg7XHNbZwB9NZUw038ADAjkhDCMd2Jj9Lkug+h9I+pXP
-         IKIzezz9AzKEMu3OzGZ4BjSdca3U6yQpos85RjcS5EFj+LmzVszeEwjtGSB9ui8z5bn7
-         QUcw==
-X-Gm-Message-State: APjAAAWGRg0hyRjKKD1x9josovicsZKd1Py1d68ktNqaZc+ksFDd7qZz
-        QlfgIJzqeL94x4mBotpzIr5SD2OM+/ycsTcR
-X-Google-Smtp-Source: APXvYqwReaa4bwtmNp/NSgCoIIpzSMoMUduHgUDieWiBxVI+QLcOG66Jh98wtBHj+VxoZ+3N5o8lkg==
-X-Received: by 2002:a7b:c75a:: with SMTP id w26mr61452wmk.18.1574787808072;
-        Tue, 26 Nov 2019 09:03:28 -0800 (PST)
-Received: from [10.83.36.220] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id 19sm17789770wrc.47.2019.11.26.09.03.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 09:03:27 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: [PATCH v2] PCI: Add DMA alias quirk for PLX PEX NTB
-From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <20191120193228.GA103670@google.com>
-Date:   Tue, 26 Nov 2019 17:03:23 +0000
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
+        Tue, 26 Nov 2019 12:03:46 -0500
+Received: from mail-eopbgr140043.outbound.protection.outlook.com ([40.107.14.43]:39398
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727674AbfKZRDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:03:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DfJzHBdjZlFe1i/5o7CGd7yZwIcs6gS4OF7YKeugJgwb9QJZymrJuWk/1nx/I6Dfcbd0Pc6dIArGGnk5CY4xRBE98rbMu1DtO4EfhkGDiidz76w1NzrCdDB3waBxfr/9pMxf/XHhCzpyL6KbyVeSJYk1dfCFL98+xJby7ZQ3ZENzzTxvo0cZhx2uTo2JYRHK1SNhQNCjRZ4rT+JDK/fuTPst9KANqTvBkfeJWzetTK8TOTGLimgfbJC7lvLktLJ5IwszTBM+YQb/+2GItYsDt8EK6kiTxuXDs2zGHQSD49QbpxCwfzQXnp3QTWeBA86vBrtJL5pUmDNX5wYD8gAnAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bzQluj4kON/3vA+0cSGYCjKVAZWpwEFQQm2uRS4p6dE=;
+ b=lBIXdjOncVA1sbx76U0ehPlrW+Ph+KfCqKqLLBTQyv2yP+b8vuun3JXeRzswlzh2rKnRcQsYZjwXIyjW+P/2JJ0NkfcUV+/jtM6daIaJ67Lyuz/BYBAHsN9gffQ34GV7NMrAKCPv+/8X5Lb2XrToiSjLQyg+9RVTKlaTf780ml8omlSw/CrCR5r/WZUlcBeU872q4xCcGgGpclX2+3447Qt1u8y5vjxlKrf73LYrtWagaN9UWoY6LKMN5/spqVtl1arfaLt1ZGyxkHxlz/Tid8bfMZC59b9tRhBxw7pdcuuU2bymUNhF1xuHRK5BmHx5hQOM0aJcLIZr7okdR3yjlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bzQluj4kON/3vA+0cSGYCjKVAZWpwEFQQm2uRS4p6dE=;
+ b=ZYSjrdq7ZWwr2QWNs5ISEWfULf+c1nsucI/ZLRMs8yRP8sEKXrDl0IoBHn6eEsWO+xEQXkd3or0mI4If9Gf4B9e1bncXbVLiNYOgUHD5ptvIumPIA3uEbWc+/LxLxHT1C69lkIXpgoO9EHeaNcAj/jaChsIyDakX37RI8ij9uGw=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3405.eurprd04.prod.outlook.com (52.134.1.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.21; Tue, 26 Nov 2019 17:03:42 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2495.014; Tue, 26 Nov 2019
+ 17:03:42 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v2] crypto: caam - do not reset pointer size from MCFGR
+ register
+Thread-Topic: [PATCH v2] crypto: caam - do not reset pointer size from MCFGR
+ register
+Thread-Index: AQHVpFRUdqDc3ecVmUOullCcW0ooTg==
+Date:   Tue, 26 Nov 2019 17:03:42 +0000
+Message-ID: <VI1PR0402MB3485B4E651C554ECC0D91BF998450@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1574771003-17208-1-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4c583cab-12ac-46a5-4320-08d772929787
+x-ms-traffictypediagnostic: VI1PR0402MB3405:|VI1PR0402MB3405:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3405188A2C99C25FCBAAB0B398450@VI1PR0402MB3405.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:218;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(39860400002)(396003)(376002)(189003)(199004)(99286004)(478600001)(53546011)(81166006)(26005)(6506007)(55016002)(6636002)(446003)(25786009)(2906002)(74316002)(186003)(102836004)(81156014)(316002)(54906003)(110136005)(4326008)(6436002)(6246003)(9686003)(3846002)(44832011)(71200400001)(86362001)(71190400001)(8936002)(66066001)(5660300002)(33656002)(76176011)(64756008)(66556008)(6116002)(66446008)(66476007)(7696005)(66946007)(4744005)(305945005)(52536014)(76116006)(7736002)(14454004)(256004)(229853002)(8676002)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3405;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9pQFEP9/IRlj5R7eHeYhRelSNDkg1n0oYBmW1GBOn8FSEYvOhlGVi1aGVah/nxODCpAcdYyv3hoHLuonpOYk32FCMuu/QIDm3MHun8EzQnmH3VxNXr7Ou0zVoXl1SREXDLjU2e0aAlicjPvl2i0aKfDwHnMqSvwdf8vSQPdw3hOqEZ+IH+ZXsnj9+8l8eqO3abmJFjp7+CNIF3Fq5IEYTtwfBpah7/96eEmI4kfc3YQK17WQLVxLtUhbNjmtEAEPuBpIdof7wB4/D+c+UWGtfnZkxTMzURtq6go6p7OenM/3kHZbF/kC4oJlEhaLAZ2e0VK0qFe0T6agoLzHs3msr0cKDS46Tu7wfp0ujPH7zf5Mozjw2jcz3xlJpNPJKecgbx5o47UFs4fAHYiL1nYG7KFRWYZNYs12P+2SXCfemsR8iqW/jvfLmNDmjSk0Ng8h
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
-References: <20191120193228.GA103670@google.com>
-To:     linux-pci@vger.kernel.org
-X-Mailer: Apple Mail (2.3445.102.3)
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c583cab-12ac-46a5-4320-08d772929787
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 17:03:42.7501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e0PheNWvEuBltnrLXvJaLg8Ebx3esh+86KX4pTcXPrWnwQS156IOX30ikUCudm3Uv1uxZJ4JF8QV4ClF5yT3dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3405
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PLX PEX NTB forwards DMA transactions using Requester ID's that
-don't exist as PCI devices. The devfn for a transaction is used as an
-index into a lookup table storing the origin of a transaction on the
-other side of the bridge.
-
-Add helper pci_add_dma_alias_range that can alias a range of devfns in=20=
-
-dma_alias_mask.
-
-This patch aliases all possible devfn's to the NTB device so that any
-transaction coming in is governed by the mappings for the NTB.
-
-Signed-off-by: James Sewart <jamessewart@arista.com>
----
- drivers/pci/pci.c    | 29 ++++++++++++++++++++++-------
- drivers/pci/quirks.c | 15 +++++++++++++++
- include/linux/pci.h  |  1 +
- 3 files changed, 38 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a97e2571a527..f502af1b5d10 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5854,6 +5854,18 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
-decode,
- 	return 0;
- }
-=20
-+int _pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
-len)
-+{
-+	if (!dev->dma_alias_mask)
-+		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
-GFP_KERNEL);
-+	if (!dev->dma_alias_mask) {
-+		pci_warn(dev, "Unable to allocate DMA alias mask\n");
-+		return -ENOMEM;
-+	}
-+	bitmap_set(dev->dma_alias_mask, devfn_from, len);
-+	return 0;
-+}
-+
- /**
-  * pci_add_dma_alias - Add a DMA devfn alias for a device
-  * @dev: the PCI device for which alias is added
-@@ -5875,18 +5887,21 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
-decode,
-  */
- void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
- {
--	if (!dev->dma_alias_mask)
--		dev->dma_alias_mask =3D bitmap_zalloc(U8_MAX, =
-GFP_KERNEL);
--	if (!dev->dma_alias_mask) {
--		pci_warn(dev, "Unable to allocate DMA alias mask\n");
-+	if (_pci_add_dma_alias_range(dev, devfn, 1) !=3D 0)
- 		return;
--	}
--
--	set_bit(devfn, dev->dma_alias_mask);
- 	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
- 		 PCI_SLOT(devfn), PCI_FUNC(devfn));
- }
-=20
-+void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
-len)
-+{
-+	int devfn_to =3D devfn_from + len - 1;
-+	if (_pci_add_dma_alias_range(dev, devfn_from, len) !=3D 0)
-+		return;
-+	pci_info(dev, "Enabling fixed DMA alias for devfn range from =
-%02x.%d to %02x.%d\n",
-+		 PCI_SLOT(devfn_from), PCI_FUNC(devfn_from), =
-PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
-+}
-+
- bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
-*dev2)
- {
- 	return (dev1->dma_alias_mask &&
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 320255e5e8f8..1ed230f739a4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5315,6 +5315,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
-=20
-+/*
-+ * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. =
-These IDs
-+ * are used to forward responses to the originator on the other side of =
-the
-+ * NTB. Alias all possible IDs to the NTB to permit access when the =
-IOMMU is
-+ * turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias_range(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, =
-quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, =
-quirk_plx_ntb_dma_alias);
-+
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS =
-does
-  * not always reset the secondary Nvidia GPU between reboots if the =
-system
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 1a6cf19eac2d..6765f3d0102b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2324,6 +2324,7 @@ static inline struct eeh_dev =
-*pci_dev_to_eeh_dev(struct pci_dev *pdev)
- #endif
-=20
- void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
-+void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int =
-len);
- bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev =
-*dev2);
- int pci_for_each_dma_alias(struct pci_dev *pdev,
- 			   int (*fn)(struct pci_dev *pdev,
---=20
-2.24.0
-
+On 11/26/2019 2:23 PM, Iuliana Prodan wrote:=0A=
+> In commit 'a1cf573ee95 ("crypto: caam - select DMA address=0A=
+> size at runtime")' CAAM pointer size (caam_ptr_size) is changed=0A=
+When quoting a commit, it shouldn't be split across several lines.=0A=
+=0A=
+> from sizeof(dma_addr_t) to runtime value computed from MCFGR register.=0A=
+> Therefore, do not reset MCFGR[PS].=0A=
+> =0A=
+> Fixes: a1cf573ee95 ("crypto: caam - select DMA address size at runtime")=
+=0A=
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+> Cc: <stable@vger.kernel.org>=0A=
+> Cc: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+> Cc: Alison Wang <alison.wang@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
