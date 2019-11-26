@@ -2,287 +2,102 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3153DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B201DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1FA20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:10:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aX8cMxji"
+	by mail.kernel.org (Postfix) with ESMTP id 95BD220722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfKZPKw (ORCPT
+        id S1728387AbfKZPOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:10:52 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36291 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfKZPKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:10:52 -0500
-Received: by mail-qt1-f196.google.com with SMTP id y10so21746727qto.3;
-        Tue, 26 Nov 2019 07:10:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=s1e6R5LzISNI3RRfOMJIG7ybk8wvYFHMYA9iGjx9Lug=;
-        b=aX8cMxjiwRsH8dV2icZ1VyJaJS66qh0ltpBVpx7KR6uoCEyN/VxmJJgKFviDa+lBIb
-         NpRN4dVSED2QbqeF6kqmxce4vfxA014QCX72poJHh6Xf3Bl2xJyCArGcygRoG0Iis3FI
-         kCxtDirx+30qdh0xRhaNGWAx5J6PdSe5eAgDySPViexFdJYV2fxY0Dos3OX640DjvrIj
-         eif0gz412JhyQZHZd3BxFN0NXSjZM6QMnrl2xZhKSYrioa+iuhalB5nDpPduniuBuPLz
-         1oUx1juMcOBZ3f5yhQgZtJyy0VnGiTyyUfd1/fnISz4JXPWr6iqGKTaG7CSKKrxAWNzZ
-         AbGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=s1e6R5LzISNI3RRfOMJIG7ybk8wvYFHMYA9iGjx9Lug=;
-        b=MiJBlWgeiB0GfZHShu6HKSAvhM6/SwfW4R5bn4joKuDYlEVosGPmrGxO3aryLbtlle
-         8mGZ/p9SaybZNj1V00CgwRwr5ZloQAesnbHwKwEzZ6pZgMGyGhGfohgtg6CKrmAl3YK0
-         yyyNpEzuYRqD4hMle8UkweoJhmtrNWiFT34185f0IuecwNMwn8RuRtx5tAGUyvqF4/vo
-         QvKmhb0kDDz45NF3qsXsds25ADsK5iyOnGyDOKkPpLP0gG2Dv6CXMIRLwvaDTc8jWuyJ
-         vP0wj22wLWP49jEfL0Gl+ZO8yR5avt3+oYyfQiUVJyAJiK1KujcD0DljmE+JjzLXD06I
-         Y/SQ==
-X-Gm-Message-State: APjAAAVAc5jG/0VJtzYNVwltkpcuR1vczD3dFDoVAlHjai+MOKCJltgM
-        KgPUMHhAqqv2Lnk7w+6IgqY=
-X-Google-Smtp-Source: APXvYqzH5QpMTB24j6jx3odDXoCfM3tfuXsE5dasbM5Ddo1jOKR9U5ifpZXmu1yEbrfsnwBoUr7Xig==
-X-Received: by 2002:ac8:66d7:: with SMTP id m23mr25666497qtp.53.1574781049030;
-        Tue, 26 Nov 2019 07:10:49 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id c25sm5189708qkl.23.2019.11.26.07.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 07:10:47 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8A75A40D3E; Tue, 26 Nov 2019 12:10:45 -0300 (-03)
-Date:   Tue, 26 Nov 2019 12:10:45 -0300
-To:     Andrii Nakryiko <andriin@fb.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
-Message-ID: <20191126151045.GB19483@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 26 Nov 2019 10:14:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58184 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728078AbfKZPOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:14:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1E196B9ED;
+        Tue, 26 Nov 2019 15:14:18 +0000 (UTC)
+Message-ID: <1574781600.7677.2.camel@suse.cz>
+Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Doug Smythies <dsmythies@telus.net>,
+        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
+        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
+Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        'Mel Gorman' <mgorman@techsingularity.net>,
+        'Matt Fleming' <matt@codeblueprint.co.uk>,
+        'Viresh Kumar' <viresh.kumar@linaro.org>,
+        'Juri Lelli' <juri.lelli@redhat.com>,
+        'Paul Turner' <pjt@google.com>,
+        'Vincent Guittot' <vincent.guittot@linaro.org>,
+        'Quentin Perret' <qperret@qperret.net>,
+        'Dietmar Eggemann' <dietmar.eggemann@arm.com>
+Date:   Tue, 26 Nov 2019 16:20:00 +0100
+In-Reply-To: <000801d5a41e$a7fce2c0$f7f6a840$@net>
+References: <20191113124654.18122-1-ggherdovich@suse.cz>
+                 <20191113124654.18122-2-ggherdovich@suse.cz>
+                 <000001d5a29b$c944fd70$5bcef850$@net> <1574697961.16378.5.camel@suse.cz>
+         <000801d5a41e$a7fce2c0$f7f6a840$@net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
+> [...]
+> The issue with the schedutil governor not working properly in the 5.4 RC series
+> appears to be hardware dependant.
+> 
+> My test computer is Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz., Sandy Bridge.
+> On a temporary basis, I acquired a computer with an
+> Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz, Haswell,
+> and schedutil governor behaviour with the exact same kernels is fine:
+> 
+> That "gitsource" test, "make test" 6 times, first run thrown out:
+> 
+> Kernel 5.4 intel_cpufreq/schedutil: 3411.8 seconds
+> Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 1696.7 seconds
+> Ratio: 0.49
+> Recall you got a ratio of 0.49 with 5th generation, Broadwell.
 
-   While merging perf/core with mainline I found the problem below for
-which I'm adding this patch to my perf/core branch, that soon will go
-Ingo's way, etc. Please let me know if you think this should be handled
-some other way,
+It's good to hear that we're getting the same performance numbers for this
+patchset on all hardware that is not a Sandy Bridge. Thanks for double
+checking, independent verification is always valuable.
+
+Now, regarding the 5.4 regression for schedutil you see on Sandy Bridge: can
+we move this to the kernel bugzilla? Would you care to open a bug there and CC
+me to it? If it's reproducible we should assess it and see what can be done.
+
+I've tried gitsource on 5.3 versus 5.4, using intel_cpufreq + schedutil; I
+don't see the drop you're observing, but I don't have a Sandy Bridge readily
+available. This is what I see:
+
+Arithmetic mean of elapsed time for gitsource over 5 iterations (seconds):
+
+    microarch         v5.3 (baseline)                             v5.4
+    ------------------------------------------------------------------
+    Haswell         1337.84  +- 0.11%     1336.35  +- 0.12% (   0.11%)
+    Broadwell       1335.42  +- 0.08%     1352.54  +- 0.03% (  -1.28%)
+    Skylake          887.03  +- 1.02%      870.90  +- 1.19% (   1.82%)
+
+I'm looking around for a Sandy Bridge but I can make no promises at the
+moment.
+
 
 Thanks,
-
-- Arnaldo
-
-commit 94b2e22463f592d2161eb491ddb0b4659e2a91b4
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue Nov 26 11:46:08 2019 -0300
-
-    libbpf: Fix up generation of bpf_helper_defs.h
-    
-    Building perf as a detached tarball, i.e. by using one of:
-    
-      $ make help | grep perf
-        perf-tar-src-pkg    - Build perf-5.4.0.tar source tarball
-        perf-targz-src-pkg  - Build perf-5.4.0.tar.gz source tarball
-        perf-tarbz2-src-pkg - Build perf-5.4.0.tar.bz2 source tarball
-        perf-tarxz-src-pkg  - Build perf-5.4.0.tar.xz source tarball
-      $
-    
-    And then trying to build the resulting tarball, which is the first thing
-    that running:
-    
-      $ make -C tools/perf build-test
-    
-    does, ends up with these two problems:
-    
-      make[3]: *** No rule to make target '/tmp/tmp.zq13cHILGB/perf-5.3.0/include/uapi/linux/bpf.h', needed by 'bpf_helper_defs.h'.  Stop.
-      make[3]: *** Waiting for unfinished jobs....
-      make[2]: *** [Makefile.perf:757: /tmp/tmp.zq13cHILGB/perf-5.3.0/tools/lib/bpf/libbpf.a] Error 2
-      make[2]: *** Waiting for unfinished jobs....
-    
-    Because $(srcdir) points to the /tmp/tmp.zq13cHILGB/perf-5.3.0 directory
-    and we need '/tools/ after that variable, and after fixing this then we
-    get to another problem:
-    
-      /bin/sh: /home/acme/git/perf/tools/scripts/bpf_helpers_doc.py: No such file or directory
-      make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 127
-      make[3]: *** Deleting file 'bpf_helper_defs.h'
-        LD       /tmp/build/perf/libapi-in.o
-      make[2]: *** [Makefile.perf:778: /tmp/build/perf/libbpf.a] Error 2
-      make[2]: *** Waiting for unfinished jobs....
-    
-    Because this requires something outside the tools/ directories that gets
-    collected into perf's detached tarballs, to fix it just add it to
-    tools/perf/MANIFEST, which this patch does, now it works for that case
-    and also for all these other cases after doing a:
-    
-      $ make -C tools clean
-    
-    On a kernel sources directory:
-    
-      $ make -C tools/bpf/bpftool/
-      make: Entering directory '/home/acme/git/perf/tools/bpf/bpftool'
-    
-      Auto-detecting system features:
-      ...                        libbfd: [ on  ]
-      ...        disassembler-four-args: [ on  ]
-      ...                          zlib: [ on  ]
-    
-        CC       map_perf_ring.o
-      <SNIP>
-        CC       disasm.o
-      make[1]: Entering directory '/home/acme/git/perf/tools/lib/bpf'
-    
-      Auto-detecting system features:
-      ...                        libelf: [ on  ]
-      ...                           bpf: [ on  ]
-    
-        MKDIR    staticobjs/
-        CC       staticobjs/libbpf.o
-      <SNIP>
-        LD       staticobjs/libbpf-in.o
-        LINK     libbpf.a
-      make[1]: Leaving directory '/home/acme/git/perf/tools/lib/bpf'
-        LINK     bpftool
-      make: Leaving directory '/home/acme/git/perf/tools/bpf/bpftool'
-      $
-    
-      $ make -C tools/perf
-      <SNIP>
-      Auto-detecting system features:
-      ...                         dwarf: [ on  ]
-      ...            dwarf_getlocations: [ on  ]
-      ...                         glibc: [ on  ]
-      ...                          gtk2: [ on  ]
-      ...                      libaudit: [ on  ]
-      ...                        libbfd: [ on  ]
-      ...                        libcap: [ on  ]
-      ...                        libelf: [ on  ]
-      ...                       libnuma: [ on  ]
-      ...        numa_num_possible_cpus: [ on  ]
-      ...                       libperl: [ on  ]
-      ...                     libpython: [ on  ]
-      ...                     libcrypto: [ on  ]
-      ...                     libunwind: [ on  ]
-      ...            libdw-dwarf-unwind: [ on  ]
-      ...                          zlib: [ on  ]
-      ...                          lzma: [ on  ]
-      ...                     get_cpuid: [ on  ]
-      ...                           bpf: [ on  ]
-      ...                        libaio: [ on  ]
-      ...                       libzstd: [ on  ]
-      ...        disassembler-four-args: [ on  ]
-    
-        GEN      common-cmds.h
-        CC       exec-cmd.o
-        <SNIP>
-        CC       util/pmu.o
-        CC       util/pmu-flex.o
-        LD       util/perf-in.o
-        LD       perf-in.o
-        LINK     perf
-      make: Leaving directory '/home/acme/git/perf/tools/perf'
-      $
-    
-      $ make -C tools/lib/bpf
-      make: Entering directory '/home/acme/git/perf/tools/lib/bpf'
-    
-      Auto-detecting system features:
-      ...                        libelf: [ on  ]
-      ...                           bpf: [ on  ]
-    
-        HOSTCC   fixdep.o
-        HOSTLD   fixdep-in.o
-        LINK     fixdep
-      Parsed description of 117 helper function(s)
-        MKDIR    staticobjs/
-        CC       staticobjs/libbpf.o
-        CC       staticobjs/bpf.o
-        CC       staticobjs/nlattr.o
-        CC       staticobjs/btf.o
-        CC       staticobjs/libbpf_errno.o
-        CC       staticobjs/str_error.o
-        CC       staticobjs/netlink.o
-        CC       staticobjs/bpf_prog_linfo.o
-        CC       staticobjs/libbpf_probes.o
-        CC       staticobjs/xsk.o
-        CC       staticobjs/hashmap.o
-        CC       staticobjs/btf_dump.o
-        LD       staticobjs/libbpf-in.o
-        LINK     libbpf.a
-        MKDIR    sharedobjs/
-        CC       sharedobjs/libbpf.o
-        CC       sharedobjs/bpf.o
-        CC       sharedobjs/nlattr.o
-        CC       sharedobjs/btf.o
-        CC       sharedobjs/libbpf_errno.o
-        CC       sharedobjs/str_error.o
-        CC       sharedobjs/netlink.o
-        CC       sharedobjs/bpf_prog_linfo.o
-        CC       sharedobjs/libbpf_probes.o
-        CC       sharedobjs/xsk.o
-        CC       sharedobjs/hashmap.o
-        CC       sharedobjs/btf_dump.o
-        LD       sharedobjs/libbpf-in.o
-        LINK     libbpf.so.0.0.6
-        GEN      libbpf.pc
-        LINK     test_libbpf
-      make: Leaving directory '/home/acme/git/perf/tools/lib/bpf'
-      $
-    
-    Fixes: e01a75c15969 ("libbpf: Move bpf_{helpers, helper_defs, endian, tracing}.h into libbpf")
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexei Starovoitov <ast@kernel.org>
-    Cc: Andrii Nakryiko <andriin@fb.com>
-    Cc: Daniel Borkmann <daniel@iogearbox.net>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Martin KaFai Lau <kafai@fb.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Link: https://lkml.kernel.org/n/tip-4pnkg2vmdvq5u6eivc887wen@git.kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 99425d0be6ff..8ec6bc4e5e46 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -180,9 +180,9 @@ $(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
- $(BPF_IN_STATIC): force elfdep bpfdep bpf_helper_defs.h
- 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
- 
--bpf_helper_defs.h: $(srctree)/include/uapi/linux/bpf.h
-+bpf_helper_defs.h: $(srctree)/tools/include/uapi/linux/bpf.h
- 	$(Q)$(srctree)/scripts/bpf_helpers_doc.py --header 		\
--		--file $(srctree)/include/uapi/linux/bpf.h > bpf_helper_defs.h
-+		--file $(srctree)/tools/include/uapi/linux/bpf.h > bpf_helper_defs.h
- 
- $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
- 
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 70f1ff4e2eb4..4934edb5adfd 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -19,3 +19,4 @@ tools/lib/bitmap.c
- tools/lib/str_error_r.c
- tools/lib/vsprintf.c
- tools/lib/zalloc.c
-+scripts/bpf_helpers_doc.py
+Giovanni
