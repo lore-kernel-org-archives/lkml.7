@@ -2,100 +2,95 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F89C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368BC2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CDD2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:46:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Z3qXzv/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfKZVpc (ORCPT
+        id S1726987AbfKZVp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 16:45:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:39712 "EHLO foss.arm.com"
+        Tue, 26 Nov 2019 16:45:59 -0500
+Received: from vps.xff.cz ([195.181.215.36]:45622 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfKZVpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 16:45:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59F5431B;
-        Tue, 26 Nov 2019 13:45:31 -0800 (PST)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37D3B3F52E;
-        Tue, 26 Nov 2019 13:45:26 -0800 (PST)
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
- <20191123165108.GA15306@ubuntu-x2-xlarge-x86> <20191125074412.GA30595@lst.de>
- <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
- <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <935d65b4-a28e-d7b9-7392-42fec71b5150@arm.com>
-Date:   Tue, 26 Nov 2019 21:45:19 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726033AbfKZVp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:45:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1574804757; bh=ayuTHAY+hrJkpnkLRJINl7ENLTS1Zur7p3Jq1ISHp2Q=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=Z3qXzv/O3SYbEixrKlvHyyL09gNT5vLKKJjl/vq4otAMu+mlquQJ8a5wAj/cJVsWm
+         ETm6Op5i2/z21fDH0kyV3qIJebXojimVr9xu4wTr5oKJdVdBFNHgZTERYd1M92RN11
+         1nuZ4j/aPHycRyuJDFoiPjjx1Xv2F3TK/cjuRU+U=
+Date:   Tue, 26 Nov 2019 22:45:57 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] arm: Fix topology setup in case of CPU hotplug for
+ CONFIG_SCHED_MC
+Message-ID: <20191126214557.53afmorihwqimq2n@core.my.home>
+Mail-Followup-To: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20191120104212.14791-1-dietmar.eggemann@arm.com>
+ <20191124214753.m6lwcdemnddltctw@core.my.home>
+ <50dfafee-55c3-767c-55f4-7d263feafe87@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50dfafee-55c3-767c-55f4-7d263feafe87@arm.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-26 6:51 pm, Nicolas Saenz Julienne wrote:
-> On Mon, 2019-11-25 at 16:33 +0000, Robin Murphy wrote:
->> On 25/11/2019 7:44 am, Christoph Hellwig wrote:
->>> On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
->>>> Just as an FYI, this introduces a warning on arm32 allyesconfig for me:
->>>
->>> I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
->>> and/or we need to use min_t and open code the zero exception.
->>>
->>> Robin, Nicolas - any opinions?
->>
->> Yeah, given that it's always held a mask I'm not entirely sure why it
->> was ever a dma_addr_t rather than a u64. Unless anyone else is desperate
->> to do it I'll get a cleanup patch ready for rc1.
+On Tue, Nov 26, 2019 at 11:42:02AM +0100, Dietmar Eggemann wrote:
+> On 24/11/2019 22:47, Ondřej Jirman wrote:
+> > Hello,
+> > 
+> > On Wed, Nov 20, 2019 at 10:42:12AM +0000, Dietmar Eggemann wrote:
 > 
-> Sounds good to me too
+> [...]
 > 
-> Robin, since I started the mess, I'll be happy to do it if it helps offloading
-> some work from you.
+> >> Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
+> >> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> > 
+> > This fixes CPU hotplug and correspondent suspend to ram/resume failures (that
+> > disables and re-enables non-boot CPUs) on A83T SoC, that I've seen since
+> > 5.4-rc1.
+> > 
+> > Tested-by: Ondrej Jirman <megous@megous.com>
+> 
+> Thanks for testing! Which Cpufreq driver is your system using?
 
-No worries - your change only exposed my original weird decision ;)  On 
-second look the patch was literally a trivial one-liner, so I've written 
-it up already.
+Hello,
 
-Cheers,
-Robin.
+it's using cpufreq-dt.
+
+regards,
+	o.
+
+> [...]
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
