@@ -2,102 +2,121 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B201DC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0243FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BD220722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CE020722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfKZPOU (ORCPT
+        id S1728426AbfKZPRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:14:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58184 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728078AbfKZPOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:14:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1E196B9ED;
-        Tue, 26 Nov 2019 15:14:18 +0000 (UTC)
-Message-ID: <1574781600.7677.2.camel@suse.cz>
-Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Doug Smythies <dsmythies@telus.net>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        'Mel Gorman' <mgorman@techsingularity.net>,
-        'Matt Fleming' <matt@codeblueprint.co.uk>,
-        'Viresh Kumar' <viresh.kumar@linaro.org>,
-        'Juri Lelli' <juri.lelli@redhat.com>,
-        'Paul Turner' <pjt@google.com>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Quentin Perret' <qperret@qperret.net>,
-        'Dietmar Eggemann' <dietmar.eggemann@arm.com>
-Date:   Tue, 26 Nov 2019 16:20:00 +0100
-In-Reply-To: <000801d5a41e$a7fce2c0$f7f6a840$@net>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>
-                 <20191113124654.18122-2-ggherdovich@suse.cz>
-                 <000001d5a29b$c944fd70$5bcef850$@net> <1574697961.16378.5.camel@suse.cz>
-         <000801d5a41e$a7fce2c0$f7f6a840$@net>
+        Tue, 26 Nov 2019 10:17:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:43525 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKZPRU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:17:20 -0500
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MVMuN-1iPy3M0KGt-00SOwi; Tue, 26 Nov 2019 16:17:19 +0100
+Received: by mail-qt1-f181.google.com with SMTP id g24so14935877qtq.11;
+        Tue, 26 Nov 2019 07:17:18 -0800 (PST)
+X-Gm-Message-State: APjAAAWlOMxg2m1wJLcQko27lt+38k48KbL8bLdvzsH9Uizn7Id0gdZX
+        vUQQsm5URLXWYZBpyic13JK9vSuDV3HKlBu5fUk=
+X-Google-Smtp-Source: APXvYqzUEPEopV0Ugxt4XdWNrM2MToy3D7wA7iQbahz/Jhe6h/k32GzRehmUjTN89ZFA8HW1/BzHhS3cHxV+K7Tb4iA=
+X-Received: by 2002:ac8:75c4:: with SMTP id z4mr34578070qtq.142.1574781437904;
+ Tue, 26 Nov 2019 07:17:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20191111203835.2260382-1-arnd@arndb.de> <20191111203835.2260382-7-arnd@arndb.de>
+ <d54c82b5-21b7-2d5e-ad0b-206527ad2768@xs4all.nl> <CAK8P3a0rom6x4X8eH0zknfZ5=6_rrXGKGR4H+RiY4SWKbXfp=g@mail.gmail.com>
+ <2271665b-f890-802f-eba8-0da43867d81f@xs4all.nl>
+In-Reply-To: <2271665b-f890-802f-eba8-0da43867d81f@xs4all.nl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 26 Nov 2019 16:17:01 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a35r0hEnjKOc8LQRr+v3xo-kxWQ5VhxZoT=tjQHcs4-yA@mail.gmail.com>
+Message-ID: <CAK8P3a35r0hEnjKOc8LQRr+v3xo-kxWQ5VhxZoT=tjQHcs4-yA@mail.gmail.com>
+Subject: Re: [PATCH v4 6/8] media: v4l2-core: fix v4l2_buffer handling for
+ time64 ABI
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Ldv/hjNbpKdwPkiLXzdN7t4WpgL9yaZhcKpGj33mbaBNiYSRv4Q
+ StRtpIBB9/pi3ejvSbBLBCi745/3H4jJgh13a/7VtNEjNLfQ6wK6axFrKOTX3Pq4PZ28hbP
+ YDCV/8E/XD3kp0KhiseOV/obbKpGz3CX6s0mSStM1T5rjxiJQmI9ALAnCN/TC9qFUNVp6UZ
+ gZFq1d5xn1lolGBkkmhhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nZyQ59IwBTU=:kOxMEcV4H2vu3HgF/yosIK
+ kFYOdZvqdxff5HvQ7+Rr6G2+FFFmwQjCUrwIui2L6VgY5qr/AWRWPhQJ5thBvuL8+nSeVO79R
+ nCp0HrnmR35fEhpp4Oab0FXY/EqNN66L5RGQeDn+XIFmdBH3zcGjdCq5P/knA3mc+1uctQvH8
+ mQjbCk++171EUujLHoPTge8VfY4G4hKbAEMIJELRfqyoQqWAnCygjFeDhc3eKCUK9wtU81ZkD
+ GqCFjD3nFG3Ejj3GwkhtAOoOHgKEIB8NoIKekxhDNmbB1cuvb1ET9FlgX4nqbltKP0f5OT3KB
+ F46F4fPg31vzN24GV58hSy2ffLwYBAFZvn3uTVgqIzGVbmfWUKNUkzfL8312GARvgT22OWb9b
+ PTK+tMK5PeN8BU3fe9JtT9nsnh7Fz653bRZx3q0adgrkcTBbPjCsFzENoh9anAuPX95gmbqO2
+ qylvKPF+DXDCjYic6lrFBSE5S91hMkmisM1M6+WCHLyNgnu3utHoBlHng21MHIr1wWVnITaXT
+ X8Q+P1z8FFNFmvMDjUDLKSA1zc0t1kwZLuajcJ0u+okEgeJG89QtdRmebw1wGmB4zynRnCWrD
+ hQZUSSzpDKhIElSEQshRlyZAyi0z61jPhgCQiGOuLENoktg//YfaaZ2TobqBstzkRWcvReEam
+ aG1WXKRguS5m5ipEof690diB5Q5i578HfiOmf3n/SMo26NeepTQCSaoBeBU9PIbhbsEMvJs1i
+ Btskl0Kfu4dU6h0rYGvoB90oxBhb6dPeuJT5l7dUJ+nKOUibGxITus92kS+IERhGcfSlpvnnX
+ QSa0hnZWYO9sZbDQt/sDA/gl/qg3/K1NAsb3xXCdPQz5WPd4DRxgcdQcit6VOPAUPSL4DS/BX
+ MOeIrgzvUCkxeUoYGLMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
-> [...]
-> The issue with the schedutil governor not working properly in the 5.4 RC series
-> appears to be hardware dependant.
-> 
-> My test computer is Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz., Sandy Bridge.
-> On a temporary basis, I acquired a computer with an
-> Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz, Haswell,
-> and schedutil governor behaviour with the exact same kernels is fine:
-> 
-> That "gitsource" test, "make test" 6 times, first run thrown out:
-> 
-> Kernel 5.4 intel_cpufreq/schedutil: 3411.8 seconds
-> Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 1696.7 seconds
-> Ratio: 0.49
-> Recall you got a ratio of 0.49 with 5th generation, Broadwell.
+On Tue, Nov 26, 2019 at 3:15 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> Then use that in the struct v4l2_buffer definition:
+>
+> struct v4l2_buffer {
+> ...
+> #ifdef __KERNEL__
+>         struct __kernel_v4l2_timeval timestamp;
+> #else
+>         struct timeval               timestamp;
+> #endif
+>
+> That keeps struct v4l2_buffer fairly clean. And it also makes it
+> possible to have a bit more extensive documentation for the
+> struct __kernel_v4l2_timeval without polluting the actual struct
+> v4l2_buffer definition.
 
-It's good to hear that we're getting the same performance numbers for this
-patchset on all hardware that is not a Sandy Bridge. Thanks for double
-checking, independent verification is always valuable.
+Yes, good idea. I've added this version now:
 
-Now, regarding the 5.4 regression for schedutil you see on Sandy Bridge: can
-we move this to the kernel bugzilla? Would you care to open a bug there and CC
-me to it? If it's reproducible we should assess it and see what can be done.
+#ifdef __KERNEL__
+/*
+ * This corresponds to the user space version of timeval
+ * for 64-bit time_t. sparc64 is different from everyone
+ * else, using the microseconds in the wrong half of the
+ * second 64-bit word.
+ */
+struct __kernel_v4l2_timeval {
+        long long       tv_sec;
+#if defined(__sparc__) && defined(__arch64__)
+        int             tv_usec;
+        int             __pad;
+#else
+        long long       tv_usec;
+#endif
+};
+#endif
 
-I've tried gitsource on 5.3 versus 5.4, using intel_cpufreq + schedutil; I
-don't see the drop you're observing, but I don't have a Sandy Bridge readily
-available. This is what I see:
+I briefly considered using #else #define __kernel_v4l2_timeval timeval
+to avoid the second #ifdef, but went back to your version again
+for clarify.
 
-Arithmetic mean of elapsed time for gitsource over 5 iterations (seconds):
+> The videodev2.h header is something users of the API look at a
+> lot and having this really ugly kernel timestamp in there is
+> not acceptably IMHO. But splitting it off should work.
 
-    microarch         v5.3 (baseline)                             v5.4
-    ------------------------------------------------------------------
-    Haswell         1337.84  +- 0.11%     1336.35  +- 0.12% (   0.11%)
-    Broadwell       1335.42  +- 0.08%     1352.54  +- 0.03% (  -1.28%)
-    Skylake          887.03  +- 1.02%      870.90  +- 1.19% (   1.82%)
+Do you also mean moving it into a separate header file, or
+just outside of struct v4l2_buffer? Since it's hidden in #ifdef
+__KERNEL__, it could be moved to media/ioctl.h or elsewhere.
 
-I'm looking around for a Sandy Bridge but I can make no promises at the
-moment.
-
-
-Thanks,
-Giovanni
+      Arnd
