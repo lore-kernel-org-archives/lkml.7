@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CBFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB94C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2776420684
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A8520684
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfKZNNt (ORCPT
+        id S1728054AbfKZNNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:13:49 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:58262 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbfKZNNs (ORCPT
+        Tue, 26 Nov 2019 08:13:51 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57094 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbfKZNNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:13:48 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+        Tue, 26 Nov 2019 08:13:49 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,40 +31,40 @@ Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: RLiREbYPvJ902cWhjgahOb4zAmi3QZKEQRg13wnmQvG9mv80OlWKzU9h9qnGtkBhrhMdeitkBD
- RkpKOkRzUaxkH9OdMb13asHWVe/Om29PicoJ3TSAYP4/TJnOJ+wiO0G+EtYQAdX6PoeKeGTfyK
- Ljix1JWUhuA3/pGieMkyADgTGlA02jqz5uAfy3LpZekD74QquL4KCpIAk1iu6jZG0dA+J9lC3+
- pZMXj8huNO3XBVL0FNoWCt+ybv/TD0LtYC0P9GSHiP3VQmeAMeJpFZ4DpvEFvj1yHF1tNGtnG1
- KUw=
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: qkaD5uxPEuhKoidwTC91M3mm15H1qncY/2n2QZ1gBzFMByQzsr7gC605FkbpiARBF0ChGBlmkU
+ Ok3tyxJBI63SmXNAaRvY6XHzlamO9beDUNQR02MaMRoE+Uk9UI9+YWkhc1wvuvFHB6++mjJ98c
+ vsQKYK6qrTHKtJSFj56Da8oMj+YBxOkKSP7e61+U+13Ag6AFKc6eK5zyZgsuAzpm+BY3YrH8UZ
+ xuOJeXr1RKMeHJem6qdqAQbUxO5AmXLAOf1r7lyf06gSLjhBDKDpdfedFgrNXibtTquoPtuXTj
+ omI=
 X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="56919615"
+   d="scan'208";a="58391186"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:48 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:48 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 26 Nov 2019 06:13:27 -0700
+ 15.1.1713.5; Tue, 26 Nov 2019 06:13:32 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:24 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:30 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
         <sre@kernel.org>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v2 13/17] ARM: at91/defconfig: enable config flag for I2S Multi-channel
-Date:   Tue, 26 Nov 2019 15:12:17 +0200
-Message-ID: <1574773941-20649-14-git-send-email-claudiu.beznea@microchip.com>
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH v2 15/17] ARM: at91/defconfig: enable config flag for SAMA5D2's ADC
+Date:   Tue, 26 Nov 2019 15:12:19 +0200
+Message-ID: <1574773941-20649-16-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
@@ -75,28 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Enable config flag for I2S Multi-channel. This IP available on SAM9X60
-SoC.
+Enable config flag for SAMA5D2's ADC. This IP is available on
+SAM9X60 SoC.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
  arch/arm/configs/at91_dt_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index 89ab64ce295a..7cc27fad0114 100644
+index b76e9741909c..011400f926b0 100644
 --- a/arch/arm/configs/at91_dt_defconfig
 +++ b/arch/arm/configs/at91_dt_defconfig
-@@ -140,6 +140,7 @@ CONFIG_SND_ATMEL_SOC=y
- CONFIG_SND_AT91_SOC_SAM9G20_WM8731=y
- CONFIG_SND_ATMEL_SOC_WM8904=y
- CONFIG_SND_AT91_SOC_SAM9X5_WM8731=y
-+CONFIG_SND_MCHP_SOC_I2S_MCC=y
- CONFIG_USB=y
- CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
- CONFIG_USB_EHCI_HCD=y
+@@ -177,6 +177,7 @@ CONFIG_AT_XDMAC=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_IIO=y
+ CONFIG_AT91_ADC=y
++CONFIG_AT91_SAMA5D2_ADC=y
+ CONFIG_PWM=y
+ CONFIG_PWM_ATMEL=y
+ CONFIG_PWM_ATMEL_HLCDC_PWM=y
 -- 
 2.7.4
 
