@@ -2,96 +2,108 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5EAC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E15C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9C620727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CA8207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574811459;
-	bh=+Mdzm22zPeF5+afyhd9ngmeJjwhXyMQ7rcNDgR7rfDg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=X9CnDasL6r73iLI14nYJc5LfnUj7S8K5+6mkmC53O9lI2fMUdEDpQVpVDroBL4yhU
-	 eWnQ9BAQy6rndDg5/H+th+gwh9GHTV1HEjj85V1VZ4z6A8qcmEuJ0MWfpR1LPJUi0A
-	 rhqI0ejsbxdBMgZ/XnXudoaOUHNL6Mb0Zlm9ZPCI=
+	s=default; t=1574811746;
+	bh=xEjJUKBizA1h6LRBMtaK8Yxgw1yJRoT2MEgw3AULkzA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q+TyHf++bm+4qEtcWUhJSXB7UMmHgUr3Yam3695XXwgF2mfaZx0xWHIFvyl2IcdCG
+	 jLfnoqx5kqHXsYopiSs4L6s7UNF/W0GJcRWnQoj1yTHHgzAer/VG/a/TMPDOiTV6RC
+	 txWq2hjXzMKF9xUa5KTqK+Nafhl7estGED/n1wV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKZXhi (ORCPT
+        id S1726980AbfKZXmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 18:37:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42818 "EHLO mail.kernel.org"
+        Tue, 26 Nov 2019 18:42:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfKZXhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 18:37:37 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726380AbfKZXmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 18:42:24 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD951206CC;
-        Tue, 26 Nov 2019 23:37:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 851E620722;
+        Tue, 26 Nov 2019 23:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574811457;
-        bh=+Mdzm22zPeF5+afyhd9ngmeJjwhXyMQ7rcNDgR7rfDg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WfrUfCU8uRk9dUy01UDr4rVnfRyGrzkUmm8ZkU5FIzmuWdMEut37iCOLiUna8KlcD
-         BsNAJq/wnZjD2QhjxTS2FvwNBNVkFs2vLSns2HO+EI7nhzh4086zq0rKCXbspDfYuq
-         9QTwzIetDCnXyC8HsWK3NPe/O0vVDeg+ezwajnKM=
-Date:   Tue, 26 Nov 2019 17:37:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
-Message-ID: <20191126233735.GA215993@google.com>
+        s=default; t=1574811744;
+        bh=xEjJUKBizA1h6LRBMtaK8Yxgw1yJRoT2MEgw3AULkzA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aRkJ6rT6U1vHnAJ2d4iODgs3b02SQL3IHxWCTB1G7ewih9k0mtV7fKZTF9xVTY77P
+         aOLKfi2R54xr+px0UbkF4UAgZakgQ5Bc0yZU9fz9Y2yRgX7bAcRmc6dhAysPkANY1A
+         L2Ny12AQg6tnhCEY9urLWTEVcLnwnsTM6tt5e+D4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BUGFIX PATCH v4.1 2/4] selftests/ftrace: Fix ftrace test cases to check unsupported
+Date:   Wed, 27 Nov 2019 08:42:21 +0900
+Message-Id: <157481174125.14250.15128095352741182690.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191127083123.0257d2c450bfd87b0691300d@kernel.org>
+References: <20191127083123.0257d2c450bfd87b0691300d@kernel.org>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7ac93e3-9a1f-2cd5-bf0b-30b562bd707d@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 03:03:23PM -0600, Stuart Hayes wrote:
-> 
-> On 11/12/19 3:59 PM, Stuart Hayes wrote:
-> > The pciehp interrupt handler pciehp_isr() will read the slot status
-> > register and then write back to it to clear just the bits that caused the
-> > interrupt. If a different interrupt event bit gets set between the read and
-> > the write, pciehp_isr() will exit without having cleared all of the
-> > interrupt event bits, so we will never get another hotplug interrupt from
-> > that device.
-> > 
-> > That is expected behavior according to the PCI Express spec (v.5.0, section
-> > 6.7.3.4, "Software Notification of Hot-Plug Events").
-> > 
-> > Because the "presence detect changed" and "data link layer state changed"
-> > event bits are both getting set at nearly the same time when a device is
-> > added or removed, this is more likely to happen than it might seem. The
-> > issue can be reproduced rather easily by connecting and disconnecting an
-> > NVMe device on at least one system model.
-> > 
-> > This patch fixes the issue by modifying pciehp_isr() to loop back and
-> > re-read the slot status register immediately after writing to it, until
-> > it sees that all of the event status bits have been cleared.
-> > 
-> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> 
-> Bjorn,
-> 
-> Do you have any comments or issues with this patch set?  Anything I can do?
+Since dynamic function tracer can be disabled, set_ftrace_filter
+can be disappeared. Test cases which depends on it, must check
+whether the set_ftrace_filter exists or not before testing
+and if not, return as unsupported.
 
-Were you planning to address Lukas' comments?
+Also, if the function tracer itself is disabled, we can not
+set "function" to current_tracer. Test cases must check it
+before testing, and return as unsupported.
 
-https://lore.kernel.org/r/20191114025022.wz3gchr7w67fjtzn@wunner.de
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ Changes in v4.1
+  - Add double-quote to "function" word for checkbashisms clean
+    (Thanks Steve!)
+---
+ .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |    2 ++
+ .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    5 +++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc
+index 36fb59f886ea..1a52f2883fe0 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc
+@@ -3,6 +3,8 @@
+ # description: ftrace - stacktrace filter command
+ # flags: instance
+ 
++[ ! -f set_ftrace_filter ] && exit_unsupported
++
+ echo _do_fork:stacktrace >> set_ftrace_filter
+ 
+ grep -q "_do_fork:stacktrace:unlimited" set_ftrace_filter
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
+index 86a1f07ef2ca..71fa3f49e35e 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
+@@ -15,6 +15,11 @@ if [ $NP -eq 1 ] ;then
+   exit_unresolved
+ fi
+ 
++if ! grep -q "function" available_tracers ; then
++  echo "Function trace is not enabled"
++  exit_unsupported
++fi
++
+ ORIG_CPUMASK=`cat tracing_cpumask`
+ 
+ do_reset() {
+
