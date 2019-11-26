@@ -2,79 +2,83 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1763C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4058C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B5E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D16820835
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 18:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574791280;
+	bh=omsnWS1CdzFSYWPwB5Bc/IkaXklFcCy9SMZZUTRYQzs=;
+	h=In-Reply-To:References:Subject:Cc:From:To:Date:List-ID:From;
+	b=FxbezKH2RNzeN/lNNMgpZ+vIFsogYy3Fww/w8GmZoK6ujaE3UfkGvFWnG2roH4Ztz
+	 8DaSaHI6Yr2SiUCmZm2JB+CuhfIEIv0QwKOkCM7S5kU7HcKrZHAX+280dSQuLBF2YI
+	 XiKTBRWh7Gsl/kdToI08qGWV+4zJDjT6wb4pagmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfKZR6q (ORCPT
+        id S1726232AbfKZSBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42360 "EHLO mail.kernel.org"
+        Tue, 26 Nov 2019 13:01:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbfKZR6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:58:46 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725870AbfKZSBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 13:01:19 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C82C32073F;
-        Tue, 26 Nov 2019 17:49:02 +0000 (UTC)
-Date:   Tue, 26 Nov 2019 12:49:01 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH v4 2/4] selftests/ftrace: Fix ftrace test cases
- to check unsupported
-Message-ID: <20191126124901.22ae2f9f@gandalf.local.home>
-In-Reply-To: <157475726452.3389.3778488615487716476.stgit@devnote2>
-References: <157475724667.3389.15752644047898709246.stgit@devnote2>
-        <157475726452.3389.3778488615487716476.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id C76792071A;
+        Tue, 26 Nov 2019 18:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574791278;
+        bh=omsnWS1CdzFSYWPwB5Bc/IkaXklFcCy9SMZZUTRYQzs=;
+        h=In-Reply-To:References:Subject:Cc:From:To:Date:From;
+        b=HaNfuNJCXCkhjrwWON6HDO91gUx5c4vNMR1sAm696rb63zkQZGtqM9XDdnHUzfvDM
+         poIJW3DSg7GABxuFVkdWdUSOzGHr2qgxLOpo+OnNLsFXYxwWIe5EEvWGuqaIUhfbJu
+         9owrAiqtUMfRkBfEhno9SjyQg7ED2+XEezweAKJk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACPK8XchwGdgE95jkdhwWbp0r+NHge7W3q6yQp-wzfxV3Kpajg@mail.gmail.com>
+References: <20191010020655.3776-1-andrew@aj.id.au> <20191010020655.3776-3-andrew@aj.id.au> <CACPK8Xcrc_2itUcGw6caa8Fp3sJE8oHBO5LJgBtqScwmVAuHJw@mail.gmail.com> <CACPK8XchwGdgE95jkdhwWbp0r+NHge7W3q6yQp-wzfxV3Kpajg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] clk: aspeed: Add RMII RCLK gates for both AST2500 MACs
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>
+User-Agent: alot/0.8.1
+Date:   Tue, 26 Nov 2019 10:01:17 -0800
+Message-Id: <20191126180118.C76792071A@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 17:34:24 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+Quoting Joel Stanley (2019-11-25 16:59:19)
+> Hi Stephen,
+>=20
+> On Thu, 10 Oct 2019 at 23:41, Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > On Thu, 10 Oct 2019 at 02:06, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > RCLK is a fixed 50MHz clock derived from HPLL that is described by a
+> > > single gate for each MAC.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> >
+> > Reviewed-by: Joel Stanley <joel@jms.id.au>
+>=20
+> I noticed this one hasn't been applied to clk-next.
+>=20
 
-> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-> @@ -15,6 +15,11 @@ if [ $NP -eq 1 ] ;then
->    exit_unresolved
->  fi
->  
-> +if ! grep -q function available_tracers ; then
-> +  echo "Function trace is not enabled"
-> +  exit_unsupported
-> +fi
-> +
->  ORIG_CPUMASK=`cat tracing_cpumask`
+It's marked awaiting upstream in my UI. I think it was some patch that
+might have come through your PR?
 
-Strange, but the bashism test failed:
-
-++ checkbashisms /work/git-local/linux.git/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-possible bashism in /work/git-local/linux.git/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc line 18 ('function' is useless):
-if ! grep -q function available_tracers ; then
-
-Not sure why it did not like that line. Maybe my bashism check got
-confused by the key word "function"?
-
-Yep!
-
-By adding quotes around "function" it doesn't complain:
-
-	if ! grep -q "function" available_tracers ; then
-
-May need to add that.
-
--- Steve
