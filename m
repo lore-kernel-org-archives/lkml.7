@@ -2,130 +2,204 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DC0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAC2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323A620684
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40F62071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTCV7l3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfKZNOC (ORCPT
+        id S1728089AbfKZNOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:14:02 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:58371 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727919AbfKZNNh (ORCPT
+        Tue, 26 Nov 2019 08:14:36 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41304 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfKZNOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:13:37 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: HvAKchbGV88FB+zAlabJ3RKBo9W7UpAfSytciBLAz8fMbbvanBP86q/jUwxh23FaKgo7LRyEN/
- KjI6AY9717krWmGPs8R5A3jpf0UkrfTWlhYO3csn1oNsfw36ThP3toOvh7MCK+0gc5WwLxuYs2
- u8NjZmBdfpmNhI/hmpzZVpK1LPuWJtjiSyNxd6Ult90/ZHx50Hcrz7XYlFZNCOJGvhKrOA3bi8
- Ht+hLoTlFzobNISwOjGrEa8Adyc6lp13heTrP8xUt/K2jTo+GZfIiwowJxq252IFxPJobKo2p3
- eVU=
-X-IronPort-AV: E=Sophos;i="5.69,245,1571727600"; 
-   d="scan'208";a="59777367"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Nov 2019 06:13:20 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 26 Nov 2019 06:13:11 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 26 Nov 2019 06:13:08 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <sre@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 07/17] ARM: at91: Kconfig: add config flag for SAM9X60 SoC
-Date:   Tue, 26 Nov 2019 15:12:11 +0200
-Message-ID: <1574773941-20649-8-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1574773941-20649-1-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 26 Nov 2019 08:14:36 -0500
+Received: by mail-qt1-f193.google.com with SMTP id 59so15805245qtg.8;
+        Tue, 26 Nov 2019 05:14:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cpPxka1Pl27l5pcH6nCC6OburpGArFz8nhEvihO8xNg=;
+        b=jTCV7l3jNyoKkSnavBxPWKG7xXbsf4keKse9VtmD0UNTC7nV5MSXLWHd0M21Su28JI
+         RpeGYfG41qyscMKZaydg8jOFeUnbC8By/o4moFV0MxKGBx+nGucowfb5GB0L3APzWQyq
+         9EGHVmXTkopcYKenWF9Wz3O7zkODFY1CUH9T7xHEEj6/BGMC57yPd2rGbwUYdnURqSO5
+         rIStZs8MhXX+xgyXc/vzRekBA7FhIvpi4pGN5YfNBQ6vUrw4vlRJJ4OK3E8FoqJMWqBk
+         BXvtjClTgFEqzClQ4/ndvqzvyxUVegh0KnhdNNxYGatBtVopF6N0lCOKbsw5MXCnn+aR
+         6Y6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cpPxka1Pl27l5pcH6nCC6OburpGArFz8nhEvihO8xNg=;
+        b=kDFWXknBSDU+gejcZQxQk1XmiMexRNwh7ZsHNzS6xNotHSrSJocNMxoHJzFhB45sn+
+         WkkWv+h6TzO02MvAdeQpNMaD0FbddhE/MYrVM2ds0GBSQ6pi+ZdBhJAavOd04Sf1S0vp
+         VKwTMcu6s00iiARQ5H19hkSYLvzO1wHntRc5h0ZSqThYGS9ESPKAHJ9iTo58x717nezG
+         RzTtNjDxWYRiysVxyd2IYHfV0FE66i90eokWs7z0mSiy9g8EBqu1VXcyZ3Qlo2T0IrYQ
+         PaaR6Pw1uYfVE4WTWgKAv+3Nbp9s/fPgktAUe4SZzhAJgvfw9C+A8hsipTqswZN7uFhy
+         7TzQ==
+X-Gm-Message-State: APjAAAVF5i2o8tu2nw89QA2CRSZgTCwZEMDL5Z7zaGqUwGv54K/4qBIO
+        8yj7U/0SZLrlFpsRJGO7MxdpAdaphVT6iZDTFtU=
+X-Google-Smtp-Source: APXvYqzvpjLjGloa05lw3i6I7fgHo/R4gvZ+aD1eq+3S4tCNKb5dQ6Noemh342gMN8vs6C7Xgr0E0nChjCjoOogvPVg=
+X-Received: by 2002:ac8:1bed:: with SMTP id m42mr17979158qtk.359.1574774074441;
+ Tue, 26 Nov 2019 05:14:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <mhng-0a2f9574-9b23-4f26-ae76-18ed7f2c8533@palmer-si-x1c4>
+ <87d0yoizv9.fsf@xps13.shealevy.com> <87zi19gjof.fsf@xps13.shealevy.com>
+In-Reply-To: <87zi19gjof.fsf@xps13.shealevy.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Tue, 26 Nov 2019 14:14:22 +0100
+Message-ID: <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Load modules within relative jump range of the
+ kernel text.
+To:     Shea Levy <shea@shealevy.com>
+Cc:     linux-riscv@lists.infradead.org, albert@sifive.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add config flag for SAM9X60 SoC.
+On Wed, 9 May 2018 at 13:22, Shea Levy <shea@shealevy.com> wrote:
+>
+> Hi Palmer,
+>
+> Shea Levy <shea@shealevy.com> writes:
+>
+> > Hi Palmer,
+> >
+> > Palmer Dabbelt <palmer@sifive.com> writes:
+> >
+> >> On Sun, 22 Apr 2018 05:53:56 PDT (-0700), shea@shealevy.com wrote:
+> >>> Hi Palmer,
+> >>>
+> >>> Shea Levy <shea@shealevy.com> writes:
+> >>>
+> >>>> Signed-off-by: Shea Levy <shea@shealevy.com>
+> >>>> ---
+> >>>>
+> >>>> Note that this patch worked in my old modules patchset and seems to =
+be
+> >>>> working now, but my kernel boot locks up on top of
+> >>>> riscv-for-linus-4.17-mw0 and I don't know if it's due to this patch =
+or
+> >>>> something else that's changed in the mean time.
+> >>>>
+> >>>> ---
+> >>>>  arch/riscv/include/asm/pgtable.h |  9 +++++++++
+> >>>>  arch/riscv/kernel/module.c       | 11 +++++++++++
+> >>>>  2 files changed, 20 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/a=
+sm/pgtable.h
+> >>>> index 16301966d65b..b08ded13364a 100644
+> >>>> --- a/arch/riscv/include/asm/pgtable.h
+> >>>> +++ b/arch/riscv/include/asm/pgtable.h
+> >>>> @@ -25,6 +25,7 @@
+> >>>>  #include <asm/page.h>
+> >>>>  #include <asm/tlbflush.h>
+> >>>>  #include <linux/mm_types.h>
+> >>>> +#include <linux/sizes.h>
+> >>>>
+> >>>>  #ifdef CONFIG_64BIT
+> >>>>  #include <asm/pgtable-64.h>
+> >>>> @@ -425,6 +426,14 @@ static inline void pgtable_cache_init(void)
+> >>>>  #define TASK_SIZE VMALLOC_START
+> >>>>  #endif
+> >>>>
+> >>>> +/*
+> >>>> + * The module space lives between the addresses given by TASK_SIZE
+> >>>> + * and PAGE_OFFSET - it must be within 2G of the kernel text.
+> >>>> + */
+> >>>> +#define MODULES_SIZE              (SZ_128M)
+> >>>> +#define MODULES_VADDR             (PAGE_OFFSET - MODULES_SIZE)
+> >>>> +#define MODULES_END               (VMALLOC_END)
+> >>>> +
+> >>>>  #include <asm-generic/pgtable.h>
+> >>>>
+> >>>>  #endif /* !__ASSEMBLY__ */
+> >>>> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+> >>>> index 5dddba301d0a..1b382c7de095 100644
+> >>>> --- a/arch/riscv/kernel/module.c
+> >>>> +++ b/arch/riscv/kernel/module.c
+> >>>> @@ -16,6 +16,8 @@
+> >>>>  #include <linux/err.h>
+> >>>>  #include <linux/errno.h>
+> >>>>  #include <linux/moduleloader.h>
+> >>>> +#include <linux/vmalloc.h>
+> >>>> +#include <asm/pgtable.h>
+> >>>>
+> >>>>  static int apply_r_riscv_64_rela(struct module *me, u32 *location, =
+Elf_Addr v)
+> >>>>  {
+> >>>> @@ -382,3 +384,12 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const=
+ char *strtab,
+> >>>>
+> >>>>    return 0;
+> >>>>  }
+> >>>> +
+> >>>> +void *module_alloc(unsigned long size)
+> >>>> +{
+> >>>> +  return __vmalloc_node_range(size, 1, MODULES_VADDR,
+> >>>> +                              MODULES_END, GFP_KERNEL,
+> >>>> +                              PAGE_KERNEL_EXEC, 0,
+> >>>> +                              NUMA_NO_NODE,
+> >>>> +                              __builtin_return_address(0));
+> >>>> +}
+> >>>> --
+> >>>> 2.16.2
+> >>>
+> >>> Any thoughts on this?
+> >>
+> >> The concept looks good, but does this actually keep the modules within=
+ 2GiB of
+> >> the text if PAGE_OFFSET is large?
+> >
+> > It's been some time since I wrote this, but I thought PAGE_OFFSET was
+> > where the kernel text *started*? So unless the text itself is bigger
+> > than 2G - 128 M, in which case we're SOL anyway, it seems like this
+> > should work. Is there something better we can do, without a large memor=
+y
+> > model?
+> >
+> > Thanks,
+> > Shea
+>
+> Any further thoughts on this?
+>
+> Thanks,
+> Shea
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- arch/arm/mach-at91/Kconfig | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+Shea,
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index 262b550d7329..7979420bd48b 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -105,11 +105,28 @@ config SOC_AT91SAM9
- 	    AT91SAM9X35
- 	    AT91SAM9XE
- 
-+config SOC_SAM9X60
-+	bool "SAM9X60"
-+	depends on ARCH_MULTI_V5
-+	select ATMEL_AIC5_IRQ
-+	select ATMEL_PM if PM
-+	select ATMEL_SDRAMC
-+	select CPU_ARM926T
-+	select HAVE_AT91_USB_CLK
-+	select HAVE_AT91_GENERATED_CLK
-+	select HAVE_AT91_SAM9X60_PLL
-+	select MEMORY
-+	select PINCTRL_AT91
-+	select SOC_SAM_V4_V5
-+	select SRAM if PM
-+	help
-+	  Select this if you are using Microchip's SAM9X60 SoC
-+
- comment "Clocksource driver selection"
- 
- config ATMEL_CLOCKSOURCE_PIT
- 	bool "Periodic Interval Timer (PIT) support"
--	depends on SOC_AT91SAM9 || SOC_SAMA5
-+	depends on SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
- 	default SOC_AT91SAM9 || SOC_SAMA5
- 	select ATMEL_PIT
- 	help
-@@ -119,7 +136,7 @@ config ATMEL_CLOCKSOURCE_PIT
- 
- config ATMEL_CLOCKSOURCE_TCB
- 	bool "Timer Counter Blocks (TCB) support"
--	default SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAMA5
-+	default SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
- 	select ATMEL_TCB_CLKSRC
- 	help
- 	  Select this to get a high precision clocksource based on a
--- 
-2.7.4
+Waking up the dead (threads)!
 
+I'm hacking on call improvements for the RISC-V BPF JIT.
+module_alloc() is used under the hood of bpf_jit_binary_alloc(), which
+in turn is used to allocate the JIT image. The current JIT
+implementation has to to "load imm64 + jalr" to call kernel syms,
+since the relative offset is >32b. With your patch, I can use regular
+jal/auipc+jalr instead. IOW, it would be great if it could be merged.
+;-) I'd prefer not having the patch in my BPF JIT series, since that
+will go through a different tree than Paul's RV one.
+
+Wdyt about brushing of the dust of the patch, and re-send it?
+
+
+Thanks!
+Bj=C3=B6rn
