@@ -2,191 +2,217 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22563C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35079C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF52320748
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574754818;
-	bh=wQdtNaWZwMn/VthN9UOum8HGrZ6SoeLpgE8ITQInHco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TkXL8R89hCfVfVVJsPvkSuBizpoFqEaLAn9QlqbgQbjG0roxV4QanvT4XhQi9SY0B
-	 4C54tuopIUEEBUOuza858SUABlXkebSJTuZ0rwEr3KSJnQz2xf/vuwP1VP/71sloLG
-	 pAZlNrvaQ3ved5mBrEtGHrYTvOHpHsvjBAwD+h50=
+	by mail.kernel.org (Postfix) with ESMTP id 02C302071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 07:54:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IDpsxu5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfKZHxh (ORCPT
+        id S1727090AbfKZHyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 02:53:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfKZHxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 02:53:36 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0352F20722;
-        Tue, 26 Nov 2019 07:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574754815;
-        bh=wQdtNaWZwMn/VthN9UOum8HGrZ6SoeLpgE8ITQInHco=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uh/RZq2HX9nYZVe4mG/SxhxTMAPdHlJWWaPFegqaTzNEh2+ua0rIps3b8Ql97KEDW
-         J8EmxgWUBBWCCN174jr6vvpeVPaGl6NraEJlO0X8QrqNKFwhaA76grU+Vx/KxMjkyh
-         9gl2GtFSGk6aNt2IkC+RQ+X0HcXe/fnQA25NjEYg=
-Date:   Tue, 26 Nov 2019 08:53:33 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael.j.wysocki@intel.com, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, chanwoo@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3] PM / devfreq: Add new name attribute for sysfs
-Message-ID: <20191126075333.GA1231308@kroah.com>
-References: <CGME20191125005755epcas1p2404d0f095e6ce543d36e55e2427282f8@epcas1p2.samsung.com>
- <20191125010357.27153-1-cw00.choi@samsung.com>
- <20191125085039.GA2301674@kroah.com>
- <48cadf42-4675-ffe1-a3d4-a97a37538955@samsung.com>
+        Tue, 26 Nov 2019 02:54:32 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34757 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfKZHyb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 02:54:31 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n13so8765766pff.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 23:54:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AYZPHR0XrSUhALfClmZ9OBm8nT/qbgSchvFq1xCdm+s=;
+        b=IDpsxu5vGx4jOJfXXC16eWB2IIc2WC2nO4G1IsmUgGSuecBLKNb9rzwJLACtBkLdRa
+         F3/fWHWDfzjQBOPW9scgJ28T2pjC5zRQGrzPqEQ4mlKmzN68ANQs1UW61qDqHO6CiN54
+         58/cS+NWnR2vnapXyZbdvA9iZGOPp7vs2lBoE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AYZPHR0XrSUhALfClmZ9OBm8nT/qbgSchvFq1xCdm+s=;
+        b=QPdlPcGfs+jVfgQDyqpWO1iqk/CTvDg9xf3Dhy3mnJLjgCByXDPh8HOYiHnNJUQGeI
+         snU6ecF5HlrG92kpu3PXRZWwefeYv4g002S46gnSMBEFSFMIIyKh34RjctQpT4+SW5ov
+         asiFi9n6kCIcTp67VmeIBjVhJmrXSN3iXEqBx7hsIJuHj/9/hcbpqVEpCvlI/M6RR6WS
+         kXVGJRjY0g4z0DbvPjYJKBFyRK/W7UyierJZKWUWEz8weH1DpnfGBHTIC/h7RcTt6eaH
+         2ObXH48nnGxHDkCqMH7g3zwqcvGnMM/xZ7ylwn7IOeFqBAnO1U8zYX9dzfVYiVeQRW0v
+         RQow==
+X-Gm-Message-State: APjAAAVjGO6kQtKr92PKb8y2TrhZhJLgRCpqZbuJHIz4ev/B+XAsTkJY
+        OPK5Je7F5i9e9yGsqvWVufR5JeevICs=
+X-Google-Smtp-Source: APXvYqzg7jEx4NjEC6bym4272COb52LPGhJXuKp86gB3AyuTw96/R/XRdfPf+Zyhj/X+X1RODQ4Ywg==
+X-Received: by 2002:a65:4c48:: with SMTP id l8mr36429991pgr.195.1574754870389;
+        Mon, 25 Nov 2019 23:54:30 -0800 (PST)
+Received: from localhost ([2401:fa00:1:10:845f:e35d:e30c:4b47])
+        by smtp.gmail.com with ESMTPSA id w26sm11539748pfj.123.2019.11.25.23.54.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 23:54:29 -0800 (PST)
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Agrawal Akshu <Akshu.Agrawal@amd.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org, Tzung-Bi Shih <tzungbi@google.com>
+Subject: [PATCH] ASoC: AMD: Enable clk in startup intead of hw_params
+Date:   Tue, 26 Nov 2019 15:54:24 +0800
+Message-Id: <20191126075424.80668-1-yuhsuan@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48cadf42-4675-ffe1-a3d4-a97a37538955@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 12:08:18PM +0900, Chanwoo Choi wrote:
-> Hi Greg,
-> 
-> On 11/25/19 5:50 PM, Greg KH wrote:
-> > On Mon, Nov 25, 2019 at 10:03:57AM +0900, Chanwoo Choi wrote:
-> >> The commit 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for
-> >> sysfs") changed the node name to devfreq(x). After this commit, it is not
-> >> possible to get the device name through /sys/class/devfreq/devfreq(X)/*.
-> >>
-> >> Add new name attribute in order to get device name.
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: 4585fbcb5331 ("PM / devfreq: Modify the device name as devfreq(X) for sysfs")
-> >> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >> ---
-> >>  Changes from v2:
-> >> - Change the order of name_show() according to the sequence in devfreq_attrs[]
-> >>
-> >> Changes from v1:
-> >> - Update sysfs-class-devfreq documentation
-> >> - Show device name directly from 'devfreq->dev.parent'
-> >>
-> > 
-> > Shouldn't you just revert the original patch here?  Why did the sysfs
-> > file change?
-> 
-> The initial devfreq code used the parent device name for device name
-> corresponding to devfreq object instead of 'devfreq%d' style.
-> Before applied The commit 4585fbcb5331 ("PM / devfreq: Modify
-> the device name as devfreq(X) for sysfs"), the devfreq sysfs
-> showed the parent device name as following:
-> 
-> For example on Odroid-XU3 board before applied the commit 4585fbcb5331,
-> 	/sys/class/devfreq/soc:bus_wcore
-> 	/sys/class/devfreq/soc:bus_noc
-> 	...(skip)
-> 
-> 
-> But, I think that devfreq subsystem had to show the consistent
-> sysfs entry name for devfreq device like input, thermal, hwmon subsystem.
-> 
-> For example on Odroid-XU3 board,
-> - The input subsystem show the 'input%d' style for input device.
-> $root@localhost:/# ls /sys/class/input/                                         
-> event0  event1  input0  input1  mice  mouse0
-> 
-> - The thermal subsystem show the 'cooling_device%d' style for thermal cooling device.
-> $ root@localhost:/# ls /sys/class/thermal/                                       
-> cooling_device0  cooling_device2  thermal_zone1  thermal_zone3
-> cooling_device1  thermal_zone0    thermal_zone2  thermal_zone4
-> 
-> - The hwmon subsystem show the 'hwmon%d' style for h/w monitor device.
-> $root@localhost:/# ls /sys/class/hwmon/                                         
-> hwmon0
-> 
-> 
-> So, I tried to make the consistent sysfs entry name for devfreq device
-> by contributing commit 4585fbcb5331 ("PM / devfreq: Modify the device name as
-> devfreq(X) for sysfs"). But, The commit 4585fbcb5331 have missed that sysfs
-> interface had to provide the real device name. Some subsystem like thermal
-> and hwmon provide the device type or device name through sysfs interface.
-> It is possible to make the user to find their own specific device by iteration
-> on user-space.
-> 
-> root@localhost:/# cat /sys/class/thermal/cooling_device0/type 
-> pwm-fan
-> root@localhost:/# cat /sys/class/thermal/cooling_device1/type                  
-> thermal-cpufreq-0
-> root@localhost:/# cat /sys/class/thermal/cooling_device2/type                  
-> thermal-cpufreq-1
-> 
-> root@localhost:/# cat /sys/class/hwmon/hwmon0/name                             
-> pwmfan
-> 
-> 
-> So, I add the new 'name' attribute of sysfs for devfreq device.
-> 
-> > 
-> >> Documentation/ABI/testing/sysfs-class-devfreq | 7 +++++++
-> >>  drivers/devfreq/devfreq.c                     | 9 +++++++++
-> >>  2 files changed, 16 insertions(+)
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
-> >> index 01196e19afca..75897e2fde43 100644
-> >> --- a/Documentation/ABI/testing/sysfs-class-devfreq
-> >> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
-> >> @@ -7,6 +7,13 @@ Description:
-> >>  		The name of devfreq object denoted as ... is same as the
-> >>  		name of device using devfreq.
-> >>  
-> >> +What:		/sys/class/devfreq/.../name
-> >> +Date:		November 2019
-> >> +Contact:	Chanwoo Choi <cw00.choi@samsung.com>
-> >> +Description:
-> >> +		The /sys/class/devfreq/.../name shows the name of device
-> >> +		of the corresponding devfreq object.
-> >> +
-> >>  What:		/sys/class/devfreq/.../governor
-> >>  Date:		September 2011
-> >>  Contact:	MyungJoo Ham <myungjoo.ham@samsung.com>
-> >> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> >> index 65a4b6cf3fa5..6f4d93d2a651 100644
-> >> --- a/drivers/devfreq/devfreq.c
-> >> +++ b/drivers/devfreq/devfreq.c
-> >> @@ -1169,6 +1169,14 @@ int devfreq_remove_governor(struct devfreq_governor *governor)
-> >>  }
-> >>  EXPORT_SYMBOL(devfreq_remove_governor);
-> >>  
-> >> +static ssize_t name_show(struct device *dev,
-> >> +			struct device_attribute *attr, char *buf)
-> >> +{
-> >> +	struct devfreq *devfreq = to_devfreq(dev);
-> >> +	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
-> > 
-> > Why is the parent's name being set here, and not the device name?
-> 
-> The device name style in struct devfreq is 'devfreq%d' instead of
-> parent device name in order to keep the consistent naming style for devfreq device
-> as I mentioned above. 'devfreq%d' name is consistent name style for devfreq device.
-> But, it don't show the real h/w device name. So, show the parent device name
-> which is specified on device-tree file.
+Some usages only call startup and shutdown without setting hw_params
+(e.g. arecord --dump-hw-params). If we don't enable clk in startup, it
+will cause ref count error because the clk will be disabled in shutdown.
+For this reason, we should move enabling clk from hw_params to startup.
 
-I'm sorry, but I still do not understand.  Can you show me the directory
-tree before and after here?
+In addition, the hw_params is fixed in this driver(48000 rate, 2
+channels, S16_LE format) so we don't need to change the clk rate after
+the hw_params is set.
 
-thanks,
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+---
+ sound/soc/amd/acp-da7219-max98357a.c | 46 +++++++++-------------------
+ 1 file changed, 14 insertions(+), 32 deletions(-)
 
-greg k-h
+diff --git a/sound/soc/amd/acp-da7219-max98357a.c b/sound/soc/amd/acp-da7219-max98357a.c
+index f4ee6798154af5..7a5621e5e2330d 100644
+--- a/sound/soc/amd/acp-da7219-max98357a.c
++++ b/sound/soc/amd/acp-da7219-max98357a.c
+@@ -96,14 +96,19 @@ static int cz_da7219_init(struct snd_soc_pcm_runtime *rtd)
+ 	return 0;
+ }
+ 
+-static int da7219_clk_enable(struct snd_pcm_substream *substream,
+-			     int wclk_rate, int bclk_rate)
++static int da7219_clk_enable(struct snd_pcm_substream *substream)
+ {
+ 	int ret = 0;
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 
+-	clk_set_rate(da7219_dai_wclk, wclk_rate);
+-	clk_set_rate(da7219_dai_bclk, bclk_rate);
++	/*
++	 * Set wclk to 48000 because the rate constraint of this driver is
++	 * 48000. ADAU7002 spec: "The ADAU7002 requires a BCLK rate that is
++	 * minimum of 64x the LRCLK sample rate." DA7219 is the only clk
++	 * source so for all codecs we have to limit bclk to 64X lrclk.
++	 */
++	clk_set_rate(da7219_dai_wclk, 48000);
++	clk_set_rate(da7219_dai_bclk, 48000 * 64);
+ 	ret = clk_prepare_enable(da7219_dai_bclk);
+ 	if (ret < 0) {
+ 		dev_err(rtd->dev, "can't enable master clock %d\n", ret);
+@@ -156,7 +161,7 @@ static int cz_da7219_play_startup(struct snd_pcm_substream *substream)
+ 				   &constraints_rates);
+ 
+ 	machine->play_i2s_instance = I2S_SP_INSTANCE;
+-	return 0;
++	return da7219_clk_enable(substream);
+ }
+ 
+ static int cz_da7219_cap_startup(struct snd_pcm_substream *substream)
+@@ -178,7 +183,7 @@ static int cz_da7219_cap_startup(struct snd_pcm_substream *substream)
+ 
+ 	machine->cap_i2s_instance = I2S_SP_INSTANCE;
+ 	machine->capture_channel = CAP_CHANNEL1;
+-	return 0;
++	return da7219_clk_enable(substream);
+ }
+ 
+ static int cz_max_startup(struct snd_pcm_substream *substream)
+@@ -199,7 +204,7 @@ static int cz_max_startup(struct snd_pcm_substream *substream)
+ 				   &constraints_rates);
+ 
+ 	machine->play_i2s_instance = I2S_BT_INSTANCE;
+-	return 0;
++	return da7219_clk_enable(substream);
+ }
+ 
+ static int cz_dmic0_startup(struct snd_pcm_substream *substream)
+@@ -220,7 +225,7 @@ static int cz_dmic0_startup(struct snd_pcm_substream *substream)
+ 				   &constraints_rates);
+ 
+ 	machine->cap_i2s_instance = I2S_BT_INSTANCE;
+-	return 0;
++	return da7219_clk_enable(substream);
+ }
+ 
+ static int cz_dmic1_startup(struct snd_pcm_substream *substream)
+@@ -242,25 +247,7 @@ static int cz_dmic1_startup(struct snd_pcm_substream *substream)
+ 
+ 	machine->cap_i2s_instance = I2S_SP_INSTANCE;
+ 	machine->capture_channel = CAP_CHANNEL0;
+-	return 0;
+-}
+-
+-static int cz_da7219_params(struct snd_pcm_substream *substream,
+-				      struct snd_pcm_hw_params *params)
+-{
+-	int wclk, bclk;
+-
+-	wclk = params_rate(params);
+-	bclk = wclk * params_channels(params) *
+-		snd_pcm_format_width(params_format(params));
+-	/* ADAU7002 spec: "The ADAU7002 requires a BCLK rate
+-	 * that is minimum of 64x the LRCLK sample rate."
+-	 * DA7219 is the only clk source so for all codecs
+-	 * we have to limit bclk to 64X lrclk.
+-	 */
+-	if (bclk < (wclk * 64))
+-		bclk = wclk * 64;
+-	return da7219_clk_enable(substream, wclk, bclk);
++	return da7219_clk_enable(substream);
+ }
+ 
+ static void cz_da7219_shutdown(struct snd_pcm_substream *substream)
+@@ -271,31 +258,26 @@ static void cz_da7219_shutdown(struct snd_pcm_substream *substream)
+ static const struct snd_soc_ops cz_da7219_play_ops = {
+ 	.startup = cz_da7219_play_startup,
+ 	.shutdown = cz_da7219_shutdown,
+-	.hw_params = cz_da7219_params,
+ };
+ 
+ static const struct snd_soc_ops cz_da7219_cap_ops = {
+ 	.startup = cz_da7219_cap_startup,
+ 	.shutdown = cz_da7219_shutdown,
+-	.hw_params = cz_da7219_params,
+ };
+ 
+ static const struct snd_soc_ops cz_max_play_ops = {
+ 	.startup = cz_max_startup,
+ 	.shutdown = cz_da7219_shutdown,
+-	.hw_params = cz_da7219_params,
+ };
+ 
+ static const struct snd_soc_ops cz_dmic0_cap_ops = {
+ 	.startup = cz_dmic0_startup,
+ 	.shutdown = cz_da7219_shutdown,
+-	.hw_params = cz_da7219_params,
+ };
+ 
+ static const struct snd_soc_ops cz_dmic1_cap_ops = {
+ 	.startup = cz_dmic1_startup,
+ 	.shutdown = cz_da7219_shutdown,
+-	.hw_params = cz_da7219_params,
+ };
+ 
+ SND_SOC_DAILINK_DEF(designware1,
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
