@@ -2,321 +2,177 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF36AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2AFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9775F206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574773167;
-	bh=DXzDE2qVYvZ2zFjagTFJxU3Oa8Rqwt7m4wLCDwRIY58=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=VgSeiBAb0Tb4KObrbEYUK358zADZp/hkMc6VWZPTca9XtNL4HvheRQaft0x5IjUdm
-	 Z1hh0J6qO/HvfBmXq0aEPd73bW481vES2fb4PagONOEuqxetzAjojA04ko4S+Ioc27
-	 4Rd3tI/Gn/hRA1C5x3Lyj+OlJodj/Er4ykSQt13c=
+	by mail.kernel.org (Postfix) with ESMTP id 8CCCD206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="i/k3fVNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfKZM70 convert rfc822-to-8bit (ORCPT
+        id S1727714AbfKZNBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:59:26 -0500
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:35744 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727209AbfKZM70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:59:26 -0500
-Received: by mail-oi1-f169.google.com with SMTP id k196so157182oib.2;
-        Tue, 26 Nov 2019 04:59:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=0ZxJNOH7rMuReB8KSU0yjpLDZzbiOFLbBxle+ihuJvE=;
-        b=t0/menJn6ID07MCY/lx5eXGn6COHI4RC+EahWDoi786fDgavzi7K0pCVtrtLV4RORp
-         MT50pneZ2pubHiLfqW8jPChI2L8fXfgRhWpxSa5lkkpOePW5KB+3RLANQYEWjJsYawpT
-         WSV34/eA9gRgfubwIKwKmIuZGnAQ2XtBrTsMrt0bc/PYjiYuK3mxYoDrXB1cd/xLjdDt
-         aPHExqEEhbhloZFhUau62V388vDIyleNXjRnmwpapK90MqtKInI6RkBVJwm3M7nlIgWL
-         qez5l3AyOBdNvSgxHYEgHAnPYLzXuxizNpXP850hPSJDR2r0S71LyRpHLWefMKYDUxyp
-         ynRA==
-X-Gm-Message-State: APjAAAXVkgYQzQsQSdGqv++g3p5cPQzh6Fo0XJO0VKep49GOKOOzbsbP
-        EUbgNPVl4AKFzNEsSHTcaG911YZBESS9+1bTFaEE517R
-X-Google-Smtp-Source: APXvYqwtJ/RGFbnBA2yw6xZZbA56o0qTy3cdM2jiPmmnD1HW/u0hnmY/Yx5cCGDC+jNy3+UjR9JtSlAn2i4YhmLTwRg=
-X-Received: by 2002:aca:c753:: with SMTP id x80mr3280624oif.115.1574773164747;
- Tue, 26 Nov 2019 04:59:24 -0800 (PST)
+        Tue, 26 Nov 2019 08:01:06 -0500
+Received: from mail-eopbgr730054.outbound.protection.outlook.com ([40.107.73.54]:24507
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726926AbfKZNBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 08:01:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G0ybpQ4jc7dFIfBaimcJPZuvB3gWoZ9uylPR42nP+WwOTVVF5i8rw0D7YC+g6gwNfDlqc7zQhzbh7IELF+6iEv+qgRV/BzZNNiVwO83HBBPjHSWagyNsNs72N8xlenZIFrOEZIc/VkOf5yBbNvM7hctQR//oN8HLZkZXIJboFdQRh1kxQuBz9OAYyHGutQ+OVL/hHWI6UDlLEBt96Vm+2Cr3ab9tv6C17vdveHMBrPwmXQWXMrxnOosEvZDSpaNfTRoTigUgeegSWPHZjO9rcrjR51gxU5oe4ug39t40hVxC3ep0BoXFOTvkgmaMjSWue3rTdtrYf3Eww8pc3SezBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nQRy47rxdH/mPCmYQwqVzDEwtEMm5y7+3NeiDCgmcBA=;
+ b=E51dIWpyldRv2Z7hM1FegB2I1h0Qk+3PLNAbRHDDbBDkSPo6XCQHR/92aYskZsLF7Y8JKU5nUHR+7HhgW61MBZy9rzPGzXHypUBcqBXIwf4ZCJiP+6TtOGwHh6LRZEGB8+MWa5f79Z+DdAc9Mqz81EtC93/hpNTL2rL8gmkVsmiuIaI44u2seR22VgJfJBstjUTqJ4bzin/nFCFnj7n5WAoBOWtonfGDx/+4heVA6P9pEB12JzRBFzz7FqxHpZx+IigF+XkuLWHsoVB5bv0wOBDOk+TKntnDLCn3Kv5+87kOjZuH5A+YSDQucQCrd0H+5MBtCttJot4oYnnfSDabvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nQRy47rxdH/mPCmYQwqVzDEwtEMm5y7+3NeiDCgmcBA=;
+ b=i/k3fVNhoLxPB7upfh7O6QlPGWkBtfey5nzq+P16+RxepV9vTEo7klvjvMRjKWq903bmClvsRvRTN1Ps6QFcy0K2yqdLURsbl7na0H99aAVO7ewUTaDMk1E+VBRftP5ubwgWfrpQLMBD1wTnOWwtuXuzKtSQ1XsY6wqNnxVzN84=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from DM5PR12MB1932.namprd12.prod.outlook.com (10.175.89.23) by
+ DM5PR12MB1675.namprd12.prod.outlook.com (10.172.34.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.17; Tue, 26 Nov 2019 13:01:02 +0000
+Received: from DM5PR12MB1932.namprd12.prod.outlook.com
+ ([fe80::cce8:3bc3:54c7:26ea]) by DM5PR12MB1932.namprd12.prod.outlook.com
+ ([fe80::cce8:3bc3:54c7:26ea%8]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 13:01:02 +0000
+Subject: Re: [RFC PATCH 0/2] TEE driver for AMD APUs
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     "tee-dev@lists.linaro.org" <tee-dev@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Easow, Nimesh" <Nimesh.Easow@amd.com>,
+        "Rangasamy, Devaraj" <Devaraj.Rangasamy@amd.com>
+References: <cover.1571818136.git.Rijo-john.Thomas@amd.com>
+ <20191105151731.GA22448@jax>
+From:   "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
+Message-ID: <5a6f17c6-c74c-0b03-c94e-6234ee7d305f@amd.com>
+Date:   Tue, 26 Nov 2019 18:30:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20191105151731.GA22448@jax>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MAXPR01CA0118.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::36) To DM5PR12MB1932.namprd12.prod.outlook.com
+ (2603:10b6:3:10e::23)
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 Nov 2019 13:59:13 +0100
-Message-ID: <CAJZ5v0g944ZbCaoCvGcT7EFJVKW5efSMgf9oi_d3iP_3+iwbNg@mail.gmail.com>
-Subject: [GIT PULL] ACPI updates for v5.5-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dc05f12a-d895-448e-501f-08d77270b093
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1675:|DM5PR12MB1675:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1675EFF1F94F7232AF7591AACF450@DM5PR12MB1675.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0233768B38
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(136003)(376002)(366004)(199004)(189003)(305945005)(6486002)(2906002)(31696002)(54906003)(6306002)(186003)(8676002)(6512007)(58126008)(26005)(81166006)(81156014)(14454004)(25786009)(86362001)(6916009)(6436002)(4326008)(316002)(478600001)(31686004)(6246003)(7736002)(66476007)(53546011)(6506007)(386003)(2486003)(52116002)(6666004)(229853002)(99286004)(66556008)(230700001)(8936002)(23676004)(66946007)(76176011)(36756003)(47776003)(11346002)(2616005)(3846002)(50466002)(5660300002)(966005)(14444005)(446003)(65806001)(65956001)(66066001)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1675;H:DM5PR12MB1932.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: P55JxutYqbw+D77YC2hU1dmaf8PqRmnPpE6eOEfqbpGziFH+B6+NvcxHnkHvVurb0d0BWXpVOjq2qL4vHyXXPq98lqlZ6wabZrvijv0ixybd2zhusOBX3g57s6WyK5+JbCHHRdp0EDoEt5XANN954n5uea17RxwGDESv1w2x1VanV/R4F2VfTGoqcYb7ZmPhrCpZyyG7ty5BuFvQmQccjpUla2yIZEl706Fz2q2pAEA/+dbpcNBILOU0j0OGJoSEaDYE2VLKt8YXIxq+jQl7lW1KXTcoICVZKgx/7zIs9xOXASy2HnpBCVSCbPvO02kVqkj84c44yT+BywtD63k3K8Hi3Hjnzypr+AANn1aSawY2YyQJ5BDJs22olIL05cFg+HqNiE9VfWV08cM9zDAqwg7e50pybxcpKpoJ4Hsbf1nKeq4NnnEC41u73qgHQXMUivpbgNr00RHUHgqdvkH45bs5Wp/EcE3Mi08lv8ewjes=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc05f12a-d895-448e-501f-08d77270b093
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2019 13:01:02.3211
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eBs620kg9ZgIHyuxwQ/1YXoWuCOmiMp4e3w4m0S6jjZi4XmP6xu2H6TaHOeIbOr5lqgX5miyDd2RYadAhE8jWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1675
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Jens,
 
-Please pull from the tag
+On 05/11/19 8:47 PM, Jens Wiklander wrote:
+> Hi Rijo,
+> 
+> On Wed, Oct 23, 2019 at 11:30:56AM +0000, Thomas, Rijo-john wrote:
+>> This patch series introduces Trusted Execution Environment (TEE) driver
+>> for AMD APU enabled systems. The TEE is a secure area of a processor which
+>> ensures that sensitive data is stored, processed and protected in an
+>> isolated and trusted environment. The AMD Secure Processor is a dedicated
+>> processor which provides TEE to enable HW platform security. It offers
+>> protection against software attacks generated in Rich Operating
+>> System (Rich OS) such as Linux running on x86. The AMD-TEE Trusted OS
+>> running on AMD Secure Processor allows loading and execution of security
+>> sensitive applications called Trusted Applications (TAs). An example of
+>> a TA would be a DRM (Digital Rights Management) TA written to enforce
+>> content protection.
+>>
+>> Linux already provides a tee subsystem, which is described in [1]. The tee
+>> subsystem provides a generic TEE ioctl interface which can be used by user
+>> space to talk to a TEE driver. AMD-TEE driver registers with tee subsystem
+>> and implements tee function callbacks in an AMD platform specific manner.
+>>
+>> The following TEE commands are recognized by AMD-TEE Trusted OS:
+>> 1. TEE_CMD_ID_LOAD_TA : Load Trusted Application (TA) binary into TEE
+>>    environment
+>> 2. TEE_CMD_ID_UNLOAD_TA : Unload TA binary from TEE environment
+>> 3. TEE_CMD_ID_OPEN_SESSION : Open session with loaded TA
+>> 4. TEE_CMD_ID_CLOSE_SESSION : Close session with loaded TA
+>> 5. TEE_CMD_ID_INVOKE_CMD : Invoke a command with loaded TA
+>> 6. TEE_CMD_ID_MAP_SHARED_MEM : Map shared memory
+>> 7. TEE_CMD_ID_UNMAP_SHARED_MEM : Unmap shared memory
+>>
+>> Each command has its own payload format. The AMD-TEE driver creates a
+>> command buffer payload for submission to AMD-TEE Trusted OS.
+>>
+>> This patch series has a dependency on another patch set titled - Add TEE
+>> interface support to AMD Secure Processor driver.
+>>
+>> [1] https://www.kernel.org/doc/Documentation/tee.txt
+> 
+> Please add a section in Documentation/tee.txt describing the AMD-TEE driver.
+> 
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.5-rc1
+Sure, I will update Documentation/tee.txt describing the AMD-TEE driver.
 
-with top-most commit 782b59711e1561ee0da06bc478ca5e8249aa8d09
+Thanks,
+Rijo
 
- Merge branch 'acpi-mm'
-
-on top of commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c
-
- Linux 5.4-rc7
-
-to receive ACPI update for 5.5-rc1.
-
-These update the ACPICA code in the kernel to upstream revision
-20191018, add support for EFI specific purpose memory, update the
-ACPI EC driver to make it work on systems with hardware-reduced ACPI,
-improve ACPI-based device enumeration for some platforms, rework the
-lid blacklist handling in the button driver and add more lid quirks
-to it, unify ACPI _HID/_UID matching, fix assorted issues and clean
-up the code and documentation.
-
-Specifics:
-
- - Update the ACPICA code in the kernel to upstream revision 20191018
-   including:
-
-   * Fixes for Clang warnings (Bob Moore).
-
-   * Fix for possible overflow in get_tick_count() (Bob Moore).
-
-   * Introduction of acpi_unload_table() (Bob Moore).
-
-   * Debugger and utilities updates (Erik Schmauss).
-
-   * Fix for unloading tables loaded via configfs (Nikolaus Voss).
-
- - Add support for EFI specific purpose memory to optionally allow
-   either application-exclusive or core-kernel-mm managed access to
-   differentiated memory (Dan Williams).
-
- - Fix and clean up processing of the HMAT table (Brice Goglin,
-   Qian Cai, Tao Xu).
-
- - Update the ACPI EC driver to make it work on systems with
-   hardware-reduced ACPI (Daniel Drake).
-
- - Always build in support for the Generic Event Device (GED) to
-   allow one kernel binary to work both on systems with full
-   hardware ACPI and hardware-reduced ACPI (Arjan van de Ven).
-
- - Fix the table unload mechanism to unregister platform devices
-   created when the given table was loaded (Andy Shevchenko).
-
- - Rework the lid blacklist handling in the button driver and add
-   more lid quirks to it (Hans de Goede).
-
- - Improve ACPI-based device enumeration for some platforms based
-   on Intel BayTrail SoCs (Hans de Goede).
-
- - Add an OpRegion driver for the Cherry Trail Crystal Cove PMIC
-   and prevent handlers from being registered for unhandled PMIC
-   OpRegions (Hans de Goede).
-
- - Unify ACPI _HID/_UID matching (Andy Shevchenko).
-
- - Clean up documentation and comments (Cao jin, James Pack, Kacper
-   Piwiński).
-
-Thanks!
-
-
----------------
-
-Andy Shevchenko (7):
-      ACPI / utils: Describe function parameters in kernel-doc
-      ACPI / utils: Move acpi_dev_get_first_match_dev() under CONFIG_ACPI
-      ACPI / utils: Introduce acpi_dev_hid_uid_match() helper
-      ACPI / LPSS: Switch to use acpi_dev_hid_uid_match()
-      mmc: sdhci-acpi: Switch to use acpi_dev_hid_uid_match()
-      iommu/amd: Switch to use acpi_dev_hid_uid_match()
-      ACPI: platform: Unregister stale platform devices
-
-Arjan van de Ven (1):
-      ACPI: Always build evged in
-
-Bob Moore (5):
-      ACPICA: Results from Clang
-      ACPICA: Win OSL: Replace get_tick_count with get_tick_count64
-      ACPICA: More Clang changes
-      ACPICA: Add new external interface, acpi_unload_table()
-      ACPICA: Update version to 20191018
-
-Brice Goglin (1):
-      ACPI: HMAT: don't mix pxm and nid when setting memory target processor_pxm
-
-Cao jin (1):
-      ACPI: OSI: Shoot duplicate word
-
-Dan Williams (12):
-      ACPI: NUMA: Establish a new drivers/acpi/numa/ directory
-      efi: Enumerate EFI_MEMORY_SP
-      x86/efi: Push EFI_MEMMAP check into leaf routines
-      efi: Common enable/disable infrastructure for EFI soft reservation
-      x86/efi: EFI soft reservation to E820 enumeration
-      arm/efi: EFI soft reservation to memblock
-      x86/efi: Add efi_fake_mem support for EFI_MEMORY_SP
-      lib: Uplevel the pmem "region" ida to a global allocator
-      dax: Fix alloc_dax_region() compile warning
-      device-dax: Add a driver for "hmem" devices
-      ACPI: NUMA: HMAT: Register HMAT at device_initcall level
-      ACPI: NUMA: HMAT: Register "soft reserved" memory as an "hmem" device
-
-Daniel Drake (2):
-      ACPI: EC: tweak naming in preparation for GpioInt support
-      ACPI: EC: add support for hardware-reduced systems
-
-Erik Schmauss (6):
-      ACPICA: utilities: add flag to only display data when dumping buffers
-      ACPICA: debugger: add command to dump all fields of particular subtype
-      ACPICA: debugger: surround field unit output with braces '{'
-      ACPICA: debugger: add field unit support for acpi_db_get_next_token
-      ACPICA: acpiexec: initialize all simple types and field units
-from user input
-      ACPICA: debugger: remove leading whitespaces when converting a
-string to a buffer
-
-Hans de Goede (12):
-      ACPI / PMIC: Do not register handlers for unhandled OpRegions
-      ACPI / PMIC: Add byt prefix to Crystal Cove PMIC OpRegion driver
-      ACPI / PMIC: Add Cherry Trail Crystal Cove PMIC OpRegion driver
-      ACPI: LPSS: Add LNXVIDEO -> BYT I2C7 to lpss_device_links
-      ACPI: LPSS: Add LNXVIDEO -> BYT I2C1 to lpss_device_links
-      ACPI: LPSS: Add dmi quirk for skipping _DEP check for some device-links
-      ACPI: button: Refactor lid_init_state module parsing code
-      ACPI: button: Allow disabling LID support with the
-lid_init_state module option
-      ACPI: button: Turn lid_blacklst DMI table into a generic quirk table
-      ACPI: button: Add DMI quirk for Medion Akoya E2215T
-      ACPI: button: Add DMI quirk for Asus T200TA
-      ACPI: button: Remove unused acpi_lid_notifier_[un]register() functions
-
-James Pack (1):
-      ACPI: Documentation: Minor spelling fix in namespace.rst
-
-Kacper Piwiński (1):
-      ACPI: video: update doc for acpi_video_bus_DOS()
-
-Nikolaus Voss (1):
-      ACPICA: make acpi_load_table() return table index
-
-Qian Cai (1):
-      ACPI: NUMA: HMAT: fix a section mismatch
-
-Tao Xu (1):
-      ACPI: HMAT: use %u instead of %d to print u32 values
-
----------------
-
- Documentation/admin-guide/kernel-parameters.txt    |  19 +-
- Documentation/firmware-guide/acpi/namespace.rst    |   2 +-
- arch/arm64/mm/mmu.c                                |   2 +
- arch/x86/boot/compressed/eboot.c                   |   6 +-
- arch/x86/boot/compressed/kaslr.c                   |  46 ++++-
- arch/x86/include/asm/e820/types.h                  |   8 +
- arch/x86/include/asm/efi.h                         |  17 +-
- arch/x86/kernel/e820.c                             |  12 +-
- arch/x86/kernel/setup.c                            |  18 +-
- arch/x86/platform/efi/efi.c                        |  54 +++++-
- arch/x86/platform/efi/quirks.c                     |   3 +
- drivers/acpi/Kconfig                               |  23 +--
- drivers/acpi/Makefile                              |   8 +-
- drivers/acpi/acpi_configfs.c                       |   4 +-
- drivers/acpi/acpi_lpss.c                           |  48 ++---
- drivers/acpi/acpi_platform.c                       |  43 +++++
- drivers/acpi/acpi_video.c                          |   8 +-
- drivers/acpi/acpica/acdebug.h                      |   2 +
- drivers/acpi/acpica/acstruct.h                     |  10 ++
- drivers/acpi/acpica/acutils.h                      |   9 +-
- drivers/acpi/acpica/dbconvert.c                    |   4 +
- drivers/acpi/acpica/dbdisply.c                     |   2 -
- drivers/acpi/acpica/dbfileio.c                     |   2 +-
- drivers/acpi/acpica/dbinput.c                      |  36 +++-
- drivers/acpi/acpica/dbmethod.c                     |   4 +
- drivers/acpi/acpica/dbnames.c                      | 114 ++++++++++++
- drivers/acpi/acpica/dbobject.c                     |   1 -
- drivers/acpi/acpica/dscontrol.c                    |   2 +-
- drivers/acpi/acpica/dsfield.c                      |  12 +-
- drivers/acpi/acpica/evgpeblk.c                     |  11 +-
- drivers/acpi/acpica/evgpeinit.c                    |   3 -
- drivers/acpi/acpica/evmisc.c                       |  12 +-
- drivers/acpi/acpica/evregion.c                     |   4 +-
- drivers/acpi/acpica/evrgnini.c                     |   1 -
- drivers/acpi/acpica/hwxfsleep.c                    |   3 +
- drivers/acpi/acpica/nsconvert.c                    |   2 +-
- drivers/acpi/acpica/nsdump.c                       |   6 +-
- drivers/acpi/acpica/nsxfname.c                     |   4 +-
- drivers/acpi/acpica/psobject.c                     |   7 +-
- drivers/acpi/acpica/rscreate.c                     |   3 +
- drivers/acpi/acpica/tbdata.c                       |   3 +
- drivers/acpi/acpica/tbxfload.c                     |  40 ++++-
- drivers/acpi/acpica/utbuffer.c                     |  52 +++---
- drivers/acpi/acpica/utids.c                        |   2 -
- drivers/acpi/acpica/uttrack.c                      |   2 +-
- drivers/acpi/button.c                              | 139 ++++++++-------
- drivers/acpi/ec.c                                  | 195 +++++++++++++++------
- drivers/acpi/hmat/Makefile                         |   2 -
- drivers/acpi/internal.h                            |   3 +-
- drivers/acpi/{hmat => numa}/Kconfig                |   7 +
- drivers/acpi/numa/Makefile                         |   3 +
- drivers/acpi/{hmat => numa}/hmat.c                 | 158 ++++++++++++++---
- drivers/acpi/{numa.c => numa/srat.c}               |   0
- drivers/acpi/osi.c                                 |   6 +-
- drivers/acpi/pmic/intel_pmic.c                     |  20 ++-
- .../pmic/{intel_pmic_crc.c => intel_pmic_bytcrc.c} |   4 +-
- drivers/acpi/pmic/intel_pmic_chtcrc.c              |  44 +++++
- drivers/acpi/scan.c                                |   1 +
- drivers/acpi/utils.c                               |  32 ++++
- drivers/dax/Kconfig                                |  27 ++-
- drivers/dax/Makefile                               |   2 +
- drivers/dax/bus.c                                  |   2 +-
- drivers/dax/bus.h                                  |   2 +-
- drivers/dax/dax-private.h                          |   2 +-
- drivers/dax/hmem.c                                 |  56 ++++++
- drivers/firmware/efi/Kconfig                       |  21 +++
- drivers/firmware/efi/Makefile                      |   5 +-
- drivers/firmware/efi/arm-init.c                    |   9 +
- drivers/firmware/efi/arm-runtime.c                 |  24 +++
- drivers/firmware/efi/efi.c                         |  15 +-
- drivers/firmware/efi/esrt.c                        |   3 +
- drivers/firmware/efi/fake_mem.c                    |  26 ++-
- drivers/firmware/efi/fake_mem.h                    |  10 ++
- drivers/firmware/efi/libstub/arm32-stub.c          |   5 +
- drivers/firmware/efi/libstub/efi-stub-helper.c     |  19 ++
- drivers/firmware/efi/libstub/random.c              |   4 +
- drivers/firmware/efi/x86_fake_mem.c                |  69 ++++++++
- drivers/iommu/amd_iommu.c                          |  30 +---
- drivers/mfd/intel_soc_pmic_crc.c                   |   2 +-
- drivers/mmc/host/sdhci-acpi.c                      |  49 ++----
- drivers/nvdimm/Kconfig                             |   1 +
- drivers/nvdimm/core.c                              |   1 -
- drivers/nvdimm/nd-core.h                           |   1 -
- drivers/nvdimm/region_devs.c                       |  13 +-
- include/acpi/acpi_bus.h                            |   8 +-
- include/acpi/acpixf.h                              |   8 +-
- include/acpi/button.h                              |  12 --
- include/linux/acpi.h                               |   8 +
- include/linux/efi.h                                |  16 +-
- include/linux/ioport.h                             |   1 +
- include/linux/memregion.h                          |  23 +++
- lib/Kconfig                                        |   3 +
- lib/Makefile                                       |   1 +
- lib/memregion.c                                    |  18 ++
- 94 files changed, 1374 insertions(+), 410 deletions(-)
+> Cheers,
+> Jens
+> 
+>>
+>> Rijo Thomas (2):
+>>   tee: allow compilation of tee subsystem for AMD CPUs
+>>   tee: add AMD-TEE driver
+>>
+>>  drivers/tee/Kconfig                 |   4 +-
+>>  drivers/tee/Makefile                |   1 +
+>>  drivers/tee/amdtee/Kconfig          |   8 +
+>>  drivers/tee/amdtee/Makefile         |   5 +
+>>  drivers/tee/amdtee/amdtee_if.h      | 183 +++++++++++++
+>>  drivers/tee/amdtee/amdtee_private.h | 159 +++++++++++
+>>  drivers/tee/amdtee/call.c           | 370 ++++++++++++++++++++++++++
+>>  drivers/tee/amdtee/core.c           | 510 ++++++++++++++++++++++++++++++++++++
+>>  drivers/tee/amdtee/shm_pool.c       | 130 +++++++++
+>>  include/uapi/linux/tee.h            |   1 +
+>>  10 files changed, 1369 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/tee/amdtee/Kconfig
+>>  create mode 100644 drivers/tee/amdtee/Makefile
+>>  create mode 100644 drivers/tee/amdtee/amdtee_if.h
+>>  create mode 100644 drivers/tee/amdtee/amdtee_private.h
+>>  create mode 100644 drivers/tee/amdtee/call.c
+>>  create mode 100644 drivers/tee/amdtee/core.c
+>>  create mode 100644 drivers/tee/amdtee/shm_pool.c
+>>
+>> -- 
+>> 1.9.1
+>>
