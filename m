@@ -2,102 +2,136 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9FFC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40025C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4164420722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="YZpyFUSY"
+	by mail.kernel.org (Postfix) with ESMTP id 08F272068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfKZRKk (ORCPT
+        id S1728573AbfKZROR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:10:40 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25885 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727674AbfKZRKj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:10:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574788068; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=oIQe1PY4vGRM9TPEiTAsrAkTfKIqjn4z22/azPgO0cxcz/PmbKxhs5o8yvy3Zdg6Wb4RprVWH6HI20x+B7wqh+RecwDBYdiCQzOUF6Dx5rOfShwEEchlJi+SyRsVbBJUtOzDWt9LRiKhjjDmloLsA8H4+wqXl6rxfvvxGsXEycM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574788068; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=yuMGxHMKAHxS16p3bQXnY0TEe3BCGLx/Srx8HskDs9w=; 
-        b=OowQ6wTM3xDrfvOEDclaYybFvKOFmnpLXn0FC7NscW+I1cuIHvsEFTz3UC5supkZkrKIRVvtO7hkbkq4ImHXF4FTq4hkCqA9cwo9wuuTsm5MDjnQGtnd3omNbjPJSNytp4U70n9MzBjia5xs9Ah8YlNDc3Sdz0QyOFZPI80GX4E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=JsqhkJb1VfBMYa/vBi5UQK814q1qIloFBFpCyufV1Tv1kXZ9ZqiSnFmLgu5OZlOc34ozDxPn9toj
-    ij+9rIjE3qjxP9X2USgsaO8VgAYrzQnqNVS7yZILDQyA9DPw45MK  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574788068;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=yuMGxHMKAHxS16p3bQXnY0TEe3BCGLx/Srx8HskDs9w=;
-        b=YZpyFUSYz08hsuTfrUsQrYV8aR6FSVqrVMoGpMEg5Y/BsYgCKqPpGvYs+CMEPWh0
-        roLGvak981ZWENIfkD75zSv7q5FG0j3B7ZfqGqgiQ6Rhu9kq3DsFob+hMueseA7mtOR
-        isytNAOvVkuP7Ax1pZYdzRb9lg5isAeJbDVYRRUE=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.112.214 [171.221.112.214]) by mx.zohomail.com
-        with SMTPS id 1574788067290799.8760784734405; Tue, 26 Nov 2019 09:07:47 -0800 (PST)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        heiko@sntech.de, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
-        geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Subject: [PATCH v4 6/6] MIPS: CU1000: Update defconfig for pdma controller.
-Date:   Wed, 27 Nov 2019 01:06:14 +0800
-Message-Id: <1574787974-58040-7-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
-References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Tue, 26 Nov 2019 12:14:17 -0500
+Received: from mga14.intel.com ([192.55.52.115]:28954 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727532AbfKZROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:14:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 09:14:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
+   d="scan'208";a="206514949"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Nov 2019 09:14:16 -0800
+Date:   Tue, 26 Nov 2019 09:14:16 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
+ to kvm
+Message-ID: <20191126171416.GA22233@linux.intel.com>
+References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+ <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Selected pdma controller support by default.
+On Tue, Nov 26, 2019 at 01:44:14PM -0300, Leonardo Bras wrote:
+> On Mon, 2019-10-21 at 15:58 -0700, Sean Christopherson wrote:
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
+...
 
-Notes:
-    v4:
-    New patch.
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 67ef3f2e19e8..b8534c6b8cf6 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -772,6 +772,18 @@ void kvm_put_kvm(struct kvm *kvm)
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_put_kvm);
+> > 
+> > +/*
+> > + * Used to put a reference that was taken on behalf of an object associated
+> > + * with a user-visible file descriptor, e.g. a vcpu or device, if installation
+> > + * of the new file descriptor fails and the reference cannot be transferred to
+> > + * its final owner.  In such cases, the caller is still actively using @kvm and
+> > + * will fail miserably if the refcount unexpectedly hits zero.
+> > + */
+> > +void kvm_put_kvm_no_destroy(struct kvm *kvm)
+> > +{
+> > +	WARN_ON(refcount_dec_and_test(&kvm->users_count));
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_put_kvm_no_destroy);
+> > 
+> >  static int kvm_vm_release(struct inode *inode, struct file *filp)
+> >  {
+> > @@ -2679,7 +2691,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm
+> > *kvm, u32 id)
+> >  	kvm_get_kvm(kvm);
+> >  	r = create_vcpu_fd(vcpu);
+> >  	if (r < 0) {
+> > -		kvm_put_kvm(kvm);
+> > +		kvm_put_kvm_no_destroy(kvm);
+> >  		goto unlock_vcpu_destroy;
+> >  	}
+> > 
+> > @@ -3117,7 +3129,7 @@ static int kvm_ioctl_create_device(struct kvm
+> > *kvm,
+> >  	kvm_get_kvm(kvm);
+> >  	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR
+> > | O_CLOEXEC);
+> >  	if (ret < 0) {
+> > -		kvm_put_kvm(kvm);
+> > +		kvm_put_kvm_no_destroy(kvm);
+> >  		mutex_lock(&kvm->lock);
+> >  		list_del(&dev->vm_node);
+> >  		mutex_unlock(&kvm->lock);
+> 
+> Hello,
+> 
+> I see what are you solving here, but would not this behavior cause the
+> refcount to reach negative values?
+>
+> If so, is not there a problem? I mean, in some archs (powerpc included)
+> refcount_dec_and_test() will decrement and then test if the value is
+> equal 0. If we ever reach a negative value, this will cause that memory
+> to never be released. 
+>
+> An example is that refcount_dec_and_test(), on other archs than x86,
+> will call atomic_dec_and_test(), which on include/linux/atomic-
+> fallback.h will do:
+> 
+> return atomic_dec_return(v) == 0;
+> 
+> To change this behavior, it would mean change the whole atomic_*_test
+> behavior, or do a copy function in order to change this '== 0' to 
+> '<= 0'. 
+> 
+> Does it make sense? Do you need any help on this?
 
- arch/mips/configs/cu1000_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+I don't think so.  refcount_dec_and_test() will WARN on an underflow when
+the kernel is built with CONFIG_REFCOUNT_FULL=y.  I see no value in
+duplicating those sanity checks in KVM.
 
-diff --git a/arch/mips/configs/cu1000_defconfig b/arch/mips/configs/cu1000_defconfig
-index 88729ee..9f26d00 100644
---- a/arch/mips/configs/cu1000_defconfig
-+++ b/arch/mips/configs/cu1000_defconfig
-@@ -62,6 +62,8 @@ CONFIG_GPIO_SYSFS=y
- # CONFIG_VGA_CONSOLE is not set
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
-+CONFIG_DMADEVICES=y
-+CONFIG_DMA_JZ4780=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_NVMEM=y
- CONFIG_NVMEM_SYSFS=y
--- 
-2.7.4
-
-
+This new helper and WARN is to explicitly catch @users_count unexpectedly
+hitting zero, which is orthogonal to an underflow (although odds are good
+that a bug that triggers the WARN in kvm_put_kvm_no_destroy() will also
+lead to an underflow).  Leaking the memory is deliberate as the alternative
+is a guaranteed use-after-free, i.e. kvm_put_kvm_no_destroy() is intended
+to be used when users_count is guaranteed to be valid after it is
+decremented.
