@@ -2,129 +2,227 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C676C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1302AC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B64206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A0720722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CJV6ZYyK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ctmv59u8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfKZIm7 (ORCPT
+        id S1727258AbfKZInP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:42:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40915 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfKZIm7 (ORCPT
+        Tue, 26 Nov 2019 03:43:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59310 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725940AbfKZInO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:42:59 -0500
-Received: by mail-wr1-f66.google.com with SMTP id 4so18076659wro.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 00:42:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JHNZUTPIMG+8vm9Xx7nqvxw7Hrw7f/tddmrI9dcAnk8=;
-        b=CJV6ZYyKMABUO8sf/kvxRG1FphfBIzrIl/CVoIglL0z9uB6aMJrRc6kD0mwGKBlb5w
-         IqPm6qOrqH2nyG0KPUls1bgLf9VGY6Hv+QYX8BF0KfscBWJmjkuurdbFuAXutMeSvhMP
-         dG5tRgq7FJSADMvInlQA/GdDSbTK2HFx4h590=
+        Tue, 26 Nov 2019 03:43:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574757793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=GwEyhX4VjG5sUB4FdduoQGJY96vfjRUGReOuxVzCQHY=;
+        b=ctmv59u8Bm5WCAxmXGbZu3K6bCmQPVxAU51OlSdDy2GqTKqyA5O8CbNyIz9QG2dy5aPIOB
+        BZVdPP4V7OwjJFdsX1knylAhW3YGQ10/w4dRC2++nG7OjuNsULC/6x/u+IjtVyBgZjKpHs
+        TqcMyy+cvW9OEaaT9ghnNI6wFwRT6Gw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-sx62ctoOMuCl0tbbGTNq6A-1; Tue, 26 Nov 2019 03:43:09 -0500
+Received: by mail-wr1-f71.google.com with SMTP id q6so10160665wrv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 00:43:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=JHNZUTPIMG+8vm9Xx7nqvxw7Hrw7f/tddmrI9dcAnk8=;
-        b=RCcon9xderkfCShxTOBPF/3kDyK+kFXk/yOzKH7P5nikLPKC02iO//Sx9WSvW1qp1H
-         496YdOJ55Es67mkNIPx7JLEkMr22n1Dnp0PKE6f3mhwjeOJ74zhyCWGLB7a1xFzB26qz
-         80GYMFA3C4bcvRNWU3hWWdCajZFyzBqrk+H+SIMOja0krqPv3ZhPYJw+iQHH+0+tml05
-         o/XOg47WMNWtlyEpHhfpawTQMziwPLTM1f2kb1aaGJdHlF58Bigr5dRIx9WlOYbUqVRd
-         ZNiu4kVmOl6Lq5iQCExUqZnMGIBSxU/R6aM5BJVNQ4LE+NXyOgMPOQc9Ctfmpk+yNdK6
-         onXA==
-X-Gm-Message-State: APjAAAW10/i7xKQekAokiQKhYawSwU5rizRuoLJqmWb8rFUMpAf5QCnq
-        5MrEenmQs+51EKgy0ZMOgz8ulQ==
-X-Google-Smtp-Source: APXvYqyLSv+QdXGnFV3g1p8B1aJHrD8G2pitYUfElplL8wg7O0YAPimG7NTzRuqe30vr+WEPIOitpQ==
-X-Received: by 2002:adf:cf0a:: with SMTP id o10mr22353641wrj.340.1574757775944;
-        Tue, 26 Nov 2019 00:42:55 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id b1sm14040556wrs.74.2019.11.26.00.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 00:42:55 -0800 (PST)
-Date:   Tue, 26 Nov 2019 09:42:53 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     syzbot <syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com>
-Cc:     airlied@linux.ie, chris@chris-wilson.co.uk,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        rafael.antognolli@intel.com, rodrigo.vivi@intel.com,
-        shli@kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in md_ioctl
-Message-ID: <20191126084253.GP29965@phenom.ffwll.local>
-Mail-Followup-To: syzbot <syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com>,
-        airlied@linux.ie, chris@chris-wilson.co.uk,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        rafael.antognolli@intel.com, rodrigo.vivi@intel.com,
-        shli@kernel.org, syzkaller-bugs@googlegroups.com
-References: <000000000000a52337056b065fb3@google.com>
- <000000000000f4160705983366e8@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GwEyhX4VjG5sUB4FdduoQGJY96vfjRUGReOuxVzCQHY=;
+        b=nnM0R8x+EeXGhR4anRp1bklYppoY3MAdrOVW15DCxOLP6R0jLSV7I9JvWhInB8A1un
+         zFzjY8Y2F6JuRQri1BSfHj5mlh1V0TKiuHWAzO36eLtenJPJTnNYOiWHQns4vFpl16ef
+         jnPBoALRPV3gAX9GBX7sVzyNMzsWVYO6i6u5InUl9Xx2D4EUQdWhrzEnk4PGNFmsv5dM
+         e24nVofaFzTnpf3YX+2qqb5GRtW/BRPnbTtK2XOf09XkfYg/17YbWbfisCWZv8MktaJW
+         DrlzEclrb7+7P0mX5yTx1W4Wkiwf/KtxNOdrA5e4cl5+Ar3a7DT8OaT/6BLOKF4XYHTW
+         LSCw==
+X-Gm-Message-State: APjAAAUFgjx7D/fhnyK9aWMoXahGScX+dwqHtr5O0zahmYch07mINSy8
+        dOGtxE0rzpWXAQUSyk/26+3bV6PCShBYYqDccQdQYC/uqMuIB6Q70ZeeGRI0W9Vold5t1Nld6aN
+        xikju6OS1JEaI9hr+7p6BMajx
+X-Received: by 2002:adf:f010:: with SMTP id j16mr36908543wro.206.1574757788325;
+        Tue, 26 Nov 2019 00:43:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz9wxamg4+M+0j2Fdgy8QtQYYW/Vc8Xmw+mi29tyIuzKI4DBEseu9fYCBGhU/OvYDbfEKyl9Q==
+X-Received: by 2002:adf:f010:: with SMTP id j16mr36908503wro.206.1574757787851;
+        Tue, 26 Nov 2019 00:43:07 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:5454:a592:5a0a:75c? ([2001:b07:6468:f312:5454:a592:5a0a:75c])
+        by smtp.gmail.com with ESMTPSA id u1sm2243735wmc.3.2019.11.26.00.43.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 00:43:07 -0800 (PST)
+Subject: Re: [PATCH 4.9 STABLE] KVM: MMU: Do not treat ZONE_DEVICE pages as
+ being reserved
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20191125190020.28274-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <0a470253-5363-0917-0abe-4c8568191a94@redhat.com>
+Date:   Tue, 26 Nov 2019 09:43:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000f4160705983366e8@google.com>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191125190020.28274-1-sean.j.christopherson@intel.com>
+Content-Language: en-US
+X-MC-Unique: sx62ctoOMuCl0tbbGTNq6A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 02:37:01PM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
+On 25/11/19 20:00, Sean Christopherson wrote:
+> [ Upstream commit a78986aae9b2988f8493f9f65a587ee433e83bc3 ]
 > 
-> commit 4b6ce6810a5dc0af387a238e8c852e0d3822381f
-> Author: Rafael Antognolli <rafael.antognolli@intel.com>
-> Date:   Mon Feb 5 23:33:30 2018 +0000
+> Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
+> instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
+> like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
+> pages, e.g. put pages grabbed via gup().  But for flows such as setting
+> A/D bits or shifting refcounts for transparent huge pages, KVM needs to
+> to avoid processing ZONE_DEVICE pages as the flows in question lack the
+> underlying machinery for proper handling of ZONE_DEVICE pages.
 > 
->     drm/i915/cnl: WaPipeControlBefore3DStateSamplePattern
+> This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
+> when running a KVM guest backed with /dev/dax memory, as KVM straight up
+> doesn't put any references to ZONE_DEVICE pages acquired by gup().
+> 
+> Note, Dan Williams proposed an alternative solution of doing put_page()
+> on ZONE_DEVICE pages immediately after gup() in order to simplify the
+> auditing needed to ensure is_zone_device_page() is called if and only if
+> the backing device is pinned (via gup()).  But that approach would break
+> kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
+> unmap() when accessing guest memory, unlike KVM's secondary MMU, which
+> coordinates with mmu_notifier invalidations to avoid creating stale
+> page references, i.e. doesn't rely on pages being pinned.
+> 
+> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+> 
+> Reported-by: Adam Borowski <kilobyte@angband.pl>
+> Analyzed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> [sean: backport to 4.x; resolve conflict in mmu.c]
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/mmu.c       |  8 ++++----
+>  include/linux/kvm_host.h |  1 +
+>  virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
+>  3 files changed, 28 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index f0f180158c26..3a281a2decde 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -2934,7 +2934,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+>  	 * here.
+>  	 */
+>  	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> -	    level == PT_PAGE_TABLE_LEVEL &&
+> +	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+>  	    PageTransCompoundMap(pfn_to_page(pfn)) &&
+>  	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+>  		unsigned long mask;
+> @@ -4890,9 +4890,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
+>  		 * the guest, and the guest page table is using 4K page size
+>  		 * mapping if the indirect sp has level = 1.
+>  		 */
+> -		if (sp->role.direct &&
+> -			!kvm_is_reserved_pfn(pfn) &&
+> -			PageTransCompoundMap(pfn_to_page(pfn))) {
+> +		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> +		    !kvm_is_zone_device_pfn(pfn) &&
+> +		    PageTransCompoundMap(pfn_to_page(pfn))) {
+>  			drop_spte(kvm, sptep);
+>  			need_tlb_flush = 1;
+>  			goto restart;
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 0590e7d47b02..ab90a8541aaa 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -843,6 +843,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
+>  void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
+>  
+>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
+> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+>  
+>  struct kvm_irq_ack_notifier {
+>  	struct hlist_node link;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 0fc93519e63e..c0dff5337a50 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -131,10 +131,30 @@ __weak void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+>  {
+>  }
+>  
+> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
+> +{
+> +	/*
+> +	 * The metadata used by is_zone_device_page() to determine whether or
+> +	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
+> +	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
+> +	 * page_count() is zero to help detect bad usage of this helper.
+> +	 */
+> +	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
+> +		return false;
+> +
+> +	return is_zone_device_page(pfn_to_page(pfn));
+> +}
+> +
+>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+>  {
+> +	/*
+> +	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
+> +	 * perspective they are "normal" pages, albeit with slightly different
+> +	 * usage rules.
+> +	 */
+>  	if (pfn_valid(pfn))
+> -		return PageReserved(pfn_to_page(pfn));
+> +		return PageReserved(pfn_to_page(pfn)) &&
+> +		       !kvm_is_zone_device_pfn(pfn);
+>  
+>  	return true;
+>  }
+> @@ -1758,7 +1778,7 @@ static void kvm_release_pfn_dirty(kvm_pfn_t pfn)
+>  
+>  void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+>  {
+> -	if (!kvm_is_reserved_pfn(pfn)) {
+> +	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
+>  		struct page *page = pfn_to_page(pfn);
+>  
+>  		if (!PageReserved(page))
+> @@ -1769,7 +1789,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
+>  
+>  void kvm_set_pfn_accessed(kvm_pfn_t pfn)
+>  {
+> -	if (!kvm_is_reserved_pfn(pfn))
+> +	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
+>  		mark_page_accessed(pfn_to_page(pfn));
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
+> 
 
-This seems very unlikely, the reproducer doesn't open a drm device, and
-I'd be surprised if your gcd instances have an actual i915 device in them
-(but I can't check because boot log isn't provided, didn't find it on the
-dashboard either).
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Since i915 is built-in I suspect this simply moved something else in the
-kernel image around which provokes the bug.
--Daniel
-
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13aeb522e00000
-> start commit:   c61a56ab Merge branch 'x86-urgent-for-linus' of git://git...
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=106eb522e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17aeb522e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4013180e7c7a9ff9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1e46a0864c1a6e9bd3d8
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16bca207800000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14819a47800000
-> 
-> Reported-by: syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com
-> Fixes: 4b6ce6810a5d ("drm/i915/cnl:
-> WaPipeControlBefore3DStateSamplePattern")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
