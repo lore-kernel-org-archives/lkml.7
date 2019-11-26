@@ -2,108 +2,108 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EA6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B754C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D44A20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C19C20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 17:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWHmv0rw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKZRzU (ORCPT
+        id S1727187AbfKZRzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:55:20 -0500
-Received: from mx2.cyber.ee ([193.40.6.72]:46118 "EHLO mx2.cyber.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfKZRzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:55:20 -0500
-To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-From:   Meelis Roos <mroos@linux.ee>
-Subject: UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-Message-ID: <02f44ed5-13ac-f9c6-1f35-129c41006900@linux.ee>
-Date:   Tue, 26 Nov 2019 19:55:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 26 Nov 2019 12:55:53 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38002 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfKZRzw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 12:55:52 -0500
+Received: by mail-pg1-f194.google.com with SMTP id t3so8925013pgl.5;
+        Tue, 26 Nov 2019 09:55:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TvvdTSqyYu1UERC53GMtsiAam2mDxhTlJf/JArDCSrQ=;
+        b=OWHmv0rwNliBmYsjj8smIocF1JTsvaq9ItSMbiJn6nyDPUqSmrmj/rnuEL29GILHg/
+         5c2AQ/giRF9hTOccWsp96yMWBot8xnUJKhxJIbs1hpknA+oJPABUjrPrvlf3XekzVB/q
+         HHx3oOD8EzhFuRgGmWqQNa5jlkWi3tlz0ZCzizLTnaxSf/WL2zi9eJ9ixGLncAHmrGa6
+         PCWoqGGTC2YK4TgVADQbwO3BfKKDzvNDZqUZubw+3oOlIEMjSR8pXjm3yHch0dB6yMsl
+         YLYI4byIxjzAHH0IRgFWRaQYwVlfenObZpd16jdE15X3gHc0IjQSc2IkqRJSfw1bpkUu
+         6u+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TvvdTSqyYu1UERC53GMtsiAam2mDxhTlJf/JArDCSrQ=;
+        b=sH31WfQkpFTLgqda8eyBruqgE3eXik5DlZq6zGeeCAIPa7GT62vtRhFUOyz1C2a4AQ
+         ZVYECAGQ/ua4JUkh5s6vHSWVMxIR2J0pNP+czyboQhEJSnbxYUIsbW6aQ430ftl4uLFE
+         qdnjOyVt8bL2l4ZrKb1XGpuUKjS1t2MQ93GLD2VlvTd09YPKyqL4/DJ2Uk4o7mu7zpyI
+         r2XhGIF1FmrCZPpLGh3oZRL6dRoWukELDmY3mYFIj84+xjwHrghYRCBaNJnlaEMwpIAL
+         lLjGK9O8q9DtsmtHSKm3S8u9iSp5tBYd0MZlz6xTy/H5C3b7/rsvy0oONlKZd7WN/H0y
+         1AvA==
+X-Gm-Message-State: APjAAAWKM9lvHWAf/vS1t+M3j/5bXISiY9WO6ZADM+TLEUx55MlUfG7/
+        AXVPLB9IyJAXjJvM6+qDu/c=
+X-Google-Smtp-Source: APXvYqyOpcmH+LQLNqKMpeT7iy2nxBR7WsUOcR0vrbLmbLTb3Hw+LcDWtk0d4hjF2hFpb5IMctFCHg==
+X-Received: by 2002:a63:5851:: with SMTP id i17mr39852959pgm.181.1574790950285;
+        Tue, 26 Nov 2019 09:55:50 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:2f79:ce3b:4b9:a68f:959f])
+        by smtp.gmail.com with ESMTPSA id q6sm781577pfl.140.2019.11.26.09.55.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 09:55:49 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     Larry.Finger@lwfinger.net, jakub.kicinski@netronome.com,
+        kvalo@codeaurora.org
+Cc:     tranmanphong@gmail.com, Wright.Feng@cypress.com,
+        arend.vanspriel@broadcom.com, davem@davemloft.net,
+        emmanuel.grumbach@intel.com, franky.lin@broadcom.com,
+        johannes.berg@intel.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        luciano.coelho@intel.com, netdev@vger.kernel.org,
+        p.figiel@camlintechnologies.com,
+        pieter-paul.giesberts@broadcom.com, pkshih@realtek.com,
+        rafal@milecki.pl, sara.sharon@intel.com,
+        shahar.s.matityahu@intel.com, yhchuang@realtek.com,
+        yuehaibing@huawei.com
+Subject: [Patch v2 0/4] wireless: Fix -Wcast-function-type 
+Date:   Wed, 27 Nov 2019 00:55:25 +0700
+Message-Id: <20191126175529.10909-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191125150215.29263-1-tranmanphong@gmail.com>
+References: <20191125150215.29263-1-tranmanphong@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While testing 5.4 on a Dell D600 (32-bit), I noticed the old UBSAN warnings from p6 perf events.
-I remember having seen these warnings on other p6 era computers too.
+Change with v1:
+ - align commit subject prefix with review comments.
+ - split patch "drivers: net: intel: Fix -Wcast-function-type"
+   into "ipw2x00" and "iwlegacy"
+ - update tested by as
+https://lore.kernel.org/linux-wireless/8eb8d6fd-de20-2d04-8210-ad8304d7da9e@lwfinger.net/
 
-[    2.795167] ================================================================================
-[    2.795206] UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-[    2.795235] index 8 is out of range for type 'u64 [8]'
-[    2.795265] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-03419-g386403a115f9-dirty #18
-[    2.795266] Hardware name: Dell Computer Corporation Latitude D600                   /0X2034, BIOS A16 06/29/2005
-[    2.795268] Call Trace:
-[    2.795283]  dump_stack+0x16/0x19
-[    2.795290]  ubsan_epilogue+0xb/0x29
-[    2.795293]  __ubsan_handle_out_of_bounds.cold+0x43/0x48
-[    2.795299]  ? sysfs_add_file_mode_ns+0xad/0x180
-[    2.795304]  p6_pmu_event_map+0x3b/0x50
-[    2.795306]  is_visible+0x25/0x30
-[    2.795308]  ? collect_events+0x150/0x150
-[    2.795310]  internal_create_group+0xd8/0x3e0
-[    2.795312]  ? collect_events+0x150/0x150
-[    2.795314]  internal_create_groups.part.0+0x34/0x80
-[    2.795317]  sysfs_create_groups+0x10/0x20
-[    2.795321]  device_add+0x536/0x5a0
-[    2.795326]  ? kvasprintf_const+0x59/0x90
-[    2.795331]  ? kfree_const+0xf/0x30
-[    2.795334]  ? kobject_set_name_vargs+0x6a/0xa0
-[    2.795338]  pmu_dev_alloc+0x8e/0xe0
-[    2.795344]  perf_event_sysfs_init+0x40/0x78
-[    2.795346]  ? stack_map_init+0x17/0x17
-[    2.795347]  do_one_initcall+0x7a/0x1b3
-[    2.795351]  ? do_early_param+0x75/0x75
-[    2.795354]  kernel_init_freeable+0x1ae/0x230
-[    2.795357]  ? rest_init+0x6d/0x6d
-[    2.795359]  kernel_init+0x9/0xf3
-[    2.795361]  ? rest_init+0x6d/0x6d
-[    2.795363]  ret_from_fork+0x2e/0x38
-[    2.795364] ================================================================================
-[    2.795396] ================================================================================
-[    2.795427] UBSAN: Undefined behaviour in arch/x86/events/intel/p6.c:116:29
-[    2.795456] load of address (ptrval) with insufficient space
-[    2.795483] for an object of type 'const u64'
-[    2.795510] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-03419-g386403a115f9-dirty #18
-[    2.795511] Hardware name: Dell Computer Corporation Latitude D600                   /0X2034, BIOS A16 06/29/2005
-[    2.795512] Call Trace:
-[    2.795514]  dump_stack+0x16/0x19
-[    2.795517]  ubsan_epilogue+0xb/0x29
-[    2.795519]  ubsan_type_mismatch_common.cold+0xd6/0xdb
-[    2.795522]  __ubsan_handle_type_mismatch_v1+0x2d/0x40
-[    2.795524]  p6_pmu_event_map+0x4b/0x50
-[    2.795525]  is_visible+0x25/0x30
-[    2.795527]  ? collect_events+0x150/0x150
-[    2.795529]  internal_create_group+0xd8/0x3e0
-[    2.795531]  ? collect_events+0x150/0x150
-[    2.795533]  internal_create_groups.part.0+0x34/0x80
-[    2.795536]  sysfs_create_groups+0x10/0x20
-[    2.795537]  device_add+0x536/0x5a0
-[    2.795540]  ? kvasprintf_const+0x59/0x90
-[    2.795542]  ? kfree_const+0xf/0x30
-[    2.795543]  ? kobject_set_name_vargs+0x6a/0xa0
-[    2.795546]  pmu_dev_alloc+0x8e/0xe0
-[    2.795548]  perf_event_sysfs_init+0x40/0x78
-[    2.795550]  ? stack_map_init+0x17/0x17
-[    2.795551]  do_one_initcall+0x7a/0x1b3
-[    2.795553]  ? do_early_param+0x75/0x75
-[    2.795556]  kernel_init_freeable+0x1ae/0x230
-[    2.795558]  ? rest_init+0x6d/0x6d
-[    2.795560]  kernel_init+0x9/0xf3
-[    2.795561]  ? rest_init+0x6d/0x6d
-[    2.795563]  ret_from_fork+0x2e/0x38
-[    2.795565] ================================================================================
+Phong Tran (4):
+  b43legacy: Fix -Wcast-function-type
+  ipw2x00: Fix -Wcast-function-type
+  iwlegacy: Fix -Wcast-function-type
+  rtlwifi: rtl_pci: Fix -Wcast-function-type
 
+ drivers/net/wireless/broadcom/b43legacy/main.c |  5 +++--
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c   |  7 ++++---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c   |  5 +++--
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c |  5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c |  5 +++--
+ drivers/net/wireless/realtek/rtlwifi/pci.c     | 10 ++++++----
+ 6 files changed, 22 insertions(+), 15 deletions(-)
 
 -- 
-Meelis Roos <mroos@linux.ee>
+2.20.1
+
