@@ -2,258 +2,289 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844F8C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54C92071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574786928;
-	bh=GAmF3TYyk2ddyiuqlE+OzSfxjq6+jpC7YwdpGDEexBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pPC6+TZWI8ViVHexq/Ah6NygbY5cKtUKng13Y+CiM1qQW/br27pm/VhCbiOBYgect
-	 B8kOa9e6T3FbZFP2MXfWqCcVwHcbvrWTBm2Y3/mi/Iyb8synOTTNN51WGJI4ZDfh4A
-	 NfkW3Y6g+RNFKc/iMxgX6HbZeVA5t/leA7EsZ3HU=
+	by mail.kernel.org (Postfix) with ESMTP id 46AF82073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:54:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXy/I5Iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfKZQss (ORCPT
+        id S1728295AbfKZQyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:48:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfKZQsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:48:47 -0500
-Received: from linux-8ccs (x2f7ff09.dyn.telefonica.de [2.247.255.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3E9A20722;
-        Tue, 26 Nov 2019 16:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574786926;
-        bh=GAmF3TYyk2ddyiuqlE+OzSfxjq6+jpC7YwdpGDEexBw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iquYMZ08r+aRZillGk5lb3NuM8yqJDRtbqVNCm1lz6ZgRHr68L/cbW08hq1qycyA3
-         oO8F1XYt/6KMMn+59RkBmKFwOEK2lMZlhsEKnfFtmhTeskiY4p9Ok8vc8EHUpag1ut
-         RZNCCS7Yno1Z794VxNZP/shqJOsYK+v1MuNTeAjA=
-Date:   Tue, 26 Nov 2019 17:48:40 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] export.h: reduce __ksymtab_strings string duplication
- by using "MS" section flags
-Message-ID: <20191126164840.GA8011@linux-8ccs>
-References: <20191120145110.8397-1-jeyu@kernel.org>
- <20191125154217.18640-1-jeyu@kernel.org>
- <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
- <20191126135620.GA38845@google.com>
- <20191126153153.GA3495@linux-8ccs>
- <CAK7LNAS9WoqJh2NR81QrYNGVAUhbgU0Y97791HYb1XeAuHCtWw@mail.gmail.com>
+        Tue, 26 Nov 2019 11:54:09 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39380 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfKZQyI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 11:54:08 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e10so11893919ljj.6;
+        Tue, 26 Nov 2019 08:54:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K8Udhqf472lBzZGhoQZMM7y7CbUcEQYl8y6SXBB09A8=;
+        b=cXy/I5IypqlHmRe7XcWCQmZnLkDsUML/aT8hb9JlJps9b7W0dTyZVEm832FmmYVmIF
+         WXFky6MfaJKgp5xbIldzGnmD+kSKl6Wx0uHdYq//24NjCGrhfs/4rWuI1REArv+nhLpX
+         CuGSbC3wNoquk+HjXJZWmGN3hiSxa/zZoEH1OvxyTLWtxVbfU807VowgaqYmhRkRXzvN
+         5E7vqqK1k8djaD7HGv2/DOORZY+sk1tB0eWgEwGx0QMGfFNPsHifWYkQ6KW5h65N+8CL
+         FADRTvqwUWWJdZbAvqHtLcDmm06MyVPB0PLNA+7xYERO55bgJegg09mO7MNkdsU3wFq1
+         tnaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K8Udhqf472lBzZGhoQZMM7y7CbUcEQYl8y6SXBB09A8=;
+        b=fkH2Q5JUMZoakR8pZgBDed3ZMDHVWpvicn+pHeq5eJOKYdyUdAY7LKoR8MWk5gMaKf
+         VH2pMMtDGIJ6tiOcUtYGudhTtnkFXGfiALaCKYqCRSc3EwnF1gUeqs1S9UDQplt4i5l1
+         I9tmX5OhHX46uC6QY4SCVRcXtzNySsCsS7zMtSKJBfiFcOhobE2UZddBuDavP6f9Q/LR
+         1Z9fm0sgiHnKv/eMvrIa8j4BcIjCBUSiuOdXuJ2MVxMaOZ0Or3J7utT1QmQ7tstDxEMN
+         h1Rf0mhhEvtFaZtJ+vEefxf8ZG2vLD5tbMK3q0JLBsUAbjLBOP+FJxFeDL8dA3/Un+1K
+         pq2Q==
+X-Gm-Message-State: APjAAAUKXypCST1hk/Uj5WUDFith/AMONCro7DU8IKkaVXXABpQ484ys
+        pXkNEZ/yejqqngX8oimhW+ADkmZiOoOvpKHOA0I=
+X-Google-Smtp-Source: APXvYqxCksj6Q0jh/LIY76QT1NETLqc44xpSKeaEsxKH43hRYNRscEJP+gKOtzd4UuIc+rl+0QQxVc/sqXKsIPcWpMk=
+X-Received: by 2002:a2e:85d5:: with SMTP id h21mr27246616ljj.243.1574787245406;
+ Tue, 26 Nov 2019 08:54:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAS9WoqJh2NR81QrYNGVAUhbgU0Y97791HYb1XeAuHCtWw@mail.gmail.com>
-X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191126151045.GB19483@kernel.org>
+In-Reply-To: <20191126151045.GB19483@kernel.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 26 Nov 2019 08:53:53 -0800
+Message-ID: <CAADnVQLfyDChpDeo0VQUwZ+M6+ivAKvfqWRAieYZVco6AKugpg@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [27/11/19 01:12 +0900]:
->On Wed, Nov 27, 2019 at 12:32 AM Jessica Yu <jeyu@kernel.org> wrote:
->>
->> +++ Matthias Maennich [26/11/19 13:56 +0000]:
->> >On Tue, Nov 26, 2019 at 05:32:59PM +0900, Masahiro Yamada wrote:
->> >>On Tue, Nov 26, 2019 at 12:42 AM Jessica Yu <jeyu@kernel.org> wrote:
->> >>>
->> >>>Commit c3a6cf19e695 ("export: avoid code duplication in
->> >>>include/linux/export.h") refactors export.h quite nicely, but introduces
->> >>>a slight increase in memory usage due to using the empty string ""
->> >>>instead of NULL to indicate that an exported symbol has no namespace. As
->> >>>mentioned in that commit, this meant an increase of 1 byte per exported
->> >>>symbol without a namespace. For example, if a kernel configuration has
->> >>>about 10k exported symbols, this would mean that the size of
->> >>>__ksymtab_strings would increase by roughly 10kB.
->> >>>
->> >>>We can alleviate this situation by utilizing the SHF_MERGE and
->> >>>SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
->> >>>that the data in the section are null-terminated strings that can be
->> >>>merged to eliminate duplication. More specifically, from the binutils
->> >>>documentation - "for sections with both M and S, a string which is a
->> >>>suffix of a larger string is considered a duplicate. Thus "def" will be
->> >>>merged with "abcdef"; A reference to the first "def" will be changed to
->> >>>a reference to "abcdef"+3". Thus, all the empty strings would be merged
->> >>>as well as any strings that can be merged according to the cited method
->> >>>above. For example, "memset" and "__memset" would be merged to just
->> >>>"__memset" in __ksymtab_strings.
->> >>>
->> >>>As of v5.4-rc5, the following statistics were gathered with x86
->> >>>defconfig with approximately 10.7k exported symbols.
->> >>>
->> >>>Size of __ksymtab_strings in vmlinux:
->> >>>-------------------------------------
->> >>>v5.4-rc5: 213834 bytes
->> >>>v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
->> >>>v5.4-rc5 with this patch: 205759 bytes
->> >>>
->> >>>So, we already see memory savings of ~8kB compared to vanilla -rc5 and
->> >>>savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
->> >>>
->> >>>Unfortunately, as of this writing, strings will not get deduplicated for
->> >>>kernel modules, as ld does not do the deduplication for
->> >>>SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
->> >>>kernel modules are. A patch for ld is currently being worked on to
->> >>>hopefully allow for string deduplication in relocatable files in the
->> >>>future.
->> >>>
->> >
->> >Thanks for working on this!
->> >
->> >>>Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->> >>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
->> >>>---
->> >>>
->> >>>v2: use %progbits throughout and document the oddity in a comment.
->> >>>
->> >>> include/asm-generic/export.h |  8 +++++---
->> >>> include/linux/export.h       | 27 +++++++++++++++++++++------
->> >>> 2 files changed, 26 insertions(+), 9 deletions(-)
->> >>>
->> >>>diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
->> >>>index fa577978fbbd..23bc98e97a66 100644
->> >>>--- a/include/asm-generic/export.h
->> >>>+++ b/include/asm-generic/export.h
->> >>>@@ -26,9 +26,11 @@
->> >>> .endm
->> >>>
->> >>> /*
->> >>>- * note on .section use: @progbits vs %progbits nastiness doesn't matter,
->> >>>- * since we immediately emit into those sections anyway.
->> >>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
->> >>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
->> >>>+ * former apparently works on all arches according to the binutils source.
->> >>>  */
->> >>>+
->> >>> .macro ___EXPORT_SYMBOL name,val,sec
->> >>> #ifdef CONFIG_MODULES
->> >>>        .globl __ksymtab_\name
->> >>>@@ -37,7 +39,7 @@
->> >>> __ksymtab_\name:
->> >>>        __put \val, __kstrtab_\name
->> >>>        .previous
->> >>>-       .section __ksymtab_strings,"a"
->> >>>+       .section __ksymtab_strings,"aMS",%progbits,1
->> >>> __kstrtab_\name:
->> >>>        .asciz "\name"
->> >>>        .previous
->> >>>diff --git a/include/linux/export.h b/include/linux/export.h
->> >>>index 201262793369..3d835ca34d33 100644
->> >>>--- a/include/linux/export.h
->> >>>+++ b/include/linux/export.h
->> >>>@@ -81,16 +81,31 @@ struct kernel_symbol {
->> >>>
->> >>> #else
->> >>>
->> >>>+/*
->> >>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
->> >>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
->> >>>+ * former apparently works on all arches according to the binutils source.
->> >>>+ */
->> >>>+#define __KSTRTAB_ENTRY(sym)                                                   \
->> >>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
->> >>>+           "__kstrtab_" #sym ":                                        \n"     \
->> >>>+           "   .asciz  \"" #sym "\"                                    \n"     \
->> >>>+           "   .previous                                               \n")
->> >>>+
->> >>>+#define __KSTRTAB_NS_ENTRY(sym, ns)                                            \
->> >>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
->> >>>+           "__kstrtabns_" #sym ":                                      \n"     \
->> >>>+           "   .asciz  " #ns "                                         \n"     \
->> >>
->> >>
->> >>Hmm, it took some time for me to how this code works.
->> >>
->> >>ns is already a C string, then you added # to it,
->> >>then I was confused.
->> >>
->> >>Personally, I prefer this code:
->> >>" .asciz \"" ns "\" \n"
->> >>
->> >>so it looks in the same way as __KSTRTAB_ENTRY().
->> >
->> >I agree with this, these entries should be consistent.
->> >
->> >>
->> >>
->> >>
->> >>BTW, you duplicated \"aMS\",%progbits,1" and ".previous"
->> >>
->> >>
->> >>I would write it shorter, like this:
->> >>
->> >>
->> >>#define ___EXPORT_SYMBOL(sym, sec, ns) \
->> >>       extern typeof(sym) sym; \
->> >>       extern const char __kstrtab_##sym[]; \
->> >>       extern const char __kstrtabns_##sym[]; \
->> >>       __CRC_SYMBOL(sym, sec); \
->> >>       asm("    .section \"__ksymtab_strings\",\"aMS\",%progbits,1\n" \
->> >>           "__kstrtab_" #sym ": \n" \
->> >>           "     .asciz \"" #sym "\" \n" \
->> >>           "__kstrtabns_" #sym ": \n" \
->> >>           "     .asciz \"" ns "\" \n" \
->> >>           "     .previous \n");    \
->> >>      __KSYMTAB_ENTRY(sym, sec)
->> >>
->> >
->> >I would prefer the separate macros though (as initially proposed) as I
->> >find them much more readable. The code is already a bit tricky to reason
->> >about and I don't think the shorter version is enough of a gain.
->>
->> Yeah, the macros were more readable IMO. But I could just squash them into one
->> __KSTRTAB_ENTRY macro as a compromise for Masahiro maybe?
->>
->> Is this any better?
+On Tue, Nov 26, 2019 at 7:10 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
->I prefer opposite.
+> Hi guys,
 >
+>    While merging perf/core with mainline I found the problem below for
+> which I'm adding this patch to my perf/core branch, that soon will go
+> Ingo's way, etc. Please let me know if you think this should be handled
+> some other way,
 >
->__CRC_SYMBOL() is macrofied because it is ifdef'ed by
->CONFIG_MODVERSIONS and CONFIG_MOD_REL_CRCS.
+> Thanks,
 >
->__KSYMTAB_ENTRY() is macrofied because it is ifdef'ed by
->CONFIG_HAVE_ARCH_PREL32_RELOCATIONS.
+> - Arnaldo
 >
+> commit 94b2e22463f592d2161eb491ddb0b4659e2a91b4
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Tue Nov 26 11:46:08 2019 -0300
 >
+>     libbpf: Fix up generation of bpf_helper_defs.h
 >
->__KSTRTAB_ENTRY() does not depend on any CONFIG option,
->so it can be expanded in ___EXPORT_SYMBOL().
+>     Building perf as a detached tarball, i.e. by using one of:
 >
+>       $ make help | grep perf
+>         perf-tar-src-pkg    - Build perf-5.4.0.tar source tarball
+>         perf-targz-src-pkg  - Build perf-5.4.0.tar.gz source tarball
+>         perf-tarbz2-src-pkg - Build perf-5.4.0.tar.bz2 source tarball
+>         perf-tarxz-src-pkg  - Build perf-5.4.0.tar.xz source tarball
+>       $
 >
->You need to check multiple locations
->to understand how it works as a whole.
->I do not understand why increasing macro-chains is readable.
+>     And then trying to build the resulting tarball, which is the first thing
+>     that running:
+>
+>       $ make -C tools/perf build-test
+>
+>     does, ends up with these two problems:
+>
+>       make[3]: *** No rule to make target '/tmp/tmp.zq13cHILGB/perf-5.3.0/include/uapi/linux/bpf.h', needed by 'bpf_helper_defs.h'.  Stop.
+>       make[3]: *** Waiting for unfinished jobs....
+>       make[2]: *** [Makefile.perf:757: /tmp/tmp.zq13cHILGB/perf-5.3.0/tools/lib/bpf/libbpf.a] Error 2
+>       make[2]: *** Waiting for unfinished jobs....
+>
+>     Because $(srcdir) points to the /tmp/tmp.zq13cHILGB/perf-5.3.0 directory
+>     and we need '/tools/ after that variable, and after fixing this then we
+>     get to another problem:
+>
+>       /bin/sh: /home/acme/git/perf/tools/scripts/bpf_helpers_doc.py: No such file or directory
+>       make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 127
+>       make[3]: *** Deleting file 'bpf_helper_defs.h'
+>         LD       /tmp/build/perf/libapi-in.o
+>       make[2]: *** [Makefile.perf:778: /tmp/build/perf/libbpf.a] Error 2
+>       make[2]: *** Waiting for unfinished jobs....
+>
+>     Because this requires something outside the tools/ directories that gets
+>     collected into perf's detached tarballs, to fix it just add it to
+>     tools/perf/MANIFEST, which this patch does, now it works for that case
+>     and also for all these other cases after doing a:
+>
+>       $ make -C tools clean
+>
+>     On a kernel sources directory:
+>
+>       $ make -C tools/bpf/bpftool/
+>       make: Entering directory '/home/acme/git/perf/tools/bpf/bpftool'
+>
+>       Auto-detecting system features:
+>       ...                        libbfd: [ on  ]
+>       ...        disassembler-four-args: [ on  ]
+>       ...                          zlib: [ on  ]
+>
+>         CC       map_perf_ring.o
+>       <SNIP>
+>         CC       disasm.o
+>       make[1]: Entering directory '/home/acme/git/perf/tools/lib/bpf'
+>
+>       Auto-detecting system features:
+>       ...                        libelf: [ on  ]
+>       ...                           bpf: [ on  ]
+>
+>         MKDIR    staticobjs/
+>         CC       staticobjs/libbpf.o
+>       <SNIP>
+>         LD       staticobjs/libbpf-in.o
+>         LINK     libbpf.a
+>       make[1]: Leaving directory '/home/acme/git/perf/tools/lib/bpf'
+>         LINK     bpftool
+>       make: Leaving directory '/home/acme/git/perf/tools/bpf/bpftool'
+>       $
+>
+>       $ make -C tools/perf
+>       <SNIP>
+>       Auto-detecting system features:
+>       ...                         dwarf: [ on  ]
+>       ...            dwarf_getlocations: [ on  ]
+>       ...                         glibc: [ on  ]
+>       ...                          gtk2: [ on  ]
+>       ...                      libaudit: [ on  ]
+>       ...                        libbfd: [ on  ]
+>       ...                        libcap: [ on  ]
+>       ...                        libelf: [ on  ]
+>       ...                       libnuma: [ on  ]
+>       ...        numa_num_possible_cpus: [ on  ]
+>       ...                       libperl: [ on  ]
+>       ...                     libpython: [ on  ]
+>       ...                     libcrypto: [ on  ]
+>       ...                     libunwind: [ on  ]
+>       ...            libdw-dwarf-unwind: [ on  ]
+>       ...                          zlib: [ on  ]
+>       ...                          lzma: [ on  ]
+>       ...                     get_cpuid: [ on  ]
+>       ...                           bpf: [ on  ]
+>       ...                        libaio: [ on  ]
+>       ...                       libzstd: [ on  ]
+>       ...        disassembler-four-args: [ on  ]
+>
+>         GEN      common-cmds.h
+>         CC       exec-cmd.o
+>         <SNIP>
+>         CC       util/pmu.o
+>         CC       util/pmu-flex.o
+>         LD       util/perf-in.o
+>         LD       perf-in.o
+>         LINK     perf
+>       make: Leaving directory '/home/acme/git/perf/tools/perf'
+>       $
+>
+>       $ make -C tools/lib/bpf
+>       make: Entering directory '/home/acme/git/perf/tools/lib/bpf'
+>
+>       Auto-detecting system features:
+>       ...                        libelf: [ on  ]
+>       ...                           bpf: [ on  ]
+>
+>         HOSTCC   fixdep.o
+>         HOSTLD   fixdep-in.o
+>         LINK     fixdep
+>       Parsed description of 117 helper function(s)
+>         MKDIR    staticobjs/
+>         CC       staticobjs/libbpf.o
+>         CC       staticobjs/bpf.o
+>         CC       staticobjs/nlattr.o
+>         CC       staticobjs/btf.o
+>         CC       staticobjs/libbpf_errno.o
+>         CC       staticobjs/str_error.o
+>         CC       staticobjs/netlink.o
+>         CC       staticobjs/bpf_prog_linfo.o
+>         CC       staticobjs/libbpf_probes.o
+>         CC       staticobjs/xsk.o
+>         CC       staticobjs/hashmap.o
+>         CC       staticobjs/btf_dump.o
+>         LD       staticobjs/libbpf-in.o
+>         LINK     libbpf.a
+>         MKDIR    sharedobjs/
+>         CC       sharedobjs/libbpf.o
+>         CC       sharedobjs/bpf.o
+>         CC       sharedobjs/nlattr.o
+>         CC       sharedobjs/btf.o
+>         CC       sharedobjs/libbpf_errno.o
+>         CC       sharedobjs/str_error.o
+>         CC       sharedobjs/netlink.o
+>         CC       sharedobjs/bpf_prog_linfo.o
+>         CC       sharedobjs/libbpf_probes.o
+>         CC       sharedobjs/xsk.o
+>         CC       sharedobjs/hashmap.o
+>         CC       sharedobjs/btf_dump.o
+>         LD       sharedobjs/libbpf-in.o
+>         LINK     libbpf.so.0.0.6
+>         GEN      libbpf.pc
+>         LINK     test_libbpf
+>       make: Leaving directory '/home/acme/git/perf/tools/lib/bpf'
+>       $
+>
+>     Fixes: e01a75c15969 ("libbpf: Move bpf_{helpers, helper_defs, endian, tracing}.h into libbpf")
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Alexei Starovoitov <ast@kernel.org>
+>     Cc: Andrii Nakryiko <andriin@fb.com>
+>     Cc: Daniel Borkmann <daniel@iogearbox.net>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Martin KaFai Lau <kafai@fb.com>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Link: https://lkml.kernel.org/n/tip-4pnkg2vmdvq5u6eivc887wen@git.kernel.org
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index 99425d0be6ff..8ec6bc4e5e46 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -180,9 +180,9 @@ $(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
+>  $(BPF_IN_STATIC): force elfdep bpfdep bpf_helper_defs.h
+>         $(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
+>
+> -bpf_helper_defs.h: $(srctree)/include/uapi/linux/bpf.h
+> +bpf_helper_defs.h: $(srctree)/tools/include/uapi/linux/bpf.h
+>         $(Q)$(srctree)/scripts/bpf_helpers_doc.py --header              \
+> -               --file $(srctree)/include/uapi/linux/bpf.h > bpf_helper_defs.h
+> +               --file $(srctree)/tools/include/uapi/linux/bpf.h > bpf_helper_defs.h
 
-I think it is "readable" in the sense that when someone is reading
-export.h for the first time, they know exactly what ___EXPORT_SYMBOL()
-is supposed to do, without requiring them to read too deeply into the
-asm and swim through the #ifdefs.  __CRC_SYMBOL(), depending on
-modversions, creates an entry in what would eventually be merged to
-become the __kcrctab section, __KSTRTAB_ENTRY() creates entries in
-__ksymtab_strings, and __KSYMTAB_ENTRY() creates an entry in (what
-would eventually become) the __ksymtab{,_gpl} section. It gives a
-general idea of what it's doing.
+fwiw. this bit looks good. Makes sense to do regardless.
 
-However, I do understand your reasoning behind not having an extra
-macro. I'll wait a bit before respinning the patch to see if we can
-get at a consensus..
+>  $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
+>
+> diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+> index 70f1ff4e2eb4..4934edb5adfd 100644
+> --- a/tools/perf/MANIFEST
+> +++ b/tools/perf/MANIFEST
+> @@ -19,3 +19,4 @@ tools/lib/bitmap.c
+>  tools/lib/str_error_r.c
+>  tools/lib/vsprintf.c
+>  tools/lib/zalloc.c
+> +scripts/bpf_helpers_doc.py
 
-
+This one I don't understand. I couldn't find any piece that uses this file.
+Some out of tree usage?
