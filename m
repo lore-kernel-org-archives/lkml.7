@@ -2,119 +2,110 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15701C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C6FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F0C2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P83wjgV5"
+	by mail.kernel.org (Postfix) with ESMTP id 2CE8A20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 22:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKZWgk (ORCPT
+        id S1727079AbfKZWg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 17:36:40 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45550 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKZWgj (ORCPT
+        Tue, 26 Nov 2019 17:36:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27598 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726232AbfKZWg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 17:36:39 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so15425228lfa.12;
-        Tue, 26 Nov 2019 14:36:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wxy80mBAQVfVNiFRLzfL2dvJVYM/W7L9tB9zzxf4iug=;
-        b=P83wjgV5BZ79VZm2l5j3cMsBq8T9cIcd/ftrEAfOGQYgsbzP75wXa973rMk7459uXO
-         gjYLXtWxnZDZ3/i/awe3KDzga77Ve5ig8MvVwW2sPkFael3RDxd/RL/NvR62NjV03+wq
-         dzyKRgBPPSkd/LdcFkNnlJK7sNoppUQZfrL/4nuNc9nwXD4jiEb4yOKtZH2WzUKBZ1EK
-         AE3H1BlN7SPVNskMNWOMrXq2bYgkE8SMQiGNWU4nomZ0bwaUVWF2v4xKRPeC71feUDvs
-         6AJh051Ctva3V5hTRD9KcpR2JLSK+XJM3U1lp6X4B5pO+rWUV3EjdAe4qwRIqfSJBxI/
-         HR4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wxy80mBAQVfVNiFRLzfL2dvJVYM/W7L9tB9zzxf4iug=;
-        b=cHn6cI7nc3Q4DmmM8uh9wTEgeD9PbSnFGic512W/n+YS8Lz+RWwlycqgCjq+H284JE
-         V9yD4LUmxEMZdyTqM3Y5NPTRHjTld+CAL6AHQrf/HD2o6ZrD1JmZq8CiobJpEBAZPiUc
-         vcINfTPoPgRPe5762FjNZOoaWB1lHeUjVpe+T0bg3bf9NEhBxVgQI9ZYb0DEx9YNyapp
-         lUdQGuZqMnEzMrwufSY/ESO3SvTjhsdbmivPwn2QNrkAc1ulQg/OWgLkOos50yPef8h/
-         4ZMyWQc6KE8kJRPLVxJZLaMnFmgGsWNYW+sD0n6YYSic2CGSOm4uBE0I7926aasuQ3gN
-         MwiQ==
-X-Gm-Message-State: APjAAAWe3UaLdxDPG5LknG/KfuUS7Be+DJNcuUPSC0y8PGuU02t5igay
-        0OjqHrIlSMhnTDRCsE3lbdYU2q+IQVxFrzsV8L0I7f/Y
-X-Google-Smtp-Source: APXvYqxN/GAR29dK9DHptHMLVgGfyUiHMxYz2YPesHjuMPjZoZCc/lHe4X7vDMZ4GtXvwD/lM5oU02+bx/5X2J2a8hY=
-X-Received: by 2002:ac2:46f7:: with SMTP id q23mr25607116lfo.68.1574807796845;
- Tue, 26 Nov 2019 14:36:36 -0800 (PST)
+        Tue, 26 Nov 2019 17:36:57 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQMX26s057546;
+        Tue, 26 Nov 2019 17:36:43 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whcxpr31n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 17:36:42 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAQMYrGQ013272;
+        Tue, 26 Nov 2019 22:36:41 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 2wevd77a5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 22:36:41 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQMafvx55116208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Nov 2019 22:36:41 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 590C3AC05B;
+        Tue, 26 Nov 2019 22:36:41 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C769AC060;
+        Tue, 26 Nov 2019 22:36:40 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.137])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Nov 2019 22:36:40 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Replace current->mm by kvm->mm on powerpc/kvm
+Date:   Tue, 26 Nov 2019 19:36:29 -0300
+Message-Id: <20191126223631.389779-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191121234125.28032-1-sj38.park@gmail.com> <20191126222144.GW2889@paulmck-ThinkPad-P72>
-In-Reply-To: <20191126222144.GW2889@paulmck-ThinkPad-P72>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Tue, 26 Nov 2019 23:36:10 +0100
-Message-ID: <CAEjAshpBEyzh-=s9rPw7+yAbZLZfv5-XaG=-TCEn1G5yaQmHbQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] docs: Update ko_KR translations
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_07:2019-11-26,2019-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ suspectscore=2 spamscore=0 phishscore=0 mlxlogscore=606 bulkscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911260191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 11:21 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Fri, Nov 22, 2019 at 12:41:18AM +0100, SeongJae Park wrote:
-> > This patchset contains updates of Korean translation documents and a fix
-> > of original document.
-> >
-> > First 4 patches update the Korean translation of memory-barriers.txt.
-> > Fifth patch fixes a broken section reference in the original
-> > memory-barriers.txt.
-> >
-> > Sixth and seventh patches update the Korean translation of howto.rst.
->
-> The sixth and seventh probably have some other more natural path,
-> but I queued them.  Any chance of a Reviewed-by from one of our other
-> Korean-language kernel hackers?
+Replace current->mm by kvm->mm on powerpc/kvm
 
-Thanks, Paul.  I asked a review to my Korean ex-colleague.  Will update the
-results, soon!
+By replacing, we would reduce the use of 'global' current on code,
+relying more in the contents of kvm struct.
+
+On code, I found that in kvm_create_vm() there is:
+kvm->mm = current->mm;
+
+And that on every kvm_*_ioctl we have tests like that:
+if (kvm->mm != current->mm)
+        return -EIO;
+
+So this change would be safe.
+
+---
+Changes since v2:
+- Rebased on torvalds/master and updated the remaining patches.
+
+Changes since v1:
+- Fixes possible 'use after free' on kvm_spapr_tce_release (from v1)
+- Fixes possible 'use after free' on kvm_vm_ioctl_create_spapr_tce
+- Fixes undeclared variable error
 
 
-Thanks,
-SeongJae Park
+Leonardo Bras (2):
+  powerpc/kvm/book3s: Replace current->mm by kvm->mm
+  powerpc/kvm/book3e: Replace current->mm by kvm->mm
 
->
->                                                         Thanx, Paul
->
-> > *** BLURB HERE ***
-> >
-> > SeongJae Park (7):
-> >   docs/memory-barriers.txt/kokr: Rewrite "KERNEL I/O BARRIER EFFECTS"
-> >     section
-> >   Documentation/kokr: Kill all references to mmiowb()
-> >   docs/memory-barriers.txt/kokr: Fix style, spacing and grammar in I/O
-> >     section
-> >   docs/memory-barriers.txt/kokr: Update I/O section to be clearer about
-> >     CPU vs thread
-> >   docs/memory-barriers.txt: Remove remaining references to mmiowb()
-> >   Documentation/translation: Use Korean for Korean translation title
-> >   Documentation/process/howto/kokr: Update for 4.x -> 5.x versioning
-> >
-> >  Documentation/memory-barriers.txt             |  11 +-
-> >  Documentation/translations/ko_KR/howto.rst    |  56 +++--
-> >  Documentation/translations/ko_KR/index.rst    |   4 +-
-> >  .../translations/ko_KR/memory-barriers.txt    | 227 +++++++-----------
-> >  4 files changed, 119 insertions(+), 179 deletions(-)
-> >
-> > --
-> > 2.17.2
-> >
+ arch/powerpc/kvm/book3s_64_mmu_hv.c |  4 ++--
+ arch/powerpc/kvm/book3s_64_vio.c    | 10 ++++++----
+ arch/powerpc/kvm/book3s_hv.c        | 10 +++++-----
+ arch/powerpc/kvm/booke.c            |  2 +-
+ 4 files changed, 14 insertions(+), 12 deletions(-)
+
+-- 
+2.23.0
+
