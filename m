@@ -2,817 +2,319 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D63CC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36912C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0431420722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048A9206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RG4wRfHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKZIs4 convert rfc822-to-8bit (ORCPT
+        id S1727379AbfKZIt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:48:56 -0500
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:31693 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726049AbfKZIsy (ORCPT
+        Tue, 26 Nov 2019 03:49:58 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51448 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfKZIt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:48:54 -0500
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAQ8kwuw007038
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 26 Nov 2019 16:46:58 +0800 (CST)
-        (envelope-from Chunyan.Zhang@unisoc.com)
-Received: from localhost (10.0.74.88) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 26 Nov 2019 16:47:01
- +0800
-From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v3 3/3] arm64: dts: Add Unisoc's SC9863A SoC support
-Date:   Tue, 26 Nov 2019 16:46:44 +0800
-Message-ID: <20191126084644.17207-4-chunyan.zhang@unisoc.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
-References: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
+        Tue, 26 Nov 2019 03:49:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g206so2243582wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 00:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DUtjpPtkEsRpnKDWBnpzqjjyBxag8OPmqd6JOmJKLE0=;
+        b=RG4wRfHxRj9Qb9AR2jkewfbyRygSxuNhmBMPzHw0SgwgvyIf95RyWowW4Ogq5xeClo
+         XqrZI9LEeq0dkgOLxKpwtT7E5/7drxB+RAZJrsscD6RAHmXB4qkhq8csKlPJPsopYjQI
+         F+oHw6bcRAxFD/vfLcdteppRAx93loxCWp/1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=DUtjpPtkEsRpnKDWBnpzqjjyBxag8OPmqd6JOmJKLE0=;
+        b=lB2lp+QJx81dAdrBv7VHKbcAonhTbMd5dFOXRMst+OvDp/41R/uR4yp7r5x5/P0GsO
+         Hg9+MZlj0HQ/e7np25V0jh6gTTmxy1OfHUzjxoBkfX1OzQJYZilI8TdRkE7Dc9lhec32
+         PNhl2yI4La5ZDH+6zZMR5OIYsgnzMm5VbTaTokFsIDHODBtWW2f5eDdlQsnfcaRlipwW
+         cII4tOf5KQ9ZGCHsSXFdDRLQk1OfjdVEDXGP87zlmWizshq4eokL1kj1h6GfJU0G311p
+         K/u1i+ndKG4kwaQvQAd1PBZ2cGW2P7i55YTCP2lf0RUcC1TBXvHRfXnLsOJ+bVwKEvu9
+         SnFQ==
+X-Gm-Message-State: APjAAAUhJr5Oblvd+d4WQ36GqUuFOZymN31BDb7q1Hel1t6WaPw0YjWG
+        DaOZMI+M77Rj25/g4n4LwPlDCQ==
+X-Google-Smtp-Source: APXvYqy5WG5c7JXt9dC40vUTZVQYm+2vxwyYFnAd8BsPjddOuYm1VMvO4MuyIRX+JTtJdP4VDC644A==
+X-Received: by 2002:a7b:c01a:: with SMTP id c26mr2919463wmb.160.1574758194415;
+        Tue, 26 Nov 2019 00:49:54 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id u203sm2288683wme.34.2019.11.26.00.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 00:49:53 -0800 (PST)
+Date:   Tue, 26 Nov 2019 09:49:51 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, tfiga@chromium.org,
+        drinkcat@chromium.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH 1/7] drm/mediatek: fix atomic_state reference counting
+Message-ID: <20191126084951.GQ29965@phenom.ffwll.local>
+Mail-Followup-To: Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>, linux-arm-kernel@lists.infradead.org,
+        tfiga@chromium.org, drinkcat@chromium.org,
+        linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+References: <20191126062932.19773-1-bibby.hsieh@mediatek.com>
+ <20191126062932.19773-2-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="utf-8"
-X-Originating-IP: [10.0.74.88]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL: SHSQR01.spreadtrum.com xAQ8kwuw007038
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126062932.19773-2-bibby.hsieh@mediatek.com>
+X-Operating-System: Linux phenom 5.3.0-2-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic DT to support Unisoc's SC9863A, with this patch,
-the board sp9863a-1h10 can run into console.
+On Tue, Nov 26, 2019 at 02:29:26PM +0800, Bibby Hsieh wrote:
+> The DRM core takes care of all atomic state refcounting.
+> However, mediatek drm defers some work that accesses planes
+> and plane_states in drm_atomic_state, and must therefore
+> keep its own atomic state references until this work complete.
+> 
+> We take the atomic_state reference in atomic_fulsh() and ensure all the
+> information in atomic_state already was updated in hardware for
+> showing on screen and then schedules unreference_work to drop references
+> on atomic_state.
+> 
+> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- arch/arm64/boot/dts/sprd/Makefile         |   3 +-
- arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 526 ++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 148 ++++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  39 ++
- 4 files changed, 715 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+This looks strange. For one you implement your own reference counting - if
+drivers have a need for drm_atomic_state_put_irq then I
+think we should implement this in the core code.
 
-diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
-index 2bdc23804f40..f4f1f5148cc2 100644
---- a/arch/arm64/boot/dts/sprd/Makefile
-+++ b/arch/arm64/boot/dts/sprd/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
--                       sp9860g-1h10.dtb
-+                       sp9860g-1h10.dtb        \
-+                       sp9863a-1h10.dtb
-diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-new file mode 100644
-index 000000000000..ec3d065f51a3
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-@@ -0,0 +1,526 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SC9863A SoC DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "sharkl3.dtsi"
-+
-+/ {
-+       cpus {
-+               #address-cells = <2>;
-+               #size-cells = <0>;
-+
-+               cpu-map {
-+                       cluster0 {
-+                               core0 {
-+                                       cpu = <&CPU0>;
-+                               };
-+                               core1 {
-+                                       cpu = <&CPU1>;
-+                               };
-+                               core2 {
-+                                       cpu = <&CPU2>;
-+                               };
-+                               core3 {
-+                                       cpu = <&CPU3>;
-+                               };
-+                       };
-+
-+                       cluster1 {
-+                               core0 {
-+                                       cpu = <&CPU4>;
-+                               };
-+                               core1 {
-+                                       cpu = <&CPU5>;
-+                               };
-+                               core2 {
-+                                       cpu = <&CPU6>;
-+                               };
-+                               core3 {
-+                                       cpu = <&CPU7>;
-+                               };
-+                       };
-+               };
-+
-+               CPU0: cpu@0 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x0>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU1: cpu@100 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x100>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU2: cpu@200 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x200>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU3: cpu@300 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x300>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU4: cpu@400 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x400>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU5: cpu@500 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x500>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU6: cpu@600 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x600>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+
-+               CPU7: cpu@700 {
-+                       device_type = "cpu";
-+                       compatible = "arm,cortex-a55";
-+                       reg = <0x0 0x700>;
-+                       enable-method = "psci";
-+                       cpu-idle-states = <&CORE_PD>;
-+               };
-+       };
-+
-+       idle-states {
-+               entry-method = "arm,psci";
-+               CORE_PD: core-pd {
-+                       compatible = "arm,idle-state";
-+                       entry-latency-us = <4000>;
-+                       exit-latency-us = <4000>;
-+                       min-residency-us = <10000>;
-+                       local-timer-stop;
-+                       arm,psci-suspend-param = <0x00010000>;
-+               };
-+       };
-+
-+       psci {
-+               compatible = "arm,psci-0.2";
-+               method = "smc";
-+       };
-+
-+       timer {
-+               compatible = "arm,armv8-timer";
-+               interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>, /* Physical Secure PPI */
-+                            <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>, /* Physical Non-Secure PPI */
-+                            <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>, /* Virtual PPI */
-+                            <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>; /* Hipervisor PPI */
-+       };
-+
-+       pmu {
-+               compatible = "arm,armv8-pmuv3";
-+               interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+                            <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-+       };
-+
-+       soc {
-+               gic: interrupt-controller@14000000 {
-+                       compatible = "arm,gic-v3";
-+                       #interrupt-cells = <3>;
-+                       #address-cells = <2>;
-+                       #size-cells = <2>;
-+                       ranges;
-+                       redistributor-stride = <0x0 0x20000>;   /* 128KB stride */
-+                       #redistributor-regions = <1>;
-+                       interrupt-controller;
-+                       reg = <0x0 0x14000000 0 0x20000>,       /* GICD */
-+                             <0x0 0x14040000 0 0x100000>;      /* GICR */
-+                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+               };
-+
-+               funnel@10001000 {
-+                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+                       reg = <0 0x10001000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       funnel_soc_out_port: endpoint {
-+                                               remote-endpoint = <&etb_in>;
-+                                       };
-+                               };
-+                       };
-+
-+                       in-ports {
-+                               port {
-+                                       funnel_soc_in_port: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_ca55_out_port>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etb@10003000 {
-+                       compatible = "arm,coresight-tmc", "arm,primecell";
-+                       reg = <0 0x10003000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       in-ports {
-+                               port {
-+                                       etb_in: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_soc_out_port>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               funnel@12001000 {
-+                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+                       reg = <0 0x12001000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       funnel_little_out_port: endpoint {
-+                                               remote-endpoint =
-+                                               <&etf_little_in>;
-+                                       };
-+                               };
-+                       };
-+
-+                       in-ports {
-+                               #address-cells = <1>;
-+                               #size-cells = <0>;
-+
-+                               port@0 {
-+                                       reg = <0>;
-+                                       funnel_little_in_port0: endpoint {
-+                                               remote-endpoint = <&etm0_out>;
-+                                       };
-+                               };
-+
-+                               port@1 {
-+                                       reg = <1>;
-+                                       funnel_little_in_port1: endpoint {
-+                                               remote-endpoint = <&etm1_out>;
-+                                       };
-+                               };
-+
-+                               port@2 {
-+                                       reg = <2>;
-+                                       funnel_little_in_port2: endpoint {
-+                                               remote-endpoint = <&etm2_out>;
-+                                       };
-+                               };
-+
-+                               port@3 {
-+                                       reg = <3>;
-+                                       funnel_little_in_port3: endpoint {
-+                                               remote-endpoint = <&etm3_out>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etf@12002000 {
-+                       compatible = "arm,coresight-tmc", "arm,primecell";
-+                       reg = <0 0x12002000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etf_little_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_ca55_in_port0>;
-+                                       };
-+                               };
-+                       };
-+
-+                       in-port {
-+                               port {
-+                                       etf_little_in: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_little_out_port>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etf@12003000 {
-+                       compatible = "arm,coresight-tmc", "arm,primecell";
-+                       reg = <0 0x12003000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etf_big_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_ca55_in_port1>;
-+                                       };
-+                               };
-+                       };
-+
-+                       in-ports {
-+                               port {
-+                                       etf_big_in: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_big_out_port>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               funnel@12004000 {
-+                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+                       reg = <0 0x12004000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       funnel_ca55_out_port: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_soc_in_port>;
-+                                       };
-+                               };
-+                       };
-+
-+                       in-ports {
-+                               #address-cells = <1>;
-+                               #size-cells = <0>;
-+
-+                               port@0 {
-+                                       reg = <0>;
-+                                       funnel_ca55_in_port0: endpoint {
-+                                               remote-endpoint =
-+                                               <&etf_little_out>;
-+                                       };
-+                               };
-+
-+                               port@1 {
-+                                       reg = <1>;
-+                                       funnel_ca55_in_port1: endpoint {
-+                                               remote-endpoint =
-+                                               <&etf_big_out>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               funnel@12005000 {
-+                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+                       reg = <0 0x12005000 0 0x1000>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       funnel_big_out_port: endpoint {
-+                                               remote-endpoint =
-+                                               <&etf_big_in>;
-+                                       };
-+                               };
-+                       };
-+
-+                       in-ports {
-+                               #address-cells = <1>;
-+                               #size-cells = <0>;
-+
-+                               port@0 {
-+                                       reg = <0>;
-+                                       funnel_big_in_port0: endpoint {
-+                                               remote-endpoint = <&etm4_out>;
-+                                       };
-+                               };
-+
-+                               port@1 {
-+                                       reg = <1>;
-+                                       funnel_big_in_port1: endpoint {
-+                                               remote-endpoint = <&etm5_out>;
-+                                       };
-+                               };
-+
-+                               port@2 {
-+                                       reg = <2>;
-+                                       funnel_big_in_port2: endpoint {
-+                                               remote-endpoint = <&etm6_out>;
-+                                       };
-+                               };
-+
-+                               port@3 {
-+                                       reg = <3>;
-+                                       funnel_big_in_port3: endpoint {
-+                                               remote-endpoint = <&etm7_out>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13040000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13040000 0 0x1000>;
-+                       cpu = <&CPU0>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm0_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_little_in_port0>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13140000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13140000 0 0x1000>;
-+                       cpu = <&CPU1>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm1_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_little_in_port1>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13240000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13240000 0 0x1000>;
-+                       cpu = <&CPU2>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm2_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_little_in_port2>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13340000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13340000 0 0x1000>;
-+                       cpu = <&CPU3>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm3_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_little_in_port3>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13440000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13440000 0 0x1000>;
-+                       cpu = <&CPU4>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm4_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_big_in_port0>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13540000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13540000 0 0x1000>;
-+                       cpu = <&CPU5>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm5_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_big_in_port1>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13640000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13640000 0 0x1000>;
-+                       cpu = <&CPU6>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm6_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_big_in_port2>;
-+                                       };
-+                               };
-+                       };
-+               };
-+
-+               etm@13740000 {
-+                       compatible = "arm,coresight-etm4x", "arm,primecell";
-+                       reg = <0 0x13740000 0 0x1000>;
-+                       cpu = <&CPU7>;
-+                       clocks = <&ext_26m>;
-+                       clock-names = "apb_pclk";
-+
-+                       out-ports {
-+                               port {
-+                                       etm7_out: endpoint {
-+                                               remote-endpoint =
-+                                               <&funnel_big_in_port3>;
-+                                       };
-+                               };
-+                       };
-+               };
-+       };
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-new file mode 100644
-index 000000000000..3b5a94560481
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc Sharkl3 platform DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+/ {
-+       interrupt-parent = <&gic>;
-+       #address-cells = <2>;
-+       #size-cells = <2>;
-+
-+       soc: soc {
-+               compatible = "simple-bus";
-+               #address-cells = <2>;
-+               #size-cells = <2>;
-+               ranges;
-+
-+               ap_ahb_regs: syscon@20e00000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x20e00000 0 0x4000>;
-+               };
-+
-+               pub_ctrl_regs: syscon@300e0000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x300e0000 0 0x4000>;
-+               };
-+
-+               pub_wrap_regs: syscon@300f0000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x300f0000 0 0x1000>;
-+               };
-+
-+               pmu_regs: syscon@402b0000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x402b0000 0 0x4000>;
-+               };
-+
-+               aon_apb_regs: syscon@402e0000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x402e0000 0 0x4000>;
-+               };
-+
-+               anlg_phy_g1_regs: syscon@40350000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x40350000 0 0x3000>;
-+               };
-+
-+               anlg_phy_g2_regs: syscon@40353000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x40353000 0 0x3000>;
-+               };
-+
-+               anlg_phy_g4_regs: syscon@40359000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x40359000 0 0x3000>;
-+               };
-+
-+               anlg_phy_g5_regs: syscon@4035c000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x4035c000 0 0x3000>;
-+               };
-+
-+               anlg_phy_g7_regs: syscon@40363000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x40363000 0 0x3000>;
-+               };
-+
-+               anlg_wrap_wcn_regs: syscon@40366000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x40366000 0 0x3000>;
-+               };
-+
-+               mm_ahb_regs: syscon@60800000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x60800000 0 0x1000>;
-+               };
-+
-+               mm_vsp_ahb_regs: syscon@62000000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x62000000 0 0x1000>;
-+               };
-+
-+               ap_apb_regs: syscon@71300000 {
-+                       compatible = "sprd,sc9863a-glbregs", "syscon";
-+                       reg = <0 0x71300000 0 0x4000>;
-+               };
-+
-+               apb@70000000 {
-+                       compatible = "simple-bus";
-+                       #address-cells = <1>;
-+                       #size-cells = <1>;
-+                       ranges = <0 0x0 0x70000000 0x10000000>;
-+
-+                       uart0: serial@0 {
-+                               compatible = "sprd,sc9863a-uart",
-+                                            "sprd,sc9836-uart";
-+                               reg = <0x0 0x100>;
-+                               interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+                               clocks = <&ext_26m>;
-+                               status = "disabled";
-+                       };
-+
-+                       uart1: serial@100000 {
-+                               compatible = "sprd,sc9863a-uart",
-+                                            "sprd,sc9836-uart";
-+                               reg = <0x100000 0x100>;
-+                               interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+                               clocks = <&ext_26m>;
-+                               status = "disabled";
-+                       };
-+
-+                       uart2: serial@200000 {
-+                               compatible = "sprd,sc9863a-uart",
-+                                            "sprd,sc9836-uart";
-+                               reg = <0x200000 0x100>;
-+                               interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+                               clocks = <&ext_26m>;
-+                               status = "disabled";
-+                       };
-+
-+                       uart3: serial@300000 {
-+                               compatible = "sprd,sc9863a-uart",
-+                                            "sprd,sc9836-uart";
-+                               reg = <0x300000 0x100>;
-+                               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+                               clocks = <&ext_26m>;
-+                               status = "disabled";
-+                       };
-+
-+                       uart4: serial@400000 {
-+                               compatible = "sprd,sc9863a-uart",
-+                                            "sprd,sc9836-uart";
-+                               reg = <0x400000 0x100>;
-+                               interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+                               clocks = <&ext_26m>;
-+                               status = "disabled";
-+                       };
-+               };
-+       };
-+
-+       ext_26m: ext-26m {
-+               compatible = "fixed-clock";
-+               #clock-cells = <0>;
-+               clock-frequency = <26000000>;
-+               clock-output-names = "ext-26m";
-+       };
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-new file mode 100644
-index 000000000000..5c32c1596337
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SP9863A-1h10 boards DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sc9863a.dtsi"
-+
-+/ {
-+       model = "Spreadtrum SP9863A-1H10 Board";
-+
-+       compatible = "sprd,sp9863a-1h10", "sprd,sc9863a";
-+
-+       aliases {
-+               serial0 = &uart0;
-+               serial1 = &uart1;
-+       };
-+
-+       memory@80000000 {
-+               device_type = "memory";
-+               reg = <0x0 0x80000000 0x0 0x80000000>;
-+       };
-+
-+       chosen {
-+               stdout-path = "serial1:115200n8";
-+               bootargs = "earlycon";
-+       };
-+};
-+
-+&uart0 {
-+       status = "okay";
-+};
-+
-+&uart1 {
-+       status = "okay";
-+};
---
-2.20.1
+The other bit is that atomic commits are meant to simply wait for
+everything to finish - commit_tail doesn't hold locks, it's only ordered
+through drm_crtc_commit events (at least with the async implementation in
+the helpers), so you can just block there until your interrupt handler is
+done processing the commit. Depending how you want to do this you might
+want to wait before or after drm_atomic_helper_commit_hw_done().
+-Daniel
 
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 11 +++-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 79 +++++++++++++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  9 +++
+>  3 files changed, 97 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index 29d0582e90e9..68b92adc96bb 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -7,7 +7,7 @@
+>  #include <linux/pm_runtime.h>
+>  
+>  #include <asm/barrier.h>
+> -
+> +#include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_probe_helper.h>
+> @@ -47,6 +47,7 @@ struct mtk_drm_crtc {
+>  	struct mtk_disp_mutex		*mutex;
+>  	unsigned int			ddp_comp_nr;
+>  	struct mtk_ddp_comp		**ddp_comp;
+> +	struct drm_crtc_state		*old_crtc_state;
+>  };
+>  
+>  struct mtk_crtc_state {
+> @@ -362,6 +363,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>  static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  {
+>  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+> +	struct drm_atomic_state *atomic_state = mtk_crtc->old_crtc_state->state;
+>  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+>  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+>  	unsigned int i;
+> @@ -399,6 +401,7 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  			plane_state->pending.config = false;
+>  		}
+>  		mtk_crtc->pending_planes = false;
+> +		mtk_atomic_state_put_queue(atomic_state);
+>  	}
+>  }
+>  
+> @@ -494,6 +497,7 @@ static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
+>  static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  				      struct drm_crtc_state *old_crtc_state)
+>  {
+> +	struct drm_atomic_state *old_atomic_state = old_crtc_state->state;
+>  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
+>  	struct mtk_drm_private *priv = crtc->dev->dev_private;
+>  	unsigned int pending_planes = 0;
+> @@ -512,8 +516,11 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  			pending_planes |= BIT(i);
+>  		}
+>  	}
+> -	if (pending_planes)
+> +	if (pending_planes) {
+>  		mtk_crtc->pending_planes = true;
+> +		drm_atomic_state_get(old_atomic_state);
+> +		mtk_crtc->old_crtc_state = old_crtc_state;
+> +	}
+>  	if (crtc->state->color_mgmt_changed)
+>  		for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+>  			mtk_ddp_gamma_set(mtk_crtc->ddp_comp[i], crtc->state);
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 6588dc6dd5e3..6c68283b6124 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -115,10 +115,85 @@ static int mtk_atomic_commit(struct drm_device *drm,
+>  	return 0;
+>  }
+>  
+> +struct mtk_atomic_state {
+> +	struct drm_atomic_state base;
+> +	struct list_head list;
+> +};
+> +
+> +static inline struct mtk_atomic_state *to_mtk_state(struct drm_atomic_state *s)
+> +{
+> +	return container_of(s, struct mtk_atomic_state, base);
+> +}
+> +
+> +void mtk_atomic_state_put_queue(struct drm_atomic_state *state)
+> +{
+> +	struct drm_device *drm = state->dev;
+> +	struct mtk_drm_private *mtk_drm = drm->dev_private;
+> +	struct mtk_atomic_state *mtk_state = to_mtk_state(state);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&mtk_drm->unreference.lock, flags);
+> +	list_add_tail(&mtk_state->list, &mtk_drm->unreference.list);
+> +	spin_unlock_irqrestore(&mtk_drm->unreference.lock, flags);
+> +
+> +	schedule_work(&mtk_drm->unreference.work);
+> +}
+> +
+> +static void mtk_unreference_work(struct work_struct *work)
+> +{
+> +	struct mtk_drm_private *mtk_drm = container_of(work,
+> +			struct mtk_drm_private, unreference.work);
+> +	unsigned long flags;
+> +	struct mtk_atomic_state *state, *tmp;
+> +
+> +	/*
+> +	 * framebuffers cannot be unreferenced in atomic context.
+> +	 * Therefore, only hold the spinlock when iterating unreference_list,
+> +	 * and drop it when doing the unreference.
+> +	 */
+> +	spin_lock_irqsave(&mtk_drm->unreference.lock, flags);
+> +	list_for_each_entry_safe(state, tmp, &mtk_drm->unreference.list, list) {
+> +		list_del(&state->list);
+> +		spin_unlock_irqrestore(&mtk_drm->unreference.lock, flags);
+> +		drm_atomic_state_put(&state->base);
+> +		spin_lock_irqsave(&mtk_drm->unreference.lock, flags);
+> +	}
+> +	spin_unlock_irqrestore(&mtk_drm->unreference.lock, flags);
+> +}
+> +
+> +static struct drm_atomic_state *
+> +		mtk_drm_atomic_state_alloc(struct drm_device *dev)
+> +{
+> +	struct mtk_atomic_state *mtk_state;
+> +
+> +	mtk_state = kzalloc(sizeof(*mtk_state), GFP_KERNEL);
+> +	if (!mtk_state)
+> +		return NULL;
+> +
+> +	if (drm_atomic_state_init(dev, &mtk_state->base) < 0) {
+> +		kfree(mtk_state);
+> +		return NULL;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&mtk_state->list);
+> +
+> +	return &mtk_state->base;
+> +}
+> +
+> +static void mtk_drm_atomic_state_free(struct drm_atomic_state *state)
+> +{
+> +	struct mtk_atomic_state *mtk_state = to_mtk_state(state);
+> +
+> +	drm_atomic_state_default_release(state);
+> +	kfree(mtk_state);
+> +}
+> +
+>  static const struct drm_mode_config_funcs mtk_drm_mode_config_funcs = {
+>  	.fb_create = mtk_drm_mode_fb_create,
+>  	.atomic_check = drm_atomic_helper_check,
+>  	.atomic_commit = mtk_atomic_commit,
+> +	.atomic_state_alloc = mtk_drm_atomic_state_alloc,
+> +	.atomic_state_free = mtk_drm_atomic_state_free
+>  };
+>  
+>  static const enum mtk_ddp_comp_id mt2701_mtk_ddp_main[] = {
+> @@ -337,6 +412,10 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>  	drm_kms_helper_poll_init(drm);
+>  	drm_mode_config_reset(drm);
+>  
+> +	INIT_WORK(&private->unreference.work, mtk_unreference_work);
+> +	INIT_LIST_HEAD(&private->unreference.list);
+> +	spin_lock_init(&private->unreference.lock);
+> +
+>  	return 0;
+>  
+>  err_unset_dma_parms:
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> index b6a82728d563..c37d835cf949 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> @@ -55,6 +55,13 @@ struct mtk_drm_private {
+>  
+>  	struct drm_atomic_state *suspend_state;
+>  
+> +	struct {
+> +		struct work_struct	work;
+> +		struct list_head	list;
+> +		/* lock for unreference list */
+> +		spinlock_t		lock;
+> +	} unreference;
+> +
+>  	bool dma_parms_allocated;
+>  };
+>  
+> @@ -66,4 +73,6 @@ extern struct platform_driver mtk_dpi_driver;
+>  extern struct platform_driver mtk_dsi_driver;
+>  extern struct platform_driver mtk_mipi_tx_driver;
+>  
+> +void mtk_atomic_state_put_queue(struct drm_atomic_state *state);
+> +
+>  #endif /* MTK_DRM_DRV_H */
+> -- 
+> 2.18.0
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
