@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D10C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155A82084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A157F2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfKZUOO (ORCPT
+        id S1727689AbfKZUQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:14:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46022 "EHLO mx1.suse.de"
+        Tue, 26 Nov 2019 15:16:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45838 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbfKZUOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:14:11 -0500
+        id S1727166AbfKZUOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 15:14:14 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 61FFCB12B;
-        Tue, 26 Nov 2019 20:14:08 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id D950EB1DE;
+        Tue, 26 Nov 2019 20:14:12 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -66,9 +66,9 @@ Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/35] powerpc/64s/exception: Remove old INT_ENTRY macro
-Date:   Tue, 26 Nov 2019 21:13:20 +0100
-Message-Id: <baff592123801e2a0bb26daa0e2fc84cad6bb23c.1574798487.git.msuchanek@suse.de>
+Subject: [PATCH v2 09/35] powerpc/64s/exception: Add ISIDE option
+Date:   Tue, 26 Nov 2019 21:13:23 +0100
+Message-Id: <a35d660e15806f9dce239f69897d6bd439b208d4.1574798487.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574798487.git.msuchanek@suse.de>
 References: <cover.1574798487.git.msuchanek@suse.de>
@@ -81,155 +81,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
+Rather than using DAR=2 to select the i-side registers, add an
+explicit option.
+
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 68 ++++++++++++----------------
- 1 file changed, 30 insertions(+), 38 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index b5decc9a0cbf..ba2dcd91aaaf 100644
+index bef0c2eee7dc..b8588618cdc3 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -482,13 +482,13 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
-  * - Fall through and continue executing in real, unrelocated mode.
-  *   This is done if early=2.
-  */
--.macro INT_HANDLER name, vec, ool=0, early=0, virt=0, hsrr=0, area=PACA_EXGEN, ri=1, dar=0, dsisr=0, bitmask=0, kvm=0
-+.macro GEN_INT_ENTRY name, virt, ool=0
- 	SET_SCRATCH0(r13)			/* save r13 */
- 	GET_PACA(r13)
--	std	r9,\area\()+EX_R9(r13)		/* save r9 */
-+	std	r9,IAREA+EX_R9(r13)		/* save r9 */
- 	OPT_GET_SPR(r9, SPRN_PPR, CPU_FTR_HAS_PPR)
- 	HMT_MEDIUM
--	std	r10,\area\()+EX_R10(r13)	/* save r10 - r12 */
-+	std	r10,IAREA+EX_R10(r13)		/* save r10 - r12 */
- 	OPT_GET_SPR(r10, SPRN_CFAR, CPU_FTR_CFAR)
- 	.if \ool
- 	.if !\virt
-@@ -502,47 +502,47 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+@@ -199,6 +199,7 @@ END_FTR_SECTION_NESTED(ftr,ftr,943)
+ #define IVEC		.L_IVEC_\name\()
+ #define IHSRR		.L_IHSRR_\name\()
+ #define IAREA		.L_IAREA_\name\()
++#define IISIDE		.L_IISIDE_\name\()
+ #define IDAR		.L_IDAR_\name\()
+ #define IDSISR		.L_IDSISR_\name\()
+ #define ISET_RI		.L_ISET_RI_\name\()
+@@ -231,6 +232,9 @@ do_define_int n
+ 	.ifndef IAREA
+ 		IAREA=PACA_EXGEN
  	.endif
++	.ifndef IISIDE
++		IISIDE=0
++	.endif
+ 	.ifndef IDAR
+ 		IDAR=0
  	.endif
- 
--	OPT_SAVE_REG_TO_PACA(\area\()+EX_PPR, r9, CPU_FTR_HAS_PPR)
--	OPT_SAVE_REG_TO_PACA(\area\()+EX_CFAR, r10, CPU_FTR_CFAR)
-+	OPT_SAVE_REG_TO_PACA(IAREA+EX_PPR, r9, CPU_FTR_HAS_PPR)
-+	OPT_SAVE_REG_TO_PACA(IAREA+EX_CFAR, r10, CPU_FTR_CFAR)
- 	INTERRUPT_TO_KERNEL
--	SAVE_CTR(r10, \area\())
-+	SAVE_CTR(r10, IAREA)
- 	mfcr	r9
--	.if \kvm
--		KVMTEST \name \hsrr \vec
-+	.if (!\virt && IKVM_REAL) || (\virt && IKVM_VIRT)
-+		KVMTEST \name IHSRR IVEC
- 	.endif
--	.if \bitmask
-+	.if IMASK
- 		lbz	r10,PACAIRQSOFTMASK(r13)
--		andi.	r10,r10,\bitmask
-+		andi.	r10,r10,IMASK
- 		/* Associate vector numbers with bits in paca->irq_happened */
--		.if \vec == 0x500 || \vec == 0xea0
-+		.if IVEC == 0x500 || IVEC == 0xea0
- 		li	r10,PACA_IRQ_EE
--		.elseif \vec == 0x900
-+		.elseif IVEC == 0x900
- 		li	r10,PACA_IRQ_DEC
--		.elseif \vec == 0xa00 || \vec == 0xe80
-+		.elseif IVEC == 0xa00 || IVEC == 0xe80
- 		li	r10,PACA_IRQ_DBELL
--		.elseif \vec == 0xe60
-+		.elseif IVEC == 0xe60
- 		li	r10,PACA_IRQ_HMI
--		.elseif \vec == 0xf00
-+		.elseif IVEC == 0xf00
- 		li	r10,PACA_IRQ_PMI
- 		.else
- 		.abort "Bad maskable vector"
- 		.endif
- 
--		.if \hsrr == EXC_HV_OR_STD
-+		.if IHSRR == EXC_HV_OR_STD
- 		BEGIN_FTR_SECTION
- 		bne	masked_Hinterrupt
- 		FTR_SECTION_ELSE
- 		bne	masked_interrupt
- 		ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE | CPU_FTR_ARCH_206)
--		.elseif \hsrr
-+		.elseif IHSRR
- 		bne	masked_Hinterrupt
- 		.else
- 		bne	masked_interrupt
- 		.endif
- 	.endif
- 
--	std	r11,\area\()+EX_R11(r13)
--	std	r12,\area\()+EX_R12(r13)
-+	std	r11,IAREA+EX_R11(r13)
-+	std	r12,IAREA+EX_R12(r13)
- 
- 	/*
- 	 * DAR/DSISR, SCRATCH0 must be read before setting MSR[RI],
-@@ -550,47 +550,39 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
- 	 * not recoverable if they are live.
+@@ -542,7 +546,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
  	 */
  	GET_SCRATCH0(r10)
--	std	r10,\area\()+EX_R13(r13)
--	.if \dar == 1
--	.if \hsrr
-+	std	r10,IAREA+EX_R13(r13)
-+	.if IDAR == 1
-+	.if IHSRR
+ 	std	r10,IAREA+EX_R13(r13)
+-	.if IDAR == 1
++	.if IDAR && !IISIDE
+ 	.if IHSRR
  	mfspr	r10,SPRN_HDAR
  	.else
- 	mfspr	r10,SPRN_DAR
+@@ -550,7 +554,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
  	.endif
--	std	r10,\area\()+EX_DAR(r13)
-+	std	r10,IAREA+EX_DAR(r13)
+ 	std	r10,IAREA+EX_DAR(r13)
  	.endif
--	.if \dsisr == 1
--	.if \hsrr
-+	.if IDSISR == 1
-+	.if IHSRR
+-	.if IDSISR == 1
++	.if IDSISR && !IISIDE
+ 	.if IHSRR
  	mfspr	r10,SPRN_HDSISR
  	.else
- 	mfspr	r10,SPRN_DSISR
- 	.endif
--	stw	r10,\area\()+EX_DSISR(r13)
-+	stw	r10,IAREA+EX_DSISR(r13)
- 	.endif
- 
--	.if \early == 2
-+	.if IEARLY == 2
- 	/* nothing more */
--	.elseif \early
-+	.elseif IEARLY
- 	mfctr	r10			/* save ctr, even for !RELOCATABLE */
- 	BRANCH_TO_C000(r11, \name\()_common)
- 	.elseif !\virt
--	INT_SAVE_SRR_AND_JUMP \name\()_common, \hsrr, \ri
-+	INT_SAVE_SRR_AND_JUMP \name\()_common, IHSRR, ISET_RI
+@@ -625,16 +629,18 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+ 	std	r9,GPR11(r1)
+ 	std	r10,GPR12(r1)
+ 	std	r11,GPR13(r1)
++
+ 	.if IDAR
+-	.if IDAR == 2
++	.if IISIDE
+ 	ld	r10,_NIP(r1)
  	.else
--	INT_VIRT_SAVE_SRR_AND_JUMP \name\()_common, \hsrr
-+	INT_VIRT_SAVE_SRR_AND_JUMP \name\()_common, IHSRR
+ 	ld	r10,IAREA+EX_DAR(r13)
  	.endif
- 	.if \ool
- 	.popsection
+ 	std	r10,_DAR(r1)
  	.endif
- .endm
++
+ 	.if IDSISR
+-	.if IDSISR == 2
++	.if IISIDE
+ 	ld	r10,_MSR(r1)
+ 	lis	r11,DSISR_SRR1_MATCH_64S@h
+ 	and	r10,r10,r11
+@@ -643,6 +649,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_HAS_PPR,CPU_FTR_HAS_PPR,948)
+ 	.endif
+ 	std	r10,_DSISR(r1)
+ 	.endif
++
+ BEGIN_FTR_SECTION_NESTED(66)
+ 	ld	r10,IAREA+EX_CFAR(r13)
+ 	std	r10,ORIG_GPR3(r1)
+@@ -1311,8 +1318,9 @@ ALT_MMU_FTR_SECTION_END_IFCLR(MMU_FTR_TYPE_RADIX)
  
--.macro GEN_INT_ENTRY name, virt, ool=0
--	.if ! \virt
--		INT_HANDLER \name, IVEC, \ool, IEARLY, \virt, IHSRR, IAREA, ISET_RI, IDAR, IDSISR, IMASK, IKVM_REAL
--	.else
--		INT_HANDLER \name, IVEC, \ool, IEARLY, \virt, IHSRR, IAREA, ISET_RI, IDAR, IDSISR, IMASK, IKVM_VIRT
--	.endif
--.endm
--
- /*
-  * On entry r13 points to the paca, r9-r13 are saved in the paca,
-  * r9 contains the saved CR, r11 and r12 contain the saved SRR0 and
+ INT_DEFINE_BEGIN(instruction_access)
+ 	IVEC=0x400
+-	IDAR=2
+-	IDSISR=2
++	IISIDE=1
++	IDAR=1
++	IDSISR=1
+ 	IKVM_REAL=1
+ INT_DEFINE_END(instruction_access)
+ 
+@@ -1341,7 +1349,8 @@ INT_DEFINE_BEGIN(instruction_access_slb)
+ 	IVEC=0x480
+ 	IAREA=PACA_EXSLB
+ 	IRECONCILE=0
+-	IDAR=2
++	IISIDE=1
++	IDAR=1
+ 	IKVM_REAL=1
+ INT_DEFINE_END(instruction_access_slb)
+ 
 -- 
 2.23.0
 
