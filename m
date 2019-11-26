@@ -2,132 +2,119 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93559C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB5DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C41120727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574767508;
-	bh=omjWedzQ76IAnw8d9HDCYU2Z+dn457MOX+MFm21OspA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1mZdCGAF5hNdRGH6iUcUlByxVLGWsv/a5Y0sfLSVgF8/oZNbx9Kek+9fwn91z6QYk
-	 zZtHOq0lHdYNr/GnTFFsk5MiDWuxDiLzLhvj8mdd7BeZvOgYhamVqH2kVozRGGEZi2
-	 Cp6V0Xj8MPv5ct3g0EeXquYCYSvjaIScPgI9L8m0=
+	by mail.kernel.org (Postfix) with ESMTP id D042F207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="bYH485Jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfKZLZH (ORCPT
+        id S1728119AbfKZL0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:25:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37655 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfKZLZH (ORCPT
+        Tue, 26 Nov 2019 06:26:51 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:19691 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfKZL0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:25:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g7so1305834wrw.4;
-        Tue, 26 Nov 2019 03:25:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m/i5xPJ0FKQ+YENCg/aVtw4x62F/uvwBKEc2M7XaGDI=;
-        b=TJdKxImt6sjLXcxQGqTWRVcr08BKg+fZjVhuWqgz0JsfocOLavkvGojfsZaOgcoEra
-         BT6eA6LqiifU1yojTo0EDAd4tqi+ws+g9sASEE2Gkpe791qoUFGbDuhB5sLVh5qJhOnx
-         VDMwrEiSdmE1Bjz1DHEDVdn0RNcSxHepnoPYu9p7lAgC6YNf/4XGsr39KuhhpoI9nfgK
-         gpN3vyng/NtbJ/vcGopYeeKv6AAXOvjqbworBHtuqcCKoljYYdkFscjdzEnuj6VnmKUy
-         yExQxZVN4/c0u7gnTDlKiwjFFNuMVGwnLvRdiuIscblw1wfhqR2LmbpPkUevhKEjdCZn
-         xSkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m/i5xPJ0FKQ+YENCg/aVtw4x62F/uvwBKEc2M7XaGDI=;
-        b=DD8fSEFbI30OuXxXSSClfjf77YDBt3uhc2Iq96ZSExJkAvuMaPSdc3qm+9TRP/szCA
-         3N+C0FsSsU7nFaSm/SbpVmsZPFbdR38+KRPqsRzdGJacnkgdi08pUMTlwnbXCzS0m/uQ
-         I+NwmYC6tmUER13IYLuCJM0AMFIhlIQfbuEwKxeBrxm5RVsLG41OgccFT4viG41VgE5Y
-         qof6Gbrc3Axkktx0NIdCK92DcUcB84osukhyQKWgIrlYXPugsNFZzQI/KxTw/XB6Tgq0
-         74W4qaNsQiEz0xGl/WnFsKSsFXbPgkRbQoJHSfzFZpRHjF0W/KuI5/YNRrUv89UigAby
-         4+8w==
-X-Gm-Message-State: APjAAAVSXJHZbboxJ///NQpC7ggeVGNvOcQxAGvGzAMgAdndE7YTxt10
-        XZPT4u97DGfYpYPIwVALhHuHGq4O
-X-Google-Smtp-Source: APXvYqyK3PbiVAg9Qj+mFkNQk3riegujZ5/UjYWliJ5HX71s975YJFoSxYX0SOw0LD1PTy5+Ajq/CA==
-X-Received: by 2002:adf:a31a:: with SMTP id c26mr35562373wrb.330.1574767504340;
-        Tue, 26 Nov 2019 03:25:04 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id 5sm2606084wmk.48.2019.11.26.03.25.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 03:25:03 -0800 (PST)
-Date:   Tue, 26 Nov 2019 12:25:00 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Len Brown <len.brown@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
- function
-Message-ID: <20191126112500.GA36931@gmail.com>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
- <20191119002121.4107-12-sean.j.christopherson@intel.com>
- <7338293.UcAxln0NAJ@kreacher>
- <20191125104803.v6goacte2vjakx64@ucw.cz>
- <20191125170034.GB12178@linux.intel.com>
- <20191126111618.GA28423@gmail.com>
+        Tue, 26 Nov 2019 06:26:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574767608;
+        s=strato-dkim-0002; d=xenosoft.de;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=XMLW3ZOSKguCOTt53NHCRHDrLj4NFW5PozSyNNqJ0vs=;
+        b=bYH485JbLwz1bszGtiXeBrDFh4fHScz447YzQX6J4grHvueCpKZk5y05E5RApxxzdD
+        JU2yBBjNeFGeMtvbNexzBk/XKlHiIavBzH9oV8TNFyWutpRofgSriFosoGJ3dUesKbfX
+        jiXn1R2tAVyDMpNT4167+ykVo1C2Dm1+7LTc5Ni7OahCD4+xqkrVlgvqmrIaAdIiFnk2
+        FSV/S0qS+xwuE8dJgkJV1Xgv8Pphtc+iP93KSa4sZi+/vsF+fE77R+fHHZm9ThybAzVQ
+        eFPdWDR0wUQaK3BiuaqaNLZ6q2wAYGsrmjDQwFDL2GDw63OwftUXcfqW6bK2QrIzn9ZN
+        eUUw==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhSIh0PhkEvMsMre1rbZ/xz+jsR"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:14bb:b5af:17db:dc1]
+        by smtp.strato.de (RZmta 45.0.2 AUTH)
+        with ESMTPSA id x0678cvAQBQc8Vv
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 26 Nov 2019 12:26:38 +0100 (CET)
+Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
+ installed, unless RAM size limited to 3500M
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>, linux-arch@vger.kernel.org,
+        darren@stevens-zone.net, mad skateman <madskateman@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        paulus@samba.org, rtd2@xtra.co.nz,
+        "contact@a-eon.com" <contact@a-eon.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        nsaenzjulienne@suse.de, Mike Rapoport <rppt@linux.ibm.com>
+References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
+ <20191121072943.GA24024@lst.de>
+ <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
+ <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
+ <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
+ <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
+ <20191121180226.GA3852@lst.de>
+ <2fde79cf-875f-94e6-4a1b-f73ebb2e2c32@xenosoft.de>
+ <20191125073923.GA30168@lst.de>
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+Message-ID: <4681f5fe-c095-15f5-9221-4b55e940bafc@xenosoft.de>
+Date:   Tue, 26 Nov 2019 12:26:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126111618.GA28423@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125073923.GA30168@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25 November 2019 at 08:39 am, Christoph Hellwig wrote:
+> On Sat, Nov 23, 2019 at 12:42:27PM +0100, Christian Zigotzky wrote:
+>> Hello Christoph,
+>>
+>> Please find attached the dmesg of your Git kernel.
+> Thanks.  It looks like on your platform the swiotlb buffer isn't
+> actually addressable based on the bus dma mask limit, which is rather
+> interesting.  swiotlb_init uses memblock_alloc_low to allocate the
+> buffer, and I'll need some help from Mike and the powerpc maintainers
+> to figure out how that select where to allocate the buffer from, and
+> how we can move it to a lower address.  My gut feeling would be to try
+> to do what arm64 does and define a new ARCH_LOW_ADDRESS_LIMIT, preferably
+> without needing too much arch specific magic.
+>
+> As a quick hack can you try this patch on top of the tree from Friday?
+>
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index f491690d54c6..e3f95c362922 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -344,7 +344,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+>   #define MEMBLOCK_LOW_LIMIT 0
+>   
+>   #ifndef ARCH_LOW_ADDRESS_LIMIT
+> -#define ARCH_LOW_ADDRESS_LIMIT  0xffffffffUL
+> +#define ARCH_LOW_ADDRESS_LIMIT  0x0fffffffUL
+>   #endif
+>   
+>   phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
+>
+Hello Christoph,
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+The PCI TV card works with your patch! I was able to patch your Git 
+kernel with the patch above.
 
-> > Would you prefer a v2 of the entire series (with Acks and removal of 
-> > Fixes), or a v2 that includes only the last two patches?
-> 
-> Yep, that would be handy. I have them committed to tip:core/headers, 
-> but haven't sent it to Linus yet, and can redo that all with these 
-> improvements.
+I haven't found any error messages in the dmesg yet.
 
-Now these bits are back in tip:WIP.core/headers, waiting for the v2 
-submission.
+Thank you!
 
-Thanks,
-
-	Ingo
+Cheers,
+Christian
