@@ -2,161 +2,241 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DA6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA8EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C24206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574773338;
-	bh=M/PyEoDGgbhhd2zYk+Wj+toDwf/2eq0fVCZBcx9WhfM=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=jPBvxISJMvdtskY/U5TOyf52NY2HaRny6hU2NUO5GqqkSPCzrJch1OczaPl1NqQ8l
-	 Qf94ZMb/W2vUtY1jWAMuSoVWjSr0HMzNWJnPMdmRN+W9kpjFE+s92bOY0VL4NszLwk
-	 vi4lu/D6bJgSPJkU4KJ1AITw8gGUxakWwu0IShBA=
+	by mail.kernel.org (Postfix) with ESMTP id 62F132071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 13:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PD4jtv6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfKZNCR (ORCPT
+        id S1727322AbfKZNK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:02:17 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36506 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfKZNCQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 08:02:16 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so15807991oto.3;
-        Tue, 26 Nov 2019 05:02:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=a6t3Tx5m+5tPyVolI/88uOygfkVbfUzjcJAhGnLCRII=;
-        b=NDLrzdXpX4xAwUab28sA+j/QRIiDChcrhGsj9j1epMhyViU7ZTmBlSxG/zqWwymzwe
-         UhrfdY0MTzLbnPOoVGR+hQO8ADqpO6sUuPH8gYRnzO9NOV0xu2dTdlyKONzUUw6XwEfk
-         +WwIkQXhEwFqy5aTBo22NZqdXPDm7eYey15KiUrdtowo9gZqBorYe+gFoiewwXvrIUru
-         KEB1WgnZW9BY+wluAYwJVYcQFmSrlta/6WoxD+crCMIbMqNJEWXYzMMvTc7J+Tn0jHT3
-         Xx8k/1icKpgmzo7ZDyP84OruJUiJHy/IgQonXq5l085lmtuszf9P5pnehVGANmWz/278
-         h3aA==
-X-Gm-Message-State: APjAAAWJJXqfzbi/MUfRXQ6Trkb+o8kkxOnopSW4aSQbnAQfVtgQ55z8
-        ueWKl8Q/Ayg8d4AgEGqdSzKDa+a+HihXEvKJMlc=
-X-Google-Smtp-Source: APXvYqymvChDyM/t6YfoooZrIA2KvQa7JtHGhT56HIprePtkPtxG4n7ZFHHds0oUpiT7Qc1ZFurcTBenbhdMHL771wE=
-X-Received: by 2002:a9d:6b91:: with SMTP id b17mr2168488otq.189.1574773334221;
- Tue, 26 Nov 2019 05:02:14 -0800 (PST)
+        Tue, 26 Nov 2019 08:10:26 -0500
+Received: from mail-eopbgr750043.outbound.protection.outlook.com ([40.107.75.43]:20195
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725995AbfKZNKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 08:10:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D+eDdpsVd+DznZu3GSTtMDGkhQQJdD9nD8EbLZuEmCrnG5wv1jYRVYiDC6U+gOOifi9BOgCrPWTCHZAT/LuyWRpgozDCjbFlK7BxAxZlfcSmMywNTBySLM7Kzib2FVEOcr1Eh+xhvKmWCepgBv4ZLdnd/kPgEwtZQMy0Rr0XuvUOTCSRKpfwvadf7SPmFqZIOpDPyChV7Q4vJb4muoCQpvURa2okNw1EGC6Wq3f8M6epQQ7SNsDrcY8PTp8ELAe17nTJKzegdeXjc6EGWU8Hfveci8lmx2C2q6rUb3xE74W5wye7JZDFxxZewYnAgQ+ex0lnBys4WRNE8M2Lc1iOjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QrWLzrJbyculD6NkQ/GQeEyeu0Pf96Mh2AuC0rC48h4=;
+ b=leabm+Fd6VhtMa9TpimwJRf1XLPrvvQvhKqWX3fdXhfZYrm+3WtFebQ41yJP3XJXpqa021Bcq4mBYioPKDlyIcskFBZRCqh8yIR2zCBcnqENIH+c0JKsH1v6tsBlRaYyCRJmsKTQYtFznHMmrF6Ca4j9Qck6F5phwwbXwF+4OY3CS/7VVFZk8s58mmeyyBx9uFWuXRlnMO5aQ5majbk7ghaahAkCtdSa73v3b13yulw3KNn8XkDXKGoAa2mUX9WJS5W/xpGoEY5OBiyeF9OZ+Z/jtuyOyyydW42H9kItImnZNCYs+qx5TNaSTV/UIyto4OE3a72g5H7WL0+PwhPI6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QrWLzrJbyculD6NkQ/GQeEyeu0Pf96Mh2AuC0rC48h4=;
+ b=PD4jtv6G34JLq3IxwSQ4f4UZecA8PxW6RlzvzIZgVaDQx5KK4YJbqooKwDp7DTe8brMGIlgH0cgtAz8nNMWGICa/ghvdtQxaYHArKoyy8DgcNEDuaT91SG25Y2Hosm1Z1aztJYErPG77A3dYxZSXutzUOglt7a8ygqJ5gY0R0pU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
+ MN2PR12MB3485.namprd12.prod.outlook.com (20.178.242.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Tue, 26 Nov 2019 13:10:20 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::b927:9d83:f11:941b]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::b927:9d83:f11:941b%6]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 13:10:20 +0000
+Subject: Re: Fwd: [PATCH] NTB: Fix an error in get link status
+To:     Jiasen Lin <linjiasen@hygon.cn>
+Cc:     "S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com> Dave Jiang" 
+        <dave.jiang@intel.com>, Arindam Nath <arindam.nath@amd.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-ntb <linux-ntb@googlegroups.com>, linjiasen007@gmail.com
+References: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
+ <CAPoiz9wAJz=Hqb6Os=9AHHv_NGpZ8uCaAuOC=aUTkASKdfs9WQ@mail.gmail.com>
+ <933f74c7-7249-618c-13dc-9e4e47ad75d7@hygon.cn>
+ <11b355a8-0fe0-f256-c510-ddf106017703@hygon.cn>
+ <CAADLhr7bpb-F0eF1UFXy7AcN=z061mno_QsqGE8z-mvWKvUyCQ@mail.gmail.com>
+ <04b4d1ed-ea47-819e-a7e4-b729fa463506@amd.com>
+ <5c3155b5-6eed-d955-b18b-59b0cb1c513b@hygon.cn>
+ <740bb924-b258-8dda-6469-bc1bee90291f@hygon.cn>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <c5adca66-024f-8d37-3187-ffba73102ac4@amd.com>
+Date:   Tue, 26 Nov 2019 18:40:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+In-Reply-To: <740bb924-b258-8dda-6469-bc1bee90291f@hygon.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: MAXPR0101CA0012.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:c::22) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 Nov 2019 14:02:03 +0100
-Message-ID: <CAJZ5v0ih9pkWuMkDyKxG3rRnwELtNt+zz9JRudOgEAjS=XZawA@mail.gmail.com>
-Subject: [GIT PULL] Device properties framework updates for v5.5-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Petr Mladek <pmladek@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [165.204.157.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3ce53380-5afc-459b-e90f-08d77271fd0d
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3485:|MN2PR12MB3485:|MN2PR12MB3485:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3485D39F41B4DB77D95F875AE5450@MN2PR12MB3485.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0233768B38
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(189003)(199004)(2616005)(31686004)(11346002)(446003)(6116002)(3846002)(50466002)(25786009)(36756003)(66946007)(186003)(4326008)(6512007)(8676002)(6666004)(305945005)(7736002)(6862004)(66476007)(66556008)(81156014)(81166006)(23676004)(2486003)(66066001)(52116002)(6506007)(6246003)(8936002)(386003)(76176011)(6436002)(31696002)(316002)(2906002)(47776003)(58126008)(2870700001)(478600001)(14454004)(26005)(99286004)(65956001)(65806001)(229853002)(5660300002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3485;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mJZBS0upws9jJneNjNyucXyEqMgwzo7VXUTYGS9RX7u4tSWqUxNObxa6m3Wm4WKHAQyUFJoiiecgjOmToRW/2164nscausnd5L67YwbAhT9RSIGEk7UQMuC86zWWPaBUQcKMFKv7mz7O1XM427xA05JjDn5zPRSnpvVzJlpU6OH9tSbFbxQcfH6jXjmXijCMMwv+ZGSBui6VF+gsQe2wJcMlZGTPgbGVZjZ/1F8GpCitwHx52sWQi89qi/+lwKgXyvO7NAAgglj02zbyhOx+pfkUGP0QyMPXE/n8wdNc1WFiM9h2Nk/5v9HowNMmBygQF7qRgiZoxVzqPMfIIbXePz1bvMC7AFJTd4H/kf7MQEnHF90tMf+U0dqO8yqEHqPPfYuWUUUTMZtbbADE6SfeVQi7p8KMudo6/jDl5IA0eRY9UJbFfIolKzRW0gkspx9Z
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ce53380-5afc-459b-e90f-08d77271fd0d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2019 13:10:20.2900
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ItIRLWATrP9tJa9+u/LAue+DDceLmc1Y5Pjsc0XjP/w9n+E8u+bCVMR7Xrey9VRNi/zWTVc7cei2ehO1GvYR2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3485
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Please pull from the tag
+> Hi Sanjay R Mehta
+>
+> In more complex topology, read the Link Status and Control register of
+> RP is also wrong. Suppose that a PCIe switch bridge to the Secondary RP,
+> and Secondary internal SW.ds is a child device for switch's downstream
+> port as illustrated in the following topology.
+>
+> In secondary PCI domain:
+> Secondary RP--Switch UP--Switch DP--Secondary internal SW.us--Secondary
+> internal SW.ds--Secondary NTB
+>
+> pci_rp = pci_find_pcie_root_port(ndev->ntb.pdev) will return the
+> Secondary RP, and pcie_capability_read_dword(pci_rp,
+> PCI_EXP_LNKCTL,&stat) will get the link status between Secondary RP and
+> Switch UP. Maybe, read the Link Status and control register of Secondary
+> internal SW.us is appropriate.
+>
+Hi Jiansen Lin,
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- devprop-5.5-rc1
+I modified the code as per your suggestion and is working fine.
+Adding Arindam for comments who was the co-author of the patch I was about to send for upstream review.
 
-with top-most commit 1afc14032e54a7e6c38304dc9a6bda1b6416f2b7
-
- software node: simplify property_entry_read_string_array()
-
-on top of commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce
-
- Linux 5.4-rc2
-
-to receive device properties framework updates for 5.5-rc1.
-
-These add support for printing fwnode names using a new conversion
-specifier "%pfw" (Sakari Ailus), clean up the software node and
-efi/apple-properties code in preparation for improved software node
-reference properties handling (Dmitry Torokhov) and fix the struct
-fwnode_operations description (Heikki Krogerus).
-
-There is a merge conflict between this and the printk tree (affecting
-checkpatch.pl) that has been addressed by the appended patch from
-Stephen in linux-next.
-
-Thanks!
-
-
----------------
-
-Dmitry Torokhov (9):
-      software node: remove DEV_PROP_MAX
-      software node: introduce PROPERTY_ENTRY_XXX_ARRAY_LEN()
-      efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
-      software node: mark internal macros with double underscores
-      software node: clean up property_copy_string_array()
-      software node: get rid of property_set_pointer()
-      software node: remove property_entry_read_uNN_array functions
-      software node: unify PROPERTY_ENTRY_XXX macros
-      software node: simplify property_entry_read_string_array()
-
-Heikki Krogerus (1):
-      device property: Fix the description of struct fwnode_operations
-
-Sakari Ailus (12):
-      software node: Get reference to parent swnode in get_parent op
-      software node: Make argument to to_software_node const
-      device property: Move fwnode_get_parent() up
-      device property: Add functions for accessing node's parents
-      device property: Add fwnode_get_name for returning the name of a node
-      device property: Add a function to obtain a node's prefix
-      lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-      lib/vsprintf: Add a note on re-using %pf or %pF
-      lib/vsprintf: Make use of fwnode API to obtain node names and separators
-      lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-      lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-      lib/test_printf: Add tests for %pfw printk modifier
-
----------------
-
- Documentation/core-api/printk-formats.rst |  34 ++--
- drivers/acpi/property.c                   |  48 ++++++
- drivers/base/property.c                   |  83 +++++++++-
- drivers/base/swnode.c                     | 258 ++++++++++--------------------
- drivers/firmware/efi/apple-properties.c   |  18 +--
- drivers/of/property.c                     |  16 ++
- include/linux/fwnode.h                    |  10 +-
- include/linux/property.h                  | 106 ++++++------
- lib/test_printf.c                         |  32 ++++
- lib/vsprintf.c                            |  93 ++++++-----
- scripts/checkpatch.pl                     |   9 +-
- 11 files changed, 414 insertions(+), 293 deletions(-)
-
-
----------------
-
-diff --cc scripts/checkpatch.pl
-index 4b40445938dc,3d1f08fa091c..000000000000
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@@ -6019,10 -6020,13 +6020,13 @@@ sub process
-                  my $fmt = get_quoted_string($lines[$count - 1],
-raw_line($count, 0));
-                  $fmt =~ s/%%//g;
-
--                 while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
-+                 while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w*))/g) {
-                      $specifier = $1;
-                      $extension = $2;
--                     if ($extension !~ /[SsBKRraEehMmIiUDdgVCbGNOxt]/) {
-+                     $qualifier = $3;
- -                    if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-++                    if ($extension !~ /[SsBKRraEehMmIiUDdgVCbGNOxtf]/ ||
-+                         ($extension eq "f" &&
-+                          defined $qualifier && $qualifier !~ /^w/)) {
-                          $bad_specifier = $specifier;
-                          last;
-                      }
+Thanks,
+Sanjay Mehta
+> struct pci_dev *pci_up = NULL;
+> struct pci_dev *pci_dp = NULL;
+>
+> if (ndev->ntb.topo == NTB_TOPO_SEC) {
+>     /* Locate the pointer to Secondary up for this device */
+>     pci_dp = pci_upstream_bridge(ndev->ntb.pdev);
+>     /* Read the PCIe Link Control and Status register */
+>     if (pci_dp) {
+>        pci_up = pci_upstream_bridge(pci_dp);
+>        if (pci_up) {
+>                rc = pcie_capability_read_dword(pci_up, PCI_EXP_LNKCTL,
+>                         &stat);
+>                if (rc)
+>                        return 0;
+>                }
+>        }
+> }
+>
+> Thanks,
+> Jiansen Lin
+>
+>> I have modified the code according to your suggestion and tested it
+>> on Dhyana platform, it works well, expect to receice your patch.
+>>
+>> Before modify the code, read the Link Status and control register of the
+>> secondary NTB device to get link status.
+>>
+>> cat /sys/kernel/debug/ntb_hw_amd/0000\:43\:00.1/info
+>> NTB Device Information:
+>> Connection Topology -   NTB_TOPO_SEC
+>> LNK STA -               0x11030042
+>> Link Status -           Up
+>> Link Speed -            PCI-E Gen 3
+>> Link Width -            x16
+>>
+>> After modify the code, read the Link Status and control register of the
+>> secondary RP to get link status.
+>>
+>> cat /sys/kernel/debug/ntb_hw_amd/0000\:43\:00.1/info
+>> NTB Device Information:
+>> Connection Topology -   NTB_TOPO_SEC
+>> LNK STA -               0x70830042
+>> Link Status -           Up
+>> Link Speed -            PCI-E Gen 3
+>> Link Width -            x8
+>>
+>> Thanks,
+>> Jiasen Lin
+>>
+>>> ---
+>>>   drivers/ntb/hw/amd/ntb_hw_amd.c | 27 +++++++++++++++++++++++----
+>>>   drivers/ntb/hw/amd/ntb_hw_amd.h |  1 -
+>>>   2 files changed, 23 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c
+>>> b/drivers/ntb/hw/amd/ntb_hw_amd.c
+>>> index 14ad69c..91e1966 100644
+>>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
+>>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
+>>> @@ -842,6 +842,8 @@ static inline void ndev_init_struct(struct
+>>> amd_ntb_dev *ndev,
+>>>   static int amd_poll_link(struct amd_ntb_dev *ndev)
+>>>   {
+>>>       void __iomem *mmio = ndev->peer_mmio;
+>>> +    struct pci_dev *pci_rp = NULL;
+>>> +    struct pci_dev *pdev = NULL;
+>>>       u32 reg, stat;
+>>>       int rc;
+>>> @@ -855,10 +857,27 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
+>>>       ndev->cntl_sta = reg;
+>>> -    rc = pci_read_config_dword(ndev->ntb.pdev,
+>>> -                   AMD_LINK_STATUS_OFFSET, &stat);
+>>> -    if (rc)
+>>> -        return 0;
+>>> +    if (ndev->ntb.topo == NTB_TOPO_SEC) {
+>>> +        /* Locate the pointer to PCIe Root Port for this device */
+>>> +        pci_rp = pci_find_pcie_root_port(ndev->ntb.pdev);
+>>> +        /* Read the PCIe Link Control and Status register */
+>>> +        if (pci_rp) {
+>>> +            rc = pcie_capability_read_dword(pci_rp, PCI_EXP_LNKCTL,
+>>> +                            &stat);
+>>> +            if (rc)
+>>> +                return 0;
+>>> +        }
+>>> +    } else if (ndev->ntb.topo == NTB_TOPO_PRI) {
+>>> +        /*
+>>> +         * For NTB primary, we simply read the Link Status and control
+>>> +         * register of the NTB device itself.
+>>> +         */
+>>> +        pdev = ndev->ntb.pdev;
+>>> +        rc = pcie_capability_read_dword(pdev, PCI_EXP_LNKCTL, &stat);
+>>> +        if (rc)
+>>> +            return 0;
+>>> +    }
+>>> +
+>>>       ndev->lnk_sta = stat;
+>>>       return 1;
+>>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h
+>>> b/drivers/ntb/hw/amd/ntb_hw_amd.h
+>>> index 139a307..39e5d18 100644
+>>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.h
+>>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
+>>> @@ -53,7 +53,6 @@
+>>>   #include <linux/pci.h>
+>>>   #define AMD_LINK_HB_TIMEOUT    msecs_to_jiffies(1000)
+>>> -#define AMD_LINK_STATUS_OFFSET    0x68
+>>>   #define NTB_LIN_STA_ACTIVE_BIT    0x00000002
+>>>   #define NTB_LNK_STA_SPEED_MASK    0x000F0000
+>>>   #define NTB_LNK_STA_WIDTH_MASK    0x03F00000
+>>>
