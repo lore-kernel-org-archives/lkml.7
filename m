@@ -2,94 +2,72 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A77C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0826207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8F920836
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574796479;
-	bh=B/VLkceDBn59HJfj6bhF1gqUsX18JyqPNwK2LpyscnI=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=hc4Ll8nSLKVp89wIRVKp3CfITTrUP9Pzurb/ijpP3rsK1/QWE64JBFFkjIWdgZ5y3
-	 ZCmHXUWXdWzgHIJRTwgHJk4N1S+5OG82vhSbZbx3a3acXoMtpa4bVbAI/tAMSEdBEa
-	 wMYTvW9WhyiDqrfS1TJSRmmQEbmZ25J3L1smAjH8=
+	s=default; t=1574796608;
+	bh=IGtTu0orrfzxf9eTzVogs+bdlJDBKPO0OXuAhFzr5GA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=TDVeg0U23eaY2EVm/rcF1tTGx5JZ1qb1CGw4U+j27RNViRkt/3aPQSdwWjZScXscn
+	 Fu0rZXHnhRKrpxQxZzE7PJqTmAwvmJKu+GRNQenTQfhmtRyvmEUoY15eYQnX8wWwEM
+	 25X0OyIVZa5oeUhWMnnH1t7unLQCQmQk8ea8MV44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfKZT16 (ORCPT
+        id S1726232AbfKZTaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:27:58 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33672 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfKZT16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:27:58 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y206so1041034pfb.0;
-        Tue, 26 Nov 2019 11:27:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=qEPEckI9bajeaFnxQwJ5COLddGB79GLajuNLeTcpeO4=;
-        b=e9o4kO+SJfvTUFr7ekaSoJerhlzU7PNt4/lFRiZfiIdliVonO67Y3dNUtIS3TfcNxN
-         8j4dtavy5yUdKtC4XE1vOIxTTHBwzBdxqpOAG35hF7MH/dIbSklfk0FQnDLLtJPDxjOU
-         5ycGObV6uBycS8arKTj4h5LwB795Ji+4Hn+KMpyp8joVMjZnMucqN5AqttcIlLCPlVEz
-         VcxtnlkgV3Y2lwpIH9Eu39lfBAT8nCVMqRTigc4fNlzjAM6fLx8WkKcTvJVDJDEqdZh4
-         mQGmtAiKXflkQ0m070BVfDZLs8lGvG089jaIE3SUp95gIg0pnXttU6J00Wzx0zaaVevN
-         HGJw==
-X-Gm-Message-State: APjAAAUOY+YGwYh5NxKZEfXFk3D/S4nTfhSPBBZLprAkIJFuKWQRvQEe
-        /oNIy6OTSm5PuwCbINc0E7c=
-X-Google-Smtp-Source: APXvYqxqDmbCpIFCUpG6LlVNNtQ6Kt3fxn2xLMfze5sPVdszzPxmXD5qHSLJ3y8ue74YKaDh8+eeXw==
-X-Received: by 2002:a65:64c1:: with SMTP id t1mr62495pgv.263.1574796477359;
-        Tue, 26 Nov 2019 11:27:57 -0800 (PST)
-Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id s15sm3826227pjp.3.2019.11.26.11.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 11:27:56 -0800 (PST)
-Message-ID: <5ddd7cbc.1c69fb81.550da.d1b9@mx.google.com>
-Date:   Tue, 26 Nov 2019 11:27:55 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-CC:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] mips: cacheinfo: report shared CPU map
-References:  <20191124140731.24430-1-vladimir.kondratiev@intel.com>
-In-Reply-To:  <20191124140731.24430-1-vladimir.kondratiev@intel.com>
+        Tue, 26 Nov 2019 14:30:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbfKZTaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 14:30:06 -0500
+Subject: Re: [GIT PULL] x86/decoder change for v5.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574796606;
+        bh=IGtTu0orrfzxf9eTzVogs+bdlJDBKPO0OXuAhFzr5GA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=QGs1jwh7wBj445mPwEuRJ5fdI3j+a6yI5V1+HQo13TojX9c29l8wipKnHhxNfh6+X
+         T1QsOUcag2aIMqaGHCwFUG1xHh2LEIgqFlq/8SNZwnHWzfPu8u2lnAAlWLMHtAIk7u
+         GbB/1nFpILi096oEahyhv1LpsbBEp0Zd/V+AjJaw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191125102959.GA107197@gmail.com>
+References: <20191125102959.GA107197@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191125102959.GA107197@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ core-objtool-for-linus
+X-PR-Tracked-Commit-Id: 700c1018b86d0d4b3f1f2d459708c0cdf42b521d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fd2615908dfd0586ea40692a99c44e34b7e869bc
+Message-Id: <157479660617.2359.17525412411713413934.pr-tracker-bot@kernel.org>
+Date:   Tue, 26 Nov 2019 19:30:06 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The pull request you sent on Mon, 25 Nov 2019 11:29:59 +0100:
 
-Vladimir Kondratiev wrote:
-> Report L1 caches as shared per core; L2 - per cluster.
-> 
-> This fixes "perf" that went crazy if shared_cpu_map attribute not
-> reported on sysfs, in form of
-> 
-> /sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
-> /sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-objtool-for-linus
 
-Applied to mips-fixes.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fd2615908dfd0586ea40692a99c44e34b7e869bc
 
-> commit 3b1313eb32c4
-> https://git.kernel.org/mips/c/3b1313eb32c4
-> 
-> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+Thank you!
 
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
