@@ -2,120 +2,119 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15838C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D4EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28EE20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574759972;
-	bh=Iqz6aTqwrpGHW7R4infB/EOGkNdfCfDKkSzCxC6kw14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jt9/DCs7A496kdUcFl4wCPkvhnT0kSUGjFE6aBrStPe5xPwcmh+cLS0XF9Uz0cXDQ
-	 /F6fJoBlsefEvuOYSK+jTR0HV/EdjM/7VhhyPs26+ZhBySbs1yPrulhqR83V/GwuSy
-	 qyCZzjx4DciFLpymWy5/CMSn2mUdL7pmrDV6DTL4=
+	by mail.kernel.org (Postfix) with ESMTP id 855182075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfKZJTb (ORCPT
+        id S1727576AbfKZJUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:19:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbfKZJTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:19:31 -0500
-Received: from localhost (unknown [84.241.194.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 411842073F;
-        Tue, 26 Nov 2019 09:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574759970;
-        bh=Iqz6aTqwrpGHW7R4infB/EOGkNdfCfDKkSzCxC6kw14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dBf8P9OwXY/kAat+PpZvnrDhYOsTxpOHy1o62o6qi6+RiG/Sr5MVqvy20q1IWiY0k
-         +bgDn/K9hTRbqGZvo8UpA5JbElIhKq/2ijMXUMCR5a7OhpBmiFl/iircUikAGSUX88
-         b67L/U1Z/fc3mQi1fCRozVw3hrI+9ofixjPJXEdw=
-Date:   Tue, 26 Nov 2019 10:19:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
-Message-ID: <20191126091926.GB1372654@kroah.com>
-References: <20191023114634.13657-0-mholenko@antmicro.com>
- <20191023114634.13657-2-mholenko@antmicro.com>
- <20191120192648.GA3087498@kroah.com>
- <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
+        Tue, 26 Nov 2019 04:20:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47876 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727150AbfKZJUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:20:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 853D2BA60;
+        Tue, 26 Nov 2019 09:20:35 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     andrew.murray@arm.com, maz@kernel.org, linux-kernel@vger.kernel.org
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH v3 0/7] Raspberry Pi 4 PCIe support
+Date:   Tue, 26 Nov 2019 10:19:38 +0100
+Message-Id: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 10:02:18AM +0100, Mateusz Holenko wrote:
-> śr., 20 lis 2019 o 20:26 Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> napisał(a):
-> >
-> > On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
-> > > +#ifdef __LITTLE_ENDIAN
-> > > +# define LITEX_READ_REG(addr)                  ioread32(addr)
-> > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
-> > > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
-> > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + off)
-> > > +#else
-> > > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
-> > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
-> > > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
-> > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr + off)
-> > > +#endif
-> >
-> > I just noticed this.
-> >
-> > Ick, this is not good.  You will run into problems in the future with
-> > this, I can guarantee it.  What about systems where the CPU is one
-> > endian and the hardware in the other?  It will happen trust us.
-> 
-> As mentioned in the previous comment, LiteX CSRs are guaranteed to be
-> always little-endian - this includes configurations with both
-> big-endian and little-endian CPUs.
+This series aims at providing support for Raspberry Pi 4's PCIe
+controller, which is also shared with the Broadcom STB family of
+devices.
 
-What enforces that guarantee?
+There was a previous attempt to upstream this some years ago[1] but was
+blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
+is something currently not supported by the kernel.  Luckily this is not
+the case for the Raspberry Pi 4.
 
-> The aim of including the ifdef section was exactly to target situation
-> where endianness is different for CPU and devices. As such this
-> approach *should* work.
+Note that the driver code is to be based on top of Rob Herring's series
+simplifying inbound and outbound range parsing.
 
-"should" :)
+[1] https://patchwork.kernel.org/cover/10605933/
+[2] https://patchwork.kernel.org/patch/10605957/
 
-We have seen it happen all the time that some hardware team hooks this
-up backwards, no matter what the "spec" required.  So be careful here.
+---
 
-good luck!
+Changes since v2:
+  - Redo register access in driver avoiding indirection while keeping
+    the naming intact
+  - Add patch editing ARM64's config
+  - Last MSI cleanups, notably removing MSIX flag
+  - Got rid of all _RB writes
+  - Got rid of all of_data
+  - Overall churn removal
+  - Address the rest of Andrew's comments
 
-greg k-h
+Changes since v1:
+  - add generic rounddown/roundup_pow_two64() patch
+  - Add MAINTAINERS patch
+  - Fix Kconfig
+  - Cleanup probe, use up to date APIs, exit on MSI failure
+  - Get rid of linux,pci-domain and other unused constructs
+  - Use edge triggered setup for MSI
+  - Cleanup MSI implementation
+  - Fix multiple cosmetic issues
+  - Remove supend/resume code
+
+Jim Quinlan (3):
+  dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+  PCI: brcmstb: add Broadcom STB PCIe host controller driver
+  PCI: brcmstb: add MSI capability
+
+Nicolas Saenz Julienne (4):
+  linux/log2.h: Add roundup/rounddown_pow_two64() family of functions
+  ARM: dts: bcm2711: Enable PCIe controller
+  MAINTAINERS: Add brcmstb PCIe controller
+  arm64: defconfig: Enable Broadcom's STB PCIe controller
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |   97 ++
+ MAINTAINERS                                   |    4 +
+ arch/arm/boot/dts/bcm2711.dtsi                |   41 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/acpi/arm64/iort.c                     |    2 +-
+ drivers/net/ethernet/mellanox/mlx4/en_clock.c |    3 +-
+ drivers/of/device.c                           |    2 +-
+ drivers/pci/controller/Kconfig                |    9 +
+ drivers/pci/controller/Makefile               |    1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  |    7 +-
+ drivers/pci/controller/cadence/pcie-cadence.c |    7 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 1012 +++++++++++++++++
+ drivers/pci/controller/pcie-rockchip-ep.c     |    9 +-
+ include/linux/log2.h                          |   52 +
+ kernel/dma/direct.c                           |    3 +-
+ 15 files changed, 1230 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+
+-- 
+2.24.0
+
