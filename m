@@ -6,425 +6,281 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B13C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF1DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2196D20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322432071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbfKZQSs (ORCPT
+        id S1728786AbfKZQSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:18:48 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:58733 "EHLO
+        Tue, 26 Nov 2019 11:18:53 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:33753 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfKZQSo (ORCPT
+        with ESMTP id S1728475AbfKZQSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:18:44 -0500
+        Tue, 26 Nov 2019 11:18:43 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MVMNF-1iPzA42qVb-00SLUS; Tue, 26 Nov 2019 17:18:35 +0100
+ 1M42Ss-1iZdXu0Z1s-0007db; Tue, 26 Nov 2019 17:18:34 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v5 8/8] media: v4l2-core: fix compat v4l2_buffer handling for time64 ABI
-Date:   Tue, 26 Nov 2019 17:18:24 +0100
-Message-Id: <20191126161824.337724-9-arnd@arndb.de>
+Subject: [PATCH v5 2/8] media: v4l2: abstract timeval handling in v4l2_buffer
+Date:   Tue, 26 Nov 2019 17:18:18 +0100
+Message-Id: <20191126161824.337724-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191126161824.337724-1-arnd@arndb.de>
 References: <20191126161824.337724-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ofc3LBlLnAXmLOHye02+cN3SmFYYxNpVcm8agn8K5QILs6B6KuH
- 6aKUQNQNCjHk7MVC6+IUlMb73FzMCSBs2thRamSob5WCBBUlFqkFRhRsPpiPe7Z5jF1WpRP
- jSiUpCsa1KquhEgCmZU7aIDxMLjuVhY2z1CuBEBliLK5iKZEbvhuPuPqm7hclW/Sh4y9TTo
- IcHGiGzbaVEumQUM0chSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+J3m8TRCMvk=:yH0W4wNS2PNXNprBQR1WrB
- 3nKAEzPTRNm67b7V91GpH9u24/2gndde8ISXPcY85XLWZVKUIbkMwJRrLIzXAuwSuAyiQCDxX
- 6eXB9hq/obCfrxCkZLSmei6yM5jRuP6NIu6AECCB9ODwlWV+pw5CQoDMN7DgiyyT+0gMYmzB1
- 1RUM+RsTnRJMlVM3ATAQN1PB7O0/ySvKyD4Rshyjx/b7IGr2500nsRGGeEBx206ccV1UUSZxU
- dic5dZ6CjIlzJCMVnZzHFibcGLUWcSFy+ML4rXLtPdEHARSwRWjxQZ2VHMGn3/34yQmV/T/75
- 0NVkSZh1t9Pi0Ix2SALlJUcBVmiVbie/NSmKrrioRcXirTp3LhBf+FpSxgx3jj/qBpTqq7ywA
- vqlOlWo6laMU6HbcPH+x6PuPkLKPPlChDy9d7Hikx49PcD9iSA1kfTYY7sRsPOHcFUtlj+45X
- MsS6gP+ucv7gFA0xEyinQBiAWGJWGK+6BQb6FyVCatO4iDKxBwDf++A8kF/7U3jWp/vs21TKw
- bvyaR02TMKs40KNP2nzzQ1l9LWYZOtBD3S37YvF/qOL/0OMNm7pWXKu+oz5f002Q3aQTB3pRT
- OEldUClEjSC7d5vaY6yWqXAY/yNHjAZYHMGbKTF3n+d9Q/lS+Lsqwpnqgd64IS2UmntIoWFGu
- QQZ7rNizajhTIFoh8g7bEE+Fx5xzTSbfB282FI6a2jDVBZcItDdlvRUxT+UkqDz7SSOvqG/RG
- J6Evf/NTjrZg0pKh0PZqAlPPcIfpYL1g++tqoHOEADmAabKtZIou4cXVb3cbUpYWr+DP2BHI0
- ed8zYo4VK/aKH0NFfCuFCpGfEoD1jJfK8VgUIDgaBGYgOmoGVrMIYuHm8HGVOL2j8BHLujylr
- VM9SptToxYVybVzAxPbA==
+X-Provags-ID: V03:K1:wP8O+yAPzuZzdV0bYq+naeEf5uhuxbDAFZYzxUTCT7zjrNZbtVE
+ 7Gk14qvXcSFCbIruEdKTiJjJolhJaNNbtJr9jqsGYnfZgftfOUXSwVjV6CW+43BqLDZ0rXr
+ AOau8EpMjc6XC9R3vVYsEIUrFZ+mwng1EHTwDNnbMXtkuA3xeC+vN+yMb0C/sHMrp1VzN68
+ PjRIDQWu2bzOYm73Mc54w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qpoMj5+utN8=:/R+XZ/zPHFNOIgmygeVXiC
+ tkswV2QHDo9avmOLOM3wQyLXhvEivoyYqn1vDAO0YrunrcF9wayLO0awm7BKsugVXwMMjgw2e
+ VEQ7Exq+ZTaZ3Uz/iw7ylqp978cNWcYkLpcplnAqrTxorpzpQDRsUj7VuQxcxEtgBgw3x2OXq
+ WUweU5SbryibO/ErGNooYOzHBYyo0n1tVkCsQ1uCw27DZMZf1j8AStbt2TD+UoD78sbCC47e6
+ W3J85xKXK//CC6TDM00DuL/lPRbfSQ1To/Lk7E58LbVYBHZymtecKeIhkinJsTSjX1SgH4ZqM
+ fLu8COh/bH6Tdh8faty2JZ2hq0/MuklJPJIHdlwBrVrym+sNf7Q6nPVVnLhwN+VzKUXSdBLyN
+ Hxt0CxSJyfcme9If/C1g5n+ZzB5bIc3Jgk2fWc2nZ0fqqU1IoLUY6kA/SE0By8G+ejoAqPrMy
+ dBzLtiRN0+g1LwaRhChyYH9r2bWf9JUVI7mwzlc+LY5IpFzKqscaLt/N/ZVJ2BFpPERi/c7X7
+ deb35DRg7gbxkryMLnW/vFG57pGp4cbVTF4Sg5i0YnV2d360nfzROxSGqtqbjBTBpZHB44Qhd
+ 6J15tXl9IxPBO9dTvK3L3HHgC0Xc3Z7HtLUBe/xu7Rp4cR+ZohgJuVkB4j497Rn4yVTFR4OGm
+ sWcnTatI2J6ipavVXiiCmU1szmU6ksg2YCAm3qicN2iUwhe4dDAMfYjTb5mcrELXd24UHuup6
+ E0xlbmpe99Zx2dsUcHaZVuT6dyZeYOE2qNbA1n+ulqKTb4XiwmU7/hNTBezPG8fJfEbH3P7bo
+ FUlc4DZzlZhSm++vUCGlXtGGzBaFACEp9USTX+lCULiXROe6aTCusa+w2YlUGQwBuTMd6+dB4
+ NED+i/pctiRndnKXrNAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the four new variants of ioctl commands for 64-bit time_t
-in v4l2_buffer.
+As a preparation for adding 64-bit time_t support in the uapi,
+change the drivers to no longer care about the format of the
+timestamp field in struct v4l2_buffer.
 
-The existing v4l2_buffer32 structure for the traditional format gets
-changed to match the new v4l2_buffer format, and the old layout is
-now called v4l2_buffer32_time32. Neither of these matches the native
-64-bit architecture format of v4l2_buffer, so both require special
-handling in compat code.
-
-Duplicating the existing handlers for the new types is a safe conversion
-for now, but unfortunately this may turn into a maintenance burden
-later. A larger-scale rework of the compat code might be a better
-alternative, but is out of scope of the y2038 work.
+The v4l2_timeval_to_ns() function is no longer needed in the
+kernel after this, but there is userspace code relying on
+it to be part of the uapi header.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 265 +++++++++++++++++-
- 1 file changed, 264 insertions(+), 1 deletion(-)
+ .../media/common/videobuf2/videobuf2-v4l2.c   |  4 ++--
+ drivers/media/pci/meye/meye.c                 |  4 ++--
+ drivers/media/usb/cpia2/cpia2_v4l.c           |  4 ++--
+ drivers/media/usb/stkwebcam/stk-webcam.c      |  2 +-
+ drivers/media/usb/usbvision/usbvision-video.c |  4 ++--
+ drivers/media/v4l2-core/videobuf-core.c       |  5 +++--
+ include/media/v4l2-common.h                   | 21 +++++++++++++++++++
+ include/trace/events/v4l2.h                   |  2 +-
+ include/uapi/linux/videodev2.h                |  2 ++
+ 9 files changed, 36 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-index 46cd84879c1f..3bbf47d950e0 100644
---- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-+++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-@@ -474,7 +474,33 @@ struct v4l2_buffer32 {
- 	__u32			bytesused;
- 	__u32			flags;
- 	__u32			field;	/* enum v4l2_field */
--	struct compat_timeval	timestamp;
-+	struct {
-+		long long	tv_sec;
-+		long long	tv_usec;
-+	}			timestamp;
-+	struct v4l2_timecode	timecode;
-+	__u32			sequence;
-+
-+	/* memory location */
-+	__u32			memory;	/* enum v4l2_memory */
-+	union {
-+		__u32           offset;
-+		compat_long_t   userptr;
-+		compat_caddr_t  planes;
-+		__s32		fd;
-+	} m;
-+	__u32			length;
-+	__u32			reserved2;
-+	__s32			request_fd;
-+};
-+
-+struct v4l2_buffer32_time32 {
-+	__u32			index;
-+	__u32			type;	/* enum v4l2_buf_type */
-+	__u32			bytesused;
-+	__u32			flags;
-+	__u32			field;	/* enum v4l2_field */
-+	struct old_timeval32	timestamp;
- 	struct v4l2_timecode	timecode;
- 	__u32			sequence;
+diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+index e652f4318284..eb5d5db96552 100644
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -146,7 +146,7 @@ static void __copy_timestamp(struct vb2_buffer *vb, const void *pb)
+ 		 * and the timecode field and flag if needed.
+ 		 */
+ 		if (q->copy_timestamp)
+-			vb->timestamp = v4l2_timeval_to_ns(&b->timestamp);
++			vb->timestamp = v4l2_buffer_get_timestamp(b);
+ 		vbuf->flags |= b->flags & V4L2_BUF_FLAG_TIMECODE;
+ 		if (b->flags & V4L2_BUF_FLAG_TIMECODE)
+ 			vbuf->timecode = b->timecode;
+@@ -482,7 +482,7 @@ static void __fill_v4l2_buffer(struct vb2_buffer *vb, void *pb)
  
-@@ -581,6 +607,31 @@ static int bufsize_v4l2_buffer(struct v4l2_buffer32 __user *p32, u32 *size)
+ 	b->flags = vbuf->flags;
+ 	b->field = vbuf->field;
+-	b->timestamp = ns_to_timeval(vb->timestamp);
++	v4l2_buffer_set_timestamp(b, vb->timestamp);
+ 	b->timecode = vbuf->timecode;
+ 	b->sequence = vbuf->sequence;
+ 	b->reserved2 = 0;
+diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
+index 0e61c81356ef..3a4c29bc0ba5 100644
+--- a/drivers/media/pci/meye/meye.c
++++ b/drivers/media/pci/meye/meye.c
+@@ -1266,7 +1266,7 @@ static int vidioc_querybuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+ 		buf->flags |= V4L2_BUF_FLAG_DONE;
+ 
+ 	buf->field = V4L2_FIELD_NONE;
+-	buf->timestamp = ns_to_timeval(meye.grab_buffer[index].ts);
++	v4l2_buffer_set_timestamp(buf, meye.grab_buffer[index].ts);
+ 	buf->sequence = meye.grab_buffer[index].sequence;
+ 	buf->memory = V4L2_MEMORY_MMAP;
+ 	buf->m.offset = index * gbufsize;
+@@ -1332,7 +1332,7 @@ static int vidioc_dqbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+ 	buf->bytesused = meye.grab_buffer[reqnr].size;
+ 	buf->flags = V4L2_BUF_FLAG_MAPPED | V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+ 	buf->field = V4L2_FIELD_NONE;
+-	buf->timestamp = ns_to_timeval(meye.grab_buffer[reqnr].ts);
++	v4l2_buffer_set_timestamp(buf, meye.grab_buffer[reqnr].ts);
+ 	buf->sequence = meye.grab_buffer[reqnr].sequence;
+ 	buf->memory = V4L2_MEMORY_MMAP;
+ 	buf->m.offset = reqnr * gbufsize;
+diff --git a/drivers/media/usb/cpia2/cpia2_v4l.c b/drivers/media/usb/cpia2/cpia2_v4l.c
+index 626264a56517..9d3d05125d7b 100644
+--- a/drivers/media/usb/cpia2/cpia2_v4l.c
++++ b/drivers/media/usb/cpia2/cpia2_v4l.c
+@@ -800,7 +800,7 @@ static int cpia2_querybuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+ 		break;
+ 	case FRAME_READY:
+ 		buf->bytesused = cam->buffers[buf->index].length;
+-		buf->timestamp = ns_to_timeval(cam->buffers[buf->index].ts);
++		v4l2_buffer_set_timestamp(buf, cam->buffers[buf->index].ts);
+ 		buf->sequence = cam->buffers[buf->index].seq;
+ 		buf->flags = V4L2_BUF_FLAG_DONE;
+ 		break;
+@@ -907,7 +907,7 @@ static int cpia2_dqbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+ 	buf->flags = V4L2_BUF_FLAG_MAPPED | V4L2_BUF_FLAG_DONE
+ 		| V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+ 	buf->field = V4L2_FIELD_NONE;
+-	buf->timestamp = ns_to_timeval(cam->buffers[buf->index].ts);
++	v4l2_buffer_set_timestamp(buf, cam->buffers[buf->index].ts);
+ 	buf->sequence = cam->buffers[buf->index].seq;
+ 	buf->m.offset = cam->buffers[buf->index].data - cam->frame_buffer;
+ 	buf->length = cam->frame_size;
+diff --git a/drivers/media/usb/stkwebcam/stk-webcam.c b/drivers/media/usb/stkwebcam/stk-webcam.c
+index cfca3c70599b..1b730ac31499 100644
+--- a/drivers/media/usb/stkwebcam/stk-webcam.c
++++ b/drivers/media/usb/stkwebcam/stk-webcam.c
+@@ -1126,7 +1126,7 @@ static int stk_vidioc_dqbuf(struct file *filp,
+ 	sbuf->v4lbuf.flags &= ~V4L2_BUF_FLAG_QUEUED;
+ 	sbuf->v4lbuf.flags |= V4L2_BUF_FLAG_DONE;
+ 	sbuf->v4lbuf.sequence = ++dev->sequence;
+-	sbuf->v4lbuf.timestamp = ns_to_timeval(ktime_get_ns());
++	v4l2_buffer_set_timestamp(&sbuf->v4lbuf, ktime_get_ns());
+ 
+ 	*buf = sbuf->v4lbuf;
+ 	return 0;
+diff --git a/drivers/media/usb/usbvision/usbvision-video.c b/drivers/media/usb/usbvision/usbvision-video.c
+index 93d36aab824f..5ca2c2f35fe2 100644
+--- a/drivers/media/usb/usbvision/usbvision-video.c
++++ b/drivers/media/usb/usbvision/usbvision-video.c
+@@ -696,7 +696,7 @@ static int vidioc_querybuf(struct file *file,
+ 	vb->length = usbvision->curwidth *
+ 		usbvision->curheight *
+ 		usbvision->palette.bytes_per_pixel;
+-	vb->timestamp = ns_to_timeval(usbvision->frame[vb->index].ts);
++	v4l2_buffer_set_timestamp(vb, usbvision->frame[vb->index].ts);
+ 	vb->sequence = usbvision->frame[vb->index].sequence;
  	return 0;
  }
+@@ -765,7 +765,7 @@ static int vidioc_dqbuf(struct file *file, void *priv, struct v4l2_buffer *vb)
+ 		V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+ 	vb->index = f->index;
+ 	vb->sequence = f->sequence;
+-	vb->timestamp = ns_to_timeval(f->ts);
++	v4l2_buffer_set_timestamp(vb, f->ts);
+ 	vb->field = V4L2_FIELD_NONE;
+ 	vb->bytesused = f->scanlength;
  
-+static int bufsize_v4l2_buffer_time32(struct v4l2_buffer32_time32 __user *p32, u32 *size)
-+{
-+	u32 type;
-+	u32 length;
-+
-+	if (!access_ok(p32, sizeof(*p32)) ||
-+	    get_user(type, &p32->type) ||
-+	    get_user(length, &p32->length))
-+		return -EFAULT;
-+
-+	if (V4L2_TYPE_IS_MULTIPLANAR(type)) {
-+		if (length > VIDEO_MAX_PLANES)
-+			return -EINVAL;
-+
-+		/*
-+		 * We don't really care if userspace decides to kill itself
-+		 * by passing a very big length value
-+		 */
-+		*size = length * sizeof(struct v4l2_plane);
-+	} else {
-+		*size = 0;
-+	}
-+	return 0;
-+}
-+
- static int get_v4l2_buffer32(struct v4l2_buffer __user *p64,
- 			     struct v4l2_buffer32 __user *p32,
- 			     void __user *aux_buf, u32 aux_space)
-@@ -681,6 +732,106 @@ static int get_v4l2_buffer32(struct v4l2_buffer __user *p64,
- 	return 0;
+diff --git a/drivers/media/v4l2-core/videobuf-core.c b/drivers/media/v4l2-core/videobuf-core.c
+index 939fc11cf080..2686f03b322e 100644
+--- a/drivers/media/v4l2-core/videobuf-core.c
++++ b/drivers/media/v4l2-core/videobuf-core.c
+@@ -19,6 +19,7 @@
+ #include <linux/interrupt.h>
+ 
+ #include <media/videobuf-core.h>
++#include <media/v4l2-common.h>
+ 
+ #define MAGIC_BUFFER 0x20070728
+ #define MAGIC_CHECK(is, should)						\
+@@ -364,7 +365,7 @@ static void videobuf_status(struct videobuf_queue *q, struct v4l2_buffer *b,
+ 	}
+ 
+ 	b->field     = vb->field;
+-	b->timestamp = ns_to_timeval(vb->ts);
++	v4l2_buffer_set_timestamp(b, vb->ts);
+ 	b->bytesused = vb->size;
+ 	b->sequence  = vb->field_count >> 1;
  }
+@@ -578,7 +579,7 @@ int videobuf_qbuf(struct videobuf_queue *q, struct v4l2_buffer *b)
+ 		    || q->type == V4L2_BUF_TYPE_SDR_OUTPUT) {
+ 			buf->size = b->bytesused;
+ 			buf->field = b->field;
+-			buf->ts = v4l2_timeval_to_ns(&b->timestamp);
++			buf->ts = v4l2_buffer_get_timestamp(b);
+ 		}
+ 		break;
+ 	case V4L2_MEMORY_USERPTR:
+diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+index d8c29e089000..8d0ac0311c84 100644
+--- a/include/media/v4l2-common.h
++++ b/include/media/v4l2-common.h
+@@ -14,6 +14,7 @@
+ #ifndef V4L2_COMMON_H_
+ #define V4L2_COMMON_H_
  
-+static int get_v4l2_buffer32_time32(struct v4l2_buffer_time32 __user *p64,
-+				    struct v4l2_buffer32_time32 __user *p32,
-+				    void __user *aux_buf, u32 aux_space)
++#include <linux/time.h>
+ #include <media/v4l2-dev.h>
+ 
+ /* Common printk constructs for v4l-i2c drivers. These macros create a unique
+@@ -518,4 +519,24 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+ int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt, u32 pixelformat,
+ 			u32 width, u32 height);
+ 
++static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
 +{
-+	u32 type;
-+	u32 length;
-+	s32 request_fd;
-+	enum v4l2_memory memory;
-+	struct v4l2_plane32 __user *uplane32;
-+	struct v4l2_plane __user *uplane;
-+	compat_caddr_t p;
-+	int ret;
-+
-+	if (!access_ok(p32, sizeof(*p32)) ||
-+	    assign_in_user(&p64->index, &p32->index) ||
-+	    get_user(type, &p32->type) ||
-+	    put_user(type, &p64->type) ||
-+	    assign_in_user(&p64->flags, &p32->flags) ||
-+	    get_user(memory, &p32->memory) ||
-+	    put_user(memory, &p64->memory) ||
-+	    get_user(length, &p32->length) ||
-+	    put_user(length, &p64->length) ||
-+	    get_user(request_fd, &p32->request_fd) ||
-+	    put_user(request_fd, &p64->request_fd))
-+		return -EFAULT;
-+
-+	if (V4L2_TYPE_IS_OUTPUT(type))
-+		if (assign_in_user(&p64->bytesused, &p32->bytesused) ||
-+		    assign_in_user(&p64->field, &p32->field) ||
-+		    assign_in_user(&p64->timestamp.tv_sec,
-+				   &p32->timestamp.tv_sec) ||
-+		    assign_in_user(&p64->timestamp.tv_usec,
-+				   &p32->timestamp.tv_usec))
-+			return -EFAULT;
-+
-+	if (V4L2_TYPE_IS_MULTIPLANAR(type)) {
-+		u32 num_planes = length;
-+
-+		if (num_planes == 0) {
-+			/*
-+			 * num_planes == 0 is legal, e.g. when userspace doesn't
-+			 * need planes array on DQBUF
-+			 */
-+			return put_user(NULL, &p64->m.planes);
-+		}
-+		if (num_planes > VIDEO_MAX_PLANES)
-+			return -EINVAL;
-+
-+		if (get_user(p, &p32->m.planes))
-+			return -EFAULT;
-+
-+		uplane32 = compat_ptr(p);
-+		if (!access_ok(uplane32,
-+			       num_planes * sizeof(*uplane32)))
-+			return -EFAULT;
-+
-+		/*
-+		 * We don't really care if userspace decides to kill itself
-+		 * by passing a very big num_planes value
-+		 */
-+		if (aux_space < num_planes * sizeof(*uplane))
-+			return -EFAULT;
-+
-+		uplane = aux_buf;
-+		if (put_user_force(uplane, &p64->m.planes))
-+			return -EFAULT;
-+
-+		while (num_planes--) {
-+			ret = get_v4l2_plane32(uplane, uplane32, memory);
-+			if (ret)
-+				return ret;
-+			uplane++;
-+			uplane32++;
-+		}
-+	} else {
-+		switch (memory) {
-+		case V4L2_MEMORY_MMAP:
-+		case V4L2_MEMORY_OVERLAY:
-+			if (assign_in_user(&p64->m.offset, &p32->m.offset))
-+				return -EFAULT;
-+			break;
-+		case V4L2_MEMORY_USERPTR: {
-+			compat_ulong_t userptr;
-+
-+			if (get_user(userptr, &p32->m.userptr) ||
-+			    put_user((unsigned long)compat_ptr(userptr),
-+				     &p64->m.userptr))
-+				return -EFAULT;
-+			break;
-+		}
-+		case V4L2_MEMORY_DMABUF:
-+			if (assign_in_user(&p64->m.fd, &p32->m.fd))
-+				return -EFAULT;
-+			break;
-+		}
-+	}
-+
-+	return 0;
++	/*
++	 * When the timestamp comes from 32-bit user space, there may be
++	 * uninitialized data in tv_usec, so cast it to u32.
++	 * Otherwise allow invalid input for backwards compatibility.
++	 */
++	return buf->timestamp.tv_sec * NSEC_PER_SEC +
++		(u32)buf->timestamp.tv_usec * NSEC_PER_USEC;
 +}
 +
- static int put_v4l2_buffer32(struct v4l2_buffer __user *p64,
- 			     struct v4l2_buffer32 __user *p32)
++static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
++                                            u64 timestamp)
++{
++	struct timespec64 ts = ns_to_timespec64(timestamp);
++
++	buf->timestamp.tv_sec  = ts.tv_sec;
++	buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
++}
++
+ #endif /* V4L2_COMMON_H_ */
+diff --git a/include/trace/events/v4l2.h b/include/trace/events/v4l2.h
+index 83860de120e3..248bc09bfc99 100644
+--- a/include/trace/events/v4l2.h
++++ b/include/trace/events/v4l2.h
+@@ -130,7 +130,7 @@ DECLARE_EVENT_CLASS(v4l2_event_class,
+ 		__entry->bytesused = buf->bytesused;
+ 		__entry->flags = buf->flags;
+ 		__entry->field = buf->field;
+-		__entry->timestamp = timeval_to_ns(&buf->timestamp);
++		__entry->timestamp = v4l2_buffer_get_timestamp(buf);
+ 		__entry->timecode_type = buf->timecode.type;
+ 		__entry->timecode_flags = buf->timecode.flags;
+ 		__entry->timecode_frames = buf->timecode.frames;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 04481c717fee..6ef4a5b787a4 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -1017,6 +1017,7 @@ struct v4l2_buffer {
+ 	};
+ };
+ 
++#ifndef __KERNEL__
+ /**
+  * v4l2_timeval_to_ns - Convert timeval to nanoseconds
+  * @ts:		pointer to the timeval variable to be converted
+@@ -1028,6 +1029,7 @@ static inline __u64 v4l2_timeval_to_ns(const struct timeval *tv)
  {
-@@ -761,6 +912,87 @@ static int put_v4l2_buffer32(struct v4l2_buffer __user *p64,
- 	return 0;
+ 	return (__u64)tv->tv_sec * 1000000000ULL + tv->tv_usec * 1000;
  }
++#endif
  
-+
-+static int put_v4l2_buffer32_time32(struct v4l2_buffer_time32 __user *p64,
-+				    struct v4l2_buffer32_time32 __user *p32)
-+{
-+	u32 type;
-+	u32 length;
-+	enum v4l2_memory memory;
-+	struct v4l2_plane32 __user *uplane32;
-+	struct v4l2_plane *uplane;
-+	compat_caddr_t p;
-+	int ret;
-+
-+	if (!access_ok(p32, sizeof(*p32)) ||
-+	    assign_in_user(&p32->index, &p64->index) ||
-+	    get_user(type, &p64->type) ||
-+	    put_user(type, &p32->type) ||
-+	    assign_in_user(&p32->flags, &p64->flags) ||
-+	    get_user(memory, &p64->memory) ||
-+	    put_user(memory, &p32->memory))
-+		return -EFAULT;
-+
-+	if (assign_in_user(&p32->bytesused, &p64->bytesused) ||
-+	    assign_in_user(&p32->field, &p64->field) ||
-+	    assign_in_user(&p32->timestamp.tv_sec, &p64->timestamp.tv_sec) ||
-+	    assign_in_user(&p32->timestamp.tv_usec, &p64->timestamp.tv_usec) ||
-+	    copy_in_user(&p32->timecode, &p64->timecode, sizeof(p64->timecode)) ||
-+	    assign_in_user(&p32->sequence, &p64->sequence) ||
-+	    assign_in_user(&p32->reserved2, &p64->reserved2) ||
-+	    assign_in_user(&p32->request_fd, &p64->request_fd) ||
-+	    get_user(length, &p64->length) ||
-+	    put_user(length, &p32->length))
-+		return -EFAULT;
-+
-+	if (V4L2_TYPE_IS_MULTIPLANAR(type)) {
-+		u32 num_planes = length;
-+
-+		if (num_planes == 0)
-+			return 0;
-+		/* We need to define uplane without __user, even though
-+		 * it does point to data in userspace here. The reason is
-+		 * that v4l2-ioctl.c copies it from userspace to kernelspace,
-+		 * so its definition in videodev2.h doesn't have a
-+		 * __user markup. Defining uplane with __user causes
-+		 * smatch warnings, so instead declare it without __user
-+		 * and cast it as a userspace pointer to put_v4l2_plane32().
-+		 */
-+		if (get_user(uplane, &p64->m.planes))
-+			return -EFAULT;
-+		if (get_user(p, &p32->m.planes))
-+			return -EFAULT;
-+		uplane32 = compat_ptr(p);
-+
-+		while (num_planes--) {
-+			ret = put_v4l2_plane32((void __user *)uplane,
-+					       uplane32, memory);
-+			if (ret)
-+				return ret;
-+			++uplane;
-+			++uplane32;
-+		}
-+	} else {
-+		switch (memory) {
-+		case V4L2_MEMORY_MMAP:
-+		case V4L2_MEMORY_OVERLAY:
-+			if (assign_in_user(&p32->m.offset, &p64->m.offset))
-+				return -EFAULT;
-+			break;
-+		case V4L2_MEMORY_USERPTR:
-+			if (assign_in_user(&p32->m.userptr, &p64->m.userptr))
-+				return -EFAULT;
-+			break;
-+		case V4L2_MEMORY_DMABUF:
-+			if (assign_in_user(&p32->m.fd, &p64->m.fd))
-+				return -EFAULT;
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- struct v4l2_framebuffer32 {
- 	__u32			capability;
- 	__u32			flags;
-@@ -1147,10 +1379,13 @@ static int put_v4l2_edid32(struct v4l2_edid __user *p64,
- #define VIDIOC_G_FMT32		_IOWR('V',  4, struct v4l2_format32)
- #define VIDIOC_S_FMT32		_IOWR('V',  5, struct v4l2_format32)
- #define VIDIOC_QUERYBUF32	_IOWR('V',  9, struct v4l2_buffer32)
-+#define VIDIOC_QUERYBUF32_TIME32 _IOWR('V',  9, struct v4l2_buffer32_time32)
- #define VIDIOC_G_FBUF32		_IOR ('V', 10, struct v4l2_framebuffer32)
- #define VIDIOC_S_FBUF32		_IOW ('V', 11, struct v4l2_framebuffer32)
- #define VIDIOC_QBUF32		_IOWR('V', 15, struct v4l2_buffer32)
-+#define VIDIOC_QBUF32_TIME32	_IOWR('V', 15, struct v4l2_buffer32_time32)
- #define VIDIOC_DQBUF32		_IOWR('V', 17, struct v4l2_buffer32)
-+#define VIDIOC_DQBUF32_TIME32	_IOWR('V', 17, struct v4l2_buffer32_time32)
- #define VIDIOC_ENUMSTD32	_IOWR('V', 25, struct v4l2_standard32)
- #define VIDIOC_ENUMINPUT32	_IOWR('V', 26, struct v4l2_input32)
- #define VIDIOC_G_EDID32		_IOWR('V', 40, struct v4l2_edid32)
-@@ -1163,6 +1398,7 @@ static int put_v4l2_edid32(struct v4l2_edid __user *p64,
- #define	VIDIOC_DQEVENT32_TIME32	_IOR ('V', 89, struct v4l2_event32_time32)
- #define VIDIOC_CREATE_BUFS32	_IOWR('V', 92, struct v4l2_create_buffers32)
- #define VIDIOC_PREPARE_BUF32	_IOWR('V', 93, struct v4l2_buffer32)
-+#define VIDIOC_PREPARE_BUF32_TIME32 _IOWR('V', 93, struct v4l2_buffer32_time32)
- 
- #define VIDIOC_OVERLAY32	_IOW ('V', 14, s32)
- #define VIDIOC_STREAMON32	_IOW ('V', 18, s32)
-@@ -1232,10 +1468,13 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	case VIDIOC_G_FMT32: ncmd = VIDIOC_G_FMT; break;
- 	case VIDIOC_S_FMT32: ncmd = VIDIOC_S_FMT; break;
- 	case VIDIOC_QUERYBUF32: ncmd = VIDIOC_QUERYBUF; break;
-+	case VIDIOC_QUERYBUF32_TIME32: ncmd = VIDIOC_QUERYBUF_TIME32; break;
- 	case VIDIOC_G_FBUF32: ncmd = VIDIOC_G_FBUF; break;
- 	case VIDIOC_S_FBUF32: ncmd = VIDIOC_S_FBUF; break;
- 	case VIDIOC_QBUF32: ncmd = VIDIOC_QBUF; break;
-+	case VIDIOC_QBUF32_TIME32: ncmd = VIDIOC_QBUF_TIME32; break;
- 	case VIDIOC_DQBUF32: ncmd = VIDIOC_DQBUF; break;
-+	case VIDIOC_DQBUF32_TIME32: ncmd = VIDIOC_DQBUF_TIME32; break;
- 	case VIDIOC_ENUMSTD32: ncmd = VIDIOC_ENUMSTD; break;
- 	case VIDIOC_ENUMINPUT32: ncmd = VIDIOC_ENUMINPUT; break;
- 	case VIDIOC_TRY_FMT32: ncmd = VIDIOC_TRY_FMT; break;
-@@ -1255,6 +1494,7 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	case VIDIOC_S_OUTPUT32: ncmd = VIDIOC_S_OUTPUT; break;
- 	case VIDIOC_CREATE_BUFS32: ncmd = VIDIOC_CREATE_BUFS; break;
- 	case VIDIOC_PREPARE_BUF32: ncmd = VIDIOC_PREPARE_BUF; break;
-+	case VIDIOC_PREPARE_BUF32_TIME32: ncmd = VIDIOC_PREPARE_BUF_TIME32; break;
- 	case VIDIOC_G_EDID32: ncmd = VIDIOC_G_EDID; break;
- 	case VIDIOC_S_EDID32: ncmd = VIDIOC_S_EDID; break;
- 	default: ncmd = cmd; break;
-@@ -1336,6 +1576,22 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
- 
-+	case VIDIOC_PREPARE_BUF32_TIME32:
-+	case VIDIOC_QUERYBUF32_TIME32:
-+	case VIDIOC_QBUF32_TIME32:
-+	case VIDIOC_DQBUF32_TIME32:
-+		err = bufsize_v4l2_buffer_time32(p32, &aux_space);
-+		if (!err)
-+			err = alloc_userspace(sizeof(struct v4l2_buffer),
-+					      aux_space, &new_p64);
-+		if (!err) {
-+			aux_buf = new_p64 + sizeof(struct v4l2_buffer);
-+			err = get_v4l2_buffer32_time32(new_p64, p32,
-+						       aux_buf, aux_space);
-+		}
-+		compatible_arg = 0;
-+		break;
-+
- 	case VIDIOC_S_FBUF32:
- 		err = alloc_userspace(sizeof(struct v4l2_framebuffer), 0,
- 				      &new_p64);
-@@ -1484,6 +1740,13 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		err = put_v4l2_buffer32(new_p64, p32);
- 		break;
- 
-+	case VIDIOC_PREPARE_BUF32_TIME32:
-+	case VIDIOC_QUERYBUF32_TIME32:
-+	case VIDIOC_QBUF32_TIME32:
-+	case VIDIOC_DQBUF32_TIME32:
-+		err = put_v4l2_buffer32_time32(new_p64, p32);
-+		break;
-+
- 	case VIDIOC_ENUMSTD32:
- 		err = put_v4l2_standard32(new_p64, p32);
- 		break;
+ /*  Flags for 'flags' field */
+ /* Buffer is mapped (flag) */
 -- 
 2.20.0
 
