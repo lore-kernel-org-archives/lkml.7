@@ -2,127 +2,207 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A765C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29BEC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40D7207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 05:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="sCCZcTBW"
+	by mail.kernel.org (Postfix) with ESMTP id 8191B20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 06:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574748578;
+	bh=pHxQw4eAkDVM2NOdyDU2Qf2aPQMBOwtOkM9PYH46Vws=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oWZWNWF+p3xglMei8LGVFQLb+0SO7spKGgqn0hlahqYGhDdhXneYlor/aaiOeZnbI
+	 A7snroM1XoXEgvCa5E4bJzUAF1ITMLhn3pclAU9Bck5XXXfgOu79HkjqLHij9CBO3K
+	 +Eg8sQQy88f+QYlYKPyBDvr3ACn4Sq8ytond61lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfKZF7a (ORCPT
+        id S1727332AbfKZGJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 00:59:30 -0500
-Received: from cmta19.telus.net ([209.171.16.92]:49548 "EHLO cmta19.telus.net"
+        Tue, 26 Nov 2019 01:09:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbfKZF73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 00:59:29 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id ZTsgi5W0bhFQMZTshiLxqh; Mon, 25 Nov 2019 22:59:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1574747967; bh=z8K/VrFh+Mh+HHkwgWhGVWNDyBSRROvGxEQPmJ/967I=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=sCCZcTBW2BMiJWxHG+31qUiS8xoOOxA3Rs9G5zJZw8Dal6ujQ/ma8xWDjNcsmQ5Cr
-         wnhoI1/VLFGMkPWdQZKjfz6v+CIc7+II6RlrWfO58nWSvlairt9prGEO6WRvwp/l2a
-         eqeLT09Sntw/V8/Zi/g52Dhkiihc8uGLToMGFyz72eBL61h+gb5yMnz9TopxqdF+rj
-         RD73LskYr1EEGG6i2oGEF4xNJgh9he+/OfGad3bZujgpTUMi4ftyNPyubQ3rRJiSo5
-         owq+gdT5pYveQowNp+0FupqQD3NQMbkWn2yPG9D2B76pXpjVh3cI2ljUTHCJv4X+Ed
-         FgcXCH0NXW/Cw==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=ZPWpZkzb c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10 a=JFpEMq-k8J54Cn6rv2oA:9 a=QEXdDO2ut3YA:10
- a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Ingo Molnar'" <mingo@redhat.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Mel Gorman'" <mgorman@techsingularity.net>,
-        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Juri Lelli'" <juri.lelli@redhat.com>,
-        "'Paul Turner'" <pjt@google.com>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        "'Quentin Perret'" <qperret@qperret.net>,
-        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>         <20191113124654.18122-2-ggherdovich@suse.cz>    <000001d5a29b$c944fd70$5bcef850$@net> <1574697961.16378.5.camel@suse.cz>
-In-Reply-To: <1574697961.16378.5.camel@suse.cz>
-Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Date:   Mon, 25 Nov 2019 21:59:19 -0800
-Message-ID: <000801d5a41e$a7fce2c0$f7f6a840$@net>
+        id S1726947AbfKZGJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 01:09:36 -0500
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C282073F;
+        Tue, 26 Nov 2019 06:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574748575;
+        bh=pHxQw4eAkDVM2NOdyDU2Qf2aPQMBOwtOkM9PYH46Vws=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kiBuFTigYwZGLvOACGTXFW13iDjzjtD3cPkIOnekL34wG1IppWnQZpwTnlvmjcWTV
+         sjZhepeFmfbcT3aa0oJirH+VZRIrULYBuu4/NJM3r2zz107qZwcSd3j2D6mpZZUDPD
+         VUzLSTlamDYz0Sb7zz+ucMU3kzft7sObn55ekn3I=
+Received: by mail-lf1-f52.google.com with SMTP id b20so13047692lfp.4;
+        Mon, 25 Nov 2019 22:09:35 -0800 (PST)
+X-Gm-Message-State: APjAAAUiJjOBytTkUvI5p5ABxCjUAN7vNV9A6m/SrJRpKJdQBPKsM5KQ
+        nO/wZ6yh61rOdrq8bJQlaQb+jNKQBP3X7CZZ7iY=
+X-Google-Smtp-Source: APXvYqz+mGoODbXvuWOpDuoB4deHWZfXkDpLgYpz6o9dXanE8DhcvBX9SLi7XUWlKABR+ahnXp9G2qAt2UtBvsZP3es=
+X-Received: by 2002:ac2:51b5:: with SMTP id f21mr23141783lfk.159.1574748573659;
+ Mon, 25 Nov 2019 22:09:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdWjqXhG/2FkhiwgRMuiczjnDuyRDAAcWJdQ
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfInqMyosb61dzHgkCKzooGPz79WDnaXBPCmUSZDIwyZ5LmcPMdmWp44zLZREww2ABFfDRsT+z8Bgb6nk5mhKfDYozE8wV31XBvSJrTGlvGaCUEyO45Nm
- ATKnDQWFQYihptyBVYWzlUx6dE/qeohbR2bjHUu/L3NipUmb/r1zLITY27BGqlwMVGcaDCHr3kVjLAE5fKX/cBg7Zl7To46YJn8Pji4L2JTKNWm1OSQaQoo9
- 1Eg6kLlG3apyrkB6WoXltwHQQFvc8o058qggz40RXX2q7xys/KoYmXrfuHA+nKj+bypSPCzXs7Fhq8D30Xw1bIQQlLSUuHWOyvhyomfCvBmnZchiTuyLGRrN
- YVvUBWqikuOPIAFT3SjmewJZqGJZ39T7E4qPvVZNNMHNeYniOYK29gb5+vHW56yaOXeMorj7rGGREntvD4r/az0kT0aMEzOTUmMa/DIGkVXvFVVunG3Wi11z
- IbEHZeTxqdp8AbcLqw8v2X2kf3VN7O4o/CCTI9h8Vy0WisgXni9O5+oRpnvnKtQ9nmZPg2W+HQiXTfAUD978fTetQqJFv4aRGCfXki4zKiN/mJfZZmSjppSK
- 1aj/0KNZh1UAeT07CoJNmK9lSkjxfsI7kBPKNpY3lyhkyu3Ds4r72CJVygeV8mBQZUQbitq/gPklx/hhbBBRgPkSxG5o1DlDXOaDwL18On8J4KepLw/S75zG
- Fy62+K/DIgEU/E+yNwAotg2DGBPDBlV8vYs95DAXw07dA+gUCArEEQ==
+References: <CGME20191121072643epcas2p452071a503725c7764acf5084d24425b1@epcas2p4.samsung.com>
+ <001001d5a03d$05de1f70$119a5e50$@samsung.com> <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
+ <028901d5a3f6$e2d72310$a8856930$@samsung.com>
+In-Reply-To: <028901d5a3f6$e2d72310$a8856930$@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 26 Nov 2019 14:09:22 +0800
+X-Gmail-Original-Message-ID: <CAJKOXPdy=oxkwspt3CpF-qV5XRPMKrupMOpbWXJT3e7trqvXkw@mail.gmail.com>
+Message-ID: <CAJKOXPdy=oxkwspt3CpF-qV5XRPMKrupMOpbWXJT3e7trqvXkw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: modularize samsung pinctrl driver
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.11.25 08:06 Giovanni Gherdovich wrote:
-> On Sat, 2019-11-23 at 23:49 -0800, Doug Smythies wrote:
->> ...
->> Kernel 5.4-rc8 + revert, intel_cpufreq/schedutil: 3899 seconds
->> Kernel 5.4-rc8 + gg 6 + revert, intel_cpufreq/schedutil: 2740.7 seconds
->> Ratio: 0.70 (as expected)
->> Kernel 5.4-rc8, intel_cpufreq/schedutil: 2334.7 seconds (faster than expected)
->> Kernel 5.4-rc8 + gg 6 patch set, intel_cpufreq/schedutil: 2275.0 seconds (faster than expected)
->> Ratio: 0.97 (not as expected)
->> Kernel 5.4-rc8, intel_cpufreq/performance: 2215.3 seconds
->> Kernel 5.4-rc8, intel_cpufreq/ondemand: 3286.3 seconds
->> Re-stated from previous e-mail:
->> Kernel 5.3-rc8, intel_cpufreq/schedutil: ratio: 0.69 (I don't have the original times)
+On Tue, 26 Nov 2019 at 09:14, Hyunki Koo <hyunki00.koo@samsung.com> wrote:
 >
-> Hello Doug,
+> On Thu, 21 Nov 2019 at 16:38, Krzysztof Kozlowski <krzk@kernel.org> wrote=
+:
+> > Hi,
+> >
+> > Thanks for the patch. Few comments below:
+> >
+> > On Thu, 21 Nov 2019 at 15:26, =EA=B5=AC=ED=98=84=EA=B8=B0 <hyunki00.koo=
+@samsung.com> wrote:
+> >>
+> >> Enable samsung pinctrl driver to be compiled as modules.
+> >
+> > Why? What's the benefit? Are platforms capable of such boot? Pinctrl is=
+ needed early - even before mounting rootfs...
+> > What about module unloading? Is it reasonable?
+> > Please answer to all this also in commit message.
+> >
 >
-> schedutil in 5.4 going a lot faster than in 5.3 would be a surprise. I'm
-> running that same test too to check if I can see it as well.
+> Sorry to late and Thank you for your comment, I would like to apply GKI o=
+n the pinctrl driver
+> So I would like to cut off dependency from ARCH_EXYNOS.
 
-Great, thanks. But see below.
+This is driver for Exynos and S3C so why cutting off the dependency? I
+mean, wait, it is a driver for Exynos so it cannot work on other
+boards...
+
+> I will split into two part,
+> First, cut off the dependency with ARCH_EXYNOS in arch/arm64/Kconfig.plat=
+form.
+> Second, I will make the pinctrl driver as a module.
+
+Then you are doing it in wrong order - this patch makes it as a module
+but you send it as first one.
+
+You did not resolve however my questions about:
+1. Will this even work? Will platforms boot?
+2. How are you going to handle module unloading since on purpose we
+added suppress_bind?
 
 >
-> Besides, as it's already been said this patchset adds frequency
-> scale-invariance to scheduler metrics such as load and utilization and that's
-> useful also in areas other than frequency scaling (most notably the scheduler
-> load balancer).
+> >>
+> >> Change-Id: I92a9953c92831a316f7f50146898ff19831549ec
+> >
+> > This does not belong to Git.
+> >
+> >> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> >
+> >You "From" name is different than written here in Signed-off-by. They sh=
+ould match and I do not know Korean to be able to tell whether they really =
+match or not :).
+> >How about using Latin transliteration also in "From" field?
+> >
+> >> ---
+> >>  drivers/pinctrl/samsung/Kconfig                |  5 +----
+> >>  drivers/pinctrl/samsung/Makefile               | 13 +++++++------
+> >>  drivers/pinctrl/samsung/pinctrl-exynos-arm.c   |  2 ++
+> >>  drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |  2 ++
+> >>  drivers/pinctrl/samsung/pinctrl-exynos.c       |  2 ++
+> >>  drivers/pinctrl/samsung/pinctrl-samsung.c      | 13 +++++++++++++
+> >>  6 files changed, 27 insertions(+), 10 deletions(-)
+> >>
+> >> diff --git a/drivers/pinctrl/samsung/Kconfig
+> >> b/drivers/pinctrl/samsung/Kconfig index 425fadd6c346..25e16984ef23
+> >> 100644
+> >> --- a/drivers/pinctrl/samsung/Kconfig
+> >> +++ b/drivers/pinctrl/samsung/Kconfig
+> >> @@ -3,14 +3,13 @@
+> >>  # Samsung Pin control drivers
+> >>  #
+> >>  config PINCTRL_SAMSUNG
+> >> -       bool
+> >> +       tristate "Pinctrl driver data for Samsung SoCs"
+> >>         select PINMUX
+> >>         select PINCONF
+> >>
+> >>  config PINCTRL_EXYNOS
+> >>         bool "Pinctrl driver data for Samsung EXYNOS SoCs"
+> >>         depends on OF && GPIOLIB && (ARCH_EXYNOS || ARCH_S5PV210)
+> >> -       select PINCTRL_SAMSUNG
+> >>         select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV2=
+10)
+> >>         select PINCTRL_EXYNOS_ARM64 if ARM64 && ARCH_EXYNOS
+> >>
+> >> @@ -25,9 +24,7 @@ config PINCTRL_EXYNOS_ARM64  config PINCTRL_S3C24XX
+> >>         bool "Samsung S3C24XX SoC pinctrl driver"
+> >>         depends on ARCH_S3C24XX && OF
+> >> -       select PINCTRL_SAMSUNG
+> >>
+> >>  config PINCTRL_S3C64XX
+> >>         bool "Samsung S3C64XX SoC pinctrl driver"
+> >>         depends on ARCH_S3C64XX
+> >> -       select PINCTRL_SAMSUNG
+> >> diff --git a/drivers/pinctrl/samsung/Makefile
+> >> b/drivers/pinctrl/samsung/Makefile
+> >> index ed951df6a112..b3ac01838b8a 100644
+> >> --- a/drivers/pinctrl/samsung/Makefile
+> >> +++ b/drivers/pinctrl/samsung/Makefile
+> >> @@ -1,9 +1,10 @@
+> >>  # SPDX-License-Identifier: GPL-2.0
+> >>  # Samsung pin control drivers
+> >>
+> >> -obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D pinctrl-samsung.o
+> >> -obj-$(CONFIG_PINCTRL_EXYNOS)   +=3D pinctrl-exynos.o
+> >> -obj-$(CONFIG_PINCTRL_EXYNOS_ARM)       +=3D pinctrl-exynos-arm.o
+> >> -obj-$(CONFIG_PINCTRL_EXYNOS_ARM64)     +=3D pinctrl-exynos-arm64.o
+> >> -obj-$(CONFIG_PINCTRL_S3C24XX)  +=3D pinctrl-s3c24xx.o
+> >> -obj-$(CONFIG_PINCTRL_S3C64XX)  +=3D pinctrl-s3c64xx.o
+> >> +obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D pinctrl-samsung-super.o
+> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_SAMSUNG)        +=3D pinctrl-s=
+amsung.o
+> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS) +=3D pinctrl-exynos.o
+> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS_ARM)     +=3D pinctrl-e=
+xynos-
+> >> arm.o
+> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS_ARM64)   +=3D pinctrl-e=
+xynos-
+> >> arm64.o
+> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_S3C24XX)        +=3D pinctrl-s=
+3c24xx.o
+> >> +pinctrl-samsung-super-$(CONFIG_PINCTRL_S3C64XX)        +=3D pinctrl-s=
+3c64xx.o
+> >
+> > I don't get why you need to rename obj to pinctrl-samsung-super?
+>
+> I would like to make pinctrl as a super module. It is many dependency bet=
+ween pinctrl-exynos, pinctr-exynos-arm64 and pinctrl-samsung
 
-The issue with the schedutil governor not working properly in the 5.4 RC series
-appears to be hardware dependant.
+Might be a stupid question but what is "Super module"?
 
-My test computer is Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz., Sandy Bridge.
-On a temporary basis, I acquired a computer with an
-Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz, Haswell,
-and schedutil governor behaviour with the exact same kernels is fine:
+Second, the dependencies are there because this is a integral part of them.
 
-That "gitsource" test, "make test" 6 times, first run thrown out:
+I think I miss some bigger picture here because I still do not
+understand what you want to achieve in the end (why doing this)?
 
-Kernel 5.4 intel_cpufreq/schedutil: 3411.8 seconds
-Kernel 5.4 + gg 6 intel_cpufreq/schedutil: 1696.7 seconds
-Ratio: 0.49
-Recall you got a ratio of 0.49 with 5th generation, Broadwell.
-
-... Doug
-
-
+Best regards,
+Krzysztof
