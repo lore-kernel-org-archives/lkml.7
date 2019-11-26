@@ -2,103 +2,168 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB08C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE65EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811972080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574811090;
-	bh=symYYUtFNhnfIh9driE62idqblDpdzSXfmuR7iSwBLg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s7DdebFXmcazI4PPmLK9VHt0QdMd5tQdJrMaJxhmK+/QNzogbXGdSdNyr0dY1zKBe
-	 4XHqEvxnDtmGAoxRUZavJhUVwwFLOTeuZzZFO4mCB4/5cfEyF8VNPtC+CXt0aEpXK/
-	 R4t3ZdRmDbgXap6fqMsLHEp6+KG8wgEiGKeT9R8Q=
+	by mail.kernel.org (Postfix) with ESMTP id C2DD32068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 23:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfKZXb2 (ORCPT
+        id S1727073AbfKZXev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 18:31:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfKZXb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 18:31:28 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED712068E;
-        Tue, 26 Nov 2019 23:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574811087;
-        bh=symYYUtFNhnfIh9driE62idqblDpdzSXfmuR7iSwBLg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uwrs7OPExaCNkQ1tpJUroPHz2gstOk+e4GqTJLemh3nnCovQ/7mBObM+IUgmPS3PH
-         XT1YrzzMSWX0UnQ1fujdeU1ywtnwD5xRkPD5ljCuxWn8kdMUo4RO25zGqNh8PzYebZ
-         5RiAJB6NiW9Lpld/375GATVwvzpVdR46w0gkkUIM=
-Date:   Wed, 27 Nov 2019 08:31:23 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH v4 2/4] selftests/ftrace: Fix ftrace test cases
- to check unsupported
-Message-Id: <20191127083123.0257d2c450bfd87b0691300d@kernel.org>
-In-Reply-To: <20191126124901.22ae2f9f@gandalf.local.home>
-References: <157475724667.3389.15752644047898709246.stgit@devnote2>
-        <157475726452.3389.3778488615487716476.stgit@devnote2>
-        <20191126124901.22ae2f9f@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 26 Nov 2019 18:34:51 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:39294 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726445AbfKZXev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 18:34:51 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TjAobng_1574811280;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TjAobng_1574811280)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 27 Nov 2019 07:34:44 +0800
+Subject: Re: [RFC PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1574471132-55639-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191125093611.hlamtyo4hvefwibi@box>
+ <3a35da3a-dff0-a8ca-8269-3018fff8f21b@linux.alibaba.com>
+ <20191125183350.5gmcln6t3ofszbsy@box>
+ <9a68b929-2f84-083d-0ac8-2ceb3eab8785@linux.alibaba.com>
+Message-ID: <14b7c24b-706e-79cf-6fbc-f3c042f30f06@linux.alibaba.com>
+Date:   Tue, 26 Nov 2019 15:34:40 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <9a68b929-2f84-083d-0ac8-2ceb3eab8785@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 12:49:01 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Tue, 26 Nov 2019 17:34:24 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-> > @@ -15,6 +15,11 @@ if [ $NP -eq 1 ] ;then
-> >    exit_unresolved
-> >  fi
-> >  
-> > +if ! grep -q function available_tracers ; then
-> > +  echo "Function trace is not enabled"
-> > +  exit_unsupported
-> > +fi
-> > +
-> >  ORIG_CPUMASK=`cat tracing_cpumask`
-> 
-> Strange, but the bashism test failed:
-> 
-> ++ checkbashisms /work/git-local/linux.git/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-> possible bashism in /work/git-local/linux.git/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc line 18 ('function' is useless):
-> if ! grep -q function available_tracers ; then
-> 
-> Not sure why it did not like that line. Maybe my bashism check got
-> confused by the key word "function"?
-> 
-> Yep!
-> 
-> By adding quotes around "function" it doesn't complain:
-> 
-> 	if ! grep -q "function" available_tracers ; then
-> 
-> May need to add that.
 
-Thanks! Shuah, can I update this patch?
-I'll send it asap.
+On 11/25/19 11:33 AM, Yang Shi wrote:
+>
+>
+> On 11/25/19 10:33 AM, Kirill A. Shutemov wrote:
+>> On Mon, Nov 25, 2019 at 10:24:38AM -0800, Yang Shi wrote:
+>>>
+>>> On 11/25/19 1:36 AM, Kirill A. Shutemov wrote:
+>>>> On Sat, Nov 23, 2019 at 09:05:32AM +0800, Yang Shi wrote:
+>>>>> Currently when truncating shmem file, if the range is partial of THP
+>>>>> (start or end is in the middle of THP), the pages actually will 
+>>>>> just get
+>>>>> cleared rather than being freed unless the range cover the whole THP.
+>>>>> Even though all the subpages are truncated (randomly or 
+>>>>> sequentially),
+>>>>> the THP may still be kept in page cache.  This might be fine for some
+>>>>> usecases which prefer preserving THP.
+>>>>>
+>>>>> But, when doing balloon inflation in QEMU, QEMU actually does hole 
+>>>>> punch
+>>>>> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not 
+>>>>> used.
+>>>>> So, when using shmem THP as memory backend QEMU inflation actually 
+>>>>> doesn't
+>>>>> work as expected since it doesn't free memory.  But, the inflation
+>>>>> usecase really needs get the memory freed.  Anonymous THP will not 
+>>>>> get
+>>>>> freed right away too but it will be freed eventually when all 
+>>>>> subpages are
+>>>>> unmapped, but shmem THP would still stay in page cache.
+>>>>>
+>>>>> To protect the usecases which may prefer preserving THP, introduce a
+>>>>> new fallocate mode: FALLOC_FL_SPLIT_HPAGE, which means spltting 
+>>>>> THP is
+>>>>> preferred behavior if truncating partial THP.  This mode just makes
+>>>>> sense to tmpfs for the time being.
+>>>> We need to clarify interaction with khugepaged. This implementation
+>>>> doesn't do anything to prevent khugepaged from collapsing the range 
+>>>> back
+>>>> to THP just after the split.
+>>> Yes, it doesn't. Will clarify this in the commit log.
+>> Okay, but I'm not sure that documention alone will be enough. We need
+>> proper design.
+>
+> Maybe we could try to hold inode lock with read during 
+> collapse_file(). The shmem fallocate does acquire inode lock with 
+> write, this should be able to synchronize hole punch and khugepaged. 
+> And, shmem just needs hold inode lock for llseek and fallocate, I'm 
+> supposed they are should be called not that frequently to have impact 
+> on khugepaged. The llseek might be often, but it should be quite fast. 
+> However, they might get blocked by khugepaged.
+>
+> It sounds safe to hold a rwsem during collapsing THP.
+>
+> Or we could set VM_NOHUGEPAGE in shmem inode's flag with hole punch 
+> and clear it after truncate, then check the flag before doing collapse 
+> in khugepaged. khugepaged should not need hold the inode lock during 
+> collapse since it could be released after the flag is checked.
 
-Thank you,
+By relooking the code, it looks the latter one (check VM_NOHUGEPAGE) 
+doesn't make sense, it can't prevent khugepaged from collapsing THP in 
+parallel.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>
+>>
+>>>>> @@ -976,8 +1022,31 @@ static void shmem_undo_range(struct inode 
+>>>>> *inode, loff_t lstart, loff_t lend,
+>>>>>                }
+>>>>>                unlock_page(page);
+>>>>>            }
+>>>>> +rescan_split:
+>>>>>            pagevec_remove_exceptionals(&pvec);
+>>>>>            pagevec_release(&pvec);
+>>>>> +
+>>>>> +        if (split && PageTransCompound(page)) {
+>>>>> +            /* The THP may get freed under us */
+>>>>> +            if (!get_page_unless_zero(compound_head(page)))
+>>>>> +                goto rescan_out;
+>>>>> +
+>>>>> +            lock_page(page);
+>>>>> +
+>>>>> +            /*
+>>>>> +             * The extra pins from page cache lookup have been
+>>>>> +             * released by pagevec_release().
+>>>>> +             */
+>>>>> +            if (!split_huge_page(page)) {
+>>>>> +                unlock_page(page);
+>>>>> +                put_page(page);
+>>>>> +                /* Re-look up page cache from current index */
+>>>>> +                goto again;
+>>>>> +            }
+>>>>> +            unlock_page(page);
+>>>>> +            put_page(page);
+>>>>> +        }
+>>>>> +rescan_out:
+>>>>>            index++;
+>>>>>        }
+>>>> Doing get_page_unless_zero() just after you've dropped the pin for the
+>>>> page looks very suboptimal.
+>>> If I don't drop the pins the THP can't be split. And, there might be 
+>>> more
+>>> than one pins from find_get_entries() if I read the code correctly. For
+>>> example, truncate 8K length in the middle of THP, the THP's refcount 
+>>> would
+>>> get bumpped twice since  two sub pages would be returned.
+>> Pin the page before pagevec_release() and avoid get_page_unless_zero().
+>>
+>> Current code is buggy. You need to check that the page is still 
+>> belong to
+>> the file after speculative lookup.
+>
+> Yes, I missed this point. Thanks for the suggestion.
+>
+>>
+>
+
