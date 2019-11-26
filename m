@@ -2,90 +2,261 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D1FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCA8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3C320835
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:43:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiImRZD+"
+	by mail.kernel.org (Postfix) with ESMTP id 81A812071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfKZQnj (ORCPT
+        id S1728497AbfKZQoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:43:39 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:32776 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfKZQnj (ORCPT
+        Tue, 26 Nov 2019 11:44:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727532AbfKZQoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:43:39 -0500
-Received: by mail-qv1-f68.google.com with SMTP id x14so7581511qvu.0;
-        Tue, 26 Nov 2019 08:43:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KhtA9rIXQXlNV4fQ7BqQSdVc8vKs6lkf7nkcaD0QNF4=;
-        b=LiImRZD+xfZ3IAzkqOnhJ6Wg3r6nQIwN79W130V6fXYY1bnILHPRse0aWy0TTCOBMc
-         tqSmPCek/nl4knYns2V7+hKDw1mx96aYsHPf/1r7yvxoGWCU4yjlPXgH9rPmwNL/MKHh
-         uf6zr5rxTv3+G2McmIn1E4jPOqSHQ1TrBBiknK7lTct3fXHHHmuhPR+AgMDOdf1RiGBA
-         HTHN2H9ILqvPvIaW+JgwgjjvAjehktnIcDJ62S/GaFTj4PPUy4K0VIvH1RpU4zIT9pNQ
-         hatSLCLokVZeIqDYv6ggp/pcbJaAMvlec/w0C8p4ZS7cWfmf+iioy87xDxAElUVjc14Q
-         qCcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KhtA9rIXQXlNV4fQ7BqQSdVc8vKs6lkf7nkcaD0QNF4=;
-        b=WCH/cSfPNQ4+cW98nfln1pA6nmOFgXBdLTuS4WZkMRUCMx1ygGQjxm/oAhwEleM8iw
-         Zu0Oeyfm6OZPzfiTNSWlGdYXPcAoBfq42aHhSj17Y1684PvZmRc6auq9nfewvISpYqAW
-         TM8V/HIJP6PP/Hj0t+IIoZfVyIFH+roQWJQv0Vvp5Is6xJHBnh0yIJSifW0aD3/tPhrT
-         YtZn3i5DCuGHZjLyCgKlQ/BcU8Pyx2x1Bg1pe6wFBmNtYf2HBIpLYB/iL1BQSoL//iui
-         vPz2QPovZJB91BKwhVd3QH/WfoFfvDKEsFr+Gf3YZ5Tn1V+GlOvVhyfiGN27hsTxqv9R
-         YzPQ==
-X-Gm-Message-State: APjAAAWvKkAqU0C/dq5GtdWakrd6xL2H8Wss/I4fl8UIwiJ98InudK7a
-        VXshrwk6AwcNgmL63WfDwCwKlqA8bhB/1Vlcl9g=
-X-Google-Smtp-Source: APXvYqyq/GXZX7yyMNA8vGtvbY6ac+kEF+SEwTmtTMCRiJ3Dmjd3mK5Drs42n+6p2OBtOym0w7lnnSnQ5lb8DzvqBIg=
-X-Received: by 2002:a05:6214:208:: with SMTP id i8mr19822372qvt.233.1574786617862;
- Tue, 26 Nov 2019 08:43:37 -0800 (PST)
+        Tue, 26 Nov 2019 11:44:30 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQGKAHu148718;
+        Tue, 26 Nov 2019 11:44:24 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wfjyyfs6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 11:44:24 -0500
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAQGLuw6154598;
+        Tue, 26 Nov 2019 11:44:23 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wfjyyfs67-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 11:44:23 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAQGgIH5022856;
+        Tue, 26 Nov 2019 16:44:23 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04dal.us.ibm.com with ESMTP id 2wevd6ky33-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Nov 2019 16:44:22 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQGiM4A51904772
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Nov 2019 16:44:22 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29B4AAC059;
+        Tue, 26 Nov 2019 16:44:22 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BA2EAC05F;
+        Tue, 26 Nov 2019 16:44:21 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.137])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Nov 2019 16:44:20 +0000 (GMT)
+Message-ID: <de313d549a5ae773aad6bbf04c20b395bea7811f.camel@linux.ibm.com>
+Subject: Re: [PATCH] KVM: Add separate helper for putting borrowed reference
+ to kvm
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 26 Nov 2019 13:44:14 -0300
+In-Reply-To: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+References: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-52kbVxCF+8CnJXvXqmiD"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-References: <mhng-0a2f9574-9b23-4f26-ae76-18ed7f2c8533@palmer-si-x1c4>
- <87d0yoizv9.fsf@xps13.shealevy.com> <87zi19gjof.fsf@xps13.shealevy.com>
- <CAJ+HfNhoJnGon-L9OwSfrMbmUt1ZPBB_=A8ZFrg1CgEq3ua-Sg@mail.gmail.com> <87o8wyojlq.fsf@xps13.shealevy.com>
-In-Reply-To: <87o8wyojlq.fsf@xps13.shealevy.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Tue, 26 Nov 2019 17:43:26 +0100
-Message-ID: <CAJ+HfNiq9LWA1Zmf_F9j23__K2_NqcfQqRA5evGVP5wGzi881w@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Load modules within relative jump range of the
- kernel text.
-To:     Shea Levy <shea@shealevy.com>
-Cc:     linux-riscv@lists.infradead.org, albert@sifive.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_04:2019-11-26,2019-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ adultscore=0 clxscore=1011 bulkscore=0 mlxlogscore=999 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911260139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 at 14:25, Shea Levy <shea@shealevy.com> wrote:
->
-> Hi Bj=C3=B6rn,
->
-> Unfortunately I'm not sure what more is needed to get this in, and I'm
-> in the middle of a move and won't have easy access to my RISC-V setup
-> for testing. I don't think you can count on me for this one.
->
 
-Thanks for getting back quickly! No worries, I'll pick it up!
+--=-52kbVxCF+8CnJXvXqmiD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2019-10-21 at 15:58 -0700, Sean Christopherson wrote:
+> Add a new helper, kvm_put_kvm_no_destroy(), to handle putting a
+> borrowed
+> reference[*] to the VM when installing a new file descriptor
+> fails.  KVM
+> expects the refcount to remain valid in this case, as the in-progress
+> ioctl() has an explicit reference to the VM.  The primary motiviation
+> for the helper is to document that the 'kvm' pointer is still valid
+> after putting the borrowed reference, e.g. to document that doing
+> mutex(&kvm->lock) immediately after putting a ref to kvm isn't
+> broken.
+>=20
+> [*] When exposing a new object to userspace via a file descriptor,
+> e.g.
+>     a new vcpu, KVM grabs a reference to itself (the VM) prior to
+> making
+>     the object visible to userspace to avoid prematurely freeing the
+> VM
+>     in the scenario where userspace immediately closes file
+> descriptor.
+>=20
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c |  2 +-
+>  arch/powerpc/kvm/book3s_64_vio.c    |  2 +-
+>  include/linux/kvm_host.h            |  1 +
+>  virt/kvm/kvm_main.c                 | 16 ++++++++++++++--
+>  4 files changed, 17 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> index 9a75f0e1933b..68678e31c84c 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> @@ -2000,7 +2000,7 @@ int kvm_vm_ioctl_get_htab_fd(struct kvm *kvm,
+> struct kvm_get_htab_fd *ghf)
+>  	ret =3D anon_inode_getfd("kvm-htab", &kvm_htab_fops, ctx, rwflag
+> | O_CLOEXEC);
+>  	if (ret < 0) {
+>  		kfree(ctx);
+> -		kvm_put_kvm(kvm);
+> +		kvm_put_kvm_no_destroy(kvm);
+>  		return ret;
+>  	}
+>=20
+> diff --git a/arch/powerpc/kvm/book3s_64_vio.c
+> b/arch/powerpc/kvm/book3s_64_vio.c
+> index 5834db0a54c6..883a66e76638 100644
+> --- a/arch/powerpc/kvm/book3s_64_vio.c
+> +++ b/arch/powerpc/kvm/book3s_64_vio.c
+> @@ -317,7 +317,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm
+> *kvm,
+>  	if (ret >=3D 0)
+>  		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
+>  	else
+> -		kvm_put_kvm(kvm);
+> +		kvm_put_kvm_no_destroy(kvm);
+>=20
+>  	mutex_unlock(&kvm->lock);
+>=20
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 719fc3e15ea4..90a2102605ef 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -622,6 +622,7 @@ void kvm_exit(void);
+>=20
+>  void kvm_get_kvm(struct kvm *kvm);
+>  void kvm_put_kvm(struct kvm *kvm);
+> +void kvm_put_kvm_no_destroy(struct kvm *kvm);
+>=20
+>  static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm,
+> int as_id)
+>  {
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 67ef3f2e19e8..b8534c6b8cf6 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -772,6 +772,18 @@ void kvm_put_kvm(struct kvm *kvm)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_put_kvm);
+>=20
+> +/*
+> + * Used to put a reference that was taken on behalf of an object
+> associated
+> + * with a user-visible file descriptor, e.g. a vcpu or device, if
+> installation
+> + * of the new file descriptor fails and the reference cannot be
+> transferred to
+> + * its final owner.  In such cases, the caller is still actively
+> using @kvm and
+> + * will fail miserably if the refcount unexpectedly hits zero.
+> + */
+> +void kvm_put_kvm_no_destroy(struct kvm *kvm)
+> +{
+> +	WARN_ON(refcount_dec_and_test(&kvm->users_count));
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_put_kvm_no_destroy);
+>=20
+>  static int kvm_vm_release(struct inode *inode, struct file *filp)
+>  {
+> @@ -2679,7 +2691,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm
+> *kvm, u32 id)
+>  	kvm_get_kvm(kvm);
+>  	r =3D create_vcpu_fd(vcpu);
+>  	if (r < 0) {
+> -		kvm_put_kvm(kvm);
+> +		kvm_put_kvm_no_destroy(kvm);
+>  		goto unlock_vcpu_destroy;
+>  	}
+>=20
+> @@ -3117,7 +3129,7 @@ static int kvm_ioctl_create_device(struct kvm
+> *kvm,
+>  	kvm_get_kvm(kvm);
+>  	ret =3D anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR
+> | O_CLOEXEC);
+>  	if (ret < 0) {
+> -		kvm_put_kvm(kvm);
+> +		kvm_put_kvm_no_destroy(kvm);
+>  		mutex_lock(&kvm->lock);
+>  		list_del(&dev->vm_node);
+>  		mutex_unlock(&kvm->lock);
 
-Cheers,
-Bj=C3=B6rn
+Hello,
+
+I see what are you solving here, but would not this behavior cause the
+refcount to reach negative values?
+
+If so, is not there a problem? I mean, in some archs (powerpc included)
+refcount_dec_and_test() will decrement and then test if the value is
+equal 0. If we ever reach a negative value, this will cause that memory
+to never be released.=20
+
+An example is that refcount_dec_and_test(), on other archs than x86,
+will call atomic_dec_and_test(), which on include/linux/atomic-
+fallback.h will do:
+
+return atomic_dec_return(v) =3D=3D 0;
+
+To change this behavior, it would mean change the whole atomic_*_test
+behavior, or do a copy function in order to change this '=3D=3D 0' to=20
+'<=3D 0'.=20
+
+Does it make sense? Do you need any help on this?
+
+Kind regards,
+Leonardo Br=C3=A1s
+
+--=-52kbVxCF+8CnJXvXqmiD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3dVl4ACgkQlQYWtz9S
+ttQDdg/9GGVFNwax4jGA9g0X5EW/+VauOibm5CHqZcbdKz3PVLkrQjVZGNqi928L
+SZQ/Bi0Tt7dNBYiKoAPkC4Z8WdjvTyfzPb7lqAL/6JVpcTeI69i1n+PBmitv1olg
++dBHG+sls0+S6ZeNdxfT+hPvpNU0L5FHq6TMKm6QL97uWNaPCmqZ0sFqfWxa9yIb
+ZzuytXBggfaS1cqt5LFNKyq70pwegzateV7WnwR6g2CyVqorx0/J8wUK0AcNy5r1
++W/ouKccefa3dIq85ilHyPucwDmV2XdDxosYClhzfcKdJSoHvcAN4+v3Tbiavwh9
+47//sUx2XxoLY5b7+chy0vamRPyeODmb+w6uczA654j040Npsw+j7JO5rWJATWVE
+0ODbJ2jnLuMEHlPSu724//omXiE0wErv61kw7GqTsRh+Sz+jt7nQm1dTUMQGHctJ
+DSg1+mxZJWppXwdzYwc/KGthRiY9hgvB3LrXmWOj7F7ADqIV0kc9D1oTmLNhIADK
+06yNYQnAh50HDpjTK5I+6teE90qgxRCiPVso0g+krXyUYhWNvYT+WO8vCqqhSRR9
+mczORHdFwEp6GcJD9iheLqNruQ1CrAdoPoot3zMWJlSSjjFbGfK6ZU9dn0iDryOZ
+gXf3YFU4yGrcqKtblB8fHbpW0ZIMLPtYJb0Oza8skMKdjlMBlSg=
+=rGtj
+-----END PGP SIGNATURE-----
+
+--=-52kbVxCF+8CnJXvXqmiD--
+
