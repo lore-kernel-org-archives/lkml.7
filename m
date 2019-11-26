@@ -2,31 +2,32 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D81C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33B7C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01352206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856862075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfKZIs3 convert rfc822-to-8bit (ORCPT
+        id S1727233AbfKZIsq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:48:29 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:38080 "EHLO
+        Tue, 26 Nov 2019 03:48:46 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:50175 "EHLO
         SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726049AbfKZIs2 (ORCPT
+        with ESMTP id S1727126AbfKZIsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:48:28 -0500
+        Tue, 26 Nov 2019 03:48:46 -0500
 Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAQ8kiPO006450
+        by SHSQR01.spreadtrum.com with ESMTPS id xAQ8krvo006861
         (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 26 Nov 2019 16:46:44 +0800 (CST)
+        Tue, 26 Nov 2019 16:46:53 +0800 (CST)
         (envelope-from Chunyan.Zhang@unisoc.com)
 Received: from localhost (10.0.74.88) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 26 Nov 2019 16:46:48
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 26 Nov 2019 16:46:56
  +0800
 From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -36,59 +37,74 @@ CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v3 0/3] Add Unisoc's SC9863A support
-Date:   Tue, 26 Nov 2019 16:46:41 +0800
-Message-ID: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
+Subject: [PATCH v3 1/3] dt-bindings: arm: sprd: add global registers bindings
+Date:   Tue, 26 Nov 2019 16:46:42 +0800
+Message-ID: <20191126084644.17207-2-chunyan.zhang@unisoc.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
+References: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="utf-8"
 X-Originating-IP: [10.0.74.88]
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL: SHSQR01.spreadtrum.com xAQ8kiPO006450
+X-MAIL: SHSQR01.spreadtrum.com xAQ8krvo006861
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SC9863A has Octa-core ARM Cortex A55 application processor. Find more
-details about it on the website: http://www.unisoc.com/sc9863a
+The global registers would be used by different peripheral devices which
+we can see them as syscon clients which can use regmap interface that
+syscon driver provides.
 
-Changes from v2:
-* Discard some dt-bindings patches which have been applied by Rob Herring.
-* Added a new dt-binding file for sprd global-regs, also added a vendor directory for sprd.
-* Moved sprd.yaml to the vendor directory.
-* Addressed comments from Rob:
-- fixed dtbs_check errors;
-- move gic under to the bus node;
-- removed msi-controller from gic, sinceSC9863A doesn't provide ITS;
-- added specific compatible string for syscon nodes;
-- cut down registers range of syscon nodes;
-- removed unnecessary property "sprd,sc-id";
-- added earlycon support in devicetree.
-
-Changes from v1:
-- Convert DT bindings to json-schema.
-
-Chunyan Zhang (3):
-  dt-bindings: arm: sprd: add global registers bindings
-  dt-bindings: arm: move sprd board file to vendor directory
-  arm64: dts: Add Unisoc's SC9863A SoC support
-
- .../bindings/arm/sprd/global-regs.yaml        |  34 ++
- .../bindings/arm/{ => sprd}/sprd.yaml         |   0
- arch/arm64/boot/dts/sprd/Makefile             |   3 +-
- arch/arm64/boot/dts/sprd/sc9863a.dtsi         | 526 ++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi         | 148 +++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts     |  39 ++
- 6 files changed, 749 insertions(+), 1 deletion(-)
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+ .../bindings/arm/sprd/global-regs.yaml        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
- rename Documentation/devicetree/bindings/arm/{ => sprd}/sprd.yaml (100%)
- create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
 
+diff --git a/Documentation/devicetree/bindings/arm/sprd/global-regs.yaml b/Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+new file mode 100644
+index 000000000000..012207166116
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2019 Unisoc Inc.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/arm/sprd/global-regs.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Unisoc Global Registers
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - sprd,sc9860-glbregs
++              - sprd,sc9863a-glbregs
++          - const: syscon
++
++  reg:
++    maxItems: 1
++
++examples:
++  - |
++    apb_regs: syscon@402e0000 {
++      compatible = "sprd,sc9863a-glbregs", "syscon";
++      reg = <0x402e0000 0x4000>;
++    };
++
++...
 --
 2.20.1
 
