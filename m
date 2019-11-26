@@ -2,155 +2,192 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52FF20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574760805;
-	bh=U2TUuIsAgjY1zkd18O3yOzFhB3Br3tAvhXrL2fkiCAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gCSIlTpUCNrmvQ5IkNh+/K1YDKGSEp1cbTu0VjmZiN/hMMGFse5XY5I3Ji121rSOV
-	 fNUuQHWp1sofkF59HuHuXQirfbjo7/jzTUzH2H7ciB7oexw5LohLT8AWWYjEj0EL8Y
-	 HpHlCV1BCzCrqNFqOEIXX5YF2ivlTgJb2lfyQwe0=
+	by mail.kernel.org (Postfix) with ESMTP id BD22120678
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfKZJdZ (ORCPT
+        id S1727588AbfKZJde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:33:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44812 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbfKZJdY (ORCPT
+        Tue, 26 Nov 2019 04:33:34 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59024 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727275AbfKZJde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:33:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id i12so21510128wrn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 01:33:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IGM4wS4irBq0S6zld4vb8xvQ2ohTky9b+k5RXHxB6oI=;
-        b=e/9+QozrhU4d5FTiT1kIYZ0ZMiu+CzJqRtX0HFIJVvb63ESALvRLnrfZV825NHCUkg
-         VuUmpFQfgBhDaqbPPS+4GR8+FHS3j8FNlcKGXqQYu+l7RotFd1ndqhTivkL/JZKQtu3l
-         PXA+WmOQ9XNW/I1XS60E0cTZRgO+nTnLW8wahJbFUFDD5toLLhjRYyvnW/CxBsXTQJJV
-         tXINZIxGZN5p94FOUbeMHfyRAMvBmIUu9sOVeYcOvFatM2wXU+i2r0jWu/csAhx0UzqW
-         TlHx4jgVWmTM6HVMoAc5zYHOjAspXcY7x2xVALGVGSs7qBkoHDepvQ516nGVmDZPToQE
-         j6rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IGM4wS4irBq0S6zld4vb8xvQ2ohTky9b+k5RXHxB6oI=;
-        b=fLuCfs9uqRuacrG4iuyR/xtaBbBiiBTul5F6m86QwFavwDh9QPNqp+WE0HjrVt1Osc
-         qhrB79cjhHJcfGVFvyTA+k1XzzgwS1OJ0/vPFXIDW/znIxDYLL5ujwxxf6R/gx/XmHO/
-         BgTD3xgSzdi4PPmeUbf/fV1NGroKe98hT/nX5Nwcfx5vDFImFDkNfitoeGWZuPpXoF/+
-         YTavzJ2gADfsZWNFdjq/O1q7hnrA64f6MzN96cB6V1o2PaWpSJKsKk2qxHBYbTNfamTC
-         3itzEJlRw80aNXfLRmQ6zoL+QHnFbC6Q690ufY+dSpwfV6iarWD+ZwZbzMLEzff0b2sK
-         nO7Q==
-X-Gm-Message-State: APjAAAVrbPdiKwdg2SaJOrIaf5bZOjY714KAT+IsmR2IYhVg8866lrGg
-        qIW8DINsRKMNPaTdg+VgAPI=
-X-Google-Smtp-Source: APXvYqyC5PAg9HLogS8SOLs8dVXkT5vWwTFF69Z5JxryU51ldr8mXcAViMR3Ewz0WDVwRMxd/HGEvA==
-X-Received: by 2002:a5d:6ac9:: with SMTP id u9mr35089430wrw.383.1574760802387;
-        Tue, 26 Nov 2019 01:33:22 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u26sm2460841wmj.9.2019.11.26.01.33.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 01:33:21 -0800 (PST)
-Date:   Tue, 26 Nov 2019 10:33:19 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/asm changes for v5.5
-Message-ID: <20191126093319.GA129234@gmail.com>
-References: <20191125160821.GA42496@gmail.com>
+        Tue, 26 Nov 2019 04:33:34 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQ9W86i053556
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 04:33:33 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wf0f7s2ck-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 04:33:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 26 Nov 2019 09:33:17 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Nov 2019 09:33:13 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQ9XCf021037316
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Nov 2019 09:33:12 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7352BA405F;
+        Tue, 26 Nov 2019 09:33:12 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CF99A4060;
+        Tue, 26 Nov 2019 09:33:12 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.22.13])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Nov 2019 09:33:11 +0000 (GMT)
+Subject: Re: [PATCH] mm: memcg/slab: wait for !root kmem_cache refcnt killing
+ on root kmem_cache destruction
+To:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        stable@vger.kernel.org
+References: <20191125185453.278468-1-guro@fb.com>
+ <20191126092918.GB20912@dhcp22.suse.cz>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Tue, 26 Nov 2019 10:33:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125160821.GA42496@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191126092918.GB20912@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112609-0012-0000-0000-0000036C6207
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112609-0013-0000-0000-000021A805A9
+Message-Id: <abe23ff5-a0fb-2b85-cf7b-1166e47609d6@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_01:2019-11-26,2019-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=509 adultscore=0
+ phishscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911260087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Ingo Molnar <mingo@kernel.org> wrote:
 
-> Linus,
+On 26.11.19 10:29, Michal Hocko wrote:
+> On Mon 25-11-19 10:54:53, Roman Gushchin wrote:
+>> Christian reported a warning like the following obtained during running some
+>> KVM-related tests on s390:
+>>
+>> WARNING: CPU: 8 PID: 208 at lib/percpu-refcount.c:108 percpu_ref_exit+0x50/0x58
+>> Modules linked in: kvm(-) xt_CHECKSUM xt_MASQUERADE bonding xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_na>
+>> CPU: 8 PID: 208 Comm: kworker/8:1 Not tainted 5.2.0+ #66
+>> Hardware name: IBM 2964 NC9 712 (LPAR)
+>> Workqueue: events sysfs_slab_remove_workfn
+>> Krnl PSW : 0704e00180000000 0000001529746850 (percpu_ref_exit+0x50/0x58)
+>>            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+>> Krnl GPRS: 00000000ffff8808 0000001529746740 000003f4e30e8e18 0036008100000000
+>>            0000001f00000000 0035008100000000 0000001fb3573ab8 0000000000000000
+>>            0000001fbdb6de00 0000000000000000 0000001529f01328 0000001fb3573b00
+>>            0000001fbb27e000 0000001fbdb69300 000003e009263d00 000003e009263cd0
+>> Krnl Code: 0000001529746842: f0a0000407fe        srp        4(11,%r0),2046,0
+>>            0000001529746848: 47000700            bc         0,1792
+>>           #000000152974684c: a7f40001            brc        15,152974684e
+>>           >0000001529746850: a7f4fff2            brc        15,1529746834
+>>            0000001529746854: 0707                bcr        0,%r7
+>>            0000001529746856: 0707                bcr        0,%r7
+>>            0000001529746858: eb8ff0580024        stmg       %r8,%r15,88(%r15)
+>>            000000152974685e: a738ffff            lhi        %r3,-1
+>> Call Trace:
+>> ([<000003e009263d00>] 0x3e009263d00)
+>>  [<00000015293252ea>] slab_kmem_cache_release+0x3a/0x70
+>>  [<0000001529b04882>] kobject_put+0xaa/0xe8
+>>  [<000000152918cf28>] process_one_work+0x1e8/0x428
+>>  [<000000152918d1b0>] worker_thread+0x48/0x460
+>>  [<00000015291942c6>] kthread+0x126/0x160
+>>  [<0000001529b22344>] ret_from_fork+0x28/0x30
+>>  [<0000001529b2234c>] kernel_thread_starter+0x0/0x10
+>> Last Breaking-Event-Address:
+>>  [<000000152974684c>] percpu_ref_exit+0x4c/0x58
+>> ---[ end trace b035e7da5788eb09 ]---
+>>
+>> The problem occurs because kmem_cache_destroy() is called immediately
+>> after deleting of a memcg, so it races with the memcg kmem_cache
+>> deactivation.
+>>
+>> flush_memcg_workqueue() at the beginning of kmem_cache_destroy()
+>> is supposed to guarantee that all deactivation processes are finished,
+>> but failed to do so. It waits for an rcu grace period, after which all
+>> children kmem_caches should be deactivated. During the deactivation
+>> percpu_ref_kill() is called for non root kmem_cache refcounters,
+>> but it requires yet another rcu grace period to finish the transition
+>> to the atomic (dead) state.
+>>
+>> So in a rare case when not all children kmem_caches are destroyed
+>> at the moment when the root kmem_cache is about to be gone, we need
+>> to wait another rcu grace period before destroying the root
+>> kmem_cache.
 > 
-> Please pull the latest x86-asm-for-linus git tree from:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-for-linus
-> 
->    # HEAD: f01ec4fca8207e31b59a010c3de679c833f3a877 Merge branch 'x86/build' into x86/asm, to pick up completed topic branch
+> Could you explain how rare this really is please? I still have to wrap
+> my head around the overall logic here. It looks quite fragile to me TBH.
+> I am worried that is relies on implementation detail of the PCP ref
+> counters too much.
 
-> Unfortunately the symbol rework will generate conflicts with pending 
-> changes to assembly files.
+I can actually reproduce this very reliably by doing an
 
-Here's a more detailed merge conflict note, the changes will create 
-direct merge conflicts in these files:
+# virsh destroy <lastguest>; rmmod kvm
 
-  arch/x86/entry/entry_32.S
-  arch/x86/kernel/head_32.S
-  arch/x86/xen/xen-asm_32.S
-
-These are straightforward to resolve, but there's a semantic conflict as 
-well, due to this new commit you already merged via the crypto tree:
-
-  ed0356eda153: ("crypto: blake2s - x86_64 SIMD implementation")
-
-Which can be resolved via converting ENTRY/ENDPROC to 
-SYM_FUNC_START/SYM_FUNC_END() pattern via the patch below.
-
-Thanks,
-
-	Ingo
-
-====================>
-
- arch/x86/crypto/blake2s-core.S | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/crypto/blake2s-core.S b/arch/x86/crypto/blake2s-core.S
-index 8591938eee26..24910b766bdd 100644
---- a/arch/x86/crypto/blake2s-core.S
-+++ b/arch/x86/crypto/blake2s-core.S
-@@ -47,7 +47,7 @@ SIGMA2:
- 
- .text
- #ifdef CONFIG_AS_SSSE3
--ENTRY(blake2s_compress_ssse3)
-+SYM_FUNC_START(blake2s_compress_ssse3)
- 	testq		%rdx,%rdx
- 	je		.Lendofloop
- 	movdqu		(%rdi),%xmm0
-@@ -173,11 +173,11 @@ ENTRY(blake2s_compress_ssse3)
- 	movdqu		%xmm14,0x20(%rdi)
- .Lendofloop:
- 	ret
--ENDPROC(blake2s_compress_ssse3)
-+SYM_FUNC_END(blake2s_compress_ssse3)
- #endif /* CONFIG_AS_SSSE3 */
- 
- #ifdef CONFIG_AS_AVX512
--ENTRY(blake2s_compress_avx512)
-+SYM_FUNC_START(blake2s_compress_avx512)
- 	vmovdqu		(%rdi),%xmm0
- 	vmovdqu		0x10(%rdi),%xmm1
- 	vmovdqu		0x20(%rdi),%xmm4
-@@ -254,5 +254,5 @@ ENTRY(blake2s_compress_avx512)
- 	vmovdqu		%xmm4,0x20(%rdi)
- 	vzeroupper
- 	retq
--ENDPROC(blake2s_compress_avx512)
-+SYM_FUNC_END(blake2s_compress_avx512)
- #endif /* CONFIG_AS_AVX512 */
