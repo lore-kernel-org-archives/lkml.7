@@ -2,175 +2,276 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06344C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523552073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1luVdUV"
+	by mail.kernel.org (Postfix) with ESMTP id CBBEC20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfKZLPJ (ORCPT
+        id S1728036AbfKZLPT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:15:09 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:44685 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfKZLPJ (ORCPT
+        Tue, 26 Nov 2019 06:15:19 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50807 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbfKZLPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:15:09 -0500
-Received: by mail-yb1-f196.google.com with SMTP id g38so7283077ybe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 03:15:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=CPxUmxxrz0H0XB9WSkrGE01aU3KDlj9zInkoJCdSrwI=;
-        b=V1luVdUV4XJZz94qiIBz2tJ7QVfajnWgLB+RPf3tuqosIVP4fSEVycsb7IB4jp1+gL
-         e6Est8fUOmF044UlBzlpXdMYTwKU8j6IKv/CVD+8vMaLEus1ZXImDoWuh/Fl9fVnLF6q
-         6qBxgWSIu7MdvCV+Rr8k227Eb08UChBSMQxyyX5nIeKzdaWetG1tT4QeoiaJ76xZQ5oB
-         yhedQCP4+Y09aALzMARk6ZY93ngYyUDx7iCRPRC4HCQ9kh+rVHqW+T+CgOOjUpfAw8LD
-         sSrVpC8rQQzzW0uZcyb5o76u3HM/8iSY3GePcHey9MUALWuFbioZ16N4w/oPuDHqI8yj
-         79jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=CPxUmxxrz0H0XB9WSkrGE01aU3KDlj9zInkoJCdSrwI=;
-        b=FWXoXDeaHqdoBshMexZcCfgsqL9y/+9Pw4rcUnMRJViZk1Wwn+a9Y9E+vH4mXs+Ypv
-         kDltHbJiZo7bhDnyZ132zoIql0HceEg3NAiR0TLs2CwV2ts4Sx6VW0VI2L8+jqpW/9s8
-         fdTr+7/xYBeYWTSRCQuLYLYkGuQlc8JbpxyG2HqXC+8vilSGJjlBaUIzsFOOgr+ZaT3S
-         A2KBqhGii9GCkjRKgYqQ8F89VTuwKUxQSVBKZBOQiNrFfINHswPkuMB7C7L2NbECm/Oz
-         bwYWkXK99a3SM9tfItHjbs8elunD+N3+9ojzfHx3zKGSXFD8tffkRtWURMPfM1Er0S+R
-         yB6Q==
-X-Gm-Message-State: APjAAAUu8VrHQQMn078BAopsLF1/IzWlirxVd3e8j6xuBREF/dDLkvvq
-        hCLnY7SS4/+7IXUSGGtex94=
-X-Google-Smtp-Source: APXvYqxUgfCnoVZSg2eIA2nU2DX4ldVW9HvmRj91bucSmqEaPetNMhcHB+9fveyReW4rS6qYnqxGXA==
-X-Received: by 2002:a25:258a:: with SMTP id l132mr28132474ybl.227.1574766906377;
-        Tue, 26 Nov 2019 03:15:06 -0800 (PST)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id j79sm5064019ywa.100.2019.11.26.03.15.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 03:15:05 -0800 (PST)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH v2 2/2] drm: share address space for dma bufs
-To:     Alex Deucher <alexdeucher@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>, David Airlie <airlied@linux.ie>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20191122063749.27113-1-kraxel@redhat.com>
- <20191122063749.27113-3-kraxel@redhat.com>
- <CAKMK7uFz3hmPT3OE8UtUQwmv+tXsjazUWT2RVHLxAq47X+EaXA@mail.gmail.com>
- <CADnq5_MvOE1Fw7-0g+Fo3Vvvu-c=Z9u+pZUEstv2cVXNKKL2=g@mail.gmail.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <805a875c-a43f-556d-db72-3af32e3061d6@gmail.com>
-Date:   Tue, 26 Nov 2019 12:15:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 26 Nov 2019 06:15:19 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CAE426002D;
+        Tue, 26 Nov 2019 11:15:15 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 12:15:14 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191126121514.394df10e@xps13>
+In-Reply-To: <20191126104920.rjlgfwetz2ov3u44@pengutronix.de>
+References: <20191122113230.16486-1-miquel.raynal@bootlin.com>
+        <20191125203849.fxvg74xrzp6rxahy@pengutronix.de>
+        <20191126095156.292c03af@xps13>
+        <20191126104920.rjlgfwetz2ov3u44@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CADnq5_MvOE1Fw7-0g+Fo3Vvvu-c=Z9u+pZUEstv2cVXNKKL2=g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 22.11.19 um 19:21 schrieb Alex Deucher:
-> On Fri, Nov 22, 2019 at 4:17 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->> On Fri, Nov 22, 2019 at 7:37 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->>> Use the shared address space of the drm device (see drm_open() in
->>> drm_file.c) for dma-bufs too.  That removes a difference betweem drm
->>> device mmap vmas and dma-buf mmap vmas and fixes corner cases like
->>> dropping ptes (using madvise(DONTNEED) for example) not working
->>> properly.
->>>
->>> Also remove amdgpu driver's private dmabuf update.  It is not needed
->>> any more now that we are doing this for everybody.
->>>
->>> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
->> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
->>
->> But I think you want at least an ack from amd guys for double checking here.
->> -Daniel
-> Looks correct to me.
->
-> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Hi Uwe,
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Tue, 26 Nov
+2019 11:49:20 +0100:
 
->
->
->>> ---
->>>   drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 4 +---
->>>   drivers/gpu/drm/drm_prime.c                 | 4 +++-
->>>   2 files changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
->>> index d5bcdfefbad6..586db4fb46bd 100644
->>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
->>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
->>> @@ -361,10 +361,8 @@ struct dma_buf *amdgpu_gem_prime_export(struct drm_gem_object *gobj,
->>>                  return ERR_PTR(-EPERM);
->>>
->>>          buf = drm_gem_prime_export(gobj, flags);
->>> -       if (!IS_ERR(buf)) {
->>> -               buf->file->f_mapping = gobj->dev->anon_inode->i_mapping;
->>> +       if (!IS_ERR(buf))
->>>                  buf->ops = &amdgpu_dmabuf_ops;
->>> -       }
->>>
->>>          return buf;
->>>   }
->>> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
->>> index a9633bd241bb..c3fc341453c0 100644
->>> --- a/drivers/gpu/drm/drm_prime.c
->>> +++ b/drivers/gpu/drm/drm_prime.c
->>> @@ -240,6 +240,7 @@ void drm_prime_destroy_file_private(struct drm_prime_file_private *prime_fpriv)
->>>   struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
->>>                                        struct dma_buf_export_info *exp_info)
->>>   {
->>> +       struct drm_gem_object *obj = exp_info->priv;
->>>          struct dma_buf *dma_buf;
->>>
->>>          dma_buf = dma_buf_export(exp_info);
->>> @@ -247,7 +248,8 @@ struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
->>>                  return dma_buf;
->>>
->>>          drm_dev_get(dev);
->>> -       drm_gem_object_get(exp_info->priv);
->>> +       drm_gem_object_get(obj);
->>> +       dma_buf->file->f_mapping = obj->dev->anon_inode->i_mapping;
->>>
->>>          return dma_buf;
->>>   }
->>> --
->>> 2.18.1
->>>
->>
->> --
->> Daniel Vetter
->> Software Engineer, Intel Corporation
->> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Hallo Miquel,
+> 
+> On Tue, Nov 26, 2019 at 09:51:56AM +0100, Miquel Raynal wrote:
+> > > Also when switching from 0% to 50% you could prevent a glitch by
+> > > sticking to an unset blink phase 0 bit.  
+> > 
+> > You mean, when turning off the PWM, I should first change the intensity
+> > to 50%, then blink the phase, then change the intensity to 100%?
+> > (reversed logic when intensity > 0).  
+> 
+> No, that's not what I meant. Your hardware seems to have two different
+> "modes". One where you can set the intensity between 0 and 15/16, and
+> another where the intensity is between 1/16 and 16/16, right? Switching
 
+Right!
+
+> between these two results in a glitch and you use the first mode only
+> for intensity 0 and the second for the rest.
+
+Indeed.
+
+> If now you have to go from
+> 0 to 8/16 your driver does a mode switch while this isn't necessary.
+
+This is right but it complicates a bit the logic as intensity changes
+become stateful. If this is what you want, I can do it.
+
+> 
+> I also wonder if a glitch can at least be made less likely, even when
+> going from 0% to 100%. You claimed that changing intensity was glitch
+> free (i.e. the currently running period is completed before the changed
+> setting has an effect). Does this hold also for changing the blink
+> phase?
+
+I honestly don't know, the datasheet does not tell anything about it.
+If I implement the above logic, glitches will be made less likely.
+
+I could also add more logic to switch the blink state at the 50%
+whenever crossing this value but with the above logic added I think it
+becomes unreadable and error prone, the risks are not balanced with the
+benefits. Of course anyone can enhance the driver in the future.
+
+> 
+> > > > +	/* Disable the internal oscillator if no channel is in use */
+> > > > +	if (!pwm->count) {
+> > > > +		mutex_lock(&chip->i2c_lock);
+> > > > +		regmap_write_bits(chip->regmap, MAX7313_MASTER,
+> > > > +				  PWM_INTENSITY_MASK << PWM_BITS_PER_REG, 0);
+> > > > +		mutex_unlock(&chip->i2c_lock);
+> > > > +	}    
+> > > 
+> > > What happens to the output pin when the oscillator gets disabled?  
+> > 
+> > If .free does not modify the output, then disabling the oscillator
+> > will force a static state if that was not already the case. I suppose
+> > that's not what you want. Why one would free a pin if it stills need to
+> > blink?  
+> 
+> It's the consumer who is supposed to stop the PWM before freeing it.
+> Then better do the oscillator stop when pwm_apply_state(pwm, {...
+> .enabled = false }) is called (and the other PWMs are off, too).
+
+Ok, I can disable the oscillator in pwm_apply_state() if all
+duty_cycles are at 0.
+
+> 
+> > If I am not allowed to disable the oscillator it means energy
+> > consumption will stay high for no reason as long as one PWM has been
+> > enabled, ever.
+> >   
+> > >   
+> > > > +	mutex_unlock(&pwm->count_lock);
+> > > > +
+> > > > +	gpiochip_free_own_desc(data->desc);
+> > > > +}
+> > > > +
+> > > > +static int max7313_pwm_apply(struct pwm_chip *pwm_chip,
+> > > > +			     struct pwm_device *pwm_device,
+> > > > +			     const struct pwm_state *state)
+> > > > +{
+> > > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
+> > > > +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
+> > > > +	struct pca953x_chip *chip = to_pca953x(pwm);
+> > > > +	unsigned int duty_cycle;
+> > > > +
+> > > > +	if (state->period != PWM_PERIOD_NS ||
+> > > > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > > > +		return -EINVAL;    
+> > > 
+> > > The check for period is too strong. Anything bigger than PWM_PERIOD_NS
+> > > is acceptable, too. (The policy I'd like to see is: Provide the biggest
+> > > period possible not bigger than the requested policy.)  
+> > 
+> > I don't understand, what is this parameter supposed to mean? the period
+> > cannot be changed, it is ruled by an internal oscillator. In this case
+> > any period bigger than the actual period cannot be physically achieved.
+> > If we derive ratios with a bigger period than possible, why not
+> > allowing it for lower periods too?  
+> 
+> Yes, I understood that the period is fixed for your PWM. However
+> consider a consumer who would prefer a different period. If you decline
+> all requests unless state->period == PWM_PERIOD_NS the consumer has no
+> guide to determine that unless all periods are tested. If however asking
+> for period = 2s results in getting 31.25 ms this allows the consumer to
+> assume that no period setting between 2s and 31.25 ms is possible. And
+> so the usual policy to implement is as stated in my previous mail.
+
+I am not sure to follow you, here are two possible understandings:
+
+1/ state->period > PWM_PERIOD_NS should not be refused, but in the end
+get_state should always return PWM_PERIOD_NS.
+
+2/ I should always do the ratio between state->period and
+state->duty_cycle as long as state->period >= PWM_PERIOD_NS (In this
+case I still don't understand why I should refuse state->period <
+PWM_PERIOD_NS).
+
+> (Of course for we'd need something like pwm_round_state() to effectively
+> find a good request without actually modifying the hardware state. That
+> is on my todo list.)
+> 
+> > > > +	data->enabled = state->enabled;
+> > > > +	data->duty_cycle = state->duty_cycle;    
+> > > 
+> > > Storing these is only to let .get_state yield the last set values,
+> > > right?  
+> > 
+> > I can't guess the duty_cycle/enabled state just by reading the
+> > hardware. For instance, I cannot represent a "40% duty with PWM
+> > disabled". Reading the hardware will not be able to know if the PWM
+> > is enabled or not and the duty_cycle will be read as 0.  
+> 
+> I interpret that as a "yes". IMHO it's a misconcept that a PWM driver
+> has to remember the duty cycle (and period) with enabled=false even
+> though this has no influence on the actual output in that state. I'd
+> like to get rid of .enabled in struct pwm_state completely, but Thierry
+> doesn't agree.
+
+I have no choice. Actually I don't understand why the core do not
+provide the 'last' duty cycle when enabled == false. It provides 0. So
+if I don't use the above trick here is what happens:
+
+echo 1 > enabled
+echo 50 > duty_cycle
+echo 0 > enabled
+echo 1 > enabled
+* duty_cycle is 0 while I expect it to be 50 *
+
+> > > > +	if (!state->enabled || !state->duty_cycle)
+> > > > +		duty_cycle = 0;
+> > > > +	else
+> > > > +		/* Convert the duty-cycle to be in the [1;16] range */
+> > > > +		duty_cycle = DIV_ROUND_DOWN_ULL(state->duty_cycle,
+> > > > +						PWM_OFFSET_NS);
+> > > > +
+> > > > +	/* The hardware is supposedly glitch-free */
+> > > > +	return max7313_pwm_set_state(chip, pwm_device, duty_cycle);
+> > > > +}
+> > > > +
+> > > > +static void max7313_pwm_get_state(struct pwm_chip *pwm_chip,
+> > > > +				  struct pwm_device *pwm_device,
+> > > > +				  struct pwm_state *state)
+> > > > +{
+> > > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm_device);
+> > > > +	struct max7313_pwm *pwm = to_max7313_pwm(pwm_chip);
+> > > > +	struct pca953x_chip *chip = to_pca953x(pwm);
+> > > > +	u8 duty_cycle;
+> > > > +
+> > > > +	state->period = PWM_PERIOD_NS;
+> > > > +	state->polarity = PWM_POLARITY_NORMAL;
+> > > > +
+> > > > +	if (!data)
+> > > > +		return;
+> > > > +
+> > > > +	state->enabled = data->enabled;    
+> > > 
+> > > data->enabled is not initialized from hardware in .probe, so currently
+> > > .get doesn't provide anything useful for the initial call. :-|  
+> > 
+> > 'enabled' only has a software meaning here, so it will return false at
+> > the first call as the structure is initially zeroed. Then it will
+> > provide the last state of the boolean. This IP has no "enable/disable"
+> > feature so I don't know how to handle this in a better way.  
+> 
+> When we'd get rid of struct pwm_state::enabled this would be clearer,
+> right? As this driver will be another instance that will hopefully help
+> me convincing Thierry in the end, can you please add a comment somewhere
+> at the top like this?:
+> 
+> /*
+>  * Limitations:
+>  * - Period fixed to 31.25 ms
+>  * - Only supports normal polarity
+>  * - Doesn't support a disabled state
+>  * - Some glitches cannot be prevented
+>  */
+> 
+> (The idea is that a command like
+> 
+> 	for f in drivers/pwm/pwm-*.c ; do echo $f; sed -rn '/^ \* Limitation/,/^ \*\/?$/p' $f ; done
+
+Sure!
+
+> 
+> gives some nice overview about common limitations.)
+> 
+> But also today you should check the hardware state and if duty_cycle is
+> greater than 0 don't report the PWM as disabled.
+
+Ok.
+
+> 
+> Best regards
+> Uwe
+> 
+
+Thanks,
+Miquèl
