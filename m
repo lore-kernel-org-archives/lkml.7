@@ -2,251 +2,258 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811092071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54C92071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574786928;
+	bh=GAmF3TYyk2ddyiuqlE+OzSfxjq6+jpC7YwdpGDEexBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pPC6+TZWI8ViVHexq/Ah6NygbY5cKtUKng13Y+CiM1qQW/br27pm/VhCbiOBYgect
+	 B8kOa9e6T3FbZFP2MXfWqCcVwHcbvrWTBm2Y3/mi/Iyb8synOTTNN51WGJI4ZDfh4A
+	 NfkW3Y6g+RNFKc/iMxgX6HbZeVA5t/leA7EsZ3HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfKZQpf (ORCPT
+        id S1728126AbfKZQss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:45:35 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26320 "EHLO mga14.intel.com"
+        Tue, 26 Nov 2019 11:48:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfKZQpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:45:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 08:45:33 -0800
-X-IronPort-AV: E=Sophos;i="5.69,246,1571727600"; 
-   d="scan'208";a="291772877"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Nov 2019 08:45:34 -0800
-Message-ID: <2cd804f781b55d5c20e970dcd67b472fba6e1387.camel@linux.intel.com>
-Subject: Re: [PATCH v14 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Tue, 26 Nov 2019 08:45:20 -0800
-In-Reply-To: <052f7442-4500-cd02-af2e-56d2f97a232c@redhat.com>
-References: <20191119214454.24996.66289.stgit@localhost.localdomain>
-         <052f7442-4500-cd02-af2e-56d2f97a232c@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        id S1727532AbfKZQsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 11:48:47 -0500
+Received: from linux-8ccs (x2f7ff09.dyn.telefonica.de [2.247.255.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E9A20722;
+        Tue, 26 Nov 2019 16:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574786926;
+        bh=GAmF3TYyk2ddyiuqlE+OzSfxjq6+jpC7YwdpGDEexBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iquYMZ08r+aRZillGk5lb3NuM8yqJDRtbqVNCm1lz6ZgRHr68L/cbW08hq1qycyA3
+         oO8F1XYt/6KMMn+59RkBmKFwOEK2lMZlhsEKnfFtmhTeskiY4p9Ok8vc8EHUpag1ut
+         RZNCCS7Yno1Z794VxNZP/shqJOsYK+v1MuNTeAjA=
+Date:   Tue, 26 Nov 2019 17:48:40 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] export.h: reduce __ksymtab_strings string duplication
+ by using "MS" section flags
+Message-ID: <20191126164840.GA8011@linux-8ccs>
+References: <20191120145110.8397-1-jeyu@kernel.org>
+ <20191125154217.18640-1-jeyu@kernel.org>
+ <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
+ <20191126135620.GA38845@google.com>
+ <20191126153153.GA3495@linux-8ccs>
+ <CAK7LNAS9WoqJh2NR81QrYNGVAUhbgU0Y97791HYb1XeAuHCtWw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAS9WoqJh2NR81QrYNGVAUhbgU0Y97791HYb1XeAuHCtWw@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-26 at 13:20 +0100, David Hildenbrand wrote:
-> On 19.11.19 22:46, Alexander Duyck wrote:
-> > This series provides an asynchronous means of reporting unused guest
-> > pages to a hypervisor so that the memory associated with those pages can
-> > be dropped and reused by other processes and/or guests on the host. Using
-> > this it is possible to avoid unnecessary I/O to disk and greatly improve
-> > performance in the case of memory overcommit on the host.
-> > 
-> > When enabled it will allocate a set of statistics to track the number of
-> > reported pages. When the nr_free for a given free area is greater than
-> > this by the high water mark we will schedule a worker to begin pulling the
-> > non-reported memory and to provide it to the reporting interface via a
-> > scatterlist.
-> > 
-> > Currently this is only in use by virtio-balloon however there is the hope
-> > that at some point in the future other hypervisors might be able to make
-> > use of it. In the virtio-balloon/QEMU implementation the hypervisor is
-> > currently using MADV_DONTNEED to indicate to the host kernel that the page
-> > is currently unused. It will be zeroed and faulted back into the guest the
-> > next time the page is accessed.
-> 
-> Remind me why we are using MADV_DONTNEED? Mostly for debugging purposes
-> right now, right? Did you do any measurements with MADV_FREE? I guess
-> there should be quite a performance increase in some scenarios.
++++ Masahiro Yamada [27/11/19 01:12 +0900]:
+>On Wed, Nov 27, 2019 at 12:32 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> +++ Matthias Maennich [26/11/19 13:56 +0000]:
+>> >On Tue, Nov 26, 2019 at 05:32:59PM +0900, Masahiro Yamada wrote:
+>> >>On Tue, Nov 26, 2019 at 12:42 AM Jessica Yu <jeyu@kernel.org> wrote:
+>> >>>
+>> >>>Commit c3a6cf19e695 ("export: avoid code duplication in
+>> >>>include/linux/export.h") refactors export.h quite nicely, but introduces
+>> >>>a slight increase in memory usage due to using the empty string ""
+>> >>>instead of NULL to indicate that an exported symbol has no namespace. As
+>> >>>mentioned in that commit, this meant an increase of 1 byte per exported
+>> >>>symbol without a namespace. For example, if a kernel configuration has
+>> >>>about 10k exported symbols, this would mean that the size of
+>> >>>__ksymtab_strings would increase by roughly 10kB.
+>> >>>
+>> >>>We can alleviate this situation by utilizing the SHF_MERGE and
+>> >>>SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
+>> >>>that the data in the section are null-terminated strings that can be
+>> >>>merged to eliminate duplication. More specifically, from the binutils
+>> >>>documentation - "for sections with both M and S, a string which is a
+>> >>>suffix of a larger string is considered a duplicate. Thus "def" will be
+>> >>>merged with "abcdef"; A reference to the first "def" will be changed to
+>> >>>a reference to "abcdef"+3". Thus, all the empty strings would be merged
+>> >>>as well as any strings that can be merged according to the cited method
+>> >>>above. For example, "memset" and "__memset" would be merged to just
+>> >>>"__memset" in __ksymtab_strings.
+>> >>>
+>> >>>As of v5.4-rc5, the following statistics were gathered with x86
+>> >>>defconfig with approximately 10.7k exported symbols.
+>> >>>
+>> >>>Size of __ksymtab_strings in vmlinux:
+>> >>>-------------------------------------
+>> >>>v5.4-rc5: 213834 bytes
+>> >>>v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
+>> >>>v5.4-rc5 with this patch: 205759 bytes
+>> >>>
+>> >>>So, we already see memory savings of ~8kB compared to vanilla -rc5 and
+>> >>>savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
+>> >>>
+>> >>>Unfortunately, as of this writing, strings will not get deduplicated for
+>> >>>kernel modules, as ld does not do the deduplication for
+>> >>>SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
+>> >>>kernel modules are. A patch for ld is currently being worked on to
+>> >>>hopefully allow for string deduplication in relocatable files in the
+>> >>>future.
+>> >>>
+>> >
+>> >Thanks for working on this!
+>> >
+>> >>>Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> >>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>> >>>---
+>> >>>
+>> >>>v2: use %progbits throughout and document the oddity in a comment.
+>> >>>
+>> >>> include/asm-generic/export.h |  8 +++++---
+>> >>> include/linux/export.h       | 27 +++++++++++++++++++++------
+>> >>> 2 files changed, 26 insertions(+), 9 deletions(-)
+>> >>>
+>> >>>diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+>> >>>index fa577978fbbd..23bc98e97a66 100644
+>> >>>--- a/include/asm-generic/export.h
+>> >>>+++ b/include/asm-generic/export.h
+>> >>>@@ -26,9 +26,11 @@
+>> >>> .endm
+>> >>>
+>> >>> /*
+>> >>>- * note on .section use: @progbits vs %progbits nastiness doesn't matter,
+>> >>>- * since we immediately emit into those sections anyway.
+>> >>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
+>> >>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
+>> >>>+ * former apparently works on all arches according to the binutils source.
+>> >>>  */
+>> >>>+
+>> >>> .macro ___EXPORT_SYMBOL name,val,sec
+>> >>> #ifdef CONFIG_MODULES
+>> >>>        .globl __ksymtab_\name
+>> >>>@@ -37,7 +39,7 @@
+>> >>> __ksymtab_\name:
+>> >>>        __put \val, __kstrtab_\name
+>> >>>        .previous
+>> >>>-       .section __ksymtab_strings,"a"
+>> >>>+       .section __ksymtab_strings,"aMS",%progbits,1
+>> >>> __kstrtab_\name:
+>> >>>        .asciz "\name"
+>> >>>        .previous
+>> >>>diff --git a/include/linux/export.h b/include/linux/export.h
+>> >>>index 201262793369..3d835ca34d33 100644
+>> >>>--- a/include/linux/export.h
+>> >>>+++ b/include/linux/export.h
+>> >>>@@ -81,16 +81,31 @@ struct kernel_symbol {
+>> >>>
+>> >>> #else
+>> >>>
+>> >>>+/*
+>> >>>+ * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
+>> >>>+ * section flag requires it. Use '%progbits' instead of '@progbits' since the
+>> >>>+ * former apparently works on all arches according to the binutils source.
+>> >>>+ */
+>> >>>+#define __KSTRTAB_ENTRY(sym)                                                   \
+>> >>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
+>> >>>+           "__kstrtab_" #sym ":                                        \n"     \
+>> >>>+           "   .asciz  \"" #sym "\"                                    \n"     \
+>> >>>+           "   .previous                                               \n")
+>> >>>+
+>> >>>+#define __KSTRTAB_NS_ENTRY(sym, ns)                                            \
+>> >>>+       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
+>> >>>+           "__kstrtabns_" #sym ":                                      \n"     \
+>> >>>+           "   .asciz  " #ns "                                         \n"     \
+>> >>
+>> >>
+>> >>Hmm, it took some time for me to how this code works.
+>> >>
+>> >>ns is already a C string, then you added # to it,
+>> >>then I was confused.
+>> >>
+>> >>Personally, I prefer this code:
+>> >>" .asciz \"" ns "\" \n"
+>> >>
+>> >>so it looks in the same way as __KSTRTAB_ENTRY().
+>> >
+>> >I agree with this, these entries should be consistent.
+>> >
+>> >>
+>> >>
+>> >>
+>> >>BTW, you duplicated \"aMS\",%progbits,1" and ".previous"
+>> >>
+>> >>
+>> >>I would write it shorter, like this:
+>> >>
+>> >>
+>> >>#define ___EXPORT_SYMBOL(sym, sec, ns) \
+>> >>       extern typeof(sym) sym; \
+>> >>       extern const char __kstrtab_##sym[]; \
+>> >>       extern const char __kstrtabns_##sym[]; \
+>> >>       __CRC_SYMBOL(sym, sec); \
+>> >>       asm("    .section \"__ksymtab_strings\",\"aMS\",%progbits,1\n" \
+>> >>           "__kstrtab_" #sym ": \n" \
+>> >>           "     .asciz \"" #sym "\" \n" \
+>> >>           "__kstrtabns_" #sym ": \n" \
+>> >>           "     .asciz \"" ns "\" \n" \
+>> >>           "     .previous \n");    \
+>> >>      __KSYMTAB_ENTRY(sym, sec)
+>> >>
+>> >
+>> >I would prefer the separate macros though (as initially proposed) as I
+>> >find them much more readable. The code is already a bit tricky to reason
+>> >about and I don't think the shorter version is enough of a gain.
+>>
+>> Yeah, the macros were more readable IMO. But I could just squash them into one
+>> __KSTRTAB_ENTRY macro as a compromise for Masahiro maybe?
+>>
+>> Is this any better?
+>
+>I prefer opposite.
+>
+>
+>__CRC_SYMBOL() is macrofied because it is ifdef'ed by
+>CONFIG_MODVERSIONS and CONFIG_MOD_REL_CRCS.
+>
+>__KSYMTAB_ENTRY() is macrofied because it is ifdef'ed by
+>CONFIG_HAVE_ARCH_PREL32_RELOCATIONS.
+>
+>
+>
+>__KSTRTAB_ENTRY() does not depend on any CONFIG option,
+>so it can be expanded in ___EXPORT_SYMBOL().
+>
+>
+>You need to check multiple locations
+>to understand how it works as a whole.
+>I do not understand why increasing macro-chains is readable.
 
-There are actually a few reasons for not using MADV_FREE.
+I think it is "readable" in the sense that when someone is reading
+export.h for the first time, they know exactly what ___EXPORT_SYMBOL()
+is supposed to do, without requiring them to read too deeply into the
+asm and swim through the #ifdefs.  __CRC_SYMBOL(), depending on
+modversions, creates an entry in what would eventually be merged to
+become the __kcrctab section, __KSTRTAB_ENTRY() creates entries in
+__ksymtab_strings, and __KSYMTAB_ENTRY() creates an entry in (what
+would eventually become) the __ksymtab{,_gpl} section. It gives a
+general idea of what it's doing.
 
-The first one was debugging as I could visibly see how much memory had
-been freed by just checking the memory consumption by the guest. I didn't
-have to wait for memory pressure to trigger the memory freeing. In
-addition it would force the pages out of the guest so it was much easier
-to see if I was freeing the wrong pages.
+However, I do understand your reasoning behind not having an extra
+macro. I'll wait a bit before respinning the patch to see if we can
+get at a consensus..
 
-The second reason is because it is much more portable. The MADV_FREE has
-only been a part of the Linux kernel since about 4.5. So if you are
-running on an older kernel the option might not be available.
-
-The third reason is simply effort involved. If I used MADV_DONTNEED then I
-can just use ram_block_discard_range which is the same function used by
-other parts of the balloon driver.
-
-Finally it is my understanding is that MADV_FREE only works on anonymous
-memory (https://elixir.bootlin.com/linux/v5.4/source/mm/madvise.c#L700). I
-was concerned that using MADV_FREE wouldn't work if used on file backed
-memory such as hugetlbfs which is an option for QEMU if I am not mistaken.
-
-> > To track if a page is reported or not the Uptodate flag was repurposed and
-> > used as a Reported flag for Buddy pages. We walk though the free list
-> > isolating pages and adding them to the scatterlist until we either
-> > encounter the end of the list or have filled the scatterlist with pages to
-> > be reported. If we fill the scatterlist before we reach the end of the
-> > list we rotate the list so that the first unreported page we encounter is
-> > moved to the head of the list as that is where we will resume after we
-> > have freed the reported pages back into the tail of the list.
-> 
-> So the boundary pointer didn't actually provide that big of a benefit I
-> assume (IOW, worst thing is you have to re-scan the whole list)?
-
-I rewrote the code quite a bit to get rid of the disadvantages.
-Specifically what the boundary pointer was doing was saving our place in
-the list when we left. Even without that we still had to re-scan the
-entire list with each zone processed anyway. With these changes we end up
-potentially having to perform one additional rescan per free list.
-
-Where things differ now is that the fetching function doesn't bail out of
-the list and start over per page. Instead it fills the entire scatterlist
-before it exits, and before doing so it will advance the head to the next
-non-reported page in the list. In addition instead of walking all of the
-orders and migrate types looking for each page the code is now more
-methodical and will only work one free list at a time and do not revisit
-it until we have processed the entire zone.
-
-Even with all that we still take a pretty significant performance hit in
-the page shuffing case, however I am willing to give that up for the sake
-of being less intrusive.
-
-> > Below are the results from various benchmarks. I primarily focused on two
-> > tests. The first is the will-it-scale/page_fault2 test, and the other is
-> > a modified version of will-it-scale/page_fault1 that was enabled to use
-> > THP. I did this as it allows for better visibility into different parts
-> > of the memory subsystem. The guest is running with 32G for RAM on one
-> > node of a E5-2630 v3. The host has had some power saving features disabled
-> > by setting the /dev/cpu_dma_latency value to 10ms.
-> > 
-> > Test                page_fault1 (THP)     page_fault2
-> > Name         tasks  Process Iter  STDEV  Process Iter  STDEV
-> > Baseline         1    1203934.75  0.04%     379940.75  0.11%
-> >                 16    8828217.00  0.85%    3178653.00  1.28%
-> > 
-> > Patches applied  1    1207961.25  0.10%     380852.25  0.25%
-> >                 16    8862373.00  0.98%    3246397.25  0.68%
-> > 
-> > Patches enabled  1    1207758.75  0.17%     373079.25  0.60%
-> >  MADV disabled  16    8870373.75  0.29%    3204989.75  1.08%
-> > 
-> > Patches enabled  1    1261183.75  0.39%     373201.50  0.50%
-> >                 16    8371359.75  0.65%    3233665.50  0.84%
-> > 
-> > Patches enabled  1    1090201.50  0.25%     376967.25  0.29%
-> >  page shuffle   16    8108719.75  0.58%    3218450.25  1.07%
-> > 
-> > The results above are for a baseline with a linux-next-20191115 kernel,
-> > that kernel with this patch set applied but page reporting disabled in
-> > virtio-balloon, patches applied but the madvise disabled by direct
-> > assigning a device, the patches applied and page reporting fully
-> > enabled, and the patches enabled with page shuffling enabled.  These
-> > results include the deviation seen between the average value reported here
-> > versus the high and/or low value. I observed that during the test memory
-> > usage for the first three tests never dropped whereas with the patches
-> > fully enabled the VM would drop to using only a few GB of the host's
-> > memory when switching from memhog to page fault tests.
-> > 
-> > Most of the overhead seen with this patch set enabled seems due to page
-> > faults caused by accessing the reported pages and the host zeroing the page
-> > before giving it back to the guest. This overhead is much more visible when
-> > using THP than with standard 4K pages. In addition page shuffling seemed to
-> > increase the amount of faults generated due to an increase in memory churn.
-> 
-> MADV_FREE would be interesting.
-
-I can probably code something up. However that is going to push a bunch of
-complexity into the QEMU code and doesn't really mean much to the kernel
-code. I can probably add it as another QEMU patch to the set since it is
-just a matter of having a function similar to ram_block_discard_range that
-uses MADV_FREE instead of MADV_DONTNEED.
-
-> > The overall guest size is kept fairly small to only a few GB while the test
-> > is running. If the host memory were oversubscribed this patch set should
-> > result in a performance improvement as swapping memory in the host can be
-> > avoided.
-> > 
-> > A brief history on the background of unused page reporting can be found at:
-> > https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
-> > 
-> > Changes from v12:
-> > https://lore.kernel.org/lkml/20191022221223.17338.5860.stgit@localhost.localdomain/
-> > Rebased on linux-next 20191031
-> > Renamed page_is_reported to page_reported
-> > Renamed add_page_to_reported_list to mark_page_reported
-> > Dropped unused definition of add_page_to_reported_list for non-reporting case
-> > Split free_area_reporting out from get_unreported_tail
-> > Minor updates to cover page
-> > 
-> > Changes from v13:
-> > https://lore.kernel.org/lkml/20191105215940.15144.65968.stgit@localhost.localdomain/
-> > Rewrote core reporting functionality
-> >   Merged patches 3 & 4
-> >   Dropped boundary list and related code
-> >   Folded get_reported_page into page_reporting_fill
-> >   Folded page_reporting_fill into page_reporting_cycle
-> > Pulled reporting functionality out of free_reported_page
-> >   Renamed it to __free_isolated_page
-> >   Moved page reporting specific bits to page_reporting_drain
-> > Renamed phdev to prdev since we aren't "hinting" we are "reporting"
-> > Added documentation to describe the usage of unused page reporting
-> > Updated cover page and patch descriptions to avoid mention of boundary
-> > 
-> > 
-> > ---
-> > 
-> > Alexander Duyck (6):
-> >       mm: Adjust shuffle code to allow for future coalescing
-> >       mm: Use zone and order instead of free area in free_list manipulators
-> >       mm: Introduce Reported pages
-> >       mm: Add unused page reporting documentation
-> >       virtio-balloon: Pull page poisoning config out of free page hinting
-> >       virtio-balloon: Add support for providing unused page reports to host
-> > 
-> > 
-> >  Documentation/vm/unused_page_reporting.rst |   44 ++++
-> >  drivers/virtio/Kconfig                     |    1 
-> >  drivers/virtio/virtio_balloon.c            |   88 +++++++
-> >  include/linux/mmzone.h                     |   56 +----
-> >  include/linux/page-flags.h                 |   11 +
-> >  include/linux/page_reporting.h             |   31 +++
-> >  include/uapi/linux/virtio_balloon.h        |    1 
-> >  mm/Kconfig                                 |   11 +
-> >  mm/Makefile                                |    1 
-> >  mm/memory_hotplug.c                        |    2 
-> >  mm/page_alloc.c                            |  181 +++++++++++----
-> >  mm/page_reporting.c                        |  337 ++++++++++++++++++++++++++++
-> >  mm/page_reporting.h                        |  125 ++++++++++
-> >  mm/shuffle.c                               |   12 -
-> >  mm/shuffle.h                               |    6 
-> >  15 files changed, 805 insertions(+), 102 deletions(-)
-> 
-> So roughly 100 LOC less added, that's nice to see :)
-> 
-> I'm planning to look into the details soon, just fairly busy lately. I
-> hope Mel Et al. can also comment.
-
-Agreed. I can see if I can generate something to get the MADV_FREE
-numbers. I suspect they were probably be somewhere between the MADV
-disabled and fully enabled case, since we will still be taking the page
-faults but not doing the zeroing.
 
