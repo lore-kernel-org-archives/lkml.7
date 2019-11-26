@@ -2,227 +2,96 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CD9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D81C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE97F20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PDUGRuFB"
+	by mail.kernel.org (Postfix) with ESMTP id 01352206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfKZIna (ORCPT
+        id S1727117AbfKZIs3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:43:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39689 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725940AbfKZIna (ORCPT
+        Tue, 26 Nov 2019 03:48:29 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:38080 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726049AbfKZIs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 03:43:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574757809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=qRebXvy1MrUFFQVKp4nVYsX6imAAqHN+087BgM7udBw=;
-        b=PDUGRuFBWbWlTkqXDMORcVqVXoG+WIuXdbyzpHIaTVYIHKYhH/sS3woDbV7uGr16nj32fo
-        GvjiMRzji5QfrdLyFyXyyZ/XKBC2OsqujNhPW9eCp3cssQJishAnQlGgclJimb1pwr5JvZ
-        xVeLtxBR50jDP0ftMzL4hHWmrvfGoME=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-46oJYooSOpq0zi_qNAUEKA-1; Tue, 26 Nov 2019 03:43:27 -0500
-Received: by mail-wr1-f70.google.com with SMTP id c16so10197261wro.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 00:43:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qRebXvy1MrUFFQVKp4nVYsX6imAAqHN+087BgM7udBw=;
-        b=fo3AtKOW6XgC5PKJx0rWoLZSsfIuKveER+vIL+av9T63thAlYRrwsxGPTjZuBOjj3j
-         IO14spNSm75U993ATj0v+fR1xMsXTsjqr4dBbuttkZz4TfenY1MThIlifT+k72EX0l0U
-         M5xH3QhkysSKOSAY1Yl1Pu24lqcO+YHjFJ13hn+IFs/hz9mFLQ1Daa+Vg8NZ7BozZfNs
-         ogLN+FrRPdWqXce7CD36qlg3WJBNnyov3/nlUfwpUFAovWDpZ4MIQkEpwmP/MNx1jgw+
-         7VggfNo1HLjj2M6KP3Qf3xS6AmKqO5wUeHgSRRsfltWiQ1Dq0QeGNSvRPxNQVucP4JTG
-         aANA==
-X-Gm-Message-State: APjAAAUmU9PvDyYo4aA8MRniXjJSuTiUoidUbDqQ/PgdPSYEQt90n4WC
-        0LxV+RxPUqWiA9Of+r+vDIGLjxvcfnHb2cDsxWBctD+j+8gkRf/c47LenoRLfzs6F9K4wQ+6pj/
-        s8iNzl7slOxU7YofYju2syzsQ
-X-Received: by 2002:a7b:c4c5:: with SMTP id g5mr3126956wmk.149.1574757805764;
-        Tue, 26 Nov 2019 00:43:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxLrI8+d0wHGbyZ5QRRU1gJlX4ez4u6d5OVvbwvaBXMv7PHoj4BXzLpaEbMWY3tbsAi1jvzQQ==
-X-Received: by 2002:a7b:c4c5:: with SMTP id g5mr3126923wmk.149.1574757805345;
-        Tue, 26 Nov 2019 00:43:25 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:5454:a592:5a0a:75c? ([2001:b07:6468:f312:5454:a592:5a0a:75c])
-        by smtp.gmail.com with ESMTPSA id z15sm2166228wmi.12.2019.11.26.00.43.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Nov 2019 00:43:24 -0800 (PST)
-Subject: Re: [PATCH 4.14 STABLE] KVM: MMU: Do not treat ZONE_DEVICE pages as
- being reserved
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20191125190205.28474-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <8fb87848-325b-41ea-5db1-cba9cec2355a@redhat.com>
-Date:   Tue, 26 Nov 2019 09:43:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 26 Nov 2019 03:48:28 -0500
+Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+        by SHSQR01.spreadtrum.com with ESMTPS id xAQ8kiPO006450
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 26 Nov 2019 16:46:44 +0800 (CST)
+        (envelope-from Chunyan.Zhang@unisoc.com)
+Received: from localhost (10.0.74.88) by BJMBX02.spreadtrum.com (10.0.64.8)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 26 Nov 2019 16:46:48
+ +0800
+From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v3 0/3] Add Unisoc's SC9863A support
+Date:   Tue, 26 Nov 2019 16:46:41 +0800
+Message-ID: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191125190205.28474-1-sean.j.christopherson@intel.com>
-Content-Language: en-US
-X-MC-Unique: 46oJYooSOpq0zi_qNAUEKA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+X-Originating-IP: [10.0.74.88]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL: SHSQR01.spreadtrum.com xAQ8kiPO006450
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/11/19 20:02, Sean Christopherson wrote:
-> [ Upstream commit a78986aae9b2988f8493f9f65a587ee433e83bc3 ]
-> 
-> Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
-> instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
-> like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
-> pages, e.g. put pages grabbed via gup().  But for flows such as setting
-> A/D bits or shifting refcounts for transparent huge pages, KVM needs to
-> to avoid processing ZONE_DEVICE pages as the flows in question lack the
-> underlying machinery for proper handling of ZONE_DEVICE pages.
-> 
-> This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
-> when running a KVM guest backed with /dev/dax memory, as KVM straight up
-> doesn't put any references to ZONE_DEVICE pages acquired by gup().
-> 
-> Note, Dan Williams proposed an alternative solution of doing put_page()
-> on ZONE_DEVICE pages immediately after gup() in order to simplify the
-> auditing needed to ensure is_zone_device_page() is called if and only if
-> the backing device is pinned (via gup()).  But that approach would break
-> kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
-> unmap() when accessing guest memory, unlike KVM's secondary MMU, which
-> coordinates with mmu_notifier invalidations to avoid creating stale
-> page references, i.e. doesn't rely on pages being pinned.
-> 
-> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
-> 
-> Reported-by: Adam Borowski <kilobyte@angband.pl>
-> Analyzed-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> [sean: backport to 4.x; resolve conflict in mmu.c]
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/mmu.c       |  8 ++++----
->  include/linux/kvm_host.h |  1 +
->  virt/kvm/kvm_main.c      | 26 +++++++++++++++++++++++---
->  3 files changed, 28 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-> index 8cd26e50d41c..c0b0135ef07f 100644
-> --- a/arch/x86/kvm/mmu.c
-> +++ b/arch/x86/kvm/mmu.c
-> @@ -3177,7 +3177,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
->  	 * here.
->  	 */
->  	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
-> -	    level == PT_PAGE_TABLE_LEVEL &&
-> +	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
->  	    PageTransCompoundMap(pfn_to_page(pfn)) &&
->  	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
->  		unsigned long mask;
-> @@ -5344,9 +5344,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
->  		 * the guest, and the guest page table is using 4K page size
->  		 * mapping if the indirect sp has level = 1.
->  		 */
-> -		if (sp->role.direct &&
-> -			!kvm_is_reserved_pfn(pfn) &&
-> -			PageTransCompoundMap(pfn_to_page(pfn))) {
-> +		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
-> +		    !kvm_is_zone_device_pfn(pfn) &&
-> +		    PageTransCompoundMap(pfn_to_page(pfn))) {
->  			drop_spte(kvm, sptep);
->  			need_tlb_flush = 1;
->  			goto restart;
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index bb4758ffd403..7668c68ddb5b 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -890,6 +890,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
->  void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
->  
->  bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
-> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
->  
->  struct kvm_irq_ack_notifier {
->  	struct hlist_node link;
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index ea61162b2b53..cdaacdf7bc87 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -142,10 +142,30 @@ __weak void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
->  {
->  }
->  
-> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-> +{
-> +	/*
-> +	 * The metadata used by is_zone_device_page() to determine whether or
-> +	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
-> +	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
-> +	 * page_count() is zero to help detect bad usage of this helper.
-> +	 */
-> +	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
-> +		return false;
-> +
-> +	return is_zone_device_page(pfn_to_page(pfn));
-> +}
-> +
->  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
->  {
-> +	/*
-> +	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
-> +	 * perspective they are "normal" pages, albeit with slightly different
-> +	 * usage rules.
-> +	 */
->  	if (pfn_valid(pfn))
-> -		return PageReserved(pfn_to_page(pfn));
-> +		return PageReserved(pfn_to_page(pfn)) &&
-> +		       !kvm_is_zone_device_pfn(pfn);
->  
->  	return true;
->  }
-> @@ -1730,7 +1750,7 @@ static void kvm_release_pfn_dirty(kvm_pfn_t pfn)
->  
->  void kvm_set_pfn_dirty(kvm_pfn_t pfn)
->  {
-> -	if (!kvm_is_reserved_pfn(pfn)) {
-> +	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
->  		struct page *page = pfn_to_page(pfn);
->  
->  		if (!PageReserved(page))
-> @@ -1741,7 +1761,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
->  
->  void kvm_set_pfn_accessed(kvm_pfn_t pfn)
->  {
-> -	if (!kvm_is_reserved_pfn(pfn))
-> +	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
->  		mark_page_accessed(pfn_to_page(pfn));
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
-> 
+SC9863A has Octa-core ARM Cortex A55 application processor. Find more
+details about it on the website: http://www.unisoc.com/sc9863a
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Changes from v2:
+* Discard some dt-bindings patches which have been applied by Rob Herring.
+* Added a new dt-binding file for sprd global-regs, also added a vendor directory for sprd.
+* Moved sprd.yaml to the vendor directory.
+* Addressed comments from Rob:
+- fixed dtbs_check errors;
+- move gic under to the bus node;
+- removed msi-controller from gic, sinceSC9863A doesn't provide ITS;
+- added specific compatible string for syscon nodes;
+- cut down registers range of syscon nodes;
+- removed unnecessary property "sprd,sc-id";
+- added earlycon support in devicetree.
 
+Changes from v1:
+- Convert DT bindings to json-schema.
+
+Chunyan Zhang (3):
+  dt-bindings: arm: sprd: add global registers bindings
+  dt-bindings: arm: move sprd board file to vendor directory
+  arm64: dts: Add Unisoc's SC9863A SoC support
+
+ .../bindings/arm/sprd/global-regs.yaml        |  34 ++
+ .../bindings/arm/{ => sprd}/sprd.yaml         |   0
+ arch/arm64/boot/dts/sprd/Makefile             |   3 +-
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi         | 526 ++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sharkl3.dtsi         | 148 +++++
+ arch/arm64/boot/dts/sprd/sp9863a-1h10.dts     |  39 ++
+ 6 files changed, 749 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+ rename Documentation/devicetree/bindings/arm/{ => sprd}/sprd.yaml (100%)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+
+--
+2.20.1
+
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
