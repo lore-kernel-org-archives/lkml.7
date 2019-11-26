@@ -2,401 +2,150 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647C6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33604C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF052071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="LjR29wJr"
+	by mail.kernel.org (Postfix) with ESMTP id 008DF206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 03:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574738538;
+	bh=2b6MHJphVT1B7dbK/oqUJgs+XBJBO4MpiWz2rXyY+94=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Kv7auJ6WJyJxFHXZ4HtOud1wfuCZyQeJnF+4dwHwBliWPg1MOEYgNMeiAhbVYKhvr
+	 ZfKzWNQaqQ9XLa7UhWkoCmsQZZ1RaIm8eNAfySJhH7ZgRiNQhBJU5P/J/PF1Yvlpbb
+	 yoVprb0Lwq/qo9H+Yw07NLUHShI4AdPBBjLrqS/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKZDUr (ORCPT
+        id S1727322AbfKZDWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 22:20:47 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:55206 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbfKZDUj (ORCPT
+        Mon, 25 Nov 2019 22:22:16 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:32890 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfKZDWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 22:20:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1574738440; x=1606274440;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IgYu5GqhtLGHsR5EyD+8NnLQ92UJLx33aAXmO0z7fuY=;
-  b=LjR29wJrLYJ+TK3ySwN5vHZu9d1kkI8KlhcMYJxiu0vHN1FU8u1+JxEd
-   NIycns7EBDj9pWvIeuQ9TGi1soXflIkRmD3yFA5A3IXpXxoJZ9ayVR4O2
-   2YEMPj53Ym7OGRBu9yj1Mk7E8v48XQlkVEMvCZqdIaOO5QV//hS/ekdXz
-   yNywtcjxE5WIejJj3HXOjUMvIHAAtHXwDkWSsvuKqQ7etWiIib3aFOK7Y
-   SbFk14tVoeEJiZdLuoXfJHUnRyD2BEUVbaNx3U/jIlc8vmn0afhz5oi/x
-   RsUeyYRjrdTFmZui0d0iI/gudvYFTuTof2E8f1tph9ib1x72KGMxLTrtp
-   Q==;
-IronPort-SDR: SmcV5jXJNaxCGJsq8AhfdkbU+xwK8sO4gcBjRWwkoIpampkN3TrNQfptlDrR4XKOUgg6NRD3kM
- KI3Q/OV0oMFujyOm1TushQKuPPVLNp8+yda2SUQEaV0Q8CxtqFD93VSeSwJIyn1y6Ua1MvyIQO
- KlJS7XGgFOEMK3j7X6ecj89h7b9Od6idg2Oubac4aUC7yhmpEGQSTcpTfQaZBvTZPe4ueVXem2
- RDL/sIdreYbL2lNTJfcjmWxLzzzTxmXJLTF/TdmHDf184oursuwKMjtY52aOV8iSQT5vZp0DXr
- t9Q=
-X-IronPort-AV: E=Sophos;i="5.69,244,1571673600"; 
-   d="scan'208";a="124761544"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Nov 2019 11:20:40 +0800
-IronPort-SDR: sJk8rNb3jwDcfkGfrDkhpzXPPvH75L2LFwxxSCVSYbq7CGNpIy9aHn3uMor55RPQ4fbik85hjo
- QPOujUZn/e748V3daFDrtXTMhk3A+H8Ll1dWIxqIktESkUcLbo6/N76uDNymy9xJ6to9f5wybr
- GvrBwlCioynI7fa2NOzvwZClI7SkwG9PZIsT8BzDwuN+mszLWCghKWf6trMZsWc+dNGDhGA69y
- T3hNXiXw8gJpYJqlPkUSGR0/qjPjkM+KOAlld2eTtPeM4kIQumJwIoOejuwGy/aIDl6xq2pD9Y
- BY4ruFePnoXSzaR0v91FRW9b
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2019 19:15:18 -0800
-IronPort-SDR: 4B8lcNHAW/REcZtZOi5U+Bru7/oOlNNnhhRFh5EElL5MrQyA0U9545Rsec2cdPb0QQc2402oX7
- j7TDLE4b2ZEuNr+iI4xWMqhNGts/HudrG3+JmacJhjU6w/eKg0q0D3lWfBrTsl4VoUXduz4r9k
- w0Fpn7rjNNs49EB7j7Igg91bMNgSoO0AU/ayD6EH04V8gZtSjHQF9XCBcQau53fKGYnnmzyra3
- VU509UoIIxA4ARQC9qhy05TaR1pky6CXYYEP+Zhr4Bb2eoYvlHzPFqgQRVDgJFWKUMRw5jAKUi
- IGI=
-WDCIronportException: Internal
-Received: from usa003951.ad.shared (HELO yoda.hgst.com) ([10.86.50.226])
-  by uls-op-cesaip02.wdc.com with ESMTP; 25 Nov 2019 19:20:38 -0800
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v4 4/4] RISC-V: Implement new SBI v0.2 extensions
-Date:   Mon, 25 Nov 2019 19:20:33 -0800
-Message-Id: <20191126032033.14825-5-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191126032033.14825-1-atish.patra@wdc.com>
-References: <20191126032033.14825-1-atish.patra@wdc.com>
+        Mon, 25 Nov 2019 22:22:16 -0500
+Received: by mail-lf1-f68.google.com with SMTP id d6so12811105lfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 19:22:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/mWh4zHOpJuBz4S9adg+rZZ8a37OLbsX8O3eNwWxZ6U=;
+        b=PIBz9DkIcX7+LqItZzpiHfN1ECzE8Em4WA4leISipGNVTIqLcfdkWyCjkh2gpU1Xfs
+         lmAMPIPXNnkBrKLEkzMGfZ1hDISC3NTKbzma62gZ0cBp4qgpSnojMe7QE6aQdkbc04QO
+         9+B5XDU6183f3S18qW/yJcRbKrD/YBvIxcHTg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/mWh4zHOpJuBz4S9adg+rZZ8a37OLbsX8O3eNwWxZ6U=;
+        b=Zg9a4sjJCIpU0w9dcvOYfX/K11wZY92RFkBjJQuz6iQuaS/Q1RNetN4SD2bZUDbGTC
+         Ef+GFj1QO9nYOWiE70YYEtZUv+kn+jMUTlHezxaPf0q0eEc8DQMVtJ+ipL2D7w/AIjQ4
+         mgH7bMUB4hpowBSGUedQKSk+EtOEk0eTif2Bzf8RF25KxqJVvtEI4tEcjxDbyuVPMzc6
+         nSxaYjuDTbAHuoqpkTx4JzUwiKXN/Qmx8cpDkNPKHcG4KfexlpYBX0Vax/4KF3zWznHB
+         oLHYJmp0+qlia3pPHpGBvs2iYMc62q7Ye0o4mgYYLya4ZT8xB81oCR9Sb6aVEfbnGN46
+         /Afg==
+X-Gm-Message-State: APjAAAWO6nn5VS6+gI7xBjs3dHe/n7gYrMisjSL4jEn5/4RW9vdiVSdH
+        uxv0j7eqNy6BowokanOhL2NvAU8496c=
+X-Google-Smtp-Source: APXvYqweyU28xHRwvVW1cGfl/uDqo01Y0wRfRG9EfMHGFv+Hc6X/YhdRUHhrYf2cnXIH3PpZhdVT5g==
+X-Received: by 2002:ac2:5616:: with SMTP id v22mr12936695lfd.84.1574738533889;
+        Mon, 25 Nov 2019 19:22:13 -0800 (PST)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id i23sm4496753lfj.71.2019.11.25.19.22.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 19:22:12 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id a17so12760844lfi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 19:22:12 -0800 (PST)
+X-Received: by 2002:a19:4949:: with SMTP id l9mr22319881lfj.52.1574738532324;
+ Mon, 25 Nov 2019 19:22:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <alpine.DEB.2.21.1911251322160.2408@hp-x360n> <CAHk-=wj_nbDN3piDJBEteUrjyrZCTA+CCk15NfV=5D2xFfGJGw@mail.gmail.com>
+ <CAHk-=whn2Dp44tjUpLo9ogs=p-v-Vn7c2Xdo4p+2V=d1hTaiuA@mail.gmail.com>
+In-Reply-To: <CAHk-=whn2Dp44tjUpLo9ogs=p-v-Vn7c2Xdo4p+2V=d1hTaiuA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 25 Nov 2019 19:21:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wj3YSFT+C3n=7CTsB-8U0NUpTpT3xEH866H4-1qbQGw7Q@mail.gmail.com>
+Message-ID: <CAHk-=wj3YSFT+C3n=7CTsB-8U0NUpTpT3xEH866H4-1qbQGw7Q@mail.gmail.com>
+Subject: Re: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in
+ fdget_pos()") breaking userspace
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>
+Content-Type: multipart/mixed; boundary="000000000000d582d60598376238"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few v0.1 SBI calls are being replaced by new SBI calls that follows
-v0.2 calling convention. The specification changes can be found at
+--000000000000d582d60598376238
+Content-Type: text/plain; charset="UTF-8"
 
-riscv/riscv-sbi-doc#27
+On Mon, Nov 25, 2019 at 5:58 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> It might still be a bit noisy even with the above, but I think it will
+> at least be better.
 
-Implement the replacement extensions and few additional new SBI
-function calls that makes way for a better SBI interface in future.
+Yeah, I think I see what's going on.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/sbi.h |  35 +++++++
- arch/riscv/kernel/sbi.c      | 197 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 229 insertions(+), 3 deletions(-)
+I for some reason entirely missed the tty case. Oops. That was just
+stupid of me, I should have thought of it.
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index cc82ae63f8e0..54ba9eebec11 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -22,6 +22,9 @@ enum sbi_ext_id {
- 	SBI_EXT_0_1_SHUTDOWN = 0x8,
- #endif
- 	SBI_EXT_BASE = 0x10,
-+	SBI_EXT_TIME = 0x54494D45,
-+	SBI_EXT_IPI = 0x735049,
-+	SBI_EXT_RFENCE = 0x52464E43,
- };
- 
- enum sbi_ext_base_fid {
-@@ -34,6 +37,24 @@ enum sbi_ext_base_fid {
- 	SBI_BASE_GET_MIMPID,
- };
- 
-+enum sbi_ext_time_fid {
-+	SBI_EXT_TIME_SET_TIMER = 0,
-+};
-+
-+enum sbi_ext_ipi_fid {
-+	SBI_EXT_IPI_SEND_IPI = 0,
-+};
-+
-+enum sbi_ext_rfence_fid {
-+	SBI_EXT_RFENCE_REMOTE_FENCE_I = 0,
-+	SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
-+	SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
-+	SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA,
-+	SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID,
-+	SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA,
-+	SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
-+};
-+
- #define SBI_SPEC_VERSION_DEFAULT	0x1
- #define SBI_SPEC_VERSION_MAJOR_OFFSET	24
- #define SBI_SPEC_VERSION_MAJOR_MASK	0x7f
-@@ -74,6 +95,20 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 				unsigned long start,
- 				unsigned long size,
- 				unsigned long asid);
-+int sbi_remote_hfence_gvma(const unsigned long *hart_mask,
-+			   unsigned long start,
-+			   unsigned long size);
-+int sbi_remote_hfence_gvma_vmid(const unsigned long *hart_mask,
-+				unsigned long start,
-+				unsigned long size,
-+				unsigned long vmid);
-+int sbi_remote_hfence_vvma(const unsigned long *hart_mask,
-+			   unsigned long start,
-+			   unsigned long size);
-+int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
-+				unsigned long start,
-+				unsigned long size,
-+				unsigned long asid);
- int sbi_probe_extension(long ext);
- 
- /* Check if current SBI specification version is 0.1 or not */
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index 8574de1074c4..74b3155b570f 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -205,6 +205,101 @@ static int __sbi_rfence_v01(unsigned long ext, unsigned long fid,
- }
- #endif /* CONFIG_RISCV_SBI_V01 */
- 
-+static void __sbi_set_timer_v02(uint64_t stime_value)
-+{
-+#if __riscv_xlen == 32
-+	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value,
-+			  stime_value >> 32, 0, 0, 0, 0);
-+#else
-+	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value, 0,
-+		  0, 0, 0, 0);
-+#endif
-+}
-+
-+static int __sbi_send_ipi_v02(const unsigned long *hart_mask)
-+{
-+	unsigned long hmask_val;
-+	struct sbiret ret = {0};
-+	int result;
-+
-+	if (!hart_mask)
-+		hmask_val = *(cpumask_bits(cpu_online_mask));
-+	else
-+		hmask_val = *hart_mask;
-+
-+	ret = sbi_ecall(SBI_EXT_IPI, SBI_EXT_IPI_SEND_IPI, hmask_val,
-+			0, 0, 0, 0, 0);
-+	if (ret.error) {
-+		pr_err("%s: failed with error [%d]\n", __func__,
-+			sbi_err_map_linux_errno(ret.error));
-+		result = ret.error;
-+	} else
-+		result = ret.value;
-+
-+	return result;
-+}
-+
-+static int __sbi_rfence_v02(unsigned long extid, unsigned long fid,
-+			     const unsigned long *hart_mask,
-+			     unsigned long hbase, unsigned long start,
-+			     unsigned long size, unsigned long arg4,
-+			     unsigned long arg5)
-+{
-+	unsigned long hmask_val;
-+	struct sbiret ret = {0};
-+	int result;
-+	unsigned long ext = SBI_EXT_RFENCE;
-+
-+	if (!hart_mask)
-+		hmask_val = *(cpumask_bits(cpu_online_mask));
-+	else
-+		hmask_val = *hart_mask;
-+
-+	switch (fid) {
-+	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, 0, 0, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, start,
-+				size, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, start,
-+				size, arg4, 0);
-+		break;
-+	/*TODO: Handle non zero hbase cases */
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, start,
-+				size, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, start,
-+				size, arg4, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, start,
-+				size, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID:
-+		ret = sbi_ecall(ext, fid, hmask_val, 0, start,
-+				size, arg4, 0);
-+		break;
-+	default:
-+		pr_err("unknown function ID [%lu] for SBI extension [%lu]\n",
-+			fid, ext);
-+		result = -EINVAL;
-+	}
-+
-+	if (ret.error) {
-+		pr_err("%s: failed with error [%d]\n", __func__,
-+			sbi_err_map_linux_errno(ret.error));
-+		result = ret.error;
-+	} else
-+		result = ret.value;
-+
-+	return result;
-+}
-+
- /**
-  * sbi_set_timer() - Program the timer for next timer event.
-  * @stime_value: The value after which next timer event should fire.
-@@ -237,7 +332,7 @@ EXPORT_SYMBOL(sbi_send_ipi);
-  */
- void sbi_remote_fence_i(const unsigned long *hart_mask)
- {
--	__sbi_rfence(SBI_EXT_0_1_REMOTE_FENCE_I, 0,
-+	__sbi_rfence(SBI_EXT_0_1_REMOTE_FENCE_I, SBI_EXT_RFENCE_REMOTE_FENCE_I,
- 		     hart_mask, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_fence_i);
-@@ -255,7 +350,8 @@ void sbi_remote_sfence_vma(const unsigned long *hart_mask,
- 					 unsigned long start,
- 					 unsigned long size)
- {
--	__sbi_rfence(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
-+	__sbi_rfence(SBI_EXT_0_1_REMOTE_SFENCE_VMA,
-+		     SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
- 		     hart_mask, 0, start, size, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma);
-@@ -276,11 +372,93 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 					      unsigned long size,
- 					      unsigned long asid)
- {
--	__sbi_rfence(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
-+	__sbi_rfence(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID,
-+		     SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
- 		     hart_mask, 0, start, size, asid, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
- 
-+/**
-+ * sbi_remote_hfence_gvma() - Execute HFENCE.GVMA instructions on given remote
-+ *			   harts for the specified guest physical address range.
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the guest physical address
-+ * @size: Total size of the guest physical address range.
-+ *
-+ * Return: None
-+ */
-+int sbi_remote_hfence_gvma(const unsigned long *hart_mask,
-+					 unsigned long start,
-+					 unsigned long size)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE, SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA,
-+			    hart_mask, 0, start, size, 0, 0);
-+}
-+EXPORT_SYMBOL_GPL(sbi_remote_hfence_gvma);
-+
-+/**
-+ * sbi_remote_hfence_gvma_vmid() - Execute HFENCE.GVMA instructions on given
-+ * remote harts for a guest physical address range belonging to a specific VMID.
-+ *
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the guest physical address
-+ * @size: Total size of the guest physical address range.
-+ * @vmid: The value of guest ID (VMID).
-+ *
-+ * Return: 0 if success, Error otherwise.
-+ */
-+int sbi_remote_hfence_gvma_vmid(const unsigned long *hart_mask,
-+					      unsigned long start,
-+					      unsigned long size,
-+					      unsigned long vmid)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE,
-+			    SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID,
-+			    hart_mask, 0, start, size, vmid, 0);
-+}
-+EXPORT_SYMBOL(sbi_remote_hfence_gvma_vmid);
-+
-+/**
-+ * sbi_remote_hfence_vvma() - Execute HFENCE.VVMA instructions on given remote
-+ *			     harts for the current guest virtual address range.
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the current guest virtual address
-+ * @size: Total size of the current guest virtual address range.
-+ *
-+ * Return: None
-+ */
-+int sbi_remote_hfence_vvma(const unsigned long *hart_mask,
-+					 unsigned long start,
-+					 unsigned long size)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE, SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA,
-+			    hart_mask, 0, start, size, 0, 0);
-+}
-+EXPORT_SYMBOL(sbi_remote_hfence_vvma);
-+
-+/**
-+ * sbi_remote_hfence_vvma_asid() - Execute HFENCE.VVMA instructions on given
-+ * remote harts for current guest virtual address range belonging to a specific
-+ * ASID.
-+ *
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the current guest virtual address
-+ * @size: Total size of the current guest virtual address range.
-+ * @asid: The value of address space identifier (ASID).
-+ *
-+ * Return: None
-+ */
-+int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
-+					      unsigned long start,
-+					      unsigned long size,
-+					      unsigned long asid)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE,
-+			    SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
-+			    hart_mask, 0, start, size, asid, 0);
-+}
-+EXPORT_SYMBOL(sbi_remote_hfence_vvma_asid);
-+
- /**
-  * sbi_probe_extension() - Check if an SBI extension ID is supported or not.
-  * @extid: The extension ID to be probed.
-@@ -361,6 +539,19 @@ int __init sbi_init(void)
- 	} else {
- 		pr_info("SBI implementation ID=0x%lx Version=0x%lx\n",
- 			sbi_get_firmware_id(), sbi_get_firmware_version());
-+		if (sbi_probe_extension(SBI_EXT_TIME) > 0)
-+			__sbi_set_timer = __sbi_set_timer_v02;
-+		else
-+			__sbi_set_timer = __sbi_set_timer_dummy_warn;
-+		if (sbi_probe_extension(SBI_EXT_IPI) > 0)
-+			__sbi_send_ipi	= __sbi_send_ipi_v02;
-+		else
-+			__sbi_send_ipi = __sbi_send_ipi_dummy_warn;
-+		if (sbi_probe_extension(SBI_EXT_RFENCE) > 0)
-+			__sbi_rfence	= __sbi_rfence_v02;
-+		else
-+			__sbi_rfence	= __sbi_rfence_dummy_warn;
-+
- 	}
- 
- 	return 0;
--- 
-2.23.0
+There are other things that trigger the new informational line in that
+hacky patch, and they _might_ matter, but I suspect it's the tty and
+sound cases that causes the worst problems.
 
+I suspect Kirill Smelkov even might have mentioned the tty case at one
+point, and I just spaced out.
+
+There are other things too that trigger that debug check, like the
+sound file descriptors, and they might well matter too.
+
+Anyway, I think the thing to do (for now) is to just say "character
+devices are FMODE_STREAM files if they have no llseek operations".
+That should take care of both tty's and the sound devices.
+
+You can certainly have a character device that can do llseek, but it
+sounds like a reasonable base rule.
+
+Of course, this may fix the f_pos locking issue, but replace it with a
+"oops, the character device driver tried to look at *pos anyway", and
+that will give you a nice OOPS instead.
+
+So this patch might just replace the failure mode with another failure
+mode instead. At which point I think I'd have to revert that "get rid
+of FMODE_ATOMIC_POS" trial balloon, but let's see if this patch solves
+your problem and is sufficient..
+
+I'd suggest using it _together_ with that "pr_info()" debug patch I
+sent, to see what else might be going on..
+
+                Linus
+
+--000000000000d582d60598376238
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k3famq520>
+X-Attachment-Id: f_k3famq520
+
+IGZzL2NoYXJfZGV2LmMgfCAxMiArKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZnMvY2hhcl9kZXYuYyBiL2Zz
+L2NoYXJfZGV2LmMKaW5kZXggMDBkZmUxNzg3MWFjLi5lNWZmZWJkZjgwZDUgMTAwNjQ0Ci0tLSBh
+L2ZzL2NoYXJfZGV2LmMKKysrIGIvZnMvY2hhcl9kZXYuYwpAQCAtMzY3LDYgKzM2NywxNiBAQCB2
+b2lkIGNkZXZfcHV0KHN0cnVjdCBjZGV2ICpwKQogCX0KIH0KIAorc3RhdGljIGludCBtaWdodF9i
+ZV9zdHJlYW0oc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGZpbGUgKmZpbGUpCit7CisJY29u
+c3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyAqZm9wcyA9IGZpbGUtPmZfb3A7CisKKwlpZiAoZm9w
+cy0+bGxzZWVrICYmIGZvcHMtPmxsc2VlayAhPSBub19sbHNlZWspCisJCXJldHVybiAwOworCisJ
+cmV0dXJuIHN0cmVhbV9vcGVuKGlub2RlLCBmaWxlKTsKK30KKwogLyoKICAqIENhbGxlZCBldmVy
+eSB0aW1lIGEgY2hhcmFjdGVyIHNwZWNpYWwgZmlsZSBpcyBvcGVuZWQKICAqLwpAQCAtNDE2LDcg
+KzQyNiw3IEBAIHN0YXRpYyBpbnQgY2hyZGV2X29wZW4oc3RydWN0IGlub2RlICppbm9kZSwgc3Ry
+dWN0IGZpbGUgKmZpbHApCiAJCQlnb3RvIG91dF9jZGV2X3B1dDsKIAl9CiAKLQlyZXR1cm4gMDsK
+KwlyZXR1cm4gbWlnaHRfYmVfc3RyZWFtKGlub2RlLCBmaWxwKTsKIAogIG91dF9jZGV2X3B1dDoK
+IAljZGV2X3B1dChwKTsK
+--000000000000d582d60598376238--
