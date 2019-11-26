@@ -2,154 +2,290 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970C8C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4395C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8F820656
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74B320727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 14:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfKZOoC (ORCPT
+        id S1727855AbfKZOp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:44:02 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:50287 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfKZOoC (ORCPT
+        Tue, 26 Nov 2019 09:45:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6800 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbfKZOp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 09:44:02 -0500
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MIxmm-1iGQGI0lIo-00KPaf; Tue, 26 Nov 2019 15:44:00 +0100
-Received: by mail-qt1-f174.google.com with SMTP id q8so18985162qtr.10;
-        Tue, 26 Nov 2019 06:43:59 -0800 (PST)
-X-Gm-Message-State: APjAAAVEEHufWk6ZOeZpqEg5ZuzkmH8tQ6tjfEbCmq1KddqYj9sX2Crx
-        CtZ9UEKITgRey2Dy5xWIerJ78PolIu2AbVpj1tA=
-X-Google-Smtp-Source: APXvYqzRjNzcbtyT8m8Js3ouqRwuywNkSzgoSbWGRTp68Xa/cFG4Ckp/M6kGXAKo5/MG+uIlcDuSE2MktCaWDNF8BHg=
-X-Received: by 2002:aed:3fbc:: with SMTP id s57mr20247572qth.18.1574779438951;
- Tue, 26 Nov 2019 06:43:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191111203835.2260382-1-arnd@arndb.de> <20191111203835.2260382-6-arnd@arndb.de>
- <272c471b-a7a9-c830-e19b-d1f19ee47073@xs4all.nl>
-In-Reply-To: <272c471b-a7a9-c830-e19b-d1f19ee47073@xs4all.nl>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 Nov 2019 15:43:42 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3vHWBJU6EiUbRKJ01Zsv5E5Yfr+=h2Dg95atjvaHZ+Rg@mail.gmail.com>
-Message-ID: <CAK8P3a3vHWBJU6EiUbRKJ01Zsv5E5Yfr+=h2Dg95atjvaHZ+Rg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/8] media: v4l2-core: fix VIDIOC_DQEVENT for time64 ABI
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:sVf1GKu7Qs2YDYafC87hpBxta/ajrGexzYgpMCoRb6AVSelhaAK
- zl2sHsU460UbVkjFNFBbuAwqXjtc72k41YmVRt2fJL4s903LpkWZ5EFt/G+Kd4lVVuzeUeQ
- qEmrqlQ1dyVwW+7r2ljpxrH/MIZ3Fd8kB82OrkTS7VCDC0pqhEf9kMN6jj1NtUaGrQcmHfg
- VAlw1on7uVoRS4trRoBHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t+Q4V2GWkv4=:Y/MPRVz5xJpT10FLX+efh6
- 29FLKGigzHLjaGdI3ib+NTvc1NRs1BDveuJEX/KyREJ/RbU5OO9deyArgj7beE7hexsY3i4rD
- 36mHV3Rl6+B7apvVwxe9mr84roeItRJJZlCWo5piSpdlQn34tHrJ5IjRyXDTEU9af+YqOC79h
- UScGxWE7bZNXe0/BKPkF46Z8Gvl6cmEpY53F1g3cthl//BPm9bsEjHXoUTCaWK0Soru2flVV9
- kqbrBWSI2V4TA7MAuce5ja0t0JrBVakNuXfL/pOqxv0ZxdA1yuxFkGRsiAWtfo5zc7NC0MvGO
- JZStFxM9l+dij9TqxlaqHEIZbDfRhPMVoKXETQUgwwQNxtBUPCdlPl51d0WqEB9bxqU4fLtkT
- Og6lBzlZebsc+CYC2moYwOmlYgU4IidA+E76KcJvf4meOGqXR+N2FxMtBNIf8b5nJQ3/9Uu+G
- KnuZhOQ7BTcpJJeF3MmTsv7vTxgulMxhDgw0CwVrT9SiatVu35SmA/hFQwO6JkMJf5L5LLQ/L
- co93mQfvhbNH/KS/AwHYk0uXAO2RbzrrydX0uGIqBsehLC0tBLSrlTR+rtFetM3wqduYjZc8x
- 8zsS5od8kNPK5BIABvZIWd9J9EjEvVSaqbrjXdXlfWnTjUt21giGJSVeQG3NK5DOuFhVcBcze
- XBCF1BmgKkCkFhLCsSHH9by5aB/NwvDHM9ftrF7JLfjp2l4H7OLG1tKHjILRXMhpjCsPM27jB
- xxnNDaoRzJ/kPZqVdVitr9wJ8THtFZ8RormoqZkLGQdwskWUz8Ua9z5js9IXlZlL7N1Mzfy91
- 1HSNd9N3IaxU+8Bz17yI11CAAZFVEuZqoylQH9X5nnXq+YJjo/sv9t9F+8OuRsCdDBMmXTtyR
- 7XAxwnuLpwAIk0e2ldZw==
+        Tue, 26 Nov 2019 09:45:59 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQEjuf9145030
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:45:58 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wfk5m2t6b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 09:42:00 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zaslonko@linux.ibm.com>;
+        Tue, 26 Nov 2019 14:41:36 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Nov 2019 14:41:34 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAQEfWox47513790
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Nov 2019 14:41:32 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C32252051;
+        Tue, 26 Nov 2019 14:41:32 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DD91552059;
+        Tue, 26 Nov 2019 14:41:31 +0000 (GMT)
+From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] s390/boot: Add dfltcc= kernel command line parameter
+Date:   Tue, 26 Nov 2019 15:41:29 +0100
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191126144130.75710-1-zaslonko@linux.ibm.com>
+References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19112614-0008-0000-0000-000003388310
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112614-0009-0000-0000-00004A5787A3
+Message-Id: <20191126144130.75710-5-zaslonko@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_03:2019-11-26,2019-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
+ suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911260130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 3:40 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 11/11/19 9:38 PM, Arnd Bergmann wrote:
+Add the new kernel command line parameter 'dfltcc=' to configure
+s390 zlib hardware support.
+Format: { on | off | def_only | inf_only | always }
+ on:       s390 zlib hardware support for compression on
+           level 1 and decompression (default)
+ off:      No s390 zlib hardware support
+ def_only: s390 zlib hardware support for deflate
+           only (compression on level 1)
+ inf_only: s390 zlib hardware support for inflate
+           only (decompression)
+ always:   Same as 'on' but ignores the selected compression
+           level always using hardware support (used for debugging)
 
-> >       switch (cmd) {
-> > +#ifdef CONFIG_COMPAT_32BIT_TIME
-> > +     case VIDIOC_DQEVENT_TIME32: {
-> > +             struct v4l2_event_time32 ev32;
-> > +             struct v4l2_event *ev = parg;
-> > +
-> > +             memcpy(&ev32, ev, offsetof(struct v4l2_event, timestamp));
-> > +             ev32.timestamp.tv_sec = ev->timestamp.tv_sec;
-> > +             ev32.timestamp.tv_nsec = ev->timestamp.tv_nsec;
-> > +             memcpy(&ev32.id, &ev->id, sizeof(*ev) - offsetof(struct v4l2_event, id));
->
-> This looks dangerous: due to 64-bit alignment requirements the
-> v4l2_event struct may end with a 4-byte hole at the end of the struct,
-> which you do not want to copy to ev32.
->
-> I think it is safer to just copy id and reserved separately:
->
->                 ev32.id = ev->id;
->                 memcpy(ev32.reserved, ev->reserved, sizeof(ev->reserved));
+Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 12 ++++++++++++
+ arch/s390/boot/ipl_parm.c                       | 14 ++++++++++++++
+ arch/s390/include/asm/setup.h                   |  7 +++++++
+ arch/s390/kernel/setup.c                        |  1 +
+ lib/zlib_dfltcc/dfltcc.c                        |  5 ++++-
+ lib/zlib_dfltcc/dfltcc.h                        |  1 +
+ lib/zlib_dfltcc/dfltcc_deflate.c                |  6 ++++++
+ lib/zlib_dfltcc/dfltcc_inflate.c                |  6 ++++++
+ lib/zlib_dfltcc/dfltcc_util.h                   |  5 +++++
+ 9 files changed, 56 insertions(+), 1 deletion(-)
 
-Actually I think it's that's also bad: The padding in *ev must already be
-cleared here (otherwise there is a leak of stack data in the kernel
-already), so  *not* copying the padding requires at least adding a memset
-upfront.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 8dee8f68fe15..953376347a3a 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -836,6 +836,18 @@
+ 			dump out devices still on the deferred probe list after
+ 			retrying.
+ 
++	dfltcc=		[HW,S390]
++			Format: { on | off | def_only | inf_only | always }
++			on:       s390 zlib hardware support for compression on
++			          level 1 and decompression (default)
++			off:      No s390 zlib hardware support
++			def_only: s390 zlib hardware support for deflate
++			          only (compression on level 1)
++			inf_only: s390 zlib hardware support for inflate
++			          only (decompression)
++			always:   Same as 'on' but ignores the selected compression
++			          level always using hardware support (used for debugging)
++
+ 	dhash_entries=	[KNL]
+ 			Set number of hash buckets for dentry cache.
+ 
+diff --git a/arch/s390/boot/ipl_parm.c b/arch/s390/boot/ipl_parm.c
+index 24ef67eb1cef..357adad991d2 100644
+--- a/arch/s390/boot/ipl_parm.c
++++ b/arch/s390/boot/ipl_parm.c
+@@ -14,6 +14,7 @@
+ char __bootdata(early_command_line)[COMMAND_LINE_SIZE];
+ struct ipl_parameter_block __bootdata_preserved(ipl_block);
+ int __bootdata_preserved(ipl_block_valid);
++unsigned int __bootdata_preserved(zlib_dfltcc_support) = ZLIB_DFLTCC_FULL;
+ 
+ unsigned long __bootdata(vmalloc_size) = VMALLOC_DEFAULT_SIZE;
+ unsigned long __bootdata(memory_end);
+@@ -229,6 +230,19 @@ void parse_boot_command_line(void)
+ 		if (!strcmp(param, "vmalloc") && val)
+ 			vmalloc_size = round_up(memparse(val, NULL), PAGE_SIZE);
+ 
++		if (!strcmp(param, "dfltcc")) {
++			if (!strcmp(val, "off"))
++				zlib_dfltcc_support = ZLIB_DFLTCC_DISABLED;
++			else if (!strcmp(val, "on"))
++				zlib_dfltcc_support = ZLIB_DFLTCC_FULL;
++			else if (!strcmp(val, "def_only"))
++				zlib_dfltcc_support = ZLIB_DFLTCC_DEFLATE_ONLY;
++			else if (!strcmp(val, "inf_only"))
++				zlib_dfltcc_support = ZLIB_DFLTCC_INFLATE_ONLY;
++			else if (!strcmp(val, "always"))
++				zlib_dfltcc_support = ZLIB_DFLTCC_FULL_DEBUG;
++		}
++
+ 		if (!strcmp(param, "noexec")) {
+ 			rc = kstrtobool(val, &enabled);
+ 			if (!rc && !enabled)
+diff --git a/arch/s390/include/asm/setup.h b/arch/s390/include/asm/setup.h
+index 6dc6c4fbc8e2..bd2cca097421 100644
+--- a/arch/s390/include/asm/setup.h
++++ b/arch/s390/include/asm/setup.h
+@@ -80,6 +80,13 @@ struct parmarea {
+ 	char command_line[ARCH_COMMAND_LINE_SIZE];	/* 0x10480 */
+ };
+ 
++extern unsigned int zlib_dfltcc_support;
++#define ZLIB_DFLTCC_DISABLED		0
++#define ZLIB_DFLTCC_FULL		1
++#define ZLIB_DFLTCC_DEFLATE_ONLY	2
++#define ZLIB_DFLTCC_INFLATE_ONLY	3
++#define ZLIB_DFLTCC_FULL_DEBUG		4
++
+ extern int noexec_disabled;
+ extern int memory_end_set;
+ extern unsigned long memory_end;
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 3ff291bc63b7..e1a0cf580f6f 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -111,6 +111,7 @@ unsigned long __bootdata_preserved(__etext_dma);
+ unsigned long __bootdata_preserved(__sdma);
+ unsigned long __bootdata_preserved(__edma);
+ unsigned long __bootdata_preserved(__kaslr_offset);
++unsigned int __bootdata_preserved(zlib_dfltcc_support);
+ 
+ unsigned long VMALLOC_START;
+ EXPORT_SYMBOL(VMALLOC_START);
+diff --git a/lib/zlib_dfltcc/dfltcc.c b/lib/zlib_dfltcc/dfltcc.c
+index 7f77e5bb01c6..c30de430b30c 100644
+--- a/lib/zlib_dfltcc/dfltcc.c
++++ b/lib/zlib_dfltcc/dfltcc.c
+@@ -44,7 +44,10 @@ void dfltcc_reset(
+     dfltcc_state->param.nt = 1;
+ 
+     /* Initialize tuning parameters */
+-    dfltcc_state->level_mask = DFLTCC_LEVEL_MASK;
++    if (zlib_dfltcc_support == ZLIB_DFLTCC_FULL_DEBUG)
++        dfltcc_state->level_mask = DFLTCC_LEVEL_MASK_DEBUG;
++    else
++        dfltcc_state->level_mask = DFLTCC_LEVEL_MASK;
+     dfltcc_state->block_size = DFLTCC_BLOCK_SIZE;
+     dfltcc_state->block_threshold = DFLTCC_FIRST_FHT_BLOCK_SIZE;
+     dfltcc_state->dht_threshold = DFLTCC_DHT_MIN_SAMPLE_SIZE;
+diff --git a/lib/zlib_dfltcc/dfltcc.h b/lib/zlib_dfltcc/dfltcc.h
+index 4782c92bb2ff..be70c807b62f 100644
+--- a/lib/zlib_dfltcc/dfltcc.h
++++ b/lib/zlib_dfltcc/dfltcc.h
+@@ -8,6 +8,7 @@
+  * Tuning parameters.
+  */
+ #define DFLTCC_LEVEL_MASK 0x2 /* DFLTCC compression for level 1 only */
++#define DFLTCC_LEVEL_MASK_DEBUG 0x3fe /* DFLTCC compression for all levels */
+ #define DFLTCC_BLOCK_SIZE 1048576
+ #define DFLTCC_FIRST_FHT_BLOCK_SIZE 4096
+ #define DFLTCC_DHT_MIN_SAMPLE_SIZE 4096
+diff --git a/lib/zlib_dfltcc/dfltcc_deflate.c b/lib/zlib_dfltcc/dfltcc_deflate.c
+index b9d16917c30a..aa4539f5c071 100644
+--- a/lib/zlib_dfltcc/dfltcc_deflate.c
++++ b/lib/zlib_dfltcc/dfltcc_deflate.c
+@@ -3,6 +3,7 @@
+ #include "../zlib_deflate/defutil.h"
+ #include "dfltcc_util.h"
+ #include "dfltcc.h"
++#include <asm/setup.h>
+ #include <linux/zutil.h>
+ 
+ /*
+@@ -15,6 +16,11 @@ int dfltcc_can_deflate(
+     deflate_state *state = (deflate_state *)strm->state;
+     struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
+ 
++    /* Check for kernel dfltcc command line parameter */
++    if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED ||
++            zlib_dfltcc_support == ZLIB_DFLTCC_INFLATE_ONLY)
++        return 0;
++
+     /* Unsupported compression settings */
+     if (!dfltcc_are_params_ok(state->level, state->w_bits, state->strategy,
+                               dfltcc_state->level_mask))
+diff --git a/lib/zlib_dfltcc/dfltcc_inflate.c b/lib/zlib_dfltcc/dfltcc_inflate.c
+index 12a93a06bd61..aa9ef23474df 100644
+--- a/lib/zlib_dfltcc/dfltcc_inflate.c
++++ b/lib/zlib_dfltcc/dfltcc_inflate.c
+@@ -3,6 +3,7 @@
+ #include "../zlib_inflate/inflate.h"
+ #include "dfltcc_util.h"
+ #include "dfltcc.h"
++#include <asm/setup.h>
+ #include <linux/zutil.h>
+ 
+ /*
+@@ -15,6 +16,11 @@ int dfltcc_can_inflate(
+     struct inflate_state *state = (struct inflate_state *)strm->state;
+     struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
+ 
++    /* Check for kernel dfltcc command line parameter */
++    if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED ||
++            zlib_dfltcc_support == ZLIB_DFLTCC_DEFLATE_ONLY)
++        return 0;
++
+     /* Unsupported compression settings */
+     if (state->wbits != HB_BITS)
+         return 0;
+diff --git a/lib/zlib_dfltcc/dfltcc_util.h b/lib/zlib_dfltcc/dfltcc_util.h
+index 1930b43c1915..43419d7d181b 100644
+--- a/lib/zlib_dfltcc/dfltcc_util.h
++++ b/lib/zlib_dfltcc/dfltcc_util.h
+@@ -3,6 +3,7 @@
+ #define DFLTCC_UTIL_H
+ 
+ #include <linux/zutil.h>
++#include <asm/setup.h>
+ 
+ /*
+  * C wrapper for the DEFLATE CONVERSION CALL instruction.
+@@ -104,6 +105,10 @@ static inline int is_dfltcc_enabled(void)
+     uint64_t facilities[(DFLTCC_FACILITY / 64) + 1];
+     register char r0 __asm__("r0");
+ 
++    /* Check for kernel dfltcc command line parameter */
++    if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED)
++        return 0;
++
+     memset(facilities, 0, sizeof(facilities));
+     r0 = sizeof(facilities) / sizeof(facilities[0]) - 1;
+     __asm__ volatile("stfle %[facilities]\n"
+-- 
+2.17.1
 
-I would do the per-member copy like I did for v4l2_buffer in my
-other reply:
-
-                struct v4l2_event *ev = parg;
-                struct v4l2_event_time32 ev32 = {
-                        .type           = ev->type,
-                        .pending        = ev->pending,
-                        .sequence       = ev->sequence,
-                        .timestamp.tv_sec  = ev->timestamp.tv_sec,
-                        .timestamp.tv_nsec = ev->timestamp.tv_nsec,
-                        .id             = ev->id,
-                };
-
-                memcpy(ev32.u, ev->u, sizeof(ev->u));
-                memcpy(ev32.reserved, ev->reserved, sizeof(ev->reserved));
-
-                if (copy_to_user(arg, &ev32, sizeof(ev32)))
-                        return -EFAULT;
-
-Unfortunately this is a little uglier because it still requires the two
-memcpy() for the arrays, but I think it's good enough.
-
-Any other ideas? Let me know if I should do a memset()
-plus individual member copy instead.
-> > +             if (!(sd->flags & V4L2_SUBDEV_FL_HAS_EVENTS))
-> > +                     return -ENOIOCTLCMD;
-> > +
-> > +             rval = v4l2_event_dequeue(vfh, &ev, file->f_flags & O_NONBLOCK);
-> > +
-> > +             memcpy(ev32, &ev, offsetof(struct v4l2_event, timestamp));
-> > +             ev32->timestamp.tv_sec = ev.timestamp.tv_sec;
-> > +             ev32->timestamp.tv_nsec = ev.timestamp.tv_nsec;
-> > +             memcpy(&ev32->id, &ev.id,
-> > +                    sizeof(ev) - offsetof(struct v4l2_event, id));
->
-> Ditto.
-
-Using the corresponding code here as well.
-
-> > +
-> >  #define V4L2_EVENT_SUB_FL_SEND_INITIAL               (1 << 0)
-> >  #define V4L2_EVENT_SUB_FL_ALLOW_FEEDBACK     (1 << 1)
-> >
-> > @@ -2486,6 +2515,7 @@ struct v4l2_create_buffers {
-> >  #define      VIDIOC_S_DV_TIMINGS     _IOWR('V', 87, struct v4l2_dv_timings)
-> >  #define      VIDIOC_G_DV_TIMINGS     _IOWR('V', 88, struct v4l2_dv_timings)
-> >  #define      VIDIOC_DQEVENT           _IOR('V', 89, struct v4l2_event)
-> > +#define      VIDIOC_DQEVENT_TIME32    _IOR('V', 89, struct v4l2_event_time32)
->
-> Shouldn't this be under #ifdef __KERNEL__?
->
-> And should this be in the public header at all? media/v4l2-ioctl.h might be a better
-> place.
-
-Done.
-
-       Arnd
