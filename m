@@ -2,158 +2,125 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8683FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7402CC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571D5207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C26207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 20:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKmqPxE4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kYQJO1E4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfKZUGb (ORCPT
+        id S1727072AbfKZUHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:06:31 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51258 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfKZUGb (ORCPT
+        Tue, 26 Nov 2019 15:07:33 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44821 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfKZUHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 15:06:31 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g206so4606512wme.1;
-        Tue, 26 Nov 2019 12:06:29 -0800 (PST)
+        Tue, 26 Nov 2019 15:07:32 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e6so9522632pgi.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 12:07:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+b+NNqbOQ+HR3F7WJkh1g/uLtoPIfDf6gFrchEKK20Y=;
-        b=aKmqPxE4zIAdduzRXnIUY21W9nSOe8k6KRd48MpoAU20mxNwrJXZNK4vEAEFOGGeQh
-         WW+Ylag3O6N/yRHqMWnFMEGopbNbN8SkOeM+UpM4vrWMXtn6qi8irrbTEAPx62Ad+PGp
-         amu8scDh/uVEQH2bgfSiDFap4zQnJo24z4ib0dwWMcO7shGwNMhW5Up+u/+Bwo/FBWrB
-         BuQsLzmWau0FzArJ2NZSvboeLRnGXVwBgS0OfvMo9GcmeY3XwnAJekXoInVgZGjEj0Lj
-         ElNUAKiPjzARWuXOOk7PbMY2mxU93uZgwUl/vf2qEZWhknHcvy0BnrQ1BNgNaqLDJTu4
-         auzw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a6GxmKDvAw1vLMbaYf9F6fSma425avbz24o+1odQiW8=;
+        b=kYQJO1E4W2uuHPL5Xt55wCQ3MWajDBCrm0jA7QZ4dZUbiy0qykLO8o+veIsaLEoxXt
+         pfjt817CQHNp6x+6IYPeeQmlFOtcfeIKHgQNugJd3twsD93I50yh8E0fYn0cLrJ1rlPn
+         sooicOrr2ZAZmlh8o1KYEIqSBd2YEObh3DNg304EXxtvw3bYk3FywkGYpp3pFvdooshg
+         TDdpxONLvxs5yE9jjCutSaWrN4ZdvyZgBr2G6TI/LMbhmdftq3K+5rpVuCHgb3pzkqcF
+         iICNCzYY5a3tDZpRBnNgpXtApSnFF15lDLdvJwSQ9aZ/NBFBxA/NMHBa+gnXAFtkRS61
+         AuMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+b+NNqbOQ+HR3F7WJkh1g/uLtoPIfDf6gFrchEKK20Y=;
-        b=Hhyp0VLTAVD0bVO7IakCg44QN7rv44Lo/n9dMpvmgu1a3ZsZh18XJwPMAI3uvVEZ32
-         LOAdRBkZi+dZks14IsLtEOqzIw5WivJEJa4gQT5kNbV6OeBvroEm7g5mfcR3/JyPKee3
-         m8vCjq4UrrHEmR4i5jprQIfxxW/q11Q+uknyFsFXH/6ZMIm95zPUmVqv+tuyS9cU6I+G
-         HwdDLeRE4cAP2QBeA2FfU1/zX1xO2Fb0Bdy5UrJ8OxzYZzOTzsq13zbEh/dhilERpeOI
-         jJsepg/0Nla6t1lo0dNJDvkLjshau4tr1bL6KKovtYGhQ6j+1gqqQTbmXI7XTOH/34Rb
-         E1aQ==
-X-Gm-Message-State: APjAAAWnQrQxoB8bgblN+d/NIbD+/hum8XG/hZb2D3hKINAL5XlZvTgz
-        Ml3fVNIz5W5FiN9P12Z7BtouvLCa
-X-Google-Smtp-Source: APXvYqyPpnIXTMhVWKAsXk68HQq7lXaM4TgV4PwH/MbLYfdIOlPwyV43g2zR3Y6A4iXqEzbNrxPzgA==
-X-Received: by 2002:a1c:2846:: with SMTP id o67mr791140wmo.7.1574798788866;
-        Tue, 26 Nov 2019 12:06:28 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a03f:404e:f500:ac14:4c10:6104:457f])
-        by smtp.gmail.com with ESMTPSA id b3sm4134274wmj.44.2019.11.26.12.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 12:06:27 -0800 (PST)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Dennis Zhou <dennis@kernel.org>
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] fix __percpu annotation in asm-generic
-Date:   Tue, 26 Nov 2019 21:06:19 +0100
-Message-Id: <20191126200619.63348-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a6GxmKDvAw1vLMbaYf9F6fSma425avbz24o+1odQiW8=;
+        b=WTGa+gZpKmcyh6MVmnoV1v8nniJsxLfGbFp1p3Ron2HzMQwoY8uDTHbQ13ZYujfxAS
+         IhM7kWKL/FNPgD5jSJnxio6h8eYzqgBba3y/uCUu9tnHqdzQ3CLjRF/Si0Ym1jeQC/C8
+         sns+umfP6NJTQtkeTQE7Oa7wkP08Dyh6n/LXHfE8OZvj7ca61EOnwfc/5O4TW1uOrnF/
+         Fngv9hdmtZ2dF/ccjnet9MbtfsbqfnjOyueeEcBOE7YNHnXAFjJ0o9Oiia8e25JGotn+
+         8tdsvyl4vq5Lu2gTgbnyKad8ZukVXvopnjsUkMV+VWJi3zoSbLydnlQAH6JaPumR3iqq
+         xcFA==
+X-Gm-Message-State: APjAAAXxzZef/GNJkLbnZVyrybswbK7niqJe0vYti0rGV1zvlJUQc/Ku
+        +Hc/8N2ixOebq0gpl70ngxSIEXRKEtHJVTb3k+nIlA==
+X-Google-Smtp-Source: APXvYqzhtGrx/0AcsUJbNg7CQUdEUUrMdQwSTawPgXjZzKBWJVP5yRg+BPnmr84AYEutaBxY/BaDAxaZQcbnb3V98uw=
+X-Received: by 2002:a63:4721:: with SMTP id u33mr274648pga.159.1574798851462;
+ Tue, 26 Nov 2019 12:07:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191126193313.44181-1-heidifahim@google.com>
+In-Reply-To: <20191126193313.44181-1-heidifahim@google.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 26 Nov 2019 12:07:20 -0800
+Message-ID: <CAFd5g450f1Ds1oeEKoVxmcA1Demxx3jDH5QJ4vpmk8JpkhgDZA@mail.gmail.com>
+Subject: Re: [PATCH] kunit: test: Improve error messages for kunit_tool when
+ kunitconfig is invalid
+To:     Heidi Fahim <heidifahim@google.com>,
+        David Gow <davidgow@google.com>
+Cc:     shuah <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic implementation of raw_cpu_generic_add_return() is:
++David Gow
 
-        #define raw_cpu_generic_add_return(pcp, val)            \
-        ({                                                      \
-                typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));       \
-                                                                \
-                *__p += val;                                    \
-                *__p;                                           \
-        })
+On Tue, Nov 26, 2019 at 11:33 AM 'Heidi Fahim' via KUnit Development
+<kunit-dev@googlegroups.com> wrote:
+>
+> Previous error message for invalid kunitconfig was vague. Added to it so
+> that it lists invalid fields and prompts for them to be removed.  Added
+> validate_config function returning whether or not this kconfig is valid.
+>
+> Signed-off-by: Heidi Fahim <heidifahim@google.com>
 
-where the 'pcp' argument is a __percpu lvalue.
-There, the variable '__p' is declared as a __percpu pointer
-the type of the address of 'pcp') but:
-1) the value assigned to it, the return value of raw_cpu_ptr(), is
-   a plain (__kernel) pointer, not a __percpu one.
-2) the variable is dereferenced just after while a __percpu pointer
-   is implicitly __noderef.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
 
-So, fix the declaration of the 'pcp' variable to its correct type:
-the plain (non-percpu) pointer corresponding to its address.
-Same for raw_cpu_generic_xchg(), raw_cpu_generic_cmpxchg() &
-raw_cpu_generic_cmpxchg_double().
+Looks good to me other than one minor nit below.
 
-This remove 209 warnings on ARM, 460 on x86 & 2600+ on ppc64.
+> ---
+>  tools/testing/kunit/kunit_kernel.py | 27 +++++++++++++++------------
+>  1 file changed, 15 insertions(+), 12 deletions(-)
+>
+> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+> index bf3876835331..010d3f5030d2 100644
+> --- a/tools/testing/kunit/kunit_kernel.py
+> +++ b/tools/testing/kunit/kunit_kernel.py
+> @@ -93,6 +93,19 @@ class LinuxSourceTree(object):
+>                         return False
+>                 return True
+>
+> +       def validate_config(self, build_dir):
+> +               kconfig_path = get_kconfig_path(build_dir)
+> +               validated_kconfig = kunit_config.Kconfig()
+> +               validated_kconfig.read_from_file(kconfig_path)
+> +               if not self._kconfig.is_subset_of(validated_kconfig):
+> +                       invalid = self._kconfig.entries() - validated_kconfig.entries()
+> +                       message = 'Provided Kconfig is not contained in validated .config. Invalid fields found in kunitconfig: %s' % (
 
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- include/asm-generic/percpu.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+nit: Rather than "Invalid fields found in kunitconfig", how about
+something like "Following fields found in kunitconfig, but not
+.config:"?
 
-diff --git a/include/asm-generic/percpu.h b/include/asm-generic/percpu.h
-index c2de013b2cf4..4ae5f89a0e61 100644
---- a/include/asm-generic/percpu.h
-+++ b/include/asm-generic/percpu.h
-@@ -74,7 +74,7 @@ do {									\
- 
- #define raw_cpu_generic_add_return(pcp, val)				\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) __kernel __force *__p = raw_cpu_ptr(&(pcp));	\
- 									\
- 	*__p += val;							\
- 	*__p;								\
-@@ -82,7 +82,7 @@ do {									\
- 
- #define raw_cpu_generic_xchg(pcp, nval)					\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) __kernel __force *__p = raw_cpu_ptr(&(pcp));	\
- 	typeof(pcp) __ret;						\
- 	__ret = *__p;							\
- 	*__p = nval;							\
-@@ -91,7 +91,7 @@ do {									\
- 
- #define raw_cpu_generic_cmpxchg(pcp, oval, nval)			\
- ({									\
--	typeof(&(pcp)) __p = raw_cpu_ptr(&(pcp));			\
-+	typeof(pcp) __kernel __force *__p = raw_cpu_ptr(&(pcp));	\
- 	typeof(pcp) __ret;						\
- 	__ret = *__p;							\
- 	if (__ret == (oval))						\
-@@ -101,8 +101,8 @@ do {									\
- 
- #define raw_cpu_generic_cmpxchg_double(pcp1, pcp2, oval1, oval2, nval1, nval2) \
- ({									\
--	typeof(&(pcp1)) __p1 = raw_cpu_ptr(&(pcp1));			\
--	typeof(&(pcp2)) __p2 = raw_cpu_ptr(&(pcp2));			\
-+	typeof(pcp1) __kernel __force *__p1 = raw_cpu_ptr(&(pcp1));	\
-+	typeof(pcp2) __kernel __force *__p2 = raw_cpu_ptr(&(pcp2));	\
- 	int __ret = 0;							\
- 	if (*__p1 == (oval1) && *__p2  == (oval2)) {			\
- 		*__p1 = nval1;						\
--- 
-2.24.0
+> +                               ', '.join([str(e) for e in invalid])
+> +                       )
+> +                       logging.error(message)
+> +                       return False
+> +               return True
+> +
+>         def build_config(self, build_dir):
+>                 kconfig_path = get_kconfig_path(build_dir)
+>                 if build_dir and not os.path.exists(build_dir):
 
+Thanks for the patch!
