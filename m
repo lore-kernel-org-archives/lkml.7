@@ -2,115 +2,121 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E872C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB062068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="tfZz/hUh";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="WU8WB3In"
+	by mail.kernel.org (Postfix) with ESMTP id 255082068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 01:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574733546;
+	bh=LHUQZ8GAjtzwzQUglsN7PFMkeMULtqDSaVITo0dnFik=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0YtWL4vN/htWLx0COf/xmbHRsrqtBj170hN1S4ErVY/JqxhOy+k3fAoi/1nHtzPVW
+	 TBxi2lucBbhcTUu4RULy1TTafDvOuTpFZBS6dMqmD8+y8o2Soz/UzLZR6ghxFWWb5n
+	 3LPiRZwMXu/KSKjf9kmIay5EeWFCm6PtulvTIclU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfKZB4K (ORCPT
+        id S1727277AbfKZB7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 20:56:10 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:38904 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfKZB4K (ORCPT
+        Mon, 25 Nov 2019 20:59:05 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44833 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbfKZB7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 20:56:10 -0500
-X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 20:56:09 EST
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47MRcx4JGHzQlC4;
-        Tue, 26 Nov 2019 02:48:17 +0100 (CET)
-Authentication-Results: gerste.heinlein-support.de (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mailbox.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1574732895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=3vGTyx4hrjcs+n5a2EyZnoDC1MYkgE9tWQx/rXiB5Jg=;
-        b=tfZz/hUhECWi98Ur/t45TDfhcHtd8n7kweUxvyoG2Hxe3iuq497B9zDKgr9yZ8tVD612U6
-        c3e9gO4VrJ9fo+NcjBEKMajYlRKbpLS0l6QCs9Wu15ZFkAMSQTf22UpziRbfhaBI72nyEx
-        bVMOykVbdveeIRkiJIwYMGb3aWQHDFtXSg8TzyCGCjQXYCqE//+chroTwyufwWR+fhD1HO
-        6+F+a7GdqRNWuwQKFVgKreWxYCYH11vZ+e+PyE+AJy4ounzlS+/jD1x+FhSOIyBOJMw5Gu
-        FHFOfpLDdjS2EO++HqpfoyYSjWXkJ2KTqLrHEOSfH8Of84LfTQqawP2oCf+jYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-transfer-encoding:mime-version:message-id:date:date
-        :subject:subject:from:from:received; s=mail20150812; t=
-        1574732893; bh=PWOAFg4hdwumD5Wgmmm4vIukmBf1tHCRGCyJGHCyzX0=; b=W
-        U8WB3InnQZTnesO09wYOBTq74yclueWZR2ykRstZ+ZFCI8FX5d/NIV+cdZMxA+sU
-        BM67mm2e9fXfYMbTYPyYLp6KEqTI7SRnLzDZ0YNjG/8DCQVnpKwYTU+mecJk5OSk
-        vxEiOzmORXnym1Wxj/OI8NehWUjv9eVHU3A+oYRnIJo3EACTWS+S4J4OY8U2HH/u
-        hq3MaNTwXvVT4PYAypu6ZjzDATFK929epNUX1+AeA515Mj5rin9lokPcjdDpUvxD
-        czLTNYcOGKi9uYLStwNKKaZvJFYe5xH8+esXXAXsDW+sj0/VxEYKH1EOzKpuLqsi
-        wQfAZOHzSoqBWLqaR1GUg==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id EnMWbBeg9YEO; Tue, 26 Nov 2019 02:48:13 +0100 (CET)
-From:   Erhard Furtner <erhard_f@mailbox.org>
-To:     linuxppc-dev@ozlabs.org
-Cc:     robh+dt@kernel.org, frowand.list@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Erhard Furtner <erhard_f@mailbox.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: [PATCH v2] of: unittest: fix memory leak in attach_node_and_children
-Date:   Tue, 26 Nov 2019 02:48:04 +0100
-Message-Id: <20191126014804.28267-1-erhard_f@mailbox.org>
+        Mon, 25 Nov 2019 20:59:04 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so11615475lfa.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 17:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dtgS4AGmvnEOifgu2Dt4VbOy1bsdf4mvEndYAr4ZPQc=;
+        b=Xcu+cb5O2TRvEmYjhRf68ZKdECWrEP4UqOWaPs6ps+DSWuyv4onfE367judclAVziS
+         +C2IgAqMN/5ZRCLuU/DyFk9kn0jx94QeB0m6YUmx8qcLUXgMFhZqfYnwHO4pU0q8eSri
+         u5hc3Hq2+9rvh6b1Ao1AXld8Rpmhd4L7sDx2Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dtgS4AGmvnEOifgu2Dt4VbOy1bsdf4mvEndYAr4ZPQc=;
+        b=T8mZVB2UavjFQi0jBRiCb7PjquItnOdAHPOPGEZSW0bLso0rU3Qwxk6Npl0KkjhigZ
+         2h1IfYeGLfu5IofA7vVgq3nQ7aCvdwB9n1QaefeGYf4YdusP37dLCRWz8BfjojZrFTLo
+         sgk5hfbZep1Ya2gTcY7vhkKfRogEkdh4RCPWy0FWBoaeiRBdhTw5hlpyfOCpAtllpG6W
+         Br5G96Z+ICKqkVoHAZoSpGvCpes5A7X32j6YxqQ1MSYF5goFxoT+1CxiWTgagHjcdY/J
+         2eGPeimB/yAHrzQ7RWNF/ue/nR8ovflrgX/OmYLC6SswbIQp3TIKtGzpvoaaM8sgQIkS
+         DkDA==
+X-Gm-Message-State: APjAAAVoMQxserb3ZaucBuVT7JJbNzIDZbKrr1xeqtXgHDtkmHjB5pnn
+        P2/REECNXDz+dAvbnNfJVY5JldwuFcQ=
+X-Google-Smtp-Source: APXvYqyNQNLFsemr/IJ1LP/vtJyzj4N/vIkHrtJXElDiiU0es+iKNIitrCXTyRKX/oUyRPjwMNYnww==
+X-Received: by 2002:a05:6512:4c1:: with SMTP id w1mr22696691lfq.141.1574733542332;
+        Mon, 25 Nov 2019 17:59:02 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id g11sm4418497lfb.94.2019.11.25.17.59.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2019 17:59:01 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id t5so18258512ljk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 17:59:00 -0800 (PST)
+X-Received: by 2002:a2e:2c19:: with SMTP id s25mr24510476ljs.26.1574733540177;
+ Mon, 25 Nov 2019 17:59:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <alpine.DEB.2.21.1911251322160.2408@hp-x360n> <CAHk-=wj_nbDN3piDJBEteUrjyrZCTA+CCk15NfV=5D2xFfGJGw@mail.gmail.com>
+In-Reply-To: <CAHk-=wj_nbDN3piDJBEteUrjyrZCTA+CCk15NfV=5D2xFfGJGw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 25 Nov 2019 17:58:43 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whn2Dp44tjUpLo9ogs=p-v-Vn7c2Xdo4p+2V=d1hTaiuA@mail.gmail.com>
+Message-ID: <CAHk-=whn2Dp44tjUpLo9ogs=p-v-Vn7c2Xdo4p+2V=d1hTaiuA@mail.gmail.com>
+Subject: Re: Commit 0be0ee71 ("fs: properly and reliably lock f_pos in
+ fdget_pos()") breaking userspace
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In attach_node_and_children memory is allocated for full_name via
-kasprintf. If the condition of the 1st if is not met the function
-returns early without freeing the memory. Add a kfree() to fix that.
+On Mon, Nov 25, 2019 at 2:55 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Anyway, here's a TOTALLY UNTESTED patch that may help pinpoint which
+> thing it is that causes issues.
+>
+> It might also be so noisy as to be useless, I didn't think it through
+> a lot.
 
-This has been detected with kmemleak:
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
+Yeah, I ended up testing it between merges, and it points out a lot of
+files. Too many to usefully narrow down which one then might cause
+problems for you.
 
-It looks like the leak was introduced by this commit:
-Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
+The main cause of that is that it will complain for _every_ O_PATH
+open, because those use the 'empty_fops' and don't actually allow any
+operations at all (neither read/write nor llseek). We could have
+marked those O_STREAM, since they can't be used for any seeking
+operations.
 
-Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
----
-Changes in v2:
-  - Make the commit message more clearer.
+So to get rid of at least _that_ endless noise, add this to the patch:
 
- drivers/of/unittest.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+  --- a/fs/open.c
+  +++ b/fs/open.c
+  @@ -748,7 +748,7 @@ static int do_dentry_open(struct file *f,
+          f->f_wb_err = filemap_sample_wb_err(f->f_mapping);
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 92e895d86458..ca7823eef2b4 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1146,8 +1146,10 @@ static void attach_node_and_children(struct device_node *np)
- 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
- 
- 	if (!strcmp(full_name, "/__local_fixups__") ||
--	    !strcmp(full_name, "/__fixups__"))
-+	    !strcmp(full_name, "/__fixups__")) {
-+		kfree(full_name);
- 		return;
-+	}
- 
- 	dup = of_find_node_by_path(full_name);
- 	kfree(full_name);
--- 
-2.23.0
+          if (unlikely(f->f_flags & O_PATH)) {
+  -               f->f_mode = FMODE_PATH | FMODE_OPENED;
+  +               f->f_mode = FMODE_PATH | FMODE_OPENED | FMODE_STREAM;
+                  f->f_op = &empty_fops;
+                  return 0;
+          }
 
+the above is entirely whitespace-damaged, but you can see what it's
+doing. That should cut down on all the noise generated by O_PATH
+opens.
+
+It might still be a bit noisy even with the above, but I think it will
+at least be better.
+
+              Linus
