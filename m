@@ -7,143 +7,116 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A68C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA5CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4686C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A11206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 12:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="e0WOCwbd"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="F+CezjWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfKZMgX (ORCPT
+        id S1728541AbfKZMg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 07:36:23 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:44208 "EHLO pegase1.c-s.fr"
+        Tue, 26 Nov 2019 07:36:26 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:25835 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbfKZMgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 07:36:16 -0500
+        id S1728469AbfKZMgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 07:36:17 -0500
 Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47Mk0Y14sLz9v0G6;
-        Tue, 26 Nov 2019 13:36:13 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47Mk0Z3Hlmz9v0G8;
+        Tue, 26 Nov 2019 13:36:14 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=e0WOCwbd; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=F+CezjWa; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tm_ptMGOF88o; Tue, 26 Nov 2019 13:36:13 +0100 (CET)
+        with ESMTP id 5NS0X-0jvC8c; Tue, 26 Nov 2019 13:36:14 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47Mk0Y02Dyz9v0G3;
-        Tue, 26 Nov 2019 13:36:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574771773; bh=8QgIQ71YTNVzSY6FhAVflXh/3XEeMxBtSGOEfNUDtow=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=e0WOCwbdcMKnp4QyKaXtf8ty1cyFNEcqDCIkIA0nbLxPTwoRgnJtDs5jOPs8m+QHk
-         iAUEpz7OWL0L1tm0JeoWXINECE8OTSSrVmyXo4HFErZMTH3AGt10xVjB5rzZVIn/Zp
-         W4BM8NfaeZw5H8sU9v6J3Q6onewVnH+omjuw09+w=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F4738B7FC;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Mk0Z2F25z9v0G3;
         Tue, 26 Nov 2019 13:36:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1574771774; bh=SuQxAQ4l/1mHGi45aVKRS3CT3WsuP/jKyi3kssGze6g=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=F+CezjWaWcLVWwfzSbZHbxkNkW2eY/uQkx1c6+/ORauptQeeDq/bsmg1Xi1F4jEQ+
+         YskD5wLgPMujZJMHQFfDf0v1sbPXZw9UF0LDlh/NdqEE4uJpVhhkawjz2Jm/TqJBEd
+         V+UuRUJpq1oREQ/aC85ATds8+wi8jrcWF55Ee2tw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D43B8B7FC;
+        Tue, 26 Nov 2019 13:36:15 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id b0QeyJu1o0UF; Tue, 26 Nov 2019 13:36:14 +0100 (CET)
+        with ESMTP id 4rld6BwlFtzU; Tue, 26 Nov 2019 13:36:15 +0100 (CET)
 Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 197AE8B771;
-        Tue, 26 Nov 2019 13:36:14 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6526D8B771;
+        Tue, 26 Nov 2019 13:36:15 +0100 (CET)
 Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id D9EED6B76A; Tue, 26 Nov 2019 12:36:13 +0000 (UTC)
-Message-Id: <53512a73668924639e88b3bf1cef8d5b115aa9ca.1574771541.git.christophe.leroy@c-s.fr>
+        id EA2866B76A; Tue, 26 Nov 2019 12:36:14 +0000 (UTC)
+Message-Id: <c893bfdf0ff385427f8013a2faa2643f6a7df6c7.1574771541.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1574771539.git.christophe.leroy@c-s.fr>
 References: <cover.1574771539.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v4 10/16] powerpc/8xx: drop exception entries for non-existing
- exceptions
+Subject: [PATCH v4 11/16] powerpc/8xx: move DataStoreTLBMiss perf handler
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org
-Date:   Tue, 26 Nov 2019 12:36:13 +0000 (UTC)
+Date:   Tue, 26 Nov 2019 12:36:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-head_8xx.S has entries for all exceptions from 0x100 to 0x1f00.
-Several of them do not exist and are never generated by the 8xx
-in accordance with the documentation.
-
-Remove those entry points to make some room for future growing
-exception code.
+Move DataStoreTLBMiss perf handler in order to cope
+with future growing exception prolog.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/head_8xx.S | 29 -----------------------------
- 1 file changed, 29 deletions(-)
+ arch/powerpc/kernel/head_8xx.S | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 3de9c5f1746c..5aa63693f790 100644
+index 5aa63693f790..1e718e47fe3c 100644
 --- a/arch/powerpc/kernel/head_8xx.S
 +++ b/arch/powerpc/kernel/head_8xx.S
-@@ -134,18 +134,6 @@ MachineCheck:
- 	addi r3,r1,STACK_FRAME_OVERHEAD
- 	EXC_XFER_STD(0x200, machine_check_exception)
+@@ -166,18 +166,6 @@ SystemCall:
+  */
+ 	EXCEPTION(0x1000, SoftEmu, program_check_exception, EXC_XFER_STD)
  
--/* Data access exception.
-- * This is "never generated" by the MPC8xx.
-- */
--	. = 0x300
--DataAccess:
+-/* Called from DataStoreTLBMiss when perf TLB misses events are activated */
+-#ifdef CONFIG_PERF_EVENTS
+-	patch_site	0f, patch__dtlbmiss_perf
+-0:	lwz	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
+-	addi	r10, r10, 1
+-	stw	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
+-	mfspr	r10, SPRN_DAR
+-	mtspr	SPRN_DAR, r11	/* Tag DAR */
+-	mfspr	r11, SPRN_M_TW
+-	rfi
+-#endif
 -
--/* Instruction access exception.
-- * This is "never generated" by the MPC8xx.
-- */
--	. = 0x400
--InstructionAccess:
--
- /* External interrupt */
- 	EXCEPTION(0x500, HardwareInterrupt, do_IRQ, EXC_XFER_LITE)
- 
-@@ -162,16 +150,9 @@ Alignment:
- /* Program check exception */
- 	EXCEPTION(0x700, ProgramCheck, program_check_exception, EXC_XFER_STD)
- 
--/* No FPU on MPC8xx.  This exception is not supposed to happen.
--*/
--	EXCEPTION(0x800, FPUnavailable, unknown_exception, EXC_XFER_STD)
--
- /* Decrementer */
- 	EXCEPTION(0x900, Decrementer, timer_interrupt, EXC_XFER_LITE)
- 
--	EXCEPTION(0xa00, Trap_0a, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0xb00, Trap_0b, unknown_exception, EXC_XFER_STD)
--
- /* System call */
- 	. = 0xc00
- SystemCall:
-@@ -179,8 +160,6 @@ SystemCall:
- 
- /* Single step - not used on 601 */
- 	EXCEPTION(0xd00, SingleStep, single_step_exception, EXC_XFER_STD)
--	EXCEPTION(0xe00, Trap_0e, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0xf00, Trap_0f, unknown_exception, EXC_XFER_STD)
- 
- /* On the MPC8xx, this is a software emulation interrupt.  It occurs
-  * for all unimplemented and illegal instructions.
-@@ -507,14 +486,6 @@ DARFixed:/* Return from dcbx instruction bug workaround */
+ 	. = 0x1100
+ /*
+  * For the MPC8xx, this is a software tablewalk to load the instruction
+@@ -486,6 +474,18 @@ DARFixed:/* Return from dcbx instruction bug workaround */
  	/* 0x300 is DataAccess exception, needed by bad_page_fault() */
  	EXC_XFER_LITE(0x300, handle_page_fault)
  
--	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0x1600, Trap_16, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0x1700, Trap_17, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0x1a00, Trap_1a, unknown_exception, EXC_XFER_STD)
--	EXCEPTION(0x1b00, Trap_1b, unknown_exception, EXC_XFER_STD)
--
++/* Called from DataStoreTLBMiss when perf TLB misses events are activated */
++#ifdef CONFIG_PERF_EVENTS
++	patch_site	0f, patch__dtlbmiss_perf
++0:	lwz	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
++	addi	r10, r10, 1
++	stw	r10, (dtlb_miss_counter - PAGE_OFFSET)@l(0)
++	mfspr	r10, SPRN_DAR
++	mtspr	SPRN_DAR, r11	/* Tag DAR */
++	mfspr	r11, SPRN_M_TW
++	rfi
++#endif
++
  /* On the MPC8xx, these next four traps are used for development
   * support of breakpoints and such.  Someday I will get around to
   * using them.
