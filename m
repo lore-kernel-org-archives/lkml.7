@@ -2,63 +2,185 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A18C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5075C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52192084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811282084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574804244;
+	bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=h7dy+zEbFzGQt/wQYvxohRSPlI4ViS1DYDnxfCRyBRfOaBGamcd2Y4pgFPZw7E0XR
+	 heVx+P7EeuEd4H3690TaPbyHqbc+gsGq5PLH3ySdFxupQmu4126lsFqEAHYOteeD5W
+	 RuYSxe6QLI9uO3/H1wn0s28uskapJEbIQ2pI2iRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfKZVhL (ORCPT
+        id S1727040AbfKZVhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 16:37:11 -0500
-Received: from ms.lwn.net ([45.79.88.28]:37048 "EHLO ms.lwn.net"
+        Tue, 26 Nov 2019 16:37:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfKZVhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 16:37:10 -0500
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1726036AbfKZVhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:37:23 -0500
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D3A9F2E7;
-        Tue, 26 Nov 2019 21:37:09 +0000 (UTC)
-Date:   Tue, 26 Nov 2019 14:37:08 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Ilias Tsitsimpis <iliastsi@arrikto.com>,
-        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: docs: device-mapper: Add dm-clone to documentation index
-Message-ID: <20191126143708.1921e442@lwn.net>
-In-Reply-To: <20191126201613.GA3750@redhat.com>
-References: <20191126185627.970-1-geert+renesas@glider.be>
-        <20191126201613.GA3750@redhat.com>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B0120835;
+        Tue, 26 Nov 2019 21:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574804242;
+        bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=drZqipwPeS+niJFsQ0qSF6WD0LHQSIqKXEeHnUMsVLnVc7MNuISEmOaQH+sDLt2g/
+         zMyTvJUM46sxgLF7lkaIhja1ULdda7AL64iLWUwrXiH0nczywhEf6oFTFeuLNA5HY6
+         hlclqFVo9MpY/gYtPhZbpczXork0in44N12KPgbI=
+Date:   Tue, 26 Nov 2019 15:37:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20191126213718.GA185422@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122104505.8986-4-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Nov 2019 15:16:13 -0500
-Mike Snitzer <snitzer@redhat.com> wrote:
+On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
 
-> I already staged this for 5.5 here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.5&id=484e0d2b11e1fdd0d17702b282eb2ed56148385f
-> 
-> But I don't plan to send to Linus for a week or 2...
-> 
-> If Jon and/or someone else would like to send it along before then
-> that'd be fine with me.
+> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
+> +{
+> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+> +	u32 val, tmp;
+> +
+> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
+> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
+> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
+> +			/* clear any stale PEX_RST interrupt */
+> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
+> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +				return IRQ_HANDLED;
+> +			}
+> +			wake_up(&pcie->wq);
+> +		}
+> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
+> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
+> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
+> +				dev_info(pcie->dev, "Link is up with Host\n");
+> +				dw_pcie_ep_linkup(ep);
+> +			}
+> +		}
+> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
 
-It seems like things are well in hand to me, no need to do anything else.
+Is it really the case that only one of
+APPL_INTR_STATUS_L0_LINK_STATE_INT and
+APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
 
-Thanks,
+If it's possible that both could be set, maybe this should be
+something like this?
 
-jon
+  int spurious = 1;
+
+  if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+    ...
+    spurious = 0;
+  }
+  if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+    ...
+    spurious = 0;
+  }
+
+  if (spurious) {
+    dev_warn(...)
+  }
+
+> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
+> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
+> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
+> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +				return IRQ_HANDLED;
+> +			}
+> +			wake_up(&pcie->wq);
+> +		}
+> +	} else {
+> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
+> +			 val);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+> +static int tegra_pcie_ep_work_thread(void *p)
+> +{
+> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+> +	u32 event;
+> +
+> +	while (true) {
+> +		wait_event_interruptible(pcie->wq,
+> +					 !kfifo_is_empty(&pcie->event_fifo));
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+> +			continue;
+> +		}
+> +
+> +		switch (event) {
+> +		case EP_PEX_RST_DEASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+> +			pex_ep_event_pex_rst_deassert(pcie);
+> +			break;
+> +
+> +		case EP_PEX_RST_ASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+> +			pex_ep_event_pex_rst_assert(pcie);
+> +			break;
+> +
+> +		case EP_HOT_RST_DONE:
+> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+> +			pex_ep_event_hot_rst_done(pcie);
+> +			break;
+> +
+> +		case EP_BME_CHANGE:
+> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+> +			pex_ep_event_bme_change(pcie);
+> +			break;
+> +
+> +		case EP_EVENT_EXIT:
+> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+> +			return 0;
+> +
+> +		default:
+> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
+
+Maybe include the invalid event value in the message?
+
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
