@@ -2,135 +2,205 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AF4C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818CC2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF63F2080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 09:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574762118;
+	bh=MzKgqKCa7NaA8Djx5qejgsOtT2+/H2cyYVcKH3ql0Zk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nc+TjbMFTWJNrau9W1uM9GiVRL6myaPhvHTTKCh3Nydu5/Zhb7plmY3wfkBjpC11G
+	 SjbGl7WfWXlMWxhVknEoktnxqB/2bOwklZgKSQvcJnOpqwW5idGaEhtfz4uQiGVnKb
+	 NpoGiLan5ig1LD650H9YL+lGvoOt9McM2q9VWcQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfKZJyW (ORCPT
+        id S1727684AbfKZJzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:54:22 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:45003 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfKZJyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 04:54:22 -0500
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MIcux-1id3ni2ZFN-00Efhg; Tue, 26 Nov 2019 10:54:19 +0100
-Received: by mail-qv1-f50.google.com with SMTP id t5so162603qvs.5;
-        Tue, 26 Nov 2019 01:54:19 -0800 (PST)
-X-Gm-Message-State: APjAAAWytZ+TnxxhQykXakGeTpTnytGBlQEHkltdCYIT7uidqL9O9RpR
-        LtoZpb7GL+XGAGyPC6EZrA8NeMHu9b6emaj5Gww=
-X-Google-Smtp-Source: APXvYqzfzjkp9uCV/32ns/7FRgNOHtxQYJSAtQE1mAt193WKi70vgeZxBNUsgLiFbHYA3VpUR2G+JAWWe+LrlJHioYc=
-X-Received: by 2002:ad4:404e:: with SMTP id r14mr32738089qvp.4.1574762058335;
- Tue, 26 Nov 2019 01:54:18 -0800 (PST)
+        Tue, 26 Nov 2019 04:55:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727557AbfKZJzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:55:17 -0500
+Received: from linux-8ccs (x2f7fc62.dyn.telefonica.de [2.247.252.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE5C42075C;
+        Tue, 26 Nov 2019 09:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574762116;
+        bh=MzKgqKCa7NaA8Djx5qejgsOtT2+/H2cyYVcKH3ql0Zk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GdGD6tkDzZas/Y4hkk9UHE5NsbTPmf86gXupJNtx0Vgt/WN0rWMS2sPrKZn6FTvsU
+         OvbZzZSB6HJaXSD9T+iiGNpButycABEAI1g/M/MQzp0B3sYbMyjRp9eLUVVAPQ21VE
+         bwQAAEdaHAlwa5MOVaClVN2R424QphdxVNm0kRoU=
+Date:   Tue, 26 Nov 2019 10:55:10 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] export.h: reduce __ksymtab_strings string duplication
+ by using "MS" section flags
+Message-ID: <20191126095510.GA30181@linux-8ccs>
+References: <20191120145110.8397-1-jeyu@kernel.org>
+ <20191125154217.18640-1-jeyu@kernel.org>
+ <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1573456283.git.baolin.wang@linaro.org> <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
- <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
- <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com>
- <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
- <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com>
- <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com> <1C0831B6-CA26-4794-9686-E7384713C756@linaro.org>
-In-Reply-To: <1C0831B6-CA26-4794-9686-E7384713C756@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 Nov 2019 10:54:01 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a27PLB_rXkxuyOuK_eKvSSi29fekebcwsoTRLSAOmRX+w@mail.gmail.com>
-Message-ID: <CAK8P3a27PLB_rXkxuyOuK_eKvSSi29fekebcwsoTRLSAOmRX+w@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Add MMC software queue support
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-block <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:F4qBgONcda6uvVnW/sY+/qgy/oA8tIrpZ0Ug69hENvuxR7e1QFZ
- GVtk3336XAPu6j44gZNVR0aZaQJoGuEZuSyqxEvXnT8FPsS1cNLw7wIGwaN2GxXImb4Abem
- Djva5NMFgIq4vAug39A6Ll0vwiqZll3nvDWp07/PZ6XSLtV81XvQev7D6LxiX72AjUZ735i
- 4dTqGIrwkF4scyU7Uk1/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9juBk/clAeQ=:7lxmgSuGXYgYG4mFNRV5ky
- EgIhUJjBmo6Poe0zd7sQOSz2l86811OMt0m8yFWj7KRFGsb+VujbbnSar2cKGmIjxmS+DytkR
- 76dOD4BPiks6uthQ6HYMwChaX4TAeXmy+cLcObZnSfwTjRHkbfJvxUuew87SJE2VylnVFk5nj
- jpJ5K4AZbjaimY75DynryB7ii95yVWLSQqrynPF/oK199NqNNanhUCfFI6sFLakboRbGOVNva
- XMUj/musrBWWwuxomKYcv2ckpIQlKkpUZDxKb4PV/VmlPAsb6HzPLzgshxHxxxPwj+0qFayDU
- ndsNHh1QAWDuGdMjZVrjXC6o9xK3aR/ZfHG2PI6BICWBBVxut/86PbWnAWvvH96pO3soj+eU2
- 6dnFMWrVZasYSUZaJTRljU8uIdtULTYpjQSwFxtsLLliJMtR1WDaxSy+U0zLdA4z3fXeTChAf
- Qfg4jJZbuBa+gaGOtZD/emGzYQBuvMJWxaa4qMl2l8PEFE+fimeF353Ah39QZ/5P+fXjnvAuk
- zh4k17/dD3kq9muONF2BnovnjZR6KcM3VXOpzqXnqReHSKi+EAVJfWFj5D6V/gfi4Xku10GDu
- K8u+Rp83WUgDnAizXOZSLb/MMSrPyYVqNQ3aIJxrg0kDrFJR+XcJ+QS+9OOReGlntRua799iw
- s1IwVejyxC5PTw0y0isACEIDmz0xcvCVTBDuwPNMMVn7BwJ8bJUJoTnVZrnMXDVBMvN8gt15W
- JbraY1uRYr5Ty7Mpk1vlYZ5znBWdx3+pH4bdkvUoLnTkD5Sd7EskT0wSWxDJt7uax8ykeKyIT
- esA+l870E6mQBPG1XinvPGF+AY+yP8MtLbBzeKmpS21ur5vazgZyv1+naqfDKKM5fa5jzdYb8
- 3FP76n/dLJqIRxyyqhxg==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASU9YysYNXuBKSU4WeUyE=2itfLDYzCupXL-49GUZuGnQ@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.4.0-rc5-lp150.12.61-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 8:41 AM Paolo Valente <paolo.valente@linaro.org> wrote:
-> > Il giorno 22 nov 2019, alle ore 10:50, Arnd Bergmann <arnd@arndb.de> ha scritto:
-> > On Mon, Nov 18, 2019 at 11:04 AM (Exiting) Baolin Wang <baolin.wang@linaro.org> wrote:
-> > Paolo, can you comment on why this is currently done, or if it can
-> > be changed? It seems to me that sending multiple requests at
-> > once would also have a significant benefit on the per-request overhead
-> > on NVMe devices with with bfq.
-> >
++++ Masahiro Yamada [26/11/19 17:32 +0900]:
+>On Tue, Nov 26, 2019 at 12:42 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> Commit c3a6cf19e695 ("export: avoid code duplication in
+>> include/linux/export.h") refactors export.h quite nicely, but introduces
+>> a slight increase in memory usage due to using the empty string ""
+>> instead of NULL to indicate that an exported symbol has no namespace. As
+>> mentioned in that commit, this meant an increase of 1 byte per exported
+>> symbol without a namespace. For example, if a kernel configuration has
+>> about 10k exported symbols, this would mean that the size of
+>> __ksymtab_strings would increase by roughly 10kB.
+>>
+>> We can alleviate this situation by utilizing the SHF_MERGE and
+>> SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
+>> that the data in the section are null-terminated strings that can be
+>> merged to eliminate duplication. More specifically, from the binutils
+>> documentation - "for sections with both M and S, a string which is a
+>> suffix of a larger string is considered a duplicate. Thus "def" will be
+>> merged with "abcdef"; A reference to the first "def" will be changed to
+>> a reference to "abcdef"+3". Thus, all the empty strings would be merged
+>> as well as any strings that can be merged according to the cited method
+>> above. For example, "memset" and "__memset" would be merged to just
+>> "__memset" in __ksymtab_strings.
+>>
+>> As of v5.4-rc5, the following statistics were gathered with x86
+>> defconfig with approximately 10.7k exported symbols.
+>>
+>> Size of __ksymtab_strings in vmlinux:
+>> -------------------------------------
+>> v5.4-rc5: 213834 bytes
+>> v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
+>> v5.4-rc5 with this patch: 205759 bytes
+>>
+>> So, we already see memory savings of ~8kB compared to vanilla -rc5 and
+>> savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
+>>
+>> Unfortunately, as of this writing, strings will not get deduplicated for
+>> kernel modules, as ld does not do the deduplication for
+>> SHF_MERGE|SHF_STRINGS sections for relocatable files (ld -r), which
+>> kernel modules are. A patch for ld is currently being worked on to
+>> hopefully allow for string deduplication in relocatable files in the
+>> future.
+>>
+>> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>> ---
+>>
+>> v2: use %progbits throughout and document the oddity in a comment.
+>>
+>>  include/asm-generic/export.h |  8 +++++---
+>>  include/linux/export.h       | 27 +++++++++++++++++++++------
+>>  2 files changed, 26 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+>> index fa577978fbbd..23bc98e97a66 100644
+>> --- a/include/asm-generic/export.h
+>> +++ b/include/asm-generic/export.h
+>> @@ -26,9 +26,11 @@
+>>  .endm
+>>
+>>  /*
+>> - * note on .section use: @progbits vs %progbits nastiness doesn't matter,
+>> - * since we immediately emit into those sections anyway.
+>> + * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
+>> + * section flag requires it. Use '%progbits' instead of '@progbits' since the
+>> + * former apparently works on all arches according to the binutils source.
+>>   */
+>> +
+>>  .macro ___EXPORT_SYMBOL name,val,sec
+>>  #ifdef CONFIG_MODULES
+>>         .globl __ksymtab_\name
+>> @@ -37,7 +39,7 @@
+>>  __ksymtab_\name:
+>>         __put \val, __kstrtab_\name
+>>         .previous
+>> -       .section __ksymtab_strings,"a"
+>> +       .section __ksymtab_strings,"aMS",%progbits,1
+>>  __kstrtab_\name:
+>>         .asciz "\name"
+>>         .previous
+>> diff --git a/include/linux/export.h b/include/linux/export.h
+>> index 201262793369..3d835ca34d33 100644
+>> --- a/include/linux/export.h
+>> +++ b/include/linux/export.h
+>> @@ -81,16 +81,31 @@ struct kernel_symbol {
+>>
+>>  #else
+>>
+>> +/*
+>> + * note on .section use: we specify progbits since usage of the "M" (SHF_MERGE)
+>> + * section flag requires it. Use '%progbits' instead of '@progbits' since the
+>> + * former apparently works on all arches according to the binutils source.
+>> + */
+>> +#define __KSTRTAB_ENTRY(sym)                                                   \
+>> +       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
+>> +           "__kstrtab_" #sym ":                                        \n"     \
+>> +           "   .asciz  \"" #sym "\"                                    \n"     \
+>> +           "   .previous                                               \n")
+>> +
+>> +#define __KSTRTAB_NS_ENTRY(sym, ns)                                            \
+>> +       asm("   .section \"__ksymtab_strings\",\"aMS\",%progbits,1      \n"     \
+>> +           "__kstrtabns_" #sym ":                                      \n"     \
+>> +           "   .asciz  " #ns "                                         \n"     \
 >
-> Hi,
-> actually, "one request dispatched at a time" is not a peculiarity of
-> bfq.  Any scheduler can provide only one request at a time, with the
-> current blk-mq API for I/O schedulers.
 >
-> Yet, when it is time to refill an hardware queue, blk-mq pulls as many
-> requests as it deems appropriate from the scheduler, by invoking the
-> latter multiple times.  See blk_mq_do_dispatch_sched() in
-> block/blk-mq-sched.c.
+>Hmm, it took some time for me to how this code works.
 >
-> I don't know where the glitch for MMC is with respect to this scheme.
+>ns is already a C string, then you added # to it,
+>then I was confused.
+>
+>Personally, I prefer this code:
+>" .asciz \"" ns "\" \n"
+>
+>so it looks in the same way as __KSTRTAB_ENTRY().
+>
+>
+>
+>BTW, you duplicated \"aMS\",%progbits,1" and ".previous"
+>
+>
+>I would write it shorter, like this:
+>
+>
+>#define ___EXPORT_SYMBOL(sym, sec, ns) \
+>        extern typeof(sym) sym; \
+>        extern const char __kstrtab_##sym[]; \
+>        extern const char __kstrtabns_##sym[]; \
+>        __CRC_SYMBOL(sym, sec); \
+>        asm("    .section \"__ksymtab_strings\",\"aMS\",%progbits,1\n" \
+>            "__kstrtab_" #sym ": \n" \
+>            "     .asciz \"" #sym "\" \n" \
+>            "__kstrtabns_" #sym ": \n" \
+>            "     .asciz \"" ns "\" \n" \
+>            "     .previous \n");    \
+>       __KSYMTAB_ENTRY(sym, sec)
+>
 
-Right, this is what is puzzling me as well: in both blk_mq_do_dispatch_sched()
-and blk_mq_do_dispatch_ctx(), we seem to always take one request from
-the scheduler and dispatch it to the device, regardless of the driver or
-the scheduler, so there should only ever be one request in the local list.
+Sure, I can change that. Just thought it'd be easier to read with the
+separate macros. Thanks for your comments!
 
-Yet, both the blk_mq_dispatch_rq_list() function and the NVMe driver
-appear to be written based on the idea that there are multiple entries
-in this list. The one place that I see putting multiple requests on the
-local list before dispatching them is the end of
-blk_mq_sched_dispatch_requests():
-
-        if (!list_empty(&rq_list)) {
-              ...
-                }
-        } else if (has_sched_dispatch) {
-                blk_mq_do_dispatch_sched(hctx);
-        } else if (hctx->dispatch_busy) {
-                /* dequeue request one by one from sw queue if queue is busy */
-                blk_mq_do_dispatch_ctx(hctx);
-        } else {
-->             blk_mq_flush_busy_ctxs(hctx, &rq_list);        <----
-                blk_mq_dispatch_rq_list(q, &rq_list, false);
-        }
-
-So as you said, if we use an elevator (has_sched_dispatch == true),
-we only get one request, but without an elevator, we get into this
-optimized path.
-
-Could we perhaps change the ops.dispatch_request() function to pass
-down the list as in https://paste.ubuntu.com/p/MfSRwKqFCs/ ?
-
-      Arnd
