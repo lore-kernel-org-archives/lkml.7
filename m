@@ -2,99 +2,90 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF986C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99763C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC8A20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729BC20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:31:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="L2KfYkOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfKZP3U (ORCPT
+        id S1728495AbfKZPa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:29:20 -0500
-Received: from smtpq3.tb.mail.iss.as9143.net ([212.54.42.166]:41006 "EHLO
-        smtpq3.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727135AbfKZP3U (ORCPT
+        Tue, 26 Nov 2019 10:30:59 -0500
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:34758 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfKZPa7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:29:20 -0500
-Received: from [212.54.42.137] (helo=smtp6.tb.mail.iss.as9143.net)
-        by smtpq3.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <jongk@linux-m68k.org>)
-        id 1iZcmD-0000kO-Ni; Tue, 26 Nov 2019 16:29:17 +0100
-Received: from mail-wm1-f45.google.com ([209.85.128.45])
-        by smtp6.tb.mail.iss.as9143.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <jongk@linux-m68k.org>)
-        id 1iZcmD-0001Np-JO; Tue, 26 Nov 2019 16:29:17 +0100
-Received: by mail-wm1-f45.google.com with SMTP id g206so3674734wme.1;
-        Tue, 26 Nov 2019 07:29:17 -0800 (PST)
-X-Gm-Message-State: APjAAAUA+aMOBioXdI8sBwCaCLpNMXEfzYftgM+LYUBINjz1tMC8DlQe
-        zMMzdU8k6pUOQmGm5Ae6nqhZyB87oRbnfJb6abQ=
-X-Google-Smtp-Source: APXvYqyOkLS0wJVUdJYu1Q6ijkEqKlbukKX/UBClH3eTiS7tBWK60bcawei/HX132m5hCWHGlr/BiqgzqpW/wWbt0N8=
-X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr4581717wmm.35.1574782157366;
- Tue, 26 Nov 2019 07:29:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdVv9FU+kTf7RDd=AFKL12tJxzmGbX4jZZ8Av3VCZUzwhA@mail.gmail.com>
- <20191126144121.kzkujr27ga36gqnf@wittgenstein>
-In-Reply-To: <20191126144121.kzkujr27ga36gqnf@wittgenstein>
-From:   Kars de Jong <jongk@linux-m68k.org>
-Date:   Tue, 26 Nov 2019 16:29:06 +0100
-X-Gmail-Original-Message-ID: <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
-Message-ID: <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Wire up clone3() syscall
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-SourceIP: 209.85.128.45
-X-Authenticated-Sender: karsdejong@home.nl (via SMTP)
-X-Ziggo-spambar: /
-X-Ziggo-spamscore: 0.0
-X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=WMwBoUkR c=1 sm=1 tr=0 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=MeAgGD-zjQ4A:10 a=fxJcL_dCAAAA:8 a=tBb2bbeoAAAA:8 a=VwQbUJbxAAAA:8 a=WQa4lTAXJXru5Gui9GYA:9 a=QEXdDO2ut3YA:10 a=Oj-tNtZlA1e06AYgeCfH:22 a=AjGcO6oz07-iQ99wixmX:22
-X-Ziggo-Spam-Status: No
+        Tue, 26 Nov 2019 10:30:59 -0500
+Received: by mail-qt1-f173.google.com with SMTP id i17so21846784qtq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:30:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=/g4ZXLwK+A/FE8q6bxvvagQJw9r1wy5JryPpTD2bgYs=;
+        b=L2KfYkORncPtySaCDV3j8U8ZveUxn1I4iVZHqEOd+98M22E+2ApAL/khtMjrwFYjcN
+         4iYqiXfoME0FEHXuiWXmE+khHzryThZwqUf/+15aJXF3OL9plyGRDdt01ZoR+nzZkWUD
+         79Fb99TyHE/3j7vjuvBiwAibbddIr2qCEQxPIwWTtzu8M3ecgKUeORIIzoOcOyrS1kU6
+         qXK2+fXwS+H+likVr1enJ+kqPg48VlRqP9oYZJwIlYe0QL7mgaZQH8k1ARfYCkFuyXvA
+         CsbGXt2EudbU3g3w/ZTk0zn0rYGScPi40zofpuVrzl1RYAy9FOMU+LjhoMERgQhHnJ7g
+         gu4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=/g4ZXLwK+A/FE8q6bxvvagQJw9r1wy5JryPpTD2bgYs=;
+        b=HWszbhjz7Dx5/snBGqi55pednUCULIzROd3OSAjzkry9XvZfdPitMXz8xxO6VnxGyw
+         E5r9QQIuB/yEkh1xKH09Y15SIbyLHfQX1nMS/I9YsZ90mI6IhJNwRPQvXyGsC+YjeqVa
+         dExJZPq9jUZ3Ts4WSvvuCPEb7oOJRYYbntenhs0zd9oWuc2kgnfxTfAvgTFgfW9KeWFQ
+         tWiVHp1TurtKgpKGmPHBLbfQENbqVEd3NPrzSoCoNZ7scWSpKejaNtoj17x8io5SD7dD
+         SqNrKq2RaEEBsywpJNBXsi9JXaEVo0TAfUPoXOp/YzB8pYqjprVdjAj3L40p/rOz6XXp
+         Ajww==
+X-Gm-Message-State: APjAAAWNkTofckPTKv+aHM05xEJMdb9jvMApW+4Rn5TVKbh7Xy2bjFoE
+        6S8g1q1DSxEnWv76XdlDGy1i+Q==
+X-Google-Smtp-Source: APXvYqyu3mbNFY1nQkQM19sadjdPy7gEJM5B0DZYlRvW5Ab3B0SS/OSkFigbO/5R6HLQ2R54qMbMCA==
+X-Received: by 2002:ac8:610d:: with SMTP id a13mr31421605qtm.21.1574782258240;
+        Tue, 26 Nov 2019 07:30:58 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r4sm6010520qtd.17.2019.11.26.07.30.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 07:30:57 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC v1 00/19] Modify zonelist to nodelist v1
+Date:   Tue, 26 Nov 2019 10:30:56 -0500
+Message-Id: <828BAB69-4B46-418F-A5E2-35B0756340D0@lca.pw>
+References: <20191125083948.GC31714@dhcp22.suse.cz>
+Cc:     Pengfei Li <fly@kernel.page>,
+        "lixinhai.lxh@gmail.com" <lixinhai.lxh@gmail.com>,
+        akpm <akpm@linux-foundation.org>,
+        mgorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>, cl <cl@linux.com>,
+        "iamjoonsoo.kim" <iamjoonsoo.kim@lge.com>, guro <guro@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+In-Reply-To: <20191125083948.GC31714@dhcp22.suse.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian!
 
-Op di 26 nov. 2019 om 15:41 schreef Christian Brauner
-<christian.brauner@ubuntu.com>:
->
-> On Mon, Nov 25, 2019 at 10:12:25AM +0100, Geert Uytterhoeven wrote:
-> > Hi Kars,
-> >
-> > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
-> > > Wire up the clone3() syscall for m68k. The special entry point is done in
-> > > assembler as was done for clone() as well. This is needed because all
-> > > registers need to be saved. The C wrapper then calls the generic
-> > > sys_clone3() with the correct arguments.
-> > >
-> > > Tested on A1200 using the simple test program from:
-> > >
-> > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
->
-> Please note that we now have a growing test-suite for the clone3()
-> syscall under
-> tools/testing/selftests/clone3/*
->
-> You can test on a suitable kernel with
->
-> make TARGETS=clone3 kselftest
 
-I'm afraid my user space is almost prehistoric. I have a homebrewn
-root filesystem of about 2001 vintage, and another one with Debian
-3.1.
-So until I have bootstrapped a more recent one, I'll leave that to others ;-)
+> On Nov 25, 2019, at 3:39 AM, Michal Hocko <mhocko@kernel.org> wrote:
+>=20
+> People do care about ZONE_MOVABLE and if there is a non-movable memory
+> sitting there then it is a bug. Please report that.
 
-Thanks for checking!
-
-Kind regards,
-
-Kars.
+It is trivial to test yourself if you ever care. Just pass kernelcore=3D to a=
+s many NUMA machines you could find, an then test if ever possible to offlin=
+e those memory.=
