@@ -2,459 +2,410 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987B9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9222BC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509092071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572E520727
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OXIxCC+B"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y6gwfA/R";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LZaM8+Z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfKZPBL (ORCPT
+        id S1728329AbfKZPB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:01:11 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39319 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfKZPBK (ORCPT
+        Tue, 26 Nov 2019 10:01:28 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:60212
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbfKZPB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:01:10 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f18so14337912lfj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:01:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=r3sUnYNlhWbEfCd0QONln6twUH8AnrRhyaijqie/Qj4=;
-        b=OXIxCC+BPPC/zAgOo6C9p9kVpWCkD6b9SFCACdGqmKbhp0cxU4guClG/wy6DGbzG8U
-         pHqC6W6dmf7x+pJ1XuFrks2IsDD9gIx4aB4INQfn22nyQ5a6/dg/b8reo/EGNAB8ho8Z
-         aSN+9CZXJq9qWJ91HAK5QHXs4eeRJt4WA/PGd3Y8cidkyuAjcwPY5gYnmIWF8fh/867n
-         TcfH2hhrBNPlKuSTpWyYE5gEImkpSBEkLZWk6TzIjC9zyEb72fMCbFAZW+w6KGqBjS3L
-         Vh2NTDWhI5JxxIueckC6m++Ob5yzbFW+ClIo0nUsLiDLK4lpfvHMyCEhR841pX1XhV+v
-         lhfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=r3sUnYNlhWbEfCd0QONln6twUH8AnrRhyaijqie/Qj4=;
-        b=c2WRcyGQzrqVYRxNUl2IM4gG48+4YQ5kYA/TUGu+r2yRT39hbGEoHk/i/cwcDNhP7a
-         281JyheTIxbWisAT/Ohsbcpp0kbspNucAKtXnhbSkk6PVp5XF0htRayB6H8K0+0Q9zg4
-         7/xxNcrlKem1AAD3g26dl7sA4xn3xbFte3OImCy4HZxFj+L6oxOHdkttZvJgwBzTaAir
-         p1ZgCpDpgtqOwKbXPq1ySnuHhETIHgxn+KoIdMnJcGdkoJ6JonCUmZEuT49Z9QIIqnlL
-         ZbdihnJRfLsD4fMu7zhZOtppdIgUA0Y2dnVQfmAXhQhfx1xWLxIB25JbEQsHALaXb9rm
-         Zahg==
-X-Gm-Message-State: APjAAAUWhanPgo9Y/Za5oZ2uQL7zYGrAd+oq3Zar3ndEevAoctql/lxj
-        Knr4UbCiknw2M+wb7fw8/gKuxlPiPtt8EvQjTLpHMg==
-X-Google-Smtp-Source: APXvYqydUj5/WyyUWLVeVF077crzPKVYSKzUm8vdxQCNSBPLy56OcY7L+BFWnF45HbH9BiBOdtNhCE//l7iuhcIy47E=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr24522478lfi.93.1574780467681;
- Tue, 26 Nov 2019 07:01:07 -0800 (PST)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Nov 2019 16:00:55 +0100
-Message-ID: <CACRpkdZYR=5-vf29vYN-gZWRNta3axWNxMTve+hoK_ugkUhcnA@mail.gmail.com>
-Subject: [GIT PULL] Bulk pin control changes for v5.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 26 Nov 2019 10:01:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574780487;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=APFAqQ5hhFy6nrdgORg6OIjDflWXH5R08ymFxeXhbSA=;
+        b=Y6gwfA/R2jet5NtgXnPYy58NryRWzLEZHJBHgLTHamZRY8FsPr6iSHtHhKVCmTN3
+        gr0XD7zYsS9SQE/OvT7HVwFOOfuf+90Pwe5A2sT37JfHBB274qm/AaBBb5EFMZyayEo
+        bwwgP+LvJJIGzqDCFbAczTZmLANN2M/EfMV0GIwE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574780486;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=APFAqQ5hhFy6nrdgORg6OIjDflWXH5R08ymFxeXhbSA=;
+        b=LZaM8+Z6Tmov6iGX9cxxCRDY4hTnbfe9ezHqwgDHj9h0uU4HeOohlSkrLFB3iZps
+        8oJ+5PderVJjqjr/me6RRghlU0OgFZkiaLeS+ktPGJ8GWQviKI5Zi+pcwwhWR9g2Tyg
+        4oeZ2VLDsTLMpN8iI6tpxcY/hL1jjfqTYF1fAu4g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 95115C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com, sboyd@kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [PATCH V1 1/2] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+Date:   Tue, 26 Nov 2019 15:01:26 +0000
+Message-ID: <0101016ea83b44e2-546fc9ff-6056-482b-a42d-231b9d908640-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org>
+References: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org>
+X-SES-Outgoing: 2019.11.26-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The Qualcomm SC7180 platform has several bus fabrics that could be
+controlled and tuned dynamically according to the bandwidth demand.
+
+Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+---
+ .../bindings/interconnect/qcom,bcm-voter.yaml      |   1 +
+ .../bindings/interconnect/qcom,sc7180.yaml         | 155 +++++++++++++++++++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 149 ++++++++++++++++++++
+ 3 files changed, 305 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
+
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+index 74f0715..55c9f34 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+@@ -19,6 +19,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - qcom,sc7180-bcm-voter
+       - qcom,sdm845-bcm-voter
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+new file mode 100644
+index 0000000..487da5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title:  Qualcomm SC7180 Network-On-Chip Interconnect
++
++maintainers:
++  - David Dai <daidavid1@codeaurora.org>
++
++description: |
++   SC7180 interconnect providers support system bandwidth requirements through
++   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
++   able to communicate with the BCM through the Resource State Coordinator (RSC)
++   associated with each execution environment. Provider nodes must point to at
++   least one RPMh device child node pertaining to their RSC and each provider
++   can map to multiple RPMh resources.
++
++properties:
++  reg:
++    maxItems: 1
++
++  compatible:
++    enum:
++      - qcom,sc7180-aggre1-noc
++      - qcom,sc7180-aggre2-noc
++      - qcom,sc7180-camnoc-virt
++      - qcom,sc7180-compute-noc
++      - qcom,sc7180-config-noc
++      - qcom,sc7180-dc-noc
++      - qcom,sc7180-gem-noc
++      - qcom,sc7180-ipa-virt
++      - qcom,sc7180-mc-virt
++      - qcom,sc7180-mmss-noc
++      - qcom,sc7180-npu-noc
++      - qcom,sc7180-qup-virt
++      - qcom,sc7180-system-noc
++
++  '#interconnect-cells':
++    const: 1
++
++  qcom,bcm-voters:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      List of phandles to qcom,bcm-voter nodes that are required by
++      this interconnect to send RPMh commands.
++
++  qcom,bcm-voter-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: |
++      Names for each of the qcom,bcm-voters specified.
++
++required:
++  - compatible
++  - reg
++  - '#interconnect-cells'
++  - qcom,bcm-voters
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/interconnect/qcom,sc7180.h>
++
++      config_noc: interconnect@1500000 {
++            compatible = "qcom,sc7180-config-noc";
++            reg = <0 0x01500000 0 0x28000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      system_noc: interconnect@1620000 {
++            compatible = "qcom,sc7180-system-noc";
++            reg = <0 0x01620000 0 0x17080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mc_virt: interconnect@1630000 {
++            compatible = "qcom,sc7180-mc-virt";
++            reg = <0 0x01630000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      qup_virt: interconnect@1650000 {
++            compatible = "qcom,sc7180-qup-virt";
++            reg = <0 0x01650000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      aggre1_noc: interconnect@16e0000 {
++            compatible = "qcom,sc7180-aggre1-noc";
++            reg = <0 0x016e0000 0 0x15080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      aggre2_noc: interconnect@1700000 {
++            compatible = "qcom,sc7180-aggre2-noc";
++            reg = <0 0x01700000 0 0x1f880>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      compute_noc: interconnect@170e000 {
++            compatible = "qcom,sc7180-compute-noc";
++            reg = <0 0x0170e000 0 0x11880>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mmss_noc: interconnect@1740000 {
++            compatible = "qcom,sc7180-mmss-noc";
++            reg = <0 0x01740000 0 0x1c100>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      ipa_virt: interconnect@1e00000 {
++            compatible = "qcom,sc7180-ipa-virt";
++            reg = <0 0x01e00000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      dc_noc: interconnect@9160000 {
++            compatible = "qcom,sc7180-dc-noc";
++            reg = <0 0x09160000 0 0x03200>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      gem_noc: interconnect@9680000 {
++            compatible = "qcom,sc7180-gem-noc";
++            reg = <0 0x09680000 0 0x3e200>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      npu_noc: interconnect@9990000 {
++            compatible = "qcom,sc7180-npu-noc";
++            reg = <0 0x09990000 0 0x1600>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      camnoc_virt: interconnect@ac00000 {
++            compatible = "qcom,sc7180-camnoc-virt";
++            reg = <0 0x0ac00000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
+diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h b/include/dt-bindings/interconnect/qcom,sc7180.h
+new file mode 100644
+index 0000000..b762bc3
+--- /dev/null
++++ b/include/dt-bindings/interconnect/qcom,sc7180.h
+@@ -0,0 +1,149 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Qualcomm SC7180 interconnect IDs
++ *
++ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++
++#define MASTER_APPSS_PROC			0
++#define MASTER_SYS_TCU				1
++#define MASTER_NPU_SYS				2
++#define MASTER_IPA_CORE				3
++#define MASTER_LLCC				4
++#define MASTER_A1NOC_CFG			5
++#define MASTER_A2NOC_CFG			6
++#define MASTER_CNOC_DC_NOC			7
++#define MASTER_GEM_NOC_CFG			8
++#define MASTER_CNOC_MNOC_CFG			9
++#define MASTER_NPU_NOC_CFG			10
++#define MASTER_QDSS_BAM				11
++#define MASTER_QSPI				12
++#define MASTER_QUP_0				13
++#define MASTER_QUP_1				14
++#define MASTER_SNOC_CFG				15
++#define MASTER_A1NOC_SNOC			16
++#define MASTER_A2NOC_SNOC			17
++#define MASTER_COMPUTE_NOC			18
++#define MASTER_GEM_NOC_SNOC			19
++#define MASTER_MNOC_HF_MEM_NOC			20
++#define MASTER_MNOC_SF_MEM_NOC			21
++#define MASTER_NPU				22
++#define MASTER_SNOC_CNOC			23
++#define MASTER_SNOC_GC_MEM_NOC			24
++#define MASTER_SNOC_SF_MEM_NOC			25
++#define MASTER_QUP_CORE_0			26
++#define MASTER_QUP_CORE_1			27
++#define MASTER_CAMNOC_HF0			28
++#define MASTER_CAMNOC_HF1			29
++#define MASTER_CAMNOC_HF0_UNCOMP		30
++#define MASTER_CAMNOC_HF1_UNCOMP		31
++#define MASTER_CAMNOC_SF			32
++#define MASTER_CAMNOC_SF_UNCOMP			33
++#define MASTER_CRYPTO				34
++#define MASTER_GFX3D				35
++#define MASTER_IPA				36
++#define MASTER_MDP0				37
++#define MASTER_NPU_PROC				38
++#define MASTER_PIMEM				39
++#define MASTER_ROTATOR				40
++#define MASTER_VIDEO_P0				41
++#define MASTER_VIDEO_PROC			42
++#define MASTER_QDSS_DAP				43
++#define MASTER_QDSS_ETR				44
++#define MASTER_SDCC_2				45
++#define MASTER_UFS_MEM				46
++#define MASTER_USB3				47
++#define MASTER_EMMC				48
++#define SLAVE_EBI1				512
++#define SLAVE_IPA_CORE				513
++#define SLAVE_A1NOC_CFG				514
++#define SLAVE_A2NOC_CFG				515
++#define SLAVE_AHB2PHY_SOUTH			516
++#define SLAVE_AHB2PHY_CENTER			517
++#define SLAVE_AOP				518
++#define SLAVE_AOSS				519
++#define SLAVE_APPSS				520
++#define SLAVE_BOOT_ROM				521
++#define SLAVE_NPU_CAL_DP0			522
++#define SLAVE_CAMERA_CFG			523
++#define SLAVE_CAMERA_NRT_THROTTLE_CFG		524
++#define SLAVE_CAMERA_RT_THROTTLE_CFG		525
++#define SLAVE_CLK_CTL				526
++#define SLAVE_NPU_CP				527
++#define SLAVE_RBCPR_CX_CFG			528
++#define SLAVE_RBCPR_MX_CFG			529
++#define SLAVE_CRYPTO_0_CFG			530
++#define SLAVE_DCC_CFG				531
++#define SLAVE_CNOC_DDRSS			532
++#define SLAVE_DISPLAY_CFG			533
++#define SLAVE_DISPLAY_RT_THROTTLE_CFG		534
++#define SLAVE_DISPLAY_THROTTLE_CFG		535
++#define SLAVE_NPU_INT_DMA_BWMON_CFG		536
++#define SLAVE_NPU_DPM				537
++#define SLAVE_EMMC_CFG				538
++#define SLAVE_GEM_NOC_CFG			539
++#define SLAVE_GLM				540
++#define SLAVE_GFX3D_CFG				541
++#define SLAVE_IMEM_CFG				542
++#define SLAVE_IPA_CFG				543
++#define SLAVE_ISENSE_CFG			544
++#define SLAVE_LLCC_CFG				545
++#define SLAVE_NPU_LLM_CFG			546
++#define SLAVE_MSS_PROC_MS_MPU_CFG		547
++#define SLAVE_CNOC_MNOC_CFG			548
++#define SLAVE_CNOC_MSS				549
++#define SLAVE_NPU_CFG				550
++#define SLAVE_NPU_DMA_BWMON_CFG			551
++#define SLAVE_NPU_PROC_BWMON_CFG		552
++#define SLAVE_PDM				553
++#define SLAVE_PIMEM_CFG				554
++#define SLAVE_PRNG				555
++#define SLAVE_QDSS_CFG				556
++#define SLAVE_QM_CFG				557
++#define SLAVE_QM_MPU_CFG			558
++#define SLAVE_QSPI_0				559
++#define SLAVE_QUP_0				560
++#define SLAVE_QUP_1				561
++#define SLAVE_SDCC_2				562
++#define SLAVE_SECURITY				563
++#define SLAVE_SNOC_CFG				564
++#define SLAVE_NPU_TCM				565
++#define SLAVE_TCSR				566
++#define SLAVE_TLMM_WEST				567
++#define SLAVE_TLMM_NORTH			568
++#define SLAVE_TLMM_SOUTH			569
++#define SLAVE_UFS_MEM_CFG			570
++#define SLAVE_USB3				571
++#define SLAVE_VENUS_CFG				572
++#define SLAVE_VENUS_THROTTLE_CFG		573
++#define SLAVE_VSENSE_CTRL_CFG			574
++#define SLAVE_A1NOC_SNOC			575
++#define SLAVE_A2NOC_SNOC			576
++#define SLAVE_CAMNOC_UNCOMP			577
++#define SLAVE_CDSP_GEM_NOC			578
++#define SLAVE_SNOC_CNOC				579
++#define SLAVE_GEM_NOC_SNOC			580
++#define SLAVE_SNOC_GEM_NOC_GC			581
++#define SLAVE_SNOC_GEM_NOC_SF			582
++#define SLAVE_LLCC				583
++#define SLAVE_MNOC_HF_MEM_NOC			584
++#define SLAVE_MNOC_SF_MEM_NOC			585
++#define SLAVE_NPU_COMPUTE_NOC			586
++#define SLAVE_QUP_CORE_0			587
++#define SLAVE_QUP_CORE_1			588
++#define SLAVE_IMEM				589
++#define SLAVE_PIMEM				590
++#define SLAVE_SERVICE_A1NOC			591
++#define SLAVE_SERVICE_A2NOC			592
++#define SLAVE_SERVICE_CNOC			593
++#define SLAVE_SERVICE_GEM_NOC			594
++#define SLAVE_SERVICE_MNOC			595
++#define SLAVE_SERVICE_NPU_NOC			596
++#define SLAVE_SERVICE_SNOC			597
++#define SLAVE_QDSS_STM				598
++#define SLAVE_TCU				599
++
++#endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-this is the bulk of pin control changes for the v5.5 kernel,
-the details are as usual in the signed tag.
-
-It is pretty much business as usual, the most interesting thing
-I think is the pin controller for a new Intel chip called
-Lightning Mountain, which is according to news reports some
-kind of embedded network processor and what is surprising
-about it is that Intel have decided to use device tree to describe
-the system rather than ACPI that they have traditionally favored.
-
-I merged in v5.4-rc and also v5.4-rc5 during development, this
-was mainly because we were fixing regressions in the Intel
-drivers and the fixes included adding some new infrastructure
-(callbacks) that later development in other drivers depended
-on.
-
-Please pull it in!
-
-Yours,
-Linus Walleij
-
-The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
-
-  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.5-1
-
-for you to fetch changes up to ae75b53e08b95cd189879b00f6a47cbdaab1f0eb:
-
-  pinctrl: ingenic: Add OTG VBUS pin for the JZ4770 (2019-11-21 15:10:36 +0100)
-
-----------------------------------------------------------------
-This is the bulk of pin control changes for the v5.5 kernel
-series:
-
-Core changes:
-
-- Avoid taking direct references to device tree-supplied
-  device names: these may changed at runtime under certain
-  circumstances to kstrdup them.
-
-GPIO related:
-
-- Work is ongoing to move to passing the irqchip along as a
-  templated struct gpio_irq_chip when adding a standard
-  gpiolib-based irqchip to a GPIO controller, a few patches
-  in this cycle switches a few pin control drivers over to
-  using this method.
-
-New hardware support:
-
-- Intel Lightning Mountain SoC pin controller and GPIO
-  support, a first Intel platform to use device tree rather
-  than ACPI to configure the system. News reports says that
-  this SoC is a network processor.
-
-- Qualcomm MSM8976 and MSM8956
-
-- Qualcomm PMIC GPIO now also supports PM6150 and PM6150L
-
-- Qualcomm SPMI MPP and SPMI GPIO for PM8950 and PMI8950
-
-- Rockchip RK3308
-
-- Renesas R8A77961
-
-- Allwinner Meson-A1
-
-Driver improvements:
-
-- get_multiple and set_multiple support for the AT91-PIO4 driver.
-
-- Convert Qualcomm SSBI GPIO to use the hierarchical IRQ helpers
-  in the GPIOlib irqchip.
-
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      pinctrl: at91-pio4: implement .get_multiple and .set_multiple
-
-Amelie Delaunay (1):
-      pinctrl: stmfx: add irq_request/release_resources callbacks
-
-Andy Shevchenko (13):
-      pinctrl: intel: Avoid potential glitches if pin is in GPIO mode
-      pinctrl: cherryview: Fix spelling mistake in the comment
-      pinctrl: cherryview: Allocate IRQ chip dynamic
-      pinctrl: intel: Introduce intel_restore_padcfg() helper
-      pinctrl: intel: Introduce intel_restore_hostown() helper
-      pinctrl: intel: Introduce intel_restore_intmask() helper
-      pinctrl: intel: Drop level from warning to debug in
-intel_restore_hostown()
-      pinctrl: intel: Use helper to restore register values on ->resume()
-      pinctrl: intel: Add Intel Tiger Lake pin controller support
-      pinctrl: intel: Missed type change to unsigned int
-      pinctrl: cherryview: Missed type change to unsigned int
-      MAINTAINERS: Replace my email by one @kernel.org
-      pinctrl: lewisburg: Update pin list according to v1.1v6
-
-AngeloGioacchino Del Regno (6):
-      pinctrl: qcom: Add a pinctrl driver for MSM8976 and 8956
-      dt-bindings: pinctrl: Add MSM8976 driver bindings and documentation
-      pinctrl: qcom: spmi-gpio: Add PM/PMI8950 compatibility
-      dt-bindings: pinctrl: qcom-pmic-gpio: Add support for PM/PMI8950
-      pinctrl: qcom: spmi-mpp: Add PM/PMI8950 compatible strings
-      dt-bindings: pinctrl: qcom-pmic-mpp: Add support for PM/PMI8950
-
-Baolin Wang (1):
-      pinctrl: sprd: Add PIN_CONFIG_BIAS_DISABLE configuration support
-
-Ben Dooks (Codethink) (1):
-      pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
-
-Biju Das (2):
-      dt-bindings: pinctrl: sh-pfc: Document r8a774b1 PFC support
-      pinctrl: sh-pfc: r8a77965: Add R8A774B1 PFC support
-
-Brian Masney (1):
-      pinctrl: ssbi-gpio: convert to hierarchical IRQ helpers in gpio core
-
-Bruce Chen (1):
-      pinctrl: sprd: Add CM4 sleep mode support
-
-Chris Brandt (1):
-      pinctrl: rza2: Fix gpio name typos
-
-Chris Packham (3):
-      pinctrl: iproc: use unique name for irq chip
-      pinctrl: bcm: nsp: use gpiolib infrastructure for interrupts
-      pinctrl: bcm: nsp: implement get_direction
-
-Codrin Ciubotariu (1):
-      pinctrl: at91: Enable slewrate by default on SAM9X60
-
-Colin Ian King (2):
-      pinctl: ti: iodelay: fix error checking on
-pinctrl_count_index_with_args call
-      pinctrl: rzn1: Make array reg_drive static, makes object smaller
-
-Geert Uytterhoeven (7):
-      Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit30 when using
-SSI_SCK2 and SSI_WS2"
-      Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
-      pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
-      dt-bindings: pinctrl: sh-pfc: Document r8a77961 support
-      pinctrl: sh-pfc: Rename PINCTRL_PFC_R8A7796 to PINCTRL_PFC_R8A77960
-      pinctrl: sh-pfc: r8a7796: Add R8A77961 PFC support
-      pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
-
-Gregory CLEMENT (1):
-      pinctrl: armada-37xx: Fix irq mask access in armada_37xx_irq_set_type()
-
-Hans de Goede (1):
-      pinctrl: cherryview: Fix irq_valid_mask calculation
-
-Jianqun Xu (2):
-      dt-bindings: pinctrl: rockchip: add rk3308 SoC support
-      pinctrl: rockchip: add rk3308 SoC support
-
-Keiya Nobuta (5):
-      pinctrl: sh-pfc: Fix PINMUX_IPSR_PHYS() to set GPSR
-      pinctrl: sh-pfc: pfc-r8a7795: Fix typo in pinmux macro for SCL3
-      pinctrl: sh-pfc: pfc-r8a7795-es1: Fix typo in pinmux macro for SCL3
-      pinctrl: sh-pfc: pfc-r8a7796: Fix typo in pinmux macro for SCL3
-      pinctrl: sh-pfc: pfc-r8a77965: Fix typo in pinmux macro for SCL3
-
-Kiran Gunda (1):
-      dt-bindings: pinctrl: qcom-pmic-gpio: Add support for pm6150/pm6150l
-
-Krzysztof Kozlowski (5):
-      pinctrl: samsung: Fix device node refcount leaks in Exynos
-wakeup controller init
-      pinctrl: samsung: Fix device node refcount leaks in S3C24xx
-wakeup controller init
-      pinctrl: samsung: Fix device node refcount leaks in S3C64xx
-wakeup controller init
-      pinctrl: samsung: Fix device node refcount leaks in init code
-      pinctrl: Fix Kconfig indentation
-
-Linus Walleij (22):
-      pinctrl: coh901: Pass irqchip when adding gpiochip
-      pinctrl: pic32: Pass irqchip when adding gpiochip
-      pinctrl: spear/plgpio: Pass irqchip when adding gpiochip
-      pinctrl: nuvoton: npcm7xx: Pass irqchip when adding gpiochip
-      pinctrl: sirf: Pass irqchip when adding gpiochip
-      pinctrl: sirf/atlas7: Pass irqchip when adding gpiochip
-      pinctrl: at91: Pass irqchip when adding gpiochip
-      pinctrl: st: Pass irqchip when adding gpiochip
-      pinctrl: oxnas: Pass irqchip when adding gpiochip
-      pinctrl: ocelot: Pass irqchip when adding gpiochip
-      pinctrl: armada-37xx: Pass irqchip when adding gpiochip
-      pinctrl: pistachio: Pass irqchip when adding gpiochip
-      pinctrl: ingenic: Pass irqchip when adding gpiochip
-      pinctrl: nomadik: Drop support for latent IRQ
-      pinctrl: nomadik: Pass irqchip when adding gpiochip
-      pinctrl: nomadik: Simplify interrupt handler
-      Merge tag 'v5.4-rc4' into devel
-      Merge tag 'sh-pfc-for-v5.5-tag1' of
-git://git.kernel.org/.../geert/renesas-drivers into devel
-      Merge tag 'sh-pfc-for-v5.5-tag2' of
-git://git.kernel.org/.../geert/renesas-drivers into devel
-      Merge tag 'samsung-pinctrl-5.5' of
-https://git.kernel.org/.../pinctrl/samsung into devel
-      Merge tag 'v5.4-rc5' into devel
-      Merge tag 'intel-pinctrl-v5.5-1' of
-git://git.kernel.org/.../pinctrl/intel into devel
-
-Matti Vaittinen (1):
-      pinctrl: rza1: remove unnecessary static inline function
-
-Maxime Ripard (1):
-      pinctrl: Convert Allwinner Pin Controller to a schema
-
-Nishka Dasgupta (1):
-      pinctrl: samsung: Add of_node_put() before return in error path
-
-Paul Cercueil (2):
-      pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT config
-      pinctrl: ingenic: Add OTG VBUS pin for the JZ4770
-
-Qianggui Song (3):
-      pinctrl: add compatible for Amlogic Meson A1 pin controller
-      pinctrl: meson: add a new callback for SoCs fixup
-      pinctrl: meson: add pinctrl driver support for Meson-A1 SoC
-
-Rahul Tanwar (2):
-      pinctrl: Add pinmux & GPIO controller driver for a new SoC
-      dt-bindings: pinctrl: intel: Add for new SoC
-
-Rajendra Nayak (1):
-      pinctrl: qcom: sc7180: Add missing tile info in
-SDC_QDSD_PINGROUP/UFS_RESET
-
-Rasmus Villemoes (1):
-      pinctrl: devicetree.c: remove orphan pinctrl_dt_has_hogs()
-
-Rob Herring (1):
-      dt-bindings: pinctrl: Convert generic pin mux and config
-properties to schema
-
-Stephan Gerhold (1):
-      pinctrl: nomadik: db8500: Add mc0_a_2 pin group without direction control
-
-Takeshi Kihara (1):
-      pinctrl: sh-pfc: r8a77990: Rename AVB_AVTP_{MATCH,CAPTURE} pin functions
-
-Thierry Reding (1):
-      pinctrl: tegra: xusb: Add note about legacy status
-
-Will Deacon (1):
-      pinctrl: devicetree: Avoid taking direct reference to device name string
-
-YueHaibing (3):
-      pinctrl: mediatek: use devm_platform_ioremap_resource() to simplify code
-      pinctrl: mvebu: use devm_platform_ioremap_resource() to simplify code
-      pinctrl: use devm_platform_ioremap_resource() to simplify code
-
-lijiazi (1):
-      pinctrl: just return if no valid maps
-
- .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml       |  243 +++++
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  164 ---
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        |  116 ++
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |    1 +
- .../devicetree/bindings/pinctrl/pincfg-node.yaml   |  140 +++
- .../bindings/pinctrl/pinctrl-bindings.txt          |  192 +---
- .../devicetree/bindings/pinctrl/pinmux-node.yaml   |  132 +++
- .../bindings/pinctrl/qcom,msm8976-pinctrl.txt      |  183 ++++
- .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |    8 +
- .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  |    4 +
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    4 +-
- .../bindings/pinctrl/rockchip,pinctrl.txt          |    1 +
- MAINTAINERS                                        |    2 +-
- arch/sh/include/cpu-sh4/cpu/sh7734.h               |    2 +-
- drivers/pinctrl/Kconfig                            |   36 +-
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/actions/pinctrl-owl.c              |    4 +-
- drivers/pinctrl/bcm/pinctrl-bcm281xx.c             |    4 +-
- drivers/pinctrl/bcm/pinctrl-cygnus-mux.c           |    7 +-
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |    5 +-
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |    6 +-
- drivers/pinctrl/bcm/pinctrl-nsp-gpio.c             |  119 +--
- drivers/pinctrl/bcm/pinctrl-nsp-mux.c              |    6 +-
- drivers/pinctrl/devicetree.c                       |   50 +-
- drivers/pinctrl/devicetree.h                       |    7 -
- drivers/pinctrl/freescale/Kconfig                  |   12 +-
- drivers/pinctrl/intel/Kconfig                      |    7 +
- drivers/pinctrl/intel/Makefile                     |    1 +
- drivers/pinctrl/intel/pinctrl-cherryview.c         |   32 +-
- drivers/pinctrl/intel/pinctrl-intel.c              |  140 ++-
- drivers/pinctrl/intel/pinctrl-lewisburg.c          |  171 +--
- drivers/pinctrl/intel/pinctrl-tigerlake.c          |  454 ++++++++
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |    4 +-
- drivers/pinctrl/meson/Kconfig                      |    6 +
- drivers/pinctrl/meson/Makefile                     |    1 +
- drivers/pinctrl/meson/pinctrl-meson-a1.c           |  942 ++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson-axg.c          |    1 +
- drivers/pinctrl/meson/pinctrl-meson-g12a.c         |    9 +
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |    1 +
- drivers/pinctrl/meson/pinctrl-meson-gxl.c          |    1 +
- drivers/pinctrl/meson/pinctrl-meson.c              |   38 +-
- drivers/pinctrl/meson/pinctrl-meson.h              |    7 +
- drivers/pinctrl/meson/pinctrl-meson8.c             |    1 +
- drivers/pinctrl/meson/pinctrl-meson8b.c            |    1 +
- drivers/pinctrl/mvebu/Kconfig                      |   10 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |   40 +-
- drivers/pinctrl/mvebu/pinctrl-mvebu.c              |    4 +-
- drivers/pinctrl/mvebu/pinctrl-orion.c              |    7 +-
- drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c   |   12 +-
- drivers/pinctrl/nomadik/pinctrl-nomadik.c          |   81 +-
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |   32 +-
- drivers/pinctrl/pinctrl-amd.c                      |    3 +-
- drivers/pinctrl/pinctrl-artpec6.c                  |    4 +-
- drivers/pinctrl/pinctrl-at91-pio4.c                |   65 +-
- drivers/pinctrl/pinctrl-at91.c                     |   55 +-
- drivers/pinctrl/pinctrl-bm1880.c                   |    4 +-
- drivers/pinctrl/pinctrl-coh901.c                   |   54 +-
- drivers/pinctrl/pinctrl-da850-pupd.c               |    4 +-
- drivers/pinctrl/pinctrl-digicolor.c                |    4 +-
- drivers/pinctrl/pinctrl-equilibrium.c              |  944 ++++++++++++++++
- drivers/pinctrl/pinctrl-equilibrium.h              |  144 +++
- drivers/pinctrl/pinctrl-ingenic.c                  |   50 +-
- drivers/pinctrl/pinctrl-lpc18xx.c                  |    4 +-
- drivers/pinctrl/pinctrl-ocelot.c                   |   23 +-
- drivers/pinctrl/pinctrl-oxnas.c                    |   29 +-
- drivers/pinctrl/pinctrl-pic32.c                    |   29 +-
- drivers/pinctrl/pinctrl-pistachio.c                |   30 +-
- drivers/pinctrl/pinctrl-rockchip.c                 |  382 ++++++-
- drivers/pinctrl/pinctrl-rza1.c                     |    8 +-
- drivers/pinctrl/pinctrl-rza2.c                     |    8 +-
- drivers/pinctrl/pinctrl-rzn1.c                     |    2 +-
- drivers/pinctrl/pinctrl-st.c                       |   53 +-
- drivers/pinctrl/pinctrl-stmfx.c                    |   21 +
- drivers/pinctrl/pinctrl-tb10x.c                    |    4 +-
- drivers/pinctrl/pinctrl-u300.c                     |    4 +-
- drivers/pinctrl/pinctrl-xway.c                     |    4 +-
- drivers/pinctrl/pxa/pinctrl-pxa25x.c               |   13 +-
- drivers/pinctrl/pxa/pinctrl-pxa27x.c               |   13 +-
- drivers/pinctrl/qcom/Kconfig                       |  101 +-
- drivers/pinctrl/qcom/Makefile                      |    1 +
- drivers/pinctrl/qcom/pinctrl-msm.c                 |    3 +-
- drivers/pinctrl/qcom/pinctrl-msm8976.c             | 1127 ++++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-sc7180.c              |   18 +-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    5 +
- drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |    2 +
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |  121 +--
- drivers/pinctrl/samsung/pinctrl-exynos.c           |   14 +-
- drivers/pinctrl/samsung/pinctrl-s3c24xx.c          |    6 +-
- drivers/pinctrl/samsung/pinctrl-s3c64xx.c          |    6 +-
- drivers/pinctrl/samsung/pinctrl-samsung.c          |   10 +-
- drivers/pinctrl/sh-pfc/Kconfig                     |   12 +-
- drivers/pinctrl/sh-pfc/Makefile                    |    4 +-
- drivers/pinctrl/sh-pfc/core.c                      |   32 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c           |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7795.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7796.c               |   35 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |  863 ++++++++-------
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c              |   57 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c                |    4 +-
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |    8 +-
- drivers/pinctrl/sirf/pinctrl-atlas7.c              |   41 +-
- drivers/pinctrl/sirf/pinctrl-sirf.c                |   43 +-
- drivers/pinctrl/spear/pinctrl-plgpio.c             |   51 +-
- drivers/pinctrl/spear/pinctrl-spear.c              |    4 +-
- drivers/pinctrl/sprd/pinctrl-sprd.c                |   23 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c              |    4 +-
- drivers/pinctrl/tegra/pinctrl-tegra-xusb.c         |   10 +-
- drivers/pinctrl/tegra/pinctrl-tegra.c              |    3 +-
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c            |    2 +-
- drivers/pinctrl/vt8500/pinctrl-wmt.c               |    4 +-
- drivers/pinctrl/zte/pinctrl-zx.c                   |    4 +-
- include/dt-bindings/gpio/meson-a1-gpio.h           |   73 ++
- include/dt-bindings/pinctrl/at91.h                 |    4 +-
- 113 files changed, 6440 insertions(+), 1669 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
- delete mode 100644
-Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
- create mode 100644 drivers/pinctrl/intel/pinctrl-tigerlake.c
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
- create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
- create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
- create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8976.c
- create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
