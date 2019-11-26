@@ -2,115 +2,157 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F4C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74562071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574796839;
-	bh=0tVWzkUmUxRAFV9I+FwMU8XxbHncra7yJT++iN0mBDY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LQCsNzLu4I4lFyIfQ1fdMfE9KRr3y8XYhIF7l3OkG/MANkln9J1xfkkx5xgiGY5c/
-	 rT0hYY488qchGZulz7QPMljFILBnUyUCHifGOJAMUpww1iVFluPiIyxpZ9kppXxLpc
-	 xdgCiCEcINilOJOxuG22Ch4MkQbKcyoUieNbh3WI=
+	by mail.kernel.org (Postfix) with ESMTP id 5D7FA20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:35:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOLm1AXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfKZTd5 (ORCPT
+        id S1726984AbfKZTfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:33:57 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40093 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfKZTd5 (ORCPT
+        Tue, 26 Nov 2019 14:35:55 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34686 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfKZTfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:33:57 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y5so2371054lfy.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 11:33:56 -0800 (PST)
+        Tue, 26 Nov 2019 14:35:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w11so17006733ote.1;
+        Tue, 26 Nov 2019 11:35:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eNdeYyzKLpu63DGl2XEkPQDnzQUC1plincAavY5X3kM=;
-        b=QvAwJP0j2/X610cvfwW8I1VXhYWVnDyMBDlfw0V9BIJ7RmgPyzRPiAE+jEbmtwdGZe
-         OaUI0eIk1VJF8bzxEkApNnJ0YcGdNzhZut3CrbxwDAUu0nJTz0iRtxan5FaleaItrpky
-         HB1ZsWPbHd6/69K/6nXAjUupWa94CmR60Whqk=
+         :content-transfer-encoding;
+        bh=HT2M1Xfv+tvpjG1ucYQkF2fvfzcdx/n3wzuhyYktctM=;
+        b=JOLm1AXku5RalOJtjRieB/kQKtK0udRdscDeEXxH1KAHd/fYWGsjz4xkUcLdpDNU4L
+         3LF5fe0fVVNNP+dspxrYrGnLoyux4FgkHnDl0YpGt74hEHT9r9fZ5SLTycjn5+fy07Lk
+         uq/Bkwg4bYsgKll9SLSzdzC1rkiciuWzGekJqBGenTIabcP8aqXBMUgPtuU1zOvRo6Iy
+         jg/61mts1Vg1P41pVsgPAVb+vVUfGFy+4WeI0e+EFwSdLoATYfQHsd+3/aR5alvw3+XX
+         Q0NpGmPM1EXKaiGqf9+ZtKOC735yL/I9wWudIFHWCSHwQqgLZhGZ1Y7V1blYW8MXGocZ
+         ZPyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eNdeYyzKLpu63DGl2XEkPQDnzQUC1plincAavY5X3kM=;
-        b=NUBhb7HkVh13go12GA86IVju4v8J6PqB90y7n/+pB5Kw7wa8hjnfpva7M1VrvLT/gQ
-         g0MBeUoiCqhcKfh4sfrh1Ik/+/gjulCyCcGmtfFdRyQ67Yy4h5FJPrulo7WcktwVGyAP
-         A2mrVD8JyYkmydr0mnRgP5kuY5qJWubmGQtPJHDOo88Cqq1E2J5En5sVOgiwukH3tvVl
-         oKzakrXbjIaQD3oO6UMVnYnpfnZT2AvZnGW6e1VKrzDKIqjqSo/H2oxP8KdxkJ9kbeyH
-         cULUMNhdmJoLFB+L3seIyeWtImTaUymoqiEgjVd1s5pDEnDOcQPFSExPA2z/FF2bJDk+
-         lA9Q==
-X-Gm-Message-State: APjAAAV/C25RsCEp6yscfD64ym24fiTKta3vGI8va8rYUY/xg02OHd1K
-        w0217GpspEss+BfZeuTxkys/bnQ3yeM=
-X-Google-Smtp-Source: APXvYqy1fEmjxyXALZovaClwmL/UPj3Py21qfShyeVx12L9v/npb2s8fXE5/4dG8jCPndkUbROYpxg==
-X-Received: by 2002:ac2:5de4:: with SMTP id z4mr24209627lfq.17.1574796834928;
-        Tue, 26 Nov 2019 11:33:54 -0800 (PST)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id f3sm5867916lfl.58.2019.11.26.11.33.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Nov 2019 11:33:54 -0800 (PST)
-Received: by mail-lj1-f181.google.com with SMTP id e10so12441277ljj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 11:33:53 -0800 (PST)
-X-Received: by 2002:a2e:2c19:: with SMTP id s25mr27984371ljs.26.1574796833583;
- Tue, 26 Nov 2019 11:33:53 -0800 (PST)
+         :message-id:subject:to:content-transfer-encoding;
+        bh=HT2M1Xfv+tvpjG1ucYQkF2fvfzcdx/n3wzuhyYktctM=;
+        b=cVuTbMj6s67HZHDKOvZ76HuKR08hMMA5nezvzq1WGi29TVQw4Oj3eHwt2M0fBQpzFJ
+         15Lh2WDo/BikQrft/s/ifq9qNB//50P/k5+POgpnAI/QWhkGbNkXgokB4sttgWStAnjO
+         53EFVJlJu4HzWWqYIiUeCiqgKKjTzOTMztFqgZ0IUiySJL4ahrJXuqelSYv1P8BTyQof
+         GGLx7fCOZBJMHAfct/fWNSJR4wPHQFb5FwCccy3SKWAIDE3TpWGrY8fEHV7V7qWl0lsM
+         xaQrmvQPR+OndBGsIhTTut4Tfhrux4k7MPckWRf0+62il9zpZaaYF5LZ7tmIYqQ6kK9A
+         Cndg==
+X-Gm-Message-State: APjAAAU19FacvlrlpALAxZwA1A2D9HdYrgoG4qNqIc0sL/sRNy2iPh2Q
+        bRKnPneV1sYqmHxk8SK9OEWOu6mUK1DBsrnQaN8=
+X-Google-Smtp-Source: APXvYqxwy2YH1zXRvoLZhDl2LwHUaPWwfU4ZwllfPWEY5VmEMkXSvMDIFkZLaOj3kJ+NneohsrgZgOhpJ7pdvQg1LaY=
+X-Received: by 2002:a9d:64ce:: with SMTP id n14mr472946otl.263.1574796954091;
+ Tue, 26 Nov 2019 11:35:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20191125161626.GA956@gmail.com>
-In-Reply-To: <20191125161626.GA956@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 26 Nov 2019 11:33:37 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whswxd9b0A9Sr5YhjcGbA0WKrB8Rrtx89PLKeP6RdKT3A@mail.gmail.com>
-Message-ID: <CAHk-=whswxd9b0A9Sr5YhjcGbA0WKrB8Rrtx89PLKeP6RdKT3A@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/iopl changes for v5.5
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190901215214.f4vbxemdd7mf3gun@core.my.home>
+ <20190902072735.zkrueocyz4glc26n@flea> <20190902105816.zurkkh2vjfexft7t@core.my.home>
+In-Reply-To: <20190902105816.zurkkh2vjfexft7t@core.my.home>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Tue, 26 Nov 2019 11:36:37 -0800
+Message-ID: <CA+E=qVdzHGZsazfeZYBA2YZBZv_rSpk7NsV5wbiAFH80cjxajQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] add thermal driver for h6
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 8:16 AM Ingo Molnar <mingo@kernel.org> wrote:
+On Mon, Sep 2, 2019 at 3:58 AM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
 >
-> This tree implements a nice simplification of the iopl and ioperm code
-> that Thomas Gleixner discovered: we can implement the IO privilege
-> features of the iopl system call by using the IO permission bitmap in
-> permissive mode, while trapping CLI/STI/POPF/PUSHF uses in user-space if
-> they change the interrupt flag.
+> Hello Maxime,
+>
+> On Mon, Sep 02, 2019 at 09:27:35AM +0200, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Sun, Sep 01, 2019 at 11:52:14PM +0200, Ond=C5=99ej Jirman wrote:
+> > > Hello Yangtao,
+> > >
+> > > On Sat, Aug 10, 2019 at 05:28:11AM +0000, Yangtao Li wrote:
+> > > > This patchset add support for A64, H3, H5, H6 and R40 thermal senso=
+r.
+> > > >
+> > > > Thx to Icenowy and Vasily.
+> > > >
+> > > > BTY, do a cleanup in thermal makfile.
 
-I've pulled it.
+Hey Yangtao,
 
-But do we have a test for something like this:
+Are there any plans for v6?
 
-   ioperm(.. limited set of ports..)
-   access that limited set.
+Regards,
+Vasily
 
-   special_sequence() {
-       iopl(3);
-       access some extended set
-       iopl(0)
-   }
-
-   go back to access the limited set again
-
-because there's subtle interactions with people using *both* iopl()
-and ioperm() and switching between the two. Historically you could
-trivially do the above, because they are entirely independent
-operations. Does it still work?
-
-Too busy/lazy to check myself.
-
-              Linus
+> > > I've added support for A83T and also some cleanups, according to my
+> > > feedback:
+> > >
+> > > https://megous.com/git/linux/log/?h=3Dths-5.3
+> > >
+> > > Feel free to pick up whatever you like from that tree.
+> > >
+> > > For others, there are also DTS patches in that tree for H3, H5, A83T,=
+ and H6, so
+> > > that shoul make testing of this driver easier.
+> >
+> > I'm not convinced that always expanding the number of SoC supported is
+> > the best strategy to get this merged. Usually, keeping the same
+> > feature set across version, consolidating that, and then once it's in
+> > sending the new SoC support works best.
+>
+> That's fine and all, but I've mostly added DT descriptions for already su=
+pported
+> SoCs and fixed bugs in the driver, so that people can actually test the e=
+xisting
+> driver.
+>
+> I think adding DT changes will actually help get needed exposure for this
+> patch series.
+>
+> A83T support that I added, was actually just a small change to the driver=
+.
+>
+> regards,
+>         o.
+>
+> > Maxime
+> >
+> > --
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
