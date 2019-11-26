@@ -2,143 +2,214 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFEEC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16610C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5822080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7442080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 16:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfKZQSk (ORCPT
+        id S1728755AbfKZQSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:18:40 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:33573 "EHLO
+        Tue, 26 Nov 2019 11:18:44 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:39427 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbfKZQSk (ORCPT
+        with ESMTP id S1728250AbfKZQSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Nov 2019 11:18:40 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N6LMN-1hkrRY2dUf-016cSA; Tue, 26 Nov 2019 17:18:33 +0100
+ 1MaIKJ-1iL14x2lz3-00WBEs; Tue, 26 Nov 2019 17:18:34 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v5 0/8] y2038 safety in v4l2
-Date:   Tue, 26 Nov 2019 17:18:16 +0100
-Message-Id: <20191126161824.337724-1-arnd@arndb.de>
+Subject: [PATCH v5 4/8] media: v4l2-core: split out data copy from video_usercopy
+Date:   Tue, 26 Nov 2019 17:18:20 +0100
+Message-Id: <20191126161824.337724-5-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191126161824.337724-1-arnd@arndb.de>
+References: <20191126161824.337724-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KT9LBiKgC1VMou4wVMLeOPZOAr0fBKC7dja4kMF5KzxecFIk/Oq
- PVv6TlCkah1zDAbbznnAGazr70gnLuIuD+RjbGmRGFiLdC5OAbOKQrbpARMfBxRE3jsZw2w
- 7PtQbgN5rP1yjkMGshYRhxUeZN5epiosE71h6OqdxV+WLxwUA0G5CO/cOykOFdZObifvqct
- 3XQgAF3e0vZCD8CaSLeJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ahhvd/oc2yE=:SkbadSIJ83oP7J+D6Pzf46
- 1jJ5wtWlM72SKhLS/PE17pHJ6/3zvaTpQ0ApywCxIFKrTFojqC1/3MM719moSQADNjVFXR6/O
- d/7JeZlfPfcRstijxPfAPL1efayX9AgNGZ1JeqRIzNy9P+iZYs9DHvSWgQpdOVHQIg57DkUWM
- xtITWpk8aIfnsODsOYs9HBbIh/PkP4jh9GHQNDMg46tWa8t55PJr0EOaDBvAK5Tk7ezAUOWzf
- wzp5xeYO7pAlZDVSJ1//k2S69SSKBt2Wm3WCz+ruH8c6FeykeaPB9DgqYHMHR1zRcL+MynwLA
- XW5INgBt2ZCnnwNTVhSk8JhvKpACCdT1RIGDwIKtzANqnbEXdON2/cIUawzxJWLH7d09J37HN
- n0v6fxVijtk650pjWjV+k86HIt4xdtWh//9/3eSdoPLGOhpA5l5/lcMOe9lT+IeJQ01IeFETA
- QE8M/g0onOEhcIKIAoxNg7FcHs7FUaxJRqhEmZMHZdZcCSdwR6JMsj7bxmntCytg15If6uCEN
- +u2uHID7zPWfC/Gqonhl9rt3VsNu2QPZhqapx4XZq9ZteeUNNe7EAdeQVCsJjm6fSymHsMxbo
- ojaHRaIZED5wFgZMl6utgeQIHEJcDukxHBo885jyCLXoch/EyMz5gRFG4Rl1TfHQ32dsB29Mo
- qmerZ2EN7PGp2jZY8USkwViiiOxIhce0OJwctPRmy4Yq7NsOlnE5deFzz69tNNjRROpL2fzwW
- j270CES3LRmgbalRmn+U05xKQV546nd84VcPC4+PM9PuSv2TFyV9mrmoino8T21nN9579U6bd
- ESiMC6GzWl27eSt8zsxKcA0gGzLmLpS+dZxoX5QHQyMylWy9MmOKcxwM5s9t+5KtyX7R6YgJJ
- 87KdWyvqO/OHXxfRhjqg==
+X-Provags-ID: V03:K1:r++WgAlr/NGAG5oOEEOa/W39DoBoyYcLns/mRUgxxpoktk06+ym
+ 5xeohg1HW7rYPasW+z9VUJajRk+OLnFxeuCVTax2GwEsOcY4rGelk560Ro/n/jyS+lkXDPq
+ Ilx8QVYx72Tz5qAK/RizIX+8hLDvqfNIZho0SByxH2KR02Wd7eeVxVOK9ZGMKK+gU/0GGhy
+ GZkKeyy9I+NH8FS/hJe6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wWBfceJaoWk=:WQemL2H/yF3X7qE+DDrrJj
+ bCsQ//nqLfGQ6m/CYqhbqGF1XoM4xYMEteIjS/v4dfhx4V2I9Y5+C20EsKMr7qxMTKqauKO+/
+ O9SDc3AVJKKS0FlPrLptoObqW69ooCl6VCglGBHE3ZttrUJuN+TAf7buuwN/XJgr5Icvz3ekT
+ s6EmEC6Y340iWOipAPTrlJgozryk0xpKDLF9k+wWaIbMP7YkNKq3oQ/t7ILft/aihtv98M3QP
+ lRJZqq6ZLi3HgscdShxdvuBZxkGXOhsQWAghoJFlVvDNRYJevKQx4a75Cp/C3AN1O/zOleQVQ
+ HgNuSxAMZY24BdFiGrvXBTIes7W8ZZLeDX65emvtm1B+5Pdj82g0RYYrNsJ5H/jeKNVOA5bBV
+ xkVeazjhgBWzfHU78esr8+5OUEPyJt/Rh1tT5CR54AUpG9M3W9u92PLFcYl5dlLF3mCll9KXO
+ OoFjfwfBKg4RWYM3qLe5RsMyt7akBVpETHcxE3Mj8b7f8IggrqaYfUgcWcQo7Q09EMtqIf0XL
+ 7KTXeFcne9Vi2kah7VolsPnWWPHOs+ED+cIw/uFSyd944qn8qQ07RkavH9gsiFm25NNWG6hxC
+ HnITohetp+AJuQ/2GCBLDfLH4ntTMbd2UBYK1dsd89gY7hSrzo0Ds9squxv4BLd80V8wROl4/
+ dc6NzuQdIbGKM8W9rarKd7Gx27zQpYNu+Zed5TWzcMobIzcs0GSwrBGXdTiJbYknv7gHefK7h
+ rD9vncTnmPVucLn+Fwcv1L62Qvoqk6sBR+TuW/g+xoyrNTgFb9lc7r5Q3D1zOi8S7nspZJWXM
+ U+HbZyIDAUdDU3IX1c7uwgtoE3ltsT9frlT254gsZE5rIHNUiIB7UuDdz9zZwByl2CbQ/0b3D
+ +uaDnWrP756v6gNDPNAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm in the process of finishing up the last bits on y2038-unsafe
-code in the kernel, this series is for v4l2, which has no problem
-with overflow, but has multiple ioctls that break with user space
-built against a new 32-bit libc.
+The copy-in/out portions of video_usercopy() are about to
+get more complex, so turn then into separate functions as
+a cleanup first.
 
-I posted similar patches as part of a series back in 2015, the
-new version was rewritten from scratch and I double-checked with
-the old version to make sure I did not miss anything I had already
-taken care of before.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/media/v4l2-core/v4l2-ioctl.c | 107 +++++++++++++++++----------
+ 1 file changed, 68 insertions(+), 39 deletions(-)
 
-Hans Verkuil worked on a different patch set in 2017, but this
-also did not get to the point of being merged.
-
-My new version contains compat-ioctl support, which the old one
-did not and should be complete, but given its size likely contains
-bugs. I did randconfig build tests, but no runtime test, so
-careful review as well as testing would be much appreciated.
-
-With this version, the newly added code takes care of the existing
-ABI, while the existing code got moved to the 64-bit time_t
-interface and is used internally. This means that testing with
-existing binaries should exercise most of the modifications
-and if that works and doesn't get shot down in review, we can
-probably live without testing the new ABI explicitly.
-
-I'm not entirely happy with the compat-ioctl implementation that
-adds quite a bit of code duplication, but I hope this is
-acceptable anyway, as a better implementation would likely
-require a larger refactoring of the compat-ioctl file, while
-my approach simply adds support for the additional data structure
-variants.
-
-I uploaded git branch on top of the v4l2/dvb branch to [2].
-
-      Arnd
-
-Changes since v4:
-
-- Move non-public contents out of uapi header
-- split out __kernel_v4l2_timeval into separate struct
-- use compound initializers for v4l2_event_time32 and
-  v4l2_buffer_time32 conversion
-- add comment for v4l2_buffer_get_timestamp()
-
-Changes since v3:
-
-- This is a minor update compared to version 3 of this series,
-  with bugfixes for small mistakes that I found or that were
-  reported by automated build bots.
-
-
-[1] https://lwn.net/Articles/657754/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038-v4l2-v5
-
-Arnd Bergmann (8):
-  media: documentation: fix video_event description
-  media: v4l2: abstract timeval handling in v4l2_buffer
-  media: v4l2-core: compat: ignore native command codes
-  media: v4l2-core: split out data copy from video_usercopy
-  media: v4l2-core: fix VIDIOC_DQEVENT for time64 ABI
-  media: v4l2-core: fix v4l2_buffer handling for time64 ABI
-  media: v4l2-core: fix compat VIDIOC_DQEVENT for time64 ABI
-  media: v4l2-core: fix compat v4l2_buffer handling for time64 ABI
-
- .../media/uapi/dvb/video-get-event.rst        |   2 +-
- Documentation/media/uapi/dvb/video_types.rst  |   2 +-
- .../media/common/videobuf2/videobuf2-v4l2.c   |   4 +-
- drivers/media/pci/meye/meye.c                 |   4 +-
- drivers/media/usb/cpia2/cpia2_v4l.c           |   4 +-
- drivers/media/usb/stkwebcam/stk-webcam.c      |   2 +-
- drivers/media/usb/usbvision/usbvision-video.c |   4 +-
- drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 470 +++++++++++++++---
- drivers/media/v4l2-core/v4l2-event.c          |   5 +-
- drivers/media/v4l2-core/v4l2-ioctl.c          | 209 ++++++--
- drivers/media/v4l2-core/v4l2-subdev.c         |  26 +-
- drivers/media/v4l2-core/videobuf-core.c       |   5 +-
- include/media/v4l2-common.h                   |  21 +
- include/media/v4l2-ioctl.h                    |  55 ++
- include/trace/events/v4l2.h                   |   2 +-
- include/uapi/linux/videodev2.h                |  29 ++
- 16 files changed, 709 insertions(+), 135 deletions(-)
-
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 4e700583659b..2ce91f88369b 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -3023,8 +3023,69 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
+ 	return ret;
+ }
+ 
++static unsigned int video_translate_cmd(unsigned int cmd)
++{
++	return cmd;
++}
++
++static int video_get_user(void __user *arg, void *parg, unsigned int cmd,
++			  bool *always_copy)
++{
++	unsigned int n = _IOC_SIZE(cmd);
++
++	if (!(_IOC_DIR(cmd) & _IOC_WRITE)) {
++		/* read-only ioctl */
++		memset(parg, 0, n);
++		return 0;
++	}
++
++	switch (cmd) {
++	default:
++		/*
++		 * In some cases, only a few fields are used as input,
++		 * i.e. when the app sets "index" and then the driver
++		 * fills in the rest of the structure for the thing
++		 * with that index.  We only need to copy up the first
++		 * non-input field.
++		 */
++		if (v4l2_is_known_ioctl(cmd)) {
++			u32 flags = v4l2_ioctls[_IOC_NR(cmd)].flags;
++
++			if (flags & INFO_FL_CLEAR_MASK)
++				n = (flags & INFO_FL_CLEAR_MASK) >> 16;
++			*always_copy = flags & INFO_FL_ALWAYS_COPY;
++		}
++
++		if (copy_from_user(parg, (void __user *)arg, n))
++			return -EFAULT;
++
++		/* zero out anything we don't copy from userspace */
++		if (n < _IOC_SIZE(cmd))
++			memset((u8 *)parg + n, 0, _IOC_SIZE(cmd) - n);
++		break;
++	}
++
++	return 0;
++}
++
++static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
++{
++	if (!(_IOC_DIR(cmd) & _IOC_READ))
++		return 0;
++
++	switch (cmd) {
++	default:
++		/*  Copy results into user buffer  */
++		if (copy_to_user(arg, parg, _IOC_SIZE(cmd)))
++			return -EFAULT;
++		break;
++	}
++
++	return 0;
++}
++
+ long
+-video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
++video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
+ 	       v4l2_kioctl func)
+ {
+ 	char	sbuf[128];
+@@ -3036,6 +3097,7 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
+ 	size_t  array_size = 0;
+ 	void __user *user_ptr = NULL;
+ 	void	**kernel_ptr = NULL;
++	unsigned int cmd = video_translate_cmd(orig_cmd);
+ 	const size_t ioc_size = _IOC_SIZE(cmd);
+ 
+ 	/*  Copy arguments into temp kernel buffer  */
+@@ -3050,37 +3112,12 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
+ 			parg = mbuf;
+ 		}
+ 
+-		err = -EFAULT;
+-		if (_IOC_DIR(cmd) & _IOC_WRITE) {
+-			unsigned int n = ioc_size;
+-
+-			/*
+-			 * In some cases, only a few fields are used as input,
+-			 * i.e. when the app sets "index" and then the driver
+-			 * fills in the rest of the structure for the thing
+-			 * with that index.  We only need to copy up the first
+-			 * non-input field.
+-			 */
+-			if (v4l2_is_known_ioctl(cmd)) {
+-				u32 flags = v4l2_ioctls[_IOC_NR(cmd)].flags;
+-
+-				if (flags & INFO_FL_CLEAR_MASK)
+-					n = (flags & INFO_FL_CLEAR_MASK) >> 16;
+-				always_copy = flags & INFO_FL_ALWAYS_COPY;
+-			}
+-
+-			if (copy_from_user(parg, (void __user *)arg, n))
+-				goto out;
+-
+-			/* zero out anything we don't copy from userspace */
+-			if (n < ioc_size)
+-				memset((u8 *)parg + n, 0, ioc_size - n);
+-		} else {
+-			/* read-only ioctl */
+-			memset(parg, 0, ioc_size);
+-		}
+ 	}
+ 
++	err = video_get_user((void __user *)arg, parg, orig_cmd, &always_copy);
++	if (err)
++		goto out;
++
+ 	err = check_array_args(cmd, parg, &array_size, &user_ptr, &kernel_ptr);
+ 	if (err < 0)
+ 		goto out;
+@@ -3131,15 +3168,7 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
+ 		goto out;
+ 
+ out_array_args:
+-	/*  Copy results into user buffer  */
+-	switch (_IOC_DIR(cmd)) {
+-	case _IOC_READ:
+-	case (_IOC_WRITE | _IOC_READ):
+-		if (copy_to_user((void __user *)arg, parg, ioc_size))
+-			err = -EFAULT;
+-		break;
+-	}
+-
++	err = video_put_user((void __user *)arg, parg, orig_cmd);
+ out:
+ 	kvfree(mbuf);
+ 	return err;
 -- 
 2.20.0
 
