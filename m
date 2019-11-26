@@ -2,102 +2,94 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFDAC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C52DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7332075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF13D20835
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 19:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ur3wMnD8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RlptzD05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfKZTpA (ORCPT
+        id S1726199AbfKZTt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:45:00 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43727 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfKZTpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:45:00 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47MvWF3XFWz9sPV;
-        Wed, 27 Nov 2019 06:44:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574797498;
-        bh=bKB2nIv6EI51TfPvE5J9CjUCTmuAd+A4EK8VMXJ64lE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ur3wMnD8RkQAeI8kJlrvXnS/YgerJlkQICHlzFT2LQkMoNiipQ5ZMqMCaGmqen76w
-         ftqmykjhhSA2D/Q2QgTqImEBvfJ5eKetq688LU6TasZ0pS4tGRV41VzcnRnVz4o8Ta
-         yLZiMECQhbKhxP9qVwjQdWtfAApAcM924EBAtKerTh4M1pt762FxDQ/GNnfJq1JIae
-         BZYLPyD++CgAoSakWrfXpBD+EtrkPw8soY/FzGyaHL6WtSX+kZqWQaQTjtN4CI2unH
-         KMALt8nSFl6pp+HSVEFoLQmRArC9fM77e+JKiGfYW4dyZ8uri98bYEmwyiIn4eXQGe
-         AuzZOK9MiVlqQ==
-Date:   Wed, 27 Nov 2019 06:44:56 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Subject: linux-next: Fixes tag needs some work in the amdgpu tree
-Message-ID: <20191127064456.285e233c@canb.auug.org.au>
+        Tue, 26 Nov 2019 14:49:59 -0500
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:41942 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfKZTt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 14:49:58 -0500
+Received: by mail-pg1-f172.google.com with SMTP id 207so9505296pge.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 11:49:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=15zl+Qd2phUwLHXSf0W8dzNhE08wTuzt1OowuWwLasU=;
+        b=RlptzD05sQPfKEdqN9ncIDMkGSSjPNwd4Sh1EmbOB89KU657sYJiCl1becpAaIl8Kh
+         fnc8PdhDIgqLmefynzDkvFwdNuOZVcOPOeZcC9B8ZsdZ7pmLlb/jmtz1yUQnwnL2WoTd
+         G02WBjFa47aoUhjBAoZ+QzGXncAGnNqAIxfRRi3zFaRmRcdDEddDRO3ym97a1JQtGaYN
+         /v9LrtEX1kQWvFlCSH1HqJBNxqNmWvDTVDRKakP/lc8sZKR8aKyLAz+D90pbeGypLdP/
+         fm0RdNrehTT3ch1LICaRZ9LosdNCkFjN9lNh6OLFIb1g68kdSdyVa7gDrtNZGph3ydl6
+         cBIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=15zl+Qd2phUwLHXSf0W8dzNhE08wTuzt1OowuWwLasU=;
+        b=MmDW9glxAi5kTuPRc2x20iAsvqlxJlVZA9cNrhNOeXd3gKWrOMVoAy8no3WYo92Kr6
+         7C2Ow/sYXQvVw5AynqW1LPDAcvyC05N5gCaMgtX0i7G0+xEhM2YcyB/FXzO+USHHSxQe
+         589tayu1hORGfzRmykAKehzasLTPk9vQfxJhOm5AEE1rhK3stFgAoIdiN8hTF150nGYc
+         fQORT69pBgV2sqoOXzuw/bunfy4qbZqnv5KtCDGcCJM2MlHKEgkjD88y04HrqMPK+CxZ
+         vARtFIaYvtW+qKA/XfhKdNn6G6bSYkmOlHcy1uw3SmCR/br9CTw/kUvthevn208fUMqa
+         Ukyw==
+X-Gm-Message-State: APjAAAWuUFqmOtfGt4RHH73qO3ySvADVO1ecSHqG/TK+j1/mST2jDpRU
+        gkck0VxdpPVX+3eNLAYg4vfNig==
+X-Google-Smtp-Source: APXvYqwdtW1r6IWED9o1iJW79WrWZ43Jde/wxzMDfLa4CNDsYp4vXZZDWyO9wmIy+qse3V3e0kum8g==
+X-Received: by 2002:a62:e119:: with SMTP id q25mr44001315pfh.161.1574797797660;
+        Tue, 26 Nov 2019 11:49:57 -0800 (PST)
+Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
+        by smtp.googlemail.com with ESMTPSA id w2sm13917852pgm.18.2019.11.26.11.49.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 11:49:57 -0800 (PST)
+From:   Barret Rhoden <brho@google.com>
+Subject: AVX register corruption from signal delivery
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Rik van Riel\"" <riel@surriel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Message-ID: <c87e93c3-5f30-f242-74b7-6c7ccc91158a@google.com>
+Date:   Tue, 26 Nov 2019 14:49:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uvQgj.5xpwWxPH6+/.NfLE2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uvQgj.5xpwWxPH6+/.NfLE2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi -
 
-Hi all,
+The Go Team found a bug[1] where the AVX registers can get corrupted 
+during signal delivery.  They were able to bisect it to commits related 
+to the "x86: load FPU registers on return to userland" patchset[2].
 
-In commit
+The bug requires the kernel to be built with GCC 9 to trigger.  In 
+particular, arch/x86/kernel/fpu/signal.c needs to be built with GCC 9.
 
-  1b8b896f1ea5 ("drm/amd/display: Null check aconnector in event_property_v=
-alidate")
+Thanks,
 
-Fixes tag
+Barret
 
-  Fixes: cc5dae9f6286 ("drm/amd/display: Refactor HDCP to handle multiple
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=205663
+[2] 
+https://lore.kernel.org/kvm/20190403164156.19645-1-bigeasy@linutronix.de/
 
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: b1abe5586ffc ("drm/amd/display: Refactor HDCP to handle multiple dis=
-plays per link")
-
-Also, please do not split Fixes tags over more than one line and keep
-them with the rest of the tags at the end of the commit message.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uvQgj.5xpwWxPH6+/.NfLE2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3dgLgACgkQAVBC80lX
-0Gyjawf9F4TmFRTB10Ve67bvnv7BI9VOOiU3DcI6q4vksNELFIvY9/1W/Zh4ZNoY
-76NsYHhBYgLAu05o+weAL5J5xEunYz+WHmQPNiIGWlkAi04RZlfRsd7usu4/8OIz
-D9QvNQm8r6YAc1FRZFK5EjT0wRc3/A3jMHTTDnkAtfkpKYtBYvcxRxFAhdug8cIM
-DjuCl/UOYWlmk8z75TZm7gTWkLknXV0vugibdC63xT4q2yOApI46HtATmUAPSYkG
-o4rY5W0QlH42N8cFjdJc63Hl+uHRtr7i/PMdzZm6guxRrNRyPWIKztZI220XtXTn
-JECleURYMdpSB2JrIsqp1K3huAcCrQ==
-=5hT9
------END PGP SIGNATURE-----
-
---Sig_/uvQgj.5xpwWxPH6+/.NfLE2--
