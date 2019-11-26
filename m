@@ -2,126 +2,160 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A17EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F24C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8C120659
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFA72071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 15:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mR/SHrJk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZryQJlQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfKZPjD (ORCPT
+        id S1728592AbfKZPj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:39:03 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41945 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfKZPjD (ORCPT
+        Tue, 26 Nov 2019 10:39:58 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38059 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfKZPj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:39:03 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b18so22993450wrj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Nov 2019 07:39:01 -0800 (PST)
+        Tue, 26 Nov 2019 10:39:58 -0500
+Received: by mail-qt1-f194.google.com with SMTP id 14so21865887qtf.5;
+        Tue, 26 Nov 2019 07:39:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=8M4WeC77001HU9K3OuWdzr0/6Ckzu4Btb0vCvwuuEEY=;
-        b=mR/SHrJkmHMPldRrAFgSYdjriCZZSc3YubJJ1LswCfp0Y+Kf3xBxhJ3bciSEUx8FvS
-         6Vt7kxcIVbIChKir64Sng8ZkuDHQRuYOQm8VAtFL9xCUJZtwJ9eiRpLADhHnKotmCmuN
-         jtcvirGL0a9jYH/SXLcR5VbSRlYVl3aVPDk89efOOWey5JZaeH0x7AExfRzb0xohhaO3
-         YeY44+9g5VM3BsZJ2PcBt1Km0o7k6iZcZeiOpsVxw5P3NnK/HqK5I2mOI6wczkhe3/It
-         Eook/YZC4159YCPY9jkOkyc8gE+pQqca+Fp3tQBhyey+RK8cOPv3ehhzqkRTACtLLet4
-         R0JQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jqOLj+zmhCKP7Os2hVh7KNkHJtVIfRP5Fr7ygxzfC/k=;
+        b=ZryQJlQklZkrilo3PB6/3iQkzFYlNRAE83eqDldO3pYYrXbuN1qjXyaSyDg40Q3Ww5
+         r/FrUnvEAuKgvzCqaPXgOAL3PNq9MLItAvdW9jCp76ILGphb7Ljr4ZDpVQdOftgxTp7F
+         +RT9wdHGyU7YMnPBOP0zn8Kfwh7I22gbbIdHKkFpN+GiSlclJY3nPMJ5e1czT60+X2H1
+         NMP16huoRg+U4XS4O5sxylbyxdM60MhTXvMqCvW3dtDDvnw321e1QpjjghbHVJ8qY2cB
+         BzR/B9F4vMkDMy+0UwZ7YL2js25YJkFu3fbgp3wMLIv+/gYJ4KVTkKKEaEyCFMQNO+dH
+         INWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=8M4WeC77001HU9K3OuWdzr0/6Ckzu4Btb0vCvwuuEEY=;
-        b=Lc/CNjhqtXEe4ZuhPxi5T+uYAO89glj31F0w3RHlQvrN/6Z8IShcNo0dn2AdFu4oaN
-         5uGk6txyYLtmCTLdgHZy8G+bUdog7faBJI0zyOdIxiceGQa6Qw5/lo5U41u0PTKvOl0W
-         8dEcQH2d+ET8FCAyIIgxKw/HGN2dbnRwzVOfU9FUjNsa8HCi8KaNkh7CSBJtavcyPW97
-         L9nIsqUuDoT6SL14eVX6ZqP6Tr/zDO7XUxzPDM7ESbHhWrXPpwHnRDkRMpk/okAFRbOR
-         n+BPUZ/X3C0pRSEbn9I+BI/sDgMFONJUkNGzi/dI+WmTxRUGjl622sroMYYRoVRqafbO
-         OhJg==
-X-Gm-Message-State: APjAAAVTPaX5153MxLybWRtuA23PpfjXwm0HwxWW+QFu6Bxw8Ws4raUq
-        5boIBut1Qm0wBJRmlw37rBx1PuaQ02RYGw==
-X-Google-Smtp-Source: APXvYqyZPMwPDWs0EFOTxZYrE5LTKn4ic1vtelHq6ZdCIrDANfaJtO1aEY9UUVS019Zne+tAylesNg==
-X-Received: by 2002:adf:9786:: with SMTP id s6mr39056324wrb.188.1574782740652;
-        Tue, 26 Nov 2019 07:39:00 -0800 (PST)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 60sm14791602wrn.86.2019.11.26.07.38.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jqOLj+zmhCKP7Os2hVh7KNkHJtVIfRP5Fr7ygxzfC/k=;
+        b=Jou5feRaC96lUcXxudDoS8sFOqBcH9WKKvaFpQtDEbB21YaD7sJhgSA008yR9Yf6Dc
+         j57hctEQZlcm+h7rqRAQpPXaBx4HJDxNLpale6kh9Oo8WsTaPzyR+Fizxpq372cvljAK
+         YKICv8ITTHTjKDHpTBp+FStJGPQKQbEXD2OeY6Mdp4aaIz5izn/Pe1cpr48VRQAetIEy
+         OfU2OxNcXFNEPQxc4atO506pynFtaoOm0WN+jGXnsL5XCq74FdSZjzzFcRf6P9kaFAus
+         aDhVDnO2fNNV8/mHweIHamukvZol5eaAXNQCTflpgMOCtM7a9c/r03wnzpU1JP4OmB96
+         2q3w==
+X-Gm-Message-State: APjAAAXtTq+ElCLD8xLqAKwUAf6CnhsURbqGqK9tUXheiD2zc5X0Sz0p
+        ESnLW3BU5+4JUHa8PTVC6UM=
+X-Google-Smtp-Source: APXvYqwRg51oIe6DA1IT2q++wUTdAqhqELpT4Qih6rNjRSxcYqDcBeXG9pFn2r75cIpoj1BsYMC0kg==
+X-Received: by 2002:ac8:690c:: with SMTP id e12mr23339115qtr.239.1574782796765;
+        Tue, 26 Nov 2019 07:39:56 -0800 (PST)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id z64sm6047532qtc.4.2019.11.26.07.39.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 07:38:59 -0800 (PST)
-Date:   Tue, 26 Nov 2019 15:38:58 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [GIT PULL] kgdb changes v5.5-rc1
-Message-ID: <20191126153858.bclidzxinfjrtkl6@holly.lan>
+        Tue, 26 Nov 2019 07:39:55 -0800 (PST)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        rfontana@redhat.com, kstewart@linuxfoundation.org,
+        tglx@linutronix.de
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dummy_dvb_fe: register adapter/frontend
+Date:   Tue, 26 Nov 2019 12:31:57 -0300
+Message-Id: <20191126153157.26355-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+Before using the DTV frontend core, a bridge driver should register the
+new frontend at the subsystem and unregister it at device detach / removal.
 
-are available in the Git repository at:
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+---
+ drivers/media/dvb-frontends/dvb_dummy_fe.c | 39 ++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.5-rc1
+diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+index 4db679cb70ad..1ccb58c67e8e 100644
+--- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
++++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+@@ -13,12 +13,12 @@
+ #include <media/dvb_frontend.h>
+ #include "dvb_dummy_fe.h"
+ 
++DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+ 
+ struct dvb_dummy_fe_state {
+ 	struct dvb_frontend frontend;
+ };
+ 
+-
+ static int dvb_dummy_fe_read_status(struct dvb_frontend *fe,
+ 				    enum fe_status *status)
+ {
+@@ -84,7 +84,36 @@ static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
+ 
+ static int dvb_dummy_fe_init(struct dvb_frontend* fe)
+ {
+-	return 0;
++	int result = 0;
++	struct dvb_adapter *adapter = fe->dvb;
++
++	result = dvb_register_adapter(adapter,
++				      KBUILD_MODNAME,
++				      THIS_MODULE,
++				      adapter->device,
++				      adapter_nr);
++
++	if (!result) {
++		pr_err("DVB_DUMMY_FE: Failed to register the adapter, errno:%d",
++			result);
++		goto err;
++	}
++
++	result = dvb_register_frontend(adapter, fe);
++	if (!result) {
++		pr_err("DVB_DUMMY_FE: Failed to register the frontend, errno:%d",
++			result);
++		goto err;
++	}
++
++	return result;
++
++err:
++	dvb_unregister_adapter(adapter);
++	dvb_unregister_frontend(fe);
++	dvb_frontend_detach(fe);
++	return result;
++
+ }
+ 
+ static int dvb_dummy_fe_set_tone(struct dvb_frontend *fe,
+@@ -102,6 +131,12 @@ static int dvb_dummy_fe_set_voltage(struct dvb_frontend *fe,
+ static void dvb_dummy_fe_release(struct dvb_frontend* fe)
+ {
+ 	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
++	struct dvb_adapter *adapter = fe->dvb;
++
++	dvb_unregister_adapter(adapter);
++	dvb_unregister_frontend(fe);
++	dvb_frontend_detach(fe);
++
+ 	kfree(state);
+ }
+ 
+-- 
+2.24.0
 
-for you to fetch changes up to c58ff643763c78bef12874ee39995c9f7f987bc2:
-
-  kdb: Tweak escape handling for vi users (2019-10-28 12:08:29 +0000)
-
-----------------------------------------------------------------
-kgdb patches for 5.5-rc1
-
-The major change here is the work from Douglas Anderson that
-reworks the way kdb stack traces are handled on SMP systems.
-The effect is to allow all CPUs to issue their stack trace which
-reduced the need for architecture specific code to support stack
-tracing.
-
-Also included are general of clean ups from Doug and myself:
-
- * Remove some unused variables or arguments.
- * Tidy up the kdb escape handling code and fix a couple of odd
-   corner cases.
- - Better ignore escape characters that do not form part of an
-   escape sequence. This mostly benefits vi users since they are most
-   likely to press escape as a nervous habit but it won't harm anyone
-   else.
-
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-----------------------------------------------------------------
-Daniel Thompson (6):
-      kdb: Avoid array subscript warnings on non-SMP builds
-      kdb: Tidy up code to handle escape sequences
-      kdb: Simplify code to fetch characters from console
-      kdb: Remove special case logic from kdb_read()
-      kdb: Improve handling of characters from different input sources
-      kdb: Tweak escape handling for vi users
-
-Douglas Anderson (4):
-      kgdb: Remove unused DCPU_SSTEP definition
-      kdb: Remove unused "argcount" param from kdb_bt1(); make btaprompt bool
-      kdb: Fix "btc <cpu>" crash if the CPU didn't round up
-      kdb: Fix stack crawling on 'running' CPUs that aren't the master
-
- kernel/debug/debug_core.c      |  34 ++++++
- kernel/debug/debug_core.h      |   3 +-
- kernel/debug/kdb/kdb_bt.c      | 116 +++++++++++----------
- kernel/debug/kdb/kdb_io.c      | 231 ++++++++++++++++++++---------------------
- kernel/debug/kdb/kdb_private.h |   1 +
- 5 files changed, 208 insertions(+), 177 deletions(-)
