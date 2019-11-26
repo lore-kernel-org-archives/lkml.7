@@ -2,139 +2,192 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325D2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C42C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8E42075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3B12080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 11:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="aMLA567e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbfKZLef (ORCPT
+        id S1728158AbfKZLft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:34:35 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:33713 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfKZLee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:34:34 -0500
-Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MplPf-1i1Mpg0g4T-00qA97; Tue, 26 Nov 2019 12:34:33 +0100
-Received: by mail-qv1-f44.google.com with SMTP id d3so7085023qvs.11;
-        Tue, 26 Nov 2019 03:34:32 -0800 (PST)
-X-Gm-Message-State: APjAAAU+pH51GEjIlhW6eo4VkhwYVMC1FqNj7q87+1Kq5+e39faVEjNz
-        Aj6Lir6edEJywp+2W5/FVJX6XaPkCU+40ZXtdYI=
-X-Google-Smtp-Source: APXvYqyP0ubV+wbmtUnKnlLA9Dg95JHEfh5NUlQS2Rfnof25MN29f8oIJkRplALMOpCBO0IcGYxWRhEARVn65P2Yuig=
-X-Received: by 2002:a05:6214:811:: with SMTP id df17mr15089086qvb.197.1574768071947;
- Tue, 26 Nov 2019 03:34:31 -0800 (PST)
+        Tue, 26 Nov 2019 06:35:49 -0500
+Received: from mail-eopbgr750049.outbound.protection.outlook.com ([40.107.75.49]:62614
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728159AbfKZLft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Nov 2019 06:35:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VmnFpKvK9pT/pggg8bC5INq0BUbNnneiBn7w55FkFGrVxrrx+T+Bxw4mzIK+TxyQdb5tGz9hrYtEPDGH/E3vK9RgTbnvRS4Sk5WdYTkZgh3N4/5xdUkFUi2OUgFObcwg2ktPeltAEHimei7BzLEjKMhFXLBHuzqQLJigYdty2cZQS+AWCgTZ/zsLvLRIjeKHLVdyqOYFryJbAZnOhDE4oyIycam4EWK28Gqa55WJfb9+UlRMLtMexcbOaYj0O2P6ZxqnNtM8VXdqzsmAKrgeo/S9xpvoJoEh1M4rllTKksTvdN4WudxJTE+VBNO9AE6Wl5uLOWOnQMdaXpSjFlr1Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1rmhTS8OhLr9p37Bg+hspR0aRgFuFDo9W34xYs1FsBA=;
+ b=TJTynvOxsGtmb8JJTtrZ0rLfsrWLpDYFdSamG6M/oVXjeoYOng6/unKQ0BnznDhb/T/orSxkx+GUnTlUzChGvuouxCxPi+NNnJ3KgavPiRDaxF4vod6v5Yid4SocFjcNSvdrJIht+h3EoQr9l55szpGC3ZeKn2ZXUMrg82ngwZ1auF8BgcJMx0WzTPD2MNLSlYNwPPiFKxJK+aGG1ZZwLhVx1JOiovhflQ1qK9iyz9Sz01+LTjTGZpmWH5R60GTcjcwuMIBk5zGlFIxz4W/cr1UXAdF8vI+rVip4Z2yD/7bzA94KKf/8bmPOWziTdj1/pNvxT8Q7G20qN+lSYVdYsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1rmhTS8OhLr9p37Bg+hspR0aRgFuFDo9W34xYs1FsBA=;
+ b=aMLA567e12c1SHCsKxZ0npL/2SS7x6ppaYv68O99fu7aOTRFchMYoX+owzEe8SjWXQfftwcmm37CoFp/dn3nnAcjZkOgzTWNQpOVjuB2Y+qswW005c54GCWBKaI0NjNyahY4o/Kbgsw53eUHUMrkz9RTDSzDDm4D4yBKShikAYU=
+Received: from BYAPR02MB4055.namprd02.prod.outlook.com (52.135.202.143) by
+ BYAPR02MB5064.namprd02.prod.outlook.com (20.176.253.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.21; Tue, 26 Nov 2019 11:35:43 +0000
+Received: from BYAPR02MB4055.namprd02.prod.outlook.com
+ ([fe80::fccc:d399:e650:9a9e]) by BYAPR02MB4055.namprd02.prod.outlook.com
+ ([fe80::fccc:d399:e650:9a9e%5]) with mapi id 15.20.2474.023; Tue, 26 Nov 2019
+ 11:35:43 +0000
+From:   Rajan Vaja <RAJANV@xilinx.com>
+To:     Rajan Vaja <RAJANV@xilinx.com>,
+        "ichal.simek@xilinx.com" <ichal.simek@xilinx.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drivers: clocksource: Use ttc driver as platform driver
+Thread-Topic: [PATCH] drivers: clocksource: Use ttc driver as platform driver
+Thread-Index: AQHVlVaOW+EHQwVffUWJv7WplPkHr6edcAHg
+Date:   Tue, 26 Nov 2019 11:35:42 +0000
+Message-ID: <BYAPR02MB4055F607B83F35B5FBF68CC6B7450@BYAPR02MB4055.namprd02.prod.outlook.com>
+References: <1573122659-13947-1-git-send-email-rajan.vaja@xilinx.com>
+In-Reply-To: <1573122659-13947-1-git-send-email-rajan.vaja@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=RAJANV@xilinx.com; 
+x-originating-ip: [14.142.15.114]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8f102ac7-620c-4447-5dbd-08d77264c570
+x-ms-traffictypediagnostic: BYAPR02MB5064:|BYAPR02MB5064:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB5064A643998992D2F48B7D9CB7450@BYAPR02MB5064.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0233768B38
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(13464003)(199004)(189003)(66946007)(2201001)(14444005)(86362001)(7736002)(74316002)(316002)(25786009)(305945005)(76116006)(256004)(2906002)(14454004)(478600001)(54906003)(8676002)(81156014)(446003)(6116002)(81166006)(3846002)(8936002)(66556008)(64756008)(66446008)(33656002)(2501003)(11346002)(186003)(26005)(6436002)(76176011)(7696005)(99286004)(229853002)(55016002)(55236004)(53546011)(71200400001)(71190400001)(9686003)(6246003)(66066001)(6506007)(102836004)(4326008)(5660300002)(52536014)(66476007)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5064;H:BYAPR02MB4055.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xrUhqpN+MAC5hxKzz2+YjKRtUhFDrZuUipj3SdUl8aXz72mbdlTOg74lq8fBxN9fHz1rsARzf6kCzTQ9dZ2sJrkMXMRuA9RH6Yv6BecqHsrYzDbZ/+Wbzaa2hQHMWMyU733iLuIMD/kSyBvhUXjpTdJbzY6m42DwvjedqQwxYZAheqKgr3jW2kxwTaCQTceeW2ERXrKSQ1cOeHmmQJ93UUYIwE2LabhGnD5sG1FiYlCqiQwpJq5aiJZ+YhzqoAVvfkba5/8pZjpkrEZh6DeQlAqXK+0FhyKt7+JkELf6jjgOSSQQrkredKrAgHX9C4hVq8w+8QiKO8FH8Y23kLJs2eo9zCZDzNCHbmXeqU8fvPcG/QxQIrGPcehHrSVaIdGVICGhoG+WxZx4MLroyJI8lmWdGZossbkQfR7GjPYUCx7ZzYb+dYGb202U8NIYgUtJ
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191111203835.2260382-1-arnd@arndb.de> <20191111203835.2260382-3-arnd@arndb.de>
- <00fea162-508a-b6e1-84ba-1472a94f6945@xs4all.nl>
-In-Reply-To: <00fea162-508a-b6e1-84ba-1472a94f6945@xs4all.nl>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 Nov 2019 12:34:15 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3dhruU1k9XtVHZsfmTxt+jL5Pf8jhT77+vce5p=h9U8w@mail.gmail.com>
-Message-ID: <CAK8P3a3dhruU1k9XtVHZsfmTxt+jL5Pf8jhT77+vce5p=h9U8w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/8] media: v4l2: abstract timeval handling in v4l2_buffer
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:B8Mm1ukgYdV+UTz5ZKRGto5znAMBY5Yzedr8KxBSXwWDyRZmsyV
- s5EswmhenIXGdXlggmKO7s5D2k9vr9b/efZT6a1B5PfwdXmbhfCsp7VnIJcWUDBmZ7NNm0n
- EBG1JSNKueZEaQZGxkqILWGH5dHwGfi23+K48Bf2ABaVywyPw0YrQoc/aZSjM1efO8hBNb3
- vBs0ShRfPRuaCBqahmS7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eG/ROzqDxMQ=:suFoLOANhTR+3jeZTwNp94
- mZfBfkPYQwicWWAj9VsTDIzOk5+EUDrrt2QFadEDK8ohz5cOuH2WbFdMOmy1+bJcEu/PX95ST
- mn7SIMLnRhOLWAlJvviK9MaQ3xCd0s4i8mZqJrzs3G0aNz65tAr2IasFhvYY6Gkcu/+R4BkG3
- /LuXoiqxx+EjVMMRb201/cX8LulSG1uC9gcK7cwOZOeRitFuVC0DoF6Gn7u83IhnROr5y1ZC3
- WzAXwKY2X1Va2J56dUke3gmQ8B80fJg0vsu5LXo/KerLRi3/5Fg0iPbXYHCnKlhMFPbFZJoY5
- NXu5cMazlTJQsQ3zbsr+37Vtk8MaeW0XlDFH/d3xfTz6bloZDUcPAgKz7Wae9xcBrSYgNzKaB
- nLmEaKEbQouBj523WgmG+O5wL02t3SecOYHx/zY0sGBLkO7Iv4WZF4AfWewnyr0/60kuS+ong
- BvJIF7q9keqaUnx6eLOLS8JbmpZYAepoGNrFrzpZhRkJ3EEhGSJPIn4FvVHKyyOvZkffJ5c5i
- 7fd4DBmDiJAaVly0G4P62/qET0FpAOO0OLkb14m1rRVrZeIEqXQaj164FsvcWgTbabwsHw6cF
- a+q+8GokLbEihtivvP6jMg4DOxF1JRgvfq7dff8XBpf1B/+FAeyxgCIKZZ5wUSLdNHC1JixFY
- 5uDtudquWhZH+xPthMdeUFnO5Y46IyMf8KXq0F2bqPVW6DloMF5xF60qTGAP8SZYRwedJCBZR
- dQwNndDT92ms7h8dm6hPnkq6rYId4OFJIXzbMzEdbSI6POrHqO7Cx0GpV4p7pYhFXWHEdfT78
- o8SZ0MY+5T+rnJzK9s31TFTTKikfwtUYjWlr6mS/YPfHQsSSznTgs+Af64v3jSAuppnSLJ7zI
- pDPqBiAJ+X904gJepheA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f102ac7-620c-4447-5dbd-08d77264c570
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2019 11:35:42.9357
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IvzbvrrPmtvYcmzWm0rvC22oGhfkcLv5yUz9wXyQOfjskKPsqBRbrgN02oWECTl0lh+ewpg0wCEzIxhn4rrNGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 4:52 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->
-> On 11/11/19 9:38 PM, Arnd Bergmann wrote:
-> > As a preparation for adding 64-bit time_t support in the uapi,
-> > change the drivers to no longer care about the format of the
-> > timestamp field in struct v4l2_buffer.
-> >
-> > The v4l2_timeval_to_ns() function is no longer needed in the
-> > kernel after this, but there may be userspace code relying on
-> > it because it is part of the uapi header.
->
-> There is indeed userspace code that relies on this.
+Request for review.
 
-Ok, good to know. I rephrased the changelog text as
+Thanks,
+Rajan
 
-The v4l2_timeval_to_ns() function is no longer needed in the
-kernel after this, but there is userspace code relying on
-it to be part of the uapi header.
+> -----Original Message-----
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
+> Sent: 07 November 2019 04:01 PM
+> To: ichal.simek@xilinx.com; daniel.lezcano@linaro.org; tglx@linutronix.de
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; R=
+ajan Vaja
+> <RAJANV@xilinx.com>
+> Subject: [PATCH] drivers: clocksource: Use ttc driver as platform driver
+>=20
+> Currently TTC driver is TIMER_OF_DECLARE type driver. Because of
+> that, TTC driver may be initialized before other clock drivers. If
+> TTC driver is dependent on that clock driver then initialization of
+> TTC driver will failed.
+>=20
+> So use TTC driver as platform driver instead of using
+> TIMER_OF_DECLARE.
+>=20
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+>  drivers/clocksource/timer-cadence-ttc.c | 26 ++++++++++++++++++--------
+>  1 file changed, 18 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksourc=
+e/timer-
+> cadence-ttc.c
+> index 88fe2e9..38858e1 100644
+> --- a/drivers/clocksource/timer-cadence-ttc.c
+> +++ b/drivers/clocksource/timer-cadence-ttc.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/slab.h>
+>  #include <linux/sched_clock.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+>=20
+>  /*
+>   * This driver configures the 2 16/32-bit count-up timers as follows:
+> @@ -464,13 +466,7 @@ static int __init ttc_setup_clockevent(struct clk *c=
+lk,
+>  	return 0;
+>  }
+>=20
+> -/**
+> - * ttc_timer_init - Initialize the timer
+> - *
+> - * Initializes the timer hardware and register the clock source and cloc=
+k event
+> - * timers with Linux kernal timer framework
+> - */
+> -static int __init ttc_timer_init(struct device_node *timer)
+> +static int __init ttc_timer_probe(struct platform_device *pdev)
+>  {
+>  	unsigned int irq;
+>  	void __iomem *timer_baseaddr;
+> @@ -478,6 +474,7 @@ static int __init ttc_timer_init(struct device_node *=
+timer)
+>  	static int initialized;
+>  	int clksel, ret;
+>  	u32 timer_width =3D 16;
+> +	struct device_node *timer =3D pdev->dev.of_node;
+>=20
+>  	if (initialized)
+>  		return 0;
+> @@ -532,4 +529,17 @@ static int __init ttc_timer_init(struct device_node =
+*timer)
+>  	return 0;
+>  }
+>=20
+> -TIMER_OF_DECLARE(ttc, "cdns,ttc", ttc_timer_init);
+> +static const struct of_device_id ttc_timer_of_match[] =3D {
+> +	{.compatible =3D "cdns,ttc"},
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, ttc_timer_of_match);
+> +
+> +static struct platform_driver ttc_timer_driver =3D {
+> +	.driver =3D {
+> +		.name	=3D "cdns_ttc_timer",
+> +		.of_match_table =3D ttc_timer_of_match,
+> +	},
+> +};
+> +builtin_platform_driver_probe(ttc_timer_driver, ttc_timer_probe);
+> --
+> 2.7.4
 
-> >
-> > +static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
-> > +{
-> > +     return buf->timestamp.tv_sec * NSEC_PER_SEC +
-> > +            (u32)buf->timestamp.tv_usec * NSEC_PER_USEC;
->
-> Why the (u32) cast?
-
-Simple question, long answer:
-
-on 32-bit architectures, the tv_usec member may be 32-bit wide plus
-padding in user space when interpreted as a regular 'struct timeval',
-but the kernel implementation now sees it as a 64-bit member,
-with half of it being possibly uninitialized user space data.
-
-The 32-bit cast avoids that uninitialized data and ensures user space
-passing garbage in the upper half gets ignored, as it has to be on 32-bit
-user space.
-
-On 64-bit native user space, the tv_usec field is always 64 bit wide,
-so this is a change in behavior for denormalized timeval data
-with tv_usec > U32_MAX, but the current behavior does not appear
-worth preserving either.
-
-The correct way would probably be to return an error for
- tv_usec >USEC_PER_SEC, but as the code never did that, this
-would risk a regression for user space that relies on passing
-invalid timestamps without getting an error.
-
-> > +static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
-> > +                                          u64 timestamp)
-> > +{
-> > +     struct timespec64 ts = ns_to_timespec64(timestamp);
-> > +
-> > +     buf->timestamp.tv_sec  = ts.tv_sec;
-> > +     buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
-> > +}
-> > +
->
-> This does not belong in the public header. This is kernel specific,
-
-Note: this is not the uapi header but the in-kernel one.
-
-> so media/v4l2-common.h would be a good place.
-
-Ok, sounds good. I wasn't sure where to put it, and ended up
-with include/linux/videodev2.h as the best replacement for
-include/uapi/linux/videodev2.h, changed it to
-include/media/v4l2-common.h now.
-
-       Arnd
