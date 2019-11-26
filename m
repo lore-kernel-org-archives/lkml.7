@@ -2,88 +2,211 @@ Return-Path: <SRS0=8t7v=ZS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF2FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963EFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA3D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=iupui.edu header.i=@iupui.edu header.b="neW2YHS/"
+	by mail.kernel.org (Postfix) with ESMTP id 7C431207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Nov 2019 02:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKZCdz (ORCPT
+        id S1727438AbfKZCez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Nov 2019 21:33:55 -0500
-Received: from belushi.uits.indiana.edu ([129.79.1.188]:26015 "EHLO
-        hartman.uits.indiana.edu" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725946AbfKZCdz (ORCPT
+        Mon, 25 Nov 2019 21:34:55 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:22340 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbfKZCez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Nov 2019 21:33:55 -0500
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 21:33:54 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=iupui.edu; i=@iupui.edu; l=990; q=dns/txt; s=iu;
-  t=1574735634; x=1606271634;
-  h=from:to:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=jLALNnq3gD+Ik4gEh/clEneYjLUgy+WG4fFNEFl2+cM=;
-  b=neW2YHS/gSuHObiTQ7siPvtKz5bv4jmq38Bd1t7bh0balPrbpCscWUVy
-   XfVDn4lzn5j4nd/13i9MruQ+TzaIZDSDCmMi7Wu/he6lhCtvEhsllWR+r
-   TtZBEVYZIjwvg9Td4EWFeUeV7WZu8yT2jl+YwyRWACvvNkqK3TqEMI6v9
-   0=;
-IronPort-SDR: 75Oy6lTxQivo0daJrdh3M+jsxClEyp7qbKsU9OtgCsx1SjgTdQv4bxekreYDf6L3bmu/8B35vK
- QmCJJ1SOTNFzkY0xbQomSeKXqq+kH8C98AdCDuy9IJ3kFV7DcWu0bOXP/mr3eF7R86B40MzFCj
- IyQGLgL10WEkQaOXk8pzbZsTlsa+XSBPLAdij4Abj/Gp0/d/Fp0GH7x/Q6Me00xiqSXHf42NHg
- VivQ8c+6EdB11Df8kWZCgp3PKhqq8bUBmHz9EZfZnQH80aP5n/99toasXHviINYCo3O3Q5KAMN
- BWI=
-X-IronPort-AV: E=Sophos;i="5.69,244,1571716800"; 
-   d="scan'208";a="188847297"
-Received: from mssg-relay.indiana.edu ([129.79.1.73])
-  by irpt-internal-relay.indiana.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Nov 2019 21:26:47 -0500
-Received: from IN-CCI-D2S15.ads.iu.edu (in-cci-d2s15.ads.iu.edu [10.234.85.20])
-        by mssg-relay.indiana.edu (8.14.7/8.14.7) with ESMTP id xAQ2Qlfs014795
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Nov 2019 21:26:47 -0500
-Received: from BL-CCI-D2S05.ads.iu.edu (10.79.69.18) by
- IN-CCI-D2S15.ads.iu.edu (10.234.85.20) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 25 Nov 2019 21:26:47 -0500
-Received: from BL-CCI-D2S05.ads.iu.edu ([fe80::500e:3613:3cb5:274c]) by
- BL-CCI-D2S05.ads.iu.edu ([fe80::500e:3613:3cb5:274c%12]) with mapi id
- 15.00.1497.000; Mon, 25 Nov 2019 21:26:47 -0500
-From:   "Paramasivam, Meenakshisundaram" <mparamas@iupui.edu>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: mdadm grow to double the capacity
-Thread-Topic: mdadm grow to double the capacity
-Thread-Index: AQHVpABCXbRhMZC0hkmo78Fa/ZRP/Q==
-Date:   Tue, 26 Nov 2019 02:26:47 +0000
-Message-ID: <1574735207490.32532@iupui.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [68.38.222.235]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 25 Nov 2019 21:34:55 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 26 Nov
+ 2019 10:35:17 +0800
+Subject: Re: [PATCH v2 3/3] clk: meson: a1: add support for Amlogic A1 clock
+ driver
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com>
+ <1571382865-41978-4-git-send-email-jian.hu@amlogic.com>
+ <1jsgnmba1a.fsf@starbuckisacylon.baylibre.com>
+ <49b33e94-910b-3fd9-4da1-050742d07e93@amlogic.com>
+ <1jblts3v7e.fsf@starbuckisacylon.baylibre.com>
+ <f02b6fb2-5b98-0930-6d47-a3e65840fb82@amlogic.com>
+ <1jh839f2ue.fsf@starbuckisacylon.baylibre.com>
+ <20d04452-fc63-9e9e-220f-146b493a860f@amlogic.com>
+ <1695e9b0-1730-eef6-491d-fe90ac897ee9@amlogic.com>
+ <1jtv6yftmm.fsf@starbuckisacylon.baylibre.com>
+ <9e652ed1-384e-f630-f2a4-0aa4486df577@amlogic.com>
+ <1j7e3oqn36.fsf@starbuckisacylon.baylibre.com>
+ <9ec317e8-136e-1ab4-4e9b-21210e7f3e05@amlogic.com>
+ <1j5zj8qgsl.fsf@starbuckisacylon.baylibre.com>
+ <7a3f1e14-e5a5-407a-335a-eb68d3082eb9@amlogic.com>
+Message-ID: <1ca0c5e1-8417-c5dc-7ad1-80ea707554b2@amlogic.com>
+Date:   Tue, 26 Nov 2019 10:35:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <7a3f1e14-e5a5-407a-335a-eb68d3082eb9@amlogic.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4oCLSGksCgpJIGhhdmUgcmFpZC02IG1kYWRtIGFycmF5IHdpdGggOCBkcml2ZXMgKDUgVEIgZWFj
-aCksIGFuZCBhIHRvdGFsIG9mIDMwIFRCIHVzYWJsZSBzcGFjZS4gWEZTIGlzIGNyZWF0ZWQgb24g
-dGhpcyB2b2x1bWUuIFNpbmNlIEkgYW0gYWJvdXQgODUlIHVzZWQsICBJIHdhbnQgdG8gYWRkIDYg
-bW9yZSBkcml2ZXMgdG8gdGhpcyBleGlzdGluZyBhcnJheSBpbiByYWlkLTYgdG8gdGFrZSB0aGlz
-IGFycmF5IHRvIDYwIFRCIHdpdGggMTQgZHJpdmVzIGluIHJhaWQtNi4gIAoK4oCLV2hhdCB3b3Vs
-ZCBiZSB0aGUgZmFzdGVzdCAoYW5kIHNhZmVzdCkgd2F5IHRvIGdyb3cgdGhlIHJhaWQtNiBhcnJh
-eSBmcm9tIDggZGlza3MgdG8gMTQgZGlza3M/IEkgYW0gYXNzdW1pbmcgSSBjYW4gZmlyc3QgYWRk
-IHRoZSA2IGRyaXZlcywgYW5kIGdyb3cgYWxsIGF0IG9uY2Ugd2l0aCB0aGUgY29tbWFuZDoKCm1k
-YWRtIC12IC0tZ3JvdyAtLXJhaWQtZGV2aWNlcz0xNCAvZGV2L21kMgoKIEhvdyBsb25nIHdpbGwg
-dGhpcyB0YWtlIChlc3RpbWF0ZSk/IFNob3VsZCBJIHVtb3VudCB4ZnMgYmVmb3JlIGF0dGVtcHRp
-bmcgdG8gZ3JvdyB0aGUgbWRhZG0gYXJyYXk/IAoKSSBhbSBhd2FyZSB0aGF0IEkgbmVlZCB0byBn
-cm93IHhmcyBhZnRlciB0aGUgbWRhZG0gZ3JvdyBvcGVyYXRpb24uIAoKUGxlYXNlIGxldCBtZSBr
-bm93IG9yIHBvaW50IHRvIHRpcHMuIFRoYW5rcy4KClN1bmRhcg==
+
+
+On 2019/11/25 21:51, Jian Hu wrote:
+> 
+> 
+> On 2019/11/25 20:30, Jerome Brunet wrote:
+>>
+>> On Mon 25 Nov 2019 at 13:01, Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>>> On 2019/11/25 18:14, Jerome Brunet wrote:
+>>>>
+>>>> On Thu 21 Nov 2019 at 04:21, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>>
+>>>>> Hi, Jerome
+>>>>>
+>>>>> On 2019/11/20 23:35, Jerome Brunet wrote:
+>>>>>>
+>>>>>> On Wed 20 Nov 2019 at 10:28, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>>>>
+>>>>>>> Hi, jerome
+>>>>>>>
+>>>>>>> Is there any problem about fixed_pll_dco's parent_data?
+>>>>>>>
+>>>>>>> Now both name and fw_name are described in parent_data.
+>>>>>>
+>>>>>> Yes, there is a problem.  This approach is incorrect, as I've 
+>>>>>> tried to
+>>>>>> explain a couple times already. Let me try to re-summarize why this
+>>>>>> approach is incorrect.
+>>>>>>
+>>>>>> Both fw_name and name should be provided when it is possible that
+>>>>>> the DT does not describe the input clock. IOW, it is only for 
+>>>>>> controllers
+>>>>>> which relied on the global name so far and are now starting to 
+>>>>>> describe
+>>>>>> the clock input in DT
+>>>>>>
+>>>>>> This is not your case.
+>>>>>> Your controller is new and DT will have the correct
+>>>>>> info
+>>>>>>
+>>>>>> You are trying work around an ordering issue by providing both 
+>>>>>> fw_name
+>>>>>> and name. This is not correct and I'll continue to nack it.
+>>>>>>
+>>>>>> If the orphan clock is not reparented as you would expect, I 
+>>>>>> suggest you
+>>>>>> try to look a bit further at how the reparenting of orphans is 
+>>>>>> done in
+>>>>>> CCF and why it does not match your expectation.
+>>>>>>
+>>>>> I have debugged the handle for orphan clock in CCF, Maybe you are 
+>>>>> missing
+>>>>> the last email.
+>>>>
+>>>> Nope, got it the first time
+>>>>
+>>>>> Even though the clock index exit, it will get failed for the orphan 
+>>>>> clock's
+>>>>> parent clock due to it has not beed added to the provider.
+>>>>
+>>>> If the provider is not registered yet, of course any query to it won't
+>>>> work. This why I have suggested to this debug *further* :
+>>>>
+>>>> * Is the orphan reparenting done when a new provider is registered ?
+>>>> * If not, should it be done ? is this your problem ?
+>>>>
+>>
+>> Apparently, I was not clear enough so I'll rephrase
+>>
+>>> Yes, the orphan reparenting is done when the new provider is
+>>> registered.
+>>
+>> No it is not done yet. Please check the code.
+>>
+>> The reparenting of orphan is done only on clock registration, not on
+>> provider registeration. Now that clocks can be specified by DT, this
+>> probably needs to added.The action of reparenting the orphan is before 
+>> the provider registration 
+> with the current code.
+>>
+>> That is your problem.
+> Yes, if the provider is registered before the clock registration, it
+> will reparent successfully.
+>>
+>> Please fix the underlying issue, then you can post your series again.
+>>
+>>>
+>>> Reparenting the orphan will be done when each clock is registered by
+>>> devm_clk_hw_register. And at this time the provider has not been
+>>> registered. After all clocks are registered by devm_clk_hw_register, the
+>>> provider will be registered by devm_of_clk_add_hw_provider.
+>>>
+>>> Reparenting the orphan will fail when fw_name is added alone, the 
+>>> couse is
+>>> that devm_clk_hw_register is always running ahead of
+>>> devm_of_clk_add_hw_provider.
+>>
+>> Please stop bringing the topic of "fw_name" and "name" field together, I
+>> told you 3 times why this is wrong. It is not going to change.
+>>
+>>>
+>>> That is why it will failed to get parent for the orphan clock.
+>>
+>> It fails because the provider is not registered when you try to reparent
+>> the orphan.
+>>
+>> It shows that you should try again once the provider is registered.
+>>
+> OK, I have exchanged the position for devm_clk_hw_register and 
+> devm_of_clk_add_hw_provider in meson-eeclk.c.
+> 
+> It reparents successfully for orphan clock.
+> 
+> Is is ok that put devm_of_clk_add_hw_provider ahead?
+> 
+> As far as I am concerned, there is no any effect.Sorry, If the provider is registered first, I find it will affect the 
+assigned-clock-parents and assigned-clock-rates configurations in DT 
+when the provider is registered.
+
+It will fail to set the assigned parent and assigned rate for one clock 
+because of the related clocks are not registered yet.
+
+Moreover, registering provider is always after clock registration in 
+other vendor clock drivers.
+
+Maybe registering provider is better after the clock registration.
+
+
+>>>
+>>>
+>>>
+>>>>
+>>>> .
+>>>>
+>>
+>> .
+>>
